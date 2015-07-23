@@ -1,0 +1,532 @@
+! JPARSEC TEST CASES
+! ------------------
+!
+! General structure is test id number; input values; expected output.
+!
+! ***
+! 0 = Atlas test. Input values are RA (h), DEC (deg), output values are expected charts for 
+! millennium atlas, sky atlas 2000, uranometria, uranometria 2nd editions, and Rukl (lunar 
+! atlas). See (Millenium) http://www.rssd.esa.int/index.php?page=msa&project=HIPPARCOS,
+! (Sky Atlas 2000) http://www.nightskyinfo.com/sky_atlas_2000/,
+! (Uranometria 2000) http://www.fortunecity.com/roswell/borley/49/chartidx.htm,
+! (Uranometria 2nd edition) http://www.willbell.com/u2k/index.htm,
+! (Rukl) http://the-moon.wikispaces.com/Rukl+Index+Map.
+! Use - for values that should not be tested.
+0; 0.5, 80.0; VI-14, 1, VI-3, V1-2, Rukl 4
+0; 0.0, -22; -, 18, VII-305, -, Rukl 55
+0; 0.0, 11; -, 17, VII-170, V1-81, Rukl 33
+0; 3.33, -33; -, 18, VII-355, -, Rukl 69
+0; 18.1, -66; -, 26, VII-455, -, Rukl 71/VI
+0; 18.1, -88; -, 26, VII-472, -, Rukl 73/VI
+0; 6.0, -88; -, 24, VII-473, -, Rukl 73/V
+0; 0.7, 41; VI-105, -, -, V1-30, -
+0; 5.6, -5.5; VI-278, -, -, -, -
+0; 20.8, 30; VIII-1169, -, -, V1-47, -
+0; 8.7, 20; VII-712, -, -, -, -
+!
+! ***
+! 1 = Constellation test. Input values are RA (h), DEC (deg). Output value is constellation 
+! name at that equatorial position
+1; 5.12, 9.12; Orion
+1; 9.0, 65.0; Ursa Major
+1; 23.5, -20; Aquarius
+1; 9.46, -19.9; Hydra
+1; 12.89, 22; Coma Berenices
+1; 15.67, -12.12; Libra
+1; 19.0, -40.0; Corona Australis
+1; 6.22, -81.12; Mensa
+!
+! ***
+! 2 = Coordinate systems. Position (lon, lat), from one system (Galactical, Equatorial, 
+! Ecliptical, Horizontal) to another. In case of horizontal assumed time is J2000.0, location 
+! is Madrid, Spain, and reduction algorithms IAU2009. - is used for results that should not
+! be tested. Transformations are done for J2000 epoch and FK5 frame, and with mean ecliptic.
+2; 0, 0.0, Galactical, Equatorial; -93º 35' 42.014", -28º 56' 10.221"
+2; 0, 90.0, Galactical, Equatorial; 192º 51' 34.132", 27º 7' 41.704"
+2; 192.8594812, 27.1282512, Equatorial, Galactical; -, 90º 0' 0.000"
+2; 90, 0, Equatorial, Ecliptical; 90º 0' 0.000", -23º 26' 21.406"
+2; 90, -23.4392794, Ecliptical, Equatorial; 90º 0' 0.000", 0.000"
+2; -90, 0, Equatorial, Ecliptical; -90º 0' 0.000", 23º 26' 21.406"
+2; -90, 23.4392794, Ecliptical, Equatorial; -90º 0' 0.000", 0.000"
+!
+! ***
+! 3 = Ephemerides test. Values are year, month, day, hour, minute (UT), foreground body,
+! background body, elongation (deg). The tests list occultations as appear in Wikipedia (see 
+! http://en.wikipedia.org/wiki/Occultation#Occultation_by_planets). This tests planetary and
+! stellar ephemerides. Calculations are done respect to geocenter, considering the object
+! radii and parallaxes con calculate if there is an occultation from a given point on Earth.
+! Background body can be a planet or a star, giving its name or catalog number.
+3; 1802, 12, 9, 7, 36, Mercury, Acrab, 16.2 W; -
+3; 1808, 12, 9, 20, 34, Mercury, Saturn, 20.3 W; -
+3; 1810, 12, 22, 6, 32, Venus, 18570149, 11.1 E, Xi-2 Sgr; -
+3; 1818, 1, 3, 21, 52, Venus, Jupiter, 16.5 W; -
+3; 1825, 7, 11, 9, 10, Venus, 4220123, 44.4 W, del-1 Tau; -
+3; 1837, 7, 11, 12, 50, Mercury, eta gem, 17.8 W; -
+3; 1841, 5, 9, 19, 35, Venus, Electra, 9.2 E, 17 Tau; -
+3; 1843, 9, 27, 18, 0, Venus, eta Vir, 3.2 W; -
+3; 1850, 12, 16, 11, 28, Mercury, lam Sgr, 10.2 E; -
+3; 1855, 5, 22, 5, 4, Venus, eps Gem, 37.4 E; -
+3; 1857, 6, 30, 0, 25, Saturn, del Gem, 8.4 E; -
+3; 1865, 12, 5, 14, 20, Mercury, lam Sgr, 21 E; -
+3; 1876, 2, 28, 5, 13, Jupiter, Acrab, 97.6 W; -
+3; 1881, 6, 7, 20, 54, Mercury, eps Gem, 21.2 E; -
+3; 1906, 12, 9, 17, 40, Venus, Acrab, 14.9 W; -
+3; 1910, 7, 27, 2, 53, Venus, eta Gem, 31 W; -
+! WIKIPEDIA WAS WRONG HERE, 24-12, NOT 16-12. ELONGATION CORRECT
+3; 1937, 12, 24, 18, 38, Mercury, omi Sgr, 11.6 E; -
+3; 1940, 6, 10, 2, 21, Mercury, eps Gem, 20.1 E; -
+! 14500141 = Alpha-2 Lib = Zuben El Genubi, but Alpha-1 Lib has same name and is 3' away !!!
+3; 1947, 10, 25, 1, 45, Venus, 14500141, 13.5 E; -
+3; 1959, 7, 7, 14, 30, Venus, Regulus, 44.5 E; -
+3; 1965, 9, 27, 15, 30, Mercury, eta Vir, 2.6 W; -
+3; 1971, 5, 13, 20, 0, Jupiter, bet Sco, 169.5 W; -
+3; 1976, 4, 8, 1, 0, Mars, eps Gem, 81.3 E; -
+! WIKIPEDIA WAS WRONG, IS 15:27, NOT 14:27
+3; 1981, 11, 17, 15, 27, Venus, Nunki, 47 E; -
+! WIKIPEDIA SAYS 1:32, but 1:33 eliminates the failure
+3; 1984, 11, 19, 1, 33, Venus, lam Sgr, 39.2 E; -
+! 16:15.5 seems better, but still fails
+3; 2015, 12, 4, 16, 14, Mercury, the oph, 9.6 E; -
+3; 2035, 2, 17, 15, 19, Venus, 19090174, 42.1 W, pi Sgr; -
+3; 2044, 10, 1, 22, 0, Venus, Regulus, 38.9 W; -
+3; 2046, 2, 23, 19, 24, Venus, 19210133, 45.4 W, rho-1 Sgr; -
+! 14500141 = Alpha-2 Lib = Zuben El Genubi, but Alpha-1 Lib has same name and is 3' away !!!
+3; 2052, 11, 10, 7, 20, Mercury, 14500141, 2.8 W; -
+3; 2065, 11, 22, 12, 45, Venus, Jupiter, 7.9 W; -
+! WIKIPEDIA SAYS 11:56, but 11:55 eliminates the failure
+3; 2067, 7, 15, 11, 55, Mercury, Neptune, 18.4 W; -
+! 20:22 seems better, but still fails
+3; 2069, 8, 11, 20, 25, Venus, Zavijava, 38.4 E; -
+3; 2078, 10, 3, 22, 0, Mars, the oph, 71.4 E; -
+3; 2079, 8, 11, 1, 30, Mercury, Mars, 11.3 W; -
+3; 2088, 10, 27, 13, 43, Mercury, Jupiter, 4.7 W; -
+3; 2094, 4, 7, 10, 48, Mercury, Jupiter, 1.8 W; -
+!
+! ***
+! 4 = Ephemerides for natural satellites. See (Jupiter)
+! http://www.aanda.org/index.php?option=com_article&access=bibcode&Itemid=129&bibcode=2006A%2526A...451..733AFUL
+! and (Saturn)
+! http://www.aanda.org/index.php?option=com_article&access=standard&Itemid=129&url=/articles/aa/full/2001/19/aa1933/aa1933.html
+! Parameters are year, month, day, hour, minute, second (TT), city, body in front, body behind, 
+! type. No expected values, the body behind should be occulted/eclipsed by the one in front.
+! JUPITER
+4; 1997, 4, 24, 3, 56, 21, Madrid, Callisto, Europa, Total occ; -
+4; 1997, 4, 24, 3, 55, 59, Bordeaux, Callisto, Europa, Total occ; -
+4; 1997, 5, 12, 2, 37, 34, Munich, Callisto, Ganymede, Partial occ; -
+4; 1997, 5, 29, 1, 10, 4, Munich, Io, Europa, Partial ecl; -
+4; 1997, 5, 30, 3, 5, 15, Paris, Ganymede, Io, Total occ; -
+4; 1997, 5, 31, 0, 30, 6, Stuttgart, Ganymede, Io, Partial occ; -
+4; 1997, 6, 7, 4, 32, 29, Tenerife, Ganymede, Io, Partial occ; -
+4; 1997, 6, 18, 1, 4, 39, Lisboa, Europa, Io, Annular ecl; -
+4; 1997, 6, 25, 3, 17, 9, Tenerife, Europa, Io, Annular ecl; -
+4; 1997, 6, 30, 5, 39, 48, New York, Callisto, Europa, Partial ecl; -
+! There are a lot more!
+! SATURN
+4; 1995, 8, 13, 22, 14, 42, Bucharest, Dione, Titan, Partial occ; -
+4; 1995, 8, 15, 3, 25, 9, Bordeaux, Dione, Titan , Annular occ; -
+4; 1995, 8, 16, 3, 45, 16, Bordeaux, Enceladus, Mimas, Total occ; -
+4; 1995, 9, 24, 1, 15, 58, Bordeaux, Tethys, Rhea, Annular ecl; -
+4; 1995, 11, 3, 19, 39, 36, Bordeaux, Dione, Tethys, Partial ecl; -
+4; 1995, 11, 5, 18, 53, 3, Bordeaux, Rhea, Tethys, Partial ecl; -
+!
+! ***
+! 5 = Julian days. Parameters are year, month, day, hour. Expected value of the Julian day.
+5; 2000, 1, 1, 12; 2451545.0
+5; 1987, 6, 19, 12; 2446966.0
+5; 1900, 1, 1, 0; 2415020.5
+5; 1600, 12, 31, .0; 2305812.5
+5; 837, 4, 10, 6; 2026871.75
+5; -1001, 7, 12, 12; 1356001.0;
+5; -4713, 1, 1, 12; 0.0
+!
+! ***
+! 6 = Time scales test. Year, month, day, hour, minute, second, time scale (LT, UT1, UTC, TT, TDB),
+! and maximum number of ms of error (>= 0, 0 for full precision). Expected values are the set 
+! of Julian days in LT, UT1, UTC, TT, and TDB. Input date can also be given as a Julian day.
+! In practice, for current dates double precision values allows a precision of 0.05 ms or better
+! when working with a given instant represented as Julian days in different time scales.
+6; 2006, 1, 1, 0, 0, 0, TT, 0.1; 2453736.540912231, 2453736.499249477, 2453736.499245564, 2453736.5, 2453736.4999999995
+6; 2453736.540912231, LT, 0.1; 2453736.540912231, 2453736.499249477, 2453736.499245564, 2453736.5, 2453736.4999999995
+6; 2453736.499249477, UT1, 0.1; 2453736.540912231, 2453736.499249477, 2453736.499245564, 2453736.5, 2453736.4999999995
+6; 2453736.499245564, UTC, 0.1; 2453736.540912231, 2453736.499249477, 2453736.499245564, 2453736.5, 2453736.4999999995
+6; 2453736.4999999995, TDB, 0.1; 2453736.540912231, 2453736.499249477, 2453736.499245564, 2453736.5, 2453736.4999999995
+!
+! ***
+! 7 = Measure representation and conversion test. Measure, error, unit, desired output unit. Expected 
+! values are the measure and error for the output unit, and measure representation by rounding 
+! errors.
+7; 1.0, 1.0, JOHNSON I, Jy; 967.4004244449982, 891.0087185132663, 1000 +/- 900 Jy
+7; 968.4004244449982, 891.0092796748264, Jy, Jy; 968.4004244449982, 891.0092796748264, 1000 +/- 900 Jy
+7; 0.998878256198762, 0.9989679984628773, JOHNSON I, JOHNSON I; 0.998878256198762, 0.9989679984628773, 1.0 +/- 1.0 JOHNSON I
+7; 1.0, 1.0, JOHNSON I, JOHNSON I; 1.0, 1.0, 1.0 +/- 1.0 JOHNSON I
+7; 968.4004244449982, 891.0092796748264, Jy, JOHNSON I; 0.998878256198762, 0.9989679984628772, 1.0 +/- 1.0 JOHNSON I
+7; 0.998878256198762, 0.9989679984628773, JOHNSON I, Jy; 968.4004244449982, 891.0092796748264, 1000 +/- 900 Jy
+!
+! ***
+! 8 = Tests for calendars. 3 test dates are applied for each of 8 calendars. Input are year, month, day, and 
+! calendar name (see CalendarGenericConversion class for the names), and output are the dates for the 8 calendars
+! as year month day, in the following order: Gregorian date, Julian date, Hebrew date, Coptic date, Ethiopic date,
+! Persian (astr), Islamic (astr), Hindu solar. Test data comes from the following references:
+! http://books.google.com/books?id=J90gKVAque4C&printsec=frontcover&hl=es#v=onepage&q&f=false
+! http://www.cs.tau.ac.il/~nachum/calendar-book/Calendrica.html
+! http://www.cs.tau.ac.il/~nachum/calendar-book/tables/CUP-2000.pdf
+! Not all calendars are tested, neither transformations in the far past or future.
+8; 2000, 1, 2, Gregorian; 2000 1 2, 1999 12 20, 5760 10 24, 1716 4 23, 1992 4 23, 1378 10 12, 1420 9 25, 1921 9 18
+8; 1901, 12, 29, Gregorian; 1901 12 29, 1901 12 16, 5662 10 19, 1618 4 20, 1894 4 20, 1280 10 8, 1319 9 18, 1823 9 15
+8; 2101, 1, 1, Gregorian; 2101 1 1, 2100 12 18, 5861 9 30, 1817 4 22, 2093 4 22, 1479 10 11, 1524 11 1, 2022 9 16
+8; 1999, 12, 20, Julian; 2000 1 2, 1999 12 20, 5760 10 24, 1716 4 23, 1992 4 23, 1378 10 12, 1420 9 25, 1921 9 18
+8; 1901, 12, 16, Julian; 1901 12 29, 1901 12 16, 5662 10 19, 1618 4 20, 1894 4 20, 1280 10 8, 1319 9 18, 1823 9 15
+8; 2100, 12, 18, Julian; 2101 1 1, 2100 12 18, 5861 9 30, 1817 4 22, 2093 4 22, 1479 10 11, 1524 11 1, 2022 9 16
+8; 5760, 10, 24, Hebrew; 2000 1 2, 1999 12 20, 5760 10 24, 1716 4 23, 1992 4 23, 1378 10 12, 1420 9 25, 1921 9 18
+8; 5662, 10, 19, Hebrew; 1901 12 29, 1901 12 16, 5662 10 19, 1618 4 20, 1894 4 20, 1280 10 8, 1319 9 18, 1823 9 15
+8; 5861, 9, 30, Hebrew; 2101 1 1, 2100 12 18, 5861 9 30, 1817 4 22, 2093 4 22, 1479 10 11, 1524 11 1, 2022 9 16
+8; 1716, 4, 23, Coptic; 2000 1 2, 1999 12 20, 5760 10 24, 1716 4 23, 1992 4 23, 1378 10 12, 1420 9 25, 1921 9 18
+8; 1618, 4, 20, Coptic; 1901 12 29, 1901 12 16, 5662 10 19, 1618 4 20, 1894 4 20, 1280 10 8, 1319 9 18, 1823 9 15
+8; 1817, 4, 22, Coptic; 2101 1 1, 2100 12 18, 5861 9 30, 1817 4 22, 2093 4 22, 1479 10 11, 1524 11 1, 2022 9 16
+8; 1992, 4, 23, Ethiopic; 2000 1 2, 1999 12 20, 5760 10 24, 1716 4 23, 1992 4 23, 1378 10 12, 1420 9 25, 1921 9 18
+8; 1894, 4, 20, Ethiopic; 1901 12 29, 1901 12 16, 5662 10 19, 1618 4 20, 1894 4 20, 1280 10 8, 1319 9 18, 1823 9 15
+8; 2093, 4, 22, Ethiopic; 2101 1 1, 2100 12 18, 5861 9 30, 1817 4 22, 2093 4 22, 1479 10 11, 1524 11 1, 2022 9 16
+8; 1378, 10, 12, Persian (astronomical); 2000 1 2, 1999 12 20, 5760 10 24, 1716 4 23, 1992 4 23, 1378 10 12, 1420 9 25, 1921 9 18
+8; 1280, 10, 8, Persian (astronomical); 1901 12 29, 1901 12 16, 5662 10 19, 1618 4 20, 1894 4 20, 1280 10 8, 1319 9 18, 1823 9 15
+8; 1479, 10, 11, Persian (astronomical); 2101 1 1, 2100 12 18, 5861 9 30, 1817 4 22, 2093 4 22, 1479 10 11, 1524 11 1, 2022 9 16
+8; 1420, 9, 25, Islamic (arithmetic); 2000 1 2, 1999 12 20, 5760 10 24, 1716 4 23, 1992 4 23, 1378 10 12, 1420 9 25, 1921 9 18
+8; 1319, 9, 18, Islamic (arithmetic); 1901 12 29, 1901 12 16, 5662 10 19, 1618 4 20, 1894 4 20, 1280 10 8, 1319 9 18, 1823 9 15
+8; 1524, 11, 1, Islamic (arithmetic); 2101 1 1, 2100 12 18, 5861 9 30, 1817 4 22, 2093 4 22, 1479 10 11, 1524 11 1, 2022 9 16
+8; 1921, 9, 18, Hindu solar; 2000 1 2, 1999 12 20, 5760 10 24, 1716 4 23, 1992 4 23, 1378 10 12, 1420 9 25, 1921 9 18
+8; 1823, 9, 15, Hindu solar; 1901 12 29, 1901 12 16, 5662 10 19, 1618 4 20, 1894 4 20, 1280 10 8, 1319 9 18, 1823 9 15
+8; 2022, 9, 16, Hindu solar; 2101 1 1, 2100 12 18, 5861 9 30, 1817 4 22, 2093 4 22, 1479 10 11, 1524 11 1, 2022 9 16
+!
+! ***
+! 9 = Geodetic to geocentric latitudes. Input is longitude (irrelevant), latitude, height above sea level 
+! in m, coordinates type (geodetic or geocentric), and reference ellipsoid (WGS84 or IERS2003). Output is
+! longitude, latitude for the other coordinate type, and elevation. Test cases taken from
+! http://www.mathworks.es/help/toolbox/aerotbx/ug/geoc2geod.html
+9; 0, 0, 1000, geodetic, WGS84; 0.0, 0.0, -
+9; 0, 45, 1000, geodetic, WGS84; 0.0, 44.8076, -
+9; 0, 44.8076, 0, geocentric, WGS84; 0.0, 44.9997, -
+9; 0, 90, 1000, geodetic, WGS84; 0.0, 90.0, -
+9; 0, 0, 1000, geocentric, WGS84; 0.0, 0.0, -
+9; 0, 45, 1000, geocentric, WGS84; 0.0, 45.19207, -
+9; 0, 45.1921, 1000, geodetic, WGS84; 0.0, 44.9997, -
+9; 0, 90, 1000, geocentric, WGS84; 0.0, 90.0, -
+!
+! ***
+! General tests of ephemerides for different theories, bodies, coordinates types (apparent, astrometric J2000,
+! geometric). Input parameters are year, month, day (TT), body, maximum allowed difference in angles ("),
+! and maximum difference in the distances (AU). Ephemerides tested for the methods by Moshier, VSOP87/ELP2000, 
+! Series96/Moshier, JPL DE200, 403, 405 (taken as reference to calculate differences), 413, 414. For VSOP87 and
+! Pluto as target the calculations cannot be done (they are skipped). Tested fields are almost all in 
+! EphemElement class. Output expected values given here are the RA and DEC for apparent, astrometric, and 
+! geometric coordinates for the algorithm taken as reference (JPL DE405). These values are obtained using 
+! JPL Horizons for apparent and astrometric positions, and IMCCE for geometric ones. The rest of the expected
+! values (if present) are the planetographic (geodetic) longitude and latitude, the subsolar longitude and 
+! latitude, the heliocentric apparent distance (not true/geometric one), apparent distance to the observer, 
+! apparent solar elongation, and almost-apparent phase angle (see Horizons documentation, expected 
+! difference < 20" with JPARSEC). Latest value is the constellation abbreviation. Tolerable errors for these
+! parameters (that are compared directly with JPARSEC) are set automatically: 1.0E-5 AU for distances, 0.015º
+! for elongation and phase angle, and 0.05º for the rest. The exception is the planetogeodetic longitudes,
+! where the error is 1 deg since JPL is probably giving wrong results in dates far from J2000. In addition,
+! JPL and IMCCE implements different algorithms so here positions are tested to a precission of 0.1". In
+! a later test positions are tested with more accuracy. Precision in elongation and phase angle is 0.4"
+! since I only have 4 decimal places for those parameters from Horizons. In distance accuracy compared
+! with Horizons and DE405 is excellent (all digits matches almost always), but here it is reduced to values
+! around 1.0E-5 since other theories are not so accurate. The only exception is the distance to the Moon,
+! which needs further investigation since Horizons GIVES DIFFERENT VALUES depending on the Ephemeris type. 
+! For example, in year 2000 the distance in OBSERVER mode is 0.00267983322055 AU, and in VECTOR mode is 
+! 0.002680056593 AU. The value obtained with JPARSEC is the later one (after correcting for light-time the 
+! value from Horizons, both are identical).
+10; 1950, 1, 1, Moon, 0.5, 1.0E-7; 03h 53m 47.38s,  24º 09' 05.0", 03h 56m 46.04s,  24º 17' 33.3", 03h 53m 47.79s,  24º 08' 58.8", 356.94706 , -4.96237 , 35.52562, -1.57515 , 0.985328111433 , 0.00267134176532 , 141.2508 , 38.6518 , Tau
+10; 2000, 1, 1, Moon, 0.5, 1.0E-7; 14h 26m 38.63s, -08º 59' 29.4", 14h 26m 40.12s, -08º 59' 38.8", 14h 26m 39.51s, -08º 59' 37.5", 5.56630 , -6.79806 , 248.27509 ,  0.63139 , 0.982105696677 , 0.00267981683743 , 62.6979 , 117.1631 , Lib
+10; 2049, 1, 1, Moon, 0.7, 1.0E-7; 15h 39m 19.06s, -21º 26' 35.0", 15h 36m 27.34s, -21º 17' 06.4", 15h 39m 17.88s, -21º 26' 33.3", 354.74514 , 2.41513 , 218.21106 , 0.59969 , 0.981578201379 , 0.00243629518339 , 43.4658 , 136.4362 , Lib
+10; 1950, 1, 1, Sun, 0.075, 1.0E-7; 18h 43m 32.24s, -23º 04' 14.8", 18h 46m 35.54s, -23º 00' 48.9", 18h 43m 33.94s, -23º 04' 04.8"
+10; 2000, 1, 1, Sun, 0.075, 1.0E-7; 18h 42m 54.06s, -23º 04' 16.2", 18h 42m 56.60s, -23º 04' 19.3", 18h 42m 56.60s, -23º 04' 19.3"
+10; 2049, 1, 1, Sun, 0.075, 1.0E-7; 18h 47m 48.66s, -22º 58' 39.0", 18h 44m 51.02s, -23º 01' 58.4", 18h 47m 48.95s, -22º 58' 41.2"
+10; 1950, 1, 1, Mercury, 0.2, 1.0E-5; 20h 07m 31.46s, -21º 28' 17.0", 20h 10m 28.81s, -21º 19' 10.1", 20h 07m 33.09s, -21º 28' 01.1", 75.16 , -5.46 , 358.29 , -0.01 , 0.336574125084 , 1.00299133872360 , 19.4794 , 76.9406 , Cap
+10; 2000, 1, 1, Mercury, 0.2, 1.0E-5; 18h 04m 52.62s, -24º 22' 42.9", 18h 04m 55.15s, -24º 22' 48.5", 18h 04m 56.98s, -24º 22' 51.1", 245.55, -3.84 , 264.00, -0.02  , 0.466254982664 ,  1.41308874562055 , 8.7984 , 18.8213 , Sgr
+10; 2049, 1, 1, Mercury, 0.2, 1.0E-5; 20h 05m 25.93s, -20º 32' 49.0", 20h 02m 34.34s, -20º 41' 16.3", 20h 05m 25.13s, -20º 32' 48.8", 285.11, -6.39 , 180.38 ,  0.01 , 0.316967021309 , 0.85415090116384 , 18.1716 , 104.6423 , Sgr
+10; 1950, 1, 1, Venus, 0.2, 1.0E-5; 21h 16m 56.34s, -15º 09' 04.7", 21h 19m 42.91s, -14º 56' 10.3", 21h 16m 56.59s, -15º 08' 56.0", 281.43 , -1.00 , 46.24  , -1.09 , 0.720099685276 , 0.37468540492782 , 36.9795 , 124.7806 , Cap
+10; 2000, 1, 1, Venus, 0.2, 1.0E-5; 15h 57m 05.14s, -18º 18' 48.3", 15h 57m 07.15s, -18º 18' 58.9", 15h 57m 07.98s, -18º 19' 02.5", 257.46 , -1.02 , 198.32 , -2.19 , 0.720159644184 , 1.13432878289948 , 38.9447 , 59.1280 , Lib
+10; 2049, 1, 1, Venus, 0.2, 1.0E-5; 22h 03m 13.98s, -13º 17' 18.9", 22h 00m 35.43s, -13º 31' 35.3", 22h 03m 13.85s, -13º 17' 19.8", 217.58 ,  0.70 , 305.43 ,  0.11 , 0.722151722747 , 0.69495943163265 , 47.2137 , 87.8559 , Aqr
+10; 1950, 1, 1, Mars, 0.2, 1.0E-5; 12h 12m 06.67s,  01º 25' 32.3", 12h 14m 40.35s,  01º 08' 52.9", 12h 12m 07.44s,  01º 25' 28.2", 47.61  , 24.03  , 86.60  , 22.28  , 1.663835303003 ,  1.21552054413961 , 97.7859 , 35.8428 , Vir
+10; 2000, 1, 1, Mars, 0.2, 1.0E-5; 22h 00m 34.72s, -13º 19' 21.3", 22h 00m 36.59s, -13º 19' 14.2", 22h 00m 37.60s, -13º 19' 08.6", 254.25 , -23.17 , 219.72 , -25.39 , 1.390945245952 ,  1.84697285467017 , 47.7256 , 31.5380 , Aqr
+10; 2049, 1, 1, Mars, 0.2, 1.0E-5; 23h 02m 28.92s, -06º 59' 23.0", 22h 59m 55.68s, -07º 15' 16.3", 23h 02m 29.36s, -06º 59' 20.4", 302.38 , -25.82 , 260.55 , -22.61 , 1.417423762245 ,  1.55911965850753 , 63.0732 , 38.2062 , Aqr
+10; 1950, 1, 1, Jupiter, 0.3, 1.0E-5; 20h 36m 11.60s, -19º 13' 08.9", 20h 39m 04.61s, -19º 02' 20.5", 20h 36m 13.61s, -19º 12' 54.7", 270.71 , -0.62 , 265.76 , -0.31 , 5.074481869144 , 5.93536484491519 , 26.5067  , 4.9635  , Cap, [OK, L0 = 271.36 = value given by IMCCE in the graphical visualization]
+10; 2000, 1, 1, Jupiter, 0.3, 1.0E-5; 01h 35m 24.00s,  08º 35' 04.5", 01h 35m 24.47s,  08º 35' 10.3", 01h 35m 25.04s,  08º 35' 13.7", 339.54 ,  3.31 , 328.52 ,  3.50 , 4.965312354289 , 4.61341107349985 , 105.3708 , 11.0049 , Psc
+10; 2049, 1, 1, Jupiter, 0.3, 1.0E-5; 05h 33m 55.87s,  22º 54' 55.8", 05h 30m 55.03s,  22º 52' 58.7", 05h 33m 53.84s,  22º 54' 57.3", 348.49 ,  2.88 , 345.26 ,  2.76 , 5.110803759687 , 4.16236852715959 , 163.0027 , 3.2183  , Tau
+10; 1950, 1, 1, Saturn, 0.4, 1.0E-5; 11h 24m 20.02s,  06º 01' 40.8", 11h 26m 54.48s,  05º 45' 10.8", 11h 24m 20.15s,  06º 01' 39.3", 171.86 , -1.83  , 176.89 , -5.00 , 9.353240604830 , 8.96249258574609 , 110.5539 , 5.6525 , Leo
+10; 2000, 1, 1, Saturn, 0.4, 1.0E-5; 02h 35m 06.26s,  12º 36' 56.5", 02h 35m 06.40s,  12º 37' 01.9", 02h 35m 06.84s,  12º 37' 04.1", 224.89 , -23.03 , 219.56 ,-25.01 , 9.183967605493 , 8.64561332170131 , 120.5166 , 5.2881 , Ari
+10; 2049, 1, 1, Saturn, 0.4, 1.0E-5; 19h 15m 43.46s, -22º 03' 21.2", 19h 12m 47.84s, -22º 08' 35.8", 19h 15m 44.18s, -22º 03' 22.6", 311.03 ,  29.22 , 310.36 , 29.02 ,10.024234935431 , 11.0006165382543 , 6.5112  , 0.6414 , Sgr
+10; 1950, 1, 1, Uranus, 0.6, 1.0E-5; 06h 11m 43.14s,  23º 41' 23.0", 06h 14m 44.84s,  23º 40' 17.2", 06h 11m 42.21s,  23º 41' 15.0", 276.61 , 73.15 ,277.21 , 72.83 , 18.945469111788 , 17.9698631366579 , 172.6733 , 0.3728 , Gem
+10; 2000, 1, 1, Uranus, 0.4, 3.0E-5; 21h 09m 47.94s, -17º 01' 40.1", 21h 09m 50.09s, -17º 01' 34.7", 21h 09m 50.39s, -17º 01' 33.5", 14.84  ,-33.63 , 15.13 ,-31.99 , 19.923961518998 , 20.7221895282437 , 34.9310  , 1.6228 , Cap
+10; 2049, 1, 1, Uranus, 1.5, 6.0E-5; 11h 09m 19.36s,  06º 17' 19.8", 11h 06m 45.42s,  06º 33' 27.5", 11h 09m 18.08s,  06º 17' 28.7", 211.11 ,  2.42 ,210.75 ,  5.32 , 18.289577172020 , 17.8507922858825 , 115.0892 , 2.7946 , Leo
+10; 1950, 1, 1, Neptune, 0.4, 2.0E-5; 13h 06m 06.48s, -05º 18' 42.7", 13h 08m 42.48s, -05º 34' 41.2", 13h 06m 07.14s, -05º 18' 43.4", 269.84 , 12.88 , 271.56 , 13.67, 30.295277061353 ,  30.4037158351984, 82.7413 , 1.8453 , Vir
+10; 2000, 1, 1, Neptune, 0.9, 7.0E-5; 20h 21m 39.48s, -19º 13' 02.0", 20h 21m 41.83s, -19º 12' 59.1", 20h 21m 42.09s, -19º 12' 58.3", 152.46 ,-28.40 , 151.64 ,-28.51, 30.120616388034 , 31.0211175747855 , 23.3179 , 0.7447 , Cap
+! It seems here that the difference in the position of Neptune between DE200 and DE405 is almost 3" !
+10; 2049, 1, 1, Neptune, 3.0, 11.0E-5; 03h 17m 28.13s,  16º 22' 08.3", 03h 14m 40.90s,  16º 11' 18.7", 03h 17m 26.29s,  16º 22' 03.8", 297.15 ,  2.31 , 295.87 , 2.99 , 29.816680398689 , 29.1714260682633 , 130.2941 , 1.4368 , Ari
+10; 1950, 1, 1, Pluto, 1, 0.0002; 09h 31m 51.78s,  23º 17' 35.9", 09h 34m 41.54s,  23º 04' 13.1", 09h 31m 50.98s,  23º 17' 36.7", 319.86,  58.96 ,318.02 , 59.15 ,36.325399841190 , 35.5510968781456 , 141.4566,  0.9715 , Leo
+10; 2000, 1, 1, Pluto, 4.0, 0.0006; 16h 45m 36.38s, -11º 23' 33.9", 16h 45m 38.53s, -11º 23' 41.7", 16h 45m 38.79s, -11º 23' 43.1", 100.36, -26.27 , 99.69 ,-25.54 ,30.223031944329 , 31.0683011612493 , 30.2612 , 0.9360 , Oph
+! I increment here the tolerable error to 20" since there's a deviation from JPL DE200 to 405 in the direction of the north pole of rotation
+10; 2049, 1, 1, Pluto, 20.0, 0.0011; 22h 51m 31.39s, -20º 43' 33.4", 22h 48m 52.86s, -20º 59' 09.4", 22h 51m 31.24s, -20º 43' 32.0", 273.14, -50.50, 274.57 ,-49.83,41.201795360105 , 41.7410133883077 , 56.1821 , 1.1384 , Aqr
+!
+! ***
+! Natural satellites
+10; 1950, 1, 1, Phobos, 0.2, 0.00001; 12h 12m 06.22s,  01º 25' 38.5", 12h 14m 39.89s,  01º 08' 59.0", 12h 12m 07.05s,  01º 25' 34.3", 302.81, 41.72, 341.49, 39.14,  1.663890856745,  1.21555214644787, 97.7883, 35.8416, Vir
+10; 1950, 1, 1, Io, 0.3, 0.00001; 20h 36m 16.93s, -19º 12' 46.1", 20h 39m 09.92s, -19º 01' 57.4", 20h 36m 18.41s, -19º 12' 34.0", 127.40, -0.53, 122.44, -0.27, 5.072992182817, 5.93367287025952, 26.5286, 4.9705, Cap
+10; 1950, 1, 1, Titan, 0.4, 0.00001; 11h 24m 12.63s, 06º 01' 35.9", 11h 26m 47.10s, 05º 45' 05.9", 11h 24m 12.54s, 06º 01' 34.0", 210.89, -1.49, 215.94, -4.04, 9.347150486647, 8.95594290443931, 110.5817, 5.6544, Leo
+10; 1950, 1, 1, Oberon, 0.6, 0.00001; 06h 11m 40.01s,  23º 41' 28.0", 06h 14m 41.71s,  23º 40' 22.5", 06h 11m 39.07s,  23º 41' 17.9", 148.96, 72.60, 149.57, 72.27, 18.944444921185, 17.9688638943493, 172.6613, 0.3734, Gem
+10; 1950, 1, 1, Triton, 0.4, 0.0001; 13h 06m 06.82s, -05º 18' 50.5", 13h 08m 42.82s, -05º 34' 49.0", 13h 06m 07.65s, -05º 18' 51.7", 220.45,  2.63, 219.15,  3.94, 30.293372824130, 30.4018415829990, 82.7395, 1.8459, Vir
+!
+! ***
+! Sidereal time, true obliquity, and nutation. Input data is a date. Expected output for sidereal time
+! test is the Greenwich apparent sidereal time, mean sidereal time, and equation of equinoxes (supposing
+! input date is for 0h UT1). For obliquity the expected true obliquity for that date at 0h TT. For nutation
+! the expected nutation at 0h TT without free-core nutation or pole movement. Data from AA. IAU2006
+! algorithms are used.
+11; 2009, 1, 1, siderealTime; 06h 43m 07.1394s, 06h 43m 06.3205s, 0.8189s
+11; 2009, 11, 19, siderealTime; 03h 52m 38.0203s, 03h 52m 37.1489s, 0.8714s
+11; 2009, 7, 1, obliquity; 23º 26' 21.2974"
+11; 2009, 7, 1, nutation; 14.7823", 4.3391"
+!
+! ***
+! Tests for natural satellites theories and JPL ephemeris. Input data is JD (TT), theory name, satellite
+! number or planet id constant for JPL ephem. Output is x, y, z, vx, vy, vz (in AU or AU/day, or km and 
+! km/day, km/yr, depending on the theory).
+! From Horizons
+12; 2442413.5, de405, 0; -0.002778466806619606, -0.0001371481505240407, 0.00001598380242716914, 0.0000007121921412015217, -0.000006304236384065129, -0.000002754982127518105
+12; 2460676.5, de405, 0; -0.005729903581718697, -0.004576438644324111, -0.001788558413644218, 0.000007160785923387444, -0.000003317172921789437, -0.000001566444051546533
+12; 2442413.5, de405, 1; 0.2363743828365439,-0.3062866527086762,-0.1883244913305822, 0.01773958268732228, 0.01575571437706276, 0.006575020602516057
+12; 2460676.5, de405, 1; -0.3930329105340720,-0.1618290003542665,-0.04565180846134294, 0.005031591423528277, -0.02171734089259788, -0.01212198535208888
+12; 2442413.5, de405, 2; 0.4845626167198589, -0.4814490375328292, -0.2473299875827062, 0.01488229249232774, 0.01262844594009676, 0.004738248170656145
+12; 2460676.5, de405, 2; 0.4476888608388256, 0.5185822840206196, 0.2049285310188015, -0.01579911351233697, 0.01113451419284638, 0.006010096376850540
+! Earth unsupported in JPARSEC, position must be obtained indirectly
+!12; 2442413.5, de405, 3; -0.1783293865616953, 0.8875024561409613, 0.3849174797326148, -0.01720209663873897, -0.002878905454813442, -0.001248178772238981
+!12; 2460676.5, de405, 3; -0.1844133495183917, 0.8826332565543006, 0.3828082228185471, -0.01719757778068188, -0.002933328868506422, -0.001271875952440207
+12; 2460676.5, de405, 4; -0.5274157683992698, 1.376996176286727, 0.6459773632095778, -0.01270467413829678, -0.003162816692938147, -0.001107852767461495
+12; 2469807.5, de405, 4; -1.542430033907673, -0.4759482003289589, -0.1766849969944578, 0.004867166022962643, -0.01095577086977315, -0.005156268633839071
+12; 2442413.5, de405, 5; 4.934523854341761, -0.4442312880461308, -0.3106919066158428, 0.0007178788720506169, 0.007226513657206959, 0.003080300901256049
+12; 2460676.5, de405, 5; 1.050302344632133, 4.574254917002780, 1.935117479479192, -0.007468790877726857, 0.001699068362041206, 0.0009100993036339864
+12; 2442413.5, de405, 6; -2.426096721308273, 8.001136398692759, 3.408197939580888, -0.005675479727241492, -0.001487801739717524, -0.0003703820454423332
+12; 2460676.5, de405, 6; 9.455339917217261, -1.485995953092897, -1.021046562120735, 0.0007162730248081354, 0.005069753535508238, 0.002063210237583061
+12; 2442413.5, de405, 7; -16.08678481790292, -8.382709219779178, -3.443497635847714, 0.001900887811054284, -0.003297607858126338, -0.001471206529725114
+12; 2460676.5, de405, 7; 11.09788830709051, 14.79532470989420, 6.322982332846551, -0.003266569195965867, 0.001860844022546527, 0.0008611944247564096
+12; 2442413.5, de405, 8; -10.42862868588783, -26.42266013836331, -10.55546066473623, 0.002927296672225484, -0.0009571534427704233, -0.0004646226330431307
+12; 2460676.5, de405, 8; 29.87423311315728, -0.3177680028408320, -0.8738177584383171, 0.00004643143962398082, 0.002922804347922567, 0.001195163764607200
+! Horizons returns Pluto position for DE413, see ftp://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/a_old_versions/de413_memo.ps
+! Difference is 300m
+12; 2442413.5, de413, 9; -29.25161272830501, -7.142391888761897, 6.584071526936301, 0.0009063986543760217, -0.003064256489386518, -0.001229243028582288
+12; 2460676.5, de413, 9; 18.22310042133425, -26.71691208124781, -13.82812035390832, 0.002767430794713086, 0.001216767238512264, -0.0004541040766725648
+12; 2442413.5, de405, 10; -0.001836555810927522, 0.001519678078544720, 0.0004346702822026698, -0.0004122203176888004, -0.0004236374236448662, -0.0002064885146158632
+12; 2460676.5, de405, 10; 0.001016407150940106, -0.002057673933390378, -0.001115523135172851, 0.0005386351640509153, 0.0002277848065203184, 0.0001228891083746145
+12; 2442413.5, de405, 11; -0.1783517017903028, 0.8875209211195537, 0.3849227612310906, -0.01720710535699908, -0.002884052897596879, -0.001250687728613225
+12; 2460676.5, de405, 11; -0.1844009995762899, 0.8826082546110162, 0.3827946685591936, -0.01719103304800872, -0.002930561149714225, -0.001270382777808411
+! Librations, see http://astro.ukho.gov.uk/data/tn/naotn74.pdf. Values are psi, theta, and psi
+12; 2455713.5, de403, 16; 0.0671434078218415, 0.4124126209708347, 3522.7808866515984000
+! From the different theories by the IMCCE
+12; 2426855, L1, 1; 0.002271527767, 0.001491984142, 0.000750111216, -0.005895653255, 0.007343188303, 0.003402858909
+12; 2456483, L1, 2; 0.003438637708, 0.002613676533, 0.001313674687, -0.005147284797, 0.005398552812, 0.002560664504
+12; 2476235, L1, 3;-0.006642067401,-0.002374459282,-0.001250108202,  0.002339135125,-0.005280921340,-0.002455264319
+12; 2441669, L1, 4;-0.012136434072, 0.003374929866, 0.001437454080, -0.001354205854,-0.004062009363,-0.001947041015
+12; 2451605, Mars07, 1; 0.000033910062, -0.000038516526, -0.000037325256, 0.000870900873, 0.000850538844, -0.000068951380
+12; 2451555, Mars07, 2; 0.000003554238, -0.000139120094, -0.000072183842, 0.000692893922, 0.000179388498, -0.000311490283
+12; 2449909.125, GUST86, 1; 116776.465 ,  -9655.903 , -55704.358 ,-2.45651219 , 2.65694226 ,-5.62224338
+12; 2449909.125, GUST86, 2; 186368.403 , -42290.739 ,  -7012.500 , 0.12909352 , 1.43746647 ,-5.30747363
+12; 2449909.125, GUST86, 3;-244947.486 ,  76695.011 , -65719.487 ,-1.45138070 , -0.87096610, 4.36898332
+12; 2449909.125, GUST86, 4;-289642.933 , 149245.644 ,-290221.835 ,-2.60666546 , -0.07923656, 2.54490241
+12; 2449909.125, GUST86, 5; 554001.114 ,-156422.593 ,  93294.441 , 0.69497936 , 0.66198498 ,-3.00317166
+12; 2421677.4, tass1.7, 1; -0.001198576888, -0.000209825461,  0.000186837157,  0.723936877, -2.640848972,  1.326181365
+12; 2406147.5, tass1.7, 2; -0.000317458744,  0.001387123315, -0.000695569370, -2.613864221, -0.369066453,  0.446037406
+12; 2409977.4, tass1.7, 3;  0.001169171755, -0.001455040893,  0.000629464516,  1.917976545,  1.207348532, -0.772706551
+12; 2406477.5, tass1.7, 4; -0.001139424157,  0.002032365984, -0.000955456204, -1.880203521, -0.779545669,  0.590410818
+12; 2405824.5, tass1.7, 5;  0.000255016488, -0.003124357779,  0.001600422912,  1.781208363,  0.049114113, -0.186597578
+12; 2440512.6, tass1.7, 6; -0.008312968003,  0.000590507681,  0.000496831020, -0.019590068, -1.020463815,  0.529324054
+12; 2406327.6, tass1.7, 7;  0.010080312859, -0.003940249379,  0.001120175589,  0.378238813,  0.783156263, -0.425574501
+12; 2406216.6, tass1.7, 8;  0.002447343471,  0.022675031476, -0.006665246397, -0.671393700,  0.121862318,  0.098725209
+!
+! ***
+! Tests for star ephemerides and Simbad. Input data is date (UT1) as year, month, day, hour, minute, second,
+! object name (to be resolved by Simbad). Output is mean star position (J2000, as given by Simbad),
+! apparent position in equinox of date, and velocities respect to LSR, geocentric, and topocentric. 
+! Default location is Madrid.
+! Note Simbad/Vizier queries are sometimes not working, specially in weekends ... 
+13; 2011, 7, 13, 10, 22, 46, HD259431; 06h 33m 05.19s, 10º 19' 20.0", 06h 33m 43.28s, 10º 18' 45.8", 4.27, 12.97, 12.88
+13; 2011, 7, 13, 10, 22, 46, R Mon; 06h 39m 09.95s, 08º 44' 09.7", 06h 39m 47.58s, 08º 43' 29.5", -3.01, 6.80, 6.70
+!
+! ***
+! Test for main astronomical events, like Venus or Mercury transits on the Sun disk, equinox and
+! solstices, planetary phenomena like oppositions (maximum elongations), and transits of the GRS
+! on Jupiter. Tests data taken from different sources in Internet, and GRS from Sky & Telescope,
+! see http://www.skyandtelescope.com/skytel/beyondthepage/91731334.html. Location is Madrid, and
+! output time are in different time scales depending on the event type.
+14; 2012, 3, 15, transit, 2, 0, 2=Venus, 0=next event; 06-jun-2012 03:30:32 LT, NASA says 03:30, JPARSEC uses Meeus approximate method (only geocentric)
+14; 2011, 1, 1, equinoxSolstice, 8, 8=Summer equinox; 21-jun-2011 19:16:30 LT
+14; 2011, 7, 15, planet, 4, 15, 4=Mars, 15=Max elongation; 03-mar-2012 21:48:07 LT
+14; 2010, 11, 1, planet, 4, 11, 4=Mars, 11=Min distance from Sun; 09-mar-2011 15:26:37 LT
+14; 2010, 11, 1, grs; 01-nov-2010 03:31 UT1, S&T says 03:30
+14; 2010, 10, 1, grs; 01-oct-2010 02:56 UT1, S&T says 02:57
+14; 2011, 1, 1, grs; 01-jan-2011 09:08 UT1, S&T says 09:01, but JPARSEC uses spline interpolation to get updated GRS longitude as it moves
+14; 2011, 2, 20, grs; 20-feb-2011 00:52 UT1, S&T says 00:43, but JPARSEC uses spline interpolation to get updated GRS longitude as it moves
+14; -1000, 3, 1, moon, 4, 2, 4=lunar eclipse, 2=closest; 14-mar-1000 05:38:14 B.C. TDB, Espenak (NASA) says 05:40:48, in JPARSEC with ELP2000 I obtain 05:40:15
+! Moon apogee/perigee from http://www.saao.ac.za/public-info/sun-moon-stars/moon-index/lunar-perigee-apogee-2004-2020/
+14; 2004, 1, 15, apogeePerigee, 1; Moon's perigee: 2004-01-19 19:26 TDB (parallax = 1º 0' 25.622", distance = 362876 km)
+14; 2004, 1, 1, apogeePerigee, 2; Moon's apogee: 2004-01-03 20:20 TDB (parallax = 54' 2.839", distance = 405706 km)
+! Meeus test cases. For the librations input date is for 00h TDB
+14; 1988, 10, 1, apogeePerigee, 2; Moon's apogee: 1988-10-07 20:30 TDB (parallax = 54' 0.679", distance = 405976 km)
+14; 1992, 4, 12, librations; l = -1.23, b = 4.20, p = 15.08
+! 
+! ***
+! Test for double and eclipsing variable stars. Input values are the date and time in local time for Madrid,
+! the object type (double, variable), and the object name as given in the catalogs in JPARSEC. Output values
+! expected are the phase and next minima for variable (eclipsing binary) stars, and the separation (") and 
+! PA (deg) for double stars.
+15; 2011, 7, 14, 14, 0, 0, variable, AN And; 0.81, 15-jul-2011 04:21
+15; 2011, 7, 14, 14, 0, 0, double, STF  60AB; 13.2, -36.3
+!
+! ***
+! Test for eclipses. Input is date (eclipse search starts from this date in TDB), eclipse type (solar, lunar), 
+! and time scale for output times. Expected values are the times of the different phases in the selected 
+! time scale, for Madrid. For lunar eclipses ELP2000 theory (fixed for moon secular acceleration) is used, for solar
+! eclipses Moshier method is applied. 
+16; 2005, 10, 1, solar, UT1; 03-oct-2005 07:40:13 (partial), 03-oct-2005 08:55:55 (annular), 03-oct-2005 08:58:00 (Eclipse maximum), within 1s with Spenak's results
+16; -1000, 3, 10, lunar, TDB; 14-mar-1000 02:55:24 B.C. (penumbral), 14-mar-1000 03:55:28 B.C. (full penumbral), 14-mar-1000 03:54:53 B.C. (partial), 14-mar-1000 04:58:40 B.C. (total), 14-mar-1000 05:40:16 B.C. (Eclipse maximum)
+!
+! ***
+! Test for very accurate ephemerides following the algorithms by IMCCE, Horizons, and AA. Input values are
+! year, month, day (0h TT), target body, reduction type (IMCCE, AA, HORIZONS), the maximum allowed difference
+! with JPARSEC results in milliarcseconds and AU. Output is the RA, DEC, and distance obtained from the web 
+! queries at different ephemerides servers. Algorithm is JPL DE405, with files obtained from an external directory
+! (downloaded from ftp://ssd.jpl.nasa.gov/pub/eph/planets/ascii/de405). In AA distance is not tested since it is 
+! the 'true' distance, not the apparent the planet had when it emitted the light that reaches us. The distance
+! difference is also checked, the value used to throw a fail is 2.0E-12 AU for HORIZONS and 2.0E-9 for IMCCE.
+17; 1600, 1, 1, 8, IMCCE, 1, 2E-9; 10h 00m 31.59378s, 12º 51' 13.3640", 29.466102577
+17; 1900, 1, 1, 8, IMCCE, 1, 2E-9; 05h 39m 21.87494s, 22º 03' 58.9701", 28.920271361
+17; 2200, 1, 1, 8, IMCCE, 1, 2E-9; 01h 24m 58.76536s, 07º 07' 44.9398", 29.615237432
+17; 1600, 1, 1, 8, HORIZONS, 70, 2E-12; 10h 00m 31.5983s, 12º 51' 13.356", 29.4661025774498
+17; 1900, 1, 1, 8, HORIZONS, 70, 2E-12; 05h 39m 21.8796s, 22º 03' 58.978", 28.9202713607579
+17; 2200, 1, 1, 8, HORIZONS, 80, 6E-12; 01h 24m 58.7607s, 07º 07' 44.908", 29.6152374317953
+! Note the difference in RA in 2000 !!! It is clear from previous tests that HORIZONS and IMCCE uses APPLY_IAU1976 
+! algorithms, but IMCCE DOES NOT CORRECT FOR POLAR MOTION! In dates far
+! from J2000 IMCCE results can be fitted to the milliarcsecond level, but that's not possible with HORIZONS
+! since I don't know which set of algorithms they use. Comparing both servers it is clear that IMCCE has a
+! better implementation of the ephemerides (but with old algorithms), and HORIZONS has a better implementation
+! of the geometry of the Solar System (distances, elongation and phase angle, central meridian and PA axis/pole).
+17; 2000, 1, 1, 8, IMCCE, 1, 2E-9;    20h 21m 39.47908s, -19º 13' 01.9774", 31.021117421
+17; 2000, 1, 1, 8, HORIZONS, 50, 3E-12; 20h 21m 39.4756s,  -19º 13' 01.987", 31.0211174206981
+!
+17; 1600, 1, 1, 4, IMCCE, 1, 2E-9; 09h 24m 41.58178s,  19º 15' 18.9756", 0.746598316
+17; 1900, 1, 1, 4, IMCCE, 8, 2E-9; 19h 00m 39.90359s, -23º 38' 58.3076", 2.400963430
+17; 2200, 1, 1, 4, IMCCE, 1, 4E-9; 10h 25m 57.25433s,  13º 29' 37.0809", 0.842946359
+17; 1600, 1, 1, 4, HORIZONS, 70, 1E-12; 09h 24m 41.5865s,  19º 15' 18.970", 0.74659831738180
+17; 1900, 1, 1, 4, HORIZONS, 70, 1E-13; 19h 00m 39.9087s, -23º 38' 58.308", 2.40096343001482
+17; 2200, 1, 1, 4, HORIZONS, 80, 4E-12; 10h 25m 57.2494s,  13º 29' 37.104", 0.84294636203948
+! Well, Astronomical Almanac is easier to understand, just IAU2006 algorithms and J2000 frame. Due to lack of digits
+! the results of JPARSEC are rounded to the same 3 decimal places in RA and 2 in DEC, and then the difference is computed.
+! It should be zero.
+17; 2011, 7, 18, 8, AA, 0, 0; 22h 10m 46.150s, -11º 49' 46.06", -
+17; 2011, 7, 18, 4, AA, 0, 0; 05h 11m 32.063s, 23º 05' 16.56", -
+17; 2011, 7, 18, 5, AA, 0, 0; 02h 21m 54.955s, 12º 49' 28.91", -
+! Note here the bad coincidence JPARSEC-IMCCE in Deimos for dates far from J2000, and the excellent one 
+! in Oberon everytime. Maybe IMCCE has a better version of the theory for Martian satellites, since GUST86 
+! theory is not from IMCCE. Anyway, from Oberon it is clear that JPARSEC is extremelly accurate. In Jupiter
+! the difference varies from 40 mas in year 1600 to a few mas close to J2000. This variation with time
+! and difference is high enough to worth further investigation. Obviously a bug in IMCCE ephemerides server
+! cannot be discarded, mainly because I have found that to get the same output (mas level) for Titan it is
+! necessary to rotate ecliptic position (from TASS) to equatorial using the ecliptic of date, not the J2000 
+! ecliptic as it is mentioned in the TASS theory. Maybe the same problem is happening in Mars and Jupiter
+! and I need some king of strange rotation for their equatorial positions ? Horizons does not help here, 
+! since I cannot reproduce the results to the mas level.
+17; 1600, 1, 1, Deimos, IMCCE, 2000, 2E-5;   09h 24m 44.52675s,  19º 15' 19.6628",  0.746640479, ???
+17; 1900, 1, 1, Deimos, IMCCE, 20, 5E-8;   19h 00m 40.56578s, -23º 38' 59.5043",  2.400848638
+17; 2200, 1, 1, Deimos, IMCCE, 1200, 1E-5;   10h 25m 59.52983s,  13º 29' 25.4275",  0.842883773
+17; 1600, 1, 1, Titan, IMCCE, 0.5, 5E-10;    13h 45m 15.35365s, -08º 17' 57.0768",  9.998734380, USING ECLIPTIC OF DATE, NOT J2000
+17; 1900, 1, 1, Titan, IMCCE, 0.5, 2E-10;    17h 50m 10.06797s, -22º 24' 27.4608", 11.031604402
+17; 2200, 1, 1, Titan, IMCCE, 0.5, 2E-9;    22h 02m 43.88507s, -13º 27' 15.7030", 10.450165195
+17; 1600, 1, 1, Callisto, IMCCE, 40, 2E-6; 09h 33m 53.33724s,  15º 30' 35.5888",  4.558908178, ?
+17; 1900, 1, 1, Callisto, IMCCE, 20, 2E-6; 15h 56m 43.78523s, -19º 36' 26.0122",  6.125545509
+17; 2200, 1, 1, Callisto, IMCCE, 4, 1E-6; 22h 26m 48.97572s, -10º 48' 53.3763",  5.494266711
+17; 1600, 1, 1, Oberon, IMCCE, 0.5, 2E-9;   01h 41m 49.40287s,  10º 01' 47.6674", 19.470081383, OK
+17; 1900, 1, 1, Oberon, IMCCE, 0.5, 2E-8;   16h 34m 01.71001s, -21º 54' 48.8151", 19.838041698
+17; 2200, 1, 1, Oberon, IMCCE, 0.5, 1E-9;   05h 46m 52.47223s,  23º 32' 39.3707", 18.121971509
+!
+! ***
+! Test for mutual events of natural satellites. Input values are year, month, day, planet (5 = Jupiter,
+! 6 = Saturn, 7 = Uranus), event type (sat. #x eclipses/occultes sat #y, (P)artial, (T)otal, (A)nnular).
+! Output values are start time (TT), time of maximum, and duration (s). Predictions below are from
+! IMCCE (geocentric). All events with duration betweem 1000 and 3000s are considered, except for Saturn, 
+! where the lower limit is around 600s. Here what is tested is the logic of transits of satellites on top
+! of each other as seen from Earth (occultations) or from Sun (eclipses). Note that the same logic is 
+! applied to events between satellites and their mother planets, which are not tested here in detail, it
+! seems unnecessary. Tests will fail if the difference between the calculated and expected maximum is
+! greater than 10s. Start/duration times are not tested since values agree perfectly for Uranus but not
+! for Jupiter/Saturn satellites.
+! Jupiter: I don't know which theory does IMCCE use for predictions, seems to be E2x3. Here I test
+! against E2x3 for Jupiter and TASS for Saturn. GUST86 is used for Uranus.
+! Data taken from:
+! ftp://ftp.imcce.fr/pub/ephem/satel/phemu09/phemu09_132ts.txt
+! ftp://ftp.imcce.fr/pub/ephem/satel/phesat09/phetri-calTASS-Xflux.txt
+! ftp://ftp.imcce.fr/pub/ephem/satel/pheura07/pred_pheura07_GUST86_selected.txt
+18; 2009, 8, 16, 5, 1 ECL 3 A; 20 31  8, 20 45 57, 1662
+18; 2009, 8, 18, 5, 1 OCC 2 P; 14 26 11, 14 37 59, 1358
+18; 2009, 8, 19, 5, 3 ECL 2 P;  6  4 39,  6 13 48, 1110
+18; 2009, 8, 22, 5, 1 OCC 2 P;  4  0 30,  4  9 32, 1058
+18; 2009, 8, 26, 5, 3 ECL 2 P; 10 59 37, 11 12 29, 1577
+18; 2009, 8, 26, 5, 3 OCC 2 P;  9 16 21,  9 26 55, 1283
+18; 2009, 8, 28, 5, 1 ECL 2 P; 13 50 43, 13 59 32, 1095
+18; 2009, 8, 28, 5, 1 OCC 2 P; 12 42 60, 12 51 55, 1096
+18; 2009, 8, 30, 5, 1 ECL 3 P;  7 47 19,  7 57 59, 1348
+18; 2009, 9,  1, 5, 1 ECL 2 P;  3 55 39,  4 10 39, 2069
+18; 2009, 9,  1, 5, 1 OCC 2 P;  2  4 46,  2 15 23, 1320
+18; 2009, 9,  2, 5, 3 OCC 2 P; 13 37 17, 13 53 38, 2020
+18; 2009, 9,  4, 5, 1 OCC 2 P; 15 37 58, 15 52  8, 1815
+18; 2010, 3, 17, 5, 2 OCC 1 P; 22 40 41, 23  1 43, 2727
+18; 2010, 4,  4, 5, 2 ECL 1 P;  9 13 28,  9 32  9, 2147
+! Saturn (TASS)
+18; 2008, 12, 19, 6, 4 OCC 5 P;  2  4 57,  2 12 15,  875
+18; 2008, 12, 31, 6, 4 OCC 1 T; 17 53 53, 18  5 17, 1365
+18; 2009,  1, 22, 6, 1 OCC 2 P;  5 32 45,  5 39  9,  769
+18; 2009,  1, 22, 6, 2 ECL 3 P;  7 44 34,  7 48 50,  596
+18; 2009,  4, 17, 6, 2 ECL 3 P;  7  1 23,  7  5 47,  596
+18; 2009,  6, 24, 6, 5 ECL 4 P; 13 57  6, 14  4 46, 1116
+18; 2009,  7,  1, 6, 4 ECL 5 P;  7 31 19,  7 35  9,  601
+18; 2009,  7, 10, 6, 2 OCC 3 A; 17 48 23, 17 53 31,  617
+18; 2009,  8,  2, 6, 6 ECL 5 T; 18 54 10, 18 57  2,  597
+18; 2009,  9,  1, 6, 5 ECL 3 P;  1 44 12,  1 51 43, 1226
+18; 2009, 12, 23, 6, 3 ECL 4 P; 18 50 13, 18 54 42,  647
+18; 2010,  4, 24, 6, 4 OCC 3 P; 15 14 55, 15 29 59, 1805
+18; 2010,  6, 18, 6, 4 OCC 3 P;  8 10 18,  8 19 10, 1061
+! Uranus (GUST86)
+18; 2007,  5,  3, 7, 1 OCC 3 P;  2 12 58,  2 22  3, 1108
+18; 2007,  5,  3, 7, 1 OCC 3 P; 12 57 18, 13  9 45, 1493
+18; 2007,  8,  5, 7, 4 OCC 2 P; 13 42 56, 13 52 20, 1159
+18; 2007,  8,  6, 7, 4 OCC 2 P;  0 56 35,  1 11 39, 1807
+18; 2007, 10, 21, 7, 1 ECL 2 P; 22 53  5, 23 11 32, 2087
+18; 2007, 11, 11, 7, 1 ECL 3 P;  3  1 53,  3 13 30, 1237
+18; 2007, 11, 30, 7, 3 ECL 4 P; 18 32 16, 18 46 34, 1482
+18; 2007, 12, 24, 7, 2 ECL 1 P; 18 44 52, 18 53 54, 1010
+18; 2007, 12, 25, 7, 2 ECL 1 P; 17  0  3, 17 24 14, 2764
+18; 2008,  2, 21, 7, 2 OCC 1 P; 19 33 41, 19 42 33, 1064
+18; 2008,  8, 12, 7, 1 ECL 5 T; 22 12 35, 22 24  9, 1317
+18; 2008,  8, 19, 7, 5 ECL 2 P;  9 16 57,  9 26 44, 1024
+18; 2008,  8, 23, 7, 5 OCC 2 A; 21 16 58, 21 27 22, 1304
+18; 2009,  6, 11, 7, 1 ECL 5 T; 18 47 57, 19 10 52, 2636
+18; 2009, 12,  2, 7, 1 ECL 5 T;  8 44 39,  9  6 29, 2504
+!
+! ***
+! Test for apparent ephemerides as seen from other bodies. Input values are year, month, day, hour,
+! minute, second, time scale, target body, origin body (lon, lat). Output values are topocentric
+! RA and DEC, and azimuth and elevation. Apparent, topocentric calculations for equinox of date are 
+! done using dynamical equinox J2000 as frame, IAU_1976 as reduction algorithms, and Moshier as 
+! calculation algorithm.
+19; 2010, 1, 6, 0, 0, 0, UTC, Sun, Mars (184.702 -14.64); 10h 58m 08.2425s, 13º 43' 57.384", -75º 28' 38.838", 1º 10' 25.685"
+!
+!
+! CURRENT STATUS OF ISSUES
+! 
+! Occultations of stars by planets show some inconsistencies -> Wikipedia data wrong ? (maybe old catalog with wrong proper motions). Will be clear by 2015 ...
+! HORIZONS ephemerides cannot be reproduced to the mas (RA, DEC) out of J2000 -> Seems they have an inconsistent mixture of old/new algorithms, including IAU1976 precession but IAU2006 planetary rotation models
+! Ephemerides for martian/jovian satellites far from J2000 show inconsistencies -> Seems analytical theory not so accurate for year 1600, against numerical integration
+! HORIZONS uses a different orientation for the north pole of Saturn and Pluto (1.5 and 2.5 degrees of difference respectively), Phobos (1 deg), Titan (1.5 deg), and probably others ?
+!    There are differencies between longitude of central meridian in Jupiter and Saturn with time. Seems JPL uses TCB to obtain it although it is incorrect following G. H. Kaplan et al. 2006 (astro-ph/0602086).
+! Minimum inconsistency with Pluto position and DE413: Horizons gives Pluto DE413 position respect DE405 SSB, probably there's an offset with respect DE413 SSB
+! Some mutual events of Jovian/Uranian satellites show differencies with IMCCE predictions (> 10s). 
+!    Jupiter satellites predictions cannot be reproduced to that accuracy -> It is rather clear IMCCE is using Lieske's E2x3 or an even older theory, but not L1, since with E2x3 almost 50% of the events match
+!    Uranian mutual events after (and including) 2008 8 12 are not found

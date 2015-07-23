@@ -1,0 +1,1672 @@
+/*
+ * This file is part of JPARSEC library.
+ * 
+ * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
+ *  
+ * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
+ * 
+ * JPARSEC library is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * JPARSEC library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ */					
+package jparsec.ephem.stars;
+
+import jparsec.astronomy.CoordinateSystem;
+import jparsec.ephem.Ephem;
+import jparsec.ephem.EphemerisElement;
+import jparsec.ephem.Functions;
+import jparsec.ephem.IAU2006;
+import jparsec.ephem.Nutation;
+import jparsec.ephem.Precession;
+import jparsec.ephem.RiseSetTransit;
+import jparsec.ephem.EphemerisElement.FRAME;
+import jparsec.ephem.EphemerisElement.REDUCTION_METHOD;
+import jparsec.ephem.Target.TARGET;
+import jparsec.ephem.planets.EphemElement;
+import jparsec.ephem.planets.JPLEphemeris;
+import jparsec.ephem.planets.PlanetEphem;
+import jparsec.ephem.planets.imcce.Series96;
+import jparsec.graph.DataSet;
+import jparsec.io.ConsoleReport;
+import jparsec.io.FileIO;
+import jparsec.io.ReadFile;
+import jparsec.math.Constant;
+import jparsec.math.matrix.Matrix;
+import jparsec.observer.City;
+import jparsec.observer.CityElement;
+import jparsec.observer.LocationElement;
+import jparsec.observer.ObserverElement;
+import jparsec.observer.ReferenceEllipsoid.ELLIPSOID;
+import jparsec.time.AstroDate;
+import jparsec.time.SiderealTime;
+import jparsec.time.TimeScale;
+import jparsec.time.TimeElement;
+import jparsec.time.TimeFormat;
+import jparsec.time.TimeElement.SCALE;
+import jparsec.util.Configuration;
+import jparsec.util.DataBase;
+import jparsec.util.JPARSECException;
+
+/**
+ * A class to obtain accurate ephemerides of stars.
+ * <P>
+ * To obtain star ephemeris follow these simple steps:
+ * <P>
+ * 
+ * <pre>
+ * // Read BSC5 or SKYMASTER 2000 catalogue
+ * ReadElement roe = new ReadElement();
+ * roe.setPath(PATH_TO_BSC5_FILE);
+ * roe.setFormat(ReadElement.format_BSC5);
+ * roe.readFileOfStars();
+ * 
+ * // Choose a star.
+ * int my_star = roe.searchByName(&quot;Alp UMi&quot;);
+ * StarElement star = (StarElement) roe.READ_ELEMENTS.elementAt(my_star);
+ * 
+ * // Calc ephemeris. 
+ * StarEphemElement star_ephem = StarEphem.StarEphemeris(time, observer, eph, star, true);
+ * </pre>
+ * 
+ * @author T. Alonso Albi - OAN (Spain)
+ * @version 1.0
+ */
+public class StarEphem
+{
+	// private constructor so that this class cannot be instantiated.
+	private StarEphem() {}
+	
+	private static ReadFile readFile = null;
+	
+	/**
+	 * Searchs for a given star in SkyMaster 2000 catalogue and returns the index.
+	 * @param name Star name.
+	 * @return The index, or -1 if no match is found.
+	 * @throws JPARSECException If an error occurs.
+	 */
+	public static int getStarTargetIndex(String name)
+	throws JPARSECException {
+		if (readFile == null) {
+			ReadFile re = new ReadFile();
+			re.setPath(StarEphem.PATH_TO_SkyMaster2000_JPARSEC_FILE);
+			re.setFormat(ReadFile.FORMAT.JPARSEC_SKY2000);
+			re.readFileOfStars();
+			readFile = re;
+		}
+		int index = readFile.searchByName(StarEphem.getCatalogNameFromProperName(name));
+		return index;
+	}
+	/**
+	 * Returns the name of a star from the index in SkyMaster 2000 catalogue.
+	 * @param index Index for the star as sorted in the file.
+	 * @return The name.
+	 * @throws JPARSECException If an error occurs.
+	 */
+	public static String getStarName(int index)
+	throws JPARSECException {
+		if (readFile == null) {
+			ReadFile re = new ReadFile();
+			re.setPath(StarEphem.PATH_TO_SkyMaster2000_JPARSEC_FILE);
+			re.setFormat(ReadFile.FORMAT.JPARSEC_SKY2000);
+			re.readFileOfStars();
+			readFile = re;
+		}
+		String name = readFile.getObjectName(index);
+		return name;		
+	}
+	/**
+	 * Returns the star element set for a given star using SkyMaster 2000 catalogue.
+	 * @param index Index for the star.
+	 * @return The star element set.
+	 * @throws JPARSECException if an error occurs.
+	 */
+	public static StarElement getStarElement(int index)
+	throws JPARSECException {
+		if (readFile == null) {
+			ReadFile re = new ReadFile();
+			re.setPath(StarEphem.PATH_TO_SkyMaster2000_JPARSEC_FILE);
+			re.setFormat(ReadFile.FORMAT.JPARSEC_SKY2000);
+			re.readFileOfStars();
+			readFile = re;
+		}
+		StarElement sat = readFile.getStarElement(index);
+		return sat;		
+	}
+	/**
+	 * Returns the number of stars in SkyMaster 2000 catalogue.
+	 * @return The number of objects.
+	 * @throws JPARSECException If an error occurs.
+	 */
+	public static int getStarCount()
+	throws JPARSECException {
+		if (readFile == null) {
+			ReadFile re = new ReadFile();
+			re.setPath(StarEphem.PATH_TO_SkyMaster2000_JPARSEC_FILE);
+			re.setFormat(ReadFile.FORMAT.JPARSEC_SKY2000);
+			re.readFileOfStars();
+			readFile = re;
+		}
+		int n = readFile.getNumberOfObjects();
+		return n;		
+	}
+
+	
+	/* Factors to eliminate E terms of aberration */
+	private static final double A[] = new double[]
+	{ -1.62557e-6, -3.1919e-7, -1.3843e-7 };
+
+	private static final double AD[] = new double[]
+//	{ 1.244e-3, -1.579e-3, -6.60e-4 }; // This is found in the original code by Moshier, from AA 1992
+  { 1.245e-3, -1.580e-3, -6.59e-4 }; // This is found in AA 2004, based on articles from 1982-3
+
+	/*
+	 * Transformation matrix for unit direction vector, and motion vector in arc
+	 * seconds per century
+	 */
+	private static final double MAT[] = new double[]
+	{ 0.9999256782, -0.0111820611, -4.8579477e-3, 2.42395018e-6, -2.710663e-8, -1.177656e-8, 0.0111820610,
+			0.9999374784, -2.71765e-5, 2.710663e-8, 2.42397878e-6, -6.587e-11, 4.8579479e-3, -2.71474e-5, 0.9999881997,
+			1.177656e-8, -6.582e-11, 2.42410173e-6, -5.51e-4, -0.238565, 0.435739, 0.99994704, -0.01118251,
+			-4.85767e-3, 0.238514, -2.667e-3, -8.541e-3, 0.01118251, 0.99995883, -2.718e-5, -0.435623, 0.012254,
+			2.117e-3, 4.85767e-3, -2.714e-5, 1.00000956 };
+
+	private static final double MAT_INVERSE[] = new double[] {
+		  0.999925679464461,  0.011181482851459,  0.004859003846486, -0.000002423898397, -0.000000027105446, -0.000000011777421,
+		  -0.011181482771564,  0.999937484931120, -0.000027177091951,  0.000000027105446, -0.000002423927023,  0.000000000065853,
+		  -0.004859004003576, -0.000027155783797,  0.999988194635765,  0.000000011777421,  0.000000000065848, -0.000002424049950,
+		  -0.000550383713599,  0.238509389858923, -0.435613424180734,  0.999904317129668,  0.011181454040714,  0.004858518649158,
+		  -0.238559418959058, -0.002667814477651,  0.012253699727072, -0.011181454113760,  0.999916129088180, -0.000027170347867,
+		   0.435729962168090, -0.008540856009088,  0.002116430447234, -0.004858518484394, -0.000027159935551,  0.999966838499726
+	};
+	
+	/**
+	 * Converts FK5 J2000.0 catalog coordinates to FK4 B1950.0 coordinates,
+	 * supposing that the object is static.
+	 * 
+	 * @param loc Right Ascension and declination.
+	 * @return Output coordinates.
+	 * @throws JPARSECException Should not be thrown.
+	 */
+	public static LocationElement transform_FK5_J2000_to_FK4_B1950(LocationElement loc) throws JPARSECException
+	{
+		StarElement star = new StarElement(); // proper motions to zero
+		star.rightAscension = loc.getLongitude();
+		star.declination = loc.getLatitude();
+		star.parallax = 0.0;
+		star.equinox = Constant.J2000;
+		star.frame = EphemerisElement.FRAME.FK5;
+		star = StarEphem.transform_FK5_J2000_to_FK4_B1950(star, null);
+		return new LocationElement(star.rightAscension, star.declination, loc.getRadius());
+	}
+
+	/**
+	 * Converts FK4 B1950.0 catalog coordinates to FK5 J2000.0 coordinates,
+	 * supposing that the object is static.
+	 * 
+	 * @param loc Right Ascension and declination.
+	 * @return Output coordinates.
+	 * @throws JPARSECException Should not be thrown.
+	 */
+	public static LocationElement transform_FK4_B1950_to_FK5_J2000(LocationElement loc) throws JPARSECException
+	{
+		StarElement star = new StarElement(); // proper motions to zero
+		star.rightAscension = loc.getLongitude();
+		star.declination = loc.getLatitude();
+		star.parallax = 0.0;
+		star.equinox = Constant.B1950;
+		star.frame = EphemerisElement.FRAME.FK4;
+		star = StarEphem.transform_FK4_B1950_to_FK5_J2000(star);
+		return new LocationElement(star.rightAscension, star.declination, loc.getRadius());
+	}
+	
+	/**
+	 * Converts FK5 J2000.0 catalog coordinates to FK4 B1950.0 coordinates. AA
+	 * page B58. Radial movement is considered only when distance is not zero.
+	 * <P>
+	 * Note systematic corrections FK5-FK4 are not considered (see Fricke 1988
+	 * to correct for this), and the input J2000 position is precessed to J2000
+	 * if the input equinox is different (i.e. equinox is considered to be
+	 * the epoch of the observation, which for example corresponds to 1983.5 for 
+	 * IRAS data).
+	 * <P>
+	 * Conversion between B1950 and J2000 coordinates is not a standard procedure
+	 * done exactly in the same way in any library. However, this method gives
+	 * almost exactly the same conversion as that provided by the CDS web service
+	 * or the one described in the Astronomical Almanac Supplement, to a discrepancy
+	 * below the milliarcsecond level. Note that for a moving star with non-zero
+	 * radial velocity the conversion towards J2000 and back to B1950 could show
+	 * inconsistencies close to the milliarcsecond, since radial velocity is supposed
+	 * constant between 1950 and 2000 in the conversion methods usually described in 
+	 * the literature.
+	 * <P>
+	 * Main part of the method taken from C code by S. L. Moshier.
+	 * 
+	 * @param s Star input object. Must be FK5, but not necessarily J2000 (automatically corrected).
+	 * @param eph Ephemeris properties with the method to apply for precession, if necessary. Classic conversion
+	 * methods use IAU 1976 resolutions.
+	 * @return Output Star object, FK4 B1950.
+	 * @throws JPARSECException If the input frame is not FK5.
+	 */
+	public static StarElement transform_FK5_J2000_to_FK4_B1950(StarElement s, EphemerisElement eph) throws JPARSECException
+	{
+		if (s.frame != EphemerisElement.FRAME.FK5) throw new JPARSECException("The frame of the input star is not FK5.");
+		
+		StarElement star = s.clone();
+
+		if (star.equinox != Constant.J2000) {
+			// Precess to J2000
+			LocationElement loc = new LocationElement(star.rightAscension, star.declination, 1.0);
+			loc = LocationElement.parseRectangularCoordinates(Precession.precessToJ2000(star.equinox, LocationElement.parseLocationElement(loc), eph));
+			star.rightAscension = loc.getLongitude();
+			star.declination = loc.getLatitude();
+			star.equinox = Constant.J2000;
+		}
+		
+		LocationElement loc_FK5 = new LocationElement(star.rightAscension, star.declination, 1.0);
+		double geo_eq_FK5[] = LocationElement.parseLocationElement(loc_FK5);
+
+		/* space motion */
+		double relativisticFactor = 1.0 / (1.0 - star.properMotionRadialV / Constant.SPEED_OF_LIGHT);
+		double cte = Constant.SECONDS_PER_DAY * Constant.JULIAN_DAYS_PER_CENTURY * 0.01 / Constant.AU; // 0.2109495...
+		double sindec = Math.sin(star.declination);
+		double cosdec = Math.cos(star.declination);
+		double cosra = Math.cos(star.rightAscension);
+		double sinra = Math.sin(star.rightAscension);
+		double vpi = cte * star.properMotionRadialV * star.parallax * 0.001 / Constant.RAD_TO_ARCSEC;
+		double m[] = new double[3];
+		m[0] = -star.properMotionRA * cosdec * sinra - star.properMotionDEC * sindec * cosra + vpi * geo_eq_FK5[0];
+		m[1] = star.properMotionRA * cosdec * cosra - star.properMotionDEC * sindec * sinra + vpi * geo_eq_FK5[1];
+		m[2] = star.properMotionDEC * cosdec + vpi * geo_eq_FK5[2];
+
+		double R[] = new double[6];
+		int i, j;
+
+		for (i = 0; i < 3; i++)
+		{
+			m[i] *= 100.0 * Constant.RAD_TO_ARCSEC * relativisticFactor;
+			R[i] = geo_eq_FK5[i];
+			R[i + 3] = m[i];
+		}
+		
+		/*
+		 * Perform matrix multiplication
+		 */
+		double geo_eq_FK4[] = new double[3];
+		double geo_eq_vel_FK4[] = new double[3];
+		int v_mat = -1;
+		for (i = 0; i < 6; i++)
+		{
+			double a = 0.0;
+			int u_R = -1;
+			for (j = 0; j < 6; j++)
+			{
+				v_mat++;
+				u_R++;
+				a += R[u_R] * MAT_INVERSE[v_mat];
+			}
+			if (i < 3)
+				geo_eq_FK4[i] = a;
+			else
+				geo_eq_vel_FK4[i - 3] = a;
+		}
+
+		double a = 0.0, b = 0.0, c = 0.0;
+		for (i = 0; i < 3; i++)
+		{
+			a -= A[i] * geo_eq_FK4[i];
+			b -= AD[i] * geo_eq_FK4[i];
+		}
+		/*
+		 * Add E terms of aberration from FK4
+		 */
+		for (i = 0; i < 3; i++)
+		{
+			geo_eq_FK4[i] = geo_eq_FK4[i] + A[i] + a * geo_eq_FK4[i];
+			geo_eq_vel_FK4[i] = geo_eq_vel_FK4[i] + AD[i] + b * geo_eq_FK4[i];
+		}
+
+		/*
+		 * Transform the answers into B1950 catalog entries in radian measure.
+		 */
+		b = geo_eq_FK4[0] * geo_eq_FK4[0] + geo_eq_FK4[1] * geo_eq_FK4[1];
+		a = b + geo_eq_FK4[2] * geo_eq_FK4[2];
+		c = a;
+		a = Math.sqrt(a);
+
+		StarElement out = star.clone();
+		out.rightAscension = Math.atan2(geo_eq_FK4[1], geo_eq_FK4[0]);
+		out.declination = Math.asin(geo_eq_FK4[2] / a);
+
+		/* Note motion converted back to radians per (Julian) year */
+		out.properMotionRA = (float) (0.01 * (geo_eq_FK4[0] * geo_eq_vel_FK4[1] - geo_eq_FK4[1] * geo_eq_vel_FK4[0]) / (Constant.RAD_TO_ARCSEC * b * relativisticFactor));
+		out.properMotionDEC = (float) (0.01 * (geo_eq_vel_FK4[2] * b - geo_eq_FK4[2] * (geo_eq_FK4[0] * geo_eq_vel_FK4[0] + geo_eq_FK4[1] * geo_eq_vel_FK4[1])) / (Constant.RAD_TO_ARCSEC * c * Math
+				.sqrt(b) * relativisticFactor));
+
+		// Pass proper motions from "/Julian year to "/tropical year. This correction
+		// depends on the particular case for a given input coordinates, and is usually
+		// ignored or already done in input proper motions (javadoc of StarElement.propermotion...
+		// already defines that the proper motion should be given in "/Julian year, so this
+		// transformation is not done here).
+		//out.properMotionRA /= 1.00002136;
+		//out.properMotionDEC /= 1.00002136;
+
+		out.properMotionRadialV = star.properMotionRadialV;
+		if (!star.isDistanceUnknown())
+		{
+			c = 0.0;
+			for (i = 0; i < 3; i++)
+				c += geo_eq_FK4[i] * geo_eq_vel_FK4[i];
+
+			/*
+			 * divide by RTS to deconvert m (and therefore c) from arc seconds
+			 * back to radians
+			 */
+			out.properMotionRadialV = (float) (c / (relativisticFactor * cte * 100.0 * a * star.parallax * 0.001));
+		}
+		out.parallax = star.parallax * a;
+		out.equinox = Constant.B1950;
+		out.frame = EphemerisElement.FRAME.FK4;
+
+		// Correct for fictitious velocities
+		if (star.isDistanceUnknown()) {
+			out.properMotionRA = 0.0f;
+			out.properMotionDEC = 0.0f;
+		}
+
+		return out;
+	}
+
+	/**
+	 * Converts FK4 B1950.0 catalog coordinates to FK5 J2000.0 coordinates. AA
+	 * page B58. Radial movement is considered only when distance is not zero.
+	 * <P>
+	 * Note systematic corrections FK5-FK4 are not considered (see Fricke 1988
+	 * to correct for this), and the input B1950 position is precessed to B1950
+	 * if the input equinox is different (i.e. equinox is considered to be
+	 * the epoch of the observation, which for example corresponds to 1983.5 for 
+	 * IRAS data).
+	 * <P>
+	 * Conversion between B1950 and J2000 coordinates is not a standard procedure
+	 * done exactly in the same way in any library. However, this method gives
+	 * almost exactly the same conversion as that provided by the CDS web service
+	 * or the one described in the Astronomical Almanac Supplement, to a discrepancy
+	 * below the milliarcsecond level. Note that for a moving star with non-zero
+	 * radial velocity the conversion towards J2000 and back to B1950 could show
+	 * inconsistencies close to the milliarcsecond, since radial velocity is supposed
+	 * constant between 1950 and 2000 in the conversion methods usually described in 
+	 * the literature.
+	 * <P>
+	 * Main part of the method taken from C code by S. L. Moshier.
+	 * 
+	 * @param s Star input object. Must be FK4, but not necessarily B1950 (automatically corrected).
+	 * @return Output Star object, FK5 J2000.
+	 * @throws JPARSECException If the input frame is not FK4.
+	 */
+	public static StarElement transform_FK4_B1950_to_FK5_J2000(StarElement s) throws JPARSECException
+	{
+		if (s.frame != EphemerisElement.FRAME.FK4) throw new JPARSECException("The frame of the input star is not FK4.");
+		
+		StarElement star = s.clone();
+
+		if (star.equinox != Constant.B1950) {
+			EphemerisElement eph = new EphemerisElement();
+			eph.ephemMethod = REDUCTION_METHOD.IAU_1976;
+
+			// Apply correction for the precession constant between Newcomb and IAU 1976 precession methods: 1.13"/century. 
+			LocationElement loc = new LocationElement(star.rightAscension, star.declination, 1.0);
+			double eqc = (star.equinox - Constant.B1950) * 0.07555 * 15.0 * Constant.ARCSEC_TO_RAD / Constant.JULIAN_DAYS_PER_CENTURY;
+			loc = LocationElement.parseRectangularCoordinates(Ephem.equatorialToEcliptic(loc.getRectangularCoordinates(), Constant.B1950, eph));
+			loc.setLongitude(loc.getLongitude()+eqc);
+			loc = LocationElement.parseRectangularCoordinates(Ephem.eclipticToEquatorial(loc.getRectangularCoordinates(), Constant.B1950, eph));
+
+			// Now precess to B1950 using Lieske formula
+			loc = LocationElement.parseRectangularCoordinates(Precession.precess(star.equinox, Constant.B1950, loc.getRectangularCoordinates(), eph));
+			star.rightAscension = loc.getLongitude();
+			star.declination = loc.getLatitude();
+			star.equinox = Constant.B1950;
+		}
+		// Pass proper motions from "/tropical year to "/Julian year. This correction
+		// depends on the particular case for a given input coordinates, and is usually 
+		// ignored or already done in input proper motions (javadoc of StarElement.propermotion...
+		// already defines that the proper motion should be given in "/Julian year).
+		//star.properMotionRA *= 1.00002136;
+		//star.properMotionDEC *= 1.00002136;
+		
+		LocationElement loc_FK4 = new LocationElement(star.rightAscension, star.declination, 1.0);
+		double geo_eq_FK4[] = LocationElement.parseLocationElement(loc_FK4);
+
+		/* space motion */
+		double relativisticFactor = 1.0 / (1.0 - star.properMotionRadialV / Constant.SPEED_OF_LIGHT);
+		double cte = Constant.SECONDS_PER_DAY * Constant.JULIAN_DAYS_PER_CENTURY * 0.01 / Constant.AU; // 0.2109495...
+		double sindec = Math.sin(star.declination);
+		double cosdec = Math.cos(star.declination);
+		double cosra = Math.cos(star.rightAscension);
+		double sinra = Math.sin(star.rightAscension);
+		double vpi = cte * star.properMotionRadialV * star.parallax * 0.001 / Constant.RAD_TO_ARCSEC;
+		double m[] = new double[3];
+		m[0] = -star.properMotionRA * cosdec * sinra - star.properMotionDEC * sindec * cosra + vpi * geo_eq_FK4[0];
+		m[1] = star.properMotionRA * cosdec * cosra - star.properMotionDEC * sindec * sinra + vpi * geo_eq_FK4[1];
+		m[2] = star.properMotionDEC * cosdec + vpi * geo_eq_FK4[2];
+
+		double a, b, c;
+		double R[] = new double[6];
+		int i, j;
+
+		a = 0.0;
+		b = 0.0;
+		for (i = 0; i < 3; i++)
+		{
+			m[i] *= 100.0 * Constant.RAD_TO_ARCSEC * relativisticFactor;
+			a += A[i] * geo_eq_FK4[i];
+			b += AD[i] * geo_eq_FK4[i];
+		}
+		/*
+		 * Remove E terms of aberration from FK4
+		 */
+		for (i = 0; i < 3; i++)
+		{
+			R[i] = geo_eq_FK4[i] - A[i] + a * geo_eq_FK4[i];
+			R[i + 3] = m[i] - AD[i] + b * geo_eq_FK4[i];
+		}
+	
+		/*
+		 * Perform matrix multiplication
+		 */
+		double geo_eq_FK5[] = new double[3];
+		double geo_eq_vel_FK5[] = new double[3];
+		int v_mat = -1;
+		for (i = 0; i < 6; i++)
+		{
+			a = 0.0;
+			int u_R = -1;
+			for (j = 0; j < 6; j++)
+			{
+				v_mat++;
+				u_R++;
+				a += R[u_R] * MAT[v_mat];
+			}
+			if (i < 3)
+				geo_eq_FK5[i] = a;
+			else
+				geo_eq_vel_FK5[i - 3] = a;
+		}
+
+		/*
+		 * Transform the answers into J2000 catalog entries in radian measure.
+		 */
+		b = geo_eq_FK5[0] * geo_eq_FK5[0] + geo_eq_FK5[1] * geo_eq_FK5[1];
+		a = b + geo_eq_FK5[2] * geo_eq_FK5[2];
+		c = a;
+		a = Math.sqrt(a);
+
+		StarElement out = star.clone();
+		out.rightAscension = Math.atan2(geo_eq_FK5[1], geo_eq_FK5[0]);
+		out.declination = Math.asin(geo_eq_FK5[2] / a);
+
+		/* Note motion converted back to radians per (Julian) year */
+		out.properMotionRA = (float) (0.01 * (geo_eq_FK5[0] * geo_eq_vel_FK5[1] - geo_eq_FK5[1] * geo_eq_vel_FK5[0]) / (Constant.RAD_TO_ARCSEC * b * relativisticFactor));
+		out.properMotionDEC = (float) (0.01 * (geo_eq_vel_FK5[2] * b - geo_eq_FK5[2] * (geo_eq_FK5[0] * geo_eq_vel_FK5[0] + geo_eq_FK5[1] * geo_eq_vel_FK5[1])) / (Constant.RAD_TO_ARCSEC * c * Math
+				.sqrt(b) * relativisticFactor));
+
+		out.properMotionRadialV = star.properMotionRadialV;
+		if (!star.isDistanceUnknown())
+		{
+			c = 0.0;
+			for (i = 0; i < 3; i++)
+				c += geo_eq_FK5[i] * geo_eq_vel_FK5[i];
+
+			/*
+			 * divide by RTS to deconvert m (and therefore c) from arc seconds
+			 * back to radians
+			 */
+			out.properMotionRadialV = (float) (c / (relativisticFactor * cte * 100.0 * a * star.parallax * 0.001));
+		}
+		out.parallax = star.parallax * a;
+		out.equinox = Constant.J2000;
+		out.frame = EphemerisElement.FRAME.FK5;
+
+		// Correct for fictitious velocities when input object is static
+		if (star.isDistanceUnknown()) {
+			out.rightAscension -= out.properMotionRA * 100.0 * (Constant.J2000 - Constant.B1950) / Constant.JULIAN_DAYS_PER_CENTURY;
+			out.declination -= out.properMotionDEC * 100.0 * (Constant.J2000 - Constant.B1950) / Constant.JULIAN_DAYS_PER_CENTURY;
+			out.properMotionRA = 0.0f;
+			out.properMotionDEC = 0.0f;
+		}
+
+		return out;
+	}
+
+	/**
+	 * Transform the elements of a star to another frame and/or epoch/equinox. Transformations of Hipparcos
+	 * data to old FK4 frame is not directly supported, but you can use this method to go to FK5 J2000 and then 
+	 * another method provided to go to FK4 B1950. IAU2006 algorithms are used for precession when changing 
+	 * the equinox.
+	 * <P>
+	 * In case you want to transform Hipparcos data to FK5/ICRF J2000, select as input values for this method
+	 * FK5/ICRF frame, J2000 epoch, and J1991.25 equinox. In case you want to obtain the data for FK4 B1950,
+	 * use this method with previous values (and FK5 frame) to go to FK5, then force equinox to be J2000 in the
+	 * {@linkplain StarElement} object, and then call {@linkplain StarEphem#transform_FK5_J2000_to_FK4_B1950(StarElement, EphemerisElement)}
+	 * using IAU1976 algorithms.
+	 * <P>
+	 * Main part of the method taken from C code by S. L. Moshier.
+	 * 
+	 * @param s Star input object.
+	 * @param outFrame the output reference frame.
+	 * @param outputEpoch The output epoch. Proper motion will be applied from input to output epoch. Input epoch
+	 * is assumed to be equal to the input equinox.
+	 * @param outputEquinox The output equinox. Precession will be applied from input to output equinox, using IAU2006
+	 * algorithms.
+	 * @return Output Star object.
+	 * @throws JPARSECException If the output frame is not supported.
+	 */
+	public static StarElement transformStarElementsToOutputEquinoxAndFrame(StarElement s, FRAME outFrame,
+			double outputEpoch, double outputEquinox) throws JPARSECException
+	{
+		StarElement star = s.clone();
+		
+		if (s.frame == EphemerisElement.FRAME.FK4) star = StarEphem.transform_FK4_B1950_to_FK5_J2000(star);
+		
+		if (s.frame == outFrame && s.equinox == outputEquinox && outputEpoch == s.equinox) return star;
+		boolean toFK4 = false;
+		if (outFrame == FRAME.FK4  && outputEquinox == Constant.B1950) {
+			toFK4 = true;
+			outFrame = FRAME.FK5;
+			outputEquinox = Constant.J2000;
+		}
+		
+		// Pass proper motions from "/tropical year to "/Julian year. This correction
+		// depends on the particular case for a given input coordinates, and is usually 
+		// ignored or already done in input proper motions (javadoc of StarElement.propermotion...
+		// already defines that the proper motion should be given in "/Julian year).
+		//star.properMotionRA *= 1.00002136;
+		//star.properMotionDEC *= 1.00002136;
+		
+		LocationElement loc_inputFrame = new LocationElement(star.rightAscension, star.declination, 1.0);
+		double geo_eq_inputFrame[] = LocationElement.parseLocationElement(loc_inputFrame);
+
+		/* space motion */
+		double relativisticFactor = 1.0 / (1.0 - star.properMotionRadialV / Constant.SPEED_OF_LIGHT);
+		double cte = Constant.SECONDS_PER_DAY * Constant.JULIAN_DAYS_PER_CENTURY * 0.01 / Constant.AU; // 0.2109495...
+		double sindec = Math.sin(star.declination);
+		double cosdec = Math.cos(star.declination);
+		double cosra = Math.cos(star.rightAscension);
+		double sinra = Math.sin(star.rightAscension);
+		double vpi = cte * star.properMotionRadialV * star.parallax * 0.001 / Constant.RAD_TO_ARCSEC;
+		double m[] = new double[3];
+		m[0] = -star.properMotionRA * cosdec * sinra - star.properMotionDEC * sindec * cosra + vpi * geo_eq_inputFrame[0];
+		m[1] = star.properMotionRA * cosdec * cosra - star.properMotionDEC * sindec * sinra + vpi * geo_eq_inputFrame[1];
+		m[2] = star.properMotionDEC * cosdec + vpi * geo_eq_inputFrame[2];
+
+		double R[] = new double[6];
+		for (int i = 0; i < 3; i++)
+		{
+			m[i] *= 100.0 * Constant.RAD_TO_ARCSEC * relativisticFactor;
+			R[i] = geo_eq_inputFrame[i]  + m[i] * (outputEpoch - star.equinox) / (Constant.JULIAN_DAYS_PER_CENTURY * Constant.RAD_TO_ARCSEC);
+			R[i + 3] = m[i];
+		}
+
+		// Precess
+		if (star.equinox != outputEquinox) {
+			EphemerisElement eph = new EphemerisElement();
+			eph.ephemMethod = REDUCTION_METHOD.IAU_2006;
+			R = Precession.precessPosAndVelInEquatorial(star.equinox, outputEquinox, R, eph);
+		}
+
+		// Change frame
+		R = Ephem.toOutputFrame(R, star.frame, outFrame);
+		if (R.length < 6) throw new JPARSECException("cannot transform velocities to output frame.");
+		
+		double geo_eq_outFrameEq[] = new double[] {R[0], R[1], R[2]};
+		double geo_eq_vel_outFrameEq[] = new double[] {R[3], R[4], R[5]};
+
+		/*
+		 * Transform the answers into catalog entries in radian measure.
+		 */
+		double b = geo_eq_outFrameEq[0] * geo_eq_outFrameEq[0] + geo_eq_outFrameEq[1] * geo_eq_outFrameEq[1];
+		double a = b + geo_eq_outFrameEq[2] * geo_eq_outFrameEq[2];
+		double c = a;
+		a = Math.sqrt(a);
+
+		StarElement out = star.clone();
+		out.rightAscension = Math.atan2(geo_eq_outFrameEq[1], geo_eq_outFrameEq[0]);
+		out.declination = Math.asin(geo_eq_outFrameEq[2] / a);
+
+		/* Note motion converted back to radians per (Julian) year */
+		out.properMotionRA = (float) (0.01 * (geo_eq_outFrameEq[0] * geo_eq_vel_outFrameEq[1] - geo_eq_outFrameEq[1] * geo_eq_vel_outFrameEq[0]) / (Constant.RAD_TO_ARCSEC * b * relativisticFactor));
+		out.properMotionDEC = (float) (0.01 * (geo_eq_vel_outFrameEq[2] * b - geo_eq_outFrameEq[2] * (geo_eq_outFrameEq[0] * geo_eq_vel_outFrameEq[0] + geo_eq_outFrameEq[1] * geo_eq_vel_outFrameEq[1])) / (Constant.RAD_TO_ARCSEC * c * Math
+				.sqrt(b) * relativisticFactor));
+
+		out.properMotionRadialV = star.properMotionRadialV;
+		if (!star.isDistanceUnknown())
+		{
+			c = 0.0;
+			for (int i = 0; i < 3; i++)
+				c += geo_eq_outFrameEq[i] * geo_eq_vel_outFrameEq[i];
+
+			/*
+			 * divide by RTS to deconvert m (and therefore c) from arc seconds
+			 * back to radians
+			 */
+			out.properMotionRadialV = (float) (c / (relativisticFactor * cte * 100.0 * a * star.parallax * 0.001));
+		}
+		out.parallax = star.parallax * a;
+		out.equinox = outputEquinox;
+		out.frame = outFrame;
+
+		// Correct for fictitious velocities when input object is static
+		if (star.isDistanceUnknown()) {
+			out.rightAscension -= out.properMotionRA * 100.0 * (outputEpoch - s.equinox) / Constant.JULIAN_DAYS_PER_CENTURY;
+			out.declination -= out.properMotionDEC * 100.0 * (outputEpoch - s.equinox) / Constant.JULIAN_DAYS_PER_CENTURY;
+			out.properMotionRA = 0.0f;
+			out.properMotionDEC = 0.0f;
+		}
+
+		if (toFK4) {
+			EphemerisElement eph = new EphemerisElement();
+			eph.ephemMethod = REDUCTION_METHOD.IAU_1976;
+			out = StarEphem.transform_FK5_J2000_to_FK4_B1950(out, eph);
+		}
+
+		return out;
+	}
+	
+	/**
+	 * Calculates ephemerides of stars. This method assumes that the star
+	 * velocity is much lower than the speed of the light. This is a valid
+	 * approximation for any star in our Galaxy, since velocities are below 1000
+	 * km/s.
+	 * <P>
+	 * It is not recommended to use this method if the speed of the star is
+	 * above 25% of the speed of light.
+	 * <P>
+	 * This method takes the star object from the integer number defined
+	 * in {@linkplain EphemerisElement#targetBody}.
+	 * 
+	 * @param time Time object.
+	 * @param obs Observer object.
+	 * @param eph Ephemeris object. The index of the star must be added to the index
+	 *  property.
+	 * @param fullEphemeris True for calculating full ephemeris, including rise,
+	 *        set, transit times, constellation, and topocentric corrections.
+	 * @return Output ephem object.
+	 * @throws JPARSECException Thrown if the calculation fails.
+	 */
+	public static StarEphemElement starEphemeris(TimeElement time, ObserverElement obs, EphemerisElement eph,
+			boolean fullEphemeris) throws JPARSECException
+	{
+		StarElement star = StarEphem.getStarElement(eph.targetBody.getIndex());
+		return starEphemeris(time, obs, eph, star, fullEphemeris);
+	}
+	
+	/**
+	 * Calculates ephemerides of stars. This method assumes that the star
+	 * velocity is much lower than the speed of the light. This is a valid
+	 * approximation for any star in our Galaxy, since velocities are below 1000
+	 * km/s.
+	 * <P>
+	 * It is not recommended to use this method if the speed of the star is
+	 * above 25% of the speed of light.
+	 * 
+	 * @param time Time object.
+	 * @param obs Observer object.
+	 * @param eph Ephemeris object.
+	 * @param star Star object.
+	 * @param fullEphemeris True for calculating full ephemeris, including rise,
+	 *        set, transit times.
+	 * @return Output ephem object.
+	 * @throws JPARSECException Thrown if the calculation fails.
+	 */
+	public static StarEphemElement starEphemeris(TimeElement time, ObserverElement obs, EphemerisElement eph,
+			StarElement star, boolean fullEphemeris) throws JPARSECException
+	{
+		// Check Ephemeris object
+		if (!EphemerisElement.checkEphemeris(eph))
+			throw new JPARSECException("invalid ephemeris object.");
+
+		StarEphemElement out = new StarEphemElement();
+
+		/* Convert from RA and Dec to equatorial rectangular direction	 */
+		StarElement in = star.clone();
+		// Convert FK4 to FK5
+		if (star.frame == EphemerisElement.FRAME.FK4)
+			in = StarEphem.transform_FK4_B1950_to_FK5_J2000(in);
+		LocationElement loc = new LocationElement(in.rightAscension, in.declination, 1.0);
+		double q[] = LocationElement.parseLocationElement(loc);
+
+		// Obtain julian day in Barycentric Dynamical Time
+		double JD_TDB = TimeScale.getJD(time, obs, eph, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
+		EphemerisElement ephClone = eph.clone();
+		ephClone.targetBody = TARGET.SUN;
+		if (ephClone.algorithm == EphemerisElement.ALGORITHM.SERIES96_MOSHIERForMoon && (JD_TDB < 2415020.5 || JD_TDB > 2488092.5))
+			ephClone.algorithm = EphemerisElement.ALGORITHM.MOSHIER;
+		if (ephClone.algorithm != EphemerisElement.ALGORITHM.SERIES96_MOSHIERForMoon && ephClone.algorithm != EphemerisElement.ALGORITHM.MOSHIER)
+			ephClone.algorithm = EphemerisElement.ALGORITHM.MOSHIER;
+		double e[] = new double[6];
+		if (ephClone.algorithm == EphemerisElement.ALGORITHM.SERIES96_MOSHIERForMoon)
+		{
+			e = Series96.getGeocentricPosition(JD_TDB, ephClone.targetBody, 0.0, false, obs);
+		} else
+		{
+			if (eph.algorithm.name().indexOf("JPL") >= 0 || 
+					(eph.algorithm == EphemerisElement.ALGORITHM.STAR && eph.preferPrecisionInEphemerides)) {
+				try {
+					// Use DE406 or the version selected
+					JPLEphemeris jplEph = new JPLEphemeris(EphemerisElement.ALGORITHM.JPL_DE406);
+					if (eph.algorithm.name().indexOf("JPL") >= 0) jplEph = new JPLEphemeris(eph.algorithm);
+					if (!jplEph.isAvailable(JD_TDB)) throw new JPARSECException("JPL integration "+jplEph.getJPLVersion()+" not available for JD = "+JD_TDB+"!");
+					ephClone.targetBody = TARGET.Solar_System_Barycenter; // Improves precision
+					e = jplEph.getGeocentricPosition(JD_TDB, ephClone.targetBody, 0.0, false, obs); 
+				} catch (JPARSECException exc) {
+					if (eph.algorithm.name().indexOf("JPL") >= 0) throw exc; 
+						//JPARSECException.addWarning("JPL integration version "+eph.algorithm.name()+" not available. Using Moshier instead.");
+					e = PlanetEphem.getGeocentricPosition(JD_TDB, ephClone.targetBody, 0.0, false, obs);
+					e = Ephem.eclipticToEquatorial(e, Constant.J2000, ephClone);										
+				}
+			} else {
+				e = PlanetEphem.getGeocentricPosition(JD_TDB, ephClone.targetBody, 0.0, false, obs);
+				e = Ephem.eclipticToEquatorial(e, Constant.J2000, ephClone);
+			}
+		}
+
+		/* space motion */
+		double relativisticFactor = 1.0 / (1.0 - star.properMotionRadialV / Constant.SPEED_OF_LIGHT);
+		double sindec = Math.sin(in.declination);
+		double cosdec = Math.cos(in.declination);
+		double cosra = Math.cos(in.rightAscension);
+		double sinra = Math.sin(in.rightAscension);
+		double cte = Constant.SECONDS_PER_DAY * Constant.JULIAN_DAYS_PER_CENTURY * 0.01 / Constant.AU; // 0.2109495...
+		double vpi = cte * in.properMotionRadialV * in.parallax * 0.001 / Constant.RAD_TO_ARCSEC;
+		double m[] = new double[3];
+		m[0] = (-in.properMotionRA * cosdec * sinra - in.properMotionDEC * sindec * cosra + vpi * q[0]) * relativisticFactor;
+		m[1] = (in.properMotionRA * cosdec * cosra - in.properMotionDEC * sindec * sinra + vpi * q[1]) * relativisticFactor;
+		m[2] = (in.properMotionDEC * cosdec + vpi * q[2]) * relativisticFactor;
+
+		// Add warning for possible incorrect result when the speed is too high
+		// (25% c)
+		double speed_check = in.properMotionRadialV * LocationElement.parseRectangularCoordinates(m).getRadius() / vpi;
+		if (speed_check > (0.00025 * Constant.SPEED_OF_LIGHT))
+			JPARSECException
+					.addWarning("the speed of the star " + star.name + " is " + speed_check + " km/s, which seems to be very high.");
+
+		/* Correct for proper motion and parallax */
+		double T = (JD_TDB - in.equinox) * 100.0 / Constant.JULIAN_DAYS_PER_CENTURY;
+		double p[] = new double[3];
+
+		// Correction for differential light time
+		boolean correction = true;
+		if (ephClone.ephemType == EphemerisElement.COORDINATES_TYPE.GEOMETRIC)
+			correction = false;
+		double light_time_before = in.getDistance() * Constant.RAD_TO_ARCSEC * Constant.LIGHT_TIME_DAYS_PER_AU;
+		double dT = 0.0;
+		double ddT = 0.0;
+		int iter = 0;
+		do
+		{
+			iter ++;
+			for (int i = 0; i < 3; i++)
+			{
+				p[i] = q[i] + (T + dT) * m[i] + e[i] * in.parallax * 0.001 / Constant.RAD_TO_ARCSEC;
+			}
+			double norm = Math.sqrt(p[0] * p[0] + p[1] * p[1] + p[2] * p[2]);
+			double light_time_now = in.getDistance() * norm * Constant.RAD_TO_ARCSEC * Constant.LIGHT_TIME_DAYS_PER_AU;
+			ddT = dT;
+			dT = (light_time_now - light_time_before) * 100.0 / Constant.JULIAN_DAYS_PER_CENTURY;
+			ddT -= dT;
+		} while (iter < 5 && Math.abs(ddT) > (100.0 * 1.0E-6 / (Constant.SECONDS_PER_DAY * Constant.JULIAN_DAYS_PER_CENTURY)) && correction);
+		
+		/* precess the star to J2000 equinox */
+		//p = Precession.precessToJ2000(in.equinox, p, ephClone.ephemMethod);
+
+		/* Find vector from earth in direction of object, in AU units */
+		double EO = in.getDistance() * Constant.RAD_TO_ARCSEC;
+		for (int i = 0; i < 3; i++)
+		{
+			p[i] = p[i] * EO;
+		}
+
+		// Correct for solar deflection and aberration
+		if (ephClone.ephemType == EphemerisElement.COORDINATES_TYPE.APPARENT)
+		{
+			LocationElement loc_p = LocationElement.parseRectangularCoordinates(p);
+			double light_time = loc_p.getRadius() * Constant.LIGHT_TIME_DAYS_PER_AU;
+			//p = Ephem.solarDeflection(p, e, Functions.substract(p, e));
+			p = Ephem.solarAndPlanetaryDeflection(p, e, Functions.substract(p, e),
+					new TARGET[] {TARGET.JUPITER, TARGET.SATURN, TARGET.EARTH}, JD_TDB, false, obs);
+			p = Ephem.aberration(p, e, light_time);
+			
+			DataBase.addData("GCRS", p, true);
+		} else {
+			DataBase.addData("GCRS", null, true);
+		}
+
+		/* Correction to output frame. */
+		p = Ephem.toOutputFrame(p, in.frame, eph.frame);
+
+		double geo_date[];
+		if (eph.frame == FRAME.FK4) {
+			// Transform from B1950 to mean equinox of date
+			 geo_date = Precession.precess(Constant.B1950, JD_TDB, p, eph);	
+		} else {
+			// Transform from J2000 to mean equinox of date
+			geo_date = Precession.precessFromJ2000(JD_TDB, p, ephClone);
+		}
+
+		// Mean equatorial to true equatorial
+		double true_eq[] = geo_date;
+		if (obs.getMotherBody() == TARGET.EARTH) {
+			if (ephClone.ephemType == EphemerisElement.COORDINATES_TYPE.APPARENT)
+				/* Correct nutation */
+				true_eq = Nutation.nutateInEquatorialCoordinates(JD_TDB, ephClone, geo_date, true);
+	
+			// Correct for polar motion
+			if (eph.ephemType == EphemerisElement.COORDINATES_TYPE.APPARENT &&
+					eph.correctForPolarMotion)
+			{
+				double gast = SiderealTime.greenwichApparentSiderealTime(time, obs, eph);
+				true_eq = Functions.rotateZ(true_eq, -gast);
+				Matrix mat = IAU2006.getPolarMotionCorrectionMatrix(time, obs, eph);
+				true_eq = mat.times(new Matrix(true_eq)).getColumn(0);
+				true_eq = Functions.rotateZ(true_eq, gast);
+			}
+		}
+		
+		// Pass to coordinates as seen from another body, if necessary
+		if (obs.getMotherBody() != TARGET.NOT_A_PLANET && obs.getMotherBody() != TARGET.EARTH)
+			true_eq = Ephem.getPositionFromBody(LocationElement.parseRectangularCoordinates(true_eq), time, obs, eph).getRectangularCoordinates();
+
+		// Get equatorial coordinates
+		LocationElement ephem_loc = LocationElement.parseRectangularCoordinates(true_eq);
+		out.rightAscension = ephem_loc.getLongitude();
+		out.declination = ephem_loc.getLatitude();
+		out.distance = ephem_loc.getRadius() * Constant.ARCSEC_TO_RAD;
+		out.magnitude = in.magnitude + (float) (5.0 * Math.log(out.distance / in.getDistance()) / Math.log(10.0));
+		if (in.isDistanceUnknown()) out.distance = StarElement.DISTANCE_UNKNOWN;
+		out.name = star.name;
+
+		/* Topocentric correction */
+		EphemElement ephem = EphemElement.parseStarEphemElement(out);
+		if (ephClone.isTopocentric)
+			ephem = Ephem.topocentricCorrection(time, obs, eph, ephem);
+
+		/* Horizontal coordinates */
+		if (ephClone.isTopocentric)
+			ephem = Ephem.horizontalCoordinates(time, obs, eph, ephem);
+
+		ephem.constellation = "";
+		try {
+			LocationElement locE = ephem.getEquatorialLocation();
+			if (obs.getMotherBody() != TARGET.NOT_A_PLANET && obs.getMotherBody() != TARGET.EARTH)
+				locE = Ephem.getPositionFromEarth(locE, time, obs, eph);
+			String constel = jparsec.astronomy.Constellation.getConstellationName(locE.getLongitude(),
+					locE.getLatitude(), JD_TDB, ephClone);
+			ephem.constellation = constel;
+		} catch (Exception exc) {}				
+
+		/* Set coordinates to the output equinox */
+		if (EphemerisElement.EQUINOX_OF_DATE != ephClone.equinox)
+			ephem = Ephem.toOutputEquinox(ephem, eph, JD_TDB);
+
+		// Get results
+		out.rightAscension = ephem.rightAscension;
+		out.declination = ephem.declination;
+		out.distance = ephem.distance / Constant.RAD_TO_ARCSEC;
+		out.magnitude = ephem.magnitude;
+		out.azimuth = ephem.azimuth;
+		out.elevation = ephem.elevation;
+		out.paralacticAngle = ephem.paralacticAngle;
+		out.constellation = ephem.constellation;
+
+		if (fullEphemeris)
+		{
+			Object gcrs = DataBase.getData("GCRS", true);
+			
+			ephClone.algorithm = EphemerisElement.ALGORITHM.STAR;
+			ephClone.targetBody = TARGET.NOT_A_PLANET;
+			ephClone.targetBody.setIndex(eph.targetBody.getIndex());
+			if (ephClone.isTopocentric)
+				ephem = RiseSetTransit.obtainCurrentRiseSetTransit(time, obs, ephClone, ephem, RiseSetTransit.TWILIGHT.HORIZON_ASTRONOMICAL_34arcmin);
+
+			// Get results
+			if (ephem.rise != null) out.rise = ephem.rise[0];
+			if (ephem.set != null) out.set = ephem.set[0];
+			if (ephem.transit != null) out.transit = ephem.transit[0];
+			if (ephem.transitElevation != null) out.transitElevation = ephem.transitElevation[0];
+			
+			DataBase.addData("GCRS", gcrs, true);
+		}
+
+		return out;
+	}
+
+	/**
+	 * Default path to the file of BSC5, including extension.
+	 */
+	public static final String PATH_TO_BSC5_FILE = FileIO.DATA_STARS_BSC5_DIRECTORY + "BrightStarCatalogue5.txt";
+
+	/**
+	 * Default path to the file of SkyMaster 2000 in JPARSEC format, including
+	 * extension.
+	 */
+	public static final String PATH_TO_SkyMaster2000_JPARSEC_FILE = FileIO.DATA_STARS_SKY2000_DIRECTORY + "JPARSEC_Sky2000.txt";
+
+	/**
+	 * Transforms the popular name of a star into the catalog name to allow to
+	 * search for it . This should always be done since certain popular stars like
+	 * 'Alp Cen' are identified in the Sky Master 2000 as 'Alp1 Cen', the primary
+	 * component.
+	 * 
+	 * @param name Proper star name, for example "Vega" or "Polaris".
+	 * @return Name of the closets match found, for example "Alp Lyr" or "Alp
+	 *         UMi", or the same input name if no match is found.
+	 * @throws JPARSECException If an error occurs.
+	 */
+	public static String getCatalogNameFromProperName(String name) throws JPARSECException
+	{
+		String star_name = name;
+
+		Object o = DataBase.getData("starNames_all", null, true);
+		String[] starNames = null;
+		if (o != null) starNames = (String[]) o;
+		if (starNames == null)
+		{
+			starNames = DataSet.arrayListToStringArray(ReadFile.readResource(FileIO.DATA_SKY_DIRECTORY + "star_names.txt"));
+			DataBase.addData("starNames_all", null, starNames, true);
+		}
+
+		for (int n = 0; n < starNames.length; n++)
+		{
+			String line = starNames[n];
+			int aa = line.toLowerCase().indexOf(name.toLowerCase());
+			if (aa >= 0)
+			{
+				star_name = FileIO.getField(1, line, ";", true);
+			}
+			if (aa == 0 && line.length() == name.length())
+				break;
+		}
+
+		// Correct for double stars
+		String wrongNames[] = new String [] {
+				"Alp Cen","The Eri","Alp Cru","Alp Cru","Gam And","Gam Leo","Bet Sco","Alp Lib","Alp CVn","Bet Cyg","Bet Cap","Alp Her","Alp Cap","Psi Dra","Gam Ari"
+		};
+		String okNames[] = new String[] {
+				"Alp1 Cen","The1 Eri","Alp1 Cru","Alp1 Cru","Gam1 And","Gam1 Leo","Bet1 Sco","Alp1 Lib","Alp1 CVn","Bet1 Cyg","Bet1 Cap","Alp1 Her","Alp1 Cap","Psi1 Dra","Gam1 Ari"
+		};
+		int index = DataSet.getIndex(wrongNames, star_name);
+		if (index >= 0) star_name = okNames[index];
+
+		return star_name;
+	}
+
+	/**
+	 * Location of the LSR in J2000, 18h 03m 50.2s, 30º 00' 16.8", and
+	 * 19.5 km/s of speed set as radius.
+	 */
+	public static final LocationElement LSR_J2000_direction = new LocationElement(
+			Functions.parseRightAscension("18h 03m 50.2s"),
+			Functions.parseDeclination("30º 00' 16.8\""), 19.5
+			);
+
+	/**
+	 * Transforms radial velocity from heliocentric to LSR.
+	 * <P>
+	 * The sun has a systematic motion relative to nearby stars, the mean
+	 * depending on the spectral type of the stars used for comparison. The
+	 * standard solar motion is defined to be the average velocity of spectral
+	 * types A through G as found in general catalogs of radial velocity,
+	 * regardless of luminosity class. This motion is 19.5 km/s toward 18 hrs
+	 * right ascension and 30º declination for epoch 1900.0 (galactic
+	 * co-ordinates l=56º, b=23º). Basic solar motion is the most probable
+	 * velocity of stars in the solar neighborhood, so it is weighted more
+	 * heavily by the radial velocities of stars of the most common spectral
+	 * types (A, gK, dM) in the solar vicinity. In this system, the sun moves at
+	 * 15.4 km/s toward l=51º, b=23º.
+	 * <P>
+	 * The conventional local standard of rest used for galactic studies is
+	 * essentially based on the standard solar motion. It assumes the sun to
+	 * move at the rounded velocity of 20.0 km/s toward 18 hrs right ascension
+	 * and 30º declination for epoch 1900.0. This choice presumes that the
+	 * earlier spectral types involved in determining the standard solar motion,
+	 * being younger, more closely represent the velocity of the interstellar
+	 * gas.
+	 * @param time Time object.
+	 * @param obs Observer object.
+	 * @param eph Ephemeris object.
+	 * @param star Input star with position and proper motions.
+	 * @return Radial velocity measured in conventional LSR.
+	 * @throws JPARSECException If an error occurs.
+	 */
+	public static double getLSRradialVelocity(TimeElement time, ObserverElement obs,
+			EphemerisElement eph, StarElement star) throws JPARSECException
+	{
+		StarEphemElement sephem = StarEphem.starEphemeris(time, obs, eph, star, false);
+		double alpha = sephem.rightAscension;
+		double delta = sephem.declination;
+		
+		double JD = TimeScale.getJD(time, obs, eph, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
+		double qLSR[] = LocationElement.parseLocationElement(LSR_J2000_direction);
+		if (eph.getEpoch(JD) != Constant.J2000)
+			qLSR = Precession.precess(Constant.J2000, JD, LocationElement.parseLocationElement(LSR_J2000_direction),
+					eph);
+		LocationElement locLSR = LocationElement.parseRectangularCoordinates(qLSR);
+		double lsrRA = locLSR.getLongitude(), lsrDEC = locLSR.getLatitude();
+		double speed_LSR = Math.cos(lsrRA) * Math.cos(lsrDEC) * Math.cos(alpha) * Math.cos(delta);
+		speed_LSR = speed_LSR + Math.sin(lsrRA) * Math.cos(lsrDEC) * Math.sin(alpha) * Math.cos(delta) + Math.sin(lsrDEC) * Math.sin(delta);
+		speed_LSR = locLSR.getRadius() * speed_LSR + star.properMotionRadialV;
+		
+		return speed_LSR;
+	}
+
+	/**
+	 * Computes the galactic motion of an object. Method taken from program
+	 * http://idlastro.gsfc.nasa.gov/ftp/pro/astro/gal_uvw.pro.<P>
+	 * Follows the general outline of Johnson & Soderblom (1987, AJ, 93,864)
+	 * except that the J2000 transformation matrix to Galactic coordinates is 
+	 * taken from the introduction to the Hipparcos catalog.<P>
+	 * Authors: W. Landsman and Sergey Koposov.
+	 * @param star The star object containing J2000 object position of proper motions.
+	 * @param toLSR True to return the motion respect the LSR instead of respect the Sun.
+	 * True will add to the result (U,V,W)_Sun = (-8.5, 13.38, 6.49), taken from
+	 * Coskunoglu et al. 2011 (MNRAS 412, 1237). Despite that UVW errors are (0.29, 0.43, 0.26), these
+	 * and previous values considered as correct are in clear disagreement, so the solar 
+	 * motion through the LSR remains poorly determined.
+	 * @return The U, V, W components of the galactic motion in km/s. U is positive 
+	 * towards galactic center, V positive towards galactic rotation direction, and
+	 * W positive towards galactic north pole.
+	 */
+	public static double[] getGalacticMotionUVW(StarElement star, boolean toLSR) {
+		double ra = star.rightAscension, dec = star.declination;
+		double vrad = star.properMotionRadialV, plx = 1000.0 * star.parallax;
+		double pmra = star.properMotionRA * Constant.RAD_TO_ARCSEC;
+		double pmdec = star.properMotionDEC * Constant.RAD_TO_ARCSEC;
+		
+		double cosd = Math.cos(dec);
+		double sind = Math.sin(dec);
+		double cosa = Math.cos(ra);
+		double sina = Math.sin(ra);
+
+		double k = Constant.AU / (Constant.SECONDS_PER_DAY * 365.25); // Equivalent of 1 A.U/yr in km/s
+
+		// J2000 to galactic coordinates, following Hipparcos document
+		double A_G[][] = new double[][] {
+				new double[] {0.0548755604, 0.8734370902, 0.4838350155}, 
+				new double[] {0.4941094279, -0.4448296300, 0.7469822445},
+				new double[] {-0.8676661490, -0.1980763734, 0.4559837762}
+		};
+
+  		double vec1 = vrad;
+		double vec2 = k * pmra / plx;
+		double vec3 = k * pmdec / plx;
+
+		double u = -(( A_G[0][0]*cosa*cosd+A_G[0][1]*sina*cosd+A_G[0][2]*sind)*vec1+
+				     (-A_G[0][0]*sina     +A_G[0][1]*cosa                   )*vec2+
+				     (-A_G[0][0]*cosa*sind-A_G[0][1]*sina*sind+A_G[0][2]*cosd)*vec3);
+		double v = ( A_G[1][0]*cosa*cosd+A_G[1][1]*sina*cosd+A_G[1][2]*sind)*vec1+
+				     (-A_G[1][0]*sina     +A_G[1][1]*cosa                   )*vec2+
+				     (-A_G[1][0]*cosa*sind-A_G[1][1]*sina*sind+A_G[1][2]*cosd)*vec3;
+		double w = ( A_G[2][0]*cosa*cosd+A_G[2][1]*sina*cosd+A_G[2][2]*sind)*vec1+
+				     (-A_G[2][0]*sina     +A_G[2][1]*cosa                   )*vec2+
+				     (-A_G[2][0]*cosa*sind-A_G[2][1]*sina*sind+A_G[2][2]*cosd)*vec3;
+
+		double lsr_vel[] = new double[] {8.5, 13.38, 6.49};
+		if (toLSR) {
+			u = u + lsr_vel[0];
+			v = v + lsr_vel[1];
+			w = w + lsr_vel[2];
+		}
+		return new double[] {u, v, w};
+	}
+	
+	/**
+	 * Transforms radial velocity from heliocentric to topocentric, or to
+	 * geocentric if the ephemeris object is set to geocentric calculations. 
+	 * No relativistic corrections are applied in this method, and Moshier 
+	 * algorithms are used for the position of the Earth.
+	 * @param time Time object.
+	 * @param obs Observer object.
+	 * @param eph Ephemeris object.
+	 * @param star Input star with position and proper motions.
+	 * @return Radial velocity measured respect observer in km/s.
+	 * @throws JPARSECException If an error occurs.
+	 */
+	public static double getRadialVelocity(TimeElement time, ObserverElement obs,
+			EphemerisElement eph, StarElement star) throws JPARSECException
+	{
+		EphemerisElement newEph = eph.clone();
+		newEph.equinox = EphemerisElement.EQUINOX_J2000;
+		StarEphemElement sephem = StarEphem.starEphemeris(time, obs, newEph, star, false);
+		double delta = sephem.declination;
+		
+		LocationElement ecl = CoordinateSystem.equatorialToEcliptic(sephem.getEquatorialLocation(), time, obs, newEph);
+		double beta = ecl.getLatitude();
+		double lam = ecl.getLongitude();
+		double tsl = SiderealTime.apparentSiderealTime(time, obs, newEph);
+		double ha = tsl - sephem.rightAscension;
+		newEph.targetBody = TARGET.SUN;
+		newEph.ephemType = EphemerisElement.COORDINATES_TYPE.GEOMETRIC;
+		EphemElement ephemSun = PlanetEphem.MoshierEphemeris(time, obs, newEph);
+		ecl = CoordinateSystem.equatorialToEcliptic(ephemSun.getEquatorialLocation(), time, obs, newEph);
+		double lsun = ecl.getLongitude();
+		double JD = TimeScale.getJD(time, obs, eph, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
+		double v[] = PlanetEphem.getGeocentricPosition(JD, TARGET.SUN, 0.0, false, obs);
+		
+		v = DataSet.getSubArray(v, 3, 5);
+		v[0] *= Constant.AU / Constant.SECONDS_PER_DAY;
+		v[1] *= Constant.AU / Constant.SECONDS_PER_DAY;
+		v[2] *= Constant.AU / Constant.SECONDS_PER_DAY;
+		double v0 = Math.sqrt(v[0]*v[0]+v[1]*v[1]+v[2]*v[2]);
+		
+		// Can also be used the simple code below, but result is slightly different
+		//DoubleVector dv = new DoubleVector(DataSet.applyFunction("x*"+Constant.AU+"/"+Constant.SECONDS_PER_DAY, DataSet.getSubArray(v, 3, 5)));
+		//double v0 = dv.norm2();
+		
+		double vhel = -v0 * Math.cos(beta) * Math.sin(lsun - lam); // Note this should be geocentric beta
+		ELLIPSOID ref = obs.getEllipsoid();
+		double ver = obs.getMotherBodyMeanRotationRate(eph) * (ref.getRadiusAtLatitude(obs.getLatitudeRad()) + obs.getHeight() * 0.001) * Math.sin(ha) * Math.cos(delta) * Math.cos(obs.getLatitudeRad());
+		if (!eph.isTopocentric) ver = 0.0;
+		return vhel + ver + star.properMotionRadialV;
+	}
+	
+	private static double[] getSSBPosition(TimeElement time, ObserverElement observer, EphemerisElement eph,
+			double JD_TDB, double lightTime) throws JPARSECException {
+		double pos_SSB[] = null;
+		String a = "JPL DE406";
+		if (eph.preferPrecisionInEphemerides) {
+			try {
+				JPLEphemeris jpl = new JPLEphemeris(EphemerisElement.ALGORITHM.JPL_DE406);
+				if (eph.algorithm.name().indexOf("JPL") >= 0) {
+					a = eph.algorithm.name();
+					jpl = new JPLEphemeris(eph.algorithm, Configuration.JPL_EPHEMERIDES_FILES_EXTERNAL_PATH);
+				}
+				pos_SSB = jpl.getGeocentricPosition(JD_TDB, TARGET.Solar_System_Barycenter, lightTime, false, observer);
+			} catch (Exception exc) {
+				JPARSECException.addWarning(a+" could not be found in the classpath, using Sun position from Moshier algorithms instead.");
+				pos_SSB = Ephem.eclipticToEquatorial(PlanetEphem.getGeocentricPosition(JD_TDB, TARGET.SUN, lightTime, false, observer),
+						Constant.J2000, eph);
+			}
+		} else {
+			pos_SSB = Ephem.eclipticToEquatorial(PlanetEphem.getGeocentricPosition(JD_TDB, TARGET.SUN, lightTime, false, observer),
+					Constant.J2000, eph);			
+		}
+		// Topocentric observer should not be corrected for nutation, although the effect is 
+		// well below the microsecond level. A better way is to avoid aberration in stars,
+		// so that deflection is also considered.
+		return Functions.substract(pos_SSB, observer.topocentricObserverICRF(time, eph));
+	}
+	
+	/**
+	 * Returns the light time to a star from the Solar System Barycenter (SSB) and the Earth.
+	 * Precision of this method should be at the level of +/- 0.05 ms if JPL DE406 (or the selected JPL
+	 * integration) is available. In case the files are not found (or the ephemerides are not configured as
+	 * high precision at {@linkplain EphemerisElement#preferPrecisionInEphemerides}), Sun position (using Moshier algorihtms)
+	 * is used instead of the Solar System barycenter. In that case precision
+	 * will be +/- 4s or better (obviously these values are relative between computations,
+	 * not absolute since stellar distances are not known to such level of precision).<P>
+	 * The difference between the light-time from SSB and from Earth (calculated from the
+	 * distance of the star to the observer) allows to correct time events observed from Earth
+	 * and refer them to an uniform time scale defined by the movement of the barycenter
+	 * of the Solar System in the space.<P>
+	 * Note that the difference between JPL DE406 and DE422 is of a few us, so precision can never be
+	 * better than that.
+	 * @param time The time.
+	 * @param observer The observer at Earth (possibly) used to obtain the star position.
+	 * @param ephIn The ephemeris properties. Only geocentric/topocentric flag and ephemeris 
+	 * reduction method are considered, to rest is set to J2000 equinox, ICRF frame, and astrometric
+	 * coordinates. The algorithm is also taken into account if it corresponds to a JPL ephemeris
+	 * version supported and available, otherwise DE406 is used (if available). As a last chance, 
+	 * Moshier is used.
+	 * @param star The properties of the star.
+	 * @return The light time to the star from the Solar System Barycenter and the Earth (second
+	 * component of the output array), in days.
+	 * @throws JPARSECException If an error occurs.
+	 */
+	public static double[] getLightTimeFromSSBandEarth(TimeElement time, ObserverElement observer, EphemerisElement ephIn,
+			StarElement star) throws JPARSECException {
+
+		EphemerisElement eph = ephIn.clone();
+		eph.equinox = EphemerisElement.EQUINOX_J2000;
+		eph.frame = EphemerisElement.FRAME.ICRF;
+		eph.targetBody = TARGET.NOT_A_PLANET;
+		eph.algorithm = EphemerisElement.ALGORITHM.STAR;
+		eph.ephemType = EphemerisElement.COORDINATES_TYPE.GEOMETRIC; // Neglect light deflection
+		
+		// Get star properties to J2000 equinox and FK5/ICRF frame
+		StarElement newStar = star.clone();
+		if (newStar.frame == EphemerisElement.FRAME.FK4) newStar = StarEphem.transform_FK4_B1950_to_FK5_J2000(newStar);
+		if (newStar.equinox != Constant.J2000) {
+			// Precess to J2000
+			LocationElement loc = new LocationElement(newStar.rightAscension, newStar.declination, 1.0);
+			loc = LocationElement.parseRectangularCoordinates(Precession.precessToJ2000(newStar.equinox, LocationElement.parseLocationElement(loc), eph));
+			newStar.rightAscension = loc.getLongitude();
+			newStar.declination = loc.getLatitude();
+			newStar.equinox = Constant.J2000;			
+		}
+
+		double pc2au = Constant.PARSEC / (1000.0 * Constant.AU);
+		StarEphemElement ephem_star = StarEphem.starEphemeris(time, observer, eph, newStar, false);
+		double lightTimeInDaysFromEarth = ephem_star.distance * pc2au * Constant.LIGHT_TIME_DAYS_PER_AU;
+		
+		double JD_TDB = TimeScale.getJD(time, observer, eph, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
+		double pos_star[] = ephem_star.getEquatorialLocation().getRectangularCoordinates();
+		pos_star = Functions.scalarProduct(pos_star, Constant.PARSEC / (1000.0 * Constant.AU)); // to AU, same as planetary ephemerides
+		
+		// Get topocentric/geocentric position of the Solar System barycenter
+		double lightTime = 0.0;
+		double pos_SSB[] = getSSBPosition(time, observer, ephIn, JD_TDB, lightTime);
+		
+		// Get position from SSB
+		double pos_star_SSB[] = Functions.substract(pos_star, pos_SSB);
+		double lightTimeInDaysFromSSB = LocationElement.parseRectangularCoordinates(pos_star_SSB).getRadius() * Constant.LIGHT_TIME_DAYS_PER_AU;
+		
+		// Correct from different light-time SSB-Earth (The barycenter and the star have moved in those +/- 8 minutes)
+		// This effect is generally below 1s, and should be done with a StarElement referred to an
+		// equinox close to J2000. This is corrected at the beginning of this method.
+		// This should be an iteration, but here I simply use a first order approximation.
+		lightTime = -(lightTimeInDaysFromSSB - lightTimeInDaysFromEarth);
+		pos_SSB = getSSBPosition(time, observer, ephIn, JD_TDB, lightTime);
+		pos_star_SSB = Functions.substract(pos_star, pos_SSB);
+		lightTimeInDaysFromSSB = LocationElement.parseRectangularCoordinates(pos_star_SSB).getRadius() * Constant.LIGHT_TIME_DAYS_PER_AU;
+		
+		double dif = (lightTimeInDaysFromSSB - lightTimeInDaysFromEarth) * newStar.properMotionRadialV * 1000.0 / Constant.SPEED_OF_LIGHT;
+		lightTimeInDaysFromSSB += dif;
+		
+		return new double[] {lightTimeInDaysFromSSB, lightTimeInDaysFromEarth};
+	}
+
+	/**
+	 * Returns the light time to a star from the Solar System Barycenter (SSB).
+	 * Precision of this method should be at the level of +/- 0.05 ms if JPL DE406 (or the selected
+	 * JPL integration) is available. In case the files are not found (or the ephemerides are not configured as
+	 * high precision at {@linkplain EphemerisElement#preferPrecisionInEphemerides}), Sun position (using Moshier algorihtms)
+	 * is used instead of the Solar System barycenter. In that case precision
+	 * will be +/- 4s or better (obviously these values are relative between computations,
+	 * not absolute since stellar distances are not known to such level of precision).<P>
+	 * The difference between the light-time from SSB and from Earth (calculated from the
+	 * distance of the star to the observer) allows to correct time events observed from Earth
+	 * and refer them to an uniform time scale defined by the movement of the barycenter
+	 * of the Solar System in the space.<P>
+	 * Note that the difference between JPL DE406 and DE422 is of a few us, so precision can never be
+	 * better than that.
+	 * @param time The time.
+	 * @param observer The observer at Earth (possibly) used to obtain the star position.
+	 * @param eph The ephemeris properties. Only geocentric/topocentric flag and ephemeris 
+	 * reduction method are considered, to rest is set to J2000 equinox, ICRF frame, and astrometric
+	 * coordinates. The algorithm is also taken into account if it corresponds to a JPL ephemeris
+	 * version supported and available, otherwise DE406 is used (if available). As a last chance, 
+	 * Moshier is used.
+	 * @param star The properties of the star.
+	 * @return The light time to the star from the Solar System Barycenter, in days.
+	 * @throws JPARSECException If an error occurs.
+	 */
+	public static double getLightTimeFromSSB(TimeElement time, ObserverElement observer, EphemerisElement eph,
+			StarElement star) throws JPARSECException {
+
+		return StarEphem.getLightTimeFromSSBandEarth(time, observer, eph, star)[0];
+	}
+
+	/**
+	 * For unit testing only.
+	 * @param args Not used.
+	 */
+	public static void main(String args[])
+	{
+		System.out.println("StarEphem Test");
+
+		try
+		{
+			AstroDate astro = new AstroDate(2050, AstroDate.JANUARY, 1, 6, 10, 0);
+			TimeElement time = new TimeElement(astro, SCALE.TERRESTRIAL_TIME);
+			EphemerisElement eph = new EphemerisElement(TARGET.NOT_A_PLANET, EphemerisElement.COORDINATES_TYPE.APPARENT,
+					EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.GEOCENTRIC, EphemerisElement.REDUCTION_METHOD.WILLIAMS_1994,
+					EphemerisElement.FRAME.ICRF, EphemerisElement.ALGORITHM.JPL_DE405);
+
+			// BSC5
+/*			ReadFile re = new ReadFile();
+			re.setPath(PATH_TO_BSC5_FILE);
+			re.setFormat(ReadFile.FORMAT.FORMAT_BSC5);
+			re.readFileOfStars();
+			String myStar = "Alpheratz";
+			int my_star = re.searchByName(getCatalogNameFromProperName(myStar));
+			StarElement star = (StarElement) re.readElements.get(my_star);
+
+			ObservatoryElement obs = Observatory.findObservatorybyName("Greenwich");
+			ObserverElement observer = ObserverElement.parseObservatory(obs);
+*/
+			// Moshier test, seems he lives near Boston
+			CityElement city = City.findCity("Boston");
+			ObserverElement observer = ObserverElement.parseCity(city);
+			observer.setLongitudeDeg(-71.13);
+			observer.setLatitudeDeg(42.27); // he says geocentic lat = 42.0785 => lat 42.27 deg
+
+			StarElement star = new StarElement("HD 119288", Functions.parseRightAscension(13, 39, 44.526), Functions
+					.parseDeclination("8", 38, 28.63), 1, 2.06f, (float) (-0.0259 * 15.0 * Constant.ARCSEC_TO_RAD), (float) (-0.093 * Constant.ARCSEC_TO_RAD), 0, Constant.B1950,
+					EphemerisElement.FRAME.FK4);
+			
+			// AA Suplement (2006) page 181: difference of 6 mas in RA and 1 mas in DEC if correction of
+			// proper motions from "/tropical year to "/Julian year is applied, else difference is < 1 mas.
+			// After inverting the transformation the inconsistency is close to 1 mas, due to non-zero 
+			// radial v, which is supposed constant between 1950 and 2000 ...
+			// In previos example (HD 119288) inconsistency is obviously 0.
+/*			star = new StarElement("Ficticious", Functions.parseRightAscension(14, 36, 11.25), Functions
+					.parseDeclination("-60", 37, 48.85), 751, 2.06f, (float) (-49.042 * 0.01 * 15.0 * Constant.ARCSEC_TO_RAD), (float) (71.2 * 0.01 * Constant.ARCSEC_TO_RAD), -22.2f, Constant.B1950,
+					EphemerisElement.FRAME.FK4); // Should be 14 39 36.1869 -60 50 7.393 -49.5060 69.934 0.7516 -22.18
+*/			
+			star = StarEphem.transform_FK4_B1950_to_FK5_J2000(star);
+			System.out.println("RA: " + Functions.formatRA(star.rightAscension, 6));
+			System.out.println("DEC: " + Functions.formatDEC(star.declination, 5));
+			System.out.println("dRA: " + Functions.formatDEC(star.properMotionRA/15.0, 6));
+			System.out.println("dDEC: " + Functions.formatDEC(star.properMotionDEC, 5));
+			System.out.println("Parallax: " + Functions.formatDEC(Constant.ARCSEC_TO_RAD*0.001*star.parallax, 5));
+			System.out.println("Radial V: " + Functions.formatValue(star.properMotionRadialV, 5));
+			// JPrecess.pro program: 13 42 12.740, 8 23 17.69, ok
+			EphemerisElement eph_iau1976 = new EphemerisElement();
+			eph_iau1976.ephemMethod = REDUCTION_METHOD.IAU_1976;
+			star = StarEphem.transform_FK5_J2000_to_FK4_B1950(star, eph_iau1976);
+			System.out.println("RA: " + Functions.formatRA(star.rightAscension, 6));
+			System.out.println("DEC: " + Functions.formatDEC(star.declination, 5));
+			System.out.println("dRA: " + Functions.formatDEC(star.properMotionRA/15.0, 6));
+			System.out.println("dDEC: " + Functions.formatDEC(star.properMotionDEC, 5));
+
+/*			double m[][] = new double[6][6];
+			int in = -1;
+			for (int i=0; i<6; i++) {
+				for (int j=0; j<6; j++) {
+					in ++;
+					m[i][j] = MAT[in];
+				}				
+			}
+			Matrix ma = new Matrix(m);
+			ma.print(17, 15);
+			ma = ma.inverse();
+			ma.print(17, 15);
+*/			
+			// Use his catalog. To reproduce results of aa56 of Moshier I use
+			// Williams formulae, for the recent aa200 IAU1976 should be used.
+			star = new StarElement("Alpheratz", Functions.parseRightAscension(0, 8, 23.265), Functions
+					.parseDeclination("29", 05, 25.58), 24, 2.06f, (float) (1.039 * 0.01 * 15.0 * Constant.ARCSEC_TO_RAD / Math
+					.cos(0*29.1 * Constant.DEG_TO_RAD)), (float) (-16.33 * 0.01 * Constant.ARCSEC_TO_RAD), -12, Constant.J2000,
+					EphemerisElement.FRAME.ICRF);
+			
+/*			// AA 2004 test, B31
+			astro = new AstroDate(2004, AstroDate.JANUARY, 1, 0, 0, 0);
+			time = new TimeElement(astro, SCALE.TERRESTRIAL_TIME);
+			eph.algorithm = EphemerisElement.ALGORITHM.JPL_DE405;
+			star = new StarElement("Ficticious", Functions.parseRightAscension(14, 39, 36.087), Functions
+					.parseDeclination("-60", 50, 7.14), 752, 2.06f, (float) (-49.486 * 0.01 * 15.0 * Constant.ARCSEC_TO_RAD), (float) (69.60 * 0.01 * Constant.ARCSEC_TO_RAD), -22.2f, Constant.J2000,
+					EphemerisElement.FRAME.ICRF); // eph object above in ICRF to avoid frame conversion
+			// AA says 14 39 49.532, -60 50 50.75 (OK, using old WILLIAMS formulae)
+*/
+			
+			// For Barnard star
+/*			star = new StarElement("Barnard", Functions.parseRightAscension(17, 55, 23.0), Functions
+					.parseDeclination("4", 33, 18.00), 548, 9.54f, (float) (-5.0 * 15.0 * Constant.ARCSEC_TO_RAD / 100.0),
+					(float) (1031.0 * Constant.ARCSEC_TO_RAD / 100.0), -107.8f, Constant.B1950, EphemerisElement.FRAME.FK4);
+			astro = new AstroDate(1986, AstroDate.JANUARY, 1, 0, 0, 0);
+			time = new TimeElement(astro, SCALE.TERRESTRIAL_TIME);
+*/
+			
+/*			astro = new AstroDate(1989, AstroDate.JULY, 3, 10, 0, 0);
+			time = new TimeElement(astro, SCALE.UNIVERSAL_TIME_UTC);
+			//Configuration.PREFER_PRECISION_IN_EPHEMERIDES = false;
+			eph = new EphemerisElement(TARGET.NOT_A_PLANET, EphemerisElement.COORDINATES_TYPE.APPARENT,
+					EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.TOPOCENTRIC, EphemerisElement.REDUCTION_METHOD.IAU_2006,
+					EphemerisElement.FRAME.ICRF, EphemerisElement.ALGORITHM.STAR);
+			star = StarEphem.getStarElement(StarEphem.getStarTargetIndex("18460079"));
+			city = City.findCity("Madrid");
+			observer = ObserverElement.parseCity(city);
+*/
+			
+			StarEphemElement star_ephem = StarEphem.starEphemeris(time, observer, eph, star, true);
+
+			System.out.println("CALCULATION TIME "+TimeFormat.formatJulianDayAsDateAndTime(astro.jd(), time.timeScale));
+			System.out.println("Using catalog by Moshier "+(star.name));
+			System.out.println("RA: " + Functions.formatRA(star_ephem.rightAscension));
+			System.out.println("DEC: " + Functions.formatDEC(star_ephem.declination));
+			
+			eph.isTopocentric = true;
+			star_ephem = StarEphem.starEphemeris(time, observer, eph, star, true);
+			
+			System.out.println("MAG: " + Functions.formatValue(star_ephem.magnitude, 3));
+			System.out.println("R: " + Functions.formatValue(star_ephem.distance, 3));
+			System.out.println("AZI: " + Functions.formatAngle(star_ephem.azimuth, 3));
+			System.out.println("ELE: " + Functions.formatAngle(star_ephem.elevation, 3));
+			System.out.println("PARA. ANGLE: " + Functions.formatAngle(star_ephem.paralacticAngle, 3));
+			System.out.println("CONSTEL: " + star_ephem.constellation);
+			System.out.println("RISE:      " + TimeFormat.formatJulianDayAsDateAndTime(star_ephem.rise, SCALE.LOCAL_TIME));
+			System.out.println("TRANSIT:   " + TimeFormat.formatJulianDayAsDateAndTime(star_ephem.transit, SCALE.LOCAL_TIME));
+			System.out.println("MAX_ELEV:  " + Functions.formatAngle(star_ephem.transitElevation, 3));
+			System.out.println("SET:       " + TimeFormat.formatJulianDayAsDateAndTime(star_ephem.set, SCALE.LOCAL_TIME));
+
+			// JPARSEC Sky2000
+			ReadFile re = new ReadFile();
+			re.setPath(PATH_TO_SkyMaster2000_JPARSEC_FILE);
+			re.setFormat(ReadFile.FORMAT.JPARSEC_SKY2000);
+			re.readFileOfStars();
+			int my_star = re.searchByName(getCatalogNameFromProperName("Alpheratz"));
+			star = (StarElement) re.getReadElements()[my_star];
+
+/*			star = new StarElement("Polar", Functions.parseRightAscension(2, 31, 47.0753), Functions
+					.parseDeclination("89", 15, 50.090), 7.56, 1.97f, (float) (0.04422 * Constant.ARCSEC_TO_RAD / Math
+					.cos(89.25 * Constant.DEG_TO_RAD)), (float) (-0.01175 * Constant.ARCSEC_TO_RAD), star.properMotionRadialV, Constant.J2000,
+					EphemerisElement.FRAME.FRAME_FK5);
+*/
+			eph.isTopocentric = true;
+			star_ephem = StarEphem.starEphemeris(time, observer, eph, star, true);
+
+			System.out.println("");
+			System.out.println("USING JPARSEC Sky2000");
+			System.out.println("RA: " + Functions.formatRA(star_ephem.rightAscension));
+			System.out.println("DEC: " + Functions.formatDEC(star_ephem.declination));
+			
+			//eph.isTopocentric = true;
+			//star_ephem = StarEphem.starEphemeris(time, observer, eph, star, true);
+
+			System.out.println("MAG: " + Functions.formatValue(star_ephem.magnitude, 3));
+			System.out.println("R: " + Functions.formatValue(star_ephem.distance, 3));
+			System.out.println("AZI: " + Functions.formatAngle(star_ephem.azimuth, 3));
+			System.out.println("ELE: " + Functions.formatAngle(star_ephem.elevation, 3));
+			System.out.println("PARA. ANGLE: " + Functions.formatAngle(star_ephem.paralacticAngle, 3));
+			System.out.println("CONSTEL: " + star_ephem.constellation);
+			System.out.println("RISE:      " + TimeFormat.formatJulianDayAsDateAndTime(star_ephem.rise, SCALE.LOCAL_TIME));
+			System.out.println("TRANSIT:   " + TimeFormat.formatJulianDayAsDateAndTime(star_ephem.transit, SCALE.LOCAL_TIME));
+			System.out.println("MAX_ELEV:  " + Functions.formatAngle(star_ephem.transitElevation, 3));
+			System.out.println("SET:       " + TimeFormat.formatJulianDayAsDateAndTime(star_ephem.set, SCALE.LOCAL_TIME));
+
+			// Test data from Moshier
+/*
+			StarElement star2 = new StarElement("Barnard", Functions.parseRightAscension(17, 55, 23.0), Functions
+					.parseDeclination(4, 33, 18.00), 548, 9.54, -5.0 * 15.0 * Constant.ARCSEC_TO_RAD / 100.0,
+					1031.0 * Constant.ARCSEC_TO_RAD / 100.0, -107.8, Constant.B1950, EphemerisElement.FRAME.FRAME_FK4);
+
+			StarEphemElement star_ephem2 = StarEphem.starEphemeris(time, observer, eph, star2, true);
+
+			System.out.println("");
+			System.out.println("RA: " + Functions.formatRA(star_ephem2.rightAscension));
+			System.out.println("DEC: " + Functions.formatDEC(star_ephem2.declination));
+			System.out.println("MAG: " + Functions.formatValue(star_ephem2.magnitude, 3));
+			System.out.println("R: " + Functions.formatValue(star_ephem2.distance, 3));
+			System.out.println("AZI: " + Functions.formatAngle(star_ephem2.azimuth, 3));
+			System.out.println("ELE: " + Functions.formatAngle(star_ephem2.elevation, 3));
+			System.out.println("PARA. ANGLE: " + Functions.formatAngle(star_ephem2.paralacticAngle, 3));
+			System.out.println("CONSTEL: " + star_ephem2.constellation);
+			System.out.println("RISE:      " + TimeFormat.formatJulianDayAsDateAndTime(star_ephem2.rise));
+			System.out.println("TRANSIT:   " + TimeFormat.formatJulianDayAsDateAndTime(star_ephem2.transit));
+			System.out.println("MAX_ELEV:  " + Functions.formatAngle(star_ephem2.transitElevation, 3));
+			System.out.println("SET:       " + TimeFormat.formatJulianDayAsDateAndTime(star_ephem2.set));
+
+			StarElement star3 = new StarElement("MWC1080", Functions.parseRightAscension(23, 17, 25.5744), Functions
+					.parseDeclination(60, 50, 43.34), 1000.0 / 1600, 10, -0.01863 * Constant.ARCSEC_TO_RAD / Math
+					.cos(60.83 * Constant.DEG_TO_RAD), -0.01484 * Constant.ARCSEC_TO_RAD, -4.0, Constant.J2000,
+					EphemerisElement.FRAME.FRAME_ICRS);
+			StarElement star4 = new StarElement("VVSer", Functions.parseRightAscension(18, 28, 47.863), Functions
+					.parseDeclination(0, 8, 39.99), 1000.0 / 330, 10, 0.002 * Constant.ARCSEC_TO_RAD / Math
+					.cos(0.13 * Constant.DEG_TO_RAD), -0.008 * Constant.ARCSEC_TO_RAD, -4.0, Constant.J2000,
+					EphemerisElement.FRAME.FRAME_FK5);
+*/
+/*			star = new StarElement("Polar", 2.530301028 / Constant.RAD_TO_HOUR, 89.264109444 * Constant.DEG_TO_RAD,
+				7.56, 1.97f, (float) (0.04422 * Constant.ARCSEC_TO_RAD / Math
+				.cos(89.26411 * Constant.DEG_TO_RAD)), (float) (-0.01175 * Constant.ARCSEC_TO_RAD), -17.4f, Constant.J2000,
+				EphemerisElement.FRAME.FRAME_FK5);
+			time = new TimeElement(2450300.5, SCALE.TERRESTRIAL_TIME);
+			eph.isTopocentric = false;
+			eph.frame = EphemerisElement.FRAME.FRAME_FK5;
+			eph.ephemMethod = EphemerisElement.APPLY_IAU2006;
+			star_ephem = StarEphem.starEphemeris(time, observer, eph, star, true);
+
+			System.out.println("");
+			System.out.println("POLARIS POSITION AT JD = 2450203.5 TT");
+			System.out.println("RA: " + (star_ephem.rightAscension * Constant.RAD_TO_HOUR));
+			System.out.println("DEC: " + (star_ephem.declination * Constant.RAD_TO_DEG));
+*/
+			System.out.println("");
+			StarElement star5 = new StarElement("RMon", Functions.parseRightAscension(6, 39, 9.947), Functions
+					.parseDeclination("8", 44, 10.75), 1000.0 / 800, 10, (float) (-0.003 * Constant.ARCSEC_TO_RAD / Math
+					.cos(8.75 * Constant.DEG_TO_RAD)), (float) (-0.004 * Constant.ARCSEC_TO_RAD), 12.0f, Constant.J2000,
+					EphemerisElement.FRAME.FK5);
+					
+			StarElement star7 = new StarElement("ZCMa", Functions.parseRightAscension(7, 3, 43.1619), Functions
+					.parseDeclination("-11", 33, 6.209), 1000.0 / 930, 10, (float) (-0.00877 * Constant.ARCSEC_TO_RAD / Math
+					.cos(11.55 * Constant.DEG_TO_RAD)), (float) (-0.00342 * Constant.ARCSEC_TO_RAD), 28.0f, Constant.J2000,
+					EphemerisElement.FRAME.FK5);
+			
+			StarElement star6 = new StarElement("HD259431", Functions.parseRightAscension(6, 33, 5.19), Functions
+					.parseDeclination("+10", 19, 19.99), 5.78, 8.8f, (float) (-0.00237 * Constant.ARCSEC_TO_RAD / Math
+					.cos(25.35 * Constant.DEG_TO_RAD)), (float) (-0.00272 * Constant.ARCSEC_TO_RAD), 17f, Constant.J2000,
+					EphemerisElement.FRAME.FK5);
+
+			//StarElement star7 = new StarElement("Check", StarEphem.lsrRA, StarEphem.lsrDEC, 930, 0, 0, 0, 0,
+			//		Constant.J2000, EphemerisElement.FRAME.FRAME_FK5);
+
+			astro = new AstroDate(2011, AstroDate.JULY, 13, 10, 22, 46);
+			time = new TimeElement(astro, SCALE.UNIVERSAL_TIME_UT1);
+			city = City.findCity("Madrid");
+			observer = ObserverElement.parseCity(city);
+			double LSR = StarEphem.getLSRradialVelocity(time, observer, eph, star6);
+			System.out.println("LSR of " + star6.name + ": " + LSR);
+			eph.isTopocentric = true;
+			double vRel = StarEphem.getRadialVelocity(time, observer, eph, star6);
+			System.out.println("Vtop of " + star6.name + ": " + vRel);
+			eph.isTopocentric = false;
+			vRel = StarEphem.getRadialVelocity(time, observer, eph, star6);
+			System.out.println("Vgeo of " + star6.name + ": " + vRel);
+
+			// Sirius = HIP 32349
+			StarElement star8 = new StarElement("Sirius", Functions.parseRightAscension(6, 45, 9.25), Functions
+					.parseDeclination("-16", 42, 47.3), 379.21, -1.44f, (float) (-0.54601 * Constant.ARCSEC_TO_RAD / Math
+					.cos(-16.7131388889 * Constant.DEG_TO_RAD)), (float) (-1.22308 * Constant.ARCSEC_TO_RAD), 
+					-7.6f, Constant.J1991_25, // Radial velocity from Simbad
+					EphemerisElement.FRAME.ICRF);
+			// Hipparcos -> FK5 J2000
+			star8 = StarEphem.transformStarElementsToOutputEquinoxAndFrame(star8, FRAME.FK5, Constant.J2000, Constant.J1991_25);
+			System.out.println("J2000 RA FK5:     "+ Functions.formatRA(star8.rightAscension, 4));
+			System.out.println("J2000 DEC FK5:   "+ Functions.formatDEC(star8.declination, 3));
+			System.out.println("J2000 DRA FK5:   "+ Functions.formatValue(star8.properMotionRA*Constant.RAD_TO_ARCSEC, 3));
+			System.out.println("J2000 DDEC FK5: "+ Functions.formatValue(star8.properMotionDEC*Constant.RAD_TO_ARCSEC, 3));
+			System.out.println("J2000 DRV FK5:   "+ Functions.formatValue(star8.properMotionRadialV, 3));
+			
+			// ICRS J2000 (Simbad): 06 45 08.91728 -16 42 58.0171         8.9174      58.002     (JPARSEC)
+			// FK5 J2000 (Simbad): 06 45 08.917 -16 42 58.02                  8.9189      58.024
+			// FK4 B1950 (Simbad): 06 42 56.72 -16 38 45.4                    56.7247    45.391
+
+			// Now to B1950. Note in the previous step precession is not applied since Hipparcos data is referred to ICRS.
+			// Here we first force equinox to be already J2000 to avoid precession also. That's why previous method don't
+			// support direct transformation to B1950, due to peculiarity of Hipparcos reference epoch/equinox.
+			star8.equinox = Constant.J2000;
+			star8 = StarEphem.transform_FK5_J2000_to_FK4_B1950(star8, eph_iau1976);
+			System.out.println("B1950 RA FK4:     "+ Functions.formatRA(star8.rightAscension, 4));
+			System.out.println("B1950 DEC FK4:   "+ Functions.formatDEC(star8.declination, 3));
+			System.out.println("B1950 DRA FK4:   "+ Functions.formatValue(star8.properMotionRA*Constant.RAD_TO_ARCSEC, 3));
+			System.out.println("B1950 DDEC FK4: "+ Functions.formatValue(star8.properMotionDEC*Constant.RAD_TO_ARCSEC, 3));
+			System.out.println("B1950 DRV FK4:   "+ Functions.formatValue(star8.properMotionRadialV, 3));
+
+			// Cross check
+			star8 = StarEphem.transform_FK4_B1950_to_FK5_J2000(star8);
+			System.out.println("J2000 RA FK5:     "+ Functions.formatRA(star8.rightAscension, 4));
+			System.out.println("J2000 DEC FK5:   "+ Functions.formatDEC(star8.declination, 3));
+			System.out.println("J2000 DRA FK5:   "+ Functions.formatValue(star8.properMotionRA*Constant.RAD_TO_ARCSEC, 3));
+			System.out.println("J2000 DDEC FK5: "+ Functions.formatValue(star8.properMotionDEC*Constant.RAD_TO_ARCSEC, 3));
+			System.out.println("J2000 DRV FK5:   "+ Functions.formatValue(star8.properMotionRadialV, 3));
+
+			star8 = new StarElement("HD 6755", Functions.parseRightAscension(1, 9, 42.3), 
+					Functions.parseDeclination("61", 32, 49.5), 1000.0 / 139, 0, (float) (628.42 * 1.0E-3 * Constant.ARCSEC_TO_RAD), 
+					(float) (76.65 * 1.0E-3 * Constant.ARCSEC_TO_RAD), -321.4f, Constant.J2000, FRAME.FK5);
+			double uvw[] = StarEphem.getGalacticMotionUVW(star8, true);
+			System.out.println(ConsoleReport.doubleArrayReport(new String[] {"u = xxxx.x km/s", "v = xxxx.x km/s", "w = xxxx.x km/s"}, uvw));
+			JPARSECException.showWarnings();
+		} catch (JPARSECException ve)
+		{
+			JPARSECException.showException(ve);
+		}
+	}
+
+	/**
+	   RESULTS CHECKED WITH AA EPHEMERIDES PROGRAM BY S. L. MOSHIER, EVERYTHING OK
+	   
+	                                  per century
+eq   RAh RAm RAs  DECg DECm DECs  RApm(s) DECpm('') VR_pm  Parallax  Mag  Nombre    ID
+2000 00 08 23.265  29 05 25.58   1.039  -16.33 -12.0 0.0240   2.06 alAnd(Alpheratz)       4
+1950 17 55 23.000   4 33 18.00  -5.0   1031.0 -107.8 0.548   9.54  Barnard
+
+Terrestrial east longitude -71.1300 deg
+geocentric latitude 42.0785 deg
+
+               alpha Andromedae (Alpheratz)
+
+JD 2446431.76,  1986 January 1 Wednesday  6h 09m 05.130s  UT
+1986 January 1 Wednesday  6h 10m 00.000s  TDT
+approx. visual magnitude 2.1
+Astrometric J2000.0:  R.A.   0h 08m 23.118s  Dec.    29d 05' 27.86"  
+Astrometric B1950.0:  R.A.   0h 05m 48.257s  Dec.    28d 48' 46.14"  
+Astrometric of date:  R.A.   0h 07m 39.711s  Dec.    29d 00' 47.45"  
+elongation from sun 93.22 degrees, light defl. dRA 0.000s dDec 0.00"
+annual aberration dRA -0.215s dDec 8.66"
+nutation dRA -0.829s dDec -3.45"
+    Apparent:  R.A.   0h 07m 38.668s  Dec.    29d 00' 52.66"  
+Local apparent sidereal time   8h 06m 58.673s  
+diurnal aberration dRA -0.009s dDec 0.10"
+atmospheric refraction 0.444 deg  dRA 78.482s dDec 1224.21"
+Topocentric:  Altitude 0.692 deg, Azimuth 310.658 deg
+Topocentric: R.A.  0h 08m 57.141s   Dec.   29d 21' 16.96"  
+local meridian transit 1985 December 31 Tuesday 22h 11m 03.676s  UT
+rises 1985 December 31 Tuesday 14h 07m 12.434s  UT
+sets 1986 January 1 Wednesday  6h 14m 54.875s  UT
+Visible hours 16.1285
+
+
+              Barnard
+
+JD 2446431.50,  1986 January 1 Wednesday  0h 00m 00.000s  TDT
+Converting to FK5 system
+approx. visual magnitude 9.5
+Astrometric J2000.0:  R.A.  17h 57m 49.551s  Dec.     4d 39' 14.85"
+Astrometric B1950.0:  R.A.  17h 55m 21.275s  Dec.     4d 39' 29.75"
+Astrometric of date:  R.A.  17h 57m 08.029s  Dec.     4d 39' 17.93"
+elongation from sun 30.03 degrees, light defl. dRA -0.000s dDec 0.01"
+annual aberration dRA -1.368s dDec -1.80"
+nutation dRA -0.546s dDec -6.91"
+
+- NOTE MOSHIER DOES NOT CORRECT FOR DIFFERENTIAL LIGHT TIME => 0.05" in DEC FOR BARNARD
+
+ Apparent:  R.A.  17h 57m 06.114s  Dec.     4d 39' 09.26"
+Local apparent sidereal time   1h 56m 52.913s
+diurnal aberration dRA -0.008s dDec 0.02"
+atmospheric refraction 0.000 deg  dRA -0.000s dDec 0.00"
+Topocentric:  Altitude -18.318 deg, Azimuth 294.529 deg
+Topocentric: R.A. 17h 57m 06.106s   Dec.    4d 39' 09.28"
+local meridian transit 1985 December 31 Tuesday 16h 01m 31.813s  UT
+rises 1985 December 31 Tuesday  9h 42m 34.767s  UT
+sets 1985 December 31 Tuesday 22h 20m 28.821s  UT
+Visible hours 12.6317
+
+	 */
+}
