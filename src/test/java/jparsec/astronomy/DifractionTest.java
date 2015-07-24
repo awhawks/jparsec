@@ -4,10 +4,10 @@ public class DifractionTest {
 
     /**
      * For unit testing only.
-     *
      * @param args Not used.
      */
-    public static void main(String args[]) throws Exception {
+    public static void main(String args[]) throws Exception
+    {
         System.out.println("Difraction test");
         TelescopeElement telescope = TelescopeElement.SCHMIDT_CASSEGRAIN_20cm;
         double pattern[][] = Difraction.pattern(telescope, 4);

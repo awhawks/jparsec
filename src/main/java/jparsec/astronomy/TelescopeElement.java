@@ -18,13 +18,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.astronomy;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-
-import jparsec.ephem.Functions;
 import jparsec.io.FileFormatElement;
 import jparsec.io.FileIO;
 import jparsec.io.ReadFile;
@@ -89,12 +87,21 @@ public class TelescopeElement implements Serializable
 
 		this.invertHorizontal = false;
 		this.invertVertical = false;
-		if (name.toLowerCase().indexOf("binocular") >= 0 || name.toLowerCase().indexOf("human") >= 0 || name.toLowerCase().indexOf("obje") >= 0 ) return;
+		if (name.toLowerCase().contains("binocular") ||
+                name.toLowerCase().contains("human") ||
+                name.toLowerCase().contains("obje")) return;
 
 		boolean sct = false, newton = false, refractor = false;
-		if (name.equals("SCT") || name.indexOf("Schmidt-Cassegrain") >= 0 || name.indexOf(" SCT") >= 0 || name.indexOf(" Mak") >= 0 || name.indexOf(" Cass") >= 0) sct = true;
-		if (name.indexOf("Newton") >= 0 || name.indexOf(" Newt") >= 0 || name.indexOf(" Dob") >= 0 ) newton = true;
-		if (name.equals("Refractor") || name.indexOf(" Refr") >= 0) refractor = true;
+		if (name.equals("SCT") ||
+            name.contains("Schmidt-Cassegrain") ||
+            name.contains(" SCT") ||
+            name.contains(" Mak") ||
+            name.contains(" Cass")) sct = true;
+		if (name.contains("Newton") ||
+            name.contains(" Newt") ||
+            name.contains(" Dob")) newton = true;
+		if (name.equals("Refractor") |
+            name.contains(" Refr")) refractor = true;
 		if (!sct && !newton && !refractor) { // Account for scopes in the scope.txt file that doesn't have clear IDs
 			if (diameter < 150) {
 				refractor = true;
@@ -102,7 +109,7 @@ public class TelescopeElement implements Serializable
 				newton = true;
 			}
 		}
-			
+
 		if (sct && !newton && !refractor) {
 			this.invertHorizontal = true; // Only horizontal flip, assuming the diagonal mirror is used. Otherwise it would be like a refractor
 		}
@@ -147,7 +154,7 @@ public class TelescopeElement implements Serializable
 	 */
 	public OcularElement ocular;
 	private OcularElement lastOcular;
-	
+
 	/**
 	 * CCD camera attached to the telescope instead of an ocular. To be used
 	 * this value must be non null and ocular must be null;
@@ -165,19 +172,18 @@ public class TelescopeElement implements Serializable
 	 * True if the telescope inverts the image from East-West.
 	 */
 	public boolean invertHorizontal;
-	
+
 	/**
 	 * True if the telescope inverts the vision from North-South.
 	 */
 	public boolean invertVertical;
-	
+
 	/**
 	 * Returns an adequate object for a typical 20 cm f/10 Schmidt-Cassegrain
 	 * reflector telescope with the default ocular.
 	 */
 	public static final TelescopeElement SCHMIDT_CASSEGRAIN_20cm =
 		new TelescopeElement("Schmidt-Cassegrain 20cm f/10", 2003, 200, 80, 0, 0.75f, new OcularElement());
-	
 
 	/**
 	 * Returns an adequate object for a typical 40 cm f/10 Schmidt-Cassegrain
@@ -272,8 +278,8 @@ public class TelescopeElement implements Serializable
 			}
 			tel[tel.length-1].name = Translate.translate(tel[tel.length-1].name);
 		}
-		
-		for (int i=0; i<tel.length; i++) {
+
+		for (int i = 0; i < tel.length; i++) {
 			if (tel[i].ocular != null) {
 				tel[i].ocular.name = Translate.translate(tel[i].ocular.name);
 			}
@@ -352,7 +358,7 @@ public class TelescopeElement implements Serializable
 
 		OcularElement ocular = new OcularElement();
 		ReadFormat rf = new ReadFormat();
-		
+
 		rf.setFormatToRead(fmt);
 		for (int i = 0; i < v.size(); i++)
 		{
@@ -379,7 +385,7 @@ public class TelescopeElement implements Serializable
 			}
 			if (c >= 0)
 			{
-				if (name.indexOf("AP ") >= 0)
+				if (name.contains("AP "))
 					crom = 0;
 			}
 
@@ -404,7 +410,7 @@ public class TelescopeElement implements Serializable
 		int what = -1;
 		for (int i = 0; i < telescopes.length; i++)
 		{
-			if (telescopes[i].name.indexOf(telescope_name) >= 0)
+			if (telescopes[i].name.contains(telescope_name))
 				what = i;
 		}
 		if (what >= 0)
@@ -455,7 +461,7 @@ public class TelescopeElement implements Serializable
 			TelescopeElement telescope)
 	{
 		if (telescope.ocular == null) return 0;
-		
+
 		double mag = telescope.ocular.fieldOfView / field;
 
 		float fl = (float) (telescope.focalLength / mag);
@@ -501,7 +507,6 @@ public class TelescopeElement implements Serializable
 	 */
 	public TelescopeElement clone()
 	{
-		if (this == null) return null;
 		TelescopeElement tel = null;
 		if (ocular == null) {
 			tel = new TelescopeElement(this.name, this.focalLength, this.diameter,
@@ -524,12 +529,9 @@ public class TelescopeElement implements Serializable
 	public boolean equals(Object telescope)
 	{
 		if (telescope == null) {
-			if (this == null) return true;
 			return false;
 		}
-		if (this == null) {
-			return false;
-		}
+
 		TelescopeElement tel = (TelescopeElement) telescope;
 		boolean equals = true;
 		if (!this.name.equals(tel.name)) equals = false;
@@ -642,7 +644,7 @@ public class TelescopeElement implements Serializable
 					}
 				}
 			}
-			
+
 			double l = 1.0 / Math.pow(10.0, m / 2.5);
 			double sg = l * s * so * en * ap * ap;
 			double sk = s * so * ar * ap * ap / Math.pow(10.0, sb / 2.5);
@@ -707,47 +709,6 @@ public class TelescopeElement implements Serializable
 			ocular = null;
 		} else {
 			ocular = lastOcular;
-		}
-	}
-	
-	/**
-	 * For unit testing only.
-	 * @param args Not used.
-	 */
-	public static void main(String args[])
-	{
-		System.out.println("TelescopeElement Test");
-
-		TelescopeElement telescope = TelescopeElement.SCHMIDT_CASSEGRAIN_20cm;
-
-		try
-		{
-			Translate.setDefaultLanguage(Translate.LANGUAGE.SPANISH);
-			System.out.println("Field of view: " + Functions.formatAngle(telescope.getField(), 1));
-			System.out.println("Limiting magnitude: " + Functions.formatValue(telescope.getLimitingMagnitude(), 1));
-			System.out.println("Resolution: " + Functions.formatAngle(telescope.getResolution(), 1));
-			System.out.println("mm for 1 degree object: " + Functions.formatValue(telescope.getObjectSizeAtFilmPlane(0.5 * Constant.DEG_TO_RAD), 1));
-
-			TelescopeElement tel[] = TelescopeElement.getAllAvailableTelescopes();
-
-			System.out.println("List of all telescopes");
-			for (int i = 0; i < tel.length; i++)
-			{
-				System.out.println(tel[i].name + "/" + tel[i].diameter + "/" + tel[i].focalLength + "/" + tel[i].centralObstruction + "/" + tel[i].spidersSize + "/" + tel[i].cromatismLevel);
-				System.out.println("  Primary focus field: "+tel[i].getPrimaryFocusField()*Constant.RAD_TO_DEG);
-				System.out.println("  Field: "+tel[i].getField()*Constant.RAD_TO_DEG);
-				System.out.println("  Limiting magnitude: "+tel[i].getLimitingMagnitude());
-				System.out.println("  Resolution: "+tel[i].getResolution()*Constant.RAD_TO_ARCSEC);
-				tel[i].attachCCDCamera(CCDElement.getCCD("ST-9E"));
-				System.out.println("  Limiting magnitude for ST-9E and 100s exposure: "+tel[i].getCCDLimitingMagnitude(100, 19, 7));
-				System.out.println("  Field: "+tel[i].getField()*Constant.RAD_TO_DEG);
-				tel[i].attachCCDCamera(null);
-				System.out.println("  Field: "+tel[i].getField()*Constant.RAD_TO_DEG);
-				System.out.println("  Invert H/V: "+tel[i].invertHorizontal+"/"+tel[i].invertVertical);
-			}
-		} catch (Exception ve)
-		{
-			ve.printStackTrace();
 		}
 	}
 }

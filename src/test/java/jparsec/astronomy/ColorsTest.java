@@ -5,27 +5,27 @@ import jparsec.astrophysics.photometry.Photometry;
 public class ColorsTest {
     /**
      * Test program.
-     *
      * @param args Unused.
      */
-    public static void main(String args[]) throws Exception {
+    public static void main(String args[]) throws Exception
+    {
         double ival0 = 1.0;
         double ival = ival0;
 
-        System.out.println("(V-I) " + ival + " = (B-V) " + Colors.viTobv(ival));
-        System.out.println("(V-I) " + ival + " = (V-R) " + Colors.viTovr(ival));
+        System.out.println("(V-I) " +ival+ " = (B-V) " + Colors.viTobv(ival));
+        System.out.println("(V-I) " +ival+ " = (V-R) " + Colors.viTovr(ival));
         ival = Colors.viTobv(ival0);
 
-        System.out.println("(B-V) " + ival + " = (V-I) " + Colors.bvTovi(ival));
+        System.out.println("(B-V) " +ival+ " = (V-I) " + Colors.bvTovi(ival));
         ival = Colors.viTovr(ival);
 
-        System.out.println("(V-R) " + ival + " = (V-I) " + Colors.vrTovi(ival));
+        System.out.println("(V-R) " +ival+ " = (V-I) " + Colors.vrTovi(ival));
         ival = ival0;
 
-        System.out.println("(V-R) " + ival + " = (B-V) " + Colors.vrTobv(ival));
+        System.out.println("(V-R) " +ival+ " = (B-V) " + Colors.vrTobv(ival));
         ival = Colors.vrTobv(ival);
 
-        System.out.println("(B-V) " + ival + " = (V-R) " + Colors.bvTovr(ival));
+        System.out.println("(B-V) " +ival+ " = (V-R) " + Colors.bvTovr(ival));
         double ovals[] = Colors.bvTychoToJohnson(ival);
 
         if (ovals != null) {

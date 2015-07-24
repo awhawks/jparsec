@@ -52,7 +52,7 @@ public class OcularElement implements Serializable {
 		focalLength = 20;
 		fieldOfView = 50.0 * Constant.DEG_TO_RAD;
 		reticleSize = 32;
-		name = Translate.translate(Translate.JPARSEC_DEFAULT_OCULAR)+" 1-1/4, 20mm, 50º";
+		name = Translate.translate(Translate.JPARSEC_DEFAULT_OCULAR)+" 1-1/4, 20mm, 50?";
 	}
 
 	/**
@@ -98,7 +98,6 @@ public class OcularElement implements Serializable {
 	 */
 	public OcularElement clone()
 	{
-		if (this == null) return null;
 		OcularElement ocular = new OcularElement(this.name, this.focalLength, this.fieldOfView, this.reticleSize);
 		return ocular;
 	}
@@ -111,12 +110,9 @@ public class OcularElement implements Serializable {
 	public boolean equals(Object ocular)
 	{
 		if (ocular == null) {
-			if (this == null) return true;
 			return false;
 		}
-		if (this == null) {
-			return false;
-		}
+
 		OcularElement o = (OcularElement) ocular;
 		boolean equals = true;
 		if (!this.name.equals(o.name)) equals = false;
@@ -125,6 +121,7 @@ public class OcularElement implements Serializable {
 		if (this.reticleSize != o.reticleSize) equals = false;
 		return equals;
 	}
+
 	/**
 	 * Return all oculars from external file.
 	 * 
@@ -204,7 +201,7 @@ public class OcularElement implements Serializable {
 		int what = -1;
 		for (int i = 0; i < oculars.length; i++)
 		{
-			if (oculars[i].name.indexOf(ocular_name) >= 0)
+			if (oculars[i].name.contains(ocular_name))
 				what = i;
 		}
 		if (what >= 0)
@@ -219,10 +216,9 @@ public class OcularElement implements Serializable {
 	 */
 	public static void main(String args[])
 	{
-		System.out.println("OcularElement Test");
+		System.out.println("OcularElement test");
 
-		try
-		{
+		try {
 			OcularElement ocul[] = OcularElement.getAllAvailableOculars();
 
 			System.out.println("List of all oculars");
@@ -230,22 +226,7 @@ public class OcularElement implements Serializable {
 			{
 				System.out.println(ocul[i].name + "/" + ocul[i].focalLength + "/" + ocul[i].fieldOfView + "/" + ocul[i].reticleSize);
 			}
-			
-/*			for (int i = 0; i < ocul.length; i++)
-			{
-				String name = ocul[i].name;
-				name = DataSet.replaceAll(name, "á", "&aacute;", true);
-				name = DataSet.replaceAll(name, "é", "&eacute;", true);
-				name = DataSet.replaceAll(name, "í", "&iacute;", true);
-				name = DataSet.replaceAll(name, "ó", "&oacute;", true);
-				name = DataSet.replaceAll(name, "ú", "&uacute;", true);
-				name = DataSet.replaceAll(name, "ñ", "&ntilde;", true);
-				name = DataSet.replaceAll(name, "º", "&deg;", true);
-				name = DataSet.replaceAll(name, "ö", "&ouml;", true);
-				String val = ""+ocul[i].focalLength+" "+(float) (ocul[i].fieldOfView * Constant.RAD_TO_DEG);
-				System.out.println(" <OPTION value=\""+val+"\">"+name+"</OPTION>");
-			}
-*/		} catch (JPARSECException ve)
+		} catch (JPARSECException ve)
 		{
 			JPARSECException.showException(ve);
 		}

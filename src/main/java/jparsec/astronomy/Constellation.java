@@ -22,12 +22,10 @@
 package jparsec.astronomy;
 
 import java.util.ArrayList;
-
 import jparsec.ephem.EphemerisElement;
 import jparsec.ephem.EphemerisElement.REDUCTION_METHOD;
 import jparsec.ephem.Functions;
 import jparsec.ephem.Precession;
-import jparsec.ephem.Target.TARGET;
 import jparsec.ephem.planets.EphemElement;
 import jparsec.graph.DataSet;
 import jparsec.graph.chartRendering.SkyRenderElement;
@@ -52,21 +50,21 @@ public class Constellation
 	/**
 	 * Types of constellations names.
 	 */
-	public static enum CONSTELLATION_NAME {
+	public enum CONSTELLATION_NAME {
 		/** Symbolic constant for Latin constellation names. */
 		LATIN,
 		/** Symbolic constant for Spanish constellation names. */
 		SPANISH,
 		/** Symbolic constant for Spanish constellation names with alternative 
 		 * names for some Zodiacal constellations. Gemelos is shown as 
-		 * Géminis, for instance. */
+		 * Gï¿½minis, for instance. */
 		SPANISH_WITH_ALTERNATE_ZODIAC,
 		/** Symbolic constant for abbreviated constellation names. */
 		ABREVIATED,
 		/** Symbolic constant for English constellation names. */
 		ENGLISH
 	};
-	
+
 	/**
 	 * Latin constellation names for the array of limits.
 	 */
@@ -93,9 +91,9 @@ public class Constellation
 		"Scl", "Sco", "Sct", "Ser", "Sex", "Sge", "Sgr", "Tau", "Tel",
 		"Tra", "Tri", "Tyc", "UMa", "UMi", "Vel", "Vir", "Vol", "Vul", 
 		"Ser"};
-	
+
 	// Note Cancer is repeated, so we use here a public array corrected for this
-	
+
 	/**
 	 * Latin constellation names, corresponding to the possible values of {@linkplain EphemElement#constellation}.
 	 */
@@ -110,7 +108,6 @@ public class Constellation
 		"Sculptor", "Scorpius", "Scutum", "Serpens Caput", "Serpens Cauda", "Sextans", "Sagitta", "Sagittarius", "Taurus", 
 		"Telescopium", "Triangulum Australe", "Triangulum", "Tucana", "Ursa Major", "Ursa Minor", "Vela", "Virgo", "Volans", 
 		"Vulpecula"};
-
 
 	/*
 	 * Table of constellation boundaries. Roman, Nancy Grace, "Identification of
@@ -323,7 +320,7 @@ public class Constellation
 
 		throw new JPARSECException("constellation not found");
 	}
-	
+
 	/**
 	 * Gets the positions of the constellations for certain date.
 	 * 
@@ -446,7 +443,7 @@ public class Constellation
 				if (v0.get(i).indexOf(" "+name+" ") >= 0) break;
 			}
 		}
-		
+
 		if (v.size() == 0) throw new JPARSECException("Cannot find "+name+".");
 		if (v.size() == 1) {
 			String line = v.get(0);
@@ -472,7 +469,7 @@ public class Constellation
 			}
 			return cons;
 		}
-*/		
+*/
 		int s = v0.size();
 		for (int i=0; i<s; i++) {
 			String line = v0.get(i);
@@ -493,59 +490,5 @@ public class Constellation
 			}
 		}
 		throw new JPARSECException("Cannot find "+name+".");
-	}
-	
-	/**
-	 * For unit testing only.
-	 * @param args Not used.
-	 */
-	public static void main(String args[])
-	{
-		System.out.println("Constellation Test");
-
-		EphemerisElement eph = new EphemerisElement(TARGET.NOT_A_PLANET, EphemerisElement.COORDINATES_TYPE.APPARENT,
-				EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.GEOCENTRIC, EphemerisElement.REDUCTION_METHOD.WILLIAMS_1994,
-				EphemerisElement.FRAME.ICRF);
-
-		try
-		{
-			double ra = 15.47 / Constant.RAD_TO_HOUR;
-			double dec = 4.9 / Constant.RAD_TO_DEG;
-			double epoch = Constant.J2000;
-			
-			LocationElement loc = new LocationElement(ra, dec, 1.0);
-			String constel = Constellation.getConstellationName(ra, dec, epoch, eph);
-			System.out.println("RA = " + Functions.formatRA(loc.getLongitude()) + " DEC = " + Functions.formatDEC(loc
-					.getLatitude()) + " is in " + constel);
-			// Serpens Caput
-			System.out.println("   = " + Constellation.getConstellation(constel, CONSTELLATION_NAME.ENGLISH));
-
-			ra = 17.49 / Constant.RAD_TO_HOUR;
-			dec = -12.14 / Constant.RAD_TO_DEG;
-			
-			loc = new LocationElement(ra, dec, 1.0);
-			constel = Constellation.getConstellationName(ra, dec, epoch, eph);
-			System.out.println("RA = " + Functions.formatRA(loc.getLongitude()) + " DEC = " + Functions.formatDEC(loc
-					.getLatitude()) + " is in " + constel);
-			// Serpens Cauda
-			
-			System.out.println("   = " + Constellation.getConstellation(constel, CONSTELLATION_NAME.ENGLISH));
-
-			// Complete list
-			long t0 = System.currentTimeMillis();
-			for (int i=0; i<CONSTELLATION_NAMES.length; i++) {
-				String eng = Constellation.getConstellation(CONSTELLATION_NAMES[i], CONSTELLATION_NAME.ENGLISH);
-				System.out.println(CONSTELLATION_NAMES[i] + " = " + eng + " = " + Constellation.getConstellation(eng, CONSTELLATION_NAME.SPANISH) + " = " + Constellation.getConstellation(eng, CONSTELLATION_NAME.ABREVIATED));
-			}
-			long t1 = System.currentTimeMillis();
-			System.out.println("Time: "+(0.001f*(t1-t0)));
-			
-			String constell = Constellation.getConstellation(Constellation.getConstellationName(ra, dec, Constant.J2000,
-					eph), CONSTELLATION_NAME.ABREVIATED);
-			System.out.println(constell);
-		} catch (JPARSECException ve)
-		{
-			JPARSECException.showException(ve);
-		}
 	}
 }

@@ -23,11 +23,9 @@ package jparsec.astronomy;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-
 import jparsec.graph.DataSet;
 import jparsec.io.FileIO;
 import jparsec.io.ReadFile;
-import jparsec.math.Constant;
 import jparsec.util.JPARSECException;
 
 /**
@@ -135,7 +133,6 @@ public class CCDElement implements Serializable {
 	 */
 	public CCDElement clone()
 	{
-		if (this == null) return null;
 		CCDElement ccd = new CCDElement(this.name, this.chipSizeX, this.chipSizeY, this.pixelSizeX,
 				this.pixelSizeY, this.binningFactor);
 		ccd.cameraPA = this.cameraPA;
@@ -150,12 +147,9 @@ public class CCDElement implements Serializable {
 	public boolean equals(Object ccd)
 	{
 		if (ccd == null) {
-			if (this == null) return true;
 			return false;
 		}
-		if (this == null) {
-			return false;
-		}
+
 		CCDElement o = (CCDElement) ccd;
 		boolean equals = true;
 		if (!this.name.equals(o.name)) equals = false;
@@ -255,7 +249,7 @@ public class CCDElement implements Serializable {
 		int what = -1;
 		for (int i = 0; i < ccds.length; i++)
 		{
-			if (ccds[i].name.toLowerCase().indexOf(ccd.toLowerCase()) >= 0)
+			if (ccds[i].name.toLowerCase().contains(ccd.toLowerCase()))
 				what = i;
 			if (ccds[i].name.toLowerCase().equals(ccd.toLowerCase())) break;
 		}
@@ -340,34 +334,5 @@ public class CCDElement implements Serializable {
 		double fovsingle = 2.0 * Math.atan(((ps * cs) / 2000.0) / (telescope.focalLength * this.zoomFactor));
 
 		return fovsingle;
-	}
-
-	
-	/**
-	 * For unit testing only.
-	 * @param args Not used.
-	 */
-	public static void main(String args[])
-	{
-		System.out.println("CCDElement Test");
-		
-		try {
-			CCDElement ccd[] = CCDElement.getAllAvailableCCDs();
-
-			System.out.println("List of all CCDs");
-			for (int i = 0; i < ccd.length; i++)
-			{
-				System.out.println(ccd[i].name + "/" + ccd[i].chipSizeX + "/" + ccd[i].chipSizeY + "/" + ccd[i].pixelSizeX+"/" + ccd[i].pixelSizeY);
-			}
-			
-			CCDElement toucam = CCDElement.getCCD("TouCam");
-			TelescopeElement telescope = TelescopeElement.SCHMIDT_CASSEGRAIN_20cm;
-			telescope.ocular = null;
-			System.out.println("Scale (\"/pixel): "+(float) (toucam.getScale(telescope) * Constant.RAD_TO_ARCSEC));
-			System.out.println("Field (arcmin): "+(float)(toucam.getFieldX(telescope) * Constant.RAD_TO_DEG * 60.0) +" * "+ (float) (toucam.getFieldY(telescope) * Constant.RAD_TO_DEG * 60.0));
-		} catch (Exception e)
-		{
-			e.printStackTrace();
-		}
 	}
 }

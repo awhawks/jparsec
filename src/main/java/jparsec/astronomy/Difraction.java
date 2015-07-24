@@ -36,7 +36,7 @@ public class Difraction
 {
 	// private constructor so that this class cannot be instantiated.
 	private Difraction() {}
-	
+
 	/**
 	 * Obtain the difraction pattern of a point star supposing a perfect aligned
 	 * telescope and lenses.
@@ -54,7 +54,7 @@ public class Difraction
 	public static double[][] pattern(double diam_obj, double lambda, int field, double obstruc, double spider)
 	{
 		if (field < 1) field = 1;
-		
+
 		double R = diam_obj * 0.5;
 		double L = lambda;
 		double RET = 16.0; // Parts in which the reticulus will be divided by. If
@@ -94,7 +94,6 @@ public class Difraction
 				// the spiders
 				if (r1 <= R && r1 >= (obstruc * R) && Math.abs(x) >= (spider * R) && Math.abs(y) >= (spider * R))
 				{
-
 					// Obtain the phase of the input ray and it's cosine or
 					// intensity contribution of difraction
 					for (int i = 0; i <= resolution_x; i++)
@@ -140,7 +139,6 @@ public class Difraction
 						}
 					}
 				}
-
 			}
 		}
 
@@ -172,9 +170,9 @@ public class Difraction
 		return pattern(telescope.diameter / 10.0, 0.000056, field, telescope.centralObstruction / 10.0,
 				telescope.spidersSize / 10.0);
 	}
-	
+
 	/**
-	 * Resamples a given difraction pattern to a given resolution, using P. Thévenaz
+	 * Resamples a given difraction pattern to a given resolution, using P. Thï¿½venaz
 	 * 2d interpolation.
 	 * This method should only be used with patterns generated with
 	 * this class.
@@ -192,7 +190,7 @@ public class Difraction
 		ist.resize(w, w, 3);
 		return ist.getImage();
 	}
-	
+
 	/**
 	 * Convolves a given sky image with a given telescope pattern. This method can be extremely
 	 * slow.
@@ -228,7 +226,7 @@ public class Difraction
 				deltay[i][j] = (int) (difraction_scale_factor * (double) (j - center) / (double) center);
 			}
 		}
-		
+
 		for (int dx = 0; dx < w; dx++)
 		{
 			for (int dy = 0; dy < h; dy++)
@@ -306,7 +304,7 @@ public class Difraction
 
 		return screen_out;
 	}
-	
+
 	private static boolean isInTheScreen(int x, int y, int size, int w, int h)
 	{
 		boolean isVisible = false;
@@ -315,34 +313,5 @@ public class Difraction
 			isVisible = true;
 
 		return isVisible;
-	}
-	
-	/**
-	 * For unit testing only.
-	 * @param args Not used.
-	 */
-	public static void main(String args[])
-	{
-		System.out.println("Difraction Test");
-
-		try {
-			TelescopeElement telescope = TelescopeElement.SCHMIDT_CASSEGRAIN_20cm;
-			double pattern[][] = Difraction.pattern(telescope, 4);
-	
-			pattern = Difraction.resample(pattern, 0.25);
-			for (int j = 0; j < pattern.length; j++)
-			{
-				String line = "";
-				for (int i = 0; i < pattern.length; i++)
-				{
-					double intensity = pattern[i][j];
-					char a = (char) ('A' + (int) (intensity * 16));
-					line += a;
-				}
-				System.out.println(line);
-			}			
-		} catch (Exception exc) {
-			exc.printStackTrace();
-		}
 	}
 }
