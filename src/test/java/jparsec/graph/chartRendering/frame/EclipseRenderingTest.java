@@ -2,8 +2,10 @@ package jparsec.graph.chartRendering.frame;
 
 import jparsec.ephem.EphemerisElement;
 import jparsec.ephem.Target;
-import jparsec.graph.chartRendering.*;
+import jparsec.graph.chartRendering.Graphics;
+import jparsec.graph.chartRendering.RenderPlanet;
 import jparsec.graph.chartRendering.RenderSatellite;
+import jparsec.graph.chartRendering.SatelliteRenderElement;
 import jparsec.io.image.Picture;
 import jparsec.observer.City;
 import jparsec.observer.ObserverElement;
@@ -23,7 +25,6 @@ public class EclipseRenderingTest {
 
         try {
             // Translate.setDefaultLanguage(LANGUAGE.SPANISH);
-
             // Solar eclipse
             AstroDate astro = new AstroDate(2005, AstroDate.OCTOBER, 3, 9, 0, 0);
             // Lunar eclipse
@@ -32,12 +33,17 @@ public class EclipseRenderingTest {
             // Main objects
             TimeElement time = new TimeElement(astro, TimeElement.SCALE.UNIVERSAL_TIME_UT1);
             ObserverElement observer = ObserverElement.parseCity(City.findCity("Madrid"));
-            EphemerisElement eph = new EphemerisElement(Target.TARGET.SUN, EphemerisElement.COORDINATES_TYPE.APPARENT,
-                    EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.TOPOCENTRIC, EphemerisElement.REDUCTION_METHOD.IAU_2009,
-                    EphemerisElement.FRAME.DYNAMICAL_EQUINOX_J2000, EphemerisElement.ALGORITHM.MOSHIER);
+            EphemerisElement eph = new EphemerisElement(
+                Target.TARGET.SUN,
+                EphemerisElement.COORDINATES_TYPE.APPARENT,
+                EphemerisElement.EQUINOX_OF_DATE,
+                EphemerisElement.TOPOCENTRIC,
+                EphemerisElement.REDUCTION_METHOD.IAU_2009,
+                EphemerisElement.FRAME.DYNAMICAL_EQUINOX_J2000,
+                EphemerisElement.ALGORITHM.MOSHIER);
 
             // Set some properties in other classes used by RenderEclipse
-            jparsec.graph.chartRendering.RenderPlanet.MAXIMUM_TEXTURE_QUALITY_FACTOR = 2f; // Better quality
+            RenderPlanet.MAXIMUM_TEXTURE_QUALITY_FACTOR = 2f; // Better quality
             RenderSatellite.ALLOW_SPLINE_RESIZING = false; // Improve performance
             // Following line is not required since it is used internally in RenderEclipse class,
             // but I put it here to show how to improve performance when calculating ephemerides

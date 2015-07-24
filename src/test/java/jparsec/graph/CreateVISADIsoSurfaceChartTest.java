@@ -42,6 +42,7 @@ public class CreateVISADIsoSurfaceChartTest {
             }
 
             lmv2.setCubeData(synthetic);
+
             // Create the 2 cube objects
             float v0 = lmv.getv0();
             float vf = lmv.getvf();

@@ -27,51 +27,51 @@ public class CreateChart3DTest {
 
             ChartSeriesElement3D series = new ChartSeriesElement3D(gridChart);
             //GridChartElement.createData(-field, field, 1.0 / 5.0),
-//                    GridChartElement.createData(-field, field, 1.0 / 5.0), data, "Relative intensity (|@PSI|^{2})");
+//					GridChartElement.createData(-field, field, 1.0 / 5.0), data, "Relative intensity (|@PSI|^{2})");
             series.color = Color.RED;
 
-/*            // This is only to test GridChartElement.getDataFromDataSet
+/*			// This is only to test GridChartElement.getDataFromDataSet
             DoubleVector stupidData[] = new DoubleVector[] {
-                    new DoubleVector(1-2, 1, 0E-10),
-                    new DoubleVector(2-2, 1, 1E-10),
-                    new DoubleVector(3-2, 1, 0E-10),
-                    new DoubleVector(1-2, 2, 1E-10),
-                    new DoubleVector(2-2, 2, 4E-10),
-                    new DoubleVector(3-2, 2, 1E-10),
-                    new DoubleVector(1-2, 3, 0E-10),
-                    new DoubleVector(2-2, 3, 1E-10),
-                    new DoubleVector(3-2, 3, 0E-10)
-            };
-            double x[] = DoubleVector.getAGivenComponent(stupidData, 0);
-            double y[] = DoubleVector.getAGivenComponent(stupidData, 1);
-            double z[] = DoubleVector.getAGivenComponent(stupidData, 2);
-            gridChart.data = GridChartElement.getDataFromDataSet(x, y, z);
-            gridChart.limits = GridChartElement.getLimitsFromDataSet(x, y);
-            series = new ChartSeriesElement3D(gridChart);
-            series.color = Color.RED;
+					new DoubleVector(1-2, 1, 0E-10),
+					new DoubleVector(2-2, 1, 1E-10),
+					new DoubleVector(3-2, 1, 0E-10),
+					new DoubleVector(1-2, 2, 1E-10),
+					new DoubleVector(2-2, 2, 4E-10),
+					new DoubleVector(3-2, 2, 1E-10),
+					new DoubleVector(1-2, 3, 0E-10),
+					new DoubleVector(2-2, 3, 1E-10),
+					new DoubleVector(3-2, 3, 0E-10)
+			};
+			double x[] = DoubleVector.getAGivenComponent(stupidData, 0);
+			double y[] = DoubleVector.getAGivenComponent(stupidData, 1);
+			double z[] = DoubleVector.getAGivenComponent(stupidData, 2);
+			gridChart.data = GridChartElement.getDataFromDataSet(x, y, z);
+			gridChart.limits = GridChartElement.getLimitsFromDataSet(x, y);
+			series = new ChartSeriesElement3D(gridChart);
+			series.color = Color.RED;
 */
 
-/*            series = ChartSeriesElement3D.getSurfaceFromPoints(new DoubleVector[] {
-                    new DoubleVector(1-2, 1, 0E-10),
-                    new DoubleVector(2-2, 1, 1E-10),
-                    new DoubleVector(3-2, 1, 0E-10),
-                    new DoubleVector(1-2, 2, 1E-10),
-                    new DoubleVector(2-2, 2, 4E-10),
-                    new DoubleVector(3-2, 2, 1E-10),
-                    new DoubleVector(1-2, 3, 0E-10),
-                    new DoubleVector(2-2, 3, 1E-10),
-                    new DoubleVector(3-2, 3, 0E-10)
-            }, 20);
+/*			series = ChartSeriesElement3D.getSurfaceFromPoints(new DoubleVector[] {
+					new DoubleVector(1-2, 1, 0E-10),
+					new DoubleVector(2-2, 1, 1E-10),
+					new DoubleVector(3-2, 1, 0E-10),
+					new DoubleVector(1-2, 2, 1E-10),
+					new DoubleVector(2-2, 2, 4E-10),
+					new DoubleVector(3-2, 2, 1E-10),
+					new DoubleVector(1-2, 3, 0E-10),
+					new DoubleVector(2-2, 3, 1E-10),
+					new DoubleVector(3-2, 3, 0E-10)
+			}, 20);
 */
-/*            series = new ChartSeriesElement3D(
-                    GridChartElement.createData(-field, field, field / 2.0),
-                    GridChartElement.createData(-field, field, field / 2.0),
-                    GridChartElement.createData(-field*10, field*10, field*10 / 2.0), "Relative intensity (|@PSI|^{2})");
-            series.zValues = new String[] {"<"+series.xValues[0], ">"+series.xValues[1],
-                    series.xValues[2],  ">"+series.xValues[3], "<"+series.xValues[4]};
-            series.dxValues = new double[] {1, 2, 0, 2, 1};
-            series.dyValues = new double[] {1, 2, 0, 2, 1};
-            series.dzValues = new double[] {1, 2, 0, 2, 1};
+/*			series = new ChartSeriesElement3D(
+					GridChartElement.createData(-field, field, field / 2.0),
+					GridChartElement.createData(-field, field, field / 2.0),
+					GridChartElement.createData(-field*10, field*10, field*10 / 2.0), "Relative intensity (|@PSI|^{2})");
+			series.zValues = new String[] {"<"+series.xValues[0], ">"+series.xValues[1],
+					series.xValues[2],  ">"+series.xValues[3], "<"+series.xValues[4]};
+			series.dxValues = new double[] {1, 2, 0, 2, 1};
+			series.dyValues = new double[] {1, 2, 0, 2, 1};
+			series.dzValues = new double[] {1, 2, 0, 2, 1};
 */
 
             ChartElement3D chart = new ChartElement3D(new ChartSeriesElement3D[] { series },
@@ -83,8 +83,8 @@ public class CreateChart3DTest {
             CreateChart3D c = new CreateChart3D(chart);
             c.showChart(500, 500);
 
-//            Serialization.writeObject(chart, "/home/alonso/chart3dTest");
-//            Serialization.writeObject(c, "/home/alonso/createChart3dTest");
+//			Serialization.writeObject(chart, "/home/alonso/chart3dTest");
+//			Serialization.writeObject(c, "/home/alonso/createChart3dTest");
             System.out.println(c.getIntensityAt(2, 2, series.legend));
             System.out.println(c.getIntensityAt(0, 0, series.legend));
         } catch (JPARSECException e) {

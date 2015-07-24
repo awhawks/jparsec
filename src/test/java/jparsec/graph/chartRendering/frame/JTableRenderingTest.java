@@ -13,7 +13,6 @@ public class JTableRenderingTest {
      */
     public static void main(String args[]) throws Exception {
         System.out.println("JTableRendering test");
-
         String columns[] = new String[] { "c1", "c2", "c3", "c4", "c5" };
         boolean editable[] = null; // All false except boolean
         Class<?> classes[] = new Class<?>[] { Boolean.class, Integer.class, String.class, String.class, String.class };

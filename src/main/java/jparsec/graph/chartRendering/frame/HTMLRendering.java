@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.graph.chartRendering.frame;
 
 import java.awt.AWTEvent;
@@ -39,12 +39,11 @@ import javax.swing.JDialog;
 import javax.swing.JEditorPane;
 import javax.swing.JScrollPane;
 
-import jparsec.io.image.Picture;
 import jparsec.util.JPARSECException;
 
 /**
  * An HTML dialog to show very simple data in HTML format.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -63,9 +62,9 @@ public class HTMLRendering extends JDialog implements ActionListener, Serializab
 	public Color background = Color.WHITE;
 
 	/**
-	 * Constructor for a default HTML non-modal and non-visible dialog. 
+	 * Constructor for a default HTML non-modal and non-visible dialog.
 	 * Default initial size is 400x400 pixels.
-	 * 
+	 *
 	 * @param title Title.
 	 * @param message Content of the dialog.
 	 * @param icon Frame icon.
@@ -90,7 +89,7 @@ public class HTMLRendering extends JDialog implements ActionListener, Serializab
 		if (message.startsWith("file:") || message.startsWith("http:")) {
 			try {
 				jEditorPane_Message.setPage(message);
-			} catch (Exception e) {	}			
+			} catch (Exception e) {	}
 		} else {
 			jEditorPane_Message.setText(message);
 		}
@@ -103,7 +102,7 @@ public class HTMLRendering extends JDialog implements ActionListener, Serializab
 		this.setLayout(new FlowLayout());
 		Dimension size = getContentPane().getSize();
 		size.height = size.height - verticalButtonSize;
-		
+
 		jEditorPane_Message = new JEditorPane();
 		jEditorPane_Message.setContentType("text/html");
 		jEditorPane_Message.setSize(size);
@@ -175,26 +174,5 @@ public class HTMLRendering extends JDialog implements ActionListener, Serializab
 	@Override
 	public void componentShown(ComponentEvent arg0) {
 		repaint();
-	}
-	
-	/**
-	 * For unit testing only.
-	 * @param args Not used.
-	 */
-	public static void main(String args[])
-	{
-		try {
-			String s = "http://conga.oan.es/~alonso/lib/exe/fetch.php?media=jupitertripleeclipse.png";
-			Picture pic = new Picture(s);
-			// s = pic.imageToString(true); // base64 images not supported
-			HTMLRendering dlg = new HTMLRendering("Hellow!",
-					"<HTML><body bgcolor=\"#000000\"><img src=\""+s+"\"><BR>This is a <B>JPARSEC</B> test for an HTML dialog.</body></HTML>", 
-					pic.getImage(), true);
-			dlg.setSize(800, 800);
-			dlg.setVisible(true);
-		} catch (JPARSECException e)
-		{
-			e.showException();
-		}
 	}
 }

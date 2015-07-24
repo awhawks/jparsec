@@ -33,13 +33,16 @@ public class CreateSurface3DTest {
         cs1.show(w, h, "Surface test 1", true);
 
         CreateSurface3D cs2 = new CreateSurface3D("Math.sin(x)", new double[] { -5, 5, -5, 5 }, "x", "y", "Functions", GridChartElement.COLOR_MODEL.RED_TO_BLUE);
-        //cs2.getModel().setXMin(-2.5f);
-        //cs2.getModel().setXMax(2.5f);
-        //cs2.getModel().setYMin(-2.5f);
-        //cs2.getModel().setYMax(2.5f);
+        /*
+        cs2.getModel().setXMin(-2.5f);
+        cs2.getModel().setXMax(2.5f);
+        cs2.getModel().setYMin(-2.5f);
+        cs2.getModel().setYMax(2.5f);
+        */
         cs2.show(w, h, "Surface test 2", false);
         //Picture p1 = new Picture(cs1.chartAsBufferedImage());
         //p1.show("My surface chart");
+
         //Serialization.writeObject(cs1, "/home/alonso/surface3dTest");
     }
 }

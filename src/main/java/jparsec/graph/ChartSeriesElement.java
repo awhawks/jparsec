@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.graph;
 
 import java.awt.*;
@@ -26,6 +26,7 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
 
+import java.util.Arrays;
 import jparsec.astrophysics.MeasureElement;
 import jparsec.math.GenericFit;
 import jparsec.math.LinearFit;
@@ -40,7 +41,7 @@ import jparsec.util.JPARSECException;
  * encoded following the instructions given in {@linkplain TextLabel} class. This
  * provides some possibilities like to dynamically change color/size, include superscript
  * or subscript text, or greek letters.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -58,7 +59,7 @@ public class ChartSeriesElement implements Serializable
 
 	/**
 	 * Simple constructor.
-	 * 
+	 *
 	 * @param x X values.
 	 * @param y Y Values.
 	 * @param legend Legend.
@@ -84,7 +85,7 @@ public class ChartSeriesElement implements Serializable
 
 	/**
 	 * Constructor adequate for an x-y chart with bar errors.
-	 * 
+	 *
 	 * @param x X values.
 	 * @param y Y Values.
 	 * @param dx X error values.
@@ -119,7 +120,7 @@ public class ChartSeriesElement implements Serializable
 
 	/**
 	 * Constructor adequate for an x-y chart with bar errors.
-	 * 
+	 *
 	 * @param x X values.
 	 * @param y Y Values.
 	 * @param dx X error values.
@@ -148,7 +149,7 @@ public class ChartSeriesElement implements Serializable
 			double minimumY = DataSet.getMinimumValue(y);
 			this.yMinimumValue = minimumY;
 		} catch (Exception exc) {}
-		
+
 		shapeSize = SHAPE_SIZE;
 	}
 
@@ -241,11 +242,11 @@ public class ChartSeriesElement implements Serializable
 	 * write. Pointers and labels are set automatically using the angle defined
 	 * in another parameter (the pointers angle), although the value can be set in
 	 * each pointer using the '@LEFT', '@RIGHT', '@UP', and '@DOWN' commands at
-	 * the beginning of the pointer text. The command '@CENTERx', where x is a 
+	 * the beginning of the pointer text. The command '@CENTERx', where x is a
 	 * number between 1 and 9, can also be used to locate the text relative to the
 	 * arrow when exporting to Gildas format.<P>
 	 * Another posible format to set a pointer in a given location (not towards
-	 * a given point in the chart) is to replace the point number with 
+	 * a given point in the chart) is to replace the point number with
 	 * '(x,y)' (without quotes), being x and y the pointer location in physical units.
 	 */
 	public String pointers[] = new String[0];
@@ -253,7 +254,7 @@ public class ChartSeriesElement implements Serializable
 	/**
 	 * Sets an angle in radians to point the pointers. Can be set to
 	 * one of the constants defined in this class. Default value is
-	 * up. 
+	 * up.
 	 */
 	public POINTER_ANGLE pointersAngle = POINTER_ANGLE.UPWARDS;
 
@@ -290,7 +291,7 @@ public class ChartSeriesElement implements Serializable
 	 * This is only supported on xy charts.
 	 */
 	public boolean enable = true;
-	
+
 	/**
 	 * Holds some colors.
 	 */
@@ -302,7 +303,7 @@ public class ChartSeriesElement implements Serializable
 	 */
 	public static final String[] COLORS_MEANINGS = new String[] {"Black", "Blue", "Cyan", "Dark gray",
 		"Gray", "Green", "Light gray", "Magenta", "Orange", "Pink", "Red", "White", "Yellow"};
-	
+
 	/**
 	 * The set of locations for the pointers.
 	 */
@@ -325,11 +326,11 @@ public class ChartSeriesElement implements Serializable
 		 */
 		AVOID_SUPERIMPOSED_STRINGS
 	};
-	
+
 	/**
 	 * Pointer angle meanings.
 	 */
-	public static final String[] POINTER_ANGLES_MEANINGS = new String[] {"Up", "Down", "Left", "Right", 
+	public static final String[] POINTER_ANGLES_MEANINGS = new String[] {"Up", "Down", "Left", "Right",
 		"To center", "To outside", "Automatic"};
 
 	/**
@@ -352,7 +353,7 @@ public class ChartSeriesElement implements Serializable
 		/** ID constant for a general regression fit using {@linkplain Regression} class.
 		 * The custom function and initial estimates must be set after selecting this option. */
 		REGRESSION_CUSTOM;
-		
+
 		private boolean showEquation = false;
 		private boolean showRegression = true;
 		private String equation = "";
@@ -418,7 +419,7 @@ public class ChartSeriesElement implements Serializable
 		public boolean getShowEquation() {
 			return showEquation;
 		}
-		
+
 		/**
 		 * Sets if the fitting formula should be shown or not.
 		 * @param show True or false.
@@ -434,7 +435,7 @@ public class ChartSeriesElement implements Serializable
 		public boolean getShowRegression() {
 			return showRegression;
 		}
-		
+
 		/**
 		 * Sets if the regression series should be shown or not.
 		 * @param show True or false.
@@ -471,7 +472,7 @@ public class ChartSeriesElement implements Serializable
 
 		/**
 		 * Sets the values for the coefficients of the fitting formula.
-		 * The equation formula is modified only if it is null or empty string 
+		 * The equation formula is modified only if it is null or empty string
 		 * (and not a generic custom fitting formula).
 		 * @param val The coefficients for the fitting formula. For a line
 		 * the values will be y for x = 0, and the slope (use better the
@@ -486,15 +487,15 @@ public class ChartSeriesElement implements Serializable
 		}
 
 		/**
-		 * Returns the set of values representing the errors of the fitting values. 
-		 * For a line the values will be dy for x = 0, and the slope error, for a 
+		 * Returns the set of values representing the errors of the fitting values.
+		 * For a line the values will be dy for x = 0, and the slope error, for a
 		 * polynomial the errors of its coefficients.
 		 * @return The values for the errors of the parameters of the fitting formula.
 		 */
 		public double[] getEquationValuesErrors() {
 			return eqErr;
 		}
-		
+
 		/**
 		 * Sets the fitting values from a linear fit instance.
 		 * The equation formula is modified only if it is null or empty string
@@ -526,7 +527,7 @@ public class ChartSeriesElement implements Serializable
 
 		/**
 		 * Returns the degree of the polynomial for the fit.
-		 * Note this value is not necessarily related to the number of 
+		 * Note this value is not necessarily related to the number of
 		 * coefficients in the parameters of the fit, since this value
 		 * can be changed.
 		 * @return The polynomial degree.
@@ -534,7 +535,7 @@ public class ChartSeriesElement implements Serializable
 		public int getPolynomialDegree() {
 			return polynomialDegree;
 		}
-		
+
 		/**
 		 * Sets the degree of the polynomial for the fit. It should be
 		 * set before the chart is created.
@@ -543,7 +544,7 @@ public class ChartSeriesElement implements Serializable
 		public void setPolynomialDegree(int degree) {
 			this.polynomialDegree = degree;
 		}
-		
+
 		/**
 		 * Returns a polynomial instance representing the fitting formula.
 		 * @return The fitting polynomial.
@@ -574,12 +575,12 @@ public class ChartSeriesElement implements Serializable
 			if (eqVal == null) return false;
 			return true;
 		}
-		
+
 		private void setEquation() {
 			if (equation != null) {
 				if (!equation.equals("")) return;
 			}
-			
+
 			String eq = "";
 			if (eqVal != null) {
 				for (int i=0; i<eqVal.length; i++) {
@@ -599,7 +600,7 @@ public class ChartSeriesElement implements Serializable
 				eq = DataSet.replaceAll(eq, "(0.0)", "", true);
 				eq = DataSet.replaceAll(eq, "(NaN)", "", true);
 			}
-			
+
 			switch (this) {
 			case NONE:
 				equation = "";
@@ -616,7 +617,7 @@ public class ChartSeriesElement implements Serializable
 				break;
 			}
 		}
-		
+
 		/**
 		 * Returns the color to show the regression. Default color is the same
 		 * as the series to apply the regression.
@@ -634,7 +635,7 @@ public class ChartSeriesElement implements Serializable
 		public void setColor(Color col) {
 			color = new int[] {col.getRed(), col.getGreen(), col.getBlue(), col.getAlpha()};
 		}
-		
+
 		/**
 		 * Resets all fields to their default values for this enum
 		 * constant.
@@ -651,7 +652,7 @@ public class ChartSeriesElement implements Serializable
 			color = null;
 			initialEstimates = null;
 		}
-		
+
 		/**
 		 * Resets the regression to force it to be calculated again.
 		 */
@@ -664,19 +665,19 @@ public class ChartSeriesElement implements Serializable
 			equation = "";
 		}
 	};
-	
+
 	/**
 	 * Holds types of regressions.
 	 */
 	public static final String[] REGRESSION_TYPES = new String[] {"None", "Linear", "Polynomial", "Spline interpolation",
 		"Linear interpolation", "Generic fit", "Custom regression"};
-	
+
 	/**
 	 * Gets the pointers from a string. They are defined as the point number
 	 * plus an space and the text to write as the pointer. Instead of the point
 	 * number it is possible to insert the point position in the format
 	 * (x, y).
-	 * 
+	 *
 	 * @param comment Input string.
 	 * @return Array of pointers.
 	 */
@@ -719,7 +720,7 @@ public class ChartSeriesElement implements Serializable
 	public static void setShapeSize(int size)
 	{
 		SHAPE_SIZE = size;
-		
+
 		SHAPE_SQUARE = new Rectangle2D.Double(-SHAPE_SIZE, -SHAPE_SIZE, SHAPE_SIZE * 2,
 				SHAPE_SIZE * 2);
 		SHAPE_CIRCLE = new Ellipse2D.Double(-SHAPE_SIZE, -SHAPE_SIZE, SHAPE_SIZE * 2,
@@ -746,7 +747,7 @@ public class ChartSeriesElement implements Serializable
 		SHAPE_TRIANGLE_RIGHT = new Polygon(new int[]
 		{ -SHAPE_SIZE, SHAPE_SIZE, -SHAPE_SIZE }, new int[]
 		{ -SHAPE_SIZE, 0, SHAPE_SIZE }, 3);
-		
+
 		SHAPE_VERTICAL_RECTANGLE = new Rectangle2D.Double(-SHAPE_SIZE * 0.5, -SHAPE_SIZE,
 				SHAPE_SIZE * 0.5, SHAPE_SIZE * 2);
 		SHAPE_TRIANGLE_LEFT = new Polygon(new int[]
@@ -763,7 +764,7 @@ public class ChartSeriesElement implements Serializable
 			SHAPE_VERTICAL_RECTANGLE, SHAPE_ELLIPSE, SHAPE_POINT,
 			SHAPE_STAR, SHAPE_STAR2, SHAPE_PENTAGON, SHAPE_CRUX};
 	}
-	
+
 	/**
 	 * Default size of the shapes = 3.
 	 */
@@ -781,7 +782,7 @@ public class ChartSeriesElement implements Serializable
 	{
 		return SHAPE_SIZE;
 	}
-	
+
 	/**
 	 * Square.
 	 */
@@ -881,7 +882,7 @@ public class ChartSeriesElement implements Serializable
 	 * Holds shapes types.
 	 */
 	public static final String[] SHAPES_TYPES = new String[] {"Circle", "Square", "Diamond", "Triangle up",
-		"Triangle down", "Triangle left", "Triangle right", "Horizontal rectangle", "Vertical rectangle", 
+		"Triangle down", "Triangle left", "Triangle right", "Horizontal rectangle", "Vertical rectangle",
 		"Ellipse", "Point", "Star", "Star2", "Pentagon", "Crux"};
 	/**
 	 * Holds shapes types.
@@ -889,14 +890,13 @@ public class ChartSeriesElement implements Serializable
 	public static Shape[] SHAPES = new Shape[] {SHAPE_CIRCLE, SHAPE_SQUARE, SHAPE_DIAMOND, SHAPE_TRIANGLE_UP,
 		SHAPE_TRIANGLE_DOWN, SHAPE_TRIANGLE_LEFT, SHAPE_TRIANGLE_RIGHT, SHAPE_HORIZONTAL_RECTANGLE,
 		SHAPE_VERTICAL_RECTANGLE, SHAPE_ELLIPSE, SHAPE_POINT, SHAPE_STAR, SHAPE_STAR2, SHAPE_PENTAGON, SHAPE_CRUX};
-	
-	
+
+
 	/**
 	 * To clone the object.
 	 */
 	public ChartSeriesElement clone()
 	{
-		if (this == null) return null;
 		ChartSeriesElement c = new ChartSeriesElement();
 		c.color = this.color;
 		if (this.colorsForPieCharts != null) c.colorsForPieCharts = this.colorsForPieCharts.clone();
@@ -924,89 +924,81 @@ public class ChartSeriesElement implements Serializable
 		try { c.enable = this.enable; } catch (Exception exc) {}
 		return c;
 	}
+
 	/**
 	 * Returns true if the input object is equals to this chart object.
 	 */
-	public boolean equals(Object c)
-	{
-		if (c == null) {
-			if (this == null) return true;
-			return false;
-		}
-		if (this == null) {
-			return false;
-		}
-		ChartSeriesElement chart = (ChartSeriesElement) c;
-		boolean equals = true;
-		if (!ChartSeriesElement.equalShapes(this.shape, chart.shape)) equals = false;
-		if (!this.stroke.equals(chart.stroke)) equals = false;
-		if (!this.legend.equals(chart.legend)) equals = false;
-		try { if (this.enable != chart.enable) equals = false; } catch (Exception exc) {}
-		if (this.showErrorBars != chart.showErrorBars) equals = false;
-		if (this.xMinimumValue != chart.xMinimumValue) equals = false;
-		if (this.yMinimumValue != chart.yMinimumValue) equals = false;
-		if (this.pointersAngle != chart.pointersAngle) equals = false;
-		if (this.pointersLabelOffsetFactor != chart.pointersLabelOffsetFactor) equals = false;
-		if (!this.regressionType.equals(chart.regressionType)) equals = false;
-		if (this.showArrowInPointers != chart.showArrowInPointers) equals = false;
-		if (this.showErrorBars != chart.showErrorBars) equals = false;
-		if (this.showLegend != chart.showLegend) equals = false;
-		if (this.showLines != chart.showLines) equals = false;
-		if (this.showShapes != chart.showShapes) equals = false;
-		if (this.sizeOfArrowInLimits != chart.sizeOfArrowInLimits) equals = false;
-		if (this.useCustomColorsInPieCharts != chart.useCustomColorsInPieCharts) equals = false;
-		
-		if (this.color.hashCode() != chart.color.hashCode()) equals = false;
-		if (this.colorsForPieCharts.hashCode() != chart.colorsForPieCharts.hashCode()) equals = false;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof ChartSeriesElement)) return false;
 
-		if (this.dxValues.length == chart.dxValues.length)
-		{
-			for (int i=0; i<this.dxValues.length; i++)
-			{
-				if (this.dxValues[i] != chart.dxValues[i]) equals = false;
-			}
-		} else {
-			equals = false;
-		}
-		if (this.dyValues.length == chart.dyValues.length)
-		{
-			for (int i=0; i<this.dyValues.length; i++)
-			{
-				if (this.dyValues[i] != chart.dyValues[i]) equals = false;
-			}
-		} else {
-			equals = false;
-		}
-		if (this.xValues.length == chart.xValues.length)
-		{
-			for (int i=0; i<this.xValues.length; i++)
-			{
-				if (!this.xValues[i].equals(chart.xValues[i])) equals = false;
-			}
-		} else {
-			equals = false;
-		}
-		if (this.yValues.length == chart.yValues.length)
-		{
-			for (int i=0; i<this.yValues.length; i++)
-			{
-				if (!this.yValues[i].equals(chart.yValues[i])) equals = false;
-			}
-		} else {
-			equals = false;
-		}
-		if (this.pointers.length == chart.pointers.length)
-		{
-			for (int i=0; i<this.pointers.length; i++)
-			{
-				if (!this.pointers[i].equals(chart.pointers[i])) equals = false;
-			}
-		} else {
-			equals = false;
-		}
-		return equals;
+		ChartSeriesElement that = (ChartSeriesElement) o;
+
+		if (showLegend != that.showLegend) return false;
+		if (useCustomColorsInPieCharts != that.useCustomColorsInPieCharts) return false;
+		if (showShapes != that.showShapes) return false;
+		if (showLines != that.showLines) return false;
+		if (shapeSize != that.shapeSize) return false;
+		if (sizeOfArrowInLimits != that.sizeOfArrowInLimits) return false;
+		if (showArrowInPointers != that.showArrowInPointers) return false;
+		if (showErrorBars != that.showErrorBars) return false;
+		if (Float.compare(that.pointersLabelOffsetFactor, pointersLabelOffsetFactor) != 0) return false;
+		if (Double.compare(that.xMinimumValue, xMinimumValue) != 0) return false;
+		if (Double.compare(that.yMinimumValue, yMinimumValue) != 0) return false;
+		if (enable != that.enable) return false;
+		// Probably incorrect - comparing Object[] arrays with Arrays.equals
+		if (!Arrays.equals(xValues, that.xValues)) return false;
+		// Probably incorrect - comparing Object[] arrays with Arrays.equals
+		if (!Arrays.equals(yValues, that.yValues)) return false;
+		if (!Arrays.equals(dxValues, that.dxValues)) return false;
+		if (!Arrays.equals(dyValues, that.dyValues)) return false;
+		if (legend != null ? !legend.equals(that.legend) : that.legend != null) return false;
+		if (color != null ? !color.equals(that.color) : that.color != null) return false;
+		// Probably incorrect - comparing Object[] arrays with Arrays.equals
+		if (!Arrays.equals(colorsForPieCharts, that.colorsForPieCharts)) return false;
+		if (shape != null ? !shape.equals(that.shape) : that.shape != null) return false;
+		if (regressionType != that.regressionType) return false;
+		if (stroke != null ? !stroke.equals(that.stroke) : that.stroke != null) return false;
+		// Probably incorrect - comparing Object[] arrays with Arrays.equals
+		if (!Arrays.equals(pointers, that.pointers)) return false;
+
+		return pointersAngle == that.pointersAngle;
 	}
-	
+
+	@Override
+	public int hashCode() {
+		int result;
+		long temp;
+		result = xValues != null ? Arrays.hashCode(xValues) : 0;
+		result = 31 * result + (yValues != null ? Arrays.hashCode(yValues) : 0);
+		result = 31 * result + (dxValues != null ? Arrays.hashCode(dxValues) : 0);
+		result = 31 * result + (dyValues != null ? Arrays.hashCode(dyValues) : 0);
+		result = 31 * result + (legend != null ? legend.hashCode() : 0);
+		result = 31 * result + (showLegend ? 1 : 0);
+		result = 31 * result + (color != null ? color.hashCode() : 0);
+		result = 31 * result + (colorsForPieCharts != null ? Arrays.hashCode(colorsForPieCharts) : 0);
+		result = 31 * result + (useCustomColorsInPieCharts ? 1 : 0);
+		result = 31 * result + (shape != null ? shape.hashCode() : 0);
+		result = 31 * result + (showShapes ? 1 : 0);
+		result = 31 * result + (showLines ? 1 : 0);
+		result = 31 * result + (regressionType != null ? regressionType.hashCode() : 0);
+		result = 31 * result + shapeSize;
+		result = 31 * result + sizeOfArrowInLimits;
+		result = 31 * result + (stroke != null ? stroke.hashCode() : 0);
+		result = 31 * result + (pointers != null ? Arrays.hashCode(pointers) : 0);
+		result = 31 * result + (pointersAngle != null ? pointersAngle.hashCode() : 0);
+		result = 31 * result + (showArrowInPointers ? 1 : 0);
+		result = 31 * result + (showErrorBars ? 1 : 0);
+		result = 31 * result + (pointersLabelOffsetFactor != +0.0f ? Float.floatToIntBits(pointersLabelOffsetFactor) : 0);
+		temp = Double.doubleToLongBits(xMinimumValue);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(yMinimumValue);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		result = 31 * result + (enable ? 1 : 0);
+		return result;
+	}
+
 	/**
 	 * Tests whether two shapes are similar or not.
 	 * @param s1 One shape.
@@ -1052,7 +1044,7 @@ public class ChartSeriesElement implements Serializable
 		}
 		return equal;
 	}
-	
+
 	/**
 	 * Returns the characteristic name of this instance.
 	 * @return The characteristic name, currently equals to the legend.
@@ -1061,7 +1053,7 @@ public class ChartSeriesElement implements Serializable
 	{
 		return this.legend;
 	}
-	
+
 	protected static Polygon shapeFor(int shape, int boxX, int boxY) {
         if (shape==0) {
             Polygon p = new Polygon();
@@ -1079,7 +1071,7 @@ public class ChartSeriesElement implements Serializable
             p.addPoint(-3*unit,unit);
             p.addPoint(-3*unit,-unit);
             return p;
-            
+
         } else if (shape == 1) {
             int unit = 7*boxX/22;
             Polygon p = new Polygon();
@@ -1099,7 +1091,7 @@ public class ChartSeriesElement implements Serializable
                 if (i%2 == 0) {
                     x = 11*x/23;
                     y = 11*y/23;
-                    
+
                 }
                 p.addPoint(x,y);
                 angle += angleStep;
@@ -1113,7 +1105,7 @@ public class ChartSeriesElement implements Serializable
             for (int i = 0; i < 5 ; i++) {
                 int x = (int) (Math.cos(angle)*radius);
                 int y = (int) (Math.sin(angle)*radius);
-                
+
                 p.addPoint(x,y);
                 angle += angleStep;
             }
@@ -1129,7 +1121,7 @@ public class ChartSeriesElement implements Serializable
                 if (i%2 == 0) {
                     x = 11*x/23;
                     y = 11*y/23;
-                    
+
                 }
                 p.addPoint(x,y);
                 angle += angleStep;
@@ -1158,7 +1150,7 @@ public class ChartSeriesElement implements Serializable
             p.addPoint(-5*unitx, unity);
             return p;
         }
-        
+
         return null;
     }
 
@@ -1195,7 +1187,7 @@ public class ChartSeriesElement implements Serializable
 				if (dx != null) vdx[j] =dx[indexes[j]];
 				if (dy != null) vdy[j] =dy[indexes[j]];
 			}
-			
+
 			Color col = Color.BLACK;
 			Shape shape = ChartSeriesElement.SHAPE_CIRCLE;
 			if (changeShape) {
@@ -1205,7 +1197,7 @@ public class ChartSeriesElement implements Serializable
 				int index = i % COLORS.length;
 				col = COLORS[index];
 			}
-			
+
 			series[i] = new ChartSeriesElement(
 					vx, vy, vdx, vdy,
 					legend[i], true, col, shape,
@@ -1213,7 +1205,7 @@ public class ChartSeriesElement implements Serializable
 		}
 		return series;
 	}
-	
+
 	/**
 	 * Return the index of certain shape in the array of available ones.
 	 * @param shape A shape.

@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,32 +18,43 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.graph;
 
-import visad.*;
-import visad.java3d.*;
-import visad.util.*;
-
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.rmi.RemoteException;
-import java.awt.*;
-
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-
-import jparsec.astrophysics.gildas.LMVCube;
-import jparsec.graph.VISADCubeElement;
-import jparsec.io.Serialization;
-import jparsec.math.Constant;
 import jparsec.util.JPARSECException;
 import jparsec.util.Logger;
-import jparsec.util.Translate;
 import jparsec.util.Logger.LEVEL;
+import jparsec.util.Translate;
+import visad.DataReferenceImpl;
+import visad.Display;
+import visad.DisplayEvent;
+import visad.DisplayImpl;
+import visad.DisplayListener;
+import visad.FlatField;
+import visad.FunctionType;
+import visad.GraphicsModeControl;
+import visad.Integer1DSet;
+import visad.RealTupleType;
+import visad.RealType;
+import visad.ScalarMap;
+import visad.Set;
+import visad.VisADException;
+import visad.java3d.DisplayImplJ3D;
+import visad.util.ContourWidget;
 
 /**
  * A class to show cubes of data in iso-surface mode using VISAD.
@@ -53,31 +64,31 @@ import jparsec.util.Logger.LEVEL;
 public class CreateVISADIsoSurfaceChart implements DisplayListener, Serializable {
 
 	static final long serialVersionUID = 1;
-	
+
 	  /**
 	   * Complete panel.
 	   */
 	public JPanel panel;
 	private boolean displaysAreLinked = true;
-	
+
 	private RealType rightAscension, declination, velocity;
 
 	/**
 	 * Holds the displays.
 	 */
 	private DisplayImpl[] displays;
-	
+
 	/**
 	 * The input cubes.
 	 */
 	public VISADCubeElement cube, cube2;
 	private String path[];
-	
+
 	/**
 	 * Display panel.
 	 */
 	public JPanel dispPanel;
-	
+
 	/**
 	 * Constructor for a standard VISAD datacube using right ascension,
 	 * declination, and velocity.
@@ -156,7 +167,7 @@ public class CreateVISADIsoSurfaceChart implements DisplayListener, Serializable
 	public String[] getFiles() {
 		return path;
 	}
-	
+
 	private void start(VISADCubeElement cube)
 	throws JPARSECException{
 		try {
@@ -172,7 +183,7 @@ public class CreateVISADIsoSurfaceChart implements DisplayListener, Serializable
 		}
 		catch (VisADException ex)
 		{
-			throw new JPARSECException("VisAD exception.", ex);		  
+			throw new JPARSECException("VisAD exception.", ex);
 		}
 	}
 
@@ -196,28 +207,28 @@ public class CreateVISADIsoSurfaceChart implements DisplayListener, Serializable
 		}
 		catch (VisADException ex)
 		{
-			throw new JPARSECException("VisAD exception.", ex);		  
+			throw new JPARSECException("VisAD exception.", ex);
 		}
 	}
 
     private void init() throws RemoteException, VisADException {
 	    // Create the Displays and their maps
 	    displays = new DisplayImpl[] { new DisplayImplJ3D("display")};
-	
+
 	    // Get display's graphics mode control draw scales
 	    for( int i = 0; i<1;i++){
 	      GraphicsModeControl dispGMC = (GraphicsModeControl) displays[i].getGraphicsModeControl();
 	      dispGMC.setScaleEnable(true);
 	    }
-	
+
 	    displays[0].getGraphicsModeControl().setTextureEnable(false);
-	
+
 	    RealType ir_radiance = RealType.getRealType(Translate.translate(942)); // "Iso_surface_level");
 	    RealType index = RealType.getRealType("index");
 	    RealType[] types = {declination, rightAscension, velocity, ir_radiance};
 	    RealTupleType radiance = new RealTupleType(types);
 	    FunctionType image_tuple = new FunctionType(index, radiance);
-	    
+
 	    Set domain_set = new Integer1DSet(cube.getNColumns()*cube.getNLevels()*cube.getNRows());
 	    FlatField imaget1 = new FlatField(image_tuple, domain_set);
 	    try {
@@ -234,26 +245,26 @@ public class CreateVISADIsoSurfaceChart implements DisplayListener, Serializable
 	    DataReferenceImpl ref_imaget1 = new DataReferenceImpl("ref_imaget1");
 	    ref_imaget1.setData(imaget1);
 	    displays[0].addReference(ref_imaget1, null);
-	    
+
 	    // Create application window, put display into it
 	    panel.setLayout(new BorderLayout());
-	
+
 	    dispPanel = new JPanel( new GridLayout(1,2) );
 	    dispPanel.add(displays[0].getComponent());
 	    panel.add(dispPanel, BorderLayout.CENTER);
-	
+
 	    ContourWidget cw = new ContourWidget(map1contour);
 	    JPanel panels = new JPanel();
 	    panels.setLayout(new GridLayout(2, 1));
-	
+
 	    for (int i=0; i<cw.getComponentCount(); i++) {
 	    	if (cw.getComponent(i).getClass().getName().equals("javax.swing.JSlider")) {
 	    	    final JSlider js1 = (JSlider) cw.getComponent(i);
-	    	    
+
 	    	    JPanel jp = ((JPanel) cw.getComponent(i-1));
 	    		panels.add(jp.getComponent(1), BorderLayout.EAST);
 	    		panels.add(cw.getComponent(i), BorderLayout.CENTER);
-	    		
+
 	    	    js1.addChangeListener(new ChangeListener() {
 					@Override
 					public void stateChanged(ChangeEvent e) {
@@ -263,27 +274,27 @@ public class CreateVISADIsoSurfaceChart implements DisplayListener, Serializable
 	    	    break;
 	    	}
 	    }
-	    
+
 	    this.panel.add(panels, BorderLayout.SOUTH);
     }
 
     private void init2() throws RemoteException, VisADException {
 	    // Create the Displays and their maps
 	    displays = new DisplayImpl[] { new DisplayImplJ3D("display1"), new DisplayImplJ3D("display2")};
-	
+
 	    // Get display's graphics mode control draw scales
 	    for( int i = 0; i< displays.length;i++){
 	      GraphicsModeControl dispGMC = (GraphicsModeControl) displays[i].getGraphicsModeControl();
 	      dispGMC.setScaleEnable(true);
 	      displays[i].getGraphicsModeControl().setTextureEnable(false);
 	    }
-		
+
 	    RealType ir_radiance = RealType.getRealType(Translate.translate(942)); //"Iso_surface_level");
 	    RealType index = RealType.getRealType("index");
 	    RealType[] types = {declination, rightAscension, velocity, ir_radiance};
 	    RealTupleType radiance = new RealTupleType(types);
 	    FunctionType image_tuple = new FunctionType(index, radiance);
-	    
+
 	    Set domain_set1 = new Integer1DSet(cube.getNColumns()*cube.getNLevels()*cube.getNRows());
 	    FlatField imaget1 = new FlatField(image_tuple, domain_set1);
 	    try {
@@ -321,25 +332,25 @@ public class CreateVISADIsoSurfaceChart implements DisplayListener, Serializable
 
 	    // Create application window, put display into it
 	    panel.setLayout(new BorderLayout());
-	
+
 	    dispPanel = new JPanel( new GridLayout(1, 2) );
 	    dispPanel.add(displays[0].getComponent());
 	    dispPanel.add(displays[1].getComponent());
-	    
+
 	    JPanel titles = new JPanel();
 
 	    titles.setLayout(new GridLayout(1, 2));
 	    titles.add(new JLabel(Translate.translate(943)), BorderLayout.EAST);
 	    titles.add(new JLabel(Translate.translate(944)), BorderLayout.WEST);
 	    panel.add(titles, BorderLayout.NORTH);
-	    
+
 	    panel.add(dispPanel, BorderLayout.CENTER);
-	
+
 	    ContourWidget cw = new ContourWidget(map1contour);
 	    ContourWidget cw2 = new ContourWidget(map2contour);
 	    JPanel panels = new JPanel();
 	    panels.setLayout(new GridLayout(2, 1));
-	
+
 	    for (int i=0; i<cw.getComponentCount(); i++) {
 	    	if (cw.getComponent(i).getClass().getName().equals("javax.swing.JSlider")) {
 	    	    final JSlider js2 = (JSlider) cw2.getComponent(i);
@@ -348,7 +359,7 @@ public class CreateVISADIsoSurfaceChart implements DisplayListener, Serializable
 	    	    JPanel jp = ((JPanel) cw.getComponent(i-1));
 	    		panels.add(jp.getComponent(1), BorderLayout.EAST);
 	    		panels.add(cw.getComponent(i), BorderLayout.CENTER);
-	    		
+
 	    	    js1.addChangeListener(new ChangeListener() {
 					@Override
 					public void stateChanged(ChangeEvent e) {
@@ -361,7 +372,7 @@ public class CreateVISADIsoSurfaceChart implements DisplayListener, Serializable
 	    	    break;
 	    	}
 	    }
-	    
+
 	    this.panel.add(panels, BorderLayout.SOUTH);
     }
 
@@ -384,7 +395,7 @@ public class CreateVISADIsoSurfaceChart implements DisplayListener, Serializable
 
     /**
      * Returns the 'samples' object to be used as a FlatField in the
-     * VISAD library. 
+     * VISAD library.
      * @param cube The 3d cube.
      * @return The 2d samples.
      */
@@ -406,8 +417,8 @@ public class CreateVISADIsoSurfaceChart implements DisplayListener, Serializable
     			}
     		}
     	}
-    	
-/*    	
+
+/*
 		// Force sphere isosurface for testing: when resolution is too high
 		// VISAD produces wrong results
 //		System.out.println(ncolumns * nrows * nlevels+"/"+ncolumns+"/"+nrows+"/"+nlevels);
@@ -423,7 +434,7 @@ public class CreateVISADIsoSurfaceChart implements DisplayListener, Serializable
 */
     	return flat_samples;
     }
-    
+
     /**
      * Shows the chart.
      * @param width Width in pixels.
@@ -457,7 +468,7 @@ public class CreateVISADIsoSurfaceChart implements DisplayListener, Serializable
 			if (cube2 == null) {
 				start(cube);
 			} else {
-				start2(cube, cube2);				
+				start2(cube, cube2);
 			}
 		} catch (Exception exc) {
 			throw new IOException("file cannot be read");
@@ -479,77 +490,5 @@ public class CreateVISADIsoSurfaceChart implements DisplayListener, Serializable
 	 */
 	public JPanel getComponent() {
 		return panel;
-	}
-
-	/**
-	 * Test program.
-	 * @param args Unused.
-	 */
-	public static void main(String[] args)
-	{
-		try {
-			String file = "/home/alonso/reduccion/2010/reajusteRMonConDataCube/rmon_K.lmv";
-			String file2 = "/home/alonso/reduccion/2010/reajusteRMonConDataCube/rmon_modelo_K.lmv";
-//			file = "/home/alonso/reduccion/2007/discos/qa4c_ZCMa/pc10-co21.lmv";
-	  		LMVCube lmv = new LMVCube(file);
-	  		LMVCube lmv2 = new LMVCube(file2);
-
-	  		// Limit the size of both cubes to the same values
-	  		int maxS = 12;
-			lmv.setCubeData(lmv.getCubeData(maxS, maxS, maxS));
-			lmv2.setCubeData(lmv2.getCubeData(maxS, maxS, maxS));
-			maxS = lmv.axis3Dim;
-			lmv.resample(maxS, maxS, false);
-			lmv2.resample(maxS, maxS, false);
-			System.out.println(lmv.axis3Dim);
-
-			// Just for testing: replace the second cube with a sphere
- 			int s = lmv2.getCubeData().length;
-	  		float synthetic[][][] = new float[s][s][s];
-	  		for (int i=0; i<synthetic.length; i++) { // vel
-		  		for (int j=0; j<synthetic[0].length; j++) { // ra
-			  		for (int k=0; k<synthetic[0][0].length; k++) { // dec
-			  			double dx = synthetic.length / 2.0 - i;
-			  			double dy = synthetic[0].length / 2.0 - j;
-			  			double dz = synthetic[0][0].length / 2.0 - k;
-			  			synthetic[i][j][k] = maxS / 2f - (float) Math.sqrt(dx * dx + dy * dy + dz * dz);
-			  		}
-		  		}
-	  		}
-			lmv2.setCubeData(synthetic);
-	  		
-			// Create the 2 cube objects
-	  		float v0 = lmv.getv0();
-			float vf = lmv.getvf();
-			float x0 = (float) (lmv.getx0() * Constant.RAD_TO_ARCSEC);
-			float xf = (float) (lmv.getxf() * Constant.RAD_TO_ARCSEC);
-			float y0 = (float) (lmv.gety0() * Constant.RAD_TO_ARCSEC);
-			float yf = (float) (lmv.getyf() * Constant.RAD_TO_ARCSEC);
-			VISADCubeElement cube = new VISADCubeElement(lmv.getCubeData(),
-					  new float[] {x0, xf, y0, yf, v0, vf},
-					  "OFFSET_RA", VISADCubeElement.UNIT.ARCSEC,
-					  "OFFSET_DEC", VISADCubeElement.UNIT.ARCSEC,
-					  "Velocity", VISADCubeElement.UNIT.KILOMETER_PER_SECOND,
-					  "FLUX", VISADCubeElement.UNIT.KELVIN);
-			VISADCubeElement cube2 = new VISADCubeElement(lmv2.getCubeData(),
-					  new float[] {x0, xf, y0, yf, v0, vf},
-					  "OFFSET_RA", VISADCubeElement.UNIT.ARCSEC,
-					  "OFFSET_DEC", VISADCubeElement.UNIT.ARCSEC,
-					  "Velocity", VISADCubeElement.UNIT.KILOMETER_PER_SECOND,
-					  "FLUX", VISADCubeElement.UNIT.KELVIN);
-			
-			// Create the chart and show it
-			CreateVISADIsoSurfaceChart vc = new CreateVISADIsoSurfaceChart(cube, cube2, lmv.line+" datacube of "+lmv.sourceName);
-			vc.show(800, 600);
-			
-//			CreateVISADIsoSurfaceChart vc = (CreateVISADIsoSurfaceChart) Serialization.readObject("/home/alonso/eclipse/libreria_jparsec/presentation/testPanel/visadIsoSurfaceTest");
-//			Serialization.writeObject(vc, "/home/alonso/visadIsoSurfaceTest");
-		} catch (JPARSECException e)
-		{
-			e.showException();
-		} catch (Exception ee)
-		{
-			ee.printStackTrace();
-		}
 	}
 }

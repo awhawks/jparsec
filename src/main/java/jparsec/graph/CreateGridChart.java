@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,21 +18,49 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.graph;
 
-import gov.noaa.pmel.sgt.swing.*;
-import gov.noaa.pmel.sgt.swing.prop.GridAttributeDialog;
-import gov.noaa.pmel.sgt.IndexedColorMap;
+import gov.noaa.pmel.sgt.Axis;
+import gov.noaa.pmel.sgt.CartesianGraph;
+import gov.noaa.pmel.sgt.CartesianRenderer;
 import gov.noaa.pmel.sgt.ColorMap;
-import gov.noaa.pmel.sgt.LabelDrawer;
+import gov.noaa.pmel.sgt.ContourLevels;
+import gov.noaa.pmel.sgt.DefaultContourLineAttribute;
+import gov.noaa.pmel.sgt.GridAttribute;
+import gov.noaa.pmel.sgt.GridCartesianRenderer;
+import gov.noaa.pmel.sgt.IndexedColorMap;
+import gov.noaa.pmel.sgt.JPane;
+import gov.noaa.pmel.sgt.Layer;
 import gov.noaa.pmel.sgt.LinearTransform;
-import gov.noaa.pmel.sgt.dm.*;
-import gov.noaa.pmel.util.*;
-import gov.noaa.pmel.sgt.*;
-
-import java.awt.*;
-import java.awt.event.*;
+import gov.noaa.pmel.sgt.dm.SGTData;
+import gov.noaa.pmel.sgt.dm.SGTMetaData;
+import gov.noaa.pmel.sgt.dm.SimpleGrid;
+import gov.noaa.pmel.sgt.swing.JClassTree;
+import gov.noaa.pmel.sgt.swing.JPlotLayout;
+import gov.noaa.pmel.sgt.swing.prop.GridAttributeDialog;
+import gov.noaa.pmel.util.Dimension2D;
+import gov.noaa.pmel.util.Domain;
+import gov.noaa.pmel.util.Point2D;
+import gov.noaa.pmel.util.Range2D;
+import gov.noaa.pmel.util.SoTDomain;
+import gov.noaa.pmel.util.SoTRange;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GraphicsEnvironment;
+import java.awt.RenderingHints;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -45,27 +73,32 @@ import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.Date;
-
-import javax.swing.*;
-//import javax.vecmath.Point3d;
-
-import jparsec.astronomy.*;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import jparsec.graph.chartRendering.AWTGraphics;
-import jparsec.io.*;
+import jparsec.io.FileIO;
+import jparsec.io.WriteFile;
 import jparsec.io.image.ImageSplineTransform;
 import jparsec.io.image.Picture;
-import jparsec.math.FastMath;
-import jparsec.util.*;
+import jparsec.util.JPARSECException;
+import jparsec.util.Logger;
 import jparsec.util.Logger.LEVEL;
+import jparsec.util.Translate;
 
 /**
- * Creates grid charts (x-y maps with the variation of a third 
+ * Creates grid charts (x-y maps with the variation of a third
  * variable in color levels). This class uses the NOAA Scientific
  * Graphic Toolkit called SGT. The array of data should be square and
  * fully populated of data to properly create the chart.<P>
  * The SGT version used in JPARSEC is a modified version of the original.
  * An error when drawing color key in vertical orientation is fixed.
- * Also support was added to superscripts, subscripts, Greek characters, 
+ * Also support was added to superscripts, subscripts, Greek characters,
  * and text labels or pointers.
  * <P>The chart can be zoomed/resized with the mouse. The different elements in
  * the chart can be selected and edited interactively.
@@ -89,7 +122,7 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 	  private JPanel main = new JPanel(), button = new JPanel();
 	  private ColorMap cmap;
 	  private int[] limits = null;
-	  
+
 		private void writeObject(ObjectOutputStream out)
 		throws IOException {
 			out.writeObject(this.gridChart);
@@ -136,7 +169,7 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 			  if (gridChart.limits[2] > gridChart.limits[3])  gridChart.invertYaxis = true;
 		  }
 
-		  makeGraph(this.gridChart);		  
+		  makeGraph(this.gridChart);
 	  }
 
 	  /**
@@ -145,10 +178,10 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 	   * @throws JPARSECException If an error occurs.
 	   */
 	  public void showChartInSGTpanel(boolean showButtons)
-	  throws JPARSECException {		  
+	  throws JPARSECException {
 		  showChartInSGTpanel(showButtons, true);
 	  }
-	  
+
 	  /**
 	   * Shows the chart in a default SGT panel.
 	   * @param showButtons True to show the buttons.
@@ -156,7 +189,7 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 	   * @throws JPARSECException If an error occurs.
 	   */
 	  public void showChartInSGTpanel(boolean showButtons, boolean showJFrame)
-	  throws JPARSECException {		  
+	  throws JPARSECException {
 		  main.removeAll();
 		  button.removeAll();
 		  this.showButtons = showButtons;
@@ -167,24 +200,24 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 		  rpl_.setBatch(true);
 		  main.add(rpl_, BorderLayout.NORTH);
 		  frame.setTitle(TextLabel.getSimplifiedString(gridChart.title));
-		  
+
 		  frame.add(main, BorderLayout.NORTH);
 		  if (showButtons) frame.add(button, BorderLayout.SOUTH);
 		  rpl_.setBatch(false);
 		  frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		  frame.addComponentListener(this);	
+		  frame.addComponentListener(this);
 		  rpl_.addPropertyChangeListener(this);
 		  rpl_.addMouseWheelListener(this);
 		  rpl_.addMouseListener(this);
 		  frame.pack();
 		  frame.setVisible(showJFrame);
-		
+
 		  width = frame.getWidth();
 		  height = frame.getHeight();
 		  drawPointers();
 		  frame.setIconImage(this.chartAsBufferedImage());
 	  }
-	  
+
 	  /**
 	   * Returns the JPanel.
 	   * @param showButtons True to show the buttons.
@@ -192,7 +225,7 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 	   * @throws JPARSECException If an error occurs.
 	   */
 	  public JPanel getComponent(boolean showButtons)
-	  throws JPARSECException {		  
+	  throws JPARSECException {
 		  main.removeAll();
 		  button.removeAll();
 		  this.showButtons = showButtons;
@@ -212,7 +245,7 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 		  rpl_.setBatch(false);
 		  width = frame.getWidth();
 		  height = frame.getHeight();
-		  
+
 		  frame.addComponentListener(new ComponentAdapter() {
   		    public void componentResized(ComponentEvent evt) {
   		    	update();
@@ -243,7 +276,7 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 		  }
 		  drawPointers();
 	  }
-	  
+
 		/**
 		 * Returns the chart as an image.
 		 * @return The image.
@@ -252,26 +285,26 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 		public BufferedImage chartAsBufferedImage()
 		throws JPARSECException{
 			boolean isShown = frame.isVisible();
-			
+
 			if (!isShown) this.showChartInSGTpanel(false);
 		    BufferedImage buf = new BufferedImage(frame.getWidth(), frame.getHeight(), BufferedImage.TYPE_INT_RGB);
 			Graphics g = buf.createGraphics();
 			g.fillRect(0, 0, buf.getWidth(), buf.getHeight());
 			try {
-				if (this.rpl_.isEnabled()) 
+				if (this.rpl_.isEnabled())
 					this.rpl_.draw(g, buf.getWidth(), buf.getHeight());
 			} catch (Exception exc)
-			{		
+			{
  				Logger.log(LEVEL.ERROR, "Error drawing the chart to an image. Message was: "+exc.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(exc.getStackTrace()));
 			}
 			drawPointers(buf);
-			if (!isShown) frame.dispose();			
+			if (!isShown) frame.dispose();
 			return buf;
 		}
-		
+
 		/**
 		 * Exports the chart as an EPS file.
-		 * 
+		 *
 		 * @param file_name File name.
 		 * @throws JPARSECException If an error occurs.
 		 */
@@ -283,7 +316,7 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 			File plotFile = new File(file_name + ".eps");
 			int size_x = gridChart.imageWidth, size_y = gridChart.imageWidth - 100;
 			final Dimension size = new Dimension(size_x, size_y);
-			
+
 			boolean isShown = frame.isVisible();
 			if (!isShown) this.showChartInSGTpanel(false);
 			try
@@ -294,12 +327,12 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 				Object psGraphics = cc.newInstance(new Object[] {plotFile, size});
 				Method m = c.getMethod("startExport", null);
 				m.invoke(psGraphics, null);
-				
+
 				try {
-					if (this.rpl_.isEnabled()) 
+					if (this.rpl_.isEnabled())
 						this.rpl_.draw((Graphics2D) (psGraphics), gridChart.imageWidth, gridChart.imageWidth-100);
 				} catch (Exception exc)
-				{		
+				{
 	 				Logger.log(LEVEL.ERROR, "Error drawing the chart to an image. Message was: "+exc.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(exc.getStackTrace()));
 				}
 
@@ -313,10 +346,10 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 				throw new JPARSECException("cannot write to file.", e);
 			}
 		}
-		
+
 		/**
 		 * Exports the chart as an PDF file.
-		 * 
+		 *
 		 * @param file_name File name.
 		 * @throws JPARSECException If an error occurs.
 		 */
@@ -328,7 +361,7 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 			File plotFile = new File(file_name + ".pdf");
 			int size_x = gridChart.imageWidth, size_y = gridChart.imageWidth - 100;
 			final Dimension size = new Dimension(size_x, size_y);
-			
+
 			boolean isShown = frame.isVisible();
 			if (!isShown) this.showChartInSGTpanel(false);
 			try
@@ -339,12 +372,12 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 				Object pdfGraphics = cc.newInstance(new Object[] {plotFile, size});
 				Method m = c.getMethod("startExport", null);
 				m.invoke(pdfGraphics, null);
-				
+
 				try {
-					if (this.rpl_.isEnabled()) 
+					if (this.rpl_.isEnabled())
 						this.rpl_.draw((Graphics2D) (pdfGraphics), gridChart.imageWidth, gridChart.imageWidth-100);
 				} catch (Exception exc)
-				{		
+				{
 	 				Logger.log(LEVEL.ERROR, "Error drawing the chart to an image. Message was: "+exc.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(exc.getStackTrace()));
 				}
 
@@ -358,10 +391,10 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 				throw new JPARSECException("cannot write to file.", e);
 			}
 		}
-		
+
 		/**
 		 * Exports the chart as an SVG file.
-		 * 
+		 *
 		 * @param file_name File name.
 		 * @throws JPARSECException If an error occurs.
 		 */
@@ -373,7 +406,7 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 			File plotFile = new File(file_name + ".svg");
 			int size_x = gridChart.imageWidth, size_y = gridChart.imageWidth - 100;
 			final Dimension size = new Dimension(size_x, size_y);
-			
+
 			boolean isShown = frame.isVisible();
 			if (!isShown) this.showChartInSGTpanel(false);
 			try
@@ -384,12 +417,12 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 				Object svgGraphics = cc.newInstance(new Object[] {plotFile, size});
 				Method m = c.getMethod("startExport", null);
 				m.invoke(svgGraphics, null);
-				
+
 				try {
-					if (this.rpl_.isEnabled()) 
+					if (this.rpl_.isEnabled())
 						this.rpl_.draw((Graphics2D) (svgGraphics), gridChart.imageWidth, gridChart.imageWidth-100);
 				} catch (Exception exc)
-				{		
+				{
 	 				Logger.log(LEVEL.ERROR, "Error drawing the chart to an image. Message was: "+exc.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(exc.getStackTrace()));
 				}
 
@@ -403,7 +436,7 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 				throw new JPARSECException("cannot write to file.", e);
 			}
 		}
-		
+
 		/**
 		 * Returns the chart object.
 		 * @return Grid chart object.
@@ -412,7 +445,7 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 		{
 			return this.gridChart;
 		}
-	  
+
 		private void makeGraph(GridChartElement chart) {
 		    /*
 		     * This example uses a pre-created "Layout" for raster time
@@ -422,7 +455,7 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 		     * PointCollectionKey, and general X-Y plots with a
 		     * LineKey. JPlotLayout supports zooming, object selection, and
 		     * object editing.
-		     */                
+		     */
 		    SGTData newData;
 		    ContourLevels clevels;
 		    /*
@@ -440,7 +473,7 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 		    /*
 		     * Create the layout without a Logo image and with the
 		     * ColorKey on a separate Pane object.
-		     */   		    
+		     */
 		    rpl_.setEditClasses(true);
 		    /*
 		     * Create a GridAttribute for CONTOUR style.
@@ -453,7 +486,7 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 			    gridAttr_ = new GridAttribute(clevels);
 			    gridAttr_.setColorMap(cmap);
 			    gridAttr_.setStyle(chart.type.ordinal());
-			    
+
 			    try {
 			    	DefaultContourLineAttribute dcla = gridAttr_.getContourLevels().getDefaultContourLineAttribute();
 			    	int n = 0;
@@ -463,7 +496,7 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 			    	}
 			    	dcla.setSignificantDigits(n);
 			    	dcla.setLabelEnabled(!chart.ocultLevelLabels);
-			    	gridAttr_.getContourLevels().setDefaultContourLineAttribute(dcla);			    	
+			    	gridAttr_.getContourLevels().setDefaultContourLineAttribute(dcla);
 			    } catch (Exception exc) {}
 
 		    } else {
@@ -481,7 +514,7 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 
 		    /*
 		     * Change the layout's three title lines.
-		     */        
+		     */
 		    String l1 = chart.title;
 		    if (l1 == null) l1 = "";
 		    String l2 = chart.subTitle;
@@ -518,7 +551,7 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 			    }
 		    }
 		}
-		
+
 		private void edit_actionPerformed(java.awt.event.ActionEvent e) {
 		    /*
 		     * Create a GridAttributeDialog and set the renderer.
@@ -539,7 +572,7 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 			ct.setJPane(rpl_);
 			ct.show();
 		}
-		    
+
 		private ColorMap createColorMap(Range2D datar, GridChartElement chart) {
 		    IndexedColorMap cmap = new IndexedColorMap(chart.red, chart.green, chart.blue);
 		    LinearTransform ctrans =
@@ -547,9 +580,9 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 		    ((IndexedColorMap)cmap).setTransform(ctrans);
 		    return cmap;
 		}
-		 
+
 		private JPopupMenu result;
-	    private JMenuItem treeViewItem, editGridItem, resetZoomItem, exportItem; 
+	    private JMenuItem treeViewItem, editGridItem, resetZoomItem, exportItem;
 	    /**
 	     * Creates a popup menu for the panel.
 	     *
@@ -571,7 +604,7 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
             exportItem = new JMenuItem(Translate.translate(950)); //"Export");
             exportItem.addActionListener(myAction);
             result.add(exportItem);
-            
+
 	        return result;
 	    }
 
@@ -593,7 +626,7 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 		    export = new JButton(Translate.translate(950)); //"Export");
 		    export.addActionListener(myAction);
 		    button.add(export);
-		      
+
 		    return button;
 		}
 
@@ -639,7 +672,7 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 			    sg.setId("GRIDCHART");
 			    return sg;
 		}
-		  
+
 		/**
 		 *  This method is called after the component's size changes.
 		 */
@@ -657,6 +690,7 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 				makeGraph(gridChart);
 		    }
 		}
+
 		/**
 		 * This method is called after the component is moved.
 		 */
@@ -679,7 +713,7 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 		{
 			return cmap.getColor(intensity);
 		}
-		  
+
 		/**
 		 * Creates a script to draw the current chart using GILDAS. A file
 		 * with extension .greg is created.
@@ -705,10 +739,10 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 					double fx = (double) i / (double) (gridChart.data.length - 1.0);
 					double fy = (double) j / (double) (gridChart.data[i].length - 1.0);
 					double x = limits[0] + (limits[1] - limits[0]) * fx;
-					double y = limits[2] + (limits[3] - limits[2]) * fy; 
+					double y = limits[2] + (limits[3] - limits[2]) * fy;
 					if (gridChart.data[i][j] != null)
 						data.append(""+x+" "+y+ " "+gridChart.data[i][j].doubleValue() + FileIO.getLineSeparator());
-				}				
+				}
 			}
 			WriteFile.writeAnyExternalFile(auxF, data.toString());
 			String sep = FileIO.getLineSeparator();
@@ -778,7 +812,7 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 		throws JPARSECException {
 			CreateGridChart.exportAsSuperScriptForGILDAS(charts, nx, ny, names, superName, dir, drawTitles, false, false, false, false);
 		}
-		
+
 		/**
 		 * Creates a panel with several charts for GILDAS.
 		 * @param charts The charts.
@@ -804,7 +838,7 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 			boolean yaxis[] = new boolean[names.length];
 			int maxN = nx;
 			if (ny > nx) maxN = ny;
-			
+
 			String sep = FileIO.getLineSeparator();
 			StringBuffer script = new StringBuffer(1000);
 			script.append("! SCRIPT TO DRAW A CHART PANEL WITH GILDAS"+ sep);
@@ -821,16 +855,16 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 
 					double byf = (ymin + (double) (y - 1) * (double) (ymax - ymin) / (double) maxN);
 					double by0 = (byf + (double) (ymax - ymin) / (double) maxN);
-					
+
 					by0 = ymax + ymin - by0;
 					byf = ymax + ymin - byf;
-					
+
 					index ++;
 					if (index < charts.length)
 					{
 						script.append("set box "+bx0+" "+bxf+" "+by0+" "+byf + sep);
 						script.append("@"+names[index]+".greg" + sep + sep);
-						
+
 						xaxis[index] = yaxis[index] = true;
 						if (x > 1) yaxis[index] = false;
 						if (y < ny) xaxis[index] = false;
@@ -843,13 +877,13 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 /*			if (autoDestroy)
 			{
 				script.append(""+ sep);
-				//script.append("PAUSE Continue to remove all unnecesary files. Otherwise quit/exit here."+ sep);		
+				//script.append("PAUSE Continue to remove all unnecesary files. Otherwise quit/exit here."+ sep);
 				script.append(""+ sep);
 				script.append("! REMOVE ALL UNNECESARY FILES"+ sep);
 				script.append("sys \"rm "+superName+".greg\""+ sep);
 			}
 */			//script.append("exit"+sep);
-			
+
 			WriteFile.writeAnyExternalFile(dir+superName+".greg", script.toString());
 
 			for (int i=0; i<charts.length; i++)
@@ -859,12 +893,12 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 				gscript = DataSet.replaceOne(gscript, "wedge", "!wedge", 1);
 				if (i > 0) gscript = DataSet.replaceOne(gscript, "plot /scaling lin", "plot /scaling lin LCUT HCUT !", 1);
 				if (i > 0) gscript = DataSet.replaceOne(gscript, "lut white", "!lut white", 1);
-				
+
 				if (!drawTitles)
 				{
 					gscript = DataSet.replaceOne(gscript, "draw text", "!draw text", 3);
 				}
-				
+
 				if (drawPanelIndex)
 				{
 					String panelIndex = ""+(i+1);
@@ -873,14 +907,14 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 							panelIndex = "abcdefghijklmnopqrstuvwxyz".substring(i, i+1);
 						} catch (Exception exc) {}
 					}
-					gscript = DataSet.replaceOne(gscript, "! DRAW TITLE", 
+					gscript = DataSet.replaceOne(gscript, "! DRAW TITLE",
 							"let mx = user_xmax-user_xmin"+ sep+
 							"let my = user_ymax-user_ymin"+ sep+
 							"let py user_ymin+my*0.95"+sep+
 							"let px user_xmin+mx*0.05"+sep+
 							"draw text px py \""+panelIndex+")\" 5 0 /user"+sep+"! DRAW TITLE", 1);
 				}
-				
+
 				String box = "box ";
 				if (!xaxis[i]) {
 					box += "N ";
@@ -899,16 +933,16 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 				gscript = DataSet.replaceOne(gscript, sep+"hard", sep+"!hard", 1);
 				if (gscript.indexOf(sep+"exit") > 0)
 					gscript = gscript.substring(0, gscript.indexOf(sep+"exit"));
-				
+
 				WriteFile.writeAnyExternalFile(dir+names[i]+".greg", gscript);
 			}
-		}	
-		
+		}
+
 		private ImageSplineTransform t = null;
 
 		/**
 		 * Returns the intensity at certain position using 2d spline interpolation.
-		 * Note the returned value will not agree 
+		 * Note the returned value will not agree
 		 * exactly with the contour lines generated by SGT, but the difference
 		 * should be always small and inside the level of uncertainty expected.
 		 * @param x X position in physical units.
@@ -919,7 +953,7 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 		{
 			if (t == null) t = new ImageSplineTransform(GridChartElement.ObjectToDoubleArray(gridChart.data, 0.0));
 			int pointsX = this.gridChart.data.length;
-			int pointsY = this.gridChart.data[0].length;			
+			int pointsY = this.gridChart.data[0].length;
 			double px = (x - this.gridChart.limits[0]) * ((double) (pointsX - 1.0)) / (this.gridChart.limits[1] - this.gridChart.limits[0]);
 			double py = (y - this.gridChart.limits[2]) * ((double) (pointsY - 1.0)) / (this.gridChart.limits[3] - this.gridChart.limits[2]);
 			double data = 0.0;
@@ -927,13 +961,13 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 				if (!t.isOutOfImage(px, py)) data = t.interpolate(px, py);
 			} catch (Exception exc) {
 			}
-			
+
 			return data;
 		}
-		
+
 		/**
 		 * Returns the intensity at certain position using 2d spline interpolation.
-		 * Note the returned value will not agree 
+		 * Note the returned value will not agree
 		 * exactly with the contour lines generated by SGT, but the difference
 		 * should be always small and inside the level of uncertainty expected.
 		 * @param x X position in index units, from 0 to width-1.
@@ -948,10 +982,10 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 				if (!t.isOutOfImage(x, y)) data = t.interpolate(x, y);
 			} catch (Exception exc) {
 			}
-			
+
 			return data;
 		}
-		
+
 		/**
 		 * Returns the display component of the instance.
 		 * @return The graphic component.
@@ -965,7 +999,7 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 		 * Transforms pixel coordinates in the chart to physical coordinates.
 		 * @param x X pixel coordinate.
 		 * @param y Y position.
-		 * @return Array with x and y position in physical coordinates, or null if 
+		 * @return Array with x and y position in physical coordinates, or null if
 		 * an error occurs. Error should never occur anyway.
 		 */
 		public double[] screenCoordinatesToPhysicalCoordinates(int x, int y)
@@ -978,13 +1012,13 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 				if (c[i] instanceof Layer) {
 					posx = ((Layer) c[i]).getXDtoP(x);
 					posy = ((Layer) c[i]).getYDtoP(y);
-					
+
 					double refX = 0.1, refY = 0.6;
 					if (gridChart.levelsOrientation == GridChartElement.WEDGE_ORIENTATION.HORIZONTAL_BOTTOM) {
 						refX += 0.9;
 						refY += 0.9;
 					}
-					
+
 					double x0 = rpl_.getRange().getXRange().start;
 					double xf = rpl_.getRange().getXRange().end;
 					double y0 = rpl_.getRange().getYRange().start;
@@ -995,14 +1029,14 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 				}
 			}
 			if (count > 1) return null; // Should never occur, just one chart or 'layer'
-			return new double[] {posx, posy};			 
+			return new double[] {posx, posy};
 		}
 
 		/**
 		 * Transforms physical coordinates in the chart to pixel position.
 		 * @param x X physical position.
 		 * @param y Y physical position.
-		 * @return Array with x and y pixel positions, or null if 
+		 * @return Array with x and y pixel positions, or null if
 		 * an error occurs. Error should never occur anyway.
 		 */
 		public double[] physicalCoordinatesToScreenCoordinates(double x, double y)
@@ -1033,7 +1067,7 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 				}
 			}
 			if (count > 1) return null; // Should never occur, just one chart or 'layer'
-			return new double[] {posx, posy};			
+			return new double[] {posx, posy};
 		}
 
 		/**
@@ -1064,12 +1098,12 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 				}
 			}
 			if (count > 1) return false; // Should never occur, just one chart or 'layer'
-			return inside;			
+			return inside;
 		}
 
 		private void drawPointers() {
 			if (gridChart.pointers == null || gridChart.pointers.length == 0 || !rpl_.isBatch()) return;
-			
+
 			int n = rpl_.getComponentCount();
 			if (n == 1) {
 				JLabel label = new JLabel();
@@ -1078,17 +1112,17 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 				label.setBackground(new Color(0, 0, 0, 0));
 				rpl_.add(label, 0);
 			}
-			
+
 			BufferedImage buf = new BufferedImage(rpl_.getWidth(), rpl_.getHeight(), BufferedImage.TYPE_INT_ARGB);
 			drawPointers(buf);
-	
+
 			JLabel label = (JLabel) rpl_.getComponent(0);
 			label.setIcon(new ImageIcon(buf));
 			label.setSize(buf.getWidth(), buf.getHeight());
 			label.setPreferredSize(new Dimension(buf.getWidth(), buf.getHeight()));
 			label.setLocation(0, 0);
 		}
-		
+
 		private void drawPointers(BufferedImage buf) {
 			if (gridChart.pointers == null || gridChart.pointers.length == 0) return;
 
@@ -1107,15 +1141,15 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 				if (!inside1) continue;
 				double sp1[] = this.physicalCoordinatesToScreenCoordinates(px1, py1);
 				double py2 = Double.parseDouble(FileIO.getField(4, p, " ", true));
-				
+
 				if (DataSet.isDoubleStrictCheck(val3)) {
 					double px2 = Double.parseDouble(val3);
-					
+
 					boolean inside2 = this.isPhysicalPositionInsideChartArea(px2, py2);
-					
+
 					if (inside2) {
 						double sp2[] = this.physicalCoordinatesToScreenCoordinates(px2, py2);
-						
+
 						// This code is to generate a little offset between the end point
 						// and the position of the label, following the line initial-end point
 						if (sp2[0] != sp1[0]) {
@@ -1133,11 +1167,11 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 							};
 							TextLabel tl = new TextLabel(label);
 							tl.draw(g, (int) sp3[0], (int) sp3[1], TextLabel.ALIGN.CENTER);
-							if (px1 != px2 || py1 != py2) 
+							if (px1 != px2 || py1 != py2)
 								g.drawLine((int) sp1[0], (int) sp1[1], (int) sp2[0], (int) sp2[1]);
 						} else { // Support for bullets or points in case of the same initial/final position
 							TextLabel tl = new TextLabel(label);
-							
+
 							int s = g.getFont().getSize()/2;
 							g.fillOval((int) sp1[0]-s, (int) sp1[1]-s, 2*s+1, 2*s+1);
 							tl.draw(g, (int) sp2[0], (int) sp2[1] + s+4+g.getFont().getSize(), TextLabel.ALIGN.CENTER);
@@ -1146,7 +1180,7 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 				} else {
 					if (val3.indexOf("C") < 0) continue;
 					TextLabel tl = new TextLabel(label);
-					
+
 					g.setStroke(AWTGraphics.getStroke(JPARSECStroke.STROKE_DEFAULT_LINE));
 					if (py2 != 0) {
 						double sp1b[] = this.physicalCoordinatesToScreenCoordinates(px1, py1+py2/2);
@@ -1154,7 +1188,7 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 						if (val3.indexOf("F") < 0) {
 							g.drawOval((int) sp1[0]-s, (int) sp1[1]-s, 2*s+1, 2*s+1);
 						} else {
-							g.fillOval((int) sp1[0]-s, (int) sp1[1]-s, 2*s+1, 2*s+1);						
+							g.fillOval((int) sp1[0]-s, (int) sp1[1]-s, 2*s+1, 2*s+1);
 						}
 					}
 					tl.draw(g, (int) sp1[0], (int) sp1[1] + 4+(g.getFont().getSize()*3)/2, TextLabel.ALIGN.CENTER);
@@ -1162,7 +1196,7 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 			}
 			g.dispose();
 		}
-		
+
 		/**
 		 * 'Prepares' a Graphics context so that it can be used to draw on a JFreeChart using
 		 * physical and not Java coordinates.
@@ -1174,7 +1208,7 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 	        g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 	        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
 	        g.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
-	        
+
 			double refX = 0.1, refY = 0.6;
 			if (gridChart.levelsOrientation == GridChartElement.WEDGE_ORIENTATION.HORIZONTAL_BOTTOM) {
 				refX += 0.9;
@@ -1201,7 +1235,7 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 	        g.translate(p1[0], p1[1]);
 	        g.scale(sx, sy);
 		}
-		
+
 		/**
 		 * Returns the scaling factor for the fonts inside the graph, 1 by default.
 		 * @return Scaling factor.
@@ -1216,64 +1250,14 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 		public static void setLabelFontScalingFactor(double scale) {
 			Axis.FONT_SCALE = scale;
 		}
-		
-		
-		/**
-		 * For unit testing only.
-		 * @param args Not used.
-		 */
-		public static void main (String args[])
-		{
-			System.out.println("CreateGridChart test");
 
-			try {
-				float x0 = -2f, y0 = -Math.abs(x0), xf = -x0, yf = -y0;
-				TelescopeElement telescope = TelescopeElement.NEWTON_20cm;
-				double data[][] = Difraction.pattern(telescope, (int) Math.abs(xf)*2);
-				double values[] = DataSet.getSetOfValues(0, 1, 11, false);
-
-				setLabelFontScalingFactor(1.2);
-				GridChartElement chart = new GridChartElement("Difraction pattern",
-						"offset x (\")", "offset y (\")", 
-						"Relative Intensity (|@PSI|)",
-						GridChartElement.COLOR_MODEL.RED_TO_BLUE, 
-						new double[] {x0, xf, y0, yf}, data, 
-						values, 800);
-				chart.subTitle = "Newton 20cm";
-				chart.levelsOrientation = GridChartElement.WEDGE_ORIENTATION.VERTICAL_RIGHT;
-				chart.levelsBorderStyle = GridChartElement.WEDGE_BORDER.NO_BORDER;
-				chart.type = GridChartElement.TYPE.RASTER_CONTOUR;
-				
-				chart.pointers = new String[] {"0 0 1 1 @BLUEArrow from (1, 1) to (0, 0)@GREEN"};
-				CreateGridChart c = new CreateGridChart(chart);
-//				c.showChartInSGTpanel(true);
-				Picture p = new Picture(c.chartAsBufferedImage());
-				Graphics2D g = p.getImage().createGraphics();
-				c.prepareGraphics2D(g, true);
-				g.setColor(new Color(0, 255, 0, 128));
-				int x = 0, y = 0, r = 1;
-				g.setStroke(AWTGraphics.getStroke(new JPARSECStroke(JPARSECStroke.STROKE_DEFAULT_LINE, 0.1f)));
-				g.drawOval(x-r, y-r, 2*r, 2*r);
-				p.show("");
-				
-				//Serialization.writeObject(c, "/home/alonso/gridChartTest");
-
-//				chart.resample(data.length*10, data[0].length*10);
-//				CreateGridChart c2 = new CreateGridChart(chart);
-//				c2.showChartInSGTpanel(false);				
-			} catch (Exception e)
-			{
-				e.printStackTrace();
-			}
-		}
-		  
 		private class MyAction implements java.awt.event.ActionListener {
 			public void actionPerformed(java.awt.event.ActionEvent event) {
 				Object obj = event.getSource();
 				if(obj == edit_ || obj == editGridItem) edit_actionPerformed(event);
 				if(obj == space_ || obj == resetZoomItem) rpl_.resetZoom();
 				if(obj == tree_ || obj == treeViewItem) tree_actionPerformed(event);
-		        		        
+
 		        if (obj == export || obj == exportItem) {
 		        	try {
 			        	String name = FileIO.fileChooser(false);
@@ -1295,7 +1279,7 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 		public void propertyChange(PropertyChangeEvent e) {
 	    	if (e.getPropertyName().equals("domainRange")) {
 				SoTDomain rangeObs = getDisplay().getGraphDomain();
-				
+
 				boolean change = false;
 				if (getChartElement().invertXaxis) {
 					SoTRange r = rangeObs.getXRange();
@@ -1318,7 +1302,7 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 				}
 	    	}
 
-	    	makeGraph(gridChart); 
+	    	makeGraph(gridChart);
 	    	drawPointers();
 		}
 		/**
@@ -1351,7 +1335,7 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 			} catch (Exception exc) {
  				Logger.log(LEVEL.ERROR, "Error setting range. Message was: "+exc.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(exc.getStackTrace()));
 			}
-			
+
 			drawPointers();
 		}
 		/**

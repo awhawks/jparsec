@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,11 +18,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.graph.chartRendering;
 
 import java.io.Serializable;
 
+import java.util.Arrays;
 import jparsec.astronomy.TelescopeElement;
 import jparsec.ephem.Target.TARGET;
 import jparsec.ephem.moons.MoonEphemElement;
@@ -31,7 +32,7 @@ import jparsec.graph.chartRendering.Graphics.ANAGLYPH_COLOR_MODE;
 
 /**
  * A class to instantiate an adequate object for rendering operations.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -46,7 +47,7 @@ public class PlanetRenderElement implements Serializable
 
 	/**
 	 * Explicit full constructor.
-	 * 
+	 *
 	 * @param w Width of the window in pixels.
 	 * @param h Height of the window in pixels.
 	 * @param a True for viewing rotation axis.
@@ -74,7 +75,7 @@ public class PlanetRenderElement implements Serializable
 
 	/**
 	 * Explicit constructor.
-	 * 
+	 *
 	 * @param w Width of the window in pixels.
 	 * @param h Height of the window in pixels.
 	 * @param a True for viewing axes.
@@ -101,7 +102,7 @@ public class PlanetRenderElement implements Serializable
 
 	/**
 	 * Explicit constructor.
-	 * 
+	 *
 	 * @param w Width of the window in pixels.
 	 * @param h Height of the window in pixels.
 	 * @param a True for viewing axes.
@@ -126,7 +127,7 @@ public class PlanetRenderElement implements Serializable
 
 	/**
 	 * Constructor to be used with an sky render object.
-	 * 
+	 *
 	 * @param a True for viewing axes.
 	 * @param t True for viewing textures.
 	 * @param s True for viewing main natural satellites.
@@ -144,7 +145,7 @@ public class PlanetRenderElement implements Serializable
 
 	/**
 	 * Constructor to be used with an sky render object.
-	 * 
+	 *
 	 * @param a True for viewing axes.
 	 * @param t True for viewing textures.
 	 * @param s True for viewing main natural satellites.
@@ -165,7 +166,7 @@ public class PlanetRenderElement implements Serializable
 
 	/**
 	 * Constructor only for the size of the window.
-	 * 
+	 *
 	 * @param w Width of the window in pixels.
 	 * @param h Height of the window in pixels.
 	 */
@@ -239,7 +240,7 @@ public class PlanetRenderElement implements Serializable
 	 * but requires much more time. Default value is false.
 	 */
 	public boolean highQuality = false;
-	
+
 	/**
 	 * Sets whether to render also all available satellites or not (instead of
 	 * only main ones). Only when both main satellites and all ones are enabled,
@@ -263,9 +264,9 @@ public class PlanetRenderElement implements Serializable
 	 * Sets the target body.
 	 */
 	public TARGET target = TARGET.SUN;
-	
+
 	/**
-	 * Set to true as default value to show labels below the satellites. 
+	 * Set to true as default value to show labels below the satellites.
 	 */
 	public boolean showLabels = true;
 
@@ -277,7 +278,7 @@ public class PlanetRenderElement implements Serializable
 	 * Holds foreground color (satellites), white as default.
 	 */
 	public int foreground = 255<<24 | 255<<16 | 255<<8 | 255;
-	
+
 	/**
 	 * The anaglyph mode, disabled by default.
 	 */
@@ -286,9 +287,9 @@ public class PlanetRenderElement implements Serializable
 	/**
 	 * To clone the object.
 	 */
+    @Override
 	public PlanetRenderElement clone()
 	{
-		if (this == null) return null;
 		PlanetRenderElement out = new PlanetRenderElement(this.width, this.height, this.axes, this.textures,
 				this.satellitesMain, this.satellitesAll, this.northUp, this.difraction);
 
@@ -310,57 +311,61 @@ public class PlanetRenderElement implements Serializable
 		out.highQuality = this.highQuality;
 		return out;
 	}
+
 	/**
 	 * Returns true if the input object is equal to this instance.
 	 */
-	public boolean equals(Object e)
-	{
-		if (e == null) {
-			if (this == null) return true;
-			return false;
-		}
-		if (this == null) {
-			return false;
-		}
-		boolean equals = true;
-		PlanetRenderElement ere = (PlanetRenderElement) e;
-		if (ere.showLabels != this.showLabels) equals = false;
-		if (ere.axes != this.axes) equals = false;
-		if (ere.axesNOSE != this.axesNOSE) equals = false;
-		if (ere.textures != this.textures) equals = false;
-		if (ere.height != this.height) equals = false;
-		if (ere.width != this.width) equals = false;
-		if (ere.satellitesMain != this.satellitesMain) equals = false;
-		if (ere.satellitesAll != this.satellitesAll) equals = false;
-		if (ere.difraction != this.difraction) equals = false;
-		if (ere.northUp != this.northUp) equals = false;
-		if (ere.target != this.target) equals = false;
-		if (!ere.telescope.equals(this.telescope)) equals = false;
-		if (!ere.ephemSun.equals(this.ephemSun)) equals = false;
-		if (!ere.ephem.equals(this.ephem)) equals = false;
-		if (ere.background != this.background) equals = false;
-		if (ere.foreground != this.foreground) equals = false;
-		if (ere.anaglyphMode != this.anaglyphMode) equals = false;
-		if (ere.highQuality != this.highQuality) equals = false;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof PlanetRenderElement)) return false;
 
-		if (moonephem == null || ere.moonephem == null) {
-			if (ere.moonephem != null || moonephem != null) equals = false; 
-		} else {
-			if (this.moonephem.length == ere.moonephem.length)
-			{
-				for (int i=0; i<this.moonephem.length; i++)
-				{
-					if (this.moonephem[i] == null) {
-						if (ere.moonephem[i] != null) equals = false;
-					} else {
-						if (!this.moonephem[i].equals(ere.moonephem[i])) equals = false;
-					}
-				}
-			} else {
-				equals = false;
-			}
-		}
+        PlanetRenderElement that = (PlanetRenderElement) o;
 
-		return equals;
-	}
+        if (width != that.width) return false;
+        if (height != that.height) return false;
+        if (textures != that.textures) return false;
+        if (axes != that.axes) return false;
+        if (axesNOSE != that.axesNOSE) return false;
+        if (northUp != that.northUp) return false;
+        if (satellitesMain != that.satellitesMain) return false;
+        if (highQuality != that.highQuality) return false;
+        if (satellitesAll != that.satellitesAll) return false;
+        if (difraction != that.difraction) return false;
+        if (showLabels != that.showLabels) return false;
+        if (background != that.background) return false;
+        if (foreground != that.foreground) return false;
+        if (ephem != null ? !ephem.equals(that.ephem) : that.ephem != null) return false;
+        if (telescope != null ? !telescope.equals(that.telescope) : that.telescope != null) return false;
+        // Probably incorrect - comparing Object[] arrays with Arrays.equals
+        if (!Arrays.equals(moonephem, that.moonephem)) return false;
+        if (ephemSun != null ? !ephemSun.equals(that.ephemSun) : that.ephemSun != null) return false;
+        if (target != that.target) return false;
+        return anaglyphMode == that.anaglyphMode;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = ephem != null ? ephem.hashCode() : 0;
+        result = 31 * result + (telescope != null ? telescope.hashCode() : 0);
+        result = 31 * result + (moonephem != null ? Arrays.hashCode(moonephem) : 0);
+        result = 31 * result + (ephemSun != null ? ephemSun.hashCode() : 0);
+        result = 31 * result + width;
+        result = 31 * result + height;
+        result = 31 * result + (textures ? 1 : 0);
+        result = 31 * result + (axes ? 1 : 0);
+        result = 31 * result + (axesNOSE ? 1 : 0);
+        result = 31 * result + (northUp ? 1 : 0);
+        result = 31 * result + (satellitesMain ? 1 : 0);
+        result = 31 * result + (highQuality ? 1 : 0);
+        result = 31 * result + (satellitesAll ? 1 : 0);
+        result = 31 * result + (difraction ? 1 : 0);
+        result = 31 * result + (target != null ? target.hashCode() : 0);
+        result = 31 * result + (showLabels ? 1 : 0);
+        result = 31 * result + background;
+        result = 31 * result + foreground;
+        result = 31 * result + (anaglyphMode != null ? anaglyphMode.hashCode() : 0);
+        return result;
+    }
 }

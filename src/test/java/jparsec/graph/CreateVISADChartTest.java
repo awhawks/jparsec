@@ -41,7 +41,8 @@ public class CreateVISADChartTest {
         //Serialization.writeObject(cube, "/home/alonso/visadTest2");
         //Serialization.writeObject(p, "/home/alonso/createVisadTest2");
 
-/*          field = 50;
+        /*
+          field = 50;
           float data2[][][] = new float[16][field*10+1][field*10+1];
           for (int i=0; i<16; i++)
           {
@@ -64,7 +65,7 @@ public class CreateVISADChartTest {
                   "Diameter", VISADCubeElement.UNIT_KILOMETER_PER_SECOND,
                   "Flux", VISADCubeElement.UNIT_KELVIN);
           p.update(cube2, 0);
-*/
+        */
         // Second example
         // Show levels and chart types
         // Retrieve levels at cursor position
@@ -76,20 +77,21 @@ public class CreateVISADChartTest {
                 new double[] { field, -field, -field, field }, dat,
                 new double[] { 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0 }, 400);
 
-/*            GridChartElement chart2 = GridChartElement.getSurfaceFromPoints(new DoubleVector[] {
-                    new DoubleVector(1, 1, 0),
-                    new DoubleVector(2, 1, 1),
-                    new DoubleVector(3, 1, 0),
-                    new DoubleVector(1, 2, 1),
-                    new DoubleVector(2, 2, 4),
-                    new DoubleVector(3, 2, 1),
-                    new DoubleVector(1, 3, 0),
-                    new DoubleVector(2, 3, 1),
-                    new DoubleVector(3, 3, 0)
-                }, 20);
-            chart.data = chart2.data;
-            chart.limits = chart2.limits;
-*/
+        /*
+        GridChartElement chart2 = GridChartElement.getSurfaceFromPoints(new DoubleVector[] {
+                new DoubleVector(1, 1, 0),
+                new DoubleVector(2, 1, 1),
+                new DoubleVector(3, 1, 0),
+                new DoubleVector(1, 2, 1),
+                new DoubleVector(2, 2, 4),
+                new DoubleVector(3, 2, 1),
+                new DoubleVector(1, 3, 0),
+                new DoubleVector(2, 3, 1),
+                new DoubleVector(3, 3, 0)
+            }, 20);
+        chart.data = chart2.data;
+        chart.limits = chart2.limits;
+        */
 
         chart.type = GridChartElement.TYPE.RASTER_CONTOUR;
         chart.opacity = GridChartElement.OPACITY.OPAQUE;

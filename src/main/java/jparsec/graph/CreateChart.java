@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,29 +18,43 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.graph;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.RenderingHints;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.Date;
-import java.io.*;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-
-import javax.swing.*;
-
+import java.util.ArrayList;
+import java.util.Date;
+import javax.swing.BoxLayout;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import jparsec.ephem.Functions;
 import jparsec.graph.ChartElement.SUBTYPE;
 import jparsec.graph.chartRendering.AWTGraphics;
-import jparsec.io.*;
+import jparsec.io.FileIO;
+import jparsec.io.WriteFile;
 import jparsec.io.image.Picture;
-import jparsec.math.Constant;
 import jparsec.math.Evaluation;
 import jparsec.math.GenericFit;
 import jparsec.math.Interpolation;
@@ -51,15 +65,11 @@ import jparsec.time.AstroDate;
 import jparsec.util.JPARSECException;
 import jparsec.util.Logger;
 import jparsec.util.Logger.LEVEL;
-
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.ChartRenderingInfo;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
-import org.jfree.data.time.Second;
-import org.jfree.data.time.TimeSeries;
-import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.chart.annotations.CategoryPointerAnnotation;
 import org.jfree.chart.annotations.XYPointerAnnotation;
 import org.jfree.chart.axis.CategoryAxis;
@@ -67,9 +77,6 @@ import org.jfree.chart.axis.ColorBar;
 import org.jfree.chart.axis.LogarithmicAxis;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.ValueAxis;
-//import org.jfree.chart.axis.AxisState;
-//import org.jfree.chart.axis.Tick;
-//import org.jfree.chart.axis.CategoryAxis;
 import org.jfree.chart.entity.StandardEntityCollection;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.ContourPlot;
@@ -80,50 +87,55 @@ import org.jfree.chart.plot.RingPlot;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.category.AreaRenderer;
 import org.jfree.chart.renderer.category.BarRenderer;
-import org.jfree.chart.renderer.category.CategoryItemRenderer;
 import org.jfree.chart.renderer.category.LineAndShapeRenderer;
 import org.jfree.chart.renderer.category.LineRenderer3D;
 import org.jfree.chart.renderer.category.StackedAreaRenderer;
+import org.jfree.chart.renderer.xy.XYAreaRenderer;
 import org.jfree.chart.renderer.xy.XYErrorRenderer;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
-import org.jfree.chart.renderer.xy.XYAreaRenderer;
-import org.jfree.chart.renderer.xy.XYStepRenderer;
 import org.jfree.chart.renderer.xy.XYStepAreaRenderer;
+import org.jfree.chart.renderer.xy.XYStepRenderer;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.contour.ContourDataset;
 import org.jfree.data.contour.DefaultContourDataset;
 import org.jfree.data.general.DefaultPieDataset;
+import org.jfree.data.time.Second;
+import org.jfree.data.time.TimeSeries;
+import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.XYIntervalSeries;
 import org.jfree.data.xy.XYIntervalSeriesCollection;
-import org.jfree.data.xy.XYSeries;
 import org.jfree.ui.TextAnchor;
+
+//import org.jfree.chart.axis.AxisState;
+//import org.jfree.chart.axis.Tick;
+//import org.jfree.chart.axis.CategoryAxis;
 
 /**
  * Creates a chart using JFreeChart or GILDAS.<P>
- * 
+ *
  * Charts can be created from a {@linkplain ChartElement} or a
  * {@linkplain SimpleChartElement} objects. Once created they can
  * be visualize using either the JFreeChart original panel or a
  * default panel defined in {@linkplain Picture}.<P>
- * 
+ *
  * When using a JFreeChart panel, you will get some advantages like
  * automatic resize of the chart, point labels when setting the mouse
  * on a given point, and an emerging window (right mouse click) with
  * some options. However, sub-charts will not be visible.<P>
- * 
+ *
  * When using a default panel, you will be able to see a sub-chart
  * (a little chart inside the main one) if the sub-chart was defined
  * in the {@linkplain ChartElement} object. Another advantage is the
- * automatic update of the chart, without calling any method. In this 
+ * automatic update of the chart, without calling any method. In this
  * default panel the width of the chart should be equal to the height.<P>
- * 
+ *
  * It is also possible to export the chart to the following formats:
  * JPG, PNG, EPS, SVG, and PDF.<P>
- * 
+ *
  * The JFreechart version used here is a modified version of the original.
  * The JCommon library was modified to support subscripts and superscripts
- * usually required to properly draw scientific charts. 
- * 
+ * usually required to properly draw scientific charts.
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -133,181 +145,6 @@ public class CreateChart implements Serializable
 
 	private JFreeChart chart;
 	private ChartElement chart_elem;
-
-
-	/**
-	 * For unit testing only.
-	 * @param args Not used.
-	 * @throws JPARSECException If an error occurs.
-	 */
-	public static void main(String[] args) throws JPARSECException
-	{
-		System.out.println("CreateChart test");
-		
-		// Charts can be created using a ChartElement or a SimpleChartElement
-		
-		// SimpleChartElement example
-		SimpleChartElement chart1 = new SimpleChartElement(ChartElement.TYPE.XY_CHART,
-				ChartElement.SUBTYPE.XY_SCATTER, new double[]
-				{ 1, 2, 3 }, new double[]
-				{ 2, 5, 8 }, "CHART 1", "X_LABEL", "Y_LABEL", "LEGEND", true, false, 400, 300);
-		chart1.xAxisInLogScale = false;
-		CreateChart ch1 = new CreateChart(chart1);
-		Picture p1 = ch1.showChart(false); // false => not draw it now (later in real time)
-		double p[] = ch1.getJava2DUnits(2, 5);
-		p = ch1.getJava2DUnits(1, 2);
-		System.out.println(p[0]+"/"+p[1]);
-		Graphics2D g = p1.getImage().createGraphics();
-		g.setColor(Color.BLACK);
-		int x = (int) p[0], y = (int) p[1], rx = 5, ry = 3;
-		g.drawOval(x-rx, y-ry, 2*rx, 2*ry);
-		p = ch1.getPhysicalUnits(p[0], p[1]);
-		System.out.println(p[0]+"/"+p[1]);
-		ch1.prepareGraphics2D(g, true);
-		x = (int) p[0];
-		y = (int) p[1];
-		rx = 1;
-		ry = 2;
-		g.setColor(new Color(255, 0, 0, 128));
-		g.setStroke(AWTGraphics.getStroke(new JPARSECStroke(JPARSECStroke.STROKE_DEFAULT_LINE, 0.1f)));
-		g.fillOval(x-rx, y-ry, 2*rx, 2*ry);	
-		g.draw(AWTGraphics.rotateShape(new Ellipse2D.Double(2-rx*0.5, 5-ry*0.5, rx, ry), -45 * Constant.DEG_TO_RAD)); // Rotate 45º using the Graphics2D transform
-		g.fill(AWTGraphics.rotateShape(g, new Ellipse2D.Double(2-rx*0.5, 5-ry*0.5, rx, ry), -45 * Constant.DEG_TO_RAD)); // Rotate 45º using the original transform
-		g.drawLine(2, 5, 1, 2);
-		p1.show("");
-		
-/*
-		// Quick simple chart example
-//		CreateChart ch1bis = 
-//			CreateChart.createSimpleChart(new double[] {1, 2, 3}, new double [] {2, 4, 8}, "TITLE", "X_LABEL", "Y_LABEL", "LEGEND", false);
-//		ch1bis.showChart(true);
-
-		// Another example for a category chart
-		SimpleChartElement chart2 = new SimpleChartElement(ChartElement.TYPE.CATEGORY_CHART,
-				ChartElement.SUBTYPE.CATEGORY_BAR_3D, new double[]
-				{ 1, 2, 3 }, new double[]
-				{ 2, 4, 8 }, "CHART 2", "X_LABEL", "Y_LABEL", "LEGEND", true, false, 400, 300);
-		CreateChart ch2 = new CreateChart(chart2);
-		ch2.showChart(true);
-
-		// Example of a simple pie chart
-		SimpleChartElement chart3 = new SimpleChartElement(ChartElement.TYPE.PIE_CHART,
-				ChartElement.SUBTYPE.PIE_3D, new double[]
-				{ 1, 2, 3 }, new double[]
-				{ 2, 4, 8 }, "CHART 3", "X_LABEL", "Y_LABEL", "LEGEND", true, false, 400, 300);
-		chart3.xValuesForPieAndCategoryCharts = new String[] { "2006", "2007", "2008" };
-		CreateChart ch3 = new CreateChart(chart3);
-		ch3.showChart(true);
-
-		
-		// Full ChartElement simple example. This allows to show several series
-		String vx[] = DataSet.toStringValues(DataSet.getSetOfValues(1.0, 100, 100, true));
-		String y1[] = DataSet.toStringValues(DataSet.getSetOfValues(1000.0, 100000, 100, true));
-		String y2[] = DataSet.toStringValues(DataSet.getSetOfValues(10000.0, 1000000, 100, true));
-		String y3[] = DataSet.toStringValues(DataSet.getSetOfValues(100000.0, 10000000, 100, true));
-		String vy[] = new String[100];
-		for (int i=0; i<100; i++) {
-			double y = 1.82E7/Math.pow(Double.parseDouble(vx[i]), 2.3);
-			vy[i] = ""+y;
-		}
-		ChartSeriesElement chartSeries1 = new ChartSeriesElement(vx,
-				vy, null, null,
-				"t_{kh}", true, Color.BLACK, ChartSeriesElement.SHAPE_EMPTY,
-				ChartSeriesElement.REGRESSION.NONE);
-		ChartSeriesElement chartSeries2 = new ChartSeriesElement(vx,
-				y1, null, null,
-				"dM/dt = 10^{-3} M_{@SUN}/año", true, Color.BLACK, ChartSeriesElement.SHAPE_EMPTY,
-				ChartSeriesElement.REGRESSION.NONE);
-		ChartSeriesElement chartSeries3 = new ChartSeriesElement(vx,
-				y2, null, null,
-				"dM/dt = 10^{-4}", true, Color.BLACK, ChartSeriesElement.SHAPE_EMPTY,
-				ChartSeriesElement.REGRESSION.NONE);
-		ChartSeriesElement chartSeries4 = new ChartSeriesElement(vx,
-				y3, null, null,
-				"dM/dt = 10^{-5}", true, Color.BLACK, ChartSeriesElement.SHAPE_EMPTY,
-				ChartSeriesElement.REGRESSION.NONE);
-		chartSeries1.showShapes = false;
-		chartSeries2.showShapes = false;
-		chartSeries3.showShapes = false;
-		chartSeries4.showShapes = false;
-
-		ChartSeriesElement series[] = new ChartSeriesElement[] {chartSeries1, chartSeries2,
-				chartSeries3, chartSeries4};
-		ChartElement chart4 = new ChartElement(series, ChartElement.TYPE.XY_CHART, 
-				ChartElement.SUBTYPE.XY_SCATTER,
-				"Acreción y tiempo de Kelvin-Helmholtz", 
-				"Masa de la estrella (M_{@SUN})", "Tiempo (años)", false, 802, 482);
-		chart4.xAxisInLogScale = true;
-		chart4.yAxisInLogScale = true;
-		// Modifiers (test lot more...)
-		chart4.series[0].stroke = new JPARSECStroke(JPARSECStroke.STROKE_DEFAULT_LINE, 3f);
-		chart4.series[1].stroke = new JPARSECStroke(JPARSECStroke.STROKE_DEFAULT_LINE, 3f);
-		chart4.series[2].stroke = new JPARSECStroke(JPARSECStroke.STROKE_DEFAULT_LINE, 3f);
-		chart4.series[3].stroke = new JPARSECStroke(JPARSECStroke.STROKE_DEFAULT_LINE, 3f);
-		chart4.series[0].showLines = true;
-		chart4.series[1].showLines = true;
-		chart4.series[2].showLines = true;
-		chart4.series[3].showLines = true;
-		chart4.series[0].color = Color.BLACK;
-		chart4.series[1].color = Color.BLUE;
-		chart4.series[2].color = Color.GREEN;
-		chart4.series[3].color = Color.RED;
-		chart4.series[0].pointers = new String[] {"10 t_{kh}"};
-		chart4.series[1].pointers = new String[] {"10 dM/dt = 10^{-3} M_{@SUN}/año"};
-		chart4.series[2].pointers = new String[] {"10 dM/dt = 10^{-4} M_{@SUN}/año"};
-		chart4.series[3].pointers = new String[] {"10 dM/dt = 10^{-5} M_{@SUN}/año"};
-		chart4.series[1].pointersAngle = ChartSeriesElement.POINTER_ANGLE.TO_OUTSIDE;
-		chart4.series[2].pointersAngle = ChartSeriesElement.POINTER_ANGLE.TO_OUTSIDE;
-		chart4.series[3].pointersAngle = ChartSeriesElement.POINTER_ANGLE.TO_OUTSIDE;
-//		chart4.series[0].showErrorBars = false;
-		chart4.yTickLabels = ChartElement.TICK_LABELS.LOGARITHM_VALUES;
-		
-		CreateChart ch4 = new CreateChart(chart4);
-		ch4.showChartInJFreeChartPanelWithAdvancedControls();
-//		Serialization.writeObject(chart4, "/home/alonso/chartTest");
-//		Serialization.writeObject(ch4, "/home/alonso/createChartTest");
-
-		CreateChart.showChartsInJFreeChartPanel(new CreateChart[] {ch1, ch2, ch3, ch4}, "My group of charts", false);
-*/		
-/*
-        // Export possibilities
-		ch4.exportAsScriptForGILDAS("myChart", CreateChart.GILDAS_SHOW_LEYEND_AT_BOTTOM);        		
-		CreateChart.CreateChartAsPNGFile(chart1, "chart.png");
-		CreateChart.CreateChartAsSVGFile(chart2, "chart.svg");
-		CreateChart.CreateChartAsPDFFile(chart3, "chart.pdf");
-		CreateChart.CreateChartAsEPSFile(chart4, "chart.eps");	
-		ch4.chartAsHTMLFile("chart");
-*/
-		
-/*
-		// Real time charting with X-Y chart (ch1), series 0
-		int i = 0;
-		double oldTime = new Date().getTime() / 1000.0;
-		p1.show("REAL TIME CHART");
-		do {
-			Date date = new Date();
-			double actualTime = date.getTime() / 1000.0;
-			double elapsed = actualTime - oldTime;
-			if (elapsed >= 1.0) {
-				oldTime = actualTime;
-				i ++;
-				double x[] = DataSet.toDoubleValues(ch1.getChartElement().series[0].xValues);
-				double y[] = DataSet.toDoubleValues(ch1.getChartElement().series[0].yValues);
-				x = DataSet.addDoubleArray(x, new double[] {i + 3});
-				y = DataSet.addDoubleArray(y, new double[] {(i + 3)*3-1});
-				ch1.getChartElement().series[0].xValues = DataSet.toStringValues(x);
-				ch1.getChartElement().series[0].yValues = DataSet.toStringValues(y);
-				
-				// Add a linear fit to the chart
-				ch1.getChartElement().series[0].regressionType = REGRESSION.LINEAR;
-
-				// Update the chart
-				ch1.updateChart();
-			}
-			try { Thread.sleep(200); } catch (InterruptedException e) { e.printStackTrace(); }
-		} while (i<20);
-*/	}
-	
 
 	private void writeObject(ObjectOutputStream out)
 	throws IOException {
@@ -324,7 +161,7 @@ public class CreateChart implements Serializable
 
 	/**
 	 * Creates an HTML file with the chart.
-	 * 
+	 *
 	 * @param chart Chart element.
 	 * @param file_name File name without extension.
 	 * @throws JPARSECException If an error occurs.
@@ -333,14 +170,14 @@ public class CreateChart implements Serializable
 	{
 		int ext = file_name.toLowerCase().lastIndexOf(".htm");
 		if (ext > 0) file_name = file_name.substring(0, ext);
-		
+
 		CreateChart jfchart = new CreateChart(chart);
 		jfchart.chartAsHTMLFile(file_name);
 	}
 
 	/**
 	 * Creates an HTML file with the chart.
-	 * 
+	 *
 	 * @param chart Chart element.
 	 * @param file_name File name without extension.
 	 * @throws JPARSECException If an error occurs.
@@ -356,7 +193,7 @@ public class CreateChart implements Serializable
 
 	/**
 	 * Exports the chart as an HTML file.
-	 * 
+	 *
 	 * @param file_name File name without extension.
 	 * @throws JPARSECException If an error occurs.
 	 */
@@ -369,10 +206,10 @@ public class CreateChart implements Serializable
 		int size_y = this.chart_elem.imageHeight;
 		this.chartAsHTMLFile(file_name, size_x, size_y);
 	}
-	
+
 	/**
 	 * Exports the chart as an HTML file.
-	 * 
+	 *
 	 * @param file_name File name without extension.
 	 * @param size_x Image width.
 	 * @param size_y Image height.
@@ -412,7 +249,7 @@ public class CreateChart implements Serializable
 
 	/**
 	 * Creates a EPS file with the chart.
-	 * 
+	 *
 	 * @param chart_elem Chart element.
 	 * @param file_name File name without extension.
 	 * @throws JPARSECException If an error occurs.
@@ -428,7 +265,7 @@ public class CreateChart implements Serializable
 
 	/**
 	 * Exports the chart as an EPS file.
-	 * 
+	 *
 	 * @param file_name File name without extension.
 	 * @throws JPARSECException If an error occurs.
 	 */
@@ -444,7 +281,7 @@ public class CreateChart implements Serializable
 
 	/**
 	 * Exports the chart as an EPS file.
-	 * 
+	 *
 	 * @param file_name File name.
 	 * @param size_x Image width.
 	 * @param size_y Image height.
@@ -489,7 +326,7 @@ public class CreateChart implements Serializable
 
 	/**
 	 * Creates a PDF file with the chart.
-	 * 
+	 *
 	 * @param chart_elem Chart element.
 	 * @param file_name File name without extension.
 	 * @throws JPARSECException If an error occurs.
@@ -505,7 +342,7 @@ public class CreateChart implements Serializable
 
 	/**
 	 * Exports the chart as an PDF file.
-	 * 
+	 *
 	 * @param file_name File name without extension.
 	 * @throws JPARSECException If an error occurs.
 	 */
@@ -529,7 +366,7 @@ public class CreateChart implements Serializable
 
 	/**
 	 * Creates a PNG file with the chart.
-	 * 
+	 *
 	 * @param chart_elem Chart element.
 	 * @param file_name File name without extension.
 	 * @throws JPARSECException If an error occurs.
@@ -545,7 +382,7 @@ public class CreateChart implements Serializable
 
 	/**
 	 * Exports the chart as an PNG file.
-	 * 
+	 *
 	 * @param file_name File name without extension.
 	 * @throws JPARSECException If an error occurs.
 	 */
@@ -561,7 +398,7 @@ public class CreateChart implements Serializable
 
 	/**
 	 * Exports the chart as a PNG file.
-	 * 
+	 *
 	 * @param file_name File name without extension.
 	 * @param size_x Image width.
 	 * @param size_y Image height.
@@ -581,7 +418,7 @@ public class CreateChart implements Serializable
 			throw new JPARSECException(e);
 		}
 
-	} 
+	}
 
 	private void chartAsPNGFile(SimpleChartElement chart_elem, String file_name) throws JPARSECException
 	{
@@ -594,7 +431,7 @@ public class CreateChart implements Serializable
 
 	/**
 	 * Creates a SVG file with the chart.
-	 * 
+	 *
 	 * @param chart_elem Chart element.
 	 * @param file_name File name without extension.
 	 * @throws JPARSECException If an error occurs.
@@ -610,7 +447,7 @@ public class CreateChart implements Serializable
 
 	/**
 	 * Exports the chart as an SVG file.
-	 * 
+	 *
 	 * @param file_name File name without extension.
 	 * @throws JPARSECException If an error occurs.
 	 */
@@ -633,7 +470,7 @@ public class CreateChart implements Serializable
 
 	/**
 	 * Creates a EPS file with the chart.
-	 * 
+	 *
 	 * @param chart_elem Chart element.
 	 * @param file_name File name without extension.
 	 * @throws JPARSECException If an error occurs.
@@ -676,7 +513,7 @@ public class CreateChart implements Serializable
 
 	/**
 	 * Creates a PDF file with the chart.
-	 * 
+	 *
 	 * @param chart_elem Chart element.
 	 * @param file_name File name without extension.
 	 * @throws JPARSECException If an error occurs.
@@ -720,7 +557,7 @@ public class CreateChart implements Serializable
 
 	/**
 	 * Creates a PNG file with the chart.
-	 * 
+	 *
 	 * @param chart_elem Chart element.
 	 * @param file_name File name without extension.
 	 * @throws JPARSECException If an error occurs.
@@ -753,7 +590,7 @@ public class CreateChart implements Serializable
 
 	/**
 	 * Creates a SVG file with the chart.
-	 * 
+	 *
 	 * @param chart_elem Chart element.
 	 * @param file_name File name without extension.
 	 * @throws JPARSECException If an error occurs.
@@ -796,7 +633,7 @@ public class CreateChart implements Serializable
 
 	/**
 	 * Exports the chart as an SVG file.
-	 * 
+	 *
 	 * @param file_name File name.
 	 * @param size_x Image width.
 	 * @param size_y Image height.
@@ -860,17 +697,17 @@ public class CreateChart implements Serializable
 	 */
 	public void paintChart(Graphics g)
 	throws JPARSECException {
-		getChart().draw((Graphics2D) g, new Rectangle2D.Double(0, 0, chart_elem.imageWidth, 
+		getChart().draw((Graphics2D) g, new Rectangle2D.Double(0, 0, chart_elem.imageWidth,
 				chart_elem.imageHeight));
-		
+
 		if (chart_elem == null) return;
 		if (chart_elem.subCharts != null) {
 			for (int i=0; i<chart_elem.subCharts.length; i++)
 			{
 				CreateChart subC = new CreateChart(chart_elem.subCharts[i]);
 				subC.getChart().draw((Graphics2D) g, new Rectangle2D.Double(
-						chart_elem.subChartPosition[i].getX(), chart_elem.subChartPosition[i].getY(), 
-						subC.chart_elem.imageWidth, 
+						chart_elem.subChartPosition[i].getX(), chart_elem.subChartPosition[i].getY(),
+						subC.chart_elem.imageWidth,
 						subC.chart_elem.imageHeight));
 			}
 		}
@@ -895,8 +732,8 @@ public class CreateChart implements Serializable
 				CreateChart subC = new CreateChart(chart_elem.subCharts[i]);
 				subC.getChart().draw((Graphics2D) g, new Rectangle2D.Double(
 						chart_elem.subChartPosition[i].getX() * scaleX,
-						chart_elem.subChartPosition[i].getY() * scaleY, 
-						subC.chart_elem.imageWidth * scaleX, 
+						chart_elem.subChartPosition[i].getY() * scaleY,
+						subC.chart_elem.imageWidth * scaleX,
 						subC.chart_elem.imageHeight * scaleY));
 			}
 		}
@@ -912,18 +749,18 @@ public class CreateChart implements Serializable
 			if (this.getChartElement().series[i].regressionType != null)
 				this.getChartElement().series[i].regressionType.clearRegression();
 		}
-		
+
 		CreateChart newc = new CreateChart(this.getChartElement());
 		this.setChart(newc.getChart());
 		if (p != null) {
 			p.setImage(newc.chartAsBufferedImage(
-					newc.getChartElement().imageWidth, 
+					newc.getChartElement().imageWidth,
 					newc.getChartElement().imageHeight));
 			p.update();
 		}
 		if (chartPanel != null) chartPanel.setChart(this.getChart());
 	}
-	
+
 	/**
 	 * Returns a BufferedImage instance with the current chart, adequate to
 	 * write an image to disk.
@@ -971,8 +808,8 @@ public class CreateChart implements Serializable
 				{
 					CreateChart subC = new CreateChart(charts[i].chart_elem.subCharts[ii]);
 					subC.getChart().draw((Graphics2D) chartPanel[i].getGraphics(), new Rectangle2D.Double(
-							charts[i].chart_elem.subChartPosition[ii].getX(), charts[i].chart_elem.subChartPosition[ii].getY(), 
-							subC.chart_elem.imageWidth, 
+							charts[i].chart_elem.subChartPosition[ii].getX(), charts[i].chart_elem.subChartPosition[ii].getY(),
+							subC.chart_elem.imageWidth,
 							subC.chart_elem.imageHeight));
 				}
 			}
@@ -987,7 +824,7 @@ public class CreateChart implements Serializable
         }
 		frame.add(sp);
 		frame.setIconImage(charts[0].chartAsBufferedImage(
-				charts[0].chart_elem.imageWidth, 
+				charts[0].chart_elem.imageWidth,
 				charts[0].chart_elem.imageHeight));
 		frame.pack();
 		frame.setVisible(true);
@@ -1011,7 +848,7 @@ public class CreateChart implements Serializable
 		chartPanel.setMouseWheelEnabled(true);
 		return chartPanel;
 	}
-	
+
 	/**
 	 * Shows the main chart in an JFreeChart panel.
 	 * @return The panel object.
@@ -1025,8 +862,8 @@ public class CreateChart implements Serializable
 		chartPanel.setPreferredSize(new java.awt.Dimension(w, h));
 		chartPanel.setDisplayToolTips(true);
 		chartPanel.setMouseWheelEnabled(true);
-		String title = (new TextLabel(chart_elem.title, 
-				new Font("Dialog", Font.PLAIN, 10), 
+		String title = (new TextLabel(chart_elem.title,
+				new Font("Dialog", Font.PLAIN, 10),
 				Color.BLACK, TextLabel.ALIGN.LEFT)).getSimplifiedString();
 		JFrame aframe = new JFrame(title);
 		aframe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -1040,8 +877,8 @@ public class CreateChart implements Serializable
 			{
 				CreateChart subC = new CreateChart(chart_elem.subCharts[i]);
 				subC.getChart().draw((Graphics2D) chartPanel.getGraphics(), new Rectangle2D.Double(
-						chart_elem.subChartPosition[i].getX(), chart_elem.subChartPosition[i].getY(), 
-						subC.chart_elem.imageWidth, 
+						chart_elem.subChartPosition[i].getX(), chart_elem.subChartPosition[i].getY(),
+						subC.chart_elem.imageWidth,
 						subC.chart_elem.imageHeight));
 			}
 		}
@@ -1062,8 +899,8 @@ public class CreateChart implements Serializable
 		chartPanel.setPreferredSize(new java.awt.Dimension(w, h));
 		chartPanel.setDisplayToolTips(true);
 		chartPanel.setMouseWheelEnabled(true);
-		String title = (new TextLabel(chart_elem.title, 
-				new Font("Dialog", Font.PLAIN, 10), 
+		String title = (new TextLabel(chart_elem.title,
+				new Font("Dialog", Font.PLAIN, 10),
 				Color.BLACK, TextLabel.ALIGN.LEFT)).getSimplifiedString();
 		JFrame aframe = new JFrame(title);
 		aframe.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -1077,16 +914,16 @@ public class CreateChart implements Serializable
 			{
 				CreateChart subC = new CreateChart(chart_elem.subCharts[i]);
 				subC.getChart().draw((Graphics2D) chartPanel.getGraphics(), new Rectangle2D.Double(
-						chart_elem.subChartPosition[i].getX(), chart_elem.subChartPosition[i].getY(), 
-						subC.chart_elem.imageWidth, 
+						chart_elem.subChartPosition[i].getX(), chart_elem.subChartPosition[i].getY(),
+						subC.chart_elem.imageWidth,
 						subC.chart_elem.imageHeight));
 			}
 		}
-		
-		aframe.addKeyListener(new KeyAdapter() {  
+
+		aframe.addKeyListener(new KeyAdapter() {
             public void keyReleased(KeyEvent e) {
          	   if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-          		   try { 
+          		   try {
           			   ChartElement ce = getChartElement();
           			   for (int i=0; i<ce.series.length; i++) {
           				   if (ce.series[i].enable == false) {
@@ -1096,12 +933,12 @@ public class CreateChart implements Serializable
           			   }
           			   JFreeChart ch2 = (new CreateChart(ce)).getChart();
           			   chartPanel.setChart(ch2);
-          		   } catch (Exception exc) { 
+          		   } catch (Exception exc) {
           				Logger.log(LEVEL.ERROR, "Error processing key right event. Message was: "+exc.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(exc.getStackTrace()));
-          		   }             			   
+          		   }
          	   }
          	   if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-          		   try { 
+          		   try {
           			   ChartElement ce = getChartElement();
           			   for (int i=ce.series.length-1; i>=0; i--) {
           				   if (ce.series[i].enable == true) {
@@ -1111,21 +948,21 @@ public class CreateChart implements Serializable
           			   }
           			   JFreeChart ch2 = (new CreateChart(ce)).getChart();
           			   chartPanel.setChart(ch2);
-          		   } catch (Exception exc) { 
+          		   } catch (Exception exc) {
          				Logger.log(LEVEL.ERROR, "Error processing key left event. Message was: "+exc.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(exc.getStackTrace()));
-          		   }             			   
+          		   }
          	   }
          	   if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-          		   try { 
+          		   try {
           			   decreaseFontSize();
           			   JFreeChart ch2 = (new CreateChart(getChartElement())).getChart();
           			   chartPanel.setChart(ch2);
-          		   } catch (Exception exc) { 
+          		   } catch (Exception exc) {
          				Logger.log(LEVEL.ERROR, "Error processing key down event. Message was: "+exc.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(exc.getStackTrace()));
-          		   }             			   
+          		   }
       		   }
          	   if (e.getKeyCode() == KeyEvent.VK_UP) {
-      			   try { 
+      			   try {
       				   increaseFontSize();
           			   JFreeChart ch2 = (new CreateChart(getChartElement())).getChart();
           			   chartPanel.setChart(ch2);
@@ -1134,17 +971,17 @@ public class CreateChart implements Serializable
           		   }
       		   }
          	   if (e.getKeyCode() == KeyEvent.VK_Q) chartPanel.getParent().requestFocusInWindow();
-            }  
-      });  
+            }
+      });
 	}
 	private Picture p = null;
 	private transient ChartPanel chartPanel = null;
-	
+
 	/**
 	 * Shows the chart in an external panel.
 	 * @param show True to create and show the window. If false,
-	 * a later call to {@link Picture#show(String)} or 
-	 * {@link Picture#show(int, int, String, boolean, boolean, boolean)} 
+	 * a later call to {@link Picture#show(String)} or
+	 * {@link Picture#show(int, int, String, boolean, boolean, boolean)}
 	 * is needed.
 	 * @throws JPARSECException If an error occurs.
 	 * @return The picture object.
@@ -1152,7 +989,7 @@ public class CreateChart implements Serializable
 	public Picture showChart(boolean show)
 	throws JPARSECException {
 		p = new Picture(this.chartAsBufferedImage(
-				this.chart_elem.imageWidth, 
+				this.chart_elem.imageWidth,
 				this.chart_elem.imageHeight));
 		Graphics g = p.getImage().getGraphics();
 		this.paintChart(g);
@@ -1167,7 +1004,7 @@ public class CreateChart implements Serializable
 	public void showChartWithMenu()
 	throws JPARSECException {
 		p = new Picture(this.chartAsBufferedImage(
-				this.chart_elem.imageWidth, 
+				this.chart_elem.imageWidth,
 				this.chart_elem.imageHeight));
 		Graphics g = p.getImage().getGraphics();
 		this.paintChart(g);
@@ -1177,7 +1014,7 @@ public class CreateChart implements Serializable
 
 	/**
 	 * Creates a frame with the chart.
-	 * 
+	 *
 	 * @param chart_elem Chart element.
 	 * @throws JPARSECException If an error occurs.
 	 */
@@ -1190,7 +1027,7 @@ public class CreateChart implements Serializable
 
 	/**
 	 * Creates a frame with the chart.
-	 * 
+	 *
 	 * @param chart_elem Chart element.
 	 * @throws JPARSECException If an error occurs.
 	 */
@@ -1216,7 +1053,7 @@ public class CreateChart implements Serializable
 			for (int i = 0; i < chart_elem.series[0].xValues.length; i++)
 			{
 				if (chart_elem.xForCategoryCharts != null) {
-					pieDataset.setValue(chart_elem.xForCategoryCharts[i], new Double(chart_elem.series[0].yValues[i]));					
+					pieDataset.setValue(chart_elem.xForCategoryCharts[i], new Double(chart_elem.series[0].yValues[i]));
 				} else {
 					pieDataset.setValue(chart_elem.series[0].xValues[i], new Double(chart_elem.series[0].yValues[i]));
 				}
@@ -1385,9 +1222,9 @@ public class CreateChart implements Serializable
 						.get(0);
 				double y_val[] = (double[]) DataSet.getDoubleValuesIncludingLimits(chart_elem.series[nser].yValues)
 						.get(0);
-				
+
 				double thisymin = DataSet.getMinimumValue(y_val);
-				
+
 				if (nser == 0 || thisymin < y_min)
 					y_min = thisymin;
 
@@ -1428,7 +1265,7 @@ public class CreateChart implements Serializable
 					{
 						series.add(x_val[i], minx, x_val[i] + dx, y_val[i], miny, y_val[i] + dy);
 					}
-					
+
 					if (chart_elem.subType == ChartElement.SUBTYPE.XY_TIME)
 					{
 						double jd = DataSet.getDoubleValueWithoutLimit(chart_elem.series[nser].xValues[i]);
@@ -1439,7 +1276,7 @@ public class CreateChart implements Serializable
 								y_val[i]);
 					}
 				}
- 
+
 				if (xyDataset != null) xyDataset.addSeries(series);
 				if (timeData != null) timeData.addSeries(timeSeries);
 				if (chart_elem.series[nser].showLegend)
@@ -1455,7 +1292,7 @@ public class CreateChart implements Serializable
 			switch (chart_elem.subType)
 			{
 			case XY_TIME:
-				jf = ChartFactory.createTimeSeriesChart(chart_elem.title, chart_elem.xLabel, 
+				jf = ChartFactory.createTimeSeriesChart(chart_elem.title, chart_elem.xLabel,
 		        		chart_elem.yLabel, timeData, showLegend, true, true);
 				break;
 			case XY_AREA:
@@ -1581,7 +1418,7 @@ public class CreateChart implements Serializable
 			XYStepAreaRenderer renderer4 = null;
 			XYStepRenderer renderer5 = null;
 			renderer.setCapLength(2);
-			
+
 			if (chart_elem.subType == ChartElement.SUBTYPE.XY_STEP ||
 					chart_elem.subType == ChartElement.SUBTYPE.XY_STEP_AREA ||
 					chart_elem.subType == ChartElement.SUBTYPE.XY_AREA) {
@@ -1602,7 +1439,7 @@ public class CreateChart implements Serializable
 					renderer.setDrawXError(chart_elem.showErrorBars);
 					renderer.setDrawYError(chart_elem.showErrorBars);
 					renderer.setSeriesFillPaint(i, chart_elem.series[i].color);
-					
+
 					renderer2.setSeriesFillPaint(i, chart_elem.series[i].color);
 					renderer2.setSeriesShapesVisible(i, chart_elem.series[i].showShapes);
 					renderer2.setSeriesLinesVisible(i, chart_elem.series[i].showLines);
@@ -1610,20 +1447,20 @@ public class CreateChart implements Serializable
 					renderer2.setSeriesVisibleInLegend(i, new Boolean(chart_elem.series[i].showLegend));
 					renderer2.setSeriesPaint(i, chart_elem.series[i].color);
 					renderer2.setSeriesShape(i, chart_elem.series[i].shape);
-	
+
 					if (renderer3 != null) {
 						renderer3.setSeriesFillPaint(i, chart_elem.series[i].color);
 						if (chart_elem.series[i].stroke != null) renderer3.setSeriesStroke(i, AWTGraphics.getStroke(chart_elem.series[i].stroke));
 						renderer3.setSeriesVisibleInLegend(i, new Boolean(chart_elem.series[i].showLegend));
 						renderer3.setSeriesPaint(i, chart_elem.series[i].color);
 						renderer3.setSeriesShape(i, chart_elem.series[i].shape);
-		
+
 						renderer4.setSeriesFillPaint(i, chart_elem.series[i].color);
 						if (chart_elem.series[i].stroke != null) renderer4.setSeriesStroke(i, AWTGraphics.getStroke(chart_elem.series[i].stroke));
 						renderer4.setSeriesVisibleInLegend(i, new Boolean(chart_elem.series[i].showLegend));
 						renderer4.setSeriesPaint(i, chart_elem.series[i].color);
 						renderer4.setSeriesShape(i, chart_elem.series[i].shape);
-		
+
 						renderer5.setSeriesFillPaint(i, chart_elem.series[i].color);
 						renderer5.setSeriesShapesVisible(i, chart_elem.series[i].showShapes);
 						renderer5.setSeriesLinesVisible(i, chart_elem.series[i].showLines);
@@ -1632,7 +1469,7 @@ public class CreateChart implements Serializable
 						renderer5.setSeriesPaint(i, chart_elem.series[i].color);
 						renderer5.setSeriesShape(i, chart_elem.series[i].shape);
 					}
-					
+
 					ArrayList<Object> vx = DataSet.getDoubleValuesIncludingLimits(chart_elem.series[i].xValues);
 					ArrayList<Object> vy = DataSet.getDoubleValuesIncludingLimits(chart_elem.series[i].yValues);
 					double x_val[] = (double[]) vx.get(0);
@@ -1667,8 +1504,8 @@ public class CreateChart implements Serializable
 							pointer.setArrowPaint(chart_elem.series[i].color);
 							pointer.setPaint(chart_elem.series[i].color);
 							plot.addAnnotation(pointer);
-						} 
-	
+						}
+
 						int npo = 0;
 						try { npo = chart_elem.series[i].pointers.length; } catch (Exception exc) {}
 						if (npo > 0 && ii == 0)
@@ -1708,9 +1545,9 @@ public class CreateChart implements Serializable
 										pointerY = DataSet.getDoubleValueWithoutLimit(chart_elem.series[i].yValues[n-1]);
 										pointerMsg = FileIO.getRestAfterField(1, pointerMsg, " ", true);
 									}
-										
+
 										Rectangle2D rect = new Rectangle2D.Double(0, 0, chart_elem.imageWidth, chart_elem.imageHeight); //this.getComponent().getScreenDataArea();
-										double posx = x_axis 
+										double posx = x_axis
 												.valueToJava2D(pointerX, rect, plot
 														.getDomainAxisEdge());
 										double posy = y_axis
@@ -1719,9 +1556,9 @@ public class CreateChart implements Serializable
 										angle = jparsec.ephem.Functions.normalizeRadians(Math.atan2(
 												(rect.getCenterX() - posy),
 												(rect.getCenterY() - posx)));
-										
+
 										ChartSeriesElement.POINTER_ANGLE ang = chart_elem.series[i].pointersAngle;
-										
+
 										if (ang == ChartSeriesElement.POINTER_ANGLE.AVOID_SUPERIMPOSED_STRINGS) {
 											ang = this.getMostEmptyDirection(chart_elem, posx, posy, plot);
 										}
@@ -1736,7 +1573,7 @@ public class CreateChart implements Serializable
 												ang != ChartSeriesElement.POINTER_ANGLE.RIGHTWARDS &&
 												ang != ChartSeriesElement.POINTER_ANGLE.TO_OUTSIDE &&
 												ang != ChartSeriesElement.POINTER_ANGLE.TO_CENTER) angle = 0; //-ang;
-	
+
 										if (pointerMsg.startsWith("@UP")) {
 											angle = -Math.PI * 0.5;
 											pointerMsg = pointerMsg.substring(3);
@@ -1760,7 +1597,7 @@ public class CreateChart implements Serializable
 										String text = pointerMsg;
 										if (angle == Math.PI) text = "@CENTER"+text;
 										if (angle == 0) text = "@LEFTPLUS" + text;
-										
+
 										double label_pos = 15.0 * chart_elem.series[i].pointersLabelOffsetFactor;
 										XYPointerAnnotation pointer = new XYPointerAnnotation(text, pointerX, pointerY,
 												angle);
@@ -1775,15 +1612,15 @@ public class CreateChart implements Serializable
 										{
 											pointer.setArrowLength(0);
 											pointer.setTipRadius(0);
-											pointer.setBaseRadius(0);	
+											pointer.setBaseRadius(0);
 										}
 										plot.addAnnotation(pointer);
 								}
 							}
 						}
 					}
-	
-					if (xyDataset != null && (chart_elem.series[i].regressionType == ChartSeriesElement.REGRESSION.LINEAR || 
+
+					if (xyDataset != null && (chart_elem.series[i].regressionType == ChartSeriesElement.REGRESSION.LINEAR ||
 							chart_elem.series[i].regressionType == ChartSeriesElement.REGRESSION.POLYNOMIAL ||
 							chart_elem.series[i].regressionType == ChartSeriesElement.REGRESSION.GENERIC_FIT ||
 							chart_elem.series[i].regressionType == ChartSeriesElement.REGRESSION.REGRESSION_CUSTOM) &&
@@ -1894,7 +1731,7 @@ public class CreateChart implements Serializable
 									p = CreateChart.getPoint(chart_elem, pol, i, xx[jj], ymax, ymin);
 								} else {
 									if (chart_elem.series[i].regressionType == ChartSeriesElement.REGRESSION.REGRESSION_CUSTOM) {
-										p = CreateChart.getPoint(chart_elem, function, chart_elem.series[i].regressionType.getEquationValues(), i, xx[jj], ymax, ymin);										
+										p = CreateChart.getPoint(chart_elem, function, chart_elem.series[i].regressionType.getEquationValues(), i, xx[jj], ymax, ymin);
 									} else {
 										p = CreateChart.getPoint(chart_elem, gf, i, xx[jj], ymax, ymin);
 									}
@@ -1918,7 +1755,7 @@ public class CreateChart implements Serializable
 						renderer2.setSeriesPaint(series_number - 1, chart_elem.series[i].color);
 						if (chart_elem.series[i].regressionType.getColor() != null) renderer2.setSeriesPaint(series_number - 1, chart_elem.series[i].regressionType.getColor());
 						if (chart_elem.series[i].stroke != null) renderer2.setSeriesStroke(series_number - 1, AWTGraphics.getStroke(chart_elem.series[i].stroke));
-						
+
 						if (renderer3 != null) {
 							renderer3.setSeriesVisibleInLegend(series_number - 1, new Boolean(chart_elem.series[i].regressionType.getShowEquation()));
 							renderer3.setSeriesPaint(series_number - 1, chart_elem.series[i].color);
@@ -1928,7 +1765,7 @@ public class CreateChart implements Serializable
 							renderer4.setSeriesPaint(series_number - 1, chart_elem.series[i].color);
 							if (chart_elem.series[i].regressionType.getColor() != null) renderer4.setSeriesPaint(series_number - 1, chart_elem.series[i].regressionType.getColor());
 							if (chart_elem.series[i].stroke != null) renderer4.setSeriesStroke(series_number - 1, AWTGraphics.getStroke(chart_elem.series[i].stroke));
-	
+
 							renderer5.setSeriesShapesVisible(series_number - 1, false);
 							renderer5.setSeriesLinesVisible(series_number - 1, true);
 							renderer5.setSeriesVisibleInLegend(series_number - 1, new Boolean(chart_elem.series[i].regressionType.getShowEquation()));
@@ -1937,8 +1774,8 @@ public class CreateChart implements Serializable
 							if (chart_elem.series[i].stroke != null) renderer5.setSeriesStroke(series_number - 1, AWTGraphics.getStroke(chart_elem.series[i].stroke));
 						}
 					}
-	
-					if (xyDataset != null && (chart_elem.series[i].regressionType == ChartSeriesElement.REGRESSION.SPLINE_INTERPOLATION || chart_elem.series[i].regressionType == ChartSeriesElement.REGRESSION.LINEAR_INTERPOLATION) && 
+
+					if (xyDataset != null && (chart_elem.series[i].regressionType == ChartSeriesElement.REGRESSION.SPLINE_INTERPOLATION || chart_elem.series[i].regressionType == ChartSeriesElement.REGRESSION.LINEAR_INTERPOLATION) &&
 							chart_elem.series[i].xValues.length > 2 && chart_elem.series[i].enable != false)
 					{
 						// Fit in LOG scale if necessary
@@ -1949,10 +1786,10 @@ public class CreateChart implements Serializable
 							if (chart_elem.yAxisInLogScale)
 								y_val[j] = Math.log10(y_val[j]);
 						}
-	
+
 						double xmin = DataSet.getMinimumValue(x_val);
 						double xmax = DataSet.getMaximumValue(x_val);
-	
+
 						double ymax = y_up;
 						double ymin = y_down;
 						if (chart_elem.xAxisInLogScale || chart_elem.yAxisInLogScale) {
@@ -1961,7 +1798,7 @@ public class CreateChart implements Serializable
 							if (xmin < chart_elem.series[i].xMinimumValue)
 								xmin = chart_elem.series[i].xMinimumValue;
 						}
-	
+
 						chart_elem.series[i].regressionType.setEquationValues(null, null);
 						XYIntervalSeries series = new XYIntervalSeries(chart_elem.series[i].regressionType.getEquation());
 						int n = chart_elem.series[i].xValues.length;
@@ -1973,7 +1810,7 @@ public class CreateChart implements Serializable
 						for (double x = xmin; x <= xmax; x = x + step)
 						{
 							double px = x, y = 0.0;
-	
+
 							Interpolation interp = new Interpolation(x_val, y_val, false);
 							if (chart_elem.series[i].regressionType == ChartSeriesElement.REGRESSION.SPLINE_INTERPOLATION)
 							{
@@ -1989,7 +1826,7 @@ public class CreateChart implements Serializable
 							if (y > ymin && y < ymax)
 								series.add(px, px, px, y, y, y);
 						}
-	
+
 						xyDataset.addSeries(series);
 						series_number++;
 						renderer.setSeriesShape(series_number - 1, ChartSeriesElement.SHAPE_EMPTY);
@@ -1999,7 +1836,7 @@ public class CreateChart implements Serializable
 						renderer.setSeriesPaint(series_number - 1, chart_elem.series[i].color);
 						if (chart_elem.series[i].regressionType.getColor() != null) renderer.setSeriesPaint(series_number - 1, chart_elem.series[i].regressionType.getColor());
 						if (chart_elem.series[i].stroke != null) renderer.setSeriesStroke(series_number - 1, AWTGraphics.getStroke(chart_elem.series[i].stroke));
-	
+
 						renderer2.setSeriesShape(series_number - 1, ChartSeriesElement.SHAPE_EMPTY);
 						renderer2.setSeriesShapesVisible(series_number - 1, false);
 						renderer2.setSeriesLinesVisible(series_number - 1, true);
@@ -2007,20 +1844,20 @@ public class CreateChart implements Serializable
 						renderer2.setSeriesPaint(series_number - 1, chart_elem.series[i].color);
 						if (chart_elem.series[i].regressionType.getColor() != null) renderer2.setSeriesPaint(series_number - 1, chart_elem.series[i].regressionType.getColor());
 						if (chart_elem.series[i].stroke != null) renderer2.setSeriesStroke(series_number - 1, AWTGraphics.getStroke(chart_elem.series[i].stroke));
-						
+
 						if (renderer3 != null) {
 							renderer3.setSeriesShape(series_number - 1, ChartSeriesElement.SHAPE_EMPTY);
 							renderer3.setSeriesVisibleInLegend(series_number - 1, new Boolean(chart_elem.series[i].regressionType.getShowEquation()));
 							renderer3.setSeriesPaint(series_number - 1, chart_elem.series[i].color);
 							if (chart_elem.series[i].regressionType.getColor() != null) renderer3.setSeriesPaint(series_number - 1, chart_elem.series[i].regressionType.getColor());
 							if (chart_elem.series[i].stroke != null) renderer3.setSeriesStroke(series_number - 1, AWTGraphics.getStroke(chart_elem.series[i].stroke));
-							
+
 							renderer4.setSeriesShape(series_number - 1, ChartSeriesElement.SHAPE_EMPTY);
 							renderer4.setSeriesVisibleInLegend(series_number - 1, new Boolean(chart_elem.series[i].regressionType.getShowEquation()));
 							renderer4.setSeriesPaint(series_number - 1, chart_elem.series[i].color);
 							if (chart_elem.series[i].regressionType.getColor() != null) renderer4.setSeriesPaint(series_number - 1, chart_elem.series[i].regressionType.getColor());
 							if (chart_elem.series[i].stroke != null) renderer4.setSeriesStroke(series_number - 1, AWTGraphics.getStroke(chart_elem.series[i].stroke));
-		
+
 							renderer5.setSeriesShape(series_number - 1, ChartSeriesElement.SHAPE_EMPTY);
 							renderer5.setSeriesShapesVisible(series_number - 1, false);
 							renderer5.setSeriesLinesVisible(series_number - 1, true);
@@ -2039,14 +1876,14 @@ public class CreateChart implements Serializable
 			if (chart_elem.subType == ChartElement.SUBTYPE.XY_STEP ||
 					chart_elem.subType == ChartElement.SUBTYPE.XY_STEP_AREA ||
 					chart_elem.subType == ChartElement.SUBTYPE.XY_AREA) {
-				if (chart_elem.subType == ChartElement.SUBTYPE.XY_STEP) plot.setRenderer(renderer5);				
-				if (chart_elem.subType == ChartElement.SUBTYPE.XY_STEP_AREA) plot.setRenderer(renderer4);				
-				if (chart_elem.subType == ChartElement.SUBTYPE.XY_AREA) plot.setRenderer(renderer3);				
+				if (chart_elem.subType == ChartElement.SUBTYPE.XY_STEP) plot.setRenderer(renderer5);
+				if (chart_elem.subType == ChartElement.SUBTYPE.XY_STEP_AREA) plot.setRenderer(renderer4);
+				if (chart_elem.subType == ChartElement.SUBTYPE.XY_AREA) plot.setRenderer(renderer3);
 			} else {
 				if (chart_elem.showErrorBars) {
 					plot.setRenderer(renderer);
 				} else {
-					plot.setRenderer(renderer2);				
+					plot.setRenderer(renderer2);
 				}
 			}
 
@@ -2086,7 +1923,7 @@ public class CreateChart implements Serializable
 			if (chart_elem.subType == ChartElement.SUBTYPE.CATEGORY_BAR ||
 					chart_elem.subType == ChartElement.SUBTYPE.CATEGORY_BAR_3D ||
 					chart_elem.subType == ChartElement.SUBTYPE.CATEGORY_STACKED_BAR ||
-					chart_elem.subType == ChartElement.SUBTYPE.CATEGORY_STACKED_BAR_3D) 
+					chart_elem.subType == ChartElement.SUBTYPE.CATEGORY_STACKED_BAR_3D)
 				isBar = true;
 //			if (!isBar) {
 */				for (int i = 0; i < chart_elem.xForCategoryCharts.length; i++)
@@ -2132,7 +1969,7 @@ public class CreateChart implements Serializable
 								legend += "*";
 							}
 						} else {
-							nr = 0;							
+							nr = 0;
 						}
 						if (nr > nrMax) nrMax = nr;
 					}
@@ -2281,7 +2118,7 @@ public class CreateChart implements Serializable
 					}
 				}
 			}
-			
+
 			// Other chart properties not established by JPARSEC
 			// CategoryAxis bar_axis = bar_plot.getDomainAxis();
 			// bar_render.setDrawBarOutline(false);
@@ -2375,7 +2212,7 @@ public class CreateChart implements Serializable
 							pointer.setPaint(chart_elem.series[i].color);
 							bar_plot.addAnnotation(pointer);
 						}
-	
+
 						if (x_limit[ii] == 1)
 							angle = 0;
 						if (x_limit[ii] == -1)
@@ -2390,7 +2227,7 @@ public class CreateChart implements Serializable
 							pointer.setPaint(chart_elem.series[i].color);
 							bar_plot.addAnnotation(pointer);
 						}
-	
+
 						int npo = 0;
 						try { npo = chart_elem.series[i].pointers.length; } catch (Exception exc) {}
 						if (npo > 0 && ii == 0)
@@ -2433,7 +2270,7 @@ public class CreateChart implements Serializable
 										pointerY = DataSet.getDoubleValueWithoutLimit(chart_elem.series[i].yValues[n-1]);
 										pointerMsg = FileIO.getRestAfterField(1, pointerMsg, " ", true);
 									}
-	
+
 										int ppp = chart_elem.getIndexOfCategoryPoint(pointerX);
 										double posx = chart_elem.imageWidth * (double) ppp / (double) chart_elem.xForCategoryCharts.length;
 										Rectangle2D rect = new Rectangle2D.Double(0, 0, chart_elem.imageWidth, chart_elem.imageHeight); //this.getComponent().getScreenDataArea();
@@ -2443,7 +2280,7 @@ public class CreateChart implements Serializable
 										angle = jparsec.ephem.Functions.normalizeRadians(Math.atan2(
 												(rect.getCenterX() - posy),
 												(rect.getCenterY() - posx)));
-	
+
 										ChartSeriesElement.POINTER_ANGLE ang = chart_elem.series[i].pointersAngle;
 										if (ang == ChartSeriesElement.POINTER_ANGLE.DOWNWARDS) angle = Math.PI * 0.5;
 										if (ang == ChartSeriesElement.POINTER_ANGLE.UPWARDS) angle = -Math.PI * 0.5;
@@ -2456,7 +2293,7 @@ public class CreateChart implements Serializable
 												ang != ChartSeriesElement.POINTER_ANGLE.RIGHTWARDS &&
 												ang != ChartSeriesElement.POINTER_ANGLE.TO_OUTSIDE &&
 												ang != ChartSeriesElement.POINTER_ANGLE.TO_CENTER) angle = 0; //-ang;
-	
+
 										if (pointerMsg.startsWith("@UP")) {
 											angle = -Math.PI * 0.5;
 											pointerMsg = pointerMsg.substring(3);
@@ -2502,7 +2339,7 @@ public class CreateChart implements Serializable
 							}
 						}
 					}
-	
+
 /*					if (chart_elem.series[i].regressionType == ChartSeriesElement.REGRESSION.LINEAR &&
 							chart_elem.series[i].regressionType.getShowRegression())
 					{
@@ -2612,8 +2449,8 @@ public class CreateChart implements Serializable
 							}
 						}
 					}
-*/					
-					
+*/
+
 				}
 			}
 
@@ -2656,7 +2493,7 @@ public class CreateChart implements Serializable
 		{
 		case CATEGORY_STACKED_BAR_3D:
 			jfc = ChartFactory.createStackedBarChart3D(chart_elem.title, chart_elem.xLabel, chart_elem.yLabel,
-					categoryDataset, plo, show_legend, 
+					categoryDataset, plo, show_legend,
 					true, true);
 			break;
 		case CATEGORY_BAR_3D:
@@ -2725,7 +2562,7 @@ public class CreateChart implements Serializable
 			{
 				y = chart_elem.series[i].yMinimumValue;
 				x = Math.pow(10.0, myfit.evaluateAbcissa(Math.log10(y)));
-			}				
+			}
 		}
 		if (chart_elem.yAxisInLogScale && !chart_elem.xAxisInLogScale)
 		{
@@ -2808,9 +2645,9 @@ public class CreateChart implements Serializable
 			{
 				y = chart_elem.series[i].yMinimumValue;
 				x = Math.pow(10.0, solve(pol, Math.log10(y)));
-			}				
+			}
 		}
-*/		
+*/
 		if (chart_elem.yAxisInLogScale && !chart_elem.xAxisInLogScale)
 		{
 			y = Math.pow(10.0, pol.evaluate(x).real);
@@ -2871,7 +2708,7 @@ public class CreateChart implements Serializable
 
 		return new double[] { x, y };
 	}
-	
+
 	private static double[] getPoint(ChartElement chart_elem, String function, double estimates[], int i, double x, double ymax, double ymin) throws JPARSECException
 	{
 		double y = 0.0;
@@ -2898,9 +2735,9 @@ public class CreateChart implements Serializable
 			{
 				y = chart_elem.series[i].yMinimumValue;
 				x = Math.pow(10.0, solve(pol, Math.log10(y)));
-			}				
+			}
 		}
-*/		
+*/
 		if (chart_elem.yAxisInLogScale && !chart_elem.xAxisInLogScale)
 		{
 			y = Math.pow(10.0, eval.evaluate());
@@ -2961,7 +2798,7 @@ public class CreateChart implements Serializable
 
 		return new double[] { x, y };
 	}
-	
+
 /*	private static double solve(Polynomial pol, double y) throws JPARSECException {
 		Polynomial p = pol.clone();
 		Complex c[] = p.getCoefficients();
@@ -2970,8 +2807,8 @@ public class CreateChart implements Serializable
 		Complex z[] = p.zeros();
 		return z[0].real; // Which to retrieve!?
 	}
-*/	
-	
+*/
+
 	private static double[] getPoint(ChartElement chart_elem, GenericFit gf, int i, double x, double ymax, double ymin) throws JPARSECException
 	{
 		double y = 0.0;
@@ -2992,9 +2829,9 @@ public class CreateChart implements Serializable
 			{
 				y = chart_elem.series[i].yMinimumValue;
 				x = Math.pow(10.0, solve(pol, Math.log10(y)));
-			}				
+			}
 		}
-*/		
+*/
 		if (chart_elem.yAxisInLogScale && !chart_elem.xAxisInLogScale)
 		{
 			y = Math.pow(10.0, gf.evaluateFittingFunction(x));
@@ -3058,7 +2895,7 @@ public class CreateChart implements Serializable
 
 	/**
 	 * Creates a simple chart from a set of values.
-	 * 
+	 *
 	 * @param x X values.
 	 * @param y Y values.
 	 * @param legend Legend text. Empty string implies no legend
@@ -3081,7 +2918,7 @@ public class CreateChart implements Serializable
 
 		return new CreateChart(elem);
 	}
-	
+
 	/**
 	 * Deletes a series from the chart.
 	 * @param index Index of the series.
@@ -3200,10 +3037,10 @@ public class CreateChart implements Serializable
 
 	/**
 	 * Creates a script to draw the current chart using GILDAS. Only the most
-	 * simple charts (x-y scattering and category) are fully supported, with limitations on 
+	 * simple charts (x-y scattering and category) are fully supported, with limitations on
 	 * colors and line strokes, among others.
 	 * @param fileName Name of the postscript file to be created, with path.
-	 * @param leyendPosition Position of the leyend, constants defined in 
+	 * @param leyendPosition Position of the leyend, constants defined in
 	 * class {@linkplain GILDAS_LEYEND}.
 	 * @param autoDestroy True to add commands to autodestroy the script.
 	 * @throws JPARSECException If an error occurs.
@@ -3227,7 +3064,7 @@ public class CreateChart implements Serializable
 		double xmax = 28.0; //this.chart_elem.getxMax();
 		double ymin = 2.5; //this.chart_elem.getyMin();
 		double ymax = 19.5; //this.chart_elem.getyMax();
-		
+
 		String sep = FileIO.getLineSeparator();
 		StringBuffer script = this.exportChartForGILDAS(true, 1.0, -1, leyendPosition, path, fileName);
 
@@ -3260,7 +3097,7 @@ public class CreateChart implements Serializable
 				}
 			}
 		}
-		
+
 		script.append("! EXPORT AS PS"+ sep);
 		script.append("sys \"rm "+fileName+".ps\""+ sep);
 		script.append("hard "+fileName+".ps /dev ps color"+ sep);
@@ -3287,9 +3124,9 @@ public class CreateChart implements Serializable
 				}
 			}
 		}
-		
+
 		WriteFile.writeAnyExternalFile(path+fileName+".greg", script.toString());
-		
+
 		return script.toString();
 	}
 
@@ -3310,10 +3147,10 @@ public class CreateChart implements Serializable
 		/** Symbolic constant to set the position of the leyend in a GILDAS figure. */
 		NO_LEYEND
 	};
-	
+
 	/**
 	 * Creates a script to draw the current chart using GILDAS. Only the most
-	 * simple charts (x-y scattering and category) are fully supported, with limitations on 
+	 * simple charts (x-y scattering and category) are fully supported, with limitations on
 	 * colors and line strokes, among others.
 	 * @param mainChart True if it is the main chart.
 	 * @param lastExpand Last expand value in GILDAS.
@@ -3328,7 +3165,7 @@ public class CreateChart implements Serializable
 			GILDAS_LEYEND leyendPosition, String path, String fileName)
 	throws JPARSECException {
 		boolean warningColor = false, warningMark = false, warningPointer = false;
-		
+
 		ChartSeriesElement series[] = this.chart_elem.series;
 		StringBuffer script = new StringBuffer(1000);
 		String sep = FileIO.getLineSeparator();
@@ -3352,7 +3189,7 @@ public class CreateChart implements Serializable
 			}
 			ymin = y_axis.getLowerBound();
 			ymax = y_axis.getUpperBound();
-			
+
 			if (chart_elem.xAxisInverted) {
 				double tmp = xmin;
 				xmin = xmax;
@@ -3390,12 +3227,12 @@ public class CreateChart implements Serializable
 
 		if (this.chart_elem.yAxisInLogScale)
 		{
-			if (ymin < series[0].yMinimumValue && this.chart_elem.chartType != ChartElement.TYPE.CATEGORY_CHART) 
+			if (ymin < series[0].yMinimumValue && this.chart_elem.chartType != ChartElement.TYPE.CATEGORY_CHART)
 				ymin = series[0].yMinimumValue;
-			if (ymin < 0.0 && this.chart_elem.chartType == ChartElement.TYPE.CATEGORY_CHART) 
+			if (ymin < 0.0 && this.chart_elem.chartType == ChartElement.TYPE.CATEGORY_CHART)
 				ymin = series[0].yMinimumValue;
 		}
-		
+
 		String limit = "limits "+xmin+" "+xmax+" "+ymin+" "+ymax;
 		if (this.chart_elem.xAxisInLogScale) limit += " /XLOG";
 		if (this.chart_elem.yAxisInLogScale) limit += " /YLOG";
@@ -3409,19 +3246,19 @@ public class CreateChart implements Serializable
 		if (mainChart) script.append("set expand "+lastExpand+"*(box_xmax-box_xmin)/24"+sep);
 		script.append(limit + sep);
 		if (this.chart_elem.chartType == ChartElement.TYPE.CATEGORY_CHART) {
-			script.append("box N O ! LABELS FOR X AXIS WILL BE SET AT THE END"+sep);			
+			script.append("box N O ! LABELS FOR X AXIS WILL BE SET AT THE END"+sep);
 		} else {
 			script.append("box"+sep);
 		}
 		script.append(""+ sep);
-		
+
 		for (int i=0; i<series.length; i++)
 		{
 			if (series[i].enable) {
 				script.append("! BEGIN OF COMMANDS FOR DRAWING SERIES NUMBER "+i+" - "+series[i].legend + sep);
 				script.append(""+ sep);
 				String color = "";
-	
+
 				if (series[i].stroke != null)
 				{
 					if (series[i].stroke.equals(JPARSECStroke.STROKE_DEFAULT_LINE)) color += " /dashed 1";
@@ -3433,7 +3270,7 @@ public class CreateChart implements Serializable
 					if (series[i].stroke.equals(JPARSECStroke.STROKE_POINTS_MEDIUM_SPACE)) color += " /dashed 4";
 				}
 				if (color.indexOf("/dashed") < 0) color += " /dashed 1";
-				
+
 				if (series[i].color.equals(Color.BLACK) ||
 						series[i].color.equals(Color.black)) color += " /col 0 ! BLACK";
 				if (series[i].color.equals(Color.GRAY) ||
@@ -3456,35 +3293,35 @@ public class CreateChart implements Serializable
 						series[i].color.equals(Color.pink)) color += " /col 6 ! MAGENTA (FROM PINK)";
 				if (series[i].color.equals(Color.WHITE) ||
 						series[i].color.equals(Color.white)) color += " /col 7 ! WHITE";
-	
+
 				if (color.indexOf("/col") == -1) {
 					color += " /col 0 ! BLACK (FROM A COLOR UNSUPPORTED BY GILDAS)";
 				}
 				if (color.indexOf("(FROM") >= 0) {
 					warningColor = true;
 				}
-				
+
 				// Use relativelly thin line for black, and thicker for other colors that
-				// will be passed to gray scale in the printer. This effect has been 
+				// will be passed to gray scale in the printer. This effect has been
 				// finally removed.
 				double pointSize0 = 0.2 * (double) series[i].shapeSize / 3.0;
 				if (pointSize0 >= 0.2) {
 					if (color.indexOf("/col 0") >= 0) {
 						color = "pen /wei 1" + color;
 					} else {
-						color = "pen /wei 2" + color;				
+						color = "pen /wei 2" + color;
 					}
 				} else {
-					color = "pen /wei 1" + color;				
+					color = "pen /wei 1" + color;
 				}
-				
+
 				script.append("! Color selection" + sep);
 				script.append(color + sep);
-				
+
 				ChartSeriesElement.setShapeSize(series[i].shapeSize);
 				String pointSize = ""+(float)pointSize0;
 				if (!series[i].showShapes) pointSize = "0.0";
-				
+
 				boolean equalDiamond = ChartSeriesElement.equalShapes(series[i].shape, ChartSeriesElement.SHAPE_DIAMOND);
 				boolean equalEllipse = ChartSeriesElement.equalShapes(series[i].shape, ChartSeriesElement.SHAPE_ELLIPSE);
 				boolean equalPoint = ChartSeriesElement.equalShapes(series[i].shape, ChartSeriesElement.SHAPE_POINT);
@@ -3500,7 +3337,7 @@ public class CreateChart implements Serializable
 				boolean equalStar = ChartSeriesElement.equalShapes(series[i].shape, ChartSeriesElement.SHAPE_STAR);
 				boolean equalStar2 = ChartSeriesElement.equalShapes(series[i].shape, ChartSeriesElement.SHAPE_STAR2);
 				boolean equalPentagon = ChartSeriesElement.equalShapes(series[i].shape, ChartSeriesElement.SHAPE_PENTAGON);
-	
+
 				script.append(""+ sep);
 				script.append("! Point shape selection" + sep);
 				String mark = "set mark 20 3 "+pointSize+" 90 ! CIRCLE";
@@ -3534,16 +3371,16 @@ public class CreateChart implements Serializable
 					mark = "set mark 3 3 "+pointSize+" 270 ! TRIANGLE RIGHT";
 				if (equalTriangleU)
 					mark = "set mark 3 3 "+pointSize+" 0 ! TRIANGLE UP";
-	
+
 				ChartSeriesElement.setShapeSize(ChartSeriesElement.SHAPE_DEFAULT_SIZE);
-	
+
 				if (mark.indexOf("(FROM") >= 0) {
 					warningMark = true;
 				}
-	
+
 				script.append(mark + sep);
 				pointSize = ""+pointSize0;
-				
+
 				script.append(""+ sep);
 				script.append("! Read series" + sep);
 				String subChart = "subchart"+subChartID;
@@ -3552,8 +3389,8 @@ public class CreateChart implements Serializable
 				script.append(""+ sep);
 				if (series[i].showShapes) {
 					script.append("points" + sep);
-				}				
-				 
+				}
+
 				script.append(""+ sep);
 				if (series[i].showLines || series[i].regressionType.getShowRegression() && series[i].regressionType != null &&
 						(series[i].regressionType == ChartSeriesElement.REGRESSION.LINEAR_INTERPOLATION
@@ -3564,14 +3401,14 @@ public class CreateChart implements Serializable
 					if (!series[i].showShapes) script.append("points " + sep); ///blanking 0 1E300" + sep);
 					if (series[i].regressionType != ChartSeriesElement.REGRESSION.LINEAR_INTERPOLATION &&
 							series[i].regressionType != ChartSeriesElement.REGRESSION.NONE) {
-						
+
 						ArrayList<Object> vx = DataSet.getDoubleValuesIncludingLimits(series[i].xValues);
 						ArrayList<Object> vy = DataSet.getDoubleValuesIncludingLimits(series[i].yValues);
 						double x_val[] = (double[]) vx.get(0);
 						double y_val[] = (double[]) vy.get(0);
 						double dx_val[] = series[i].dxValues;
 						double dy_val[] = series[i].dyValues;
-	
+
 						// Fit in LOG scale if necessary
 						for (int j = 0; j < x_val.length; j++)
 						{
@@ -3584,7 +3421,7 @@ public class CreateChart implements Serializable
 							if (this.chart_elem.yAxisInLogScale)
 								y_val[j] = Math.log10(y_val[j]);
 						}
-	
+
 						LinearFit myfit = null; //chart_elem.series[i].regressionType.getLinearFit();
 						Polynomial pol = null; //chart_elem.series[i].regressionType.getPolynomialFit();
 						GenericFit gf = null;
@@ -3628,7 +3465,7 @@ public class CreateChart implements Serializable
 								}
 							}
 						}
-	
+
 						double xmaxFit = this.chart_elem.getxMax();
 						double xminFit = this.chart_elem.getxMin();
 						double ymaxFit = this.chart_elem.getyMax();
@@ -3637,7 +3474,7 @@ public class CreateChart implements Serializable
 							yminFit = series[i].yMinimumValue;
 						if (xminFit < series[i].xMinimumValue)
 							xminFit = series[i].xMinimumValue;
-	
+
 						int np = 2*chart_elem.series[i].xValues.length;
 						double xv[] = DataSet.getSetOfValues(xminFit, xmaxFit, np+1, false);
 						if (chart_elem.series[i].regressionType == ChartSeriesElement.REGRESSION.LINEAR) np = 1;
@@ -3650,14 +3487,14 @@ public class CreateChart implements Serializable
 									p = CreateChart.getPoint(chart_elem, pol, i, xv[index], ymaxFit, yminFit);
 								} else {
 									if (chart_elem.series[i].regressionType == ChartSeriesElement.REGRESSION.REGRESSION_CUSTOM) {
-										p = CreateChart.getPoint(chart_elem, function, chart_elem.series[i].regressionType.getEquationValues(), i, xv[index], ymaxFit, yminFit);										
+										p = CreateChart.getPoint(chart_elem, function, chart_elem.series[i].regressionType.getEquationValues(), i, xv[index], ymaxFit, yminFit);
 									} else {
 										if (chart_elem.series[i].regressionType == ChartSeriesElement.REGRESSION.GENERIC_FIT)
-											p = CreateChart.getPoint(chart_elem, gf, i, xv[index], ymaxFit, yminFit);									
+											p = CreateChart.getPoint(chart_elem, gf, i, xv[index], ymaxFit, yminFit);
 									}
 								}
 							}
-							script.append("draw r "+p[0]+" "+p[1]+" /user" + sep);					
+							script.append("draw r "+p[0]+" "+p[1]+" /user" + sep);
 							if (chart_elem.series[i].regressionType == ChartSeriesElement.REGRESSION.LINEAR) {
 								p = CreateChart.getPoint(chart_elem, myfit, i, xmaxFit, ymaxFit, yminFit);
 							} else {
@@ -3665,10 +3502,10 @@ public class CreateChart implements Serializable
 									p = CreateChart.getPoint(chart_elem, pol, i, xv[index+1], ymaxFit, yminFit);
 								} else {
 									if (chart_elem.series[i].regressionType == ChartSeriesElement.REGRESSION.REGRESSION_CUSTOM) {
-										p = CreateChart.getPoint(chart_elem, function, chart_elem.series[i].regressionType.getEquationValues(), i, xv[index+1], ymaxFit, yminFit);										
+										p = CreateChart.getPoint(chart_elem, function, chart_elem.series[i].regressionType.getEquationValues(), i, xv[index+1], ymaxFit, yminFit);
 									} else {
 										if (chart_elem.series[i].regressionType == ChartSeriesElement.REGRESSION.GENERIC_FIT)
-											p = CreateChart.getPoint(chart_elem, gf, i, xv[index+1], ymaxFit, yminFit);									
+											p = CreateChart.getPoint(chart_elem, gf, i, xv[index+1], ymaxFit, yminFit);
 									}
 								}
 							}
@@ -3681,25 +3518,25 @@ public class CreateChart implements Serializable
 					}
 				}
 				if (series[i].regressionType.getShowRegression() &&
-						series[i].regressionType == ChartSeriesElement.REGRESSION.SPLINE_INTERPOLATION) 
+						series[i].regressionType == ChartSeriesElement.REGRESSION.SPLINE_INTERPOLATION)
 					script.append("curve" + sep);
-	
+
 				if (series[i].showLegend && leyendPosition != CreateChart.GILDAS_LEYEND.NO_LEYEND) {
 					script.append(""+ sep);
 					script.append("! SHOW LEGEND"+ sep);
 					script.append("pen /wei 1"+ sep);
 					script.append("set expand 0.7*(box_xmax-box_xmin)/24"+ sep);
 					double posY = -2.1;
-					double posXi = 0 + 24.0 * i / series.length; 
+					double posXi = 0 + 24.0 * i / series.length;
 					double posXf = (0 + 24.0 * (i+1) / series.length + posXi) * 0.5;
-					
+
 					// To set the position of the leyend in vertical direction from the
 					// given corner. Otherwise, default leyend at the bottom.
 					//double xmin = 4.0; //this.chart_elem.getxMin();
 					//double xmax = 28.0; //this.chart_elem.getxMax();
 					//double ymin = 2.5; //this.chart_elem.getyMin();
 					//double ymax = 19.5; //this.chart_elem.getyMax();
-	
+
 					switch (leyendPosition)
 					{
 					case TOP_RIGHT_CORNER:
@@ -3723,20 +3560,20 @@ public class CreateChart implements Serializable
 						posY = 0 + (series.length - i) * 0.6;
 						break;
 					}
-	
+
 					String pxi = ""+(posXi/24.0)+"*(box_xmax-box_xmin)";
 					String pxf = ""+(posXf/24.0)+"*(box_xmax-box_xmin)";
 					String py = ""+(posY/17.0)+"*(box_ymax-box_ymin)";
-					script.append("draw r "+pxi+" "+py+" "+ sep);				
-					if (series[i].showLines) script.append("draw line "+pxf+" "+py+" "+ sep);				
-					if (series[i].showShapes) script.append("draw mark ("+pxi+"+"+pxf+")*0.5 "+py+" "+ sep);				
+					script.append("draw r "+pxi+" "+py+" "+ sep);
+					if (series[i].showLines) script.append("draw line "+pxf+" "+py+" "+ sep);
+					if (series[i].showShapes) script.append("draw mark ("+pxi+"+"+pxf+")*0.5 "+py+" "+ sep);
 					script.append("pen /wei 1 /col 0"+ sep);
 					script.append("greg1\\draw text "+pxf+"+0.5 "+py+" \""+toGILDASformat(series[i].legend)+"\" 6 0 "+ sep);
 					int index = color.indexOf("/col");
 					script.append("pen "+color.substring(index, index+6)+ sep);
 					script.append("set expand "+lastExpand+"*(box_xmax-box_xmin)/24" + sep);
 				}
-				
+
 				script.append(""+ sep);
 				script.append("pen /dashed 1 /wei 1 ! SELECT CONTINUOS THIN LINE"+ sep);
 				if (series[i].showErrorBars && this.chart_elem.showErrorBars && series[i].dyValues != null) {
@@ -3752,7 +3589,7 @@ public class CreateChart implements Serializable
 					script.append("errorbar x" + sep);
 				}
 				script.append(""+ sep);
-	
+
 				if (series[i].showShapes) {
 					String arrowSizeXMinus = "x[ii]*0.75/"+((double) series[i].sizeOfArrowInLimits/30.0);
 					String arrowSizeXPlus = "x[ii]*1.25*"+((double) series[i].sizeOfArrowInLimits/30.0);
@@ -3760,13 +3597,13 @@ public class CreateChart implements Serializable
 					String arrowSizeYPlus = "y[ii]*1.25*"+((double) series[i].sizeOfArrowInLimits/30.0);
 					if (!this.chart_elem.xAxisInLogScale) {
 						arrowSizeXMinus = "x[ii]-"+(offsetx * (double) series[i].sizeOfArrowInLimits/22.5);
-						arrowSizeXPlus = "x[ii]+"+(offsetx * (double) series[i].sizeOfArrowInLimits/22.5);				
+						arrowSizeXPlus = "x[ii]+"+(offsetx * (double) series[i].sizeOfArrowInLimits/22.5);
 					}
 					if (!this.chart_elem.yAxisInLogScale) {
 						arrowSizeYMinus = "y[ii]-"+(offsety * (double) series[i].sizeOfArrowInLimits/22.5);
-						arrowSizeYPlus = "y[ii]+"+(offsety * (double) series[i].sizeOfArrowInLimits/22.5);				
+						arrowSizeYPlus = "y[ii]+"+(offsety * (double) series[i].sizeOfArrowInLimits/22.5);
 					}
-	
+
 					// True to show empty triangles, false for filled ones
 					boolean emptyTriangles = true;
 					script.append(""+ sep);
@@ -3777,7 +3614,7 @@ public class CreateChart implements Serializable
 					if (emptyTriangles) {
 						script.append("   set mark 3 0 "+pointSize+" 180 ! TRIANGLE DOWN" + sep);
 					} else {
-						script.append("   set mark 3 3 "+pointSize+" 180 ! TRIANGLE DOWN" + sep);					
+						script.append("   set mark 3 3 "+pointSize+" 180 ! TRIANGLE DOWN" + sep);
 					}
 					script.append("   draw marker x[ii] "+arrowSizeYMinus+" /user" + sep);
 					script.append("   draw line x[ii] y[ii] /user" + sep);
@@ -3786,14 +3623,14 @@ public class CreateChart implements Serializable
 					if (emptyTriangles) {
 						script.append("   set mark 3 0 "+pointSize+" 0 ! TRIANGLE UP" + sep);
 					} else {
-						script.append("   set mark 3 3 "+pointSize+" 0 ! TRIANGLE UP" + sep);					
+						script.append("   set mark 3 3 "+pointSize+" 0 ! TRIANGLE UP" + sep);
 					}
 					script.append("   draw marker x[ii] "+arrowSizeYPlus+" /user" + sep);
 					script.append("   draw line x[ii] y[ii] /user" + sep);
 					script.append(" END IF" + sep);
 					script.append("next" + sep);
 					script.append(""+ sep);
-					
+
 					script.append("! Read series with x limits. Set a mark 3 0 ... for empty triangles, or 3 3 ... for filled ones" + sep);
 					script.append("column x 1 y 2 z 5 /file "+subChart+"serie"+i+fileName+".jparsec" + sep);
 					script.append("for ii 1 to NXY" + sep);
@@ -3801,7 +3638,7 @@ public class CreateChart implements Serializable
 					if (emptyTriangles) {
 						script.append("   set mark 3 0 "+pointSize+" 90 ! TRIANGLE LEFT" + sep);
 					} else {
-						script.append("   set mark 3 3 "+pointSize+" 90 ! TRIANGLE LEFT" + sep);					
+						script.append("   set mark 3 3 "+pointSize+" 90 ! TRIANGLE LEFT" + sep);
 					}
 					script.append("   draw marker "+arrowSizeXMinus+" y[ii] /user" + sep);
 					script.append("   draw line x[ii] y[ii] /user" + sep);
@@ -3810,16 +3647,16 @@ public class CreateChart implements Serializable
 					if (emptyTriangles) {
 						script.append("   set mark 3 0 "+pointSize+" 270 ! TRIANGLE RIGHT" + sep);
 					} else {
-						script.append("   set mark 3 3 "+pointSize+" 270 ! TRIANGLE RIGHT" + sep);					
+						script.append("   set mark 3 3 "+pointSize+" 270 ! TRIANGLE RIGHT" + sep);
 					}
 					script.append("   draw marker "+arrowSizeXPlus+" y[ii] /user" + sep);
 					script.append("   draw line x[ii] y[ii] /user" + sep);
 					script.append(" END IF" + sep);
 					script.append("next" + sep);
 					script.append(""+ sep);
-	
+
 				}
-				
+
 				int npo = 0;
 				try { npo = series[i].pointers.length; } catch (Exception exc) {}
 				if (npo > 0) {
@@ -3833,7 +3670,7 @@ public class CreateChart implements Serializable
 						script.append("define real sinangle" + sep);
 						warningPointer = true;
 					}
-					
+
 					for (int iii=0; iii<series[i].pointers.length; iii++)
 					{
 						if (series[i].pointers[iii] != null)
@@ -3855,7 +3692,7 @@ public class CreateChart implements Serializable
 										pointerMsg = msg;
 										pointerX = DataSet.getDoubleValueWithoutLimit(p1);
 										pointerY = DataSet.getDoubleValueWithoutLimit(p2);
-	
+
 										if (this.chart_elem.chartType == ChartElement.TYPE.CATEGORY_CHART) {
 											pointerX = (this.chart_elem.getIndexOfCategoryPoint(p1) + 1.0) / (this.chart_elem.xForCategoryCharts.length + 1.0);
 										}
@@ -3879,17 +3716,17 @@ public class CreateChart implements Serializable
 									pointerX = (this.chart_elem.getIndexOfCategoryPoint(chart_elem.series[i].xValues[n-1]) + 1.0) / (this.chart_elem.xForCategoryCharts.length + 1.0);
 								}
 							}
-							
-							
+
+
 								double prMin = 0.3 * series[i].pointersLabelOffsetFactor;
 								if (this.chart_elem.chartType == ChartElement.TYPE.CATEGORY_CHART) {
-									script.append("draw relocate user_xmin+(user_xmax-user_xmin)*"+pointerX+" "+pointerY+" /user" + sep);									
+									script.append("draw relocate user_xmin+(user_xmax-user_xmin)*"+pointerX+" "+pointerY+" /user" + sep);
 								} else {
 									script.append("draw relocate "+pointerX+" "+pointerY+" /user" + sep);
 								}
 								script.append("let px1 (x_pen-4-12)" + sep);
 								script.append("let py1 (y_pen-2.5-8.5)" + sep);
-	
+
 								double angle = 0.0;
 								ChartSeriesElement.POINTER_ANGLE ang = chart_elem.series[i].pointersAngle;
 
@@ -3930,7 +3767,7 @@ public class CreateChart implements Serializable
 										ang != ChartSeriesElement.POINTER_ANGLE.RIGHTWARDS &&
 										ang != ChartSeriesElement.POINTER_ANGLE.TO_OUTSIDE &&
 										ang != ChartSeriesElement.POINTER_ANGLE.TO_CENTER) angle = 0; //-ang;
-	
+
 								if (ang == ChartSeriesElement.POINTER_ANGLE.TO_OUTSIDE ||
 										ang == ChartSeriesElement.POINTER_ANGLE.TO_CENTER) {
 									String sign = "";
@@ -3951,7 +3788,7 @@ public class CreateChart implements Serializable
 								script.append("pen /col "+col+sep);
 								String labelPoint = "1";
 								if (series[i].showArrowInPointers)
-								{ 
+								{
 									script.append("draw relocate px2 py2" + sep);
 									script.append("draw arrow px1 py1" + sep);
 									labelPoint = "2";
@@ -3959,14 +3796,14 @@ public class CreateChart implements Serializable
 								script.append("set expand 0.5*(box_xmax-box_xmin)/24"+sep);
 								writeGildasText(script, pointerMsg.trim(), "px"+labelPoint+"+"+(prMin*1.5)+"*cosangle", "py"+labelPoint+"+"+(prMin*1.5)+"*sinangle", center, lastExpand);
 						}
-	
+
 					}
 					script.append(""+ sep);
 				}
-				
+
 				script.append("! END OF COMMANDS FOR DRAWING SERIES NUMBER "+i+" - "+series[i].legend + sep);
 				script.append(""+ sep);
-				
+
 				StringBuffer serie = new StringBuffer(1000);
 				serie.append("! Dataset for series "+i+" - "+series[i].legend + sep);
 				serie.append("! Columns are x, y, dx, dy, x limits (1 = upper, -1 = lower, 0 = none), y limits" + sep);
@@ -3987,7 +3824,7 @@ public class CreateChart implements Serializable
 					if (series[i].dxValues != null) dx = series[i].dxValues[j];
 					double dy = 0.0;
 					if (series[i].dyValues != null) dy = series[i].dyValues[j];
-					
+
 					int limitX = 0, limitY = 0;
 					if (series[i].xValues[j].startsWith("<")) limitX = 1;
 					if (series[i].xValues[j].startsWith(">")) limitX = -1;
@@ -4004,7 +3841,7 @@ public class CreateChart implements Serializable
 				}
 			}
 		}
-		
+
 		script.append("! SET FONT AND CALCULATE SCALES"+ sep);
 		script.append("pen /col 0 /dashed 1 /wei 1" + sep);
 		script.append("set font duplex"+ sep);
@@ -4030,14 +3867,14 @@ public class CreateChart implements Serializable
 			script.append(" let py user_ymin-my*0.08"+ sep);
 			script.append("END IF" + sep);
 		} else {
-			script.append("let py user_ymin-my*0.12"+ sep);			
+			script.append("let py user_ymin-my*0.12"+ sep);
 		}
 		script.append("greg1\\draw text px py \""+CreateChart.toGILDASformat(chart_elem.xLabel.trim())+"\" 5 0 /user"+ sep);
 		script.append("let py user_ymin+my*0.5"+ sep);
 		if (mainChart) {
 			script.append("let px user_xmin-mx*(0.1*character_size/0.6)"+ sep);
 		} else {
-			script.append("let px user_xmin-mx*(0.14*character_size/0.6)"+ sep);			
+			script.append("let px user_xmin-mx*(0.14*character_size/0.6)"+ sep);
 		}
 		script.append("greg1\\draw text px py \""+CreateChart.toGILDASformat(chart_elem.yLabel.trim())+"\" 5 90 /user"+ sep);
 		script.append(""+ sep);
@@ -4058,11 +3895,11 @@ public class CreateChart implements Serializable
 			}
 		}
 		script.append(""+ sep);
-		if (warningColor || warningMark) script.append("! SHOW WARNINGS"+ sep); 
-		if (warningColor) script.append("SAY \"WARNING: ONE OR MORE COLORS IN THE CHART ARE NOT SUPPORTED BY GILDAS.\""+ sep);		
-		if (warningMark) script.append("SAY \"WARNING: ONE OR MORE MARKERS IN THE CHART ARE NOT SUPPORTED BY GILDAS.\""+ sep);		
-		if (warningColor || warningMark) script.append(""+ sep); 
-		
+		if (warningColor || warningMark) script.append("! SHOW WARNINGS"+ sep);
+		if (warningColor) script.append("SAY \"WARNING: ONE OR MORE COLORS IN THE CHART ARE NOT SUPPORTED BY GILDAS.\""+ sep);
+		if (warningMark) script.append("SAY \"WARNING: ONE OR MORE MARKERS IN THE CHART ARE NOT SUPPORTED BY GILDAS.\""+ sep);
+		if (warningColor || warningMark) script.append(""+ sep);
+
 		return script;
 	}
 
@@ -4081,15 +3918,15 @@ public class CreateChart implements Serializable
 		for (int i=0; i<tt.length; i++) {
 			if (dx.length > i) ddx += dx[i];
 			if (dy.length > i) ddy += dy[i];
-			script.append("greg1\\draw text "+px+ddx+" "+py+ddy+" \""+tt[i]+"\" "+center+" "+ textAngle + sep);		
+			script.append("greg1\\draw text "+px+ddx+" "+py+ddy+" \""+tt[i]+"\" "+center+" "+ textAngle + sep);
 		}
 		script.append("set expand " + lastExpand + sep);
 	}
-	
+
 	private static double textAngle = 0, textSize = 1.0;
 	private static String textdx = "", textdy = "";
 	private static int col = 0;
-	
+
 	/**
 	 * Transforms a given string with subindex, superindex, or greek letters
 	 * from JPARSEC to GILDAS format.
@@ -4099,7 +3936,7 @@ public class CreateChart implements Serializable
 	public static String toGILDASformat(String label)
 	{
         String commands[] = new String[] {"RED", "GREEN", "BLUE", "SIZE", "BLACK", "WHITE",
-       		 "CYAN", "GRAY", "MAGENTA", "ORANGE", "PINK", "YELLOW", "alpha", "beta", "gamma", 
+       		 "CYAN", "GRAY", "MAGENTA", "ORANGE", "PINK", "YELLOW", "alpha", "beta", "gamma",
        		 "delta", "epsilon", "zeta", "eta", "theta", "iota", "kappa", "lambda", "mu", "nu",
     			 "xi", "omicron", "pi", "rho", "sigma", "tau", "upsilon", "phi", "chi", "psi", "omega",
     			 "sun", "mercury", "venus", "earth", "mars", "jupiter",
@@ -4114,7 +3951,7 @@ public class CreateChart implements Serializable
         textAngle = 0;
         col = -1;
         textSize = 1.0;
-        textdx = ""; 
+        textdx = "";
         textdy = "";
         for (int i=0; i<commands.length; i++)
         {
@@ -4135,7 +3972,7 @@ public class CreateChart implements Serializable
         			if (i == 11) col = 5;
         		}
         	}
-        	
+
         	String replace = "";
         	String replaceCapital = "";
         	if (i > 11 && i <= 35) replace = "\\g"+greek.substring(i-12, i-11);
@@ -4178,7 +4015,7 @@ public class CreateChart implements Serializable
 	        	gildas = DataSet.replaceAll(gildas, "@"+commands[i].toUpperCase(), replaceCapital, true);
         	}
         }
-		
+
 		int i = gildas.lastIndexOf("^{");
 		if (i>= 0)
 		{
@@ -4186,7 +4023,7 @@ public class CreateChart implements Serializable
 				String part1 = gildas.substring(0, i+2);
 				String part2 = gildas.substring(i+2);
 				int j = part2.indexOf("}");
-				
+
 				gildas = part1.substring(0, part1.length()-2) + "\\\\u" + part2.substring(0, j) + "\\\\d";
 				if (j < part2.length()-1) gildas += part2.substring(j+1);
 				i = gildas.lastIndexOf("^{");
@@ -4199,7 +4036,7 @@ public class CreateChart implements Serializable
 				String part1 = gildas.substring(0, i+2);
 				String part2 = gildas.substring(i+2);
 				int j = part2.indexOf("}");
-				
+
 				gildas = part1.substring(0, part1.length()-2) + "\\\\d" + part2.substring(0, j) + "\\\\u";
 				if (j < part2.length()-1) gildas += part2.substring(j+1);
 				i = gildas.lastIndexOf("_{");
@@ -4208,7 +4045,7 @@ public class CreateChart implements Serializable
 		gildas = DataSet.replaceAll(gildas, "^{", "\\\\u", true);
 		gildas = DataSet.replaceAll(gildas, "_{", "\\\\d", true);
 		gildas = DataSet.replaceAll(gildas, "\"", "''", true);
-		
+
 		return gildas;
 	}
 
@@ -4270,9 +4107,9 @@ public class CreateChart implements Serializable
 	 * @param drawPanelIndex True to draw panel label as a character or number.
 	 * @param panelIndexAsNumber True to draw panel label as a character.
 	 * @param sameRatio true to produce charts with the same ratio always.
-	 * @param sepx separation between the charts in x axis, as a percentage of 
+	 * @param sepx separation between the charts in x axis, as a percentage of
 	 * the width of each chart (0 to 100).
-	 * @param sepy separation between the charts in y axis, as a percentage of 
+	 * @param sepy separation between the charts in y axis, as a percentage of
 	 * the height of each chart (0 to 100).
 	 * @throws JPARSECException If an error occurs.
 	 */
@@ -4283,7 +4120,7 @@ public class CreateChart implements Serializable
 	throws JPARSECException {
 		CreateChart.exportAsSuperScriptForGILDAS(charts, nx, ny, names, superName, dir, leyendPosition, drawTitles, autoDestroy, drawPanelIndex, panelIndexAsNumber, sameRatio, sepx, sepy, false, false);
 	}
-	
+
 	/**
 	 * Creates a panel with several charts for GILDAS.
 	 * @param charts The charts.
@@ -4298,9 +4135,9 @@ public class CreateChart implements Serializable
 	 * @param drawPanelIndex True to draw panel label as a character or number.
 	 * @param panelIndexAsNumber True to draw panel label as a character.
 	 * @param sameRatio true to produce charts with the same ratio always.
-	 * @param sepx separation between the charts in x axis, as a percentage of 
+	 * @param sepx separation between the charts in x axis, as a percentage of
 	 * the width of each chart (0 to 100).
-	 * @param sepy separation between the charts in y axis, as a percentage of 
+	 * @param sepy separation between the charts in y axis, as a percentage of
 	 * the height of each chart (0 to 100).
 	 * @param axisRangeAlways True to show the range of values in the axes always.
 	 * @param titlesInside True to show the tittles of each chart slightly inside the
@@ -4314,7 +4151,7 @@ public class CreateChart implements Serializable
 	throws JPARSECException {
 		if (!dir.endsWith(FileIO.getFileSeparator())) dir += FileIO.getFileSeparator();
 		if (superName.endsWith(".greg")) superName = superName.substring(0, superName.length()-5);
-		
+
 		double xmin = 4, xmax = 28, ymin = 2.5, ymax = 19.5;
 		boolean xaxis[] = new boolean[names.length];
 		boolean yaxis[] = new boolean[names.length];
@@ -4325,7 +4162,7 @@ public class CreateChart implements Serializable
 			maxNx = nx;
 			maxNy = ny;
 		}
-		
+
 		String sep = FileIO.getLineSeparator();
 		StringBuffer script = new StringBuffer("! SCRIPT TO DRAW A CHART PANEL WITH GILDAS"+ sep);
 		script.append("! AUTOMATICALLY GENERATED BY JPARSEC PACKAGE"+ sep);
@@ -4341,19 +4178,19 @@ public class CreateChart implements Serializable
 
 				double byf = (ymin + (double) (y - 1) * (double) (ymax - ymin) / (double) ny);
 				double by0 = (byf + (double) (ymax - ymin) / (double) maxNy);
-				
+
 				by0 = ymax + ymin - by0;
 				byf = ymax + ymin - byf;
 
 				if (sepx > 0 && sepx < 100) bxf = bxf - (bxf - bx0) * sepx / 100.0;
 				if (sepy > 0 && sepy < 100) by0 = by0 - (by0 - byf) * sepy / 100.0;
-				
+
 				index ++;
 				if (index < names.length)
 				{
 					script.append("set box "+bx0+" "+bxf+" "+by0+" "+byf + sep);
 					script.append("@"+names[index]+".greg" + sep + sep);
-					
+
 					xaxis[index] = yaxis[index] = true;
 					if (x > 1 && !axisRangeAlways) yaxis[index] = false;
 					if (y < ny && !axisRangeAlways) xaxis[index] = false;
@@ -4371,7 +4208,7 @@ public class CreateChart implements Serializable
 			script.append("! REMOVE ALL UNNECESARY FILES"+ sep);
 			script.append("sys \"rm "+superName+".greg\""+ sep);
 		}
-		
+
 		WriteFile.writeAnyExternalFile(dir+superName+".greg", script.toString());
 
 		boolean inside = titlesInside; //false;
@@ -4382,7 +4219,7 @@ public class CreateChart implements Serializable
 				break;
 			}
 		}
-*/		
+*/
 		for (int i=0; i<names.length; i++)
 		{
 			String fileName = names[i];
@@ -4399,7 +4236,7 @@ public class CreateChart implements Serializable
 			} else {
 				gscript = DataSet.replaceOne(gscript, "greg1\\draw text px py", "!greg1\\draw text px py", 3);
 			}
-			
+
 			if (drawPanelIndex)
 			{
 				String panelIndex = ""+(i+1);
@@ -4408,12 +4245,12 @@ public class CreateChart implements Serializable
 						panelIndex = "abcdefghijklmnopqrstuvwxyz".substring(i, i+1);
 					} catch (Exception exc) {}
 				}
-				gscript = DataSet.replaceOne(gscript, "! DRAW TITLE", 
+				gscript = DataSet.replaceOne(gscript, "! DRAW TITLE",
 						"let py user_ymin+my*(1.0-0.05*character_size/0.6)"+FileIO.getLineSeparator()+
 						"let px user_xmin+mx*0.05"+FileIO.getLineSeparator()+
 						"greg1\\draw text px py \""+panelIndex+")\" 5 0 /user"+FileIO.getLineSeparator()+"! DRAW TITLE", 1);
 			}
-			
+
 			String box = "box ";
 			if (!xaxis[i]) {
 				box += "N ";
@@ -4433,11 +4270,11 @@ public class CreateChart implements Serializable
 			gscript = DataSet.replaceOne(gscript, sep+"hard", sep+"!hard", 1);
 			if (gscript.indexOf(sep+"exit") > 0)
 				gscript = gscript.substring(0, gscript.indexOf(sep+"exit"));
-			
+
 			WriteFile.writeAnyExternalFile(dir+names[i]+".greg", gscript);
 		}
-	}	
-	
+	}
+
 	private double posx[], posy[];
 	private ChartSeriesElement.POINTER_ANGLE getMostEmptyDirection(ChartElement chart_elem, int series, int point, XYPlot plot) throws JPARSECException
 	{
@@ -4456,7 +4293,7 @@ public class CreateChart implements Serializable
 
 		return getMostEmptyDirection(chart_elem, posx, posy, plot);
 	}
-	
+
 	private ChartSeriesElement.POINTER_ANGLE getMostEmptyDirection(ChartElement chart_elem, double posx0, double posy0, XYPlot plot)
 	{
 		ChartSeriesElement.POINTER_ANGLE dir = ChartSeriesElement.POINTER_ANGLE.DOWNWARDS;
@@ -4464,14 +4301,14 @@ public class CreateChart implements Serializable
 		try {
 			ValueAxis y_axis = plot.getRangeAxis();
 			ValueAxis x_axis = plot.getDomainAxis();
-	
+
 			int ns = chart_elem.series.length;
 			int np = 0;
 			for (int i=0; i<ns; i++)
 			{
 				np = np + chart_elem.series[i].xValues.length;
 			}
-			if (posx == null || posy == null) 
+			if (posx == null || posy == null)
 			{
 				posx = new double[np];
 				posy = new double[np];
@@ -4483,7 +4320,7 @@ public class CreateChart implements Serializable
 					{
 							double pointerX = DataSet.getDoubleValueWithoutLimit(chart_elem.series[i].xValues[j]);
 							double pointerY = DataSet.getDoubleValueWithoutLimit(chart_elem.series[i].yValues[j]);
-			
+
 							index ++;
 							posx[index] = x_axis.valueToJava2D(pointerX, rect, plot
 								.getDomainAxisEdge());
@@ -4492,7 +4329,7 @@ public class CreateChart implements Serializable
 					}
 				}
 			}
-			
+
 /*			double pointerX = DataSet.getDoubleValueWithoutLimit(chart_elem.series[series].xValues[point]);
 			double pointerY = DataSet.getDoubleValueWithoutLimit(chart_elem.series[series].yValues[point]);
 			double px = x_axis.valueToJava2D(pointerX, new Rectangle2D.Double(0, 0,
@@ -4516,7 +4353,7 @@ public class CreateChart implements Serializable
 					if (Math.abs(angle-90.0) < 45.0) d = 1;
 					if (Math.abs(angle-180.0) < 45.0) d = 0;
 					if (Math.abs(angle-270.0) < 45.0) d = 3;
-					wei[d] += 1.0/(r*r);	
+					wei[d] += 1.0/(r*r);
 				}
 			}
 			int min = DataSet.getIndexOfMinimum(wei);
@@ -4551,10 +4388,10 @@ public class CreateChart implements Serializable
 				dir = ChartSeriesElement.POINTER_ANGLE.DOWNWARDS;
 				break;
 			}
-			
+
 		} catch (Exception exc) {
 		}
-		
+
 		return dir;
 	}
 
@@ -4598,9 +4435,9 @@ public class CreateChart implements Serializable
 	 * @param n Positive or negative.
 	 */
 	public static void increaseFontSize(int n) {
-		increaseFontSize += n;		
+		increaseFontSize += n;
 	}
-	
+
 	/**
 	 * Transforms mouse position in a chart to physical units.
 	 * @param panel The ChartPanel object.
@@ -4614,7 +4451,7 @@ public class CreateChart implements Serializable
 		double y = plot.getRangeAxis().java2DToValue(panel.translateScreenToJava2D(p).getY(),panel.getChartRenderingInfo().getPlotInfo().getDataArea(),plot.getRangeAxisEdge());
 		return new double[] {x, y};
 	}
-	
+
 	private Rectangle2D r = null;
 	/**
 	 * Transforms mouse position in a chart to physical units.
@@ -4626,7 +4463,7 @@ public class CreateChart implements Serializable
 	{
 		if (!(getChart().getPlot() instanceof XYPlot)) return null;
 		XYPlot plot = (XYPlot) getChart().getPlot();
-		
+
 		if (r == null) {
 			BufferedImage buf = this.chartAsBufferedImage();
 			int w = buf.getWidth(), h = buf.getHeight();
@@ -4773,7 +4610,7 @@ public class CreateChart implements Serializable
         g.translate(p1[0], p1[1]);
         g.scale(sx, sy);
 	}
-	
+
 	/**
 	 * Creates a basic contour chart in JFreeChart as a workaround for being
 	 * impossible to generate png images from SGT library without showing a JFrame.
@@ -4787,7 +4624,7 @@ public class CreateChart implements Serializable
 		xAxis.setUpperMargin(0.0);
 		yAxis.setUpperMargin(0.0);
 		ColorBar zColorBar = new ColorBar(chartElem.legend);
-		
+
 	      // Converts the float [][] grid to 3 x Double[]
 	      int size =  chartElem.data.length;
 	      Double [] oDoubleX = new Double[size*size];
@@ -4809,7 +4646,7 @@ public class CreateChart implements Serializable
 	      // then sets up and returns ContourDataSet
 	      ContourDataset cds = new DefaultContourDataset("Contouring", oDoubleX, oDoubleY, oDoubleZ);
 
-				
+
 		ContourPlot cplot = new ContourPlot(cds, xAxis, yAxis, zColorBar);
 
 		JFreeChart chart = new JFreeChart(chartElem.title, null, cplot, false);
@@ -4818,5 +4655,5 @@ public class CreateChart implements Serializable
 
 		this.chart_elem = new ChartElement(new ChartSeriesElement[] {}, ChartElement.TYPE.XY_CHART, ChartElement.SUBTYPE.XY_SCATTER, chartElem.title, chartElem.xLabel, chartElem.yLabel, false, chartElem.imageWidth, chartElem.imageWidth*2/3);
 		this.setChart(chart);
-	}	
+	}
 }

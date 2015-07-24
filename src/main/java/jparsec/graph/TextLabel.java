@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,20 +18,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.graph;
 
-import java.awt.Font;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
 import java.awt.image.BufferedImage;
-import java.util.*;
-
-import javax.swing.*;
-
+import java.util.ArrayList;
+import java.util.Stack;
+import java.util.Vector;
 import jparsec.io.image.Picture;
 import jparsec.math.Constant;
 import jparsec.math.LATEXFormula;
@@ -40,7 +39,7 @@ import jparsec.util.JPARSECException;
 /**
  * This class is designed to bundle together all the information required
  * to draw short Strings with subscripts and superscripts.<P>
- * 
+ *
  * The string should be encoded following some rules:<P>
  * - Superscripts and subscript using ^ and _ characters, followed by the text to be drawn
  * in superscript or subscript.<P>
@@ -50,8 +49,8 @@ import jparsec.util.JPARSECException;
  * '@BLUE', and so on, using any color directly provided as constant in Java's Color class),
  * size change ('@SIZExx', where xx is the size of the text), and @ FOLLOWED BY BOLD, ITALIC, or PLAIN.<P>
  * - You can draw latex formulas with the command '@LATEX{}', with the latex formula between the {}.<P>
- * - You can draw digital clock symbols with the command '@CLOCK{}', with the numbers between the {}. 
- * Besides numbers, supported characters are hmsº'": _-dDbBtTCUL. The plus + is mapped to a blank space of half width.
+ * - You can draw digital clock symbols with the command '@CLOCK{}', with the numbers between the {}.
+ * Besides numbers, supported characters are hmsï¿½'": _-dDbBtTCUL. The plus + is mapped to a blank space of half width.
  * In case of bold effect applied, the digits will be drawn with a blur effect.<P>
  * - You can rotate text with the '@ROTATExxx' command, being xxx the angle in degrees.<P>
  * - You can increase/decrease text size with '@SIZE+x' and '@SIZE-x'.<P>
@@ -60,7 +59,7 @@ import jparsec.util.JPARSECException;
  * - You can insert a blank space inside a subscript/superscript with '@SPACE', in those cases where
  * programatically the text is split or cut whenever a blank space like ' ' is found.<P>
  * - It is recommended to clear the list of text states whenever a new text if written with {@link TextLabel#clearTextStateList()}.<P>
- * 
+ *
  *  Example:<P>
  *  ln(@REDy{^@ORANGEx_i}@SIZE20@GREENHI@BLUE@ALPHA@BETA@GAMMA@SIZE10@BLACK) = ln (y^xi HI alfa beta gamma ),
  *  where the Greek characters will be drawn in Greek, HI in a bigger size, and some portions in different colors.
@@ -73,43 +72,9 @@ import jparsec.util.JPARSECException;
  * @author  T. Alonso Albi - OAN (Spain)
  * @author  Leigh Brookshaw
  */
-public class TextLabel extends Object {
+public class TextLabel {
 
-	/**
-	 * For unit testing only.
-	 * @param args Not used.
-	 */
-	public static void main(String args[])
-	{
-		JFrame frame = new JFrame();
-		frame.setSize(800, 600);
-		frame.pack();
-		frame.setVisible(true);
-		Graphics g = frame.getGraphics();
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-		do {
-			try {
-				//String latex = "@latex{\\int_{t=0}^{2\\pi}\\frac{\\sqrt{t}}{(1+\\mathrm{cos}^2{t})}\\nbspdt}";
-				//String s = "@ROTATE015HOLA@MARS@JUPITER@SUN@EARTHln(@REDy{^@ORANGEx_{i}}@SIZE40@BOLD@GREENH"+latex+"I@BLUE@ALPHA@BETA@ITALIC@GAMMA@SIZE10@BLACK@ALPHA)";
-				//s = "X_{C^{1_{8}@SPACEhola} O} hola";
-				String s = "@CLOCK{12h 50m 37.6\"}";
-				TextLabel t = new TextLabel(s,
-//						TextLabel.readFont(TextLabel.FONTS_FILE, TextLabel.FONTS_PATH_DEJAVU_SANS),
-						new Font("Dialog", Font.PLAIN, 30), 
-						Color.BLACK, TextLabel.ALIGN.CENTER);
-				TextLabel.setRenderUnicodeAsImages(true);
-				int x = frame.getWidth() / 2, y = frame.getHeight() / 2;
-				t.draw(g, x, y);
-				//System.out.println(t.getSimplifiedString());
-			} catch (Exception exc)
-			{
-				exc.printStackTrace();
-			}
-		} while (frame.isVisible());
-	}
-
-	private static Color digitalClockOutColor = null;
+	private static Color digitalClockOutColor;
 	/**
 	 * Sets the color to be used to draw segments of a digital clock
 	 * where there's no 'light', including transparency. Default is
@@ -119,11 +84,11 @@ public class TextLabel extends Object {
 	public static void setDigitalClockOutColor(Color col) {
 		digitalClockOutColor = col;
 	}
-	
+
 	/**
 	 * The set of align values.
 	 */
-	public static enum ALIGN {
+	public enum ALIGN {
 		/** Center the Text over the point. */
 		CENTER,
 		/** Position the Text to the Left of the  point. */
@@ -132,17 +97,17 @@ public class TextLabel extends Object {
 		RIGHT,
 		/** Position the Text to the left of the  point and displaced 1/2 of its width. */
 		LEFT_PLUS
-	};
+	}
 
 	/**
 	 * The possible formatting for doubles.
 	 */
-	public static enum DOUBLE_FORMAT {
+	public enum DOUBLE_FORMAT {
 		/** Format to use when parsing a double. */
 		SCIENTIFIC,
 		/** Format to use when parsing a double. */
 		ALGEBRAIC
-	};
+	}
 
   /*
   ** Minimum Point size allowed for script characters
@@ -258,7 +223,7 @@ public class TextLabel extends Object {
       * characters to images and render them in the PDF (but not in vector graphics).
       */
      public  static boolean TRY_TO_EXPORT_GREEK_CHARACTERS_TO_PDF = false;
-     
+
   /**
    * Instantiate the class.
    */
@@ -267,7 +232,7 @@ public class TextLabel extends Object {
    * Instantiate the class.
    * @param s String to parse.
    */
-     public TextLabel(String s) { 
+     public TextLabel(String s) {
             this.text = s;
 	  }
   /**
@@ -275,10 +240,9 @@ public class TextLabel extends Object {
    * @param s String to parse.
    * @param f Font to use.
    */
-     public TextLabel(String s, Font f) { 
+     public TextLabel(String s, Font f) {
             this(s);
             font      = new Font(f.getName(), f.getStyle(), f.getSize());
-            if(font == null) return;
             fontname  = f.getName();
             fontstyle = f.getStyle();
             fontsize  = f.getSize();
@@ -311,7 +275,7 @@ public class TextLabel extends Object {
    * @param s String to parse.
    * @param c Color to use.
    */
-     public TextLabel(String s, Color c) { 
+     public TextLabel(String s, Color c) {
             this(s);
             color = c;
 	  }
@@ -330,9 +294,9 @@ public class TextLabel extends Object {
      /**
       * Clones this instance.
       */
+     @Override
      public TextLabel clone()
      {
-    	 if (this == null) return null;
          TextLabel tl = new TextLabel(this.text, font,color,justification);
          tl.ascent = this.ascent;
          tl.background = this.background;
@@ -360,28 +324,81 @@ public class TextLabel extends Object {
          tl.sup_offset = this.sup_offset;
          return tl;
      }
-     /**
-      * Returns if this instance is equals to a given object.
-      */
-     public boolean equals(Object o)
-     {
- 		if (o == null) {
-			if (this == null) return true;
-			return false;
-		}
-		if (this == null) {
-			return false;
-		}
-		TextLabel tl = (TextLabel) o;
-    	 boolean equals = true;
-    	 if (!tl.text.equals(this.text)) equals = false;
-    	 if (tl.color.getRGB() != this.color.getRGB()) equals = false;
-    	 if (tl.justification != this.justification) equals = false;
-    	 if (!tl.font.equals(this.font)) equals = false;
-    	 return equals;
-     }
 
-  /**
+     /**
+      * Returns if this instance is equal to a given object.
+      */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof TextLabel)) return false;
+
+        TextLabel textLabel = (TextLabel) o;
+
+        if (Double.compare(textLabel.script_fraction, script_fraction) != 0) return false;
+        if (Double.compare(textLabel.sup_offset, sup_offset) != 0) return false;
+        if (Double.compare(textLabel.sub_offset, sub_offset) != 0) return false;
+        if (fontsize != textLabel.fontsize) return false;
+        if (fontstyle != textLabel.fontstyle) return false;
+        if (width != textLabel.width) return false;
+        if (ascent != textLabel.ascent) return false;
+        if (maxAscent != textLabel.maxAscent) return false;
+        if (descent != textLabel.descent) return false;
+        if (maxDescent != textLabel.maxDescent) return false;
+        if (height != textLabel.height) return false;
+        if (leading != textLabel.leading) return false;
+        if (parse != textLabel.parse) return false;
+        if (getFont() != null ? !getFont().equals(textLabel.getFont()) : textLabel.getFont() != null) return false;
+        if (getColor() != null ? !getColor().equals(textLabel.getColor()) : textLabel.getColor() != null) return false;
+        if (getBackground() != null ? !getBackground().equals(textLabel.getBackground()) : textLabel.getBackground() != null)
+            return false;
+        if (background2 != null ? !background2.equals(textLabel.background2) : textLabel.background2 != null)
+            return false;
+        if (getText() != null ? !getText().equals(textLabel.getText()) : textLabel.getText() != null) return false;
+        if (fontname != null ? !fontname.equals(textLabel.fontname) : textLabel.fontname != null) return false;
+        if (getJustification() != textLabel.getJustification()) return false;
+        if (lg != null ? !lg.equals(textLabel.lg) : textLabel.lg != null) return false;
+        if (list != null ? !list.equals(textLabel.list) : textLabel.list != null) return false;
+        if (formulas != null ? !formulas.equals(textLabel.formulas) : textLabel.formulas != null) return false;
+
+        return !(dclock != null ? !dclock.equals(textLabel.dclock) : textLabel.dclock != null);
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        temp = Double.doubleToLongBits(script_fraction);
+        result = (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(sup_offset);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(sub_offset);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + (getFont() != null ? getFont().hashCode() : 0);
+        result = 31 * result + (getColor() != null ? getColor().hashCode() : 0);
+        result = 31 * result + (getBackground() != null ? getBackground().hashCode() : 0);
+        result = 31 * result + (background2 != null ? background2.hashCode() : 0);
+        result = 31 * result + (getText() != null ? getText().hashCode() : 0);
+        result = 31 * result + (fontname != null ? fontname.hashCode() : 0);
+        result = 31 * result + fontsize;
+        result = 31 * result + fontstyle;
+        result = 31 * result + (getJustification() != null ? getJustification().hashCode() : 0);
+        result = 31 * result + width;
+        result = 31 * result + ascent;
+        result = 31 * result + maxAscent;
+        result = 31 * result + descent;
+        result = 31 * result + maxDescent;
+        result = 31 * result + height;
+        result = 31 * result + leading;
+        result = 31 * result + (parse ? 1 : 0);
+        result = 31 * result + (lg != null ? lg.hashCode() : 0);
+        result = 31 * result + (list != null ? list.hashCode() : 0);
+        result = 31 * result + (formulas != null ? formulas.hashCode() : 0);
+        result = 31 * result + (dclock != null ? dclock.hashCode() : 0);
+        return result;
+    }
+
+    /**
    * Create a New TextLabel object copying the state of the existing
    * object into the new one. The state of the class is the color,
    * font, and justification ie everything but the string.
@@ -396,61 +413,62 @@ public class TextLabel extends Object {
    * object.
    * @param t The TextLabel to get the state information from.
    */
-     public void copyState(TextLabel t) {
-            if(t==null) return;
+  public void copyState(TextLabel t) {
+      if (t == null) return;
 
-            font  = t.getFont();
-            color = t.getColor();
-            justification = t.getJustification();
-       
-            if(font == null) return;
-            fontname  = font.getName();
-            fontstyle = font.getStyle();
-            fontsize  = font.getSize();
+      font = t.getFont();
+      color = t.getColor();
+      justification = t.getJustification();
 
-            parse  = true;
-     }
-  /**
+      if (font == null) return;
+      fontname = font.getName();
+      fontstyle = font.getStyle();
+      fontsize = font.getSize();
+
+      parse = true;
+  }
+
+    /**
    * Set the Font to use with the class.
    * @param f Font.
    */
-     public void setFont(  Font f   ) { 
+     public void setFont(  Font f   ) {
             font      = new Font(f.getName(), f.getStyle(), f.getSize());
             fontname  = f.getName();
             fontstyle = f.getStyle();
             fontsize  = f.getSize();
-            parse = true; 
+            parse = true;
 
      }
   /**
    * Set the String to use with the class.
    * @param s String.
    */
-     public void setText(  String s ) { 
+     public void setText(  String s ) {
             text   = s;
-            parse = true; 
+            parse = true;
      }
 
   /**
    * Set the Color to use with the class.
    * @param c Color.
    */
-     public void setColor( Color c  ) { 
-            color = c; 
+     public void setColor( Color c  ) {
+            color = c;
      }
   /**
    * Set the Background Color to use with the class.
    * @param c Color.
    */
-     public void setBackground( Color c  ) { 
-            background = c; 
+     public void setBackground( Color c  ) {
+            background = c;
      }
   /**
    * Set the Background Color to use as background for Latex formulae.
    * @param c Color.
    */
-     public void setBackgroundColorForImages( Color c  ) { 
-            background2 = c; 
+     public void setBackgroundColorForImages( Color c  ) {
+            background2 = c;
      }
 
 
@@ -467,37 +485,37 @@ public class TextLabel extends Object {
       * Returns the font in use.
       * @return The font the class is using.
       */
-        public Font   getFont()  { 
-        	return font; 
+        public Font   getFont()  {
+        	return font;
         }
      /**
       * Returns the text to draw.
       * @return The String the class is using.
       */
-        public String getText()  { 
-        	return text; 
+        public String getText()  {
+        	return text;
         }
 
      /**
       * Returns the current color.
       * @return The Color the class is using.
       */
-        public Color  getColor() { 
-        	return color; 
+        public Color  getColor() {
+        	return color;
         }
      /**
       * Returns the background color.
       * @return The Background Color the class is using.
       */
-        public Color  getBackground() { 
-        	return background; 
+        public Color  getBackground() {
+        	return background;
         }
      /**
       * Returns the justification.
       * @return The Justification the class is using.
       */
-        public ALIGN getJustification() { 
-        	return justification; 
+        public ALIGN getJustification() {
+        	return justification;
         }
 
      /**
@@ -524,7 +542,7 @@ public class TextLabel extends Object {
 
                if(font==null) fm =  g.getFontMetrics();
                else           fm =  g.getFontMetrics(font);
-               
+
                return fm.charWidth(ch);
            }
 
@@ -593,7 +611,7 @@ public class TextLabel extends Object {
                parseText(g.create(), true);
 
                return descent;
-            
+
            }
         /**
          * Returns the maximum descent.
@@ -619,9 +637,9 @@ public class TextLabel extends Object {
            parseText(g.create(), true);
 
            return leading;
-        
+
        }
-       
+
        /**
         * Set to true to render Unicode characters (Greek characters for example)
         * as images. Default is false, but true maybe be useful to export to a
@@ -650,7 +668,7 @@ public class TextLabel extends Object {
        }
        private static final String commands[] = new String[] {
     	     "RED", "GREEN", "BLUE", "SIZE", "BOLD", "ITALIC", "PLAIN", "BLACK", "WHITE",
-      		 "CYAN", "GRAY", "MAGENTA", "ORANGE", "PINK", "YELLOW", "alpha", "beta", "gamma", 
+      		 "CYAN", "GRAY", "MAGENTA", "ORANGE", "PINK", "YELLOW", "alpha", "beta", "gamma",
       		 "delta", "epsilon", "zeta", "eta", "theta", "iota", "kappa", "lambda", "mu", "nu",
    			 "xi", "omicron", "pi", "rho", "sigma", "tau", "upsilon", "phi", "chi", "psi", "omega",
    			 "sun", "mercury", "venus", "earth", "mars", "jupiter",
@@ -659,45 +677,45 @@ public class TextLabel extends Object {
    			 "sagittarius", "capricornus", "aquarius", "pisces"};
 
        private static final String[] greek = new String[] {
-    	    "\u03B1", "\u03B2", "\u03B3", 
-    	    "\u03B4", "\u03B5", "\u03B6", "\u03B7", "\u03B8", "\u03B9", "\u03BA", "\u03BB", "\u03BC", "\u03BD", 
-    	    "\u03BE", "\u03BF",	"\u03C0", "\u03C1", //"\u03C2", 
+    	    "\u03B1", "\u03B2", "\u03B3",
+    	    "\u03B4", "\u03B5", "\u03B6", "\u03B7", "\u03B8", "\u03B9", "\u03BA", "\u03BB", "\u03BC", "\u03BD",
+    	    "\u03BE", "\u03BF",	"\u03C0", "\u03C1", //"\u03C2",
      		"\u03C3", "\u03C4", "\u03C5", "\u03C6", "\u03C7", "\u03C8", "\u03C9",
-     		
-     		"\u2299", "\u2640", "\u2641", "\u2295", "\u2642", "\u2643", "\u2644", 
-     		"\u2645", "\u2646", "\u2647", "\u9800", "\u9801", "\u9802", "\u9803", 
-     		"\u9804", "\u9805", "\u9806", "\u9807", "\u9808", "\u9809", "\u9810", 
+
+     		"\u2299", "\u2640", "\u2641", "\u2295", "\u2642", "\u2643", "\u2644",
+     		"\u2645", "\u2646", "\u2647", "\u9800", "\u9801", "\u9802", "\u9803",
+     		"\u9804", "\u9805", "\u9806", "\u9807", "\u9808", "\u9809", "\u9810",
      		"\u9811"};
 
        private static final String[] greekCapital = new String[] {
-    	   "\u0391", "\u0392", "\u0393", 
-    	   "\u0394", "\u0395", "\u0396", "\u0397", "\u0398", "\u0399", "\u039A", "\u039B", "\u039C", "\u039D", 
-    	   "\u039E", "\u039F",	"\u03A0", "\u03A1", 
+    	   "\u0391", "\u0392", "\u0393",
+    	   "\u0394", "\u0395", "\u0396", "\u0397", "\u0398", "\u0399", "\u039A", "\u039B", "\u039C", "\u039D",
+    	   "\u039E", "\u039F",	"\u03A0", "\u03A1",
     		"\u03A3", "\u03A4", "\u03A5", "\u03A6", "\u03A7", "\u03A8", "\u03A9"
        };
 
        private static final String[] greekLATEX = new String[] {
-    	   "\\alpha", "\\beta", "\\gamma", 
-    	   "\\delta", "\\epsilon", "\\zeta", "\\eta", "\\theta", "\\iota", "\\kappa", "\\lambda", "\\mu", "\\nu", 
-    	   "\\xi", "\\omicron", "\\pi", "\\rho", 
+    	   "\\alpha", "\\beta", "\\gamma",
+    	   "\\delta", "\\epsilon", "\\zeta", "\\eta", "\\theta", "\\iota", "\\kappa", "\\lambda", "\\mu", "\\nu",
+    	   "\\xi", "\\omicron", "\\pi", "\\rho",
     		"\\sigma", "\\tau", "\\upsilon", "\\phi", "\\chi", "\\psi", "\\omega"
     		//, "\\cdot", "\\rightarrow", "\\leftarrow"
        };
        private static final String[] greekCapitalLATEX = new String[] {
-    	   "A", "B", "\\Gamma", 
-    	   "\\Delta", "E", "Z", "H", "\\Theta", "I", "K", "\\Lambda", "M", "N", 
-    	   "\\Xi", "O", "\\Pi", "P", 
+    	   "A", "B", "\\Gamma",
+    	   "\\Delta", "E", "Z", "H", "\\Theta", "I", "K", "\\Lambda", "M", "N",
+    	   "\\Xi", "O", "\\Pi", "P",
     		"\\Sigma", "T", "\\Upsilon", "\\Phi", "X", "\\Psi", "\\Omega"
     		//, "\\cdot", "\\rightarrow", "\\leftarrow"
        };
 
        // To be used with font Symbol when exporting to PDF
-       private static final char[] greekPDF = new char[] {'a', 'b', 'g', 'd', 'e', 
-    		'z', 'h', 'q', 'i', 'k', 'l', 'm', 'n', 'x', 'o', 
-    		'p', 'r', 's', 't', 'u', 'f', 'c', 'y', 'w'}; //, '\u2022', '\t', '¬'}; // '\u2022','',''
-       private static final char[] greekCapitalPDF = new char[] {'A', 'B', 'G', 'D', 'E', 
-    		'Z', 'H', 'Q', 'I', 'K', 'L', 'M', 'N', 'X', 'O', 
-    		'P', 'R', 'S', 'T', 'U', 'F', 'C', 'Y', 'W'}; //, '\u2022', '\t', '¬'};
+       private static final char[] greekPDF = new char[] {'a', 'b', 'g', 'd', 'e',
+    		'z', 'h', 'q', 'i', 'k', 'l', 'm', 'n', 'x', 'o',
+    		'p', 'r', 's', 't', 'u', 'f', 'c', 'y', 'w'}; //, '\u2022', '\t', 'ï¿½'}; // '\u2022','',''
+       private static final char[] greekCapitalPDF = new char[] {'A', 'B', 'G', 'D', 'E',
+    		'Z', 'H', 'Q', 'I', 'K', 'L', 'M', 'N', 'X', 'O',
+    		'P', 'R', 'S', 'T', 'U', 'F', 'C', 'Y', 'W'}; //, '\u2022', '\t', 'ï¿½'};
 
        /**
         * Clears the list of text states.
@@ -705,13 +723,13 @@ public class TextLabel extends Object {
        public static void clearTextStateList() {
            listCopy = new Vector<TextState>();
        }
-           
+
 	  /**
 	   * Parse the text. When the text is parsed the width, height, leading
 	   * are all calculated. The text will only be truly parsed if
 	   * the graphics context has changed or the text has changed or
 	   * the font has changed. Otherwise nothing is done when this
-	   * method is called. 
+	   * method is called.
 	   * @param g Graphics context.
 	   * @param justWidth True if only the width of the string is requested (faster),
 	   * false to draw everything.
@@ -764,7 +782,7 @@ public class TextLabel extends Object {
                     	  int end = i+commands[j].length();
                     	  int kk = -1;
                     	  if (end >= text.length()) {
-                    		  kk = text.substring(i).toUpperCase().indexOf(commands[j].toUpperCase());                    		  
+                    		  kk = text.substring(i).toUpperCase().indexOf(commands[j].toUpperCase());
                     	  } else {
                     		  kk = text.substring(i, i+commands[j].length()).toUpperCase().indexOf(commands[j].toUpperCase());
                     	  }
@@ -796,10 +814,10 @@ public class TextLabel extends Object {
                     		  }
                     		  String f = t.substring(0, end);
                      		  i = i + 6 + end;
-                     		  
+
                      		  int initS = current.f.getSize();
                      		  int maxH = lg.getFontMetrics().getHeight() * 11 / 8;
-                     		  
+
                          	  if (clock) {
                           		  int cw = (initS*4)/10-1;
                           		  int chh = cw/4, cb = chh/5;
@@ -826,16 +844,16 @@ public class TextLabel extends Object {
 	                    		  formulas.add(lf);
 	                    		  BufferedImage img = lf.getAsImage();
 	    	            		  width += img.getWidth();
-                          	  }   
-                          	  
+                          	  }
+
                               w = current.getWidth(g);
                               if(!current.isEmpty()) {
                                    current = current.copyState();
                                    list.addElement(current);
                               }
-                              
+
                           	  if (clock) {
-                          		  current.s = new StringBuffer("@CLOCK");                          		  
+                          		  current.s = new StringBuffer("@CLOCK");
                           	  } else {
                           		  current.s = new StringBuffer("@FORMULA");
                           	  }
@@ -854,7 +872,7 @@ public class TextLabel extends Object {
                     			  } else {
     		                    	  if(i<text.length()) {
     		                    		  current.s.append(text.charAt(i));
-    		                    	  }                    				  
+    		                    	  }
                     			  }
                     		  } else {
                         		  if (t.toLowerCase().startsWith("transparent")) {
@@ -932,13 +950,13 @@ public class TextLabel extends Object {
  	    	            		  if (text.length() > i) text1 += text.substring(i);
  	    	            		  text = text1;
                          		  i = i + 8 + text0.length();
-                         		  
+
                                   w = current.getWidth(g);
                                   if(!current.isEmpty()) {
                                        current = current.copyState();
                                        list.addElement(current);
                                   }
-                                  
+
                         		  current.s = new StringBuffer("@FORMULA");
                         		  current.x += w;
                     		  } else {
@@ -947,11 +965,11 @@ public class TextLabel extends Object {
                                        current = current.copyState();
                                        list.addElement(current);
                                   }
-                                  
+
                         		  current.s = new StringBuffer("");
                         		  current.x += w;
                     			  if (capital && (k-15) < greekCapital.length) {
-                    				  current.s.append(greekCapital[k-15]);                    				  
+                    				  current.s.append(greekCapital[k-15]);
                     			  } else {
                     				  current.s.append(greek[k-15]);
                     			  }
@@ -1050,7 +1068,7 @@ public class TextLabel extends Object {
                            current = current.copyState();
                            current.f = new Font(this.fontname, current.f.getStyle(), current.f.getSize());
                            list.addElement(current);
-                      } 
+                      }
                       listCopy.add(current.copyState());
                       current.f = getScriptFont(current.f);
                       current.x += w;
@@ -1070,7 +1088,7 @@ public class TextLabel extends Object {
                       current.y += (int)((double)(current.getDescent(g))*sub_offset+0.5);
                       break;
 
-             default: 
+             default:
                       current.s.append(ch);
                       break;
 	     }
@@ -1121,7 +1139,7 @@ public class TextLabel extends Object {
      public void avoidParsingTextAgain() {
     	 parse = false;
      }
-     
+
      /**
       * Returns a simplified version of the string.
       * @return The string.
@@ -1188,16 +1206,16 @@ public class TextLabel extends Object {
       * @param xoffset Pixel position of the text.
       * @param yoffset Pixel position of the text.
       * @return The last font used for rendering.
-      */ 
+      */
      public Font drawAndReturnLastFont(Graphics lg, int xoffset, int yoffset) {
     	 return drawString(lg, xoffset, yoffset);
      }
 
      private Font drawString(Graphics lg, int xoffset, int yoffset) {
          TextState ts;
- 
+
          if(lg == null || text == null) return null;
- 
+
          if (parse) parseText(lg.create(), false);
 
          if(justification == ALIGN.CENTER ) {
@@ -1206,7 +1224,7 @@ public class TextLabel extends Object {
         	 if(justification == ALIGN.RIGHT ) xoffset -= width;
         	 if(justification == ALIGN.LEFT_PLUS) xoffset += width/2;
          }
-         
+
         if(background != null) {
         	 Color col = lg.getColor();
         	 lg.setColor(background);
@@ -1222,7 +1240,7 @@ public class TextLabel extends Object {
          int rx = 0;
          Graphics g = lg.create();
          Font out = lg.getFont();
-         
+
          // In case the rendering is done against a PDF graphics we will change font to Symbol
          // for Greek characters instead of using images, so that they will be in vector graphics.
          String graphics = lg.getClass().getName();
@@ -1230,12 +1248,12 @@ public class TextLabel extends Object {
          if (!graphics.equals("sun.java2d.SunGraphics2D") && graphics.toLowerCase().indexOf("pdfgraphics2d") >= 0) {
         	 toPdf = true;
          }
-         
+
          for(int i=0; i<list.size(); i++) {
               ts = ((TextState)(list.elementAt(i)));
               int x = ts.x + xoffset;
               if (replaceX) x = rx;
-              
+
               if (ts.f != null) {
             	  g.setFont(ts.f);
             	  out = ts.f;
@@ -1248,7 +1266,7 @@ public class TextLabel extends Object {
                 	  g.setFont(f);
                   }
 
-            	  int tf = t.indexOf("@FORMULA"); 
+            	  int tf = t.indexOf("@FORMULA");
             	  if (tf >= 0 && formulas.size() > index) {
             		  do {
 	            		  LATEXFormula lf = formulas.get(index);
@@ -1275,7 +1293,7 @@ public class TextLabel extends Object {
 		    	            		  xoffset += g.getFontMetrics().stringWidth(tt);
 		    	            		  g.setFont(ff);
 		                		  } catch (Exception exc) {}
-		                 		  
+
 			            		  index ++;
 			            		  t = t.substring(tf+8);
 			                	  tf = t.indexOf("@FORMULA");
@@ -1283,15 +1301,15 @@ public class TextLabel extends Object {
 	            			  }
 	            		  }
 	            		  BufferedImage img = lf.getAsImage();
-	            		  
+
 	            		  if (img.getWidth() < 20) {
 	            			  int w = img.getWidth();
 	            			  lf = new LATEXFormula(lf.getCode(), 40);
 		            		  lf.getFormula().setColor(g.getColor());
 	            			  Picture pic = new Picture(lf.getAsImage());
-	            			  int newH = (int) (w * (double) pic.getHeight() / (double) pic.getWidth()); 
+	            			  int newH = (int) (w * (double) pic.getHeight() / (double) pic.getWidth());
 	            			  if (pic.getImage().getWidth() > w && newH > 1) {
-	            				  pic.getScaledInstance(w, 0, true);		            				  
+	            				  pic.getScaledInstance(w, 0, true);
 		            			  img = pic.getImage();
 	            			  }
 	            		  }
@@ -1310,7 +1328,7 @@ public class TextLabel extends Object {
             		  rx = ts.x + xoffset + g.getFontMetrics().stringWidth(t);
             		  replaceX = true;
             	  } else {
-                	  tf = t.indexOf("@CLOCK"); 
+                	  tf = t.indexOf("@CLOCK");
                 	  if (tf >= 0 && dclock.size() > cindex) {
                 		  DigitalClock dc = dclock.get(cindex);
                 		  String ra = dc.getString();
@@ -1329,7 +1347,7 @@ public class TextLabel extends Object {
 	            		  try {
 	                		  Font ff = g.getFont();
 		            		  if (toPdf && t.length() == 1) {
-		            			  int a1 = DataSet.getIndex(greek, t); 
+		            			  int a1 = DataSet.getIndex(greek, t);
 		            			  int a2 = DataSet.getIndex(greekCapital, t);
 		            			  if ((a1 >= 0 && a1 < greekCapital.length) || (a2 >= 0 && a2 < greekCapital.length)) {
 		            				  if (a1 >= 0) t = ""+greekPDF[a1];
@@ -1337,9 +1355,9 @@ public class TextLabel extends Object {
 		            				  g.setFont(new Font(Font.SERIF, ff.getStyle(), Math.max(1, ff.getSize())));
 		            			  }
 		            		  } else {
-		                		  if (ff.getSize() < 1) g.setFont(new Font(ff.getName(), ff.getStyle(), 1));	            			  
+		                		  if (ff.getSize() < 1) g.setFont(new Font(ff.getName(), ff.getStyle(), 1));
 		            		  }
-	
+
 	                          if (ts.angle != 0) {
 	                        	  ((Graphics2D) g).rotate(ts.angle, x+width/2, ts.y+yoffset);
 	                        	  xoffset -= width * 0.5 * Math.sin(ts.angle);
@@ -1352,7 +1370,7 @@ public class TextLabel extends Object {
             	  }
               }
          }
-         
+
          lg.setColor(g.getColor());
          return out;
        }
@@ -1391,7 +1409,7 @@ public class TextLabel extends Object {
      /*
      ** Rebuild the font using the current fontname, fontstyle, and fontsize.
      */
-     private void rebuildFont() 
+     private void rebuildFont()
      {
         parse = true;
 
@@ -1432,7 +1450,7 @@ public class TextLabel extends Object {
  * that the state pertains to.
  * @author  Leigh Brookshaw
  */
-class TextState extends Object {
+class TextState {
 	  // The font.
       Font f         = null;
       // The string buffer.
@@ -1447,7 +1465,7 @@ class TextState extends Object {
       double angle = 0;
       private FontMetrics fontMetric = null;
       private Font fontMetricFont;
-      
+
       /**
        * Constructor.
        */
@@ -1482,6 +1500,7 @@ class TextState extends Object {
       /**
        * Returns the text.
        */
+      @Override
       public String toString() {
              return s.toString();
 	   }
@@ -1502,7 +1521,7 @@ class TextState extends Object {
       {
     	  return this.col;
       }
-      
+
       /**
        * Text rotation.
        * @return The angle in radians.
@@ -1617,28 +1636,28 @@ class TextState extends Object {
             }
 
             return fontMetric.getLeading();
-      }      
+      }
 }
 
 class DigitalClock {
-	
+
 	/** The different sections of a digit. */
-	public static enum DIGIT_SECTION {
+	public enum DIGIT_SECTION {
 		/** The different sections of a digit. */
 		H_TOP, H_MEDIUM, H_BOTTOM, V_TOP_LEFT, V_TOP_RIGHT, V_BOTTOM_LEFT, V_BOTTOM_RIGHT
 	}
-	
+
 	/** The set of supported digits. */
-	public static enum DIGIT {
-		NUMBER_0 ("1011111"), 
-		NUMBER_1 ("0000101"), 
-		NUMBER_2 ("1110110"), 
-		NUMBER_3 ("1110101"), 
-		NUMBER_4 ("0101101"), 
-		NUMBER_5 ("1111001"), 
-		NUMBER_6 ("1111011"), 
-		NUMBER_7 ("1000101"), 
-		NUMBER_8 ("1111111"), 
+	public enum DIGIT {
+		NUMBER_0 ("1011111"),
+		NUMBER_1 ("0000101"),
+		NUMBER_2 ("1110110"),
+		NUMBER_3 ("1110101"),
+		NUMBER_4 ("0101101"),
+		NUMBER_5 ("1111001"),
+		NUMBER_6 ("1111011"),
+		NUMBER_7 ("1000101"),
+		NUMBER_8 ("1111111"),
 		NUMBER_9 ("1111101"),
 		CHARACTER_d ("0110111"),
 		CHARACTER_h ("0101011"),
@@ -1662,9 +1681,9 @@ class DigitalClock {
 		CHARACTER_BLANK_SPACE_HALF (null), // unsupported here
 		CHARACTER_TWO_POINTS (null), // unsupported here
 		CHARACTER_ONE_POINT (null); // unsupported here
-		
+
 		private String matrix;
-		private DIGIT(String matrix) {
+        DIGIT(String matrix) {
 			this.matrix = matrix;
 		}
 
@@ -1683,7 +1702,7 @@ class DigitalClock {
 	private Color in, out;
 	private boolean blur, rotate;
 	private String s;
-	
+
 	/**
 	 * Constructor for a digital clock. Adequate values
 	 * for w, h, and b are, respectively, 50, 11, and 2.
@@ -1695,18 +1714,18 @@ class DigitalClock {
 	 * @param blur True to slightly blur the output image.
 	 * @param rotate True to slightly rotate the digits for an italic-like effect.
 	 */
-	public DigitalClock(int w, int h, int b, 
+	public DigitalClock(int w, int h, int b,
 			Color in, Color out, boolean blur, boolean rotate) {
 		this.w = w;
 		this.h = h;
 		this.b = b;
-		
+
 		this.in = in;
 		this.out = out;
 		this.blur = blur;
 		this.rotate = rotate;
 	}
-	
+
 	/**
 	 * Returns the width of a clock's section.
 	 * @return The width.
@@ -1747,7 +1766,7 @@ class DigitalClock {
 	public void setString(String s) {
 		this.s = s;
 	}
-	
+
 	/**
 	 * Returns the string to be rendered.
 	 * @return The string.
@@ -1780,7 +1799,7 @@ class DigitalClock {
 						new int[] {h + b, w + b - h, w, w + b - h, h + b, 2*b, h + b},
 						new int[] {w-1, w-1, w-1+h/2, w+h-1, w+h-1, w-1+h/2, w-1},
 						7
-						);				
+						);
 			}
 		case H_BOTTOM:
 			return new Polygon(
@@ -1824,12 +1843,12 @@ class DigitalClock {
 	 */
 	public BufferedImage getDigitImage(String s) throws JPARSECException {
 		if (s.length() != 1) throw new JPARSECException("String must be of length 1");
-		
+
 		if (s.equals("0") || s.equals("1") || s.equals("2") || s.equals("3") ||
 				s.equals("4") || s.equals("5") || s.equals("6") || s.equals("7") ||
 				s.equals("8") || s.equals("9")) {
 			int n = Integer.parseInt(s);
-			return getDigitImage(DIGIT.values()[n]);			
+			return getDigitImage(DIGIT.values()[n]);
 		} else {
 			if (s.equals("L")) return getDigitImage(DIGIT.CHARACTER_L);
 			if (s.equals("U")) return getDigitImage(DIGIT.CHARACTER_U);
@@ -1843,7 +1862,7 @@ class DigitalClock {
 			if (s.equals("h")) return getDigitImage(DIGIT.CHARACTER_h);
 			if (s.equals("m")) return getDigitImage(DIGIT.CHARACTER_m);
 			if (s.equals("s")) return getDigitImage(DIGIT.CHARACTER_s);
-			if (s.equals("º")) return getDigitImage(DIGIT.CHARACTER_o);
+			if (s.equals("ï¿½")) return getDigitImage(DIGIT.CHARACTER_o);
 			if (s.equals("'")) return getDigitImage(DIGIT.CHARACTER_I);
 			if (s.equals("-")) return getDigitImage(DIGIT.CHARACTER_BAR);
 			if (s.equals("_")) return getDigitImage(DIGIT.CHARACTER_BAR_BOTTOM);
@@ -1855,7 +1874,7 @@ class DigitalClock {
 		}
 		throw new JPARSECException("Unsupported digit "+s+"!");
 	}
-	
+
 	/**
 	 * Returns an image with the digit.
 	 * @param d The digit.
@@ -1878,7 +1897,7 @@ class DigitalClock {
 					g.fillOval(w/2-b-r, h/2-sepY-r, r2, r2);
 					g.fillOval(w/2-b-r, h/2+sepY-r, r2, r2);
 				} else {
-					g.fillOval(w/2-b-r, h-r2, r2, r2);					
+					g.fillOval(w/2-b-r, h-r2, r2, r2);
 				}
 			} else {
 				DIGIT_SECTION s[] = DIGIT_SECTION.values();
@@ -1900,8 +1919,8 @@ class DigitalClock {
 			pic.rotate(6 * Constant.DEG_TO_RAD, pic.getWidth()/2, pic.getHeight()/2);
 	 		image = pic.getImage();
 		}
-		
-		if (d.ordinal() > 9 && d != DIGIT.CHARACTER_TWO_POINTS && d != DIGIT.CHARACTER_BAR && 
+
+		if (d.ordinal() > 9 && d != DIGIT.CHARACTER_TWO_POINTS && d != DIGIT.CHARACTER_BAR &&
 				d != DIGIT.CHARACTER_BLANK_SPACE && d != DIGIT.CHARACTER_ONE_POINT) {
 			if (pic == null) pic = new Picture(image);
 			if (d == DIGIT.CHARACTER_s || d == DIGIT.CHARACTER_d || d == DIGIT.CHARACTER_L
@@ -1915,7 +1934,7 @@ class DigitalClock {
 					if (d != DIGIT.CHARACTER_t) {
 						pic.getScaledInstance(w/4+this.h, h/2+this.b, false);
 					} else {
-						pic.getScaledInstance(w/4, h/2+this.b, false);						
+						pic.getScaledInstance(w/4, h/2+this.b, false);
 					}
 					if (blur) pic.convolve(Picture.PATTERN_SHARPENING);
 					pic.move(0, -h/4-b);
@@ -1925,7 +1944,7 @@ class DigitalClock {
 			pic.move(0, this.b);
 	 		image = pic.getImage();
 		}
-		
+
 		if (blur) {
 			if (pic == null) pic = new Picture(image);
 	 		if (d.ordinal() <= 9) {
@@ -1938,7 +1957,7 @@ class DigitalClock {
 						blur, 1.0-blur*4, blur,
 						0, blur, 0
 				};
-				pic.convolve(pattern);			
+				pic.convolve(pattern);
 			}
 	 		image = pic.getImage();
 		}

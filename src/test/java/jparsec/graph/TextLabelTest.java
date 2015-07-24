@@ -22,7 +22,8 @@ public class TextLabelTest {
 
         do {
             //String latex = "@latex{\\int_{t=0}^{2\\pi}\\frac{\\sqrt{t}}{(1+\\mathrm{cos}^2{t})}\\nbspdt}";
-            //String s = "@ROTATE015HOLA@MARS@JUPITER@SUN@EARTHln(@REDy{^@ORANGEx_{i}}@SIZE40@BOLD@GREENH"+latex+"I@BLUE@ALPHA@BETA@ITALIC@GAMMA@SIZE10@BLACK@ALPHA)";
+            //String s = "@ROTATE015HOLA@MARS@JUPITER@SUN@EARTHln(@REDy{^@ORANGEx_{i}}@SIZE40@BOLD@GREENH" + latex +
+            // "I@BLUE@ALPHA@BETA@ITALIC@GAMMA@SIZE10@BLACK@ALPHA)";
             //s = "X_{C^{1_{8}@SPACEhola} O} hola";
             String s = "@CLOCK{12h 50m 37.6\"}";
             TextLabel t = new TextLabel(s,

@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.graph;
 
 import java.awt.Color;
@@ -95,7 +95,6 @@ import jparsec.graph.chartRendering.Graphics.ANAGLYPH_COLOR_MODE;
 import jparsec.graph.chartRendering.Graphics.FONT;
 import jparsec.graph.chartRendering.PlanetRenderElement;
 import jparsec.graph.chartRendering.Projection;
-import jparsec.graph.chartRendering.Projection.PROJECTION;
 import jparsec.graph.chartRendering.RenderEclipse;
 import jparsec.graph.chartRendering.RenderPlanet;
 import jparsec.graph.chartRendering.RenderSatellite;
@@ -118,7 +117,6 @@ import jparsec.graph.chartRendering.frame.JTableRendering;
 import jparsec.graph.chartRendering.frame.PlanetaryRendering;
 import jparsec.graph.chartRendering.frame.SkyRendering;
 import jparsec.io.ConsoleReport;
-import jparsec.io.FileFormatElement;
 import jparsec.io.FileIO;
 import jparsec.io.HTMLReport;
 import jparsec.io.ReadFile;
@@ -159,7 +157,7 @@ import jparsec.vo.SimbadElement;
 
 /**
  * An interactive sky chart element.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -179,31 +177,31 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 	/**
 	 * The sky rendering object used for this chart.
 	 */
-    public SkyRendering skyRender;
-    /**
-     * The Sky object.
-     */
-    public SkyRenderElement chart;
-    /**
-     * The Sky object for dragging. Default value is null for
-     * an automatic mode.
-     */
-    public SkyRenderElement chartForDragging;
+	public SkyRendering skyRender;
+	/**
+	 * The Sky object.
+	 */
+	public SkyRenderElement chart;
+	/**
+	 * The Sky object for dragging. Default value is null for
+	 * an automatic mode.
+	 */
+	public SkyRenderElement chartForDragging;
 
-    /**
-     * Set to false to avoid displaying events in the popup menu. Default
-     * is true.
-     */
-    public boolean calcEvents = true;
-    
-    private JTableRendering table = null;
+	/**
+	 * Set to false to avoid displaying events in the popup menu. Default
+	 * is true.
+	 */
+	public boolean calcEvents = true;
+
+	private JTableRendering table;
 	private int x, y, x0, y0, w0, h0;
 	private LEYEND_POSITION originalShowLegend;
- 	private String object = null;
- 	private boolean showModifyLocTimeCoord = true, listShown = false;
- 	private boolean isApplet = false;
+ 	private String object;
+ 	private boolean showModifyLocTimeCoord = true, listShown;
+ 	private boolean isApplet;
  	private Timer timer;
- 	private boolean now = false, invertH = false, invertV = false, hMode = false;
+ 	private boolean now, invertH, invertV, hMode;
  	private double timeVel = 0.0, posEQ[] = null, posEQvel = 1.0E-3;
  	private int updateTime = 2000, updateTime0 = 2000, updateTime1 = 200;
  	private TimeElement time;
@@ -214,7 +212,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
  	private GenericTelescope telescopeControl[] = new GenericTelescope[0];
  	private LocationElement lastLoc;
  	private static final int drawLeyendMinimumWidth = 750, minimumSize = 5;
- 
+
 	/**
 	 * Creates a chart.
 	 * @param w Width.
@@ -235,11 +233,10 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 		w0 = chart.width;
 		h0 = chart.height;
 		this.create();
-		
+
 		//this.updateTime = updateTime * 1000;
 		this.isApplet = true;
 		//speedTested = true;
-
 	}
 
 	/**
@@ -249,7 +246,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 	 * @param sky The sky rendering object.
 	 * @param showModifyLocTimeCoordButtons False to disable the modification
 	 * of location, time, and projection/coordinate system.
-	 * @param isApplet True if the component is inside an applet. The only effect is a wait 
+	 * @param isApplet True if the component is inside an applet. The only effect is a wait
 	 * message when ephemerides of comets/asteroids will be calculated in the next frame.
 	 * @param updateTime Time interval to update in seconds for real-time mode. Default
 	 * value is 5s.
@@ -281,7 +278,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 	 * @param sky The sky rendering object.
 	 * @param showModifyLocTimeCoordButtons False to disable the modification
 	 * of location, time, and projection/coordinate system.
-	 * @param isApplet True if the component is inside an applet. The only effect is a wait 
+	 * @param isApplet True if the component is inside an applet. The only effect is a wait
 	 * message when ephemerides of comets/asteroids will be calculated in the next frame.
 	 * @param updateTime Time interval to update in seconds for real-time mode. Default
 	 * value is 5s.
@@ -317,7 +314,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 	 * @param sky The sky rendering object.
 	 * @param showModifyLocTimeCoordButtons False to disable the modification
 	 * of location, time, and projection/coordinate system.
-	 * @param isApplet True if the component is inside an applet. The only effect is a wait 
+	 * @param isApplet True if the component is inside an applet. The only effect is a wait
 	 * message when ephemerides of comets/asteroids will be calculated in the next frame.
 	 * @param updateTime Time interval to update in seconds for real-time mode. Default
 	 * value is 5s.
@@ -355,13 +352,13 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 	public void addTelescopeMark(String name, GenericTelescope telescope) throws JPARSECException {
 		telescopeName = DataSet.addStringArray(telescopeName, new String[] {name});
 		telescopeControl = (GenericTelescope[]) DataSet.addObjectArray(telescopeControl, new GenericTelescope[] {telescope});
-		
+
 		if (timer == null || !timer.isRunning()) {
 			updateTimer();
 			timer.start();
 		}
 	}
-	
+
 	/**
 	 * Removes a telescope.
 	 * @param name The name of the telescope.
@@ -375,37 +372,38 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 			if (telescopeName.length == 0) updateTimer();
 		}
 	}
+
 	private synchronized void updateImage() {
-	      try {
-	    	  if (skyRender.getRenderSkyObject().render.width > 0) {
-/*	    		  if (buffer == null) {
-	    				panel.createBufferStrategy(2);
-	    				buffer = panel.getBufferStrategy();
-	    		  }
-*/	    		  if (telescopeName != null && telescopeName.length > 0) {
-/*		    		  Graphics2D g = (Graphics2D)buffer.getDrawGraphics();
-		    		  g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		    		  g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-		    		  g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
-		    		  g.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+		  try {
+			  if (skyRender.getRenderSkyObject().render.width > 0) {
+/*				  if (buffer == null) {
+						panel.createBufferStrategy(2);
+						buffer = panel.getBufferStrategy();
+				  }
+*/				  if (telescopeName != null && telescopeName.length > 0) {
+/*					  Graphics2D g = (Graphics2D)buffer.getDrawGraphics();
+					  g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+					  g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+					  g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+					  g.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
 */
-		    		  skyRender.paintChart(skyImage);
-	    			  drawTelescopes(skyImage.createGraphics());
-	    		  } else {
-		    		  skyRender.paintChart(skyImage);	    	
-	    		  }
-	    		  //if (!buffer.contentsLost()) 
-	    			  //buffer.show();
+					  skyRender.paintChart(skyImage);
+					  drawTelescopes(skyImage.createGraphics());
+				  } else {
+					  skyRender.paintChart(skyImage);
+				  }
+				  //if (!buffer.contentsLost())
+					  //buffer.show();
 					panel.repaint();
-	    	  }
-	      } catch ( Exception ve ) {
-	    	  //Logger.log(LEVEL.ERROR, "Error painting chart. Message was: "+ve.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(ve.getStackTrace()));
-	      }
+			  }
+		  } catch ( Exception ve ) {
+			  //Logger.log(LEVEL.ERROR, "Error painting chart. Message was: "+ve.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(ve.getStackTrace()));
+		  }
 	}
-	
+
 	private void drawTelescopes(Graphics2D g) {
 		if (chart.coordinateSystem != COORDINATE_SYSTEM.EQUATORIAL && chart.coordinateSystem != COORDINATE_SYSTEM.HORIZONTAL) return;
-		
+
 		g.setColor(Picture.invertColor(new Color(skyRender.getRenderSkyObject().render.background)));
 		float rec[] = skyRender.getRenderSkyObject().getRectangle();
 		g.setClip((int)rec[0]+1, (int)rec[1]+1, (int)rec[2]-2, (int)rec[3]-2);
@@ -418,7 +416,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 				LocationElement loc = telescopeControl[i].getApparentEquatorialPosition();
 
 				float pos[] = skyRender.getRenderSkyObject().getSkyPosition(
-						loc, 
+						loc,
 						true, true, false);
 				if (pos != null) {
 					int x = (int) (pos[0]+0.5), y = (int) (pos[1]+0.5);
@@ -437,18 +435,18 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 						}
 						GenericCamera camera = telescopeControl[i].getCameras()[index];
 						double ang = camera.getCameraOrientation();
-						
+
 						if (chart.coordinateSystem == COORDINATE_SYSTEM.EQUATORIAL && telescopeControl[i].getMount() == MOUNT.AZIMUTHAL ||
 								(chart.coordinateSystem == COORDINATE_SYSTEM.HORIZONTAL && telescopeControl[i].getMount() == MOUNT.EQUATORIAL)) {
 							// Paralactic angle
 							//LocationElement eq = telescopeControl[i].getEquatorialPosition();
 							double lst = SiderealTime.apparentSiderealTime(time, obs, eph);
 							double angh = lst - loc.getLongitude();
-							double sinlat = Math.sin(obs.getLatitudeRad()); 
-							double coslat = Math.cos(obs.getLatitudeRad()); 
+							double sinlat = Math.sin(obs.getLatitudeRad());
+							double coslat = Math.cos(obs.getLatitudeRad());
 							double sindec = Math.sin(loc.getLatitude()), cosdec = Math.cos(loc.getLatitude());
 							double yy = Math.sin(angh);
-					 
+
 							double xx = (sinlat / coslat) * cosdec - sindec * Math.cos(angh);
 							double p = 0.0;
 							if (xx != 0.0)
@@ -461,12 +459,12 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 							if (chart.coordinateSystem == COORDINATE_SYSTEM.HORIZONTAL) p = -p;
 							ang -= p;
 						}
-						
+
 						if (ang != 0.0) g.rotate(ang);
 						int hr = r/2;
 						int rh = (int) (r / camera.getWidthHeightRatio());
 						if (camera.getCameraModel().hasRoundSensor()) {
-							g.drawOval(-hr, -rh/2, r, rh);							
+							g.drawOval(-hr, -rh/2, r, rh);
 						} else {
 							g.drawRect(-hr, -rh/2, r, rh);
 						}
@@ -497,52 +495,51 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 			} catch (Exception exc) {}
 		}
 	}
-	
-    /**
-     * Render the scene
-     */
-    public synchronized void paintImage()
-    {
-    	if (panel == null || panel.getGraphics() == null) return;
-    	if (timeVel == 0.0 && skyRender.getRenderSkyObject().willCalculateForAWhile()) {
-    		BufferedImage offscreenImage = new BufferedImage(chart.width, chart.height, BufferedImage.TYPE_INT_RGB);
-    		Graphics2D g = offscreenImage.createGraphics();
-    		g.setColor(new Color(chart.background));
-    		g.fillRect(0, 0, chart.width, chart.height);
-    		g.setColor(Picture.invertColor(new Color(chart.background)));
-    		g.setFont(new Font(Font.DIALOG, Font.PLAIN, 14));
-    		String s = t974;
-    		int w = g.getFontMetrics().stringWidth(s);
-    		g.drawString(s, chart.width/2-w/2, chart.height/2+7);
-    		g.dispose();
-    		panel.getGraphics().drawImage(offscreenImage,0,0,null);    		
-    		
-			skyRender.getRenderSkyObject().forceUpdateFast();
-    	}
-    	updateImage();
-    }
-    
 
-    /**
-     * Render the scene
-     */
-    private void paintIt()
-    {
+	/**
+	 * Render the scene
+	 */
+	public synchronized void paintImage()
+	{
+		if (panel == null || panel.getGraphics() == null) return;
+		if (timeVel == 0.0 && skyRender.getRenderSkyObject().willCalculateForAWhile()) {
+			BufferedImage offscreenImage = new BufferedImage(chart.width, chart.height, BufferedImage.TYPE_INT_RGB);
+			Graphics2D g = offscreenImage.createGraphics();
+			g.setColor(new Color(chart.background));
+			g.fillRect(0, 0, chart.width, chart.height);
+			g.setColor(Picture.invertColor(new Color(chart.background)));
+			g.setFont(new Font(Font.DIALOG, Font.PLAIN, 14));
+			String s = t974;
+			int w = g.getFontMetrics().stringWidth(s);
+			g.drawString(s, chart.width/2-w/2, chart.height/2+7);
+			g.dispose();
+			panel.getGraphics().drawImage(offscreenImage,0,0,null);
+
+			skyRender.getRenderSkyObject().forceUpdateFast();
+		}
+		updateImage();
+	}
+
+	/**
+	 * Render the scene
+	 */
+	private void paintIt()
+	{
 		try {
 			fastField = skyRender.getRenderSkyObject().render.telescope.getField();
 			vel = 1.5 * fastField / chart.width;
 		} catch (Exception e) {	}
-		
-    	if (isApplet) {
-    		paintImage();
-    		updating = false;    		
-    		return;
-    	}
-    	
-    	updateImage();
-  	
+
+		if (isApplet) {
+			paintImage();
+			updating = false;
+			return;
+		}
+
+		updateImage();
+
 		updating = false;
-    }
+	}
 	private void create() {
 		setStrings();
 		try {
@@ -558,7 +555,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 			*/
 			panel.setForeground(null);
 			panel.setBackground(null);
-	        panel.addKeyListener(this);
+			panel.addKeyListener(this);
 
 			panel.setLocation(x, y);
 			panel.setSize(chart.width, chart.height);
@@ -579,18 +576,18 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 				}
 			});
 
-            updateTimer();
-            
-            if (Runtime.getRuntime().availableProcessors() > 1 && calcEvents) {
-//            	thread = new Thread(new thread0());
-//    			thread.start(); 
-            }
-            
-    		SwingUtilities.invokeLater(new Runnable() {
-                public void run() {
-        			paintImage(); 
-                }
-            });
+			updateTimer();
+
+			if (Runtime.getRuntime().availableProcessors() > 1 && calcEvents) {
+//				thread = new Thread(new thread0());
+//				thread.start();
+			}
+
+			SwingUtilities.invokeLater(new Runnable() {
+				public void run() {
+					paintImage();
+				}
+			});
 
 		} catch (Exception exc) {
 			Logger.log(LEVEL.ERROR, "Error creating the chart. Message was: "+exc.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(exc.getStackTrace()));
@@ -598,12 +595,12 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 	}
 
 	private void updateTimer() {
-        if (timer != null) timer.stop();
-        timer = new Timer(updateTime, this);
-        timer.setRepeats(true);
-        if (now) timer.start();
+		if (timer != null) timer.stop();
+		timer = new Timer(updateTime, this);
+		timer.setRepeats(true);
+		if (now) timer.start();
 	}
-	
+
 	/**
 	 * Returns the chart as an image.
 	 * @return The image.
@@ -622,7 +619,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 	 * @return The JPanel.
 	 */
 	public JPanel getComponent() {
-		if (panel == null) { 
+		if (panel == null) {
 			skyImage = new BufferedImage(chart.width, chart.height, BufferedImage.TYPE_INT_RGB);
 			panel = new JLabel(new ImageIcon(skyImage)); /* {
 				@Override
@@ -634,8 +631,8 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 			};
 */			panel.setForeground(null);
 			panel.setBackground(null);
-	        panel.addKeyListener(this);
-	        
+			panel.addKeyListener(this);
+
 			panel.addComponentListener(new ComponentAdapter() {
 				@Override
 				public void componentResized(ComponentEvent e) {
@@ -655,10 +652,10 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 			fastField = skyRender.getRenderSkyObject().render.telescope.getField();
 		} catch (Exception e) {	}
 		vel = 1.5 * fastField / chart.width;
-		
+
 		JPanel jpanel = new JPanel(null);
 		jpanel.add(panel);
-		
+
 		jpanel.addComponentListener(new ComponentAdapter() {
 			@Override
 			public void componentResized(ComponentEvent e) {
@@ -680,7 +677,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 	private BufferedImage skyImage = null;
 	private boolean updating = false;
 	//private BufferStrategy buffer;
-	
+
 	/**
 	 * Updates the panel to a new size.
 	 * @return True if the update process is going on, false it is not
@@ -691,8 +688,8 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 			updating = true;
 			Dimension d = panel.getParent().getSize();
 			panel.setSize(d);
-	    	w0 = d.width;
-	    	h0 = d.height;
+			w0 = d.width;
+			h0 = d.height;
 			SkyRenderElement ss = skyRender.getRenderSkyObject().render;
 			ss.width = d.width;
 			ss.height = d.height;
@@ -710,9 +707,9 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 				Logger.log(LEVEL.ERROR, "Error updating the chart. Message was: "+e.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e.getStackTrace()));
 			}
 			SwingUtilities.invokeLater(new Runnable() {
-		        public void run() {
-		        	paintIt();	
-		        }
+				public void run() {
+					paintIt();
+				}
 			});
 			return true;
 		}
@@ -730,8 +727,8 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 			updating = true;
 			Dimension d = new Dimension(w, h);
 			panel.setBounds(0, 0, w, h);
-	    	w0 = d.width;
-	    	h0 = d.height;
+			w0 = d.width;
+			h0 = d.height;
 			SkyRenderElement ss = skyRender.getRenderSkyObject().render;
 			ss.width = d.width;
 			ss.height = d.height;
@@ -745,9 +742,9 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 				Logger.log(LEVEL.ERROR, "Error updating the chart. Message was: "+e.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e.getStackTrace()));
 			}
 			SwingUtilities.invokeLater(new Runnable() {
-		        public void run() {
-		        	paintIt();	
-		        }
+				public void run() {
+					paintIt();
+				}
 			});
 			return true;
 		}
@@ -763,7 +760,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 	 * @param object The object to center, or null.
 	 * @throws JPARSECException If an error occurs.
 	 */
-	public void update(SkyRenderElement sky, TimeElement time, ObserverElement obs, EphemerisElement eph, 
+	public void update(SkyRenderElement sky, TimeElement time, ObserverElement obs, EphemerisElement eph,
 			String object) throws JPARSECException {
 		obs.getGeoLat();
 		skyRender.getRenderSkyObject().setSkyRenderElement(sky, time, obs, eph);
@@ -777,7 +774,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 		this.eph.correctEquatorialCoordinatesForRefraction = false;
 		if (object != null)	setCentralObject(object, null);
 	}
-	
+
 	/**
 	 * Returns x position, without scaling.
 	 * @return x position.
@@ -839,18 +836,18 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 	public int getY0() {
 		return y0;
 	}
-	
+
 	private void setDefaults(int w, int h, SkyRendering sky)
 	{
-        try {
-	    	// Ensure we don't stop program execution due to warnings
-	    	JPARSECException.treatWarningsAsErrors(false);
-	    	
-	    	skyRender = sky;
-	    	chart = sky.getRenderSkyObject().render;
-	    	int c[] = Functions.getColorComponents(chart.background);
-	    	if (c[3] == 0) chart.background = Functions.getColor(c[0], c[1], c[2], 255);
-	    	showTextures = chart.planetRender.textures;
+		try {
+			// Ensure we don't stop program execution due to warnings
+			JPARSECException.treatWarningsAsErrors(false);
+
+			skyRender = sky;
+			chart = sky.getRenderSkyObject().render;
+			int c[] = Functions.getColorComponents(chart.background);
+			if (c[3] == 0) chart.background = Functions.getColor(c[0], c[1], c[2], 255);
+			showTextures = chart.planetRender.textures;
 			showFastLabels = chart.drawFastLabels;
 			showFilledMW = chart.fillMilkyWay;
 			showTexturedMW = chart.drawMilkyWayContoursWithTextures;
@@ -859,7 +856,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 			showTexturedObj = chart.drawDeepSkyObjectsTextures;
 			fastLines = chart.drawFastLinesMode;
 			skyRender.getRenderSkyObject().render.drawFastLinesMode = FAST_LINES.NONE;
-	    	if (chart.getColorMode().ordinal()<3) colorMode = chart.getColorMode().ordinal();
+			if (chart.getColorMode().ordinal()<3) colorMode = chart.getColorMode().ordinal();
 			fastField = chart.telescope.getField();
 			vel = 1.5 * fastField / chart.width;
 			time = sky.getTimeObject();
@@ -889,35 +886,35 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 				Logger.log(LEVEL.WARNING, "You computer seems to be fast, so high quality planetary rendering has been enabled.");
 			}
 */
-        } catch ( Exception ve ) {
-        	// Catch possible errors. In case of an error, the program stops and the message and stack
-        	// trace error is shown with the following call
-        	Logger.log(LEVEL.ERROR, "Error setting defaults values for the chart. Message was: "+ve.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(ve.getStackTrace()));
-        }
+		} catch ( Exception ve ) {
+			// Catch possible errors. In case of an error, the program stops and the message and stack
+			// trace error is shown with the following call
+			Logger.log(LEVEL.ERROR, "Error setting defaults values for the chart. Message was: "+ve.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(ve.getStackTrace()));
+		}
 	}
-	
-    // Mouse things
+
+	// Mouse things
 	double fastField, vel;
 	boolean showTextures = true, showFilledMW = true, showTexturedObj = true;
 	MILKY_WAY_TEXTURE showTexturedMW = MILKY_WAY_TEXTURE.NO_TEXTURE;
-	HORIZON_TEXTURE showTexturedHorizon = HORIZON_TEXTURE.NONE; 
+	HORIZON_TEXTURE showTexturedHorizon = HORIZON_TEXTURE.NONE;
 	SUPERIMPOSED_LABELS showFastLabels = SUPERIMPOSED_LABELS.AVOID_SUPERIMPOSING_SOFT;
 	FAST_LINES fastLines = FAST_LINES.NONE;
-    private int lastMouseClickX = 0, lastMouseClickY = 0; //, lastMouseClickZ = 0;;
-    //private int lastMouseScreenPosX = -1, lastMouseScreenPosY = -1;
-    private boolean dragging = false, increaseSpeed = true, speedTested = false, fillNeb = true;
-    private boolean draggingLock = false;
-    private long t0 = -1, nframes = 0;
-    private static double horizonViewModeLatitudeLimit = 15.0 * Constant.DEG_TO_RAD, horizonViewModeFieldLimit = 120 * Constant.DEG_TO_RAD;
+	private int lastMouseClickX = 0, lastMouseClickY = 0; //, lastMouseClickZ = 0;;
+	//private int lastMouseScreenPosX = -1, lastMouseScreenPosY = -1;
+	private boolean dragging = false, increaseSpeed = true, speedTested = false, fillNeb = true;
+	private boolean draggingLock = false;
+	private long t0 = -1, nframes = 0;
+	private static double horizonViewModeLatitudeLimit = 15.0 * Constant.DEG_TO_RAD, horizonViewModeFieldLimit = 120 * Constant.DEG_TO_RAD;
 	/**
 	 * Pans the chart around the sky.
 	 */
-	public void mouseDragged(MouseEvent e) {		
+	public void mouseDragged(MouseEvent e) {
 /*		System.gc();
 		double freeMB = Runtime.getRuntime().freeMemory() / (1024.0 * 1024.0);
 		double totalMB = Runtime.getRuntime().totalMemory() / (1024.0 * 1024.0);
 		System.out.println("MB used: "+(float)(totalMB-freeMB)+" / total MB: "+(float) totalMB);
-		
+
 		if (speedTested) {
 			nframes ++;
 			if (nframes > 200) {
@@ -929,8 +926,8 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 			}
 
 		}
-*/		
-		
+*/
+
 		if (skyRender != null && e.getModifiersEx() == MouseEvent.BUTTON1_DOWN_MASK)
 		{
 			int dx = e.getX()-lastMouseClickX, dy = e.getY()-lastMouseClickY;
@@ -946,13 +943,13 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 				int ycenter = 0;
   				if (hMode && (skyRender.getRenderSkyObject().render.projection == Projection.PROJECTION.STEREOGRAPHICAL ||
   					skyRender.getRenderSkyObject().render.projection == Projection.PROJECTION.SPHERICAL) &&
-  					skyRender.getRenderSkyObject().render.centralLatitude < horizonViewModeLatitudeLimit && 
-  					fastField > horizonViewModeFieldLimit) // Horizon-view mode 
+  					skyRender.getRenderSkyObject().render.centralLatitude < horizonViewModeLatitudeLimit &&
+  					fastField > horizonViewModeFieldLimit) // Horizon-view mode
   					ycenter = (skyRender.getRenderSkyObject().render.height-100)/2;
   				try {
 					skyRender.getRenderSkyObject().setYCenterOffset(ycenter);
 				} catch (Exception e1) {
-     				Logger.log(LEVEL.ERROR, "Error setting center y value. Message was: "+e1.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e1.getStackTrace()));
+	 				Logger.log(LEVEL.ERROR, "Error setting center y value. Message was: "+e1.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e1.getStackTrace()));
 				}
 			}
 			skyRender.getRenderSkyObject().render.centralLongitude += moveAngleX;
@@ -995,8 +992,8 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 				}
 			}
 			dragging = true;
-			paintImage();  				
-			
+			paintImage();
+
 			if (!speedTested && fastField > 50 * Constant.DEG_TO_RAD) {
 				if (t0 == -1) {
 					t0 = System.currentTimeMillis();
@@ -1032,13 +1029,13 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 					int ycenter = 0;
   	  				if (hMode && (skyRender.getRenderSkyObject().render.projection == Projection.PROJECTION.STEREOGRAPHICAL ||
   	  					skyRender.getRenderSkyObject().render.projection == Projection.PROJECTION.SPHERICAL) &&
-  	  					skyRender.getRenderSkyObject().render.centralLatitude < horizonViewModeLatitudeLimit && 
-  	  					fastField > horizonViewModeFieldLimit) // Horizon-view mode 
+  	  					skyRender.getRenderSkyObject().render.centralLatitude < horizonViewModeLatitudeLimit &&
+  	  					fastField > horizonViewModeFieldLimit) // Horizon-view mode
   	  					ycenter = (skyRender.getRenderSkyObject().render.height-100)/2;
   	  				try {
 						skyRender.getRenderSkyObject().setYCenterOffset(ycenter);
 					} catch (Exception e1) {
-         				Logger.log(LEVEL.ERROR, "Error setting center y value. Message was: "+e1.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e1.getStackTrace()));
+		 				Logger.log(LEVEL.ERROR, "Error setting center y value. Message was: "+e1.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e1.getStackTrace()));
 					}
 				}
 				skyRender.getRenderSkyObject().render.centralLongitude += moveAngleX;
@@ -1079,15 +1076,15 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 				}
 				dragging = true;
   				paintImage();
-			}			
+			}
 		} else {
 			int x = 0, y = 0;
 			if (me != null) {
 				if (me.getClickCount() > 0) return;
 				x = me.getX();
-				y = me.getY();		
+				y = me.getY();
 			}
-			
+
 			Graphics g = panel.getGraphics();
 			String msg1 = "";
 			int ndec = 3;
@@ -1114,7 +1111,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 					}
 				}
 			}
-			
+
 			TARGET target = TARGET.NOT_A_PLANET;
 			double ppd = skyRender.getRenderSkyObject().render.width / (fastField * Constant.RAD_TO_DEG * 2);
 			if (ppd > 12 && me != null) {
@@ -1132,7 +1129,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 							if (type != OBJECT.PLANET)
 								data = skyRender.getRenderSkyObject().getClosestObjectData(x, y, true, false);
 						} else {
-							data = skyRender.getRenderSkyObject().getClosestObjectData(x, y, true, false);						
+							data = skyRender.getRenderSkyObject().getClosestObjectData(x, y, true, false);
 						}
 					} catch (Exception exc) {}
 					if (data != null) {
@@ -1159,20 +1156,20 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 									msg1 = n;
 								} else {
 									int b = msg1.indexOf("(");
-									if (b > 0) msg1 = msg1.substring(0, b);								
+									if (b > 0) msg1 = msg1.substring(0, b);
 								}
 								msg1 += " ("+Functions.formatValue(ephem.magnitude, 1)+"m) - "+t79.toLowerCase();
 							} else {
-								String st = t878; // SS Obj	
+								String st = t878; // SS Obj
 		  	  					if (type == RenderSky.OBJECT.ASTEROID) st = t73;
 		  	  					if (type == RenderSky.OBJECT.COMET) st = t74;
 		  	  					if (type == RenderSky.OBJECT.NEO) st = t1275;
-		  	  					if (type == RenderSky.OBJECT.PROBE) st = t76;  						
-		  	  					if (type == RenderSky.OBJECT.TRANSNEPTUNIAN) st = t1003;  						
+		  	  					if (type == RenderSky.OBJECT.PROBE) st = t76;
+		  	  					if (type == RenderSky.OBJECT.TRANSNEPTUNIAN) st = t1003;
 
-								msg1 += " - "+st.toLowerCase();					
+								msg1 += " - "+st.toLowerCase();
 							}
-							try { 
+							try {
 								TARGET t = TARGET.NOT_A_PLANET;
 								if (type == OBJECT.PLANET) t = Target.getID(ephem.name);
 								if (t.isNaturalSatellite() && type == OBJECT.PLANET) {
@@ -1184,14 +1181,14 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 									} else {
 										m = MoonEphem.calcAllSatellites(time, obs, ephC, skyRender.getRenderSkyObject().render.planetRender.satellitesAll);
 									}
-							   	    if (m != null) {
-							   	    	String msg = "", sep = ", ";
+							   		if (m != null) {
+							   			String msg = "", sep = ", ";
 										for (int i=0; i<m.length; i++) {
 											if (m[i] != null && m[i].name.equals(ephem.name)) {
 												if (!m[i].mutualPhenomena.trim().equals(""))
 													msg += m[i].name+" "+m[i].mutualPhenomena + sep;
-												if (m[i].transiting) 
-													msg += t165 + sep; 
+												if (m[i].transiting)
+													msg += t165 + sep;
 												if (m[i].shadowTransiting) {
 													try {
 														if (obs.getMotherBody() != TARGET.EARTH) {
@@ -1201,26 +1198,26 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 															EphemElement planetEphem = Ephem.getEphemeris(time, obs, ephC, false);
 															double satAngR = FastMath.atan2_accurate(sat.equatorialRadius, LocationElement.getLinearDistance(planetEphem.getEquatorialLocation(), m[i].getEquatorialLocation()));
 															if (sunAngR > satAngR) {
-																msg += t1084 + sep;														
+																msg += t1084 + sep;
 															} else {
 																msg += t166 + sep;
 															}
 														} else {
-															msg += t166 + sep;															
+															msg += t166 + sep;
 														}
 													} catch (Exception exc) {
-														msg += t166 + sep;														
+														msg += t166 + sep;
 													}
 												}
-												if (m[i].eclipsed) 
-													msg += t163 + sep; 
-												if (m[i].occulted) 
-													msg += t164 + sep; 
+												if (m[i].eclipsed)
+													msg += t163 + sep;
+												if (m[i].occulted)
+													msg += t164 + sep;
 												break;
 											}
 										}
 										if (!msg.equals("")) msg1 = ephem.name + " ("+msg.substring(0, msg.lastIndexOf(",")).toLowerCase()+")";
-							   	    } 
+							   		}
 								}
 							} catch (Exception exc) {}
 						}
@@ -1231,7 +1228,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 						loc = skyRender.getRenderSkyObject().getPlanetographicPosition(x, y, 3, true);
 					} catch (Exception exc) {}
 					msg1 = target.getName();
-					
+
 					if (loc != null) {
 						String feature = RenderPlanet.identifyFeature(loc, target, 2); // Closest feature within 2 deg
 						if (feature == null) {
@@ -1250,14 +1247,14 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 							feature = feature.substring(0, feature.indexOf(") ")+1); // Remove lon, lat info
 							feature = " ("+feature.trim()+")";
 						}
-						if (target == TARGET.JUPITER || target == TARGET.SATURN) // || target == TARGET.URANUS || target == TARGET.NEPTUNE) 
+						if (target == TARGET.JUPITER || target == TARGET.SATURN) // || target == TARGET.URANUS || target == TARGET.NEPTUNE)
 							msg1 += " ("+t317+" III)";
-						
+
 
 						String s = "", s2 = "";
-						
+
 						// Comment this section to use negative longitudes/latitudes. Seems better to give E/W and N/S.
-						if (loc.getLongitude() < 0 || loc.getLongitude() > Constant.TWO_PI) 
+						if (loc.getLongitude() < 0 || loc.getLongitude() > Constant.TWO_PI)
 							loc.setLongitude(Functions.normalizeRadians(loc.getLongitude()));
 						s = " E";
 						s2 = " N";
@@ -1271,13 +1268,13 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 							s = " W";
 							if (Translate.getDefaultLanguage() == LANGUAGE.SPANISH) s = " O";
 							if (loc.getLongitude() > Math.PI || loc.getLongitude() < 0) {
-								s = " E";							
+								s = " E";
 								loc.setLongitude(Constant.TWO_PI-loc.getLongitude());
 							}
 						}
 						if (loc.getLatitude() < 0) s2 = " S";
 
-						
+
 						msg1 +=": "+Functions.formatAngleAsDegrees(Math.abs(loc.getLongitude()), ndec)+"�"+s+", "+Functions.formatAngleAsDegrees(Math.abs(loc.getLatitude()), ndec)+"�"+s2+feature;
 						//msg1 +=": "+Functions.formatDEC(Math.abs(loc.getLongitude()), ndec)+"�"+s+", "+Functions.formatDEC(Math.abs(loc.getLatitude()), ndec)+"�"+s2+feature;
 					}
@@ -1292,7 +1289,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 				if (time.timeScale == SCALE.LOCAL_TIME) msg1 = msg1.substring(0, msg1.lastIndexOf(" ")) + " " + time.getTimeScale();
 				if (obs.getMotherBody() != TARGET.EARTH) msg1 += " ("+Translate.translate(1079)+")";
 			}
-			
+
 			String msg2 = "";
 			if (this.object != null && !this.object.equals("")) msg2 = "["+object+"] ";
 			if (me != null) {
@@ -1319,7 +1316,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 					if (!chart.telescope.invertHorizontal) {
 						msg2 = msg2.trim() + "[V] ";
 					} else {
-						msg2 = msg2.trim() + "[HV] ";					
+						msg2 = msg2.trim() + "[HV] ";
 					}
 				}
 
@@ -1332,7 +1329,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 							if (ndeceq < 0) {
 								int nd = 1;
 								if (ndeceq < -1) nd = 0;
-								msg2 += ""+x+" px, "+y+" px / " +Functions.formatRAOnlyMinutes(loc.getLongitude(), nd+1)+", "+Functions.formatDECOnlyMinutes(loc.getLatitude(), nd);						
+								msg2 += ""+x+" px, "+y+" px / " +Functions.formatRAOnlyMinutes(loc.getLongitude(), nd+1)+", "+Functions.formatDECOnlyMinutes(loc.getLatitude(), nd);
 							} else {
 								msg2 += ""+x+" px, "+y+" px / " +Functions.formatRA(loc.getLongitude(), ndeceq+1)+", "+Functions.formatDEC(loc.getLatitude(), ndeceq);
 							}
@@ -1349,7 +1346,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 					}
 				}
 			}
-			
+
 			int s = 10;
 			g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, s));
 			int x0 = 5;
@@ -1375,13 +1372,13 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 	 */
 	public void mouseClicked(MouseEvent m) {
  		if (skyRender == null) return;
- 		
+
  		int b = m.getButton();
  		int nc = m.getClickCount();
  		if (nc <= 2 && !MouseEvent.getModifiersExText(m.getModifiersEx()).equals("Ctrl")) {
  			try {
 	 			int x = m.getX(), y = m.getY();
-	 	    	String s = null;
+	 			String s = null;
  				if (b == MouseEvent.BUTTON1) {
 		 	  		Object data[] = skyRender.getRenderSkyObject().getClosestObjectData(x, y, false, false);
 		 	  		if (data != null) {
@@ -1390,7 +1387,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 		 		  			data = skyRender.getRenderSkyObject().getClosestObjectData(x, y, true, false);
 		 		  		if (data != null) {
 		 			  		id = (RenderSky.OBJECT) data[0];
-		 			  		EphemElement ephem = null; 
+		 			  		EphemElement ephem = null;
 		 			  		StarElement star = null;
 		 			  		if (id == RenderSky.OBJECT.DEEPSKY) {
 		 			  			s = ((String[]) data[2])[0];
@@ -1426,7 +1423,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 		 	  				newLoc = new LocationElement(Functions.parseRightAscension(dd[1]), Functions.parseDeclination(dd[2]), 1);
 		 	  			}
 	  	  				if (lastObj != null && lastLoc != null && !lastObj.equals(newObj)) {
-	  	  					identifyAndGetData(x, y); 
+	  	  					identifyAndGetData(x, y);
 	  	  					String d = Functions.formatAngle(LocationElement.getAngularDistance(newLoc, lastLoc), 3);
 		  	  				int ss = 10;
 			  	  			Graphics2D g = (Graphics2D) panel.getGraphics();
@@ -1440,13 +1437,13 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 			  	  			g.fillRect(w0-w2, y0, w2, h);
 			  	  			g.setColor(new Color(skyRender.getRenderSkyObject().render.drawCoordinateGridColor));
 			  	  			y0 += (h + ss) / 2;
-			  	  			g.drawString(t299+" ("+lastObj+")-("+newObj+"): "+d, 5, y0); 
+			  	  			g.drawString(t299+" ("+lastObj+")-("+newObj+"): "+d, 5, y0);
 	  	  				}
 	  	  				lastObj = newObj;
 	  	  				lastLoc = newLoc;
 		 	  		}
 	 	  		} else {
-  					boolean considerSatellites = true; 
+  					boolean considerSatellites = true;
   					TARGET target = skyRender.getRenderSkyObject().getPlanetInScreenCoordinates(x, y, considerSatellites, minimumSize);
   	   				String popupText = "";
   	  				if (target != TARGET.NOT_A_PLANET) {
@@ -1455,21 +1452,21 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 	  					String feature = RenderPlanet.identifyFeature(loc0, target, 2); // Closest feature within 2 deg
 	  					if (loc0 != null) {
 		  					if (feature != null) {
-		  						popupText = replaceVars(t883, new String[] {"%feature", "%object", "%x", "%y", "%lon", "%lat"}, new String[] {""+feature, ""+object, ""+x, ""+y, Functions.formatAngle(loc0.getLongitude(), 1), Functions.formatAngle(loc0.getLatitude(), 1)});							
+		  						popupText = replaceVars(t883, new String[] {"%feature", "%object", "%x", "%y", "%lon", "%lat"}, new String[] {""+feature, ""+object, ""+x, ""+y, Functions.formatAngle(loc0.getLongitude(), 1), Functions.formatAngle(loc0.getLatitude(), 1)});
 		  					} else {
 		  						popupText = replaceVars(t884, new String[] {"%x", "%y", "%lon", "%lat"}, new String[] {""+x, ""+y, Functions.formatAngle(loc0.getLongitude(), 1), Functions.formatAngle(loc0.getLatitude(), 1)});
 		  					}
 		  	  				popupText += FileIO.getLineSeparator() + FileIO.getLineSeparator();
 	  					}
   	  				}
-  	  				popupText += identifyAndGetData(x, y); 
+  	  				popupText += identifyAndGetData(x, y);
 	  				if (!popupText.equals("")) {
 	  					showPopup(s, popupText);
 	  				}
 	 	  		}
  			} catch (Exception exc) {}
  		}
- 		
+
 		if (dragging && b == MouseEvent.BUTTON1) {
 			// Reset mouse listener to avoid triggering object identification process above
 			dragging = false;
@@ -1505,19 +1502,19 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
   				try {
   					this.modifyRendering(m.getX(), m.getY());
   				} catch (Exception exc) {
-     				Logger.log(LEVEL.ERROR, "Error editing the rendering values. Message was: "+exc.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(exc.getStackTrace()));
+	 				Logger.log(LEVEL.ERROR, "Error editing the rendering values. Message was: "+exc.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(exc.getStackTrace()));
   				}
   			}
   		}
   		if (b == MouseEvent.BUTTON1 && MouseEvent.getModifiersExText(m.getModifiersEx()).equals("Ctrl")) {
   			if (m.getClickCount() == 2) {
   				try {
-	  				double pos[] = new double[] {0, 0, 1.0, 0.0, 0.0, 0.0};			
+	  				double pos[] = new double[] {0, 0, 1.0, 0.0, 0.0, 0.0};
 	  				posEQ = Ephem.eclipticToEquatorial(pos, TimeScale.getJD(time, obs, eph, SCALE.BARYCENTRIC_DYNAMICAL_TIME), eph);
 
 	  				updateTime = updateTime1;
 	  				updateTimer();
-	  				
+
 					this.obs = ObserverElement.parseExtraterrestrialObserver(new ExtraterrestrialObserverElement(t1083, posEQ));
 					if (skyRender.getRenderSkyObject().render.telescope.ocular != null) skyRender.getRenderSkyObject().render.telescope.ocular.focalLength = TelescopeElement.getOcularFocalLengthForCertainField(Math.PI, skyRender.getRenderSkyObject().render.telescope);
 					if (skyRender.getRenderSkyObject().render.coordinateSystem == COORDINATE_SYSTEM.HORIZONTAL) skyRender.getRenderSkyObject().render.coordinateSystem = COORDINATE_SYSTEM.ECLIPTIC;
@@ -1533,7 +1530,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
   			} else {
   				updateTime = updateTime0;
   				updateTimer();
-  				
+
 				LocationElement loc = null;
 				int x = m.getX(), y = m.getY();
 				try {
@@ -1627,12 +1624,12 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 	 * Nothing (almost).
 	 */
 	public void mouseExited(MouseEvent arg0) {
-    	// Draw rendered image using double buffer capabilities.
+		// Draw rendered image using double buffer capabilities.
 		SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-    			mouseMoved(null);
-            }
-        });
+			public void run() {
+				mouseMoved(null);
+			}
+		});
 	}
 
 	/**
@@ -1656,7 +1653,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 				try {
 					skyRender.getRenderSkyObject().setSkyRenderElement(chart);
 					skyRender.getRenderSkyObject().setStarsLimitingMagnitude();
-				} catch (Exception exc) {}				
+				} catch (Exception exc) {}
 			}
 			skyRender.getRenderSkyObject().render.planetRender.textures = showTextures;
 			skyRender.getRenderSkyObject().render.drawObjectsLimitingMagnitude = -chart.drawObjectsLimitingMagnitude;
@@ -1674,7 +1671,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 				skyRender.getRenderSkyObject().render.drawMilkyWayContoursWithTextures = chart.drawMilkyWayContoursWithTextures;
 				skyRender.getRenderSkyObject().render.drawHorizonTexture = chart.drawHorizonTexture;
 			}
-			
+
 			if (this.chartForDragging == null) {
 				skyRender.getRenderSkyObject().render.drawFastLabels = SUPERIMPOSED_LABELS.AVOID_SUPERIMPOSING_VERY_ACCURATE;
 				if (increaseSpeed) {
@@ -1687,7 +1684,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 			}
 			paintImage();
 			skyRender.getRenderSkyObject().render.drawFastLabels = showFastLabels;
-			if (RenderPlanet.MAXIMUM_TEXTURE_QUALITY_FACTOR < 2 || !chart.planetRender.highQuality) 
+			if (RenderPlanet.MAXIMUM_TEXTURE_QUALITY_FACTOR < 2 || !chart.planetRender.highQuality)
 				skyRender.getRenderSkyObject().render.drawFastLinesMode = fastLines; // XXX
 		}
 	}
@@ -1704,19 +1701,19 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 				if (e.getWheelRotation()>0) {
 					skyRender.getRenderSkyObject().render.telescope.ocular.focalLength *= 1.2f;
 				} else {
-					skyRender.getRenderSkyObject().render.telescope.ocular.focalLength /= 1.2f;					
+					skyRender.getRenderSkyObject().render.telescope.ocular.focalLength /= 1.2f;
 				}
-				if (e.getWheelRotation()<0) //fastField > 10 * Constant.DEG_TO_RAD) 
+				if (e.getWheelRotation()<0) //fastField > 10 * Constant.DEG_TO_RAD)
 					skyRender.getRenderSkyObject().render.planetRender.textures = false;
-  				try { 
+  				try {
   					fastField = skyRender.getRenderSkyObject().render.telescope.getField();
   					if (fastField < min) {
   						skyRender.getRenderSkyObject().render.telescope.ocular.focalLength *= min / fastField;
-  						fastField = skyRender.getRenderSkyObject().render.telescope.getField();						
+  						fastField = skyRender.getRenderSkyObject().render.telescope.getField();
   					}
   					if (fastField > max) {
   						skyRender.getRenderSkyObject().render.telescope.ocular.focalLength *= max / fastField;
-  						fastField = skyRender.getRenderSkyObject().render.telescope.getField();						
+  						fastField = skyRender.getRenderSkyObject().render.telescope.getField();
   					}
   					vel = 1.5 * fastField / chart.width;
   					chart.telescope = skyRender.getRenderSkyObject().render.telescope;
@@ -1726,14 +1723,14 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
   					int ycenter = 0;
 	  				if (hMode && (skyRender.getRenderSkyObject().render.projection == Projection.PROJECTION.STEREOGRAPHICAL ||
 	  					skyRender.getRenderSkyObject().render.projection == Projection.PROJECTION.SPHERICAL) &&
-	  					skyRender.getRenderSkyObject().render.coordinateSystem == COORDINATE_SYSTEM.HORIZONTAL && 
-	  					skyRender.getRenderSkyObject().render.centralLatitude < horizonViewModeLatitudeLimit && 
-	  					fastField > horizonViewModeFieldLimit) // Horizon-view mode 
+	  					skyRender.getRenderSkyObject().render.coordinateSystem == COORDINATE_SYSTEM.HORIZONTAL &&
+	  					skyRender.getRenderSkyObject().render.centralLatitude < horizonViewModeLatitudeLimit &&
+	  					fastField > horizonViewModeFieldLimit) // Horizon-view mode
 	  					ycenter = (skyRender.getRenderSkyObject().render.height-100)/2;
   	  				try {
 						skyRender.getRenderSkyObject().setYCenterOffset(ycenter);
 					} catch (Exception e1) {
-         				Logger.log(LEVEL.ERROR, "Error setting center y value. Message was: "+e1.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e1.getStackTrace()));
+		 				Logger.log(LEVEL.ERROR, "Error setting center y value. Message was: "+e1.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e1.getStackTrace()));
 					}
 				lastMouseClickX = e.getX();
 				lastMouseClickY = e.getY();
@@ -1752,16 +1749,16 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 						skyRender.getRenderSkyObject().setSkyRenderElement(chartForDragging);
 					} catch (Exception exc) {}
 				}
-				
+
 				// Faster zoom reduction when big DSO image/s are on the screen
 				if (!running) {
 					runningTime = System.currentTimeMillis() + runningWaitTime;
 					Thread thread1 = new Thread(new thread1());
 					thread1.start();
 				}
-				
+
  		}
-	} 
+	}
 
 	private static long runningTime = -1, runningWaitTime = 100;
 	private static boolean running = false, oldTextures = false;
@@ -1776,11 +1773,11 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 				}
 			} catch (Exception exc) {}
 			running = false;
-			paintImage();			
+			paintImage();
 			skyRender.getRenderSkyObject().render.planetRender.textures = oldTextures;
 		}
 	}
-	
+
 
 	/**
 	 * Writes the object to a binary file.
@@ -1805,7 +1802,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 	private void readObject(ObjectInputStream in)
 	throws IOException, ClassNotFoundException {
 		chart = (SkyRenderElement) in.readObject();
-		
+
 		TimeElement time = (TimeElement) in.readObject();
 		if (time.astroDate == null) time.astroDate = new AstroDate();
 
@@ -1814,14 +1811,14 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 
 		x = in.readInt();
 		y = in.readInt();
-		
+
 		x0 = x;
 		y0 = y;
 		w0 = chart.width;
 		h0 = chart.height;
 
-    	eph.preferPrecisionInEphemerides = false;
-    	eph.correctForEOP = false;
+		eph.preferPrecisionInEphemerides = false;
+		eph.correctForEOP = false;
 
 		try {
 			skyRender = new SkyRendering(time, observer, eph, chart, "Sky fast render", 0);
@@ -1886,7 +1883,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 		return this.eph;
 	}
 
-	
+
 	/**
 	 * Pan support.
 	 */
@@ -1895,7 +1892,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 		if (menu != null) {
 			return;
 		}
-		
+
 		if (obs.getMotherBody() == TARGET.NOT_A_PLANET && posEQ != null) {
 			LocationElement l = skyRender.getRenderSkyObject().getEquatorialPositionOfRendering();
 			if (l != null && (e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_DOWN)) {
@@ -1904,7 +1901,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 					if (e.getKeyCode() == KeyEvent.VK_UP) {
 						this.posEQ = Functions.sumVectors(posEQ, l.getRectangularCoordinates());
 					} else {
-						this.posEQ = Functions.substract(posEQ, l.getRectangularCoordinates());					
+						this.posEQ = Functions.substract(posEQ, l.getRectangularCoordinates());
 					}
 					posEQ = new double[] {posEQ[0], posEQ[1], posEQ[2], 0, 0, 0};
 					this.obs = ObserverElement.parseExtraterrestrialObserver(new ExtraterrestrialObserverElement(t1083, posEQ));
@@ -1932,7 +1929,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 			}
 			return;
 		}
-		
+
 		int dx = 0, dy = 0;
 		int speed = 20;
 		if (e.getKeyCode() == KeyEvent.VK_LEFT) dx = -speed;
@@ -1974,8 +1971,8 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 				}
 			}
 			dragging = true;
-			paintImage();  				
-		}		
+			paintImage();
+		}
 
 		int wheel = 0;
 		speed = 1;
@@ -1989,15 +1986,15 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 			}
 			if (skyRender.getRenderSkyObject().render.telescope.ocular.focalLength < 0.01f)
 				skyRender.getRenderSkyObject().render.telescope.ocular.focalLength = 0.01f;
-			try { 
+			try {
 				fastField = skyRender.getRenderSkyObject().render.telescope.getField();
 				if (fastField < min) {
 					skyRender.getRenderSkyObject().render.telescope.ocular.focalLength *= min / fastField;
-					fastField = skyRender.getRenderSkyObject().render.telescope.getField();						
+					fastField = skyRender.getRenderSkyObject().render.telescope.getField();
 				}
 				if (fastField > max) {
 					skyRender.getRenderSkyObject().render.telescope.ocular.focalLength *= max / fastField;
-					fastField = skyRender.getRenderSkyObject().render.telescope.getField();						
+					fastField = skyRender.getRenderSkyObject().render.telescope.getField();
 				}
 			} catch (Exception exc) {
 				Logger.log(LEVEL.ERROR, "Error processing key event. Message was: "+exc.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(exc.getStackTrace()));
@@ -2017,8 +2014,8 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 		if (menu != null) {
 			return;
 		}
-		
-		if (e.getKeyCode() == KeyEvent.VK_M && Translate.getDefaultLanguage() == LANGUAGE.ENGLISH || 
+
+		if (e.getKeyCode() == KeyEvent.VK_M && Translate.getDefaultLanguage() == LANGUAGE.ENGLISH ||
 				e.getKeyCode() == KeyEvent.VK_V && Translate.getDefaultLanguage() == LANGUAGE.SPANISH) {
 			int next = this.showTexturedMW.ordinal() + 1;
 			if (next == SkyRenderElement.MILKY_WAY_TEXTURE.values().length) next = 0;
@@ -2036,14 +2033,14 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 //			return;
 //		}
 	}
-	
-    JPopupMenu menu = null;
-    private void modifyRendering(final int x, final int y) throws JPARSECException {
+
+	JPopupMenu menu = null;
+	private void modifyRendering(final int x, final int y) throws JPARSECException {
 
 		// Identify closest object: give preference to Solar System bodies to identify
   		// them without limiting magnitude. If it is not a Solar System body then
   		// reidentify closest object applying the limiting magnitude
-    	String s = null;
+		String s = null;
   		final Object data0[] = skyRender.getRenderSkyObject().getClosestObjectData(x, y, false, false);
   		Object data[] = data0;
   		if (data != null) {
@@ -2052,7 +2049,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 	  			data = skyRender.getRenderSkyObject().getClosestObjectData(x, y, true, false);
 	  		if (data != null) {
 		  		id = (RenderSky.OBJECT) data[0];
-		  		EphemElement ephem = null; 
+		  		EphemElement ephem = null;
 		  		String objData[] = null;
 		  		StarElement star = null;
 		  		if (id == RenderSky.OBJECT.DEEPSKY) {
@@ -2091,7 +2088,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 	  			}
 	  		});
 	  		menu.add(center);
-	  		
+
 	  		// Details about
 	  		JMenuItem details = new JMenuItem(t859+" "+s);
 	  		details.addActionListener(new ActionListener() {
@@ -2106,18 +2103,18 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 		  					String feature = RenderPlanet.identifyFeature(loc0, target, 2); // Closest feature within 2 deg
 		  					if (loc0 != null) {
 			  					if (feature != null) {
-			  						popupText = replaceVars(t883, new String[] {"%feature", "%object", "%x", "%y", "%lon", "%lat"}, new String[] {""+feature, ""+object, ""+x, ""+y, Functions.formatAngle(loc0.getLongitude(), 1), Functions.formatAngle(loc0.getLatitude(), 1)});							
+			  						popupText = replaceVars(t883, new String[] {"%feature", "%object", "%x", "%y", "%lon", "%lat"}, new String[] {""+feature, ""+object, ""+x, ""+y, Functions.formatAngle(loc0.getLongitude(), 1), Functions.formatAngle(loc0.getLatitude(), 1)});
 			  					} else {
 			  						popupText = replaceVars(t884, new String[] {"%x", "%y", "%lon", "%lat"}, new String[] {""+x, ""+y, Functions.formatAngle(loc0.getLongitude(), 1), Functions.formatAngle(loc0.getLatitude(), 1)});
 			  					}
 			  	  				popupText += FileIO.getLineSeparator() + FileIO.getLineSeparator();
 		  					}
 	  	  				}
-	  	  				popupText += identifyAndGetData(x, y);  
+	  	  				popupText += identifyAndGetData(x, y);
 		  				if (!popupText.equals("")) {
 		  					showPopup(obj, popupText);
 		  				}
-	  				} catch (Exception exc) { 
+	  				} catch (Exception exc) {
 	  					Logger.log(LEVEL.ERROR, "Error creating the details popup. Message was: "+exc.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(exc.getStackTrace()));
 	  				}
 	  			}
@@ -2126,21 +2123,21 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 
 	  		final RenderSky.OBJECT id = (RenderSky.OBJECT) data0[0];
 	  		TARGET target = Target.getID(s);
-	  		if (//id != OBJECT.ARTIFICIAL_SATELLITE && 
+	  		if (//id != OBJECT.ARTIFICIAL_SATELLITE &&
 	  				id != OBJECT.NOVA && id != OBJECT.SUPERNOVA && id != OBJECT.DEEPSKY
 	  				&& (!target.isNaturalSatellite() || (target.isNaturalSatellite() && target.getCentralBody() == obs.getMotherBody() &&
 	  						target.ordinal() >= TARGET.Phobos.ordinal() && target.ordinal() <= TARGET.Oberon.ordinal()))) {
 		  		JMenuItem traj = new JMenuItem(t967+" "+s);
 		  		traj.addActionListener(new ActionListener() {
 		  			public void actionPerformed(ActionEvent e) {
-		  	    		String s = (String)JOptionPane.showInputDialog(
-		  	                    null,
-		  						t968,							
-		  	                    t969,
-		  	                    JOptionPane.PLAIN_MESSAGE
-		  	                    );
+		  				String s = (String)JOptionPane.showInputDialog(
+		  						null,
+		  						t968,
+		  						t969,
+		  						JOptionPane.PLAIN_MESSAGE
+		  						);
 						try {
-			  	    		if (s == null || s.length() == 0) throw new Exception("cancel trajectory");
+			  				if (s == null || s.length() == 0) throw new Exception("cancel trajectory");
 
 							double before = DataSet.parseDouble(FileIO.getField(1, s, ",", false).trim());
 							double after = DataSet.parseDouble(FileIO.getField(2, s, ",", false).trim());
@@ -2170,14 +2167,14 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 		  	  					}
 		  	  				}
 
-		  	    			SkyRenderElement sky = skyRender.getRenderSkyObject().render;
+		  					SkyRenderElement sky = skyRender.getRenderSkyObject().render;
 		  	  				double jd_bdt = TimeScale.getJD(time, obs, eph, TimeElement.SCALE.BARYCENTRIC_DYNAMICAL_TIME);
 		  	  				TrajectoryElement.LABELS labelType = TrajectoryElement.LABELS.DAY_MONTH_ABBREVIATION;
 		  	  				if (Math.abs(after-before) > 365) labelType = TrajectoryElement.LABELS.YEAR_MONTH_DAY;
 		  	  				int labelStep = 3;
 		  	  				if (step <= 0.5) labelStep = (int)(0.5 + 1.0 / step);
 		  	  				if (FileIO.getNumberOfFields(s, ",", false) >= 4) labelStep = (int)DataSet.parseDouble(FileIO.getField(4, s, ",", false).trim());
-		  	  				
+
 		  	  				id.showCometTail = true;
 			  	  			TrajectoryElement path = new TrajectoryElement(id, obj, jd_bdt - before,
 			  	  				jd_bdt + after, step, true, labelType, labelStep, id != OBJECT.ARTIFICIAL_SATELLITE, id != OBJECT.ARTIFICIAL_SATELLITE);
@@ -2185,7 +2182,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 			  				path.drawPathFont = FONT.DIALOG_ITALIC_13;
 			  				path.drawPathColor1 = Picture.invertColor(new Color(sky.background)).getRGB(); //Color.BLACK;
 			  				path.drawPathColor2 = Color.RED.getRGB();
-			  				
+
 			  				if (sky.trajectory != null && sky.trajectory.length > 0) {
 			  					TrajectoryElement tr[] = new TrajectoryElement[1+sky.trajectory.length];
 			  					for (int it = 0; it < tr.length-1; it ++) {
@@ -2199,13 +2196,13 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 							skyRender.getRenderSkyObject().trajectoryChanged();
 							skyRender.getRenderSkyObject().setSkyRenderElement(sky);
 							updateImage();
-							fastField = skyRender.getRenderSkyObject().render.telescope.getField();	
+							fastField = skyRender.getRenderSkyObject().render.telescope.getField();
 							vel = 1.5 * fastField / chart.width;
-							chart = skyRender.getRenderSkyObject().render.clone();	
+							chart = skyRender.getRenderSkyObject().render.clone();
 						} catch (Exception e1) {
-		  	    			SkyRenderElement sky = skyRender.getRenderSkyObject().render;
-		  	    			sky.trajectory = null;
-		  	    			chart.trajectory = null;
+		  					SkyRenderElement sky = skyRender.getRenderSkyObject().render;
+		  					sky.trajectory = null;
+		  					chart.trajectory = null;
 							try {
 								skyRender.getRenderSkyObject().setSkyRenderElement(sky);
 							} catch (Exception e2) {
@@ -2243,7 +2240,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 		  					Picture pic = new Picture((BufferedImage)g.getRendering());
 		  					pic.show(Translate.translate(t1117));
 		  					RenderPlanet.FORCE_HIGHT_QUALITY = hq;
-		  				} catch (Exception exc) { 
+		  				} catch (Exception exc) {
 		  					Logger.log(LEVEL.ERROR, "Error creating the chart. Message was: "+exc.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(exc.getStackTrace()));
 		  				}
 		  			}
@@ -2276,7 +2273,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 		  					Picture pic = new Picture((BufferedImage)g.getRendering());
 		  					pic.show(Translate.translate(t1116));
 		  					map.clear();
-		  				} catch (Exception exc) { 
+		  				} catch (Exception exc) {
 		  					Logger.log(LEVEL.ERROR, "Error creating the chart. Message was: "+exc.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(exc.getStackTrace()));
 		  				}
 		  			}
@@ -2284,7 +2281,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 		  		menu.add(lunarEclipse);
 	  		}
   		}
-  		
+
   		// Goto with telescope
   		if (telescopeControl != null) {
   			JMenuItem tc[] = new JMenuItem[telescopeControl.length];
@@ -2304,10 +2301,10 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 				  				chart.centralLatitude = oldLoc.getLatitude();
 				  				setCentralObject(null, null);
 				  				chart.drawSkyCorrectingLocalHorizon = sbh;
-				  				
+
 			  					telescopeControl[index].setObjectCoordinates(loc, obj);
 			  					telescopeControl[index].gotoObject();
-			  				} catch (Exception exc) { 
+			  				} catch (Exception exc) {
 			  					Logger.log(LEVEL.ERROR, "Error commanding the telescope. Message was: "+exc.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(exc.getStackTrace()));
 			  				}
 			  			}
@@ -2317,7 +2314,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
   			}
   		}
 		menu.addSeparator();
-  		
+
   		// Lock dragging
   		JMenuItem lock = new JMenuItem(t860);
   		lock.addActionListener(new ActionListener() {
@@ -2326,33 +2323,33 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
   			}
   		});
   		menu.add(lock);
-  		
+
   		// Search object
   		String add = "";
   		if (object != null) add = " ("+object+")";
   		JMenuItem center = new JMenuItem(t861+add);
   		center.addActionListener(new ActionListener() {
   			public void actionPerformed(ActionEvent e) {
-  	    		String s = (String)JOptionPane.showInputDialog(
-  	                    null,
-  	                    t885,
-  	                    t886,
-  	                    JOptionPane.PLAIN_MESSAGE
-  	                    );
-  	    		if (s != null && s.length() > 0) {
+  				String s = (String)JOptionPane.showInputDialog(
+  						null,
+  						t885,
+  						t886,
+  						JOptionPane.PLAIN_MESSAGE
+  						);
+  				if (s != null && s.length() > 0) {
 	  				try {
-	  					setCentralObject(s, null);	  					
+	  					setCentralObject(s, null);
 		  				paintIt();
 					} catch (Exception e1) {
-         				Logger.log(LEVEL.ERROR, "Error setting central object. Message was: "+e1.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e1.getStackTrace()));
+		 				Logger.log(LEVEL.ERROR, "Error setting central object. Message was: "+e1.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e1.getStackTrace()));
 					}
-  	    		} else {
-  	    			object = null;
-  	    		}
+  				} else {
+  					object = null;
+  				}
   			}
   		});
   		menu.add(center);
-  		
+
   		// Export chart
   		JMenuItem export = new JMenuItem(t950);
   		export.addActionListener(new ActionListener() {
@@ -2393,16 +2390,16 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 	  	  							JOptionPane.showMessageDialog(null, t973, t240, JOptionPane.WARNING_MESSAGE);
 	  	  							Logger.log(LEVEL.ERROR, "Error exporting chart. Image was copied to clipboard");
 	  	  						}
-	  						}							
+	  						}
 						}
   						skyRender.getRenderSkyObject().resetLeyend(true);
 					}
-					
+
   					update();
 				} catch (Exception e1) {
 					String msg = e1.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e1.getStackTrace());
 					JOptionPane.showMessageDialog(null, t1002, t230, JOptionPane.ERROR_MESSAGE);
-     				Logger.log(LEVEL.ERROR, "Error exporting chart. Message was: "+msg);
+	 				Logger.log(LEVEL.ERROR, "Error exporting chart. Message was: "+msg);
 				}
   			}
   		});
@@ -2410,20 +2407,20 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
   		menu.addSeparator();
 
   		// Modify date
-  		add = time.toString(); 
+  		add = time.toString();
   		JMenuItem date = new JMenuItem(t862+" ("+add+")");
   		date.addActionListener(new ActionListener() {
   			public void actionPerformed(ActionEvent e) {
   				AstroDate astro = time.astroDate;
   				String date = astro.getYear()+", "+astro.getMonth()+", "+astro.getDay()+", "+astro.getHour()+", "+astro.getMinute()+", "+Functions.formatValue(astro.getSeconds(), 3)+", "+time.getTimeScaleAbbreviation();
-  	    		String s = (String)JOptionPane.showInputDialog(
-  	                    null,
-  						replaceVars(t887, new String[] {"%date"}, new String[] {date}),							
-  	                    Translate.translate(888),
-  	                    JOptionPane.PLAIN_MESSAGE, null, null, date
-  	                    );
-  	    		if (s != null && s.length() > 0) {
-  	    			int prevYear = time.astroDate.getYear();
+  				String s = (String)JOptionPane.showInputDialog(
+  						null,
+  						replaceVars(t887, new String[] {"%date"}, new String[] {date}),
+  						Translate.translate(888),
+  						JOptionPane.PLAIN_MESSAGE, null, null, date
+  						);
+  				if (s != null && s.length() > 0) {
+  					int prevYear = time.astroDate.getYear();
 	  				try {
 	  					boolean removeObj = false;
 	  					if (s.toLowerCase().equals(t889)) {
@@ -2473,7 +2470,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 			  					time.astroDate = astro;
 			  					String ts = FileIO.getField(7, s, ",", false).trim().toLowerCase();
 		  						timer.stop();
-			  					
+
 			  					if (ts.equals("tt")) time.timeScale = TimeElement.SCALE.TERRESTRIAL_TIME;
 			  					if (ts.equals("tdb")) time.timeScale = TimeElement.SCALE.BARYCENTRIC_DYNAMICAL_TIME;
 			  					if (ts.equals("ut") || ts.equals("utc") || ts.equals("tuc") || ts.equals("tu")) time.timeScale = TimeElement.SCALE.UNIVERSAL_TIME_UTC;
@@ -2485,11 +2482,11 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 	  							time = oldTime;
 	  							throw new Exception("Date is limited between years -200000 and 200000!");
 	  						}
-	  						
-	  		       			if (time.timeScale != SCALE.TERRESTRIAL_TIME  && time.timeScale != SCALE.BARYCENTRIC_DYNAMICAL_TIME && 
-	  		       					(time.astroDate.getYear() < -1000 || time.astroDate.getYear() > 3000)) {
-	  							JOptionPane.showMessageDialog(null, Translate.translate(1294), t240, JOptionPane.WARNING_MESSAGE);	  		       				
-	  		       			}
+
+	  			   			if (time.timeScale != SCALE.TERRESTRIAL_TIME  && time.timeScale != SCALE.BARYCENTRIC_DYNAMICAL_TIME &&
+	  			   					(time.astroDate.getYear() < -1000 || time.astroDate.getYear() > 3000)) {
+	  							JOptionPane.showMessageDialog(null, Translate.translate(1294), t240, JOptionPane.WARNING_MESSAGE);
+	  			   			}
 	  					}
 
 	  					// Update observer in case it is located in a non-Earth body which
@@ -2514,17 +2511,17 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 								obs = ObserverElement.parseExtraterrestrialObserver(new ExtraterrestrialObserverElement(obs.getName(), out));
 							}
 	  					}
-	  					
-	  					if (time.astroDate.getYear() != prevYear && Runtime.getRuntime().availableProcessors() > 1 
+
+	  					if (time.astroDate.getYear() != prevYear && Runtime.getRuntime().availableProcessors() > 1
 	  							&& time.astroDate.getYear() >= -1000 && time.astroDate.getYear() < 2998 && calcEvents
 	  							) {
 //	  						thread = new Thread(new thread0());
-//	  						thread.start(); 
+//	  						thread.start();
 	  					}
 
-	         			Logger.log(LEVEL.INFO, "Selected new date: "+time.toString());
-	        		    double ttminusut1 = TimeScale.getTTminusUT1(time, obs);
-	         			Logger.log(LEVEL.INFO, "TT-UT1 = "+Functions.formatValue(ttminusut1, 3)+" s");
+			 			Logger.log(LEVEL.INFO, "Selected new date: "+time.toString());
+						double ttminusut1 = TimeScale.getTTminusUT1(time, obs);
+			 			Logger.log(LEVEL.INFO, "TT-UT1 = "+Functions.formatValue(ttminusut1, 3)+" s");
 						skyRender.getRenderSkyObject().setSkyRenderElement(skyRender.getRenderSkyObject().render, time, obs, eph);
 						skyRender.getRenderSkyObject().dateChanged(true);
 						if (object != null) {
@@ -2536,9 +2533,9 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 					} catch (Exception e1) {
 						String msg = e1.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e1.getStackTrace());
 						JOptionPane.showMessageDialog(null, msg, t230, JOptionPane.ERROR_MESSAGE);
-         				Logger.log(LEVEL.ERROR, "Error setting time. Message was: "+msg);
+		 				Logger.log(LEVEL.ERROR, "Error setting time. Message was: "+msg);
 					}
-  	    		}
+  				}
   			}
   		});
   		if (showModifyLocTimeCoord)	menu.add(date);
@@ -2666,21 +2663,21 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
   			}
   		});
   		menu.add(realTime);
-  		
+
   		// Modify observer
   		JMenuItem observer = new JMenuItem(t863+" ("+obs.getName()+")");
   		observer.addActionListener(new ActionListener() {
   			public void actionPerformed(ActionEvent e) {
   				String loc = obs.getName();
-  	    		String s = (String)JOptionPane.showInputDialog(
-  	                    null,
-  						replaceVars(t890, new String[] {"%loc"}, new String[] {loc}),							
+  				String s = (String)JOptionPane.showInputDialog(
+  						null,
+  						replaceVars(t890, new String[] {"%loc"}, new String[] {loc}),
   						t891,
-  	                    JOptionPane.PLAIN_MESSAGE
-  	                    );
-  	    		if (s != null && s.length() > 0) {
+  						JOptionPane.PLAIN_MESSAGE
+  						);
+  				if (s != null && s.length() > 0) {
 	  				try {
-	  				    CityElement cities[] = City.findAllCities(s);
+	  					CityElement cities[] = City.findAllCities(s);
 	  					ObserverElement observer2 = null;
 	  					if (cities == null) {
 	  						try {
@@ -2688,8 +2685,8 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 	  							int nf = FileIO.getNumberOfFields(s, ",", false);
 		  						if (nf != 5) obse = Observatory.findObservatorybyName(s);
 		  						if (obse != null) {
-		  							observer2 = ObserverElement.parseObservatory(obse);	
-		  	         				Logger.log(LEVEL.INFO, "Selected new observatory: "+obse.name+", lon "+Functions.formatAngleAsDegrees(observer2.getLongitudeRad(), 3)+"�, lat "+Functions.formatAngleAsDegrees(observer2.getLatitudeRad(), 3)+"�");
+		  							observer2 = ObserverElement.parseObservatory(obse);
+		  			 				Logger.log(LEVEL.INFO, "Selected new observatory: "+obse.name+", lon "+Functions.formatAngleAsDegrees(observer2.getLongitudeRad(), 3)+"�, lat "+Functions.formatAngleAsDegrees(observer2.getLatitudeRad(), 3)+"�");
 		  						} else {
 		  							// Name, lon, lat (deg), height (m), Time zone (hours)
 		  							if (nf == 5) {
@@ -2705,21 +2702,21 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 			  								observer2.setHumidity(ObserverElement.DEFAULT_HUMIDITY);
 			  								observer2.setPressure(ObserverElement.DEFAULT_PRESSURE);
 			  								observer2.setTemperature(ObserverElement.DEFAULT_TEMPERATURE);
-				  	         				Logger.log(LEVEL.INFO, "Selected new observer: "+observer2.getName()+", lon "+Functions.formatAngleAsDegrees(observer2.getLongitudeRad(), 3)+"�, lat "+Functions.formatAngleAsDegrees(observer2.getLatitudeRad(), 3)+"�");		  								
+				  			 				Logger.log(LEVEL.INFO, "Selected new observer: "+observer2.getName()+", lon "+Functions.formatAngleAsDegrees(observer2.getLongitudeRad(), 3)+"�, lat "+Functions.formatAngleAsDegrees(observer2.getLatitudeRad(), 3)+"�");
 		  								} catch (Exception exc2) {
 		  									observer2 = null;
 			  								JOptionPane.showMessageDialog(null,
-				  			  						replaceVars(t892, new String[] {"%loc"}, new String[] {loc}),							
-				  			        				t893,
-				  			                        JOptionPane.WARNING_MESSAGE
-				  			                        );
+				  			  						replaceVars(t892, new String[] {"%loc"}, new String[] {loc}),
+				  									t893,
+				  									JOptionPane.WARNING_MESSAGE
+				  									);
 		  								}
 		  							} else {
 		  								JOptionPane.showMessageDialog(null,
-		  			  						replaceVars(t892, new String[] {"%loc"}, new String[] {loc}),							
-		  			        				t893,
-		  			                        JOptionPane.WARNING_MESSAGE
-		  			                        );
+		  			  						replaceVars(t892, new String[] {"%loc"}, new String[] {loc}),
+		  									t893,
+		  									JOptionPane.WARNING_MESSAGE
+		  									);
 		  							}
 		  						}
 	  						} catch (Exception exc) {
@@ -2728,14 +2725,14 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 			  						ObservatoryElement obse = null;
 			  						if (index >= 0) obse = Observatory.getObservatoryFromMarsdenList(index);
 			  						if (obse != null) {
-			  							observer2 = ObserverElement.parseObservatory(obse);	
-			  	         				Logger.log(LEVEL.INFO, "Selected new observatory: "+obse.name+", lon "+Functions.formatAngleAsDegrees(observer2.getLongitudeRad(), 3)+"�, lat "+Functions.formatAngleAsDegrees(observer2.getLatitudeRad(), 3)+"�");
+			  							observer2 = ObserverElement.parseObservatory(obse);
+			  			 				Logger.log(LEVEL.INFO, "Selected new observatory: "+obse.name+", lon "+Functions.formatAngleAsDegrees(observer2.getLongitudeRad(), 3)+"�, lat "+Functions.formatAngleAsDegrees(observer2.getLatitudeRad(), 3)+"�");
 			  						} else {
-			  			        		JOptionPane.showMessageDialog(null,
-			  			  						replaceVars(t892, new String[] {"%loc"}, new String[] {s}),							
-			  			        				t893,
-			  			                        JOptionPane.WARNING_MESSAGE
-			  			                        );
+			  							JOptionPane.showMessageDialog(null,
+			  			  						replaceVars(t892, new String[] {"%loc"}, new String[] {s}),
+			  									t893,
+			  									JOptionPane.WARNING_MESSAGE
+			  									);
 			  						}
 		  						} catch (Exception exc2) {
 	  	  							JOptionPane.showMessageDialog(null, t893, t240, JOptionPane.WARNING_MESSAGE);
@@ -2744,33 +2741,33 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 	  						}
 	  					} else {
 		  					CityElement city = cities[0];
-	  					    if (cities.length > 1) {
-	  					    	String list[] = new String[cities.length];
-	  					    	for (int i=0; i<cities.length; i++) {
-	  					    		list[i] = cities[i].name+" ("+cities[i].country+")";
-	  					    	}
+	  						if (cities.length > 1) {
+	  							String list[] = new String[cities.length];
+	  							for (int i=0; i<cities.length; i++) {
+	  								list[i] = cities[i].name+" ("+cities[i].country+")";
+	  							}
 	  							s = (String)JOptionPane.showInputDialog(
-	  					                null,
-	  					                t1001,
-	  					                t1000,
-	  					                JOptionPane.PLAIN_MESSAGE, null,
-	  					                list, list[0]
-	  					                );
+	  									null,
+	  									t1001,
+	  									t1000,
+	  									JOptionPane.PLAIN_MESSAGE, null,
+	  									list, list[0]
+	  									);
 	  							if (s != null && s.length() > 0) {
 	  								int i = DataSet.getIndex(list, s);
 	  								city = cities[i];
 	  							} else {
 	  								return;
 	  							}
-	  					    }
+	  						}
 
 	  						observer2 = ObserverElement.parseCity(city);
-  	         				Logger.log(LEVEL.INFO, "Selected new city: "+city.name+" ("+city.country+"), lon "+Functions.formatAngleAsDegrees(observer2.getLongitudeRad(), 3)+"�, lat "+Functions.formatAngleAsDegrees(observer2.getLatitudeRad(), 3)+"�");
+  			 				Logger.log(LEVEL.INFO, "Selected new city: "+city.name+" ("+city.country+"), lon "+Functions.formatAngleAsDegrees(observer2.getLongitudeRad(), 3)+"�, lat "+Functions.formatAngleAsDegrees(observer2.getLatitudeRad(), 3)+"�");
 	  					}
 	  					if (observer2 != null) {
 	  						updateTime = updateTime0;
 	  		  				updateTimer();
-	  		  				
+
 	  						if (obs.getMotherBody() != TARGET.EARTH) obs.forceObserverOnEarth();
 	  						obs.setName(observer2.getName());
 	  						obs.setDSTCode(observer2.getDSTCode());
@@ -2791,9 +2788,9 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 					} catch (Exception e1) {
 						String msg = e1.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e1.getStackTrace());
 						JOptionPane.showMessageDialog(null, msg, t230, JOptionPane.ERROR_MESSAGE);
-         				Logger.log(LEVEL.ERROR, "Error setting observer. Message was: "+msg);
+		 				Logger.log(LEVEL.ERROR, "Error setting observer. Message was: "+msg);
 					}
-  	    		}
+  				}
   			}
   		});
   		if (showModifyLocTimeCoord) menu.add(observer);
@@ -2813,7 +2810,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 					if (object != null)	setCentralObject(object, null);
 	  				paintIt();
 				} catch (Exception e1) {
-     				Logger.log(LEVEL.ERROR, "Error setting projection. Message was: "+e1.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e1.getStackTrace()));
+	 				Logger.log(LEVEL.ERROR, "Error setting projection. Message was: "+e1.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e1.getStackTrace()));
 				}
   			}
   		});
@@ -2825,7 +2822,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 					if (object != null) setCentralObject(object, null);
 	  				paintIt();
 				} catch (Exception e1) {
-     				Logger.log(LEVEL.ERROR, "Error setting projection. Message was: "+e1.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e1.getStackTrace()));
+	 				Logger.log(LEVEL.ERROR, "Error setting projection. Message was: "+e1.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e1.getStackTrace()));
 				}
   			}
   		});
@@ -2837,7 +2834,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 					if (object != null) setCentralObject(object, null);
 	  				paintIt();
 				} catch (Exception e1) {
-     				Logger.log(LEVEL.ERROR, "Error setting projection. Message was: "+e1.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e1.getStackTrace()));
+	 				Logger.log(LEVEL.ERROR, "Error setting projection. Message was: "+e1.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e1.getStackTrace()));
 				}
   			}
   		});
@@ -2849,7 +2846,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 					if (object != null) setCentralObject(object, null);
 	  				paintIt();
 				} catch (Exception e1) {
-     				Logger.log(LEVEL.ERROR, "Error setting projection. Message was: "+e1.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e1.getStackTrace()));
+	 				Logger.log(LEVEL.ERROR, "Error setting projection. Message was: "+e1.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e1.getStackTrace()));
 				}
   			}
   		});
@@ -2861,7 +2858,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 					if (object != null) setCentralObject(object, null);
 	  				paintIt();
 				} catch (Exception e1) {
-     				Logger.log(LEVEL.ERROR, "Error setting projection. Message was: "+e1.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e1.getStackTrace()));
+	 				Logger.log(LEVEL.ERROR, "Error setting projection. Message was: "+e1.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e1.getStackTrace()));
 				}
   			}
   		});
@@ -2871,7 +2868,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
   		projection.add(pItem4);
   		projection.add(pItem5);
   		if (showModifyLocTimeCoord) menu.add(projection);
-  		
+
   		// Modify coordinate system
   		JMenu coordSys = new JMenu(t865 + " ("+coordt[chart.coordinateSystem.ordinal()].toLowerCase()+")");
   		JMenuItem csItem1 = new JMenuItem(coordt[0]);
@@ -2895,8 +2892,8 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 					}
 	  				paintIt();
 				} catch (Exception e1) {
-     				Logger.log(LEVEL.ERROR, "Error setting coordinate system. Message was: "+e1.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e1.getStackTrace()));
-				}  				
+	 				Logger.log(LEVEL.ERROR, "Error setting coordinate system. Message was: "+e1.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e1.getStackTrace()));
+				}
   			}
   		});
   		csItem2.addActionListener(new ActionListener() {
@@ -2916,8 +2913,8 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 					}
 	  				paintIt();
 				} catch (Exception e1) {
-     				Logger.log(LEVEL.ERROR, "Error setting coordinate system. Message was: "+e1.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e1.getStackTrace()));
-				}  				
+	 				Logger.log(LEVEL.ERROR, "Error setting coordinate system. Message was: "+e1.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e1.getStackTrace()));
+				}
   			}
   		});
   		csItem3.addActionListener(new ActionListener() {
@@ -2937,8 +2934,8 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 					}
 	  				paintIt();
 				} catch (Exception e1) {
-     				Logger.log(LEVEL.ERROR, "Error setting coordinate system. Message was: "+e1.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e1.getStackTrace()));
-				}  				
+	 				Logger.log(LEVEL.ERROR, "Error setting coordinate system. Message was: "+e1.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e1.getStackTrace()));
+				}
   			}
   		});
   		csItem4.addActionListener(new ActionListener() {
@@ -2958,18 +2955,18 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 					}
 	  				paintIt();
 				} catch (Exception e1) {
-     				Logger.log(LEVEL.ERROR, "Error setting coordinate system. Message was: "+e1.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e1.getStackTrace()));
-				}  				
+	 				Logger.log(LEVEL.ERROR, "Error setting coordinate system. Message was: "+e1.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e1.getStackTrace()));
+				}
   			}
   		});
   		coordSys.add(csItem1);
   		coordSys.add(csItem2);
   		coordSys.add(csItem3);
-  		if (obs.getMotherBody() != TARGET.NOT_A_PLANET && eph.isTopocentric) 
+  		if (obs.getMotherBody() != TARGET.NOT_A_PLANET && eph.isTopocentric)
   			coordSys.add(csItem4);
   		if (showModifyLocTimeCoord) menu.add(coordSys);
   		if (!showModifyLocTimeCoord) menu.addSeparator();
-  		
+
   		add = "";
   		if (colorMode != -1) add = " ("+cmt[colorMode].toLowerCase()+")";
   		JMenu colorSqueme = new JMenu(t980+add);
@@ -3001,10 +2998,10 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 	  				paintIt();
 	  				colorMode = 0;
 				} catch (Exception e1) {
-     				Logger.log(LEVEL.ERROR, "Error setting color mode. Message was: "+e1.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e1.getStackTrace()));
-				}  				
+	 				Logger.log(LEVEL.ERROR, "Error setting color mode. Message was: "+e1.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e1.getStackTrace()));
+				}
   			}
-  		});  		
+  		});
   		csqItem2.addActionListener(new ActionListener() {
   			public void actionPerformed(ActionEvent e) {
   				try {
@@ -3025,10 +3022,10 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 	  				paintIt();
 	  				colorMode = 1;
 				} catch (Exception e1) {
-     				Logger.log(LEVEL.ERROR, "Error setting color mode. Message was: "+e1.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e1.getStackTrace()));
-				}  				
+	 				Logger.log(LEVEL.ERROR, "Error setting color mode. Message was: "+e1.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e1.getStackTrace()));
+				}
   			}
-  		});  		
+  		});
   		csqItem3.addActionListener(new ActionListener() {
   			public void actionPerformed(ActionEvent e) {
   				try {
@@ -3048,10 +3045,10 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 	  				paintIt();
 	  				colorMode = 2;
 				} catch (Exception e1) {
-     				Logger.log(LEVEL.ERROR, "Error setting color mode. Message was: "+e1.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e1.getStackTrace()));
-				}  				
+	 				Logger.log(LEVEL.ERROR, "Error setting color mode. Message was: "+e1.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e1.getStackTrace()));
+				}
   			}
-  		});  		
+  		});
   		csqItem4.addActionListener(new ActionListener() {
   			public void actionPerformed(ActionEvent e) {
   				try {
@@ -3071,10 +3068,10 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 	  				paintIt();
 	  				colorMode = 3;
 				} catch (Exception e1) {
-     				Logger.log(LEVEL.ERROR, "Error setting color mode. Message was: "+e1.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e1.getStackTrace()));
-				}  				
+	 				Logger.log(LEVEL.ERROR, "Error setting color mode. Message was: "+e1.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e1.getStackTrace()));
+				}
   			}
-  		});  		
+  		});
   		csqItem5.addActionListener(new ActionListener() {
   			public void actionPerformed(ActionEvent e) {
   				try {
@@ -3094,10 +3091,10 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 	  				paintIt();
 	  				colorMode = 4;
 				} catch (Exception e1) {
-     				Logger.log(LEVEL.ERROR, "Error setting color mode. Message was: "+e1.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e1.getStackTrace()));
-				}  				
+	 				Logger.log(LEVEL.ERROR, "Error setting color mode. Message was: "+e1.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e1.getStackTrace()));
+				}
   			}
-  		});  		
+  		});
   		csqItem6.addActionListener(new ActionListener() {
   			public void actionPerformed(ActionEvent e) {
   				try {
@@ -3117,10 +3114,10 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 	  				paintIt();
 	  				colorMode = 5;
 				} catch (Exception e1) {
-     				Logger.log(LEVEL.ERROR, "Error setting color mode. Message was: "+e1.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e1.getStackTrace()));
-				}  				
+	 				Logger.log(LEVEL.ERROR, "Error setting color mode. Message was: "+e1.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e1.getStackTrace()));
+				}
   			}
-  		});  		
+  		});
   		csqItem7.addActionListener(new ActionListener() {
   			public void actionPerformed(ActionEvent e) {
   				try {
@@ -3140,10 +3137,10 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 	  				paintIt();
 	  				colorMode = 6;
 				} catch (Exception e1) {
-     				Logger.log(LEVEL.ERROR, "Error setting color mode. Message was: "+e1.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e1.getStackTrace()));
-				}  				
+	 				Logger.log(LEVEL.ERROR, "Error setting color mode. Message was: "+e1.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e1.getStackTrace()));
+				}
   			}
-  		});  		
+  		});
   		csqItem8.addActionListener(new ActionListener() {
   			public void actionPerformed(ActionEvent e) {
   				try {
@@ -3163,15 +3160,15 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 	  				paintIt();
 	  				colorMode = 7;
 				} catch (Exception e1) {
-     				Logger.log(LEVEL.ERROR, "Error setting color mode. Message was: "+e1.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e1.getStackTrace()));
-				}  				
+	 				Logger.log(LEVEL.ERROR, "Error setting color mode. Message was: "+e1.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e1.getStackTrace()));
+				}
   			}
-  		});  		
+  		});
   		csqItem9.addActionListener(new ActionListener() {
   			public void actionPerformed(ActionEvent e) {
   				try {
   					chart.anaglyphMode = ANAGLYPH_COLOR_MODE.NO_ANAGLYPH;
-  					chart.setColorMode(COLOR_MODE.PRINT_MODE); 
+  					chart.setColorMode(COLOR_MODE.PRINT_MODE);
   					chart.planetRender.anaglyphMode = chart.anaglyphMode;
 					chart.drawStarsRealistic = REALISTIC_STARS.NONE_CUTE;
   					if (chart.trajectory != null) {
@@ -3185,10 +3182,10 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 	  				paintIt();
 	  				colorMode = 8;
 				} catch (Exception e1) {
-     				Logger.log(LEVEL.ERROR, "Error setting color mode. Message was: "+e1.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e1.getStackTrace()));
-				}  				
+	 				Logger.log(LEVEL.ERROR, "Error setting color mode. Message was: "+e1.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e1.getStackTrace()));
+				}
   			}
-  		});  		
+  		});
   		colorSqueme.add(csqItem1);
   		colorSqueme.add(csqItem2);
   		colorSqueme.add(csqItem3);
@@ -3199,7 +3196,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
   		colorSqueme.add(csqItem8);
   		colorSqueme.add(csqItem9);
   		menu.add(colorSqueme);
-  		 
+
   		String tel[] = new String[] {
   				// none, refractor/newton, mak
   				Translate.translate(1301), t67+"/Newton", "Mak/SC"
@@ -3301,7 +3298,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
  			item.addActionListener(new ActionListener() {
 	  			public void actionPerformed(ActionEvent e) {
 	  				OcularElement ocl = null;
-	  				if (skyRender.getRenderSkyObject().render.telescope.ocular != null) 
+	  				if (skyRender.getRenderSkyObject().render.telescope.ocular != null)
 	  					ocl = skyRender.getRenderSkyObject().render.telescope.ocular.clone();
 	  				skyRender.getRenderSkyObject().render.telescope.attachCCDCamera(ccd[index]);
 	  				skyRender.getRenderSkyObject().render.telescope.ocular = ocl;
@@ -3345,7 +3342,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
  			camPAMenu.add(item);
 		}
 		telescopeMenu.add(camPAMenu);
-		
+
 		JMenu barlowMenu = new JMenu(Translate.translate(1302));
 		final String barlow[] = new String[] {"1.5", "2.0", "2.5", "3", "5", "0.75", "0.5", "0.25"};
 		for (int i=0; i<barlow.length; i++) {
@@ -3373,9 +3370,9 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
  			barlowMenu.add(item);
 		}
 		telescopeMenu.add(barlowMenu);
-		
+
 		menu.add(telescopeMenu);
-  		
+
 /*  		if (invertH || invertV) {
   			boolean enabled = chart.telescope.invertHorizontal || chart.telescope.invertVertical;
   	  		// Show invert image option
@@ -3404,7 +3401,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
   	  		});
   	  		menu.add(showInvert);
   		}
-*/  		
+*/
   		// Show invert image option
   		JCheckBox showHmode = new JCheckBox(t1298, hMode);
   		showHmode.addActionListener(new ActionListener() {
@@ -3413,9 +3410,9 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
   			}
   		});
   		menu.add(showHmode);
-	  		
+
   		if (showModifyLocTimeCoord) menu.addSeparator();
-  		
+
   		// Show sky below horizon
   		JCheckBox skyBelowH = new JCheckBox(t1076, chart.drawSkyBelowHorizon);
   		skyBelowH.addActionListener(new ActionListener() {
@@ -3440,7 +3437,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
   			}
   		});
   		menu.add(skyBelowH);
-  		
+
   		// Show planets
   		JCheckBox showPlanets = new JCheckBox(t866, chart.drawPlanetsMoonSun);
   		showPlanets.addActionListener(new ActionListener() {
@@ -3497,7 +3494,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
   			}
   		});
   		menu.add(showOther);
-  		
+
   		// Show satellites
   		JCheckBox showSats = new JCheckBox(t970, chart.planetRender.satellitesMain);
   		showSats.addActionListener(new ActionListener() {
@@ -3509,7 +3506,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
   			}
   		});
   		menu.add(showSats);
-  		
+
   		// Show other catalogs
   		if (chart.getNumberOfExternalCatalogs() >= 0) {
   			JMenu externalMenu = new JMenu(t1081);
@@ -3526,7 +3523,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
   		  				paintIt();
   		  			}
   		  		});
-  		  		externalMenu.add(showExternal);  				
+  		  		externalMenu.add(showExternal);
   			}
 	  		JCheckBox showDSS = new JCheckBox(""+(chart.getNumberOfExternalCatalogs()+1)+" - "+t1293, skyRender.getRenderSkyObject().render.overlayDSSimageInNextRendering);
 	  		showDSS.addActionListener(new ActionListener() {
@@ -3539,10 +3536,10 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 	  				skyRender.getRenderSkyObject().render.overlayDSSimageInNextRendering = chart.overlayDSSimageInNextRendering;
 	  			}
 	  		});
-	  		externalMenu.add(showDSS);  				
+	  		externalMenu.add(showDSS);
 
-  			menu.add(externalMenu);  				
-/*  			
+  			menu.add(externalMenu);
+/*
   			String ecadd = "";
   			if (chart.getNumberOfExternalCatalogs() == 1) {
   				ecadd = " ("+chart.getExternalCatalogName(0)+")";
@@ -3558,10 +3555,10 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 	  			}
 	  		});
 	  		menu.add(showExternal);
-*/	  		
+*/
   		}
   		menu.addSeparator();
- 
+
   		// Draw grid
 		JCheckBox showGrid = new JCheckBox(t870, chart.drawCoordinateGrid);
 		showGrid.addActionListener(new ActionListener() {
@@ -3603,11 +3600,11 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
   	  					chart.drawMilkyWayContours = false;
   	  				} else {
   	  	  				if (!chart.drawMilkyWayContours && !chart.drawNebulaeContours) {
-  	    					chart.drawNebulaeContours = true;
+  							chart.drawNebulaeContours = true;
   	  	  				} else {
   	  	  	  				if (!chart.drawMilkyWayContours && chart.drawNebulaeContours) {
-  	    	  					chart.drawMilkyWayContours = true;
-  	  	  	  				}  	  	  					
+  			  					chart.drawMilkyWayContours = true;
+  	  	  	  				}
   	  	  				}
   	  				}
   				}
@@ -3763,7 +3760,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
   		menu.add(textureQ);
   		menu.addSeparator();
 
-  		
+
   		// maglim
   		add = " ("+Functions.formatValue(chart.drawStarsLimitingMagnitude, 1)+")";
   		if (!chart.drawStars) add = " ("+t898.toLowerCase()+")";
@@ -4001,12 +3998,12 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
   			for (int i=0; i<12; i++) {
   				month[i] = new JMenu(CalendarGenericConversion.getMonthName(i+1, CALENDAR.GREGORIAN));
   				event.add(month[i]);
-  			}  			
+  			}
   			for (int i=0; i<list.size(); i++) {
   				FeedMessageElement mes = list.get(i);
   				final String etitle = mes.title+" ("+mes.description+")";
   				JMenuItem e = new JMenuItem(etitle);
-  				
+
   				String edate = FileIO.getTextBeforeField(3, mes.description, " ", true).trim();
   				if (!edate.equals("")) {
   	  				boolean bc = false;
@@ -4023,7 +4020,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 	  				int mi = Integer.parseInt(FileIO.getField(2, etime, ":", false));
 	  				if (bc) yy = -yy;
 	  				final AstroDate astroDate = new AstroDate(yy, mm, dd, hh, mi, 0);
-	  				
+
 	  				month[mm-1].add(e);
 	  		 		e.addActionListener(new ActionListener() {
 	  		  			public void actionPerformed(ActionEvent e) {
@@ -4041,9 +4038,9 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 		  		  				if (etitle.indexOf(TARGET.Moon.getName().toLowerCase()) >= 0) s = TARGET.Moon.getName();
 		  		  				TimeElement time = new TimeElement(astroDate, TimeElement.SCALE.LOCAL_TIME);
 		  		  				timer.stop();
-			         			Logger.log(LEVEL.INFO, "Selected new date: "+time.toString());
-			        		    double ttminusut1 = TimeScale.getTTminusUT1(time, obs);
-			         			Logger.log(LEVEL.INFO, "TT-UT1 = "+Functions.formatValue(ttminusut1, 3)+" s");
+					 			Logger.log(LEVEL.INFO, "Selected new date: "+time.toString());
+								double ttminusut1 = TimeScale.getTTminusUT1(time, obs);
+					 			Logger.log(LEVEL.INFO, "TT-UT1 = "+Functions.formatValue(ttminusut1, 3)+" s");
 								skyRender.getRenderSkyObject().setSkyRenderElement(skyRender.getRenderSkyObject().render, time, obs, eph);
 								object = s;
 								if (object != null) {
@@ -4054,7 +4051,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 	  		  				} catch (Exception e1) {
 	  							String msg = e1.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e1.getStackTrace());
 	  							JOptionPane.showMessageDialog(null, msg, t230, JOptionPane.ERROR_MESSAGE);
-	  	         				Logger.log(LEVEL.ERROR, "Error selecting event. Message was: "+msg);
+	  			 				Logger.log(LEVEL.ERROR, "Error selecting event. Message was: "+msg);
 	  		  				}
 	  		  			}
 	  		  		});
@@ -4103,27 +4100,27 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
   			}
   		}
   		menu.show(panel, x, y);
-    }
+	}
 
-    private void updateObjTable() {
-    	// TODO: Sky view should have low field of view so that the az/el values are updated frequently
-    	
+	private void updateObjTable() {
+		// TODO: Sky view should have low field of view so that the az/el values are updated frequently
+
 		try {
-			// objects.add(new Object[] {name, messier, tt, loc, (float)magnitude, 
-			//    new float[] {(float) maxSize, (float) minSize}, paf, com});
+			// objects.add(new Object[] {name, messier, tt, loc, (float)magnitude,
+			//	new float[] {(float) maxSize, (float) minSize}, paf, com});
 			Object o =  DataBase.getDataForAnyThread("objects", true);
 			if (o == null) return;
-			ArrayList<Object> objects = new ArrayList<Object>(Arrays.asList((Object[]) o)); 
+			ArrayList<Object> objects = new ArrayList<Object>(Arrays.asList((Object[]) o));
 			String stable[][] = new String[objects.size()][7];
-			String types[] = new String[] {DataSet.capitalize(Translate.translate(819).toLowerCase(), false), DataSet.capitalize(Translate.translate(40), false), 
-					DataSet.capitalize(Translate.translate(959), false), DataSet.capitalize(Translate.translate(960), false), DataSet.capitalize(Translate.translate(1297), false), 
-					DataSet.capitalize(Translate.translate(961), false), DataSet.capitalize(Translate.translate(953), false), DataSet.capitalize(Translate.translate(954), false), 
-					DataSet.capitalize(Translate.translate(955), false), DataSet.capitalize(Translate.translate(956), false), DataSet.capitalize(Translate.translate(957), false), 
+			String types[] = new String[] {DataSet.capitalize(Translate.translate(819).toLowerCase(), false), DataSet.capitalize(Translate.translate(40), false),
+					DataSet.capitalize(Translate.translate(959), false), DataSet.capitalize(Translate.translate(960), false), DataSet.capitalize(Translate.translate(1297), false),
+					DataSet.capitalize(Translate.translate(961), false), DataSet.capitalize(Translate.translate(953), false), DataSet.capitalize(Translate.translate(954), false),
+					DataSet.capitalize(Translate.translate(955), false), DataSet.capitalize(Translate.translate(956), false), DataSet.capitalize(Translate.translate(957), false),
 					DataSet.capitalize(Translate.translate(958), false)};
-			for (int i=0; i<objects.size(); i++)  
+			for (int i=0; i<objects.size(); i++)
 			{
 				Object[] obj = (Object[]) objects.get(i);
-				
+
 				LocationElement loc = (LocationElement) obj[3];
 				float s[] = (float[]) obj[5];
 				String t = "";
@@ -4136,22 +4133,22 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 						Functions.formatAngleAsDegrees(loc.getLongitude(), 3),
 						Functions.formatAngleAsDegrees(loc.getLatitude(), 3),
 						Functions.formatValue((Float) obj[4], 1),
-						Functions.formatValue(s[0], 3)+"x"+Functions.formatValue(s[1], 3)						
+						Functions.formatValue(s[0], 3)+"x"+Functions.formatValue(s[1], 3)
 				};
 			}
-			
-    		String lo = Translate.translate(515), la = Translate.translate(517);
-    		if (skyRender.getRenderSkyObject().render.coordinateSystem == COORDINATE_SYSTEM.EQUATORIAL) {
-    			lo = Translate.translate(21);
-    			la = Translate.translate(22);
-    		}
-    		if (skyRender.getRenderSkyObject().render.coordinateSystem == COORDINATE_SYSTEM.HORIZONTAL) {
-    			lo = Translate.translate(28);
-    			la = Translate.translate(29);
-    		}
+
+			String lo = Translate.translate(515), la = Translate.translate(517);
+			if (skyRender.getRenderSkyObject().render.coordinateSystem == COORDINATE_SYSTEM.EQUATORIAL) {
+				lo = Translate.translate(21);
+				la = Translate.translate(22);
+			}
+			if (skyRender.getRenderSkyObject().render.coordinateSystem == COORDINATE_SYSTEM.HORIZONTAL) {
+				lo = Translate.translate(28);
+				la = Translate.translate(29);
+			}
 			String columns[] = new String[] {Translate.translate(787), Translate.translate(1295), Translate.translate(486), lo+" (�)", la+" (�)", Translate.translate(157), Translate.translate(308)+" (�)"};
-    		
-	    	if (!listShown || table == null || !table.getComponent().isVisible()) {
+
+			if (!listShown || table == null || !table.getComponent().isVisible()) {
 				boolean editable[] = null; // All false except boolean
 				Class<?> classes[] = new Class<?>[] {String.class, String.class, String.class, null, null, null, String.class};
 				table = new JTableRendering(columns, classes, editable, stable);
@@ -4168,21 +4165,21 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 						listShown = false;
 					}
 				});
-				
+
 				table.getComponent().addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent e) {
 						super.mouseClicked(e);
-						
+
 						String row = table.getSelectedRow(",");
 						String obj = FileIO.getField(1, row, ",", true);
 						setCentralObject(obj);
 					}
 				});
-	    	} else {
-	    		table.setColumnNames(columns);
-	    		table.updateTable(stable, true);
-	    	}
+			} else {
+				table.setColumnNames(columns);
+				table.updateTable(stable, true);
+			}
 	  		if (skyRender.getRenderSkyObject().render.getColorMode() == COLOR_MODE.NIGHT_MODE) {
 	  			Color back = new Color(0, 0, 0), foreg = new Color(128, 0, 0);
 	  			table.getComponent().setBackground(back);
@@ -4193,8 +4190,8 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 		} catch (Exception exc) {
 			exc.printStackTrace();
 		}
-    }
-    
+	}
+
 	private static String replaceVars(String raw, String[] vars, String[] values) {
 		if (vars == null) return raw;
 		String out = raw;
@@ -4228,13 +4225,13 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 			try {
 				img = ReadFile.readImageResource(image+".png");
 			} catch (Exception exc) {
-				img = ReadFile.readImageResource(image+".jpg");				
+				img = ReadFile.readImageResource(image+".jpg");
 			}
 			if (img != null) {
 				pic = new Picture(img);
 			}
 		} catch (Exception exc) {  }
-		
+
 		int w = 600, h = 600;
 		int th = 30, maxImgH = 520;
 		if (pic == null) {
@@ -4268,7 +4265,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 					render.showLabels = true;
 					EphemerisElement eph = this.eph.clone();
 					eph.targetBody = target;
-					
+
 					if (target == TARGET.SUN) {
 						String co = object;
 						double clon = skyRender.getRenderSkyObject().render.centralLongitude;
@@ -4299,9 +4296,9 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 						setCentralObject(target.getName());
 						skyRender2.getRenderSkyObject().render.centralLongitude = skyRender.getRenderSkyObject().render.centralLongitude;
 						skyRender2.getRenderSkyObject().render.centralLatitude = skyRender.getRenderSkyObject().render.centralLatitude;
-						
+
 						pic = new Picture(skyRender2.createBufferedImage());
-						
+
 						object = co;
 						skyRender.getRenderSkyObject().render.centralLongitude = clon;
 						skyRender.getRenderSkyObject().render.centralLatitude = clat;
@@ -4313,7 +4310,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 				}
 			} catch (Exception exc) { exc.printStackTrace(); }
 		}
-		
+
 		if (pic == null) {
 			String data[] = DataSet.toStringArray(popupText, FileIO.getLineSeparator());
 			String type = data[data.length-1];
@@ -4327,7 +4324,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 				if (skyRender.getRenderSkyObject().render.drawSkyCorrectingLocalHorizon && (obs.getMotherBody() == null || obs.getMotherBody() == TARGET.EARTH))
 					loc = Ephem.removeRefractionCorrectionFromEquatorialCoordinates(time, obs, eph, loc);
 				LocationElement j2000 = Ephem.toMeanEquatorialJ2000(
-						loc, 
+						loc,
 						time, obs, eph);
 				ReadFile re = new ReadFile();
 				re.setPath(DoubleStarElement.PATH_VISUAL_DOUBLE_STAR_CATALOG); //.PATH_OLD_VISUAL_DOUBLE_STAR_CATALOG);
@@ -4360,7 +4357,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 					}
 				}
 			}
-				
+
 			if (data[0].toLowerCase().indexOf(t79.toLowerCase()) >= 0 && (type.indexOf("V")>=0 || type.indexOf("B")>=0)) {
 				// TODO: integration of AAVSO light curves
 				String pos[] = DataSet.getSubArray(data, 1, 10);
@@ -4370,7 +4367,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 				if (skyRender.getRenderSkyObject().render.drawSkyCorrectingLocalHorizon && (obs.getMotherBody() == null || obs.getMotherBody() == TARGET.EARTH))
 					loc = Ephem.removeRefractionCorrectionFromEquatorialCoordinates(time, obs, eph, loc);
 				LocationElement j2000 = Ephem.toMeanEquatorialJ2000(
-						loc, 
+						loc,
 						time, obs, eph);
 				ReadFile re = new ReadFile();
 				re.setPath(VariableStarElement.getPathBulletinAAVSO(time.astroDate.getYear()-1));
@@ -4385,7 +4382,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 						double minima = vstar.getNextMinima(time, obs);
 						if (vstar.isEclipsing) {
 							vstar.calcEphemeris(time, obs, false);
-							System.out.println(vstar.name+" PHASE    "+vstar.getPhase());
+							System.out.println(vstar.name+" PHASE	"+vstar.getPhase());
 							if (minima > 0) System.out.println(vstar.name+" MIN " + TimeFormat.formatJulianDayAsDate(minima));
 						} else {
 							double maxima = vstar.getNextMaxima(time, obs);
@@ -4395,7 +4392,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 					}
 				} catch (Exception exc) {}
 			}
-			
+
 			if ((data[0].toLowerCase().indexOf(t74.toLowerCase()) >= 0 || data[0].toLowerCase().indexOf(t73.toLowerCase()) >= 0)
 					&& obj != null && !obj.equals("")) {
 				try {
@@ -4420,14 +4417,14 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 						init.add(-1*365.25);
 						end.add(5*365.25);
 						int ow = 300, oh = 300;
-						CreateChart ch = orbit.getLightCurveChart(init, end, new ObserverElement(), 
+						CreateChart ch = orbit.getLightCurveChart(init, end, new ObserverElement(),
 								new EphemerisElement(), 200);
 						ChartElement chart = ch.getChartElement();
 						chart.imageWidth = ow;
 						chart.imageHeight = oh;
 						ch = new CreateChart(chart);
 						jparsec.io.image.Picture p1 = new Picture(ch.chartAsBufferedImage());
-						CreateChart ch2 = orbit.getDistanceChart(init, end, new ObserverElement(), 
+						CreateChart ch2 = orbit.getDistanceChart(init, end, new ObserverElement(),
 								new EphemerisElement(), 200);
 						ChartElement chart2 = ch2.getChartElement();
 						chart2.imageWidth = ow;
@@ -4448,7 +4445,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 				 }
 			}
 		}
-		
+
 		Draw draw = new Draw(w, 2000);
 		draw.clear(Color.BLACK);
 		draw.setPenColor(Color.WHITE);
@@ -4466,12 +4463,12 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 		draw.setFont(new Font(Font.DIALOG, Font.PLAIN, th/2));
 		y -= th / (double) draw.getHeight();
 		draw.line(0, y, 1.0, y);
-		y -= th / (double) draw.getHeight(); 
+		y -= th / (double) draw.getHeight();
 		String t[] = DataSet.toStringArray(popupText, FileIO.getLineSeparator());
 		int init = t[1].indexOf(t21);
 		String prefix = "";
 		if (init > 0) prefix = t[1].substring(0, init);
-		
+
 		int maxLine1 = 70;
 		if (t[0].length() > maxLine1) {
 			do {
@@ -4480,15 +4477,15 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 				int n = s.lastIndexOf(" ");
 				if (t[0].length() > maxLine1 && n > 10) s = s.substring(0, n);
 				draw.text(x, y, s, false);
-				t[0] = t[0].substring(s.length()).trim(); 
+				t[0] = t[0].substring(s.length()).trim();
 				y -= th / (double) draw.getHeight();
 			} while (t[0].length() > 0);
 		} else {
 			draw.text(x, y, t[0], false);
 		}
-		y -= th / (double) draw.getHeight(); 
-		y -= th / (double) draw.getHeight(); 
-		
+		y -= th / (double) draw.getHeight();
+		y -= th / (double) draw.getHeight();
+
 		for (int i=1; i<t.length; i++) {
 			String columns[] = new String[] {
 					FileIO.getField(1, t[i], ":", false),
@@ -4503,7 +4500,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 					int n = s.lastIndexOf(" ");
 					if (columns[0].length() > 30 && n > 10) s = s.substring(0, n);
 					draw.text(x, y, s, false);
-					columns[0] = columns[0].substring(s.length()).trim(); 
+					columns[0] = columns[0].substring(s.length()).trim();
 					y -= th / (double) draw.getHeight();
 				} while (columns[0].length() > 0);
 			} else {
@@ -4518,7 +4515,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 					int n = s.lastIndexOf(" ");
 					if (columns[1].length() > 30 && n > 10) s = s.substring(0, n);
 					draw.text(x + 0.5, y, s, false);
-					columns[1] = columns[1].substring(s.length()).trim(); 
+					columns[1] = columns[1].substring(s.length()).trim();
 					y -= th / (double) draw.getHeight();
 				} while (columns[1].length() > 0);
 			} else {
@@ -4552,7 +4549,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 		f.setVisible(true);
 
 	}
-	
+
 	private void showPopupHTML(String obj, String popupText) throws JPARSECException {
 			HTMLReport html = new HTMLReport();
 			html.writeHeader(obj);
@@ -4597,7 +4594,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 			dlg.setModal(false);
 			dlg.setVisible(true);
 	}
-	
+
 	private int getMinorObjectIndex(String name, EphemerisElement eph) throws JPARSECException {
 		int index = OrbitEphem.getIndexOfAsteroid(name);
 		if (index >= 0) {
@@ -4607,13 +4604,13 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 			if (index >= 0) {
 				eph.orbit = OrbitEphem.getOrbitalElementsOfComet(index);
 			} else {
-    			index = OrbitEphem.getIndexOfTransNeptunian(name);
-    			if (index >= 0) {
-    				eph.orbit = OrbitEphem.getOrbitalElementsOfTransNeptunian(index);
-    			} else {
-    				return -1;
-    			}
-			}        				
+				index = OrbitEphem.getIndexOfTransNeptunian(name);
+				if (index >= 0) {
+					eph.orbit = OrbitEphem.getOrbitalElementsOfTransNeptunian(index);
+				} else {
+					return -1;
+				}
+			}
 		}
 		eph.targetBody.setIndex(index);
 		eph.algorithm = ALGORITHM.ORBIT;
@@ -4621,109 +4618,109 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 	}
 	private void setCentralObject(SkyRendering skyRender, TARGET targetID, boolean showError) throws JPARSECException {
 		boolean fast = false;
-		
-	    // Now we set the center position to draw: constellation or a planet
-        if (targetID == TARGET.NOT_A_PLANET) {
-        	if (object.startsWith("skyloc_")) {
-        		String p = object.substring(7);
-        		int type = 0;
-        		boolean precess = false;
-        		if (p.startsWith("ec")) type = 1;
-        		if (p.startsWith("ga")) type = 2;
-        		if (p.startsWith("ho")) type = 3;
-        		if (p.startsWith("eq0") || p.startsWith("ho0") || p.startsWith("ec0") || p.startsWith("ga0")) precess = true;
-        		int s = p.indexOf("_");
-        		p = p.substring(s+1);
-        		s = p.indexOf("_");
-        		LocationElement loc = new LocationElement(
-        				DataSet.parseDouble(p.substring(0, s)) * Constant.DEG_TO_RAD,
-        				DataSet.parseDouble(p.substring(s + 1)) * Constant.DEG_TO_RAD,
-        				1.0
-        		);
-        		if (type == 1) loc = CoordinateSystem.eclipticToEquatorial(loc, time, obs, eph);
-        		if (type == 2) loc = CoordinateSystem.galacticToEquatorial(loc, time, obs, eph);
-        		if (type == 3) loc = CoordinateSystem.horizontalToEquatorial(loc, time, obs, eph);
-        		
-        		if (chart.drawSkyCorrectingLocalHorizon) {
-        			if (obs.getMotherBody() == null || obs.getMotherBody() == TARGET.EARTH) {
-	        			double ast = SiderealTime.apparentSiderealTime(time, obs, eph);
-		    			loc = CoordinateSystem.equatorialToHorizontal(loc, ast, obs, eph, false, fast);
-		    			loc.setLatitude(Ephem.getGeometricElevation(eph, obs, loc.getLatitude()));
-		    			loc = CoordinateSystem.horizontalToEquatorial(loc, ast, obs.getLatitudeRad(), fast);
-        			}
-        		}
 
-        		if (precess) {
-	    		    double jd = TimeScale.getJD(time, obs, eph, TimeElement.SCALE.TERRESTRIAL_TIME);
-	        		loc = LocationElement.parseRectangularCoordinates(Precession.precessFromJ2000(jd, loc.getRectangularCoordinates(), eph));
-        		}
-            	loc = RenderSky.getPositionInSelectedCoordinateSystem(loc, time, obs, eph, chart, fast);
-                chart.centralLongitude = loc.getLongitude();
-                chart.centralLatitude = loc.getLatitude();                
-        	} else {
-	            LocationElement loc = Constellation.getConstellationPosition(object, time.astroDate.jd(), chart.drawConstellationNamesType);
-	            if (loc != null) {
-	    			if (obs.getMotherBody() != TARGET.EARTH && obs.getMotherBody() != TARGET.NOT_A_PLANET) {
-	    				loc = Ephem.getPositionFromEarth(loc, time, obs, eph);
-	    			}
-	            	loc = RenderSky.getPositionInSelectedCoordinateSystem(loc, time, obs, eph, chart, fast);
-	                chart.centralLongitude = loc.getLongitude();
-	                chart.centralLatitude = loc.getLatitude();                
-	            } else {
-	            	try {
-	            		EphemerisElement eph = this.eph.clone();
-	            		int index = getMinorObjectIndex(object, eph);
-	            		if (index >= 0) {
-	        			    EphemElement ephem = Ephem.getEphemeris(time, obs, eph, false, true);
-	                        loc = new LocationElement(ephem.rightAscension, ephem.declination, 1.0);
-	                        loc = RenderSky.getPositionInSelectedCoordinateSystem(loc, time, obs, eph, chart, fast);
-	                        chart.centralLongitude = loc.getLongitude();
-	                        chart.centralLatitude = loc.getLatitude();	            			
-	            		} else {
-		            		SimbadElement simbad = SimbadElement.searchDeepSkyObject(object);
-		            		if (simbad == null) throw new Exception("Cannot find object '"+object+"'");
-		            		loc = new LocationElement(simbad.rightAscension, simbad.declination, 1.0);
-			    			if (obs.getMotherBody() != TARGET.EARTH && obs.getMotherBody() != TARGET.NOT_A_PLANET) {
-			    				loc = Ephem.getPositionFromBody(loc, time, obs, eph);
-			    			}
-			    			loc = Ephem.fromJ2000ToApparentGeocentricEquatorial(loc, time, obs, eph);
-		                	loc = RenderSky.getPositionInSelectedCoordinateSystem(loc, time, obs, eph, chart, fast);
-		                    chart.centralLongitude = loc.getLongitude();
-		                    chart.centralLatitude = loc.getLatitude();
-	            		}
-	            	} catch (Exception exc) {
+		// Now we set the center position to draw: constellation or a planet
+		if (targetID == TARGET.NOT_A_PLANET) {
+			if (object.startsWith("skyloc_")) {
+				String p = object.substring(7);
+				int type = 0;
+				boolean precess = false;
+				if (p.startsWith("ec")) type = 1;
+				if (p.startsWith("ga")) type = 2;
+				if (p.startsWith("ho")) type = 3;
+				if (p.startsWith("eq0") || p.startsWith("ho0") || p.startsWith("ec0") || p.startsWith("ga0")) precess = true;
+				int s = p.indexOf("_");
+				p = p.substring(s+1);
+				s = p.indexOf("_");
+				LocationElement loc = new LocationElement(
+						DataSet.parseDouble(p.substring(0, s)) * Constant.DEG_TO_RAD,
+						DataSet.parseDouble(p.substring(s + 1)) * Constant.DEG_TO_RAD,
+						1.0
+				);
+				if (type == 1) loc = CoordinateSystem.eclipticToEquatorial(loc, time, obs, eph);
+				if (type == 2) loc = CoordinateSystem.galacticToEquatorial(loc, time, obs, eph);
+				if (type == 3) loc = CoordinateSystem.horizontalToEquatorial(loc, time, obs, eph);
+
+				if (chart.drawSkyCorrectingLocalHorizon) {
+					if (obs.getMotherBody() == null || obs.getMotherBody() == TARGET.EARTH) {
+						double ast = SiderealTime.apparentSiderealTime(time, obs, eph);
+						loc = CoordinateSystem.equatorialToHorizontal(loc, ast, obs, eph, false, fast);
+						loc.setLatitude(Ephem.getGeometricElevation(eph, obs, loc.getLatitude()));
+						loc = CoordinateSystem.horizontalToEquatorial(loc, ast, obs.getLatitudeRad(), fast);
+					}
+				}
+
+				if (precess) {
+					double jd = TimeScale.getJD(time, obs, eph, TimeElement.SCALE.TERRESTRIAL_TIME);
+					loc = LocationElement.parseRectangularCoordinates(Precession.precessFromJ2000(jd, loc.getRectangularCoordinates(), eph));
+				}
+				loc = RenderSky.getPositionInSelectedCoordinateSystem(loc, time, obs, eph, chart, fast);
+				chart.centralLongitude = loc.getLongitude();
+				chart.centralLatitude = loc.getLatitude();
+			} else {
+				LocationElement loc = Constellation.getConstellationPosition(object, time.astroDate.jd(), chart.drawConstellationNamesType);
+				if (loc != null) {
+					if (obs.getMotherBody() != TARGET.EARTH && obs.getMotherBody() != TARGET.NOT_A_PLANET) {
+						loc = Ephem.getPositionFromEarth(loc, time, obs, eph);
+					}
+					loc = RenderSky.getPositionInSelectedCoordinateSystem(loc, time, obs, eph, chart, fast);
+					chart.centralLongitude = loc.getLongitude();
+					chart.centralLatitude = loc.getLatitude();
+				} else {
+					try {
+						EphemerisElement eph = this.eph.clone();
+						int index = getMinorObjectIndex(object, eph);
+						if (index >= 0) {
+							EphemElement ephem = Ephem.getEphemeris(time, obs, eph, false, true);
+							loc = new LocationElement(ephem.rightAscension, ephem.declination, 1.0);
+							loc = RenderSky.getPositionInSelectedCoordinateSystem(loc, time, obs, eph, chart, fast);
+							chart.centralLongitude = loc.getLongitude();
+							chart.centralLatitude = loc.getLatitude();
+						} else {
+							SimbadElement simbad = SimbadElement.searchDeepSkyObject(object);
+							if (simbad == null) throw new Exception("Cannot find object '"+object+"'");
+							loc = new LocationElement(simbad.rightAscension, simbad.declination, 1.0);
+							if (obs.getMotherBody() != TARGET.EARTH && obs.getMotherBody() != TARGET.NOT_A_PLANET) {
+								loc = Ephem.getPositionFromBody(loc, time, obs, eph);
+							}
+							loc = Ephem.fromJ2000ToApparentGeocentricEquatorial(loc, time, obs, eph);
+							loc = RenderSky.getPositionInSelectedCoordinateSystem(loc, time, obs, eph, chart, fast);
+							chart.centralLongitude = loc.getLongitude();
+							chart.centralLatitude = loc.getLatitude();
+						}
+					} catch (Exception exc) {
 	  					Logger.log(LEVEL.ERROR, "Error setting central object. Message was: "+exc.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(exc.getStackTrace()));
-	    				//appendMsg(language[62]); 
+						//appendMsg(language[62]);
 						if (showError) JOptionPane.showMessageDialog(null,
 		  						replaceVars(t876, new String[] {"%obj"}, new String[] {object}), t230, JOptionPane.ERROR_MESSAGE);
 						object = "";
 						throw new JPARSECException(exc);
-	            	}
-	            }
-        	}
-        } else {
-        	try {
-        		EphemerisElement eph = this.eph.clone();
-        		int index = getMinorObjectIndex(targetID.getEnglishName(), eph);
-    			if (index < 0 && eph.targetBody.isNaturalSatellite())
-    					eph.algorithm = ALGORITHM.NATURAL_SATELLITE;
-			    EphemElement ephem = Ephem.getEphemeris(time, obs, eph, false, true);
+					}
+				}
+			}
+		} else {
+			try {
+				EphemerisElement eph = this.eph.clone();
+				int index = getMinorObjectIndex(targetID.getEnglishName(), eph);
+				if (index < 0 && eph.targetBody.isNaturalSatellite())
+						eph.algorithm = ALGORITHM.NATURAL_SATELLITE;
+				EphemElement ephem = Ephem.getEphemeris(time, obs, eph, false, true);
 
-                LocationElement loc = new LocationElement(ephem.rightAscension, ephem.declination, 1.0);
-                loc = RenderSky.getPositionInSelectedCoordinateSystem(loc, time, obs, eph, chart, fast);
-                chart.centralLongitude = loc.getLongitude();
-                chart.centralLatitude = loc.getLatitude();
-        	} catch (Exception exc) { 
-        		Logger.log(LEVEL.ERROR, "Error setting central object. Message was: "+exc.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(exc.getStackTrace()));
+				LocationElement loc = new LocationElement(ephem.rightAscension, ephem.declination, 1.0);
+				loc = RenderSky.getPositionInSelectedCoordinateSystem(loc, time, obs, eph, chart, fast);
+				chart.centralLongitude = loc.getLongitude();
+				chart.centralLatitude = loc.getLatitude();
+			} catch (Exception exc) {
+				Logger.log(LEVEL.ERROR, "Error setting central object. Message was: "+exc.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(exc.getStackTrace()));
 				if (showError) JOptionPane.showMessageDialog(null, replaceVars(t876, new String[] {"%obj"}, new String[] {object}), t230, JOptionPane.ERROR_MESSAGE);
 				object = "";
 				throw new JPARSECException(exc);
-        	}
-        }
+			}
+		}
 		skyRender.getRenderSkyObject().render.centralLongitude = chart.centralLongitude;
 		skyRender.getRenderSkyObject().render.centralLatitude = chart.centralLatitude;
 	}
-	
+
 	/**
 	 * Sets a central object.
 	 * @param s The name of the object.
@@ -4731,21 +4728,21 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 	public void setCentralObject(String s) {
 		this.setCentralObject(s, null);
 	}
-	
-    private void setCentralObject(String s, Object data[]) {
+
+	private void setCentralObject(String s, Object data[]) {
 		if (s == null) {
 			object = null;
 			return;
 		}
-		
-    	if (s.toLowerCase().startsWith("m") && DataSet.isDoubleStrictCheck(s.substring(1).trim())) s = "M"+s.substring(1).trim();
-    	if (s.toLowerCase().startsWith("ngc")) {
-    		String number = s.substring(3);
-    		if (DataSet.isDoubleStrictCheck(number) || (number.length() > 4 && DataSet.isDoubleStrictCheck(number.substring(0, 4)))) s = "NGC "+s.substring(3).trim();
-    	}
-    	if (s.toLowerCase().startsWith("ic")) s = "IC "+s.substring(2).trim();
-    	
-    	boolean fast = false;
+
+		if (s.toLowerCase().startsWith("m") && DataSet.isDoubleStrictCheck(s.substring(1).trim())) s = "M"+s.substring(1).trim();
+		if (s.toLowerCase().startsWith("ngc")) {
+			String number = s.substring(3);
+			if (DataSet.isDoubleStrictCheck(number) || (number.length() > 4 && DataSet.isDoubleStrictCheck(number.substring(0, 4)))) s = "NGC "+s.substring(3).trim();
+		}
+		if (s.toLowerCase().startsWith("ic")) s = "IC "+s.substring(2).trim();
+
+		boolean fast = false;
 		try {
 			try {
 				skyRender.getRenderSkyObject().setYCenterOffset(0);
@@ -4756,30 +4753,30 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 			if (data == null) {
 				loc = skyRender.getRenderSkyObject().searchObject(s);
 			} else {
-        		RenderSky.OBJECT id = (RenderSky.OBJECT) data[0];
+				RenderSky.OBJECT id = (RenderSky.OBJECT) data[0];
 				loc = skyRender.getRenderSkyObject().searchObject(s, id);
 			}
-			
+
 			if (loc != null) {
 				loc = RenderSky.getPositionInSelectedCoordinateSystem(loc, time, obs, eph, skyRender.getRenderSkyObject().render, fast);
-				
+
 				skyRender.getRenderSkyObject().render.centralLongitude = loc.getLongitude();
 				skyRender.getRenderSkyObject().render.centralLatitude = loc.getLatitude();
 				chart.centralLongitude = loc.getLongitude();
 				chart.centralLatitude = loc.getLatitude();
 				object = s;
-  				paintImage(); 
+  				paintImage();
 			} else {
 				try {
 					if (data != null) {
-	            		RenderSky.OBJECT id = (RenderSky.OBJECT) data[0];
-	          			if (id == RenderSky.OBJECT.SUPERNOVA || id == OBJECT.NOVA) {
-	          				String[] objData = (String[]) data[2];
-	          				double ra = Functions.parseRightAscension(objData[1]) * Constant.RAD_TO_DEG;
-	          				double dec = Functions.parseDeclination(objData[2]) * Constant.RAD_TO_DEG;
-	          				s = "skyloc_eq_"+ra+"_"+dec;
-	          			}
-          			}
+						RenderSky.OBJECT id = (RenderSky.OBJECT) data[0];
+			  			if (id == RenderSky.OBJECT.SUPERNOVA || id == OBJECT.NOVA) {
+			  				String[] objData = (String[]) data[2];
+			  				double ra = Functions.parseRightAscension(objData[1]) * Constant.RAD_TO_DEG;
+			  				double dec = Functions.parseDeclination(objData[2]) * Constant.RAD_TO_DEG;
+			  				s = "skyloc_eq_"+ra+"_"+dec;
+			  			}
+		  			}
 					TARGET target = Target.getID(s);
 					eph.targetBody = target;
 					String oldObj = object;
@@ -4790,21 +4787,21 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 						object = oldObj;
 					}
 	  				paintImage();
-				} catch (JPARSECException e1) { 
-     				Logger.log(LEVEL.ERROR, "Error setting central object. Message was: "+e1.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e1.getStackTrace()));
+				} catch (JPARSECException e1) {
+	 				Logger.log(LEVEL.ERROR, "Error setting central object. Message was: "+e1.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e1.getStackTrace()));
 				}
 			}
-			
-		} catch (Exception exc) { 
+
+		} catch (Exception exc) {
 			Logger.log(LEVEL.ERROR, "Error when setting central object. Message was: "+exc.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(exc.getStackTrace()));
 		}
-    }
+	}
 
   	// Identifies an object at x,y and returns its data
   	private String identifyAndGetData(int x, int y)
   	throws JPARSECException {
   		String out = "";
-  		
+
   		// Identify closest object: give preference to Solar System bodies to identify
   		// them without limiting magnitude. If it is not a Solar System body then
   		// reidentify closest object applying the limiting magnitude
@@ -4814,17 +4811,17 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
   			data = skyRender.getRenderSkyObject().getClosestObjectData(x, y, true, true);
   		if (data == null) return "";
   		id = (RenderSky.OBJECT) data[0];
-  		EphemElement ephem = null; 
+  		EphemElement ephem = null;
   		String type = null;
   		String objData[] = null;
   		StarElement star = null;
-  		
+
   		if (id == RenderSky.OBJECT.DEEPSKY) {
   			type = t972;
   			objData = ((String[]) data[2]).clone();
   		} else {
   			if (id == RenderSky.OBJECT.SUPERNOVA || id == OBJECT.NOVA) {
-  				type = t877; // SN 
+  				type = t877; // SN
 				if (id == OBJECT.NOVA) type = t1304;
   				objData = ((String[]) data[2]).clone();
   			} else {
@@ -4840,28 +4837,28 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
   	  					if (id == RenderSky.OBJECT.ASTEROID) type = t73;
   	  					if (id == RenderSky.OBJECT.COMET) type = t74;
   	  					if (id == RenderSky.OBJECT.NEO) type = t1275;
-  	  					if (id == RenderSky.OBJECT.PROBE) type = t76;  						
-  	  					if (id == RenderSky.OBJECT.TRANSNEPTUNIAN) type = t1003;  						
+  	  					if (id == RenderSky.OBJECT.PROBE) type = t76;
+  	  					if (id == RenderSky.OBJECT.TRANSNEPTUNIAN) type = t1003;
   					}
   				}
 
   			}
   		}
- 
+
   		float pos[] = ((float[]) data[1]).clone();
   		String position = "";
   		if (pos != Projection.INVALID_POSITION) {
   	  		if (chart.telescope.invertHorizontal) pos[0] = chart.width - 1 - pos[0];
   	  		if (chart.telescope.invertVertical) pos[1] = chart.height - 1 - pos[1];
-  	  		
+
   			position = " ("+t880+": "+(float) pos[0]+", "+(float) pos[1]+")";
   		}
-  		
-  		//            Object found                        screen position
+
+  		//			Object found						screen position
   		out += t879+": "+type.toLowerCase() + position + FileIO.getLineSeparator();
 //  		appendMsg(language[57]+" "+type);
   		if (ephem != null) {
-			if (chart.drawSkyCorrectingLocalHorizon && (obs.getMotherBody() == null || obs.getMotherBody() == TARGET.EARTH)) 
+			if (chart.drawSkyCorrectingLocalHorizon && (obs.getMotherBody() == null || obs.getMotherBody() == TARGET.EARTH))
 				ephem.setEquatorialLocation(Ephem.correctEquatorialCoordinatesForRefraction(time, obs, eph, ephem.getEquatorialLocation()));
   			boolean isStar = false;
   			if (star != null || ephem.name.equals(TARGET.SUN.getName())) isStar = true;
@@ -4870,7 +4867,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
   			if (type.equals(t878)) {
   				out += ConsoleReport.getFullEphemReport(ephem, isStar, true, 1);
   			} else {
-  				out += ConsoleReport.getBasicEphemReport(ephem, isStar, true, 1);				
+  				out += ConsoleReport.getBasicEphemReport(ephem, isStar, true, 1);
   			}
   		}
   		if (id == RenderSky.OBJECT.DEEPSKY || id == RenderSky.OBJECT.SUPERNOVA || id == OBJECT.NOVA) {
@@ -4909,7 +4906,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 	  						}
 	  						objData[5] = Functions.formatValue(s, ndec);
 	  					} else {
-	  						objData[5] = Functions.formatValue(s, 2);	  						
+	  						objData[5] = Functions.formatValue(s, 2);
 	  					}
 	  				} else {
 	  					double s1 = DataSet.parseDouble(objData[5].substring(0, xp));
@@ -4926,7 +4923,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 	  						}
 	  						objData[5] = Functions.formatValue(s1, ndec)+"x"+Functions.formatValue(s2, ndec);
 	  					} else {
-	  						objData[5] = Functions.formatValue(s1, 2)+"x"+Functions.formatValue(s2, 2);	  						
+	  						objData[5] = Functions.formatValue(s1, 2)+"x"+Functions.formatValue(s2, 2);
 	  					}
 	  				}
 	  			} catch (Exception exc) {}
@@ -4935,9 +4932,9 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 	  				objData[6] = DataSet.replaceAll(objData[6], "Type", Translate.translate(1296), true);
   	  		} else {
   	  			if (id == OBJECT.NOVA) {
-  	  				objData[4] = t462 + " "+t1304.toLowerCase()+": " + objData[4];  	  			  	  				
+  	  				objData[4] = t462 + " "+t1304.toLowerCase()+": " + objData[4];
   	  			} else {
-  	  				objData[4] = t462 + " SN: " + objData[4];  	  			
+  	  				objData[4] = t462 + " SN: " + objData[4];
   	  			}
   	  		}
   	  		ephem = new EphemElement();
@@ -4945,7 +4942,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
   	  		ephem.rightAscension = Functions.parseRightAscension(objData[1].substring(objData[1].indexOf(":")+1).trim());
   	  		ephem.declination = Functions.parseDeclination(objData[2].substring(objData[2].indexOf(":")+1).trim());
   	  		EphemerisElement eph = this.eph.clone();
-  	  		eph.algorithm = null; 
+  	  		eph.algorithm = null;
   	  		ephem = RiseSetTransit.obtainCurrentOrNextRiseSetTransit(time, obs, eph, ephem, RiseSetTransit.TWILIGHT.HORIZON_ASTRONOMICAL_34arcmin);
   	  		if (ephem.rise != null)
 	  	  		objData = DataSet.addStringArray(objData, new String[] {
@@ -4959,7 +4956,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 	  	  		objData = DataSet.addStringArray(objData, new String[] {
 	  	  			t296 + ": " + TimeFormat.formatJulianDayAsDateAndTime(ephem.set[0], SCALE.LOCAL_TIME),
 	  	  		});
-  		}  		  		
+  		}
   		if (objData != null)
   			out += DataSet.toString(objData, FileIO.getLineSeparator());
   		if (star != null) { // Show basic star data
@@ -4971,16 +4968,16 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
   	  		out += t882+": "+star.type + FileIO.getLineSeparator(); //DataSet.replaceOne("Type and details (typo; data if it is double [sep, magA-B, period, PA]; data if it is variable [maxMag, minMag, period, type]):", "PA];", "PA];"+FileIO.getLineSeparator()+"   ", 1)+" "+star.type + FileIO.getLineSeparator();
   			/*
   			* Copied from JavaDoc: field 'type' in StarElement *
-  			Type of star: N for Normal, D for double or multiple, V for variable, and B for both double and variable. 
-  			Only available for BSC5 and JPARSEC file formats. For JPARSEC file format additional information is available 
-  			as three fields separated by ;. First field is one of the previous values N, D, V, B. Second is double star data 
-  			(only if it is double or multiple). Third is variability data (if it is variable). Double data includes four fields 
-  			separated by a comma (separation of main components in arcseconds, magnitude difference in components 
-  			A-B, orbit period in years, position angle in degrees), while variability data includes another four fields separated 
+  			Type of star: N for Normal, D for double or multiple, V for variable, and B for both double and variable.
+  			Only available for BSC5 and JPARSEC file formats. For JPARSEC file format additional information is available
+  			as three fields separated by ;. First field is one of the previous values N, D, V, B. Second is double star data
+  			(only if it is double or multiple). Third is variability data (if it is variable). Double data includes four fields
+  			separated by a comma (separation of main components in arcseconds, magnitude difference in components
+  			A-B, orbit period in years, position angle in degrees), while variability data includes another four fields separated
   			by a comma (maximum magnitude, minimum magnitude, period of variability in days, variable type).
-  			 */			
+  			 */
   		}
-  		
+
   		if (ephem != null && ephem.name != null && !ephem.name.equals(""))  {
   			TARGET target = Target.getID(ephem.name);
   			if (target == TARGET.SUN) {
@@ -4991,18 +4988,18 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
   			if (target == TARGET.Moon) {
 				double jd = TimeScale.getJD(time, obs, eph, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
   				int brown = Star.getBrownLunationNumber(jd);
-  				out += Translate.translate(1306)+": "+ brown + FileIO.getLineSeparator();  				
+  				out += Translate.translate(1306)+": "+ brown + FileIO.getLineSeparator();
   			}
   		}
-  		
+
   		// Mark Identified object on the screen
   		if (pos != Projection.INVALID_POSITION) {
 	  		int size = 5;
 	  		Graphics g = panel.getGraphics();
 	  		g.setColor(Color.RED);
 	  		g.drawOval((int) pos[0] - size, (int) pos[1] - size, 2*size+1, 2*size+1);
-  		}  
-  		
+  		}
+
   		return out;
   	}
 
@@ -5020,17 +5017,17 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
   		chartForDragging.setColorMode(chart.getColorMode());
   		chartForDragging.projection = chart.projection;
   	}
-  	
+
   	private long lastUpdateTime = -1;
   	private boolean updatingTime = false;
 	public void actionPerformed(ActionEvent e) {
 		// For the timer
 		if (skyRender == null || (menu != null && menu.isVisible()) || updatingTime) return;
-		
+
 		if (lastUpdateTime == -1) {
 			lastUpdateTime = System.currentTimeMillis();
 		}
-		
+
 		long elapsed = System.currentTimeMillis() - lastUpdateTime;
 		if (elapsed > updateTime) {
 			updatingTime = true;
@@ -5041,7 +5038,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 				} else {
 					time.add(timeVel);
 				}
-				
+
 					// Update observer in case it is located in a non-Earth body which
 					// is not a planet with a unique TARGET id (comet or asteroid)
 					if (obs.getMotherBody() == TARGET.NOT_A_PLANET) {
@@ -5085,19 +5082,19 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 				g.fillRect(w0-w2, y0, w2, h);
 				g.setColor(new Color(skyRender.getRenderSkyObject().render.drawCoordinateGridColor));
 				y0 += (h + s) / 2;
-				
+
 				String msg1 = "";
 
 				String t = time.toString();
 				if (time.timeScale == SCALE.LOCAL_TIME) t = t.substring(0, t.lastIndexOf(" ")) + " " + time.getTimeScale();
 				if (obs.isAnObservatory()) {
-					msg1 = obs.getName() + ", "+t;					
+					msg1 = obs.getName() + ", "+t;
 				} else {
 					msg1 = obs.getName() + ", "+t;
 				}
 				g.drawString(msg1, x0, y0);
 			} catch (Exception exc) {}
-			
+
 			if (listShown) updateObjTable();
 			updatingTime = false;
 		}
@@ -5106,7 +5103,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 	private String t974, t877, t972, t79, t73, t74, t76, t1003, t165, t166, t163, t164, t317, t883, t884, t878, t78,
 		t880, t879, t506, t21, t22, t157, t486, t308, t462, t295, t296, t297, t675, t881, t882, t1070,
 		t858, t859, t967, t968, t969, t860, t861, t885, t886, t950, t973, t1002, t230, t240, t862, t887, t889, t979,
-		t976, t977, t978, t975, t863, t890, t891, t892, t893, t1000, t1001, t864, t865, t980, t866, t867, t868, t869, 
+		t976, t977, t978, t975, t863, t890, t891, t892, t893, t1000, t1001, t864, t865, t980, t866, t867, t868, t869,
 		t970, t870, t996, t997, t998, t999, t995, t993, t994, t898, t901, t876, t871, t872, t873, t874, t875, t1075, t1076, t1081, t1083,
 		t1084, t1116, t1117, t1275, t1292, t299, t1293, t1298, t478, t211, t67, t1304;
 
@@ -5132,7 +5129,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 		t79 = Translate.translate(79);
 		t73 = Translate.translate(73);
 		t74 = Translate.translate(74);
-		t76 = Translate.translate(76); 
+		t76 = Translate.translate(76);
 		t1003 = Translate.translate(1003);
 		t165 = Translate.translate(165);
 		t166 = Translate.translate(166);
@@ -5241,11 +5238,11 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 			timeVel = 100.0;
 			timer.start();
 	}
-	
-private Thread thread = null;
-private Feed feed = null;
-private int YEAR = -1;
-private class thread00 implements Runnable {
+
+	private Thread thread;
+	private Feed feed;
+	private int YEAR = -1;
+	private class thread00 implements Runnable {
 	public void run() {
 		try {
 			try {
@@ -5259,7 +5256,7 @@ private class thread00 implements Runnable {
 				EphemerisElement eph = new EphemerisElement(TARGET.NOT_A_PLANET, EphemerisElement.COORDINATES_TYPE.APPARENT,
 						EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.TOPOCENTRIC, EphemerisElement.REDUCTION_METHOD.IAU_2006,
 						EphemerisElement.FRAME.DYNAMICAL_EQUINOX_J2000);
-		
+
 				EventReport.setEverythingTo(false);
 				EventReport.eclipses = true;
 				EventReport.planetaryEvents = true;
@@ -5267,298 +5264,24 @@ private class thread00 implements Runnable {
 				EventReport.lunarPhases = true;
 				EventReport.equinoxesAndSolstices = true;
 				EventReport.meteorShowers = true;
-						
+
 				EventReport.craters = true;
 				EventReport.cratersOnlyLunarX = true;
 				EventReport.EarthPerihelionAphelion = true;
 				EventReport.lunarPerigeeApogee = true;
 				EventReport.NEOs = true;
-				//if (chart.drawComets || chart.drawAsteroids) 
+				//if (chart.drawComets || chart.drawAsteroids)
 					EventReport.cometAsteroidVisibleNakedEye = true;
-				
-				
+
+
 				ObserverElement observer = obs.clone();
-                CityElement city = City.findCity("Madrid");
+				CityElement city = City.findCity("Madrid");
 				ArrayList<SimpleEventElement> list = EventReport.getEvents(init, end, observer, eph, city);
 				feed = EventReport.getFeed(list, observer);
 			} catch (Exception exc) {
 				exc.printStackTrace();
 			}
 		} catch (Exception exc) {}
-	}		
-}
-
-	/**
-	 * Test program.
-	 * @param args Not used.
-	 */
-	public static void main(String args[]) {
-		System.out.println("SkyChart test");
-
-		//Configuration.USE_DISK_FOR_DATABASE = true;
-		Translate.setDefaultLanguage(Translate.LANGUAGE.SPANISH);
-		//Configuration.JPL_EPHEMERIDES_FILES_EXTERNAL_PATH = "/home/alonso/eclipse/libreria_jparsec/ephem/test";
-		//FastMath.ACCURATE_MODE = false;
-		//FastMath.setMaximumNumberOfAngles(FastMath.getMaximumNumberOfAngles()*10);
-		//jparsec.graph.TextLabel.setRenderUnicodeAsImages(true);
-		  
-		double values[] = new double[] {
-				//2000, AstroDate.JANUARY, 1, 6, 45, 800, 600, 17, 0
-				//2011, AstroDate.JUNE, 15, 21, 21, 1200, 800, 12, 30 // Lunar eclipse (Santa Cruz das Flores) 21:40, reykjavik +2.5h
-				// 2009, AstroDate.APRIL, 13, 8, 30, 1200, 800, 12, 90 // Titan shadow transit
-				//2004, AstroDate.MARCH, 28, 8, 3, 1200, 800, 12, 90 // Jupiter triple eclipse
-				//2012, 7, 15, 1, 35, 800, 600, 17, 0 // Occultation of Jupiter by Moon
-				//2012, 9, 13, 5, 15.5, 800, 600, 17, 0 // Partial occultation of Sun by Phobos on Mars
-				//2005, 11, 27, 2, 14, 800, 600, 17, 0 // Eclipse of Phobos on Mars
-				2013, AstroDate.AUGUST, 15, 23, 0, 1200, 800, 12, 90 // 
-		};
-		
-		int yMargin = 0;
-
-		AstroDate astro = new AstroDate(); //(int) values[0], (int) values[1], (int) values[2], (int) values[3], (int) values[4], 60.0*(values[4]-(int) values[4]));
-		TimeElement time = new TimeElement(astro, SCALE.LOCAL_TIME);
-		//TimeElement time = new TimeElement();
-		EphemerisElement eph = new EphemerisElement(TARGET.NOT_A_PLANET, EphemerisElement.COORDINATES_TYPE.APPARENT,
-				EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.TOPOCENTRIC, EphemerisElement.REDUCTION_METHOD.IAU_2006,
-				EphemerisElement.FRAME.DYNAMICAL_EQUINOX_J2000,
-				EphemerisElement.ALGORITHM.MOSHIER);
-		eph.preferPrecisionInEphemerides = false;
-		eph.correctForEOP = false;
-		eph.correctForPolarMotion = false;
-		
-		PlanetRenderElement render = new PlanetRenderElement(true, true, true, false, false);
-		//render.highQuality = true;
-		TelescopeElement telescope = TelescopeElement.HUMAN_EYE;
-//		telescope.ocular.focalLength = 300f;
-/*		try {
-			telescope.attachCCDCamera(CCDElement.getCCD("TouCam"));
-		} catch (JPARSECException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		telescope.invertHorizontal = true;
-		telescope.invertVertical = true;
-*/
-		SkyRenderElement sky = new SkyRenderElement(jparsec.astronomy.CoordinateSystem.COORDINATE_SYSTEM.HORIZONTAL,
-				PROJECTION.STEREOGRAPHICAL, 0, 0.0, (int) values[5], (int) values[6], render, telescope);
-
-		//sky.anaglyphMode = ANAGLYPH_COLOR_MODE.DUBOIS_RED_CYAN;
-		sky.setColorMode(SkyRenderElement.COLOR_MODE.BLACK_BACKGROUND); //.WHITE_BACKGROUND_SIMPLE_GREEN_RED_OR_RED_CYAN_ANAGLYPH);
-
-//		sky.drawOcularFieldOfView = false;
-//		sky.drawCoordinateGrid = true;
-//		sky.drawLeyend = true;
-//		sky.drawConstellationContours = true;
-//		sky.drawConstellationContoursColor = Color.BLUE;
-//		sky.drawConstellationNames = true;
-//		sky.drawConstellationNamesColor = Color.BLACK;
-		sky.drawConstellationNamesType = Constellation.CONSTELLATION_NAME.SPANISH;
-//		sky.drawCoordinateGridColor = Color.BLACK;
-//		sky.drawCoordinateGridEclipticColor = Color.RED;
-//		sky.drawCoordinateGridEcliptic = true;
-//		sky.drawDeepSkyObjects = true;
-		//sky.drawDeepSkyObjectsColor = Color.GREEN.getRGB();
-//		sky.drawDeepSkyObjectsLabels = true;
-//		sky.drawDeepSkyObjectsOnlyMessier = false;
-//		sky.drawNebulaeContours = true;
-//		sky.drawMilkyWayContoursColor = Color.LIGHT_GRAY;
-//		sky.drawNebulaeContoursColor = Color.GRAY;
-		sky.drawObjectsLimitingMagnitude = 12.5f;
-		sky.drawMinorObjectsLimitingMagnitude = sky.drawObjectsLimitingMagnitude;
-		sky.drawPlanetsMoonSun = true;
-		sky.drawSpaceProbes = false;
-//		sky.drawStars = true;
-//		sky.drawStarsColor = Color.BLACK;
-//		sky.drawStarsColors = false;
-		sky.drawStarsLabels = SkyRenderElement.STAR_LABELS.ONLY_PROPER_NAME_SPANISH;
-//		sky.drawStarsSymbols = true;
-		sky.drawStarsGreekSymbols = true;
-		sky.drawStarsGreekSymbolsOnlyIfHasProperName = false;
-		sky.drawTransNeptunianObjects = false;
-		sky.drawStarsLimitingMagnitude = 16f;
-		sky.drawStarsLabelsLimitingMagnitude = sky.drawStarsLimitingMagnitude-2;
-		sky.drawArtificialSatellites = false;
-		sky.drawAsteroids = false;
-		sky.drawComets = false;
-		sky.drawStarsSymbols = true;
-		
-		sky.drawConstellationLimits = true;
-		sky.drawDeepSkyObjects = true;
-		sky.drawSkyBelowHorizon = false;
-		if (sky.drawSkyBelowHorizon && sky.coordinateSystem != COORDINATE_SYSTEM.HORIZONTAL) {
-			sky.drawSkyCorrectingLocalHorizon = false;
-		} else {
-			sky.drawSkyCorrectingLocalHorizon = true;
-		}
-		sky.drawFastLabels = SUPERIMPOSED_LABELS.AVOID_SUPERIMPOSING_SOFT;
-		sky.drawFastLabelsInWideFields = false;
-		sky.fillMilkyWay = true;
-		sky.drawSuperNovaAndNovaEvents = true;
-		sky.drawMilkyWayContoursWithTextures = MILKY_WAY_TEXTURE.NO_TEXTURE;
-		//sky.drawMilkyWayContours = false;
-		//sky.drawFaintStarsTimeOut = 50;
-		
-		sky.drawClever = true;
-		//sky.drawOcularFieldOfView = true;
-		sky.drawStarsPositionAngleInDoubles = true;
-
-		// Fast mode
-		//sky.drawDeepSkyObjects = false;
-		//sky.drawStars = false;
-		sky.drawFastLinesMode = FAST_LINES.GRID_AND_MILKY_WAY_AND_CONSTELLATIONS;
-		sky.drawFastLinesMode.setFastOvals(true);
-		sky.drawConstellationContoursMarginBetweenLineAndStar = 30;
-		RenderPlanet.ALLOW_SPLINE_RESIZING = false;
-		
-		sky.drawStarsLimitingMagnitude = 8.5f;
-		sky.drawObjectsLimitingMagnitude = 9f;
-		sky.drawMinorObjectsLimitingMagnitude = sky.drawObjectsLimitingMagnitude;
-		sky.fillMilkyWay = true;
-		sky.drawConstellationLimits = false;
-		sky.planetRender.textures = true;
-		sky.drawFaintStars = true;
-		if (sky.fillMilkyWay && sky.planetRender.textures) sky.drawStarsRealistic = REALISTIC_STARS.STARRED;
-		sky.drawLeyend = LEYEND_POSITION.TOP;
-		sky.drawDeepSkyObjectsAllMessierAndCaldwell = true;
-		//sky.drawHorizonTexture = HORIZON_TEXTURE.VELETA_30m;
-		sky.drawOcularFieldOfView = false;
-		
-		// SUPER FAST MODE TEST *3.5
-		SkyRenderElement skyFast = sky.clone();
-		skyFast.drawStarsLimitingMagnitude = 6.5f;
-		skyFast.drawStarsLabelsLimitingMagnitude = sky.drawStarsLimitingMagnitude-2;
-		skyFast.drawObjectsLimitingMagnitude = 5.5f;
-		skyFast.drawMinorObjectsLimitingMagnitude = skyFast.drawObjectsLimitingMagnitude;
-		//skyFast.drawDeepSkyObjectsAllMessier = false;
-		skyFast.fillMilkyWay = false;
-		skyFast.planetRender.textures = false;
-		skyFast.drawFastLinesMode = FAST_LINES.GRID_AND_MILKY_WAY_AND_CONSTELLATIONS;
-		skyFast.drawFastLinesMode.setFastOvals(true);
-		skyFast.drawFastLabels = SUPERIMPOSED_LABELS.FAST;
-		skyFast.drawFastLabelsInWideFields = true;
-		skyFast.drawSuperNovaAndNovaEvents = false;
-		skyFast.drawMilkyWayContoursWithTextures = MILKY_WAY_TEXTURE.NO_TEXTURE;
-		skyFast.drawDeepSkyObjectsTextures = false;
-		skyFast.drawCoordinateGrid = false;
-		skyFast.drawNebulaeContours = false;
-		skyFast.drawMilkyWayContours = false;
-
-		try
-		{
-			CityElement city = City.findCity("Madrid");
-			ObserverElement observer = ObserverElement.parseCity(city);
-			
-			String obj = "SATURN";
-/*			// Move observer towards Curiosity landing site on Mars
-			double jd = TimeScale.getJD(time, observer, eph, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
-			Translate.setDefaultLanguage(Translate.LANGUAGE.ENGLISH);
-			double[] pos = Ephem.eclipticToEquatorial(PlanetEphem.getHeliocentricEclipticPositionJ2000(jd, TARGET.valueOf(obj)), Constant.J2000, eph);
-			LocationElement loc = LocationElement.parseRectangularCoordinates(pos);
-			loc.setRadius(loc.getRadius()-0.01*0);
-			pos = loc.getRectangularCoordinates();
-			pos[0] += 0.009;
-			pos[1] += 0.003;
-			pos[2] += 0.25;
-			pos = new double[] {pos[0], pos[1], pos[2], 0, 0, 0};
-			observer = ObserverElement.parseExtraterrestrialObserver(new ExtraterrestrialObserverElement("Close to "+obj, pos));
-			observer = ObserverElement.parseExtraterrestrialObserver(new ExtraterrestrialObserverElement("Mars (Gale crater)", TARGET.MARS, 
-					new LocationElement(-137.4417 * Constant.DEG_TO_RAD, -4.5895*Constant.DEG_TO_RAD, 1.0)));
-			observer = ObserverElement.parseExtraterrestrialObserver(new ExtraterrestrialObserverElement("Mars (Gusev crater)", TARGET.MARS, 
-					new LocationElement(-175.4785 * Constant.DEG_TO_RAD, -14.5718*Constant.DEG_TO_RAD, 1.0)));
-			observer = ObserverElement.parseExtraterrestrialObserver(new ExtraterrestrialObserverElement("Sol", TARGET.SUN, 
-					new LocationElement(94.3 * Constant.DEG_TO_RAD, -6.7*Constant.DEG_TO_RAD, 1.0)));
-			observer = ObserverElement.parseExtraterrestrialObserver(new ExtraterrestrialObserverElement("Mare Serenitatis", TARGET.Moon, 
-					new LocationElement(18 * Constant.DEG_TO_RAD, 26*Constant.DEG_TO_RAD, 1.0)));
-*/
-			
-			// Move observer towards obj, at 0.3 AU of distance
-/*			LocationElement loc0 = RenderSky.searchStar("Arcturus", time, observer, eph);
-//			LocationElement loc0 = new LocationElement(SiderealTime.apparentSiderealTime(time, observer, eph), 0, 1.0); //RenderSky.searchStar("Arcturus", time, observer, eph);
-			System.out.println("RA "+Functions.formatRA(loc0.getLongitude()));
-			System.out.println("DEC "+Functions.formatDEC(loc0.getLatitude()));
-			loc0 = CoordinateSystem.equatorialToHorizontal(loc0, time, observer, eph);
-			System.out.println("Az "+Functions.formatAngle(loc0.getLongitude(), 3));
-			System.out.println("Ele "+Functions.formatAngle(loc0.getLatitude(), 3));
-*/
-			sky.centralLongitude = values[7] * 15.0 * Constant.DEG_TO_RAD;
-			sky.centralLatitude = values[8] * Constant.DEG_TO_RAD; //Math.PI * 0.25;
-			
-/*			double jd_bdt = TimeScale.getJD(time, observer, eph, TimeElement.SCALE.BARYCENTRIC_DYNAMICAL_TIME);
-			TrajectoryElement path = new TrajectoryElement(OBJECT.PLANET, TARGET.JUPITER.getName(), jd_bdt,
-					jd_bdt + 20, 1, true, TrajectoryElement.LABELS.DAY_MONTH_ABBREVIATION, 2, true, true);
-			path.apparentObjectName = ""; //targets[(int) values[1]];
-			path.drawPathFont = FONT.DIALOG_ITALIC_13;
-			path.drawPathColor1 = Color.WHITE.getRGB(); //Color.BLACK;
-			path.drawPathColor2 = Color.RED.getRGB();
-			
-			sky.trajectory = new TrajectoryElement[] {path};
-			//sky.poleAngle = (float) Constant.PI_OVER_FOUR;
-*/
-
-    		try {
-    			String contents[] = DataSet.arrayListToStringArray(ReadFile.readResource(FileIO.DATA_SKY_DIRECTORY + "iram-J2000.sou"));
-    			sky.addExternalCatalog(Translate.translate("IRAM catalog"), Translate.translate("Radiosource"), Color.RED.getRGB(), contents, FileFormatElement.IRAM_SOU_FORMAT);
-    		} catch (Exception exc) {}
-    		
-    		try {
-     			String contents[] = DataSet.arrayListToStringArray(ReadFile.readResource(FileIO.DATA_ORBITAL_ELEMENTS_DIRECTORY + "extrasolarPlanets.txt"));
-    			sky.addExternalCatalog(Translate.translate("Extrasolar planets"), Translate.translate("Extrasolar planets"), Color.CYAN.getRGB(), contents, FileFormatElement.EXTRASOLAR_PLANETS);
-    		} catch (Exception exc) {
-    			exc.printStackTrace();
-    		}
-    		for (int i=0; i<sky.getNumberOfExternalCatalogs(); i++) {
-    			sky.drawExternalCatalogs[i] = false;
-    		}
-    		
-/*	
-			skyFast.drawExternalCatalogs = true;
-			skyFast.addExternalCatalog("IRAM catalog", "Radiosource", Color.RED.getRGB(), "/home/alonso/colaboraciones/Pablo/2007/wp5000/catalogs/iram-J2000.sou", 
-					FileFormatElement.IRAM_SOU_FORMAT);
-*/			
-			
-			SkyRendering skyRender = new SkyRendering(time, observer, eph, sky, "Sky render", yMargin);
-			int w = (int) values[5], h = (int) values[6];
-/*
-			// For full screen mode
-			Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
-			w = d.width;
-			h = d.height;
-*/			
-			final SkyChart sc = new SkyChart(w, h, skyRender, true, false, 5, true); //skyFast);
-						
-/*			sc.chartForDragging = sky.clone();
-			sc.chartForDragging.drawMilkyWayContoursWithTextures = false;
-			sc.chartForDragging.drawConstellationLimits = false;
-*/			
-			
-/*			sc.addTelescopeMark("IRAM 30m", new ExternalTelescope(
-					"IRAM", new double[] {
-							30 * Constant.ARCSEC_TO_RAD,
-							10 * Constant.ARCSEC_TO_RAD
-					}, new String[] {"3mm", "1mm"}, "/home/alonso/pos.txt",
-					POSITION_TYPE.HORIZONTAL, observer
-					));
-*/					
-			JFrame f = new JFrame();
-			f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			f.setUndecorated(true);
-			f.setPreferredSize(new Dimension(w, h));
-			f.add(sc.getComponent());
-			f.pack();
-			f.setVisible(true);
-			f.addKeyListener(sc);
-
-//			sc.now = true;
-//			sc.timer.start();
-
-//			Picture pic = new Picture("/home/alonso/star.png");
-//			pic.makeTransparent(128, null);
-//			pic.write("/home/alonso/star2.png");
-			//Serialization.writeObject(sc, "/home/alonso/sky");			
-		} catch (Exception ve)
-		{
-			ve.printStackTrace();
-		}
 	}
+}
 }
