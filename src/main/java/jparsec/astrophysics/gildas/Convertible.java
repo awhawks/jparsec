@@ -38,7 +38,7 @@ public interface Convertible
      * @param i The offset of the first bit of the value in the array.
      * @return The value
      */
-    public abstract short readShort(byte abyte0[], int i);
+    short readShort(byte abyte0[], int i);
 
     /**
      * Reads an integer value.
@@ -46,7 +46,7 @@ public interface Convertible
      * @param i The offset of the first bit of the value in the array.
      * @return The value
      */
-    public abstract int readInt(byte abyte0[], int i);
+    int readInt(byte abyte0[], int i);
 
     /**
      * Reads a double value.
@@ -54,7 +54,7 @@ public interface Convertible
      * @param i The offset of the first bit of the value in the array.
      * @return The value
      */
-    public abstract double readDouble(byte abyte0[], int i);
+    double readDouble(byte abyte0[], int i);
 
     /**
      * Reads a float value.
@@ -62,7 +62,7 @@ public interface Convertible
      * @param i The offset of the first bit of the value in the array.
      * @return The value
      */
-    public abstract float readFloat(byte abyte0[], int i);
+    float readFloat(byte abyte0[], int i);
 
     /**
      * Reads a date value (internally as an integer).
@@ -71,18 +71,16 @@ public interface Convertible
      * @return The calendar object.
      * @throws JPARSECException If an error occurs.
      */
-    public abstract GregorianCalendar readDate(byte abyte0[], int i)
-    throws JPARSECException ;
-    
-    
-    
+    GregorianCalendar readDate(byte abyte0[], int i)
+    throws JPARSECException;
+
     /**
      * Writes a short value.
      * @param abyte0 The array where the value will be written.
      * @param i The offset of the first bit of the value in the array.
      * @param value The value to write.
      */
-    public abstract void writeShort(byte abyte0[], int i, short value);
+    void writeShort(byte abyte0[], int i, short value);
 
     /**
      * Writes an integer value.
@@ -90,7 +88,7 @@ public interface Convertible
      * @param i The offset of the first bit of the value in the array.
      * @param value The value to write.
      */
-    public abstract void writeInt(byte abyte0[], int i, int value);
+    void writeInt(byte abyte0[], int i, int value);
 
     /**
      * Writes a double value.
@@ -98,7 +96,7 @@ public interface Convertible
      * @param i The offset of the first bit of the value in the array.
      * @param value The value to write.
      */
-    public abstract void writeDouble(byte abyte0[], int i, double value);
+    void writeDouble(byte abyte0[], int i, double value);
 
     /**
      * Writes a float value.
@@ -106,7 +104,7 @@ public interface Convertible
      * @param i The offset of the first bit of the value in the array.
      * @param value The value to write.
      */
-    public abstract void writeFloat(byte abyte0[], int i, float value);
+    void writeFloat(byte abyte0[], int i, float value);
 
     /**
      * Writes a date value.
@@ -116,6 +114,6 @@ public interface Convertible
      * to integer and written with 1 day precision.
      * @throws JPARSECException If an error occurs.
      */
-    public abstract void writeDate(byte abyte0[], int i, double jd)
-    throws JPARSECException ;
+    void writeDate(byte abyte0[], int i, double jd)
+    throws JPARSECException;
 }

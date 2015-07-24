@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,21 +18,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.astrophysics.gildas;
 
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.TreeMap;
-
 import jparsec.astrophysics.MeasureElement;
 import jparsec.astrophysics.Spectrum;
-import jparsec.astrophysics.gildas.Spectrum30m.XUNIT;
 import jparsec.ephem.Functions;
 import jparsec.graph.ChartSeriesElement;
 import jparsec.graph.DataSet;
 import jparsec.io.CatalogRead;
-import jparsec.io.ConsoleReport;
 import jparsec.io.FileIO;
 import jparsec.math.Constant;
 import jparsec.math.FastMath;
@@ -54,7 +51,7 @@ import jparsec.vo.GeneralQuery;
  * @version 1.0
  */
 public class ProcessSpectrum {
-	
+
 	/** The array of residuals after the spectrum is fitted. */
 	private double residualV[];
 	/** The array of processed spectrum in a given moment, observations at startup and reduced at the end. */
@@ -89,7 +86,7 @@ public class ProcessSpectrum {
 	 * is called with this value.
 	 */
 	public static int maximumNumberOfIterationsForNelderAndMeadSimplexInRegressionClass = 3000;
-	
+
 	/**
 	 * Constructor for a 30m spectrum.
 	 * @param s The spectrum.
@@ -97,7 +94,7 @@ public class ProcessSpectrum {
 	public ProcessSpectrum(Spectrum30m s) {
 		spectrum = s.clone();
 		v = DataSet.toDoubleArray(fix(s.getSpectrumData().clone()));
-		vres = Double.parseDouble(((Parameter) s.get(Gildas30m.VEL_RESOL)).value);
+		vres = Double.parseDouble((s.get(Gildas30m.VEL_RESOL)).value);
 	}
 
 	/**
@@ -108,7 +105,7 @@ public class ProcessSpectrum {
 	public ProcessSpectrum(Spectrum s) throws JPARSECException {
 		spectrum = new Spectrum30m(s);
 		v = DataSet.toDoubleArray(fix(spectrum.getSpectrumData().clone()));
-		vres = Double.parseDouble(((Parameter) spectrum.get(Gildas30m.VEL_RESOL)).value);
+		vres = Double.parseDouble((spectrum.get(Gildas30m.VEL_RESOL)).value);
 	}
 
 	/**
@@ -163,13 +160,13 @@ public class ProcessSpectrum {
 		i1 = i1 + 2*di;
 		if (i0<0) i0 = 0;
 		if (i1>vi.length-1) i1 = vi.length-1;
-		
+
 		double vv[] = DataSet.getSubArray(vi, i0, i1).clone(); //vi.clone();
 		int basen = 100;
 		double moreBaseline[] = DataSet.getSetOfValues(0.0, 0.0, basen, false);
 		vv = DataSet.addDoubleArray(vv, moreBaseline);
 		vv = DataSet.addDoubleArray(moreBaseline, vv);
-		
+
 		double max = DataSet.getMaximumValue(vv), min = DataSet.getMinimumValue(vv);
 		boolean negativeLine = false;
 		if (min < 0 && max >= 0 && -min > 1.5*max && -min > TIMES_SIGMA * sigma) {
@@ -192,15 +189,15 @@ public class ProcessSpectrum {
 		double g = cte;
 		double v0 = Math.abs(vres);
         double out[] = new double[] {
-        		getSpectrum().getVelocity(v[0]), v[1] * g * v0, me2.getValue(), v[2] * v0, // v, w, T, A 
+        		getSpectrum().getVelocity(v[0]), v[1] * g * v0, me2.getValue(), v[2] * v0, // v, w, T, A
         		Math.abs(dv[0] * v0), Math.abs(dv[1] * g * v0), Math.abs(me2.error), Math.abs(dv[2] * v0), // errors
-        		
+
         		//getSpectrum().getChannel(getSpectrum().getVelocity(v[0])-v[1]*g*v0*3),
         		//getSpectrum().getChannel(getSpectrum().getVelocity(v[0])+v[1]*g*v0*3),
         		i00, i11,
         		getSpectrum().getFrequency(v[0])
         };
-        
+
         // The library by flanagan sometimes produces some NaN when calculations are not consistent. This occurs
         // with lines close to 3 sigma. Also, sometimes fit is ok but errors are unrealistic (too little).
         // In these cases, correct the values based on physical arguments.
@@ -229,17 +226,17 @@ public class ProcessSpectrum {
 		MeasureElement peak = new MeasureElement(out[2], minPeakError, "");
 		area.divide(peak);
 		double minWidthError = Math.abs(area.error) / 1.064467; // w
-        
+
         if (new Double(out[4]).equals(Double.NaN)) out[4] = Math.abs(vres) * 0.5; // v
         if (new Double(out[6]).equals(Double.NaN) || out[6] < minPeakError) out[6] = minPeakError; // t
         if (new Double(out[7]).equals(Double.NaN) || out[7] < minAreaError) out[7] = minAreaError; // a
         if (new Double(out[5]).equals(Double.NaN) || out[5] < minWidthError) out[5] = minWidthError; // w
-        
+
         if (negativeLine) {
         	out[2] = -Math.abs(out[2]);
         	out[3] = -Math.abs(out[3]);
         }
-        
+
         return out;
 	}
 
@@ -250,7 +247,7 @@ public class ProcessSpectrum {
 	public Spectrum30m getSpectrum() {
 		return spectrum;
 	}
-	
+
 	/**
 	 * Returns the processed spectrum.
 	 * @return The processed spectrum.
@@ -258,6 +255,7 @@ public class ProcessSpectrum {
 	public double[] getProcessedSpectrum() {
 		return v;
 	}
+
 	/**
 	 * Returns the original spectrum.
 	 * @return The original spectrum.
@@ -265,6 +263,7 @@ public class ProcessSpectrum {
 	public float[] getOriginalSpectrum() {
 		return spectrum.getSpectrumData();
 	}
+
 	/**
 	 * Returns the residual spectrum after fitting lines.
 	 * Should be only white noise.
@@ -273,21 +272,21 @@ public class ProcessSpectrum {
 	public double[] getResidualSpectrum() {
 		return residualV;
 	}
-	
+
 	private double getMeanAround(int mi, int p) {
 		double meanAround = 0.0;
 		int n = 0;
 		for (int i=mi-1;i>=mi-p; i--) {
 			if (i >= 0) {
 				meanAround += v[i];
-				n++;				
-			}	
+				n++;
+			}
 		}
 		for (int i=mi+1;i<=mi+p; i++) {
 			if (i <v.length) {
 				meanAround += v[i];
-				n++;				
-			}	
+				n++;
+			}
 		}
 		meanAround /= n;
 		return meanAround;
@@ -307,14 +306,14 @@ public class ProcessSpectrum {
 		for (int i=mi-1;i>=mi-p; i--) {
 			if (i >= 0) {
 				meanAround += v[i];
-				n++;				
-			}	
+				n++;
+			}
 		}
 		for (int i=mi+1;i<=mi+p; i++) {
 			if (i <v.length) {
 				meanAround += v[i];
-				n++;				
-			}	
+				n++;
+			}
 		}
 		meanAround /= n;
 		return meanAround;
@@ -334,14 +333,14 @@ public class ProcessSpectrum {
 		for (int i=mi-1;i>=mi-p; i--) {
 			if (i >= 0) {
 				meanAround += v[i];
-				n++;				
-			}	
+				n++;
+			}
 		}
 		for (int i=mi+1;i<=mi+p; i++) {
 			if (i <v.length) {
 				meanAround += v[i];
-				n++;				
-			}	
+				n++;
+			}
 		}
 		meanAround /= n;
 		return meanAround;
@@ -362,7 +361,7 @@ public class ProcessSpectrum {
 		}
 		return Math.sqrt(s/v.length);
 	}
-	
+
 	private double getSigma(double[] v, double meanV) {
 		double s = 0.0;
 		for (int i=0; i<v.length; i++) {
@@ -370,6 +369,7 @@ public class ProcessSpectrum {
 		}
 		return Math.sqrt(s/v.length);
 	}
+
 	// Obtain mean value of the spectrum between two positions
 	/**
 	 * Returns an average of the data between two positions.
@@ -401,7 +401,7 @@ public class ProcessSpectrum {
 		String x[] = new String[v.length];
 		String y[] = new String[v.length];
 		double g0 = getSpectrum().getChannel(g[0]);
-		
+
 		// Limit the output series to the relevant region
 		double g0min = getSpectrum().getChannel(g[0]-g[1]*10);
 		double g0max = getSpectrum().getChannel(g[0]+g[1]*10);
@@ -424,10 +424,10 @@ public class ProcessSpectrum {
 		if (imax > v.length) imax = v.length;
 
 		for (int i=imin; i<=imax; i++) {
-			double c = i; 
-			if (xUnit == Spectrum30m.XUNIT.VELOCITY_KMS) c = getSpectrum().getVelocity(c); 
-			if (xUnit == Spectrum30m.XUNIT.FREQUENCY_MHZ) c = getSpectrum().getFrequency(c); 
-			if (xUnit == Spectrum30m.XUNIT.VELOCITY_KMS_CORRECTED) c = getSpectrum().getCorrectedVelocity(c); 
+			double c = i;
+			if (xUnit == Spectrum30m.XUNIT.VELOCITY_KMS) c = getSpectrum().getVelocity(c);
+			if (xUnit == Spectrum30m.XUNIT.FREQUENCY_MHZ) c = getSpectrum().getFrequency(c);
+			if (xUnit == Spectrum30m.XUNIT.VELOCITY_KMS_CORRECTED) c = getSpectrum().getCorrectedVelocity(c);
 			x[i-1] = ""+c;
 			y[i-1] = ""+(g[2] / Math.exp(0.5 * FastMath.pow((i - g0) / (g[1] / (vres * cte)), 2.0)));
 		}
@@ -440,10 +440,10 @@ public class ProcessSpectrum {
 		s.showLines = true;
 		return s;
 	}
-	
+
 	/**
 	 * Returns a series with the Gaussian fit of a line, where
-	 * each value of index i represents the intensity for channel i+1 
+	 * each value of index i represents the intensity for channel i+1
 	 * (first channel is 1 at index 0).
 	 * @param g Values of the Gaussian parameters.
 	 * @param xUnit Unit for x axis.
@@ -454,12 +454,12 @@ public class ProcessSpectrum {
 		double x[] = new double[v.length];
 		double y[] = new double[v.length];
 		double g0 = getSpectrum().getChannel(g[0]);
-		
+
 		for (int i=1; i<= v.length; i++) {
-			double c = i; 
-			if (xUnit == Spectrum30m.XUNIT.VELOCITY_KMS) c = getSpectrum().getVelocity(c); 
-			if (xUnit == Spectrum30m.XUNIT.FREQUENCY_MHZ) c = getSpectrum().getFrequency(c); 
-			if (xUnit == Spectrum30m.XUNIT.VELOCITY_KMS_CORRECTED) c = getSpectrum().getCorrectedVelocity(c); 
+			double c = i;
+			if (xUnit == Spectrum30m.XUNIT.VELOCITY_KMS) c = getSpectrum().getVelocity(c);
+			if (xUnit == Spectrum30m.XUNIT.FREQUENCY_MHZ) c = getSpectrum().getFrequency(c);
+			if (xUnit == Spectrum30m.XUNIT.VELOCITY_KMS_CORRECTED) c = getSpectrum().getCorrectedVelocity(c);
 			x[i-1] = c;
 			y[i-1] = (g[2] / Math.exp(0.5 * FastMath.pow((i - g0) / (g[1] / (vres * cte)), 2.0)));
 		}
@@ -469,10 +469,10 @@ public class ProcessSpectrum {
 		s.showLines = true;
 		return s;
 	}
-	
+
 	/**
 	 * Returns a set of y values (intensities) for the given line, where
-	 * each value of index i represents the intensity for channel i+1 
+	 * each value of index i represents the intensity for channel i+1
 	 * (first channel is 1 at index 0).
 	 * @param g Values of the Gaussian parameters.
 	 * @return The intensities.
@@ -481,16 +481,16 @@ public class ProcessSpectrum {
 	public double[] getFullGaussianFit(double g[]) throws JPARSECException {
 		double y[] = new double[v.length];
 		double g0 = getSpectrum().getChannel(g[0]);
-		
+
 		for (int i=1; i<= v.length; i++) { // i a channel number, starts at 1
 			y[i-1] = (g[2] / Math.exp(0.5 * FastMath.pow((i - g0) / (g[1] / (vres * cte)), 2.0)));
 		}
 
 		return y;
 	}
-	
+
 	private static final double cte = 2.0 * Math.sqrt(2.0 * Math.log(2.0));
-	
+
 	/**
 	 * Removes a line from a spectrum.
 	 * @param v Input/output spectrum as an array.
@@ -503,7 +503,7 @@ public class ProcessSpectrum {
 			v[i] -= y;
 		}
 	}
-	
+
 	/**
 	 * Removes a line from the current spectrum being reduced.
 	 * @param line The line.
@@ -516,7 +516,7 @@ public class ProcessSpectrum {
 			v[i] -= y;
 		}
 	}
-	
+
 	/**
 	 * Clips a set of lines in the reduced spectrum of this instance. The clipping
 	 * is done between the minimum and maximum channels for the lines as given in
@@ -555,7 +555,7 @@ public class ProcessSpectrum {
 			}
 		}
 	}
-	
+
 	/**
 	 * Removes a line from a spectrum, only near its peak.
 	 * @param v Input/output spectrum as an array.
@@ -575,7 +575,7 @@ public class ProcessSpectrum {
 			v[i] -= y;
 		}
 	}
-	
+
 	private double[] getLineLimits(double v[], double sigma) throws JPARSECException {
 		int m = DataSet.getIndexOfMaximum(v), n = m+1;
 		if (n >= v.length-1) return null;
@@ -603,12 +603,12 @@ public class ProcessSpectrum {
 		} while((dif < 0.0 || Math.abs(max-v[n]) < 3*sigma) && n>0);
 		int init = n; // - 5;
 		if (init < 0) init = 0;
-		
+
 		return new double[] {max, init, end};
 	}
 
 	/**
-	 * Fits the lines in a spectrum. The spectrum should be previously 
+	 * Fits the lines in a spectrum. The spectrum should be previously
 	 * reduced. The method {@linkplain #getLines(ArrayList)} can later be used to return
 	 * a set of {@linkplain SpectrumLine} objects with the fitted lines.
 	 * @param eliminateNoise True to substract the residual spectrum to the
@@ -623,7 +623,7 @@ public class ProcessSpectrum {
 	public ArrayList<double[]> fitLines(boolean eliminateNoise) throws JPARSECException {
 		return fitLines(eliminateNoise, -1);
 	}
-	
+
 	/**
 	 * Transforms a set of lines fitted (returned as a set of double arrays)
 	 * to a set of {@linkplain SpectrumLine} objects.
@@ -638,9 +638,9 @@ public class ProcessSpectrum {
 		}
 		return line;
 	}
-	
+
 	/**
-	 * Fits the lines in a spectrum. The spectrum should be previously 
+	 * Fits the lines in a spectrum. The spectrum should be previously
 	 * reduced. The method {@linkplain #getLines(ArrayList)} can later be used to return
 	 * a set of {@linkplain SpectrumLine} objects with the fitted lines.
 	 * @param eliminateNoise True to substract the residual spectrum to the
@@ -659,12 +659,12 @@ public class ProcessSpectrum {
 		double v[] = this.v.clone(); //fix(this.v.clone());
 
 		double badfit[] = DataSet.getSetOfValues(0.0, 0.0, v.length, false);
-		
+
 		boolean lineUnderNoise = false;
 		do {
 			double sigma = getSigma(v);
 			double[] clonv = v.clone();
-			double limits1[] = this.getLineLimits(v, sigma); 
+			double limits1[] = this.getLineLimits(v, sigma);
 			double limits2[] = this.getLineLimits(Functions.scalarProduct(v, -1.0), sigma);
 			if (limits1 == null && limits2 == null) break;
 			double limits[] = limits1;
@@ -683,19 +683,19 @@ public class ProcessSpectrum {
 			for (int i=end;i<v.length;i++) {
 				v[i] = 0;
 			}
-			
+
 			double p[] = null;
 			try {
 				p = this.fitGreatestLine(v, sigma, init, end);
-								
+
 				if (Math.abs(p[2]) < max && Math.abs(p[2]) < TIMES_SIGMA * sigma) {
 					// Update sigma
 					double vcopy[] = v.clone();
-					removeLine(vcopy, p); 
+					removeLine(vcopy, p);
 					sigma = getSigma(vcopy);
 					p = this.fitGreatestLine(v, sigma, init, end);
 				}
-				
+
 				// FIXME Now Math.min(Math.abs(p[2]), max), before it was max only
 				if (Math.min(Math.abs(p[2]), max) < TIMES_SIGMA * sigma) {
 					lineUnderNoise = true;
@@ -733,7 +733,7 @@ public class ProcessSpectrum {
 			} catch (Exception exc) {
 				lineUnderNoise = true;
 			}
-			
+
 			for (int i=0;i<init;i++) {
 				v[i] += clonv[i];
 			}
@@ -742,28 +742,28 @@ public class ProcessSpectrum {
 			}
 
 		} while (!lineUnderNoise && (al.size() < maxN || maxN < 0));
-		
+
 		for (int i=0; i<v.length; i++) {
 			v[i] += badfit[i];
 		}
-		
+
 		residualV = v;
 		if (eliminateNoise)	{
 			this.v = Functions.substract(this.v, residualV);
 		}
 		return al;
 	}
-	
+
 	/**
-	 * Fits the lines in a spectrum. The spectrum should be previously 
-	 * reduced. Sigma value is obtained automatically. The method 
+	 * Fits the lines in a spectrum. The spectrum should be previously
+	 * reduced. Sigma value is obtained automatically. The method
 	 * {@linkplain #getLines(ArrayList)} can later be used to return
 	 * a set of {@linkplain SpectrumLine} objects with the fitted lines.
 	 * @param c0 Initial channel.
 	 * @param c1 Final channel.
-	 * @param yMin Minimum y value. In case some value in the spectrum is below 
+	 * @param yMin Minimum y value. In case some value in the spectrum is below
 	 * this one, that channel will not be taken into account in the fit.
-	 * @param yMax Maximum y value. In case some value in the spectrum is above 
+	 * @param yMax Maximum y value. In case some value in the spectrum is above
 	 * this one, that channel will not be taken into account in the fit.
 	 * @param eliminateLine True to subtract the line to the current
 	 * spectrum.
@@ -774,7 +774,7 @@ public class ProcessSpectrum {
 		double[] al = null;
 		double v[] = this.v.clone(); //fix(this.v.clone());
 		double sigma = getSigma(v);
-		
+
 		if (c0 < 0) c0 = 0;
 		if (c0 > v.length-1) c0 = v.length-1;
 		if (c1 < 0) c1 = 0;
@@ -786,7 +786,7 @@ public class ProcessSpectrum {
 		for (int i=c1;i<v.length;i++) {
 			v[i] = 0;
 		}
-					
+
 		double clonev[] = v.clone();
 		if (yMax != yMin) {
 			// Disable yMin to fit absorption lines easily
@@ -794,41 +794,41 @@ public class ProcessSpectrum {
 			yMin -= Math.abs(yMin);
 			for (int i=c0;i<c1;i++) {
 				if (v[i] > yMax || v[i] < yMin) v[i] = 0;
-			}			
+			}
 		}
 
 		al = this.fitGreatestLine(v, sigma, c0, c1);
-		
-		removeLine(v, al);					
-		
+
+		removeLine(v, al);
+
 		for (int i=0;i<c0;i++) {
 			v[i] += this.v[i];
 		}
 		for (int i=c1;i<v.length;i++) {
 			v[i] += this.v[i];
 		}
-		
+
 		if (yMax != yMin) {
 			for (int i=c0;i<c1;i++) {
 				if (clonev[i] > yMax || clonev[i] < yMin) v[i] += this.v[i];
-			}			
+			}
 		}
-		if (eliminateLine) removeLine(this.v, al);					
+		if (eliminateLine) removeLine(this.v, al);
 		residualV = v;
 		return al;
 	}
 
 	/**
-	 * Fits the lines in a spectrum. The spectrum should be previously 
+	 * Fits the lines in a spectrum. The spectrum should be previously
 	 * reduced. The method {@linkplain #getLines(ArrayList)} can later be used to return
 	 * a set of {@linkplain SpectrumLine} objects with the fitted lines.
 	 * @param sigma The sigma value of the spectrum. This affects the errors
 	 * of the Gaussian parameters.
 	 * @param c0 Initial channel.
 	 * @param c1 Final channel.
-	 * @param yMin Minimum y value. In case some value in the spectrum is below 
+	 * @param yMin Minimum y value. In case some value in the spectrum is below
 	 * this one, that channel will not be taken into account in the fit.
-	 * @param yMax Maximum y value. In case some value in the spectrum is above 
+	 * @param yMax Maximum y value. In case some value in the spectrum is above
 	 * this one, that channel will not be taken into account in the fit.
 	 * @param eliminateLine True to substract the line to the current
 	 * spectrum.
@@ -850,7 +850,7 @@ public class ProcessSpectrum {
 		for (int i=c1;i<v.length;i++) {
 			v[i] = 0;
 		}
-					
+
 		double clonev[] = v.clone();
 		if (yMax != yMin) {
 			// Disable yMin to fit absorption lines easily
@@ -858,31 +858,31 @@ public class ProcessSpectrum {
 			yMin -= Math.abs(yMin);
 			for (int i=c0;i<c1;i++) {
 				if (v[i] > yMax || v[i] < yMin) v[i] = 0;
-			}			
+			}
 		}
 		al = this.fitGreatestLine(v, sigma, c0, c1);
-		
-		removeLine(v, al);					
-		
+
+		removeLine(v, al);
+
 		for (int i=0;i<c0;i++) {
 			v[i] += this.v[i];
 		}
 		for (int i=c1;i<v.length;i++) {
 			v[i] += this.v[i];
 		}
-		
+
 		if (yMax != yMin) {
 			for (int i=c0;i<c1;i++) {
 				if (clonev[i] > yMax || clonev[i] < yMin) v[i] += this.v[i];
-			}			
+			}
 		}
-		if (eliminateLine) removeLine(this.v, al);					
+		if (eliminateLine) removeLine(this.v, al);
 		residualV = v;
 		return al;
 	}
 
 	// Fix bad channels
-	private float[] fix(float[] v) {		
+	private float[] fix(float[] v) {
 		for (int i=0; i<v.length; i++) {
 			if (Double.isNaN(v[i]) || v[i] == -1000) {
 				if (i < v.length-1 && (Double.isNaN(v[i]+1) || v[i+1] == -1000)) {
@@ -919,7 +919,7 @@ public class ProcessSpectrum {
 				} else {
 					for (int k=i; k<j; k++) {
 						v[k] = (float) (v[i-1]+(v[j]-v[i-1])*(k-i+1.0)/(double)(j-i+1.0));
-					}					
+					}
 				}
 			} else {
 				if (v[i] < minimumValueToConsiderBadChannel) v[i] = 0;
@@ -935,17 +935,18 @@ public class ProcessSpectrum {
 	 */
 	public void fixLevel0() {
 		double m = this.getMeanAround(v, v.length/2, v.length/2+1);
-//		double s = getSigma(v);
-		
-//		if (Math.abs(m) > TIMES_SIGMA * s) { // FIXME TIMES_SIGMA wasn't here at the beggining, I put it after and then decided to eliminate it again
+		//double s = getSigma(v);
+
+        // FIXME TIMES_SIGMA wasn't here at the beginning, I put it after and then decided to eliminate it again
+        // if (Math.abs(m) > TIMES_SIGMA * s) {
 			for (int i=0; i<v.length; i++) {
 				v[i] -= m;
 			}
-//		}
+		//}
 	}
-	
+
 	/**
-	 * Smoothes the residual spectrum (an invisible array stored internally in this instance) 
+	 * Smoothes the residual spectrum (an invisible array stored internally in this instance)
 	 * and returns the result of subtracting it to a given input array. This method should be
 	 * applied to the residuals after the reduction is done. It is not used in this
 	 * class, it is intended to be used for advanced reduction externally.
@@ -957,9 +958,9 @@ public class ProcessSpectrum {
 	 */
  	public double[] reduceResiduals(int n, double data[]) throws JPARSECException {
  		if (residualV == null) residualV = v.clone();
- 		
+
  		if (n == 0) return residualV.clone();
- 		 
+
  		String badChannels = this.removeBadChannels();
        	int nAverage = n;
        	double out[] = new double[v.length];
@@ -972,17 +973,17 @@ public class ProcessSpectrum {
 				int max = Math.min(v.length-1, i+nAverage);
 				double minV = getMean(v, min, max);
 				if (badChannel >= 0) {
-					out[i] = residualV[i] - minV;				
+					out[i] = residualV[i] - minV;
 				} else {
 					out[i] = minV;
 				}
 			}
 		}
-		
+
 		if (data != null) out = Functions.substract(data, out);
 		return out;
 	}
-		
+
 	private static boolean areSimilar(double v1, double v2) {
 		boolean similar = false;
 		if (Math.abs(v1-v2) < 1) similar = true;
@@ -1007,7 +1008,7 @@ public class ProcessSpectrum {
 			String t) {
 		return sumSpectra(f, s, m, searchOffset1, searchOffset2, t, -1);
 	}
-	
+
 	/**
 	 * Sums spectra and returns the mean of them.
 	 * @param f Set of 30m files.
@@ -1038,17 +1039,17 @@ public class ProcessSpectrum {
 		        	final int list[] = g30m.getListOfSpectrums(true);
 
 		        	for (int index=0; index<list.length; index++) {
-		            	Spectrum30m s30m = g30m.getSpectrum(list[index]);   
+		            	Spectrum30m s30m = g30m.getSpectrum(list[index]);
 		            	Parameter header[] = s30m.getHeader().getHeaderParameters();
-		            	
+
 		            	double off1 = header[SpectrumHeader30m.HEADER.OFFSET1.ordinal()].toDouble() * Constant.RAD_TO_ARCSEC;
-		            	double off2 = header[SpectrumHeader30m.HEADER.OFFSET2.ordinal()].toDouble() * Constant.RAD_TO_ARCSEC;	            		
+		            	double off2 = header[SpectrumHeader30m.HEADER.OFFSET2.ordinal()].toDouble() * Constant.RAD_TO_ARCSEC;
 		            	String line = header[SpectrumHeader30m.HEADER.LINE.ordinal()].value.trim().toUpperCase();
 		            	String source = header[SpectrumHeader30m.HEADER.SOURCE.ordinal()].value.trim().toUpperCase();
 		            	String teles = header[SpectrumHeader30m.HEADER.TELES.ordinal()].value.trim().toUpperCase();
-	
+
 		            	if (s.equals(source) && areSimilar(off1, searchOffset1) && areSimilar(off2, searchOffset2)
-		            			&& t.equals(teles) && m.equals(line) && 
+		            			&& t.equals(teles) && m.equals(line) &&
 		            			(areSimilar(s30m.getReferenceFrequency(), restFreq) || restFreq <= 0)) {
 		            		ndata++;
 		            		if (ndata == 1 && restFreq <= 0) restFreq = s30m.getReferenceFrequency();
@@ -1075,7 +1076,7 @@ public class ProcessSpectrum {
 			                   	num = Integer.parseInt("0"+header[SpectrumHeader30m.HEADER.NUM.ordinal()].value);
 			                   	scan = Integer.parseInt("0"+header[SpectrumHeader30m.HEADER.SCAN.ordinal()].value);
 		            		}
-		        		}		      
+		        		}
 		        	}
 				}
 			} catch (Exception e) {
@@ -1083,9 +1084,9 @@ public class ProcessSpectrum {
 				Logger.log(LEVEL.ERROR, "Found an error when adding a spectrum. Message was "+e.getLocalizedMessage());
 			}
 		}
-		
+
 		if (ndata == 0) return null;
-		
+
 		if (ndata > 1) {
 			num = scan = 0;
 			for (int i=0; i<data.length; i++) {
@@ -1097,16 +1098,16 @@ public class ProcessSpectrum {
 		}
 
 		TreeMap<String,Parameter> map = new TreeMap<String,Parameter>();
-        map.put(new String(Gildas30m.INTEG), new Parameter((float) intTimeTotal, Gildas30m.INTEG_DESC));
-        map.put(new String(Gildas30m.VEL_RESOL), new Parameter(vres, Gildas30m.VEL_RESOL_DESC));
-        map.put(new String(Gildas30m.REF_CHAN), new Parameter(refchan, Gildas30m.REF_CHAN_DESC));
-        map.put(new String(Gildas30m.REF_VEL), new Parameter(vref, Gildas30m.REF_VEL_DESC));
-        map.put(new String(Gildas30m.REF_FREQ), new Parameter(rfreq, Gildas30m.REF_FREQ_DESC));
-        map.put(new String(Gildas30m.IMAGE), new Parameter(ifreq, Gildas30m.IMAGE_DESC));
-        map.put(new String(Gildas30m.SOURCE), new Parameter(s, Gildas30m.SOURCE_DESC));
-        map.put(new String(Gildas30m.TELES), new Parameter(t, Gildas30m.TELES_DESC));
-        map.put(new String(Gildas30m.LINE), new Parameter(m, Gildas30m.LINE_DESC));
-        
+        map.put(Gildas30m.INTEG, new Parameter((float) intTimeTotal, Gildas30m.INTEG_DESC));
+        map.put(Gildas30m.VEL_RESOL, new Parameter(vres, Gildas30m.VEL_RESOL_DESC));
+        map.put(Gildas30m.REF_CHAN, new Parameter(refchan, Gildas30m.REF_CHAN_DESC));
+        map.put(Gildas30m.REF_VEL, new Parameter(vref, Gildas30m.REF_VEL_DESC));
+        map.put(Gildas30m.REF_FREQ, new Parameter(rfreq, Gildas30m.REF_FREQ_DESC));
+        map.put(Gildas30m.IMAGE, new Parameter(ifreq, Gildas30m.IMAGE_DESC));
+        map.put(Gildas30m.SOURCE, new Parameter(s, Gildas30m.SOURCE_DESC));
+        map.put(Gildas30m.TELES, new Parameter(t, Gildas30m.TELES_DESC));
+        map.put(Gildas30m.LINE, new Parameter(m, Gildas30m.LINE_DESC));
+
         Parameter aobj[] = new Parameter[15];
         aobj[0] = new Parameter(num, Gildas30m.NUM_DESC);
         aobj[1] = new Parameter(0, Gildas30m.BLOCK_DESC);
@@ -1123,7 +1124,7 @@ public class ProcessSpectrum {
         aobj[12] = new Parameter(0, Gildas30m.QUALITY_DESC);
         aobj[13] = new Parameter(scan, Gildas30m.SCAN_DESC);
         aobj[14] = new Parameter(0, Gildas30m.POSA_DESC);
-        SpectrumHeader30m header = new SpectrumHeader30m(aobj); 
+        SpectrumHeader30m header = new SpectrumHeader30m(aobj);
 		Spectrum30m s30m = new Spectrum30m(map, header, DataSet.toFloatArray(data));
 		return s30m;
 	}
@@ -1149,9 +1150,9 @@ public class ProcessSpectrum {
 	 * for instance to obtain recombination lines in the output.
 	 * @param jpl True for JPL catalog, false for COLOGNE.
 	 * @param splatalogue True to call Splatalogue using web service and to return a simple list of species found.
-	 * Setting this as true will make previous jpl flag useless. 
+	 * Setting this as true will make previous jpl flag useless.
 	 * @param onlyAtmospheric Set to true to return only possible atmospheric lines. This is only allowed for splatalogue.
-	 * @param onlyPossibleButStrangeLines Set to true to return only possible ISM lines, but less probable. In case 
+	 * @param onlyPossibleButStrangeLines Set to true to return only possible ISM lines, but less probable. In case
 	 * onlyAtmospheric is true this flag will be ignored.
 	 * @return The set of transitions at freqs freq +/- width/2.
 	 * @throws JPARSECException If an error occurs.
@@ -1177,7 +1178,7 @@ public class ProcessSpectrum {
 					noAtm = "true";
 					noKnown = "true";
 					noPotential = "false";
-					noProbable = "false";				
+					noProbable = "false";
 					query = "http://www.cv.nrao.edu/php/splat/c.php?from="+from+"&to="+to+"&frequency_units=MHz&data_version=v2.0&displayLovas=true&displaySLAIM=true&displayJPL=true&displayCDMS=true&displayToyaMA=true&displayOSU=true&displayRecomb=true&displayLisa=true&displayRFI=true&ls1=true&ls5=true&el1=true&energy_range_to="+ert+"&energy_range_type=eu_k&lill_cdms_jpl="+intens+"&no_atmospheric="+noAtm+"&known="+noKnown; //+"&no_potential="+noPotential+"&no_probable="+noProbable;
 				}
 			}
@@ -1220,7 +1221,7 @@ public class ProcessSpectrum {
 						if (a > 0) {
 							data[j-1] = data[j-1].substring(a+1);
 							a = data[j-1].indexOf("<");
-							if (a >= 0) data[j-1] = data[j-1].substring(0, a);							
+							if (a >= 0) data[j-1] = data[j-1].substring(0, a);
 						}
 					}
 					if (err) continue;
@@ -1240,7 +1241,7 @@ public class ProcessSpectrum {
 						double enguv = DataSet.parseDouble(freqs.substring(0, freqs.indexOf(" "))) * 1.0E6 * Constant.HZ_TO_K + Double.parseDouble(data[8]);
 						engu = ""+(float)enguv;
 					} catch (Exception exc) {}
-					
+
 					//int g = name.indexOf("-"), gg = name.lastIndexOf("-");
 					//if (g == gg) name = DataSet.replaceAll(name, "-", "$\\rightarrow$", true);
 					out2 = DataSet.addStringArray(out2, new String[] {
@@ -1252,14 +1253,14 @@ public class ProcessSpectrum {
 			if (out2.length == 0) return new String[] {};
 			return DataSet.getSubArray(out2, 1, out2.length-1);
 		}
-		
+
 		ArrayList<String> mol;
 		if (jpl) {
 			mol = CatalogRead.readJPLcatalog();
 		} else {
-			mol = CatalogRead.readCOLOGNEcatalog();					
+			mol = CatalogRead.readCOLOGNEcatalog();
 		}
-	
+
 		boolean save = false;
 		String tran[][] = (String[][]) DataBase.getData("processSpectrum", false);
 		if (tran == null) {
@@ -1277,7 +1278,7 @@ public class ProcessSpectrum {
 			}
 			try {
 				if (save) {
-					t = CatalogRead.getTransitions(0, mol.get(i), jpl, 
+					t = CatalogRead.getTransitions(0, mol.get(i), jpl,
 							width, maxT, maxrint);
 					tran[i] = t;
 				} else {
@@ -1299,20 +1300,20 @@ public class ProcessSpectrum {
 							String qu = data.substring(67).trim();
 							data = ""+f+" +/- "+fe+" | "+rint+" | "+gu+" | "+(float) engl+" | "+(float)engu+" | "+qf+" | "+ql+" | "+qu;
 							if (jpl) {
-								possibleTrans = DataSet.addStringArray(possibleTrans, new String[] {mol.get(i).substring(0, 20).trim()+": "+data});								
+								possibleTrans = DataSet.addStringArray(possibleTrans, new String[] {mol.get(i).substring(0, 20).trim()+": "+data});
 							} else {
 								possibleTrans = DataSet.addStringArray(possibleTrans, new String[] {mol.get(i).substring(0, 32).trim()+": "+data});
 							}
 						}
 					}
 				}
-			} catch (Exception e) { 
+			} catch (Exception e) {
 				Logger.log(LEVEL.ERROR, "Found an error when identifying lines. Message was "+e.getLocalizedMessage());
 			}
 		}
-		
+
 		DataBase.addData("processSpectrum", tran, false);
-		
+
 		return possibleTrans;
 	}
 
@@ -1324,7 +1325,7 @@ public class ProcessSpectrum {
 		fitx = reg.getBestEstimates();
 		fitdx = reg.getBestEstimatesErrors();
 	}
-	
+
 	/**
 	 * A very simple reduction method that passes a baseline only.
 	 * @param n Number of channels to smooth around a given one (+/- n) to reduce a given channel to 0.
@@ -1394,7 +1395,7 @@ public class ProcessSpectrum {
 	public static SpectrumLine[] reduceSpectrum(Spectrum spectrum, int maxN) throws JPARSECException {
 		return reduceSpectrum(new Spectrum30m(spectrum), maxN);
 	}
-	
+
 	/**
 	 * Reduces the spectrum in a fully automatic way.
 	 * @param spectrum The spectrum.
@@ -1415,7 +1416,7 @@ public class ProcessSpectrum {
 	public static SpectrumLine[] reduceSpectrum(Spectrum spectrum) throws JPARSECException {
 		return reduceSpectrum(new Spectrum30m(spectrum), -1);
 	}
-	
+
 	/**
 	 * Reduces the spectrum in a fully automatic way.
 	 * @param spectrum The spectrum.
@@ -1493,7 +1494,7 @@ public class ProcessSpectrum {
 		ps.fixLevel0();
 		if (sl != null) {
 			double data[] = ps.getProcessedSpectrum().clone();
-			
+
 			// Fit again the lines and try to reduce rms
 			if (sl.length > 1) {
 		    	double vx[] = new double[sl.length];
@@ -1501,7 +1502,7 @@ public class ProcessSpectrum {
 			    for (int i=0; i<sl.length; i++) {
 			    	vx[i] = Math.abs(sl[i].peakT);
 			    	vy[i] = i;
-			    }	
+			    }
 			    ArrayList<double[]> list = DataSet.sortInDescent(vx, vy, false);
 			    vy = list.get(1);
 			    SpectrumLine sl0[] = sl.clone();
@@ -1527,10 +1528,10 @@ public class ProcessSpectrum {
 					    		}
 					    	}
 							pss.v = datas;
-			
+
 							double l[] = pss.fitLineBetweenChannels(sl[lindex].minChannel, sl[lindex].maxChannel, sl[lindex].yMin, sl[lindex].yMax, false);
-	
-			    			sl[lindex].vel = l[0]; 
+
+			    			sl[lindex].vel = l[0];
 			    			sl[lindex].velError = l[4];
 			    			sl[lindex].width = l[1];
 			    			sl[lindex].widthError = l[5];
@@ -1539,7 +1540,7 @@ public class ProcessSpectrum {
 			    			sl[lindex].area = l[3];
 			    			sl[lindex].areaError = l[7];
 							sl[lindex].freq = l[10];
-							
+
 							double max = Math.abs(l[2]);
 							//ChartSeriesElement series = ps.getGaussianFit(l, XUNIT.VELOCITY_KMS);
 							//max = DataSet.getMaximumValue(DataSet.toDoubleValues(series.yValues));
@@ -1563,7 +1564,7 @@ public class ProcessSpectrum {
 				    	break;
 				    }
 			    }
-			}					
+			}
 
 			for (int i=0; i<sl.length; i++) {
 				if (sl[i].enabled) {
@@ -1581,13 +1582,13 @@ public class ProcessSpectrum {
 
 			double vcopy[] = ps.v.clone();
 			for (int i=0; i<sl.length; i++) {
-				ps.fitLineBetweenChannels(sl[i].minChannel, sl[i].maxChannel, 
+				ps.fitLineBetweenChannels(sl[i].minChannel, sl[i].maxChannel,
 						-1, -1, true);
 			}
 			double sigma = ProcessSpectrum.getSigma(ps.v);
 			ps.v = vcopy;
 			for (int i=0; i<sl.length; i++) {
-				double line[] = ps.fitLineBetweenChannels(sigma, sl[i].minChannel, sl[i].maxChannel, 
+				double line[] = ps.fitLineBetweenChannels(sigma, sl[i].minChannel, sl[i].maxChannel,
 						-1, -1, true);
 				sl[i].fitted = true;
 				sl[i].vel = line[0];
@@ -1602,7 +1603,7 @@ public class ProcessSpectrum {
 				sl[i].spectrumIndex = sindex;
 				sl[i].freq = line[10];
 				String label = "Fit to line "+(i+1); //identifyLine(spectrum, sl[i]);
-				if (label != null) sl[i].label = label;
+				sl[i].label = label;
 				sl[i].labelForChartID = sl[i].label;
 			}
 
@@ -1613,7 +1614,7 @@ public class ProcessSpectrum {
 			    for (int i=0; i<sl.length; i++) {
 			    	vx[i] = Math.abs(sl[i].peakT);
 			    	vy[i] = i;
-			    }	
+			    }
 			    ArrayList<double[]> list = DataSet.sortInDescent(vx, vy, false);
 			    vy = list.get(1);
 			    SpectrumLine sl0[] = sl.clone();
@@ -1639,10 +1640,10 @@ public class ProcessSpectrum {
 					    		}
 					    	}
 							pss.v = datas;
-			
+
 							double l[] = pss.fitLineBetweenChannels(sigma, sl[lindex].minChannel, sl[lindex].maxChannel, sl[lindex].yMin, sl[lindex].yMax, false);
-	
-			    			sl[lindex].vel = l[0]; 
+
+			    			sl[lindex].vel = l[0];
 			    			sl[lindex].velError = l[4];
 			    			sl[lindex].width = l[1];
 			    			sl[lindex].widthError = l[5];
@@ -1651,9 +1652,9 @@ public class ProcessSpectrum {
 			    			sl[lindex].area = l[3];
 			    			sl[lindex].areaError = l[7];
 							sl[lindex].freq = l[10];
-							
+
 							ps = pss;
-							
+
 							double max = Math.abs(l[2]);
 							if (max < ProcessSpectrum.TIMES_SIGMA * rms0 && sl[lindex].enabled) {
 								sl[lindex].deleted = true;
@@ -1674,50 +1675,8 @@ public class ProcessSpectrum {
 				    	break;
 				    }
 			    }
-			}					
+			}
 		}
 		return new Object[] {sl, ps};
-	}
-	
-	/**
-	 * Test program.
-	 * @param args Not used.
-	 */
-	public static void main(String args[]) {
-		System.out.println("ProcessSpectrum test");
-		
-		try {
-			
-			String file = "/home/alonso/colaboraciones/Rafael/2013/largeProgram/out.30m";
-			
-			Gildas30m g30m = new Gildas30m(file);
-			int list[] = g30m.getListOfSpectrums(true);
-			Spectrum30m sp = g30m.getSpectrum(list[0]);
-			
-			ProcessSpectrum.TIMES_SIGMA = 5.0;
-			SpectrumLine[] lines = ProcessSpectrum.reduceSpectrum(sp, -1);
-			XUNIT xUnit = XUNIT.VELOCITY_KMS;
-			jparsec.graph.CreateChart ch = sp.getChart(500, 500, xUnit);
-			if (lines != null) {
-				System.out.println("Found "+lines.length+" lines");
-				ProcessSpectrum ps = new ProcessSpectrum(sp);
-				for (int i=0; i<lines.length; i++) {
-					System.out.println(i+" ("+lines[i].minChannel+"-"+lines[i].maxChannel+"): vel = "+lines[i].vel+" km/s, peak = "+lines[i].peakT+" K, width = "+lines[i].width+" km/s, area = "+lines[i].area+" K km/s");
-					ChartSeriesElement series = ps.getGaussianFit(lines[i].getGaussianParameters(), xUnit);
-					series.legend = "Fit to line "+(i+1);
-					ch.addSeries(series);
-				}
-			}
-			ch.showChartInJFreeChartPanel();
-
-			double freq = 256329.5, width = 1, maxT = 1000, maxrint = -7;
-			boolean jpl = false, splatalogue = true, onlyAtm = false, onlyLessProbable = false;
-			String out[] = ProcessSpectrum.identifyLine(freq, width, maxT, maxrint, jpl, splatalogue, onlyAtm, onlyLessProbable);
-			ConsoleReport.stringArrayReport(out);
-
-		} catch (Exception exc) {
-			exc.printStackTrace();
-		}
-		
 	}
 }

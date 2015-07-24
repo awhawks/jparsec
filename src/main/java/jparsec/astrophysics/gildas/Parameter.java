@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.astrophysics.gildas;
 
 import java.io.*;
@@ -51,7 +51,7 @@ public class Parameter implements Serializable {
 	/**
 	 * The set of data types for the parameters.
 	 */
-	public static enum DATA_TYPE {
+	public enum DATA_TYPE {
 		/** ID constant for a double datatype. */
 		DOUBLE,
 		/** ID constant for an integer datatype. */
@@ -59,7 +59,7 @@ public class Parameter implements Serializable {
 		/** ID constant for a string datatype. */
 		STRING
 	};
-	
+
 	/**
 	 * Constructor for a float parameter.
 	 * @param f Value.
@@ -71,6 +71,7 @@ public class Parameter implements Serializable {
 		description = d;
 		dataType = DATA_TYPE.DOUBLE;
 	}
+
 	/**
 	 * Constructor for a double parameter.
 	 * @param f Value.
@@ -82,6 +83,7 @@ public class Parameter implements Serializable {
 		description = d;
 		dataType = DATA_TYPE.DOUBLE;
 	}
+
 	/**
 	 * Constructor for a string parameter.
 	 * @param f Value.
@@ -93,6 +95,7 @@ public class Parameter implements Serializable {
 		description = d;
 		dataType = DATA_TYPE.STRING;
 	}
+
 	/**
 	 * Constructor for an integer parameter.
 	 * @param f Value.
@@ -104,20 +107,16 @@ public class Parameter implements Serializable {
 		description = d;
 		dataType = DATA_TYPE.INT;
 	}
-	
+
 	/**
 	 * Checks if two parameters are the same.
 	 */
 	public boolean equals(Object o)
 	{
 		if (o == null) {
-			if (this == null) return true;
 			return false;
 		}
-		if (this == null) {
-			if (o == null) return true;
-			return false;
-		}
+
 		boolean equals = true;
 		Parameter p = (Parameter) o;
 		if (p.dataType != this.dataType) equals = false;
@@ -125,18 +124,25 @@ public class Parameter implements Serializable {
 		if (!p.value.equals(this.value)) equals = false;
 		return equals;
 	}
-	
-	/**
+
+    @Override
+    public int hashCode() {
+        int result = value != null ? value.hashCode() : 0;
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + (dataType != null ? dataType.hashCode() : 0);
+        return result;
+    }
+
+    /**
 	 * Clones this instance.
 	 */
 	public Parameter clone()
 	{
-		if (this == null) return null; 
 		Parameter p = new Parameter(this.value, this.description);
 		p.dataType = this.dataType;
 		return p;
 	}
-	
+
 	/**
 	 * Searches for a given parameter by its description.
 	 * @param param The array of parameters.
@@ -285,7 +291,7 @@ public class Parameter implements Serializable {
 		}
 		return img;
 	}
-	
+
 	/**
 	 * Transforms a given set of parameters into an image header instance.
 	 * @return The image header.
@@ -297,7 +303,7 @@ public class Parameter implements Serializable {
 		ImageHeaderElement img = new ImageHeaderElement(key, this.value, this.description);
 		return img;
 	}
-	
+
 	/**
 	 * Returns the value as an integer.
 	 * 0 is returned if the value is null or empty.

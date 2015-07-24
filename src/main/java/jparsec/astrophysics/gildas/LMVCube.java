@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,17 +18,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.astrophysics.gildas;
 
-import java.io.*;
+import java.io.DataOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.RandomAccessFile;
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.awt.geom.Point2D;
-
-import jparsec.graph.*;
-import jparsec.graph.GridChartElement.TYPE;
-import jparsec.io.image.ImageSplineTransform;
-import jparsec.io.image.WCS;
 import jparsec.astronomy.CoordinateSystem;
 import jparsec.astronomy.CoordinateSystem.COORDINATE_SYSTEM;
 import jparsec.astrophysics.FluxElement;
@@ -36,16 +36,30 @@ import jparsec.astrophysics.MeasureElement;
 import jparsec.astrophysics.Spectrum;
 import jparsec.astrophysics.Table;
 import jparsec.astrophysics.gildas.Spectrum30m.XUNIT;
-import jparsec.observer.*;
-import jparsec.time.*;
-import jparsec.ephem.*;
+import jparsec.ephem.EphemerisElement;
+import jparsec.ephem.Functions;
 import jparsec.ephem.Target.TARGET;
+import jparsec.graph.ChartElement;
+import jparsec.graph.ChartSeriesElement;
+import jparsec.graph.CreateChart;
+import jparsec.graph.CreateGridChart;
+import jparsec.graph.DataSet;
+import jparsec.graph.GridChartElement;
+import jparsec.graph.GridChartElement.TYPE;
+import jparsec.graph.JPARSECStroke;
+import jparsec.graph.SimpleChartElement;
+import jparsec.io.FileIO;
+import jparsec.io.image.ImageSplineTransform;
+import jparsec.io.image.WCS;
 import jparsec.math.Constant;
 import jparsec.math.Evaluation;
 import jparsec.math.FastMath;
 import jparsec.math.Interpolation;
-import jparsec.io.FileIO;
-import jparsec.util.*;
+import jparsec.observer.LocationElement;
+import jparsec.observer.ObserverElement;
+import jparsec.time.TimeElement;
+import jparsec.util.JPARSECException;
+import jparsec.util.Translate;
 
 /**
  * A class to read/write lmv (GILDAS) datacubes. A datacube can be created in
@@ -59,15 +73,15 @@ import jparsec.util.*;
  * In the second case the cube must be explicitly inserted in the constructor
  * or the {@link #cube} property. It is supposed that enough memory
  * is available to hold the instance in this case.  In large files (>20 MB)
- * to previously smooth the datacube to a lower resolution level could be 
+ * to previously smooth the datacube to a lower resolution level could be
  * required.
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
 public class LMVCube implements Serializable
-{	
+{
 	static final long serialVersionUID = 1L;
-	
+
 	private static final long INIT = 0;
 	private boolean readingFile;
 	private String path;
@@ -103,7 +117,7 @@ public class LMVCube implements Serializable
 	 * @param parallax Parallax.
 	 * @throws JPARSECException If an error occurs.
 	 */
-	public LMVCube(String source, float[][][] cube, String unit, String line, double freq, 
+	public LMVCube(String source, float[][][] cube, String unit, String line, double freq,
 			String label1, String label2, String label3, double raPos, double decPos, double ra,
 			double dec, float v0, CoordinateSystem.COORDINATE_SYSTEM coordSys, float epoch, float beamMajor, float beamMinor, float beamPA, double skyPA,
 			float blanking, float blankTol, double[] formula, float rms, float dra, float ddec, float parallax)
@@ -193,7 +207,7 @@ public class LMVCube implements Serializable
 	 * @param parallax Parallax.
 	 * @throws JPARSECException If an error occurs.
 	 */
-	public LMVCube(String source, float[][][] cube, String unit, String line, double freq, 
+	public LMVCube(String source, float[][][] cube, String unit, String line, double freq,
 			String label1, String label2, String label3, double ra,
 			double dec, float v0, CoordinateSystem.COORDINATE_SYSTEM coordSys, float epoch, float beamMajor, float beamMinor, float beamPA, double skyPA,
 			float blanking, float blankTol, double[] formula, float rms, float dra, float ddec, float parallax)
@@ -255,7 +269,7 @@ public class LMVCube implements Serializable
 	}
 
 	/**
-	 * Simplified constructor, similar to the full one, but for J2000 equatorial 
+	 * Simplified constructor, similar to the full one, but for J2000 equatorial
 	 * coordinates with blanking and sky position angle equal to 0.
 	 * @param source Source name.
 	 * @param cube The cube.
@@ -271,7 +285,7 @@ public class LMVCube implements Serializable
 	 * @param formula Conversion formula.
 	 * @throws JPARSECException If an error occurs.
 	 */
-	public LMVCube(String source, float[][][] cube, String unit, String line, double freq, 
+	public LMVCube(String source, float[][][] cube, String unit, String line, double freq,
 			double ra, double dec, float v0, float beamMajor, float beamMinor, float beamPA, double[] formula)
 	throws JPARSECException {
 		this.axis12PA = 0;
@@ -467,7 +481,7 @@ public class LMVCube implements Serializable
         {
             bis.seek(INIT);
             bis.skipBytes(512);
-            
+
             byte abyte0[] = new byte[axis1Dim * axis2Dim * 4];
             int j = 0;
             for(int l = 0; l < axis3Dim; l++)
@@ -482,7 +496,7 @@ public class LMVCube implements Serializable
                         j += 4;
                     }
                 }
-                
+
                 ad = setBlankingToZero(ad);
         		for (int x=0; x<ad[0][0].length; x++)
         		{
@@ -503,23 +517,23 @@ public class LMVCube implements Serializable
                             minimumAndMaximumFluxPositions[7] = 0 + 1;
                         }
             		}
-        		} 
+        		}
             }
-            
+
     		this.minimumFlux = (float) minValue;
     		this.maximumFlux = (float) maxValue;
         } catch(Exception exception) {
 			throw new JPARSECException(exception);
         }
     }
-    
+
     private void setExtremaData(float[][][] cube)
     throws JPARSECException {
     	if (cube == null) return;
         double maxValue = 4.9406564584124654E-324D;
         double minValue = 1.7976931348623157E+308D;
     	this.minimumAndMaximumFluxPositions = new int[8];
-    	
+
 		for (int v=0; v<cube.length; v++)
 		{
     		for (int x=0; x<cube[0][0].length; x++)
@@ -541,18 +555,18 @@ public class LMVCube implements Serializable
                         minimumAndMaximumFluxPositions[7] = 0 + 1;
                     }
         		}
-    		}    			
+    		}
 		}
 
 		this.minimumFlux = (float) minValue;
 		this.maximumFlux = (float) maxValue;
     }
-    
+
     /**
      * Returns the data in the cube changing any blanking values to zero. This
      * change is required to use the returned data as input for a given 2D/3D
      * chart. This method reads again the header if
-     * the cube data is empty to set the internal variables to their original 
+     * the cube data is empty to set the internal variables to their original
      * values, without any smooth.
      * @return The cube of data as an array in 3d, ordered by
      * number of levels, number of columns (DEC), and number of rows (RA).
@@ -563,12 +577,12 @@ public class LMVCube implements Serializable
     throws JPARSECException {
     	return getCubeData(true);
     }
-    
+
     /**
      * Returns the data in the cube changing optionally any blanking values to zero. This
      * change is required to use the returned data as input for a given 2D/3D
      * chart. This method reads again the header if
-     * the cube data is empty to set the internal variables to their original 
+     * the cube data is empty to set the internal variables to their original
      * values, without any smooth.
      * @param applyBlanking True to apply blanking (setting to 0 values equal to it).
      * This is slow when requesting frequently the cube data.
@@ -591,7 +605,7 @@ public class LMVCube implements Serializable
         {
             bis.seek(INIT);
             bis.skipBytes(512);
-            
+
             byte abyte0[] = new byte[axis1Dim * axis2Dim * 4];
             int j = 0;
             for(int l = 0; l < axis3Dim; l++)
@@ -621,7 +635,7 @@ public class LMVCube implements Serializable
         if (applyBlanking) return setBlankingToZero(ad);
         return ad;
     }
-    
+
     /**
      * Returns the cube as a Table object.
      * @param plane The plane to return, or -1 for integrated intensity.
@@ -641,7 +655,7 @@ public class LMVCube implements Serializable
     	}
     	return new Table(DataSet.toDoubleArray(data), fluxUnit);
     }
-    
+
     private float[][][] setBlankingToZero(float[][][] cube) {
 		for (int v=0; v<cube.length; v++)
 		{
@@ -652,7 +666,7 @@ public class LMVCube implements Serializable
         			if (cube[v][y][x] == blanking) cube[v][y][x] = 0f;
         		}
     		}
-		}	
+		}
 		return cube;
     }
 
@@ -668,9 +682,9 @@ public class LMVCube implements Serializable
     }
 
     /**
-     * Returns the raw data in the cube without any modification. This method 
+     * Returns the raw data in the cube without any modification. This method
      * reads again the header if
-     * the cube data is empty to set the internal variables to their original 
+     * the cube data is empty to set the internal variables to their original
      * values, without any smooth.
      * @return The raw data of the cube as an array in 3d, ordered by
      * number of levels, number of columns (DEC), and number of rows (RA).
@@ -688,7 +702,7 @@ public class LMVCube implements Serializable
         {
             bis.seek(INIT);
             bis.skipBytes(512);
-            
+
             byte abyte0[] = new byte[axis1Dim * axis2Dim * 4];
             int j = 0;
             for(int l = 0; l < axis3Dim; l++)
@@ -725,17 +739,17 @@ public class LMVCube implements Serializable
      */
     public void write(String path) throws JPARSECException
     {
-		FileOutputStream fos; 
+		FileOutputStream fos;
 		DataOutputStream file;
-		try { 
-			fos = new FileOutputStream(path);  
-			file = new DataOutputStream( fos ); 
+		try {
+			fos = new FileOutputStream(path);
+			file = new DataOutputStream( fos );
 			int off = '\0';
 
 			// Write GILDAS image ID header
 			String format = "-";
 			String gildas = "GILDAS"+format+"IMAGE"; // GILDAS_UVFIL, ...
-			Convertible convert = ConverterFactory.getConvertibleImage(format.charAt(0)); 	   
+			Convertible convert = ConverterFactory.getConvertibleImage(format.charAt(0));
 			LMVCube.writeBytes(file, convert, 0, gildas, 12);
 			int imageFormat = -11;
 			LMVCube.writeBytes(file, convert, 0, imageFormat);
@@ -743,7 +757,7 @@ public class LMVCube implements Serializable
 			int nblocks = 15 + (int) k;
 			LMVCube.writeBytes(file, convert, 0, nblocks);
 			off += 20;
-			
+
 			// Write header sections
 			int delta = '('-off;
 			off = '(';
@@ -759,7 +773,7 @@ public class LMVCube implements Serializable
 			LMVCube.writeBytes(file, convert, 0, this.axis2Dim);
 			LMVCube.writeBytes(file, convert, 0, this.axis3Dim);
 			LMVCube.writeBytes(file, convert, 0, this.axis4Dim);
-			off += 24;			
+			off += 24;
             for(int i = 0; i < 12; i++)
             {
     			LMVCube.writeBytes(file, convert, 0, this.conversionFormula[i]);
@@ -833,7 +847,7 @@ public class LMVCube implements Serializable
 			LMVCube.writeBytes(file, convert, 0, this.sourceProperMotionDEC);
 			LMVCube.writeBytes(file, convert, 0, this.sourceParallax);
 			off += 12+16;
-			
+
 			// Write cube data
 			delta = 512 - off;
 			off = 512;
@@ -856,7 +870,7 @@ public class LMVCube implements Serializable
                     	b[n] = b0[0];
                     	b[n+1] = b0[1];
                     	b[n+2] = b0[2];
-                    	b[n+3] = b0[3];                    	
+                    	b[n+3] = b0[3];
                     }
                     file.write(b);
                 }
@@ -866,28 +880,28 @@ public class LMVCube implements Serializable
             	LMVCube.writeBytes(file, convert, 0, 0);
             }
 
-		} catch (Exception ioe) { 
+		} catch (Exception ioe) {
 			throw new JPARSECException(ioe);
-		} 
+		}
     }
-    
+
 	private static void writeBytes(DataOutputStream file, Convertible convert, int off, int value)
 	throws Exception {
 		byte abyte0[] = new byte[4];
 		convert.writeInt(abyte0, off, value);
-		file.write(abyte0);		
+		file.write(abyte0);
 	}
 	private static void writeBytes(DataOutputStream file, Convertible convert, int off, double value)
 	throws Exception {
 		byte abyte0[] = new byte[8];
 		convert.writeDouble(abyte0, off, value);
-		file.write(abyte0);		
+		file.write(abyte0);
 	}
 	private static void writeBytes(DataOutputStream file, Convertible convert, int off, float value)
 	throws Exception {
 		byte abyte0[] = new byte[4];
 		convert.writeFloat(abyte0, off, value);
-		file.write(abyte0);		
+		file.write(abyte0);
 	}
 	private static void writeBytes(DataOutputStream file, Convertible convert, int off, String value, int nchar)
 	throws Exception {
@@ -896,12 +910,12 @@ public class LMVCube implements Serializable
 		} else {
 			value = FileIO.addSpacesAfterAString(value, nchar);
 		}
-		file.write(value.getBytes());		
+		file.write(value.getBytes());
 	}
 
     /**
      * Returns the data in the cube for a given velocity plane. This method reads
-     * again the header if the cube data is empty to set the internal variables to 
+     * again the header if the cube data is empty to set the internal variables to
      * their original values, without any smooth.
      * @param plane The index of the velocity plane in the file, starting from 0.
      * @return The plane, ordered as axis1, axis2 (oposite as {@linkplain #getCubeData()}).
@@ -959,7 +973,7 @@ public class LMVCube implements Serializable
     /**
      * Returns the data in the cube for a given velocity plane. Possible blanking values
      * are changed to zero. This method reads
-     * again the header if the cube data is empty to set the internal variables to 
+     * again the header if the cube data is empty to set the internal variables to
      * their original values, without any smooth.
      * @param plane The index of the velocity plane in the file, starting from 0.
      * @return The plane, ordered as axis1, axis2 (oposite as {@linkplain #getCubeData()}).
@@ -990,7 +1004,7 @@ public class LMVCube implements Serializable
             int j = 0;
             for (int s=0;s<plane+1;s++)
             {
-                //int i1 = 
+                //int i1 =
                 	bis.read(abyte0);
             }
             for(int j1 = 0; j1 < axis2Dim; j1++)
@@ -1040,7 +1054,7 @@ public class LMVCube implements Serializable
         }
     	return p;
     }
-    
+
     /**
      * Returns the data in a given plane of the cube smoothing it if necessary. The
      * internal variables are modified to properly account for the new size of the
@@ -1066,16 +1080,16 @@ public class LMVCube implements Serializable
         }
     	return p;
     }
-    
+
     /**
      * Returns the data in the cube smoothing if necessary. The
-     * internal variables are modified to properly account for the 
+     * internal variables are modified to properly account for the
      * new size of the cube data.
      * @param max1 Maximum number of elements in x axis.
      * @param max2 Maximum number of elements in y axis.
      * @param max3 Maximum number of elements in z axis.
      * @return The cube of data as an array in 3d, ordered by
-     * number of levels (z), number of columns (DEC, y), and 
+     * number of levels (z), number of columns (DEC, y), and
      * number of rows (RA, x).
      * @throws JPARSECException If an error occurs.
      */
@@ -1128,7 +1142,7 @@ public class LMVCube implements Serializable
             				ad_out[vi][yi][xi] += cube[v][y][x] / (float) (reduce2 * reduce1 * reduce3);
             			}
             		}
-        		}    			
+        		}
     		}
     	} else {
 	        float ad[][][] = new float[reduce3][axis2Dim][axis1Dim];
@@ -1142,7 +1156,7 @@ public class LMVCube implements Serializable
 	            {
 	            	int index3 = l % reduce3;
 	            	if (index3 == 0) ad = new float[reduce3][axis2Dim][axis1Dim];
-	            	
+
 	            	bis.read(abyte0);
 	                for(int j1 = 0; j1 < axis2Dim; j1++)
 	                {
@@ -1153,7 +1167,7 @@ public class LMVCube implements Serializable
 	                        j += 4;
 	                    }
 	                }
-	                
+
 	                if (index3 == (reduce3-1)) {
 	                	n3 ++;
 	                    for(int l1 = 0; l1 < reduce3; l1++)
@@ -1171,16 +1185,16 @@ public class LMVCube implements Serializable
 		    	                        for(int k2 = 0; k2 <reduce1; k2 ++)
 		    	                        {
 		    	                			if (ad[l1][j1+j2][k1+k2] != blanking)  {
-			    	                        	ad_out[n3][n1][n2] += ad[l1][j1+j2][k1+k2] / (float) (reduce2 * reduce1 * reduce3);	    	                        	
+			    	                        	ad_out[n3][n1][n2] += ad[l1][j1+j2][k1+k2] / (float) (reduce2 * reduce1 * reduce3);
 		    	                			}
 		    	                        }
 		    	                    }
 		                        }
 		                    }
 	                    }
-	                }  
+	                }
 	            }
-	            
+
 		    	if (readingFile && cube == null) {
 		    		this.setCubeData(ad_out);
 		    		this.cube = null;
@@ -1189,7 +1203,7 @@ public class LMVCube implements Serializable
 	        } catch(IOException exception) {
 				throw new JPARSECException(exception);
 	        }
-	        
+
     	}
 
 		for (int v=0; v<n3; v++)
@@ -1210,13 +1224,13 @@ public class LMVCube implements Serializable
      * Returns the data in the cube smoothing if necessary. The output
      * is calculated considering that the blanking value is equal to zero,
      * a requirement if the cube is going to be charted. The
-     * internal variables are modified to properly account for the 
+     * internal variables are modified to properly account for the
      * new size of the cube data.
      * @param max1 Maximum number of elements in x axis.
      * @param max2 Maximum number of elements in y axis.
      * @param max3 Maximum number of elements in z axis.
      * @return The cube of data as an array in 3d, ordered by
-     * number of levels (z), number of columns (DEC, y), and 
+     * number of levels (z), number of columns (DEC, y), and
      * number of rows (RA, x).
      * @throws JPARSECException If an error occurs.
      */
@@ -1275,7 +1289,7 @@ public class LMVCube implements Serializable
 	            			}
             			}
             		}
-        		}    			
+        		}
     		}
     		for (int vi=0; vi<ad_out.length; vi++)
     		{
@@ -1285,7 +1299,7 @@ public class LMVCube implements Serializable
             		{
             			if (ad_out_sum[vi][yi][xi] > 0) ad_out[vi][yi][xi] /= ad_out_sum[vi][yi][xi];
             		}
-        		}    			
+        		}
     		}
     	} else {
 	        float ad[][][] = new float[reduce3][axis2Dim][axis1Dim];
@@ -1299,7 +1313,7 @@ public class LMVCube implements Serializable
 	            {
 	            	int index3 = l % reduce3;
 	            	if (index3 == 0) ad = new float[reduce3][axis2Dim][axis1Dim];
-	            	
+
 	            	bis.read(abyte0);
 	                for(int j1 = 0; j1 < axis2Dim; j1++)
 	                {
@@ -1310,7 +1324,7 @@ public class LMVCube implements Serializable
 	                        j += 4;
 	                    }
 	                }
-	                
+
 	                if (index3 == (reduce3-1)) {
 	                	n3 ++;
 	                    for(int l1 = 0; l1 < reduce3; l1++)
@@ -1330,7 +1344,7 @@ public class LMVCube implements Serializable
 		    	                        	if (n3 < ad_out.length && n1 < ad_out[0].length && n2 < ad_out[0][0].length &&
 		    	                        			l1 < ad.length && j1+j2 < ad[0].length && k1+k2 < ad[0][0].length) {
 			    	                			if (ad[l1][j1+j2][k1+k2] != blanking)  {
-				    	                        	ad_out[n3][n1][n2] += ad[l1][j1+j2][k1+k2] / (float) (reduce2 * reduce1 * reduce3);	    	                        	
+				    	                        	ad_out[n3][n1][n2] += ad[l1][j1+j2][k1+k2] / (float) (reduce2 * reduce1 * reduce3);
 			    	                			}
 		    	                        	}
 		    	                        }
@@ -1338,9 +1352,9 @@ public class LMVCube implements Serializable
 		                        }
 		                    }
 	                    }
-	                }  
+	                }
 	            }
-	            
+
 		    	if (readingFile && cube == null) {
 		    		this.setCubeData(ad_out);
 		    		this.cube = null;
@@ -1378,10 +1392,10 @@ public class LMVCube implements Serializable
 
         if(coordinateSystem.substring(0, 8).toLowerCase().equals(CoordinateSystem.COORDINATE_SYSTEMS[COORDINATE_SYSTEM.GALACTIC.ordinal()].substring(0, 8).toLowerCase()))
         	return COORDINATE_SYSTEM.GALACTIC;
-        
+
         return COORDINATE_SYSTEM.EQUATORIAL;
     }
-    
+
     /**
      * The set of cube projections.
      */
@@ -1403,7 +1417,7 @@ public class LMVCube implements Serializable
 	    /** ID constant for global sinusoidal projection. */
 	    GLS
     };
-    
+
     /**
      * Names of the projections.
      */
@@ -1417,7 +1431,7 @@ public class LMVCube implements Serializable
     {
     	return PROJECTIONS[getProjection().ordinal()];
     }
-    
+
     /**
      * Returns the projection in the current image.
      * @return Projection ID constant.
@@ -1436,7 +1450,7 @@ public class LMVCube implements Serializable
 		float v0 = (float) (this.conversionFormula[7] - this.conversionFormula[6] * this.conversionFormula[8]);
 		return (float) (v0 + this.conversionFormula[8]);
     }
-    
+
     /**
      * Returns the final velocity of the cube, third axis.
      * @return Final velocity.
@@ -1473,7 +1487,7 @@ public class LMVCube implements Serializable
 		float x0 = (float) (this.conversionFormula[1] - this.conversionFormula[0] * this.conversionFormula[2]);
 		return (float) (x0 + this.conversionFormula[2]);
     }
-    
+
     /**
      * Returns the final x position of the cube, first axis.
      * @return Final position.
@@ -1494,7 +1508,7 @@ public class LMVCube implements Serializable
 		float y0 = (float) (this.conversionFormula[4] - this.conversionFormula[3] * this.conversionFormula[5]);
 		return (float) (y0 + this.conversionFormula[5]);
     }
-    
+
     /**
      * Returns the final y position of the cube, second axis.
      * @return Final position.
@@ -1514,7 +1528,7 @@ public class LMVCube implements Serializable
     public void updateWCS() throws JPARSECException {
     	setWCS();
     }
-    
+
     private void setWCS() throws JPARSECException
     {
     	wcs = new WCS();
@@ -1554,7 +1568,7 @@ public class LMVCube implements Serializable
      * @throws JPARSECException  If an error occurs.
      */
     public WCS getWCS(int dim1, int dim2) throws JPARSECException
-    {   	
+    {
     	double ratio1 = (double) this.axis1Dim / (double) dim1;
     	double ratio2 = (double) this.axis2Dim / (double) dim2;
     	//ratio1 = (int) (ratio1+0.5);
@@ -1563,7 +1577,7 @@ public class LMVCube implements Serializable
     	double newDelt2 = this.wcs.getCdelt2() * ratio2;
     	double newPix1 = (wcs.getCrpix1() + 1) / ratio1 + (ratio1 - 1.0) / (2.0 * ratio1) - 1;
     	double newPix2 = (wcs.getCrpix2() + 1) / ratio2 + (ratio2 - 1.0) / (2.0 * ratio2) - 1;
-    	
+
     	WCS wcs = this.wcs.clone();
         wcs.setCrpix1(newPix1);
         wcs.setCrpix2(newPix2);
@@ -1573,11 +1587,11 @@ public class LMVCube implements Serializable
     }
 
     /**
-     * Sets the datacube to a given cube data, changing the WCS 
+     * Sets the datacube to a given cube data, changing the WCS
      * data, the extrema (minimum/maximum fluxes and their
-     * positions), the conversion formula, and the resolution in 
-     * velocity and frequency accordingly. This method implies 
-     * that the input file (if any) will not be read again. To read it 
+     * positions), the conversion formula, and the resolution in
+     * velocity and frequency accordingly. This method implies
+     * that the input file (if any) will not be read again. To read it
      * again set the input cube to null.
      * @param cube The cube data.
 	 * @throws JPARSECException If an error occurs,
@@ -1619,9 +1633,9 @@ public class LMVCube implements Serializable
 
     /**
      * Flips the cube to get positive x, y, and z increments.
-     * When this method is called from a cube read from file, 
-     * the {@linkplain #cube} property is set to the cube data 
-     * to avoid reading the file again later, so memory is 
+     * When this method is called from a cube read from file,
+     * the {@linkplain #cube} property is set to the cube data
+     * to avoid reading the file again later, so memory is
      * consumed. If this is a problem it is better to avoid calling
      * this method, since the VISAD and SGT graphic libraries
      * re-scale automatically the data if a negative increment
@@ -1631,7 +1645,7 @@ public class LMVCube implements Serializable
     public void FlipCubeToGetPositiveIncrements()
     throws JPARSECException {
     	if (cube == null) cube = this.getRawCubeData();
-    	float limits[] = new float[] {this.getx0(), this.getxf(), this.gety0(), this.getyf(), 
+    	float limits[] = new float[] {this.getx0(), this.getxf(), this.gety0(), this.getyf(),
     			this.getv0(), this.getvf()};
 		  float initX = limits[0];
 		  float finalX = limits[1];
@@ -1645,7 +1659,7 @@ public class LMVCube implements Serializable
 		  boolean changed = false;
 		  if (initZ > finalZ) {
 			  cube = this.invertVelocity(cube);
-			  float aux = initZ; 
+			  float aux = initZ;
 			  initZ = finalZ;
 			  finalZ = aux;
 			  this.conversionFormula[6] = 1;
@@ -1676,7 +1690,7 @@ public class LMVCube implements Serializable
 
 		 if (changed) setWCS();
     }
-    
+
     private float[][][] invertVelocity(float cube[][][])
     {
     	float out[][][] = new float[cube.length][cube[0].length][cube[0][0].length];
@@ -1686,7 +1700,7 @@ public class LMVCube implements Serializable
     	}
     	return out;
     }
-    
+
     private float[][][] invertXAxis(float cube[][][])
     {
     	float out[][][] = new float[cube.length][cube[0].length][cube[0][0].length];
@@ -1718,7 +1732,7 @@ public class LMVCube implements Serializable
 
     /**
      * Transforms a given offset respect to the central position in the map to
-     * its (x, y) position in the cube matrix. 
+     * its (x, y) position in the cube matrix.
      * @param offsetRA Offset in RA relative to center, in radians (sky plain, not offset in coordinates).
      * @param offsetDEC Offset in DEC relative to center, in radians.
      * @return Position (x, y) in the cube matrix. This position can be used
@@ -1752,12 +1766,12 @@ public class LMVCube implements Serializable
 
     /**
      * Resamples the cube to a different resolution using a high-quality 2d spline
-     * interpolation method (function {@linkplain ImageSplineTransform#resize(int, int)}). Note that 
+     * interpolation method (function {@linkplain ImageSplineTransform#resize(int, int)}). Note that
      * 3d interpolation is not supported, so
      * the velocity axis is not resampled. Each velocity plane is
      * treated separately. Note also that errors could arise if no
      * enough memory is available.
-     * After this is done, the cube can no longer be read again from a file, it will 
+     * After this is done, the cube can no longer be read again from a file, it will
      * be stored in memory.
      * @param w New width (axis 1 or RA).
      * @param h New height (axis 2 or DEC).
@@ -1795,7 +1809,7 @@ public class LMVCube implements Serializable
      * interpolation method (function {@linkplain ImageSplineTransform#resize(int, int)}).
      * Velocity axis is resampled using linear/spline interpolation. Note also that errors could arise if no
      * enough memory is available.
-     * After this is done, the cube can no longer be read again from a file, it will 
+     * After this is done, the cube can no longer be read again from a file, it will
      * be stored in memory.
      * @param w New width (axis 1 or RA).
      * @param h New height (axis 2 or DEC).
@@ -1836,21 +1850,21 @@ public class LMVCube implements Serializable
                 	for (int k=0; k<iny.length; k++) {
                 		iny[k] = out[k][i][j];
                 		inx[k] = k;
-                	}            	
+                	}
                 	Interpolation interp = new Interpolation(inx, iny, true);
                 	for (int k=0; k<l; k++) {
                 		double newx = (double) k * (iny.length - 1.0) / (l - 1.0);
                 		if (spline) {
                 			out2[k][i][j] = (float) interp.splineInterpolation(newx);
                 		} else {
-                			out2[k][i][j] = (float) interp.linearInterpolation(newx);                			
+                			out2[k][i][j] = (float) interp.linearInterpolation(newx);
                 		}
-                	}                	
+                	}
             	}
-        	}    		
+        	}
         	out = out2;
     	}
-    	
+
     	this.setCubeData(out);
     	this.readingFile = false;
     }
@@ -1935,7 +1949,7 @@ public class LMVCube implements Serializable
     	}
     	return out;
     }
-    
+
     /**
      * Returns the integrated intensity of the cube between a given range of channels.
      * @param chan0 First channel for the integrated intensity, from 0 to {@linkplain #axis3Dim}-1.
@@ -1948,7 +1962,7 @@ public class LMVCube implements Serializable
     {
     	return integratedIntensity(chan0, chanf, -1E300);
     }
-    
+
     /**
      * Returns the integrated intensity of the cube between a given range of channels.
      * @param chan0 First channel for the integrated intensity, from 0 to {@linkplain #axis3Dim}-1.
@@ -1971,7 +1985,7 @@ public class LMVCube implements Serializable
     	float vfac = Math.abs(velResolution);
     	if (cube.length == 1) vfac = 1;
     	int nwar = 0, nwm = 10;
-    	if (chan0 < 0 || chanf < 0 || chan0 >= axis3Dim || chanf >= axis3Dim) 
+    	if (chan0 < 0 || chanf < 0 || chan0 >= axis3Dim || chanf >= axis3Dim)
     		throw new JPARSECException("Invalid range of channels "+chan0+"-"+chanf+". Should be between 0-"+(axis3Dim-1)+".");
     	for (int k=chan0; k<=chanf; k++) {
         	float[][] cubeP = this.getCubeData(k);
@@ -2007,7 +2021,7 @@ public class LMVCube implements Serializable
     {
     	return integratedIntensityKeepOrdering(chan0, chanf, -1E300);
     }
-    
+
     /**
      * Returns the integrated intensity of the cube.
      * @param chan0 First channel index for the integrated intensity, from 0 to {@linkplain #axis3Dim}-1.
@@ -2020,7 +2034,7 @@ public class LMVCube implements Serializable
      */
     public float[][] integratedIntensityKeepOrdering(int chan0, int chanf, double threeSigma) throws JPARSECException
     {
-    	if (chan0 < 0 || chanf < 0 || chan0 >= axis3Dim || chanf >= axis3Dim) 
+    	if (chan0 < 0 || chanf < 0 || chan0 >= axis3Dim || chanf >= axis3Dim)
     		throw new JPARSECException("Invalid range of channels "+chan0+"-"+chanf+". Should be between 0-"+(axis3Dim-1)+".");
     	float[][][] cube = this.getCubeData();
     	float out[][] = new float[cube[0].length][cube[0][0].length];
@@ -2111,14 +2125,14 @@ public class LMVCube implements Serializable
     	for (int k=0; k<cube.length; k++) {
         	for (int i=0; i<cube[0][0].length; i++) {
             	for (int j=0; j<cube[0].length; j++) {
-            		if (cube[k][j][i] >= threeSigma) 
+            		if (cube[k][j][i] >= threeSigma)
             			out[i][j] += cube[k][j][i] * vfac;
             	}
         	}
     	}
     	return out;
     }
-    
+
     /**
      * Scales the intensities in a given cube multiplying them by a given factor.
      * @param cube The cube to be modified.
@@ -2138,7 +2152,7 @@ public class LMVCube implements Serializable
         			if (cube[v][y][x] != blanking) cube[v][y][x] *= scale;
         		}
     		}
-		}	
+		}
 		return cube;
     }
 
@@ -2165,13 +2179,13 @@ public class LMVCube implements Serializable
         			float out2 = cube2[v][y][x];
         			if ((Float.isInfinite(out1) || Float.isNaN(out1)) &&
         					(Float.isInfinite(out2) || Float.isNaN(out2))) continue;
-        			
+
         			if (fixNaN && (Float.isInfinite(out1) || Float.isNaN(out1))) out1 = 0.0f;
         			if (fixNaN && (Float.isInfinite(out2) || Float.isNaN(out2))) out2 = 0.0f;
         			cube[v][y][x] = out1 + out2;
         		}
     		}
-		}	
+		}
 		return cube;
     }
 
@@ -2236,15 +2250,15 @@ public class LMVCube implements Serializable
 		}
 		return outCube;
     }
-    
+
     /**
      * Returns the spatial resolution of the cube in arcseconds.
      * @return Spatial resolution in arcseconds.
      */
     public double getSpatialResolution() {
-    	return Math.abs(conversionFormula[2]) * Constant.RAD_TO_ARCSEC;    	
+    	return Math.abs(conversionFormula[2]) * Constant.RAD_TO_ARCSEC;
     }
-    
+
     /**
      * Convolves this cube using the supplied kernel. Points outside the map
      * are considered. All posible NaNs are removed.
@@ -2268,10 +2282,10 @@ public class LMVCube implements Serializable
 		}
 		return outCube;
     }
-    
+
     /**
      * Scales the intensities in a given cube multiplying them by a given factor.
-     * After this is done, the cube can no longer be read again from a file, it will 
+     * After this is done, the cube can no longer be read again from a file, it will
      * be stored in memory.
      * @param scale Value to multiply intensities greater than the blanking value.
      * @throws JPARSECException If an error occurs.
@@ -2288,13 +2302,13 @@ public class LMVCube implements Serializable
         			if (cube[v][y][x] != blanking) cube[v][y][x] *= scale;
         		}
     		}
-		}	
+		}
 		setExtremaData();
     }
 
     /**
      * Scales the intensities in a given cube by applying a given formula to them.
-     * After this is done, the cube can no longer be read again from a file, it will 
+     * After this is done, the cube can no longer be read again from a file, it will
      * be stored in memory.
      * @param formula An expression in Java language as a function of variable 'x', which
      * is the intensity at any position in the cube.
@@ -2316,7 +2330,7 @@ public class LMVCube implements Serializable
         			}
         		}
     		}
-		}	
+		}
 		setExtremaData();
     }
 
@@ -2334,7 +2348,7 @@ public class LMVCube implements Serializable
     public void clip(int inix, int endx, int iniy, int endy, int iniz, int endz) throws JPARSECException {
 		setCubeData(getRawCubeData());
 		readingFile = false;
-		
+
 		float originalCube[][][] = cube.clone();
 		float cubeData[][][] = new float[endz-iniz+1][endy-iniy+1][endx-inix+1];
 		for (int v=0; v<cubeData.length; v++)
@@ -2343,10 +2357,10 @@ public class LMVCube implements Serializable
     		{
         		for (int x=0; x<cubeData[0][0].length; x++)
         		{
-        			cubeData[v][y][x] = originalCube[v+iniz][y+iniy][x+inix];            			
+        			cubeData[v][y][x] = originalCube[v+iniz][y+iniy][x+inix];
         		}
     		}
-		}	
+		}
 		cube = cubeData;
     	this.axis1Dim = cube[0][0].length;
     	this.axis2Dim = cube[0].length;
@@ -2386,7 +2400,7 @@ public class LMVCube implements Serializable
 	    	vres = this.conversionFormula[8];
 	       	rfreq = this.restFreq;
     	} catch (Exception exc) {}
-    	
+
     	for (int i=0; i<y.length; i++)
     	{
     		double v = vref + (i - refchan) * vres;
@@ -2409,13 +2423,13 @@ public class LMVCube implements Serializable
     		default:
     			throw new JPARSECException("invalid value for x axis units.");
     		}
-    	}        
+    	}
 
     	String title = this.sourceName;
     	String legend = this.line;
 		SimpleChartElement chart1 = new SimpleChartElement(ChartElement.TYPE.XY_CHART,
-				ChartElement.SUBTYPE.XY_SCATTER, x, y, title, Translate.translate(Translate.JPARSEC_VELOCITY)+" (km s^{-1})", 
-				"T_{mb} ("+this.fluxUnit.trim()+")", legend, true, false, 
+				ChartElement.SUBTYPE.XY_SCATTER, x, y, title, Translate.translate(Translate.JPARSEC_VELOCITY)+" (km s^{-1})",
+				"T_{mb} ("+this.fluxUnit.trim()+")", legend, true, false,
 				width, height);
 		switch (xUnit)
 		{
@@ -2451,15 +2465,15 @@ public class LMVCube implements Serializable
     throws JPARSECException {
     	return getSpectrum(xindex, yindex, true);
     }
-    
+
     /**
      * Returns a spectrum for a given position. Observing time is set to J2000 epoch.
-     * 
+     *
      * Note the backend is named to 30M, but should be named correctly for Doppler corrections (default is correct for 30M).
      * One of these: 'BURE','PDBI','NOEMA','PICOVELETA','VELETA', 'ACA','ALMA','APEX','ATF','CARMA',
      * 'CSO','EFFELSBERG','FCRAO','GBT','GI2T','HHT','IOTA','JCMT','KITTPEAK','KOSMA','LASILLA','MAUNAKEA',
      * 'MEDICINA','NRO','NOBEYAMA','PARANAL','PTI','SEST','SMA','SMT','VLA','VLT','YEBES'
-     * 
+     *
      * @param xindex Index in RA, from 0 to axis1Dim-1.
      * @param yindex Index in DEC, from 0 to axis2Dim-1.
      * @param applyBlanking True to apply blanking when requesting cube data (slow).
@@ -2487,7 +2501,7 @@ public class LMVCube implements Serializable
     	for (int i=0; i<flux.length; i++)
     	{
     		flux[i] = new FluxElement(new MeasureElement(i+1, 0, null), new MeasureElement(cube[i][yindex][xindex], 0, "K"));
-    	}        
+    	}
 
     	Spectrum s = new Spectrum(flux);
 		s.line = this.line;
@@ -2517,12 +2531,12 @@ public class LMVCube implements Serializable
      * Note that output spectrum will contain the rest frequency as reference frequency for the
      * default reference channel and velocity, which are 1 and the starting velocity of the cube.
      * This frequency could be incorrect.
-     * 
+     *
      * Note the backend is named to CONVOLVED, but should be named correctly for Doppler corrections.
      * One of these: 'BURE','PDBI','NOEMA','PICOVELETA','VELETA', 'ACA','ALMA','APEX','ATF','CARMA',
      * 'CSO','EFFELSBERG','FCRAO','GBT','GI2T','HHT','IOTA','JCMT','KITTPEAK','KOSMA','LASILLA','MAUNAKEA',
      * 'MEDICINA','NRO','NOBEYAMA','PARANAL','PTI','SEST','SMA','SMT','VLA','VLT','YEBES'
-	 * 
+	 *
 	 * @param beam_x Beam major axis size in arcseconds.
 	 * @param beam_y Beam minor axis size in arcseconds.
 	 * @param beam_pa Beam position angle in degrees, same Gildas criteria.
@@ -2534,7 +2548,7 @@ public class LMVCube implements Serializable
  	public Spectrum convolve(double beam_x, double beam_y, double beam_pa, int index_x_obs, int index_y_obs) throws JPARSECException
  	{
  		double spatialResolution = Math.abs(conversionFormula[2]) * Constant.RAD_TO_ARCSEC;
- 		float out[] = convolveMap(this.getCubeData(), LMVCube.convolveGetGaussianKernel(beam_x, beam_y, beam_pa, spatialResolution, 4), 
+ 		float out[] = convolveMap(this.getCubeData(), LMVCube.convolveGetGaussianKernel(beam_x, beam_y, beam_pa, spatialResolution, 4),
  				index_x_obs, index_y_obs, null, 0, true);
 		int resolution = this.axis3Dim;
 
@@ -2548,7 +2562,7 @@ public class LMVCube implements Serializable
 			fluxes[i] = new FluxElement(mx, my);
 		}
 		Spectrum outSpectrum = new Spectrum(fluxes);
-				
+
 		// Set other properties in my spectrum
 		outSpectrum.observationNumber = 1;
 		outSpectrum.offsetX = outSpectrum.offsetY = 0;
@@ -2569,7 +2583,7 @@ public class LMVCube implements Serializable
     	outSpectrum.offsetX = off[0] * Constant.RAD_TO_ARCSEC;
     	outSpectrum.offsetY = off[1] * Constant.RAD_TO_ARCSEC;
 		return outSpectrum;
-	}	
+	}
 
  	/**
  	 * Returns a Gaussian kernel for the convolution.
@@ -2595,7 +2609,7 @@ public class LMVCube implements Serializable
 			beam_y = beam_x;
 			beam_x = tmp;
 		}
-		
+
 		double distance = 100; // it doesn't matter
 		double mapStep = spatialResolution * distance;
 		int index_beam_x_max = (int) (Functions.sec2ua(beam_x*samplingFactor, distance) / mapStep + 0.5);
@@ -2609,7 +2623,7 @@ public class LMVCube implements Serializable
 			for (int iy = 0; iy <= 2*index_beam_y_max; iy++)
 			{
 				kernel[ix][iy] = 0.0;
-				
+
 				double dx = Functions.ua2sec((ix-index_beam_x_max) * mapStep, distance);
 				double dy = Functions.ua2sec((iy-index_beam_y_max) * mapStep, distance);
 
@@ -2617,20 +2631,20 @@ public class LMVCube implements Serializable
 				double sina = Math.sin(-beam_pa * Constant.DEG_TO_RAD);
 				double factor_x = (dx * dx * cosa * cosa + dy * dy * sina * sina - 2.0 * dx * dy * cosa * sina) / (beam_x * beam_x);
 				double factor_y = (dy * dy * cosa * cosa + dx * dx * sina * sina + 2.0 * dx * dy * cosa * sina) / (beam_y * beam_y);
-				
+
 				if (FastMath.hypot(factor_x, factor_y) > samplingFactor) continue;
 				if (beam_x == 0.0 && beam_y == 0.0) {
 					factor_x = 1.0;
 					factor_y = 1.0;
 				}
 				double factor = Math.exp(cte * (factor_x + factor_y));
-				
+
 				kernel[ix][iy] = factor;
 			}
 		}
 		return kernel;
  	}
- 	
+
  	/**
  	 * Convolves a given cube with a given beam or kernel. NaN points are considered as
  	 * points with inexistent data, so that they will not contribute to the output
@@ -2644,7 +2658,7 @@ public class LMVCube implements Serializable
  	 * the cube array has usually no data in case the number of dimensions is even) for each channel,
  	 * set it here, otherwise null.
  	 * @param convolveOutsideMapValue Value to consider as intensity in points outside the input map.
- 	 * Set as 0 or positive to consider points outside the map in the convolution process (with flux = 
+ 	 * Set as 0 or positive to consider points outside the map in the convolution process (with flux =
  	 * input value), otherwise set a negative value to avoid convolving outside the map.
  	 * @param fixNaN Set to true to fix all possible NaN values so that the output convolution
  	 * will contain no NaN. Set to false to conserve as NaN those points that are NaN in the input
@@ -2652,11 +2666,11 @@ public class LMVCube implements Serializable
  	 * @return The convolved and normalized spectrum data for the input position and each channel.
  	 * @throws JPARSECException If an error occurs.
  	 */
- 	public static float[] convolveMap(float[][][] cube, double[][] kernel, 
+ 	public static float[] convolveMap(float[][][] cube, double[][] kernel,
  			int index_x_obs, int index_y_obs, float[] emissionZero, float convolveOutsideMapValue,
  			boolean fixNaN) throws JPARSECException {
 		int resolution = cube.length;
-		
+
 		// Declare output spectrum
 		float out[] = new float[resolution];
 		float[] factor_sum = new float[resolution];
@@ -2677,21 +2691,21 @@ public class LMVCube implements Serializable
 		// appropriate things if we go outside the spectrum map
 		int index_beam_x_max = kernel.length / 2;
 		int index_beam_y_max = kernel[0].length / 2;
-		
+
 		int dx0 = index_x_obs - index_beam_x_max;
 		int dy0 = index_y_obs - index_beam_y_max;
 		for (int ix = index_x_obs - index_beam_x_max; ix <= index_x_obs + index_beam_x_max; ix++)
 		{
 			if (convolveOutsideMapValue < 0 && (ix < 0 || ix > index_x_max)) continue;
-			
+
 			for (int iy = index_y_obs - index_beam_y_max; iy <= index_y_obs + index_beam_y_max; iy++)
 			{
 				if (ix-dx0 < 0 || ix-dx0 >= kernel.length) continue;
 				if (iy-dy0 < 0 || iy-dy0 >= kernel[0].length) continue;
-				
+
 				double factor = kernel[ix-dx0][iy-dy0];
 				if (factor == 0.0) continue;
-				
+
 				if (ix >= 0 && ix <= index_x_max && iy >= 0 && iy <= index_y_max)
 				{
 					for (int iz = 0; iz < resolution; iz++)
@@ -2719,17 +2733,17 @@ public class LMVCube implements Serializable
 			// Offset 0 0 position as a matrix index (not integer since emissionZero != null when model doesn't cut offset 0 0)
 			double index_x0 = index_x_max/2.0;
 			double index_y0 = index_y_max/2.0;
-			
+
 			double ix = (index_x0 - index_x_obs) + index_beam_x_max, iy = (index_y0 - index_y_obs) + index_beam_y_max;
 			if (ix >= 0 && ix <= kernel.length-1 && iy >= 0 && iy <= kernel[0].length-1) {
 				double factor = 0.0;
 				if (ix == (int) ix && iy == (int) iy) {
-					factor = kernel[(int)ix][(int)iy];					
+					factor = kernel[(int)ix][(int)iy];
 				} else {
 					ImageSplineTransform ist = new ImageSplineTransform(3, kernel);
 					factor = ist.interpolate(ix, iy);
 				}
-				
+
 				for (int iz = 0; iz < resolution; iz++)
 				{
 					float value = emissionZero[iz];
@@ -2740,7 +2754,7 @@ public class LMVCube implements Serializable
 				}
 			}
 		}
-		
+
 		// Normalize output spectrum in each velocity channel
 		for (int iz = 0; iz < resolution; iz++)
 		{
@@ -2749,10 +2763,10 @@ public class LMVCube implements Serializable
 			if (!fixNaN && (Double.isInfinite(cube[iz][index_y_obs][index_x_obs]) || Double.isNaN(cube[iz][index_y_obs][index_x_obs])))
 				out[iz] = Float.NaN;
 		}
-		
+
 		return out;
  	}
- 	
+
  	/**
  	 * Convolves a given cube with a given beam or kernel. NaN points are considered as
  	 * points with inexistent data, so that they will not contribute to the output
@@ -2766,7 +2780,7 @@ public class LMVCube implements Serializable
  	 * the cube array has usually no data in case the number of dimensions is even) for each channel,
  	 * set it here, otherwise null.
  	 * @param convolveOutsideMapValue Value to consider as intensity in points outside the input map.
- 	 * Set as 0 or positive to consider points outside the map in the convolution process (with flux = 
+ 	 * Set as 0 or positive to consider points outside the map in the convolution process (with flux =
  	 * input value), otherwise set a negative value to avoid convolving outside the map.
  	 * @param fixNaN Set to true to fix all possible NaN values so that the output convolution
  	 * will contain no NaN. Set to false to conserve as NaN those points that are NaN in the input
@@ -2774,11 +2788,11 @@ public class LMVCube implements Serializable
  	 * @return The convolved and normalized spectrum data for the input position and each channel.
  	 * @throws JPARSECException If an error occurs.
  	 */
- 	public static double[] convolveMap(double[][][] cube, double[][] kernel, 
+ 	public static double[] convolveMap(double[][][] cube, double[][] kernel,
  			int index_x_obs, int index_y_obs, float[] emissionZero, float convolveOutsideMapValue,
  			boolean fixNaN) throws JPARSECException {
 		int resolution = cube.length;
-		
+
 		// Declare output spectrum
 		double out[] = new double[resolution];
 		double[] factor_sum = new double[resolution];
@@ -2799,21 +2813,21 @@ public class LMVCube implements Serializable
 		// appropriate things if we go outside the spectrum map
 		int index_beam_x_max = kernel.length / 2;
 		int index_beam_y_max = kernel[0].length / 2;
-		
+
 		int dx0 = index_x_obs - index_beam_x_max;
 		int dy0 = index_y_obs - index_beam_y_max;
 		for (int ix = index_x_obs - index_beam_x_max; ix <= index_x_obs + index_beam_x_max; ix++)
 		{
 			if (convolveOutsideMapValue < 0 && (ix < 0 || ix > index_x_max)) continue;
-			
+
 			for (int iy = index_y_obs - index_beam_y_max; iy <= index_y_obs + index_beam_y_max; iy++)
 			{
 				if (ix-dx0 < 0 || ix-dx0 >= kernel.length) continue;
 				if (iy-dy0 < 0 || iy-dy0 >= kernel[0].length) continue;
-				
+
 				double factor = kernel[ix-dx0][iy-dy0];
 				if (factor == 0.0) continue;
-				
+
 				if (ix >= 0 && ix <= index_x_max && iy >= 0 && iy <= index_y_max)
 				{
 					for (int iz = 0; iz < resolution; iz++)
@@ -2841,17 +2855,17 @@ public class LMVCube implements Serializable
 			// Offset 0 0 position as a matrix index (not integer since emissionZero != null when model doesn't cut offset 0 0)
 			double index_x0 = index_x_max/2.0;
 			double index_y0 = index_y_max/2.0;
-			
+
 			double ix = (index_x0 - index_x_obs) + index_beam_x_max, iy = (index_y0 - index_y_obs) + index_beam_y_max;
 			if (ix >= 0 && ix <= kernel.length-1 && iy >= 0 && iy <= kernel[0].length-1) {
 				double factor = 0.0;
 				if (ix == (int) ix && iy == (int) iy) {
-					factor = kernel[(int)ix][(int)iy];					
+					factor = kernel[(int)ix][(int)iy];
 				} else {
 					ImageSplineTransform ist = new ImageSplineTransform(3, kernel);
 					factor = ist.interpolate(ix, iy);
 				}
-				
+
 				for (int iz = 0; iz < resolution; iz++)
 				{
 					double value = emissionZero[iz];
@@ -2862,7 +2876,7 @@ public class LMVCube implements Serializable
 				}
 			}
 		}
-		
+
 		// Normalize output spectrum in each velocity channel
 		for (int iz = 0; iz < resolution; iz++)
 		{
@@ -2871,7 +2885,7 @@ public class LMVCube implements Serializable
 			if (!fixNaN && (Double.isInfinite(cube[iz][index_y_obs][index_x_obs]) || Double.isNaN(cube[iz][index_y_obs][index_x_obs])))
 				out[iz] = Double.NaN;
 		}
-		
+
 		return out;
  	}
 
@@ -2881,16 +2895,16 @@ public class LMVCube implements Serializable
 	 * @param ref The reference cube.
 	 * @throws JPARSECException If an error occurs.
 	 */
-	public void reproject(LMVCube ref) throws JPARSECException {	
+	public void reproject(LMVCube ref) throws JPARSECException {
 		ref.FlipCubeToGetPositiveIncrements();
 		this.FlipCubeToGetPositiveIncrements();
-		
+
 		// Convolution. Note this should be called BEFORE reproject for better results in case
 		// input map is bigger than the one to reproject to
 		double beamRef = ref.beamMajor * Constant.RAD_TO_ARCSEC;
 		double beam_x = Math.sqrt(beamRef * beamRef - FastMath.pow(beamMajor * Constant.RAD_TO_ARCSEC, 2));
 		double beam_y = beam_x, beam_pa = 0;
-		
+
 		if (!Double.isNaN(beam_x) && beam_x >= 0.5) {
 			setCubeData(convolve(beam_x, beam_y, beam_pa));
 		} else {
@@ -2902,7 +2916,7 @@ public class LMVCube implements Serializable
 		double refDX = ref.conversionFormula[2];
 		float refY0 = ref.gety0(), refYF = ref.getyf();
 		double refDY = ref.conversionFormula[5];
-		
+
 		double offx = 0, offy = 0;
 		if (axis1Pos != ref.axis1Pos) {
 			offx = -(axis1Pos - ref.axis1Pos) / refDX;
@@ -2914,7 +2928,7 @@ public class LMVCube implements Serializable
 		}
 		offx *= refDX;
 		offy *= refDY;
-		
+
 		float[][][] cubeData = new float[axis3Dim][ref.axis2Dim][ref.axis1Dim];
 		for (int z=0; z<axis3Dim; z++) {
 			CreateGridChart GC = getChart(z);
@@ -2929,7 +2943,7 @@ public class LMVCube implements Serializable
 				}
 			}
 		}
-		
+
 		setCubeData(cubeData);
 		for (int i=0; i<6; i++) {
 			conversionFormula[i] = ref.conversionFormula[i];
@@ -2948,7 +2962,7 @@ public class LMVCube implements Serializable
 		double v0 = getv0(), vf = getvf(); //, vres = (vf - v0) / (axis3Dim - 1.0);
 		int new3Dim = ref.axis3Dim;
 		float data2[][][] = new float[new3Dim][this.axis2Dim][this.axis1Dim];
-		
+
 		for (int i=0; i<data2[0][0].length; i++) {
 			for (int j=0; j<data2[0].length; j++) {
 				Table t = this.getSpectrum(i, j, false).getAsTable();
@@ -2969,9 +2983,9 @@ public class LMVCube implements Serializable
 						data2[k][j][i] = (float) (value / n);
 					}
 				}
-			}			
+			}
 		}
-		
+
 		this.setCubeData(data2);
 		this.conversionFormula[6] = ref.conversionFormula[6];
 		this.conversionFormula[7] = ref.conversionFormula[7];
@@ -2979,20 +2993,20 @@ public class LMVCube implements Serializable
 		this.velResolution = (float) Math.abs(ref.conversionFormula[8]);
 		FlipCubeToGetPositiveIncrements();
 	}
-	
+
 	/**
 	 * Corrects the cube for primary beam.
 	 * @param pbeam The primary beam to use in arcsec, or <= 0 to calculate it
 	 * automatically for PdBI.
 	 * @param pradius The radius of the region to modify in arcsec, or <= 0 to
-	 * apply the primary beam correction to the entire spatial region covered by 
+	 * apply the primary beam correction to the entire spatial region covered by
 	 * the cube.
 	 * @throws JPARSECException If an error occurs.
 	 */
 	public void correctForPrimaryBeam(double pbeam, double pradius) throws JPARSECException {
 		if (pbeam <= 0) pbeam = 115.0 * 43 / (this.restFreq * 0.001); // 43" at 115 GHz
 		double sampling = 0.5 * Math.abs(getx0() - getxf()) / (pbeam * Constant.ARCSEC_TO_RAD);
-		double primaryBeam[][] = LMVCube.convolveGetGaussianKernel(pbeam, pbeam, 
+		double primaryBeam[][] = LMVCube.convolveGetGaussianKernel(pbeam, pbeam,
 				0, getSpatialResolution(), sampling);
 		float data[][][] = getCubeData();
 		ImageSplineTransform ist = new ImageSplineTransform(2, primaryBeam);
@@ -3028,11 +3042,11 @@ public class LMVCube implements Serializable
 		if (unit.equals("Jy/beam")) unit = "Jy beam^{-1}";
 		String l = "#"+plane;
 		if (plane == -1) l = Translate.translate(925);
-		
+
 		float x0 = (float) (getx0() * Constant.RAD_TO_ARCSEC);
 		float xf = (float) (getxf() * Constant.RAD_TO_ARCSEC);
 		float y0 = (float) (gety0() * Constant.RAD_TO_ARCSEC);
-		float yf = (float) (getyf() * Constant.RAD_TO_ARCSEC);	    		
+		float yf = (float) (getyf() * Constant.RAD_TO_ARCSEC);
 		float data[][] = null;
 		if (plane == -1) {
 			data = this.integratedIntensity();
@@ -3041,14 +3055,14 @@ public class LMVCube implements Serializable
 			data = this.getCubeData(plane);
 		}
 		GridChartElement chart = new GridChartElement(l,
-				this.axis1Label.trim()+" offset (\")", this.axis2Label.trim()+" offset (\")", unit, 
-				GridChartElement.COLOR_MODEL.BLUE_TO_RED, 
-				new double[] {x0, xf, y0, yf}, DataSet.toDoubleArray(data), 
+				this.axis1Label.trim()+" offset (\")", this.axis2Label.trim()+" offset (\")", unit,
+				GridChartElement.COLOR_MODEL.BLUE_TO_RED,
+				new double[] {x0, xf, y0, yf}, DataSet.toDoubleArray(data),
 				null, 600);
 		chart.type = TYPE.RASTER_CONTOUR;
 		chart.levelsOrientation = GridChartElement.WEDGE_ORIENTATION.HORIZONTAL_BOTTOM;
 		chart.levelsBorderStyle = GridChartElement.WEDGE_BORDER.NO_BORDER;
-		  
+
 		CreateGridChart gridChart = new CreateGridChart(chart);
 
 		return gridChart;
@@ -3064,17 +3078,17 @@ public class LMVCube implements Serializable
  	 * @return The set of spectra, or null if there are no pixels between initial and ending positions.
  	 * @throws JPARSECException If any of the input positions is outside the image.
  	 */
- 	public Spectrum30m[] getStrip(LocationElement loc0, LocationElement loc1) 
+ 	public Spectrum30m[] getStrip(LocationElement loc0, LocationElement loc1)
  	throws JPARSECException {
  		double pos0[] = new double[] {loc0.getLongitude() - this.axis1Pos, loc0.getLatitude() - this.axis2Pos};
  		double pos1[] = new double[] {loc1.getLongitude() - this.axis1Pos, loc1.getLatitude() - this.axis2Pos};
  		if (pos0[0] > Math.PI) pos0[0] -= Constant.TWO_PI;
  		if (pos1[0] > Math.PI) pos1[0] -= Constant.TWO_PI;
- 		
+
  		double cosDec = Math.cos(axis2Pos);
  		pos0[0] *= cosDec;
  		pos1[0] *= cosDec;
- 		
+
 		double matrixPos0[] = getPositionFromOffset(pos0[0], pos0[1]);
 		double matrixPos1[] = getPositionFromOffset(pos1[0], pos1[1]);
 
@@ -3099,7 +3113,7 @@ public class LMVCube implements Serializable
 				py = (int) yp;
 				offrf = FastMath.hypot(px-posr0, py-posr0);
 				if (offr0 == -1) offr0 = offrf;
-				
+
 				v.add(new Spectrum30m(this.getSpectrum(px, py)));
 			}
 		}
@@ -3108,38 +3122,38 @@ public class LMVCube implements Serializable
 
 		return (Spectrum30m[]) DataSet.toObjectArray(v);
  	}
- 	
+
  	/**
  	 * Increases or reduces the extension of the input locations to match the size or limits
  	 * of the cube data, so that a strip can be obtained. Input location objects are modified
  	 * so that the strip conserves its direction.
  	 * @param loc0 Starting position for the strip, to be corrected.
  	 * @param loc1 Final position for the strip, to be corrected.
- 	 * @param onlyReduce True to modify the strip limits only in case any of the input limits 
+ 	 * @param onlyReduce True to modify the strip limits only in case any of the input limits
  	 * lies outside the cube data, so a correction is strickly required to avoid an error when
  	 * calling {@linkplain #getStrip(LocationElement, LocationElement, double[], boolean, boolean, boolean)}.
  	 */
- 	public void getStripLimits(LocationElement loc0, LocationElement loc1, boolean onlyReduce) 
+ 	public void getStripLimits(LocationElement loc0, LocationElement loc1, boolean onlyReduce)
  	{
  		double pos0[] = new double[] {loc0.getLongitude() - this.axis1Pos, loc0.getLatitude() - this.axis2Pos};
  		double pos1[] = new double[] {loc1.getLongitude() - this.axis1Pos, loc1.getLatitude() - this.axis2Pos};
  		if (pos0[0] > Math.PI) pos0[0] -= Constant.TWO_PI;
  		if (pos1[0] > Math.PI) pos1[0] -= Constant.TWO_PI;
- 		
+
  		double cosDec = Math.cos(axis2Pos);
  		pos0[0] *= cosDec;
  		pos1[0] *= cosDec;
- 		
+
 		double matrixPos0[] = getPositionFromOffset(pos0[0], pos0[1]);
 		double matrixPos1[] = getPositionFromOffset(pos1[0], pos1[1]);
 
 		if (onlyReduce && matrixPos0[0] >= 0 && matrixPos0[1] >= 0 && matrixPos1[0] >= 0 &&
-				matrixPos1[1] >= 0 && matrixPos0[0] <= (this.axis1Dim-1) && matrixPos1[0] <= (this.axis1Dim-1) 
+				matrixPos1[1] >= 0 && matrixPos0[0] <= (this.axis1Dim-1) && matrixPos1[0] <= (this.axis1Dim-1)
 				&& matrixPos0[1] <= (this.axis2Dim-1) && matrixPos1[1] <= (this.axis2Dim-1)) return;
 
 		double m = (matrixPos1[1] - matrixPos0[1]) / (matrixPos1[0] - matrixPos0[0]);
 		double n = matrixPos1[1] - m * matrixPos1[0];
-		
+
 		if (Math.abs(m) >= 1) { // High inclination => limit in y
 			double x0 = -n / m; // for y = 0
 			double xf = (this.axis2Dim - 1.0 - n) / m; // for y = ymax
@@ -3153,9 +3167,9 @@ public class LMVCube implements Serializable
 			matrixPos0[0] = 0;
 			matrixPos1[0] = this.axis1Dim - 1.0;
 			matrixPos0[1] = y0;
-			matrixPos1[1] = yf;			
+			matrixPos1[1] = yf;
 		}
-		
+
 		double off0[] = this.getOffsetFromPosition(matrixPos0[0], matrixPos0[1]);
 		double off1[] = this.getOffsetFromPosition(matrixPos1[0], matrixPos1[1]);
 		off0[0] /= cosDec;
@@ -3165,7 +3179,7 @@ public class LMVCube implements Serializable
 		loc0.setLatitude(this.axis2Pos + off0[1]);
 		loc1.setLatitude(this.axis2Pos + off1[1]);
  	}
- 	
+
  	/**
  	 * Creates a chart with a strip of this cube between two equatorial positions. The strip is
  	 * created by considering all grid points that lies in a straight line between the center of
@@ -3184,20 +3198,20 @@ public class LMVCube implements Serializable
  	 * @throws JPARSECException If any of the input positions is outside the image.
  	 */
  	public CreateGridChart getStrip(LocationElement loc0, LocationElement loc1, double[] contours, boolean usePhysicalOffsets,
- 			boolean offsetsRespectCenter, boolean interpolate) 
+ 			boolean offsetsRespectCenter, boolean interpolate)
  	throws JPARSECException {
  		double dist = LocationElement.getAngularDistance(loc0, loc1) * Constant.RAD_TO_ARCSEC * 0.5;
  		if (!usePhysicalOffsets) dist /= (Math.abs(conversionFormula[2]) * Constant.RAD_TO_ARCSEC);
- 		
+
  		double pos0[] = new double[] {loc0.getLongitude() - this.axis1Pos, loc0.getLatitude() - this.axis2Pos};
  		double pos1[] = new double[] {loc1.getLongitude() - this.axis1Pos, loc1.getLatitude() - this.axis2Pos};
  		if (pos0[0] > Math.PI) pos0[0] -= Constant.TWO_PI;
  		if (pos1[0] > Math.PI) pos1[0] -= Constant.TWO_PI;
- 		
+
  		double cosDec = Math.cos(axis2Pos);
  		pos0[0] *= cosDec;
  		pos1[0] *= cosDec;
- 		
+
 		double matrixPos0[] = getPositionFromOffset(pos0[0], pos0[1]);
 		double matrixPos1[] = getPositionFromOffset(pos1[0], pos1[1]);
 
@@ -3246,7 +3260,7 @@ public class LMVCube implements Serializable
 			for (int p=0; p<np; p++)
 			{
 				v.add(dataY2[p]);
-			}			
+			}
 		} else {
 			for (int p=0; p<np; p++)
 			{
@@ -3272,9 +3286,9 @@ public class LMVCube implements Serializable
 				}
 			}
 		}
-		
-		if (error) throw new JPARSECException("The strip has initial and ending points outside range!");	
-		
+
+		if (error) throw new JPARSECException("The strip has initial and ending points outside range!");
+
 		if (v.size() > 0) {
 			CreateChart charts[] = new CreateChart[v.size()];
 			double data[][] = new double[(v.get(0)).length][charts.length];
@@ -3288,13 +3302,13 @@ public class LMVCube implements Serializable
     		float x0 = getv0();
     		float xf = getvf();
     		float y0 = 1f;
-    		float yf = v.size();	    		
+    		float yf = v.size();
     		if (useOffsetR) {
 	    		y0 = (float) -offr0;
 	    		yf = (float) offrf;
 	    		if (stepY < 0.0) {
 		    		y0 = (float) offr0;
-		    		yf = (float) -offrf;				    			
+		    		yf = (float) -offrf;
 	    		}
     		}
     		if (offsetsRespectCenter) {
@@ -3302,22 +3316,22 @@ public class LMVCube implements Serializable
     			yf = (float) (FastMath.sign(yf) * dist);
     		}
 			GridChartElement chart = new GridChartElement("",
-					"Velocity (km s^{-1})", "Strip position offset", "", 
-					GridChartElement.COLOR_MODEL.BLUE_TO_RED, 
-					new double[] {x0, xf, y0, yf},  data, 
+					"Velocity (km s^{-1})", "Strip position offset", "",
+					GridChartElement.COLOR_MODEL.BLUE_TO_RED,
+					new double[] {x0, xf, y0, yf},  data,
 					contours, 400);
 			chart.levelsOrientation = GridChartElement.WEDGE_ORIENTATION.HORIZONTAL_BOTTOM;
 			chart.levelsBorderStyle = GridChartElement.WEDGE_BORDER.NO_BORDER;
 			fixOrientation(chart);
-			  
+
 			CreateGridChart gridChart = new CreateGridChart(chart);
 
 			return gridChart;
 		}
-		
+
 		return null;
  	}
- 	
+
 	private void fixOrientation(GridChartElement chart) {
 		  chart.invertXaxis = false;
 		  chart.invertYaxis = false;
@@ -3341,257 +3355,17 @@ public class LMVCube implements Serializable
 			  {
 				  for (int j=0; j<chart.data[0].length; j++)
 				  {
-					  data2[i][j] = new Double((chart.data[i][chart.data[0].length-1-j]).doubleValue());
-				  }			
+					  data2[i][j] = chart.data[i][chart.data[0].length-1-j];
+				  }
 			  }
 			  chart.data = data2;
-		  }		
+		  }
 	}
-	
-    /**
-     * Test program.
-     * @param args Unused.
-     */
-    public static void main(String args[])
-    {
-    	try {
-    		/*
-    		// Strip test
-    		LMVCube test = new LMVCube("/home/alonso/eclipse/libreria_jparsec/stripTest/modelTest.lmv");
-    		CreateGridChart gctest = test.getStrip(new LocationElement(-5*15*Constant.ARCSEC_TO_RAD, -60.0 * Constant.ARCSEC_TO_RAD, 1.0), 
-    				new LocationElement(5*15*Constant.ARCSEC_TO_RAD, 60.0 * Constant.ARCSEC_TO_RAD, 1.0), null);
-    		gctest.showChartInSGTpanel(false);
-    		*/
-    		
-    		String LMVFiles[] = new String[] {
-    				"/home/alonso/documentos/propuesta/2008/lkha233/ees-1-co10.lmv-clean",
-    				"/home/alonso/eclipse/workspace/mis_programas/Core/cylinder_models/RMON_obs/cubo/rmon_K.lmv",
-    				"/home/alonso/eclipse/workspace/mis_programas/Core/cylinder_models/RMON_obs/cubo/n079-co21-ex.lmv-clean",
-    				"/home/alonso/documentos/propuesta/2008/lkha233/ees--1-co10.lmv-clean",
-    				"/home/alonso/documentos/propuesta/2008/lkha233/slice-disco.lmv-clean",
-    				"/home/alonso/documentos/propuesta/2008/lkha233/cos--1-sio.lmv-clean",
-    				"/home/alonso/documentos/propuesta/2008/lkha233/ees--1-co10-un.lmv-clean",
-    				"/home/alonso/documentos/propuesta/2008/lkha233/sio-compress2.lmv-clean",
-    				"/home/alonso/documentos/propuesta/2008/lkha233/slice-strip.lmv-clean",
-    				"/home/alonso/documentos/propuesta/2008/lkha233/slice-jet.lmv-clean",
-    				"/home/alonso/documentos/propuesta/2008/lkha233/s--1-c3mm.lmv-clean",
-    				"/home/alonso/documentos/propuesta/2008/lkha233/s--1-c2mm.lmv-clean",
-    				"/home/alonso/reduccion/2007/discos/pb10_new/total2.lmv-clean",
-    				"/home/alonso/reduccion/2007/discos/pdbi/zcma-cont3mm.lmv-clean",
-    				"/home/alonso/reduccion/2007/discos/pdbi/zcma-cont1mm.lmv-clean",
-    				"/home/alonso/reduccion/2007/discos/pa10/pa10-co10-compress4.lmv-clean",
-    				"/home/alonso/reduccion/2007/discos/pb10/pb10-co10-total-compress20.lmv-clean",
-    				"/home/alonso/reduccion/2007/discos/pb10/pb10-co10-total-compress4.lmv-clean",
-    				"/home/alonso/reduccion/2007/discos/pb10/pb10-cont1mm-total.lmv-clean",
-    				"/home/alonso/reduccion/2007/discos/pb10/pb10-cont3mm-total.lmv-clean",
-    				"/home/alonso/reduccion/2007/discos/pc10/nuevo/total2/Asuncion/Tomas/pc10-co21-total-2.lmv-clean",
-    				"/home/alonso/reduccion/2007/discos/pc10/nuevo/total2/Asuncion/Tomas/pc10-co10-total-2.lmv-clean",
-    				"/home/alonso/reduccion/2007/discos/pb10/pb10-co10-total.lmv-clean",
-    				"/home/alonso/reduccion/2007/discos/pc10/nuevo/total2/Asuncion/pc10-cont3mm-total-2.lmv-clean",
-    				"/home/alonso/reduccion/2007/discos/pc10/nuevo/total2/Asuncion/pc10-cont1mm-total-2.lmv-clean",
-    				"/home/alonso/reduccion/2007/discos/pc10/nuevo/total2/pc10-co10-total-2.lmv-clean",
-    				"/home/alonso/reduccion/2007/discos/pc10/nuevo/total2/pc10-co21-total-2.lmv-clean",
-    				"/home/alonso/colaboraciones/Asuncion/2007/ALMA-special_issue/figuras/ic1396/all-1mm.lmv-clean",
-    				"/home/alonso/colaboraciones/Asuncion/2007/ALMA-special_issue/figuras/serpens/pa42-cont3mm.lmv-clean",
-    				"/home/alonso/colaboraciones/Asuncion/2007/ALMA-special_issue/figuras/ic1396/all-3mm.lmv-clean",
-    				"/home/alonso/reduccion/2007/discos/pc10/total/pc10-co21-total.lmv-clean",
-    				"/home/alonso/reduccion/2007/discos/pc10/pc10-co10.lmv-clean",
-    				"/home/alonso/reduccion/2007/discos/pc10/total/pc10-co10-total.lmv-clean",
-    				"/home/alonso/reduccion/2007/discos/pc10/total/pc10-cont1mm-total.lmv-clean",
-    				"/home/alonso/reduccion/2007/discos/pc10/total/pc10-cont3mm-total.lmv-clean",
-    				"/home/alonso/reduccion/2007/discos/pc10/pc10-co21-strip7.lmv-clean",
-    				"/home/alonso/reduccion/2007/discos/pc10/pc10-co21-strip6.lmv-clean",
-    				"/home/alonso/reduccion/2007/discos/pc10/pc10-co21-strip5.lmv-clean",
-    				"/home/alonso/reduccion/2007/discos/pc10/pc10-co21-strip4.lmv-clean",
-    				"/home/alonso/reduccion/2007/discos/pc10/pc10-co21-strip3.lmv-clean",
-    				"/home/alonso/reduccion/2007/discos/pc10/pc10-co21-strip2.lmv-clean",
-    				"/home/alonso/reduccion/2007/discos/pc10/pc10-co21-strip1.lmv-clean",
-    				"/home/alonso/reduccion/2007/discos/pc10/pc10-co21.lmv-clean",
-    				"/home/alonso/reduccion/2007/discos/pa10/tardir/pa10-cont3mm.lmv-clean",
-    				"/home/alonso/reduccion/2007/discos/pa10/tardir/pa10-cont1mm.lmv-clean",
-    				"/home/alonso/reduccion/2007/discos/pdbi/mwc297-cont3mm.lmv-clean",
-    				"/home/alonso/reduccion/2007/discos/pa10/pa10-cont3mm.lmv-clean",
-    				"/home/alonso/reduccion/2007/discos/pdbi/mwc297-cont1mm.lmv-clean",
-    				"/home/alonso/reduccion/2007/discos/pa10/pa10-cont1mm.lmv-clean",
-    				"/home/alonso/reduccion/2007/discos/pdbi/lkha215-cont3mm.lmv-clean",
-    				"/home/alonso/reduccion/2007/discos/pdbi/lkha215-cont1mm.lmv-clean",
-    				"/home/alonso/reduccion/2007/discos/pdbi/mwc137-cont3mm.lmv-clean",
-    				"/home/alonso/reduccion/2007/discos/pdbi/mwc137-cont1mm.lmv-clean",
-    				"/home/alonso/reduccion/2007/discos/pdbi/mwc1080-cont3mm.lmv-clean",
-    				"/home/alonso/reduccion/2007/discos/pdbi/mwc1080-cont1mm.lmv-clean",
-    				"/home/alonso/reduccion/2007/discos/la3a/cont1mm-total.lmv-clean",
-    				"/home/alonso/reduccion/2007/discos/p055/total-cont3mm.lmv-clean",
-    				"/home/alonso/reduccion/2007/discos/p055/total-cont3mm-beam08.lmv-clean",
-    				"/home/alonso/reduccion/2007/discos/p055/total-cont1mm.lmv-clean",
-    				"/home/alonso/reduccion/2007/discos/p055/total-cont1mm-beam03.lmv-clean",
-    				"/home/alonso/reduccion/2007/discos/p055/n079-co21-ex-sr.lmv-clean",
-    				"/home/alonso/reduccion/2007/discos/p055/n079-co10-ex.lmv-clean",
-    				"/home/alonso/reduccion/2007/discos/la3a/cont3mm-total.lmv-clean",
-    				"/home/alonso/reduccion/2007/discos/la3a/13co21-total-ex1.lmv-clean",
-    				"/home/alonso/reduccion/2007/discos/la3a/13co10-total-ex.lmv-clean",
-    				"/home/alonso/reduccion/2007/discos/lc3a/lc3a-cont3mm.lmv-clean",
-    				"/home/alonso/reduccion/2007/discos/lc3a/lc3a-cont1mm.lmv-clean",
-    				"/home/alonso/reduccion/2007/discos/lc3a/lc3a-13co21-extract.lmv-clean",
-    				"/home/alonso/reduccion/2007/discos/lc3a/lc3a-13co10-extract.lmv-clean",
-    				"/home/alonso/reduccion/2007/discos/lb3a/lb3a-cont3mm.lmv-clean",
-    				"/home/alonso/reduccion/2007/discos/lb3a/lb3a-cont1mm.lmv-clean",
-    				"/home/alonso/reduccion/2007/discos/lb3a/lb3a-13co21-extract.lmv-clean",
-    				"/home/alonso/reduccion/2007/discos/lb3a/lb3a-13co10-extract.lmv-clean",
-    				"/home/alonso/eclipse/workspace/mis_programas/Core/cylinder_models/RMON_obs/cubo/n079-co21-ex.lmv-clean",
-    				"/home/alonso/eclipse/workspace/mis_programas/Core/cylinder_models/RMON_obs/poster/total-cont3mm-beam08.lmv-clean",
-    				"/home/alonso/eclipse/workspace/mis_programas/Core/cylinder_models/RMON_obs/poster/total-cont1mm-beam03.lmv-clean",
-    				"/home/alonso/eclipse/workspace/mis_programas/Core/cylinder_models/RMON_obs/jets/n079-co21-ex.lmv-clean"
-    		};
-
-    		String LMVNames[] = new String[LMVFiles.length];
-    		for (int i=0; i<LMVFiles.length; i++)
-    		{
-    			LMVNames[i] = FileIO.getFileNameFromPath(LMVFiles[i]);
-    		}
-/*    		String s = (String) JOptionPane.showInputDialog(
-                    null,
-                    "Select the LMV file to read:",
-                    "Select LMV file",
-                    JOptionPane.PLAIN_MESSAGE, null,
-                    LMVNames, LMVNames[0]
-    		);
-    		if (s == null) System.exit(0);
-*/
-    		String s = LMVNames[0];
-    		int index = DataSet.getIndexContaining(LMVFiles, s);
-    		LMVCube lmv = new LMVCube(LMVFiles[index]);
-/*    		LMVCube lmv = new LMVCube("/home/alonso/documentos/latex/2010/Tesis/material/convolutionTest/out2cmio.lmv");
-    		LMVCube lmvv = new LMVCube("/home/alonso/documentos/latex/2010/Tesis/material/convolutionTest/out2c.lmv");
-    		System.out.println(lmv.axis12PA+"/"+lmvv.axis12PA);
-    		System.out.println(lmv.axis1Dim+"/"+lmvv.axis1Dim);
-    		System.out.println(lmv.axis1Label+"/"+lmvv.axis1Label);
-    		System.out.println(lmv.axis1Pos+"/"+lmvv.axis1Pos);
-    		System.out.println(lmv.axis2Dim+"/"+lmvv.axis2Dim);
-    		System.out.println(lmv.axis2Label+"/"+lmvv.axis2Label);
-    		System.out.println(lmv.axis2Pos+"/"+lmvv.axis2Pos);
-    		System.out.println(lmv.axis3Dim+"/"+lmvv.axis3Dim);
-    		System.out.println(lmv.axis3Label+"/"+lmvv.axis3Label);
-    		System.out.println(lmv.axis4Dim+"/"+lmvv.axis4Dim);
-    		System.out.println(lmv.axis4Label+"/"+lmvv.axis4Label);
-    		System.out.println(lmv.beamMajor+"/"+lmvv.beamMajor);
-    		System.out.println(lmv.beamMinor+"/"+lmvv.beamMinor);
-    		System.out.println(lmv.beamPA+"/"+lmvv.beamPA);
-    		System.out.println(lmv.blanking+"/"+lmvv.blanking);
-    		System.out.println(lmv.blankingTolerance+"/"+lmvv.blankingTolerance);
-    		System.out.println(lmv.coordinateSystem+"/"+lmvv.coordinateSystem);
-    		System.out.println(lmv.epoch+"/"+lmvv.epoch);
-    		System.out.println(lmv.fluxUnit+"/"+lmvv.fluxUnit);
-    		System.out.println(lmv.freqResolution+"/"+lmvv.freqResolution);
-    		System.out.println(lmv.imageFormat+"/"+lmvv.imageFormat);
-    		System.out.println(lmv.imageFrequency+"/"+lmvv.imageFrequency);
-    		System.out.println(lmv.isBig+"/"+lmvv.isBig);
-    		System.out.println(lmv.line+"/"+lmvv.line);
-    		System.out.println(lmv.maximumFlux+"/"+lmvv.maximumFlux);
-    		System.out.println(lmv.minimumFlux+"/"+lmvv.minimumFlux);
-    		System.out.println(lmv.minimumAndMaximumFluxPositions[0]+"/"+lmvv.minimumAndMaximumFluxPositions[0]);
-    		System.out.println(lmv.minimumAndMaximumFluxPositions[1]+"/"+lmvv.minimumAndMaximumFluxPositions[1]);
-    		System.out.println(lmv.minimumAndMaximumFluxPositions[2]+"/"+lmvv.minimumAndMaximumFluxPositions[2]);
-    		System.out.println(lmv.minimumAndMaximumFluxPositions[3]+"/"+lmvv.minimumAndMaximumFluxPositions[3]);
-    		System.out.println(lmv.minimumAndMaximumFluxPositions[4]+"/"+lmvv.minimumAndMaximumFluxPositions[4]);
-    		System.out.println(lmv.minimumAndMaximumFluxPositions[5]+"/"+lmvv.minimumAndMaximumFluxPositions[5]);
-    		System.out.println(lmv.minimumAndMaximumFluxPositions[6]+"/"+lmvv.minimumAndMaximumFluxPositions[6]);
-    		System.out.println(lmv.minimumAndMaximumFluxPositions[7]+"/"+lmvv.minimumAndMaximumFluxPositions[7]);
-    		System.out.println(lmv.noise+"/"+lmvv.noise);
-    		System.out.println(lmv.numberOfAxes+"/"+lmvv.numberOfAxes);
-    		System.out.println(lmv.projectionType+"/"+lmvv.projectionType);
-    		System.out.println(lmv.restFreq+"/"+lmvv.restFreq);
-    		System.out.println(lmv.rms+"/"+lmvv.rms);
-    		System.out.println(lmv.sourceDEC+"/"+lmvv.sourceDEC);
-    		System.out.println(lmv.sourceGLat+"/"+lmvv.sourceGLat);
-    		System.out.println(lmv.sourceGLon+"/"+lmvv.sourceGLon);
-    		System.out.println(lmv.sourceName+"/"+lmvv.sourceName);
-    		System.out.println(lmv.sourceParallax+"/"+lmvv.sourceParallax);
-    		System.out.println(lmv.sourceProperMotionDEC+"/"+lmvv.sourceProperMotionDEC);
-    		System.out.println(lmv.sourceProperMotionRA+"/"+lmvv.sourceProperMotionRA);
-    		System.out.println(lmv.sourceRA+"/"+lmvv.sourceRA);
-    		System.out.println(lmv.velOffset+"/"+lmvv.velOffset);
-    		System.out.println(lmv.velResolution+"/"+lmvv.velResolution);
-    		System.out.println(lmv.xAxisID+"/"+lmvv.xAxisID);
-    		System.out.println(lmv.yAxisID+"/"+lmvv.yAxisID);
-    		System.out.println(lmv.zAxisID+"/"+lmvv.zAxisID);
-*/    		
-    		lmv.setCubeData(lmv.getCubeData(100,100,200));
-    		
-//			Serialization.writeObject(lmv, "/home/alonso/lmvTest");
-
-/*    		int inix = 16, endx = 48, iniy = 16, endy = 48, iniz = 0, endz = 59;
-    		lmv.clip(inix, endx, iniy, endy, iniz, endz);
-    		System.out.println("*"+lmv.cube.length+"/"+lmv.cube[0].length+"/"+lmv.cube[0][0].length+"///"+lmv.blanking);
-    		lmv.cube = LMVCube.scaleIntensity(lmv.cube, lmv.blanking, 24f);
-    		lmv.fluxUnit = "K";
-*/    		
-/*    		System.out.println(lmv.minimumAndMaximumFluxPositions[0]+"*"+lmv.minimumAndMaximumFluxPositions[1]+"*"+lmv.axis1Dim);
-    		System.out.println(lmv.minimumAndMaximumFluxPositions[2]+"*"+lmv.minimumAndMaximumFluxPositions[3]+"*"+lmv.axis2Dim);
-    		System.out.println(lmv.minimumAndMaximumFluxPositions[4]+"*"+lmv.minimumAndMaximumFluxPositions[5]+"*"+lmv.axis3Dim);
-    		System.out.println(lmv.minimumAndMaximumFluxPositions[6]+"*"+lmv.minimumAndMaximumFluxPositions[7]+"*"+lmv.axis4Dim);
-*/
-    		System.out.println(lmv.axis1Dim+"/"+lmv.axis2Dim+"/"+lmv.axis3Dim);
-    		
-    		//lmv.setCubeData(lmv.getCubeData(32, 32, 128));
-//    		lmv.setCubeData(lmv.resample(128, 128));
-
-    		System.out.println("width "+lmv.axis1Dim);
-    		System.out.println("height "+lmv.axis2Dim);
-    		Point2D.Double p = new Point2D.Double(lmv.wcs.getCrpix1(), lmv.wcs.getCrpix2());
-    		LocationElement loc = lmv.wcs.getSkyCoordinates(p);
-    		System.out.println(p.getX()+"/"+p.getY()+" = "+loc.getLongitude()*Constant.RAD_TO_DEG+"/"+loc.getLatitude()*Constant.RAD_TO_DEG);
-    		Point2D pp = lmv.wcs.getPixelCoordinates(loc);
-    		System.out.println(pp.getX()+"/"+pp.getY()+" = "+lmv.axis1Pos*Constant.RAD_TO_DEG+"/"+lmv.axis2Pos*Constant.RAD_TO_DEG);
-    		System.out.println(Functions.formatRA(loc.getLongitude()));
-    		System.out.println(Functions.formatDEC(loc.getLatitude()));
-
-    		String output = "/home/alonso/myLMV.lmv";
-    		lmv.write(output);
-    		
-//    		lmv = new LMVCube(output);
-    		//FileIO.deleteFile(output);
-
-/*    		System.out.println("bl "+lmv.blanking+"/"+lmv.axis1Dim+"/"+lmv.axis2Dim+"/"+lmv.axis3Dim);
-    		lmv.setCubeData(lmv.getCubeData());
-    		lmv.cube[0][0][0] = lmv.blanking;
-    		lmv.cube[0][1][0] = lmv.blanking;
-    		lmv.cube[0][0][1] = lmv.blanking;
-    		lmv.cube[0][1][1] = lmv.blanking;
-    		lmv.cube[1][0][0] = lmv.blanking;
-    		lmv.cube[1][1][0] = lmv.blanking;
-    		lmv.cube[1][0][1] = lmv.blanking;
-    		lmv.cube[1][1][1] = lmv.blanking;
-    		lmv.setCubeData(lmv.getCubeData(32,32,32));
-*/    		
-/*    		float v0 =lmv.getv0();
-    		float vf = lmv.getvf();
-    		float x0 = (float) (lmv.getx0() * Constant.RAD_TO_ARCSEC);
-    		float xf = (float) (lmv.getxf() * Constant.RAD_TO_ARCSEC);
-    		float y0 = (float) (lmv.gety0() * Constant.RAD_TO_ARCSEC);
-    		float yf = (float) (lmv.getyf() * Constant.RAD_TO_ARCSEC);
-    		VISADCubeElement cube = new VISADCubeElement(lmv.getCubeData(),
-					  new float[] {x0, xf, y0, yf, v0, vf},
-					  "OFFSET_RA", VISADCubeElement.UNIT.ARCSEC,
-					  "OFFSET_DEC", VISADCubeElement.UNIT.ARCSEC,
-					  "VELOCITY", VISADCubeElement.UNIT.KILOMETER_PER_SECOND,
-					  "FLUX", VISADCubeElement.UNIT.KELVIN);
-    		CreateVISADChart vc = new CreateVISADChart(cube, v0 + (vf - v0) * 0.5, true);
-    		vc.show(500, 500);
-*/
-    		CreateGridChart ch = lmv.getChart(-1);
-    		ch.getChartElement().levels = new double[] {1, 3, 5};
-    		ch.update();
-    		ch.showChartInSGTpanel(true);
-    	} catch (JPARSECException exc)
-    	{
-    		exc.showException();
-    	}
-    }
 
     // Java objects to read the lmv file
     private Convertible convert;
     private RandomAccessFile bis;
-    
+
     // Internal GILDAS variables, not very interesting
     private boolean isBig;
     private int imageFormat;
@@ -3616,7 +3390,7 @@ public class LMVCube implements Serializable
      */
     public float maximumFlux;
     /**
-     * Minimum and maximum position for axis 1, 2, 
+     * Minimum and maximum position for axis 1, 2,
      * 3, and 4. Units are pixels on the image, starting
      * from 1 (Gildas or Fortran convention).
      */
@@ -3800,7 +3574,7 @@ public class LMVCube implements Serializable
      * The WCS.
      */
     public WCS wcs;
-    
+
 	private void writeObject(ObjectOutputStream out)
 	throws IOException {
 		out.writeObject(this.path);
@@ -3927,4 +3701,4 @@ public class LMVCube implements Serializable
 			}
 		}
  	}
-}	
+}

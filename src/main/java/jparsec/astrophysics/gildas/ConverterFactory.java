@@ -117,18 +117,4 @@ public class ConverterFactory
     	if (gd < 0.0) gd = gd - 0.5;
     	return (int) gd;
     }
-    
-    /**
-     * Test program.
-     * @param args Unused.
-     */
-    public static void main(String args[])
-    {
-    	System.out.println("ConverterFactory test");
-    	
-    	double jd = 2453163.5;
-    	System.out.println(""+jd+" -> "+ConverterFactory.getGILDASdate(jd));
-    	jd = 2453163.7125212005;
-    	System.out.println(""+jd+" -> "+ConverterFactory.getGILDASdate(jd));
-    }
 }

@@ -770,12 +770,12 @@ public class Gildas30m {
         if(index == null) createIndex(-1);
         Integer integer = null;
         Integer integer1 = new Integer(ordered_index.get(i));
-        int ii = integer1.intValue();
+        int ii = integer1;
         if (ii < 0) {
         	throw new JPARSECException("Cannot find spectrum #"+i+"!");
         }
-        integer = new Integer(index[ii].toString());
-        readSections(integer.intValue(), spectrum);
+        integer = new Integer(index[ii]);
+        readSections(integer, spectrum);
         spectrum = new Spectrum30m(spectrum.getTreeMap(), this.getHeader(i),
         		this.getData(i));
         return spectrum;
@@ -986,26 +986,26 @@ public class Gildas30m {
     private void readGeneralSection(byte abyte0[], int i, int j, Spectrum30m spectrum)
     {
         i--;
-        double d = convert.readDouble(abyte0, i * 4 + 0);
-        spectrum.put(new String(UT_TIME), new Parameter(d, Gildas30m.UT_TIME_DESC));
+        double d = convert.readDouble(abyte0, i * 4);
+        spectrum.put(UT_TIME, new Parameter(d, Gildas30m.UT_TIME_DESC));
         double d1 = convert.readDouble(abyte0, i * 4 + 8);
-        spectrum.put(new String(LST_TIME), new Parameter(d1, Gildas30m.LST_TIME_DESC));
+        spectrum.put(LST_TIME, new Parameter(d1, Gildas30m.LST_TIME_DESC));
         float f = convert.readFloat(abyte0, i * 4 + 16);
-        spectrum.put(new String(Gildas30m.AZIMUTH), new Parameter(f, Gildas30m.AZIMUTH_DESC));
+        spectrum.put(Gildas30m.AZIMUTH, new Parameter(f, Gildas30m.AZIMUTH_DESC));
         float f1 = convert.readFloat(abyte0, i * 4 + 20);
-        spectrum.put(new String(Gildas30m.ELEVATION), new Parameter(f1, Gildas30m.ELEVATION_DESC));
+        spectrum.put(Gildas30m.ELEVATION, new Parameter(f1, Gildas30m.ELEVATION_DESC));
         float f2 = convert.readFloat(abyte0, i * 4 + 24);
-        spectrum.put(new String(Gildas30m.TAU), new Parameter(f2, Gildas30m.TAU_DESC));
+        spectrum.put(Gildas30m.TAU, new Parameter(f2, Gildas30m.TAU_DESC));
         float f3 = convert.readFloat(abyte0, i * 4 + 28);
-        spectrum.put(new String(Gildas30m.TSYS), new Parameter(f3, Gildas30m.TSYS_DESC));
+        spectrum.put(Gildas30m.TSYS, new Parameter(f3, Gildas30m.TSYS_DESC));
         float f4 = convert.readFloat(abyte0, i * 4 + 32);
-        spectrum.put(new String(Gildas30m.INTEG), new Parameter(f4, Gildas30m.INTEG_DESC));
+        spectrum.put(Gildas30m.INTEG, new Parameter(f4, Gildas30m.INTEG_DESC));
     }
 
     private void readContinuumSection(byte abyte0[], int i, int j, Spectrum30m spectrum)
     {
         i--;
-        double restf = convert.readDouble(abyte0, i * 4 + 0);
+        double restf = convert.readDouble(abyte0, i * 4);
         float width = convert.readFloat(abyte0, i * 4 + 8);
         int npo = convert.readInt(abyte0, i * 4 + 12);
         float rpo = convert.readFloat(abyte0, i * 4 + 16);
@@ -1020,103 +1020,103 @@ public class Gildas30m {
         float colla = convert.readFloat(abyte0, i * 4 + 56);
         float colle = convert.readFloat(abyte0, i * 4 + 60);
         
-        spectrum.put(new String("COL_AZ"), new Parameter(colla, ""));
-        spectrum.put(new String("COL_EL"), new Parameter(colle, ""));
+        spectrum.put("COL_AZ", new Parameter(colla, ""));
+        spectrum.put("COL_EL", new Parameter(colle, ""));
     }
     
     private void readPositionSection(byte abyte0[], int i, int j, Spectrum30m spectrum)
     {
         i--;
         String s = new String(abyte0, i * 4, 12);
-        spectrum.put(new String(SOURCE), new Parameter(s, SOURCE_DESC));
+        spectrum.put(SOURCE, new Parameter(s, SOURCE_DESC));
         float f = convert.readFloat(abyte0, i * 4 + 12);
-        spectrum.put(new String(Gildas30m.EPOCH), new Parameter(f, Gildas30m.EPOCH_DESC));
+        spectrum.put(Gildas30m.EPOCH, new Parameter(f, Gildas30m.EPOCH_DESC));
         double d = convert.readDouble(abyte0, i * 4 + 16);
-        spectrum.put(new String(Gildas30m.LAMBDA), new Parameter(d, Gildas30m.LAMBDA_DESC));
+        spectrum.put(Gildas30m.LAMBDA, new Parameter(d, Gildas30m.LAMBDA_DESC));
         double d1 = convert.readDouble(abyte0, i * 4 + 24);
-        spectrum.put(new String(Gildas30m.BETA), new Parameter(d1, Gildas30m.BETA_DESC));
+        spectrum.put(Gildas30m.BETA, new Parameter(d1, Gildas30m.BETA_DESC));
         float f1 = convert.readFloat(abyte0, i * 4 + 32);
-        spectrum.put(new String(Gildas30m.LAMBDA_OFF), new Parameter(f1, Gildas30m.LAMBDA_OFF_DESC));
+        spectrum.put(Gildas30m.LAMBDA_OFF, new Parameter(f1, Gildas30m.LAMBDA_OFF_DESC));
         float f2 = convert.readFloat(abyte0, i * 4 + 36);
-        spectrum.put(new String(Gildas30m.BETA_OFF), new Parameter(f2, Gildas30m.BETA_OFF_DESC));
+        spectrum.put(Gildas30m.BETA_OFF, new Parameter(f2, Gildas30m.BETA_OFF_DESC));
         int k = convert.readInt(abyte0, i * 4 + 40);
-        spectrum.put(new String(Gildas30m.PROJECTION), new Parameter(k, Gildas30m.PROJECTION_DESC));
+        spectrum.put(Gildas30m.PROJECTION, new Parameter(k, Gildas30m.PROJECTION_DESC));
     }
 
     private void readSpectroscopySection(byte abyte0[], int i, int j, Spectrum30m spectrum)
     {
         i--;
         String s = new String(abyte0, i * 4, 12);
-        spectrum.put(new String(LINE), new Parameter(s, LINE_DESC));
+        spectrum.put(LINE, new Parameter(s, LINE_DESC));
         double d = convert.readDouble(abyte0, i * 4 + 12);
-        spectrum.put(new String(Gildas30m.REF_FREQ), new Parameter(d, Gildas30m.REF_FREQ_DESC));
+        spectrum.put(Gildas30m.REF_FREQ, new Parameter(d, Gildas30m.REF_FREQ_DESC));
         int k = convert.readInt(abyte0, i * 4 + 20);
-        spectrum.put(new String(Gildas30m.NCHAN), new Parameter(k, Gildas30m.NCHAN_DESC));
+        spectrum.put(Gildas30m.NCHAN, new Parameter(k, Gildas30m.NCHAN_DESC));
         float f = convert.readFloat(abyte0, i * 4 + 24);
-        spectrum.put(new String(Gildas30m.REF_CHAN), new Parameter((double)f, Gildas30m.REF_CHAN_DESC));
+        spectrum.put(Gildas30m.REF_CHAN, new Parameter((double)f, Gildas30m.REF_CHAN_DESC));
         float f1 = convert.readFloat(abyte0, i * 4 + 28);
-        spectrum.put(new String(Gildas30m.FREQ_RESOL), new Parameter(f1, Gildas30m.FREQ_RESOL_DESC));
+        spectrum.put(Gildas30m.FREQ_RESOL, new Parameter(f1, Gildas30m.FREQ_RESOL_DESC));
         float f2 = convert.readFloat(abyte0, i * 4 + 32);
-        spectrum.put(new String(Gildas30m.FREQ_OFF), new Parameter(f2, Gildas30m.FREQ_OFF_DESC));
+        spectrum.put(Gildas30m.FREQ_OFF, new Parameter(f2, Gildas30m.FREQ_OFF_DESC));
         float f3 = convert.readFloat(abyte0, i * 4 + 36);
-        spectrum.put(new String(Gildas30m.VEL_RESOL), new Parameter(f3, Gildas30m.VEL_RESOL_DESC));
+        spectrum.put(Gildas30m.VEL_RESOL, new Parameter(f3, Gildas30m.VEL_RESOL_DESC));
         float f4 = convert.readFloat(abyte0, i * 4 + 40);
-        spectrum.put(new String(Gildas30m.REF_VEL), new Parameter(f4, Gildas30m.REF_VEL_DESC));
+        spectrum.put(Gildas30m.REF_VEL, new Parameter(f4, Gildas30m.REF_VEL_DESC));
         float f5 = convert.readFloat(abyte0, i * 4 + 44);
-        spectrum.put(new String(Gildas30m.BAD), new Parameter(f5, Gildas30m.BAD_DESC));
+        spectrum.put(Gildas30m.BAD, new Parameter(f5, Gildas30m.BAD_DESC));
         double d1 = convert.readDouble(abyte0, i * 4 + 48);
-        spectrum.put(new String(Gildas30m.IMAGE), new Parameter(d1, Gildas30m.IMAGE_DESC));
+        spectrum.put(Gildas30m.IMAGE, new Parameter(d1, Gildas30m.IMAGE_DESC));
         int l = convert.readInt(abyte0, i * 4 + 56);
-        spectrum.put(new String(Gildas30m.VEL_TYPE), new Parameter(l, Gildas30m.VEL_TYPE_DESC));
+        spectrum.put(Gildas30m.VEL_TYPE, new Parameter(l, Gildas30m.VEL_TYPE_DESC));
     }
 
     private void readCalibrationSection(byte abyte0[], int i, int j, Spectrum30m spectrum)
     {
         i--;
         float f = convert.readFloat(abyte0, i * 4);
-        spectrum.put(new String(Gildas30m.BEAM_EFF), new Parameter(f, Gildas30m.BEAM_EFF_DESC));
+        spectrum.put(Gildas30m.BEAM_EFF, new Parameter(f, Gildas30m.BEAM_EFF_DESC));
         float f1 = convert.readFloat(abyte0, i * 4 + 4);
-        spectrum.put(new String(Gildas30m.FORW_EFF), new Parameter(f1, Gildas30m.FORW_EFF_DESC));
+        spectrum.put(Gildas30m.FORW_EFF, new Parameter(f1, Gildas30m.FORW_EFF_DESC));
         float f2 = convert.readFloat(abyte0, i * 4 + 8);
-        spectrum.put(new String(Gildas30m.GAIN_IM), new Parameter(f2, Gildas30m.GAIN_IM_DESC));
+        spectrum.put(Gildas30m.GAIN_IM, new Parameter(f2, Gildas30m.GAIN_IM_DESC));
         float f3 = convert.readFloat(abyte0, i * 4 + 12);
-        spectrum.put(new String(Gildas30m.H2OMM), new Parameter(f3, Gildas30m.H2OMM_DESC));
+        spectrum.put(Gildas30m.H2OMM, new Parameter(f3, Gildas30m.H2OMM_DESC));
         float f4 = convert.readFloat(abyte0, i * 4 + 16);
-        spectrum.put(new String(Gildas30m.PAMB), new Parameter(f4, Gildas30m.PAMB_DESC));
+        spectrum.put(Gildas30m.PAMB, new Parameter(f4, Gildas30m.PAMB_DESC));
         float f5 = convert.readFloat(abyte0, i * 4 + 20);
-        spectrum.put(new String(Gildas30m.TAMB), new Parameter(f5, Gildas30m.TAMB_DESC));
+        spectrum.put(Gildas30m.TAMB, new Parameter(f5, Gildas30m.TAMB_DESC));
         float f6 = convert.readFloat(abyte0, i * 4 + 24);
-        spectrum.put(new String(Gildas30m.TATMSIG), new Parameter(f6, Gildas30m.TATMSIG_DESC));
+        spectrum.put(Gildas30m.TATMSIG, new Parameter(f6, Gildas30m.TATMSIG_DESC));
         float f7 = convert.readFloat(abyte0, i * 4 + 28);
-        spectrum.put(new String(Gildas30m.TCHOP), new Parameter(f7, Gildas30m.TCHOP_DESC));
+        spectrum.put(Gildas30m.TCHOP, new Parameter(f7, Gildas30m.TCHOP_DESC));
         float f8 = convert.readFloat(abyte0, i * 4 + 32);
-        spectrum.put(new String(Gildas30m.TCOLD), new Parameter(f8, Gildas30m.TCOLD_DESC));
+        spectrum.put(Gildas30m.TCOLD, new Parameter(f8, Gildas30m.TCOLD_DESC));
         float f9 = convert.readFloat(abyte0, i * 4 + 36);
-        spectrum.put(new String(Gildas30m.TAUSIG), new Parameter(f9, Gildas30m.TAUSIG_DESC));
+        spectrum.put(Gildas30m.TAUSIG, new Parameter(f9, Gildas30m.TAUSIG_DESC));
         float f10 = convert.readFloat(abyte0, i * 4 + 40);
-        spectrum.put(new String(Gildas30m.TAUIMA), new Parameter(f10, Gildas30m.TAUIMA_DESC));
+        spectrum.put(Gildas30m.TAUIMA, new Parameter(f10, Gildas30m.TAUIMA_DESC));
         float f11 = convert.readFloat(abyte0, i * 4 + 44);
-        spectrum.put(new String(Gildas30m.TREC), new Parameter(f11, Gildas30m.TREC_DESC));
+        spectrum.put(Gildas30m.TREC, new Parameter(f11, Gildas30m.TREC_DESC));
         int k = convert.readInt(abyte0, i * 4 + 48 + 4);
-        spectrum.put(new String(Gildas30m.MODE), new Parameter(k, Gildas30m.MODE_DESC));
+        spectrum.put(Gildas30m.MODE, new Parameter(k, Gildas30m.MODE_DESC));
         float f12 = convert.readFloat(abyte0, i * 4 + 52 + 4);
-        spectrum.put(new String(Gildas30m.FACTOR), new Parameter(f12, Gildas30m.FACTOR_DESC));
+        spectrum.put(Gildas30m.FACTOR, new Parameter(f12, Gildas30m.FACTOR_DESC));
         float f13 = convert.readFloat(abyte0, i * 4 + 56 + 4);
-        spectrum.put(new String(Gildas30m.ALTITUDE), new Parameter(f13, Gildas30m.ALTITUDE_DESC));
+        spectrum.put(Gildas30m.ALTITUDE, new Parameter(f13, Gildas30m.ALTITUDE_DESC));
         float f14 = convert.readFloat(abyte0, i * 4 + 60 + 4);
-        spectrum.put(new String(Gildas30m.COUNT1), new Parameter(f14, Gildas30m.COUNT1_DESC));
+        spectrum.put(Gildas30m.COUNT1, new Parameter(f14, Gildas30m.COUNT1_DESC));
         float f15 = convert.readFloat(abyte0, i * 4 + 64 + 4);
-        spectrum.put(new String(Gildas30m.COUNT2), new Parameter(f15, Gildas30m.COUNT2_DESC));
+        spectrum.put(Gildas30m.COUNT2, new Parameter(f15, Gildas30m.COUNT2_DESC));
         float f16 = convert.readFloat(abyte0, i * 4 + 68 + 4);
-        spectrum.put(new String(Gildas30m.COUNT3), new Parameter(f16, Gildas30m.COUNT3_DESC));
+        spectrum.put(Gildas30m.COUNT3, new Parameter(f16, Gildas30m.COUNT3_DESC));
         float f17 = convert.readFloat(abyte0, i * 4 + 72 + 4);
-        spectrum.put(new String(Gildas30m.LONOFF), new Parameter(f17, Gildas30m.LONOFF_DESC));
+        spectrum.put(Gildas30m.LONOFF, new Parameter(f17, Gildas30m.LONOFF_DESC));
         float f18 = convert.readFloat(abyte0, i * 4 + 76 + 4);
-        spectrum.put(new String(Gildas30m.LATOFF), new Parameter(f18, Gildas30m.LATOFF_DESC));
+        spectrum.put(Gildas30m.LATOFF, new Parameter(f18, Gildas30m.LATOFF_DESC));
         double f19 = convert.readDouble(abyte0, i * 4 + 80 + 4);
-        spectrum.put(new String(Gildas30m.LON), new Parameter(f19, Gildas30m.LON_DESC));
+        spectrum.put(Gildas30m.LON, new Parameter(f19, Gildas30m.LON_DESC));
         double f20 = convert.readDouble(abyte0, i * 4 + 88 + 4);
-        spectrum.put(new String(Gildas30m.LAT), new Parameter(f20, Gildas30m.LAT_DESC));
+        spectrum.put(Gildas30m.LAT, new Parameter(f20, Gildas30m.LAT_DESC));
     }
 
     private void readDataDescriptorSection(byte abyte0[], int i, int j, Spectrum30m spectrum)
@@ -1125,11 +1125,11 @@ public class Gildas30m {
         int k = convert.readInt(abyte0, i * 4 + 0);
         spectrum.put(Gildas30m.OTF_NDUMPS, new Parameter(k, Gildas30m.OTF_NDUMPS_DESC));
         int l = convert.readInt(abyte0, i * 4 + 4);
-        spectrum.put(new String(Gildas30m.OTF_LEN_HEADER), new Parameter(l, Gildas30m.OTF_LEN_HEADER_DESC));
+        spectrum.put(Gildas30m.OTF_LEN_HEADER, new Parameter(l, Gildas30m.OTF_LEN_HEADER_DESC));
         int i1 = convert.readInt(abyte0, i * 4 + 8);
-        spectrum.put(new String(Gildas30m.OTF_LEN_DATA), new Parameter(i1, Gildas30m.OTF_LEN_DATA_DESC));
+        spectrum.put(Gildas30m.OTF_LEN_DATA, new Parameter(i1, Gildas30m.OTF_LEN_DATA_DESC));
         int j1 = convert.readInt(abyte0, i * 4 + 12);
-        spectrum.put(new String(Gildas30m.OTF_LEN_DUMP), new Parameter(j1, Gildas30m.OTF_LEN_DUMP_DESC));
+        spectrum.put(Gildas30m.OTF_LEN_DUMP, new Parameter(j1, Gildas30m.OTF_LEN_DUMP_DESC));
     }
 
     private void readFrequencySwitchingSection(byte abyte0[], int i, int j, Spectrum30m spectrum)
@@ -1142,15 +1142,15 @@ public class Gildas30m {
         for(int i1 = 0; i1 < k; i1++)
         {
             double d = convert.readDouble(abyte0, i * 4 + 4 + i1 * 8);
-            spectrum.put(new String((new StringBuilder()).append(Gildas30m.SWDECALAGE).append(i1).toString()), new Parameter(d, Gildas30m.SWDECALAGE_DESC));
+            spectrum.put((new StringBuilder().append(Gildas30m.SWDECALAGE).append(i1).toString()), new Parameter(d, Gildas30m.SWDECALAGE_DESC));
             double d1 = convert.readFloat(abyte0, i * 4 + 4 + k * 8 + i1 * 4);
-            spectrum.put(new String((new StringBuilder()).append(Gildas30m.SWDURATION).append(i1).toString()), new Parameter(d1, Gildas30m.SWDURATION_DESC));
+            spectrum.put((new StringBuilder().append(Gildas30m.SWDURATION).append(i1).toString()), new Parameter(d1, Gildas30m.SWDURATION_DESC));
             double d2 = convert.readFloat(abyte0, i * 4 + 4 + k * 8 + k * 4 + i1 * 4);
-            spectrum.put(new String((new StringBuilder()).append(Gildas30m.SWPOIDS).append(i1).toString()), new Parameter(d2, Gildas30m.SWPOIDS_DESC));
+            spectrum.put((new StringBuilder().append(Gildas30m.SWPOIDS).append(i1).toString()), new Parameter(d2, Gildas30m.SWPOIDS_DESC));
             double d3 = convert.readFloat(abyte0, i * 4 + 4 + k * 8 + k * 4 + k * 4 + 4 + i1 * 4);
-            spectrum.put(new String((new StringBuilder()).append(Gildas30m.SWLDECAL).append(i1).toString()), new Parameter(d3, Gildas30m.SWLDECAL_DESC));
+            spectrum.put((new StringBuilder().append(Gildas30m.SWLDECAL).append(i1).toString()), new Parameter(d3, Gildas30m.SWLDECAL_DESC));
             double d4 = convert.readFloat(abyte0, i * 4 + 4 + k * 8 + k * 4 + k * 4 + 4 + k * 4 + i1 * 4);
-            spectrum.put(new String((new StringBuilder()).append(Gildas30m.SWBDECAL).append(i1).toString()), new Parameter(d4, Gildas30m.SWBDECAL_DESC));
+            spectrum.put((new StringBuilder().append(Gildas30m.SWBDECAL).append(i1).toString()), new Parameter(d4, Gildas30m.SWBDECAL_DESC));
         }
 
     }
@@ -1275,105 +1275,6 @@ public class Gildas30m {
 		array[offset + 2] = (byte)(value >> 8);
 		array[offset + 3] = (byte)value;
 	}
-	   	   
-	/**
-	 * A test program.
-	 * @param args Unused.
-	 */
-	public static void main(String args[])
-	{
-		System.out.println("Spectrum test");
-		
-        try {
-        	String path = "/home/alonso/reduccion/2006/hot_cores/n7129/n7129.30m";
-        	//path = "/home/alonso/colaboraciones/Asuncion/2011/figurasMuchasLineas_MonR2/broad-2-new.30m";
-        	//path = "/home/alonso/colaboraciones/Asuncion/2011/Herschel_OMC2_30mFiles/omc2.30m";
-        	path = "/home/alonso/documentos/latex/2014/m82/Cubos/spectraCN-Ha_reprojected.30m";
-//        	path = "/home/alonso/reduccion/2011/observacionesSep2010/PVCEP_reduced.30m";
-        	
-        	Gildas30m g30m = new Gildas30m(path);
-        	int list[] = g30m.getListOfSpectrums(true);
-        	
-        	System.out.println("List of scans (index position, scan number)");
-        	for (int i=0; i<list.length; i++)
-        	{
-        		System.out.println(i+" = "+list[i]);
-        	}
-
-        	int index = 0; //list.length-1;
-        	Spectrum30m s = g30m.getSpectrum(list[index]);
-        	String keys[] = s.getKeys();
-        	Parameter p[] = s.getValues();
-
-        	System.out.println();
-        	System.out.println("List of keys (key name, value, description)");
-        	for (int i=0; i<keys.length; i++)
-        	{
-        		System.out.println(keys[i] +" = "+p[i].value+" ("+p[i].description+")");
-        	}
-        	
-        	// Header
-        	SpectrumHeader30m sh = s.getHeader();
-        	Parameter header[] = (Parameter[]) sh.getHeaderParameters();
-
-        	System.out.println();
-        	System.out.println("List of header parameters (description, value)");
-        	for (int i=0; i<header.length; i++)
-        	{
-        		System.out.println(header[i].description+" = "+header[i].value);
-        	}
-    		        
-        	// Create and show a chart
-			CreateChart ch = s.getChart(400, 400, XUNIT.VELOCITY_KMS);
-			ch.showChartInJFreeChartPanel();
-			
-/*			// Export
-//			s.writeAsFITS("/home/alonso/myUselessFits.fits", true);
-			s.writeAs30m("/home/alonso/myUseless.30m");
-			Spectrum30m.writeAs30m(
-					new Spectrum30m[] {
-							s.clone(), 
-							s.clone(), 
-							s.clone(), 
-							s.clone(), 
-							s.clone()}, 
-					"/home/alonso/myUseless2.30m");
-
-			// Now test the read process on the already created .fits file
-			Spectrum30m s2 = new Spectrum30m();
-			//s2.readFromFITS("/home/alonso/myUselessFits.fits");
-			Gildas30m g30m2 = new Gildas30m("/home/alonso/myUseless.30m");
-			s2 = g30m2.getSpectrum(g30m2.getListOfSpectrums(true)[0]);
-			
-			CreateChart ch2 = s2.getChart(400, 400, Spectrum30m.XUNIT.VELOCITY_KMS);
-			ch2.showChartInJFreeChartPanel();
-
-        	keys = s2.getKeys();
-        	p = s2.getValues();
-
-        	System.out.println();
-        	System.out.println("List of keys (key name, value, description)");
-        	for (int i=0; i<keys.length; i++)
-        	{
-        		System.out.println(keys[i] +" = "+p[i].value+" ("+p[i].description+")");
-        	}
-    		        
-        	// Header
-        	sh = s2.getHeader();
-        	header = (Parameter[]) sh.getHeaderParameters();
-
-        	System.out.println();
-        	System.out.println("List of header parameters (description, value)");
-        	for (int i=0; i<header.length; i++)
-        	{
-        		System.out.println(header[i].description+" = "+header[i].value);
-        	}
-*/
-        } catch (Exception exc)
-        {
-        	exc.printStackTrace();
-        }
-	}
 }
 
 /*
@@ -1391,5 +1292,4 @@ List of keys (key name, value, description)
 -veltype = 0 (Type of velocity)
 -voff = 0.0 (Velocity at reference channel)
 -vres = 0.0 (Velocity resolution)
-
 */
