@@ -163,6 +163,18 @@ public class CCDElement implements Serializable {
 		return equals;
 	}
 
+	@Override
+	public int hashCode() {
+		int result = name != null ? name.hashCode() : 0;
+		result = 31 * result + chipSizeX;
+		result = 31 * result + chipSizeY;
+		result = 31 * result + (pixelSizeX != +0.0f ? Float.floatToIntBits(pixelSizeX) : 0);
+		result = 31 * result + (pixelSizeY != +0.0f ? Float.floatToIntBits(pixelSizeY) : 0);
+		result = 31 * result + (cameraPA != +0.0f ? Float.floatToIntBits(cameraPA) : 0);
+		result = 31 * result + binningFactor;
+		result = 31 * result + (zoomFactor != +0.0f ? Float.floatToIntBits(zoomFactor) : 0);
+		return result;
+	}
 
 	/**
 	 * Return all available intrinsic CCD cameras.
@@ -223,12 +235,12 @@ public class CCDElement implements Serializable {
 			int n = data.length;
 			String ccd = DataSet.toString(DataSet.getSubArray(data, 0, n-5), " ");
 			if (caseSensitive) {
-				if (partialName && ccd.indexOf(name) >= 0)
+				if (partialName && ccd.contains(name))
 					return true;
-				if (ccd.equals(name)) return true;				
+				if (ccd.equals(name)) return true;
 				continue;
 			}
-			if (partialName && ccd.toLowerCase().indexOf(name.toLowerCase()) >= 0)
+			if (partialName && ccd.toLowerCase().contains(name.toLowerCase()))
 				return true;
 			if (ccd.toLowerCase().equals(name.toLowerCase())) return true;
 		}

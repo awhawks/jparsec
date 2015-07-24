@@ -122,6 +122,18 @@ public class OcularElement implements Serializable {
 		return equals;
 	}
 
+	@Override
+	public int hashCode() {
+		int result;
+		long temp;
+		result = name != null ? name.hashCode() : 0;
+		result = 31 * result + (focalLength != +0.0f ? Float.floatToIntBits(focalLength) : 0);
+		temp = Double.doubleToLongBits(fieldOfView);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		result = 31 * result + reticleSize;
+		return result;
+	}
+
 	/**
 	 * Return all oculars from external file.
 	 * 

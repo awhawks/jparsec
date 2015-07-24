@@ -555,6 +555,22 @@ public class TelescopeElement implements Serializable
 		return equals;
 	}
 
+	@Override
+	public int hashCode() {
+		int result = name != null ? name.hashCode() : 0;
+		result = 31 * result + focalLength;
+		result = 31 * result + diameter;
+		result = 31 * result + centralObstruction;
+		result = 31 * result + spidersSize;
+		result = 31 * result + (ocular != null ? ocular.hashCode() : 0);
+		result = 31 * result + (lastOcular != null ? lastOcular.hashCode() : 0);
+		result = 31 * result + (ccd != null ? ccd.hashCode() : 0);
+		result = 31 * result + (cromatismLevel != +0.0f ? Float.floatToIntBits(cromatismLevel) : 0);
+		result = 31 * result + (invertHorizontal ? 1 : 0);
+		result = 31 * result + (invertVertical ? 1 : 0);
+		return result;
+	}
+
 	/**
 	 * Returns the size of an object at film plane in primary focus mode. This
 	 * calculation is done for old 35 mm films, for digital cameras you have to
