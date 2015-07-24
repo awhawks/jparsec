@@ -1,8 +1,5 @@
 package jparsec.astronomy;
 
-/**
- * Created by carlo on 19.07.15.
- */
 public class DifractionTest {
 
     /**

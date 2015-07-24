@@ -1,8 +1,5 @@
 package jparsec.ephem.planets.imcce;
 
-/**
- * Created by carlo on 17.07.15.
- */
 final class elp_plan_perturb11_4 {
     static final Elp2000Set3 Lat[] = {
             new Elp2000Set3(new int[] { 0, 0, 3, -5, 0, 0, 0, 0, -2, 1, -1 }, new double[] { 301.78678, 0.00022, 0.041 }),

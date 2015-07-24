@@ -2,9 +2,6 @@ package jparsec.graph;
 
 import jparsec.io.image.Picture;
 
-/**
- * Created by carlo on 20.07.15.
- */
 public class CreateDitaaChartTest {
     /**
      * Test program.

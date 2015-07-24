@@ -12,9 +12,6 @@ import jparsec.time.TimeElement;
 import jparsec.time.TimeFormat;
 import jparsec.time.TimeScale;
 
-/**
- * Created by carlo on 17.07.15.
- */
 public class VE {
     public static void main(final String args[]) {
         try {
