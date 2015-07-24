@@ -15,11 +15,11 @@ public class OrbitalElementTest {
      * @param args Not used.
      */
     public static void main(String args[]) throws Exception {
-        AstroDate astro = new AstroDate(1990, 10, 5.0);
+        AstroDate astro = new AstroDate(1991, 10, 5.0);
         OrbitalElement orbit = new OrbitalElement("Encke", 2.2091404, 186.24444 * Constant.DEG_TO_RAD, 0.8502196, 0.0,
-                334.04096 * Constant.DEG_TO_RAD, 11.93911 * Constant.DEG_TO_RAD, astro.jd(), 0.0, Constant.B1950, 0.0, 0.0);
-
-        Picture pp = new Picture(orbit.getOrbitImage("title", 600, 600, 0.5, astro.jd(), false, false));
+                334.04096 * Constant.DEG_TO_RAD, 11.93911 * Constant.DEG_TO_RAD, new AstroDate(1990, 10, 5.0).jd(), 0.0, Constant.B1950, 0.0, 0.0);
+        orbit = OrbitEphem.getOrbitalElementsOfComet(OrbitEphem.getIndexOfComet("2014 Q1"));
+        Picture pp = new Picture(orbit.getOrbitImage(orbit.name, 600, 600, 0.65, astro.jd(), true, true));
         pp.show("");
 
         OrbitalElement orbit1 = orbit.clone();
@@ -32,7 +32,7 @@ public class OrbitalElementTest {
         OrbitalElement orbit2 = orbit.clone();
         orbit2.referenceFrame = EphemerisElement.FRAME.FK4;
         orbit2.referenceTime = Constant.B1950;
-        orbit2.FK4_to_FK5();
+        //orbit2.FK4_to_FK5();
         System.out.println(Functions.formatAngleAsDegrees(orbit2.inclination, 5));
         System.out.println(Functions.formatAngleAsDegrees(orbit2.ascendingNodeLongitude, 5));
         System.out.println(Functions.formatAngleAsDegrees(orbit2.argumentOfPerihelion, 5));
@@ -45,5 +45,30 @@ public class OrbitalElementTest {
         // Nov 9 1985, 3:49
         System.out.println(TimeFormat.formatJulianDayAsDateAndTime(orbit3.getNextPassThroughMeanDescendingNode(), TimeElement.SCALE.TERRESTRIAL_TIME));
         // Mar 10 1986, 8:52
+
+        /*
+        Translate.setDefaultLanguage(LANGUAGE.SPANISH);
+        AstroDate init = new AstroDate();
+        AstroDate end = init.clone();
+        end.add(365.25 * 40);
+        orbit3.magnitudeModel = MAGNITUDE_MODEL.COMET_gk;
+        CreateChart ch = orbit3.getLightCurveChart(
+                new TimeElement(init, SCALE.BARYCENTRIC_DYNAMICAL_TIME),
+                new TimeElement(end, SCALE.BARYCENTRIC_DYNAMICAL_TIME),
+                new ObserverElement(),
+                new EphemerisElement(), 200);
+        ch.showChartInJFreeChartPanel();
+        CreateChart ch2 = orbit3.getDistanceChart(
+                new TimeElement(init, SCALE.BARYCENTRIC_DYNAMICAL_TIME),
+                new TimeElement(end, SCALE.BARYCENTRIC_DYNAMICAL_TIME),
+                new ObserverElement(),
+                new EphemerisElement(), 200);
+        ch2.showChartInJFreeChartPanel();
+
+        Picture pic1 = new Picture(ChartElement.getSimpleChart(ch.getChartElement()));
+        Picture pic2 = new Picture(ChartElement.getSimpleChart(ch2.getChartElement()));
+        pic1.show("1");
+        pic2.show("2");
+        */
     }
 }

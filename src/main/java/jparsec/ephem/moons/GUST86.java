@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,15 +18,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.ephem.moons;
 
 import jparsec.ephem.Functions;
 import jparsec.ephem.Target.TARGET;
-import jparsec.graph.DataSet;
 import jparsec.math.Constant;
-import jparsec.math.DoubleVector;
-import jparsec.time.AstroDate;
 
 /**
  * A class to obtain the position of the satellites of Uranus. Objects are
@@ -34,7 +31,7 @@ import jparsec.time.AstroDate;
  * <P>
  * For reference see: GUST86 - An analytical ephemeris of the Uranian
  * satellites, Laskar J., Jacobson, R., Astron. Astrophys. 188, 212-224 (1987).
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -42,7 +39,7 @@ public class GUST86
 {
 	// private constructor so that this class cannot be instantiated.
 	private GUST86() {}
-	
+
 	private static double AN[] = new double[6];
 	private static double AE[] = new double[6];
 	private static double AI[] = new double[6];
@@ -66,9 +63,10 @@ public class GUST86
 		m.referenceEquinox = Constant.B1950;
 		return m;
 	}
+
 	/**
 	 * GUST86 theory. Output array depends on the value of ICODE.
-	 * 
+	 *
 	 * @param TJJ Julian day in TDB.
 	 * @param IS Satellite ID, from 1 (Miranda) to 5 (Oberon).
 	 * @param ICODE Output format. 1 for eliptic elements B1950, 2 for
@@ -113,20 +111,13 @@ public class GUST86
 		double XU[][] = new double[7][6];
 		double XE[][] = new double[7][6];
 
-		double FQN[] = new double[]
-		{ 0.0, 4445190.550E-06, 2492952.519E-06, 1516148.111E-06, 721718.509E-06, 466692.120E-06 };
-		double FQE[] = new double[]
-		{ 0.0, 20.082, 6.217, 2.865, 2.078, 0.386 };
-		double FQI[] = new double[]
-		{ 0.0, -20.309, -6.288, -2.836, -1.843, -0.259 };
-		double PHN[] = new double[]
-		{ 0.0, -238051.E-06, 3098046.E-06, 2285402.E-06, 856359.E-06, -915592.E-06 };
-		double PHE[] = new double[]
-		{ 0.0, 0.611392, 2.408974, 2.067774, 0.735131, 0.426767 };
-		double PHI[] = new double[]
-		{ 0.0, 5.702313, 0.395757, 0.589326, 1.746237, 4.206896 };
-		double GMS[] = new double[]
-		{ 0.0, 4.4, 86.1, 84.0, 230.0, 200.0 };
+		double FQN[] = new double[] { 0.0, 4445190.550E-06, 2492952.519E-06, 1516148.111E-06, 721718.509E-06, 466692.120E-06 };
+		double FQE[] = new double[] { 0.0, 20.082, 6.217, 2.865, 2.078, 0.386 };
+		double FQI[] = new double[] { 0.0, -20.309, -6.288, -2.836, -1.843, -0.259 };
+		double PHN[] = new double[] { 0.0, -238051.E-06, 3098046.E-06, 2285402.E-06, 856359.E-06, -915592.E-06 };
+		double PHE[] = new double[] { 0.0, 0.611392, 2.408974, 2.067774, 0.735131, 0.426767 };
+		double PHI[] = new double[] { 0.0, 5.702313, 0.395757, 0.589326, 1.746237, 4.206896 };
+		double GMS[] = new double[] { 0.0, 4.4, 86.1, 84.0, 230.0, 200.0 };
 		double RMU[] = new double[6];
 		double JSAT[] = new double[6];
 		double TRANS[][] = new double[4][4];
@@ -246,7 +237,7 @@ public class GUST86
 
 		double pXU[] = ELLIPX(EL, RMU, IS);
 		if (ICODE == 2 || ICODE == 3) pXU = FK4_TO_FK5(pXU);
-		
+
 		XU[1][IS] = pXU[1] / Constant.AU;
 		XU[2][IS] = pXU[2] / Constant.AU;
 		XU[3][IS] = pXU[3] / Constant.AU;
@@ -275,7 +266,6 @@ public class GUST86
 
 		return new double[]
 		{ XE[1][IS], XE[2][IS], XE[3][IS], XE[4][IS], XE[5][IS], XE[6][IS] };
-
 	}
 
 	private static double[] MIREL(double T)
@@ -329,7 +319,6 @@ public class GUST86
 
 	private static double[] ARIEL(double T)
 	{
-
 		/*
 		 * ---- CALCUL DES ELEMENTS ELLIPTIQUES D'ARIEL (GUST86)
 		 * -----------------
@@ -380,7 +369,6 @@ public class GUST86
 
 	private static double[] UMBEL(double T)
 	{
-
 		/*
 		 * ---- CALCUL DES ELEMENTS ELLIPTIQUES D'UMBRIEL (GUST86)
 		 * ---------------
@@ -445,9 +433,7 @@ public class GUST86
 		double RP = -10.86E-06 * Math.sin(AI[1]) - 81.51E-06 * Math.sin(AI[2]) + 1113.36E-06 * Math.sin(AI[3]) + 350.14E-06 * Math
 				.sin(AI[4]) + 106.50E-06 * Math.sin(AI[5]);
 
-		return new double[]
-		{ RN, RL, RK, RH, RQ, RP };
-
+		return new double[] { RN, RL, RK, RH, RQ, RP };
 	}
 
 	private static double[] TITEL(double T)
@@ -520,9 +506,7 @@ public class GUST86
 		double RP = -1.43E-06 * Math.sin(AI[1]) - 1.06E-06 * Math.sin(AI[2]) - 140.13E-06 * Math.sin(AI[3]) + 685.72E-06 * Math
 				.sin(AI[4]) + 378.32E-06 * Math.sin(AI[5]);
 
-		return new double[]
-		{ RN, RL, RK, RH, RQ, RP };
-
+		return new double[] { RN, RL, RK, RH, RQ, RP };
 	}
 
 	private static double[] OBREL(double T)
@@ -593,9 +577,7 @@ public class GUST86
 		double RP = -0.44E-06 * Math.sin(AI[1]) - 0.31E-06 * Math.sin(AI[2]) + 36.89E-06 * Math.sin(AI[3]) - 596.33E-06 * Math
 				.sin(AI[4]) + 451.69E-06 * Math.sin(AI[5]);
 
-		return new double[]
-		{ RN, RL, RK, RH, RQ, RP };
-
+		return new double[] { RN, RL, RK, RH, RQ, RP };
 	}
 
 	/*
@@ -746,46 +728,5 @@ public class GUST86
 		}
 
 		return F;
-	}
-	
-
-	/**
-	 * Test program.
-	 * @param args Not used.
-	 */
-	public static void main(String args[]) {
-		
-		try {
-			AstroDate astro = new AstroDate(1995, 7, 10, 15, 0, 0);
-/*			EphemerisElement eph = new EphemerisElement(TARGET.NOT_A_PLANET, EphemerisElement.COORDINATES_TYPE.APPARENT,
-					EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.TOPOCENTRIC, EphemerisElement.REDUCTION_METHOD.IAU_2006,
-					EphemerisElement.FRAME.DYNAMICAL_EQUINOX_J2000,
-					EphemerisElement.ALGORITHM.MOSHIER);
-*/					
-			double jd = astro.jd();
-			for (int i=1; i<= 5; i++) {
-				double e[] = GUST86.GUST86_theory(jd, i, 4);
-				//e = Precession.precess(Constant.J1950, Constant.J2000, e, eph);
-				
-				// From AU to km
-				DoubleVector dv = new DoubleVector(DataSet.applyFunction("x*"+Constant.AU, e));
-				
-				// From km/day to km/s
-//				dv.set(3, dv.get(3) / Constant.SECONDS_PER_DAY);
-//				dv.set(4, dv.get(4) / Constant.SECONDS_PER_DAY);
-//				dv.set(5, dv.get(5) / Constant.SECONDS_PER_DAY);
-
-				System.out.println(dv.toString());
-			}
-/* km, km/s
-12; 2449909.125, GUST86, 1; 116776.465 ,  -9655.903 , -55704.358 ,-2.45651219 , 2.65694226 ,-5.62224338
-12; 2449909.125, GUST86, 2; 186368.403 , -42290.739 ,  -7012.500 ,  .12909352 , 1.43746647 ,-5.30747363
-12; 2449909.125, GUST86, 3;-244947.486 ,  76695.011 , -65719.487 ,-1.45138070 , -.87096610 , 4.36898332
-12; 2449909.125, GUST86, 4;-289642.933 , 149245.644 ,-290221.835 ,-2.60666546 , -.07923656 , 2.54490241
-12; 2449909.125, GUST86, 5; 554001.114 ,-156422.593 ,  93294.441 ,  .69497936 ,  .66198498 ,-3.00317166			
- */
-		} catch (Exception exc) {
-			exc.printStackTrace();
-		}
 	}
 }

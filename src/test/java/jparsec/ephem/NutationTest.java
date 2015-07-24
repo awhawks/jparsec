@@ -11,14 +11,14 @@ import jparsec.time.TimeScale;
 import jparsec.util.JPARSECException;
 
 public class NutationTest {
+
     /**
      * For unit testing only.
      *
      * @param args Not used.
      */
     public static void main(String args[]) {
-        System.out.println("Nutation test");
-
+        System.out.println("Nutation Test");
         AstroDate astro = new AstroDate(2009, AstroDate.JULY, 1, 0, 0, 0);
 
         try {
@@ -30,23 +30,24 @@ public class NutationTest {
             TimeElement time = new TimeElement(astro, TimeElement.SCALE.TERRESTRIAL_TIME);
             CityElement city = City.findCity("Madrid");
             ObserverElement observer = ObserverElement.parseCity(city);
-            EphemerisElement eph = new EphemerisElement(Target.TARGET.Moon, EphemerisElement.COORDINATES_TYPE.APPARENT,
-                    EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.GEOCENTRIC,
-                    EphemerisElement.REDUCTION_METHOD.IAU_1976, // Same results as those given by Horizons
-                    EphemerisElement.FRAME.ICRF);
+            EphemerisElement eph = new EphemerisElement(
+                Target.TARGET.Moon,
+                EphemerisElement.COORDINATES_TYPE.APPARENT,
+                EphemerisElement.EQUINOX_OF_DATE,
+                EphemerisElement.GEOCENTRIC,
+                EphemerisElement.REDUCTION_METHOD.IAU_1976, // Same results as those given by Horizons
+                EphemerisElement.FRAME.ICRF);
             double JD_UTC = TimeScale.getJD(time, observer, eph, TimeElement.SCALE.UNIVERSAL_TIME_UTC);
 
             // Force initial EOP to 0
             EarthOrientationParameters.clearEOP();
             double dPsi = 0, dEpsilon = 0;
-
             double n[] = Nutation.calcNutation(Functions.toCenturies(d), eph);
             double nutLon = n[0] * Constant.RAD_TO_ARCSEC;
             double nutLat = n[1] * Constant.RAD_TO_ARCSEC;
 
             System.out.println("dPhi=" + nutLon + ", dEpsilon=" + nutLat + ", coreDpsi=" + dPsi + ", coreDeps=" + dEpsilon);
             // Results should be 14.7774  4.3386
-
             Nutation.clearPreviousCalculation();
 
             double[] eop = EarthOrientationParameters.obtainEOP(JD_UTC, eph);
@@ -68,7 +69,6 @@ public class NutationTest {
             nutLat = n[1] * Constant.RAD_TO_ARCSEC;
             System.out.println("dPhi=" + nutLon + ", dEpsilon=" + nutLat + ", coreDpsi=" + dPsi + ", coreDeps=" + dEpsilon);
             // Results should be 14.7823  4.3391 according to AA
-
             Nutation.clearPreviousCalculation();
 
             eop = EarthOrientationParameters.obtainEOP(JD_UTC, eph);
@@ -79,13 +79,15 @@ public class NutationTest {
             nutLat = n[1] * Constant.RAD_TO_ARCSEC;
             System.out.println("dPhi=" + nutLon + ", dEpsilon=" + nutLat + ", coreDpsi=" + dPsi + ", coreDeps=" + dEpsilon);
 
-/*            JPLEphemeris jpl = new JPLEphemeris(JPLEphemeris.DE405);
+            /*
+            JPLEphemeris jpl = new JPLEphemeris(JPLEphemeris.DE405);
             double nut[] = jpl.getPositionAndVelocity(d, 12); //JPLEphemeris.TARGET_LIBRATIONS);
             System.out.println("JPL DE"+jpl.getJPLVersion()+": "+nut[4]);
             System.out.println("JPL DE"+jpl.getJPLVersion()+": "+nut[0]);
-*/
+            */
 
-/*            double JD = Constant.J1900;
+            /*
+            double JD = Constant.J1900;
             double T = Functions.toCenturies(JD);
             double eq[] = new double[] {1.0, 1.0, 1.0};
             double ecl[] = Ephem.equatorialToEcliptic(eq, JD, eph.ephemMethod);
@@ -100,7 +102,7 @@ public class NutationTest {
             System.out.println(eq1[0]+"/"+eq1[1]+"/"+eq1[2]);
             System.out.println(eq2[0]+"/"+eq2[1]+"/"+eq2[2]);
             System.out.println(eq3[0]+"/"+eq3[1]+"/"+eq3[2]);
-*/
+            */
         } catch (JPARSECException ve) {
             JPARSECException.showException(ve);
         }

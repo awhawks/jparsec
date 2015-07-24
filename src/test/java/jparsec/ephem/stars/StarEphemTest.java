@@ -15,7 +15,6 @@ import jparsec.time.TimeFormat;
 import jparsec.util.JPARSECException;
 
 public class StarEphemTest {
-
     /**
      * For unit testing only.
      *
@@ -32,7 +31,8 @@ public class StarEphemTest {
                     EphemerisElement.FRAME.ICRF, EphemerisElement.ALGORITHM.JPL_DE405);
 
             // BSC5
-/*            ReadFile re = new ReadFile();
+/*
+            ReadFile re = new ReadFile();
             re.setPath(PATH_TO_BSC5_FILE);
             re.setFormat(ReadFile.FORMAT.FORMAT_BSC5);
             re.readFileOfStars();
@@ -55,10 +55,11 @@ public class StarEphemTest {
 
             // AA Supplement (2006) page 181: difference of 6 mas in RA and 1 mas in DEC if correction of
             // proper motions from "/tropical year to "/Julian year is applied, else difference is < 1 mas.
-            // After inverting the transformation the inconsistency is close to 1 mas, due to non-zero
+            // After inverting the transformation the inconsistency is close to 1 mas, due to non-zero 
             // radial v, which is supposed constant between 1950 and 2000 ...
             // In previos example (HD 119288) inconsistency is obviously 0.
-/*            star = new StarElement("Ficticious", Functions.parseRightAscension(14, 36, 11.25), Functions
+/*
+            star = new StarElement("Fictitious", Functions.parseRightAscension(14, 36, 11.25), Functions
                     .parseDeclination("-60", 37, 48.85), 751, 2.06f, (float) (-49.042 * 0.01 * 15.0 * Constant.ARCSEC_TO_RAD), (float) (71.2 * 0.01 * Constant.ARCSEC_TO_RAD), -22.2f, Constant.B1950,
                     EphemerisElement.FRAME.FK4); // Should be 14 39 36.1869 -60 50 7.393 -49.5060 69.934 0.7516 -22.18
 */
@@ -84,7 +85,7 @@ public class StarEphemTest {
                 for (int j=0; j<6; j++) {
                     in ++;
                     m[i][j] = MAT[in];
-                }
+                }                
             }
             Matrix ma = new Matrix(m);
             ma.print(17, 15);
@@ -97,7 +98,7 @@ public class StarEphemTest {
                     .parseDeclination("29", 05, 25.58), 24, 2.06f, (float) (1.039 * 0.01 * 15.0 * Constant.ARCSEC_TO_RAD / Math
                     .cos(0 * 29.1 * Constant.DEG_TO_RAD)), (float) (-16.33 * 0.01 * Constant.ARCSEC_TO_RAD), -12, Constant.J2000,
                     EphemerisElement.FRAME.ICRF);
-
+            
 /*            // AA 2004 test, B31
             astro = new AstroDate(2004, AstroDate.JANUARY, 1, 0, 0, 0);
             time = new TimeElement(astro, SCALE.TERRESTRIAL_TIME);
@@ -115,7 +116,7 @@ public class StarEphemTest {
             astro = new AstroDate(1986, AstroDate.JANUARY, 1, 0, 0, 0);
             time = new TimeElement(astro, SCALE.TERRESTRIAL_TIME);
 */
-
+            
 /*            astro = new AstroDate(1989, AstroDate.JULY, 3, 10, 0, 0);
             time = new TimeElement(astro, SCALE.UNIVERSAL_TIME_UTC);
             //Configuration.PREFER_PRECISION_IN_EPHEMERIDES = false;
@@ -156,7 +157,8 @@ public class StarEphemTest {
             int my_star = re.searchByName(StarEphem.getCatalogNameFromProperName("Alpheratz"));
             star = (StarElement) re.getReadElements()[my_star];
 
-/*            star = new StarElement("Polar", Functions.parseRightAscension(2, 31, 47.0753), Functions
+/*
+            star = new StarElement("Polar", Functions.parseRightAscension(2, 31, 47.0753), Functions
                     .parseDeclination("89", 15, 50.090), 7.56, 1.97f, (float) (0.04422 * Constant.ARCSEC_TO_RAD / Math
                     .cos(89.25 * Constant.DEG_TO_RAD)), (float) (-0.01175 * Constant.ARCSEC_TO_RAD), star.properMotionRadialV, Constant.J2000,
                     EphemerisElement.FRAME.FRAME_FK5);
@@ -246,7 +248,7 @@ public class StarEphemTest {
                     EphemerisElement.FRAME.FK5);
 
             //StarElement star7 = new StarElement("Check", StarEphem.lsrRA, StarEphem.lsrDEC, 930, 0, 0, 0, 0,
-            //        Constant.J2000, EphemerisElement.FRAME.FRAME_FK5);
+            //    Constant.J2000, EphemerisElement.FRAME.FRAME_FK5);
 
             astro = new AstroDate(2011, AstroDate.JULY, 13, 10, 22, 46);
             time = new TimeElement(astro, TimeElement.SCALE.UNIVERSAL_TIME_UT1);

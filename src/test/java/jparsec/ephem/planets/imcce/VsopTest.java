@@ -21,24 +21,26 @@ public class VsopTest {
      * @param args Not used.
      */
     public static void main(String args[]) {
-        System.out.println("Vsop Test");
+        System.out.println("Vsop test");
 
         try {
             AstroDate astro = new AstroDate(2000, AstroDate.JANUARY, 1, 0, 0, 0);
             TimeElement time = new TimeElement(astro, TimeElement.SCALE.TERRESTRIAL_TIME);
             CityElement city = City.findCity("Madrid");
             ObserverElement observer = ObserverElement.parseCity(city);
-            EphemerisElement eph = new EphemerisElement(Target.TARGET.VENUS, EphemerisElement.COORDINATES_TYPE.ASTROMETRIC,
-                    EphemerisElement.EQUINOX_J2000, EphemerisElement.GEOCENTRIC, EphemerisElement.REDUCTION_METHOD.IAU_1976,
-                    EphemerisElement.FRAME.ICRF);
+            EphemerisElement eph = new EphemerisElement(
+                Target.TARGET.VENUS,
+                EphemerisElement.COORDINATES_TYPE.ASTROMETRIC,
+                EphemerisElement.EQUINOX_J2000,
+                EphemerisElement.GEOCENTRIC,
+                EphemerisElement.REDUCTION_METHOD.IAU_1976,
+                EphemerisElement.FRAME.ICRF);
+
             eph.algorithm = EphemerisElement.ALGORITHM.VSOP87_ELP2000ForMoon;
 
             EphemElement ephem = Ephem.getEphemeris(time, observer, eph, true);
-
             String name = ephem.name;
-            String out = "", sep = FileIO.getLineSeparator();
-
-            out += sep + "VSOP87" + sep;
+            String sep = FileIO.getLineSeparator(), out = sep + "VSOP87" + sep;
             out += name + " " + Translate.translate(Translate.JPARSEC_RIGHT_ASCENSION) + ": " + Functions.formatRA(ephem.rightAscension, 5) + sep;
             out += name + " " + Translate.translate(Translate.JPARSEC_DECLINATION) + ": " + Functions.formatDEC(ephem.declination, 4) + sep;
             out += name + " " + Translate.translate(Translate.JPARSEC_DISTANCE) + ": " + Functions.formatValue(ephem.distance, 12) + sep;
@@ -55,7 +57,6 @@ public class VsopTest {
             out += name + " " + Translate.translate(Translate.JPARSEC_LONGITUDE_OF_CENTRAL_MERIDIAN) + ": " + Functions.formatAngleAsDegrees(ephem.longitudeOfCentralMeridian, 6) + sep;
 
             System.out.println(out);
-
             System.out.println("DE200");
             eph.algorithm = EphemerisElement.ALGORITHM.JPL_DE405;
             ephem = Ephem.getEphemeris(time, observer, eph, false);
@@ -66,20 +67,20 @@ public class VsopTest {
             System.out.println("" + name + " h lon: " + Functions.formatAngleAsDegrees(ephem.heliocentricEclipticLongitude, 8));
             System.out.println("" + name + " h lat: " + Functions.formatAngleAsDegrees(ephem.heliocentricEclipticLatitude, 8));
 
-/*
-            double p[] = new double[] {1, 1, 1.0};
+            /*
+            double p[] = new double[] { 1, 1, 1.0 };
             double p1[] = Vsop.meanEclipticJ2000ToEquatorial(p);
-            System.out.println(p1[0]+"/"+p1[1]+"/"+p1[2]);
+            System.out.println(p1[0] + "/" + p1[1] + "/" + p1[2]);
             double p2[] = Ephem.eclipticToEquatorial(p, Constant.J2000, EphemerisElement.REDUCE_ALGORITHM.APPLY_IAU2000);
-            System.out.println(p2[0]+"/"+p2[1]+"/"+p2[2]);
+            System.out.println(p2[0] + "/" + p2[1] + "/" + p2[2]);
             double p3[] = Elp2000.meanJ2000InertialToEquatorial(p);
-            System.out.println(p3[0]+"/"+p3[1]+"/"+p3[2]);
+            System.out.println(p3[0] + "/" + p3[1] + "/" + p3[2]);
             double p4[] = Ephem.eclipticToEquatorial(p, Constant.J2000, EphemerisElement.REDUCE_ALGORITHM.APPLY_IAU2000);
             p4 = Ephem.J2000toICRSFrame(p4);
             p4 = Ephem.ICRStoFK5Frame(p4);
-            System.out.println(p4[0]+"/"+p4[1]+"/"+p4[2]);
+            System.out.println(p4[0] + "/" + p4[1] + "/" + p4[2]);
             JPARSECException.showWarnings();
-*/
+            */
         } catch (JPARSECException ve) {
             JPARSECException.showException(ve);
         }

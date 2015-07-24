@@ -1,5 +1,6 @@
 package jparsec.ephem.probes;
 
+import java.util.ArrayList;
 import jparsec.ephem.EphemerisElement;
 import jparsec.ephem.Functions;
 import jparsec.ephem.Target;
@@ -13,8 +14,6 @@ import jparsec.time.AstroDate;
 import jparsec.time.TimeElement;
 import jparsec.time.TimeFormat;
 import jparsec.time.TimeScale;
-
-import java.util.ArrayList;
 
 public class SDP4_SGP4Test {
     /**
@@ -31,9 +30,13 @@ public class SDP4_SGP4Test {
         String name = "ISS";
         int index = SatelliteEphem.getArtificialSatelliteTargetIndex(name);
 
-        EphemerisElement eph = new EphemerisElement(Target.TARGET.NOT_A_PLANET, EphemerisElement.COORDINATES_TYPE.APPARENT,
-                EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.TOPOCENTRIC, EphemerisElement.REDUCTION_METHOD.IAU_2006,
-                EphemerisElement.FRAME.ICRF);
+        EphemerisElement eph = new EphemerisElement(
+            Target.TARGET.NOT_A_PLANET,
+            EphemerisElement.COORDINATES_TYPE.APPARENT,
+            EphemerisElement.EQUINOX_OF_DATE,
+            EphemerisElement.TOPOCENTRIC,
+            EphemerisElement.REDUCTION_METHOD.IAU_2006,
+            EphemerisElement.FRAME.ICRF);
         eph.algorithm = EphemerisElement.ALGORITHM.ARTIFICIAL_SATELLITE;
 
         eph.targetBody.setIndex(index);
@@ -101,10 +104,10 @@ public class SDP4_SGP4Test {
         // Download from http://www.tle.info/data/iridium.txt
         SatelliteEphem.setSatellitesFromExternalFile(DataSet.arrayListToStringArray(ReadFile.readAnyExternalFile("/home/alonso/eclipse/libreria_jparsec/ephem/test/iridium.txt")));
 
-        name = "IRIDIUM 31";
-        astro = new AstroDate(2011, AstroDate.OCTOBER, 26, 14, 51, 21);
-        name = "IRIDIUM 5";
-        astro = new AstroDate(2011, AstroDate.OCTOBER, 26, 16, 47, 42);
+        //name = "IRIDIUM 31";
+        //astro = new AstroDate(2011, AstroDate.OCTOBER, 26, 14, 51, 21);
+        //name = "IRIDIUM 5";
+        //astro = new AstroDate(2011, AstroDate.OCTOBER, 26, 16, 47, 42);
         name = "IRIDIUM 62";
         astro = new AstroDate(2011, AstroDate.OCTOBER, 27, 9, 24, 38);
 
@@ -153,12 +156,11 @@ public class SDP4_SGP4Test {
                     SatelliteEphemElement start = (SatelliteEphemElement) o[4];
                     SatelliteEphemElement end = (SatelliteEphemElement) o[5];
                     SatelliteEphemElement max = (SatelliteEphemElement) o[6];
-                    String fs = " (" + Functions.formatAngleAsDegrees(start.azimuth, 1) + ", " + Functions.formatAngleAsDegrees(start.elevation, 1) + ")";
-                    String fe = " (" + Functions.formatAngleAsDegrees(end.azimuth, 1) + ", " + Functions.formatAngleAsDegrees(end.elevation, 1) + ")";
-                    String fm = " (" + Functions.formatAngleAsDegrees(max.azimuth, 1) + ", " + Functions.formatAngleAsDegrees(max.elevation, 1) + ")";
+                    String fs = " (" + Functions.formatAngleAsDegrees(start.azimuth, 1) + ", " + Functions.formatAngleAsDegrees(start.elevation, 1) + ')';
+                    String fe = " (" + Functions.formatAngleAsDegrees(end.azimuth, 1) + ", " + Functions.formatAngleAsDegrees(end.elevation, 1) + ')';
+                    String fm = " (" + Functions.formatAngleAsDegrees(max.azimuth, 1) + ", " + Functions.formatAngleAsDegrees(max.elevation, 1) + ')';
                     System.out.println(SatelliteEphem.getArtificialSatelliteName(n) + ": " + TimeFormat.formatJulianDayAsDateAndTime((Double) o[0], null) + fs + "/" + TimeFormat.formatJulianDayAsDateAndTime((Double) o[1], null) + fe + "/" + TimeFormat.formatJulianDayAsDateAndTime((Double) o[2], null) + fm + "/" + (Double) o[3]);
                 }
-
                 if (flares.size() == 0)
                     System.out.println(SatelliteEphem.getArtificialSatelliteName(n));
             } else {
@@ -171,13 +173,13 @@ public class SDP4_SGP4Test {
 
         /*
          Test data from http://www.chiandh.me.uk/ephem/iriday.shtml (2011, 10, 26)
-          name            start    (hour, azimut 0=N, elevation)        peak            end
-          IRIDIUM 31 [+]  14:51:18  258.5Â°  42.6Â°  14:51:21  257.0Â°  42.3Â°  1.7Â°  14:51:25  255.0Â°  41.9Â°
-          IRIDIUM 5 [+]  16:47:33  212.1Â°  31.4Â°  16:47:42  210.5Â°  29.8Â°  0.2Â°  16:47:52  209.0Â°  28.1Â°
-          IRIDIUM 4 [+]  04:49:01   7.8Â°  27.5Â°  04:49:12   7.6Â°  25.6Â°  1.5Â°  04:49:25   7.4Â°  23.5Â°
-          IRIDIUM 56 [+]  06:59:41   2.6Â°  68.2Â°  06:59:45   2.7Â°  66.3Â°  0.9Â°  06:59:49   2.9Â°  64.5Â°
-          IRIDIUM 17 [-]  09:02:33  187.2Â°  77.2Â°  09:02:35  187.5Â°  78.3Â°  1.7Â°  09:02:37  187.8Â°  79.3Â°
-          IRIDIUM 62 [+] 09:24:33   92.4Â°  60.2Â°  09:24:38   97.0Â°  59.7Â°  0.4Â°  09:24:43  101.5Â°  59.0Â°
+          name			start	(hour, azimut 0=N, elevation)		peak			end
+          IRIDIUM 31 [+]  14:51:18  258.5�  42.6�  14:51:21  257.0�  42.3�  1.7�  14:51:25  255.0�  41.9�
+          IRIDIUM 5 [+]  16:47:33  212.1�  31.4�  16:47:42  210.5�  29.8�  0.2�  16:47:52  209.0�  28.1�
+          IRIDIUM 4 [+]  04:49:01   7.8�  27.5�  04:49:12   7.6�  25.6�  1.5�  04:49:25   7.4�  23.5�
+          IRIDIUM 56 [+]  06:59:41   2.6�  68.2�  06:59:45   2.7�  66.3�  0.9�  06:59:49   2.9�  64.5�
+          IRIDIUM 17 [-]  09:02:33  187.2�  77.2�  09:02:35  187.5�  78.3�  1.7�  09:02:37  187.8�  79.3�
+          IRIDIUM 62 [+] 09:24:33   92.4�  60.2�  09:24:38   97.0�  59.7�  0.4�  09:24:43  101.5�  59.0�
          */
     }
 }

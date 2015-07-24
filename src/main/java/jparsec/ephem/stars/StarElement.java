@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.ephem.stars;
 
 import java.io.Serializable;
@@ -30,7 +30,7 @@ import jparsec.vo.SimbadElement;
 
 /**
  * Convenient class for stars data access.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -43,10 +43,10 @@ public class StarElement implements Serializable
 	 * Current value is 1000 pc.
 	 */
 	public static final int DISTANCE_UNKNOWN = 1000;
-	
+
 	/**
 	 * Constructs an star object providing the values of the fields.
-	 * 
+	 *
 	 * @param nom Name.
 	 * @param ra Right Ascension in radians.
 	 * @param dec Declination in radians.
@@ -80,24 +80,12 @@ public class StarElement implements Serializable
 	 */
 	public StarElement()
 	{
-		rightAscension = 0.0;
-		declination = 0.0;
-		parallax = 0.0;
-		properMotionRA = 0.0f;
-		properMotionDEC = 0.0f;
-		properMotionRadialV = 0.0f;
-		equinox = 0.0;
-		frame = EphemerisElement.FRAME.ICRF;
-		name = "";
-		spectrum = "";
-		type = "";
-		magnitude = 0f;
 	}
 
 	/**
 	 * Name of the star.
 	 */
-	public String name;
+	public String name = "";
 
 	/**
 	 * Right Ascension in radians from the catalogue.
@@ -151,12 +139,12 @@ public class StarElement implements Serializable
 	/**
 	 * Reference frame for the catalogue coordinates.
 	 */
-	public EphemerisElement.FRAME frame;
+	public EphemerisElement.FRAME frame = EphemerisElement.FRAME.ICRF;
 
 	/**
 	 * Spectral type. Currently available only for JPARSEC file format.
 	 */
-	public String spectrum;
+	public String spectrum = "";
 
 	/**
 	 * Type of star: N for Normal, D for double or multiple, V for variable, and
@@ -166,18 +154,18 @@ public class StarElement implements Serializable
 	 * Second is double star data (only if it is double or multiple). Third is variability
 	 * data (if it is variable). Double data includes four fields separated by a comma
 	 * (separation of main components in arcseconds, magnitude difference in components A-B,
-	 * orbit period in years, position angle in degrees), while variability data includes 
+	 * orbit period in years, position angle in degrees), while variability data includes
 	 * another four fields separated by a comma (maximum magnitude, minimum magnitude,
 	 * period of variability in days, variable type).
 	 */
-	public String type;
+	public String type = "";
 
 	/**
 	 * To clone the object.
 	 */
+	@Override
 	public StarElement clone()
 	{
-		if (this == null) return null;
 		StarElement out = new StarElement(this.name, this.rightAscension, this.declination, this.parallax,
 				this.magnitude, this.properMotionRA, this.properMotionDEC, this.properMotionRadialV,
 				this.equinox, this.frame);
@@ -185,39 +173,57 @@ public class StarElement implements Serializable
 		out.type = this.type;
 		return out;
 	}
+
 	/**
-	 * Returns true if the input object is equals to this
-	 * instance.
+	 * Returns true if the input object is equal to this instance.
 	 */
-	public boolean equals(Object s)
-	{
-		if (s == null) {
-			if (this == null) return true;
-			return false;
-		}
-		if (this == null) {
-			return false;
-		}
-		boolean equals = true;
-		StarElement se = (StarElement) s;
-		if (se.properMotionRA != this.properMotionRA) equals = false;
-		if (!se.name.equals(this.name)) equals = false;
-		if (se.declination != this.declination) equals = false;
-		if (se.parallax != this.parallax) equals = false;
-		if (se.properMotionDEC != this.properMotionDEC) equals = false;
-		if (se.magnitude != this.magnitude) equals = false;
-		if (se.properMotionRadialV != this.properMotionRadialV) equals = false;
-		if (se.rightAscension != this.rightAscension) equals = false;
-		if (se.equinox != this.equinox) equals = false;
-		if (se.frame != this.frame) equals = false;
-		if (!se.spectrum.equals(this.spectrum)) equals = false;
-		if (!se.type.equals(this.type)) equals = false;
-		return equals;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof StarElement)) return false;
+
+		StarElement that = (StarElement) o;
+
+		if (Double.compare(that.rightAscension, rightAscension) != 0) return false;
+		if (Double.compare(that.declination, declination) != 0) return false;
+		if (Double.compare(that.parallax, parallax) != 0) return false;
+		if (Float.compare(that.magnitude, magnitude) != 0) return false;
+		if (Float.compare(that.properMotionRA, properMotionRA) != 0) return false;
+		if (Float.compare(that.properMotionDEC, properMotionDEC) != 0) return false;
+		if (Float.compare(that.properMotionRadialV, properMotionRadialV) != 0) return false;
+		if (Double.compare(that.equinox, equinox) != 0) return false;
+		if (name != null ? !name.equals(that.name) : that.name != null) return false;
+		if (frame != that.frame) return false;
+		if (spectrum != null ? !spectrum.equals(that.spectrum) : that.spectrum != null) return false;
+		return !(type != null ? !type.equals(that.type) : that.type != null);
+	}
+
+	@Override
+	public int hashCode() {
+		int result;
+		long temp;
+		result = name != null ? name.hashCode() : 0;
+		temp = Double.doubleToLongBits(rightAscension);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(declination);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(parallax);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		result = 31 * result + (magnitude != +0.0f ? Float.floatToIntBits(magnitude) : 0);
+		result = 31 * result + (properMotionRA != +0.0f ? Float.floatToIntBits(properMotionRA) : 0);
+		result = 31 * result + (properMotionDEC != +0.0f ? Float.floatToIntBits(properMotionDEC) : 0);
+		result = 31 * result + (properMotionRadialV != +0.0f ? Float.floatToIntBits(properMotionRadialV) : 0);
+		temp = Double.doubleToLongBits(equinox);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		result = 31 * result + (frame != null ? frame.hashCode() : 0);
+		result = 31 * result + (spectrum != null ? spectrum.hashCode() : 0);
+		result = 31 * result + (type != null ? type.hashCode() : 0);
+		return result;
 	}
 
 	/**
 	 * Creates a star object from a Simbad one.
-	 * 
+	 *
 	 * @param s Simbad object.
 	 * @return Star object, with J2000 equinox and FK5 frame. In case
 	 * parallax is 0 distance is arbitrarily set to 1000 pc.
@@ -229,7 +235,7 @@ public class StarElement implements Serializable
 				Constant.J2000, EphemerisElement.FRAME.FK5);
 		return star;
 	}
-	
+
 	/**
 	 * Returns the distance to the star in pc.
 	 * @return Distance in pc, or 0 if parallax is 0.
@@ -238,7 +244,7 @@ public class StarElement implements Serializable
 		if (parallax == 0) return DISTANCE_UNKNOWN;
 		return (1000.0 / parallax);
 	}
-	
+
 	/**
 	 * Returns if the distance to the star is unknown.
 	 * @return True if parallax is 0, false otherwise.
@@ -246,7 +252,7 @@ public class StarElement implements Serializable
 	public boolean isDistanceUnknown() {
 		return (parallax == 0);
 	}
-	
+
 	/**
 	 * Returns the equatorial position of this star.
 	 * @return Equatorial position.

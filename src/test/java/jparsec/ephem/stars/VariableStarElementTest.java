@@ -16,21 +16,28 @@ public class VariableStarElementTest {
      */
     public static void main(String args[]) throws Exception {
         System.out.println("VariableStarElement test");
+
         String name = "W CET";
+        int year = 2014;
         ReadFile re = new ReadFile();
-        re.setPath(VariableStarElement.PATH_VARIABLE_STAR_AAVSO_BULLETIN_2011);
+        re.setPath(VariableStarElement.getPathBulletinAAVSO(year));
         re.readFileOfVariableStars();
         System.out.println(re.getNumberOfObjects());
         int index = re.searchByName(name);
         VariableStarElement vstar = re.getVariableStarElement(index);
 
-        AstroDate astro = new AstroDate(2011, 1, 1);
+        AstroDate astro = new AstroDate(year, 1, 1);
         TimeElement time = new TimeElement(astro.jd(), TimeElement.SCALE.UNIVERSAL_TIME_UTC);
         CityElement city = City.findCity("Madrid");
         ObserverElement observer = ObserverElement.parseCity(city);
-        vstar.calcEphemeris(time, observer, false);
-        System.out.println(vstar.name + " PHASE    " + vstar.getPhase());
-        System.out.println(vstar.name + " MAX " + TimeFormat.formatJulianDayAsDate(vstar.getNextMaxima(time, observer)));
-        System.out.println(vstar.name + " MIN " + TimeFormat.formatJulianDayAsDate(vstar.getNextMinima(time, observer)));
+
+        if (vstar.isEclipsing) {
+            vstar.calcEphemeris(time, observer, false);
+            System.out.println(vstar.name + " PHASE    " + vstar.getPhase());
+            System.out.println(vstar.name + " MIN " + TimeFormat.formatJulianDayAsDate(vstar.getNextMinima(time, observer)));
+        } else {
+            System.out.println(vstar.name + " MAX " + TimeFormat.formatJulianDayAsDate(vstar.getNextMaxima(time, observer)));
+            System.out.println(vstar.name + " MIN " + TimeFormat.formatJulianDayAsDate(vstar.getNextMinima(time, observer)));
+        }
     }
 }

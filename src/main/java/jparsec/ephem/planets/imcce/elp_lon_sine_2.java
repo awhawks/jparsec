@@ -1,4 +1,4 @@
-/*
+/**
  * This file is part of JPARSEC library.
  * 
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).

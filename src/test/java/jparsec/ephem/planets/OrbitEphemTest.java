@@ -22,23 +22,21 @@ public class OrbitEphemTest {
      *
      * @param args Not used.
      */
-    /**
-     * For unit testing only.
-     * @param args Not used.
-     */
-    public static void main(String args[])
-    {
-        System.out.println("Orbit Test");
+    public static void main(String args[]) {
+        System.out.println("OrbitEphem Test");
 
-        try
-        {
+        try {
             AstroDate astro = new AstroDate(); //2006, AstroDate.JANUARY, 1);
             TimeElement time = new TimeElement(astro, TimeElement.SCALE.UNIVERSAL_TIME_UT1);
             CityElement city = City.findCity("Madrid");
             ObserverElement observer = ObserverElement.parseCity(city);
-            EphemerisElement eph = new EphemerisElement(Target.TARGET.MARS, EphemerisElement.COORDINATES_TYPE.APPARENT,
-                    EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.TOPOCENTRIC, EphemerisElement.REDUCTION_METHOD.IAU_2009,
-                    EphemerisElement.FRAME.ICRF);
+            EphemerisElement eph = new EphemerisElement(
+                Target.TARGET.MARS,
+                EphemerisElement.COORDINATES_TYPE.APPARENT,
+                EphemerisElement.EQUINOX_OF_DATE,
+                EphemerisElement.TOPOCENTRIC,
+                EphemerisElement.REDUCTION_METHOD.IAU_2009,
+                EphemerisElement.FRAME.ICRF);
             eph.algorithm = EphemerisElement.ALGORITHM.VSOP87_ELP2000ForMoon;
 
             EphemElement ephem = Ephem.getEphemeris(time, observer, eph, true);
@@ -55,7 +53,6 @@ public class OrbitEphemTest {
             ephem = OrbitEphem.orbitEphemeris(time, observer, eph);
 
             System.out.println("ORBIT");
-
             System.out.println("JD " + JD);
             System.out.println("" + name + " RA: " + Functions.formatRA(ephem.rightAscension));
             System.out.println("" + name + " DEC: " + Functions.formatDEC(ephem.declination));
@@ -82,17 +79,14 @@ public class OrbitEphemTest {
             ConsoleReport.fullEphemReportToConsole(another_ephem2);
 
             // Calculate orbit of Pluto
-            double pos[] = new double[]
-                    { -26.06710, -11.92126, 8.80594 };
-            double vel[] = new double[]
-                    { 0.001633041, -0.003103617, -0.000152622 };
+            double pos[] = new double[] { -26.06710, -11.92126, 8.80594 };
+            double vel[] = new double[] { 0.001633041, -0.003103617, -0.000152622 };
             double mass = 0.0;
             AstroDate date = new AstroDate(1982, 1, 31);
             double jd = date.jd();
             OrbitalElement PlutoOrbit = OrbitEphem.obtainOrbitalElementsFromPositionAndVelocity(pos, vel, jd, mass);
 
-            System.out
-                    .println("Osculating elemens for Pluto in 1982-1-31 obtained from position and velocity vectors:");
+            System.out.println("Osculating elemens for Pluto in 1982-1-31 obtained from position and velocity vectors:");
             System.out.println("i = " + PlutoOrbit.inclination * Constant.RAD_TO_DEG);
             System.out.println("o = " + PlutoOrbit.ascendingNodeLongitude * Constant.RAD_TO_DEG);
             System.out.println("a = " + PlutoOrbit.semimajorAxis);
@@ -113,7 +107,6 @@ public class OrbitEphemTest {
             System.out.println("n = " + PlutoOrbit.meanMotion * Constant.RAD_TO_DEG);
 
 
-
             System.out.println("Orbit determination example:");
             int n = 3;
             TimeElement times[] = new TimeElement[n];
@@ -122,18 +115,23 @@ public class OrbitEphemTest {
             LocationElement locations[] = new LocationElement[n];
             CityElement citym = City.findCity("Madrid");
             TimeElement timem = new TimeElement();
-            EphemerisElement ephm = new EphemerisElement(Target.TARGET.MARS, EphemerisElement.COORDINATES_TYPE.APPARENT,
-                    EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.TOPOCENTRIC, EphemerisElement.REDUCTION_METHOD.IAU_2009,
-                    EphemerisElement.FRAME.DYNAMICAL_EQUINOX_J2000);
+            EphemerisElement ephm = new EphemerisElement(
+                Target.TARGET.MARS,
+                EphemerisElement.COORDINATES_TYPE.APPARENT,
+                EphemerisElement.EQUINOX_OF_DATE,
+                EphemerisElement.TOPOCENTRIC,
+                EphemerisElement.REDUCTION_METHOD.IAU_2009,
+                EphemerisElement.FRAME.DYNAMICAL_EQUINOX_J2000);
             ephm.algorithm = EphemerisElement.ALGORITHM.MOSHIER;
-            for (int i=0; i<n; i++) {
+
+            for (int i = 0; i < n; i++) {
                 observers[i] = ObserverElement.parseCity(citym);
                 times[i] = timem.clone();
                 timem.add(50);
                 ephs[i] = ephm;
             }
 
-            for (int i=0; i<times.length; i++) {
+            for (int i = 0; i < times.length; i++) {
                 ephem = Ephem.getEphemeris(times[i], observers[i], ephs[i], false);
                 locations[i] = ephem.getEquatorialLocation();
                 //System.out.println(ephem.distance);
@@ -141,7 +139,6 @@ public class OrbitEphemTest {
 
             OrbitalElement myOrbit = OrbitEphem.solveOrbit(locations, times, observers, ephs);
             System.out.println(myOrbit.toString());
-
             System.out.println();
             System.out.println("Correct values are:");
             System.out.println();
@@ -150,8 +147,7 @@ public class OrbitEphemTest {
             System.out.println(myOrbit.toString());
 
             JPARSECException.showWarnings();
-        } catch (JPARSECException ve)
-        {
+        } catch (JPARSECException ve) {
             ve.showException();
         }
     }

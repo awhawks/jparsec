@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.ephem;
 
 import java.awt.geom.Point2D;
@@ -40,7 +40,7 @@ import jparsec.util.JPARSECException;
 
 /**
  * Provides methods for manipulating angles or vectors, and formatting strings.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -48,10 +48,10 @@ public class Functions
 {
 	// private constructor so that this class cannot be instantiated.
 	private Functions() {}
-	
+
 	/**
 	 * Convert a Julian day value to Julian centuries referenced to epoch J2000.
-	 * 
+	 *
 	 * @param jd Julian day number.
 	 * @return Julian centuries from J2000.
 	 */
@@ -62,7 +62,7 @@ public class Functions
 
 	/**
 	 * Convert to Julian day a given number of centuries offset from J2000.
-	 * 
+	 *
 	 * @param centuries Centuries from J2000.
 	 * @return Julian day.
 	 */
@@ -70,22 +70,22 @@ public class Functions
 	{
 		return Constant.JULIAN_DAYS_PER_CENTURY * centuries + Constant.J2000;
 	}
-	
+
 	/**
 	 * Convert a Julian day value to Julian centuries referenced to epoch J2000.
-	 * 
+	 *
 	 * @param jd Julian day number.
 	 * @return Julian centuries from J2000.
 	 */
 	public static BigDecimal toCenturies(BigDecimal jd)
 	{
-		return (jd.subtract(new BigDecimal(Constant.J2000)).divide(new BigDecimal(Constant.JULIAN_DAYS_PER_CENTURY), 
+		return (jd.subtract(new BigDecimal(Constant.J2000)).divide(new BigDecimal(Constant.JULIAN_DAYS_PER_CENTURY),
 				Configuration.BIG_DECIMAL_PRECISION_DECIMAL_PLACES, Configuration.BIG_DECIMAL_PRECISION_ROUNDING_MODE));
 	}
 
 	/**
 	 * Reduce an angle in degrees to the range (0 <= deg < 360).
-	 * 
+	 *
 	 * @param d Value in degrees.
 	 * @return The reduced degree value.
 	 */
@@ -94,7 +94,7 @@ public class Functions
 		if (d < 0 && d >= -360) return d + 360.0;
 		if (d >= 360.0 && d < 720) return d - 360.0;
 		if (d >= 0 && d < 360.0) return d;
-		
+
 		d -= Constant.DEGREES_PER_CIRCLE * Math.floor(d / Constant.DEGREES_PER_CIRCLE);
 		// Can't use Math.IEEEremainder here because remainder differs
 		// from modulus for negative numbers.
@@ -105,7 +105,7 @@ public class Functions
 
 	/**
 	 * Reduce an angle in radians to the range (0 - 2 Pi).
-	 * 
+	 *
 	 * @param r Value in radians.
 	 * @return The reduced radian value.
 	 */
@@ -114,7 +114,7 @@ public class Functions
 		if (r < 0 && r >= -Constant.TWO_PI) return r + Constant.TWO_PI;
 		if (r >= Constant.TWO_PI && r < Constant.FOUR_PI) return r - Constant.TWO_PI;
 		if (r >= 0 && r < Constant.TWO_PI) return r;
-		
+
 		// This seems faster than Math.floor ...
 		double r2 = r * Constant.TWO_PI_INVERSE;
 		if (r > 0) {
@@ -123,7 +123,7 @@ public class Functions
 			if (r2 == (int) r2) {
 				return 0;
 			} else {
-				r += Constant.TWO_PI * ((int) Math.abs(r2) + 1);				
+				r += Constant.TWO_PI * ((int) Math.abs(r2) + 1);
 			}
 		}
 
@@ -132,7 +132,7 @@ public class Functions
 
 	/**
 	 * Reduce an angle in radians to the range (0 - 2 Pi).
-	 * 
+	 *
 	 * @param r Value in radians.
 	 * @return The reduced radian value.
 	 */
@@ -154,7 +154,7 @@ public class Functions
 	 * Also, if (lunar longitude - solar longitude) changes quadrants between
 	 * the start of a day and the end of a day, we know there must have been a
 	 * lunar phase change during that day.
-	 * 
+	 *
 	 * @param radians Angle in Radians.
 	 * @return Quadrant of angle (0, 1, 2, or 3).
 	 */
@@ -165,7 +165,7 @@ public class Functions
 
 	/**
 	 * Obtain the module of the integer division.
-	 * 
+	 *
 	 * @param val1 Number to divide
 	 * @param val2 Number that val1 will be divided by
 	 * @return The rest of the integer division
@@ -180,7 +180,7 @@ public class Functions
 
 	/**
 	 * Module operation in arcseconds.
-	 * 
+	 *
 	 * @param x Value in arcseconds.
 	 * @return module.
 	 */
@@ -193,7 +193,7 @@ public class Functions
 	/**
 	 * Format right ascension. Significant digits are adapted to common
 	 * ephemeris precision.
-	 * 
+	 *
 	 * @param ra Right ascension in radians.
 	 * @return String with the format ##h ##m ##.####s.
 	 */
@@ -218,9 +218,9 @@ public class Functions
 	/**
 	 * Format declination. Significant digits are adapted to common ephemeris
 	 * precision.
-	 * 
+	 *
 	 * @param dec Declination in radians. Must be in the range -Pi/2 to +Pi/2.
-	 * @return String with the format $##º ##' ##.###'' ($ is the sign).
+	 * @return String with the format $##ï¿½ ##' ##.###'' ($ is the sign).
 	 */
 	public static String formatDEC(double dec)
 	{
@@ -233,7 +233,7 @@ public class Functions
 		dec_d = Math.floor(dec_d);
 		dec_m = Math.floor(dec_m);
 
-		out = "" + formatter0.format(dec_d) + "º " + formatter0.format(dec_m) + "' " + formatter.format(dec_s) + "\"";
+		out = "" + formatter0.format(dec_d) + "ï¿½ " + formatter0.format(dec_m) + "' " + formatter.format(dec_s) + "\"";
 		out = DataSet.replaceAll(out, ",", ".", false);
 		if (dec < 0.0 && Functions.parseDeclination(out) != 0.0)
 			out = "-" + out;
@@ -244,7 +244,7 @@ public class Functions
 	/**
 	 * Format right ascension. Significant digits are adapted to common
 	 * ephemeris precision.
-	 * 
+	 *
 	 * @param ra Right ascension in radians.
 	 * @param nsec Number of decimal places in seconds of time.
 	 * @return String with the format ##h ##m ##.##...s.
@@ -269,11 +269,11 @@ public class Functions
 
 		return out;
 	}
-	
+
 	/**
 	 * Format right ascension. Significant digits are adapted to common
 	 * ephemeris precision. In case the RA is negative a minus sign is used.
-	 * 
+	 *
 	 * @param ra0 Right ascension in radians.
 	 * @param nsec Number of decimal places in seconds of time.
 	 * @return String with the format ##h ##m ##.##...s.
@@ -301,7 +301,7 @@ public class Functions
 
 	/**
 	 * Format right ascension with hours and minutes of time.
-	 * 
+	 *
 	 * @param ra Right ascension in radians.
 	 * @param nmin Number of decimal places in minutes of time.
 	 * @return String with the format ##h ##.##...m.
@@ -327,10 +327,10 @@ public class Functions
 
 	/**
 	 * Format declination.
-	 * 
+	 *
 	 * @param dec Declination in radians. Must be in the range -Pi/2 to +Pi/2.
 	 * @param nsec Number of decimal places in arcseconds.
-	 * @return String with the format $##º ##' ##.##...'' ($ is the sign).
+	 * @return String with the format $##ï¿½ ##' ##.##...'' ($ is the sign).
 	 */
 	public static String formatDEC(double dec, int nsec)
 	{
@@ -346,7 +346,7 @@ public class Functions
 		dec_d = Math.floor(dec_d);
 		dec_m = Math.floor(dec_m);
 
-		String out = "" + formatter0.format(dec_d) + "º " + formatter0.format(dec_m) + "' " + formatter.format(dec_s) + "\"";
+		String out = "" + formatter0.format(dec_d) + "ï¿½ " + formatter0.format(dec_m) + "' " + formatter.format(dec_s) + "\"";
 		out = DataSet.replaceAll(out, ",", ".", false);
 		if (dec < 0.0 && Functions.parseDeclination(out) != 0.0)
 			out = "-" + out;
@@ -356,10 +356,10 @@ public class Functions
 
 	/**
 	 * Format declination with degrees and minutes only.
-	 * 
+	 *
 	 * @param dec Declination in radians. Must be in the range -Pi/2 to +Pi/2.
 	 * @param nmin Number of decimal places in arcminutes.
-	 * @return String with the format $##º ##.##...' ($ is the sign).
+	 * @return String with the format $##ï¿½ ##.##...' ($ is the sign).
 	 */
 	public static String formatDECOnlyMinutes(double dec, int nmin)
 	{
@@ -373,7 +373,7 @@ public class Functions
 		double dec_m = (dec_d - Math.floor(dec_d)) * 60.0;
 		dec_d = Math.floor(dec_d);
 
-		String out = "" + formatter0.format(dec_d) + "º " + formatter.format(dec_m) + "'";
+		String out = "" + formatter0.format(dec_d) + "ï¿½ " + formatter.format(dec_m) + "'";
 		out = DataSet.replaceAll(out, ",", ".", false);
 		if (dec < 0.0 && Functions.parseDeclination(out) != 0.0)
 			out = "-" + out;
@@ -383,7 +383,7 @@ public class Functions
 
 	/**
 	 * Format a real number.
-	 * 
+	 *
 	 * @param val Numerical value
 	 * @param decimals Number of decimal places.
 	 * @return String with the adequate format.
@@ -391,7 +391,7 @@ public class Functions
 	public static String formatValue(double val, int decimals)
 	{
 		DecimalFormat formatter = new DecimalFormat("##0");
- 
+
 		if (decimals > 0) {
 			String out = DataSet.repeatString("0", decimals);
 			formatter = new DecimalFormat("##0." + out);
@@ -405,7 +405,7 @@ public class Functions
 
 	/**
 	 * Format a real number.
-	 * 
+	 *
 	 * @param val Numerical value
 	 * @param decimals Number of decimal places.
 	 * @param nondecimals Number of non-decimal places.
@@ -424,11 +424,11 @@ public class Functions
 			double v = Math.abs(val);
 			double fac = FastMath.multiplyBy10ToTheX(1.0, l-nondecimals);
 			v = v / fac;
-			v = Math.floor(v + 0.5 + ((roundUp && v != (int) v)? 0.5:0)); 
+			v = Math.floor(v + 0.5 + ((roundUp && v != (int) v)? 0.5:0));
 			v = v * fac * FastMath.sign(val);
 			val = v;
 		}
-		
+
 		DecimalFormat formatter = new DecimalFormat(in);
 		if (decimals > 0) {
 			String out = DataSet.repeatString("0", decimals);
@@ -445,14 +445,14 @@ public class Functions
 	 * Formats an angle. For low values the degrees/minutes parts are skipped
 	 * when are null. For angles above +260 degrees, the value is represented as
 	 * a negative angle.
-	 * 
+	 *
 	 * @param val Numerical value representing an angle
 	 * @param secDecimals Number of decimal places in the arcseconds.
 	 * @return String with the adequate format.
 	 */
 	public static String formatAngle(double val, int secDecimals)
 	{
-		String out = "";
+		String out;
 
 		val = Functions.normalizeDegrees(val * Constant.RAD_TO_DEG);
 		if (val > 260.0)
@@ -498,7 +498,7 @@ public class Functions
 			}
 		} else
 		{
-			out = "" + (int) val_d + "º " + (int) val_m + "' " + formatter.format(val_s) + "\"";
+			out = "" + (int) val_d + "ï¿½ " + (int) val_m + "' " + formatter.format(val_s) + "\"";
 		}
 		out = DataSet.replaceAll(out, ",", ".", false);
 		if (val < 0.0 && Functions.parseDeclination(out) != 0.0)
@@ -508,9 +508,9 @@ public class Functions
 	}
 
 	/**
-	 * Formats an angle as degrees only. For angles above +260 degrees 
+	 * Formats an angle as degrees only. For angles above +260 degrees
 	 * the value is represented as a negative angle.
-	 * 
+	 *
 	 * @param val Numerical value representing an angle in radians.
 	 * @param decimals Number of decimal places in the degrees.
 	 * @return String with the adequate format.
@@ -540,7 +540,7 @@ public class Functions
 	/**
 	 * Returns declination in radians given degrees, minutes, and arcseconds. A
 	 * minus sign can be set in degrees for southern positions.
-	 * 
+	 *
 	 * @param decg Degrees.
 	 * @param min Arcminutes.
 	 * @param sec Arcseconds
@@ -551,7 +551,7 @@ public class Functions
 		double g = DataSet.parseDouble(decg);
 		double dec = Math.abs(g) + min / Constant.SECONDS_PER_MINUTE + sec / Constant.SECONDS_PER_DEGREE;
 		dec = dec * Constant.DEG_TO_RAD;
-		if (decg.indexOf("-") >= 0)
+		if (decg.contains("-"))
 			dec = -dec;
 		return dec;
 	}
@@ -559,7 +559,7 @@ public class Functions
 	/**
 	 * Returns right ascension in radians given hours, minutes, and seconds of
 	 * time.
-	 * 
+	 *
 	 * @param hour Hours.
 	 * @param min Minutes.
 	 * @param sec Seconds.
@@ -575,7 +575,7 @@ public class Functions
 
 	/**
 	 * Returns right ascension in radians given a formatted string.
-	 * 
+	 *
 	 * @param ra Right Ascension as a string ##h ##m ##.#...s, or ##h #.#...m. Numbers
 	 * separated by blank spaces are also supported, in the order hour, minutes, seconds.
 	 * @return Right ascension value in radians.
@@ -604,7 +604,7 @@ public class Functions
 			if (s > 0)
 				ras = DataSet.parseDouble(ra.substring(m + 1, s).trim());
 		}
-		
+
 		double ss = 1;
 		if (ra.startsWith("-")) ss = -1;
 		double ra_val = Math.abs(rah) + (Math.abs(ram) + Math.abs(ras) / 60.0) / 60.0;
@@ -615,9 +615,9 @@ public class Functions
 	/**
 	 * Returns declination in radians given a formatted string. Numbers
 	 * separated by blank spaces are also supported, in the order degrees, minutes, seconds.
-	 * 
-	 * @param dec Declination as a string ##º ##' ##.#...'', or ##º #.#...'. 'd'
-	 *        is allowed instead of 'º'.
+	 *
+	 * @param dec Declination as a string ##ï¿½ ##' ##.#...'', or ##ï¿½ #.#...'. 'd'
+	 *        is allowed instead of 'ï¿½'.
 	 * @return Declination value in radians.
 	 */
 	public static double parseDeclination(String dec)
@@ -627,7 +627,7 @@ public class Functions
 		double decm = 0.0;
 		double decs = 0.0;
 
-		int g = dec.indexOf("º");
+		int g = dec.indexOf("ï¿½");
 		if (g < 0)
 			g = dec.indexOf("d");
 		int m = dec.indexOf("'");
@@ -647,7 +647,7 @@ public class Functions
 			if (s > 0)
 				decs = DataSet.parseDouble(dec.substring(m + 1, s).trim());
 		}
-		
+
 		double dec_val = Math.abs(decg) + (Math.abs(decm) + Math.abs(decs) / 60.0) / 60.0;
 		if (dec.startsWith("-"))
 			dec_val = -dec_val;
@@ -698,7 +698,7 @@ public class Functions
 	 */
 	public static String getDegreesFromFormattedDEC (String dec)
 	{
-		int h = dec.indexOf("º");
+		int h = dec.indexOf("ï¿½");
 		if (h < 0) h = dec.indexOf("d");
 		String deg = dec.substring(0, h);
 		if (!deg.startsWith("-")) deg = "+"+deg;
@@ -711,7 +711,7 @@ public class Functions
 	 */
 	public static String getMinutesFromFormattedDEC (String dec)
 	{
-		int h = dec.indexOf("º");
+		int h = dec.indexOf("ï¿½");
 		if (h < 0) h = dec.indexOf("d");
 		int m = dec.indexOf("'");
 		String min = dec.substring(h+1, m).trim();
@@ -766,7 +766,7 @@ public class Functions
 
 	/**
 	 * Substracts one vector from another one.
-	 * 
+	 *
 	 * @param v1 Array (x, y, z) or (x, y, z, vx, vy, vz).
 	 * @param v2 Array (x, y, z) or (x, y, z, vx, vy, vz).
 	 * @return v1 - v2.
@@ -788,7 +788,7 @@ public class Functions
 
 	/**
 	 * Multiply the components of a vector by a constant.
-	 * 
+	 *
 	 * @param v Array (x, y, z) or (x, y, z, vx, vy, vz).
 	 * @param val Numerical value.
 	 * @return (x * val, y * val, z * val, ...).
@@ -819,10 +819,10 @@ public class Functions
 	  crossProduct[2] = v0[0] * v1[1] - v0[1] * v1[0];
 	  return crossProduct;
 	}
-	  
+
 	/**
 	 * Scalar product of two vectors.
-	 * 
+	 *
 	 * @param v1 Array (x, y, z) or with arbitrary number of components.
 	 * @param v2 Array (x, y, z) or with arbitrary number of components.
 	 * @return Scalar product.
@@ -836,13 +836,13 @@ public class Functions
 		{
 			out += v1[i] * v2[i];
 		}
-	
+
 		return out;
 	}
 
 	/**
 	 * Sums all the components of a vector.
-	 * 
+	 *
 	 * @param v Array (x, y, z) or (x, y, z, vx, vy, vz).
 	 * @return Sum of components.
 	 */
@@ -859,7 +859,7 @@ public class Functions
 
 	/**
 	 * Sums two vectors.
-	 * 
+	 *
 	 * @param v1 Array (x, y, z) or (x, y, z, vx, vy, vz).
 	 * @param v2 Array (x, y, z) or (x, y, z, vx, vy, vz).
 	 * @return Sum of both vectors.
@@ -882,7 +882,7 @@ public class Functions
 	/**
 	 * Rotate a set of rectangular coordinates from X axis. Used for rotating
 	 * from ecliptic to equatorial or back.
-	 * 
+	 *
 	 * @param c Array (x, y, z) or (x, y, z, vx, vy, vz).
 	 * @param angle Rotation angle in radians.
 	 * @return Rotated vector.
@@ -890,11 +890,11 @@ public class Functions
 	public static double[] rotateX(double c[], double angle)
 	{
 		double coords[] = c.clone();
-		
+
 		double tmp = coords[1] * Math.cos(angle) - coords[2] * Math.sin(angle);
 		coords[2] = coords[1] * Math.sin(angle) + coords[2] * Math.cos(angle);
 		coords[1] = tmp;
-	
+
 		// Treat velocities if they are present
 		if (coords.length > 3)
 		{
@@ -902,13 +902,13 @@ public class Functions
 			coords[5] = coords[4] * Math.sin(angle) + coords[5] * Math.cos(angle);
 			coords[4] = tmp;
 		}
-	
+
 		return coords;
 	}
 
 	/**
 	 * Rotate a set of rectangular coordinates from Y axis.
-	 * 
+	 *
 	 * @param c Array (x, y, z) or (x, y, z, vx, vy, vz).
 	 * @param angle Rotation angle in radians.
 	 * @return Rotated vector.
@@ -916,11 +916,11 @@ public class Functions
 	public static double[] rotateY(double c[], double angle)
 	{
 		double coords[] = c.clone();
-		
+
 		double tmp = coords[0] * Math.cos(angle) + coords[2] * Math.sin(angle);
 		coords[2] = -coords[0] * Math.sin(angle) + coords[2] * Math.cos(angle);
 		coords[0] = tmp;
-	
+
 		// Treat velocities if they are present
 		if (coords.length > 3)
 		{
@@ -928,13 +928,13 @@ public class Functions
 			coords[5] = -coords[3] * Math.sin(angle) + coords[5] * Math.cos(angle);
 			coords[3] = tmp;
 		}
-	
+
 		return coords;
 	}
 
 	/**
 	 * Rotate a set of rectangular coordinates from Z axis.
-	 * 
+	 *
 	 * @param c Array (x, y, z) or (x, y, z, vx, vy, vz).
 	 * @param angle Rotation angle in radians.
 	 * @return Rotated vector.
@@ -942,11 +942,11 @@ public class Functions
 	public static double[] rotateZ(double c[], double angle)
 	{
 		double coords[] = c.clone();
-		
+
 		double tmp = coords[0] * Math.cos(angle) - coords[1] * Math.sin(angle);
 		coords[1] = coords[0] * Math.sin(angle) + coords[1] * Math.cos(angle);
 		coords[0] = tmp;
-	
+
 		// Treat velocities if they are present
 		if (coords.length > 3)
 		{
@@ -954,7 +954,7 @@ public class Functions
 			coords[4] = coords[3] * Math.sin(angle) + coords[4] * Math.cos(angle);
 			coords[3] = tmp;
 		}
-	
+
 		return coords;
 	}
 
@@ -962,7 +962,7 @@ public class Functions
 	 * Check if the components of two vectors are equal or not. Velocities are
 	 * also check if they are present. The sizes of the vectors are not check, since
 	 * one could have velocities and the other no, for example.
-	 * 
+	 *
 	 * @param v1 First vector
 	 * @param v2 Second vector.
 	 * @return True if the components are equal, false otherwise.
@@ -975,19 +975,19 @@ public class Functions
 		if (s2 < s)
 			s = s2;
 		boolean IsEqual = true;
-	
+
 		for (int i = 0; i < s; i++)
 		{
 			if (v1[i] != v2[i])
 				IsEqual = false;
 		}
-	
+
 		return IsEqual;
 	}
-	
+
 	/**
 	 * Astronomical units to arcseconds conversion.
-	 * 
+	 *
 	 * @param ua Value in astronomical units.
 	 * @param distance Distance to the source in pc.
 	 * @return Value in arcseconds.
@@ -999,7 +999,7 @@ public class Functions
 
 	/**
 	 * Arcseconds to astronomical units conversion.
-	 * 
+	 *
 	 * @param sec Value in arcseconds.
 	 * @param distance Distance to the source in pc.
 	 * @return Value in astronomical units.
@@ -1018,7 +1018,7 @@ public class Functions
 	public static double getNorm(double v[]) {
 		return Math.sqrt(v[0]*v[0] + v[1]*v[1] + v[2]*v[2]);
 	}
-	
+
 	/**
 	*  Rounds a floating point number up to the desired decimal place.
 	*  Example:  1346.4667 rounded up to the 2nd place = 1400.
@@ -1039,12 +1039,12 @@ public class Functions
 		    else {
 			    double pow10 = FastMath.multiplyBy10ToTheX(1.0, place); //DataSet.parseDouble("1E"+place);	//	= 10 ^ place
 			    double holdvalue = value/pow10;
-		
+
 			    value = Math.ceil(holdvalue);			// Round number up to nearest integer
 			    value *= pow10;
 		    }
 		}
-	
+
 		return value;
 	}
 
@@ -1068,12 +1068,12 @@ public class Functions
 		    else {
 			    double pow10 = FastMath.multiplyBy10ToTheX(1.0, place); //DataSet.parseDouble("1E"+place);	//	= 10 ^ place
 			    double holdvalue = value/pow10;
-		
+
 			    value = Math.floor(holdvalue+0.5);		// Round number to nearest integer
 			    value *= pow10;
 		    }
 		}
-	
+
 		return value;
 	}
 
@@ -1091,19 +1091,19 @@ public class Functions
 	public static double roundDownToPlace(double value, int place)  {
 		//	If the value is zero, just pass the number back out.
 		if (value != 0.) {
-	
+
 	        //  If the place is zero, round to the one's place.
 		    if (place == 0)
 		        value = Math.floor(value);
 		    else {
 			    double pow10 = FastMath.multiplyBy10ToTheX(1.0, place); //DataSet.parseDouble("1E"+place);	//	= 10 ^ place
 			    double holdvalue = value/pow10;
-		
+
 			    value = Math.floor(holdvalue);			// Round number down to nearest integer
 			    value *= pow10;
 		    }
 		}
-	
+
 		return value;
 	}
 
@@ -1121,10 +1121,10 @@ public class Functions
     double temp;
     int dotPosition;
     long precisionValue;
-    
+
     temp = FastMath.multiplyBy10ToTheX(value, afterDecimalPoint);
     if (Math.abs(temp) < Long.MAX_VALUE) {
-      precisionValue = 	(temp > 0) ? (long)(temp + 0.5) 
+      precisionValue = 	(temp > 0) ? (long)(temp + 0.5)
                                    : -(long)(Math.abs(temp) + 0.5);
       if (precisionValue == 0) {
     	  stringBuffer = new StringBuffer(String.valueOf(0));
@@ -1158,7 +1158,7 @@ public class Functions
       if (stringBuffer.charAt(currentPos) == '.') {
     	  stringBuffer.setCharAt(currentPos, ' ');
       }
-      
+
       return stringBuffer.toString().trim();
     }
     return new String("" + value);
@@ -1180,7 +1180,7 @@ public class Functions
     char[] result;
     int dotPosition;
 
-    if ((afterDecimalPoint >= width) 
+    if ((afterDecimalPoint >= width)
         || (tempString.indexOf('E') != -1)) { // Protects sci notation
       return tempString;
     }
@@ -1202,7 +1202,7 @@ public class Functions
     } else {
       dotPosition = tempString.length();
     }
-    
+
     int offset = width - afterDecimalPoint - dotPosition;
     if (afterDecimalPoint > 0) {
       offset--;
@@ -1249,7 +1249,7 @@ public class Functions
 	  double d23 = LocationElement.getAngularDistance(loc2, loc3) * 0.5;
 	  double maxD = Math.max(Math.max(d12, d13), d23);
 	  double a = maxD, b = 0.0, c = 0.0;
-	  
+
 	  if (maxD == d12) {
 		  b = d13;
 		  c = d23;
@@ -1263,7 +1263,7 @@ public class Functions
 		  c = d13;
 	  }
 	  double h = Math.sqrt(b * b + c * c);
-	  
+
 	  double r = 0;
 	  if (maxD > h) {
 		  // type I: radius = a, and center position = midpoint between those two
@@ -1271,7 +1271,7 @@ public class Functions
 		  LocationElement l1 = loc1, l2 = loc2;
 		  if (r == d13) l2 = loc3;
 		  if (r == d23) l1 = loc3;
-	
+
 		  LocationElement l = LocationElement.getMidPoint(l1, l2);
 		  l.setRadius(r);
 		  return l;
@@ -1283,7 +1283,7 @@ public class Functions
 			  loc1 = LocationElement.getMidPoint(loc1, loc2);
 			  loc2 = LocationElement.getMidPoint(loc2, loc3);
 			  loc3 = LocationElement.getMidPoint(loc3, loc1);
-			  
+
 			  d12 = LocationElement.getAngularDistance(loc1, loc2) * 0.5;
 			  d13 = LocationElement.getAngularDistance(loc1, loc3) * 0.5;
 			  d23 = LocationElement.getAngularDistance(loc2, loc3) * 0.5;
@@ -1305,7 +1305,7 @@ public class Functions
 	  double offset = Math.pow(p2.getX(),2) + Math.pow(p2.getY(),2);
 	  double bc =   ( Math.pow(p1.getX(),2) + Math.pow(p1.getY(),2) - offset )/2.0;
 	  double cd =   (offset - Math.pow(p3.getX(), 2) - Math.pow(p3.getY(), 2))/2.0;
-	  double det =  (p1.getX() - p2.getX()) * (p2.getY() - p3.getY()) - (p2.getX() - p3.getX())* (p1.getY() - p2.getY()); 
+	  double det =  (p1.getX() - p2.getX()) * (p2.getY() - p3.getY()) - (p2.getX() - p3.getX())* (p1.getY() - p2.getY());
 
 	  if (Math.abs(det) < 1.0E-8) {
 		  //return null; // Straight line case
@@ -1329,7 +1329,7 @@ public class Functions
 
 	  return new double[] {centerx, centery, radius};
   }
-  
+
 	/**
 	 * Returns a value proportional to the distance of three bodies to the same great circle
 	 * on the celestial sphere. Maybe used to get the time when three bodies are in straight line.
@@ -1340,7 +1340,7 @@ public class Functions
 	 * @return A value that will be 0 if the three bodies are in straight line.
 	 */
 	public static double getDistanceToSameGreatCircle(LocationElement loc1, LocationElement loc2, LocationElement loc3) {
-		return 
+		return
 			Math.tan(loc1.getLatitude()) * Math.sin(loc2.getLongitude() - loc3.getLongitude()) +
 			Math.tan(loc2.getLatitude()) * Math.sin(loc3.getLongitude() - loc1.getLongitude()) +
 			Math.tan(loc3.getLatitude()) * Math.sin(loc1.getLongitude() - loc2.getLongitude());
@@ -1355,7 +1355,7 @@ public class Functions
 	 *  fmt( 1, 3 ) will return "001".<BR>
 	 *  fmt( 12, 3 ) will return "012".<BR>
 	 *  fmt( 1234, 3 ) will return "<B>234</B>."
-	 * 
+	 *
 	 * @param i The integer to format.
 	 * @param w The format width.
 	 * @return A formatted String.
@@ -1381,7 +1381,7 @@ public class Functions
 	 *  fmt( 1, 3, ':' ) will return "001:".<BR>
 	 *  fmt( 12, 3, ':' ) will return "012:".<BR>
 	 *  fmt( 1234, 3, ':' ) will return "<B>234:</B>."
-	 * 
+	 *
 	 * @param i The integer to format.
 	 * @param w The format width.
 	 * @param suffix The character to append.
@@ -1401,7 +1401,7 @@ public class Functions
 	  * @param a Alpha component. 0 is transparent.
 	  * @return RGBA.
 	  */
-	public static int getColor(int r, int g, int b, int a) {		
+	public static int getColor(int r, int g, int b, int a) {
 		if (r < 0) r = 0;
 		if (g < 0) g = 0;
 		if (b < 0) b = 0;
@@ -1410,7 +1410,7 @@ public class Functions
 		if (g > 255) g = 255;
 		if (b > 255) b = 255;
 		if (a > 255) a = 255;
-		
+
 		return a<<24 | r<<16 | g<<8 | b;
 	}
 
@@ -1427,7 +1427,7 @@ public class Functions
    * Computes the minimum enclosing circle for an arbitrary number of points.
    * @param points A list containing the set of points in 2d.
    * @return Three values: center x, center y, and radius.
-   */	
+   */
 	public static double[] getCircleContainingObjects(ArrayList<Point2D> points) {
 		ArrayList<Point> a = new ArrayList<Point>();
 		for (int i=0; i<points.size(); i++) {
@@ -1437,12 +1437,12 @@ public class Functions
 		Circle c = makeCircle(a);
 		return new double[] {c.c.x, c.c.y, c.r};
 	}
-	
+
 	private static Circle makeCircle(List<Point> points) {
 		// Clone list to preserve the caller's data, randomize order
 		List<Point> shuffled = new ArrayList<Point>(points);
 		Collections.shuffle(shuffled, new Random());
-		
+
 		// Progressively add points to circle or recompute circle
 		Circle c = null;
 		for (int i = 0; i < shuffled.size(); i++) {
@@ -1452,7 +1452,7 @@ public class Functions
 		}
 		return c;
 	}
-	
+
 	// One boundary point known
 	private static Circle makeCircleOnePoint(List<Point> points, Point p) {
 		Circle c = new Circle(p, 0);
@@ -1467,13 +1467,13 @@ public class Functions
 		}
 		return c;
 	}
-	
+
 	// Two boundary points known
 	private static Circle makeCircleTwoPoints(List<Point> points, Point p, Point q) {
 		Circle temp = makeDiameter(p, q);
 		if (temp.contains(points))
 			return temp;
-		
+
 		Circle left = null;
 		Circle right = null;
 		for (Point r : points) {  // Form a circumcircle with each point
@@ -1489,11 +1489,11 @@ public class Functions
 		}
 		return right == null || left != null && left.r <= right.r ? left : right;
 	}
-	
+
 	private static Circle makeDiameter(Point a, Point b) {
 		return new Circle(new Point((a.x + b.x)/ 2, (a.y + b.y) / 2), a.distance(b) / 2);
 	}
-	
+
 	private static Circle makeCircumcircle(Point a, Point b, Point c) {
 		// Mathematical algorithm from Wikipedia: Circumscribed circle
 		double d = (a.x * (b.y - c.y) + b.x * (c.y - a.y) + c.x * (a.y - b.y)) * 2;
@@ -1504,113 +1504,64 @@ public class Functions
 		Point p = new Point(x, y);
 		return new Circle(p, p.distance(a));
 	}
-	
-	/**
-	 * Test program.
-	 * @param args Not used.
-	 */
-	public static void main(String[] args) {
-		System.out.println(Functions.roundDownToPlace(1346.4667, 1));
-		System.out.println(Functions.roundUpToPlace(1346.4667, 2));
-		System.out.println(Functions.roundToPlace(1346.4667, 2));
-		System.out.println(Functions.formatValue(48.3, 0, 2, true));
-		double val = 2453736.499999995;
-		int decimals = 8;
-		System.out.println(Functions.formatValue(val, decimals));
-
-		System.out.println();
-
-		LocationElement loc1 = new LocationElement(
-				Functions.parseRightAscension("12 41 8.63"),
-				Functions.parseDeclination("-5 37 54.2"), 1.0);
-		LocationElement loc2 = new LocationElement(
-				Functions.parseRightAscension("12 52 5.21"),
-				Functions.parseDeclination("-4 22 26.2"), 1.0);
-		LocationElement loc3 = new LocationElement(
-				Functions.parseRightAscension("12 39 28.11"),
-				Functions.parseDeclination("-1 50 3.7"), 1.0);
-		
-		LocationElement loc = Functions.getCircleContainingThreeObjects(loc1, loc2, loc3);
-		System.out.println(Functions.formatRA(loc.getLongitude()));
-		System.out.println(Functions.formatDEC(loc.getLatitude()));
-		System.out.println(Functions.formatAngleAsDegrees(loc.getRadius(), 5));
-
-		System.out.println();
-
-		loc1 = new LocationElement(
-				Functions.parseRightAscension("9 05 41.44"),
-				Functions.parseDeclination("18 30 30"), 1.0);
-		loc2 = new LocationElement(
-				Functions.parseRightAscension("9 9 29"),
-				Functions.parseDeclination("17 43 56.7"), 1.0);
-		loc3 = new LocationElement(
-				Functions.parseRightAscension("8 59 47.14"),
-				Functions.parseDeclination("17 49 36.8"), 1.0);
-		
-		loc = Functions.getCircleContainingThreeObjects(loc1, loc2, loc3);
-		System.out.println(Functions.formatRA(loc.getLongitude()));
-		System.out.println(Functions.formatDEC(loc.getLatitude()));
-		System.out.println(Functions.formatAngleAsDegrees(loc.getRadius(), 5));
-	}
 }
 
 class Circle {
-	
 	private static double EPSILON = 1e-12;
-	
 	public final Point c;   // Center
 	public final double r;  // Radius
-	
+
 	public Circle(Point c, double r) {
 		this.c = c;
 		this.r = r;
 	}
-	
+
 	public boolean contains(Point p) {
 		return c.distance(p) <= r + EPSILON;
 	}
-	
+
 	public boolean contains(Collection<Point> ps) {
 		for (Point p : ps) {
 			if (!contains(p))
 				return false;
 		}
+
 		return true;
 	}
-	
+
+    @Override
 	public String toString() {
 		return String.format("Circle(x=%g, y=%g, r=%g)", c.x, c.y, r);
 	}
 }
 
 class Point {
-	
 	public final double x;
 	public final double y;
-	
+
 	public Point(double x, double y) {
 		this.x = x;
 		this.y = y;
 	}
-		
+
 	public Point subtract(Point p) {
 		return new Point(x - p.x, y - p.y);
 	}
-	
+
 	public double distance(Point p) {
 		return FastMath.hypot(x - p.x, y - p.y);
 	}
-	
+
 	// Signed area / determinant thing
 	public double cross(Point p) {
 		return x * p.y - y * p.x;
 	}
-	
+
 	// Magnitude squared
 	public double norm() {
 		return x * x + y * y;
 	}
-	
+
 	public String toString() {
 		return String.format("Point(%g, %g)", x, y);
 	}

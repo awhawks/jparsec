@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.ephem.moons;
 
 import jparsec.ephem.Functions;
@@ -28,7 +28,7 @@ import jparsec.math.Constant;
  * This class implements L1 theory for the positions of the satellites of
  * Jupiter by Lainey et al. For explanations see Astronomy and Astrophysics 427,
  * 371 (2004). Objects are Io, Europa, Ganymede, and Callisto.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -36,42 +36,15 @@ public class L1
 {
 	// private constructor so that this class cannot be instantiated.
 	private L1() {}
-	
-	/**
-	 * Testing program.
-	 * @param args Not used.
-	 */
-	public static void main(String args[]) {
-		for (int nsat = 1; nsat <= 4; nsat ++) {
-			double ELEM[] = L1.L1_theory_old(2451545, nsat, 1, 1);
-			System.out.println(ELEM[0]+"/"+ELEM[1]+"/"+ELEM[2]+"/"+ELEM[3]+"/"+ELEM[4]+"/"+ELEM[5]);
-// Should be
-// Io
-//			  2.671999370920431E-003  7.644018403387422E-004  4.087344808808269E-004
-//			  -3.116203340625001E-003  8.645679572984422E-003  4.066210333795641E-003
-// Europa
-//			  -3.751373844521062E-003 -2.136179970327756E-003 -1.056765216826830E-003
-//			   4.310591732986133E-003 -6.143199976514738E-003 -2.800434328620005E-003
-// Ganymede
-//			  -5.490036250442612E-003 -4.112229247907583E-003 -2.033821277493470E-003
-//			   4.036147912130572E-003 -4.364866691392988E-003 -2.037111499364415E-003
-// Callisto
-//			   2.172082907229073E-003  1.118792302205555E-002  5.322275059416266E-003
-//			  -4.662583658656747E-003  7.976685330152526E-004  3.092058747362411E-004			
-			ELEM = L1.L1_theory(2441669, nsat);
-			System.out.println(ELEM[0]+"/"+ELEM[1]+"/"+ELEM[2]+"/"+ELEM[3]+"/"+ELEM[4]+"/"+ELEM[5]);
-// Should be	
-//-0.012136434071684304/0.003374929866115463/0.0014374540796792653/-0.0013542058539217942/-0.0040620093629751275/-0.0019470410148563256
-		}
-	}
+
 	/**
 	 * L1 Ephemerides v1.2. Output vector is in equatorial coordinates, in
-	 * AU and AU/day. Tchebycheff polynomials are used to represent very long 
-	 * period perturbations, hence limiting the interval of validity of 
+	 * AU and AU/day. Tchebycheff polynomials are used to represent very long
+	 * period perturbations, hence limiting the interval of validity of
 	 * ephemerides to about [-810,810] years centered on J1950. Outside this
 	 * range these polynomials are not used and ephemerides can be calculated,
 	 * but results are approximate.
-	 * 
+	 *
 	 * @param ET Julian day in TDB.
 	 * @param ks Satellite ID from 1 to 4 (Io to Callisto).
 	 * @return Jovicentric J2000 vector (x, y, z, vx, vy, vz).
@@ -83,7 +56,7 @@ public class L1
 
 		double MU[] = new double[]
 		{ 0.0, 2.82489428433814E-07, 2.82483274392893E-07, 2.82498184184723E-07, 2.82492144889909E-07 };
-		
+
 		double nbterm[][] = new double[][] {
 				new double[] {0, 0, 0, 0, 0},
 				new double[] {0, 38, 32, 23, 15},
@@ -96,7 +69,7 @@ public class L1
 				new double[] {0, 1.446213296021224, -0.3735263437471362, 0.2874089391143348, -0.3620341291375704},
 				new double[] {0, 3.551552286182400, 1.769322711123470, 0.8782079235893280, 0.3764862334338280},
 		};
-		
+
 		double c[][][] = new double[][][] {
 				new double[][] {},
 				new double[][] {
@@ -121,7 +94,7 @@ public class L1
 						new double[] {0, 0.117376776995138E-04   ,-0.172444072203130E-06  , -0.110691155968765E-06  , -0.197744662243578E-07  , -0.511649608698392E-08},
 						new double[] {0, 0.319509608989603E-05   , 0.235985832098386E-06  , -0.369048459423356E-07  ,  0.343169676541053E-08  , -0.127841777400320E-07},
 						new double[] {0, -0.483167496026174E-05  ,  0.613727340553035E-07 ,   0.678631069587260E-08 ,  -0.130924950693160E-09 ,   0.119534263567129E-07},
-						new double[] {0, 0.447094431509368E-06   ,-0.158131098756712E-06  ,  0.190777145516695E-07  ,  0.135338072425105E-07  ,  0.115749543781328E-07}					
+						new double[] {0, 0.447094431509368E-06   ,-0.158131098756712E-06  ,  0.190777145516695E-07  ,  0.135338072425105E-07  ,  0.115749543781328E-07}
 				},
 				new double[][] {
 						new double[] {},
@@ -133,7 +106,7 @@ public class L1
 						new double[] {0, 0.144147643545141E-04  , -0.153370399783488E-06  , -0.222086683443490E-06  , -0.107729670354460E-06  , -0.224063936978287E-07},
 						new double[] {0, 0.658944353306297E-05  ,  0.447318789843126E-07  , -0.298609138042077E-06  ,  0.306301230195125E-07  , -0.333311708439601E-07},
 						new double[] {0, -0.619139500170464E-05 ,  -0.165802124252890E-07 ,  -0.129217448782639E-06 ,   0.112449433356374E-07 ,   0.107863442857316E-07},
-						new double[] {0, 0.782954615405540E-06  , -0.828946056921499E-07  , -0.150654590880644E-06  ,  0.708786417409988E-08  ,  0.662499119729457E-07}						
+						new double[] {0, 0.782954615405540E-06  , -0.828946056921499E-07  , -0.150654590880644E-06  ,  0.708786417409988E-08  ,  0.662499119729457E-07}
 				},
 				new double[][] {
 						new double[] {},
@@ -145,10 +118,10 @@ public class L1
 						new double[] {0, -0.110474926063654E-04,    0.153918794369926E-06 ,  -0.276537195728238E-06 ,  -0.359030239515192E-06 ,  -0.266081185506962E-06},
 						new double[] {0, -0.105634674903822E-04,    0.928279781805284E-07 ,  -0.133810977431205E-06 ,   0.117406290303369E-06 ,  -0.209003718083271E-06},
 						new double[] {0, 0.311526543050599E-04 ,   0.366048038576706E-06  ,  0.289677483700145E-06  ,  0.895051737231057E-07  , -0.146372661194868E-06},
-						new double[] {0, 0.466495863544146E-05 ,   0.568038769950531E-07  ,  0.470713328715423E-07  ,  0.971875658565188E-08  , -0.122390974721364E-06}					
+						new double[] {0, 0.466495863544146E-05 ,   0.568038769950531E-07  ,  0.470713328715423E-07  ,  0.971875658565188E-08  , -0.122390974721364E-06}
 				}
 		};
-		
+
 		double freq[][][] = new double[][][] {
 				new double[][] {
 					new double[] {0.0, 0.0, 0.0, 0.0, 0.0},
@@ -508,7 +481,7 @@ public class L1
 					new double[] {0.0, 0.0, 0.0, 0.0, 0.0},
 				},
 			};
-		
+
 			double ampl[][][] = new double[][][] {
 				new double[][] {
 					new double[] {0.0, 0.0, 0.0, 0.0, 0.0},
@@ -1228,13 +1201,13 @@ public class L1
 					new double[] {0.0, 0.0, 0.0, 0.0, 0.0},
 				},
 			};
-		
+
 		double T = ET - 2433282.5; // J1950
-		
+
 		double elem[] = new double[7];
 		double TN[] = new double[9];
 		double val[] = new double[6];
-		
+
 		/*
 		*  (IMCCE) computing corrections to elements from Tchebycheff polynomials :
 		*  These corrections represent very long period perturbations which
@@ -1266,7 +1239,7 @@ public class L1
 		        }
 			}
 		}
-		
+
 		/*
 		*  computing elements from series
 		*/
@@ -1309,7 +1282,7 @@ public class L1
         }
 	    elem[5] = s1 + val[4];
 		elem[6] = s2 + val[5];
-			
+
 		/*
 		*  computing cartesian coordinates from elements
 		*/
@@ -1332,11 +1305,11 @@ public class L1
 
 		return new double[]	{ elem[1], elem[2], elem[3], elem[4], elem[5], elem[6] };
 	}
-	
+
 	/**
 	 * L1 Ephemerides v1.1. Output vector is in equatorial coordinates, in
 	 * AU and AU/day.
-	 * 
+	 *
 	 * @param ET Julian day in TDB.
 	 * @param nsat Satellite ID from 1 to 4 (Io to Callisto).
 	 * @param is Output format. 0 for mean elements, 1 for vector.
@@ -1508,7 +1481,7 @@ public class L1
 	/**
 	 * Returns the exponential number e (2.718...) raised to the power of a
 	 * complex number, represented as an array (real part, imaginary part).
-	 * 
+	 *
 	 * @param z a complex number (real part, imaginary part).
 	 */
 	private static double[] ComplexEXP(double[] z)

@@ -1,5 +1,6 @@
 package jparsec.ephem;
 
+import java.math.BigDecimal;
 import jparsec.io.ConsoleReport;
 import jparsec.math.matrix.Matrix;
 import jparsec.observer.CityElement;
@@ -9,8 +10,6 @@ import jparsec.time.AstroDate;
 import jparsec.time.TimeElement;
 import jparsec.time.TimeScale;
 import jparsec.util.JPARSECException;
-
-import java.math.BigDecimal;
 
 public class IAU2006Test {
     /**
@@ -25,9 +24,14 @@ public class IAU2006Test {
             AstroDate astro = new AstroDate(2006, AstroDate.JANUARY, 15, 21, 24, 37.5000);
             TimeElement time = new TimeElement(astro, TimeElement.SCALE.UNIVERSAL_TIME_UTC);
             ObserverElement obs = new ObserverElement(new CityElement("Madrid"));
-            EphemerisElement eph = new EphemerisElement(Target.TARGET.Moon, EphemerisElement.COORDINATES_TYPE.APPARENT,
-                    EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.GEOCENTRIC, EphemerisElement.REDUCTION_METHOD.IAU_2006,
-                    EphemerisElement.FRAME.ICRF, EphemerisElement.ALGORITHM.MOSHIER);
+            EphemerisElement eph = new EphemerisElement(
+                Target.TARGET.Moon,
+                EphemerisElement.COORDINATES_TYPE.APPARENT,
+                EphemerisElement.EQUINOX_OF_DATE,
+                EphemerisElement.GEOCENTRIC,
+                EphemerisElement.REDUCTION_METHOD.IAU_2006,
+                EphemerisElement.FRAME.ICRF,
+                EphemerisElement.ALGORITHM.MOSHIER);
             eph.useVondrak2011PrecessionFormulaInsteadOfIAU2006 = false;
 
             // Force example values
@@ -67,7 +71,8 @@ public class IAU2006Test {
             //-0.97140588849284692 +0.23742427873021975 +0.00055827489427310
             //+0.00058485981985452 +0.00004153524101576 +0.99999982810689266
 
-/*            // DE200 to FK5 (eq)
+            /*
+            // DE200 to FK5 (eq)
             Matrix rx = Matrix.getR1(0.0361 * Constant.ARCSEC_TO_RAD);
             Matrix rz = Matrix.getR3(0.0059 * Constant.ARCSEC_TO_RAD);
             Matrix r = rx.times(rz);
@@ -81,7 +86,7 @@ public class IAU2006Test {
             // http://www.imcce.fr/en/ephemerides/generateur/ephepos/ephemcc_doc.ps.gz
             r = rx.times(rz);
             r.print(17, 15);
-*/
+            */
         } catch (JPARSECException e) {
             e.showException();
         }

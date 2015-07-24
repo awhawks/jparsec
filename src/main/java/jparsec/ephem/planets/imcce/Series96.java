@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.ephem.planets.imcce;
 
 import java.io.BufferedReader;
@@ -26,35 +26,29 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-
 import jparsec.ephem.Ephem;
 import jparsec.ephem.EphemerisElement;
 import jparsec.ephem.EphemerisElement.ALGORITHM;
+import jparsec.ephem.EphemerisElement.FRAME;
+import jparsec.ephem.EphemerisElement.REDUCTION_METHOD;
 import jparsec.ephem.Functions;
 import jparsec.ephem.IAU2006;
 import jparsec.ephem.Nutation;
 import jparsec.ephem.PhysicalParameters;
 import jparsec.ephem.Precession;
-import jparsec.ephem.EphemerisElement.FRAME;
-import jparsec.ephem.EphemerisElement.REDUCTION_METHOD;
 import jparsec.ephem.Target.TARGET;
 import jparsec.ephem.moons.MoonEphem;
 import jparsec.ephem.planets.EphemElement;
-import jparsec.ephem.planets.JPLEphemeris;
 import jparsec.ephem.planets.PlanetEphem;
-import jparsec.io.ConsoleReport;
 import jparsec.io.FileIO;
 import jparsec.math.Constant;
 import jparsec.math.matrix.Matrix;
-import jparsec.observer.City;
-import jparsec.observer.CityElement;
 import jparsec.observer.LocationElement;
 import jparsec.observer.ObserverElement;
-import jparsec.time.AstroDate;
 import jparsec.time.SiderealTime;
-import jparsec.time.TimeScale;
 import jparsec.time.TimeElement;
 import jparsec.time.TimeElement.SCALE;
+import jparsec.time.TimeScale;
 import jparsec.util.DataBase;
 import jparsec.util.JPARSECException;
 import jparsec.util.Translate;
@@ -70,7 +64,7 @@ import jparsec.util.Translate;
  * Representation of planetary ephemerides by frequency analysis. Application to
  * the five outer planets. Astron. and Astrophys. Suppl. Ser., 109, 191 (1995). J.
  * Chapront, G. Francou - IMCCE (France).
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -87,16 +81,16 @@ public class Series96
 	/**
 	 * Get rectangular equatorial geocentric position of a planet in epoch
 	 * J2000.
-	 * 
+	 *
 	 * @param JD Julian day in TDB.
 	 * @param planet Planet ID.
 	 * @param light_time Light time in days.
 	 * @param addSat True to add the planetocentric position of the satellite to the position
 	 * of the planet.
 	 * @param obs The observer object. Can be null for the Earth's center.
-	 * @return Array with x, y, z, (object position) vx, vy, vz (Earth barycentric 
+	 * @return Array with x, y, z, (object position) vx, vy, vz (Earth barycentric
 	 * velocity) coordinates. Note velocity components are those
-	 * for the Earth (used for aberration correction) not those for the planet relative to the 
+	 * for the Earth (used for aberration correction) not those for the planet relative to the
 	 * geocenter.
 	 * @throws JPARSECException Thrown if the calculation fails.
 	 */
@@ -104,7 +98,7 @@ public class Series96
 	{
 		// Heliocentric position corrected for light time
 		double helio_object[] = getHeliocentricEquatorialPositionJ2000(JD - light_time, planet);
-		
+
 		if (addSat) {
 			Object o = DataBase.getData("offsetPosition", true);
 			if (o != null) {
@@ -124,7 +118,7 @@ public class Series96
 					helio_earth[3], helio_earth[4], helio_earth[5], };
 			return geo_pos;
 		}
-		
+
 		// Geocentric position of Earth-Moon barycenter
 		double geo_barycenter[] = getBarycenter(JD);
 		double time_step = 0.1;
@@ -153,7 +147,7 @@ public class Series96
 	/**
 	 * Calculate heliocentric position for a given time (dynamical equinox and
 	 * ecliptic J2000). Methods from Capitaine et al. are considered.
-	 * 
+	 *
 	 * @param JD Julian day in TDB. Must be in the range 2341972.5 - 2488092.5
 	 *        (years 1700 - 2100) for Pluto. For Neptune JD starts at 2396758.5,
 	 *        and for the other planets at 2415020.5. Scale: TDB.
@@ -175,7 +169,7 @@ public class Series96
 	/**
 	 * Calculate heliocentric position for a given time (dynamical equinox and
 	 * equator J2000).
-	 * 
+	 *
 	 * @param JD Julian day in TDB. Must be in the range 2341972.5 - 2488092.5
 	 *        (years 1700 - 2100) for Pluto. For Neptune JD starts at 2396758.5,
 	 *        and for the other planets at 2415020.5. Scale: TDB.
@@ -321,7 +315,7 @@ public class Series96
 				object[4] -= geo_barycenter_vel[1];
 				object[5] -= geo_barycenter_vel[2];
 			}
-			
+
 			// Return position of Pluto's body center
 			if (planet == TARGET.Pluto) {
 				double newPos[] = MoonEphem.fromPlutoBarycenterToPlutoCenter(object.clone(), JD, EphemerisElement.REDUCTION_METHOD.IAU_2009, true);
@@ -347,13 +341,13 @@ public class Series96
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Read Series96 files. Files are stored in the path defined by
 	 * Series96.path. Files are original from IMCCE, except Pluto, which has
 	 * been modified in certain line to be able to read it using
 	 * Functions.getField method.
-	 * 
+	 *
 	 * @param planet Planet ID value.
 	 * @param JD Julian day of calculations.
 	 * @return A Series96_set object.
@@ -361,7 +355,7 @@ public class Series96
 	private Series96_set readSeries96(TARGET planet, double JD) throws JPARSECException
 	{
 		String fich = Translate.translate(planet.getName(), Translate.getDefaultLanguage(), Translate.LANGUAGE.ENGLISH);
-		
+
 		String line = "";
 		Series96_set set = new Series96_set();
 
@@ -443,12 +437,12 @@ public class Series96
 
 	/**
 	 * Obtain rectangular coordinates of the geocentric position of the
-	 * Earth-Moon Barycenter. Equinox and equator J2000. No 
+	 * Earth-Moon Barycenter. Equinox and equator J2000. No
 	 * limitation exists in the input date. It has been tested that this method
 	 * has a discrepancy with DE406 close to 200 km (2 degrees) in the position of the
 	 * barycenter at 3000 B.C., producing errors of several 0.1" only
 	 * for objects close to Earth.
-	 * 
+	 *
 	 * @param JD Julian day (TDB).
 	 * @return Array with x, y, z coordinates.
 	 */
@@ -536,7 +530,7 @@ public class Series96
 	 * Calculate ephemeris, providing full data. This method uses Series96
 	 * theory from the IMCCE, valid between 1900 and 2100. Typical error is
 	 * about 0.001 arcseconds or below, when comparing to JPL Ephemeris DE403.
-	 * 
+	 *
 	 * @param time Time object containing the date.
 	 * @param obs Observer object containing the observer position.
 	 * @param eph Ephemeris object with the target and ephemeris
@@ -607,7 +601,7 @@ public class Series96
 			geo_eq = Ephem.aberration(geo_eq, earth, light_time);
 			DataBase.addData("GCRS", geo_eq, true);
 		} else {
-			DataBase.addData("GCRS", null, true);			
+			DataBase.addData("GCRS", null, true);
 		}
 
 		/* Correction to output frame. */
@@ -617,8 +611,8 @@ public class Series96
 		double geo_date[];
 		if (eph.frame == FRAME.FK4) {
 			// Transform from B1950 to mean equinox of date
-			 geo_date = Precession.precess(Constant.B1950, JD_TDB, geo_eq, eph);	
-			 helio_object = Precession.precess(Constant.B1950, JD_TDB, helio_object, eph);	
+			 geo_date = Precession.precess(Constant.B1950, JD_TDB, geo_eq, eph);
+			 helio_object = Precession.precess(Constant.B1950, JD_TDB, helio_object, eph);
 		} else {
 			// Transform from J2000 to mean equinox of date
 			geo_date = Precession.precessFromJ2000(JD_TDB, geo_eq, eph);
@@ -635,7 +629,7 @@ public class Series96
 				/* Correct nutation */
 				true_eq = Nutation.nutateInEquatorialCoordinates(JD_TDB, eph, geo_date, true);
 			}
-	
+
 			// Correct for polar motion
 			if (eph.ephemType == EphemerisElement.COORDINATES_TYPE.APPARENT &&
 					eph.correctForPolarMotion)
@@ -647,7 +641,7 @@ public class Series96
 				true_eq = Functions.rotateZ(true_eq, gast);
 			}
 		}
-		
+
 		// Pass to coordinates as seen from another body, if necessary
 		if (obs.getMotherBody() != TARGET.NOT_A_PLANET && obs.getMotherBody() != TARGET.EARTH)
 			true_eq = Ephem.getPositionFromBody(LocationElement.parseRectangularCoordinates(true_eq), time, obs, eph).getRectangularCoordinates();
@@ -666,7 +660,7 @@ public class Series96
 		// Note distances are apparent, not true
 		ephem_elem.distanceFromSun = loc_elem.getRadius();
 
-		if (eph.targetBody == TARGET.SUN) ephem_elem.heliocentricEclipticLatitude = ephem_elem.heliocentricEclipticLongitude = 
+		if (eph.targetBody == TARGET.SUN) ephem_elem.heliocentricEclipticLatitude = ephem_elem.heliocentricEclipticLongitude =
 			ephem_elem.distanceFromSun = 0;
 
 		/* Topocentric correction */
@@ -675,10 +669,10 @@ public class Series96
 
 		/* Physical ephemeris */
 		Object gcrs = DataBase.getData("GCRS", true);
-		EphemerisElement new_eph = new EphemerisElement(eph.targetBody, EphemerisElement.COORDINATES_TYPE.APPARENT, 
+		EphemerisElement new_eph = new EphemerisElement(eph.targetBody, EphemerisElement.COORDINATES_TYPE.APPARENT,
 				EphemerisElement.EQUINOX_OF_DATE, eph.isTopocentric, eph.ephemMethod, eph.frame);
 		EphemElement ephem_elem2 = ephem_elem;
-		if (eph.ephemType != EphemerisElement.COORDINATES_TYPE.APPARENT || eph.equinox != EphemerisElement.EQUINOX_OF_DATE) 
+		if (eph.ephemType != EphemerisElement.COORDINATES_TYPE.APPARENT || eph.equinox != EphemerisElement.EQUINOX_OF_DATE)
 			ephem_elem2 = PlanetEphem.MoshierEphemeris(time, obs, new_eph);
 		new_eph.targetBody = TARGET.SUN;
 		// Priority to Moshier since performance is far better
@@ -702,72 +696,4 @@ public class Series96
 
 		return ephem_elem;
 	}
-
-	/**
-	 * For unit testing only.
-	 * @param args Not used.
-	 */
-	public static void main(String args[])
-	{
-		System.out.println("Series96 Test");
-
-		try
-		{
-			AstroDate astro = new AstroDate(2049, AstroDate.JANUARY, 1, 0, 0, 0);
-			TimeElement time = new TimeElement(astro, SCALE.TERRESTRIAL_TIME);
-			CityElement city = City.findCity("Madrid");
-			EphemerisElement eph = new EphemerisElement(TARGET.NEPTUNE, EphemerisElement.COORDINATES_TYPE.APPARENT,
-					EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.GEOCENTRIC, EphemerisElement.REDUCTION_METHOD.IAU_2006,
-					EphemerisElement.FRAME.ICRF);
-			ObserverElement observer = ObserverElement.parseCity(city);
-
-			EphemElement ephem = Series96.series96Ephemeris(time, observer, eph);
-
-			ephem.name = eph.targetBody.getName() + " (Series96)";
-			ConsoleReport.basicEphemReportToConsole(ephem);
-
-			eph.algorithm = EphemerisElement.ALGORITHM.JPL_DE403;
-			JPLEphemeris jpl = new JPLEphemeris(EphemerisElement.ALGORITHM.JPL_DE403);
-			ephem = jpl.getJPLEphemeris(time, observer, eph);
-
-			ephem.name = eph.targetBody.getName() + " (DE403)";
-			ConsoleReport.basicEphemReportToConsole(ephem);
-
-			JPARSECException.showWarnings();
-		} catch (JPARSECException ve)
-		{
-			JPARSECException.showException(ve);
-		}
-	}
-};
-
-/* A set of values (one block) in the Series96 files */
-class Series96_set
-{
-	Series96_set()
-	{
-		NF = new int[4];
-		MX = 0;
-		IMAX = 0;
-		IBLOCK = 0;
-		TDEB = 0.0;
-		DT = .0;
-		TFIN = 0.0;
-		FQ = new double[4][300];
-		SEC = new double[4][4];
-		CT = new double[4][4][300];
-		ST = new double[4][4][300];
-	};
-
-	int NF[];
-	int MX;
-	int IMAX;
-	int IBLOCK;
-	double TDEB;
-	double DT;
-	double TFIN;
-	double FQ[][];
-	double SEC[][];
-	double CT[][][];
-	double ST[][][];
 }

@@ -16,7 +16,6 @@ import jparsec.time.TimeElement;
 import jparsec.util.Translate;
 
 public class JPLEphemerisTest {
-
     /**
      * For unit testing only.
      *
@@ -24,21 +23,22 @@ public class JPLEphemerisTest {
      */
     public static void main(String args[]) throws Exception {
         System.out.println("JPLEphemeris test");
-
         JPLEphemeris jpl = new JPLEphemeris(EphemerisElement.ALGORITHM.JPL_DE430);
 
         // Full calculations
         AstroDate astro = new AstroDate(1992, AstroDate.APRIL, 12, 0, 0, 0);
         TimeElement time = new TimeElement(astro.jd(), TimeElement.SCALE.TERRESTRIAL_TIME);
         CityElement city = City.findCity("Madrid");
-        EphemerisElement eph = new EphemerisElement(Target.TARGET.JUPITER, EphemerisElement.COORDINATES_TYPE.APPARENT,
-                EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.TOPOCENTRIC, EphemerisElement.REDUCTION_METHOD.IAU_1976,
-                EphemerisElement.FRAME.ICRF);
+        EphemerisElement eph = new EphemerisElement(
+            Target.TARGET.JUPITER,
+            EphemerisElement.COORDINATES_TYPE.APPARENT,
+            EphemerisElement.EQUINOX_OF_DATE,
+            EphemerisElement.TOPOCENTRIC,
+            EphemerisElement.REDUCTION_METHOD.IAU_1976,
+            EphemerisElement.FRAME.ICRF);
         eph.algorithm = jpl.getJPLVersionID();
         ObserverElement observer = ObserverElement.parseCity(city);
-
         EphemElement ephem = jpl.getJPLEphemeris(time, observer, eph);
-
         String name = ephem.name;
         String out = "", sep = FileIO.getLineSeparator();
         out += name + " " + Translate.translate(Translate.JPARSEC_RIGHT_ASCENSION) + ": " + Functions.formatRA(ephem.rightAscension, 5) + sep;
@@ -70,13 +70,13 @@ public class JPLEphemerisTest {
         jparsec.io.ConsoleReport.fullEphemReportToConsole(ephem);
 
         double lib[] = jpl.getPositionAndVelocity(2455713.5, Target.TARGET.Libration);
+        double nut[] = jpl.getPositionAndVelocity(2455713.5, Target.TARGET.Nutation);
         System.out.println("Librations");
         ConsoleReport.stringArrayReport(DataSet.toStringValues(lib));
         // Should be
         // 0,067141829176838490   0,412413988874723900 3522,780878808184800000
         // -0,000121984430648748  -0,000007337186520484   0,230087432221497220
 
-        double nut[] = jpl.getPositionAndVelocity(2455713.5, Target.TARGET.Nutation);
         System.out.println("Nutations");
         ConsoleReport.stringArrayReport(DataSet.toStringValues(nut));
         // Should be

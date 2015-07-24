@@ -10,7 +10,6 @@ import jparsec.time.TimeElement;
 import jparsec.util.JPARSECException;
 
 public class LunarEventTest {
-
     /**
      * For unit testing only.
      *
@@ -46,8 +45,6 @@ public class LunarEventTest {
             System.out.println("l = " + Functions.formatAngleAsDegrees(angles[0], 5)); // -4.067 (for 2455713.5)
             System.out.println("b = " + Functions.formatAngleAsDegrees(angles[1], 5)); // -2.765
             System.out.println("p = " + Functions.formatAngleAsDegrees(angles[2], 5)); // -13.800
-
-
             astro = new AstroDate(2004, 1, 1);
             SimpleEventElement s = LunarEvent.getPerigee(astro.jd(), MainEvents.EVENT_TIME.NEXT);
             System.out.println(s.toString()); // 19:26 and 362 767 km, according to http://www.saao.ac.za/public-info/sun-moon-stars/moon-index/lunar-perigee-apogee-2004-2020/

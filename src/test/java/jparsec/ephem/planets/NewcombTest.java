@@ -14,23 +14,26 @@ import jparsec.time.TimeScale;
 import jparsec.util.JPARSECException;
 
 public class NewcombTest {
-
     /**
      * For unit testing only.
      *
      * @param args Not used.
      */
     public static void main(String args[]) {
-        System.out.println("Newcomb Test");
+        System.out.println("Newcomb test");
 
         try {
             AstroDate astro = new AstroDate(Constant.B1950); // 1, AstroDate.january, 2006);
             TimeElement time = new TimeElement(astro, TimeElement.SCALE.UNIVERSAL_TIME_UT1);
             CityElement city = City.findCity("Madrid");
             ObserverElement observer = ObserverElement.parseCity(city);
-            EphemerisElement eph = new EphemerisElement(Target.TARGET.SUN, EphemerisElement.COORDINATES_TYPE.APPARENT,
-                    EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.TOPOCENTRIC, EphemerisElement.REDUCTION_METHOD.WILLIAMS_1994,
-                    EphemerisElement.FRAME.ICRF);
+            EphemerisElement eph = new EphemerisElement(
+                Target.TARGET.SUN,
+                EphemerisElement.COORDINATES_TYPE.APPARENT,
+                EphemerisElement.EQUINOX_OF_DATE,
+                EphemerisElement.TOPOCENTRIC,
+                EphemerisElement.REDUCTION_METHOD.WILLIAMS_1994,
+                EphemerisElement.FRAME.ICRF);
 
             EphemElement ephem = Ephem.getEphemeris(time, observer, eph, false, true);
             String name = eph.targetBody.getName();
@@ -61,7 +64,6 @@ public class NewcombTest {
             System.out.println("" + name + " meridian: " + ephem.longitudeOfCentralMeridian * Constant.RAD_TO_DEG);
 
             JPARSECException.showWarnings();
-
         } catch (JPARSECException ve) {
             JPARSECException.showException(ve);
         }

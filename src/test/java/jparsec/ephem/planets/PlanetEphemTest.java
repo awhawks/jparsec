@@ -25,13 +25,16 @@ public class PlanetEphemTest {
             AstroDate astro = new AstroDate(1990, AstroDate.JANUARY, 3, 12, 7, 38.002);
             TimeElement time = new TimeElement(astro, TimeElement.SCALE.LOCAL_TIME);
             CityElement city = City.findCity("Madrid");
-            EphemerisElement eph = new EphemerisElement(Target.TARGET.JUPITER, EphemerisElement.COORDINATES_TYPE.APPARENT,
-                    EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.TOPOCENTRIC,
+            EphemerisElement eph = new EphemerisElement(
+                    Target.TARGET.JUPITER,
+                    EphemerisElement.COORDINATES_TYPE.APPARENT,
+                    EphemerisElement.EQUINOX_OF_DATE,
+                    EphemerisElement.TOPOCENTRIC,
                     EphemerisElement.REDUCTION_METHOD.IAU_1976, // Same results as those given by Horizons
                     EphemerisElement.FRAME.ICRF);
             eph.algorithm = EphemerisElement.ALGORITHM.MOSHIER; //.JPL_DE405;
             ObserverElement observer = ObserverElement.parseCity(city);
-            // ObserverElement observer = ObserverElement.parseObservatory(observatory);
+            //ObserverElement observer = ObserverElement.parseObservatory(observatory);
 
             eph.correctForEOP = false;
             eph.correctForPolarMotion = false;
@@ -50,9 +53,8 @@ public class PlanetEphemTest {
                     EphemerisElement.REDUCTION_METHOD.IAU_2006,
                     EphemerisElement.FRAME.DYNAMICAL_EQUINOX_J2000);
             eph.algorithm = EphemerisElement.ALGORITHM.MOSHIER;
-            city = City.findCity("Madrid");
-            observer = ObserverElement.parseCity(city);
 
+            observer = ObserverElement.parseCity(city);
             ephem = Ephem.getEphemeris(time, observer, eph, false);
             System.out.println(ephem.getEquatorialLocation().toStringAsEquatorialLocation());
 

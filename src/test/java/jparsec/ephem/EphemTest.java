@@ -22,7 +22,6 @@ public class EphemTest {
      */
     public static void main(String args[]) throws Exception {
         System.out.println("Ephem test");
-
         AstroDate astro = new AstroDate(2013, AstroDate.JULY, 23, 10, 0, 0); // Test unknown sunset time
         TimeElement time = new TimeElement(astro, TimeElement.SCALE.UNIVERSAL_TIME_UT1);
         CityElement city = City.findCity("New York"); // Test: 2 locations with the same name...
@@ -64,33 +63,19 @@ public class EphemTest {
 
         // FK5 coordinates of Sun calculated directly = FK4 transformed to FK5 => fully consistent
         Sun Right ascension: 17h 56m 15.8827s
-        Sun Declination: -23Âº 26' 11.944"
+        Sun Declination: -23� 26' 11.944"
         */
 
         // Testing synchronization
-        final EphemerisElement eph2 = new EphemerisElement(
-                Target.TARGET.NEPTUNE,
-                EphemerisElement.COORDINATES_TYPE.APPARENT,
-                EphemerisElement.EQUINOX_OF_DATE,
-                EphemerisElement.GEOCENTRIC,
-                EphemerisElement.REDUCTION_METHOD.IAU_1976,
-                EphemerisElement.FRAME.ICRF,
-                EphemerisElement.ALGORITHM.JPL_DE405);
-        final EphemerisElement eph3 = new EphemerisElement(
-                Target.TARGET.Oberon,
-                EphemerisElement.COORDINATES_TYPE.APPARENT,
-                EphemerisElement.EQUINOX_OF_DATE,
-                EphemerisElement.GEOCENTRIC,
-                EphemerisElement.REDUCTION_METHOD.IAU_1976,
-                EphemerisElement.FRAME.ICRF,
-                EphemerisElement.ALGORITHM.NATURAL_SATELLITE);
-        eph = new EphemerisElement(Target.TARGET.SUN,
-                EphemerisElement.COORDINATES_TYPE.APPARENT,
-                EphemerisElement.EQUINOX_OF_DATE,
-                EphemerisElement.GEOCENTRIC,
-                EphemerisElement.REDUCTION_METHOD.IAU_1976,
-                EphemerisElement.FRAME.ICRF,
-                EphemerisElement.ALGORITHM.JPL_DE405);
+        final EphemerisElement eph2 = new EphemerisElement(Target.TARGET.NEPTUNE, EphemerisElement.COORDINATES_TYPE.APPARENT,
+                EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.GEOCENTRIC, EphemerisElement.REDUCTION_METHOD.IAU_1976,
+                EphemerisElement.FRAME.ICRF, EphemerisElement.ALGORITHM.JPL_DE405);
+        final EphemerisElement eph3 = new EphemerisElement(Target.TARGET.Oberon, EphemerisElement.COORDINATES_TYPE.APPARENT,
+                EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.GEOCENTRIC, EphemerisElement.REDUCTION_METHOD.IAU_1976,
+                EphemerisElement.FRAME.ICRF, EphemerisElement.ALGORITHM.NATURAL_SATELLITE);
+        eph = new EphemerisElement(Target.TARGET.SUN, EphemerisElement.COORDINATES_TYPE.APPARENT,
+                EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.GEOCENTRIC, EphemerisElement.REDUCTION_METHOD.IAU_1976,
+                EphemerisElement.FRAME.ICRF, EphemerisElement.ALGORITHM.JPL_DE405);
         astro = new AstroDate(1600, AstroDate.JANUARY, 1, 0, 0, 0);
         final TimeElement timeF = new TimeElement(astro, TimeElement.SCALE.TERRESTRIAL_TIME);
 
@@ -137,20 +122,20 @@ public class EphemTest {
 
         /*
 RA:  10h 00m 31.59382s
-DEC: 12Âº 51' 13.3634"
+DEC: 12� 51' 13.3634"
 RA2:  01h 41m 49.40292s
-DEC2: 10Âº 01' 47.6673"
+DEC2: 10� 01' 47.6673"
 RA:  18h 43m 27.72859s
-DEC: -23Âº 06' 56.9669"
-         */
+DEC: -23� 06' 56.9669"
+        */
 
         // For ALMA
-        /*observer.temperature = 0;
+/*
+        observer.temperature = 0;
         observer.humidity = 0;
         observer.pressure = 550;
         observer.height = 5500;
-        */
-
+*/
         for (double alt_deg = -5; alt_deg <= 90; alt_deg = alt_deg + 1) {
             double alt = alt_deg * Constant.DEG_TO_RAD;
 

@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.ephem.planets.imcce;
 
 import java.io.BufferedReader;
@@ -26,18 +26,17 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-
 import jparsec.ephem.Ephem;
 import jparsec.ephem.EphemerisElement;
 import jparsec.ephem.EphemerisElement.ALGORITHM;
 import jparsec.ephem.EphemerisElement.COORDINATES_TYPE;
+import jparsec.ephem.EphemerisElement.FRAME;
 import jparsec.ephem.EphemerisElement.REDUCTION_METHOD;
 import jparsec.ephem.Functions;
 import jparsec.ephem.IAU2006;
 import jparsec.ephem.Nutation;
 import jparsec.ephem.PhysicalParameters;
 import jparsec.ephem.Precession;
-import jparsec.ephem.EphemerisElement.FRAME;
 import jparsec.ephem.Target.TARGET;
 import jparsec.ephem.planets.EphemElement;
 import jparsec.io.FileFormatElement;
@@ -45,26 +44,22 @@ import jparsec.io.FileIO;
 import jparsec.io.ReadFormat;
 import jparsec.math.Constant;
 import jparsec.math.matrix.Matrix;
-import jparsec.observer.City;
-import jparsec.observer.CityElement;
 import jparsec.observer.LocationElement;
 import jparsec.observer.ObserverElement;
-import jparsec.time.AstroDate;
 import jparsec.time.SiderealTime;
-import jparsec.time.TimeScale;
 import jparsec.time.TimeElement;
 import jparsec.time.TimeElement.SCALE;
+import jparsec.time.TimeScale;
 import jparsec.util.DataBase;
 import jparsec.util.JPARSECException;
-import jparsec.util.Translate;
 
 /**
  * This class provides VSOP planetary positions for Mercury through Neptune.
- * The version of VSOP implemeted is VSOP87A (J2000 heliocentric rectangular 
+ * The version of VSOP implemeted is VSOP87A (J2000 heliocentric rectangular
  * coordinates).
 *
  * Bretagnon P., Francou G., : 1988, Astron. Astrophys., 202, 309.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -76,7 +71,7 @@ public class Vsop
 	/**
 	 * Obtain rectangular position of a planet using full VSOP87 theory. Mean
 	 * equinox and ecliptic J2000.
-	 * 
+	 *
 	 * @param JD Julian day in TDB.
 	 * @param planet Planet ID.
 	 * @return Array (x, y, z, vx, vy, vz).
@@ -131,7 +126,7 @@ public class Vsop
 
 	/**
 	 * Evaluates full VSOP87A theory.
-	 * 
+	 *
 	 * @param extension Planet extension of file.
 	 * @param jcen Julian centuries from J2000.
 	 * @return Array (x, y, z, vx, vy, vz), mean equinox and ecliptic J2000.
@@ -163,7 +158,7 @@ public class Vsop
 		rf_begin.setFormatToRead(VSOP_begin_record);
 		ReadFormat rf = new ReadFormat();
 		rf.setFormatToRead(VSOP_record);
-		
+
 		try
 		{
 			InputStream is = getClass().getClassLoader().getResourceAsStream(PATH_TO_FILE+"."+extension);
@@ -236,7 +231,7 @@ public class Vsop
 	/**
 	 * Get rectangular ecliptic geocentric position of a planet in equinox
 	 * J2000.
-	 * 
+	 *
 	 * @param JD Julian day in TDB.
 	 * @param planet Planet ID.
 	 * @param light_time Light time in days.
@@ -244,14 +239,14 @@ public class Vsop
 	 * of the planet.
 	 * @param obs The observer object. Can be null for the Earth's center.
 	 * @return Array with x, y, z, vx, vy, vz coordinates. Note velocity components are those
-	 * for the Earth (used for aberration correction) not those for the planet relative to the 
+	 * for the Earth (used for aberration correction) not those for the planet relative to the
 	 * geocenter.
 	 * @throws JPARSECException Thrown if the calculation fails.
 	 */
 	public static double[] getGeocentricPosition(double JD, TARGET planet, double light_time,
 			boolean addSat, ObserverElement obs) throws JPARSECException
 	{
-		// Heliocentric position corrected for light time 
+		// Heliocentric position corrected for light time
 		double helio_object[] = getHeliocentricEclipticPositionJ2000(JD - light_time, planet);
 
 		if (addSat) {
@@ -285,7 +280,7 @@ public class Vsop
 	/**
 	 * Transform J2000 mean ecliptic coordinates into equatorial.
 	 * Specific to this theory (class) to compare positions with DE200.
-	 * 
+	 *
 	 * @param position Ecliptic coordinates (x, y, z) or (x, y, z, vx, vy, vz)
 	 *        refered to mean ecliptic and dynamical equinox of J2000.
 	 * @return Equatorial FK5 coordinates.
@@ -333,7 +328,7 @@ public class Vsop
 	 * after 2100, despite that the results match JPL DE200 Ephemeris to within
 	 * the arcsecond for several millenia. Results closer to JPL DE403 can be obtained with
 	 * JPL ephemeris or Moshier algorithms.
-	 * 
+	 *
 	 * @param time Time object containing the date.
 	 * @param obs Observer object containing the observer position.
 	 * @param eph Ephemeris object with the target and ephemeris
@@ -366,7 +361,7 @@ public class Vsop
 		new_eph.ephemType = COORDINATES_TYPE.APPARENT;
 		new_eph.equinox = EphemerisElement.EQUINOX_OF_DATE;
 		EphemElement ephem_elem2 = ephem_elem;
-		if (eph.ephemType != EphemerisElement.COORDINATES_TYPE.APPARENT || eph.equinox != EphemerisElement.EQUINOX_OF_DATE) 
+		if (eph.ephemType != EphemerisElement.COORDINATES_TYPE.APPARENT || eph.equinox != EphemerisElement.EQUINOX_OF_DATE)
 			ephem_elem2 = vsopCalc(time, obs, new_eph, true);
 		new_eph.targetBody = TARGET.SUN;
 		ephem_elem2 = PhysicalParameters.physicalParameters(JD_TDB, vsopCalc(time, obs, new_eph, false), ephem_elem2, obs, eph);
@@ -430,10 +425,10 @@ public class Vsop
 			helio_object = Functions.sumVectors(helio_object, planetocentricPositionOfTargetSatellite);
 		}
 		helio_object = Ephem.eclipticToEquatorial(helio_object, Constant.J2000, eph);
-		
+
 		// Correct for solar deflection and aberration
 		if (eph.ephemType == EphemerisElement.COORDINATES_TYPE.APPARENT)
-		{ 
+		{
 			double geo_sun_0[] = Vsop.meanEclipticJ2000ToEquatorialFK5(Vsop
 					.getGeocentricPosition(JD_TDB, TARGET.SUN, 0.0, false, obs));
 			if (obs.getMotherBody() != TARGET.EARTH || (eph.targetBody != TARGET.SUN && eph.targetBody != TARGET.Moon))
@@ -454,8 +449,8 @@ public class Vsop
 		double geo_date[];
 		if (eph.frame == FRAME.FK4) {
 			// Transform from B1950 to mean equinox of date
-			 geo_date = Precession.precess(Constant.B1950, JD_TDB, geo_eq, eph);	
-			 helio_object = Precession.precess(Constant.B1950, JD_TDB, helio_object, eph);	
+			 geo_date = Precession.precess(Constant.B1950, JD_TDB, geo_eq, eph);
+			 helio_object = Precession.precess(Constant.B1950, JD_TDB, helio_object, eph);
 		} else {
 			// Transform from J2000 to mean equinox of date
 			geo_date = Precession.precessFromJ2000(JD_TDB, geo_eq, eph);
@@ -472,7 +467,7 @@ public class Vsop
 				/* Correct nutation */
 				true_eq = Nutation.nutateInEquatorialCoordinates(JD_TDB, eph, geo_date, true);
 			}
-	
+
 			// Correct for polar motion
 			if (eph.ephemType == EphemerisElement.COORDINATES_TYPE.APPARENT &&
 					eph.correctForPolarMotion)
@@ -484,7 +479,7 @@ public class Vsop
 				true_eq = Functions.rotateZ(true_eq, gast);
 			}
 		}
-		
+
 		// Pass to coordinates as seen from another body, if necessary
 		if (obs.getMotherBody() != TARGET.NOT_A_PLANET && obs.getMotherBody() != TARGET.EARTH)
 			true_eq = Ephem.getPositionFromBody(LocationElement.parseRectangularCoordinates(true_eq), time, obs, eph).getRectangularCoordinates();
@@ -503,7 +498,7 @@ public class Vsop
 		// Note distances are apparent, not true
 		ephem_elem.distanceFromSun = loc_elem.getRadius();
 
-		if (eph.targetBody == TARGET.SUN) ephem_elem.heliocentricEclipticLatitude = ephem_elem.heliocentricEclipticLongitude = 
+		if (eph.targetBody == TARGET.SUN) ephem_elem.heliocentricEclipticLatitude = ephem_elem.heliocentricEclipticLongitude =
 			ephem_elem.distanceFromSun = 0;
 
 		/* Topocentric correction */
@@ -512,75 +507,4 @@ public class Vsop
 
 		return ephem_elem;
 	}
-
-	/**
-	 * For unit testing only.
-	 * @param args Not used.
-	 */
-	public static void main(String args[])
-	{
-		System.out.println("Vsop Test");
-
-		try
-		{
-			AstroDate astro = new AstroDate(2000, AstroDate.JANUARY, 1, 0, 0, 0);
-			TimeElement time = new TimeElement(astro, SCALE.TERRESTRIAL_TIME);
-			CityElement city = City.findCity("Madrid");
-			ObserverElement observer = ObserverElement.parseCity(city);
-			EphemerisElement eph = new EphemerisElement(TARGET.VENUS, EphemerisElement.COORDINATES_TYPE.ASTROMETRIC,
-					EphemerisElement.EQUINOX_J2000, EphemerisElement.GEOCENTRIC, EphemerisElement.REDUCTION_METHOD.IAU_1976,
-					EphemerisElement.FRAME.ICRF);
-			eph.algorithm = EphemerisElement.ALGORITHM.VSOP87_ELP2000ForMoon;
-
-			EphemElement ephem = Ephem.getEphemeris(time, observer, eph, true);
-
-			String name = ephem.name;
-			String out = "", sep = FileIO.getLineSeparator();
-			
-			out += sep + "VSOP87" + sep;
-			out += name + " "+Translate.translate(Translate.JPARSEC_RIGHT_ASCENSION)+": " + Functions.formatRA(ephem.rightAscension, 5) + sep;
-			out += name + " "+Translate.translate(Translate.JPARSEC_DECLINATION)+": " + Functions.formatDEC(ephem.declination, 4) + sep;
-			out += name + " "+Translate.translate(Translate.JPARSEC_DISTANCE)+": " + Functions.formatValue(ephem.distance, 12) + sep;
-			out += name + " "+Translate.translate(Translate.JPARSEC_ELONGATION)+": " + Functions.formatAngleAsDegrees(ephem.elongation, 8) + sep;
-			out += name + " "+Translate.translate(Translate.JPARSEC_PHASE_ANGLE)+": " + Functions.formatAngleAsDegrees(ephem.phaseAngle, 8) + sep;
-			out += name + " "+Translate.translate(Translate.JPARSEC_PHASE)+": " + Functions.formatValue(ephem.phase, 8) + sep;
-			out += name + " "+Translate.translate(Translate.JPARSEC_HELIOCENTRIC_ECLIPTIC_LONGITUDE)+": " + Functions.formatAngleAsDegrees(ephem.heliocentricEclipticLongitude, 8) + sep;
-			out += name + " "+Translate.translate(Translate.JPARSEC_HELIOCENTRIC_ECLIPTIC_LATITUDE)+": " + Functions.formatAngleAsDegrees(ephem.heliocentricEclipticLatitude, 8) + sep;
-			out += name + " "+Translate.translate(Translate.JPARSEC_HELIOCENTRIC_DISTANCE)+": " + Functions.formatValue(ephem.distanceFromSun, 8) + sep;
-			out += name + " "+Translate.translate(Translate.JPARSEC_SUBSOLAR_LONGITUDE)+": " + Functions.formatAngleAsDegrees(ephem.subsolarLongitude, 6) + sep;
-			out += name + " "+Translate.translate(Translate.JPARSEC_SUBSOLAR_LATITUDE)+": " + Functions.formatAngleAsDegrees(ephem.subsolarLatitude, 6) + sep;
-			out += name + " "+Translate.translate(Translate.JPARSEC_POSITION_ANGLE_OF_AXIS)+": " + Functions.formatAngleAsDegrees(ephem.positionAngleOfAxis, 6) + sep;
-			out += name + " "+Translate.translate(Translate.JPARSEC_POSITION_ANGLE_OF_POLE)+": " + Functions.formatAngleAsDegrees(ephem.positionAngleOfPole, 6) + sep;
-			out += name + " "+Translate.translate(Translate.JPARSEC_LONGITUDE_OF_CENTRAL_MERIDIAN)+": " + Functions.formatAngleAsDegrees(ephem.longitudeOfCentralMeridian, 6) + sep;
-
-			System.out.println(out);
-			
-			System.out.println("DE200");
-			eph.algorithm = EphemerisElement.ALGORITHM.JPL_DE405;
-			ephem = Ephem.getEphemeris(time, observer, eph, false);
-			System.out.println("" + name + " RA: " + Functions.formatRA(ephem.rightAscension, 5));
-			System.out.println("" + name + " DEC: " + Functions.formatDEC(ephem.declination, 4));
-			System.out.println("" + name + " dist: " + ephem.distance);
-			System.out.println("" + name + " l-t: " + ephem.lightTime);
-			System.out.println("" + name + " h lon: " + Functions.formatAngleAsDegrees(ephem.heliocentricEclipticLongitude, 8));
-			System.out.println("" + name + " h lat: " + Functions.formatAngleAsDegrees(ephem.heliocentricEclipticLatitude, 8));
-
-/*			double p[] = new double[] {1, 1, 1.0};
-			double p1[] = Vsop.meanEclipticJ2000ToEquatorial(p);
-			System.out.println(p1[0]+"/"+p1[1]+"/"+p1[2]);
-			double p2[] = Ephem.eclipticToEquatorial(p, Constant.J2000, EphemerisElement.REDUCE_ALGORITHM.APPLY_IAU2000);
-			System.out.println(p2[0]+"/"+p2[1]+"/"+p2[2]);
-			double p3[] = Elp2000.meanJ2000InertialToEquatorial(p);
-			System.out.println(p3[0]+"/"+p3[1]+"/"+p3[2]);
-			double p4[] = Ephem.eclipticToEquatorial(p, Constant.J2000, EphemerisElement.REDUCE_ALGORITHM.APPLY_IAU2000);
-			p4 = Ephem.J2000toICRSFrame(p4);
-			p4 = Ephem.ICRStoFK5Frame(p4);
-			System.out.println(p4[0]+"/"+p4[1]+"/"+p4[2]);
-			JPARSECException.showWarnings();
-*/
-		} catch (JPARSECException ve)
-		{
-			JPARSECException.showException(ve);
-		}
-	}
-};
+}

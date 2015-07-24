@@ -24,9 +24,8 @@ package jparsec.ephem.planets.imcce;
 // One ELP2000 term
 
 /**
- * All the static data of the ELP2000 theory (part 1), in a
- * separate file for managability. The whole theory is applied. This is part 1
- * (from 2) of the data.
+ * All the static data of the ELP2000 theory (part 1), in a separate file for manageability.
+ * The whole theory is applied. This is part 1 (from 2) of the data.
  * <p>
  * Library users can ignore this class.
  * <p>

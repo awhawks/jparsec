@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.ephem.event;
 
 import jparsec.ephem.EphemerisElement.COORDINATES_TYPE;
@@ -71,7 +71,7 @@ public class MoonEvent {
 		 * before and ends later), and limb criteria for mutual events (neglecting penumbra). Default value.*/
 		AUTOMATIC,
 		/** Automatic value for drawing purposes: selects the criteria of satellite limb for transits (including penumbra, so it is
-		 * not exactly equal to satellite limb mode) and entire satellite for occultations, and satellite limb for mutual events. 
+		 * not exactly equal to satellite limb mode) and entire satellite for occultations, and satellite limb for mutual events.
 		 * Default value when rendering. */
 		AUTOMATIC_FOR_DRAWING
 	};
@@ -83,17 +83,17 @@ public class MoonEvent {
 	 * events.
 	 */
 	public static int SEVERAL_SIMULTANEOUS_EVENTS_MINIMUM_NUMBER = 2;
-	
+
 	/**
 	 * Sets the minimum number of simultaneous events to set the corresponding flag
 	 * {@linkplain MoonEventElement#severalSimultaneousEvents} as true, in case of
-	 * mutual events between satellites. Default value is 2, but can be set to a greater 
+	 * mutual events between satellites. Default value is 2, but can be set to a greater
 	 * value to search for more uncommon but interesting events.
 	 */
 	public static int SEVERAL_MUTUAL_SIMULTANEOUS_EVENTS_MINIMUM_NUMBER = 2;
-	
+
 	private static EVENT_DEFINITION eventDef = EVENT_DEFINITION.AUTOMATIC;
-	
+
 	/**
 	 * Sets how to consider the start/end of an event. Default value is when the center of
 	 * the main body starts/ends crossing the limb or edge of the secondary body in non-mutual
@@ -114,12 +114,12 @@ public class MoonEvent {
 		/*
 		Object o = DataBase.getData("eventDefinition", null, true);
 		if (o == null) return EVENT_DEFINITION.AUTOMATIC;
-		
+
 		int ord = (Integer) o;
 		return EVENT_DEFINITION.values()[ord];
 		*/
 	}
-	
+
 	/**
 	 * The set of theories to obtain events for Jupiter satellites.
 	 */
@@ -157,7 +157,7 @@ public class MoonEvent {
 	 * the entire satellite disk, this value should be reduced to around 10s), and 100s for non-mutual phenomena. Note that
 	 * the accuracy of the returned events is independent of this parameter. A
 	 * value of 30s only means that some events of shorter duration could be missed.
-	 * @param accuracy This will be the accuracy in seconds of the returned event times. 
+	 * @param accuracy This will be the accuracy in seconds of the returned event times.
 	 * A good value is 1-10s for mutual events and 30s for non-mutual, but can be lower
 	 * for Mars.
 	 * @param optimize True to optimize calculations for speed. This consists on forcing astrometric J2000
@@ -174,14 +174,14 @@ public class MoonEvent {
 		double jdf = TimeScale.getJD(timef, observer, eph, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
 		TimeElement newTime = new TimeElement(jd0, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
 		TimeElement newTimef = new TimeElement(jdf, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
-		
+
 		this.time = newTime;
 		this.observer  = observer.clone();
 		this.eph = eph.clone();
 		this.timef = newTimef;
 		this.precision = precision;
 		this.accuracy = accuracy;
-		
+
 		if (optimize) {
 			this.eph.ephemType = COORDINATES_TYPE.ASTROMETRIC;
 			this.eph.isTopocentric = false;
@@ -211,7 +211,7 @@ public class MoonEvent {
 	 * the entire satellite disk, this value should be reduced to around 10s), and 100s for non-mutual phenomena. Note that
 	 * the accuracy of the returned events is independent of this parameter. A
 	 * value of 30s only means that some events of shorter duration could be missed.
-	 * @param accuracy This will be the accuracy in seconds of the returned event times. 
+	 * @param accuracy This will be the accuracy in seconds of the returned event times.
 	 * A good value is 1-10s for mutual events and 30s for non-mutual, but can be lower
 	 * for Mars.
 	 * @param optimize True to optimize calculations for speed. This consists on forcing astrometric J2000
@@ -263,14 +263,14 @@ public class MoonEvent {
 			throw new JPARSECException("unsupported body for mutual phenomena. Use Mars, Jupiter, Saturn, Uranus, Neptune, or Pluto.");
 		}
 	}
-	
+
 	/**
-	 * Obtains all mutual phenomena. Supported objects are Mars (2007 numerical integration theory), 
+	 * Obtains all mutual phenomena. Supported objects are Mars (2007 numerical integration theory),
 	 * Jupiter (L1 theory), Saturn (TASS 1.7), and Uranus (GUST86).
-	 * 
+	 *
 	 * @param all True to return all events including occultations/eclipses by the mother planet itself. Note
 	 * that in the latter case only events in a partial phase will be returned, i.e., the interval while the
-	 * eclipse/occultation is in progress. 
+	 * eclipse/occultation is in progress.
 	 * @return Events visible for the observer. Those events that started before the initial time and persists at
 	 * the initial time will have invalid initial times (jd = 0).
 	 * @throws JPARSECException If an error occurs.
@@ -328,7 +328,7 @@ public class MoonEvent {
 								ephem[j].yPosition, 0.0);
 						double r = LocationElement.getLinearDistance(loci, locj);
 						if (r < minDist || minDist < 0.0) minDist = r;
-						
+
 						loci = LocationElement.parseRectangularCoordinates(ephem[i].xPositionFromSun,
 								ephem[i].yPositionFromSun, 0.0);
 						locj = LocationElement.parseRectangularCoordinates(ephem[j].xPositionFromSun,
@@ -341,7 +341,7 @@ public class MoonEvent {
 				myjd += lastStep;
 			}
 		}
-		
+
 		events = new MoonEventElement[vector.size()];
 		for (int i=0; i<events.length;i++)
 		{
@@ -349,12 +349,12 @@ public class MoonEvent {
 		}
 		return events;
 	}
-	
+
 	private MoonEventElement[] getMutualEventDetails(ObserverElement observer, EphemerisElement eph,
 			double mystep, double step, boolean approx, boolean all)
 	throws JPARSECException {
 		boolean started = false;
-		boolean eventFound = false; 
+		boolean eventFound = false;
 		MoonEventElement ev[] = null;
 		myjd = myjd - mystep;
 		double jd = myjd;
@@ -394,18 +394,18 @@ public class MoonEvent {
 							ephem[i].elevation = ephemObj.elevation;
 						}
 						ev[i].elevation = ephem[i].elevation;
-						if (ephem[i].eclipsed && phenom == MoonEventElement.EVENT.OCCULTED) ev[i].visibleFromEarth = false;						
-						if (ephem[i].occulted && phenom == MoonEventElement.EVENT.ECLIPSED) ev[i].visibleFromEarth = false;						
+						if (ephem[i].eclipsed && phenom == MoonEventElement.EVENT.OCCULTED) ev[i].visibleFromEarth = false;
+						if (ephem[i].occulted && phenom == MoonEventElement.EVENT.ECLIPSED) ev[i].visibleFromEarth = false;
 					} else {
 						String second = ephem[i].mutualPhenomena.substring(ephem[i].mutualPhenomena.toLowerCase().indexOf(by)+by.length()).trim();
 						String per = second.substring(second.indexOf("(") + 1, second.indexOf("%"));
-						if (second.indexOf("º") >= 0) {
-							String dist = second.substring(second.lastIndexOf("(") + 3, second.lastIndexOf("º"));
+						if (second.indexOf("ï¿½") >= 0) {
+							String dist = second.substring(second.lastIndexOf("(") + 3, second.lastIndexOf("ï¿½"));
 							if (FileIO.getField(3, ev[i].details, ",", true).equals("") || Double.parseDouble(dist) < Double.parseDouble(FileIO.getField(3, ev[i].details, ",", true)))
 								ev[i].details = per+", "+myjd+", "+dist;
 						} else {
 							if (FileIO.getField(2, ev[i].details, ",", true).equals("") || Double.parseDouble(per) > Double.parseDouble(FileIO.getField(1, ev[i].details, ",", true)))
-								ev[i].details = per+", "+myjd;							
+								ev[i].details = per+", "+myjd;
 						}
 					}
 					if (myjd <= myjd0) ev[i].startTime = 0.0;
@@ -413,10 +413,10 @@ public class MoonEvent {
 					if (ev[i] != null) {
 						if (ev[i].endTime == -1.0) {
 							ev[i].endTime = myjd - step * 0.5;
-							if (ephem[i].occulted && ev[i].eventType == MoonEventElement.EVENT.OCCULTED) ev[i].subType = MoonEventElement.SUBEVENT.START;						
-							if (!ephem[i].occulted && ev[i].eventType == MoonEventElement.EVENT.OCCULTED) ev[i].subType = MoonEventElement.SUBEVENT.END;						
-							if (ephem[i].eclipsed && ev[i].eventType == MoonEventElement.EVENT.ECLIPSED) ev[i].subType = MoonEventElement.SUBEVENT.START;						
-							if (!ephem[i].eclipsed && ev[i].eventType == MoonEventElement.EVENT.ECLIPSED) ev[i].subType = MoonEventElement.SUBEVENT.END;						
+							if (ephem[i].occulted && ev[i].eventType == MoonEventElement.EVENT.OCCULTED) ev[i].subType = MoonEventElement.SUBEVENT.START;
+							if (!ephem[i].occulted && ev[i].eventType == MoonEventElement.EVENT.OCCULTED) ev[i].subType = MoonEventElement.SUBEVENT.END;
+							if (ephem[i].eclipsed && ev[i].eventType == MoonEventElement.EVENT.ECLIPSED) ev[i].subType = MoonEventElement.SUBEVENT.START;
+							if (!ephem[i].eclipsed && ev[i].eventType == MoonEventElement.EVENT.ECLIPSED) ev[i].subType = MoonEventElement.SUBEVENT.END;
 						}
 					}
 				}
@@ -424,7 +424,7 @@ public class MoonEvent {
 
 			if (!eventPersists && eventFound) break;
 		}
-			
+
 		int count = 0;
 		for (int i=0; i<ev.length; i++)
 		{
@@ -442,11 +442,11 @@ public class MoonEvent {
 		if (out.length >= MoonEvent.SEVERAL_MUTUAL_SIMULTANEOUS_EVENTS_MINIMUM_NUMBER) {
 			for (int i=0; i<out.length; i++) {
 				out[i].severalSimultaneousEvents = true;
-			}			
+			}
 		}
 		return out;
 	}
-	
+
 	/**
 	 * Obtains the light curve of a given mutual event.
 	 * @param event Event to calculate. Must have valid initial/ending times.
@@ -474,7 +474,7 @@ public class MoonEvent {
 		double jd = TimeScale.getJD(time, observer, eph, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
 		double jdf = TimeScale.getJD(timef, observer, eph, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
 		double step = (jdf - jd) / 100.0;
-		
+
 		int index = -1, index2 = -1;
 		for (double myjd = jd; myjd < jdf; myjd = myjd + step)
 		{
@@ -512,22 +512,22 @@ public class MoonEvent {
 			}
 			if (!eventExist) {
 				if (magnitude) {
-					if (combined) vector.add(new double[] {myjd, jparsec.astronomy.Star.combinedMagnitude(ephem[index].magnitude, ephem[index2].magnitude)});					
-					if (!combined) vector.add(new double[] {myjd, ephem[index].magnitude});					
+					if (combined) vector.add(new double[] {myjd, jparsec.astronomy.Star.combinedMagnitude(ephem[index].magnitude, ephem[index2].magnitude)});
+					if (!combined) vector.add(new double[] {myjd, ephem[index].magnitude});
 				} else {
 					if (index >=0) {
 						if (ephem[index].eclipsed || ephem[index].occulted)
 						{
 							vector.add(new double[] {myjd, 0.0});
 						} else {
-							vector.add(new double[] {myjd, 1.0});							
+							vector.add(new double[] {myjd, 1.0});
 						}
 					}
 					vector.add(new double[] {myjd, 1.0});
 				}
 			}
 		}
-		
+
 		String x[] = new String[vector.size()];
 		String y[] = new String[vector.size()];
 		double dy[] = new double[vector.size()];
@@ -547,21 +547,21 @@ public class MoonEvent {
 		chartSeries.showErrorBars = false;
 		ChartSeriesElement series[] = new ChartSeriesElement[] {chartSeries};
 		ChartElement chart = new ChartElement(series, ChartElement.TYPE.XY_CHART, ChartElement.SUBTYPE.XY_TIME,
-				event.mainBody.getName()+" "+Translate.translate(MoonEventElement.EVENTS[event.eventType.ordinal()])+" "+Translate.translate(Translate.JPARSEC_BY)+" "+event.secondaryBody.getName()+". "+Translate.translate(Translate.JPARSEC_LIGHT_CURVE), 
+				event.mainBody.getName()+" "+Translate.translate(MoonEventElement.EVENTS[event.eventType.ordinal()])+" "+Translate.translate(Translate.JPARSEC_BY)+" "+event.secondaryBody.getName()+". "+Translate.translate(Translate.JPARSEC_LIGHT_CURVE),
 				Translate.translate("Time")+" ("+TimeElement.getTimeScaleAbbreviation(outputTimeScale)+")", Translate.translate(Translate.JPARSEC_VISIBLE_DISK_FRACTION)+" "+Translate.translate(Translate.JPARSEC_OF)+
 				" "+event.mainBody.getName(), false, 400, 400);
 
 		if (magnitude) chart.yLabel = Translate.translate(Translate.JPARSEC_MAGNITUDE)+" "+Translate.translate(Translate.JPARSEC_OF)+" "+event.mainBody.getName();
 		if (magnitude && combined) chart.yLabel = Translate.translate(Translate.JPARSEC_COMBINED_MAGNITUDE)+" "+Translate.translate(Translate.JPARSEC_OF)+" "+event.mainBody.getName()+" and "+event.secondaryBody.getName();
-		
+
 		return new CreateChart(chart);
 	}
-	
+
 	/**
 	 * Obtains all non-mutual phenomena (eclipses, occultations, transits, shadow transits).
-	 * Supported objects are Mars (2007 numerical integration theory), 
+	 * Supported objects are Mars (2007 numerical integration theory),
 	 * Jupiter (L1 theory), Saturn (TASS 1.7), and Uranus (GUST86).
-	 * @return Events visible for the observer. Those events that started before the initial 
+	 * @return Events visible for the observer. Those events that started before the initial
 	 * time and persists at the initial time will have invalid initial times (jd = 0).
 	 * @throws JPARSECException If an error occurs.
 	 */
@@ -574,7 +574,7 @@ public class MoonEvent {
 		double step2 = (double) accuracy / Constant.SECONDS_PER_DAY;
 		double jdf = TimeScale.getJD(timef, observer, eph, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
 		myjd0 = jd;
-		double lastStep = 0;		
+		double lastStep = 0;
 		for (myjd = jd; myjd < jdf; myjd = myjd + step)
 		{
 			lastStep += step;
@@ -590,7 +590,7 @@ public class MoonEvent {
 					if (myjd <= oldJD) myjd = oldJD;
 					myjd += step;
 					ephem = getEphem(observer, eph);
-					
+
 					if (ev != null) {
 						for (int j=0; j<ev.length; j++)
 						{
@@ -600,7 +600,7 @@ public class MoonEvent {
 					};
 				}
 			}
-			
+
 			double minDist = -1.0;
 			lastStep = 0;
 			if (!eventExist)
@@ -611,13 +611,13 @@ public class MoonEvent {
 					double f = 1.0 + (2.0 * i) / (ephem.length - 1.0);
 					double r = Math.sqrt(ephem[i].xPosition*ephem[i].xPosition+ephem[i].yPosition*ephem[i].yPosition);
 					if (r < 1) break;
-					
+
 					r = (r - 1.0) * f;
 					if (r < minDist || minDist < 0.0) minDist = r;
-					
+
 					r = Math.sqrt(ephem[i].xPositionFromSun*ephem[i].xPositionFromSun+ephem[i].yPositionFromSun*ephem[i].yPositionFromSun);
 					if (r < 1) break;
-					
+
 					r = (r - 1.0) * f;
 					if (r < minDist || minDist < 0.0) minDist = r;
 				}
@@ -625,7 +625,7 @@ public class MoonEvent {
 				myjd += lastStep;
 			}
 		}
-		
+
 		events = new MoonEventElement[vector.size()];
 		for (int i=0; i<events.length;i++)
 		{
@@ -633,12 +633,12 @@ public class MoonEvent {
 		}
 		return events;
 	}
-	
+
 	private MoonEventElement[] getEventDetails(ObserverElement observer, EphemerisElement eph,
 			double mystep, double step, boolean approx)
 	throws JPARSECException {
 		boolean started = false;
-		boolean eventFound = false; 
+		boolean eventFound = false;
 		MoonEventElement ev[][] = null;
 		myjd = myjd - mystep;
 		double jd = myjd;
@@ -680,7 +680,7 @@ public class MoonEvent {
 							ephem[i].elevation = ephemObj.elevation;
 						}
 						ev[i][0].elevation = ephem[i].elevation;
-						if (ephem[i].eclipsed) ev[i][0].visibleFromEarth = false;						
+						if (ephem[i].eclipsed) ev[i][0].visibleFromEarth = false;
 						if (myjd <= myjd0) ev[i][0].startTime = 0.0;
 					}
 					if (ev[i][1] == null && ephem[i].eclipsed) {
@@ -693,10 +693,10 @@ public class MoonEvent {
 							ephem[i].elevation = ephemObj.elevation;
 						}
 						ev[i][1].elevation = ephem[i].elevation;
-						if (ephem[i].occulted) ev[i][0].visibleFromEarth = false;						
+						if (ephem[i].occulted) ev[i][0].visibleFromEarth = false;
 						if (myjd <= myjd0) ev[i][1].startTime = 0.0;
 					}
-					
+
 					if (ev[i][0] == null && ephem[i].transiting) {
 						eventFound = true;
 						MoonEventElement.EVENT phenom = MoonEventElement.EVENT.TRANSIT;
@@ -721,7 +721,7 @@ public class MoonEvent {
 						ev[i][1].elevation = ephem[i].elevation;
 						if (myjd <= myjd0) ev[i][1].startTime = 0.0;
 					}
-						
+
 					if (ev[i][0] != null && !ephem[i].occulted && !ephem[i].transiting) {
 						if (ev[i][0].endTime == -1.0) {
 							ev[i][0].endTime = myjd - step * 0.5;
@@ -731,7 +731,7 @@ public class MoonEvent {
 						if (ev[i][1].endTime == -1.0) {
 							ev[i][1].endTime = myjd - step * 0.5;
 						}
-					}					
+					}
 				}
 				if (ev[i][0] != null && !ephem[i].occulted && !ephem[i].transiting) {
 					if (ev[i][0].endTime == -1.0) {
@@ -744,9 +744,9 @@ public class MoonEvent {
 					}
 				}
 			}
-			
+
 			if (!eventPersists && eventFound) break;
-			
+
 			// Accelerate calculations
 			if (eventPersists) {
 				double timeStep = 20 * step;
@@ -779,7 +779,7 @@ public class MoonEvent {
 				} while (true);
 			}
 		}
-			
+
 		int count = 0;
 		for (int i=0; i<ev.length; i++)
 		{
@@ -812,7 +812,7 @@ public class MoonEvent {
 			if (nsat >= MoonEvent.SEVERAL_SIMULTANEOUS_EVENTS_MINIMUM_NUMBER) {
 				for (int i=0; i<out.length; i++) {
 					out[i].severalSimultaneousEvents = true;
-				}			
+				}
 			}
 		}
 		return out;
@@ -833,7 +833,7 @@ public class MoonEvent {
 		SCALE timeScale = SCALE.BARYCENTRIC_DYNAMICAL_TIME;
 		double initJD = TimeScale.getJD(time, observer, eph, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
 		double endJD = TimeScale.getJD(timef, observer, eph, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
-		
+
 		TARGET tbm[] = new TARGET[] {TARGET.Phobos, TARGET.Deimos};
 		TARGET tbj[] = new TARGET[] {TARGET.Io, TARGET.Europa, TARGET.Ganymede, TARGET.Callisto};
 		TARGET tbs[] = new TARGET[] {TARGET.Mimas, TARGET.Enceladus, TARGET.Tethys, TARGET.Dione, TARGET.Rhea, TARGET.Titan, TARGET.Hyperion, TARGET.Iapetus};
@@ -848,7 +848,7 @@ public class MoonEvent {
 		String lineSep = FileIO.getLineSeparator();
 		String dataTable[] = new String[targetBodies.length];
 		ArrayList<Object[]> ephem = populateEphemCalculations(observer, eph, initJD, endJD, step, timeScale, targetBodies);
-		
+
 		for (int targetIndex = 0; targetIndex < targetBodies.length; targetIndex ++) {
 			String data = "";
 			int index = 0;
@@ -859,7 +859,7 @@ public class MoonEvent {
 				EphemElement ephemPlan = (EphemElement) ephemCalc[0];
 				MoonEphemElement ephemSat = ((MoonEphemElement[]) ephemCalc[1])[targetIndex];
 				LocationElement locSat = new LocationElement(ephemSat.rightAscension, ephemSat.declination, ephemSat.distance);
-				
+
 				double sep = LocationElement.getAngularDistance(locSat, ephemPlan.getEquatorialLocation()) / ephemPlan.angularRadius;
 				if (arcseconds) sep *= ephemPlan.angularRadius * Constant.RAD_TO_ARCSEC;
 
@@ -867,7 +867,7 @@ public class MoonEvent {
 				if (projectToEquator) {
 					double angRespectNorth = LocationElement.getPositionAngle(locSat, ephemPlan.getEquatorialLocation());
 					double angRespectEquator = Constant.PI_OVER_TWO + LocationElement.getPositionAngle(
-							new LocationElement(ephemPlan.northPoleRA, ephemPlan.northPoleDEC, 1.0), 
+							new LocationElement(ephemPlan.northPoleRA, ephemPlan.northPoleDEC, 1.0),
 							new LocationElement(0.0, Constant.PI_OVER_TWO, 1.0));
 					sep = -sep * Math.cos(angRespectEquator - angRespectNorth);
 				} else {
@@ -911,18 +911,18 @@ public class MoonEvent {
 			series[i].stroke = strokes[i % strokes.length];
 		}
 		ChartSeriesElement.setShapeSize(1);
-		ChartElement chart = new ChartElement(series, ChartElement.TYPE.XY_CHART, 
+		ChartElement chart = new ChartElement(series, ChartElement.TYPE.XY_CHART,
 				ChartElement.SUBTYPE.XY_TIME, title, Translate.translate("Day"), Translate.translate("Separation")+" (\")", false, 900, 300);
 		if (!arcseconds) chart.yLabel = Translate.translate("Separation")+ " (" + Translate.translate("radii")+")";
 		CreateChart ch = new CreateChart(chart);
 
 		return ch;
 	}
-	
+
 	// Used to calculate ephemerides in a more efficient way, can be reduced to
 	// few lines using Ephem class, but would be slower
 	private ArrayList<Object[]> populateEphemCalculations(ObserverElement observer, EphemerisElement eph,
-			double initJD, double endJD, double step, SCALE timeScale, TARGET targetBodies[]) throws JPARSECException {		
+			double initJD, double endJD, double step, SCALE timeScale, TARGET targetBodies[]) throws JPARSECException {
 		ArrayList<Object[]> ephem = new ArrayList<Object[]>();
 
 		TARGET mo = eph.targetBody;
@@ -937,7 +937,7 @@ public class MoonEvent {
 			for (int targetIndex = 0; targetIndex < targetBodies.length; targetIndex ++) {
 
 				TARGET target = targetBodies[targetIndex];
-				
+
 				eph.targetBody = target;
 				int mainSat = 0, mainSatN = 0;
 				if (eph.targetBody == TARGET.Phobos || eph.targetBody == TARGET.Deimos) {
@@ -979,7 +979,7 @@ public class MoonEvent {
 						if (mainSat == 4) {
 							if (ephemUra == null) ephemUra = MoonEphem.calcAllSatellites(time, observer, eph, false);
 							ephemS[targetIndex] = ephemUra[mainSatN];
-						}						
+						}
 					} else {
 						if (mainSat == 1) {
 							if (ephemMar == null) ephemMar = MoonEphem.martianSatellitesEphemerides_2007(time, observer, eph);
@@ -1001,7 +1001,7 @@ public class MoonEvent {
 							ephemS[targetIndex] = ephemSat[mainSatN];
 						}
 						if (mainSat == 4) {
-							if (ephemUra == null) ephemUra = MoonEphem.uranianSatellitesEphemerides_GUST86(time, observer, eph);						
+							if (ephemUra == null) ephemUra = MoonEphem.uranianSatellitesEphemerides_GUST86(time, observer, eph);
 							ephemS[targetIndex] = ephemUra[mainSatN];
 						}
 					}
@@ -1012,122 +1012,5 @@ public class MoonEvent {
 			ephem.add(new Object[] {ephemPlan, ephemS});
 		}
 		return ephem;
-	}
-
-	/**
-	 * For unit testing only.
-	 * @param args Not used.
-	 */
-	public static void main (String args[])
-	{
-		System.out.println("MoonEvent test - mutual phenomena");
-
-		try {
-			Translate.setDefaultLanguage(Translate.LANGUAGE.SPANISH);			
-			
-			// Test on Jupiter
-			AstroDate astroi = new AstroDate(2011, AstroDate.OCTOBER, 2);
-			TARGET t = TARGET.JUPITER;
-
-			// Test for Charon
-			astroi = new AstroDate(1987, AstroDate.MARCH, 12, 20, 0, 0);
-			t = TARGET.Pluto;
-			
-			AstroDate astrof = new AstroDate(astroi.jd() + 1.0);
-
-			TimeElement timei = new TimeElement(astroi, SCALE.UNIVERSAL_TIME_UTC);
-			TimeElement timef = new TimeElement(astrof, SCALE.UNIVERSAL_TIME_UTC);
-			CityElement city = City.findCity("Madrid");
-			ObserverElement observer = ObserverElement.parseCity(city);
-			EphemerisElement eph = new EphemerisElement(t, EphemerisElement.COORDINATES_TYPE.APPARENT,
-					EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.GEOCENTRIC, EphemerisElement.REDUCTION_METHOD.IAU_1976,
-					EphemerisElement.FRAME.ICRF);
-			eph.algorithm = EphemerisElement.ALGORITHM.JPL_DE406;
- 
-			long t0 = System.currentTimeMillis();
-			MoonEvent me = new MoonEvent(timei, observer, eph, timef, 30, 10, true);
-			MoonEventElement ev[] = me.getMutualPhenomena(false);
-			System.out.println("FOUND EVENTS");
-			for (int i=0; i<ev.length; i++)
-			{
-				AstroDate astroI = new AstroDate(ev[i].startTime);
-				TimeElement timeI = new TimeElement(astroI, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
-				double jdI = TimeScale.getJD(timeI, observer, eph, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
-				AstroDate astroI2 = new AstroDate(jdI);
-				String eDateI = astroI2.getYear()+"-"+astroI2.getMonth()+"-"+astroI2.getDay();
-				String eTimeI = astroI2.getHour()+":"+astroI2.getMinute()+":"+astroI2.getRoundedSecond();
-				
-				AstroDate astroF = new AstroDate(ev[i].endTime);
-				TimeElement timeF = new TimeElement(astroF, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
-				double jdF = TimeScale.getJD(timeF, observer, eph, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
-				AstroDate astro2F = new AstroDate(jdF);
-				String eTimeF = astro2F.getHour()+":"+astro2F.getMinute()+":"+astro2F.getRoundedSecond();
-
-				String visible = "YES";
-				if ((ev[i].elevation * Constant.RAD_TO_DEG) < 20) visible = "DIFFICULT";
-				if ((ev[i].elevation * Constant.RAD_TO_DEG) < 5) visible = "NO";
-				if (!ev[i].visibleFromEarth) visible = "NO*";
-				AstroDate astroMax = new AstroDate(Double.parseDouble(FileIO.getField(2, ev[i].details, ",", true)));
-				String eTimeMax = astroMax.getHour()+":"+astroMax.getMinute()+":"+astroMax.getRoundedSecond();
-				String details = eTimeMax+", ";
-				details += Functions.formatValue(Double.parseDouble(FileIO.getField(1, ev[i].details, ",", true)), 1)+"%";
-				System.out.println(ev[i].mainBody.getName()+" & "+Translate.translate(MoonEventElement.EVENTS[ev[i].eventType.ordinal()])+" & "+ev[i].secondaryBody.getName()+" & "+eDateI+" & "+eTimeI+" & "+eTimeF+" & "+details+" & "+visible);
-//				CreateChart ch = MoonEvent.lightCurve(ev[i], SCALE.UNIVERSAL_TIME_UTC, true);
-//				ch.showChartInJFreeChartPanel();
-			}
-			JPARSECException.showWarnings();
-			long t1 = System.currentTimeMillis();
-			System.out.println("Done in "+(float) ((t1-t0)/1000.0)+" seconds.");
-			// DE406 is 2 times faster than Moshier
-
-			
-			System.out.println();
-			System.out.println("MoonEvent test - phenomena");
-
-			t0 = System.currentTimeMillis();
-			me = new MoonEvent(timei, observer, eph, timef, 200, 30, true);
-			ev = me.getPhenomena();
-			System.out.println("FOUND EVENTS");
-			for (int i=0; i<ev.length; i++)
-			{
-				AstroDate astroI = new AstroDate(ev[i].startTime);
-				TimeElement timeI = new TimeElement(astroI, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
-				double jdI = TimeScale.getJD(timeI, observer, eph, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
-				AstroDate astroI2 = new AstroDate(jdI);
-				String eDateI = TimeFormat.formatJulianDayAsDate(jdI); //astroI2.getYear()+"-"+astroI2.getMonth()+"-"+astroI2.getDay();
-				String eTimeI = astroI2.getHour()+":"+astroI2.getMinute()+":"+astroI2.getRoundedSecond();
-				
-				AstroDate astroF = new AstroDate(ev[i].endTime);
-				TimeElement timeF = new TimeElement(astroF, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
-				double jdF = TimeScale.getJD(timeF, observer, eph, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
-				AstroDate astro2F = new AstroDate(jdF);
-				String eDateF = astro2F.getYear()+"-"+astro2F.getMonth()+"-"+astro2F.getDay();
-				String eTimeF = astro2F.getHour()+":"+astro2F.getMinute()+":"+astro2F.getRoundedSecond();
-
-				if (ev[i].startTime <= 0) {
-					eTimeI = "-";
-					eDateI = eDateF;
-				}
-				
-				String visible = "YES";
-				if ((ev[i].elevation * Constant.RAD_TO_DEG) < 20) visible = "DIFFICULT";
-				if ((ev[i].elevation * Constant.RAD_TO_DEG) < 5) visible = "NO";
-				if (!ev[i].visibleFromEarth) visible = "NO*";
-				System.out.println(ev[i].mainBody.getName()+" & "+Translate.translate(MoonEventElement.EVENTS[ev[i].eventType.ordinal()])+" & "+ev[i].secondaryBody.getName()+" & "+eDateI+" & "+eTimeI+" & "+eTimeF+" & "+ev[i].details+" & "+visible);
-				if (visible.equals("YES")) System.out.println(ev[i].mainBody.getName()+" & "+Translate.translate(MoonEventElement.EVENTS[ev[i].eventType.ordinal()])+" & "+eDateI+" & "+eTimeI+" & "+eTimeF+" & "+ev[i].details);
-//				CreateChart ch = MoonEvent.lightCurve(ev[i], SCALE.UNIVERSAL_TIME_UTC, true);
-//				ch.showChartInJFreeChartPanel();
-			}
-			
-//			CreateChart ch = me.getPathChart(1.0 / 24.0, true, true);
-//			ch.showChartInJFreeChartPanel();
-
-			JPARSECException.showWarnings();
-			t1 = System.currentTimeMillis();
-			System.out.println("Done in "+(float) ((t1-t0)/1000.0)+" seconds.");
-		} catch (JPARSECException e)
-		{
-			e.showException();
-		}
 	}
 }

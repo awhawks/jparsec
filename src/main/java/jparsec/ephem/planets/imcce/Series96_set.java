@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -37,9 +37,28 @@ package jparsec.ephem.planets.imcce;
  * @author T. Alonso Albi - OAN (Spain)
  * @since version 1.0
  */
-public final class Elp2000_data1 {
-    // private constructor so that this class cannot be instantiated.
-    private Elp2000_data1() {
-    }
-}
 
+/* A set of values (one block) in the Series96 files */
+class Series96_set
+{
+	Series96_set()
+	{
+		NF = new int[4];
+		FQ = new double[4][300];
+		SEC = new double[4][4];
+		CT = new double[4][4][300];
+		ST = new double[4][4][300];
+	};
+
+	int NF[];
+	int MX;
+	int IMAX;
+	int IBLOCK;
+	double TDEB;
+	double DT;
+	double TFIN;
+	double FQ[][];
+	double SEC[][];
+	double CT[][][];
+	double ST[][][];
+}

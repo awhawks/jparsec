@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,31 +18,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.ephem.stars;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-
 import jparsec.ephem.EphemerisElement;
-import jparsec.ephem.Functions;
 import jparsec.ephem.Target.TARGET;
 import jparsec.ephem.planets.OrbitEphem;
 import jparsec.ephem.planets.OrbitalElement;
-import jparsec.graph.TextLabel;
-import jparsec.graph.chartRendering.AWTGraphics;
 import jparsec.io.FileIO;
-import jparsec.io.ReadFile;
-import jparsec.io.image.Picture;
-import jparsec.observer.City;
-import jparsec.observer.CityElement;
 import jparsec.observer.LocationElement;
 import jparsec.observer.ObserverElement;
-import jparsec.time.AstroDate;
 import jparsec.time.TimeElement;
-import jparsec.time.TimeElement.SCALE;
 import jparsec.util.JPARSECException;
-import jparsec.vo.GeneralQuery;
 
 /**
  * Convenient class for double stars ephemerides. Example:<P>
@@ -54,18 +41,18 @@ import jparsec.vo.GeneralQuery;
  * 		System.out.println(re.getNumberOfObjects());
  * 		int index = re.searchByName("alpha centauri");
  * 		DoubleStarElement dstar = re.getDoubleStarElement(index);
- * 
+ *
  * 		AstroDate astro = new AstroDate(2010, 1, 1);
  * 		TimeElement time = new TimeElement(astro.jd(), SCALE.UNIVERSAL_TIME_UTC);
  * 		CityElement city = City.findCity("Madrid");
  * 		ObserverElement observer = ObserverElement.parseCity(city);
- * 
+ *
  * 		dstar.calcEphemeris(time, observer);
  * } catch (Exception e)
  * {
  *		e.printStackTrace();
- * } 
- * </pre> 
+ * }
+ * </pre>
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -75,7 +62,7 @@ public class DoubleStarElement {
 
 	/**
 	 * Constructs an star object providing the values of the fields.
-	 * 
+	 *
 	 * @param nom Name.
 	 * @param ra Right Ascension in radians.
 	 * @param dec Declination in radians.
@@ -91,7 +78,7 @@ public class DoubleStarElement {
 	 * @param ref Contain a link to a file of references.
 	 * @param png Contain a link to a png file showing the orbit.
 	 */
-	public DoubleStarElement(String nom, double ra, double dec, String wds, String ads, String hd, String hipp, 
+	public DoubleStarElement(String nom, double ra, double dec, String wds, String ads, String hd, String hipp,
 			String magP, String magS, OrbitalElement orbit, int orbitG, String notes, String ref, String png)
 	{
 		rightAscension = ra;
@@ -115,8 +102,6 @@ public class DoubleStarElement {
 	 */
 	public DoubleStarElement()
 	{
-		rightAscension = 0.0;
-		declination = 0.0;
 		name = "";
 		wds = "";
 		ads = "";
@@ -124,8 +109,6 @@ public class DoubleStarElement {
 		hipparcos = "";
 		magPrimary = "";
 		magSecondary = "";
-		orbit = null;
-		orbitGrade = 0;
 		notes = "";
 		reference = "";
 		orbitPNG = "";
@@ -134,31 +117,31 @@ public class DoubleStarElement {
 	/**
 	 * Name of the star.
 	 */
-	public String name;
+	public String name = "";
 	/**
 	 * WDS designation.
 	 */
-	public String wds;
+	public String wds = "";
 	/**
 	 * ADS designation.
 	 */
-	public String ads;
+	public String ads = "";
 	/**
 	 * HD designation.
 	 */
-	public String hd;
+	public String hd = "";
 	/**
 	 * Hipparcos designation.
 	 */
-	public String hipparcos;
+	public String hipparcos = "";
 	/**
 	 * Magnitude of primary.
 	 */
-	public String magPrimary;
+	public String magPrimary = "";
 	/**
 	 * Magnitude of secondary.
 	 */
-	public String magSecondary;
+	public String magSecondary = "";
 	/**
 	 * Orbital elements for the star.
 	 */
@@ -170,16 +153,16 @@ public class DoubleStarElement {
 	/**
 	 * Link to notes.
 	 */
-	public String notes;
+	public String notes = "";
 	/**
 	 * Link to reference.
 	 */
-	public String reference;
+	public String reference = "";
 	/**
 	 * Link to online png file showing the orbit.
 	 */
-	public String orbitPNG;
-	
+	public String orbitPNG = "";
+
 	/**
 	 * Right Ascension in radians from the catalogue.
 	 */
@@ -193,48 +176,72 @@ public class DoubleStarElement {
 	/**
 	 * To clone the object.
 	 */
+    @Override
 	public DoubleStarElement clone()
 	{
-		if (this == null) return null;
 		DoubleStarElement out = new DoubleStarElement(this.name, this.rightAscension, this.declination, wds, ads,
 				hd, hipparcos, magPrimary, magSecondary, orbit.clone(), orbitGrade, notes, reference, orbitPNG);
 		out.pa = this.pa;
 		out.rho = this.rho;
 		return out;
 	}
-	/**
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof DoubleStarElement)) return false;
+
+        DoubleStarElement that = (DoubleStarElement) o;
+
+        if (orbitGrade != that.orbitGrade) return false;
+        if (Double.compare(that.rightAscension, rightAscension) != 0) return false;
+        if (Double.compare(that.declination, declination) != 0) return false;
+        if (Double.compare(that.pa, pa) != 0) return false;
+        if (Double.compare(that.rho, rho) != 0) return false;
+        if (name != null ? !name.equals(that.name) : that.name != null) return false;
+        if (wds != null ? !wds.equals(that.wds) : that.wds != null) return false;
+        if (ads != null ? !ads.equals(that.ads) : that.ads != null) return false;
+        if (hd != null ? !hd.equals(that.hd) : that.hd != null) return false;
+        if (hipparcos != null ? !hipparcos.equals(that.hipparcos) : that.hipparcos != null) return false;
+        if (magPrimary != null ? !magPrimary.equals(that.magPrimary) : that.magPrimary != null) return false;
+        if (magSecondary != null ? !magSecondary.equals(that.magSecondary) : that.magSecondary != null) return false;
+        if (orbit != null ? !orbit.equals(that.orbit) : that.orbit != null) return false;
+        if (notes != null ? !notes.equals(that.notes) : that.notes != null) return false;
+        if (reference != null ? !reference.equals(that.reference) : that.reference != null) return false;
+        return !(orbitPNG != null ? !orbitPNG.equals(that.orbitPNG) : that.orbitPNG != null);
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        result = name != null ? name.hashCode() : 0;
+        result = 31 * result + (wds != null ? wds.hashCode() : 0);
+        result = 31 * result + (ads != null ? ads.hashCode() : 0);
+        result = 31 * result + (hd != null ? hd.hashCode() : 0);
+        result = 31 * result + (hipparcos != null ? hipparcos.hashCode() : 0);
+        result = 31 * result + (magPrimary != null ? magPrimary.hashCode() : 0);
+        result = 31 * result + (magSecondary != null ? magSecondary.hashCode() : 0);
+        result = 31 * result + (orbit != null ? orbit.hashCode() : 0);
+        result = 31 * result + orbitGrade;
+        result = 31 * result + (notes != null ? notes.hashCode() : 0);
+        result = 31 * result + (reference != null ? reference.hashCode() : 0);
+        result = 31 * result + (orbitPNG != null ? orbitPNG.hashCode() : 0);
+        temp = Double.doubleToLongBits(rightAscension);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(declination);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(pa);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(rho);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        return result;
+    }
+
+    /**
 	 * Returns true if the input object is equals to this
 	 * instance.
 	 */
-	public boolean equals(Object s)
-	{
-		if (s == null) {
-			if (this == null) return true;
-			return false;
-		}
-		if (this == null) {
-			return false;
-		}
-		boolean equals = true;
-		DoubleStarElement se = (DoubleStarElement) s;
-		if (!se.name.equals(this.name)) equals = false;
-		if (se.declination != this.declination) equals = false;
-		if (se.rightAscension != this.rightAscension) equals = false;
-		if (!se.wds.equals(this.wds)) equals = false;
-		if (!se.ads.equals(this.ads)) equals = false;
-		if (!se.hd.equals(this.hd)) equals = false;
-		if (!se.hipparcos.equals(this.hipparcos)) equals = false;
-		if (!se.magPrimary.equals(this.magPrimary)) equals = false;
-		if (!se.magSecondary.equals(this.magSecondary)) equals = false;
-		if (se.orbitGrade != this.orbitGrade) equals = false;
-		if (!se.notes.equals(this.notes)) equals = false;
-		if (!se.reference.equals(this.reference)) equals = false;
-		if (!se.orbitPNG.equals(this.orbitPNG)) equals = false;
-		if (!se.orbit.equals(this.orbit)) equals = false;
-		if (se.pa != this.pa) equals = false;
-		if (se.rho != this.rho) equals = false;
-		return equals;
-	}
 
 	private double pa, rho;
 	/**
@@ -276,68 +283,16 @@ public class DoubleStarElement {
 				EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.TOPOCENTRIC, EphemerisElement.REDUCTION_METHOD.IAU_2006,
 				EphemerisElement.FRAME.ICRF, EphemerisElement.ALGORITHM.ORBIT, this.orbit);
 		double pos[] = OrbitEphem.obtainPosition(time, observer, eph);
-		
+
 		rho = Math.sqrt(pos[0]*pos[0]+pos[1]*pos[1]);
-		pa = Math.atan2(pos[1], pos[0]);		
+		pa = Math.atan2(pos[1], pos[0]);
 	}
-	
+
 	/**
 	 * Returns the equatorial position of this star.
 	 * @return Equatorial position.
 	 */
 	public LocationElement getEquatorialPosition() {
 		return new LocationElement(rightAscension, declination, 1);
-	}
-	
-	/**
-	 * Testing program.
-	 * @param args Not used.
-	 */
-	public static void main(String args[]) {
-		System.out.println("Double star ephemeris test");
-		
-		try {
-			//String name = "alpha centauri";
-			String name = "Eps Aur";
-			
-			ReadFile re = new ReadFile();
-			re.setPath(DoubleStarElement.PATH_VISUAL_DOUBLE_STAR_CATALOG); //.PATH_OLD_VISUAL_DOUBLE_STAR_CATALOG);
-			re.readFileOfDoubleStars();
-			System.out.println(re.getNumberOfObjects());
-			int index = re.searchByName(name);
-			DoubleStarElement dstar = re.getDoubleStarElement(index);
-
-			AstroDate astro = new AstroDate(2010, 1, 1);
-			TimeElement time = new TimeElement(astro.jd(), SCALE.UNIVERSAL_TIME_UTC);
-			CityElement city = City.findCity("Madrid");
-			ObserverElement observer = ObserverElement.parseCity(city);
-
-			dstar.calcEphemeris(time, observer);
-			
-			System.out.println(dstar.name+" RHO "+dstar.getDistance());
-			System.out.println(dstar.name+" PA  "+Functions.formatAngleAsDegrees(dstar.getPositionAngle(), 3));
-			
-			if (!dstar.orbitPNG.equals("")) {
-				try {
-					Picture p = new Picture(GeneralQuery.queryImage(dstar.orbitPNG));
-					p.show(dstar.name);
-				} catch (Exception exc) {}
-			}
-			
-			// Orbit sketch from JPARSEC, note image is inverted respect to previous one
-			Picture pp = new Picture(dstar.orbit.getOrbitImage(dstar.orbit.name, 600, 600, 1.0, astro.jd(), false, true));
-			Graphics2D g = pp.getImage().createGraphics();
-			AWTGraphics.enableAntialiasing(g);
-			g.setColor(Color.BLACK);
-			String label1 = "@rho = "+Functions.formatValue(dstar.getDistance(), 3)+"\"";
-			String label2 = "PA = "+Functions.formatAngleAsDegrees(dstar.getPositionAngle(), 3)+"º";
-			TextLabel tl1 = new TextLabel(label1);
-			tl1.draw(g, 10, 560);
-			TextLabel tl2 = new TextLabel(label2);
-			tl2.draw(g, 10, 580);
-			pp.show("");
-		} catch (Exception exc) {
-			exc.printStackTrace();
-		}
 	}
 }

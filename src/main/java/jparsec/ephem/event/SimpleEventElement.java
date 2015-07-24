@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.ephem.event;
 
 import jparsec.time.*;
@@ -48,7 +48,7 @@ public class SimpleEventElement implements Serializable {
 
 	/** ID value for the end time of an event when that event has no end time defined. */
 	public static final double END_TIME_NOT_APPLICABLE = -1E100;
-	
+
 	/**
 	 * Holds the time of the event as a Julian day in TT. In case the event
 	 * has a start and end times, set here the start time.
@@ -67,12 +67,12 @@ public class SimpleEventElement implements Serializable {
 	 * Holds details on the event.
 	 */
 	public String details;
-	/** 
+	/**
 	 * The equatorial position where this event occurs. Null by default, but
 	 * can be used manually to set this information. For certain events it is
-	 * set, like variable stars (position of the star), occultations and conjunctions. 
+	 * set, like variable stars (position of the star), occultations and conjunctions.
 	 */
-	public LocationElement eventLocation = null;
+	public LocationElement eventLocation;
 	/**
 	 * The name of the body that produces the event.
 	 */
@@ -88,7 +88,7 @@ public class SimpleEventElement implements Serializable {
 	/**
 	 * The set of events.
 	 */
-	public static enum EVENT {
+	public enum EVENT {
 		/** ID constant for the full Moon event. */
 		MOON_FULL,
 		/** ID constant for the new Moon event. */
@@ -174,7 +174,7 @@ public class SimpleEventElement implements Serializable {
 		/** ID constant for an inexistent event, only used internally. */
 		NO_EVENT;
 	};
-	
+
 	/**
 	 * The events as strings.
 	 */
@@ -184,18 +184,18 @@ public class SimpleEventElement implements Serializable {
 		"Summer solstice", "Winter solstice", "Minimum distance", "Minimum distance from Sun",
 		"Minimum elongation", "Maximum distance", "Maximum distance from Sun", "Maximum elongation",
 		"GRS transit", "Moon's perigee", "Moon's apogee", "Mercury transit", "Venus transit",
-		"Meteor shower", "Moon's ascending node", "Moon's descending node", 
-		"Moon's maximum declination", "Moon's minimum declination", "Mira variable star", "Eclipsing variable star", 
-		"Calendar", "Crater", 
-		"Conjunction", "Occultation", "Transit", "Eclipse", "Shadow transit", "Opposition", "Conjunction", 
+		"Meteor shower", "Moon's ascending node", "Moon's descending node",
+		"Moon's maximum declination", "Moon's minimum declination", "Mira variable star", "Eclipsing variable star",
+		"Calendar", "Crater",
+		"Conjunction", "Occultation", "Transit", "Eclipse", "Shadow transit", "Opposition", "Conjunction",
 		"Saturn rings edge-on", "Saturn rings in maximum aperture", "Other", "Inexistent"
 	};
-	
+
 	/**
 	 * Empty constructor.
 	 */
 	public SimpleEventElement() {}
-	
+
 	/**
 	 * Constructor for a simple event.
 	 * @param jd Event time.
@@ -208,7 +208,7 @@ public class SimpleEventElement implements Serializable {
 		this.eventType = event;
 		this.details = details;
 	}
-	
+
 	/**
 	 * Transforms the event time into another time scale.
 	 * @param obs Observer object.
@@ -220,7 +220,7 @@ public class SimpleEventElement implements Serializable {
 	public double getEventTime(ObserverElement obs, EphemerisElement eph, SCALE timeScale)
 	throws JPARSECException {
 		TimeElement time = new TimeElement(this.time, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
-		
+
 		double out = TimeScale.getJD(time, obs, eph, timeScale);
 		return out;
 	}
@@ -236,7 +236,7 @@ public class SimpleEventElement implements Serializable {
 	public double getEventEndTime(ObserverElement obs, EphemerisElement eph, SCALE timeScale)
 	throws JPARSECException {
 		TimeElement time = new TimeElement(this.endTime, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
-		
+
 		double out = TimeScale.getJD(time, obs, eph, timeScale);
 		return out;
 	}
@@ -265,7 +265,7 @@ public class SimpleEventElement implements Serializable {
 				obj = body;
 			}
 		} catch (Exception exc) {}
-		
+
 		if (obj == null && eventLocation == null) return -1;
 		double et = this.time;
 		if (endTime > this.time) et = (et + this.endTime) * 0.5;
@@ -283,13 +283,13 @@ public class SimpleEventElement implements Serializable {
 		EphemElement ephem = Ephem.getEphemeris(time, obs, ephCopy, false, false);
 		return ephem.elevation;
 	}
-	
+
 	/**
 	 * Clones this instance.
 	 */
+	@Override
 	public SimpleEventElement clone()
 	{
-		if (this == null) return null;
 		SimpleEventElement e = new SimpleEventElement(this.time, this.eventType, this.details);
 		e.body = this.body;
 		e.secondaryBody = this.secondaryBody;
@@ -298,54 +298,63 @@ public class SimpleEventElement implements Serializable {
 		e.endTime = this.endTime;
 		return e;
 	}
+
 	/**
 	 * Returns whether the input Object contains the same information
 	 * as this instance.
 	 */
-	public boolean equals(Object e)
-	{
-		if (e == null) {
-			if (this == null) return true;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof SimpleEventElement)) return false;
+
+		SimpleEventElement that = (SimpleEventElement) o;
+
+		if (Double.compare(that.time, time) != 0) return false;
+		if (Double.compare(that.endTime, endTime) != 0) return false;
+		if (eventType != that.eventType) return false;
+		if (details != null ? !details.equals(that.details) : that.details != null) return false;
+
+		if (eventLocation != null ? !eventLocation.equals(that.eventLocation) : that.eventLocation != null)
 			return false;
-		}
-		if (this == null) {
-			return false;
-		}
-		boolean equals = true;
-		SimpleEventElement ee = (SimpleEventElement) e;
-		if (!ee.details.equals(this.details)) equals = false;
-		if (ee.time != this.time) equals = false;
-		if (ee.endTime != this.endTime) equals = false;
-		if (ee.eventType != this.eventType) equals = false;
-		if (!ee.body.equals(this.body)) equals = false;
-		if (ee.secondaryBody == null || this.secondaryBody == null) {
-			if (ee.secondaryBody != null || this.secondaryBody != null) equals = false;
-		} else {
-			if (!ee.secondaryBody.equals(this.secondaryBody)) equals = false;
-		}
-		if (ee.eventLocation == null || this.eventLocation == null) {
-			if (ee.eventLocation != null || this.eventLocation != null) equals = false;			
-		} else {
-			if (!ee.eventLocation.equals(this.eventLocation)) equals = false;
-		}
-		return equals;
+
+		if (body != null ? !body.equals(that.body) : that.body != null) return false;
+
+		return !(secondaryBody != null ? !secondaryBody.equals(that.secondaryBody) : that.secondaryBody != null);
+	}
+
+	@Override
+	public int hashCode() {
+		int result;
+		long temp;
+		temp = Double.doubleToLongBits(time);
+		result = (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(endTime);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		result = 31 * result + (eventType != null ? eventType.hashCode() : 0);
+		result = 31 * result + (details != null ? details.hashCode() : 0);
+		result = 31 * result + (eventLocation != null ? eventLocation.hashCode() : 0);
+		result = 31 * result + (body != null ? body.hashCode() : 0);
+		result = 31 * result + (secondaryBody != null ? secondaryBody.hashCode() : 0);
+		return result;
 	}
 
 	/**
 	 * Returns a string representation of this event.
 	 */
+	@Override
 	public String toString() {
 		EphemerisElement eph = new EphemerisElement();
 		eph.correctForEOP = false;
 		eph.correctForPolarMotion = false;
 		return this.toString(new ObserverElement(), eph, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
 	}
-	
+
 	private String fix(String s, boolean bb) {
 		if (s == null) return s;
 		if (bb) {
 			int a = s.indexOf("(");
-			
+
 			if (a >= 0) {
 				s = DataSet.replaceAll(s, "(", " ", true);
 				s = DataSet.replaceAll(s, ")", " ", true);
@@ -363,7 +372,7 @@ public class SimpleEventElement implements Serializable {
 		}
 		return s;
 	}
-	
+
 	/**
 	 * Returns a string representation of this event.
 	 * @param obs Observer object.
@@ -380,7 +389,7 @@ public class SimpleEventElement implements Serializable {
 		out = Translate.translate(EVENTS[eventType.ordinal()]);
 		TimeElement timeE = null;
 		try {
-			if (secondaryBody == null && ((eventType.compareTo(EVENT.PLANET_MINIMUM_DISTANCE) >= 0 && 
+			if (secondaryBody == null && ((eventType.compareTo(EVENT.PLANET_MINIMUM_DISTANCE) >= 0 &&
 				eventType.compareTo(EVENT.PLANET_MAXIMUM_ELONGATION) <= 0) || eventType == EVENT.PLANET_CONJUNCTION ||
 				eventType == EVENT.PLANET_OPPOSITION)) {
 				out = Translate.translate(EVENTS[eventType.ordinal()] + " of") + " " + Translate.translate(body);
@@ -389,7 +398,7 @@ public class SimpleEventElement implements Serializable {
 					if (eventType == EVENT.OCCULTATION || eventType == EVENT.ECLIPSE) {
 						out = Translate.translate(EVENTS[eventType.ordinal()]) + " "+Translate.translate("of") + " " + Translate.translate(body)+" " + Translate.translate("by") + " " + Translate.translate(secondaryBody);
 					} else {
-						out = Translate.translate(EVENTS[eventType.ordinal()]) + " "+Translate.translate("of") + " " + Translate.translate(body)+" " + Translate.translate("on top of") + " " + Translate.translate(secondaryBody);						
+						out = Translate.translate(EVENTS[eventType.ordinal()]) + " "+Translate.translate("of") + " " + Translate.translate(body)+" " + Translate.translate("on top of") + " " + Translate.translate(secondaryBody);
 					}
 				}
 			}
@@ -398,12 +407,12 @@ public class SimpleEventElement implements Serializable {
 			if (this.endTime > -1E100) {
 				TimeElement timeEE = new TimeElement(this.getEventEndTime(obs, eph, timeScale), timeScale);
 				out += " -> "+timeEE.toMinString();
-			}			
+			}
 		} catch (Exception e) { }
 		boolean translateIt = false;
-		
+
 		if (details != null && !details.equals("")) {
-			if (((eventType.compareTo(EVENT.PLANET_MINIMUM_DISTANCE) >= 0 && 
+			if (((eventType.compareTo(EVENT.PLANET_MINIMUM_DISTANCE) >= 0 &&
 					eventType.compareTo(EVENT.PLANET_MAXIMUM_ELONGATION) <= 0) || eventType == EVENT.PLANET_CONJUNCTION ||
 					eventType == EVENT.PLANET_OPPOSITION || eventType == EVENT.MOON_MAXIMUM_DECLINATION || eventType == EVENT.MOON_MINIMUM_DECLINATION)) {
 				String details = fix(this.details, false);
@@ -431,7 +440,7 @@ public class SimpleEventElement implements Serializable {
 				if (eventType == EVENT.MOON_MAXIMUM_DECLINATION || eventType == EVENT.MOON_MINIMUM_DECLINATION ||
 						eventType == EVENT.PLANET_MAXIMUM_ELONGATION || eventType == EVENT.PLANET_MINIMUM_ELONGATION
 						|| eventType == EVENT.PLANET_CONJUNCTION || eventType == EVENT.PLANET_OPPOSITION) {
-					d += "º";
+					d += "ï¿½";
 					if (eventType == EVENT.PLANET_MAXIMUM_ELONGATION && (body.equals(TARGET.MERCURY.getName()) ||
 							body.equals(TARGET.MERCURY.getEnglishName()) || body.equals(TARGET.VENUS.getName()) ||
 							body.equals(TARGET.VENUS.getEnglishName()))) {
@@ -453,30 +462,30 @@ public class SimpleEventElement implements Serializable {
 					String p = Functions.formatAngle(value, 3);
 					double dist = Constant.EARTH_RADIUS / Math.sin(value);
 					String d = Functions.formatValue(dist, 0);
-					out += " ("+Translate.translate("parallax")+" = "+p+", "+Translate.translate("distance")+" = "+d+" km)";					
+					out += " ("+Translate.translate("parallax")+" = "+p+", "+Translate.translate("distance")+" = "+d+" km)";
 				} else {
 					String details = fix(this.details, false);
 					if (this.eventType == EVENT.SATURN_RINGS_MAXIMUM_APERTURE) {
-						out += " ("+Functions.formatValue(Double.parseDouble(details), 2)+"º)";						
+						out += " ("+Functions.formatValue(Double.parseDouble(details), 2)+"ï¿½)";
 					} else {
 						out += " ("+details+")";
 					}
 
 					if (this.eventType == EVENT.CALENDAR || eventType == EVENT.CONJUNCTION || eventType == EVENT.CRATER
-							|| eventType == EVENT.METEOR_SHOWER || (eventType == EVENT.OCCULTATION && !secondaryIsNaturalSatellite) || 
+							|| eventType == EVENT.METEOR_SHOWER || (eventType == EVENT.OCCULTATION && !secondaryIsNaturalSatellite) ||
 							eventType == EVENT.VARIABLE_STAR_ECLIPSING
 							|| eventType == EVENT.VARIABLE_STAR_MIRA || eventType == EVENT.OTHER) {
 						try {
 							if (obs.getLatitudeDeg() < 0.0) {
-								if (details.equals("DST1")) details = Translate.translate(1274);
-								if (details.equals("DST2")) details = Translate.translate(1273);							
+								if ("DST1".equals(details)) details = Translate.translate(1274);
+								if ("DST2".equals(details)) details = Translate.translate(1273);
 							} else {
-								if (details.equals("DST1")) details = Translate.translate(1273);
-								if (details.equals("DST2")) details = Translate.translate(1274);
+								if ("DST1".equals(details)) details = Translate.translate(1273);
+								if ("DST2".equals(details)) details = Translate.translate(1274);
 							}
 						} catch (Exception exc) {
-							if (details.equals("DST1")) details = Translate.translate(1273);
-							if (details.equals("DST2")) details = Translate.translate(1274);
+							if ("DST1".equals(details)) details = Translate.translate(1273);
+							if ("DST2".equals(details)) details = Translate.translate(1274);
 						}
 						out = details + ": " + timeE.toMinString();
 						if (this.endTime > -1E100) {
@@ -490,11 +499,11 @@ public class SimpleEventElement implements Serializable {
 				}
 			}
 		}
-		
+
 		// Try to translate every string found usually in events
 		if (translateIt && Translate.getDefaultLanguage() != Translate.LANGUAGE.ENGLISH) {
 			int translate[] = new int[] {1085, 1086, 1087, 301, 73, 74, 963, 964, 161, 164, 167, 168, 169, 829, 830, 831, 832, 839, 840, 841, 842, 843, 844, 962, 965, 966, 1007, 1008, 1009, 1010, 1021, 1022, 1023, 1077, 1078, 1080};
-			if (eventType == EVENT.MOON_LUNAR_ECLIPSE || eventType == EVENT.MOON_SOLAR_ECLIPSE) 
+			if (eventType == EVENT.MOON_LUNAR_ECLIPSE || eventType == EVENT.MOON_SOLAR_ECLIPSE)
 				translate = new int[] {963, 964, 161, 164, 167, 168, 169, 829, 830, 831, 832, 839, 840, 841, 842, 843, 844, 962, 966, 1007, 1008, 1009, 1010, 1021, 1022, 1023};
 			int from = 1025, to = 1067;
 			int translateLC[] = new int[] {1022, 1024};
@@ -504,7 +513,7 @@ public class SimpleEventElement implements Serializable {
 					try {
 						out = DataSet.replaceAll(out, translateS[i], Translate.translate(translateS[i]).toLowerCase(), true);
 						if (Translate.getDefaultLanguage() == LANGUAGE.SPANISH && (out.startsWith("new") || out.startsWith("nuevo")) && eventType == EVENT.CALENDAR) {
-							out = "nuevo año "+DataSet.replaceAll(FileIO.getRestAfterField(1, out, " ", true), "año", "", true).trim();
+							out = "nuevo aï¿½o "+DataSet.replaceAll(FileIO.getRestAfterField(1, out, " ", true), "aï¿½o", "", true).trim();
 						}
 					} catch (Exception exc) {}
 				}
@@ -551,7 +560,7 @@ public class SimpleEventElement implements Serializable {
 			out = DataSet.replaceAll(out, "Chinese", Translate.translate("Chinese"), true);
 			out = DataSet.replaceAll(out, " of ", " "+Translate.translate("of")+" ", true);
 		}
-		
+
 		if (this.eventLocation != null) {
 			out +=". " + Translate.translate("Coordinates")+" "+Translate.translate("of")+" "+Translate.translate(body)+": " + Functions.formatRAOnlyMinutes(this.eventLocation.getLongitude(), 2)+", "+Functions.formatDECOnlyMinutes(this.eventLocation.getLatitude(), 1);
 		}

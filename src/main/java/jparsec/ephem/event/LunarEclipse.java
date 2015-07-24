@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.ephem.event;
 
 import jparsec.ephem.Ephem;
@@ -28,15 +28,11 @@ import jparsec.ephem.Target.TARGET;
 import jparsec.ephem.planets.EphemElement;
 import jparsec.math.Constant;
 import jparsec.math.FastMath;
-import jparsec.observer.City;
-import jparsec.observer.CityElement;
 import jparsec.observer.LocationElement;
 import jparsec.observer.ObserverElement;
-import jparsec.time.AstroDate;
-import jparsec.time.TimeFormat;
-import jparsec.time.TimeScale;
 import jparsec.time.TimeElement;
 import jparsec.time.TimeElement.SCALE;
+import jparsec.time.TimeScale;
 import jparsec.util.JPARSECException;
 import jparsec.util.Translate;
 
@@ -46,19 +42,19 @@ import jparsec.util.Translate;
  * independent from the ephemerides theory. It is very fast if used
  * correctly. The effect of the mountains on lunar limb is ignored.
  * <P>
- * One advantage of this pure geometric approach is the possibility 
+ * One advantage of this pure geometric approach is the possibility
  * of calculating eclipses by other satellites (not the Moon).
- *  
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
 public class LunarEclipse
 {
-	private TARGET targetBody = null;
-	
+	private TARGET targetBody;
+
 	/**
 	 * Checks for events.
-	 * 
+	 *
 	 * @param time Time object.
 	 * @param obs Observer object.
 	 * @param eph Ephemeris properties.
@@ -79,7 +75,7 @@ public class LunarEclipse
 		new_eph.algorithm = alg;
 		EphemElement ephem = Ephem.getEphemeris(time, obs, new_eph, false);
 
-		
+
 		TARGET motherBody = targetBody.getCentralBody();
 
 		boolean inside_shadow = false, totality = false;
@@ -93,7 +89,7 @@ public class LunarEclipse
 			f -= targetBody.equatorialRadius * (ephem.angularRadius / ephem_moon.angularRadius);
 			if (f <= targetBody.equatorialRadius) inside_penumbra = true;
 			if (f <= - targetBody.equatorialRadius) totality_penumbra = true;
-			
+
 			boolean out[] = new boolean[] { inside_penumbra, totality_penumbra, inside_shadow, totality };
 			return out;
 		}
@@ -103,12 +99,12 @@ public class LunarEclipse
 		ephem.rightAscension += Math.PI;
 		ephem.declination = -ephem.declination;
 		ephem.distance = ephem_moon.distance;
-		
+
 		// The main calculation is to position the center of the Earth shadow
-		// cone. We consider this cone to be indeed an oval with a size 
+		// cone. We consider this cone to be indeed an oval with a size
 		// slightly larger than the Earth's equatorial and polar radius.
 		// This excess can be understood taking into account Earth surface
-		// elevation and opacity of the atmosphere. Values fitted to lunar 
+		// elevation and opacity of the atmosphere. Values fitted to lunar
 		// eclipses in 2007. Note AA supplement uses 1.02 in page 429, but more
 		// precision is required (and a separation between polar and equatorial
 		// axis) to get an accuracy of 1 second or better.
@@ -181,7 +177,7 @@ public class LunarEclipse
 			if (inside_penumbra && targetBody == TARGET.Moon)
 				recommendedTimeOffsetToNextEvent = 0.25 * Math.abs(dist - (s_r - ephem_moon.angularRadius)) / LunarEclipse.moonMeanOrbitalRate;
 			// Disabled to properly account for eclipses whose penumbra totality
-			// ends before shadow egress 
+			// ends before shadow egress
 			// if (inside_penumbra) recommended_time_offset_to_next_event_after_totality = Math.abs(dist - (s_r + ephem_moon.angularRadius)) / LunarEclipse.moonMeanOrbitalRate;
 		}
 
@@ -202,6 +198,7 @@ public class LunarEclipse
 			recommendedTimeOffsetToNextEventAfterTotality = s / Constant.SECONDS_PER_DAY;
 		}
 	}
+
 	private double recommendedTimeOffsetToNextEvent = 1.0 / Constant.SECONDS_PER_DAY;
 	private double recommendedTimeOffsetToNextEventAfterTotality = 1.0 / Constant.SECONDS_PER_DAY;
 	private static double moonMeanOrbitalRate = 2.0 * Math.PI / 29.5;
@@ -235,7 +232,7 @@ public class LunarEclipse
 	 * <P>
 	 * If you are calculation eclipses for current dates the Moshier algorithm will give a
 	 * good performance. For better precision in ancient times use ELP2000.
-	 * 
+	 *
 	 * Moon/Sun elevation above local horizon is not considered in this method, so output
 	 * events can be not visible by the input observer.
 	 * @param time Time object with the date of the eclipse before it starts, but as close
@@ -254,9 +251,9 @@ public class LunarEclipse
 	 * Obtain events for the next lunar eclipse in TDB. Input time should be
 	 * Immediately before, or the day before a certain lunar eclipse starts
 	 * (penumbra ingress). This constructor is similar to the other one, but
-	 * it is intended to be used to calculate eclipses produced by other 
+	 * it is intended to be used to calculate eclipses produced by other
 	 * satellites, not the Moon. So it adds an accuracy parameter to control
-	 * the sensitivity of the search. 
+	 * the sensitivity of the search.
 	 * <P>
 	 * Events are:
 	 * <P> - Penumbra ingress start.
@@ -274,9 +271,9 @@ public class LunarEclipse
 	 * as possible.
 	 * @param obs Observer object.
 	 * @param eph Ephemeris properties.
-	 * @param accuracy Accuracy of the iterative search in seconds for eclipses produced by 
-	 * any moon besides the Moon. In case of lunar eclipses or input values <= 0 this value 
-	 * will have no effect. Default value is 1s (for lunar eclipses is irrelevant, it is set 
+	 * @param accuracy Accuracy of the iterative search in seconds for eclipses produced by
+	 * any moon besides the Moon. In case of lunar eclipses or input values <= 0 this value
+	 * will have no effect. Default value is 1s (for lunar eclipses is irrelevant, it is set
 	 * automatically).
 	 * @throws JPARSECException Thrown if the calculation fails.
 	 */
@@ -291,7 +288,7 @@ public class LunarEclipse
 		if (eph.targetBody != TARGET.Moon && !eph.targetBody.isNaturalSatellite()) throw new JPARSECException("Target body must be the Moon or any other natural satellite.");
 		if (eph.targetBody.getCentralBody() != obs.getMotherBody()) throw new JPARSECException("Target body must orbit around the observer.");
 		targetBody = eph.targetBody;
-		
+
 		double jd = TimeScale.getJD(time, obs, eph, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
 		double precission = 1.0 / Constant.SECONDS_PER_DAY;
 		double out[] = new double[]
@@ -383,12 +380,12 @@ public class LunarEclipse
 
 		this.events = out;
 	}
-	
+
 	/**
 	 * Return eclipse maximum as Julian day in TDB. Output is the intermediate time
 	 * between the deepest events in the current eclipse. Accurate up to some
 	 * seconds in total eclipses.
-	 * 
+	 *
 	 * @return Eclipse maximum.
 	 */
 	public double getEclipseMaximum()
@@ -406,7 +403,7 @@ public class LunarEclipse
 
 	/**
 	 * Return eclipse type as a string.
-	 * 
+	 *
 	 * @return Eclipse type, such as penumbral, partial, or total.
 	 */
 	public String getEclipseType()
@@ -426,7 +423,7 @@ public class LunarEclipse
 	 */
 	public MoonEventElement[] getEvents()
 	{
-		String e[] = new String[] {Translate.translate(1271), Translate.translate(1272), 
+		String e[] = new String[] {Translate.translate(1271), Translate.translate(1272),
 			Translate.translate(Translate.JPARSEC_PARTIAL), Translate.translate(Translate.JPARSEC_TOTAL)};
 		int count = 0;
 		MoonEventElement event[] = new MoonEventElement[4];
@@ -446,85 +443,5 @@ public class LunarEclipse
 			}
 		}
 		return out;
-	}
-	
-	/**
-	 * For unit testing only.
-	 * @param args Not used.
-	 */
-	public static void main(String args[])
-	{
-		System.out.println("LunarEclipse test");
-		try
-		{
-			AstroDate astro = new AstroDate(-1000, AstroDate.MARCH, 11, 0, 0, 0);
-			//AstroDate astro = new AstroDate(1997, AstroDate.SEPTEMBER, 16, 0, 0, 0);
-			// AstroDate astro = new AstroDate(7, AstroDate.september, 2006, 0, 0, 0);
-			// AstroDate astro = new AstroDate(14, AstroDate.march, 2006, 0, 0, 0);
-			TimeElement time = new TimeElement(astro, SCALE.UNIVERSAL_TIME_UTC);
-			EphemerisElement eph = new EphemerisElement(TARGET.Moon, EphemerisElement.COORDINATES_TYPE.APPARENT,
-					EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.GEOCENTRIC, EphemerisElement.REDUCTION_METHOD.IAU_2006,
-					EphemerisElement.FRAME.DYNAMICAL_EQUINOX_J2000, EphemerisElement.ALGORITHM.MOSHIER);
-			eph.correctForEOP = false;
-			eph.correctForPolarMotion = false;
-			eph.correctEOPForDiurnalSubdiurnalTides = false;
-			eph.preferPrecisionInEphemerides = false;
-			CityElement city = City.findCity("Madrid");
-			ObserverElement observer = ObserverElement.parseCity(city);
-			SCALE output = SCALE.BARYCENTRIC_DYNAMICAL_TIME;
-
-			LunarEclipse le = new LunarEclipse(time, observer, eph);
-
-			double jdMax  = le.getEclipseMaximum();
-
-			System.out.println("TT-UT1: "+TimeScale.getTTminusUT1(astro));
-			System.out.println(le.getEclipseType() + " lunar eclipse on " + TimeFormat
-					.formatJulianDayAsDateAndTime(jdMax, SCALE.BARYCENTRIC_DYNAMICAL_TIME) + ". In "+output+":");
-
-			MoonEventElement[] events = le.getEvents();
-			for (int i = 0; i < events.length; i++)
-			{
-				if (events[i].startTime != 0.0)
-					System.out.println("From "+TimeFormat.formatJulianDayAsDateAndTime(events[i].getEventTime(observer, eph, true, output), output) + " to "+
-							TimeFormat.formatJulianDayAsDateAndTime(events[i].getEventTime(observer, eph, false, output), output)+" (" + events[i].details + ")");
-			}
-			
-			// Difference of only 30s at year 1000 B.C. with Spenak results in Five Millennium Canon of Solar/Lunar Eclipses (5:40:48),
-			// using ELP2000 fixed. With Moshier 3 minutes, and with ELP2000 not fixed 30 min.
-			// Only 30s, but why?
-
-			/*
-			ELP2000 Fixed
-			TT-UT1: 25314.834625356198
-			total lunar eclipse on 14-Mar-1000 05:40:15 (B.C.) TDB. In BARYCENTRIC_DYNAMICAL_TIME:
-			From 14-Mar-1000 02:55:24 (B.C.) TDB to 14-Mar-1000 08:25:12 (B.C.) TDB (penumbral)
-			From 14-Mar-1000 03:55:27 (B.C.) TDB to 14-Mar-1000 07:25:06 (B.C.) TDB (full penumbral)
-			From 14-Mar-1000 03:54:52 (B.C.) TDB to 14-Mar-1000 07:25:39 (B.C.) TDB (partial)
-			From 14-Mar-1000 04:58:40 (B.C.) TDB to 14-Mar-1000 06:21:51 (B.C.) TDB (total)
-			
-			ELP 2000 Fixed using Meeus expansion: Maximum at 05:38:14, just 2 minutes of error
-			
-			Moshier. Since it's based on DE404, it should be more accurate, gives max at 05:37:46
-			total lunar eclipse on 14-Mar-1000 05:37:46 (B.C.) TDB. In BARYCENTRIC_DYNAMICAL_TIME:
-			From 14-Mar-1000 02:52:55 (B.C.) TDB to 14-Mar-1000 08:22:42 (B.C.) TDB (penumbral)
-			From 14-Mar-1000 03:52:59 (B.C.) TDB to 14-Mar-1000 07:22:37 (B.C.) TDB (full penumbral)
-			From 14-Mar-1000 03:52:24 (B.C.) TDB to 14-Mar-1000 07:23:10 (B.C.) TDB (partial)
-			From 14-Mar-1000 04:56:12 (B.C.) TDB to 14-Mar-1000 06:19:21 (B.C.) TDB (total)
-			 */
-			JPARSECException.showWarnings();
-			
-			astro = new AstroDate(-1000, 1, 15);
-			//astro = new AstroDate(1997, 9, 16);
-			SimpleEventElement see = MainEvents.MoonPhaseOrEclipse(astro.jd(), SimpleEventElement.EVENT.MOON_LUNAR_ECLIPSE, MainEvents.EVENT_TIME.CLOSEST);
-			if (see != null) {
-				time = new TimeElement(see.time, TimeElement.SCALE.BARYCENTRIC_DYNAMICAL_TIME);
-				astro = new AstroDate(see.getEventTime(observer, eph, output)); 
-				// should be 23:36 LT or 05:38 TDB
-				System.out.println("Meeus expansion: lunar eclipse on "+see.time+"/"+astro.getYear()+"/"+astro.getMonth()+"/"+astro.getDay()+"/"+astro.getHour()+":"+astro.getMinute()+":"+astro.getRoundedSecond());
-			}
-		} catch (JPARSECException ve)
-		{
-			JPARSECException.showException(ve);
-		}
 	}
 }
