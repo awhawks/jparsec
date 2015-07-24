@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,11 +18,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.astrophysics;
 
 import java.io.*;
 
+import java.util.Arrays;
 import jparsec.astrophysics.gildas.Spectrum30m;
 import jparsec.astrophysics.gildas.SpectrumLine;
 import jparsec.astrophysics.gildas.Spectrum30m.XUNIT;
@@ -42,7 +43,7 @@ public class Spectrum implements Serializable
 
 	/**
 	 * Holds the spectrum/SED. The set of points
-	 * should be given as flux as function of channel 
+	 * should be given as flux as function of channel
 	 * number to later create a Gildas spectrum.
 	 */
 	public FluxElement[] spectrum;
@@ -123,7 +124,7 @@ public class Spectrum implements Serializable
 	 * Beam efficiency.
 	 */
 	public double beamEfficiency;
-	
+
 	/**
 	 * Simple constructor.
 	 * @param s The SED/spectrum points. The set of points
@@ -134,7 +135,7 @@ public class Spectrum implements Serializable
 	{
 		if (s != null) this.spectrum = s.clone();
 	}
-	
+
 	/**
 	 * Constructor for a set of values representing the spectrum,
 	 * as intensities as function of channel number channel >= 1.
@@ -144,7 +145,7 @@ public class Spectrum implements Serializable
 	public Spectrum(MeasureElement m[]) throws JPARSECException {
 		this(new Table(m));
 	}
-	
+
 	/**
 	 * Constructor for a Table object. Intensities are taken from the
 	 * Table object, while channel number >= 1 (ordered as in the Table
@@ -156,7 +157,7 @@ public class Spectrum implements Serializable
 		if (table.getDimensions() > 1) throw new JPARSECException("Table must have 1 dimension.");
 		double v[][][] = table.getValues();
 		double dv[][][] = table.getErrors();
-		
+
 		int n = v[0][0].length;
 		spectrum = new FluxElement[n];
 		for (int i=0; i<n; i++) {
@@ -184,20 +185,20 @@ public class Spectrum implements Serializable
 		if (s == null || s.length == 0) throw new JPARSECException("Input table must contain valid data.");
 		boolean skip = false;
 		String newSep = DataSet.replaceAll(separator, "  ", " ", true);
-		if (newSep.equals(" ")) skip = true;	
+		if (newSep.equals(" ")) skip = true;
 		int n = FileIO.getNumberOfFields(s[0], separator, skip);
 		if (xColumn < 1 || yColumn < 1 || xColumn > n || yColumn > n) throw new JPARSECException("x and y columns must be between 1 and "+n+".");
-		
+
 		this.spectrum = new FluxElement[s.length];
 		for (int i=0; i<s.length; i++)
 		{
 			String xval = FileIO.getField(xColumn, s[i], separator, skip);
-			double dxval = 0.0; 
+			double dxval = 0.0;
 			if (dxColumn != null) dxval = DataSet.parseDouble(FileIO.getField(dxColumn.intValue(), s[i], separator, skip));
 			MeasureElement x = new MeasureElement(xval, dxval, xUnit);
-			
+
 			String yval = FileIO.getField(yColumn, s[i], separator, skip);
-			double dyval = 0.0; 
+			double dyval = 0.0;
 			if (dyColumn != null) dyval = DataSet.parseDouble(FileIO.getField(dyColumn.intValue(), s[i], separator, skip));
 			MeasureElement y = new MeasureElement(yval, dyval, yUnit);
 
@@ -276,55 +277,39 @@ public class Spectrum implements Serializable
 		}
 		return out;
 	}
-	
+
 	/**
 	 * Clones this instance.
 	 */
+    @Override
 	public Spectrum clone()
 	{
-		if (this == null) return null;
 		FluxElement f[] = new FluxElement[spectrum.length];
 		for (int i=0; i<f.length; i++) {
 			f[i] = spectrum[i].clone();
 		}
+
 		Spectrum s = new Spectrum(f);
 		s.backend = this.backend;
-		s.beamEfficiency = this.beamEfficiency;
-		s.dec = this.dec;
-		s.epochJD = this.epochJD;
-		s.integrationTime = this.integrationTime;
 		s.line = this.line;
-		s.observationNumber = this.observationNumber;
-		s.observingTimeJD = this.observingTimeJD;
-		s.offsetX = this.offsetX;
-		s.offsetY = this.offsetY;
-		s.ra = this.ra;
-		s.referenceChannel = this.referenceChannel;
-		s.referenceVelocity = this.referenceVelocity;
-		s.referenceFrequency = this.referenceFrequency;
-		s.imgFrequency = this.imgFrequency;
-		s.scanNumber = this.scanNumber;
-		s.sigmaRMS = this.sigmaRMS;
 		s.source = this.source;
-		s.velocityResolution = this.velocityResolution;
+
 		return s;
 	}
-	
+
 	/**
 	 * Check is this instance is equals to another.
 	 */
+    @Override
 	public boolean equals(Object o)
 	{
 		if (o == null) {
-			if (this == null) return true;
 			return false;
 		}
-		if (this == null) {
-			return false;
-		}
+
 		boolean equals = true;
 		Spectrum s = (Spectrum) o;
-		
+
 		if (this.spectrum == null) {
 			if (s.spectrum != null) equals = false;
 		} else {
@@ -339,6 +324,7 @@ public class Spectrum implements Serializable
 				}
 			}
 		}
+
 		if (!this.spectrum.equals(s.spectrum)) equals = false;
 		if (!this.backend.equals(s.backend)) equals = false;
 		if (!this.line.equals(s.line)) equals = false;
@@ -360,9 +346,50 @@ public class Spectrum implements Serializable
 		if (this.sigmaRMS != s.sigmaRMS) equals = false;
 		if (this.velocityResolution != s.velocityResolution) equals = false;
 		return equals;
-	}	
-	
-	/**
+	}
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        result = spectrum != null ? Arrays.hashCode(spectrum) : 0;
+        temp = Double.doubleToLongBits(ra);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(dec);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(epochJD);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + (source != null ? source.hashCode() : 0);
+        temp = Double.doubleToLongBits(observingTimeJD);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(referenceChannel);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(referenceFrequency);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(imgFrequency);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(referenceVelocity);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(velocityResolution);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(sigmaRMS);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + scanNumber;
+        result = 31 * result + observationNumber;
+        result = 31 * result + (backend != null ? backend.hashCode() : 0);
+        result = 31 * result + (line != null ? line.hashCode() : 0);
+        temp = Double.doubleToLongBits(offsetX);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(offsetY);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(integrationTime);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(beamEfficiency);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        return result;
+    }
+
+    /**
 	 * Returns a perfect Gaussian spectrum given the parameters of the Gaussian.
 	 * @param np The number of points in the spectrum.
 	 * @param line The fit to the line.
@@ -377,7 +404,7 @@ public class Spectrum implements Serializable
 	 * Returns a Gaussian spectrum given the parameters of the Gaussian.
 	 * @param v The central velocity, km/s.
 	 * @param t The peak temperature, K.
-	 * @param w The width of the Gaussian, km/s. The spectrum will have 
+	 * @param w The width of the Gaussian, km/s. The spectrum will have
 	 * velocity limits from v - 2 * w to w + 2 * w.
 	 * @param np The number of points in the spectrum.
 	 * @param nu0 The central frequency, MHz.
@@ -409,7 +436,7 @@ public class Spectrum implements Serializable
 		sp.velocityResolution = velRes;
 		return sp;
 	}
-	
+
 	/**
 	 * Returns this spectrum as a Table object in 1d.
 	 * @return The table object.

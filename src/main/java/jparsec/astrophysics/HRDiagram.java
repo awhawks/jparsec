@@ -28,6 +28,7 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.GeneralPath;
 import java.util.ArrayList;
 
+import java.util.Arrays;
 import jparsec.astronomy.Star;
 import jparsec.astronomy.Star.LUMINOSITY_CLASS;
 import jparsec.graph.ChartElement;
@@ -54,8 +55,8 @@ public class HRDiagram {
 	private double T[], Mv[];
 	private String source;
 	private double dist;
-	private HRDiagram fittedHR = null;
-	private MeasureElement turnOff[] = null;
+	private HRDiagram fittedHR;
+	private MeasureElement turnOff[];
 	
 	/**
 	 * Constructor for an HR diagram using experimental data.
@@ -268,23 +269,20 @@ public class HRDiagram {
 	/**
 	 * Returns if this instance is equals to another.
 	 */
+    @Override
 	public boolean equals(Object o) {
 		if (o == null) {
-			if (this == null) return true;
 			return false;
 		}
-		if (this == null) {
-			return false;
-		}
+
 		HRDiagram hr = (HRDiagram) o;
 		if (!hr.source.equals(source)) return false;
 		if (!DataSet.sameArrayValues(T, hr.T)) return false;
 		if (!DataSet.sameArrayValues(Mv, hr.Mv)) return false;
 		if (hr.dist != dist) return false;
-		if (hr.fittedHR != null && fittedHR == null) return false; 
-		if (hr.fittedHR == null && fittedHR != null) return false;
-		if (hr.fittedHR != null || fittedHR != null) {
-			if (!hr.fittedHR.equals(fittedHR)) return false; 
+		if (hr.fittedHR != fittedHR) return false;
+		if (fittedHR != null) {
+			return fittedHR.equals(hr.fittedHR);
 		}
 		return true;
 	}
@@ -292,15 +290,29 @@ public class HRDiagram {
 	/**
 	 * Clones this instance.
 	 */
+    @Override
 	public HRDiagram clone() {
 		HRDiagram hr = new HRDiagram(T.clone(), Mv.clone(), source);
 		hr.dist = dist;
-		hr.fittedHR = null;
 		if (fittedHR != null) hr.fittedHR = this.fittedHR.clone();
 		return hr;
 	}
-	
-	/**
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        result = T != null ? Arrays.hashCode(T) : 0;
+        result = 31 * result + (Mv != null ? Arrays.hashCode(Mv) : 0);
+        result = 31 * result + (source != null ? source.hashCode() : 0);
+        temp = Double.doubleToLongBits(dist);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + (fittedHR != null ? fittedHR.hashCode() : 0);
+        result = 31 * result + (turnOff != null ? Arrays.hashCode(turnOff) : 0);
+        return result;
+    }
+
+    /**
 	 * Draws the different branches of the HR diagram to a Graphics2D device. The Graphics
 	 * instance should be previosuly 'prepared' using the method {@linkplain CreateChart#prepareGraphics2D(Graphics2D, boolean)}. 
 	 * @param g A 'prepared' Graphics2D instance of an image where the HR diagram was previosuly drawn using the method
@@ -427,63 +439,6 @@ public class HRDiagram {
 			s = AWTGraphics.rotateShape(g, s, 25 * Constant.DEG_TO_RAD);
 			g.setColor(whiteDwarf);
 			g.fill(s);
-		}
-	}
-	
-	/**
-	 * Test program.
-	 * @param args Not used.
-	 */
-	public static void main(String[] args) {
-		try {
-			HRDiagram hr = new HRDiagram(true, true, 50, 3000, 30000);
-			final CreateChart ch = hr.getChart(true);
-			ch.getChartElement().imageHeight = 900;
-			ch.updateChart();
-			Picture pic = new Picture(ch.chartAsBufferedImage());
-			Graphics2D g = pic.getImage().createGraphics();
-			ch.prepareGraphics2D(g, true);
-			Color mainSequence = new Color(255, 0, 0, 128);
-			Color giant = new Color(0, 255, 0, 128);
-			Color sgiant = new Color(0, 0, 255, 128);
-			Color whiteDwarf = new Color(128, 128, 128, 128);
-			hr.renderHRbranches(g, mainSequence, giant, sgiant, whiteDwarf);
-			pic.show("HR diagram");
-			/*
-			pic.getCanvas().addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent e) {
-					super.mouseClicked(e);
-					double pos[] = ch.getPhysicalUnits(e.getX(), e.getY());
-					System.out.println("path.lineTo("+(float)pos[0]+", "+(float)pos[1]+");");
-				}
-			});
-			*/
-			/*
-			String data[] = DataSet.arrayListToStringArray(ReadFile.readAnyExternalFile("/home/alonso/kk.txt"));
-			for (int i=0; i<data.length; i = i + 3) {
-				int n1 = data[i].indexOf("(");
-				int n2 = data[i].indexOf(")");
-				String s1 = data[i].substring(n1+1, n2);
-				double px1 = Double.parseDouble(FileIO.getField(1, s1, ",", false).trim());
-				double py1 = Double.parseDouble(FileIO.getField(2, s1, ",", false).trim());
-
-				n1 = data[i+1].indexOf("(");
-				n2 = data[i+1].indexOf(")");
-				s1 = data[i+1].substring(n1+1, n2);
-				double px2 = Double.parseDouble(FileIO.getField(1, s1, ",", false).trim());
-				double py2 = Double.parseDouble(FileIO.getField(2, s1, ",", false).trim());
-								
-				n1 = data[i+2].indexOf("(");
-				n2 = data[i+2].indexOf(")");
-				s1 = data[i+2].substring(n1+1, n2);
-				double px3 = Double.parseDouble(FileIO.getField(1, s1, ",", false).trim());
-				double py3 = Double.parseDouble(FileIO.getField(2, s1, ",", false).trim());
-				System.out.println("path.curveTo("+(float)px1+", "+(float)py1+", "+(float)px2+", "+(float)py2+", "+(float)px3+", "+(float)py3+");");
-			}
-			*/
-		} catch (Exception exc) {
-			exc.printStackTrace();
 		}
 	}
 }

@@ -1,5 +1,6 @@
 package jparsec.astrophysics.gildas;
 
+import java.awt.geom.Point2D;
 import jparsec.ephem.Functions;
 import jparsec.graph.CreateGridChart;
 import jparsec.graph.DataSet;
@@ -7,8 +8,6 @@ import jparsec.io.FileIO;
 import jparsec.math.Constant;
 import jparsec.observer.LocationElement;
 import jparsec.util.JPARSECException;
-
-import java.awt.geom.Point2D;
 
 public class LMVCubeTest {
     /**
@@ -179,7 +178,7 @@ public class LMVCubeTest {
 */
             lmv.setCubeData(lmv.getCubeData(100, 100, 200));
 
-//            Serialization.writeObject(lmv, "/home/alonso/lmvTest");
+            //Serialization.writeObject(lmv, "/home/alonso/lmvTest");
 
 /*            int inix = 16, endx = 48, iniy = 16, endy = 48, iniz = 0, endz = 59;
             lmv.clip(inix, endx, iniy, endy, iniz, endz);
@@ -195,7 +194,7 @@ public class LMVCubeTest {
             System.out.println(lmv.axis1Dim + "/" + lmv.axis2Dim + "/" + lmv.axis3Dim);
 
             //lmv.setCubeData(lmv.getCubeData(32, 32, 128));
-//            lmv.setCubeData(lmv.resample(128, 128));
+            //lmv.setCubeData(lmv.resample(128, 128));
 
             System.out.println("width " + lmv.axis1Dim);
             System.out.println("height " + lmv.axis2Dim);
@@ -210,7 +209,7 @@ public class LMVCubeTest {
             String output = "/home/alonso/myLMV.lmv";
             lmv.write(output);
 
-//            lmv = new LMVCube(output);
+            //lmv = new LMVCube(output);
             //FileIO.deleteFile(output);
 
 /*            System.out.println("bl "+lmv.blanking+"/"+lmv.axis1Dim+"/"+lmv.axis2Dim+"/"+lmv.axis3Dim);

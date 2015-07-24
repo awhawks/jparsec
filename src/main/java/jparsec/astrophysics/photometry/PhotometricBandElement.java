@@ -486,21 +486,11 @@ public class PhotometricBandElement implements Serializable
     /**
      * To clone the object.
      */
+    @Override
     public PhotometricBandElement clone()
     {
-    	if (this == null) return null;
     	PhotometricBandElement p = new PhotometricBandElement();
-    	p.bandWidth = this.bandWidth;
-    	p.bandWidthError = this.bandWidthError;
-    	p.effectiveWavelength = this.effectiveWavelength;
-    	p.effectiveWavelengthError = this.effectiveWavelengthError;
-    	p.fluxAt0Magnitude = this.fluxAt0Magnitude;
-    	p.fluxAt0MagnitudeError = this.fluxAt0MagnitudeError;
-    	p.magnitude0ForFlux = this.magnitude0ForFlux;
-    	p.fieldName = this.fieldName;
-    	p.fluxGivenAsMagnitude = this.fluxGivenAsMagnitude;
     	p.name = this.name;
-    	p.beam = this.beam;
     	return p;
     }
     
@@ -509,15 +499,13 @@ public class PhotometricBandElement implements Serializable
      * @param band Object to compare with.
      * @return True is it is equal.
      */
+    @Override
     public boolean equals(Object band)
     {
 		if (band == null) {
-			if (this == null) return true;
 			return false;
 		}
-		if (this == null) {
-			return false;
-		}
+
 		PhotometricBandElement p = (PhotometricBandElement) band;
     	boolean isEqual = true;
        	if (p.bandWidth != this.bandWidth) isEqual = false;
@@ -532,5 +520,21 @@ public class PhotometricBandElement implements Serializable
        	if (!p.name.equals(this.name)) isEqual = false;
        	if (p.beam != this.beam) isEqual = false;
     	return isEqual;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (effectiveWavelength != +0.0f ? Float.floatToIntBits(effectiveWavelength) : 0);
+        result = 31 * result + (effectiveWavelengthError != +0.0f ? Float.floatToIntBits(effectiveWavelengthError) : 0);
+        result = 31 * result + (bandWidth != +0.0f ? Float.floatToIntBits(bandWidth) : 0);
+        result = 31 * result + (bandWidthError != +0.0f ? Float.floatToIntBits(bandWidthError) : 0);
+        result = 31 * result + (fluxAt0Magnitude != +0.0f ? Float.floatToIntBits(fluxAt0Magnitude) : 0);
+        result = 31 * result + (fluxAt0MagnitudeError != +0.0f ? Float.floatToIntBits(fluxAt0MagnitudeError) : 0);
+        result = 31 * result + (magnitude0ForFlux != +0.0f ? Float.floatToIntBits(magnitude0ForFlux) : 0);
+        result = 31 * result + (fluxGivenAsMagnitude ? 1 : 0);
+        result = 31 * result + (beam != +0.0f ? Float.floatToIntBits(beam) : 0);
+        result = 31 * result + (fieldName != null ? fieldName.hashCode() : 0);
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        return result;
     }
 }

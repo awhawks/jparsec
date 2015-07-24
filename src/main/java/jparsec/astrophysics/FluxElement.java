@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.astrophysics;
 
 import java.io.Serializable;
@@ -62,6 +62,7 @@ public class FluxElement implements Serializable
 		this.x = x;
 		this.y = y;
 	}
+
 	/**
 	 * Full constructor.
 	 * @param x X value.
@@ -74,39 +75,45 @@ public class FluxElement implements Serializable
 		this.y = y;
 		if (b != null) this.photometricBand = b.clone();
 	}
-	
+
 	/**
 	 * Clones this instance.
 	 */
+    @Override
 	public FluxElement clone()
 	{
-		if (this == null) return null;
 		if (photometricBand == null) return new FluxElement(this.x.clone(), this.y.clone(), null);
 		FluxElement p = new FluxElement(this.x.clone(), this.y.clone(), this.photometricBand.clone());
 		return p;
 	}
-	
+
 	/**
 	 * Returns if this instance is equals to another.
 	 */
+    @Override
 	public boolean equals(Object o)
 	{
 		if (o == null) {
-			if (this == null) return true;
 			return false;
 		}
-		if (this == null) {
-			return false;
-		}
+
 		FluxElement p = (FluxElement) o;
 		boolean equals = true;
 		if (!this.x.equals(p.x)) equals = false;
 		if (!this.y.equals(p.y)) equals = false;
 		if (!this.photometricBand.equals(p.photometricBand)) equals = false;
 		return equals;
-	}	
-	
-	private MeasureElement transformX(String newUnit)
+	}
+
+    @Override
+    public int hashCode() {
+        int result = x != null ? x.hashCode() : 0;
+        result = 31 * result + (y != null ? y.hashCode() : 0);
+        result = 31 * result + (photometricBand != null ? photometricBand.hashCode() : 0);
+        return result;
+    }
+
+    private MeasureElement transformX(String newUnit)
 	throws JPARSECException {
 		if (newUnit == null || this.x.unit == null || this.x.unit.equals(newUnit)) return this.x;
 		return this.x.get(newUnit);
@@ -115,7 +122,7 @@ public class FluxElement implements Serializable
 	private MeasureElement transformY(String newUnit)
 	throws JPARSECException {
 		if (newUnit == null || this.y.unit == null || this.y.unit.equals(newUnit)) return this.y;
-		
+
 		if (this.y.unit.equals(MeasureElement.UNIT_Y_MAG))
 		{
 			MeasureElement out = Photometry.getFluxFromMagnitude(DataSet.getDoubleValueWithoutLimit(this.y.value), this.y.error, this.photometricBand);
@@ -144,7 +151,7 @@ public class FluxElement implements Serializable
 	throws JPARSECException {
 		this.x = this.transformX(newUnit);
 	}
-	
+
 	/**
 	 * Obtains the current x value in a new unit.
 	 * @param newUnit The new unit.
@@ -165,7 +172,7 @@ public class FluxElement implements Serializable
 	throws JPARSECException {
 		this.y = this.transformY(newUnit);
 	}
-	
+
 	/**
 	 * Obtains the current y value in a new unit.
 	 * @param newUnit The new unit.
@@ -176,7 +183,7 @@ public class FluxElement implements Serializable
 	throws JPARSECException {
 		return this.transformY(newUnit);
 	}
-	
+
 	/**
 	 * Returns a String representation of this object.
 	 */

@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.astrophysics;
 
 import jparsec.math.Constant;
@@ -26,7 +26,7 @@ import jparsec.util.JPARSECException;
 
 /**
  * A class to perform some useful calculations on IRAM instruments.
- * @author T. Alonso Albi - OAN (Spain) 
+ * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
 public class IRAMPdBI {
@@ -56,7 +56,7 @@ public class IRAMPdBI {
 	 * Efficiency factor at 3 mm.
 	 */
 	public static double eta_3mm = 0.9;
-	
+
 	/**
 	 * System temperature below 110 GHz.
 	 */
@@ -128,7 +128,7 @@ public class IRAMPdBI {
 	 * Number of configurations.
 	 */
 	public int Nc;
-	
+
 	/**
 	 * Constructor.
 	 * @param wave The wavelength.
@@ -164,7 +164,7 @@ public class IRAMPdBI {
 			eta = IRAMPdBI.eta_3mm;
 		}
 	}
-	
+
 	/**
 	 * Returns the RMS in the PdBI.
 	 * @return The rms value.
@@ -230,7 +230,7 @@ public class IRAMPdBI {
 			throw new JPARSECException("unsupported year.");
 		}
 	}
-	
+
 	/**
 	 * Returns the wavelength in mm.
 	 * @param freq Frequency in GHz.
@@ -238,37 +238,5 @@ public class IRAMPdBI {
 	 */
 	public static double getWavelength(double freq) {
 		return Constant.SPEED_OF_LIGHT * 1.0E3 / (freq * 1.0E9);
-	}
-	
-	/**
-	 * A test program.
-	 * @param args Unused.
-	 */
-	public static void main(String args[])
-	{
-		System.out.println("PdBI test");
-		
-		try {
-			System.out.println("Factor "+(1.0/IRAMPdBI.getFactorKToJy(Constant.SPEED_OF_LIGHT*1000.0 / (89189*1E6), 5.20, 4.81)));
-			setConstants(2008);
-//			IRAMPdBI.Na = 6;
-			IRAMPdBI ir = new IRAMPdBI(IRAMPdBI.WAVE_3MM, "B", 8, 2, 80000);
-//			IRAMPdBI ir = new IRAMPdBI(IRAMPdBI.WAVE_2MM, "C", 2, 1, 2.0E9); // Discos 0.7 mJy, pero mejor 0.86
-//			IRAMPdBI ir = new IRAMPdBI(IRAMPdBI.WAVE_3MM, "CD", 6, 2, 40*1.0E3); // R Mon 6 mJy, a mi 7.6, pero mejor 9.3
-			double rms = ir.getRMS_PdBI();
-//			System.out.println(ir.Jpk);
-//			System.out.println(ir.eta);
-//			System.out.println(ir.Tsys);
-			System.out.println("RMS (mJy/beam): "+(rms*1000.0));
-
-			// CN 2-1 y este distintos
-			double lambda = Constant.SPEED_OF_LIGHT * 1.0E3 / (86.7 * 1.0E9);
-			double bmajor = 5.91, bminor = 5.58;
-			double mJyToK = (1.0/(1000.0*IRAMPdBI.getFactorKToJy(lambda, bmajor, bminor)));
-			System.out.println("K/(mJy/beam): "+mJyToK);
-		} catch (Exception exc)
-		{
-			exc.printStackTrace();
-		}
 	}
 }

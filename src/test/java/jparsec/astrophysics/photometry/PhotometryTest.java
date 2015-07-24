@@ -1,5 +1,6 @@
 package jparsec.astrophysics.photometry;
 
+import java.awt.Color;
 import jparsec.astrophysics.MeasureElement;
 import jparsec.astrophysics.gildas.Spectrum30m;
 import jparsec.graph.ChartElement;
@@ -8,8 +9,6 @@ import jparsec.graph.CreateChart;
 import jparsec.graph.DataSet;
 import jparsec.math.Constant;
 import jparsec.util.JPARSECException;
-
-import java.awt.*;
 
 public class PhotometryTest {
     /**
@@ -58,7 +57,6 @@ public class PhotometryTest {
             // Show a chart with the filters
             ChartSeriesElement series[] = new ChartSeriesElement[5];
             Color[] col = new Color[] { Color.MAGENTA, Color.BLUE, Color.YELLOW, Color.RED, Color.ORANGE };
-
             for (int i = 0; i < 5; i++) {
                 series[i] = new ChartSeriesElement(Photometry.getFilterWavelengths(Photometry.FILTER.values()[i]),
                         Photometry.getFilterTransmitancy(Photometry.FILTER.values()[i])
@@ -67,7 +65,6 @@ public class PhotometryTest {
                 series[i].showLines = true;
                 series[i].showShapes = false;
             }
-
             ChartElement chart = new ChartElement(series, ChartElement.TYPE.XY_CHART,
                     ChartElement.SUBTYPE.XY_SCATTER,
                     "Johnson UBVRI filter transmitancies",
