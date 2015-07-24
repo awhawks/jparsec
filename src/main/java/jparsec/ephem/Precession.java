@@ -419,7 +419,7 @@ public class Precession
 	 * @return Vector referred to mean equinox and equator of JD.
 	 * @throws JPARSECException If JD and JD0 are non equal to J2000.
 	 */
-	private static double[] precessionIAU2006(double JD0, double JD, double[] R) throws JPARSECException
+	protected static double[] precessionIAU2006(double JD0, double JD, double[] R) throws JPARSECException
 	{
 		if (JD != Constant.J2000 && JD0 != Constant.J2000) 
 			throw new JPARSECException("Precession must be from or to J2000 epoch.");

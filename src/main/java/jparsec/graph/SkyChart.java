@@ -48,7 +48,6 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
-
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
@@ -61,23 +60,22 @@ import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
-
 import jparsec.astronomy.CCDElement;
 import jparsec.astronomy.Constellation;
 import jparsec.astronomy.Constellation.CONSTELLATION_NAME;
 import jparsec.astronomy.CoordinateSystem;
+import jparsec.astronomy.CoordinateSystem.COORDINATE_SYSTEM;
 import jparsec.astronomy.OcularElement;
 import jparsec.astronomy.Star;
 import jparsec.astronomy.TelescopeElement;
-import jparsec.astronomy.CoordinateSystem.COORDINATE_SYSTEM;
 import jparsec.ephem.Ephem;
 import jparsec.ephem.EphemerisElement;
+import jparsec.ephem.EphemerisElement.ALGORITHM;
 import jparsec.ephem.EphemerisElement.COORDINATES_TYPE;
 import jparsec.ephem.Functions;
 import jparsec.ephem.Precession;
 import jparsec.ephem.RiseSetTransit;
 import jparsec.ephem.Target;
-import jparsec.ephem.EphemerisElement.ALGORITHM;
 import jparsec.ephem.Target.TARGET;
 import jparsec.ephem.event.EventReport;
 import jparsec.ephem.event.MainEvents;
@@ -92,12 +90,12 @@ import jparsec.ephem.planets.OrbitalElement;
 import jparsec.ephem.stars.DoubleStarElement;
 import jparsec.ephem.stars.StarElement;
 import jparsec.ephem.stars.VariableStarElement;
-import jparsec.graph.DataSet;
+import jparsec.graph.chartRendering.AWTGraphics;
 import jparsec.graph.chartRendering.Graphics.ANAGLYPH_COLOR_MODE;
 import jparsec.graph.chartRendering.Graphics.FONT;
-import jparsec.graph.chartRendering.AWTGraphics;
 import jparsec.graph.chartRendering.PlanetRenderElement;
 import jparsec.graph.chartRendering.Projection;
+import jparsec.graph.chartRendering.Projection.PROJECTION;
 import jparsec.graph.chartRendering.RenderEclipse;
 import jparsec.graph.chartRendering.RenderPlanet;
 import jparsec.graph.chartRendering.RenderSatellite;
@@ -105,17 +103,16 @@ import jparsec.graph.chartRendering.RenderSky;
 import jparsec.graph.chartRendering.RenderSky.OBJECT;
 import jparsec.graph.chartRendering.SatelliteRenderElement.PLANET_MAP;
 import jparsec.graph.chartRendering.SkyRenderElement;
+import jparsec.graph.chartRendering.SkyRenderElement.COLOR_MODE;
 import jparsec.graph.chartRendering.SkyRenderElement.CONSTELLATION_CONTOUR;
 import jparsec.graph.chartRendering.SkyRenderElement.FAST_LINES;
 import jparsec.graph.chartRendering.SkyRenderElement.HORIZON_TEXTURE;
 import jparsec.graph.chartRendering.SkyRenderElement.LEYEND_POSITION;
 import jparsec.graph.chartRendering.SkyRenderElement.MILKY_WAY_TEXTURE;
 import jparsec.graph.chartRendering.SkyRenderElement.REALISTIC_STARS;
+import jparsec.graph.chartRendering.SkyRenderElement.STAR_LABELS;
 import jparsec.graph.chartRendering.SkyRenderElement.SUPERIMPOSED_LABELS;
 import jparsec.graph.chartRendering.TrajectoryElement;
-import jparsec.graph.chartRendering.Projection.PROJECTION;
-import jparsec.graph.chartRendering.SkyRenderElement.COLOR_MODE;
-import jparsec.graph.chartRendering.SkyRenderElement.STAR_LABELS;
 import jparsec.graph.chartRendering.frame.HTMLRendering;
 import jparsec.graph.chartRendering.frame.JTableRendering;
 import jparsec.graph.chartRendering.frame.PlanetaryRendering;
@@ -145,16 +142,16 @@ import jparsec.observer.ObserverElement.DST_RULE;
 import jparsec.time.AstroDate;
 import jparsec.time.SiderealTime;
 import jparsec.time.TimeElement;
+import jparsec.time.TimeElement.SCALE;
 import jparsec.time.TimeFormat;
 import jparsec.time.TimeScale;
-import jparsec.time.TimeElement.SCALE;
 import jparsec.time.calendar.CalendarGenericConversion;
 import jparsec.time.calendar.CalendarGenericConversion.CALENDAR;
 import jparsec.util.DataBase;
 import jparsec.util.JPARSECException;
 import jparsec.util.Logger;
-import jparsec.util.Translate;
 import jparsec.util.Logger.LEVEL;
+import jparsec.util.Translate;
 import jparsec.util.Translate.LANGUAGE;
 import jparsec.vo.Feed;
 import jparsec.vo.FeedMessageElement;
@@ -1281,8 +1278,8 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 						if (loc.getLatitude() < 0) s2 = " S";
 
 						
-						msg1 +=": "+Functions.formatAngleAsDegrees(Math.abs(loc.getLongitude()), ndec)+"º"+s+", "+Functions.formatAngleAsDegrees(Math.abs(loc.getLatitude()), ndec)+"º"+s2+feature;
-						//msg1 +=": "+Functions.formatDEC(Math.abs(loc.getLongitude()), ndec)+"º"+s+", "+Functions.formatDEC(Math.abs(loc.getLatitude()), ndec)+"º"+s2+feature;
+						msg1 +=": "+Functions.formatAngleAsDegrees(Math.abs(loc.getLongitude()), ndec)+"ï¿½"+s+", "+Functions.formatAngleAsDegrees(Math.abs(loc.getLatitude()), ndec)+"ï¿½"+s2+feature;
+						//msg1 +=": "+Functions.formatDEC(Math.abs(loc.getLongitude()), ndec)+"ï¿½"+s+", "+Functions.formatDEC(Math.abs(loc.getLatitude()), ndec)+"ï¿½"+s2+feature;
 					}
 				}
 				if (msg1.equals("")) {
@@ -1340,7 +1337,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 								msg2 += ""+x+" px, "+y+" px / " +Functions.formatRA(loc.getLongitude(), ndeceq+1)+", "+Functions.formatDEC(loc.getLatitude(), ndeceq);
 							}
 						} else {
-							//msg2 += ""+x+" px, "+y+" px / " +Functions.formatAngleAsDegrees(loc.getLongitude(), ndec)+"º, "+Functions.formatAngleAsDegrees(loc.getLatitude(), ndec)+"º";
+							//msg2 += ""+x+" px, "+y+" px / " +Functions.formatAngleAsDegrees(loc.getLongitude(), ndec)+"ï¿½, "+Functions.formatAngleAsDegrees(loc.getLatitude(), ndec)+"ï¿½";
 							if (ndeceq < 0) {
 								int nd = 1;
 								if (ndeceq < -1) nd = 0;
@@ -2692,7 +2689,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 		  						if (nf != 5) obse = Observatory.findObservatorybyName(s);
 		  						if (obse != null) {
 		  							observer2 = ObserverElement.parseObservatory(obse);	
-		  	         				Logger.log(LEVEL.INFO, "Selected new observatory: "+obse.name+", lon "+Functions.formatAngleAsDegrees(observer2.getLongitudeRad(), 3)+"º, lat "+Functions.formatAngleAsDegrees(observer2.getLatitudeRad(), 3)+"º");
+		  	         				Logger.log(LEVEL.INFO, "Selected new observatory: "+obse.name+", lon "+Functions.formatAngleAsDegrees(observer2.getLongitudeRad(), 3)+"ï¿½, lat "+Functions.formatAngleAsDegrees(observer2.getLatitudeRad(), 3)+"ï¿½");
 		  						} else {
 		  							// Name, lon, lat (deg), height (m), Time zone (hours)
 		  							if (nf == 5) {
@@ -2708,7 +2705,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 			  								observer2.setHumidity(ObserverElement.DEFAULT_HUMIDITY);
 			  								observer2.setPressure(ObserverElement.DEFAULT_PRESSURE);
 			  								observer2.setTemperature(ObserverElement.DEFAULT_TEMPERATURE);
-				  	         				Logger.log(LEVEL.INFO, "Selected new observer: "+observer2.getName()+", lon "+Functions.formatAngleAsDegrees(observer2.getLongitudeRad(), 3)+"º, lat "+Functions.formatAngleAsDegrees(observer2.getLatitudeRad(), 3)+"º");		  								
+				  	         				Logger.log(LEVEL.INFO, "Selected new observer: "+observer2.getName()+", lon "+Functions.formatAngleAsDegrees(observer2.getLongitudeRad(), 3)+"ï¿½, lat "+Functions.formatAngleAsDegrees(observer2.getLatitudeRad(), 3)+"ï¿½");		  								
 		  								} catch (Exception exc2) {
 		  									observer2 = null;
 			  								JOptionPane.showMessageDialog(null,
@@ -2732,7 +2729,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 			  						if (index >= 0) obse = Observatory.getObservatoryFromMarsdenList(index);
 			  						if (obse != null) {
 			  							observer2 = ObserverElement.parseObservatory(obse);	
-			  	         				Logger.log(LEVEL.INFO, "Selected new observatory: "+obse.name+", lon "+Functions.formatAngleAsDegrees(observer2.getLongitudeRad(), 3)+"º, lat "+Functions.formatAngleAsDegrees(observer2.getLatitudeRad(), 3)+"º");
+			  	         				Logger.log(LEVEL.INFO, "Selected new observatory: "+obse.name+", lon "+Functions.formatAngleAsDegrees(observer2.getLongitudeRad(), 3)+"ï¿½, lat "+Functions.formatAngleAsDegrees(observer2.getLatitudeRad(), 3)+"ï¿½");
 			  						} else {
 			  			        		JOptionPane.showMessageDialog(null,
 			  			  						replaceVars(t892, new String[] {"%loc"}, new String[] {s}),							
@@ -2768,7 +2765,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 	  					    }
 
 	  						observer2 = ObserverElement.parseCity(city);
-  	         				Logger.log(LEVEL.INFO, "Selected new city: "+city.name+" ("+city.country+"), lon "+Functions.formatAngleAsDegrees(observer2.getLongitudeRad(), 3)+"º, lat "+Functions.formatAngleAsDegrees(observer2.getLatitudeRad(), 3)+"º");
+  	         				Logger.log(LEVEL.INFO, "Selected new city: "+city.name+" ("+city.country+"), lon "+Functions.formatAngleAsDegrees(observer2.getLongitudeRad(), 3)+"ï¿½, lat "+Functions.formatAngleAsDegrees(observer2.getLatitudeRad(), 3)+"ï¿½");
 	  					}
 	  					if (observer2 != null) {
 	  						updateTime = updateTime0;
@@ -4152,7 +4149,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
     			lo = Translate.translate(28);
     			la = Translate.translate(29);
     		}
-			String columns[] = new String[] {Translate.translate(787), Translate.translate(1295), Translate.translate(486), lo+" (º)", la+" (º)", Translate.translate(157), Translate.translate(308)+" (º)"};
+			String columns[] = new String[] {Translate.translate(787), Translate.translate(1295), Translate.translate(486), lo+" (ï¿½)", la+" (ï¿½)", Translate.translate(157), Translate.translate(308)+" (ï¿½)"};
     		
 	    	if (!listShown || table == null || !table.getComponent().isVisible()) {
 				boolean editable[] = null; // All false except boolean
@@ -4354,7 +4351,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 						AWTGraphics.enableAntialiasing(g);
 						g.setColor(Color.BLACK);
 						String label1 = "@rho = "+Functions.formatValue(dstar.getDistance(), 3)+"\"";
-						String label2 = "PA = "+Functions.formatAngleAsDegrees(dstar.getPositionAngle(), 3)+"º";
+						String label2 = "PA = "+Functions.formatAngleAsDegrees(dstar.getPositionAngle(), 3)+"ï¿½";
 						TextLabel tl1 = new TextLabel(label1);
 						tl1.draw(g, 10, ih-40);
 						TextLabel tl2 = new TextLabel(label2);
@@ -4896,7 +4893,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
   			objData[3] = t157 + ": " + objData[3];
   	  		if (id == RenderSky.OBJECT.DEEPSKY) {
 	  			objData[4] = t486 + ": " + objData[4];
-	  			String unit = "º";
+	  			String unit = "ï¿½";
 	  			int ndec = 1;
 	  			try {
 	  				int xp = objData[5].indexOf("x");
@@ -5281,7 +5278,8 @@ private class thread00 implements Runnable {
 				
 				
 				ObserverElement observer = obs.clone();
-				ArrayList<SimpleEventElement> list = EventReport.getEvents(init, end, observer, eph);
+                CityElement city = City.findCity("Madrid");
+				ArrayList<SimpleEventElement> list = EventReport.getEvents(init, end, observer, eph, city);
 				feed = EventReport.getFeed(list, observer);
 			} catch (Exception exc) {
 				exc.printStackTrace();

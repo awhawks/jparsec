@@ -171,30 +171,28 @@ public class FrenchModified implements Serializable
 
 	/**
 	 * Gets the day of the week.
-	 * 
-	 * @param f French instance.
+	 *
 	 * @return Day of week.
 	 */
-	public static int getDayOfWeek(FrenchModified f)
+	public int getDayOfWeek()
 	{
-		int day = f.day + 9;
-        if(f.month < 13) day = (f.day - 1) % 10;
-        day++;
-		if (day > French.DAY_OF_WEEK_NAMES.length) day -= French.DAY_OF_WEEK_NAMES.length;
-		if (day < 0) day += French.DAY_OF_WEEK_NAMES.length;
-		return day;
+		int d = this.day + 9;
+        if (this.month < 13) d = (this.day - 1) % 10;
+        d++;
+		if (d > French.DAY_OF_WEEK_NAMES.length) d -= French.DAY_OF_WEEK_NAMES.length;
+		if (d < 0) d += French.DAY_OF_WEEK_NAMES.length;
+		return d;
 	}
 
 	/**
 	 * Gets the decadi.
-	 * 
-	 * @param f French instance.
+	 *
 	 * @return Decadi index (0, 1, 2), or -1 for no decadi.
 	 */
-	public static int getDecadi(FrenchModified f)
+	public int getDecadi()
 	{
 		int week = -1;
-        if(f.month < 13) week = (f.day - 1) / 10 + 1;
+        if (this.month < 13) week = (this.day - 1) / 10 + 1;
         if (week > 2) week = week - 3;
 		return week;
 	}
@@ -214,8 +212,8 @@ public class FrenchModified implements Serializable
 		FrenchModified h2 = new FrenchModified(h.year, h.month, h.day);
 		System.out.println("JD " + h2.toJulianDay() + " = " + h2.year + "/" + h2.month + "/" + h2.day);
 
-		if (getDecadi(h2) != -1) System.out.println("Decadi "+Calendar.nameFromNumber(FrenchModified.getDecadi(h2), French.DECADE_NAMES));
+		if (h2.getDecadi() != -1) System.out.println("Decadi "+Calendar.nameFromNumber(h2.getDecadi(), French.DECADE_NAMES));
 		System.out.println(Calendar.nameFromMonth(h2.month, French.MONTH_NAMES));
-		System.out.println(Calendar.nameFromNumber(FrenchModified.getDayOfWeek(h2), French.DAY_OF_WEEK_NAMES));
+		System.out.println(Calendar.nameFromNumber(h2.getDayOfWeek(), French.DAY_OF_WEEK_NAMES));
 	}
 }

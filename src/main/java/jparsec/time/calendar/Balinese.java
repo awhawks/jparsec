@@ -360,16 +360,15 @@ public class Balinese implements Serializable
 
 	/**
 	 * Gets the interval between two dates.
-	 * 
-	 * @param balinese Balinese instance.
+	 *
 	 * @param l Fixed date.
 	 * @return Interval in days.
 	 */
-	public static long onOrBefore(Balinese balinese, long l)
+	public long onOrBefore(long l)
 	{
-		int i = balinese.pancawara - 1;
-		int j = balinese.sadwara - 1;
-		int k = balinese.saptawara - 1;
+		int i = this.pancawara - 1;
+		int j = this.sadwara - 1;
+		int k = this.saptawara - 1;
 		int i1 = Calendar.mod(i + 14 + 15 * (k - i), 35);
 		int j1 = j + 36 * (i1 - j);
 		int k1 = dayFromFixed(0L);
@@ -379,23 +378,21 @@ public class Balinese implements Serializable
 	/**
 	 * Gets the day from a Balinese date.
 	 * 
-	 * @param balinese Balinese instance.
 	 * @return Day.
 	 */
-	public static int day(Balinese balinese)
+	public int day()
 	{
-		return (int) ((onOrBefore(balinese, EPOCH + 209L) - EPOCH) + 1L);
+		return (int) ((onOrBefore(EPOCH + 209L) - EPOCH) + 1L);
 	}
 
 	/**
 	 * Gets the week from a Balinese date.
-	 * 
-	 * @param balinese Balinese instance.
+	 *
 	 * @return Week.
 	 */
-	public static int week(Balinese balinese)
+	public int week()
 	{
-		return (int) (Calendar.quotient(day(balinese) - 1, 7D) + 1L);
+		return (int) (Calendar.quotient(day() - 1, 7D) + 1L);
 	}
 
 	/**
@@ -436,6 +433,6 @@ public class Balinese implements Serializable
 		System.out.println(Calendar.nameFromNumber(h2.asatawara, ASATAWARA_NAMES));
 		System.out.println(Calendar.nameFromNumber(h2.sangawara, SANGAWARA_NAMES));
 		System.out.println(Calendar.nameFromNumber(h2.dasawara, DASAWARA_NAMES));
-		System.out.println(Calendar.nameFromNumber(week(h2), WEEK_NAMES));
+		System.out.println(Calendar.nameFromNumber(h2.week(), WEEK_NAMES));
 	}
 }

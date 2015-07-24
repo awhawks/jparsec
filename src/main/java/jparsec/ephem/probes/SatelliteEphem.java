@@ -27,16 +27,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-
 import jparsec.astronomy.Constellation;
 import jparsec.astronomy.CoordinateSystem;
 import jparsec.astronomy.Star;
-import jparsec.ephem.Ephem;
 import jparsec.ephem.EphemerisElement;
 import jparsec.ephem.Functions;
 import jparsec.ephem.Nutation;
 import jparsec.ephem.Precession;
-import jparsec.ephem.EphemerisElement.ALGORITHM;
 import jparsec.ephem.Target.TARGET;
 import jparsec.ephem.event.Saros;
 import jparsec.ephem.probes.SatelliteOrbitalElement.STATUS;
@@ -52,10 +49,10 @@ import jparsec.observer.ObserverElement;
 import jparsec.observer.ReferenceEllipsoid.ELLIPSOID;
 import jparsec.time.AstroDate;
 import jparsec.time.SiderealTime;
-import jparsec.time.TimeFormat;
-import jparsec.time.TimeScale;
 import jparsec.time.TimeElement;
 import jparsec.time.TimeElement.SCALE;
+import jparsec.time.TimeFormat;
+import jparsec.time.TimeScale;
 import jparsec.util.Configuration;
 import jparsec.util.DataBase;
 import jparsec.util.JPARSECException;
@@ -92,7 +89,7 @@ public class SatelliteEphem
 	// private constructor so that this class cannot be instantiated.
 	private SatelliteEphem() {}
 	
-	private static ReadFile readFile = null;
+	protected static ReadFile readFile = null;
 
 	/**
 	 * Set this flag to true to use the database of iridium artificial satellites.
@@ -1380,7 +1377,7 @@ public class SatelliteEphem
 	 * value is lower enough.  An empirical relationship between this angle 
 	 * and the brightness of the reflection has been determined (Randy John, 
 	 * 2002, SKYSAT v0.64, see http://home.comcast.net/~skysat). 2 deg 
-	 * corresponds to about 0 mag, 0.5° to -3 mag. The brightest flares are 
+	 * corresponds to about 0 mag, 0.5ï¿½ to -3 mag. The brightest flares are 
 	 * -8 or -9 mag (visible during day), and can last from 10 to 30s. This 
 	 * code comes from Horst Meyerdierks (Sputnik library).
 	 * @param itsR The geocentric position (x, y, z) of the satellite in arbitrary units.
@@ -1428,7 +1425,7 @@ public class SatelliteEphem
 	 * value is lower enough.  An empirical relationship between this angle 
 	 * and the brightness of the reflection has been determined (Randy John, 
 	 * 2002, SKYSAT v0.64, see http://home.comcast.net/~skysat). 2 deg 
-	 * corresponds to about 0 mag, 0.5° to -3 mag. The brightest flares are 
+	 * corresponds to about 0 mag, 0.5ï¿½ to -3 mag. The brightest flares are 
 	 * -8 or -9 mag (visible during day), and can last from 10 to 30s. This 
 	 * code comes from Horst Meyerdierks (Sputnik library).
 	 * <P>
@@ -1919,12 +1916,12 @@ Done in 467.015s
 
 			 Test data from http://www.chiandh.me.uk/ephem/iriday.shtml (2011, 10, 26)
 			  name			start	(hour, azimut 0=N, elevation)		peak			end
-			  IRIDIUM 31 [+]  14:51:18  258.5°  42.6°  14:51:21  257.0°  42.3°  1.7°  14:51:25  255.0°  41.9°
-			  IRIDIUM 5 [+]  16:47:33  212.1°  31.4°  16:47:42  210.5°  29.8°  0.2°  16:47:52  209.0°  28.1°
-			  IRIDIUM 4 [+]  04:49:01   7.8°  27.5°  04:49:12   7.6°  25.6°  1.5°  04:49:25   7.4°  23.5°
-			  IRIDIUM 56 [+]  06:59:41   2.6°  68.2°  06:59:45   2.7°  66.3°  0.9°  06:59:49   2.9°  64.5°
-			  IRIDIUM 17 [-]  09:02:33  187.2°  77.2°  09:02:35  187.5°  78.3°  1.7°  09:02:37  187.8°  79.3°
-			  IRIDIUM 62 [+] 09:24:33   92.4°  60.2°  09:24:38   97.0°  59.7°  0.4°  09:24:43  101.5°  59.0°
+			  IRIDIUM 31 [+]  14:51:18  258.5ï¿½  42.6ï¿½  14:51:21  257.0ï¿½  42.3ï¿½  1.7ï¿½  14:51:25  255.0ï¿½  41.9ï¿½
+			  IRIDIUM 5 [+]  16:47:33  212.1ï¿½  31.4ï¿½  16:47:42  210.5ï¿½  29.8ï¿½  0.2ï¿½  16:47:52  209.0ï¿½  28.1ï¿½
+			  IRIDIUM 4 [+]  04:49:01   7.8ï¿½  27.5ï¿½  04:49:12   7.6ï¿½  25.6ï¿½  1.5ï¿½  04:49:25   7.4ï¿½  23.5ï¿½
+			  IRIDIUM 56 [+]  06:59:41   2.6ï¿½  68.2ï¿½  06:59:45   2.7ï¿½  66.3ï¿½  0.9ï¿½  06:59:49   2.9ï¿½  64.5ï¿½
+			  IRIDIUM 17 [-]  09:02:33  187.2ï¿½  77.2ï¿½  09:02:35  187.5ï¿½  78.3ï¿½  1.7ï¿½  09:02:37  187.8ï¿½  79.3ï¿½
+			  IRIDIUM 62 [+] 09:24:33   92.4ï¿½  60.2ï¿½  09:24:38   97.0ï¿½  59.7ï¿½  0.4ï¿½  09:24:43  101.5ï¿½  59.0ï¿½
 			 */			  
 
 		} catch (JPARSECException ve)

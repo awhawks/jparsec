@@ -22,7 +22,6 @@
 package jparsec.graph;
 
 import java.awt.Graphics;
-import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -30,8 +29,9 @@ import java.io.ObjectOutputStream;
 
 import org.jzy3d.chart.Chart;
 import org.jzy3d.chart.ChartLauncher;
-import org.jzy3d.chart.controllers.keyboard.camera.CameraKeyController;
-import org.jzy3d.chart.controllers.mouse.camera.CameraMouseController;
+// FIXME which jzy3d library contains CameraKeyController and CameraMouseController ??
+//import org.jzy3d.chart.controllers.keyboard.camera.CameraKeyController;
+//import org.jzy3d.chart.controllers.mouse.camera.CameraMouseController;
 import org.jzy3d.colors.Color;
 import org.jzy3d.colors.ColorMapper;
 import org.jzy3d.colors.colormaps.ColorMapGrayscale;
@@ -41,6 +41,7 @@ import org.jzy3d.contour.DefaultContourColoringPolicy;
 import org.jzy3d.contour.MapperContourMeshGenerator;
 import org.jzy3d.maths.Coord3d;
 import org.jzy3d.maths.Range;
+import org.jzy3d.maths.Rectangle;
 import org.jzy3d.plot3d.builder.Builder;
 import org.jzy3d.plot3d.builder.Mapper;
 import org.jzy3d.plot3d.builder.concrete.OrthonormalGrid;
@@ -50,7 +51,8 @@ import org.jzy3d.plot3d.primitives.Shape;
 import org.jzy3d.plot3d.primitives.axes.ContourAxeBox;
 import org.jzy3d.plot3d.primitives.contour.ContourMesh;
 import org.jzy3d.plot3d.rendering.canvas.Quality;
-import org.jzy3d.plot3d.rendering.legends.colorbars.ColorbarLegend;
+// FIXME which jzy3d library contains ColorbarLegend ??
+//import org.jzy3d.plot3d.rendering.legends.colorbars.ColorbarLegend;
 import org.jzy3d.plot3d.rendering.view.Renderer2d;
 
 import jparsec.astronomy.Difraction;
@@ -129,7 +131,7 @@ public class CreateJZY3DChart {
 			double pz[] = null;
 			if (chart3d.series[i].isSurface) {
 		        // Define range and precision for the function to plot
-		        Range range = new Range(chart3d.getxMin(), chart3d.getxMax());
+		        Range range = new Range((float) chart3d.getxMin(), (float) chart3d.getxMax());
 		        int steps = chart3d.series[i].xValues.length;
 
 		        final GridChartElement gridChart = GridChartElement.getSurfaceFromPoints(ChartSeriesElement3D.get3dPointsFromDataSet((double[][])chart3d.series[i].zValues, chart3d.series[i].getLimits()), chart3d.series[i].xValues.length);
@@ -160,7 +162,8 @@ public class CreateJZY3DChart {
 			    	        }
 			        	}
 			        };
-			        chart.addRenderer(title);
+					// FIXME unknown method addRenderer !!
+			        //chart.addRenderer(title);
 		        }
 
 		        if (chart3d.xLabel != null && chart3d.xLabel.length() > 0 && chart3d.xLabel.indexOf("@") < 0)
@@ -171,9 +174,10 @@ public class CreateJZY3DChart {
 		        	chart.getView().getAxe().getLayout().setZAxeLabel(chart3d.zLabel);
 		        
 		        if (chart3d.showLegend) {
-		    		surface.setLegend(new ColorbarLegend(surface, 
-							chart.getView().getAxe().getLayout().getZTickProvider(), 
-							chart.getView().getAxe().getLayout().getZTickRenderer()));
+					// FIXME unknown class ColorbarLegend
+		    		//surface.setLegend(new ColorbarLegend(surface,
+					//		chart.getView().getAxe().getLayout().getZTickProvider(),
+					//		chart.getView().getAxe().getLayout().getZTickRenderer()));
 		        }
 
 		        chart.getScene().add(surface);
@@ -190,9 +194,9 @@ public class CreateJZY3DChart {
 					pz = (double[])chart3d.series[i].zValues;
 					for (int j=0; j<chart3d.series[i].xValues.length; j++) {
 						points[index] = new Coord3d(px[j], py[j], pz[j]);
-						colors[index] = new Color(java.awt.Color.BLACK);
+						colors[index] = Color.BLACK;
 						if (chart3d.series[i].color != null)
-							colors[index] = new Color(chart3d.series[i].color);
+							colors[index] = chart3d.series[i].color;
 						index ++;
 					}
 				}
@@ -203,8 +207,9 @@ public class CreateJZY3DChart {
 	        scatter.setWidth(3);
 	        chart.getScene().add(scatter);
 		}
-        chart.addController(new CameraKeyController());
-        chart.addController(new CameraMouseController());
+		// FIXME unknown classes CameraKeyController, CameraMouseController
+        //chart.addController(new CameraKeyController());
+        //chart.addController(new CameraMouseController());
 	}
 
 	private void init(final GridChartElement gridChart) throws JPARSECException {
@@ -228,7 +233,7 @@ public class CreateJZY3DChart {
 		}
 
         // Define range and precision for the function to plot
-        Range range = new Range(-gridChart.getMaximum(), gridChart.getMaximum());
+        Range range = new Range(-(float) gridChart.getMaximum(), (float) gridChart.getMaximum());
         int steps = gridChart.data.length;
 
         // Define a function to plot
@@ -279,9 +284,10 @@ public class CreateJZY3DChart {
         }
 
         if (gridChart.legend != null && gridChart.legend.length() > 0) {
-    		surface.setLegend(new ColorbarLegend(surface, 
-					chart.getView().getAxe().getLayout().getZTickProvider(), 
-					chart.getView().getAxe().getLayout().getZTickRenderer()));
+			// FIXME unknown class ColorbarLegend
+    		//surface.setLegend(new ColorbarLegend(surface,
+			//		chart.getView().getAxe().getLayout().getZTickProvider(),
+			//		chart.getView().getAxe().getLayout().getZTickRenderer()));
         }
 
 		Renderer2d title = new Renderer2d(){
@@ -296,7 +302,8 @@ public class CreateJZY3DChart {
     	        }
         	}
         };
-        chart.addRenderer(title);
+		// FIXME unknown method addRenderer
+        //chart.addRenderer(title);
 
         if (gridChart.xLabel != null && gridChart.xLabel.length() > 0 && gridChart.xLabel.indexOf("@") < 0)
         	chart.getView().getAxe().getLayout().setXAxeLabel(gridChart.xLabel); 
@@ -306,8 +313,9 @@ public class CreateJZY3DChart {
         	chart.getView().getAxe().getLayout().setZAxeLabel(gridChart.legend);
 
         chart.getScene().add(surface);
-        chart.addController(new CameraKeyController());
-        chart.addController(new CameraMouseController());
+        // FIXME unknown classes CameraKeyController, CameraMouseController
+        //chart.addController(new CameraKeyController());
+        //chart.addController(new CameraMouseController());
 	}
 
 	private void init(final String fxy, int min, int max, int n) throws JPARSECException {
@@ -336,9 +344,10 @@ public class CreateJZY3DChart {
         surface.setWireframeDisplayed(true);
         surface.setWireframeColor(Color.BLACK);		
         
-		surface.setLegend(new ColorbarLegend(surface, 
-				chart.getView().getAxe().getLayout().getZTickProvider(), 
-				chart.getView().getAxe().getLayout().getZTickRenderer()));
+        // FIXME unknown class ColorbarLegend
+		//surface.setLegend(new ColorbarLegend(surface,
+		//		chart.getView().getAxe().getLayout().getZTickProvider(),
+		//		chart.getView().getAxe().getLayout().getZTickRenderer()));
 
 		Renderer2d title = new Renderer2d(){
         	public void paint(Graphics g){
@@ -347,11 +356,13 @@ public class CreateJZY3DChart {
     			g.drawString(fxy, x, 20);
         	}
         };
-        chart.addRenderer(title);
+        // FIXME unknown method addRenderer
+        //chart.addRenderer(title);
         
         chart.getScene().add(surface);
-        chart.addController(new CameraKeyController());
-        chart.addController(new CameraMouseController());
+        // FIXME unknown classes CameraKeyController, CameraMouseController
+        //chart.addController(new CameraKeyController());
+        //chart.addController(new CameraMouseController());
 	}
 
 	/**
@@ -362,7 +373,7 @@ public class CreateJZY3DChart {
 	public void showChart(int i, int j) {
 		if (chart_elem == null) {
 			if (grid_chart_elem == null) {
-				ChartLauncher.openStaticChart(chart, new Rectangle(0, 0, i, j), fxy);				
+				ChartLauncher.openStaticChart(chart, new Rectangle(0, 0, i, j), fxy);
 			} else {
 				ChartLauncher.openStaticChart(chart, new Rectangle(0, 0, i, j), grid_chart_elem.title);
 			}
@@ -495,7 +506,7 @@ TODO:
 					new double[] {0, 0.2, 0.4, 0.6, 0.8, 1.0}, 400);
 
 			ChartSeriesElement3D series = new ChartSeriesElement3D(gridChart);
-			series.color = java.awt.Color.RED;
+			series.color = Color.RED;
 			ChartSeriesElement3D series2 = new ChartSeriesElement3D(
 					new double[] {0, 1, 2, -1, -2}, 
 					new double[] {0, 1, 1, -1 ,-1}, 

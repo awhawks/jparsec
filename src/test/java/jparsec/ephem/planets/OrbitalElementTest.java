@@ -19,7 +19,7 @@ public class OrbitalElementTest {
         OrbitalElement orbit = new OrbitalElement("Encke", 2.2091404, 186.24444 * Constant.DEG_TO_RAD, 0.8502196, 0.0,
                 334.04096 * Constant.DEG_TO_RAD, 11.93911 * Constant.DEG_TO_RAD, astro.jd(), 0.0, Constant.B1950, 0.0, 0.0);
 
-        Picture pp = new Picture(orbit.getOrbitImage(600, 600, 0.5, astro.jd()));
+        Picture pp = new Picture(orbit.getOrbitImage("title", 600, 600, 0.5, astro.jd(), false, false));
         pp.show("");
 
         OrbitalElement orbit1 = orbit.clone();

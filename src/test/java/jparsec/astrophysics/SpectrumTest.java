@@ -32,8 +32,8 @@ public class SpectrumTest {
         int offset = 20;
         Spectrum sp2 = Spectrum.getGaussianSpectrum(v, -t / 3, w / 8.0, np - offset, nu0, 5.0 * w, 0 * t / 20.0); // 5 to get some baseline
         Spectrum30m s30m2 = new Spectrum30m(sp2);
-        double data[] = s30m.getSpectrumData();
-        double data2[] = s30m2.getSpectrumData();
+        float data[] = s30m.getSpectrumData();
+        float data2[] = s30m2.getSpectrumData();
 
         for (int i = 0; i < data2.length; i++) {
             data[i + offset] += data2[i];

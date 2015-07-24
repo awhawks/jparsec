@@ -1947,7 +1947,7 @@ public class LATEXReport implements Serializable
 	}
 	
 
-	private static Spectrum calculate(double parameter1, double parameter2, double parameter3)
+	protected static Spectrum calculate(double parameter1, double parameter2, double parameter3)
 	throws JPARSECException	{
 		// Here we apply our model. In this example we simply generate an output spectrum
 		// with 1000 channels, where x is microns (from 1 to 1000), and y the flux in mJy,

@@ -22,13 +22,13 @@ Testing ... constellation names from equatorial positions
    Test case #18: 1; 19.0, -40.0; Corona Australis
    Test case #19: 1; 6.22, -81.12; Mensa
 Testing ... coordinate systems
-   Test case #20: 2; 0, 0.0, Galactical, Equatorial; -93ยบ 35' 42.014", -28ยบ 56' 10.221"
-   Test case #21: 2; 0, 90.0, Galactical, Equatorial; 192ยบ 51' 34.132", 27ยบ 7' 41.704"
-   Test case #22: 2; 192.8594812, 27.1282512, Equatorial, Galactical; -, 90ยบ 0' 0.000"
-   Test case #23: 2; 90, 0, Equatorial, Ecliptical; 90ยบ 0' 0.000", -23ยบ 26' 21.406"
-   Test case #24: 2; 90, -23.4392794, Ecliptical, Equatorial; 90ยบ 0' 0.000", 0.000"
-   Test case #25: 2; -90, 0, Equatorial, Ecliptical; -90ยบ 0' 0.000", 23ยบ 26' 21.406"
-   Test case #26: 2; -90, 23.4392794, Ecliptical, Equatorial; -90ยบ 0' 0.000", 0.000"
+   Test case #20: 2; 0, 0.0, Galactical, Equatorial; -93บ 35' 42.014", -28บ 56' 10.221"
+   Test case #21: 2; 0, 90.0, Galactical, Equatorial; 192บ 51' 34.132", 27บ 7' 41.704"
+   Test case #22: 2; 192.8594812, 27.1282512, Equatorial, Galactical; -, 90บ 0' 0.000"
+   Test case #23: 2; 90, 0, Equatorial, Ecliptical; 90บ 0' 0.000", -23บ 26' 21.406"
+   Test case #24: 2; 90, -23.4392794, Ecliptical, Equatorial; 90บ 0' 0.000", 0.000"
+   Test case #25: 2; -90, 0, Equatorial, Ecliptical; -90บ 0' 0.000", 23บ 26' 21.406"
+   Test case #26: 2; -90, 23.4392794, Ecliptical, Equatorial; -90บ 0' 0.000", 0.000"
 Testing ... ephemerides for planets and stars (tests of occultations)
    Test case #27: 3; 1802, 12, 9, 7, 36, Mercury, Acrab, 16.2 W; -
    Test case #28: 3; 1808, 12, 9, 20, 34, Mercury, Saturn, 20.3 W; -
@@ -103,7 +103,7 @@ Testing ... ephemerides for natural satellites (tests of mutual occultations/ecl
 (Less accurate) Mutual eclipse not reported by MoonEphem class.
    Test case #68: 4; 1997, 5, 30, 3, 5, 15, Paris, Ganymede, Io, Total occ; -
    Test case #69: 4; 1997, 5, 31, 0, 30, 6, Stuttgart, Ganymede, Io, Partial occ; -
-19-mar-2015 10:38:54 (main) jparsec.observer.City.findCity
+21-jul-2015 16:51:13 (main) jparsec.observer.City.findCity
 ADVERTENCIA: Found 2 locations named 'Tenerife'. Selecting the one with index number 0.
    Test case #70: 4; 1997, 6, 7, 4, 32, 29, Tenerife, Ganymede, Io, Partial occ; -
    Test case #71: 4; 1997, 6, 18, 1, 4, 39, Lisboa, Europa, Io, Annular ecl; -
@@ -181,160 +181,160 @@ Testing ... geodetic and geocentric coordinates and ellipsoids
    Test case #128: 9; 0, 45.1921, 1000, geodetic, WGS84; 0.0, 44.9997, -
    Test case #129: 9; 0, 90, 1000, geocentric, WGS84; 0.0, 90.0, -
 Testing ... detailed ephemerides for different bodies, theories, and coordinate types
-19-mar-2015 10:39:03 (main) jparsec.observer.EarthOrientationParameters.obtainEOP
+21-jul-2015 16:51:17 (main) jparsec.observer.EarthOrientationParameters.obtainEOP
 ADVERTENCIA: UT1-UTC not available, using UT1 = UTC and ignoring pole movement.
-   Test case #130: 10; 1950, 1, 1, Moon, 0.5, 1.0E-7; 03h 53m 47.38s,  24ยบ 09' 05.0", 03h 56m 46.04s,  24ยบ 17' 33.3", 03h 53m 47.79s,  24ยบ 08' 58.8", 356.94706 , -4.96237 , 35.52562, -1.57515 , 0.985328111433 , 0.00267134176532 , 141.2508 , 38.6518 , Tau
+   Test case #130: 10; 1950, 1, 1, Moon, 0.5, 1.0E-7; 03h 53m 47.38s,  24บ 09' 05.0", 03h 56m 46.04s,  24บ 17' 33.3", 03h 53m 47.79s,  24บ 08' 58.8", 356.94706 , -4.96237 , 35.52562, -1.57515 , 0.985328111433 , 0.00267134176532 , 141.2508 , 38.6518 , Tau
 
-Difference in field longitude of central meridian between Horizons and JPL_DE405 for APPARENT coordinates is 141ยบ 43' 32.2" > 1ยบ 0' 0.0".
-Difference in field position angle of pole between Horizons and JPL_DE405 for APPARENT coordinates is 48ยบ 23' 28.5" > 3' 0.0".
-Difference in field Longitude central meridian between JPL_DE200 and JPL_DE405 for APPARENT coordinates is 141ยบ 43' 56.7" > 0.5".
-Difference in field PA axis between JPL_DE200 and JPL_DE405 for APPARENT coordinates is 156ยบ 53' 43.2" > 0.5".
-Difference in field PA pole between JPL_DE200 and JPL_DE405 for APPARENT coordinates is 48ยบ 24' 48.1" > 0.5".
+Difference in field longitude of central meridian between Horizons and JPL_DE405 for APPARENT coordinates is 141บ 43' 32.2" > 1บ 0' 0.0".
+Difference in field position angle of pole between Horizons and JPL_DE405 for APPARENT coordinates is 48บ 23' 28.5" > 3' 0.0".
+Difference in field Longitude central meridian between JPL_DE200 and JPL_DE405 for APPARENT coordinates is 141บ 43' 56.7" > 0.5".
+Difference in field PA axis between JPL_DE200 and JPL_DE405 for APPARENT coordinates is 156บ 53' 43.2" > 0.5".
+Difference in field PA pole between JPL_DE200 and JPL_DE405 for APPARENT coordinates is 48บ 24' 48.1" > 0.5".
 Difference in field Longitude central meridian between JPL_DE403 and JPL_DE405 for APPARENT coordinates is 1.8" > 0.5".
 Difference in field PA axis between JPL_DE403 and JPL_DE405 for APPARENT coordinates is 0.6" > 0.5".
 Difference in field Longitude central meridian between JPL_DE413 and JPL_DE405 for APPARENT coordinates is 0.9" > 0.5".
 Difference in field PA axis between JPL_DE413 and JPL_DE405 for APPARENT coordinates is 2.2" > 0.5".
 Difference in field Longitude central meridian between MOSHIER and JPL_DE405 for APPARENT coordinates is 1.7" > 0.5".
 Difference in field PA axis between MOSHIER and JPL_DE405 for APPARENT coordinates is 0.8" > 0.5".
-Difference in field Longitude central meridian between VSOP87_ELP2000ForMoon and JPL_DE405 for APPARENT coordinates is 141ยบ 43' 56.7" > 0.5".
-Difference in field PA axis between VSOP87_ELP2000ForMoon and JPL_DE405 for APPARENT coordinates is 156ยบ 53' 43.2" > 0.5".
-Difference in field PA pole between VSOP87_ELP2000ForMoon and JPL_DE405 for APPARENT coordinates is 48ยบ 24' 48.2" > 0.5".
+Difference in field Longitude central meridian between VSOP87_ELP2000ForMoon and JPL_DE405 for APPARENT coordinates is 141บ 43' 56.7" > 0.5".
+Difference in field PA axis between VSOP87_ELP2000ForMoon and JPL_DE405 for APPARENT coordinates is 156บ 53' 43.2" > 0.5".
+Difference in field PA pole between VSOP87_ELP2000ForMoon and JPL_DE405 for APPARENT coordinates is 48บ 24' 48.2" > 0.5".
 Difference in field Longitude central meridian between SERIES96_MOSHIERForMoon and JPL_DE405 for APPARENT coordinates is 1.7" > 0.5".
 Difference in field PA axis between SERIES96_MOSHIERForMoon and JPL_DE405 for APPARENT coordinates is 0.8" > 0.5".
-Difference in field Longitude central meridian between JPL_DE200 and JPL_DE405 for ASTROMETRIC coordinates is 142ยบ 53' 37.3" > 0.5".
-Difference in field PA axis between JPL_DE200 and JPL_DE405 for ASTROMETRIC coordinates is 159ยบ 38' 31.4" > 0.5".
-Difference in field PA pole between JPL_DE200 and JPL_DE405 for ASTROMETRIC coordinates is 48ยบ 25' 33.6" > 0.5".
+Difference in field Longitude central meridian between JPL_DE200 and JPL_DE405 for ASTROMETRIC coordinates is 142บ 53' 37.3" > 0.5".
+Difference in field PA axis between JPL_DE200 and JPL_DE405 for ASTROMETRIC coordinates is 159บ 38' 31.4" > 0.5".
+Difference in field PA pole between JPL_DE200 and JPL_DE405 for ASTROMETRIC coordinates is 48บ 25' 33.6" > 0.5".
 Difference in field Longitude central meridian between JPL_DE403 and JPL_DE405 for ASTROMETRIC coordinates is 1.8" > 0.5".
 Difference in field PA axis between JPL_DE403 and JPL_DE405 for ASTROMETRIC coordinates is 0.6" > 0.5".
 Difference in field Longitude central meridian between JPL_DE413 and JPL_DE405 for ASTROMETRIC coordinates is 0.9" > 0.5".
 Difference in field PA axis between JPL_DE413 and JPL_DE405 for ASTROMETRIC coordinates is 2.2" > 0.5".
 Difference in field Longitude central meridian between MOSHIER and JPL_DE405 for ASTROMETRIC coordinates is 1.8" > 0.5".
 Difference in field PA axis between MOSHIER and JPL_DE405 for ASTROMETRIC coordinates is 0.7" > 0.5".
-Difference in field Longitude central meridian between VSOP87_ELP2000ForMoon and JPL_DE405 for ASTROMETRIC coordinates is 142ยบ 53' 37.2" > 0.5".
-Difference in field PA axis between VSOP87_ELP2000ForMoon and JPL_DE405 for ASTROMETRIC coordinates is 159ยบ 38' 31.5" > 0.5".
-Difference in field PA pole between VSOP87_ELP2000ForMoon and JPL_DE405 for ASTROMETRIC coordinates is 48ยบ 25' 33.7" > 0.5".
+Difference in field Longitude central meridian between VSOP87_ELP2000ForMoon and JPL_DE405 for ASTROMETRIC coordinates is 142บ 53' 37.2" > 0.5".
+Difference in field PA axis between VSOP87_ELP2000ForMoon and JPL_DE405 for ASTROMETRIC coordinates is 159บ 38' 31.5" > 0.5".
+Difference in field PA pole between VSOP87_ELP2000ForMoon and JPL_DE405 for ASTROMETRIC coordinates is 48บ 25' 33.7" > 0.5".
 Difference in field Longitude central meridian between SERIES96_MOSHIERForMoon and JPL_DE405 for ASTROMETRIC coordinates is 1.8" > 0.5".
 Difference in field PA axis between SERIES96_MOSHIERForMoon and JPL_DE405 for ASTROMETRIC coordinates is 0.7" > 0.5".
-Difference in field Longitude central meridian between JPL_DE200 and JPL_DE405 for GEOMETRIC coordinates is 141ยบ 44' 3.4" > 0.5".
-Difference in field PA axis between JPL_DE200 and JPL_DE405 for GEOMETRIC coordinates is 156ยบ 53' 50.2" > 0.5".
-Difference in field PA pole between JPL_DE200 and JPL_DE405 for GEOMETRIC coordinates is 48ยบ 24' 48.2" > 0.5".
+Difference in field Longitude central meridian between JPL_DE200 and JPL_DE405 for GEOMETRIC coordinates is 141บ 44' 3.4" > 0.5".
+Difference in field PA axis between JPL_DE200 and JPL_DE405 for GEOMETRIC coordinates is 156บ 53' 50.2" > 0.5".
+Difference in field PA pole between JPL_DE200 and JPL_DE405 for GEOMETRIC coordinates is 48บ 24' 48.2" > 0.5".
 Difference in field Longitude central meridian between JPL_DE403 and JPL_DE405 for GEOMETRIC coordinates is 1.8" > 0.5".
 Difference in field PA axis between JPL_DE403 and JPL_DE405 for GEOMETRIC coordinates is 0.6" > 0.5".
 Difference in field Longitude central meridian between JPL_DE413 and JPL_DE405 for GEOMETRIC coordinates is 0.9" > 0.5".
 Difference in field PA axis between JPL_DE413 and JPL_DE405 for GEOMETRIC coordinates is 2.2" > 0.5".
 Difference in field Longitude central meridian between MOSHIER and JPL_DE405 for GEOMETRIC coordinates is 1.7" > 0.5".
 Difference in field PA axis between MOSHIER and JPL_DE405 for GEOMETRIC coordinates is 0.8" > 0.5".
-Difference in field Longitude central meridian between VSOP87_ELP2000ForMoon and JPL_DE405 for GEOMETRIC coordinates is 141ยบ 44' 3.3" > 0.5".
-Difference in field PA axis between VSOP87_ELP2000ForMoon and JPL_DE405 for GEOMETRIC coordinates is 156ยบ 53' 50.2" > 0.5".
-Difference in field PA pole between VSOP87_ELP2000ForMoon and JPL_DE405 for GEOMETRIC coordinates is 48ยบ 24' 48.3" > 0.5".
+Difference in field Longitude central meridian between VSOP87_ELP2000ForMoon and JPL_DE405 for GEOMETRIC coordinates is 141บ 44' 3.3" > 0.5".
+Difference in field PA axis between VSOP87_ELP2000ForMoon and JPL_DE405 for GEOMETRIC coordinates is 156บ 53' 50.2" > 0.5".
+Difference in field PA pole between VSOP87_ELP2000ForMoon and JPL_DE405 for GEOMETRIC coordinates is 48บ 24' 48.3" > 0.5".
 Difference in field Longitude central meridian between SERIES96_MOSHIERForMoon and JPL_DE405 for GEOMETRIC coordinates is 1.7" > 0.5".
 Difference in field PA axis between SERIES96_MOSHIERForMoon and JPL_DE405 for GEOMETRIC coordinates is 0.8" > 0.5".
 
-   Test case #131: 10; 2000, 1, 1, Moon, 0.5, 1.0E-7; 14h 26m 38.63s, -08ยบ 59' 29.4", 14h 26m 40.12s, -08ยบ 59' 38.8", 14h 26m 39.51s, -08ยบ 59' 37.5", 5.56630 , -6.79806 , 248.27509 ,  0.63139 , 0.982105696677 , 0.00267981683743 , 62.6979 , 117.1631 , Lib
+   Test case #131: 10; 2000, 1, 1, Moon, 0.5, 1.0E-7; 14h 26m 38.63s, -08บ 59' 29.4", 14h 26m 40.12s, -08บ 59' 38.8", 14h 26m 39.51s, -08บ 59' 37.5", 5.56630 , -6.79806 , 248.27509 ,  0.63139 , 0.982105696677 , 0.00267981683743 , 62.6979 , 117.1631 , Lib
 
-Difference in field longitude of central meridian between Horizons and JPL_DE405 for APPARENT coordinates is 51ยบ 29' 53.6" > 1ยบ 0' 0.0".
-Difference in field position angle of pole between Horizons and JPL_DE405 for APPARENT coordinates is 38ยบ 53' 0.2" > 3' 0.0".
-Difference in field Longitude central meridian between JPL_DE200 and JPL_DE405 for APPARENT coordinates is 51ยบ 29' 43.9" > 0.5".
-Difference in field PA axis between JPL_DE200 and JPL_DE405 for APPARENT coordinates is 101ยบ 47' 11.0" > 0.5".
-Difference in field PA pole between JPL_DE200 and JPL_DE405 for APPARENT coordinates is 38ยบ 51' 32.9" > 0.5".
+Difference in field longitude of central meridian between Horizons and JPL_DE405 for APPARENT coordinates is 51บ 29' 53.6" > 1บ 0' 0.0".
+Difference in field position angle of pole between Horizons and JPL_DE405 for APPARENT coordinates is 38บ 53' 0.2" > 3' 0.0".
+Difference in field Longitude central meridian between JPL_DE200 and JPL_DE405 for APPARENT coordinates is 51บ 29' 43.9" > 0.5".
+Difference in field PA axis between JPL_DE200 and JPL_DE405 for APPARENT coordinates is 101บ 47' 11.0" > 0.5".
+Difference in field PA pole between JPL_DE200 and JPL_DE405 for APPARENT coordinates is 38บ 51' 32.9" > 0.5".
 Difference in field Longitude central meridian between JPL_DE403 and JPL_DE405 for APPARENT coordinates is 1.8" > 0.5".
 Difference in field Longitude central meridian between JPL_DE413 and JPL_DE405 for APPARENT coordinates is 0.7" > 0.5".
 Difference in field PA axis between JPL_DE413 and JPL_DE405 for APPARENT coordinates is 0.6" > 0.5".
 Difference in field Longitude central meridian between MOSHIER and JPL_DE405 for APPARENT coordinates is 1.9" > 0.5".
-Difference in field Longitude central meridian between VSOP87_ELP2000ForMoon and JPL_DE405 for APPARENT coordinates is 51ยบ 29' 43.8" > 0.5".
-Difference in field PA axis between VSOP87_ELP2000ForMoon and JPL_DE405 for APPARENT coordinates is 101ยบ 47' 11.1" > 0.5".
-Difference in field PA pole between VSOP87_ELP2000ForMoon and JPL_DE405 for APPARENT coordinates is 38ยบ 51' 32.9" > 0.5".
+Difference in field Longitude central meridian between VSOP87_ELP2000ForMoon and JPL_DE405 for APPARENT coordinates is 51บ 29' 43.8" > 0.5".
+Difference in field PA axis between VSOP87_ELP2000ForMoon and JPL_DE405 for APPARENT coordinates is 101บ 47' 11.1" > 0.5".
+Difference in field PA pole between VSOP87_ELP2000ForMoon and JPL_DE405 for APPARENT coordinates is 38บ 51' 32.9" > 0.5".
 Difference in field Longitude central meridian between SERIES96_MOSHIERForMoon and JPL_DE405 for APPARENT coordinates is 1.9" > 0.5".
-Difference in field Longitude central meridian between JPL_DE200 and JPL_DE405 for ASTROMETRIC coordinates is 51ยบ 29' 59.3" > 0.5".
-Difference in field PA axis between JPL_DE200 and JPL_DE405 for ASTROMETRIC coordinates is 101ยบ 47' 19.4" > 0.5".
-Difference in field PA pole between JPL_DE200 and JPL_DE405 for ASTROMETRIC coordinates is 38ยบ 51' 52.6" > 0.5".
+Difference in field Longitude central meridian between JPL_DE200 and JPL_DE405 for ASTROMETRIC coordinates is 51บ 29' 59.3" > 0.5".
+Difference in field PA axis between JPL_DE200 and JPL_DE405 for ASTROMETRIC coordinates is 101บ 47' 19.4" > 0.5".
+Difference in field PA pole between JPL_DE200 and JPL_DE405 for ASTROMETRIC coordinates is 38บ 51' 52.6" > 0.5".
 Difference in field Longitude central meridian between JPL_DE403 and JPL_DE405 for ASTROMETRIC coordinates is 1.8" > 0.5".
 Difference in field Longitude central meridian between JPL_DE413 and JPL_DE405 for ASTROMETRIC coordinates is 0.7" > 0.5".
 Difference in field PA axis between JPL_DE413 and JPL_DE405 for ASTROMETRIC coordinates is 0.6" > 0.5".
 Difference in field Longitude central meridian between MOSHIER and JPL_DE405 for ASTROMETRIC coordinates is 1.9" > 0.5".
-Difference in field Longitude central meridian between VSOP87_ELP2000ForMoon and JPL_DE405 for ASTROMETRIC coordinates is 51ยบ 29' 59.1" > 0.5".
-Difference in field PA axis between VSOP87_ELP2000ForMoon and JPL_DE405 for ASTROMETRIC coordinates is 101ยบ 47' 19.4" > 0.5".
-Difference in field PA pole between VSOP87_ELP2000ForMoon and JPL_DE405 for ASTROMETRIC coordinates is 38ยบ 51' 52.9" > 0.5".
+Difference in field Longitude central meridian between VSOP87_ELP2000ForMoon and JPL_DE405 for ASTROMETRIC coordinates is 51บ 29' 59.1" > 0.5".
+Difference in field PA axis between VSOP87_ELP2000ForMoon and JPL_DE405 for ASTROMETRIC coordinates is 101บ 47' 19.4" > 0.5".
+Difference in field PA pole between VSOP87_ELP2000ForMoon and JPL_DE405 for ASTROMETRIC coordinates is 38บ 51' 52.9" > 0.5".
 Difference in field Longitude central meridian between SERIES96_MOSHIERForMoon and JPL_DE405 for ASTROMETRIC coordinates is 1.9" > 0.5".
-Difference in field Longitude central meridian between JPL_DE200 and JPL_DE405 for GEOMETRIC coordinates is 51ยบ 29' 54.4" > 0.5".
-Difference in field PA axis between JPL_DE200 and JPL_DE405 for GEOMETRIC coordinates is 101ยบ 47' 17.9" > 0.5".
-Difference in field PA pole between JPL_DE200 and JPL_DE405 for GEOMETRIC coordinates is 38ยบ 51' 44.5" > 0.5".
+Difference in field Longitude central meridian between JPL_DE200 and JPL_DE405 for GEOMETRIC coordinates is 51บ 29' 54.4" > 0.5".
+Difference in field PA axis between JPL_DE200 and JPL_DE405 for GEOMETRIC coordinates is 101บ 47' 17.9" > 0.5".
+Difference in field PA pole between JPL_DE200 and JPL_DE405 for GEOMETRIC coordinates is 38บ 51' 44.5" > 0.5".
 Difference in field Longitude central meridian between JPL_DE403 and JPL_DE405 for GEOMETRIC coordinates is 1.8" > 0.5".
 Difference in field Longitude central meridian between JPL_DE413 and JPL_DE405 for GEOMETRIC coordinates is 0.7" > 0.5".
 Difference in field PA axis between JPL_DE413 and JPL_DE405 for GEOMETRIC coordinates is 0.6" > 0.5".
 Difference in field Longitude central meridian between MOSHIER and JPL_DE405 for GEOMETRIC coordinates is 1.9" > 0.5".
-Difference in field Longitude central meridian between VSOP87_ELP2000ForMoon and JPL_DE405 for GEOMETRIC coordinates is 51ยบ 29' 54.3" > 0.5".
-Difference in field PA axis between VSOP87_ELP2000ForMoon and JPL_DE405 for GEOMETRIC coordinates is 101ยบ 47' 17.9" > 0.5".
-Difference in field PA pole between VSOP87_ELP2000ForMoon and JPL_DE405 for GEOMETRIC coordinates is 38ยบ 51' 44.8" > 0.5".
+Difference in field Longitude central meridian between VSOP87_ELP2000ForMoon and JPL_DE405 for GEOMETRIC coordinates is 51บ 29' 54.3" > 0.5".
+Difference in field PA axis between VSOP87_ELP2000ForMoon and JPL_DE405 for GEOMETRIC coordinates is 101บ 47' 17.9" > 0.5".
+Difference in field PA pole between VSOP87_ELP2000ForMoon and JPL_DE405 for GEOMETRIC coordinates is 38บ 51' 44.8" > 0.5".
 Difference in field Longitude central meridian between SERIES96_MOSHIERForMoon and JPL_DE405 for GEOMETRIC coordinates is 1.9" > 0.5".
 
-   Test case #132: 10; 2049, 1, 1, Moon, 0.7, 1.0E-7; 15h 39m 19.06s, -21ยบ 26' 35.0", 15h 36m 27.34s, -21ยบ 17' 06.4", 15h 39m 17.88s, -21ยบ 26' 33.3", 354.74514 , 2.41513 , 218.21106 , 0.59969 , 0.981578201379 , 0.00243629518339 , 43.4658 , 136.4362 , Lib
+   Test case #132: 10; 2049, 1, 1, Moon, 0.7, 1.0E-7; 15h 39m 19.06s, -21บ 26' 35.0", 15h 36m 27.34s, -21บ 17' 06.4", 15h 39m 17.88s, -21บ 26' 33.3", 354.74514 , 2.41513 , 218.21106 , 0.59969 , 0.981578201379 , 0.00243629518339 , 43.4658 , 136.4362 , Lib
 
-Difference in field longitude of central meridian between Horizons and JPL_DE405 for APPARENT coordinates is 38ยบ 19' 43.7" > 1ยบ 0' 0.0".
-Difference in field position angle of pole between Horizons and JPL_DE405 for APPARENT coordinates is 43ยบ 51' 15.3" > 3' 0.0".
-Difference in field Longitude central meridian between JPL_DE200 and JPL_DE405 for APPARENT coordinates is 38ยบ 19' 20.2" > 0.7".
-Difference in field PA axis between JPL_DE200 and JPL_DE405 for APPARENT coordinates is 76ยบ 19' 34.6" > 0.7".
-Difference in field PA pole between JPL_DE200 and JPL_DE405 for APPARENT coordinates is 43ยบ 52' 34.3" > 0.7".
+Difference in field longitude of central meridian between Horizons and JPL_DE405 for APPARENT coordinates is 38บ 19' 43.7" > 1บ 0' 0.0".
+Difference in field position angle of pole between Horizons and JPL_DE405 for APPARENT coordinates is 43บ 51' 15.3" > 3' 0.0".
+Difference in field Longitude central meridian between JPL_DE200 and JPL_DE405 for APPARENT coordinates is 38บ 19' 20.2" > 0.7".
+Difference in field PA axis between JPL_DE200 and JPL_DE405 for APPARENT coordinates is 76บ 19' 34.6" > 0.7".
+Difference in field PA pole between JPL_DE200 and JPL_DE405 for APPARENT coordinates is 43บ 52' 34.3" > 0.7".
 Difference in field Longitude central meridian between JPL_DE403 and JPL_DE405 for APPARENT coordinates is 2.1" > 0.7".
 Difference in field Longitude central meridian between JPL_DE413 and JPL_DE405 for APPARENT coordinates is 1.1" > 0.7".
 Difference in field Longitude central meridian between MOSHIER and JPL_DE405 for APPARENT coordinates is 2.2" > 0.7".
-Difference in field Longitude central meridian between VSOP87_ELP2000ForMoon and JPL_DE405 for APPARENT coordinates is 38ยบ 19' 19.2" > 0.7".
-Difference in field PA axis between VSOP87_ELP2000ForMoon and JPL_DE405 for APPARENT coordinates is 76ยบ 19' 34.9" > 0.7".
-Difference in field PA pole between VSOP87_ELP2000ForMoon and JPL_DE405 for APPARENT coordinates is 43ยบ 52' 34.4" > 0.7".
+Difference in field Longitude central meridian between VSOP87_ELP2000ForMoon and JPL_DE405 for APPARENT coordinates is 38บ 19' 19.2" > 0.7".
+Difference in field PA axis between VSOP87_ELP2000ForMoon and JPL_DE405 for APPARENT coordinates is 76บ 19' 34.9" > 0.7".
+Difference in field PA pole between VSOP87_ELP2000ForMoon and JPL_DE405 for APPARENT coordinates is 43บ 52' 34.4" > 0.7".
 Difference in field Longitude central meridian between SERIES96_MOSHIERForMoon and JPL_DE405 for APPARENT coordinates is 2.2" > 0.7".
-Difference in field Longitude central meridian between JPL_DE200 and JPL_DE405 for ASTROMETRIC coordinates is 38ยบ 10' 55.0" > 0.7".
-Difference in field PA axis between JPL_DE200 and JPL_DE405 for ASTROMETRIC coordinates is 75ยบ 57' 8.0" > 0.7".
-Difference in field PA pole between JPL_DE200 and JPL_DE405 for ASTROMETRIC coordinates is 44ยบ 33' 10.3" > 0.7".
+Difference in field Longitude central meridian between JPL_DE200 and JPL_DE405 for ASTROMETRIC coordinates is 38บ 10' 55.0" > 0.7".
+Difference in field PA axis between JPL_DE200 and JPL_DE405 for ASTROMETRIC coordinates is 75บ 57' 8.0" > 0.7".
+Difference in field PA pole between JPL_DE200 and JPL_DE405 for ASTROMETRIC coordinates is 44บ 33' 10.3" > 0.7".
 Difference in field Longitude central meridian between JPL_DE403 and JPL_DE405 for ASTROMETRIC coordinates is 2.1" > 0.7".
 Difference in field Longitude central meridian between JPL_DE413 and JPL_DE405 for ASTROMETRIC coordinates is 1.1" > 0.7".
 Difference in field Longitude central meridian between MOSHIER and JPL_DE405 for ASTROMETRIC coordinates is 2.2" > 0.7".
-Difference in field Longitude central meridian between VSOP87_ELP2000ForMoon and JPL_DE405 for ASTROMETRIC coordinates is 38ยบ 10' 54.5" > 0.7".
-Difference in field PA axis between VSOP87_ELP2000ForMoon and JPL_DE405 for ASTROMETRIC coordinates is 75ยบ 57' 8.2" > 0.7".
-Difference in field PA pole between VSOP87_ELP2000ForMoon and JPL_DE405 for ASTROMETRIC coordinates is 44ยบ 33' 10.3" > 0.7".
+Difference in field Longitude central meridian between VSOP87_ELP2000ForMoon and JPL_DE405 for ASTROMETRIC coordinates is 38บ 10' 54.5" > 0.7".
+Difference in field PA axis between VSOP87_ELP2000ForMoon and JPL_DE405 for ASTROMETRIC coordinates is 75บ 57' 8.2" > 0.7".
+Difference in field PA pole between VSOP87_ELP2000ForMoon and JPL_DE405 for ASTROMETRIC coordinates is 44บ 33' 10.3" > 0.7".
 Difference in field Longitude central meridian between SERIES96_MOSHIERForMoon and JPL_DE405 for ASTROMETRIC coordinates is 2.2" > 0.7".
-Difference in field Longitude central meridian between JPL_DE200 and JPL_DE405 for GEOMETRIC coordinates is 38ยบ 19' 17.0" > 0.7".
-Difference in field PA axis between JPL_DE200 and JPL_DE405 for GEOMETRIC coordinates is 76ยบ 19' 24.2" > 0.7".
-Difference in field PA pole between JPL_DE200 and JPL_DE405 for GEOMETRIC coordinates is 43ยบ 52' 50.5" > 0.7".
+Difference in field Longitude central meridian between JPL_DE200 and JPL_DE405 for GEOMETRIC coordinates is 38บ 19' 17.0" > 0.7".
+Difference in field PA axis between JPL_DE200 and JPL_DE405 for GEOMETRIC coordinates is 76บ 19' 24.2" > 0.7".
+Difference in field PA pole between JPL_DE200 and JPL_DE405 for GEOMETRIC coordinates is 43บ 52' 50.5" > 0.7".
 Difference in field Longitude central meridian between JPL_DE403 and JPL_DE405 for GEOMETRIC coordinates is 2.1" > 0.7".
 Difference in field Longitude central meridian between JPL_DE413 and JPL_DE405 for GEOMETRIC coordinates is 1.1" > 0.7".
 Difference in field Longitude central meridian between MOSHIER and JPL_DE405 for GEOMETRIC coordinates is 2.2" > 0.7".
-Difference in field Longitude central meridian between VSOP87_ELP2000ForMoon and JPL_DE405 for GEOMETRIC coordinates is 38ยบ 19' 16.5" > 0.7".
-Difference in field PA axis between VSOP87_ELP2000ForMoon and JPL_DE405 for GEOMETRIC coordinates is 76ยบ 19' 24.3" > 0.7".
-Difference in field PA pole between VSOP87_ELP2000ForMoon and JPL_DE405 for GEOMETRIC coordinates is 43ยบ 52' 50.5" > 0.7".
+Difference in field Longitude central meridian between VSOP87_ELP2000ForMoon and JPL_DE405 for GEOMETRIC coordinates is 38บ 19' 16.5" > 0.7".
+Difference in field PA axis between VSOP87_ELP2000ForMoon and JPL_DE405 for GEOMETRIC coordinates is 76บ 19' 24.3" > 0.7".
+Difference in field PA pole between VSOP87_ELP2000ForMoon and JPL_DE405 for GEOMETRIC coordinates is 43บ 52' 50.5" > 0.7".
 Difference in field Longitude central meridian between SERIES96_MOSHIERForMoon and JPL_DE405 for GEOMETRIC coordinates is 2.2" > 0.7".
 
-   Test case #133: 10; 1950, 1, 1, Sun, 0.075, 1.0E-7; 18h 43m 32.24s, -23ยบ 04' 14.8", 18h 46m 35.54s, -23ยบ 00' 48.9", 18h 43m 33.94s, -23ยบ 04' 04.8"
-   Test case #134: 10; 2000, 1, 1, Sun, 0.075, 1.0E-7; 18h 42m 54.06s, -23ยบ 04' 16.2", 18h 42m 56.60s, -23ยบ 04' 19.3", 18h 42m 56.60s, -23ยบ 04' 19.3"
+   Test case #133: 10; 1950, 1, 1, Sun, 0.075, 1.0E-7; 18h 43m 32.24s, -23บ 04' 14.8", 18h 46m 35.54s, -23บ 00' 48.9", 18h 43m 33.94s, -23บ 04' 04.8"
+   Test case #134: 10; 2000, 1, 1, Sun, 0.075, 1.0E-7; 18h 42m 54.06s, -23บ 04' 16.2", 18h 42m 56.60s, -23บ 04' 19.3", 18h 42m 56.60s, -23บ 04' 19.3"
 
 Difference in field Longitude central meridian between SERIES96_MOSHIERForMoon and JPL_DE405 for ASTROMETRIC coordinates is 0.2" > 0.1".
 Difference in field Longitude central meridian between SERIES96_MOSHIERForMoon and JPL_DE405 for GEOMETRIC coordinates is 0.2" > 0.1".
 
-   Test case #135: 10; 2049, 1, 1, Sun, 0.075, 1.0E-7; 18h 47m 48.66s, -22ยบ 58' 39.0", 18h 44m 51.02s, -23ยบ 01' 58.4", 18h 47m 48.95s, -22ยบ 58' 41.2"
-   Test case #136: 10; 1950, 1, 1, Mercury, 0.2, 1.0E-5; 20h 07m 31.46s, -21ยบ 28' 17.0", 20h 10m 28.81s, -21ยบ 19' 10.1", 20h 07m 33.09s, -21ยบ 28' 01.1", 75.16 , -5.46 , 358.29 , -0.01 , 0.336574125084 , 1.00299133872360 , 19.4794 , 76.9406 , Cap
-   Test case #137: 10; 2000, 1, 1, Mercury, 0.2, 1.0E-5; 18h 04m 52.62s, -24ยบ 22' 42.9", 18h 04m 55.15s, -24ยบ 22' 48.5", 18h 04m 56.98s, -24ยบ 22' 51.1", 245.55, -3.84 , 264.00, -0.02  , 0.466254982664 ,  1.41308874562055 , 8.7984 , 18.8213 , Sgr
+   Test case #135: 10; 2049, 1, 1, Sun, 0.075, 1.0E-7; 18h 47m 48.66s, -22บ 58' 39.0", 18h 44m 51.02s, -23บ 01' 58.4", 18h 47m 48.95s, -22บ 58' 41.2"
+   Test case #136: 10; 1950, 1, 1, Mercury, 0.2, 1.0E-5; 20h 07m 31.46s, -21บ 28' 17.0", 20h 10m 28.81s, -21บ 19' 10.1", 20h 07m 33.09s, -21บ 28' 01.1", 75.16 , -5.46 , 358.29 , -0.01 , 0.336574125084 , 1.00299133872360 , 19.4794 , 76.9406 , Cap
+   Test case #137: 10; 2000, 1, 1, Mercury, 0.2, 1.0E-5; 18h 04m 52.62s, -24บ 22' 42.9", 18h 04m 55.15s, -24บ 22' 48.5", 18h 04m 56.98s, -24บ 22' 51.1", 245.55, -3.84 , 264.00, -0.02  , 0.466254982664 ,  1.41308874562055 , 8.7984 , 18.8213 , Sgr
 
 Difference in field Phase angle between SERIES96_MOSHIERForMoon and JPL_DE405 for APPARENT coordinates is 0.3" > 0.2".
 Difference in field Subsolar longitude between SERIES96_MOSHIERForMoon and JPL_DE405 for APPARENT coordinates is 0.3" > 0.2".
 
-   Test case #138: 10; 2049, 1, 1, Mercury, 0.2, 1.0E-5; 20h 05m 25.93s, -20ยบ 32' 49.0", 20h 02m 34.34s, -20ยบ 41' 16.3", 20h 05m 25.13s, -20ยบ 32' 48.8", 285.11, -6.39 , 180.38 ,  0.01 , 0.316967021309 , 0.85415090116384 , 18.1716 , 104.6423 , Sgr
-   Test case #139: 10; 1950, 1, 1, Venus, 0.2, 1.0E-5; 21h 16m 56.34s, -15ยบ 09' 04.7", 21h 19m 42.91s, -14ยบ 56' 10.3", 21h 16m 56.59s, -15ยบ 08' 56.0", 281.43 , -1.00 , 46.24  , -1.09 , 0.720099685276 , 0.37468540492782 , 36.9795 , 124.7806 , Cap
-   Test case #140: 10; 2000, 1, 1, Venus, 0.2, 1.0E-5; 15h 57m 05.14s, -18ยบ 18' 48.3", 15h 57m 07.15s, -18ยบ 18' 58.9", 15h 57m 07.98s, -18ยบ 19' 02.5", 257.46 , -1.02 , 198.32 , -2.19 , 0.720159644184 , 1.13432878289948 , 38.9447 , 59.1280 , Lib
+   Test case #138: 10; 2049, 1, 1, Mercury, 0.2, 1.0E-5; 20h 05m 25.93s, -20บ 32' 49.0", 20h 02m 34.34s, -20บ 41' 16.3", 20h 05m 25.13s, -20บ 32' 48.8", 285.11, -6.39 , 180.38 ,  0.01 , 0.316967021309 , 0.85415090116384 , 18.1716 , 104.6423 , Sgr
+   Test case #139: 10; 1950, 1, 1, Venus, 0.2, 1.0E-5; 21h 16m 56.34s, -15บ 09' 04.7", 21h 19m 42.91s, -14บ 56' 10.3", 21h 16m 56.59s, -15บ 08' 56.0", 281.43 , -1.00 , 46.24  , -1.09 , 0.720099685276 , 0.37468540492782 , 36.9795 , 124.7806 , Cap
+   Test case #140: 10; 2000, 1, 1, Venus, 0.2, 1.0E-5; 15h 57m 05.14s, -18บ 18' 48.3", 15h 57m 07.15s, -18บ 18' 58.9", 15h 57m 07.98s, -18บ 19' 02.5", 257.46 , -1.02 , 198.32 , -2.19 , 0.720159644184 , 1.13432878289948 , 38.9447 , 59.1280 , Lib
 
 Difference in field Subsolar latitude between SERIES96_MOSHIERForMoon and JPL_DE405 for ASTROMETRIC coordinates is 0.3" > 0.2".
 Difference in field Subsolar latitude between SERIES96_MOSHIERForMoon and JPL_DE405 for GEOMETRIC coordinates is 0.3" > 0.2".
 
-   Test case #141: 10; 2049, 1, 1, Venus, 0.2, 1.0E-5; 22h 03m 13.98s, -13ยบ 17' 18.9", 22h 00m 35.43s, -13ยบ 31' 35.3", 22h 03m 13.85s, -13ยบ 17' 19.8", 217.58 ,  0.70 , 305.43 ,  0.11 , 0.722151722747 , 0.69495943163265 , 47.2137 , 87.8559 , Aqr
-   Test case #142: 10; 1950, 1, 1, Mars, 0.2, 1.0E-5; 12h 12m 06.67s,  01ยบ 25' 32.3", 12h 14m 40.35s,  01ยบ 08' 52.9", 12h 12m 07.44s,  01ยบ 25' 28.2", 47.61  , 24.03  , 86.60  , 22.28  , 1.663835303003 ,  1.21552054413961 , 97.7859 , 35.8428 , Vir
-   Test case #143: 10; 2000, 1, 1, Mars, 0.2, 1.0E-5; 22h 00m 34.72s, -13ยบ 19' 21.3", 22h 00m 36.59s, -13ยบ 19' 14.2", 22h 00m 37.60s, -13ยบ 19' 08.6", 254.25 , -23.17 , 219.72 , -25.39 , 1.390945245952 ,  1.84697285467017 , 47.7256 , 31.5380 , Aqr
+   Test case #141: 10; 2049, 1, 1, Venus, 0.2, 1.0E-5; 22h 03m 13.98s, -13บ 17' 18.9", 22h 00m 35.43s, -13บ 31' 35.3", 22h 03m 13.85s, -13บ 17' 19.8", 217.58 ,  0.70 , 305.43 ,  0.11 , 0.722151722747 , 0.69495943163265 , 47.2137 , 87.8559 , Aqr
+   Test case #142: 10; 1950, 1, 1, Mars, 0.2, 1.0E-5; 12h 12m 06.67s,  01บ 25' 32.3", 12h 14m 40.35s,  01บ 08' 52.9", 12h 12m 07.44s,  01บ 25' 28.2", 47.61  , 24.03  , 86.60  , 22.28  , 1.663835303003 ,  1.21552054413961 , 97.7859 , 35.8428 , Vir
+   Test case #143: 10; 2000, 1, 1, Mars, 0.2, 1.0E-5; 22h 00m 34.72s, -13บ 19' 21.3", 22h 00m 36.59s, -13บ 19' 14.2", 22h 00m 37.60s, -13บ 19' 08.6", 254.25 , -23.17 , 219.72 , -25.39 , 1.390945245952 ,  1.84697285467017 , 47.7256 , 31.5380 , Aqr
 
 Difference in field PA pole between SERIES96_MOSHIERForMoon and JPL_DE405 for ASTROMETRIC coordinates is 0.3" > 0.2".
 Difference in field Subsolar latitude between SERIES96_MOSHIERForMoon and JPL_DE405 for ASTROMETRIC coordinates is 0.3" > 0.2".
 Difference in field PA pole between SERIES96_MOSHIERForMoon and JPL_DE405 for GEOMETRIC coordinates is 0.3" > 0.2".
 Difference in field Subsolar latitude between SERIES96_MOSHIERForMoon and JPL_DE405 for GEOMETRIC coordinates is 0.3" > 0.2".
 
-   Test case #144: 10; 2049, 1, 1, Mars, 0.2, 1.0E-5; 23h 02m 28.92s, -06ยบ 59' 23.0", 22h 59m 55.68s, -07ยบ 15' 16.3", 23h 02m 29.36s, -06ยบ 59' 20.4", 302.38 , -25.82 , 260.55 , -22.61 , 1.417423762245 ,  1.55911965850753 , 63.0732 , 38.2062 , Aqr
-   Test case #145: 10; 1950, 1, 1, Jupiter, 0.3, 1.0E-5; 20h 36m 11.60s, -19ยบ 13' 08.9", 20h 39m 04.61s, -19ยบ 02' 20.5", 20h 36m 13.61s, -19ยบ 12' 54.7", 270.71 , -0.62 , 265.76 , -0.31 , 5.074481869144 , 5.93536484491519 , 26.5067  , 4.9635  , Cap, [OK, L0 = 271.36 = value given by IMCCE in the graphical visualization]
-   Test case #146: 10; 2000, 1, 1, Jupiter, 0.3, 1.0E-5; 01h 35m 24.00s,  08ยบ 35' 04.5", 01h 35m 24.47s,  08ยบ 35' 10.3", 01h 35m 25.04s,  08ยบ 35' 13.7", 339.54 ,  3.31 , 328.52 ,  3.50 , 4.965312354289 , 4.61341107349985 , 105.3708 , 11.0049 , Psc
+   Test case #144: 10; 2049, 1, 1, Mars, 0.2, 1.0E-5; 23h 02m 28.92s, -06บ 59' 23.0", 22h 59m 55.68s, -07บ 15' 16.3", 23h 02m 29.36s, -06บ 59' 20.4", 302.38 , -25.82 , 260.55 , -22.61 , 1.417423762245 ,  1.55911965850753 , 63.0732 , 38.2062 , Aqr
+   Test case #145: 10; 1950, 1, 1, Jupiter, 0.3, 1.0E-5; 20h 36m 11.60s, -19บ 13' 08.9", 20h 39m 04.61s, -19บ 02' 20.5", 20h 36m 13.61s, -19บ 12' 54.7", 270.71 , -0.62 , 265.76 , -0.31 , 5.074481869144 , 5.93536484491519 , 26.5067  , 4.9635  , Cap, [OK, L0 = 271.36 = value given by IMCCE in the graphical visualization]
+   Test case #146: 10; 2000, 1, 1, Jupiter, 0.3, 1.0E-5; 01h 35m 24.00s,  08บ 35' 04.5", 01h 35m 24.47s,  08บ 35' 10.3", 01h 35m 25.04s,  08บ 35' 13.7", 339.54 ,  3.31 , 328.52 ,  3.50 , 4.965312354289 , 4.61341107349985 , 105.3708 , 11.0049 , Psc
 
 Difference in field PA pole between SERIES96_MOSHIERForMoon and JPL_DE405 for ASTROMETRIC coordinates is 0.3" > 0.3".
 Difference in field Longitude central meridian between SERIES96_MOSHIERForMoon and JPL_DE405 for GEOMETRIC coordinates is 0.4" > 0.3".
@@ -344,66 +344,66 @@ Difference in field Longitude central meridian III between SERIES96_MOSHIERForMo
 Difference in field PA pole between SERIES96_MOSHIERForMoon and JPL_DE405 for GEOMETRIC coordinates is 0.3" > 0.3".
 Difference in field Subsolar longitude between SERIES96_MOSHIERForMoon and JPL_DE405 for GEOMETRIC coordinates is 0.4" > 0.3".
 
-   Test case #147: 10; 2049, 1, 1, Jupiter, 0.3, 1.0E-5; 05h 33m 55.87s,  22ยบ 54' 55.8", 05h 30m 55.03s,  22ยบ 52' 58.7", 05h 33m 53.84s,  22ยบ 54' 57.3", 348.49 ,  2.88 , 345.26 ,  2.76 , 5.110803759687 , 4.16236852715959 , 163.0027 , 3.2183  , Tau
-   Test case #148: 10; 1950, 1, 1, Saturn, 0.4, 1.0E-5; 11h 24m 20.02s,  06ยบ 01' 40.8", 11h 26m 54.48s,  05ยบ 45' 10.8", 11h 24m 20.15s,  06ยบ 01' 39.3", 171.86 , -1.83  , 176.89 , -5.00 , 9.353240604830 , 8.96249258574609 , 110.5539 , 5.6525 , Leo
+   Test case #147: 10; 2049, 1, 1, Jupiter, 0.3, 1.0E-5; 05h 33m 55.87s,  22บ 54' 55.8", 05h 30m 55.03s,  22บ 52' 58.7", 05h 33m 53.84s,  22บ 54' 57.3", 348.49 ,  2.88 , 345.26 ,  2.76 , 5.110803759687 , 4.16236852715959 , 163.0027 , 3.2183  , Tau
+   Test case #148: 10; 1950, 1, 1, Saturn, 0.4, 1.0E-5; 11h 24m 20.02s,  06บ 01' 40.8", 11h 26m 54.48s,  05บ 45' 10.8", 11h 24m 20.15s,  06บ 01' 39.3", 171.86 , -1.83  , 176.89 , -5.00 , 9.353240604830 , 8.96249258574609 , 110.5539 , 5.6525 , Leo
 
-Difference in field longitude of central meridian between Horizons and JPL_DE405 for APPARENT coordinates is 1ยบ 32' 57.3" > 1ยบ 0' 0.0".
-Difference in field subsolar longitude between Horizons and JPL_DE405 for APPARENT coordinates is 1ยบ 32' 57.3" > 1ยบ 0' 0.0".
+Difference in field longitude of central meridian between Horizons and JPL_DE405 for APPARENT coordinates is 1บ 32' 57.3" > 1บ 0' 0.0".
+Difference in field subsolar longitude between Horizons and JPL_DE405 for APPARENT coordinates is 1บ 32' 57.3" > 1บ 0' 0.0".
 
-   Test case #149: 10; 2000, 1, 1, Saturn, 0.4, 1.0E-5; 02h 35m 06.26s,  12ยบ 36' 56.5", 02h 35m 06.40s,  12ยบ 37' 01.9", 02h 35m 06.84s,  12ยบ 37' 04.1", 224.89 , -23.03 , 219.56 ,-25.01 , 9.183967605493 , 8.64561332170131 , 120.5166 , 5.2881 , Ari
-   Test case #150: 10; 2049, 1, 1, Saturn, 0.4, 1.0E-5; 19h 15m 43.46s, -22ยบ 03' 21.2", 19h 12m 47.84s, -22ยบ 08' 35.8", 19h 15m 44.18s, -22ยบ 03' 22.6", 311.03 ,  29.22 , 310.36 , 29.02 ,10.024234935431 , 11.0006165382543 , 6.5112  , 0.6414 , Sgr
+   Test case #149: 10; 2000, 1, 1, Saturn, 0.4, 1.0E-5; 02h 35m 06.26s,  12บ 36' 56.5", 02h 35m 06.40s,  12บ 37' 01.9", 02h 35m 06.84s,  12บ 37' 04.1", 224.89 , -23.03 , 219.56 ,-25.01 , 9.183967605493 , 8.64561332170131 , 120.5166 , 5.2881 , Ari
+   Test case #150: 10; 2049, 1, 1, Saturn, 0.4, 1.0E-5; 19h 15m 43.46s, -22บ 03' 21.2", 19h 12m 47.84s, -22บ 08' 35.8", 19h 15m 44.18s, -22บ 03' 22.6", 311.03 ,  29.22 , 310.36 , 29.02 ,10.024234935431 , 11.0006165382543 , 6.5112  , 0.6414 , Sgr
 
-Difference in field longitude of central meridian between Horizons and JPL_DE405 for APPARENT coordinates is 1ยบ 38' 1.3" > 1ยบ 0' 0.0".
-Difference in field subsolar longitude between Horizons and JPL_DE405 for APPARENT coordinates is 1ยบ 37' 50.4" > 1ยบ 0' 0.0".
+Difference in field longitude of central meridian between Horizons and JPL_DE405 for APPARENT coordinates is 1บ 38' 1.3" > 1บ 0' 0.0".
+Difference in field subsolar longitude between Horizons and JPL_DE405 for APPARENT coordinates is 1บ 37' 50.4" > 1บ 0' 0.0".
 
-   Test case #151: 10; 1950, 1, 1, Uranus, 0.6, 1.0E-5; 06h 11m 43.14s,  23ยบ 41' 23.0", 06h 14m 44.84s,  23ยบ 40' 17.2", 06h 11m 42.21s,  23ยบ 41' 15.0", 276.61 , 73.15 ,277.21 , 72.83 , 18.945469111788 , 17.9698631366579 , 172.6733 , 0.3728 , Gem
-   Test case #152: 10; 2000, 1, 1, Uranus, 0.4, 3.0E-5; 21h 09m 47.94s, -17ยบ 01' 40.1", 21h 09m 50.09s, -17ยบ 01' 34.7", 21h 09m 50.39s, -17ยบ 01' 33.5", 14.84  ,-33.63 , 15.13 ,-31.99 , 19.923961518998 , 20.7221895282437 , 34.9310  , 1.6228 , Cap
-   Test case #153: 10; 2049, 1, 1, Uranus, 1.5, 6.0E-5; 11h 09m 19.36s,  06ยบ 17' 19.8", 11h 06m 45.42s,  06ยบ 33' 27.5", 11h 09m 18.08s,  06ยบ 17' 28.7", 211.11 ,  2.42 ,210.75 ,  5.32 , 18.289577172020 , 17.8507922858825 , 115.0892 , 2.7946 , Leo
-   Test case #154: 10; 1950, 1, 1, Neptune, 0.4, 2.0E-5; 13h 06m 06.48s, -05ยบ 18' 42.7", 13h 08m 42.48s, -05ยบ 34' 41.2", 13h 06m 07.14s, -05ยบ 18' 43.4", 269.84 , 12.88 , 271.56 , 13.67, 30.295277061353 ,  30.4037158351984, 82.7413 , 1.8453 , Vir
-   Test case #155: 10; 2000, 1, 1, Neptune, 0.9, 7.0E-5; 20h 21m 39.48s, -19ยบ 13' 02.0", 20h 21m 41.83s, -19ยบ 12' 59.1", 20h 21m 42.09s, -19ยบ 12' 58.3", 152.46 ,-28.40 , 151.64 ,-28.51, 30.120616388034 , 31.0211175747855 , 23.3179 , 0.7447 , Cap
-   Test case #156: 10; 2049, 1, 1, Neptune, 3.0, 11.0E-5; 03h 17m 28.13s,  16ยบ 22' 08.3", 03h 14m 40.90s,  16ยบ 11' 18.7", 03h 17m 26.29s,  16ยบ 22' 03.8", 297.15 ,  2.31 , 295.87 , 2.99 , 29.816680398689 , 29.1714260682633 , 130.2941 , 1.4368 , Ari
-   Test case #157: 10; 1950, 1, 1, Pluto, 1, 0.0002; 09h 31m 51.78s,  23ยบ 17' 35.9", 09h 34m 41.54s,  23ยบ 04' 13.1", 09h 31m 50.98s,  23ยบ 17' 36.7", 319.86,  58.96 ,318.02 , 59.15 ,36.325399841190 , 35.5510968781456 , 141.4566,  0.9715 , Leo
+   Test case #151: 10; 1950, 1, 1, Uranus, 0.6, 1.0E-5; 06h 11m 43.14s,  23บ 41' 23.0", 06h 14m 44.84s,  23บ 40' 17.2", 06h 11m 42.21s,  23บ 41' 15.0", 276.61 , 73.15 ,277.21 , 72.83 , 18.945469111788 , 17.9698631366579 , 172.6733 , 0.3728 , Gem
+   Test case #152: 10; 2000, 1, 1, Uranus, 0.4, 3.0E-5; 21h 09m 47.94s, -17บ 01' 40.1", 21h 09m 50.09s, -17บ 01' 34.7", 21h 09m 50.39s, -17บ 01' 33.5", 14.84  ,-33.63 , 15.13 ,-31.99 , 19.923961518998 , 20.7221895282437 , 34.9310  , 1.6228 , Cap
+   Test case #153: 10; 2049, 1, 1, Uranus, 1.5, 6.0E-5; 11h 09m 19.36s,  06บ 17' 19.8", 11h 06m 45.42s,  06บ 33' 27.5", 11h 09m 18.08s,  06บ 17' 28.7", 211.11 ,  2.42 ,210.75 ,  5.32 , 18.289577172020 , 17.8507922858825 , 115.0892 , 2.7946 , Leo
+   Test case #154: 10; 1950, 1, 1, Neptune, 0.4, 2.0E-5; 13h 06m 06.48s, -05บ 18' 42.7", 13h 08m 42.48s, -05บ 34' 41.2", 13h 06m 07.14s, -05บ 18' 43.4", 269.84 , 12.88 , 271.56 , 13.67, 30.295277061353 ,  30.4037158351984, 82.7413 , 1.8453 , Vir
+   Test case #155: 10; 2000, 1, 1, Neptune, 0.9, 7.0E-5; 20h 21m 39.48s, -19บ 13' 02.0", 20h 21m 41.83s, -19บ 12' 59.1", 20h 21m 42.09s, -19บ 12' 58.3", 152.46 ,-28.40 , 151.64 ,-28.51, 30.120616388034 , 31.0211175747855 , 23.3179 , 0.7447 , Cap
+   Test case #156: 10; 2049, 1, 1, Neptune, 3.0, 11.0E-5; 03h 17m 28.13s,  16บ 22' 08.3", 03h 14m 40.90s,  16บ 11' 18.7", 03h 17m 26.29s,  16บ 22' 03.8", 297.15 ,  2.31 , 295.87 , 2.99 , 29.816680398689 , 29.1714260682633 , 130.2941 , 1.4368 , Ari
+   Test case #157: 10; 1950, 1, 1, Pluto, 1, 0.0002; 09h 31m 51.78s,  23บ 17' 35.9", 09h 34m 41.54s,  23บ 04' 13.1", 09h 31m 50.98s,  23บ 17' 36.7", 319.86,  58.96 ,318.02 , 59.15 ,36.325399841190 , 35.5510968781456 , 141.4566,  0.9715 , Leo
 
-Difference in field longitude of central meridian between Horizons and JPL_DE405 for APPARENT coordinates is 2ยบ 32' 8.5" > 1ยบ 0' 0.0".
-Difference in field position angle of pole between Horizons and JPL_DE405 for APPARENT coordinates is 2ยบ 46' 9.6" > 3' 0.0".
-Difference in field subsolar longitude between Horizons and JPL_DE405 for APPARENT coordinates is 2ยบ 39' 40.9" > 1ยบ 0' 0.0".
-Difference in field subsolar latitude between Horizons and JPL_DE405 for APPARENT coordinates is 2ยบ 47' 31.3" > 3' 0.0".
+Difference in field longitude of central meridian between Horizons and JPL_DE405 for APPARENT coordinates is 2บ 32' 8.5" > 1บ 0' 0.0".
+Difference in field position angle of pole between Horizons and JPL_DE405 for APPARENT coordinates is 2บ 46' 9.6" > 3' 0.0".
+Difference in field subsolar longitude between Horizons and JPL_DE405 for APPARENT coordinates is 2บ 39' 40.9" > 1บ 0' 0.0".
+Difference in field subsolar latitude between Horizons and JPL_DE405 for APPARENT coordinates is 2บ 47' 31.3" > 3' 0.0".
 Difference in field distance from Sun between Horizons and JPL_DE405 for APPARENT coordinates is 0.000034 > 0.000010.
 Difference in field distance to observer between Horizons and JPL_DE405 for APPARENT coordinates is 0.000035 > 0.000010.
 
-   Test case #158: 10; 2000, 1, 1, Pluto, 4.0, 0.0006; 16h 45m 36.38s, -11ยบ 23' 33.9", 16h 45m 38.53s, -11ยบ 23' 41.7", 16h 45m 38.79s, -11ยบ 23' 43.1", 100.36, -26.27 , 99.69 ,-25.54 ,30.223031944329 , 31.0683011612493 , 30.2612 , 0.9360 , Oph
+   Test case #158: 10; 2000, 1, 1, Pluto, 4.0, 0.0006; 16h 45m 36.38s, -11บ 23' 33.9", 16h 45m 38.53s, -11บ 23' 41.7", 16h 45m 38.79s, -11บ 23' 43.1", 100.36, -26.27 , 99.69 ,-25.54 ,30.223031944329 , 31.0683011612493 , 30.2612 , 0.9360 , Oph
 
-Difference in field longitude of central meridian between Horizons and JPL_DE405 for APPARENT coordinates is 1ยบ 52' 40.7" > 1ยบ 0' 0.0".
+Difference in field longitude of central meridian between Horizons and JPL_DE405 for APPARENT coordinates is 1บ 52' 40.7" > 1บ 0' 0.0".
 Difference in field position angle of pole between Horizons and JPL_DE405 for APPARENT coordinates is 52' 16.4" > 3' 0.0".
-Difference in field subsolar longitude between Horizons and JPL_DE405 for APPARENT coordinates is 1ยบ 50' 56.9" > 1ยบ 0' 0.0".
+Difference in field subsolar longitude between Horizons and JPL_DE405 for APPARENT coordinates is 1บ 50' 56.9" > 1บ 0' 0.0".
 Difference in field subsolar latitude between Horizons and JPL_DE405 for APPARENT coordinates is 50' 7.2" > 3' 0.0".
 
-   Test case #159: 10; 2049, 1, 1, Pluto, 20.0, 0.0011; 22h 51m 31.39s, -20ยบ 43' 33.4", 22h 48m 52.86s, -20ยบ 59' 09.4", 22h 51m 31.24s, -20ยบ 43' 32.0", 273.14, -50.50, 274.57 ,-49.83,41.201795360105 , 41.7410133883077 , 56.1821 , 1.1384 , Aqr
+   Test case #159: 10; 2049, 1, 1, Pluto, 20.0, 0.0011; 22h 51m 31.39s, -20บ 43' 33.4", 22h 48m 52.86s, -20บ 59' 09.4", 22h 51m 31.24s, -20บ 43' 32.0", 273.14, -50.50, 274.57 ,-49.83,41.201795360105 , 41.7410133883077 , 56.1821 , 1.1384 , Aqr
 
-Difference in field longitude of central meridian between Horizons and JPL_DE405 for APPARENT coordinates is 5ยบ 19' 29.8" > 1ยบ 0' 0.0".
-Difference in field position angle of pole between Horizons and JPL_DE405 for APPARENT coordinates is 2ยบ 3' 58.8" > 3' 0.0".
-Difference in field subsolar longitude between Horizons and JPL_DE405 for APPARENT coordinates is 5ยบ 19' 25.2" > 1ยบ 0' 0.0".
-Difference in field subsolar latitude between Horizons and JPL_DE405 for APPARENT coordinates is 2ยบ 0' 40.8" > 3' 0.0".
+Difference in field longitude of central meridian between Horizons and JPL_DE405 for APPARENT coordinates is 5บ 19' 29.8" > 1บ 0' 0.0".
+Difference in field position angle of pole between Horizons and JPL_DE405 for APPARENT coordinates is 2บ 3' 58.8" > 3' 0.0".
+Difference in field subsolar longitude between Horizons and JPL_DE405 for APPARENT coordinates is 5บ 19' 25.2" > 1บ 0' 0.0".
+Difference in field subsolar latitude between Horizons and JPL_DE405 for APPARENT coordinates is 2บ 0' 40.8" > 3' 0.0".
 Difference in field distance from Sun between Horizons and JPL_DE405 for APPARENT coordinates is 0.000033 > 0.000010.
 Difference in field distance to observer between Horizons and JPL_DE405 for APPARENT coordinates is 0.000033 > 0.000010.
 
-   Test case #160: 10; 1950, 1, 1, Phobos, 0.2, 0.00001; 12h 12m 06.22s,  01ยบ 25' 38.5", 12h 14m 39.89s,  01ยบ 08' 59.0", 12h 12m 07.05s,  01ยบ 25' 34.3", 302.81, 41.72, 341.49, 39.14,  1.663890856745,  1.21555214644787, 97.7883, 35.8416, Vir
+   Test case #160: 10; 1950, 1, 1, Phobos, 0.2, 0.00001; 12h 12m 06.22s,  01บ 25' 38.5", 12h 14m 39.89s,  01บ 08' 59.0", 12h 12m 07.05s,  01บ 25' 34.3", 302.81, 41.72, 341.49, 39.14,  1.663890856745,  1.21555214644787, 97.7883, 35.8416, Vir
 
-Difference in field position angle of pole between Horizons and NATURAL_SATELLITE for APPARENT coordinates is 1ยบ 6' 0.4" > 3' 0.0".
-Difference in field subsolar latitude between Horizons and NATURAL_SATELLITE for APPARENT coordinates is 1ยบ 5' 3.5" > 3' 0.0".
+Difference in field position angle of pole between Horizons and NATURAL_SATELLITE for APPARENT coordinates is 1บ 6' 0.4" > 3' 0.0".
+Difference in field subsolar latitude between Horizons and NATURAL_SATELLITE for APPARENT coordinates is 1บ 5' 3.5" > 3' 0.0".
 
-   Test case #161: 10; 1950, 1, 1, Io, 0.3, 0.00001; 20h 36m 16.93s, -19ยบ 12' 46.1", 20h 39m 09.92s, -19ยบ 01' 57.4", 20h 36m 18.41s, -19ยบ 12' 34.0", 127.40, -0.53, 122.44, -0.27, 5.072992182817, 5.93367287025952, 26.5286, 4.9705, Cap
-   Test case #162: 10; 1950, 1, 1, Titan, 0.4, 0.00001; 11h 24m 12.63s, 06ยบ 01' 35.9", 11h 26m 47.10s, 05ยบ 45' 05.9", 11h 24m 12.54s, 06ยบ 01' 34.0", 210.89, -1.49, 215.94, -4.04, 9.347150486647, 8.95594290443931, 110.5817, 5.6544, Leo
+   Test case #161: 10; 1950, 1, 1, Io, 0.3, 0.00001; 20h 36m 16.93s, -19บ 12' 46.1", 20h 39m 09.92s, -19บ 01' 57.4", 20h 36m 18.41s, -19บ 12' 34.0", 127.40, -0.53, 122.44, -0.27, 5.072992182817, 5.93367287025952, 26.5286, 4.9705, Cap
+   Test case #162: 10; 1950, 1, 1, Titan, 0.4, 0.00001; 11h 24m 12.63s, 06บ 01' 35.9", 11h 26m 47.10s, 05บ 45' 05.9", 11h 24m 12.54s, 06บ 01' 34.0", 210.89, -1.49, 215.94, -4.04, 9.347150486647, 8.95594290443931, 110.5817, 5.6544, Leo
 
-Difference in field longitude of central meridian between Horizons and NATURAL_SATELLITE for APPARENT coordinates is 1ยบ 32' 2.2" > 1ยบ 0' 0.0".
-Difference in field subsolar longitude between Horizons and NATURAL_SATELLITE for APPARENT coordinates is 1ยบ 32' 14.8" > 1ยบ 0' 0.0".
+Difference in field longitude of central meridian between Horizons and NATURAL_SATELLITE for APPARENT coordinates is 1บ 32' 2.2" > 1บ 0' 0.0".
+Difference in field subsolar longitude between Horizons and NATURAL_SATELLITE for APPARENT coordinates is 1บ 32' 14.8" > 1บ 0' 0.0".
 
-   Test case #163: 10; 1950, 1, 1, Oberon, 0.6, 0.00001; 06h 11m 40.01s,  23ยบ 41' 28.0", 06h 14m 41.71s,  23ยบ 40' 22.5", 06h 11m 39.07s,  23ยบ 41' 17.9", 148.96, 72.60, 149.57, 72.27, 18.944444921185, 17.9688638943493, 172.6613, 0.3734, Gem
-   Test case #164: 10; 1950, 1, 1, Triton, 0.4, 0.0001; 13h 06m 06.82s, -05ยบ 18' 50.5", 13h 08m 42.82s, -05ยบ 34' 49.0", 13h 06m 07.65s, -05ยบ 18' 51.7", 220.45,  2.63, 219.15,  3.94, 30.293372824130, 30.4018415829990, 82.7395, 1.8459, Vir
+   Test case #163: 10; 1950, 1, 1, Oberon, 0.6, 0.00001; 06h 11m 40.01s,  23บ 41' 28.0", 06h 14m 41.71s,  23บ 40' 22.5", 06h 11m 39.07s,  23บ 41' 17.9", 148.96, 72.60, 149.57, 72.27, 18.944444921185, 17.9688638943493, 172.6613, 0.3734, Gem
+   Test case #164: 10; 1950, 1, 1, Triton, 0.4, 0.0001; 13h 06m 06.82s, -05บ 18' 50.5", 13h 08m 42.82s, -05บ 34' 49.0", 13h 06m 07.65s, -05บ 18' 51.7", 220.45,  2.63, 219.15,  3.94, 30.293372824130, 30.4018415829990, 82.7395, 1.8459, Vir
 Testing ... Greenwich apparent and mean sidereal times
    Test case #165: 11; 2009, 1, 1, siderealTime; 06h 43m 07.1394s, 06h 43m 06.3205s, 0.8189s
    Test case #166: 11; 2009, 11, 19, siderealTime; 03h 52m 38.0203s, 03h 52m 37.1489s, 0.8714s
-   Test case #167: 11; 2009, 7, 1, obliquity; 23ยบ 26' 21.2974"
+   Test case #167: 11; 2009, 7, 1, obliquity; 23บ 26' 21.2974"
    Test case #168: 11; 2009, 7, 1, nutation; 14.7823", 4.3391"
 Testing ... natural satellites and JPL DExxx theories
    Test case #169: 12; 2442413.5, de405, 0; -0.002778466806619606, -0.0001371481505240407, 0.00001598380242716914, 0.0000007121921412015217, -0.000006304236384065129, -0.000002754982127518105
@@ -461,8 +461,8 @@ Expected 0.001216767238512264, but found 0.0012167672384486 instead.
    Test case #209: 12; 2406327.6, tass1.7, 7;  0.010080312859, -0.003940249379,  0.001120175589,  0.378238813,  0.783156263, -0.425574501
    Test case #210: 12; 2406216.6, tass1.7, 8;  0.002447343471,  0.022675031476, -0.006665246397, -0.671393700,  0.121862318,  0.098725209
 Testing ... stellar ephemerides
-   Test case #211: 13; 2011, 7, 13, 10, 22, 46, HD259431; 06h 33m 05.19s, 10ยบ 19' 20.0", 06h 33m 43.28s, 10ยบ 18' 45.8", 4.27, 12.97, 12.88
-   Test case #212: 13; 2011, 7, 13, 10, 22, 46, R Mon; 06h 39m 09.95s, 08ยบ 44' 09.7", 06h 39m 47.58s, 08ยบ 43' 29.5", -3.01, 6.80, 6.70
+   Test case #211: 13; 2011, 7, 13, 10, 22, 46, HD259431; 06h 33m 05.19s, 10บ 19' 20.0", 06h 33m 43.28s, 10บ 18' 45.8", 4.27, 12.97, 12.88
+   Test case #212: 13; 2011, 7, 13, 10, 22, 46, R Mon; 06h 39m 09.95s, 08บ 44' 09.7", 06h 39m 47.58s, 08บ 43' 29.5", -3.01, 6.80, 6.70
 Testing ... general astronomical events
    Test case #213: 14; 2012, 3, 15, transit, 2, 0, 2=Venus, 0=next event; 06-jun-2012 03:30:32 LT, NASA says 03:30, JPARSEC uses Meeus approximate method (only geocentric)
    Test case #214: 14; 2011, 1, 1, equinoxSolstice, 8, 8=Summer equinox; 21-jun-2011 19:16:30 LT
@@ -473,199 +473,208 @@ Testing ... general astronomical events
    Test case #219: 14; 2011, 1, 1, grs; 01-jan-2011 09:08 UT1, S&T says 09:01, but JPARSEC uses spline interpolation to get updated GRS longitude as it moves
    Test case #220: 14; 2011, 2, 20, grs; 20-feb-2011 00:52 UT1, S&T says 00:43, but JPARSEC uses spline interpolation to get updated GRS longitude as it moves
    Test case #221: 14; -1000, 3, 1, moon, 4, 2, 4=lunar eclipse, 2=closest; 14-mar-1000 05:38:14 B.C. TDB, Espenak (NASA) says 05:40:48, in JPARSEC with ELP2000 I obtain 05:40:15
-   Test case #222: 14; 2004, 1, 15, apogeePerigee, 1; Moon's perigee: 2004-01-19 19:26 TDB (parallax = 1ยบ 0' 25.622", distance = 362876 km)
+   Test case #222: 14; 2004, 1, 15, apogeePerigee, 1; Moon's perigee: 2004-01-19 19:26 TDB (parallax = 1บ 0' 25.622", distance = 362876 km)
    Test case #223: 14; 2004, 1, 1, apogeePerigee, 2; Moon's apogee: 2004-01-03 20:20 TDB (parallax = 54' 2.839", distance = 405706 km)
    Test case #224: 14; 1988, 10, 1, apogeePerigee, 2; Moon's apogee: 1988-10-07 20:30 TDB (parallax = 54' 0.679", distance = 405976 km)
    Test case #225: 14; 1992, 4, 12, librations; l = -1.23, b = 4.20, p = 15.08
 Testing ... double and variable stars
    Test case #226: 15; 2011, 7, 14, 14, 0, 0, variable, AN And; 0.81, 15-jul-2011 04:21
-19-mar-2015 10:47:31 (main) jparsec.io.ReadFile.parseDoubleStar
+21-jul-2015 16:55:17 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: "". Line to parse was: 
 001125.97+584929.1 00114+5850 SKW   1Aa,Ab   .     .      .       15.    19.      462.7     y    .         0.14   a   .        0.3       .      31.         .          .           .       0.90      .       344.        .          2003 7 n SKW2005                    
-19-mar-2015 10:47:31 (main) jparsec.io.ReadFile.parseDoubleStar
+21-jul-2015 16:55:17 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: "". Line to parse was: 
 001125.97+584929.1 00114+5850 SKW   1Aa,Ab   .     .      .       15.    19.       58.8     y    .         0.05   a   .        0.4       .      33.         .          .           .       0.90      .        14.        .          2003 7 n SKW2005                    
-19-mar-2015 10:47:31 (main) jparsec.io.ReadFile.parseDoubleStar
+21-jul-2015 16:55:17 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: "". Line to parse was: 
 001125.97+584929.1 00114+5850 SKW   1Aa,Ab   .     .      .       15.    19.      117.9     y    .         0.10   a   .       70.        .      48.         .          .           .       0.31      .       300.        .          2003 7 n SKW2005                    
-19-mar-2015 10:47:31 (main) jparsec.io.ReadFile.parseDoubleStar
+21-jul-2015 16:55:17 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: "". Line to parse was: 
 001125.97+584929.1 00114+5850 SKW   1Aa,Ab   .     .      .       15.    19.      206.3     y    .         0.17   a   .       70.        .     243.         .          .           .       0.69      .        63.        .          2003 7 n SKW2005                    
-19-mar-2015 10:47:31 (main) jparsec.io.ReadFile.parseDoubleStar
+21-jul-2015 16:55:17 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: "". Line to parse was: 
-004006.26+501415.5 00401+5014 V523 Cas       .     .      .       10.87    .       86.      y   5.          .     m   .       83.8       .        .         .          .           .       0.08     0.07        .        .               9 n Pbl2006                    
-19-mar-2015 10:47:31 (main) jparsec.io.ReadFile.parseDoubleStar
+004006.26+501415.5 00401+5014 V523 Cas       .     .      .       10.87    .       86.      y   5.          .     m   .       83.8       .        .         .          .           .       0.08     0.07        .        .               7 n Pbl2006                    
+21-jul-2015 16:55:17 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: "". Line to parse was: 
-005642.52+604300.2 00567+6043 BU 1028A         782   5394   4427   2.47    .       60.      y    .       150.     m   .         .        .        .         .          .           .        .        .          .        .               9   Gon2000                    
-19-mar-2015 10:47:31 (main) jparsec.io.ReadFile.parseDoubleStar
+005642.52+604300.2 00567+6043 BU 1028A         782   5394   4427   2.47    .       60.      y    .       150.     m   .         .        .        .         .          .           .        .        .          .        .               7   Gon2000                    
+21-jul-2015 16:55:17 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: "". Line to parse was: 
-014558.62+800455.3 01460+8005 GW Cep         .     .      .       11.13    .       13.5     y   5.          .     m   .       84.0       .        .         .          .           .       0.58     0.28        .        .               9 n Pbl2006                    
-19-mar-2015 10:47:31 (main) jparsec.io.ReadFile.parseDoubleStar
+014558.62+800455.3 01460+8005 GW Cep         .     .      .       11.13    .       13.5     y   5.          .     m   .       84.0       .        .         .          .           .       0.58     0.28        .        .               7 n Pbl2006                    
+21-jul-2015 16:55:17 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: "". Line to parse was: 
-020903.42+404739.1 02091+4048 BX And         .      13078  10027   8.98    .       62.      y   9.          .     m   .       74.5       .        .         .          .           .       0.3      0.3         .        .               9 n Pbl2006                    
-19-mar-2015 10:47:31 (main) jparsec.io.ReadFile.parseDoubleStar
+020903.42+404739.1 02091+4048 BX And         .      13078  10027   8.98    .       62.      y   9.          .     m   .       74.5       .        .         .          .           .       0.3      0.3         .        .               7 n Pbl2006                    
+21-jul-2015 16:55:17 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: "". Line to parse was: 
 021222.28+301811.0 02124+3018 TZ Tri          1697  13480  10280   4.95v   .         .           .         0.0021 a  0.0009   58.       4.        .         .          .           .        .        .          .        .               7 n Krs1998                    
-19-mar-2015 10:47:31 (main) jparsec.io.ReadFile.parseDoubleStar
+21-jul-2015 16:55:17 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: "". Line to parse was: 
 021542.83+250235.7 02157+2503 COU  79A       .      13872  10535   6.40    .      925.      d  90.          .         .       71.      45.     211.       55.     54092.      m  62.       0.        .         0.        .     2000 2008 9 n Mut2010e                   
-19-mar-2015 10:47:31 (main) jparsec.io.ReadFile.parseDoubleStar
+21-jul-2015 16:55:17 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: "". Line to parse was: 
-022903.99+672408.6 02291+6724 STF 262AB,C     1860  15089  11569   4.46   8.7        .           .          .         .       87.6       .     109.82       .      2250.      y    .      48.1       .         8.82      .     1900 1957 7 n Hop1960b                   
-19-mar-2015 10:47:31 (main) jparsec.io.ReadFile.parseDoubleStar
+022903.99+672408.6 02291+6724 STF 262AB,C     1860  15089  11569   4.46   9.05       .           .          .         .       87.6       .     109.82       .      2250.      y    .      48.1       .         8.82      .     1900 1957 7 n Hop1960b                   
+21-jul-2015 16:55:17 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: "". Line to parse was: 
 025538.89+265225.3 02556+2652 STF 326AB       2218  18143  13642   7.68  10.02       .           .          .         .       81.50      .      34.55       .      2248.0     y    .       1.0       .       308.20      .     1900 1955 7 n Hop1967                    
-19-mar-2015 10:47:31 (main) jparsec.io.ReadFile.parseDoubleStar
+21-jul-2015 16:55:17 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: "". Line to parse was: 
-030952.74-065333.5 03099-0654 UX Eri         .     .       14699  10.64    .       42.8     y  13.       110.     m   .       79.0       .        .         .          .           .       0.6       .          .        .               9 n Pbl2006                    
-19-mar-2015 10:47:31 (main) jparsec.io.ReadFile.parseDoubleStar
+030952.74-065333.5 03099-0654 UX Eri         .     .       14699  10.64    .       42.8     y  13.       110.     m   .       79.0       .        .         .          .           .       0.6       .          .        .               7 n Pbl2006                    
+21-jul-2015 16:55:17 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: "". Line to parse was: 
-031246.32-011145.4 03128-0112 HJ  663B        2406  19994B 14954B 11.0     .      740.      d    .         0.064  a   .       95.        .        .         .          .           .        .        .          .        .     2000 2008 9 n Sef2008b                   
-19-mar-2015 10:47:31 (main) jparsec.io.ReadFile.parseDoubleStar
+031246.32-011145.4 03128-0112 HJ  663B        2406  19994B 14954B 11.0     .      740.      d    .         0.064  a   .       95.        .        .         .          .           .        .        .          .        .     2000 2008 7 n Sef2008b                   
+21-jul-2015 16:55:17 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: "". Line to parse was: 
-034813.42+221850.9 03482+2219 EQ Tau         .     .      .       11.20    .       50.2     y  18.          .     m   .       86.6       .        .         .          .           .       0.37     0.12        .        .               9 n Pbl2006                    
-19-mar-2015 10:47:31 (main) jparsec.io.ReadFile.parseDoubleStar
+034813.42+221850.9 03482+2219 EQ Tau         .     .      .       11.20    .       50.2     y  18.          .     m   .       86.6       .        .         .          .           .       0.37     0.12        .        .               7 n Pbl2006                    
+21-jul-2015 16:55:17 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: "". Line to parse was: 
-051114.50-083324.4 05112-0833 RUC  18AB      .     .       24156   9.53    .       52.      y   3.          .     m   .       87.5       .        .         .          .           .       0.77     0.05        .        .               9 n Pbl2006                    
-19-mar-2015 10:47:31 (main) jparsec.io.ReadFile.parseDoubleStar
+051114.50-083324.4 05112-0833 RUC  18AB      .     .       24156   9.74  12.41     52.      y   3.          .     m   .       87.5       .        .         .          .           .       0.77     0.05        .        .               7 n Pbl2006                    
+21-jul-2015 16:55:17 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: "". Line to parse was: 
 053319.07+444902.2 05333+4449 GJ 1081        .     .      .       12.2     .       11.4     y    .         0.041  a   .       99.        .      45.         .      1979.4     y    .        .        .          .        .               9   USN1988a                   
-19-mar-2015 10:47:31 (main) jparsec.io.ReadFile.parseDoubleStar
+21-jul-2015 16:55:17 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: "". Line to parse was: 
-070350.23-433340.7 07040-4337 DUN  38C       .      53680  34052   8.64    .     1501.      d    .        30.6    m   .      180.        .        .         .          .           .        .        .          .        .               9   Mkr2008                    
-19-mar-2015 10:47:31 (main) jparsec.io.ReadFile.parseDoubleStar
+070350.23-433340.7 07040-4337 DUN  38C       .      53680  34052   8.64    .     1501.      d    .        30.6    m   .      180.        .        .         .          .           .        .        .          .        .               7   Mkr2008                    
+21-jul-2015 16:55:17 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: "". Line to parse was: 
 073437.45+315210.2 07346+3153 YY Gem          6175  60179C.        9.83    .       19.542763h   0.000007   0.00135a  0.00005  86.5      0.05      .         .     50556.5614  m   0.0004   0.        .          .        .               8 n Sgr2000                    
-19-mar-2015 10:47:31 (main) jparsec.io.ReadFile.parseDoubleStar
+21-jul-2015 16:55:17 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: "". Line to parse was: 
 083137.58+192339.5 08317+1924 BEU  12Aa,Ab   .     .       41824  11.89    .       66.515280h   0.000029   0.0028 a  0.0003   86.7      0.4       .         .     50579.1907  m   0.0002   0.        .          .        .               8 n Sgr2000                    
-19-mar-2015 10:47:31 (main) jparsec.io.ReadFile.parseDoubleStar
+21-jul-2015 16:55:17 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: "". Line to parse was: 
 094648.28+760246.9 09468+7603 Ross 434       .     .       47981  10.63    .        1.26    y    .         0.038  a   .       94.        .     135.         .          .           .        .        .          .        .               7 n Ald1951                    
-19-mar-2015 10:47:31 (main) jparsec.io.ReadFile.parseDoubleStar
+21-jul-2015 16:55:17 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: "". Line to parse was: 
-100140.39+172433.2 10017+1725 RUC   7        .     .       49136   9.45    .       19.59    y   5.       140.     m   .       65.8       .        .         .          .           .       0.09     0.03        .        .               9 n Pbl2006                    
-19-mar-2015 10:47:31 (main) jparsec.io.ReadFile.parseDoubleStar
+100140.39+172433.2 10017+1725 RUC   7        .     .       49136   9.45    .       19.59    y   5.       140.     m   .       65.8       .        .         .          .           .       0.09     0.03        .        .               7 n Pbl2006                    
+21-jul-2015 16:55:17 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: "". Line to parse was: 
 105505.83+471428.9 10551+4714 G 146-72       .     .      .       12.7     .        6.8     y    .         0.020  a   .       55.        .      76.         .      1979.8     y    .        .        .          .        .               9   USN1988a                   
-19-mar-2015 10:47:31 (main) jparsec.io.ReadFile.parseDoubleStar
+21-jul-2015 16:55:17 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: "". Line to parse was: 
-110533.99-110520.0 11056-1105 TOK 221        .      96220  54214   6.10    .       30.      y    .       200.     m   .         .        .        .         .          .           .        .        .          .        .               9   Gon2000                    
-19-mar-2015 10:47:31 (main) jparsec.io.ReadFile.parseDoubleStar
+110533.98-110519.4 11056-1105 TOK 221        .      96220  54214   6.10  11.       30.      y    .       200.     m   .         .        .        .         .          .           .        .        .          .        .               7   Gon2000                    
+21-jul-2015 16:55:17 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: "". Line to parse was: 
-111105.17+302645.6 11111+3027 STT 231AB       8083  97101  54646   8.51  10.93       .           .          .         .       91.50      .      83.10  *    .      2050.      y    .        .        .       190.4       .     1900 1960 7 n Hop1960b                   
-19-mar-2015 10:47:31 (main) jparsec.io.ReadFile.parseDoubleStar
+111105.23+302645.4 11111+3027 STT 231AB       8083  97101  54646   8.86   9.98       .           .          .         .       91.50      .      83.10  *    .      2050.      y    .        .        .       190.4       .     1900 1960 7 n Hop1960b                   
+21-jul-2015 16:55:17 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: "". Line to parse was: 
-113004.31+295752.5 11301+2958 AW UMa         .      99946  56109   6.92    .       16.8     y   5.       120.     m   .       78.3       .        .         .          .           .       0.46     0.22        .        .               9 n Pbl2006                    
-19-mar-2015 10:47:31 (main) jparsec.io.ReadFile.parseDoubleStar
+113004.31+295752.5 11301+2958 AW UMa         .      99946  56109   6.92    .       16.8     y   5.       120.     m   .       78.3       .        .         .          .           .       0.46     0.22        .        .               7 n Pbl2006                    
+21-jul-2015 16:55:17 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: "". Line to parse was: 
-121420.99+114909.3 12143+1149 AH Vir         .     106400  59683   9.33    .       41.1     y  15.       180.     m   .       86.5       .        .         .          .           .       0.89     0.05        .        .               9 n Pbl2006                    
-19-mar-2015 10:47:31 (main) jparsec.io.ReadFile.parseDoubleStar
+121420.99+114909.3 12143+1149 AH Vir         .     106400  59683   9.33    .       41.1     y  15.       180.     m   .       86.5       .        .         .          .           .       0.89     0.05        .        .               7 n Pbl2006                    
+21-jul-2015 16:55:17 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: "". Line to parse was: 
 122635.94-630556.6 12266-6306 DUN 252AB      .     108248  60718   1.25   1.55       .           .          .         .      100.51      .     102.70       .      2106.      y    .       1.215     .       358.79      .          1955 7 n Hop1960b                   
-19-mar-2015 10:47:31 (main) jparsec.io.ReadFile.parseDoubleStar
+21-jul-2015 16:55:17 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: "". Line to parse was: 
-143503.75+090649.3 14350+0907 RUC   8        .     128141  71319   8.99    .       21.3     y    .       300.     m   .       56.6       .        .         .          .           .       0.96     0.07        .        .               9 n Pbl2006                    
-19-mar-2015 10:47:31 (main) jparsec.io.ReadFile.parseDoubleStar
+143503.75+090649.3 14350+0907 RUC   8        .     128141  71319   8.99    .       21.3     y    .       300.     m   .       56.6       .        .         .          .           .       0.96     0.07        .        .               7 n Pbl2006                    
+21-jul-2015 16:55:17 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: "". Line to parse was: 
 145821.57+440235.9 14584-4443 STF1896B       .     132563B 73261B  9.68    .     1544.      d  34.        27.3    m  2.8        .        .        .         .      2593.      m 148.       0.22     0.09     158.      35.          2010 9 n Des2011                    
-19-mar-2015 10:47:31 (main) jparsec.io.ReadFile.parseDoubleStar
+21-jul-2015 16:55:17 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: "". Line to parse was: 
-150046.94+350754.7 15008+3508 TY Boo         .     .      .       11.40    .       55.8     y  27.          .     m   .       77.5       .        .         .          .           .       0.26     0.07        .        .               9 n Pbl2006                    
-19-mar-2015 10:47:31 (main) jparsec.io.ReadFile.parseDoubleStar
+150046.94+350754.7 15008+3508 TY Boo         .     .      .       11.40    .       55.8     y  27.          .     m   .       77.5       .        .         .          .           .       0.26     0.07        .        .               7 n Pbl2006                    
+21-jul-2015 16:55:17 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: "". Line to parse was: 
-150747.23+395558.3 15078+3956 COU1271        .     134303 .        9.0   10.0     137.83    y    .         0.380  a   .        0.        .        .         .          .           .       0.        .          .        .               5   Cou1999b wds15078+3956a.png
-19-mar-2015 10:47:31 (main) jparsec.io.ReadFile.parseDoubleStar
-ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: "". Line to parse was: 
-150809.13+395812.8 15082+3958 RUC  23        .     .       74061  10.41    .       34.0     y   5.          .     m   .         .        .        .         .          .           .       0.58     0.04        .        .               9 n Pbl2006                    
-19-mar-2015 10:47:31 (main) jparsec.io.ReadFile.parseDoubleStar
+150809.13+395812.8 15082+3958 RUC  23        .     .       74061   9.01k 14.98k    34.0     y   5.          .     m   .         .        .        .         .          .           .       0.58     0.04        .        .               7 n Pbl2006                    
+21-jul-2015 16:55:17 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: "0567 7". Line to parse was: 
 153117.22-334911.2 15313-3349 B  2036AB      .     138138  76001   7.7    7.9     227.78    y    .         0.444  a   .       90.9       .     181.2        .      1985.94    y    .       0.567 7   .        67.0       .     2000 2011 4   Hrt2011d wds15313-3349k.png
-19-mar-2015 10:47:31 (main) jparsec.io.ReadFile.parseDoubleStar
+21-jul-2015 16:55:17 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: "". Line to parse was: 
 165529.24-082003.1 16555-0820 Gl 644Ba,Bb    .     152751B 82817B  9.81    .        2.965509d   0.000006    .     a   .      164.18     0.08      .         .     50919.48    m   0.03     0.0209   0.0008   150.       3.               8 n Sgr2000                    
-19-mar-2015 10:47:31 (main) jparsec.io.ReadFile.parseDoubleStar
+21-jul-2015 16:55:17 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: "". Line to parse was: 
-165547.87+351057.5 16557+3511 RUC   9        .     .      .       10.10    .       10.9     y   6.          .     m   .       57.0       .        .         .          .           .       0.26     0.32        .        .               9 n Pbl2006                    
-19-mar-2015 10:47:31 (main) jparsec.io.ReadFile.parseDoubleStar
+165547.87+351057.5 16557+3511 RUC   9        .     .      .       10.10    .       10.9     y   6.          .     m   .       57.0       .        .         .          .           .       0.26     0.32        .        .               7 n Pbl2006                    
+21-jul-2015 16:55:17 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: "". Line to parse was: 
 170721.73-340514.5 17074-3405 V455 Sco       .     .      .       13.73    .     1397.8     d   5.9        0.24   m  0.01     94.3      1.4    169.49      0.75   52991.0     d   9.4      0.0       .          .        .          2007 7 n Fek2008                    
-19-mar-2015 10:47:31 (main) jparsec.io.ReadFile.parseDoubleStar
+21-jul-2015 16:55:17 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: "". Line to parse was: 
-171357.81+162101.0 17140+1621 HO  557A       .     155937  84293   8.0   12.0      57.8     y   8.          .     m   .       80.8       .        .         .          .           .       0.16     0.06        .        .               9 n Pbl2006                    
-19-mar-2015 10:47:31 (main) jparsec.io.ReadFile.parseDoubleStar
+171357.81+162101.0 17140+1621 HO  557A       .     155937  84293   8.0   12.0      57.8     y   8.          .     m   .       80.8       .        .         .          .           .       0.16     0.06        .        .               7 n Pbl2006                    
+21-jul-2015 16:55:17 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: "". Line to parse was: 
 171744.18+114010.8 17177+1140 G 139-29       .     .      .       15.1     .        9.5     y    .         0.056  a   .      115.        .     178.         .      1970.6     y    .        .        .          .        .               9   USN1988a                   
-19-mar-2015 10:47:31 (main) jparsec.io.ReadFile.parseDoubleStar
+21-jul-2015 16:55:17 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: "". Line to parse was: 
 173752.78+183521.5 17379+1836 Ci 18,2347     .     .       86287   9.62    .       24.      y    .         0.04   a   .         .        .        .         .      1956.0     y    .       0.20      .          .        .          1963 7 n Bie1964                    
-19-mar-2015 10:47:31 (main) jparsec.io.ReadFile.parseDoubleStar
+21-jul-2015 16:55:17 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: "". Line to parse was: 
-175652.38+045914.7 17568+0459 V566 Oph       .     163611  87860   7.60    .       23.1     y   5.       140.     m   .       79.8       .        .         .          .           .       0.6      0.2         .        .               9 n Pbl2006                    
-19-mar-2015 10:47:31 (main) jparsec.io.ReadFile.parseDoubleStar
+175652.38+045914.7 17568+0459 V566 Oph       .     163611  87860   7.60    .       23.1     y   5.       140.     m   .       79.8       .        .         .          .           .       0.6      0.2         .        .               7 n Pbl2006                    
+21-jul-2015 16:55:17 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: "". Line to parse was: 
 180009.07+800013.7 18002+8000 STF2308AB      11061 166866  88136   5.70   6.00  25097.69    c    .          .         .      117.        .     209.         .      4058.      y    .       0.98      .       142.        .               7 n PkO2012                    
-19-mar-2015 10:47:31 (main) jparsec.io.ReadFile.parseDoubleStar
+21-jul-2015 16:55:17 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: "". Line to parse was: 
 180009.07+800013.7 18002+8000 STF2308AB      11061 166866  88136   5.70   6.00   1845.44    c    .          .         .      125.        .     209.         .      3802.      y    .       0.94      .       152.        .               7 n PkO2012                    
-19-mar-2015 10:47:31 (main) jparsec.io.ReadFile.parseDoubleStar
+21-jul-2015 16:55:17 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: "". Line to parse was: 
 180009.07+800013.7 18002+8000 STF2308AB      11061 166866  88136   5.70   6.00    514.60    c    .          .         .      179.        .     115.         .      3299.      y    .       0.95      .       262.        .               7 n PkO2012                    
-19-mar-2015 10:47:31 (main) jparsec.io.ReadFile.parseDoubleStar
+21-jul-2015 16:55:17 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: "". Line to parse was: 
 180009.07+800013.7 18002+8000 STF2308AB      11061 166866  88136   5.70   6.00   1845.44    c    .          .         .      123.        .      31.         .      3772.      y    .       0.94      .       328.        .               7 n PkO2012                    
-19-mar-2015 10:47:31 (main) jparsec.io.ReadFile.parseDoubleStar
+21-jul-2015 16:55:17 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: "". Line to parse was: 
 180009.07+800013.7 18002+8000 STF2308AB      11061 166866  88136   5.70   6.00  25097.69    c    .          .         .      116.        .      31.         .      4045.      y    .       0.98      .       318.        .               7 n PkO2012                    
-19-mar-2015 10:47:31 (main) jparsec.io.ReadFile.parseDoubleStar
+21-jul-2015 16:55:17 (main) jparsec.io.ReadFile.parseDoubleStar
+ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: "". Line to parse was: 
+203951.88+111458.8 20399+1115 CVN  17Aa1,2   .     196885 101966   5.5     .        3.63    y   0.01       0.065  a  0.003      .        .        .         .      2002.85    y   0.02     0.48     0.02      93.2      3.0    2000 2009 7 n Cvn2011                    
+21-jul-2015 16:55:17 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: "". Line to parse was: 
 205904.54+041737.8 20591+0418 STF2737AB,C    14499 199766 103569   5.30   7.05       .           .          .         .      110.9       .     253.9        .      1900.      y    .       6.80      .       180.0       .     1950 1960 7 n Zel1965                    
-19-mar-2015 10:47:31 (main) jparsec.io.ReadFile.parseDoubleStar
+21-jul-2015 16:55:17 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: "". Line to parse was: 
-222256.88+161927.8 22229+1619 BB Peg         .     .      110493  10.97    .       20.4     y   4.        30.     m   .       79.9       .        .         .          .           .       0.32     0.21        .        .               9 n Pbl2006                    
-19-mar-2015 10:47:31 (main) jparsec.io.ReadFile.parseDoubleStar
+220410.52-564657.8 22034-5647 VLK   1Ba,Bb   .     .      .       12.29k 13.23k    11.2     y   0.5        0.67   a  0.03    282.8      0.7       .         .      2010.1     y   0.6      0.53     0.03        .        .          2008 7 n Mcg2009                    
+21-jul-2015 16:55:17 (main) jparsec.io.ReadFile.parseDoubleStar
+ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: "". Line to parse was: 
+222256.88+161927.8 22229+1619 BB Peg         .     .      110493  10.97    .       20.4     y   4.        30.     m   .       79.9       .        .         .          .           .       0.32     0.21        .        .               7 n Pbl2006                    
+21-jul-2015 16:55:17 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: "". Line to parse was: 
 223832.26-151818.8 22385-1519 Gl 866Aa,Ab    .     .      .       12.2     .        3.786516d   0.000005    .     a   .      116.5      0.5       .         .     50799.8080  m   0.       0.        .          .        .               8 n Sgr2000                    
-19-mar-2015 10:47:31 (main) jparsec.io.ReadFile.parseDoubleStar
+21-jul-2015 16:55:17 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: "". Line to parse was: 
-225341.59+375618.5 22536+3756 RUC  15        .     216598 113052   8.51    .       28.2     y   1.       160.     m   .       80.2       .        .         .          .           .       0.51     0.05        .        .               9 n Pbl2006                    
-19-mar-2015 10:47:31 (main) jparsec.io.ReadFile.parseDoubleStar
+225341.59+375618.5 22536+3756 RUC  15        .     216598 113052   6.81k  9.4 k    93.1     y    .       400.     m   .       80.2       .        .         .          .           .       0.71     0.01        .        .               7 n Pbl2006                    
+21-jul-2015 16:55:17 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: "". Line to parse was: 
-231132.01+365335.6 23116+3654 RUC  26        .     .      114508   9.77    .       59.1     y  10.       160.     m   .       86.8       .        .         .          .           .       0.12     0.03        .        .               9 n Pbl2006                    
+225341.59+375618.5 22536+3756 RUC  15        .     216598 113052   6.81k  9.4 k    28.2     y   1.       160.     m   .       80.2       .        .         .          .           .       0.51     0.05        .        .               7 n Pbl2006                    
+21-jul-2015 16:55:17 (main) jparsec.io.ReadFile.parseDoubleStar
+ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: "". Line to parse was: 
+231132.01+365335.6 23116+3654 RUC  26        .     .      114508   7.67l 14.26k    59.1     y  10.       160.     m   .       86.8       .        .         .          .           .       0.12     0.03        .        .               7 n Pbl2006                    
+21-jul-2015 16:55:17 (main) jparsec.io.ReadFile.parseDoubleStar
+ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: "". Line to parse was: 
+233920.98+773755.1 23393+7738 gam CepAa,Ab   .     222404 116727   1.04    .  k   902.9     d   3.5      332.4    m  7.7        .        .        .         .     53147.      d  71.       0.115    0.058     63.      27.          2006 7   Nhr2007                    
    Test case #227: 15; 2011, 7, 14, 14, 0, 0, double, STF  60AB; 13.2, -36.3
 Testing ... eclipses
    Test case #228: 16; 2005, 10, 1, solar, UT1; 03-oct-2005 07:40:13 (partial), 03-oct-2005 08:55:55 (annular), 03-oct-2005 08:58:00 (Eclipse maximum), within 1s with Spenak's results
    Test case #229: 16; -1000, 3, 10, lunar, TDB; 14-mar-1000 02:55:24 B.C. (penumbral), 14-mar-1000 03:55:28 B.C. (full penumbral), 14-mar-1000 03:54:53 B.C. (partial), 14-mar-1000 04:58:40 B.C. (total), 14-mar-1000 05:40:16 B.C. (Eclipse maximum)
 Testing ... accurate ephemerides from IMCCE, Horizons, and Astronomical Almanac
-   Test case #230: 17; 1600, 1, 1, 8, IMCCE, 1, 2E-9; 10h 00m 31.59378s, 12ยบ 51' 13.3640", 29.466102577
-   Test case #231: 17; 1900, 1, 1, 8, IMCCE, 1, 2E-9; 05h 39m 21.87494s, 22ยบ 03' 58.9701", 28.920271361
-   Test case #232: 17; 2200, 1, 1, 8, IMCCE, 1, 2E-9; 01h 24m 58.76536s, 07ยบ 07' 44.9398", 29.615237432
-   Test case #233: 17; 1600, 1, 1, 8, HORIZONS, 70, 2E-12; 10h 00m 31.5983s, 12ยบ 51' 13.356", 29.4661025774498
-   Test case #234: 17; 1900, 1, 1, 8, HORIZONS, 70, 2E-12; 05h 39m 21.8796s, 22ยบ 03' 58.978", 28.9202713607579
-   Test case #235: 17; 2200, 1, 1, 8, HORIZONS, 80, 6E-12; 01h 24m 58.7607s, 07ยบ 07' 44.908", 29.6152374317953
-   Test case #236: 17; 2000, 1, 1, 8, IMCCE, 1, 2E-9;    20h 21m 39.47908s, -19ยบ 13' 01.9774", 31.021117421
-   Test case #237: 17; 2000, 1, 1, 8, HORIZONS, 50, 3E-12; 20h 21m 39.4756s,  -19ยบ 13' 01.987", 31.0211174206981
-   Test case #238: 17; 1600, 1, 1, 4, IMCCE, 1, 2E-9; 09h 24m 41.58178s,  19ยบ 15' 18.9756", 0.746598316
-   Test case #239: 17; 1900, 1, 1, 4, IMCCE, 8, 2E-9; 19h 00m 39.90359s, -23ยบ 38' 58.3076", 2.400963430
-   Test case #240: 17; 2200, 1, 1, 4, IMCCE, 1, 4E-9; 10h 25m 57.25433s,  13ยบ 29' 37.0809", 0.842946359
-   Test case #241: 17; 1600, 1, 1, 4, HORIZONS, 70, 1E-12; 09h 24m 41.5865s,  19ยบ 15' 18.970", 0.74659831738180
-   Test case #242: 17; 1900, 1, 1, 4, HORIZONS, 70, 1E-13; 19h 00m 39.9087s, -23ยบ 38' 58.308", 2.40096343001482
-   Test case #243: 17; 2200, 1, 1, 4, HORIZONS, 80, 4E-12; 10h 25m 57.2494s,  13ยบ 29' 37.104", 0.84294636203948
-   Test case #244: 17; 2011, 7, 18, 8, AA, 0, 0; 22h 10m 46.150s, -11ยบ 49' 46.06", -
-   Test case #245: 17; 2011, 7, 18, 4, AA, 0, 0; 05h 11m 32.063s, 23ยบ 05' 16.56", -
-   Test case #246: 17; 2011, 7, 18, 5, AA, 0, 0; 02h 21m 54.955s, 12ยบ 49' 28.91", -
-   Test case #247: 17; 1600, 1, 1, Deimos, IMCCE, 2000, 2E-5;   09h 24m 44.52675s,  19ยบ 15' 19.6628",  0.746640479, ???
-   Test case #248: 17; 1900, 1, 1, Deimos, IMCCE, 20, 5E-8;   19h 00m 40.56578s, -23ยบ 38' 59.5043",  2.400848638
-   Test case #249: 17; 2200, 1, 1, Deimos, IMCCE, 1200, 1E-5;   10h 25m 59.52983s,  13ยบ 29' 25.4275",  0.842883773
-   Test case #250: 17; 1600, 1, 1, Titan, IMCCE, 0.5, 5E-10;    13h 45m 15.35365s, -08ยบ 17' 57.0768",  9.998734380, USING ECLIPTIC OF DATE, NOT J2000
-   Test case #251: 17; 1900, 1, 1, Titan, IMCCE, 0.5, 2E-10;    17h 50m 10.06797s, -22ยบ 24' 27.4608", 11.031604402
-   Test case #252: 17; 2200, 1, 1, Titan, IMCCE, 0.5, 2E-9;    22h 02m 43.88507s, -13ยบ 27' 15.7030", 10.450165195
-   Test case #253: 17; 1600, 1, 1, Callisto, IMCCE, 40, 2E-6; 09h 33m 53.33724s,  15ยบ 30' 35.5888",  4.558908178, ?
-   Test case #254: 17; 1900, 1, 1, Callisto, IMCCE, 20, 2E-6; 15h 56m 43.78523s, -19ยบ 36' 26.0122",  6.125545509
-   Test case #255: 17; 2200, 1, 1, Callisto, IMCCE, 4, 1E-6; 22h 26m 48.97572s, -10ยบ 48' 53.3763",  5.494266711
-   Test case #256: 17; 1600, 1, 1, Oberon, IMCCE, 0.5, 2E-9;   01h 41m 49.40287s,  10ยบ 01' 47.6674", 19.470081383, OK
-   Test case #257: 17; 1900, 1, 1, Oberon, IMCCE, 0.5, 2E-8;   16h 34m 01.71001s, -21ยบ 54' 48.8151", 19.838041698
-   Test case #258: 17; 2200, 1, 1, Oberon, IMCCE, 0.5, 1E-9;   05h 46m 52.47223s,  23ยบ 32' 39.3707", 18.121971509
+   Test case #230: 17; 1600, 1, 1, 8, IMCCE, 1, 2E-9; 10h 00m 31.59378s, 12บ 51' 13.3640", 29.466102577
+   Test case #231: 17; 1900, 1, 1, 8, IMCCE, 1, 2E-9; 05h 39m 21.87494s, 22บ 03' 58.9701", 28.920271361
+   Test case #232: 17; 2200, 1, 1, 8, IMCCE, 1, 2E-9; 01h 24m 58.76536s, 07บ 07' 44.9398", 29.615237432
+   Test case #233: 17; 1600, 1, 1, 8, HORIZONS, 70, 2E-12; 10h 00m 31.5983s, 12บ 51' 13.356", 29.4661025774498
+   Test case #234: 17; 1900, 1, 1, 8, HORIZONS, 70, 2E-12; 05h 39m 21.8796s, 22บ 03' 58.978", 28.9202713607579
+   Test case #235: 17; 2200, 1, 1, 8, HORIZONS, 80, 6E-12; 01h 24m 58.7607s, 07บ 07' 44.908", 29.6152374317953
+   Test case #236: 17; 2000, 1, 1, 8, IMCCE, 1, 2E-9;    20h 21m 39.47908s, -19บ 13' 01.9774", 31.021117421
+   Test case #237: 17; 2000, 1, 1, 8, HORIZONS, 50, 3E-12; 20h 21m 39.4756s,  -19บ 13' 01.987", 31.0211174206981
+   Test case #238: 17; 1600, 1, 1, 4, IMCCE, 1, 2E-9; 09h 24m 41.58178s,  19บ 15' 18.9756", 0.746598316
+   Test case #239: 17; 1900, 1, 1, 4, IMCCE, 8, 2E-9; 19h 00m 39.90359s, -23บ 38' 58.3076", 2.400963430
+   Test case #240: 17; 2200, 1, 1, 4, IMCCE, 1, 4E-9; 10h 25m 57.25433s,  13บ 29' 37.0809", 0.842946359
+   Test case #241: 17; 1600, 1, 1, 4, HORIZONS, 70, 1E-12; 09h 24m 41.5865s,  19บ 15' 18.970", 0.74659831738180
+   Test case #242: 17; 1900, 1, 1, 4, HORIZONS, 70, 1E-13; 19h 00m 39.9087s, -23บ 38' 58.308", 2.40096343001482
+   Test case #243: 17; 2200, 1, 1, 4, HORIZONS, 80, 4E-12; 10h 25m 57.2494s,  13บ 29' 37.104", 0.84294636203948
+   Test case #244: 17; 2011, 7, 18, 8, AA, 0, 0; 22h 10m 46.150s, -11บ 49' 46.06", -
+   Test case #245: 17; 2011, 7, 18, 4, AA, 0, 0; 05h 11m 32.063s, 23บ 05' 16.56", -
+   Test case #246: 17; 2011, 7, 18, 5, AA, 0, 0; 02h 21m 54.955s, 12บ 49' 28.91", -
+   Test case #247: 17; 1600, 1, 1, Deimos, IMCCE, 2000, 2E-5;   09h 24m 44.52675s,  19บ 15' 19.6628",  0.746640479, ???
+   Test case #248: 17; 1900, 1, 1, Deimos, IMCCE, 20, 5E-8;   19h 00m 40.56578s, -23บ 38' 59.5043",  2.400848638
+   Test case #249: 17; 2200, 1, 1, Deimos, IMCCE, 1200, 1E-5;   10h 25m 59.52983s,  13บ 29' 25.4275",  0.842883773
+   Test case #250: 17; 1600, 1, 1, Titan, IMCCE, 0.5, 5E-10;    13h 45m 15.35365s, -08บ 17' 57.0768",  9.998734380, USING ECLIPTIC OF DATE, NOT J2000
+   Test case #251: 17; 1900, 1, 1, Titan, IMCCE, 0.5, 2E-10;    17h 50m 10.06797s, -22บ 24' 27.4608", 11.031604402
+   Test case #252: 17; 2200, 1, 1, Titan, IMCCE, 0.5, 2E-9;    22h 02m 43.88507s, -13บ 27' 15.7030", 10.450165195
+   Test case #253: 17; 1600, 1, 1, Callisto, IMCCE, 40, 2E-6; 09h 33m 53.33724s,  15บ 30' 35.5888",  4.558908178, ?
+   Test case #254: 17; 1900, 1, 1, Callisto, IMCCE, 20, 2E-6; 15h 56m 43.78523s, -19บ 36' 26.0122",  6.125545509
+   Test case #255: 17; 2200, 1, 1, Callisto, IMCCE, 4, 1E-6; 22h 26m 48.97572s, -10บ 48' 53.3763",  5.494266711
+   Test case #256: 17; 1600, 1, 1, Oberon, IMCCE, 0.5, 2E-9;   01h 41m 49.40287s,  10บ 01' 47.6674", 19.470081383, OK
+   Test case #257: 17; 1900, 1, 1, Oberon, IMCCE, 0.5, 2E-8;   16h 34m 01.71001s, -21บ 54' 48.8151", 19.838041698
+   Test case #258: 17; 2200, 1, 1, Oberon, IMCCE, 0.5, 1E-9;   05h 46m 52.47223s,  23บ 32' 39.3707", 18.121971509
 Testing ... mutual events of natural satellites
    Test case #259: 18; 2009, 8, 16, 5, 1 ECL 3 A; 20 31  8, 20 45 57, 1662
 
@@ -766,10 +775,10 @@ Could not find the event!
 
 Testing ... ephemerides from other planets
 Mars (184.702 -14.64)
-   Test case #302: 19; 2010, 1, 6, 0, 0, 0, UTC, Sun, Mars (184.702 -14.64); 10h 58m 08.2425s, 13ยบ 43' 57.384", -75ยบ 28' 38.838", 1ยบ 10' 25.685"
+   Test case #302: 19; 2010, 1, 6, 0, 0, 0, UTC, Sun, Mars (184.702 -14.64); 10h 58m 08.2425s, 13บ 43' 57.384", -75บ 28' 38.838", 1บ 10' 25.685"
 
 SUMMARY
 
 Passed tests: 261
 Failures: 41
-Launch time: 1596.878s
+Launch time: 976.626s

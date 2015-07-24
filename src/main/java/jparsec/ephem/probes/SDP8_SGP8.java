@@ -22,10 +22,8 @@
 package jparsec.ephem.probes;
 
 import java.util.ArrayList;
-
 import jparsec.astronomy.CoordinateSystem;
 import jparsec.astronomy.Star;
-import jparsec.ephem.Ephem;
 import jparsec.ephem.EphemerisElement;
 import jparsec.ephem.Functions;
 import jparsec.ephem.Nutation;
@@ -45,9 +43,9 @@ import jparsec.observer.ReferenceEllipsoid.ELLIPSOID;
 import jparsec.time.AstroDate;
 import jparsec.time.SiderealTime;
 import jparsec.time.TimeElement;
+import jparsec.time.TimeElement.SCALE;
 import jparsec.time.TimeFormat;
 import jparsec.time.TimeScale;
-import jparsec.time.TimeElement.SCALE;
 import jparsec.util.DataBase;
 import jparsec.util.JPARSECException;
 
@@ -60,7 +58,7 @@ an artificial Earth satellite, using the SGP8 and SDP8 models.</p>
  */
 public class SDP8_SGP8
 {
-	private SatelliteOrbitalElement sat;
+  private SatelliteOrbitalElement sat;
   /** Position vector [Gm] */
   private double[] itsR;
   /** Velocity vector [km/s] */
@@ -393,18 +391,22 @@ public class SDP8_SGP8
 			/*
 			 Test data from http://www.chiandh.me.uk/ephem/iriday.shtml (2011, 10, 26)
 			  name			start	(hour, azimut 0=N, elevation)		peak			end
-			  IRIDIUM 31 [+]  14:51:18  258.5°  42.6°  14:51:21  257.0°  42.3°  1.7°  14:51:25  255.0°  41.9°
-			  IRIDIUM 5 [+]  16:47:33  212.1°  31.4°  16:47:42  210.5°  29.8°  0.2°  16:47:52  209.0°  28.1°
-			  IRIDIUM 4 [+]  04:49:01   7.8°  27.5°  04:49:12   7.6°  25.6°  1.5°  04:49:25   7.4°  23.5°
-			  IRIDIUM 56 [+]  06:59:41   2.6°  68.2°  06:59:45   2.7°  66.3°  0.9°  06:59:49   2.9°  64.5°
-			  IRIDIUM 17 [-]  09:02:33  187.2°  77.2°  09:02:35  187.5°  78.3°  1.7°  09:02:37  187.8°  79.3°
-			  IRIDIUM 62 [+] 09:24:33   92.4°  60.2°  09:24:38   97.0°  59.7°  0.4°  09:24:43  101.5°  59.0°
+			  IRIDIUM 31 [+]  14:51:18  258.5ï¿½  42.6ï¿½  14:51:21  257.0ï¿½  42.3ï¿½  1.7ï¿½  14:51:25  255.0ï¿½  41.9ï¿½
+			  IRIDIUM 5 [+]  16:47:33  212.1ï¿½  31.4ï¿½  16:47:42  210.5ï¿½  29.8ï¿½  0.2ï¿½  16:47:52  209.0ï¿½  28.1ï¿½
+			  IRIDIUM 4 [+]  04:49:01   7.8ï¿½  27.5ï¿½  04:49:12   7.6ï¿½  25.6ï¿½  1.5ï¿½  04:49:25   7.4ï¿½  23.5ï¿½
+			  IRIDIUM 56 [+]  06:59:41   2.6ï¿½  68.2ï¿½  06:59:45   2.7ï¿½  66.3ï¿½  0.9ï¿½  06:59:49   2.9ï¿½  64.5ï¿½
+			  IRIDIUM 17 [-]  09:02:33  187.2ï¿½  77.2ï¿½  09:02:35  187.5ï¿½  78.3ï¿½  1.7ï¿½  09:02:37  187.8ï¿½  79.3ï¿½
+			  IRIDIUM 62 [+] 09:24:33   92.4ï¿½  60.2ï¿½  09:24:38   97.0ï¿½  59.7ï¿½  0.4ï¿½  09:24:43  101.5ï¿½  59.0ï¿½
 			 */			  
 
 		} catch (Exception exc) {
 			exc.printStackTrace();
 		}
   }
+
+    public SatelliteOrbitalElement getSat() {
+        return sat;
+    }
 
   /**
    * The constructor to apply SDP8/SGP8 model.

@@ -21,7 +21,10 @@
  */					
 package jparsec.graph;
 
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -41,6 +44,7 @@ import jparsec.io.image.ImageSplineTransform;
 import jparsec.io.image.Picture;
 import jparsec.util.JPARSECException;
 
+import org.jzy3d.colors.Color;
 import org.math.plot.*;
 import org.math.plot.canvas.Plot3DCanvas;
 import org.math.plot.canvas.PlotCanvas;
@@ -75,7 +79,16 @@ public class CreateChart3D implements Serializable, MouseWheelListener, MouseLis
 	throws JPARSECException {
 		init(chart);
 	}
-	
+
+    /**
+     * Convert a Color instance to a java.awt.Color equivalent.
+     * @return the converted Color.
+     */
+    private java.awt.Color convert(Color color) {
+        float rgb[] = color.toArray();
+        return new java.awt.Color((int) (rgb[0] * 255), (int) (rgb[0] * 255), (int) (rgb[0] * 255));
+    }
+
 	/**
 	 * Returns the component of this chart.
 	 * @return The JPanel.
@@ -94,21 +107,23 @@ public class CreateChart3D implements Serializable, MouseWheelListener, MouseLis
 	
 			for (int i=0; i<chart_elem.series.length; i++)
 			{
+                java.awt.Color convertedColor = convert(chart_elem.series[i].color);
+
 				if (chart_elem.series[i].isSurface) {
-					plot.addGridPlot(chart_elem.series[i].legend, chart_elem.series[i].color, 
+					plot.addGridPlot(chart_elem.series[i].legend, convertedColor,
 							DataSet.toDoubleValues(chart_elem.series[i].xValues), 
 							DataSet.toDoubleValues(chart_elem.series[i].yValues), 
 							(double[][]) chart_elem.series[i].zValues);				
 				} else {
 					if (chart_elem.series[i].drawLines) {
 						try {
-							plot.addLinePlot(chart_elem.series[i].legend, chart_elem.series[i].color, 
+							plot.addLinePlot(chart_elem.series[i].legend, convertedColor,
 								DataSet.toDoubleValues(chart_elem.series[i].xValues), 
 								DataSet.toDoubleValues(chart_elem.series[i].yValues), 
 								(double[]) chart_elem.series[i].zValues);
 						} catch (Exception exc)
 						{
-							plot.addLinePlot(chart_elem.series[i].legend, chart_elem.series[i].color, 
+							plot.addLinePlot(chart_elem.series[i].legend, convertedColor,
 									DataSet.toDoubleValues(chart_elem.series[i].xValues), 
 									DataSet.toDoubleValues(chart_elem.series[i].yValues), 
 									DataSet.toDoubleValues((String[]) chart_elem.series[i].zValues));							
@@ -116,26 +131,26 @@ public class CreateChart3D implements Serializable, MouseWheelListener, MouseLis
 					} else {
 						if (chart_elem.series[i].isBarPlot) {
 							try {
-								plot.addBarPlot(chart_elem.series[i].legend, chart_elem.series[i].color, 
+								plot.addBarPlot(chart_elem.series[i].legend, convertedColor,
 									DataSet.toDoubleValues(chart_elem.series[i].xValues), 
 									DataSet.toDoubleValues(chart_elem.series[i].yValues), 
 									(double[]) chart_elem.series[i].zValues);
 							} catch (Exception exc)
 							{
-								plot.addBarPlot(chart_elem.series[i].legend, chart_elem.series[i].color, 
+								plot.addBarPlot(chart_elem.series[i].legend, convertedColor,
 										DataSet.toDoubleValues(chart_elem.series[i].xValues), 
 										DataSet.toDoubleValues(chart_elem.series[i].yValues), 
 										DataSet.toDoubleValues((String[]) chart_elem.series[i].zValues));							
 							}
 						} else {
 							try {
-								plot.addScatterPlot(chart_elem.series[i].legend, chart_elem.series[i].color, 
+								plot.addScatterPlot(chart_elem.series[i].legend, convertedColor,
 									DataSet.toDoubleValues(chart_elem.series[i].xValues), 
 									DataSet.toDoubleValues(chart_elem.series[i].yValues), 
 									(double[]) chart_elem.series[i].zValues);				
 							} catch (Exception exc)
 							{
-								plot.addScatterPlot(chart_elem.series[i].legend, chart_elem.series[i].color, 
+								plot.addScatterPlot(chart_elem.series[i].legend, convertedColor,
 										DataSet.toDoubleValues(chart_elem.series[i].xValues), 
 										DataSet.toDoubleValues(chart_elem.series[i].yValues), 
 										DataSet.toDoubleValues((String[]) chart_elem.series[i].zValues));							
@@ -147,7 +162,7 @@ public class CreateChart3D implements Serializable, MouseWheelListener, MouseLis
 						{
 							int p = Integer.parseInt(FileIO.getField(1, chart_elem.series[i].pointers[ix], " ", true))-1;
 							plot.addLabel(FileIO.getRestAfterField(1, chart_elem.series[i].pointers[ix], " ", true), 
-									chart_elem.series[i].color, 
+									convertedColor,
 									new double[] {DataSet.getDoubleValueWithoutLimit(chart_elem.series[i].xValues[p]), 
 								DataSet.getDoubleValueWithoutLimit(chart_elem.series[i].yValues[p]), ((double[]) chart_elem.series[i].zValues)[p]});					
 						}
@@ -221,7 +236,7 @@ public class CreateChart3D implements Serializable, MouseWheelListener, MouseLis
 						if (chart_elem.series[i].dyValues != null) box[j][4] = 2.0 * chart_elem.series[i].dyValues[j];
 						if (chart_elem.series[i].dzValues != null) box[j][5] = 2.0 * chart_elem.series[i].dzValues[j];
 					}
-					if (ok) plot.addBoxPlot("", chart_elem.series[i].color, box);							
+					if (ok) plot.addBoxPlot("", convertedColor, box);
 				}
 			}
 	
@@ -244,7 +259,7 @@ public class CreateChart3D implements Serializable, MouseWheelListener, MouseLis
 						double m = DataSet.getMaximumValue(data[i]);
 						if (m > max || max == -1E99) max = m;
 					}
-		            BaseLabel title = new BaseLabel(chart.title, Color.BLACK, new double[] {0, 0, max * 1.3});
+		            BaseLabel title = new BaseLabel(chart.title, convert(Color.BLACK), new double[] {0, 0, max * 1.3});
 		            title.setFont(new Font("Courier", Font.BOLD, 20));
 		            plot.addPlotable(title);
 				} catch (Exception exc) {}

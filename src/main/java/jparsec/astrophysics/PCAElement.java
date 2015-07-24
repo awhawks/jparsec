@@ -21,7 +21,6 @@
  */	
 package jparsec.astrophysics;
 
-import java.awt.Color;
 import java.util.ArrayList;
 
 import jparsec.ephem.Functions;
@@ -32,6 +31,7 @@ import jparsec.graph.DataSet;
 import jparsec.math.matrix.Matrix;
 import jparsec.math.matrix.SingularValueDecomposition;
 import jparsec.util.JPARSECException;
+import org.jzy3d.colors.Color;
 
 /**
  * A class to hold the results of a PCA (Principal Component Analysis) calculation.
@@ -293,8 +293,7 @@ public class PCAElement {
 			series[index].drawLines = true;
 			series[index].color = Color.RED;
 		}
-		
-		
+
 		ChartElement3D chart = new ChartElement3D(series, title, xLabel, yLabel, zLabel);
 		chart.showToolbar = true;
 		chart.showLegend = false;

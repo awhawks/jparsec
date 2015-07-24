@@ -1062,7 +1062,7 @@ public class ChartSeriesElement implements Serializable
 		return this.legend;
 	}
 	
-	private static Polygon shapeFor(int shape, int boxX, int boxY) {
+	protected static Polygon shapeFor(int shape, int boxX, int boxY) {
         if (shape==0) {
             Polygon p = new Polygon();
             int unit = 7*boxX/54;

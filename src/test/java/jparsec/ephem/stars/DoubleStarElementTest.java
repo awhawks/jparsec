@@ -43,7 +43,7 @@ public class DoubleStarElementTest {
         }
 
         // Orbit sketch from JPARSEC, note image is inverted respect to previous one
-        Picture pp = new Picture(dstar.orbit.getOrbitImage(600, 600, 1.0, astro.jd()));
+        Picture pp = new Picture(dstar.orbit.getOrbitImage("title", 600, 600, 1.0, astro.jd(), false, false));
         pp.show("");
     }
 }

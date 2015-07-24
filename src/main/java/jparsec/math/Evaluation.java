@@ -36,7 +36,7 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
-import sun.org.mozilla.javascript.internal.NativeArray;
+import jdk.nashorn.internal.objects.NativeArray;
 
 import jparsec.graph.ChartElement;
 import jparsec.graph.ChartSeriesElement;
@@ -687,11 +687,11 @@ public class Evaluation implements Serializable
 	 */
 	public static String[] nativeArrayToStringArray(NativeArray n)
 	{
-		String arr[] = new String[(int) n.getLength()];
+		String arr[] = new String[n.size()];
 	
 		for (int i = 0; i < arr.length; i++)
 		{
-			arr[i] = n.get(i, null).toString();
+			arr[i] = n.get(i).toString();
 		}
 	
 		return arr;
@@ -705,11 +705,11 @@ public class Evaluation implements Serializable
 	 */
 	public static double[] nativeArrayToDoubleArray(NativeArray n)
 	{
-		double arr[] = new double[(int) n.getLength()];
+		double arr[] = new double[n.size()];
 	
 		for (int i = 0; i < arr.length; i++)
 		{
-			arr[i] = ((Double) n.get(i, null)).doubleValue();
+			arr[i] = ((Double) n.get(i)).doubleValue();
 		}
 	
 		return arr;

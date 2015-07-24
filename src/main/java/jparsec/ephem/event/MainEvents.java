@@ -395,14 +395,13 @@ public class MainEvents
 	 * @return The event.
 	 * @throws JPARSECException If an error occurs.
 	 */
-	public static SimpleEventElement EquinoxesAndSolstices(int year, SimpleEventElement.EVENT event) throws JPARSECException {
+	public static SimpleEventElement EquinoxesAndSolstices(int year, SimpleEventElement.EVENT event, CityElement city) throws JPARSECException {
 		int m = 3;
 		if (event == SimpleEventElement.EVENT.SUN_SUMMER_SOLSTICE) m = 6;
 		if (event == SimpleEventElement.EVENT.SUN_AUTUMN_EQUINOX) m = 9;
 		if (event == SimpleEventElement.EVENT.SUN_WINTER_SOLSTICE) m = 12;
 		AstroDate astro = new AstroDate(year, m, 1);
 		double jd = astro.jd();
-		CityElement city = City.findCity("Madrid");
 		ObserverElement observer = ObserverElement.parseCity(city);
 		EphemerisElement eph = new EphemerisElement(TARGET.SUN, EphemerisElement.COORDINATES_TYPE.APPARENT,
 				EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.GEOCENTRIC, EphemerisElement.REDUCTION_METHOD.IAU_2006,

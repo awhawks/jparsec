@@ -151,8 +151,8 @@ public class MoonEphem
 			TimeElement time = new TimeElement(new AstroDate(1600, 1, 1), TimeElement.SCALE.TERRESTRIAL_TIME);
 			MoonEphemElement ephem[] = MoonEphem.saturnianSatellitesEphemerides_TASS17(time, observer, eph, false);
 			System.out.println(ephem[5].name+": "+Functions.formatRA(ephem[5].rightAscension, 6)+", "+Functions.formatDEC(ephem[5].declination, 5)+", "+ephem[5].distance);
-			//IMCCE     	 13h 45m 15.35365s,   -08º 17' 57.0768",  9.99873438	
-			//JPARSEC		 13h 45m 15.3536950s, -08º 17' 57.07677", 9.99873438032
+			//IMCCE     	 13h 45m 15.35365s,   -08ï¿½ 17' 57.0768",  9.99873438	
+			//JPARSEC		 13h 45m 15.3536950s, -08ï¿½ 17' 57.07677", 9.99873438032
 			*/
 			
 			double jd = 2451545.0 + 15 * 365.25;
@@ -275,7 +275,7 @@ public class MoonEphem
 		DataBase.addData("offsetPosition", eq, true);
 	}
 	
-	private static MoonOrbitalElement[] getMoonElements(String target, double jd) throws JPARSECException {
+	protected static MoonOrbitalElement[] getMoonElements(String target, double jd) throws JPARSECException {
 		double limit0 = new AstroDate(OLD_YEAR, 1, 1).jd();
 		//double limitf = new AstroDate(YEAR, 1, 1).jd();
 		
@@ -1689,7 +1689,7 @@ public class MoonEphem
 					if (occultedArea > 99.999) occultedArea = 100.0;
 
 						if (!moons[body_behind].mutualPhenomena.equals("")) moons[body_behind].mutualPhenomena += ", ";
-						moons[body_behind].mutualPhenomena += Translate.translate(Translate.JPARSEC_OCCULTED)+" "+Translate.translate(Translate.JPARSEC_BY) + " " + moons[body_infront].name + " ("+Functions.formatValue(occultedArea, 1)+"%) (d="+Functions.formatAngleAsDegrees(r * planet_angular_radius, 8)+"º)";
+						moons[body_behind].mutualPhenomena += Translate.translate(Translate.JPARSEC_OCCULTED)+" "+Translate.translate(Translate.JPARSEC_BY) + " " + moons[body_infront].name + " ("+Functions.formatValue(occultedArea, 1)+"%) (d="+Functions.formatAngleAsDegrees(r * planet_angular_radius, 8)+"ï¿½)";
 						double fractionVisible = 1.0 - occultedArea / 100.0;
 						if (fractionVisible == 0.0)
 						{
@@ -1726,7 +1726,7 @@ public class MoonEphem
 					if (occultedArea > 99.999) occultedArea = 100.0;
 
 					if (!moons[body_behind].mutualPhenomena.equals("")) moons[body_behind].mutualPhenomena += ", ";
-						moons[body_behind].mutualPhenomena += Translate.translate(Translate.JPARSEC_ECLIPSED)+" "+Translate.translate(Translate.JPARSEC_BY) + " " + moons[body_infront].name + " ("+Functions.formatValue(occultedArea, 1)+"%) (d="+Functions.formatAngleAsDegrees(r * planet_angular_radius, 8)+"º)";
+						moons[body_behind].mutualPhenomena += Translate.translate(Translate.JPARSEC_ECLIPSED)+" "+Translate.translate(Translate.JPARSEC_BY) + " " + moons[body_infront].name + " ("+Functions.formatValue(occultedArea, 1)+"%) (d="+Functions.formatAngleAsDegrees(r * planet_angular_radius, 8)+"ï¿½)";
 						
 						double fractionVisible = 1.0 - occultedArea / 100.0;
 						if (fractionVisible == 0.0)
@@ -1880,7 +1880,7 @@ public class MoonEphem
 	 *         equator J2000, in AU.
 	 * @throws JPARSECException If an error occurs.
 	 */
-	private static double[] rocks(double jd, MoonOrbitalElement orbit, EphemerisElement.REDUCTION_METHOD ephem_method)
+	protected static double[] rocks(double jd, MoonOrbitalElement orbit, EphemerisElement.REDUCTION_METHOD ephem_method)
 	throws JPARSECException {
 		double output_vect[] = new double[] { 0.0, 0.0, 0.0 };
 

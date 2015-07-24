@@ -297,7 +297,7 @@ public class MieTheory implements Serializable
 		}
 	}
 
-	private static void reProcess(String file, String type, DustOpacity dust)
+	protected static void reProcess(String file, String type, DustOpacity dust)
 	throws JPARSECException {
 		String separator = "   ";
 		String file1[] = DataSet.arrayListToStringArray(ReadFile.readAnyExternalFile(file));

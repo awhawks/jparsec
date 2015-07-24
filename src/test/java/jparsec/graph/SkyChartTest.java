@@ -126,7 +126,6 @@ public class SkyChartTest {
         sky.drawFastLabels = SkyRenderElement.SUPERIMPOSED_LABELS.AVOID_SUPERIMPOSING_SOFT;
         sky.drawFastLabelsInWideFields = false;
         sky.fillMilkyWay = true;
-        sky.drawSuperNovaEvents = true;
         sky.drawMilkyWayContoursWithTextures = SkyRenderElement.MILKY_WAY_TEXTURE.NO_TEXTURE;
         //sky.drawMilkyWayContours = false;
         //sky.drawFaintStarsTimeOut = 50;
@@ -168,7 +167,6 @@ public class SkyChartTest {
         skyFast.drawFastLinesMode.setFastOvals(true);
         skyFast.drawFastLabels = SkyRenderElement.SUPERIMPOSED_LABELS.FAST;
         skyFast.drawFastLabelsInWideFields = true;
-        skyFast.drawSuperNovaEvents = false;
         skyFast.drawMilkyWayContoursWithTextures = SkyRenderElement.MILKY_WAY_TEXTURE.NO_TEXTURE;
         skyFast.drawDeepSkyObjectsTextures = false;
         skyFast.drawCoordinateGrid = false;

@@ -42,10 +42,10 @@ public class FastMath
 	private static float[] sin = null;
 	private static float[] tan = null;
 	private static float[] asin = null;
-	private static final double PI2 = Constant.TWO_PI;
-	private static double STEP = PI2 / N, STEP_INVERSE = 1.0 / STEP;
+	protected static final double PI2 = Constant.TWO_PI;
+	protected static double STEP = PI2 / N, STEP_INVERSE = 1.0 / STEP;
 	private static int A_N = N * 10; // 0.01 degree precision
-	private static double A_STEP = 1.0 / A_N;
+	protected static double A_STEP = 1.0 / A_N;
 	private static double PI3_OVER_2 = 3.0 * Constant.PI_OVER_TWO;
 	private static double pow10[] = null;
 	private static int N_4 = N + N / 4;
