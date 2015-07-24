@@ -528,21 +528,21 @@ public class Table {
 	}
 
 	/**
-	 * Returns if this instance is equals to another.
+	 * Returns if this instance is equal to another.
 	 */
-    @Override
+	@Override
 	public boolean equals(Object o) {
-		if (o == null) return false;
+		if (this == o) return true;
+		if (o == null || !(o instanceof Table)) return false;
 
-		Table t = (Table) o;
-		if (t.hasErrors != this.hasErrors) return false;
-		if (t.data != null && data == null) return false;
-		if (t.data == null && data != null) return false;
-		if (t.mask != null && mask == null) return false;
-		if (t.mask == null && mask != null) return false;
-		if (!this.isCompatible(t)) return false;
+		Table table = (Table) o;
 
-        return Arrays.deepEquals(t.data, data);
+		if (hasErrors != table.hasErrors) return false;
+		if (!Arrays.deepEquals(data, table.data)) return false;
+		if (!Arrays.deepEquals(mask, table.mask)) return false;
+		if (!Arrays.equals(ist, table.ist)) return false;
+
+		return Arrays.equals(istErr, table.istErr);
 	}
 
 	/**
@@ -702,6 +702,7 @@ public class Table {
 	 * Returns a simple string representation of this table.
 	 * Separator is 3 blank spaces.
 	 */
+	@Override
 	public String toString() {
 		StringBuffer out = new StringBuffer("");
 		String sep = FileIO.getLineSeparator(), fieldSep = "   ";
@@ -848,6 +849,7 @@ public class Table {
 		}
 		return max;
  	}
+
  	/**
  	 * Returns the minimum value in the table.
  	 * @return Minimum value.
@@ -868,6 +870,7 @@ public class Table {
 		}
 		return min;
  	}
+
  	/**
  	 * Returns the index of the maximum value in the table.
  	 * @param unique True to return null in case there are several
@@ -953,6 +956,7 @@ public class Table {
  	public int getNcolumns() {
  		return data[0][0].length;
  	}
+
  	/**
  	 * Returns the number of rows in the table.
  	 * @return Number of rows.
@@ -960,6 +964,7 @@ public class Table {
  	public int getNrows() {
  		return data[0].length;
  	}
+
  	/**
  	 * Returns the number of planes in the table.
  	 * @return Number of planes.
@@ -1257,6 +1262,7 @@ public class Table {
 		}
 		return max;
  	}
+
  	/**
  	 * Returns the minimum value in the table for a given column (second dimension).
  	 * @param column The column index.
@@ -1278,6 +1284,7 @@ public class Table {
 		}
 		return min;
  	}
+
  	/**
  	 * Returns the index of the maximum value in the table for a given column.
  	 * @param column The column index.
