@@ -26,12 +26,14 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-
+import jparsec.graph.GridChartElement.COLOR_MODEL;
+import jparsec.graph.TextLabel.ALIGN;
+import jparsec.io.FileIO;
+import jparsec.io.image.Picture;
+import jparsec.math.Evaluation;
+import jparsec.util.JPARSECException;
 import org.jzy3d.chart.Chart;
 import org.jzy3d.chart.ChartLauncher;
-// FIXME which jzy3d library contains CameraKeyController and CameraMouseController ??
-//import org.jzy3d.chart.controllers.keyboard.camera.CameraKeyController;
-//import org.jzy3d.chart.controllers.mouse.camera.CameraMouseController;
 import org.jzy3d.colors.Color;
 import org.jzy3d.colors.ColorMapper;
 import org.jzy3d.colors.colormaps.ColorMapGrayscale;
@@ -51,18 +53,13 @@ import org.jzy3d.plot3d.primitives.Shape;
 import org.jzy3d.plot3d.primitives.axes.ContourAxeBox;
 import org.jzy3d.plot3d.primitives.contour.ContourMesh;
 import org.jzy3d.plot3d.rendering.canvas.Quality;
-// FIXME which jzy3d library contains ColorbarLegend ??
-//import org.jzy3d.plot3d.rendering.legends.colorbars.ColorbarLegend;
 import org.jzy3d.plot3d.rendering.view.Renderer2d;
 
-import jparsec.astronomy.Difraction;
-import jparsec.astronomy.TelescopeElement;
-import jparsec.graph.GridChartElement.COLOR_MODEL;
-import jparsec.graph.TextLabel.ALIGN;
-import jparsec.io.FileIO;
-import jparsec.io.image.Picture;
-import jparsec.math.Evaluation;
-import jparsec.util.JPARSECException;
+// FIXME which jzy3d library contains CameraKeyController and CameraMouseController ??
+//import org.jzy3d.chart.controllers.keyboard.camera.CameraKeyController;
+//import org.jzy3d.chart.controllers.mouse.camera.CameraMouseController;
+// FIXME which jzy3d library contains ColorbarLegend ??
+//import org.jzy3d.plot3d.rendering.legends.colorbars.ColorbarLegend;
 
 /**
  * A class to create 3d charts using JZY3D library visualization library.
@@ -488,41 +485,4 @@ TODO:
 - Support text effects also in axes labels ?
 - Dates in x axis ?
  */
-
-	/**
-	 * Test program.
-	 * @param args Not used.
-	 */
-	public static void main(String args[]) {
-		System.out.println("JZY3D test");
-		try {
-			TelescopeElement telescope = TelescopeElement.NEWTON_20cm;
-			int field = 3;
-			double data[][] = Difraction.pattern(telescope, field);
-
-			GridChartElement gridChart = new GridChartElement("Difraction pattern",
-					"offsetX", "offsetY", "RelativeIntensity", GridChartElement.COLOR_MODEL.RED_TO_BLUE,
-					new double[] {-field, field, -field, field}, data,
-					new double[] {0, 0.2, 0.4, 0.6, 0.8, 1.0}, 400);
-
-			ChartSeriesElement3D series = new ChartSeriesElement3D(gridChart);
-			series.color = Color.RED;
-			ChartSeriesElement3D series2 = new ChartSeriesElement3D(
-					new double[] {0, 1, 2, -1, -2},
-					new double[] {0, 1, 1, -1 ,-1},
-					new double[] {2, 1, 1, 1, 1}, "3d Points");
-
-			ChartElement3D chart = new ChartElement3D(new ChartSeriesElement3D[] {series, series2},
-					"Difraction pattern", "@DELTAx (\")", "@DELTAy (\")", "@SIZE20I_{relative} (|@PSI|^{2})");
-			chart.showToolbar = false;
-			chart.showLegend = true;
-			chart.showTitle = true;
-			CreateJZY3DChart c = new CreateJZY3DChart(gridChart);
-			c.showChart(500, 500);
-			CreateJZY3DChart c2 = new CreateJZY3DChart("x * Math.sin(x * y)", -3, 3, 40);
-			c2.showChart(500, 500);
-		} catch (Exception exc) {
-			exc.printStackTrace();
-		}
-	}
 }
