@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,16 +18,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.observer;
 
 import java.io.Serializable;
-
 import jparsec.ephem.Ephem;
 import jparsec.ephem.EphemerisElement;
+import jparsec.ephem.EphemerisElement.ALGORITHM;
 import jparsec.ephem.EphemerisElement.COORDINATES_TYPE;
 import jparsec.ephem.Functions;
-import jparsec.ephem.EphemerisElement.ALGORITHM;
 import jparsec.ephem.Target.TARGET;
 import jparsec.ephem.moons.MoonEphem;
 import jparsec.ephem.planets.EphemElement;
@@ -40,12 +39,11 @@ import jparsec.time.TimeElement;
 import jparsec.util.JPARSECException;
 import jparsec.util.Translate;
 import jparsec.util.Translate.LANGUAGE;
-import jparsec.vo.SimbadQuery;
 
 /**
  * This is a convenience class used for passing around polar coordinates. Units
  * are radians for longitude and latitude, AU for distance.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -65,7 +63,7 @@ public class LocationElement implements Serializable
 
 	/**
 	 * Explicit constructor.
-	 * 
+	 *
 	 * @param lon longitude.
 	 * @param lat latitude.
 	 * @param rad radius.
@@ -86,19 +84,19 @@ public class LocationElement implements Serializable
 	 * bodies, that will provide geocentric positions. Distance will be
 	 * 1.0 for deep sky objects, in pc for stars, and in AU for solar system objects.
 	 * Reference frame is J2000 Dynamical Equinox for solar system objects and ICRF for
-	 * stars and deep sky objects. Output positions can be mean (astrometric) J2000 or 
+	 * stars and deep sky objects. Output positions can be mean (astrometric) J2000 or
 	 * apparent of date.
 	 * @param body The name of the body.
 	 * @param apparentOfDate True to return the apparent position of the body for the
 	 * current time (corrected for aberration, precesion, and nutation), false for mean
-	 * J2000 position. 
+	 * J2000 position.
 	 * @throws JPARSECException If the body is not found.
 	 */
 	public LocationElement(String body, boolean apparentOfDate) throws JPARSECException {
 		TARGET t = jparsec.ephem.Target.getID(body);
-		if (t == TARGET.NOT_A_PLANET && Translate.getDefaultLanguage() != LANGUAGE.ENGLISH) 
+		if (t == TARGET.NOT_A_PLANET && Translate.getDefaultLanguage() != LANGUAGE.ENGLISH)
 			t = jparsec.ephem.Target.getIDFromEnglishName(body);
-		
+
 		TimeElement time = new TimeElement();
 		CityElement city = City.findCity("Madrid");
 		ObserverElement observer = ObserverElement.parseCity(city);
@@ -109,7 +107,7 @@ public class LocationElement implements Serializable
 			eph.ephemType = COORDINATES_TYPE.ASTROMETRIC;
 			eph.equinox = Constant.J2000;
 		}
-		
+
 		if (t == TARGET.NOT_A_PLANET) {
 			int index = StarEphem.getStarTargetIndex(body);
 			if (index == -1) {
@@ -138,7 +136,7 @@ public class LocationElement implements Serializable
 			EphemElement ephem = Ephem.getEphemeris(time, observer, eph, false);
 			lon = ephem.rightAscension;
 			lat = ephem.declination;
-			rad = ephem.distance;			
+			rad = ephem.distance;
 		}
 	}
 
@@ -150,7 +148,7 @@ public class LocationElement implements Serializable
 	 * bodies, that will provide geocentric positions. Distance will be
 	 * 1.0 for deep sky objects, in pc for stars, and in AU for solar system objects.
 	 * Reference frame is J2000 Dynamical Equinox for solar system objects and ICRF for
-	 * stars and deep sky objects. Output positions can be mean (astrometric) J2000 or 
+	 * stars and deep sky objects. Output positions can be mean (astrometric) J2000 or
 	 * apparent of date.
 	 * @param body The name of the body.
 	 * @param time Time object for calculations.
@@ -168,7 +166,7 @@ public class LocationElement implements Serializable
 
 	/**
 	 * Vector constructor.
-	 * 
+	 *
 	 * @param vector { lat, lon, rad }
 	 */
 	public LocationElement(double vector[])
@@ -178,7 +176,7 @@ public class LocationElement implements Serializable
 
 	/**
 	 * Gets the latitude.
-	 * 
+	 *
 	 * @return The latitude value of this instance.
 	 */
 	public double getLatitude()
@@ -188,7 +186,7 @@ public class LocationElement implements Serializable
 
 	/**
 	 * Gets the longitude.
-	 * 
+	 *
 	 * @return The longitude value of this instance.
 	 */
 	public double getLongitude()
@@ -198,7 +196,7 @@ public class LocationElement implements Serializable
 
 	/**
 	 * Gets the radius.
-	 * 
+	 *
 	 * @return The radius value of this instance.
 	 */
 	public double getRadius()
@@ -209,7 +207,7 @@ public class LocationElement implements Serializable
 	/**
 	 * Get all values in this instance as a vector. <P>
 	 * The vector is an array of three doubles, latitude, longitude, radius.
-	 * 
+	 *
 	 * @return v[0] = longitude, v[1] = latitude, v[2] = radius.
 	 */
 	public double[] get()
@@ -219,7 +217,7 @@ public class LocationElement implements Serializable
 
 	/**
 	 * Set the latitude.
-	 * 
+	 *
 	 * @param d The new latitude value.
 	 */
 	public void setLatitude(double d)
@@ -229,7 +227,7 @@ public class LocationElement implements Serializable
 
 	/**
 	 * Set the longitude.
-	 * 
+	 *
 	 * @param d The new longitude value.
 	 */
 	public void setLongitude(double d)
@@ -239,7 +237,7 @@ public class LocationElement implements Serializable
 
 	/**
 	 * Set the radius.
-	 * 
+	 *
 	 * @param d The new radius value.
 	 */
 	public void setRadius(double d)
@@ -251,7 +249,7 @@ public class LocationElement implements Serializable
 	 * Set all members of this instance from a vector. <P>
 	 * The vector is an array of three doubles, latitude, longitude, radius, in
 	 * that order.
-	 * 
+	 *
 	 * @param vector v[0] = longitude, v[1] = latitude, v[2] = radius.
 	 */
 	public void set(double vector[])
@@ -263,7 +261,7 @@ public class LocationElement implements Serializable
 
 	/**
 	 * Set all members of this instance individually.
-	 * 
+	 *
 	 * @param lon The new longitude.
 	 * @param lat The new latitude.
 	 * @param rad The new radius.
@@ -294,7 +292,7 @@ public class LocationElement implements Serializable
 	 * Transforms rectangular coordinates x, y, z contained in an array to a
 	 * {@linkplain LocationElement}. Coordinate system is independent: equatorial, ecliptic,
 	 * or any other.
-	 * 
+	 *
 	 * @param v (x, y, z) vector.
 	 * @return Location object.
 	 */
@@ -320,7 +318,7 @@ public class LocationElement implements Serializable
 	 * Transforms rectangular coordinates x, y, z contained in an array to a
 	 * {@linkplain LocationElement}. Coordinate system is independent: equatorial, ecliptic,
 	 * or any other. This method uses {@linkplain FastMath#atan2_accurate(double, double)} method.
-	 * 
+	 *
 	 * @param v (x, y, z) vector.
 	 * @return Location object.
 	 */
@@ -328,12 +326,12 @@ public class LocationElement implements Serializable
 	{
 		return parseRectangularCoordinatesFast(v[0], v[1], v[2]);
 	}
-	
+
 	/**
 	 * Transforms rectangular coordinates x, y, z contained in an array to a
 	 * {@linkplain LocationElement}. Coordinate system is independent: equatorial, ecliptic,
 	 * or any other. This method uses {@linkplain FastMath#atan2_accurate(double, double)} method.
-	 * 
+	 *
 	 * @param x X coordinate.
 	 * @param y Y coordinate.
 	 * @param z Z coordinate.
@@ -345,7 +343,7 @@ public class LocationElement implements Serializable
 		double lat = Constant.PI_OVER_TWO;
 		if (z < 0.0)
 			lat = -lat;
-		
+
 		if (y != 0.0 || x!= 0.0)
 		{
 			h = FastMath.hypot(x, y);
@@ -361,7 +359,7 @@ public class LocationElement implements Serializable
 	/**
 	 * Transforms rectangular coordinates x, y, z to a {@linkplain LocationElement}.
 	 * Coordinate system is independent: equatorial, ecliptic, or any other.
-	 * 
+	 *
 	 * @param x X coordinate.
 	 * @param y Y coordinate.
 	 * @param z Z coordinate.
@@ -376,7 +374,7 @@ public class LocationElement implements Serializable
 
 	/**
 	 * Transforms a {@linkplain LocationElement} into a set of rectangular coordinates x, y, z.
-	 * 
+	 *
 	 * @param loc Location object.
 	 * @return Array with (x, y, z) vector.
 	 */
@@ -393,7 +391,7 @@ public class LocationElement implements Serializable
 	/**
 	 * Transforms a {@linkplain LocationElement} into a set of rectangular coordinates x, y, z,
 	 * using approximate trigonometric functions.
-	 * 
+	 *
 	 * @param loc Location object.
 	 * @return Array with (x, y, z) vector.
 	 */
@@ -406,10 +404,10 @@ public class LocationElement implements Serializable
 
 		return new double[] { x, y, z };
 	}
-	
+
 	/**
 	 * Transforms a {@linkplain LocationElement} into a set of rectangular coordinates x, y, z.
-	 * 
+	 *
 	 * @return Array with (x, y, z) vector.
 	 */
 	public double[] getRectangularCoordinates()
@@ -419,7 +417,7 @@ public class LocationElement implements Serializable
 
 	/**
 	 * Obtain linear distance between two spherical positions.
-	 * 
+	 *
 	 * @param loc1 Location object.
 	 * @param loc2 Location object.
 	 * @return Linear distance.
@@ -440,7 +438,7 @@ public class LocationElement implements Serializable
 
 	/**
 	 * Obtain the direction between two spherical positions.
-	 * 
+	 *
 	 * @param loc1 Location object.
 	 * @param loc2 Location object.
 	 * @return The midpoint.
@@ -459,10 +457,10 @@ public class LocationElement implements Serializable
 
 	/**
 	 * Obtain the relative position of the second loc object respect the first one.
-	 * 
+	 *
 	 * @param loc1 Location object.
 	 * @param loc2 Location object.
-	 * @return The relative position of the second body respect the first one, as an 
+	 * @return The relative position of the second body respect the first one, as an
 	 * offset in longitude and latitude (radians), and distance.
 	 */
 	public static double[] getRelativeOffsets(LocationElement loc1, LocationElement loc2)
@@ -472,7 +470,7 @@ public class LocationElement implements Serializable
 
 		return MoonEphem.relativePosition(xyz1, xyz2);
 	}
-	
+
 	/**
 	 * Solves an spherical triangle return the angle between the positions
 	 * locP and locP1 as seen from locA.
@@ -490,9 +488,9 @@ public class LocationElement implements Serializable
 			double po = LocationElement.getApproximateAngularDistance(locP, locA);
 			double sinO = FastMath.sin(p1p) * FastMath.sin(locA.getLongitude()-locP1.getLongitude()) / FastMath.sin(p1o);
 			double cosO = (FastMath.cos(p1p) - FastMath.cos(p1o) * FastMath.cos(po)) / FastMath.sin(p1o) * FastMath.sin(po);
-			return FastMath.atan2(sinO, cosO);			
+			return FastMath.atan2(sinO, cosO);
 		}
-		
+
 		double p1p = LocationElement.getAngularDistance(locP1, locP);
 		double p1o = LocationElement.getAngularDistance(locP1, locA);
 		double po = LocationElement.getAngularDistance(locP, locA);
@@ -500,16 +498,16 @@ public class LocationElement implements Serializable
 		double cosO = (Math.cos(p1p) - Math.cos(p1o) * Math.cos(po)) / Math.sin(p1o) * Math.sin(po);
 		return Math.atan2(sinO, cosO);
 	}
-	
+
 	/**
 	 * Obtain angular distance between two spherical coordinates.
-	 * 
+	 *
 	 * @param loc1 Location object.
 	 * @param loc2 Location object.
 	 * @return The distance in radians, from 0 to PI.
 	 */
 	public static double getAngularDistance(LocationElement loc1, LocationElement loc2)
-	{		
+	{
 		LocationElement cl1 = new LocationElement(loc1.getLongitude(), loc1.getLatitude(), 1.0);
 		LocationElement cl2 = new LocationElement(loc2.getLongitude(), loc2.getLatitude(), 1.0);
 
@@ -527,27 +525,27 @@ public class LocationElement implements Serializable
  		// Haversine formula
  		double dLat = loc1.lat - loc2.lat;
 		double dLon = loc1.lon - loc2.lon;
-		double a = FastMath.sin(dLat/2) * FastMath.sin(dLat/2) + FastMath.cos(loc1.lat) * FastMath.cos(loc2.lat) * FastMath.sin(dLon/2) * FastMath.sin(dLon/2); 
-		return 2.0 * FastMath.atan2(Math.sqrt(a), Math.sqrt(1.0-a)); 
+		double a = FastMath.sin(dLat/2) * FastMath.sin(dLat/2) + FastMath.cos(loc1.lat) * FastMath.cos(loc2.lat) * FastMath.sin(dLon/2) * FastMath.sin(dLon/2);
+		return 2.0 * FastMath.atan2(Math.sqrt(a), Math.sqrt(1.0-a));
 */
 	}
 
 	/**
 	 * Obtain approximate angular distance between two spherical coordinates. Good performance,
 	 * accuracy around 0.2 deg or better.
-	 * 
+	 *
 	 * @param loc1 Location object.
 	 * @param loc2 Location object.
 	 * @return The distance in radians, from 0 to PI.
 	 */
 	public static double getApproximateAngularDistance(LocationElement loc1, LocationElement loc2)
-	{		
-		return FastMath.acos(FastMath.sin(loc2.lat) * FastMath.sin(loc1.lat) + FastMath.cos(loc2.lat) * FastMath.cos(loc1.lat) * FastMath.cos(loc2.lon-loc1.lon));		
+	{
+		return FastMath.acos(FastMath.sin(loc2.lat) * FastMath.sin(loc1.lat) + FastMath.cos(loc2.lat) * FastMath.cos(loc1.lat) * FastMath.cos(loc2.lon-loc1.lon));
 	}
 
 	/**
 	 * Obtain position angle between two spherical coordinates. Good performance.
-	 * 
+	 *
 	 * @param loc1 Location object.
 	 * @param loc2 Location object.
 	 * @return The position angle in radians.
@@ -558,16 +556,16 @@ public class LocationElement implements Serializable
 		double bl = loc2.getLongitude(), bp = loc2.getLatitude();
 		double dl = bl - al;
 		double cbp = FastMath.cos(bp);
-	    double y = FastMath.sin(dl) * cbp;
-	    double x = FastMath.sin(bp) * FastMath.cos(ap) - cbp * FastMath.sin(ap) * FastMath.cos(dl);
-	    double pa = 0.0;
-	    if (x != 0.0 || y != 0.0) pa = -FastMath.atan2_accurate(y, x);
-		return pa;	
+		double y = FastMath.sin(dl) * cbp;
+		double x = FastMath.sin(bp) * FastMath.cos(ap) - cbp * FastMath.sin(ap) * FastMath.cos(dl);
+		double pa = 0.0;
+		if (x != 0.0 || y != 0.0) pa = -FastMath.atan2_accurate(y, x);
+		return pa;
 	}
 
 	/**
 	 * Obtain exact position angle between two spherical coordinates. Performance will be poor.
-	 * 
+	 *
 	 * @param loc1 Location object.
 	 * @param loc2 Location object.
 	 * @return The position angle in radians.
@@ -578,18 +576,18 @@ public class LocationElement implements Serializable
 		double bl = loc2.getLongitude(), bp = loc2.getLatitude();
 		double dl = bl - al;
 		double cbp = Math.cos(bp);
-	    double y = Math.sin(dl) * cbp;
-	    double x = Math.sin(bp) * Math.cos(ap) - cbp * Math.sin(ap) * Math.cos(dl);
-	    double pa = 0.0;
-	    if (x != 0.0 || y != 0.0) pa = -Math.atan2(y, x);
-		return pa;	
+		double y = Math.sin(dl) * cbp;
+		double x = Math.sin(bp) * Math.cos(ap) - cbp * Math.sin(ap) * Math.cos(dl);
+		double pa = 0.0;
+		if (x != 0.0 || y != 0.0) pa = -Math.atan2(y, x);
+		return pa;
 	}
 
 	/**
 	 * Gets the geodetic {@linkplain LocationElement} of certain {@linkplain CityElement}.
 	 * Radius is set to unity.
 	 * <P>
-	 * 
+	 *
 	 * @param city The {@linkplain CityElement} to parse.
 	 * @return The corresponding {@linkplain LocationElement}.
 	 */
@@ -603,7 +601,7 @@ public class LocationElement implements Serializable
 	/**
 	 * Gets the geodetic {@linkplain LocationElement} of certain {@linkplain ObservatoryElement}.
 	 * Radius is set to unity.
-	 * 
+	 *
 	 * @param observatory The {@linkplain ObservatoryElement} to parse.
 	 * @return The corresponding {@linkplain LocationElement}.
 	 */
@@ -618,35 +616,46 @@ public class LocationElement implements Serializable
 	/**
 	 * To clone the object.
 	 */
+	@Override
 	public LocationElement clone()
 	{
-		if (this == null) return null;
 		LocationElement loc = new LocationElement(this.getLongitude(), this.getLatitude(),
 				this.getRadius());
 		return loc;
 	}
+
 	/**
 	 * Returns true if the input object is equals to this instance.
 	 */
-	public boolean equals(Object l)
-	{
-		if (l == null) {
-			if (this == null) return true;
-			return false;
-		}
-		if (this == null) {
-			return false;
-		}
-		LocationElement loc = (LocationElement) l;
-		if (loc.getLongitude() != this.getLongitude() ||
-				loc.getLatitude() != this.getLatitude() ||
-				loc.getRadius() != this.getRadius()) return false;
-		return true;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof LocationElement)) return false;
+
+		LocationElement that = (LocationElement) o;
+
+		return Double.compare(that.lat, lat) == 0 &&
+			   Double.compare(that.lon, lon) == 0 &&
+			   Double.compare(that.rad, rad) == 0;
 	}
-	
+
+	@Override
+	public int hashCode() {
+		int result;
+		long temp;
+		temp = Double.doubleToLongBits(lat);
+		result = (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(lon);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(rad);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		return result;
+	}
+
 	/**
 	 * Returns a String representation of this object.
 	 */
+	@Override
 	public String toString() {
 		String out = "lon: "+Functions.formatDEC(this.lon)+", lat: "+Functions.formatDEC(this.lat)+", rad: "+this.rad;
 		return out;
@@ -685,39 +694,5 @@ public class LocationElement implements Serializable
 		double lonp = dlon / Math.cos(lat);
 		lon += lonp;
 		lat += dlat;
-	}
-
-	/**
-	 * For unit testing only.
-	 * @param args Not used.
-	 */
-	public static void main(String args[])
-	{
-		System.out.println("LocationElement Test");
-
-		double lon1 = Math.random() * Constant.TWO_PI;
-		double lon2 = Math.random() * Constant.TWO_PI;
-		double lat1 = Math.random() * Math.PI - Constant.PI_OVER_TWO;
-		double lat2 = Math.random() * Math.PI - Constant.PI_OVER_TWO;
-
-		LocationElement loc1 = new LocationElement(lon1, lat1, 1.0);
-		LocationElement loc2 = new LocationElement(lon2, lat2, 1.0);
-
-		double PA = LocationElement.getPositionAngle(loc1, loc2) * Constant.RAD_TO_DEG;
-		double PA2 = LocationElement.getApproximatePositionAngle(loc1, loc2) * Constant.RAD_TO_DEG;
-
-		System.out.println(Functions.formatAngle(loc1.lon, 1) + " / " + Functions.formatAngle(loc1.lat, 1));
-		System.out.println(Functions.formatAngle(loc2.lon, 1) + " / " + Functions.formatAngle(loc2.lat, 1));
-		System.out.println("PA: " + PA + " / approx " + PA2);
-		
-		try {
-			String obj = "M31";
-			loc1 = new LocationElement(obj, false);
-			System.out.println(obj+ ": " + loc1.toStringAsEquatorialLocation());
-			loc1 = SimbadQuery.query(obj).getLocation();
-			System.out.println(obj+ ": " + loc1.toStringAsEquatorialLocation());
-		} catch (Exception exc) {
-			exc.printStackTrace();
-		}
 	}
 }

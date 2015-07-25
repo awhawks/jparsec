@@ -10,7 +10,7 @@ public class ObservatoryTest {
      * @param args Not used.
      */
     public static void main(String args[]) {
-        System.out.println("Observatory test");
+        System.out.println("Observatory Test");
 
         try {
             ObservatoryElement loc_elements[] = Observatory.getObservatoriesByCountry(Country.COUNTRY.Spain);
@@ -31,7 +31,7 @@ public class ObservatoryTest {
             JPARSECException.showException(ve);
         }
 
-        ObservatoryElement loc_element = null;
+        ObservatoryElement loc_element;
         try {
             loc_element = Observatory.findObservatorybyName("Madrid");
             System.out.println(loc_element.name);
@@ -46,7 +46,8 @@ public class ObservatoryTest {
 
         try {
             System.out.println(Observatory.getAllObservatories().length);
-            System.out.println("Marsden list contains " + Observatory.getNumberOfObservatoriesInMarsdenList() + " observatories");
+            System.out
+                    .println("Marsden list contains " + Observatory.getNumberOfObservatoriesInMarsdenList() + " observatories");
             int my_obs = Observatory.searchByNameInMarsdenList("Teide");
             ObservatoryElement obs2 = Observatory.getObservatoryFromMarsdenList(my_obs);
             System.out.println(obs2.location);
@@ -66,31 +67,31 @@ public class ObservatoryTest {
             System.out.println(" " + observ.name + " lon: " + observ.longitude);
             System.out.println(" " + observ.name + " lat: " + observ.latitude);
             System.out.println(" " + observ.name + " alt: " + observ.height);
-/*
+
+            /*
             COUNTRY countries[] = COUNTRY.values();
             String out = "";
-            for (int i=0; i<countries.length; i++) {
+            for (int i = 0; i < countries.length; i++) {
                 ObservatoryElement observatories[] = Observatory.getObservatoriesByCountry(countries[i]);
                 if (observatories == null) {
-                    System.out.println("0 observatories for "+countries[i]);
+                    System.out.println("0 observatories for " + countries[i]);
                 } else {
-                    for (int j = 0; j < observatories.length; j ++) {
+                    for (int j = 0; j < observatories.length; j++) {
                         String line = FileIO.addSpacesAfterAString(observatories[j].name, 70) +
-                                FileIO.addSpacesAfterAString(countries[i].toString(), 50)+ //cities[j].country, 50)+
+                                FileIO.addSpacesAfterAString(countries[i].toString(), 50) + //cities[j].country, 50)+
                                 FileIO.addSpacesAfterAString(Functions.formatValue(observatories[j].longitude, 4), 10) +
                                 FileIO.addSpacesAfterAString(Functions.formatValue(observatories[j].latitude, 3), 9) +
                                 FileIO.addSpacesAfterAString(Functions.formatValue(observatories[j].code, 0), 6) +
                                 FileIO.addSpacesAfterAString(Functions.formatValue(observatories[j].height, 0), 5) +
                                 FileIO.addSpacesAfterAString(observatories[j].location, 30) +
-                                FileIO.addSpacesAfterAString(observatories[j].reference, 3)
-                                ;
+                                FileIO.addSpacesAfterAString(observatories[j].reference, 3);
                         out += line + FileIO.getLineSeparator();
                     }
                 }
             }
 
             WriteFile.writeAnyExternalFile("/home/alonso/observatories.txt", out);
-*/
+            */
         } catch (JPARSECException ve) {
             JPARSECException.showException(ve);
         }
