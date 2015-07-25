@@ -13,8 +13,8 @@ public class OcularElementTest {
 
         try {
             OcularElement ocul[] = OcularElement.getAllAvailableOculars();
-
             System.out.println("List of all oculars");
+
             for (int i = 0; i < ocul.length; i++) {
                 System.out.println(ocul[i].name + '/' + ocul[i].focalLength + '/' + ocul[i].fieldOfView + '/' + ocul[i].reticleSize);
             }

@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.astronomy;
 
 import java.io.Serializable;
@@ -36,7 +36,7 @@ import jparsec.util.Translate;
  * A class to hold and to calculate the properties of an ocular. Calculations
  * are based on theoretical statements, so the real life could be somewhat
  * different.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -57,7 +57,7 @@ public class OcularElement implements Serializable {
 
 	/**
 	 * Creates an Ocular object by giving the values of the fields.
-	 * 
+	 *
 	 * @param n Name of the ocular.
 	 * @param focal Focal length of the ocular in mm.
 	 * @param field Apparent field of view in radians.
@@ -96,6 +96,7 @@ public class OcularElement implements Serializable {
 	/**
 	 * To clone the object.
 	 */
+	@Override
 	public OcularElement clone()
 	{
 		OcularElement ocular = new OcularElement(this.name, this.focalLength, this.fieldOfView, this.reticleSize);
@@ -107,19 +108,18 @@ public class OcularElement implements Serializable {
 	 * @param ocular An ocular object.
 	 * @return True or false.
 	 */
-	public boolean equals(Object ocular)
-	{
-		if (ocular == null) {
-			return false;
-		}
+	@Override
+	public boolean equals(Object ocular) {
+		if (this == ocular) return true;
+		if (!(ocular instanceof OcularElement)) return false;
 
-		OcularElement o = (OcularElement) ocular;
-		boolean equals = true;
-		if (!this.name.equals(o.name)) equals = false;
-		if (this.focalLength != o.focalLength) equals = false;
-		if (this.fieldOfView != o.fieldOfView) equals = false;
-		if (this.reticleSize != o.reticleSize) equals = false;
-		return equals;
+		OcularElement that = (OcularElement) ocular;
+
+		if (Float.compare(that.focalLength, focalLength) != 0) return false;
+		if (Double.compare(that.fieldOfView, fieldOfView) != 0) return false;
+		if (reticleSize != that.reticleSize) return false;
+		return !(name != null ? !name.equals(that.name) : that.name != null);
+
 	}
 
 	@Override
@@ -136,7 +136,7 @@ public class OcularElement implements Serializable {
 
 	/**
 	 * Return all oculars from external file.
-	 * 
+	 *
 	 * @return Array of Ocular objects.
 	 * @throws JPARSECException Thrown if the method fails.
 	 */
@@ -149,7 +149,7 @@ public class OcularElement implements Serializable {
 	}
 	/**
 	 * Return all oculars from external file.
-	 * 
+	 *
 	 * @return Array of ocular names.
 	 * @throws JPARSECException Thrown if the method fails.
 	 */
@@ -167,7 +167,7 @@ public class OcularElement implements Serializable {
 	/**
 	 * Return all oculars from an external file. Designed specially for input
 	 * file eyepiece.txt in sky.jar.
-	 * 
+	 *
 	 * @param jarpath Path to the file.
 	 * @param fmt File format array with ocular name as NAME, focal length in mm
 	 *        as FOCAL, and field of view as FIELD in degrees.
@@ -185,7 +185,7 @@ public class OcularElement implements Serializable {
 		int reticle = 32;
 
 		ReadFormat rf = new ReadFormat();
-		
+
 		rf.setFormatToRead(fmt);
 		for (int i = 0; i < v.size(); i++)
 		{
@@ -200,7 +200,7 @@ public class OcularElement implements Serializable {
 
 	/**
 	 * Return certain ocular.
-	 * 
+	 *
 	 * @param ocular_name Name of the ocular;
 	 * @return The required Ocular object, or null if none is found.
 	 * @throws JPARSECException Thrown if the method fails.
@@ -220,27 +220,5 @@ public class OcularElement implements Serializable {
 			ocular = oculars[what];
 
 		return ocular;
-	}
-
-	/**
-	 * For unit testing only.
-	 * @param args Not used.
-	 */
-	public static void main(String args[])
-	{
-		System.out.println("OcularElement test");
-
-		try {
-			OcularElement ocul[] = OcularElement.getAllAvailableOculars();
-
-			System.out.println("List of all oculars");
-			for (int i = 0; i < ocul.length; i++)
-			{
-				System.out.println(ocul[i].name + "/" + ocul[i].focalLength + "/" + ocul[i].fieldOfView + "/" + ocul[i].reticleSize);
-			}
-		} catch (JPARSECException ve)
-		{
-			JPARSECException.showException(ve);
-		}
 	}
 }
