@@ -5,26 +5,21 @@ import java.io.StringWriter;
 import jparsec.graph.DataSet;
 
 public class MatrixTest {
-
     /**
      * Main method for testing this class.
      *
      * @param args Not used.
      */
     public static void main(String[] args) throws Exception {
-        Matrix I;
-        Matrix A;
-        Matrix B;
-
         // Identity
         System.out.println("\nIdentity\n");
-        I = Matrix.identity(3, 5);
+        Matrix I = Matrix.identity(3, 5);
         System.out.println("I(3,5)\n" + I);
 
         // basic operations - square
         System.out.println("\nbasic operations - square\n");
-        A = Matrix.random(3, 3);
-        B = Matrix.random(3, 3);
+        Matrix A = Matrix.random(3, 3);
+        Matrix B = Matrix.random(3, 3);
         System.out.println("A\n" + A);
         System.out.println("B\n" + B);
         System.out.println("A'\n" + A.inverse());
@@ -43,7 +38,14 @@ public class MatrixTest {
 
         // sqrt
         System.out.println("\nsqrt (1)\n");
-        A = new Matrix(new double[][] { { 5, -4, 1, 0, 0 }, { -4, 6, -4, 1, 0 }, { 1, -4, 6, -4, 1 }, { 0, 1, -4, 6, -4 }, { 0, 0, 1, -4, 5 } });
+        A = new Matrix(new double[][] {
+                {  5, -4,  1,  0,  0 },
+                { -4,  6, -4,  1,  0 },
+                {  1, -4,  6, -4,  1 },
+                {  0,  1, -4,  6, -4 },
+                {  0,  0,  1, -4,  5 }
+        });
+
         System.out.println("A\n" + A);
         System.out.println("sqrt(A)\n" + A.sqrt());
 

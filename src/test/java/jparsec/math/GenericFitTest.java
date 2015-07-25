@@ -14,9 +14,11 @@ public class GenericFitTest {
     public static void main(String args[]) throws Exception {
         System.out.println("Let's fit a set of data to the function p1 * Math.sin(x) + p2 * Math.sin(2.0*x) + p3 * Math.sin(3.0*x)");
 
-        double x[] = new double[] { 3, 20, 34, 50, 75, 88, 111, 129, 143, 160, 183, 200, 218, 230, 248, 269, 290, 303, 320, 344 };
+        double x[] = new double[] { 3, 20, 34, 50, 75, 88, 111, 129, 143, 160, 183, 200, 218, 230,
+                248, 269, 290, 303, 320, 344 };
         double y[] = new double[] { 0.0433, 0.2532, 0.3386, 0.3560, 0.4983, 0.7577, 1.4585, 1.8628,
-                1.8264, 1.2431, -0.2043, -1.2431, -1.8422, -1.8726, -1.4889, -0.8372, -0.4377, -0.3640, -0.3508, -0.2126 };
+                1.8264, 1.2431, -0.2043, -1.2431, -1.8422, -1.8726, -1.4889, -0.8372, -0.4377, -0.3640,
+                -0.3508, -0.2126 };
         x = Functions.scalarProduct(x, Constant.DEG_TO_RAD);
 
         GenericFit g = new GenericFit(x, y, "Math.sin(x)", "Math.sin(2.0*x)", "Math.sin(3.0*x)");

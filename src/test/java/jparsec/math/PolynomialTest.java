@@ -3,13 +3,13 @@ package jparsec.math;
 import jparsec.graph.CreateChart;
 
 public class PolynomialTest {
+
     /**
      * Used to test out the methods in this class.
      *
      * @param args Unused.
      **/
     public static void main(String args[]) throws Exception {
-        System.out.println();
         System.out.println("Polynomial test");
 
         // Evaluate p(x) = x^2 + 2*x + 1.
@@ -24,6 +24,7 @@ public class PolynomialTest {
         System.out.println("    p(5) = " + poly.evaluate(5.));
         System.out.println("    Zeros of p(x) are:");
         Complex[] zeros = poly.zeros();
+
         for (int i = 0; i < zeros.length; ++i) {
             System.out.println("        " + zeros[i]);
         }
@@ -44,12 +45,13 @@ public class PolynomialTest {
         poly = new Polynomial(coef);
         System.out.println("    p(x) = " + poly);
         zeros = poly.zeros();
+
         for (int i = 0; i < zeros.length; ++i) {
             System.out.println("        " + zeros[i]);
         }
+
         CreateChart ch = poly.getChart(0, 10, 100);
         ch.showChartInJFreeChartPanel();
-
         System.out.println("    EXAMPLE 2. ZEROS ON IMAGINARY AXIS DEGREE 3.");
         Complex[] ccoef = new Complex[4];
         ccoef[3] = new Complex(1, 0);
@@ -59,6 +61,7 @@ public class PolynomialTest {
         poly = new Polynomial(ccoef);
         System.out.println("    p(x) = " + poly);
         zeros = poly.zeros();
+
         for (int i = 0; i < zeros.length; ++i) {
             System.out.println("        " + zeros[i]);
         }
@@ -79,6 +82,7 @@ public class PolynomialTest {
         poly = new Polynomial(ccoef);
         System.out.println("    p(x) = " + poly);
         zeros = poly.zeros();
+
         for (int i = 0; i < zeros.length; ++i) {
             System.out.println("        " + zeros[i]);
         }
@@ -98,12 +102,12 @@ public class PolynomialTest {
         poly = new Polynomial(ccoef);
         System.out.println("    p(x) = " + poly);
         zeros = poly.zeros();
+
         for (int i = 0; i < zeros.length; ++i) {
             System.out.println("        " + zeros[i]);
         }
 
-        System.out.println("    EXAMPLE 5. 12 ZEROS EVENLY DISTRIBUTED ON A CIRCLE OF RADIUS" +
-                " 1 CENTERED AT 0+2I.");
+        System.out.println("    EXAMPLE 5. 12 ZEROS EVENLY DISTRIBUTED ON A CIRCLE OF RADIUS 1 CENTERED AT 0+2I.");
         ccoef = new Complex[13];
         ccoef[12] = new Complex(1, 0);
         ccoef[11] = new Complex(0, -24);
@@ -121,6 +125,7 @@ public class PolynomialTest {
         poly = new Polynomial(ccoef);
         System.out.println("    p(x) = " + poly);
         zeros = poly.zeros();
+
         for (int i = 0; i < zeros.length; ++i)
             System.out.println("        " + zeros[i]);
     }

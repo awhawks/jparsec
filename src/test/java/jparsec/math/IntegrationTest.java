@@ -5,6 +5,7 @@ import jparsec.graph.DataSet;
 import jparsec.util.JPARSECException;
 
 public class IntegrationTest {
+
     /**
      * For unit testing only.
      *
@@ -30,6 +31,7 @@ public class IntegrationTest {
 
             double x1 = 2.0, x2 = xf - 1.0;
             double step = (x2 - x1) * 0.00001;
+
             double exact = Math.log(x2) - Math.log(x1);
 
             Integration intgr = new Integration(x, y, x1, x2);
@@ -38,7 +40,6 @@ public class IntegrationTest {
             integral = intgr.simpleIntegration(step);
             System.out.println("simple integration        I = " + integral);
             System.out.println("Exact = " + exact);
-
             CreateChart ch = intgr.getChart();
             ch.showChartInJFreeChartPanel();
         } catch (JPARSECException e) {

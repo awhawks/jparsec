@@ -21,11 +21,14 @@ public class RootTest {
 
             if (result != null) {
                 int iter = (int) result[2];
-                System.out.println("Root for " + root.functionRealTerm + " found around x = " + result[0] + " (in " + iter + " iterations).");
-                System.out.println("Residual error is " + Math.abs(root.evaluateFunction(root.functionRealTerm,
-                        result[0], result[1])));
-                System.out.println("String representation of the root is: " + root.toString(result[0], Math.abs(root.evaluateFunction(root.functionRealTerm,
-                        result[0], result[1]))));
+                System.out.println(
+                    "Root for " + root.functionRealTerm + " found around x = " + result[0] + " (in " + iter + " iterations).");
+                System.out.println(
+                    "Residual error is " + Math.abs(root.evaluateFunction(root.functionRealTerm, result[0], result[1])));
+                System.out.println(
+                    "String representation of the root is: " + root.toString(result[0],
+                    Math.abs(root.evaluateFunction(root.functionRealTerm,
+                    result[0], result[1]))));
             } else {
                 System.out.println("Root could not be found in " + limit_of_iterations + " iterations.");
             }

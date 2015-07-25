@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,24 +18,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.math;
 
 import java.awt.Color;
 import java.io.Serializable;
-
-import jparsec.ephem.Functions;
 import jparsec.graph.ChartElement;
 import jparsec.graph.ChartSeriesElement;
 import jparsec.graph.CreateChart;
 import jparsec.graph.DataSet;
-import jparsec.io.ConsoleReport;
 import jparsec.util.JPARSECException;
 
 /**
  * A class for fitting data to an arbitrary function of 3 independent variables.
  * Implementation based on Jean Meeus's Astronomical Algorithms.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -46,19 +43,19 @@ public class GenericFit implements Serializable
 	private double x[], y[];
 	private String f, f0, f1, f2;
 	private double a = 0, b = 0, c = 0;
-	
+
 	/**
 	 * Default constructor.
 	 * @param x X values.
 	 * @param y Y values.
-	 * @param f0 The first function f0(x) from 'y = a f0(x) + b f1(x) + c f2(x)', 
+	 * @param f0 The first function f0(x) from 'y = a f0(x) + b f1(x) + c f2(x)',
 	 * in Java notation.
-	 * @param f1 The second function f1(x) from 'y = a f0(x) + b f1(x) + c f2(x)', 
+	 * @param f1 The second function f1(x) from 'y = a f0(x) + b f1(x) + c f2(x)',
 	 * in Java notation.
-	 * @param f2 The third function f2(x) from 'y = a f0(x) + b f1(x) + c f2(x)', 
-	 * in Java notation. You can use '1' or 'x' for a linear fit or if you don't need it, 
+	 * @param f2 The third function f2(x) from 'y = a f0(x) + b f1(x) + c f2(x)',
+	 * in Java notation. You can use '1' or 'x' for a linear fit or if you don't need it,
 	 * but must be different from f1 and f0 and cannot be '0' or empty. The only exception
-	 * (for f2 to be 0 or empty) is to set f1 to '1' or 'x', in a linear fit. 
+	 * (for f2 to be 0 or empty) is to set f1 to '1' or 'x', in a linear fit.
 	 */
 	public GenericFit(double x[], double y[], String f0, String f1, String f2)	{
 		if (x != null) this.x = x.clone();
@@ -73,7 +70,7 @@ public class GenericFit implements Serializable
 	 * Default constructor for only one function.
 	 * @param x X values.
 	 * @param y Y values.
-	 * @param f0 The function f0(x) from 'y = a f0(x)', 
+	 * @param f0 The function f0(x) from 'y = a f0(x)',
 	 * in Java notation.
 	 */
 	public GenericFit(double x[], double y[], String f0)	{
@@ -88,7 +85,7 @@ public class GenericFit implements Serializable
 
 	/**
 	 * Evaluate fitting function in some point. A fit should previously be done.
-	 * 
+	 *
 	 * @param x Point to evaluate.
 	 * @return Result of evaluation. 0.0 if fit is invalid.
 	 * @throws JPARSECException If an error occurs.
@@ -97,7 +94,7 @@ public class GenericFit implements Serializable
 	{
 		if (f1 == null && f2 == null) {
 			Evaluation eval = new Evaluation(f, new String[] {"x "+x, "a "+a});
-			return eval.evaluate();			
+			return eval.evaluate();
 		} else {
 			Evaluation eval = new Evaluation(f, new String[] {"x "+x, "a "+a, "b "+b, "c "+c});
 			return eval.evaluate();
@@ -107,7 +104,7 @@ public class GenericFit implements Serializable
 	/**
 	 * Returns the adequate object to evaluate the fitted function.
 	 * A fit should previously be done.
-	 *  
+	 *
 	 * @return The object with the function and fitting variables.
 	 * @throws JPARSECException If an error occurs.
 	 */
@@ -125,13 +122,13 @@ public class GenericFit implements Serializable
 	 * @param npoints Number of points in x axis for the series.
 	 * @param xlogScale True to sample x axis in log scale.
 	 * @return The series, with black color and epmty shape. The legend
-	 * is set to the expression of the function. 
+	 * is set to the expression of the function.
 	 * @throws JPARSECException If an error occurs.
 	 */
 	public ChartSeriesElement getFittingFunctionAsSeries(int npoints, boolean xlogScale) throws JPARSECException {
 		double xmin = DataSet.getMinimumValue(x), xmax = DataSet.getMaximumValue(x);
 		double vx[] = DataSet.getSetOfValues(xmin, xmax, npoints, xlogScale);
-		
+
 		double vy[] = new double[vx.length];
 		for (int i=0; i<vx.length; i++) {
 			vy[i] = this.evaluateFittingFunction(vx[i]);
@@ -142,17 +139,17 @@ public class GenericFit implements Serializable
 				ChartSeriesElement.REGRESSION.NONE);
 		return chartSeries;
 	}
-	
+
 	/**
 	 * Does the fit.
 	 * @return The set of variables a, b, c. If some of them are not
 	 * used, its value will be zero.
-	 * @throws JPARSECException If the number of points is lower than 3. 
+	 * @throws JPARSECException If the number of points is lower than 3.
 	 */
 	public double[] fit() throws JPARSECException {
-		if (x.length < 3 || x.length != y.length) 
+		if (x.length < 3 || x.length != y.length)
 			throw new JPARSECException("Invalid input, at least three x and y values and same number of them.");
-		
+
 		double M = 0.0, P = 0.0, Q = 0.0, R = 0.0, S = 0.0, T = 0.0, U = 0.0, V = 0.0, W = 0.0;
 		if (f1 == null && f2 == null) {
 			for (int i=0; i<x.length; i++) {
@@ -160,7 +157,7 @@ public class GenericFit implements Serializable
 				Evaluation eval2 = new Evaluation("("+f0+")*("+f0+")", new String[] {"x "+x[i]});
 				M += y[i] * eval1.evaluate();
 				R += eval2.evaluate();
-			}			
+			}
 			a = M / R;
 			return new double[] {a};
 		} else {
@@ -188,19 +185,19 @@ public class GenericFit implements Serializable
 					Evaluation eval7 = new Evaluation(f0, new String[] {"x "+x[i]});
 					Evaluation eval8 = new Evaluation(f1, new String[] {"x "+x[i]});
 					Evaluation eval9 = new Evaluation(f2, new String[] {"x "+x[i]});
-					
+
 					M += eval1.evaluate();
 					R += eval2.evaluate();
 					T += eval3.evaluate();
-					
+
 					P += eval4.evaluate();
 					Q += eval5.evaluate();
 					S += eval6.evaluate();
-		
+
 					U += y[i] * eval7.evaluate();
 					V += y[i] * eval8.evaluate();
 					W += y[i] * eval9.evaluate();
-				}				
+				}
 				double D = M * R * T + 2.0 * P * Q * S - M * S * S - R * Q * Q - T * P * P;
 				a = (U * (R * T - S * S) + V * (Q * S - P * T) + W * (P * S - Q * R)) / D;
 				b = (U * (S * Q - P * T) + V * (M * T - Q * Q) + W * (P * Q - M * S)) / D;
@@ -209,7 +206,7 @@ public class GenericFit implements Serializable
 		}
 		return new double[] {a, b, c};
 	}
-	
+
 	/**
 	 * Returns the complete function.
 	 * @return The function.
@@ -239,81 +236,18 @@ public class GenericFit implements Serializable
 		double min = DataSet.getMinimumValue(x), max = DataSet.getMaximumValue(x);
 		for (int i=0; i<dy.length; i++) {
 			dx[i] = min + (max - min) * i / (dy.length - 1.0);
-			dy[i] = this.evaluateFittingFunction(dx[i]);				
+			dy[i] = this.evaluateFittingFunction(dx[i]);
 		}
 		ChartSeriesElement chartSeries2 = new ChartSeriesElement(dx,
 				dy, null, null, "f(x)", true, Color.RED, ChartSeriesElement.SHAPE_CIRCLE,
 				ChartSeriesElement.REGRESSION.SPLINE_INTERPOLATION);
 
 		ChartSeriesElement series[] = new ChartSeriesElement[] {chartSeries1, chartSeries2};
-		ChartElement chart = new ChartElement(series, ChartElement.TYPE.XY_CHART, 
+		ChartElement chart = new ChartElement(series, ChartElement.TYPE.XY_CHART,
 				ChartElement.SUBTYPE.XY_SCATTER,
-				"X, Y, f(x)", 
+				"X, Y, f(x)",
 				"X", "Y, f(x)", false, 800, 600);
 		CreateChart ch = new CreateChart(chart);
 		return ch;
-	}
-	
-	/**
-	 * Test program.
-	 * @param args Not used.
-	 */
-	public static void main (String args[]) {
-		try {
-			System.out.println("Let's fit a set of data to the function p1 * Math.sin(x) + p2 * Math.sin(2.0*x) + p3 * Math.sin(3.0*x)");
-			
-			double x[] = new double[] {3, 20, 34, 50, 75, 88, 111, 129, 143, 160, 183, 200, 218, 230,
-					248, 269, 290, 303, 320, 344};
-			double y[] = new double[] {0.0433, 0.2532, 0.3386, 0.3560, 0.4983, 0.7577, 1.4585, 1.8628,
-					1.8264, 1.2431, -0.2043, -1.2431, -1.8422, -1.8726, -1.4889, -0.8372, -0.4377, -0.3640,
-					-0.3508, -0.2126};
-			x = Functions.scalarProduct(x, Constant.DEG_TO_RAD);
-			
-			GenericFit g = new GenericFit(x, y, "Math.sin(x)", "Math.sin(2.0*x)", "Math.sin(3.0*x)");
-			ConsoleReport.doubleArrayReport(g.fit(), "f2.2"); // 1.2, -0.77, 0.39
-			
-			System.out.println();
-					
-			// Now the same using Regression
-			System.out.println("Now using Regression class");
-			Regression regression = new Regression(x, y, DataSet.getSetOfValues(0.0, 0.0, x.length, false));
-			String function = "p1*Math.sin(x)+p2*Math.sin(2.0*x)+p3*Math.sin(3.0*x)";
-			double initialValues[] = DataSet.getSetOfValues(1.0, 1.0, 3, false); // Suppose we have no idea of the results
-			initialValues[1] = -1; // But we know second value is negative (Help required with correct sign!)
-			regression.customFunction(function, initialValues);
-			ConsoleReport.doubleArrayReport(regression.getBestEstimates(), "f2.4");
-			System.out.println("Converge ? "+regression.convergence());
-			
-			System.out.println("");
-			double out[] = regression.getBestEstimates();
-			double out2[] = g.fit();
-			String[] param = new String[] {"p1 "+out[0], "p2 "+out[1], "p3 "+out[2]};
-			String[] param2 = new String[] {"p1 "+out2[0], "p2 "+out2[1], "p3 "+out2[2]};
-			System.out.println("x, y, y estimate (GenericFit), y estimate (Regression)");
-			for (int i=0; i<x.length; i++) {
-				Evaluation eval = new Evaluation(function, DataSet.addStringArray(param, new String[] {"x "+x[i]}));
-				Evaluation eval2 = new Evaluation(function, DataSet.addStringArray(param2, new String[] {"x "+x[i]}));
-				System.out.println(x[i]+" "+y[i]+" "+eval.evaluate()+" "+eval2.evaluate());
-			}
-			
-			System.out.println("");			
-			System.out.println("Now more simple a*sqrt(x)+b*x+c");
-			x = new double[] {0, 1, 2, 3, 4, 5};
-			y = new double[] {0, 1.2, 1.4, 1.7, 2.1, 2.2};
-			g = new GenericFit(x, y, "Math.sqrt(x)", "x", "1");
-			ConsoleReport.doubleArrayReport(g.fit(), "f2.4"); // 1.016
-
-			System.out.println("Now using Regression class");
-			regression = new Regression(x, y, DataSet.getSetOfValues(0.0, 0.0, x.length, false));
-			function = "p1*Math.sqrt(x)+p2*x+p3";
-			initialValues = DataSet.getSetOfValues(1.0, 1.0, 3, false); // Suppose we have no idea of the results
-			regression.customFunction(function, initialValues);
-			ConsoleReport.doubleArrayReport(regression.getBestEstimates(), "f2.4"); // Second value is negative, but little enough
-
-			CreateChart ch = g.getChart(2);
-			ch.showChartInJFreeChartPanel();
-		} catch (Exception exc) {
-			exc.printStackTrace();
-		}
 	}
 }

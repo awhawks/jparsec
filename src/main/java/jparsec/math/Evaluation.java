@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.math;
 
 import java.awt.Color;
@@ -48,9 +48,9 @@ import jparsec.util.JPARSECException;
 
 /**
  * A class for evaluating functions into numbers. Functions should be expressed
- * in the Java mathematical notation. This is the only class in JPARSEC 
+ * in the Java mathematical notation. This is the only class in JPARSEC
  * that currently requires JRE 1.6 to be used.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -90,11 +90,11 @@ public class Evaluation implements Serializable
 	{
 		function = func;
 		if (var != null) variables = var.clone();
-		
+
 		mgr = new ScriptEngineManager();
 		jsEngine = mgr.getEngineByName("javascript");
 	}
-	
+
 	/**
 	 * Evaluates user's expression to it's numerical result (symbolic
 	 * calculations), using javascript. Requires jre1.6.
@@ -108,7 +108,7 @@ public class Evaluation implements Serializable
 		Evaluation eval = new Evaluation(function, variables);
 		return eval.evaluate();
 	}
-	
+
 	/**
 	 * Evaluates user's expression to it's numerical result (symbolic
 	 * calculations), using javascript. Requires jre1.6.
@@ -118,15 +118,15 @@ public class Evaluation implements Serializable
 	public double evaluate()
 	throws JPARSECException {
 		if (configured) return evaluateMathExpression(function, variables);
-		
+
 		String f = configureUserFunction(function);
 		configured = true;
 		return evaluateMathExpression(f, variables);
 	}
-	
+
 	/**
 	 * Obtain result of an operation using Java scripting.
-	 * 
+	 *
 	 * @param expression Math expression in Java format.
 	 * @return Result of the operation.
 	 * @throws JPARSECException If an error occurs.
@@ -148,7 +148,7 @@ public class Evaluation implements Serializable
 
 	/**
 	 * Obtain result of an operation using Java scripting.
-	 * 
+	 *
 	 * @param expression Expression in Java format.
 	 * @return Result of the operation.
 	 * @throws JPARSECException If an error occurs.
@@ -172,7 +172,7 @@ public class Evaluation implements Serializable
 	 * Obtain result of an operation using Java scripting. The expression must be a
 	 * pure Java representation of the operation to perform, no change is made to this
 	 * input.
-	 * 
+	 *
 	 * @param expression Expression in Java format.
 	 * @return Result of the operation.
 	 * @throws JPARSECException If an error occurs.
@@ -193,7 +193,7 @@ public class Evaluation implements Serializable
 
 	/**
 	 * Obtain result of an operation using Java scripting.
-	 * 
+	 *
 	 * @param expression Math expression in Java format.
 	 * @param variables Array of variables and values. Format is variable name,
 	 *        an space, and it's value.
@@ -210,7 +210,7 @@ public class Evaluation implements Serializable
 			{
 				String name = FileIO.getField(1, variables[i], " ", true);
 				String value = FileIO.getField(2, variables[i], " ", true);
-	
+
 				jsEngine.put(name, new Double(value));
 			}
 		}
@@ -225,10 +225,10 @@ public class Evaluation implements Serializable
 		}
 		return out;
 	}
-	
+
 	/**
 	 * Resets the value of a given variable to another value in this instance.
-	 * Later you can use {@linkplain #evaluate()} to evaluate an expression faster 
+	 * Later you can use {@linkplain #evaluate()} to evaluate an expression faster
 	 * compared to creating the object again.
 	 * @param name Variable name.
 	 * @param value New value.
@@ -243,7 +243,7 @@ public class Evaluation implements Serializable
 
 	/**
 	 * Resets the values of the set of variables.
-	 * Later you can use {@linkplain #evaluate()} to evaluate an expression faster 
+	 * Later you can use {@linkplain #evaluate()} to evaluate an expression faster
 	 * compared to creating the object again.
 	 * @param variables The variables.
 	 */
@@ -255,16 +255,16 @@ public class Evaluation implements Serializable
 			{
 				String name = FileIO.getField(1, variables[i], " ", true);
 				String value = FileIO.getField(2, variables[i], " ", true);
-	
+
 				jsEngine.put(name, new Double(value));
 			}
 		}
 	}
-	
+
 	/**
 	 * Obtain result of a function using Java scripting. Function can be
 	 * dependent of at most three variables, called x, y, and z.
-	 * 
+	 *
 	 * @param function Math function f(x, y, z) in Java format.
 	 * @param x Value of x.
 	 * @param y Value of y.
@@ -295,7 +295,7 @@ public class Evaluation implements Serializable
 	 * Configures math operations and logical expressions to be able to evaluate
 	 * them with Java Scripting. This method is only called by {@linkplain Evaluation#evaluate()},
 	 * in the rest of cases it should be called explicitly.
-	 * 
+	 *
 	 * @param f Function.
 	 * @return Same function, ready to evaluate.
 	 */
@@ -376,7 +376,7 @@ public class Evaluation implements Serializable
 	 * <P>
 	 * This method can be applied to these functions: abundance, velocity,
 	 * temperature, and density.
-	 * 
+	 *
 	 * @param interp_point Interpolation x point.
 	 * @param dir Main directory, root for /FILE tag.
 	 * @return The adequate value.
@@ -528,7 +528,7 @@ public class Evaluation implements Serializable
 	 * A /FILE tag is needed to set the input file from the working directory.
 	 * Also A COLUMNxx (xx being the column number) is convenient. Math
 	 * operations are allowed.
-	 * 
+	 *
 	 * @param dir URL of the working directory which serves as the root directory to get
 	 *        the file path.
 	 * @return The adequate value.
@@ -606,7 +606,7 @@ public class Evaluation implements Serializable
 	 * A /FILE tag is needed to set the input file from the working directory.
 	 * Also A COLUMNxx (xx being the column number) is convenient. Math
 	 * operations are allowed.
-	 * 
+	 *
 	 * @param comment Any line starting with any of the characters in this string will be skipped.
 	 * @param sep The separator for the different fields in the COLUMN tag.
 	 * @return The adequate value.
@@ -681,37 +681,37 @@ public class Evaluation implements Serializable
 
 	/**
 	 * Transforms a NativeArray (Java Script) to string array.
-	 * 
+	 *
 	 * @param n NativeArray.
 	 * @return String array
 	 */
 	public static String[] nativeArrayToStringArray(NativeArray n)
 	{
 		String arr[] = new String[n.size()];
-	
+
 		for (int i = 0; i < arr.length; i++)
 		{
 			arr[i] = n.get(i).toString();
 		}
-	
+
 		return arr;
 	}
 
 	/**
 	 * Transforms a NativeArray (Java Script) to double array.
-	 * 
+	 *
 	 * @param n NativeArray.
 	 * @return Double array.
 	 */
 	public static double[] nativeArrayToDoubleArray(NativeArray n)
 	{
 		double arr[] = new double[n.size()];
-	
+
 		for (int i = 0; i < arr.length; i++)
 		{
-			arr[i] = ((Double) n.get(i)).doubleValue();
+			arr[i] = (Double) n.get(i);
 		}
-	
+
 		return arr;
 	}
 
@@ -722,6 +722,7 @@ public class Evaluation implements Serializable
 	public String getFunction() {
 		return function;
 	}
+
 	/**
 	 * Return the variables set.
 	 * @return The variables
@@ -729,7 +730,7 @@ public class Evaluation implements Serializable
 	public String[] getVariables() {
 		return variables;
 	}
-	
+
 	/**
 	 * Returns a chart showing the evaluated data.
 	 * @param var The name of the variable to modify, for instance "x".
@@ -746,65 +747,19 @@ public class Evaluation implements Serializable
 		for (int i=0; i<dy.length; i++) {
 			dx[i] = min + (max - min) * i / (dy.length - 1.0);
 			variables[index] = var + " " + dx[i];
-			dy[i] = this.evaluate();				
+			dy[i] = this.evaluate();
 		}
 		ChartSeriesElement chartSeries1 = new ChartSeriesElement(dx,
 				dy, null, null, "Y", true, Color.RED, ChartSeriesElement.SHAPE_CIRCLE,
 				ChartSeriesElement.REGRESSION.NONE);
 
 		ChartSeriesElement series[] = new ChartSeriesElement[] {chartSeries1};
-		ChartElement chart = new ChartElement(series, ChartElement.TYPE.XY_CHART, 
+		ChartElement chart = new ChartElement(series, ChartElement.TYPE.XY_CHART,
 				ChartElement.SUBTYPE.XY_SCATTER,
-				"X, Y", 
+				"X, Y",
 				"X", "Y", false, 800, 600);
 		CreateChart ch = new CreateChart(chart);
 		variables = vars;
 		return ch;
-	}
-	
-	/**
-	 * For unit testing only.
-	 * @param args Not used.
-	 */
-	public static void main(String args[])
-	{
-		System.out.println("Evaluation test");
-
-		try {
-//			String f = "2*Math.sqrt(16)*(5==5)+Math.pow(x,3)*(3>4)";
-			String f = "2*Math.sqrt(16)*(Math.sqrt(x)<2)+Math.pow(x,3)*(Math.abs(x-2)<1)";
-			String variables[] = new String[] { "x 2" };
-			Evaluation eval = new Evaluation(f, variables);			
-			double yy = eval.evaluate();
-			System.out.println("Expression: "+f);
-			System.out.println("(x=2) => " + yy);
-			System.out.println();
-			
-			CreateChart ch = eval.getChart("x", 0, 5, 100);
-			ch.showChartInJFreeChartPanel();
-			
-			double x = 1.0, y = 2.0, z = 3.0;
-			String function = "x*x+y*y+z*z";
-			eval = new Evaluation();
-			double val = eval.evaluateMathFunction(function, x, y, z);
-			System.out.println("f(x,y,z) = "+function);
-			System.out.println("f("+x+", "+y+", "+z+") = "+val);
-			System.out.println();
-			
-			String expression = "var u=1.0\nvar v=1.0\n";
-			expression += "var ir=.3+.1*Math.sin(4*Math.PI*u)\n";
-			expression += "var r=ir*Math.sin(2*Math.PI*v)+.5\n";
-			expression += "var x=r*Math.sin(2*Math.PI*u)\n";
-			expression += "var y=r*Math.cos(2*Math.PI*u)\n";
-			expression += "var z=1.5*ir*Math.cos(Math.PI*v)\n";
-			expression += "var xx = new Array (x, y, z)\n";
-			expression += "xx"; // To get the array
-			System.out.println("Expression: \n"+expression);
-			double out[] = Evaluation.nativeArrayToDoubleArray((NativeArray) eval.evaluatePureJavaExpression(expression));
-			ConsoleReport.doubleArrayReport(out, "f2.5");
-		} catch (Exception exc)
-		{
-			exc.printStackTrace();
-		}
 	}
 }
