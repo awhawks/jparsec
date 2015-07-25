@@ -10,7 +10,7 @@ public class ADSQueryTest {
      * @param args Not used.
      */
     public static void main(String args[]) throws Exception {
-/*
+        /*
         // Select a given specific article
         String query = ADSQuery.ADS_HARVARD_URL;
         query += ADSQuery.addParameter(ADSQuery.PARAMETER.BIBCODE, "2007A&A...470..625D");
@@ -18,7 +18,8 @@ public class ADSQueryTest {
 
         String out = ADSQuery.query(query);
         System.out.println(out);
-*/
+        */
+
         // Get all my abstracts as bibtex entries between a given year interval
         String author = "Alonso-Albi, T.";
         int year0 = 2012, yearf = 2012;

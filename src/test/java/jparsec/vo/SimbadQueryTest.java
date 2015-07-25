@@ -13,9 +13,10 @@ public class SimbadQueryTest {
     public static void main(String args[]) {
         try {
             String name = "HD259431";
+
             if (args != null && args.length > 0) {
                 name = DataSet.toString(args, " ");
-                System.out.println("<HTML><pre>");
+                System.out.println("<html><body><pre>");
             } else {
                 System.out.println("SimbadQuery test");
             }
@@ -39,7 +40,7 @@ public class SimbadQueryTest {
             }
 
             if (args != null && args.length > 0)
-                System.out.println("</pre></HTML>");
+                System.out.println("</pre></body></html>");
         } catch (Exception e) {
             System.out.println(DataSet.toString(JPARSECException.toStringArray(e.getStackTrace()), FileIO.getLineSeparator()));
         }

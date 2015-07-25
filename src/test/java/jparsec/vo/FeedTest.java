@@ -3,7 +3,6 @@ package jparsec.vo;
 import java.net.URL;
 
 public class FeedTest {
-
     /**
      * Test program.
      *

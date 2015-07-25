@@ -17,7 +17,6 @@ public class ADSElementTest {
         ADSElement bib = new ADSElement(year, journal, volume, publicationType, page, author);
         String bibTex = bib.getBibCode();
         System.out.println(bibTex);
-
         String bibTexEntry = bib.getBibTexEntry();
         System.out.println(bibTexEntry);
         bib.getArticle("/home/alonso/myarticle.pdf", 30000);
