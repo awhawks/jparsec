@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,14 +18,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.util;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-
-import jparsec.graph.*;
+import jparsec.graph.DataSet;
 import jparsec.io.FileIO;
 import jparsec.io.ReadFile;
 import jparsec.util.Logger.LEVEL;
@@ -33,25 +32,25 @@ import jparsec.util.Logger.LEVEL;
 /**
  * Translates library to other languages. This class uses direct
  * translation from/to English and Spanish.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
-public class Translate 
+public class Translate
 {
 	// private constructor so that this class cannot be instantiated.
 	private Translate() {}
-		
+
 	/**
 	 * The set of languages available in JPARSEC.
 	 */
-	public static enum LANGUAGE {
+	public enum LANGUAGE {
 		/** ID constant for English. */
 		ENGLISH,
 		/** ID Constant for Spanish. */
 		SPANISH
-	};
-	
+	}
+
 	/**
 	 * Selects default language for output.
 	 */
@@ -70,7 +69,7 @@ public class Translate
 		if (value.equals("")) return "";
  		if (from == to) return DataSet.replaceAll(value, "\\n", FileIO.getLineSeparator(), true);
 		String out = value;
-		
+
 		try
 		{
 			String pathToFile = "jparsec/util/"+from.name().toLowerCase()+".txt";
@@ -78,7 +77,7 @@ public class Translate
 			String file_line = "";
 			int index = -1, indexSW = -1, i = -1;
 			int RindexSW = -1;
-			
+
 			InputStream is = Translate.class.getClassLoader().getResourceAsStream(pathToFile);
 			BufferedReader dis = new BufferedReader(new InputStreamReader(is, encoding));
 
@@ -95,7 +94,7 @@ public class Translate
 
 			// Close file
 			dis.close();
-			
+
 			if (index < 0) {
 				index = indexSW;
 				// FIXME: check if this is happening and maybe correct it
@@ -213,24 +212,7 @@ public class Translate
 	public static int getNumberOfEntries() throws JPARSECException {
 		return ReadFile.readResourceGetNumberOfLines("jparsec/util/english.txt", ReadFile.ENCODING_ISO_8859);
 	}
-	
-	/**
-	 * Test program.
-	 * @param args Unused.
-	 */
-	public static void main(String args[])
-	{
-		System.out.println("Translate test");
 
-		try {
-			String translate[] =  DataSet.arrayListToStringArray(ReadFile.readResource("jparsec/util/english.txt"));
-			int index = DataSet.getIndex(translate, "Position angle");
-			System.out.println(index);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-	}
-	
 	/** ID value for the corresponding String constant. */
 	public static final int JPARSEC_EQUATOR = 18;
 	/** ID value for the corresponding String constant. */
