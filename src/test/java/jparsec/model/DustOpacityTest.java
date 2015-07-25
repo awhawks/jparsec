@@ -30,23 +30,25 @@ public class DustOpacityTest {
             // 0.14 and 0.86 and the % of each grain type
             DustOpacity dust1 = new DustOpacity(grain1, p, max, 0.14);
             DustOpacity dust2 = new DustOpacity(grain2, p, max, 0.86);
-
             ChartSeriesElement series[] = new ChartSeriesElement[size.length];
+
             for (int i = 0; i < size.length; i++) {
                 dust1.sizeMax = size[i];
                 dust2.sizeMax = size[i];
-
                 CreateChart charts[] = DustOpacity.getOpacityAndBetaCharts(dust1, dust2, 0.1, 10000.0, true, true);
                 ChartElement chartElem = charts[0].getChartElement(); // Return only the opacity chart here
                 ChartSeriesElement s[] = chartElem.series;
+
                 for (int j = 0; j < s.length; j++) {
                     s[j].showLines = true;
                     s[j].showShapes = false;
                     s[j].legend = "" + dust1.sizeMax;
                     s[j].color = col[i];
                 }
+
                 series[i] = s[2];
             }
+
             series[0].legend += " (@mum)";
             series[2].legend = "10^{4}";
 
@@ -58,10 +60,8 @@ public class DustOpacityTest {
             chart.showErrorBars = false;
             chart.xTickLabels = ChartElement.TICK_LABELS.LOGARITHM_VALUES;
             chart.yTickLabels = ChartElement.TICK_LABELS.LOGARITHM_VALUES;
-
             chart.xAxisInLogScale = true;
             chart.yAxisInLogScale = true;
-
             //Serialization.writeObject(chart, "/home/alonso/grainOpacity");
             CreateChart c = new CreateChart(chart);
             c.showChartInJFreeChartPanel();

@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.model;
 
 import jparsec.astronomy.Star;
@@ -29,15 +29,15 @@ import java.io.Serializable;
 
 /**
  * A class to model the extinction towards the ISM.<P>
- * 
+ *
  * The model determines the total absorption at wavelengths
  * between 0.10 and 3.33 um using the algorithm developed by
  * Cardelli, Clayton, and Mathis (1989)
  * <a href="http://adsabs.harvard.edu/cgi-bin/nph-bib_query?1989ApJ...345..245C&db_key=AST"> [ApJ 345 245] </a>.<P>
- * 
- * Code based on the original Doug Welch's 'Excellent' Absorption 
+ *
+ * Code based on the original Doug Welch's 'Excellent' Absorption
  * Law Calculator in Javascript.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -86,10 +86,10 @@ public class Extinction implements Serializable {
 		this.rv = 3.1;
 		this.av = Extinction.getAv(nH);
 	}
-	
+
 	/**
-	 * Constructor for a given B-V color index. 
-	 * @param rv The value for rv parameter. 
+	 * Constructor for a given B-V color index.
+	 * @param rv The value for rv parameter.
 	 * @param BminusV The color index.
 	 * @param spectralType The spectral type as it is ussually given: OBAFGKM
 	 * followed by the subtype number.
@@ -98,7 +98,7 @@ public class Extinction implements Serializable {
 	 */
 	public Extinction(double rv, double BminusV, String spectralType, boolean mainSequence)
 	throws JPARSECException {
-		LUMINOSITY_CLASS lclass = LUMINOSITY_CLASS.MAIN_SEQUENCE_V;			
+		LUMINOSITY_CLASS lclass = LUMINOSITY_CLASS.MAIN_SEQUENCE_V;
 		if (!mainSequence) lclass = LUMINOSITY_CLASS.GIANTS_III;
 		double bv = Star.getStarBminusV(Star.getEffectiveTemperature(spectralType), lclass);
 		observedBV = BminusV;
@@ -112,9 +112,9 @@ public class Extinction implements Serializable {
 	/**
 	 * Clones this instance.
 	 */
+	@Override
 	public Object clone()
 	{
-		if (this == null) return null;
 		Extinction e = new Extinction(this.rv, this.av);
 		e.enableExtinction = this.enableExtinction;
 		e.main = this.main;
@@ -123,30 +123,47 @@ public class Extinction implements Serializable {
 		e.sp = this.sp;
 		return e;
 	}
+
 	/**
-	 * Checks if this instance is equals to another.
+	 * Checks if this instance is equal to another.
 	 */
-	public boolean equals(Object o)
-	{
-		if (o == null) {
-			if (this == null) return true;
-			return false;
-		}
-		if (this == null) {
-			return false;
-		}
-		boolean equals = true;
-		Extinction e = (Extinction) o;
-		if (e.av != this.av) equals = false;
-		if (e.maximumWavelengthToComputeExtinction != this.maximumWavelengthToComputeExtinction) equals = false;
-		if (e.observedBV != this.observedBV) equals = false;
-		if (e.rv != this.rv) equals = false;
-		if (e.enableExtinction != this.enableExtinction) equals = false;
-		if (e.main != this.main) equals = false;
-		if (!e.sp.equals(this.sp)) equals = false;
-		return equals;
-	}
-	/**
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Extinction)) return false;
+
+        Extinction that = (Extinction) o;
+
+        if (Double.compare(that.rv, rv) != 0) return false;
+        if (Double.compare(that.av, av) != 0) return false;
+        if (Double.compare(that.observedBV, observedBV) != 0) return false;
+        if (main != that.main) return false;
+        if (enableExtinction != that.enableExtinction) return false;
+        if (Double.compare(that.maximumWavelengthToComputeExtinction, maximumWavelengthToComputeExtinction) != 0)
+            return false;
+
+        return !(sp != null ? !sp.equals(that.sp) : that.sp != null);
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        temp = Double.doubleToLongBits(rv);
+        result = (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(av);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(observedBV);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + (sp != null ? sp.hashCode() : 0);
+        result = 31 * result + (main ? 1 : 0);
+        result = 31 * result + (enableExtinction ? 1 : 0);
+        temp = Double.doubleToLongBits(maximumWavelengthToComputeExtinction);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        return result;
+    }
+
+    /**
 	 * Returns the observed B minus V.
 	 * @return The B-V color.
 	 */
@@ -154,6 +171,7 @@ public class Extinction implements Serializable {
 	{
 		return this.observedBV;
 	}
+
 	/**
 	 * Returns the spectral type.
 	 * @return The spectral type.
@@ -162,6 +180,7 @@ public class Extinction implements Serializable {
 	{
 		return this.sp;
 	}
+
 	/**
 	 * Returns if the star belongs to the Main Sequence.
 	 * @return True or false.
@@ -170,12 +189,12 @@ public class Extinction implements Serializable {
 	{
 		return this.main;
 	}
-	
+
 	/**
 	 * Holds maximum wavelength to compute extinction in microns. Default value
-	 * is 3.33 microns. If it is increased (not more than 5.0 microns), the Rieke and 
+	 * is 3.33 microns. If it is increased (not more than 5.0 microns), the Rieke and
 	 * Lebofski 1985 law already integrated in the Cardelli 1989 parameterization will be
-	 * extrapolated up to this wavelength. 
+	 * extrapolated up to this wavelength.
 	 */
 	public double maximumWavelengthToComputeExtinction = 3.33;
 
@@ -188,13 +207,13 @@ public class Extinction implements Serializable {
 	public double compute(double wv)
 	throws JPARSECException {
 		if (!enableExtinction) return 0.0;
-		
+
 		   double x = 1.0 / wv, xx = 0.0;
 		   double ax = 0.0, bx = 0.0, y = 0.0, fa = 0.0, fb = 0.0;
-		
-		   if (wv < 0.1 || wv > maximumWavelengthToComputeExtinction) 
+
+		   if (wv < 0.1 || wv > maximumWavelengthToComputeExtinction)
 			   throw new JPARSECException("Wavelength should be between 0.1 and "+maximumWavelengthToComputeExtinction+" microns.");
-		   
+
 		   if (x < 1.1) {
 		      ax =  0.574 * Math.pow(x, 1.61);
 		      bx = -0.527 * Math.pow(x, 1.61);
@@ -229,7 +248,7 @@ public class Extinction implements Serializable {
 		    	  fb = 0.0;
 		      }
 
-		      ax = 1.752 - 0.316*x; 
+		      ax = 1.752 - 0.316*x;
 		      ax -= 0.104 / (Math.pow((x - 4.67), 2.0) + 0.341);
 		      ax += fa;
 
@@ -249,20 +268,20 @@ public class Extinction implements Serializable {
 		  }
 
 		  double al = (ax + bx / rv) * av;
-		  
+
 		  return al;
 	}
-	
+
 	/**
 	 * Returns the selective extinction E(B-V) = A(B) - A(v).
-	 * It is just {@linkplain Extinction#av}/{@linkplain Extinction#rv}. 
+	 * It is just {@linkplain Extinction#av}/{@linkplain Extinction#rv}.
 	 * @return The selective extinction.
 	 */
 	public double getEBminusV()
 	{
 		return av / rv;
 	}
-	
+
 	/**
 	 * Returns the extinction Av (to be used as input in the
 	 * instance of {@linkplain Extinction}) assuming a column
@@ -273,12 +292,12 @@ public class Extinction implements Serializable {
 	 * Values for nH / Av (atoms cm^-2 mag^-1) range from 5.8E21 of
 	 * the first reference to 1.8E21 of the last one, which is the value
 	 * used here.
-	 * 
+	 *
 	 * @param nH in atoms cm^-2.
 	 * @return The total extinction A in V band.
 	 */
 	public static double getAv(double nH)
 	{
 		return nH / (1.8 * 1.0E21);
-	}	
+	}
 }
