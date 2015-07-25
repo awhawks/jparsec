@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.io;
 
 import jparsec.ephem.Functions;
@@ -39,7 +39,7 @@ import java.util.Set;
 
 /**
  * A class with static methods to report results of calculations in an adequate format.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -47,11 +47,11 @@ public class ConsoleReport
 {
 	// private constructor so that this class cannot be instantiated.
 	private ConsoleReport() {}
-	
+
 	/**
 	 * Report the results of an ephemeris calculation to the console. Useful for
 	 * getting the values quickly or for testing purposes.
-	 * 
+	 *
 	 * @param ephem Ephem object for a Solar System body.
 	 * @throws JPARSECException Thrown for invalid rise, set, or transit times.
 	 */
@@ -59,10 +59,10 @@ public class ConsoleReport
 	{
 		System.out.println(getFullEphemReport(ephem, false));
 	}
-	
+
 	/**
 	 * Report the results of an ephemeris calculation to a string
-	 * 
+	 *
 	 * @param ephem Ephem object.
 	 * @param isStar True if the object is a star, and distance should be
 	 * shown in pc instead of AU.
@@ -73,10 +73,10 @@ public class ConsoleReport
 	{
 		return getFullEphemReport(ephem, isStar, true);
 	}
-	
+
 	/**
 	 * Report the results of an ephemeris calculation to a string
-	 * 
+	 *
 	 * @param ephem Ephem object.
 	 * @param isStar True if the object is a star, and distance should be
 	 * shown in pc instead of AU.
@@ -91,7 +91,7 @@ public class ConsoleReport
 
 	/**
 	 * Report the results of an ephemeris calculation to a string
-	 * 
+	 *
 	 * @param ephem Ephem object.
 	 * @param isStar True if the object is a star, and distance should be
 	 * shown in pc instead of AU.
@@ -106,7 +106,7 @@ public class ConsoleReport
 		double factor1 = Constant.AU * 1000.0 / Constant.PARSEC;
 		double factor2 = 1000.0 / (Constant.LIGHT_YEAR * Constant.LIGHT_TIME_DAYS_PER_AU);
 		String unit1 = "pc", unit2 = "light-years";
-		if (Translate.getDefaultLanguage() == Translate.LANGUAGE.SPANISH) unit2 = "años-luz";
+		if (Translate.getDefaultLanguage() == Translate.LANGUAGE.SPANISH) unit2 = "aï¿½os-luz";
 		int n = 1;
 		if (!isStar || ephem.distance < 100000) {
 			unit1 = "AU";
@@ -116,7 +116,7 @@ public class ConsoleReport
 			factor2 = Constant.SECONDS_PER_DAY;
 			n = 6;
 		}
-		
+
 		String name = ephem.name + " ";
 		if (!showName) name = "";
 		String out = "", sep = FileIO.getLineSeparator();
@@ -157,7 +157,7 @@ public class ConsoleReport
 		if (!isStar) out += name + Translate.translate(Translate.JPARSEC_BRIGHT_LIMB_ANGLE)+": " + Functions.formatAngle(ephem.brightLimbAngle, decimalArcsec) + sep;
 		out += name + Translate.translate(Translate.JPARSEC_POSITION_ANGLE_OF_AXIS)+": " + Functions.formatAngle(ephem.positionAngleOfAxis, decimalArcsec) + sep;
 		out += name + Translate.translate(Translate.JPARSEC_POSITION_ANGLE_OF_POLE)+": " + Functions.formatAngle(ephem.positionAngleOfPole, decimalArcsec) + sep;
-		
+
 		TARGET t = Target.getID(ephem.name);
 		if (t == TARGET.JUPITER || t == TARGET.SATURN || t == TARGET.URANUS || t == TARGET.NEPTUNE) {
 			if (t == TARGET.JUPITER || t == TARGET.SATURN) {
@@ -171,15 +171,15 @@ public class ConsoleReport
 			out += name + Translate.translate(Translate.JPARSEC_LONGITUDE_OF_CENTRAL_MERIDIAN)+" "+Translate.translate(Translate.JPARSEC_SYSTEM).toLowerCase()+" III: " + Functions.formatAngle(
 					ephem.longitudeOfCentralMeridianSystemIII, decimalArcsec) + sep;
 		} else {
-			out += name + Translate.translate(Translate.JPARSEC_LONGITUDE_OF_CENTRAL_MERIDIAN)+": " + Functions.formatAngle(ephem.longitudeOfCentralMeridian, decimalArcsec) + sep;			
+			out += name + Translate.translate(Translate.JPARSEC_LONGITUDE_OF_CENTRAL_MERIDIAN)+": " + Functions.formatAngle(ephem.longitudeOfCentralMeridian, decimalArcsec) + sep;
 		}
 		return out;
 	}
-	
+
 	/**
 	 * Report main results of an ephemeris calculation to the console. Useful
 	 * for getting the values quickly or for testing purposes.
-	 * 
+	 *
 	 * @param ephem Ephem object for a Solar System body.
 	 * @throws JPARSECException Thrown for invalid rise, set, or transit times.
 	 */
@@ -187,10 +187,10 @@ public class ConsoleReport
 	{
 		System.out.println(getBasicEphemReport(ephem, false));
 	}
-	
+
 	/**
 	 * Report main results of an ephemeris calculation to a string.
-	 * 
+	 *
 	 * @param ephem Ephem object.
 	 * @param isStar True if the object is a star, and distance should be
 	 * shown in pc instead of AU.
@@ -201,10 +201,10 @@ public class ConsoleReport
 	{
 		return getBasicEphemReport(ephem, isStar, true);
 	}
-	
+
 	/**
 	 * Report main results of an ephemeris calculation to a string.
-	 * 
+	 *
 	 * @param ephem Ephem object.
 	 * @param isStar True if the object is a star, and distance should be
 	 * shown in pc instead of AU.
@@ -216,10 +216,10 @@ public class ConsoleReport
 	{
 		return getBasicEphemReport(ephem, isStar, showName, 3);
 	}
-	
+
 	/**
 	 * Report main results of an ephemeris calculation to a string.
-	 * 
+	 *
 	 * @param ephem Ephem object.
 	 * @param isStar True if the object is a star, and distance should be
 	 * shown in pc instead of AU.
@@ -240,7 +240,7 @@ public class ConsoleReport
 			factor = 1.0;
 			n = 6;
 		}
-		
+
 		String name = ephem.name + " ";
 		if (!showName) name = "";
 		String out = "", sep = FileIO.getLineSeparator();
@@ -256,7 +256,7 @@ public class ConsoleReport
 		out += name + Translate.translate(Translate.JPARSEC_AZIMUTH)+": " + Functions.formatAngle(ephem.azimuth, decimalArcsec) + sep;
 		out += name + Translate.translate(Translate.JPARSEC_ELEVATION)+": " + Functions.formatAngle(ephem.elevation, decimalArcsec) + sep;
 		out += name + Translate.translate(Translate.JPARSEC_MAGNITUDE)+": " + (ephem.magnitude > 99 ? "-" : Functions.formatValue(ephem.magnitude, 3)) + sep;
-	
+
 		return out;
 	}
 
@@ -350,10 +350,10 @@ public class ConsoleReport
 						break;
 					}
 					if (p2 == 0) {
-						line = DataSet.replaceOne(line, line.substring(x, end), 
+						line = DataSet.replaceOne(line, line.substring(x, end),
 								FileIO.eliminateLeadingZeros(ConsoleReport.formatAsFortran(new String[] {""+array[index]}, "I"+p1, true).trim(), true), 1);
 					} else {
-						line = DataSet.replaceOne(line, line.substring(x, end), 
+						line = DataSet.replaceOne(line, line.substring(x, end),
 							FileIO.eliminateLeadingZeros(ConsoleReport.formatAsFortran(new String[] {""+array[index]}, "f"+p1+"."+p2, true).trim(), true), 1);
 					}
 					index ++;
@@ -370,7 +370,7 @@ public class ConsoleReport
 	 * @param val The set of values.
 	 * @param format The format to apply, for example '1x, i2, 2f5.4, a3'.
 	 * @param fillBefore True to fill with blank spaces before the values in case the
-	 * field is longer than the length of the value. False will fill with blanks after 
+	 * field is longer than the length of the value. False will fill with blanks after
 	 * the field value. True is used commonly so that values will be aligned to the right,
 	 * and decimal point always at the same place.
 	 * @return The formatted output.
@@ -379,14 +379,14 @@ public class ConsoleReport
 	{
 		String out = "";
 		DecimalFormat formatter = new DecimalFormat("00.0000");
-		
+
 		format = format.toUpperCase();
 		int n = FileIO.getNumberOfFields(format, ",", true);
 		int index = -1;
 		for (int i=0; i<n; i++)
 		{
 			String f = FileIO.getField(i+1, format, ",", true);
-			
+
 			int x = f.indexOf("X");
 			if (x >= 0) {
 				int pre = ConsoleReport.getPreviousInt(f, "X");
@@ -477,15 +477,15 @@ public class ConsoleReport
 								}
 							}
 						}
-					}				
-				}				
+					}
+				}
 			}
 		}
-		
+
 		out = DataSet.replaceAll(out, ",", ".", true);
 		return out;
 	}
-	
+
 	private static int getPreviousInt(String text, String remove)
 	{
 		int val = 1;
@@ -510,11 +510,11 @@ public class ConsoleReport
 	 * Reports system properties.
 	 */
 	public static void reportSystemProperties() {
-		Properties properties = System.getProperties(); 
-		Set<Object> keys = properties.keySet(); 
-		for(Object key : keys){ 
-			System.out.println(key + ": " + properties.get(key)); 
-		} 
+		Properties properties = System.getProperties();
+		Set<Object> keys = properties.keySet();
+		for(Object key : keys){
+			System.out.println(key + ": " + properties.get(key));
+		}
 	}
 
 	/**
@@ -529,7 +529,7 @@ public class ConsoleReport
 				System.out.println("Null object");
 				return;
 			}
-			
+
 			String className = o.getClass().getCanonicalName();
 			Class c = Class.forName(className);
 			Field f[] = c.getFields();
@@ -547,21 +547,5 @@ public class ConsoleReport
 			e.printStackTrace();
 			throw new JPARSECException("cannot report fields.", e);
 		}
-	}
-
-	/**
-	 * For unit testing only.
-	 * @param args Not used.
-	 */
-	public static void main(String args[])
-	{
-		System.out.println("ConsoleReport test");
-		
-		String val[] = DataSet.toStringValues(new double[] {
-				-123.123,  -12, 12, 321.1234567
-		});
-		String format = "1x, f5.3, 3x, 2I3, 1x, A5";
-		String out = ConsoleReport.formatAsFortran(val, format, true);
-		System.out.println(out);
 	}
 }

@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -25,18 +25,18 @@
  * Copyright (C) 1996 Sun Microsystems Inc.
  * All Rights Reserved. ISBN 0-13-565755-5
  *
- * Permission to use, copy, modify, and distribute this 
+ * Permission to use, copy, modify, and distribute this
  * software and its documentation for NON-COMMERCIAL purposes
- * and without fee is hereby granted provided that this 
- * copyright notice appears in all copies. 
- * 
- * THE AUTHORS AND PUBLISHER MAKE NO REPRESENTATIONS OR 
- * WARRANTIES ABOUT THE SUITABILITY OF THE SOFTWARE, EITHER 
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE 
- * IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 
+ * and without fee is hereby granted provided that this
+ * copyright notice appears in all copies.
+ *
+ * THE AUTHORS AND PUBLISHER MAKE NO REPRESENTATIONS OR
+ * WARRANTIES ABOUT THE SUITABILITY OF THE SOFTWARE, EITHER
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
  * PARTICULAR PURPOSE, OR NON-INFRINGEMENT. THE AUTHORS
- * AND PUBLISHER SHALL NOT BE LIABLE FOR ANY DAMAGES SUFFERED 
- * BY LICENSEE AS A RESULT OF USING, MODIFYING OR DISTRIBUTING 
+ * AND PUBLISHER SHALL NOT BE LIABLE FOR ANY DAMAGES SUFFERED
+ * BY LICENSEE AS A RESULT OF USING, MODIFYING OR DISTRIBUTING
  * THIS SOFTWARE OR ITS DERIVATIVES.
  */
 
@@ -48,12 +48,12 @@ import jparsec.util.JPARSECException;
 /**
  * A class for formatting numbers that follows printf conventions. Also
  * implements C-like atoi and atof functions
- * 
+ *
  * @version 1.01 15 Feb 1996
  * @author Cay Horstmann
  */
 public class CFormat {
-/** 
+/**
   * Formats the number following printf conventions.
   * Main limitation: Can only handle one format parameter at a time
   * Use multiple Format objects to format more than one number
@@ -177,7 +177,7 @@ public class CFormat {
 
 	/**
 	 * prints a formatted number following printf conventions.
-	 * 
+	 *
 	 * @param s a PrintStream.
 	 * @param fmt the format string.
 	 * @param x the double to print.
@@ -189,7 +189,7 @@ public class CFormat {
 
 	/**
 	 * prints a formatted number following printf conventions.
-	 * 
+	 *
 	 * @param s a PrintStream.
 	 * @param fmt the format string.
 	 * @param x the long to print.
@@ -201,7 +201,7 @@ public class CFormat {
 
 	/**
 	 * prints a formatted number following printf conventions.
-	 * 
+	 *
 	 * @param s a PrintStream.
 	 * @param fmt the format string.
 	 * @param x the character to print.
@@ -213,7 +213,7 @@ public class CFormat {
 
 	/**
 	 * Prints a formatted number following printf conventions.
-	 * 
+	 *
 	 * @param s a PrintStream, fmt the format string.
 	 * @param fmt The format string.
 	 * @param x a string that represents the digits to print.
@@ -225,7 +225,7 @@ public class CFormat {
 
 	/**
 	 * Converts a string of digits (decimal, octal or hex) to an integer.
-	 * 
+	 *
 	 * @param s a string.
 	 * @return the numeric value of the prefix of s representing a base 10
 	 *         integer.
@@ -236,7 +236,7 @@ public class CFormat {
 
 	/**
 	 * Converts a string of digits (decimal, octal or hex) to a long integer.
-	 * 
+	 *
 	 * @param s a string.
 	 * @return the numeric value of the prefix of s representing a base 10
 	 *         integer.
@@ -285,7 +285,7 @@ public class CFormat {
 
 	/**
 	 * Converts a string of digits to an double.
-	 * 
+	 *
 	 * @param s a string.
 	 * @return The double value.
 	 */
@@ -331,7 +331,7 @@ public class CFormat {
 
 	/**
 	 * Formats a double into a string (like sprintf in C).
-	 * 
+	 *
 	 * @param x the number to format.
 	 * @return the formatted string.
 	 * @throws JPARSECException if bad argument.
@@ -357,7 +357,7 @@ public class CFormat {
 
 	/**
 	 * Formats a long integer into a string (like sprintf in C).
-	 * 
+	 *
 	 * @param x the number to format.
 	 * @return the formatted string.
 	 * @throws JPARSECException if bad format.
@@ -386,7 +386,7 @@ public class CFormat {
 
 	/**
 	 * Formats a character into a string (like sprintf in C).
-	 * 
+	 *
 	 * @param c the value to format.
 	 * @return the formatted string.
 	 * @throws JPARSECException if bad format.
@@ -401,7 +401,7 @@ public class CFormat {
 
 	/**
 	 * Formats a string into a larger string (like sprintf in C).
-	 * 
+	 *
 	 * @param s the value to format.
 	 * @return the formatted string.
 	 * @throws JPARSECException if bad format.
@@ -412,73 +412,6 @@ public class CFormat {
 		if (precision >= 0)
 			s = s.substring(0, precision);
 		return pad(s);
-	}
-
-	/**
-	 * A test stub for the format class
-	 * @param args Not used.
-	 */
-	public static void main(String[] args) {
-		try {
-			double x = 1.23456789012;
-			double y = 123;
-			double z = 1.2345e30;
-			double w = 1.02;
-			double u = 1.234e-5;
-			int d = 0xCAFE;
-			CFormat.print(System.out, "x = |%f|\n", x);
-			CFormat.print(System.out, "u = |%20f|\n", u);
-			CFormat.print(System.out, "x = |% .5f|\n", x);
-			CFormat.print(System.out, "w = |%20.5f|\n", w);
-			CFormat.print(System.out, "x = |%020.5f|\n", x);
-			CFormat.print(System.out, "x = |%+20.5f|\n", x);
-			CFormat.print(System.out, "x = |%+020.5f|\n", x);
-			CFormat.print(System.out, "x = |% 020.5f|\n", x);
-			CFormat.print(System.out, "y = |%#+20.5f|\n", y);
-			CFormat.print(System.out, "y = |%-+20.5f|\n", y);
-			CFormat.print(System.out, "z = |%20.5f|\n", z);
-	
-			CFormat.print(System.out, "x = |%e|\n", x);
-			CFormat.print(System.out, "u = |%20e|\n", u);
-			CFormat.print(System.out, "x = |% .5e|\n", x);
-			CFormat.print(System.out, "w = |%20.5e|\n", w);
-			CFormat.print(System.out, "x = |%020.5e|\n", x);
-			CFormat.print(System.out, "x = |%+20.5e|\n", x);
-			CFormat.print(System.out, "x = |%+020.5e|\n", x);
-			CFormat.print(System.out, "x = |% 020.5e|\n", x);
-			CFormat.print(System.out, "y = |%#+20.5e|\n", y);
-			CFormat.print(System.out, "y = |%-+20.5e|\n", y);
-	
-			CFormat.print(System.out, "x = |%g|\n", x);
-			CFormat.print(System.out, "z = |%g|\n", z);
-			CFormat.print(System.out, "w = |%g|\n", w);
-			CFormat.print(System.out, "u = |%g|\n", u);
-			CFormat.print(System.out, "y = |%.2g|\n", y);
-			CFormat.print(System.out, "y = |%#.2g|\n", y);
-	
-			CFormat.print(System.out, "d = |%d|\n", d);
-			CFormat.print(System.out, "d = |%20d|\n", d);
-			CFormat.print(System.out, "d = |%020d|\n", d);
-			CFormat.print(System.out, "d = |%+20d|\n", d);
-			CFormat.print(System.out, "d = |% 020d|\n", d);
-			CFormat.print(System.out, "d = |%-20d|\n", d);
-			CFormat.print(System.out, "d = |%20.8d|\n", d);
-			CFormat.print(System.out, "d = |%x|\n", d);
-			CFormat.print(System.out, "d = |%20X|\n", d);
-			CFormat.print(System.out, "d = |%#20x|\n", d);
-			CFormat.print(System.out, "d = |%020X|\n", d);
-			CFormat.print(System.out, "d = |%20.8x|\n", d);
-			CFormat.print(System.out, "d = |%o|\n", d);
-			CFormat.print(System.out, "d = |%020o|\n", d);
-			CFormat.print(System.out, "d = |%#20o|\n", d);
-			CFormat.print(System.out, "d = |%#020o|\n", d);
-			CFormat.print(System.out, "d = |%20.12o|\n", d);
-	
-			CFormat.print(System.out, "s = |%-20s|\n", "Hello");
-			CFormat.print(System.out, "s = |%-20c|\n", '!');
-		} catch (JPARSECException exc) {
-			exc.showException();
-		}
 	}
 
 	private static String repeat(char c, int n) {

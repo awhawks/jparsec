@@ -3,19 +3,19 @@ package jparsec.io;
 import jparsec.util.JPARSECException;
 
 public class CFormatTest {
+    private static final double x = 1.23456789012;
+    private static final double y = 123;
+    private static final double z = 1.2345e30;
+    private static final double w = 1.02;
+    private static final double u = 1.234e-5;
+    private static final int d = 0xCAFE;
+
     /**
      * A test stub for the format class
-     *
      * @param args Not used.
      */
     public static void main(String[] args) {
         try {
-            double x = 1.23456789012;
-            double y = 123;
-            double z = 1.2345e30;
-            double w = 1.02;
-            double u = 1.234e-5;
-            int d = 0xCAFE;
             CFormat.print(System.out, "x = |%f|\n", x);
             CFormat.print(System.out, "u = |%20f|\n", u);
             CFormat.print(System.out, "x = |% .5f|\n", x);

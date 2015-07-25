@@ -18,11 +18,12 @@ public class ResizeTest {
         int w = 1920, h = 0;
 
         Resize.ALLOW_RESIZE_TO_GREATER_SIZES = true;
-
         BufferedImage in = ImageIO.read(new File(path));
-        //Picture pic = new Picture(in);
-        //pic.getScaledInstance(w*2, 0, true);
-        //in = pic.getImage();
+        /*
+        Picture pic = new Picture(in);
+        pic.getScaledInstance(w*2, 0, true);
+        in = pic.getImage();
+        */
         long t0 = System.currentTimeMillis();
         BufferedImage out = Resize.resize(in, w, h, true);
         long t1 = System.currentTimeMillis();

@@ -11,7 +11,7 @@ public class WCSTest {
      * @param args Unused.
      */
     public static void main(String args[]) throws Exception {
-        System.out.println("WCS Test");
+        System.out.println("WCS test");
 
         String file = "/home/alonso/colaboraciones/Pablo/2008/fitsALMA/testImages/1904-66_TAN.fits";
         //file = "/home/alonso/today/reduced/1377258097873.fits";
@@ -46,7 +46,7 @@ public class WCSTest {
         wcs.setEpoch(2013.9222222222224);
         wcs.setCrota2(360.0565970885837);
 
-/*
+            /*
 World Coordinate System
 -----------------------
 crval1     : 322.9358838939052
@@ -64,7 +64,8 @@ projection : TAN
 width : 3888
 height : 2592
 cd : -9.999999999999999E-5, -1.0000000000000002E-6, -1.0000000000000002E-6, 1.0E-4
-*/
+           */
+
         wcs.setWidth(3888);
         wcs.setHeight(2592);
         wcs.setCD(new double[] { -9.999999999999999E-5, -1.0000000000000002E-6, -1.0000000000000002E-6, 1.0E-4 });

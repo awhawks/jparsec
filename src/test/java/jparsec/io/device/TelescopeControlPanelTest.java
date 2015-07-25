@@ -18,9 +18,11 @@ public class TelescopeControlPanelTest {
      */
     public static void main(String args[]) throws Exception {
         // Translate.setDefaultLanguage(LANGUAGE.SPANISH);
+
         JFrame app = new JFrame(Translate.translate(1127));
 
         app.addWindowListener(new WindowAdapter() {
+            @Override
             public void windowClosing(WindowEvent evt) {
                 System.exit(0);
             }
@@ -57,11 +59,14 @@ public class TelescopeControlPanelTest {
 
         if (obsManager.reductionPossible()) {
             JFrame app2 = new JFrame(Translate.translate(1188));
+
             app2.addWindowListener(new WindowAdapter() {
+                @Override
                 public void windowClosing(WindowEvent evt) {
                     System.exit(0);
                 }
             });
+
             app2.setIconImage(ReadFile.readImageResource(FileIO.DATA_IMAGES_DIRECTORY + "planetaryNeb_transparentOK.png"));
             Dimension d2 = obsManager.getPreferredSize();
             d2.height += 80;

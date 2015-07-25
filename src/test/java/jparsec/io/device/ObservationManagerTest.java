@@ -9,7 +9,7 @@ public class ObservationManagerTest {
      * @param args Unused.
      */
     public static void main(String args[]) throws Exception {
-        System.out.println("DCRaw test");
+        System.out.println("ObservationManager test");
 
         String file = "/home/alonso/java/librerias/astroFoto/crw_2785.crw";
         ObservationManager.executeDCRaw(file);

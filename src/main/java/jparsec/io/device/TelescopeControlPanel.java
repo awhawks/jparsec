@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,26 +18,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */	
+ */
 package jparsec.io.device;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Choice;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.image.BufferedImage;
-
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.Timer;
 import javax.swing.border.TitledBorder;
-
-import net.miginfocom.swing.MigLayout;
-
 import jparsec.astronomy.Constellation;
 import jparsec.astronomy.CoordinateSystem;
 import jparsec.astronomy.TelescopeElement;
@@ -52,11 +54,11 @@ import jparsec.graph.JPARSECStroke;
 import jparsec.graph.SkyChart;
 import jparsec.graph.TextLabel;
 import jparsec.graph.chartRendering.AWTGraphics;
+import jparsec.graph.chartRendering.Graphics.FONT;
 import jparsec.graph.chartRendering.PlanetRenderElement;
+import jparsec.graph.chartRendering.Projection.PROJECTION;
 import jparsec.graph.chartRendering.RenderPlanet;
 import jparsec.graph.chartRendering.SkyRenderElement;
-import jparsec.graph.chartRendering.Graphics.FONT;
-import jparsec.graph.chartRendering.Projection.PROJECTION;
 import jparsec.graph.chartRendering.SkyRenderElement.FAST_LINES;
 import jparsec.graph.chartRendering.SkyRenderElement.LEYEND_POSITION;
 import jparsec.graph.chartRendering.SkyRenderElement.MILKY_WAY_TEXTURE;
@@ -78,11 +80,11 @@ import jparsec.io.device.GenericTelescope.TELESCOPE_MODEL;
 import jparsec.io.device.GenericTelescope.TELESCOPE_TYPE;
 import jparsec.io.device.GenericWeatherStation.WEATHER_FORECAST;
 import jparsec.io.device.GenericWeatherStation.WEATHER_STATION_MODEL;
+import jparsec.io.device.ObservationManager.AVERAGE_METHOD;
 import jparsec.io.device.ObservationManager.COMBINATION_METHOD;
 import jparsec.io.device.ObservationManager.DRIZZLE;
 import jparsec.io.device.ObservationManager.IMAGE_ORIENTATION;
 import jparsec.io.device.ObservationManager.INTERPOLATION;
-import jparsec.io.device.ObservationManager.AVERAGE_METHOD;
 import jparsec.io.device.implementation.CanonEOS40D50D1000D;
 import jparsec.io.device.implementation.CelestronTelescope;
 import jparsec.io.device.implementation.MeadeTelescope;
@@ -100,62 +102,63 @@ import jparsec.util.Translate;
 import jparsec.util.Translate.LANGUAGE;
 import jparsec.vo.SimbadElement;
 import jparsec.vo.SimbadQuery;
+import net.miginfocom.swing.MigLayout;
 
 /**
  * A control panel to send/receive commands from the telescope. For
  * a successfully connection, take into account the following points.<P>
  * <pre>
  * CONTROL TELESCOPE FROM JPARSEC
- * 
+ *
  * JPARSEC uses the library nrjavaserial (a fork of RXTX library) to
- * communicate with serial ports. The installation is straightforward 
+ * communicate with serial ports. The installation is straightforward
  * since the .jar file is provided with the dependencies.
- * 
+ *
  * MEADE WARNING
- * 
+ *
  * YOU MUST USE SPECIFIC AND COMPATIBLE CABLES TO CONNECT TO A MEADE
- * TELESCOPE IN CASE YOU NEED A USB-TO-SERIAL ADAPTER. FOR A CELESTRON ONE, 
+ * TELESCOPE IN CASE YOU NEED A USB-TO-SERIAL ADAPTER. FOR A CELESTRON ONE,
  * YOU WILL PROBABLY HAVE NO PROBLEMS WITH ANY GENERIC ADAPTER.
- * 
+ *
  * THE AUTOSTAR HANDBOX WILL WORK CORRECTLY ONLY IF YOU HAVE THE TELESCOPE
  * ENOUGH POWERED. USE BATTERIES OR CHECK YOUR AC ADAPTER IS CORRECT (>=1.5 A).
- * 
+ *
  * CELESTRON WARNING
- * 
+ *
  * IMPLEMENTATION IS COMPLETE UP TO WHAT IS SUPPORTED IN CELESTRON, BUT NO
  * TEST AT ALL HAS BEEN MADE WITH ANY CELESTRON TELESCOPE.
- * 
+ *
  * LINUX OS (Mac also?)
- * 
+ *
  * Specific drivers for telescope and USB-to-serial adapter are not required,
  * they already comes with all/most Linux distributions. Only in case of
  * connection problems, execute these steps.
- * 
+ *
  * # Add user to dialout group
  * sudo usermod -a -G dialout $USER
- * 
+ *
  * # Remove modemmanager since it is a possible conflict cause
  * sudo apt-get remove modemmanager
- * 
+ *
  * # Allow user access to the required port (check its name with dmesg after plugin in, here I put ttyUSB0)
  * sudo chmod a+rw /dev/ttyUSB0
- * 
+ *
  * WINDOWS OS
- * 
+ *
  * Your must install the appropriate drivers. In case of a Meade telescope
  * you must install the software that comes with the cables connection kit.
  * For instance, an ETX telescope cannot be connected to a PC if you only
  * have what comes with the ETX standard box (unless you have a very old
  * PC with a serial port and the old, standard required cables).
- * 
+ *
  * Windows 7 is known to have lots of problems with USB-to-serial drivers.
  * </pre>
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  */
 public final class TelescopeControlPanel extends JPanel implements ActionListener {
 	private static final long serialVersionUID = 1L;
-	
+
 	private ObservationManager obsManager;
 	private GenericTelescope telescope;
 	private GenericDome dome;
@@ -163,14 +166,14 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 	private GenericWeatherStation weather;
 	private boolean cameraShooting[];
 	private String cameraStatus[];
-	
+
 	private TimeElement time;
 	private ObserverElement obs;
 	private EphemerisElement eph;
 	private String tname;
 	private LocationElement locEq, locHz;
 	private SkyChart sc;
-	
+
 	private JTextField raField = new JTextField(14);
 	private JTextField decField = new JTextField(14);
 	private JTextField azField = new JTextField(14);
@@ -211,69 +214,6 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 	private Timer timer;
 
 	/**
-	 * Test program.
-	 * @param args Not used.
-	 */
-	public static void main(String args[]) {
-		try {
-			// Translate.setDefaultLanguage(LANGUAGE.SPANISH);
-			
-			JFrame app = new JFrame(Translate.translate(1127));
-			app.addWindowListener(new WindowAdapter() {
-				public void windowClosing(WindowEvent evt) {
-					System.exit(0);
-				}
-			});
-			app.setIconImage(ReadFile.readImageResource(FileIO.DATA_IMAGES_DIRECTORY+"telescope_transparentOK.png"));
-
-			// Set the hardware
-			TELESCOPE_MODEL telescopeModel = TELESCOPE_MODEL.VIRTUAL_TELESCOPE_EQUATORIAL_MOUNT; //.MEADE_AUTOSTAR;
-			DOME_MODEL domeModel = DOME_MODEL.VIRTUAL_DOME;
-			CAMERA_MODEL cameraModel[] = new CAMERA_MODEL[] {CAMERA_MODEL.VIRTUAL_CAMERA}; //CAMERA_MODEL.CANON_EOS_40D_400D_50D_500D_1000D;
-			WEATHER_STATION_MODEL weatherStation = WEATHER_STATION_MODEL.VIRTUAL_WEATHER_STATION;
-			ObservationManager obsManager = new ObservationManager("/home/alonso/", "today", telescopeModel, cameraModel, domeModel, weatherStation);
-			obsManager.setTelescopeType(TELESCOPE_TYPE.SCHMIDT_CASSEGRAIN);
-			obsManager.setCameraMinimumIntervalBetweenShots(0, 20);
-			obsManager.setCombineMethod(COMBINATION_METHOD.MEDIAN);
-			obsManager.setInterpolationMethod(INTERPOLATION.BICUBIC);
-			obsManager.setDrizzleMethod(DRIZZLE.NO_DRIZZLE);
-			obsManager.setAverageMethod(AVERAGE_METHOD.PONDERATION);
-			obsManager.setTelescopeParkPosition(new LocationElement(0, Constant.PI_OVER_TWO, 1)); // Park to the zenith
-			// Ports for telescope and camera are set to null to automatically scan and select the first one available
-			boolean addSky = true;
-			
-			TelescopeControlPanel tcp = new TelescopeControlPanel(obsManager, addSky);
-			Dimension d = tcp.getPreferredSize();
-			
-			// Border + window title
-			d.height += 80;
-			d.width += 10;
-			
-			app.add(tcp);
-			app.setSize(d);
-			app.setVisible(true);
-			
-			if (obsManager.reductionPossible()) {
-				JFrame app2 = new JFrame(Translate.translate(1188));
-				app2.addWindowListener(new WindowAdapter() {
-					public void windowClosing(WindowEvent evt) {
-						System.exit(0);
-					}
-				});
-				app2.setIconImage(ReadFile.readImageResource(FileIO.DATA_IMAGES_DIRECTORY+"planetaryNeb_transparentOK.png"));
-				Dimension d2 = obsManager.getPreferredSize();
-				d2.height += 80;
-				d2.width += 10;
-				app2.add(obsManager);
-				app2.setSize(d2);
-				app2.setVisible(true);
-			}
-		} catch (Exception exc) {
-			exc.printStackTrace();
-		}
-	}
-	
-	/**
 	 * Constructs a telescope panel.
 	 * @param manager The observation manager with the hardware and reduction properties set.
 	 * @param addSky True to add the sky panel at the bottom.
@@ -300,11 +240,11 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 			}
 		}
 		obsManager = manager;
-		
+
 		if (telescopeModel.isMeade()) telescope = new MeadeTelescope(telescopeModel, telescopePort);
 		if (telescopeModel.isCelestron()) telescope = new CelestronTelescope(telescopeModel, telescopePort);
 		if (telescopeModel.isVirtual()) telescope = new VirtualTelescope(telescopeModel);
-		if (telescope == null) throw new JPARSECException("Could not find/initialize the telescope.");	
+		if (telescope == null) throw new JPARSECException("Could not find/initialize the telescope.");
 
 		if (domeModel != null) {
 			if (domeModel.isVirtual()) dome = new VirtualDome(domeModel);
@@ -351,7 +291,7 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 			}
 		}
 		telescope.setCameras(camera);
-		
+
 		int vgap = 25;
 		fc = Color.lightGray;
 		focusRateCombo.add(Translate.translate(1128));
@@ -364,7 +304,7 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 		slewRateCombo.setForeground(fc);
 		slewRateCombo.select(telescope.getMoveSpeed().ordinal());
 		focusRateCombo.select(telescope.getFocusSpeed().ordinal());
-				
+
 		// Goto panel
 		MigLayout gotoLayout = new MigLayout("wrap 3", "[20%][55%][25%]", "[]"+vgap+"[]");
 		JPanel gotoPanel = new JPanel(gotoLayout);
@@ -405,7 +345,7 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 		focusPanel.add(outButton, "span, align center");
 		JLabel speed = new JLabel(Translate.translate(1140));
 		speed.setForeground(fc);
-		focusPanel.add(speed, "align center");		
+		focusPanel.add(speed, "align center");
 		focusPanel.add(focusRateCombo, "align center");
 
 		// Dome panel
@@ -418,7 +358,7 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 			domePanel.add(rightButton, "align center");
 			JLabel azimuth = new JLabel(Translate.translate(28));
 			azimuth.setForeground(fc);
-			domePanel.add(azimuth, "align center");		
+			domePanel.add(azimuth, "align center");
 			domePanel.add(azField, "align center");
 			azField.setEditable(false);
 		}
@@ -433,7 +373,7 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 				cameraPanel[i] = getCameraPanel(i, 8);
 			}
 		}
-		
+
 		// Move panel
 		MigLayout moveLayout = new MigLayout("", "[33%][33%][33%]");
 		JPanel movePanel = new JPanel(moveLayout);
@@ -447,7 +387,7 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 		moveLabel.setForeground(fc);
 		movePanel.add(moveLabel, "gaptop 10, align center");
 		movePanel.add(slewRateCombo, "span, gaptop 10, align center"); //"cell 1 3 2 1");
-		
+
 		// Global panels
 		String constrainColumn = "[48%][30%][22%]";
 		if (telescope.hasFocuser() || dome != null) {
@@ -466,11 +406,11 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 			add(sdPanel, "growx");
 			add(domePanel, "growx, wrap");
 		} else {
-			add(sdPanel, "growx, wrap");			
+			add(sdPanel, "growx, wrap");
 		}
 		if (camera != null)
 			for (int i=0; i<cameraPanel.length; i++) { add(cameraPanel[i], "span, growx"); }
-		
+
 		// Override panel height
 		int h = getMaxHeight();
 		if (h == 0) {
@@ -512,7 +452,7 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 		rightButton.addActionListener(new DomeActionListener(2));
 		openButton.addActionListener(new DomeActionListener(3));
 		closeButton.addActionListener(new DomeActionListener(4));
-		
+
 		if (camera != null) {
 			for (int i=0; i<cameraPanel.length; i++) {
 				iso[i].addItemListener(new CameraActionListener(1, i));
@@ -558,7 +498,7 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 	 */
 	public static TitledBorder getBorder(String title) {
 		Font font = new Font("Default", Font.BOLD, 18);
-		return BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.GRAY, 2), title, 
+		return BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.GRAY, 2), title,
 				TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, font, Color.ORANGE);
 	}
 	private JPanel getCameraPanel(int index, int vgap) {
@@ -582,9 +522,9 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 			resolution[index].select(camera[index].getResolutionMode());
 			imgID[index].select(camera[index].getImageID().ordinal());
 			filter[index].select(camera[index].getFilter().ordinal());
-			JLabel orientation = new JLabel(Translate.translate(1170)+" (º)");
+			JLabel orientation = new JLabel(Translate.translate(1170)+" (ï¿½)");
 			orientation.setForeground(fc);
-			
+
 			if (camera[index].getCameraModel().isDLSR()) {
 				JLabel liso = new JLabel("ISO");
 				liso.setForeground(fc);
@@ -600,7 +540,7 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 				setChoice(aperture[index], camera[index].getPossibleApertures());
 				aperture[index].select(camera[index].getAperture());
 				cameraPanel.add(aperture[index], "align left");
-				
+
 
 				setChoice(shutter[index], camera[index].getPossibleExpositionTimes());
 				shutter[index].select(camera[index].getExpositionTime());
@@ -612,42 +552,42 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 				ltime.setForeground(fc);
 				cameraPanel.add(ltime, "align left");
 				cameraPanel.add(bulbField[index], "align left");
-				cameraPanel.add(orientation, "align left");		
+				cameraPanel.add(orientation, "align left");
 				cameraPanel.add(orientationField[index], "align left, wrap");
 
 				cameraPanel.add(limgID, "align left");
 				cameraPanel.add(imgID[index], "align left");
 				cameraPanel.add(lfilter, "align left");
-				cameraPanel.add(filter[index], "align left");				
+				cameraPanel.add(filter[index], "align left");
 			} else {
 				cameraPanel.add(limgID, "align left");
 				cameraPanel.add(imgID[index], "align left");
 				JLabel ltime = null;
 				if (camera[index].getCameraModel().isWebcam()) {
-					ltime = new JLabel(Translate.translate(1186));					
+					ltime = new JLabel(Translate.translate(1186));
 				} else {
 					ltime = new JLabel(Translate.translate(180)+" (s)");
 				}
 				ltime.setForeground(fc);
 				cameraPanel.add(ltime, "align left");
 				cameraPanel.add(bulbField[index], "align left");
-				cameraPanel.add(orientation, "align left");		
+				cameraPanel.add(orientation, "align left");
 				cameraPanel.add(orientationField[index], "align left");
-				
+
 				cameraPanel.add(limgRES, "align left");
 				cameraPanel.add(resolution[index], "align left");
 				cameraPanel.add(lfilter, "align left");
 				cameraPanel.add(filter[index], "align left");
-			}			
+			}
 			JLabel lfov = new JLabel(Translate.translate(1181));
 			lfov.setForeground(fc);
 			cameraPanel.add(lfov, "align left");
 			cameraPanel.add(fovField[index], "align left");
-			
+
 			fovField[index].setText("0.5");
 			orientationField[index].setText(""+camera[index].getCameraOrientation());
 			bulbField[index].setText(""+camera[index].getCCDorBulbModeTime());
-			
+
 			if (obsManager.reductionPossible()) {
 				cameraPanel.add(shotButton[index], "align center, span 3");
 				cameraPanel.add(shotButtonMultiple[index], "align center, span 3");
@@ -657,8 +597,8 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 		}
 		return cameraPanel;
 	}
-	
-	
+
+
 	private class GotoActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent evt) {
 			gotoObject();
@@ -666,7 +606,7 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 	}
 	private boolean gotoObject() {
 		if (!telescope.isConnected()) return false;
-		
+
 		if (telescope.isMoving()) {
 			telescope.stopMoving();
 			gotoButton.setText(Translate.translate(1134));
@@ -681,7 +621,7 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 					JOptionPane.showMessageDialog(null, Translate.translate(1156), Translate.translate(240), JOptionPane.WARNING_MESSAGE);
 				return false;
 			}
-			
+
 			boolean go = false;
 			LocationElement locHz = new LocationElement();
 			try {
@@ -746,20 +686,20 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 			try {
 				String offRA = FileIO.getField(1, s, ",", false);
 				String offDEC = FileIO.getField(2, s, ",", false);
-				
+
 				double dDEC = 0, dRA = 0;
 				if (offDEC != null && !offDEC.equals("")) dDEC = Functions.parseDeclination(offDEC);
 				if (offRA != null && !offRA.equals("")) {
 					try {
 						dRA = Functions.parseRightAscension(offRA);
 					} catch (Exception exc2) {
-						dRA = Functions.parseDeclination(offRA);							
+						dRA = Functions.parseDeclination(offRA);
 					}
 				}
-				
+
 				double ra = Functions.parseRightAscension(raField.getText());
 				double dec = Functions.parseDeclination(decField.getText());
-				
+
 				dec += dDEC;
 				ra += dRA / Math.cos(dec);
 				raField.setText(Functions.formatRA(ra, 1));
@@ -769,15 +709,15 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 				return "";
 			}
 		}
-		
+
 		TARGET t = TARGET.NOT_A_PLANET;
 		try {
 			t = Target.getID(s);
-			if (t == TARGET.NOT_A_PLANET && Translate.getDefaultLanguage() != LANGUAGE.ENGLISH) 
+			if (t == TARGET.NOT_A_PLANET && Translate.getDefaultLanguage() != LANGUAGE.ENGLISH)
 				t = jparsec.ephem.Target.getIDFromEnglishName(s);
 			if (t == TARGET.SUN && !headlessMode) JOptionPane.showMessageDialog(null, Translate.translate(1154), Translate.translate(240), JOptionPane.WARNING_MESSAGE);
 		} catch (Exception e) { }
-		
+
 		try {
 			LocationElement loc = new LocationElement(s, true); //!telescope.getTelescopeModel().isJ2000());
 			if (t != null && t != TARGET.NOT_A_PLANET) {
@@ -788,7 +728,7 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 			}
 			loc = Ephem.correctEquatorialCoordinatesForRefraction(time, obs, eph, loc);
 			raField.setText(Functions.formatRA(loc.getLongitude(), 1));
-			decField.setText(Functions.formatDEC(loc.getLatitude(), 0));			
+			decField.setText(Functions.formatDEC(loc.getLatitude(), 0));
 		} catch (Exception exc) {
 			try {
 				SimbadElement se = SimbadQuery.query(s);
@@ -796,7 +736,7 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 				loc = Ephem.fromJ2000ToApparentGeocentricEquatorial(loc, time, obs, eph);
 				loc = Ephem.correctEquatorialCoordinatesForRefraction(time, obs, eph, loc);
 				raField.setText(Functions.formatRA(loc.getLongitude(), 1));
-				decField.setText(Functions.formatDEC(loc.getLatitude(), 0));			
+				decField.setText(Functions.formatDEC(loc.getLatitude(), 0));
 			} catch (Exception exc2) {
 				return DataSet.replaceAll(Translate.translate(1155), "%obj", s, true);
 			}
@@ -811,7 +751,7 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 		}
 		public void actionPerformed(ActionEvent evt) {
 			if (!telescope.isConnected()) return;
-			
+
 			if(focusing) {
 				telescope.stopFocus();
 				focusing=false;
@@ -844,7 +784,7 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 		}
 		public void actionPerformed(ActionEvent evt) {
 			if (!telescope.isConnected()) return;
-			
+
 			if(slewing) {
 				telescope.stopMove(direction);
 				slewing=false;
@@ -931,7 +871,7 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 			if ((dome != null && (!dome.isOpen() || !dome.isSync(telescope.getHorizontalPosition())) && camera[cameraIndex].getImageID() == IMAGE_ID.ON_SOURCE) ||
 					camera[cameraIndex].isShooting() || ((camera[cameraIndex].getImageID() == IMAGE_ID.FLAT || camera[cameraIndex].getImageID() == IMAGE_ID.ON_SOURCE) && (telescope.isMoving() || !telescope.isTracking()))) {
 				if (!headlessMode)
-					JOptionPane.showMessageDialog(null, Translate.translate(1175), Translate.translate(1174), JOptionPane.WARNING_MESSAGE);				
+					JOptionPane.showMessageDialog(null, Translate.translate(1175), Translate.translate(1174), JOptionPane.WARNING_MESSAGE);
 			} else {
 				try { camera[cameraIndex].setCCDorBulbModeTime(Integer.parseInt(bulbField[cameraIndex].getText())); } catch (Exception exc) {}
 
@@ -939,10 +879,10 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 				if (id == -1) {
 					if (camera[cameraIndex].getImageID() == IMAGE_ID.TEST) {
 						if (!headlessMode)
-							JOptionPane.showMessageDialog(null, Translate.translate(1215), Translate.translate(1216), JOptionPane.WARNING_MESSAGE);				
+							JOptionPane.showMessageDialog(null, Translate.translate(1215), Translate.translate(1216), JOptionPane.WARNING_MESSAGE);
 						return;
 					}
-					
+
 					try {
 						String options[] = new String[] {
 								"3 "+Translate.translate(1214),
@@ -953,15 +893,15 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 								"50 "+Translate.translate(1214),
 						};
 						int result = JOptionPane.showOptionDialog(null, Translate.translate(1212), Translate.translate(1213), JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
-								null, //new ImageIcon(ReadFile.readImageResource(FileIO.DATA_IMAGES_DIRECTORY+"planetaryNeb_transparentOK.png")), 
+								null, //new ImageIcon(ReadFile.readImageResource(FileIO.DATA_IMAGES_DIRECTORY+"planetaryNeb_transparentOK.png")),
 								options, options[0]);
 						if (result < 0) return;
-						
+
 						nshots = (new int[] {3, 5, 10, 15, 25, 50})[result];
-						
+
 						if (obsManager.getCombineMethod() == null && obsManager.reductionEnabled()) {
-							result = JOptionPane.showOptionDialog(null, Translate.translate(1210), Translate.translate(1211), JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, 
-									null, //new ImageIcon(ReadFile.readImageResource(FileIO.DATA_IMAGES_DIRECTORY+"planetaryNeb_transparentOK.png")), 
+							result = JOptionPane.showOptionDialog(null, Translate.translate(1210), Translate.translate(1211), JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,
+									null, //new ImageIcon(ReadFile.readImageResource(FileIO.DATA_IMAGES_DIRECTORY+"planetaryNeb_transparentOK.png")),
 									ObservationManager.COMBINATION_METHODS, ObservationManager.COMBINATION_METHODS[0]);
 							obsManager.setCombineMethod(COMBINATION_METHOD.values()[result]);
 						}
@@ -984,7 +924,7 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 					}
 					return;
 */				}
-				
+
 				try {
 				boolean ok = camera[cameraIndex].shotAndDownload(false);
 				if (ok) {
@@ -1029,7 +969,7 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 			}
 			firstTime = false;
 		}
-		
+
 		try {
 /*			if (Runtime.getRuntime().availableProcessors() >= 2) {
 				if (displayImg == null || !displayImg.isAlive()) {
@@ -1057,9 +997,9 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 					if (telescope != null) telescope.disconnect();
 				}
 			}
-			
+
 			if (dome != null && dome.getDomeModel().hasLeftRightControl()) {
-				azField.setText(Functions.formatAngleAsDegrees(dome.getAzimuth(), 3)+"º");
+				azField.setText(Functions.formatAngleAsDegrees(dome.getAzimuth(), 3)+"ï¿½");
 				long t1 = System.currentTimeMillis();
 				if (t1 - lastDomet0 > dome.getSyncTime()*1000 && dome.isOpen() && !dome.isMoving()) {
 					try {
@@ -1076,10 +1016,9 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 			System.out.println("Could not update telescope status!");
 		}
 	}
-	
+
 	/**
 	 * Returns if the weather conditions are fine to continue observations or not.
-	 * @param weather The weather station.
 	 * @return True if everything is fine, false if alarm should be launched.
 	 */
 	private boolean checkWeatherConditions() {
@@ -1104,7 +1043,7 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 		}
 		return ok;
 	}
-	
+
 	/**
 	 * Returns the instance to the telescope object.
 	 * @return The telescope instance.
@@ -1112,7 +1051,7 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 	public GenericTelescope getTelescopeInstance() {
 		return telescope;
 	}
-	
+
 	/**
 	 * Returns an image with the display.
 	 * @return The image.
@@ -1138,13 +1077,13 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 		}
 		if (sc != null && obs0 != null && !obs.equals(obs0))
 			sc.update(sc.chart, time, obs, eph, null);
- 
+
 		if (tname == null) tname = telescope.getTelescopeName();
 		LocationElement loc = telescope.getApparentEquatorialPosition();
 		locHz = CoordinateSystem.equatorialToHorizontal(loc, time, obs, eph); //telescope.getHorizontalPosition();
-		boolean isMoving = telescope.isMoving(), isTracking = telescope.isTracking(), isAligned = telescope.isAligned(), 
+		boolean isMoving = telescope.isMoving(), isTracking = telescope.isTracking(), isAligned = telescope.isAligned(),
 				isConnected = telescope.isConnected(), isEqMount = telescope.getMount() == MOUNT.EQUATORIAL;
-		
+
 		if (isEqMount) {
 			northButton.setText("N");
 			eastButton.setText("E");
@@ -1156,7 +1095,7 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 			northButton.setText(Translate.translate(204));
 			eastButton.setText(Translate.translate(206));
 			southButton.setText(Translate.translate(205));
-			westButton.setText(Translate.translate(207));			
+			westButton.setText(Translate.translate(207));
 		}
 		if (dome != null && dome.getDomeModel().hasLeftRightControl()) {
 			if (dome.isOpen()) {
@@ -1172,9 +1111,9 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 			if (!isMoving) {
 				telescopePositionUpdated = true;
 			}
-			sc.setCentralObject(null);				
+			sc.setCentralObject(null);
 		}
-		
+
 		int w = p.width, h = 200;
 		if (getSize().width > w) w = getSize().width;
 		if (w < 700) w = 700;
@@ -1192,15 +1131,15 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 			J2000 = ", "+Translate.translate(1178);
 			if (!telescope.getTelescopeModel().isJ2000()) J2000 = "@SIZE"+(fs-24)+" _{("+J2000.substring(2)+")}"+prefix;
 		}
-*/		
+*/
 		if (telescope.getTelescopeModel().isJ2000()) J2000 = "@SIZE"+(fs-24)+" _{(J2000"+J2000+")}"+prefix;
-		String ral = Translate.translate(1136)+J2000+"@SPACE@SPACE@SPACE@SPACE", decl = Translate.translate(1137)+J2000+"@SPACE@SPACE", 
+		String ral = Translate.translate(1136)+J2000+"@SPACE@SPACE@SPACE@SPACE", decl = Translate.translate(1137)+J2000+"@SPACE@SPACE",
 				azl = Translate.translate(1148)+"@SPACE@SPACE", ell = Translate.translate(1149)+"@SPACE@SPACE@SPACE",
-				lonl = Translate.translate(1150)+"@SPACE@SPACE", latl = Translate.translate(1151)+"@SPACE@SPACE@SPACE", 
+				lonl = Translate.translate(1150)+"@SPACE@SPACE", latl = Translate.translate(1151)+"@SPACE@SPACE@SPACE",
 				tzl = Translate.translate(1152)+"@SPACE@SPACE", dstl = Translate.translate(1153)+"@SPACE@SPACE", name = "";
 
-		
-		String unknownRA = "--h --m --.-s", unknownDEC = "---º --' --\"";
+
+		String unknownRA = "--h --m --.-s", unknownDEC = "---ï¿½ --' --\"";
 		String ra = unknownRA, dec = unknownDEC, az = unknownDEC, el = unknownDEC;
 		if (isConnected) {
 			ra =  Functions.formatRA(locEq.getLongitude(), 1);
@@ -1215,7 +1154,7 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 		String tz = Functions.formatValue(obs.getTimeZone(), 1);
 		double JD_UT = TimeScale.getJD(time, obs, eph, SCALE.UNIVERSAL_TIME_UTC);
 		String dst = Functions.formatValue(TimeScale.getDST(JD_UT, obs), 0);
-		
+
 
 		date = prefix + date;
 		hour = "@SIZE" + (fs+2) + clockStartWithoutBlur + hour + time.getTimeScaleAbbreviation() + clockend;
@@ -1223,7 +1162,7 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 		az = prefix + azl + clockStart + az + clockend;
 		dec = prefix + decl + clockStart + dec + clockend;
 		el = prefix + ell + clockStart + el + clockend;
-		
+
 		prefix = "@SIZE"+fsObserver;
 		name = "@SIZE" + (fsObserver+2) + "@BOLD" + tname;
 		lon = prefix + lonl + clockStartWithoutBlur + lon + clockend;
@@ -1235,12 +1174,12 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 		TextLabel.setDigitalClockOutColor(new Color(128, 128, 128, 40));
 		g.setColor(Color.BLACK.getRGB(), false);
 		g.fillRect(0, 0, w,  h);
-		
+
 		g.setColor(datetime.getRGB(), true);
 		g.setFont(FONT.getDerivedFont(g.getFont(), fs));
 		int x = 20, y = fs, gapy = fs + 10, radecY = 145, gapyObserver = fsObserver + 10;
 		int xm0 = w/2 + x, xm = xm0 + fs;
-		
+
 		//int dw = (int) g.getStringWidth(date);
 		g.drawString(hour, w-180, y+2);
 		//g.drawString(date, w-dw-10, y += gapy+10);
@@ -1267,7 +1206,7 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 		g.drawString(tz, x + (xm0-fs)/2, y);
 		g.drawString(lat, x, y += gapyObserver-3);
 		g.drawString(dst, x + (xm0-fs)/2, y);
-		
+
 		y = 8;
 		int gapx = 45;
 		x = xm0 + 6 - (gapx * 5)/2;
@@ -1283,7 +1222,7 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 		drawSymbol(g, SYMBOL.MOVING, isMoving, x+=gapx, y);
 		if (dome != null) drawSymbol(g, SYMBOL.DOME, dome.isOpen(), x+=gapx, y);
 		if (weather != null) drawSymbol(g, SYMBOL.WEATHER, !weather.isRaining(), x+=gapx, y);
-		
+
 		Picture pic = new Picture((BufferedImage) g.getRendering());
 		//pic.makeTransparent(0, Color.BLACK);
 
@@ -1292,16 +1231,17 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 	}
 
 	/** The set of icons to draw. */
-	private static enum SYMBOL {
+	private enum SYMBOL {
 		/** The different icons to be drawn. */
 		MOVING, TRACKING, ALIGNED, CONNECTED, EQ_MOUNT, DOME, WEATHER
 	}
+
 	private void drawSymbol(jparsec.graph.chartRendering.Graphics g, SYMBOL symbol, boolean active, int x, int y) {
 		g.setColor(255, 0, 0, 128);
 		if (active || symbol == SYMBOL.EQ_MOUNT) g.setColor(0, 255, 0, 255);
 		int c = g.getColor();
 		g.setStroke(JPARSECStroke.STROKE_DEFAULT_LINE_THICK);
-		
+
 		switch (symbol) {
 		case CONNECTED:
 			y += 6;
@@ -1323,10 +1263,10 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 			if (active) {
 				g.drawString("P", x+15-half, y+15);
 			} else {
-				g.drawString("Z", x+15-half, y+15);				
+				g.drawString("Z", x+15-half, y+15);
 			}
 			g.drawLine(x+15, y+18, x+15, y+30, false);
-			g.drawLine(x, y+30, x+30, y+30, false);			
+			g.drawLine(x, y+30, x+30, y+30, false);
 			break;
 		case TRACKING:
 			g.drawOval(x, y, 30, 30, false);
@@ -1370,7 +1310,7 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 			int size = 9;
 			g.setFont(jparsec.graph.chartRendering.Graphics.FONT.getDerivedFont(g.getFont(), size, 1));
 			half = 1+size/3;
-			g.drawString(""+t+"º", x, y+size);
+			g.drawString(""+t+"ï¿½", x, y+size);
 			g.drawString(""+h+"%", x+20, y+size);
 			WEATHER_FORECAST w = weather.getForecastInFollowingDays()[0];
 			g.setStroke(JPARSECStroke.STROKE_DEFAULT_LINE);
@@ -1416,16 +1356,16 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 			break;
 		}
 	}
-	
+
 	private SkyChart getSkyChart() {
 		Dimension p = getPreferredSize();
-		
+
 		int w = p.width;
 		if (w < 700) w = 700;
 		int h = (w * 3) / 4;
 		PlanetRenderElement render = new PlanetRenderElement(false, true, true, true, false);
 		TelescopeElement telescope = TelescopeElement.HUMAN_EYE;
-		
+
 		SkyRenderElement sky = new SkyRenderElement(jparsec.astronomy.CoordinateSystem.COORDINATE_SYSTEM.EQUATORIAL,
 				PROJECTION.STEREOGRAPHICAL, 0, 0.0, w, h, render, telescope);
 
@@ -1445,7 +1385,7 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 		sky.drawAsteroids = false;
 		sky.drawComets = false;
 		sky.drawStarsSymbols = true;
-		
+
 		sky.drawConstellationLimits = true;
 		sky.drawDeepSkyObjects = true;
 		sky.drawSkyCorrectingLocalHorizon = true;
@@ -1455,7 +1395,7 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 		sky.fillMilkyWay = false;
 		sky.drawSuperNovaAndNovaEvents = true;
 		sky.drawMilkyWayContoursWithTextures = MILKY_WAY_TEXTURE.NO_TEXTURE;
-		
+
 		sky.drawClever = true;
 		sky.drawStarsPositionAngleInDoubles = true;
 
@@ -1463,7 +1403,7 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 		sky.drawFastLinesMode.setFastOvals(true);
 		sky.drawConstellationContoursMarginBetweenLineAndStar = 30;
 		RenderPlanet.ALLOW_SPLINE_RESIZING = false;
-		
+
 		sky.drawStarsLimitingMagnitude = 7.5f;
 		sky.drawObjectsLimitingMagnitude = 9f;
 		sky.drawConstellationLimits = false;
@@ -1491,10 +1431,10 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
     		for (int i=0; i<sky.getNumberOfExternalCatalogs(); i++) {
     			sky.drawExternalCatalogs[i] = false;
     		}
-    		
+
 			SkyRendering skyRender = new SkyRendering(time, obs, eph, sky, "Sky render", 0);
 			sc = new SkyChart(w, h, skyRender, true, false, updateTime/1000, true);
-			
+
 			sc.addTelescopeMark(tname, this.telescope);
 			sc.setRealTimeUpdate();
 			return sc;
@@ -1502,7 +1442,7 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 			return null;
 		}
 	}
-	
+
 	private void setCameraShooting(int cameraIndex, boolean shooting) {
 		if (cameraShooting == null) return;
 		if (cameraIndex == -1) {
@@ -1528,7 +1468,7 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 			shotButtonMultiple[cameraIndex].setEnabled(false);
 			return;
 		}
-		
+
 		String status = cameraStatus[cameraIndex];
 		int n = Integer.parseInt(FileIO.getField(1, status, " ", true));
 		n --;
@@ -1537,9 +1477,9 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 		if (n == 0) {
 			boolean b1 = Boolean.parseBoolean(FileIO.getField(2, status, " ", true));
 			b2 = Boolean.parseBoolean(FileIO.getField(3, status, " ", true));
-			status = null; 
+			status = null;
 			obsManager.setReductionEnabled(b1);
-			//obsManager.setAutoReduceOnFramesEnabled(true); // Ons may need to be stacked/sligned first 
+			//obsManager.setAutoReduceOnFramesEnabled(true); // Ons may need to be stacked/sligned first
 
 			cameraShooting[cameraIndex] = false;
 			iso[cameraIndex].setEnabled(true);
@@ -1551,10 +1491,10 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 			shotButton[cameraIndex].setEnabled(true);
 			shotButtonMultiple[cameraIndex].setEnabled(true);
 		}
-		
+
 		String path = camera[cameraIndex].getPathOfLastDownloadedImage();
 		cameraStatus[cameraIndex] = status;
-		
+
 		if (path != null) {
 			String p[] = DataSet.toStringArray(path, ",");
 			if (obsManager.reductionPossible()) {
@@ -1564,7 +1504,7 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 					if (weather != null) header = ImageHeaderElement.addHeaderEntry(header, weather.getFitsHeader());
 					String project[] = obsManager.getProjectInfo();
 					String inst = obsManager.getTelescopeInstitute();
-					
+
 					if (project[0] != null) header = ImageHeaderElement.addHeaderEntry(header, new ImageHeaderElement("PROJECT", project[0], "Project name"));
 					if (project[1] != null) header = ImageHeaderElement.addHeaderEntry(header, new ImageHeaderElement("OBSERVER", project[1], "Observer name"));
 					if (project[2] != null) {
@@ -1576,7 +1516,7 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 					if (inst != null) header = ImageHeaderElement.addHeaderEntry(header, new ImageHeaderElement("ORIGIN", inst, "Institute responsible for the telescope"));
 					header = ImageHeaderElement.addHeaderEntry(header, new ImageHeaderElement("DATE", ""+(new TimeElement()).toString(), "fits file creation date and time"));
 					header = ImageHeaderElement.addHeaderEntry(header, new ImageHeaderElement("CAMPOSER", ""+obsManager.getCameraPositionError(cameraIndex), "Camera position error respect telescope (radians)"));
-					
+
 					obsManager.offerFrame(camera[cameraIndex].getImageID(), p, header, cameraIndex);
 				} catch (JPARSECException e) {
 					e.printStackTrace();
@@ -1594,9 +1534,9 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 				}
 			}
 		}
- 
+
 		if (n == 0) obsManager.setAutoReduceOnFramesEnabled(b2);
-		
+
 		if (obsManager.reductionPossible() && n > 0) {
 			if (dome != null) {
 				LocationElement telHz = telescope.getHorizontalPosition();
@@ -1621,7 +1561,7 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 			camera[cameraIndex].shotAndDownload(false);
 		}
 	}
-	
+
 	/**
 	 * Executes a set of commands defined in a very simple language described below.
 	 * The commands are checked before starting execution, so in case of error an
@@ -1631,7 +1571,7 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 	 * <pre>
 	 * KEYWORKD      POSSIBLE VALUES
 	 * -----------------------------
-	 * 
+	 *
 	 * PROJECT       a project name
 	 * OBSERVER      observer name
 	 * DESCRIPTION   description of the project
@@ -1646,7 +1586,7 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 	 * MAXTEMP       maximum temperature in C allowed before a weather alarm. Default is 50
 	 * MINTEMP       minimum temperature in C allowed before a weather alarm. Default is -20
 	 * CAMERA        from 1 to the number of cameras (selects a camera). Default value is 1
-	 * SHIFT         value in degrees representing the position shift between the telescope and the selected camera. 0 for primary focus, >0 for piggy back camera 
+	 * SHIFT         value in degrees representing the position shift between the telescope and the selected camera. 0 for primary focus, >0 for piggy back camera
 	 * GOTO          object name (internal databases in JPARSEC or a valid Simbad identifier). Offset from current position is also allowed
 	 * PARK          Nothing. Parks the telescope.
 	 * UNPARK        Nothing. Unparks the telescope.
@@ -1680,7 +1620,7 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 	 */
 	public void executeCommand(final String command[]) throws JPARSECException {
 		if (lastLog == null) throw new JPARSECException("A previous command is still running");
-		
+
 		String error = checkCommand(command);
 		if (error != null) throw new JPARSECException(error);
 		Thread script = new Thread(new Runnable() {
@@ -1706,7 +1646,7 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 	public String executedCommandLog() {
 		return lastLog;
 	}
-	
+
 	/**
 	 * Checks a set of commands.
 	 * @param command The commands.
@@ -1939,7 +1879,7 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 				}
 				if (command[i].startsWith("COLDTIME ")) {
 					String val = FileIO.getRestAfterField(1, command[i], " ", true).trim();
-					if (!DataSet.isDoubleFastCheck(val) || val.indexOf(".") >= 0 || val.toLowerCase().indexOf("e") >= 0) {
+					if (!DataSet.isDoubleFastCheck(val) || val.contentEquals(".") || val.toLowerCase().contains("e")) {
 						error = "COLD TIME "+val+" is not a valid integer value";
 						break;
 					}
@@ -2010,7 +1950,7 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 					continue;
 				}
 				if (command[i].equals("CONNECT") || command[i].equals("DISCONNECT")) continue;
-				
+
 				error = "Cannot recognize command "+command[i];
 				break;
 			}
@@ -2029,7 +1969,7 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 		StringBuffer log = new StringBuffer("");
 		String sep = FileIO.getLineSeparator();
 		int cameraIndex = 0;
-		
+
 		if (obsManager.getCombineMethod() == null && obsManager.reductionEnabled())
 			obsManager.setCombineMethod(COMBINATION_METHOD.MEDIAN);
 
@@ -2042,7 +1982,7 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 					log.append(sep + BAD_WEATHER_STOP_MESSAGE);
 					break;
 				}
-				
+
 				if (command[i].startsWith("PROJECT ")) {
 					String pr = FileIO.getRestAfterField(1, command[i], " ", true);
 					String prInfo[] = obsManager.getProjectInfo();
@@ -2127,7 +2067,7 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 				if (command[i].startsWith("GOTO ")) {
 					if (!telescope.isConnected() || telescope.isMoving()) {
 						if (!telescope.isConnected()) {
-							log.append("ERROR! The telescope is not connected"+sep);							
+							log.append("ERROR! The telescope is not connected"+sep);
 						} else {
 							log.append("ERROR! The telescope is moving"+sep);
 						}
@@ -2139,7 +2079,7 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 						boolean go = gotoObject();
 						if (!go) {
 							log.append("ERROR! The telescope rejected the goto command"+sep);
-							continue;														
+							continue;
 						} else {
 							try {
 								Thread.sleep(5000);
@@ -2147,11 +2087,11 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 								do {
 									String s = gotoButton.getText();
 									if (s.equals(endString)) break;
-									Thread.sleep(5000);								
+									Thread.sleep(5000);
 								} while (true);
 							} catch (Exception exc2) {
 								log.append("ERROR! "+exc2.getMessage()+sep);
-								continue;							
+								continue;
 							}
 						}
 					}
@@ -2197,7 +2137,7 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 							shutter[cameraIndex].select(times[bulbIndex]);
 							bulbField[cameraIndex].setText(""+time);
 						} catch (Exception exc2) {
-							log.append("ERROR! "+exc2.getMessage()+sep);						
+							log.append("ERROR! "+exc2.getMessage()+sep);
 						}
 					} else {
 						camera[cameraIndex].setExpositionTime(val);
@@ -2309,16 +2249,16 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 							val[ii-2] = Double.parseDouble(s);
 						}
 					}
-					obsManager.setSExtractorValues((int) val[0], (int) val[1], val[2], (int) val[3]); 
+					obsManager.setSExtractorValues((int) val[0], (int) val[1], val[2], (int) val[3]);
 					log.append("OK"+sep);
 					continue;
 				}
 				if (command[i].startsWith("SHOT ")) {
 					if (dome != null && !dome.isOpen() && camera[cameraIndex].getImageID() == IMAGE_ID.ON_SOURCE) {
-						log.append("ERROR! The dome is closed, you must call connect first "+sep);											
+						log.append("ERROR! The dome is closed, you must call connect first "+sep);
 					} else {
 						if (camera[cameraIndex].isShooting() || ((camera[cameraIndex].getImageID() == IMAGE_ID.FLAT || camera[cameraIndex].getImageID() == IMAGE_ID.ON_SOURCE) && (telescope.isMoving() || !telescope.isTracking()))) {
-							log.append("ERROR! Camera is busy or telescope not ready "+sep);					
+							log.append("ERROR! Camera is busy or telescope not ready "+sep);
 						} else {
 							String val = FileIO.getRestAfterField(1, command[i], " ", true).trim();
 							int n = Integer.parseInt(val);
@@ -2338,7 +2278,7 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 										System.out.println("ERROR: Could not synchronize the dome with azimuth "+Functions.formatAngleAsDegrees(telHz.getLongitude(), 3));
 								}
 							}
-							
+
 							boolean ok = camera[cameraIndex].shotAndDownload(false);
 							if (ok) {
 								setCameraShooting(cameraIndex, true);
@@ -2352,7 +2292,7 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 									} while (true);
 								} catch (Exception exc2) {
 									log.append("ERROR! "+exc2.getMessage()+sep);
-									continue;							
+									continue;
 								}
 								log.append("OK"+sep);
 							} else {
@@ -2375,7 +2315,7 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 					int index = DataSet.getIndex(values, val);
 					if (index < 0) {
 						log.append("ERROR! "+val+" is invalid"+sep);
-						continue;						
+						continue;
 					}
 					if (index == 0) obsManager.setCombineMethod(COMBINATION_METHOD.MEDIAN);
 					if (index == 1) obsManager.setCombineMethod(COMBINATION_METHOD.MEAN_AVERAGE);
@@ -2390,7 +2330,7 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 					int index = DataSet.getIndex(values, val);
 					if (index < 0) {
 						log.append("ERROR! "+val+" is invalid"+sep);
-						continue;						
+						continue;
 					}
 					if (index == 0) obsManager.setInterpolationMethod(INTERPOLATION.NEAREST_NEIGHBOR);
 					if (index == 1) obsManager.setInterpolationMethod(INTERPOLATION.BILINEAR);
@@ -2404,7 +2344,7 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 					int index = DataSet.getIndex(values, val);
 					if (index < 0) {
 						log.append("ERROR! "+val+" is invalid"+sep);
-						continue;						
+						continue;
 					}
 					if (index == 0) obsManager.setAverageMethod(AVERAGE_METHOD.CLOSEST_POINT);
 					if (index == 1) obsManager.setAverageMethod(AVERAGE_METHOD.PONDERATION);
@@ -2417,7 +2357,7 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 					int index = DataSet.getIndex(values, val);
 					if (index < 0) {
 						log.append("ERROR! "+val+" is invalid"+sep);
-						continue;						
+						continue;
 					}
 					if (index == 0) obsManager.setDrizzleMethod(DRIZZLE.NO_DRIZZLE);
 					if (index == 1) obsManager.setDrizzleMethod(DRIZZLE.DRIZZLE_2);
@@ -2433,25 +2373,25 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 					log.append("OK"+sep);
 				}
 				if (command[i].equals("DISCONNECT")) {
-					if (dome != null) dome.close();					
+					if (dome != null) dome.close();
 					telescope.disconnect();
 					log.append("OK"+sep);
 				}
-				log.append("WARNING: this command was ignored "+sep);			
-			}		
+				log.append("WARNING: this command was ignored "+sep);
+			}
 		} catch (Exception exc) {
 			log.append("ERROR! "+exc.getMessage()+sep);
 		}
 		return log.toString();
 	}
-	
-	private Thread displayImg = null;
+
+	//private Thread displayImg = null;
 	private class displayThread implements Runnable {
 		public displayThread() { }
 		public void run() {
 			try {
 				display.setIcon(new ImageIcon(getDisplay()));
 			} catch (Exception exc) { }
-		}		
+		}
 	}
 }
