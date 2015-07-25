@@ -3,11 +3,11 @@ package jparsec.time.calendar;
 public class BahaiTest {
     /**
      * For unit testing only.
-     *
      * @param args Not used.
      */
-    public static void main(String args[]) {
-        System.out.println("Bahai Test");
+    public static void main(String args[])
+    {
+        System.out.println("Bahai test");
 
         int jd = 2451545;
         Bahai h = new Bahai(jd);

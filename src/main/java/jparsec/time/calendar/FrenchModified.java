@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.time.calendar;
 
 import java.io.Serializable;
@@ -29,13 +29,13 @@ import java.io.Serializable;
  * Used between May, 6-23, 1871.
  * <P>
  * See Calendrical Calculations for reference.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
 public class FrenchModified implements Serializable
 {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * The year.
@@ -59,7 +59,7 @@ public class FrenchModified implements Serializable
 
 	/**
 	 * Julian day constructor.
-	 * 
+	 *
 	 * @param jd Julian day.
 	 */
 	public FrenchModified(int jd)
@@ -69,7 +69,7 @@ public class FrenchModified implements Serializable
 
 	/**
 	 * Explicit constructor.
-	 * 
+	 *
 	 * @param y Year.
 	 * @param m Month.
 	 * @param d Day.
@@ -83,7 +83,7 @@ public class FrenchModified implements Serializable
 
 	/**
 	 * To fixed day.
-	 * 
+	 *
 	 * @param y Year.
 	 * @param m Month.
 	 * @param d Day.
@@ -97,7 +97,7 @@ public class FrenchModified implements Serializable
 
 	/**
 	 * To fixed day.
-	 * 
+	 *
 	 * @return Fixed day.
 	 */
 	public long toFixed()
@@ -107,7 +107,7 @@ public class FrenchModified implements Serializable
 
 	/**
 	 * Sets the date from fixed day.
-	 * 
+	 *
 	 * @param l Fixed day.
 	 */
 	public void fromFixed(long l)
@@ -120,7 +120,7 @@ public class FrenchModified implements Serializable
 
 	/**
 	 * Gets if the current year is a leap one.
-	 * 
+	 *
 	 * @param l Fixed day.
 	 * @return True or false.
 	 */
@@ -138,7 +138,7 @@ public class FrenchModified implements Serializable
 
 	/**
 	 * Transforms a French date into a Julian day
-	 * 
+	 *
 	 * @param year Year.
 	 * @param month Month.
 	 * @param day Day.
@@ -151,7 +151,7 @@ public class FrenchModified implements Serializable
 
 	/**
 	 * Transforms a French date into a Julian day.
-	 * 
+	 *
 	 * @return Julian day.
 	 */
 	public int toJulianDay()
@@ -161,7 +161,7 @@ public class FrenchModified implements Serializable
 
 	/**
 	 * Sets a French date with a given Julian day.
-	 * 
+	 *
 	 * @param jd Julian day.
 	 */
 	public void fromJulianDay(int jd)
@@ -195,25 +195,5 @@ public class FrenchModified implements Serializable
         if (this.month < 13) week = (this.day - 1) / 10 + 1;
         if (week > 2) week = week - 3;
 		return week;
-	}
-
-	/**
-	 * For unit testing only.
-	 * @param args Not used.
-	 */
-	public static void main(String args[])
-	{
-		System.out.println("Modified French Test");
-
-		int jd = 1757754;
-		FrenchModified h = new FrenchModified(jd);
-		System.out.println("JD " + jd + " = " + h.year + "/" + h.month + "/" + h.day);
-
-		FrenchModified h2 = new FrenchModified(h.year, h.month, h.day);
-		System.out.println("JD " + h2.toJulianDay() + " = " + h2.year + "/" + h2.month + "/" + h2.day);
-
-		if (h2.getDecadi() != -1) System.out.println("Decadi "+Calendar.nameFromNumber(h2.getDecadi(), French.DECADE_NAMES));
-		System.out.println(Calendar.nameFromMonth(h2.month, French.MONTH_NAMES));
-		System.out.println(Calendar.nameFromNumber(h2.getDayOfWeek(), French.DAY_OF_WEEK_NAMES));
 	}
 }

@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.time.calendar;
 
 import java.io.Serializable;
@@ -35,13 +35,13 @@ import jparsec.util.JPARSECException;
  * since Gregorian year 1645 (Qing dinasty).
  * <P>
  * See Calendrical Calculations for reference.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
 public class Chinese implements Serializable
 {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Cycle.
@@ -86,14 +86,12 @@ public class Chinese implements Serializable
 	/**
 	 * Stem year names.
 	 */
-	public static final String YEAR_STEM_NAMES[] =
-	{ "Jia", "Yi", "Bing", "Ding", "Wu", "Ji", "Geng", "Xin", "Ren", "Gui" };
+	public static final String YEAR_STEM_NAMES[] = { "Jia", "Yi", "Bing", "Ding", "Wu", "Ji", "Geng", "Xin", "Ren", "Gui" };
 
 	/**
 	 * Branch year names.
 	 */
-	public static final String YEAR_BRANCH_NAMES[] =
-	{ "Zi", "Chou", "Yin", "Mao", "Chen", "Si", "Wu", "Wei", "Shen", "You", "Xu", "Hai" };
+	public static final String YEAR_BRANCH_NAMES[] = { "Zi", "Chou", "Yin", "Mao", "Chen", "Si", "Wu", "Wei", "Shen", "You", "Xu", "Hai" };
 
 	/**
 	 * Empty constructor.
@@ -102,7 +100,7 @@ public class Chinese implements Serializable
 
 	/**
 	 * Constructor from a fixed epoch.
-	 * 
+	 *
 	 * @param l Fixed day.
 	 */
 	public Chinese(long l)
@@ -112,7 +110,7 @@ public class Chinese implements Serializable
 
 	/**
 	 * Constructor from a Julian day.
-	 * 
+	 *
 	 * @param jd Julian day.
 	 */
 	public Chinese(int jd)
@@ -122,7 +120,7 @@ public class Chinese implements Serializable
 
 	/**
 	 * Full constructor.
-	 * 
+	 *
 	 * @param ccycle Cycle.
 	 * @param cyear Year.
 	 * @param cmonth Month.
@@ -140,7 +138,7 @@ public class Chinese implements Serializable
 
 	/**
 	 * To fixed day.
-	 * 
+	 *
 	 * @param cycle Cycle.
 	 * @param year Year.
 	 * @param month Month.
@@ -161,7 +159,7 @@ public class Chinese implements Serializable
 
 	/**
 	 * To fixed day.
-	 * 
+	 *
 	 * @return Fixed day.
 	 */
 	public long toFixed()
@@ -171,7 +169,7 @@ public class Chinese implements Serializable
 
 	/**
 	 * Sets the date from a fixed day.
-	 * 
+	 *
 	 * @param l Fixed day.
 	 */
 	public void fromFixed(long l)
@@ -194,7 +192,7 @@ public class Chinese implements Serializable
 
 	/**
 	 * Gets the time when the solar longitude is equal to some value.
-	 * 
+	 *
 	 * @param l Fixed day.
 	 * @param d Desired longitude of the Sun to search for.
 	 * @return Time when the Sun has this longitude in UT.
@@ -257,7 +255,7 @@ public class Chinese implements Serializable
 
 	/**
 	 * Returns previous new moon.
-	 * 
+	 *
 	 * @param l Fixed day.
 	 * @return New Moon.
 	 */
@@ -269,7 +267,7 @@ public class Chinese implements Serializable
 
 	/**
 	 * Returns next new moon.
-	 * 
+	 *
 	 * @param l Fixed day.
 	 * @return New Moon.
 	 */
@@ -302,7 +300,7 @@ public class Chinese implements Serializable
 
 	/**
 	 * Returns name of year.
-	 * 
+	 *
 	 * @param i Fixed day.
 	 * @return Year name.
 	 */
@@ -313,7 +311,7 @@ public class Chinese implements Serializable
 
 	/**
 	 * Returns name of month.
-	 * 
+	 *
 	 * @param i year in chinese calendar.
 	 * @param j month in chinese calendar.
 	 * @return Month name.
@@ -326,7 +324,7 @@ public class Chinese implements Serializable
 
 	/**
 	 * Returns name of day.
-	 * 
+	 *
 	 * @param l Fixed day.
 	 * @return Day name.
 	 */
@@ -338,7 +336,7 @@ public class Chinese implements Serializable
 	/**
 	 * Returns Beijing's city object. Note that in 1929 the official time
 	 * zone changed.
-	 * 
+	 *
 	 * @param d Fixed day.
 	 * @return The adequate object.
 	 */
@@ -351,7 +349,7 @@ public class Chinese implements Serializable
 	/**
 	 * Returns Tokyo's city object. Note that in 1888 the official
 	 * location for Tokyo changed.
-	 * 
+	 *
 	 * @param d Fixed day.
 	 * @return The adequate object.
 	 */
@@ -366,7 +364,7 @@ public class Chinese implements Serializable
 
 	/**
 	 * Returns new year.
-	 * 
+	 *
 	 * @param l Gregorian year.
 	 * @return Fixed date of the new year for that Gregorian year.
 	 */
@@ -377,7 +375,7 @@ public class Chinese implements Serializable
 
 	/**
 	 * Returns dragon festival date.
-	 * 
+	 *
 	 * @param l Fixed day.
 	 * @return Dragon festival fixed date.
 	 */
@@ -391,7 +389,7 @@ public class Chinese implements Serializable
 
 	/**
 	 * Returns quingMing.
-	 * 
+	 *
 	 * @param l Fixed day.
 	 * @return QuingMing.
 	 */
@@ -402,7 +400,7 @@ public class Chinese implements Serializable
 
 	/**
 	 * Returns chinese age.
-	 * 
+	 *
 	 * @param chinese Chinese instance.
 	 * @param l Fixed day.
 	 * @return Age.
@@ -455,49 +453,5 @@ public class Chinese implements Serializable
 	 */
 	public int getYearNumber() {
 		return 1 + (int) this.cycle * 60 + this.year;
-	}
-	
-	/**
-	 * For unit testing only.
-	 * @param args Not used.
-	 */
-	public static void main(String args[])
-	{
-		System.out.println("Chinese Test");
-
-		int jd = 2451545;
-		Chinese h = new Chinese(jd);
-		System.out
-				.println("JD " + jd + " = " + h.cycle + "/" + h.year + "/" + h.month + "/" + h.leapMonth + "/" + h.day);
-
-		Chinese h2 = new Chinese(h.cycle, h.year, h.month, h.leapMonth, h.day);
-		System.out
-				.println("JD " + h2.toJulianDay() + " = " + h2.cycle + "/" + h2.year + "/" + h2.month + "/" + h2.leapMonth + "/" + h2.day);
-
-		ChineseName name = Chinese.nameOfYear(h2.year);
-		String year = Calendar.nameFromMonth(name.stem, Chinese.YEAR_STEM_NAMES) + "-" + Calendar.nameFromMonth(
-				name.branch, Chinese.YEAR_BRANCH_NAMES);
-		System.out.println(year);
-
-		name = Chinese.nameOfMonth(h2.year, h2.month);
-		String month = Calendar.nameFromMonth(name.stem, Chinese.YEAR_STEM_NAMES);
-		month += "-" + Calendar.nameFromMonth(name.branch, Chinese.YEAR_BRANCH_NAMES);
-		System.out.println(month);
-
-		name = Chinese.nameOfDay(h2.cycle);
-		String day = Calendar.nameFromMonth(name.stem, Chinese.YEAR_STEM_NAMES);
-		day += "-" + Calendar.nameFromMonth(name.branch, Chinese.YEAR_BRANCH_NAMES);
-		System.out.println(day);
-		
-		// New year
-		int yearN = 2012;
-		Gregorian g = new Gregorian();
-		g.fromFixed(Chinese.newYear(yearN));
-		System.out.println("New Chinese year for Gregorian year "+yearN);
-		System.out.println(g.year+"/"+g.month+"/"+g.day);
-		h2 = new Chinese(Chinese.newYear(2012));
-		System.out.println(h2.getYearNumber());
-		System.out
-		.println("JD " + h2.toJulianDay() + " = " + h2.cycle + "/" + h2.year + "/" + h2.month + "/" + h2.leapMonth + "/" + h2.day);
 	}
 }

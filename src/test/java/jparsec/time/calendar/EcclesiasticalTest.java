@@ -8,15 +8,10 @@ public class EcclesiasticalTest {
      *
      * @param args Unused.
      */
-    public static void main(String args[]) {
+    public static void main(String args[]) throws Exception {
         System.out.println("Ecclesiastical test");
-
-        try {
-            long fixed = 2009; //Calendar.fixedFromJD(2454986.0);
-            System.out.println("Easter " + TimeFormat.formatJulianDayAsDate(Calendar.jdFromFixed(Ecclesiastical.easter(fixed))));
-            System.out.println("Pentecost " + TimeFormat.formatJulianDayAsDate(Calendar.jdFromFixed(Ecclesiastical.pentecost(fixed))));
-        } catch (Exception exc) {
-            exc.printStackTrace();
-        }
+        long fixed = 2009; //Calendar.fixedFromJD(2454986.0);
+        System.out.println("Easter " + TimeFormat.formatJulianDayAsDate(Calendar.jdFromFixed(Ecclesiastical.easter(fixed))));
+        System.out.println("Pentecost " + TimeFormat.formatJulianDayAsDate(Calendar.jdFromFixed(Ecclesiastical.pentecost(fixed))));
     }
 }

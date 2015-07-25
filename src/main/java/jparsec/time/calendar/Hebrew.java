@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.time.calendar;
 
 import java.io.Serializable;
@@ -31,13 +31,13 @@ import java.io.Serializable;
  * begin at sunset.
  * <P>
  * See Calendrical Calculations for reference.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
 public class Hebrew implements Serializable
 {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * The year.
@@ -62,18 +62,14 @@ public class Hebrew implements Serializable
 	/**
 	 * Day of week names.
 	 */
-	public static final String DAY_OF_WEEK_NAMES[] =
-	{ "yom rishon", "yom sheni", "yom shelishi", "yom revi`i", "yom hamishi", "yom shishi", "yom shabbat" };
+	public static final String DAY_OF_WEEK_NAMES[] = { "yom rishon", "yom sheni", "yom shelishi", "yom revi`i", "yom hamishi", "yom shishi", "yom shabbat" };
 
 	/**
 	 * Month names.
 	 */
-	public static final String MONTH_NAMES[] =
-	{ "Nisan", "Iyyar", "Sivan", "Tammuz", "Av", "Elul", "Tishri", "Marheshvan", "Kislev", "Tevet", "Shevat", "Adar" };
+	public static final String MONTH_NAMES[] = { "Nisan", "Iyyar", "Sivan", "Tammuz", "Av", "Elul", "Tishri", "Marheshvan", "Kislev", "Tevet", "Shevat", "Adar" };
 
-	public static final String LEAPYEAR_MONTH_NAMES[] =
-	{ "Nisan", "Iyyar", "Sivan", "Tammuz", "Av", "Elul", "Tishri", "Marheshvan", "Kislev", "Tevet", "Shevat", "Adar I",
-			"Adar II" };
+	public static final String LEAPYEAR_MONTH_NAMES[] = { "Nisan", "Iyyar", "Sivan", "Tammuz", "Av", "Elul", "Tishri", "Marheshvan", "Kislev", "Tevet", "Shevat", "Adar I", "Adar II" };
 
 	/**
 	 * Default constructor.
@@ -82,7 +78,7 @@ public class Hebrew implements Serializable
 
 	/**
 	 * Constructs a Hebrew date with a Julian day
-	 * 
+	 *
 	 * @param jd Julian day
 	 */
 	public Hebrew(int jd)
@@ -92,7 +88,7 @@ public class Hebrew implements Serializable
 
 	/**
 	 * Explicit constructor.
-	 * 
+	 *
 	 * @param y Year.
 	 * @param m Month.
 	 * @param d Day.
@@ -106,7 +102,7 @@ public class Hebrew implements Serializable
 
 	/**
 	 * To fixed day..
-	 * 
+	 *
 	 * @param y Year.
 	 * @param m Month.
 	 * @param d Day.
@@ -134,7 +130,7 @@ public class Hebrew implements Serializable
 
 	/**
 	 * To fixed date.
-	 * 
+	 *
 	 * @return Fixed day.
 	 */
 	public long toFixed()
@@ -144,7 +140,7 @@ public class Hebrew implements Serializable
 
 	/**
 	 * Transforms a Hebrew date into a Julian day
-	 * 
+	 *
 	 * @param year Year.
 	 * @param month Month.
 	 * @param day Day.
@@ -166,7 +162,7 @@ public class Hebrew implements Serializable
 
 	/**
 	 * Sets a Hebrew date with a given Julian day
-	 * 
+	 *
 	 * @param jd Julian day.
 	 */
 	public void fromJulianDay(int jd)
@@ -176,7 +172,7 @@ public class Hebrew implements Serializable
 
 	/**
 	 * Sets the date from the fixed day.
-	 * 
+	 *
 	 * @param l Fixed day.
 	 */
 	public void fromFixed(long l)
@@ -193,7 +189,7 @@ public class Hebrew implements Serializable
 
 	/**
 	 * Is this a leap year?
-	 * 
+	 *
 	 * @param year Year.
 	 * @return True if it is a leap year.
 	 */
@@ -204,7 +200,7 @@ public class Hebrew implements Serializable
 
 	/**
 	 * Gets the last month in this year.
-	 * 
+	 *
 	 * @param year Year.
 	 * @return Number of months.
 	 */
@@ -215,7 +211,7 @@ public class Hebrew implements Serializable
 
 	/**
 	 * Gets the last day of month.
-	 * 
+	 *
 	 * @param month Month.
 	 * @param year Year.
 	 * @return Number of days in this month.
@@ -228,7 +224,7 @@ public class Hebrew implements Serializable
 
 	/**
 	 * Get elapsed days from fixed epoch.
-	 * 
+	 *
 	 * @param year Year.
 	 * @return Elapsed days.
 	 */
@@ -245,7 +241,7 @@ public class Hebrew implements Serializable
 
 	/**
 	 * Gets the new year.
-	 * 
+	 *
 	 * @param year Year.
 	 * @return Next new year fixed day.
 	 */
@@ -256,7 +252,7 @@ public class Hebrew implements Serializable
 
 	/**
 	 * Gets the delay until next new year.
-	 * 
+	 *
 	 * @param year Year.
 	 * @return Delay.
 	 */
@@ -272,7 +268,7 @@ public class Hebrew implements Serializable
 
 	/**
 	 * Gets number of days in this year.
-	 * 
+	 *
 	 * @param year Year.
 	 * @return Number of days.
 	 */
@@ -283,7 +279,7 @@ public class Hebrew implements Serializable
 
 	/**
 	 * Returns true if this year has long Marheshvan.
-	 * 
+	 *
 	 * @param year Year.
 	 * @return True or false.
 	 */
@@ -295,7 +291,7 @@ public class Hebrew implements Serializable
 
 	/**
 	 * Returns true if this year has short Kislev.
-	 * 
+	 *
 	 * @param year Year.
 	 * @return True or false.
 	 */
@@ -307,7 +303,7 @@ public class Hebrew implements Serializable
 
 	/**
 	 * Returns Yom Kippur feast.
-	 * 
+	 *
 	 * @param year Year.
 	 * @return Such date.
 	 */
@@ -319,7 +315,7 @@ public class Hebrew implements Serializable
 
 	/**
 	 * Returns Passover feast.
-	 * 
+	 *
 	 * @param year Year.
 	 * @return Such date.
 	 */
@@ -327,31 +323,5 @@ public class Hebrew implements Serializable
 	{
 		long l1 = year - Gregorian.yearFromFixed(EPOCH);
 		return toFixed(l1, 1, 15);
-	}
-
-	/**
-	 * For unit testing only.
-	 * @param args Not used.
-	 */
-	public static void main(String args[])
-	{
-		System.out.println("Hebrew Test");
-
-		try {
-			int jd = (int) (new jparsec.time.AstroDate(2011, 9, 29, 12, 0, 0)).jd();
-			Hebrew h = new Hebrew(jd);
-			System.out.println("JD " + jd + " = " + h.year + "/" + h.month + "/" + h.day);
-	
-			Hebrew h2 = new Hebrew(h.year, h.month, h.day);
-			System.out.println("JD " + h2.toJulianDay() + " = " + h2.year + "/" + h2.month + "/" + h2.day);
-	
-			System.out.println(Calendar.nameFromMonth(h2.month, Hebrew.MONTH_NAMES));
-			System.out
-					.println(Calendar.nameFromDayOfWeek(Calendar.dayOfWeekFromFixed(h2.toFixed()), Hebrew.DAY_OF_WEEK_NAMES));
-			System.out.println("(until sunset)");
-		} catch (Exception exc)
-		{
-			exc.printStackTrace();
-		}
 	}
 }

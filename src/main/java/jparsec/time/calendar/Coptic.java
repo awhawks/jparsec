@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,20 +18,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.time.calendar;
 
 import java.io.Serializable;
 
 /**
  * Implements the Coptic calendar. See Calendrical Calculations for reference.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
 public class Coptic implements Serializable
 {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * The year.
@@ -56,15 +56,12 @@ public class Coptic implements Serializable
 	/**
 	 * Week day names.
 	 */
-	public static final String DAY_OF_WEEK_NAMES[] =
-	{ "Tkyriaka", "Pesnau", "Pshoment", "Peftoou", "Ptiou", "Psoou", "Psabbaton" };
+	public static final String DAY_OF_WEEK_NAMES[] = { "Tkyriaka", "Pesnau", "Pshoment", "Peftoou", "Ptiou", "Psoou", "Psabbaton" };
 
 	/**
 	 * Month names.
 	 */
-	public static final String MONTH_NAMES[] =
-	{ "Tut", "Babah", "Hatur", "Kiyahk", "Tubah", "Amshir", "Baramhat", "Baramundah", "Bashans", "Ba'unah", "Abib",
-			"Misra", "al-Nasi" };
+	public static final String MONTH_NAMES[] = { "Tut", "Babah", "Hatur", "Kiyahk", "Tubah", "Amshir", "Baramhat", "Baramundah", "Bashans", "Ba'unah", "Abib", "Misra", "al-Nasi" };
 
 	/**
 	 * Empty constructor.
@@ -73,7 +70,7 @@ public class Coptic implements Serializable
 
 	/**
 	 * Julian day constructor.
-	 * 
+	 *
 	 * @param jd Julian day.
 	 */
 	public Coptic(int jd)
@@ -83,7 +80,7 @@ public class Coptic implements Serializable
 
 	/**
 	 * Explicit constructor.
-	 * 
+	 *
 	 * @param y Year.
 	 * @param m Month.
 	 * @param d Day.
@@ -97,7 +94,7 @@ public class Coptic implements Serializable
 
 	/**
 	 * To fixed day..
-	 * 
+	 *
 	 * @param y Year.
 	 * @param m Month.
 	 * @param d Day.
@@ -110,7 +107,7 @@ public class Coptic implements Serializable
 
 	/**
 	 * To fixed day.
-	 * 
+	 *
 	 * @return Fixed day.
 	 */
 	public long toFixed()
@@ -120,7 +117,7 @@ public class Coptic implements Serializable
 
 	/**
 	 * Sets the date from the fixed day.
-	 * 
+	 *
 	 * @param l Fixed day.
 	 */
 	public void fromFixed(long l)
@@ -132,7 +129,7 @@ public class Coptic implements Serializable
 
 	/**
 	 * Returns if the year is a leap one.
-	 * 
+	 *
 	 * @param year Year.
 	 * @return True if it is a leap year.
 	 */
@@ -143,7 +140,7 @@ public class Coptic implements Serializable
 
 	/**
 	 * Transforms a Coptic date into a Julian day
-	 * 
+	 *
 	 * @param year Year.
 	 * @param month Month.
 	 * @param day Day.
@@ -170,25 +167,5 @@ public class Coptic implements Serializable
 	public void fromJulianDay(int jd)
 	{
 		fromFixed(jd - Gregorian.EPOCH);
-	}
-
-	/**
-	 * For unit testing only.
-	 * @param args Not used.
-	 */
-	public static void main(String args[])
-	{
-		System.out.println("Coptic Test");
-
-		int jd = 2451545;
-		Coptic h = new Coptic(jd);
-		System.out.println("JD " + jd + " = " + h.year + "/" + h.month + "/" + h.day);
-
-		Coptic h2 = new Coptic(h.year, h.month, h.day);
-		System.out.println("JD " + h2.toJulianDay() + " = " + h2.year + "/" + h2.month + "/" + h2.day);
-
-		System.out.println(Calendar.nameFromMonth(h2.month, Coptic.MONTH_NAMES));
-		System.out
-				.println(Calendar.nameFromDayOfWeek(Calendar.dayOfWeekFromFixed(h2.toFixed()), Coptic.DAY_OF_WEEK_NAMES));
 	}
 }

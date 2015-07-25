@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.time.calendar;
 
 import java.io.Serializable;
@@ -28,7 +28,7 @@ import java.io.Serializable;
  * <P>
  * Note that it is not possible to pass from a given date to a Julian day, since
  * no year exists in this calendar.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -167,7 +167,7 @@ public class Balinese implements Serializable
 
 	/**
 	 * Constructor from a Julian day.
-	 * 
+	 *
 	 * @param jd Julian day.
 	 */
 	public Balinese(int jd)
@@ -177,7 +177,7 @@ public class Balinese implements Serializable
 
 	/**
 	 * Constructor using all fields.
-	 * 
+	 *
 	 * @param bluang Luang.
 	 * @param bdwiwara Dwiwara.
 	 * @param btriwara Triwara.
@@ -189,7 +189,7 @@ public class Balinese implements Serializable
 	 * @param bsangawara Sangawara.
 	 * @param bdasawara Dasawara.
 	 */
-	public Balinese(boolean bluang, int bdwiwara, int btriwara, int bcaturwara, int bpancawara, int bsadwara, 
+	public Balinese(boolean bluang, int bdwiwara, int btriwara, int bcaturwara, int bpancawara, int bsadwara,
 			int bsaptawara,	int basatawara, int bsangawara, int bdasawara)
 	{
 		luang = bluang;
@@ -206,7 +206,7 @@ public class Balinese implements Serializable
 
 	/**
 	 * Gets the Balinese calendar fields from the fixed day.
-	 * 
+	 *
 	 * @param l Fixed day.
 	 */
 	public void fromFixed(long l)
@@ -225,7 +225,7 @@ public class Balinese implements Serializable
 
 	/**
 	 * Gets the day from the fixed date.
-	 * 
+	 *
 	 * @param l Fixed date.
 	 * @return Day.
 	 */
@@ -236,7 +236,7 @@ public class Balinese implements Serializable
 
 	/**
 	 * Gets the luang from the fixed date.
-	 * 
+	 *
 	 * @param l Fixed date.
 	 * @return Luang.
 	 */
@@ -247,7 +247,7 @@ public class Balinese implements Serializable
 
 	/**
 	 * Gets the dwiwara from the fixed date.
-	 * 
+	 *
 	 * @param l Fixed date.
 	 * @return Dwiwara.
 	 */
@@ -258,7 +258,7 @@ public class Balinese implements Serializable
 
 	/**
 	 * Gets the triwara from the fixed date.
-	 * 
+	 *
 	 * @param l Fixed date.
 	 * @return Triwara.
 	 */
@@ -269,7 +269,7 @@ public class Balinese implements Serializable
 
 	/**
 	 * Gets the caturwara from the fixed date.
-	 * 
+	 *
 	 * @param l Fixed date.
 	 * @return Caturwara.
 	 */
@@ -280,7 +280,7 @@ public class Balinese implements Serializable
 
 	/**
 	 * Gets the pancawara from the fixed date.
-	 * 
+	 *
 	 * @param l Fixed date.
 	 * @return Pancawara.
 	 */
@@ -291,7 +291,7 @@ public class Balinese implements Serializable
 
 	/**
 	 * Gets the sadwara from the fixed date.
-	 * 
+	 *
 	 * @param l Fixed date.
 	 * @return Sadwara.
 	 */
@@ -302,7 +302,7 @@ public class Balinese implements Serializable
 
 	/**
 	 * Gets the saptawara from the fixed date.
-	 * 
+	 *
 	 * @param l Fixed date.
 	 * @return Saptawara.
 	 */
@@ -313,7 +313,7 @@ public class Balinese implements Serializable
 
 	/**
 	 * Gets the asatawara from the fixed date.
-	 * 
+	 *
 	 * @param l Fixed date.
 	 * @return Asatawara.
 	 */
@@ -325,7 +325,7 @@ public class Balinese implements Serializable
 
 	/**
 	 * Gets the sangawara from the fixed date.
-	 * 
+	 *
 	 * @param l Fixed date.
 	 * @return Sangawara.
 	 */
@@ -336,7 +336,7 @@ public class Balinese implements Serializable
 
 	/**
 	 * Gets the dasawara from the fixed date.
-	 * 
+	 *
 	 * @param l Fixed date.
 	 * @return Dasawara.
 	 */
@@ -349,7 +349,7 @@ public class Balinese implements Serializable
 
 	/**
 	 * Gets the week from the fixed date.
-	 * 
+	 *
 	 * @param l Fixed date.
 	 * @return Week.
 	 */
@@ -377,7 +377,7 @@ public class Balinese implements Serializable
 
 	/**
 	 * Gets the day from a Balinese date.
-	 * 
+	 *
 	 * @return Day.
 	 */
 	public int day()
@@ -397,42 +397,11 @@ public class Balinese implements Serializable
 
 	/**
 	 * Sets a Balinese date with a given Julian day.
-	 * 
+	 *
 	 * @param jd Julian day.
 	 */
 	public void fromJulianDay(int jd)
 	{
 		fromFixed(jd - Gregorian.EPOCH);
-	}
-
-	/**
-	 * For unit testing only.
-	 * @param args Not used.
-	 */
-	public static void main(String args[])
-	{
-		System.out.println("Balinese Test");
-
-		int jd = 2451545;
-		Balinese h = new Balinese(jd);
-		String date = "luang=" + h.luang + ",dwiwara=" + h.dwiwara + ",triwara=" + h.triwara + ",caturwara=" + h.caturwara + ",pancawara=" + h.pancawara + ",sadwara=" + h.sadwara + ",saptawara=" + h.saptawara + ",asatawara=" + h.asatawara + ",sangawara=" + h.sangawara + ",dasawara=" + h.dasawara;
-		System.out.println("JD " + jd + " = " + date);
-
-		Balinese h2 = new Balinese(h.luang, h.dwiwara, h.triwara, h.caturwara, h.pancawara, h.sadwara, h.saptawara,
-				h.asatawara, h.sangawara, h.dasawara);
-		date = "luang=" + h2.luang + ",dwiwara=" + h2.dwiwara + ",triwara=" + h2.triwara + ",caturwara=" + h2.caturwara + ",pancawara=" + h2.pancawara + ",sadwara=" + h2.sadwara + ",saptawara=" + h2.saptawara + ",asatawara=" + h2.asatawara + ",sangawara=" + h2.sangawara + ",dasawara=" + h2.dasawara;
-
-		System.out.println(date);
-
-		System.out.println(Calendar.nameFromNumber(h2.dwiwara, DWIWARA_NAMES));
-		System.out.println(Calendar.nameFromNumber(h2.triwara, TRIWARA_NAMES));
-		System.out.println(Calendar.nameFromNumber(h2.caturwara, CATURWARA_NAMES));
-		System.out.println(Calendar.nameFromNumber(h2.pancawara, PANCAWARA_NAMES));
-		System.out.println(Calendar.nameFromNumber(h2.sadwara, SADWARA_NAMES));
-		System.out.println(Calendar.nameFromNumber(h2.saptawara, SAPTAWARA_NAMES));
-		System.out.println(Calendar.nameFromNumber(h2.asatawara, ASATAWARA_NAMES));
-		System.out.println(Calendar.nameFromNumber(h2.sangawara, SANGAWARA_NAMES));
-		System.out.println(Calendar.nameFromNumber(h2.dasawara, DASAWARA_NAMES));
-		System.out.println(Calendar.nameFromNumber(h2.week(), WEEK_NAMES));
 	}
 }

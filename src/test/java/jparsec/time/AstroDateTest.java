@@ -10,9 +10,9 @@ public class AstroDateTest {
      */
     public static void main(String args[]) {
         System.out.println("AstroDate test");
-
         // Note that year -1001 = 1001 B.C., and -4713 = 4713 B.C.
         // Year 0 does not exist, will produce error
+
         try {
             AstroDate astro = new AstroDate(-12000, 1, 1);
             System.out.println(astro.jd() + '/' + astro.toStandarizedString(null) + '/' + astro.toString(0));

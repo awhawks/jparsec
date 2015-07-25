@@ -7,14 +7,12 @@ public class FrenchModifiedTest {
      * @param args Not used.
      */
     public static void main(String args[]) {
-        System.out.println("Modified French Test");
-
+        System.out.println("FrenchModified test");
         int jd = 1757754;
         FrenchModified h = new FrenchModified(jd);
-        System.out.println("JD " + jd + " = " + h.year + "/" + h.month + "/" + h.day);
-
+        System.out.println("JD " + jd + " = " + h.year + '/' + h.month + '/' + h.day);
         FrenchModified h2 = new FrenchModified(h.year, h.month, h.day);
-        System.out.println("JD " + h2.toJulianDay() + " = " + h2.year + "/" + h2.month + "/" + h2.day);
+        System.out.println("JD " + h2.toJulianDay() + " = " + h2.year + '/' + h2.month + '/' + h2.day);
         int decadi = h2.getDecadi();
 
         if (decadi != -1) {

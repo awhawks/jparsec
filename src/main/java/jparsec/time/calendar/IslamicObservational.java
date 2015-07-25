@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.time.calendar;
 
 import java.io.Serializable;
@@ -28,13 +28,13 @@ import jparsec.observer.CityElement;
 /**
  * Implements the Observational Islamic calendar. See Calendrical Calculations
  * for reference.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
 public class IslamicObservational implements Serializable
 {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * The year.
@@ -70,7 +70,7 @@ public class IslamicObservational implements Serializable
 
 	/**
 	 * Julian day constructor.
-	 * 
+	 *
 	 * @param jd Julian day.
 	 */
 	public IslamicObservational(int jd)
@@ -80,7 +80,7 @@ public class IslamicObservational implements Serializable
 
 	/**
 	 * Explicit constructor.
-	 * 
+	 *
 	 * @param y Year.
 	 * @param m Month.
 	 * @param d Day.
@@ -94,7 +94,7 @@ public class IslamicObservational implements Serializable
 
 	/**
 	 * To fixed day.
-	 * 
+	 *
 	 * @param y Year.
 	 * @param m Month.
 	 * @param d Day.
@@ -117,7 +117,7 @@ public class IslamicObservational implements Serializable
 
 	/**
 	 * To fixed day.
-	 * 
+	 *
 	 * @return Fixed day.
 	 */
 	public long toFixed()
@@ -127,7 +127,7 @@ public class IslamicObservational implements Serializable
 
 	/**
 	 * Sets the date from fixed day.
-	 * 
+	 *
 	 * @param l Fixed date.
 	 */
 	public void fromFixed(long l)
@@ -139,16 +139,14 @@ public class IslamicObservational implements Serializable
 			year = Calendar.quotient(l2, 12D) + 1L;
 			month = (int) (Calendar.mod(l2, 12L) + 1L);
 			day = (int) ((l - l1) + 1L);
-			return;
 		} catch (Exception ex)
 		{
-			return;
 		}
 	}
 
 	/**
 	 * Transforms an Islamic date into a Julian day.
-	 * 
+	 *
 	 * @param year Year.
 	 * @param month Month.
 	 * @param day Day.
@@ -161,7 +159,7 @@ public class IslamicObservational implements Serializable
 
 	/**
 	 * Transforms an Islamic date into a Julian day.
-	 * 
+	 *
 	 * @return Julian day.
 	 */
 	public int toJulianDay()
@@ -171,31 +169,11 @@ public class IslamicObservational implements Serializable
 
 	/**
 	 * Sets an Islamic date with a given Julian day.
-	 * 
+	 *
 	 * @param jd Julian day.
 	 */
 	public void fromJulianDay(int jd)
 	{
 		fromFixed(jd - Gregorian.EPOCH);
-	}
-
-	/**
-	 * For unit testing only.
-	 * @param args Not used.
-	 */
-	public static void main(String args[])
-	{
-		System.out.println("Observational Islamic Test");
-
-		int jd = 2451545;
-		IslamicObservational h = new IslamicObservational(jd);
-		System.out.println("JD " + jd + " = " + h.year + "/" + h.month + "/" + h.day);
-
-		IslamicObservational h2 = new IslamicObservational(h.year, h.month, h.day);
-		System.out.println("JD " + h2.toJulianDay() + " = " + h2.year + "/" + h2.month + "/" + h2.day);
-
-		System.out.println(Calendar.nameFromMonth(h2.month, Islamic.MONTH_NAMES));
-		System.out.println(Calendar
-				.nameFromDayOfWeek(Calendar.dayOfWeekFromFixed(h2.toFixed()), Islamic.DAY_OF_WEEK_NAMES));
 	}
 }

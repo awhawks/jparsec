@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.time.calendar;
 
 import java.io.Serializable;
@@ -28,13 +28,13 @@ import jparsec.observer.CityElement;
 /**
  * Implements the Hindu Solar calendar. See Calendrical Calculations for
  * reference.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
 public class HinduSolar implements Serializable
 {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * The year.
@@ -52,7 +52,7 @@ public class HinduSolar implements Serializable
 	public int day;
 
 	/**
-	 * Sidereal year lenght.
+	 * Sidereal year length.
 	 */
 	public static final double SIDEREAL_YEAR = 365.2587564814815D;
 
@@ -74,16 +74,14 @@ public class HinduSolar implements Serializable
 	/**
 	 * Ujjain location.
 	 */
-	public static final CityElement UJJAIN = new CityElement("Ujjain, India", Calendar.angle(75D, 46D, 0.0D), Calendar
-			.angle(23D, 9D, 0.0D), 5.0512222222222221D, 0);
+	public static final CityElement UJJAIN = new CityElement("Ujjain, India", Calendar.angle(75D, 46D, 0.0D), Calendar.angle(23D, 9D, 0.0D), 5.0512222222222221D, 0);
 
 	/**
 	 * Hindu locale site, currently equal to Ujjain.
 	 */
 	public static final CityElement HINDU_LOCALE = UJJAIN;
 
-	private static final double RS[] =
-	{ 0.92777777777777781D, 0.99722222222222223D, 1.075D, 1.075D, 0.99722222222222223D, 0.92777777777777781D };
+	private static final double RS[] = { 0.92777777777777781D, 0.99722222222222223D, 1.075D, 1.075D, 0.99722222222222223D, 0.92777777777777781D };
 
 	/**
 	 * Default constructor.
@@ -92,7 +90,7 @@ public class HinduSolar implements Serializable
 
 	/**
 	 * Fixed day constructor.
-	 * 
+	 *
 	 * @param l Fixed day.
 	 */
 	public HinduSolar(long l)
@@ -102,7 +100,7 @@ public class HinduSolar implements Serializable
 
 	/**
 	 * Julian day constructor.
-	 * 
+	 *
 	 * @param jd Julian day.
 	 */
 	public HinduSolar(int jd)
@@ -112,7 +110,7 @@ public class HinduSolar implements Serializable
 
 	/**
 	 * Explicit constructor.
-	 * 
+	 *
 	 * @param y Year.
 	 * @param m Month.
 	 * @param d Day.
@@ -126,7 +124,7 @@ public class HinduSolar implements Serializable
 
 	/**
 	 * To fixed day..
-	 * 
+	 *
 	 * @param year Year.
 	 * @param month Month.
 	 * @param day Day.
@@ -139,7 +137,7 @@ public class HinduSolar implements Serializable
 
 	/**
 	 * To fixed day.
-	 * 
+	 *
 	 * @return Fixed day.
 	 */
 	public long toFixed()
@@ -157,7 +155,7 @@ public class HinduSolar implements Serializable
 
 	/**
 	 * Sets the date from the fixed day.
-	 * 
+	 *
 	 * @param l Fixed day.
 	 */
 	public void fromFixed(long l)
@@ -208,8 +206,8 @@ public class HinduSolar implements Serializable
 
 	/**
 	 * Returns solar true position.
-	 * 
-	 * @param d 
+	 *
+	 * @param d
 	 * @param d1
 	 * @param d2
 	 * @param d3
@@ -227,7 +225,7 @@ public class HinduSolar implements Serializable
 
 	/**
 	 * Gets the solar longitude.
-	 * 
+	 *
 	 * @param d Fixed day.
 	 * @return Solar longitude.
 	 */
@@ -238,7 +236,7 @@ public class HinduSolar implements Serializable
 
 	/**
 	 * Returns zodiac sign.
-	 * 
+	 *
 	 * @param d Fixed day.
 	 * @return Zodiac sign integer.
 	 */
@@ -254,7 +252,7 @@ public class HinduSolar implements Serializable
 
 	/**
 	 * Gets calendar day.
-	 * 
+	 *
 	 * @param d Fixed date.
 	 * @return Calendar day.
 	 */
@@ -312,7 +310,7 @@ public class HinduSolar implements Serializable
 
 	/**
 	 * Gets the sunrise time.
-	 * 
+	 *
 	 * @param l Fixed day.
 	 * @return Sunrise time.
 	 */
@@ -323,7 +321,7 @@ public class HinduSolar implements Serializable
 
 	/**
 	 * Gets the solar longitude after some time from certain instant.
-	 * 
+	 *
 	 * @param d Fixed date.
 	 * @param d1 Time to add.
 	 * @return Solar longitude.
@@ -348,7 +346,7 @@ public class HinduSolar implements Serializable
 
 	/**
 	 * Gets Mesha Samkranti.
-	 * 
+	 *
 	 * @param l Fixed day.
 	 * @return Such date.
 	 */
@@ -360,7 +358,7 @@ public class HinduSolar implements Serializable
 
 	/**
 	 * Transforms a Hindu date into a Julian day
-	 * 
+	 *
 	 * @param year Year.
 	 * @param month Month.
 	 * @param leap Leap.
@@ -374,7 +372,7 @@ public class HinduSolar implements Serializable
 
 	/**
 	 * Transforms a Hindu date into a Julian day
-	 * 
+	 *
 	 * @return Julian day.
 	 */
 	public int toJulianDay()
@@ -384,32 +382,11 @@ public class HinduSolar implements Serializable
 
 	/**
 	 * Sets a Hindu date with a given Julian day
-	 * 
+	 *
 	 * @param jd Julian day.
 	 */
 	public void fromJulianDay(int jd)
 	{
 		fromFixed(jd - Gregorian.EPOCH);
-	}
-
-	/**
-	 * For unit testing only.
-	 * @param args Not used.
-	 */
-	public static void main(String args[])
-	{
-		System.out.println("Hindu Solar Test");
-
-		int jd = 2451545;
-		HinduSolar h = new HinduSolar(jd);
-		System.out.println("JD " + jd + " = " + h.year + "/" + h.month + "/" + h.day);
-
-		HinduSolar h2 = new HinduSolar(h.year, h.month, h.day);
-		System.out.println("JD " + h2.toJulianDay() + " = " + h2.year + "/" + h2.month + "/" + h2.day);
-
-		System.out.println(Calendar.nameFromMonth(Calendar.adjustedMod(h2.month + 1, 12), HinduOldLunar.MONTH_NAMES));
-		System.out.println(Calendar.nameFromDayOfWeek(Calendar.dayOfWeekFromFixed(h2.toFixed()), HinduOldSolar.DAY_OF_WEEK_NAMES));
-
-		System.out.println("(from sunrise)");
 	}
 }

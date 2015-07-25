@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.time.calendar;
 
 import java.io.Serializable;
@@ -29,23 +29,23 @@ import java.io.Serializable;
  * <P>
  * Note that it is not possible to pass from a given date to a Julian day, since
  * no year exists in this calendar.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
 public class MayanTzolkin implements Serializable
 {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Number.
 	 */
-	public int number = 0;
+	public int number;
 
 	/**
 	 * Name.
 	 */
-	public int name = 0;
+	public int name;
 
 	/**
 	 * Calendar epoch.
@@ -55,9 +55,7 @@ public class MayanTzolkin implements Serializable
 	/**
 	 * Month names.
 	 */
-	public static final String NAMES[] =
-	{ "Imix", "Ik", "Akbal", "Kan", "Chicchan", "Cimi", "Manik", "Lamat", "Muluc", "Oc", "Chuen", "Eb", "Ben", "Ix",
-			"Men", "Cib", "Caban", "Etznab", "Cauac", "Ahau" };
+	public static final String NAMES[] = { "Imix", "Ik", "Akbal", "Kan", "Chicchan", "Cimi", "Manik", "Lamat", "Muluc", "Oc", "Chuen", "Eb", "Ben", "Ix", "Men", "Cib", "Caban", "Etznab", "Cauac", "Ahau" };
 
 	/**
 	 * Default constructor.
@@ -66,7 +64,7 @@ public class MayanTzolkin implements Serializable
 
 	/**
 	 * Julian day constructor.
-	 * 
+	 *
 	 * @param jd Julian day.
 	 */
 	public MayanTzolkin(int jd)
@@ -76,7 +74,7 @@ public class MayanTzolkin implements Serializable
 
 	/**
 	 * Explicit constructor.
-	 * 
+	 *
 	 * @param mnumber Number.
 	 * @param mname Name.
 	 */
@@ -88,7 +86,7 @@ public class MayanTzolkin implements Serializable
 
 	/**
 	 * Sets the date from fixed day.
-	 * 
+	 *
 	 * @param l Fixed date.
 	 */
 	public void fromFixed(long l)
@@ -100,7 +98,7 @@ public class MayanTzolkin implements Serializable
 
 	/**
 	 * Gets the ordinal.
-	 * 
+	 *
 	 * @param mayantzolkin MayanTzolkin instance.
 	 * @return Days elapsed since new year.
 	 */
@@ -111,7 +109,7 @@ public class MayanTzolkin implements Serializable
 
 	/**
 	 * Gets last new year.
-	 * 
+	 *
 	 * @param mayantzolkin MayanTzolkin instance.
 	 * @param l Fixed day.
 	 * @return Such date.
@@ -123,27 +121,11 @@ public class MayanTzolkin implements Serializable
 
 	/**
 	 * Sets a Mayan date with a given Julian day
-	 * 
+	 *
 	 * @param jd Julian day.
 	 */
 	public void fromJulianDay(int jd)
 	{
 		fromFixed(jd - Gregorian.EPOCH);
-	}
-
-	/**
-	 * For unit testing only.
-	 * @param args Not used.
-	 */
-	public static void main(String args[])
-	{
-		System.out.println("Mayan Long Count Test");
-
-		int jd = 2451545;
-		MayanTzolkin h = new MayanTzolkin(jd);
-		System.out.println("JD " + jd + " = " + h.number + "/" + h.name);
-
-		MayanTzolkin h2 = new MayanTzolkin(h.number, h.name);
-		System.out.println("JD " + " = " + h2.number + "/" + h2.name);
 	}
 }

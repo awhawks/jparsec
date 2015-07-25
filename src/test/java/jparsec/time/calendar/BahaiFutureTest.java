@@ -7,14 +7,14 @@ public class BahaiFutureTest {
      * @param args Not used.
      */
     public static void main(String args[]) {
-        System.out.println("FutureBahai Test");
+        System.out.println("BahaiFuture test");
 
-        int jd = 2451545;
+        int jd = 2451545; // 2457103  = March 21, 2015 //2451545;
         BahaiFuture h = new BahaiFuture(jd);
-        System.out.println("JD " + jd + " = " + h.major + "/" + h.cycle + "/" + h.year + "/" + h.month + "/" + h.day);
+        System.out.println("JD " + jd + " = " + h.major + '/' + h.cycle + '/' + h.year + '/' + h.month + '/' + h.day);
 
         BahaiFuture h2 = new BahaiFuture(h.major, h.cycle, h.year, h.month, h.day);
-        System.out.println("JD " + h2.toJulianDay() + " = " + h2.major + "/" + h2.cycle + "/" + h2.year + "/" + h2.month + "/" + h2.day);
+        System.out.println("JD " + h2.toJulianDay() + " = " + h2.major + '/' + h2.cycle + '/' + h2.year + '/' + h2.month + '/' + h2.day);
 
         System.out.println(Calendar.nameFromDayOfWeek(Calendar.dayOfWeekFromFixed(h2.toFixed()), Bahai.DAY_OF_WEEK_NAMES));
         String month = Calendar.nameFromMonth(h2.day, Bahai.DAY_OF_MONTH_NAMES);

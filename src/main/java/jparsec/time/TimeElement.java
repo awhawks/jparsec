@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.time;
 
 import java.io.Serializable;
@@ -34,28 +34,28 @@ import jparsec.util.Translate;
 import jparsec.util.Translate.LANGUAGE;
 
 /**
- * An adequate class for storing the time of an observer, defined as a Julian day ({@linkplain AstroDate} 
+ * An adequate class for storing the time of an observer, defined as a Julian day ({@linkplain AstroDate}
  * instance) plus the identifier of the time scale of that date.
  * <P>
  * This library uses AstroDate class, with the Gregorian calendar for dates equal or after October,
  * 15, 1582. For dates before that the library uses the Julian Calendar. The
- * Before Christ era (B.C.) is automatically selected by setting a negative year as the year in 
+ * Before Christ era (B.C.) is automatically selected by setting a negative year as the year in
  * the AstroDate instance. Year 0 does not exists.
  * <P>
- * The time can be Barycentric Dynamical Time, Terrestrial Time, Universal Time 
+ * The time can be Barycentric Dynamical Time, Terrestrial Time, Universal Time
  * UT1/UTC, or Local Time. In the last
  * case the time will be corrected when making any kind of calculations using
  * the time zone field in the corresponding observer element instance. Beware
  * that for observatories this field should be set explicity, unless you perform
  * calculations without using local time.
- * 
+ *
  * @see jparsec.observer.ObserverElement
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
 public class TimeElement implements Serializable
 {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Creates a default time object with the current computer's date
@@ -69,7 +69,7 @@ public class TimeElement implements Serializable
 
 	/**
 	 * Creates a time object by giving the values of the fields.
-	 * 
+	 *
 	 * @param obs_date Gregorian Calendar object with the date.
 	 * @param ts Time scale ID constant.
 	 * @deprecated Dates cannot be represented in a {@linkplain GregorianCalendar}
@@ -83,7 +83,7 @@ public class TimeElement implements Serializable
 
 	/**
 	 * Creates a time object from an {@linkplain AstroDate} instance.
-	 * 
+	 *
 	 * @param astro {@linkplain AstroDate} instance.
 	 * @param ts Time scale ID constant.
 	 */
@@ -95,7 +95,7 @@ public class TimeElement implements Serializable
 
 	/**
 	 * Creates a time object from a Julian day.
-	 * 
+	 *
 	 * @param jd Julian day.
 	 * @param ts Time scale ID constant.
 	 * @throws JPARSECException Thrown if the Julian day is invalid.
@@ -108,7 +108,7 @@ public class TimeElement implements Serializable
 
 	/**
 	 * Creates a time object from a Julian day.
-	 * 
+	 *
 	 * @param jd Julian day.
 	 * @param ts Time scale ID constant.
 	 * @throws JPARSECException Thrown if the Julian day is invalid.
@@ -132,7 +132,7 @@ public class TimeElement implements Serializable
 	/**
 	 * This value sets the desired precision when
 	 * writing the output date (number of decimal
-	 * positions in the field seconds). Default 
+	 * positions in the field seconds). Default
 	 * value is 0.
 	 */
 	public int decimalsInSeconds = 0;
@@ -166,7 +166,7 @@ public class TimeElement implements Serializable
 		/** ID Constant for obtaining Julian day in Terrestrial Time. */
 		TERRESTRIAL_TIME,
 		/** ID Constant for obtaining Julian day in Barycentric Dynamical Time.
-		 * This time scale is only dependent on the gravitational potential of the Earth, 
+		 * This time scale is only dependent on the gravitational potential of the Earth,
 		 * and it is also called Teph (the time scale of the JPL ephemerides). To obtain
 		 * the barycentric coordinate time, independent of any potentials in the Solar
 		 * System, use {@linkplain TimeScale#getTCBminusTDB(double)}. */
@@ -176,15 +176,12 @@ public class TimeElement implements Serializable
 	/**
 	 * List of available time scales.
 	 */
-	public static final String TIME_SCALES[] = new String[] {"Local time", 
-		"Universal Time UT1", "Universal time UTC", "Terrestrial time",
-		"Barycentric dynamical time"};
+	public static final String TIME_SCALES[] = new String[] {"Local time", "Universal Time UT1", "Universal time UTC", "Terrestrial time", "Barycentric dynamical time"};
 
 	/**
 	 * List of available time scales in abbreviated form.
 	 */
-	public static final String TIME_SCALES_ABBREVIATED[] = new String[] {"LT", 
-		"UT1", "UTC", "TT", "TDB"};
+	public static final String TIME_SCALES_ABBREVIATED[] = new String[] {"LT", "UT1", "UTC", "TT", "TDB"};
 
 	/**
 	 * Returns the time scale as string.
@@ -211,7 +208,7 @@ public class TimeElement implements Serializable
 		if (ts.equals("UTC")) return SCALE.UNIVERSAL_TIME_UTC;
 		throw new JPARSECException("Invalid abbreviation "+ts);
 	}
-	
+
 	/**
 	 * Returns the time scale as string.
 	 * @return The abbreviation of the time scale.
@@ -239,13 +236,13 @@ public class TimeElement implements Serializable
 	public void add(double days) throws JPARSECException {
 		this.astroDate = new AstroDate(this.astroDate.jd() + days);
 	}
-	
+
 	/**
 	 * Clones this instance.
 	 */
+	@Override
 	public TimeElement clone()
 	{
-		if (this == null) return null;
 		TimeElement time;
 		try {
 			time = new TimeElement(astroDate, this.timeScale);
@@ -258,28 +255,30 @@ public class TimeElement implements Serializable
 	/**
 	 * Returns whether the input object is equals to this instance.
 	 */
-	public boolean equals(Object t)
-	{
-		if (t == null) {
-			if (this == null) return true;
-			return false;
-		}
-		if (this == null) {
-			return false;
-		}
-		TimeElement te = (TimeElement) t;
-		boolean equals = true;
-		if (te.timeScale != this.timeScale) equals = false;
-		try {
-			if (te.astroDate.jd() != this.astroDate.jd()) equals = false;
-		} catch (Exception e) {	}
-		if (te.decimalsInSeconds != this.decimalsInSeconds) equals = false;
-		return equals;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof TimeElement)) return false;
+
+		TimeElement that = (TimeElement) o;
+
+		if (decimalsInSeconds != that.decimalsInSeconds) return false;
+		if (astroDate != null ? !astroDate.equals(that.astroDate) : that.astroDate != null) return false;
+		return getTimeScale() == that.getTimeScale();
+	}
+
+	@Override
+	public int hashCode() {
+		int result = astroDate != null ? astroDate.hashCode() : 0;
+		result = 31 * result + (getTimeScale() != null ? getTimeScale().hashCode() : 0);
+		result = 31 * result + decimalsInSeconds;
+		return result;
 	}
 
 	/**
 	 * Returns a simple String representation of this instant.
 	 */
+	@Override
 	public String toString() {
 		try {
 			return astroDate.toString(this.decimalsInSeconds)+" "+getTimeScaleAbbreviation();
@@ -303,7 +302,7 @@ public class TimeElement implements Serializable
 
 	/**
 	 * Constructor for a given date expressed as a String.
-	 * @param date The date, in the same format as it is given 
+	 * @param date The date, in the same format as it is given
 	 * by {@linkplain TimeElement#toString()} or
 	 * {@linkplain TimeFormat#formatJulianDayAsDateAndTime(double, SCALE)}.
 	 * @throws JPARSECException If the input date cannot be parsed.
@@ -349,7 +348,7 @@ public class TimeElement implements Serializable
 					year = Integer.parseInt(FileIO.getField(3, date1, "-", false));
 					day = Integer.parseInt(FileIO.getField(1, date1, "-", false));
 				}
-				
+
 				astroDate = new AstroDate(year, month, day);
 				astroDate.setDayFraction(0.0);
 				if (!date2.equals("")) {
@@ -372,33 +371,6 @@ public class TimeElement implements Serializable
 				exc2.printStackTrace();
 				throw new JPARSECException("could not parse the date "+date, exc2);
 			}
-		}
-	}
-	
-	/**
-	 * For unit testing only.
-	 * @param args Not used.
-	 */
-	public static void main(String args[])
-	{
-		System.out.println("TimeElement Test");
-
-		Translate.setDefaultLanguage(LANGUAGE.SPANISH);
-		try {
-			TimeElement time = new TimeElement(new AstroDate(-50, 1, 2, 3, 4, 5.678), TimeElement.SCALE.TERRESTRIAL_TIME);
-			time.decimalsInSeconds = 3;
-			System.out.println("Time is " + time.toString()+"/"+time.astroDate.getSeconds());
-			
-			TimeElement time2 = new TimeElement(time.toString());
-			System.out.println("Time is " + time2.toString()+"/"+time.astroDate.getSeconds());
-			
-			boolean dmy = true, monthAsString = true;
-			String s = TimeFormat.formatJulianDayAsDateAndTime(time, dmy, monthAsString);
-			System.out.println(s);
-			TimeElement time3 = new TimeElement(s);
-			System.out.println("Time is " + time3.toString());
-		} catch (Exception exc) {
-			exc.printStackTrace();
 		}
 	}
 }
