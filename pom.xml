@@ -9,6 +9,25 @@
     <url>http://maven.apache.org</url>
 
     <dependencies>
+        <!-- Scientific Graphics Toolkit from NOAA/PMEL (Don Denbo)
+                 Version 3.0 (the latest) was released in Sept 2003
+                http://www.epic.noaa.gov/java/sgt/ -->
+        <!--
+        <dependency>
+            <groupId>gov.noaa.pmel</groupId>
+            <artifactId>SGT_toolkit</artifactId>
+            <version>${version.SGT_toolkit}</version>
+        </dependency>
+        -->
+
+        <!--
+        <dependency>
+            <groupId>uk.ac.rdg.resc</groupId>
+            <artifactId>edal-graphics</artifactId>
+            <version>1.0-rc1</version>
+        </dependency>
+        -->
+
         <dependency>
             <groupId>gov.noaa.pmel</groupId>
             <artifactId>sgt</artifactId>
@@ -16,6 +35,7 @@
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/sgt_v30.jar</systemPath>
         </dependency>
+
         <dependency>
             <groupId>es.oan.conga</groupId>
             <artifactId>orbital_elements</artifactId>
@@ -60,31 +80,31 @@
         <dependency>
             <groupId>cds.savot</groupId>
             <artifactId>savot-model</artifactId>
-            <version>2.6</version>
+            <version>${version.cds.savot}</version>
         </dependency>
 
         <dependency>
             <groupId>cds.savot</groupId>
             <artifactId>savot-common</artifactId>
-            <version>2.6</version>
+            <version>${version.cds.savot}</version>
         </dependency>
 
         <dependency>
             <groupId>cds.savot</groupId>
             <artifactId>savot-pullengine</artifactId>
-            <version>2.6</version>
+            <version>${version.cds.savot}</version>
         </dependency>
 
         <dependency>
             <groupId>cds.savot</groupId>
             <artifactId>savot-saxengine</artifactId>
-            <version>2.6</version>
+            <version>${version.cds.savot}</version>
         </dependency>
 
         <dependency>
             <groupId>cds.savot</groupId>
             <artifactId>savot-writer</artifactId>
-            <version>2.6</version>
+            <version>${version.cds.savot}</version>
         </dependency>
 
         <dependency>
@@ -198,6 +218,33 @@
             <id>savot</id>
             <url>http://maven.mse.jhu.edu/m2repository/</url>
         </repository>
+        <repository>
+            <id>geotoolkit</id>
+            <name>Geotoolkit binaries</name>
+            <url>http://maven.geotoolkit.org/</url>
+        </repository>
+        <repository>
+            <id>mvnsearch</id>
+            <name>mvnsearch</name>
+            <url>http://www.mvnsearch.org/maven2/</url>
+        </repository>
+        <repository>
+            <!-- This allows us to include local maven repos in each module
+                to contain dependencies which are not available through maven. We have only
+                a single example, in the graphics module. We could define it in the graphics
+                pom.xml, but that means that javadoc generation fails when we call it from
+                this level. -->
+            <id>libs</id>
+            <name>Non-maven dependencies</name>
+            <releases>
+                <enabled>true</enabled>
+                <checksumPolicy>ignore</checksumPolicy>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <url>file://${project.basedir}/lib</url>
+        </repository>
     </repositories>
 
     <properties>
@@ -234,5 +281,7 @@
         <version.nom-tam-fits>1.13.0</version.nom-tam-fits>
         <version.jmathplot>1.0.1</version.jmathplot>
         <version.plantuml>8028</version.plantuml>
+        <version.SGT_toolkit>3.0</version.SGT_toolkit>
+        <version.cds.savot>2.6</version.cds.savot>
     </properties>
 </project>
