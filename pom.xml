@@ -24,13 +24,6 @@
         </dependency>
         <dependency>
             <groupId>es.oan.conga</groupId>
-            <artifactId>jsky-coords</artifactId>
-            <version>${version.jparsec}</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/jsky-coords.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>es.oan.conga</groupId>
             <artifactId>orbital_elements</artifactId>
             <version>${version.jparsec}</version>
             <scope>system</scope>
@@ -110,6 +103,11 @@
             <version>${version.testng}</version>
         </dependency>
         <dependency>
+            <groupId>jsky</groupId>
+            <artifactId>jsky-coords</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>${version.junit}</version>
@@ -172,6 +170,11 @@
         </dependency>
     </dependencies>
     <repositories>
+        <repository>
+            <id>foo</id>
+            <name>foo</name>
+            <url>http://java.freehep.org/maven2</url>
+        </repository>
         <repository>
             <id>jzy3d-snapshots</id>
             <name>Jzy3d Snapshots</name>
