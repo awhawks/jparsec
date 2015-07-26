@@ -231,102 +231,9 @@
             <artifactId>nrjavaserial</artifactId>
             <version>${version.nrjavaserial}</version>
         </dependency>
-
-        <!-- Scientific Graphics Toolkit from NOAA/PMEL (Don Denbo)
-                 Version 3.0 (the latest) was released in Sept 2003
-                http://www.epic.noaa.gov/java/sgt/ -->
-        <!--
-        <dependency>
-            <groupId>gov.noaa.pmel</groupId>
-            <artifactId>SGT_toolkit</artifactId>
-            <version>${version.SGT_toolkit}</version>
-        </dependency>
-        -->
-
-        <!--
-        <dependency>
-            <groupId>uk.ac.rdg.resc</groupId>
-            <artifactId>edal-graphics</artifactId>
-            <version>1.0-rc1</version>
-        </dependency>
-        -->
-
-        <!--
-        <dependency>
-            <groupId>libs</groupId>
-            <artifactId>sgt</artifactId>
-            <version>_v30</version>
-            <scope>provided</scope>
-            <type>jar</type>
-            <optional>true</optional>
-            <systemPath>${project.basedir}/lib/sgt_v30.jar</systemPath>
-        </dependency>
-        -->
-
-        <!--
-        <dependency>
-            <groupId>es.oan.conga</groupId>
-            <artifactId>orbital_elements</artifactId>
-            <version>${version.jparsec}</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/orbital_elements.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>es.oan.conga</groupId>
-            <artifactId>sky</artifactId>
-            <version>${version.jparsec}</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/sky.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>es.oan.conga</groupId>
-            <artifactId>skyViewWCS</artifactId>
-            <version>${version.jparsec}</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/skyViewWCS.jar</systemPath>
-        </dependency>
-
-        <dependency>
-            <groupId>cds</groupId>
-            <artifactId>cds.astro</artifactId>
-            <version>${version.jparsec}</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/cds.astro.jar</systemPath>
-        </dependency>
-        -->
-
-        <!--
-        <dependency>
-            <groupId>visad</groupId>
-            <artifactId>visad</artifactId>
-            <version>${version.jparsec}</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/visad.jar</systemPath>
-        </dependency>
-        -->
     </dependencies>
 
     <repositories>
-        <!-- This allows us to include local maven repos in each module
-            to contain dependencies which are not available through maven. We have only
-            a single example, in the graphics module. We could define it in the graphics
-            pom.xml, but that means that javadoc generation fails when we call it from
-            this level. -->
-        <!--
-        <repository>
-            <id>libs</id>
-            <name>Non-maven dependencies</name>
-            <releases>
-                <enabled>true</enabled>
-                <checksumPolicy>ignore</checksumPolicy>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <url>file://${project.basedir}/lib</url>
-        </repository>
-        -->
-
         <repository>
             <id>freehep</id>
             <name>freehep maven2 repo</name>
@@ -350,29 +257,5 @@
             <id>savot</id>
             <url>http://maven.mse.jhu.edu/m2repository/</url>
         </repository>
-
-        <!--
-        <repository>
-            <id>unidata</id>
-            <name>Unidata repositories</name>
-            <url>https://artifacts.unidata.ucar.edu/content/repositories/unidata</url>
-        </repository>
-        <repository>
-            <id>unidata-3rd-party</id>
-            <name>Unidata 3rd party repositories</name>
-            <url>https://artifacts.unidata.ucar.edu/content/repositories/unidata-3rdparty</url>
-        </repository>
-        <repository>
-            <id>mvnsearch</id>
-            <name>mvnsearch</name>
-            <url>http://www.mvnsearch.org/maven2/</url>
-        </repository>
-
-        <repository>
-            <id>geotoolkit</id>
-            <name>Geotoolkit binaries</name>
-            <url>http://maven.geotoolkit.org/</url>
-        </repository>
-        -->
     </repositories>
 </project>
