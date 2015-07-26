@@ -72,13 +72,6 @@
             <systemPath>${project.basedir}/lib/cds.savot.writer.jar</systemPath>
         </dependency>
         <dependency>
-            <groupId>org.stathissideris</groupId>
-            <artifactId>ditaa</artifactId>
-            <version>${version.jparsec}</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/ditaa.jar</systemPath>
-        </dependency>
-        <dependency>
             <groupId>visad</groupId>
             <artifactId>visad</artifactId>
             <version>${version.jparsec}</version>
@@ -104,6 +97,11 @@
             <groupId>be.ugent.caagt</groupId>
             <artifactId>jmathtex</artifactId>
             <version>0.7pre</version>
+        </dependency>
+        <dependency>
+            <groupId>net.sourceforge.plantuml</groupId>
+            <artifactId>plantuml</artifactId>
+            <version>${version.plantuml}</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -221,5 +219,6 @@
         <version.jz3d>0.9.1</version.jz3d>
         <version.nom-tam-fits>1.13.0</version.nom-tam-fits>
         <version.jmathplot>1.0.1</version.jmathplot>
+        <version.plantuml>8028</version.plantuml>
     </properties>
 </project>
