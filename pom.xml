@@ -7,6 +7,7 @@
     <version>${version.jparsec}</version>
     <name>jparsec</name>
     <url>http://maven.apache.org</url>
+
     <dependencies>
         <dependency>
             <groupId>gov.noaa.pmel</groupId>
@@ -36,41 +37,7 @@
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/skyViewWCS.jar</systemPath>
         </dependency>
-        <dependency>
-            <groupId>cds.savot</groupId>
-            <artifactId>common</artifactId>
-            <version>${version.jparsec}</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/cds.savot.common.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>cds.savot</groupId>
-            <artifactId>astro</artifactId>
-            <version>${version.jparsec}</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/cds.astro.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>cds.savot</groupId>
-            <artifactId>model</artifactId>
-            <version>${version.jparsec}</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/cds.savot.model.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>cds.savot</groupId>
-            <artifactId>pull</artifactId>
-            <version>${version.jparsec}</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/cds.savot.pull.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>cds.savot</groupId>
-            <artifactId>writer</artifactId>
-            <version>${version.jparsec}</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/cds.savot.writer.jar</systemPath>
-        </dependency>
+
         <dependency>
             <groupId>visad</groupId>
             <artifactId>visad</artifactId>
@@ -78,6 +45,48 @@
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/visad.jar</systemPath>
         </dependency>
+
+        <dependency>
+            <groupId>cds</groupId>
+            <artifactId>cds.astro</artifactId>
+            <version>${version.jparsec}</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/cds.astro.jar</systemPath>
+        </dependency>
+
+        <!-- SAVOT -->
+        <!-- http://cdsweb.u-strasbg.fr/cdsdevcorner/savot2.6.gml -->
+
+        <dependency>
+            <groupId>cds.savot</groupId>
+            <artifactId>savot-model</artifactId>
+            <version>2.6</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cds.savot</groupId>
+            <artifactId>savot-common</artifactId>
+            <version>2.6</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cds.savot</groupId>
+            <artifactId>savot-pullengine</artifactId>
+            <version>2.6</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cds.savot</groupId>
+            <artifactId>savot-saxengine</artifactId>
+            <version>2.6</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cds.savot</groupId>
+            <artifactId>savot-writer</artifactId>
+            <version>2.6</version>
+        </dependency>
+
         <dependency>
             <groupId>com.puppycrawl.tools</groupId>
             <artifactId>checkstyle</artifactId>
@@ -185,7 +194,12 @@
             <id>itest-legacy-mvn-repo</id>
             <url>https://raw.github.com/iTest-UCM/itest-legacy/mvn-repo/mvn-repo/</url>
         </repository>
+        <repository>
+            <id>savot</id>
+            <url>http://maven.mse.jhu.edu/m2repository/</url>
+        </repository>
     </repositories>
+
     <properties>
         <!-- Plugin version numbers -->
         <!-- Properties for maven-compiler-plugin -->
