@@ -1,6 +1,7 @@
 package jparsec.astrophysics.gildas;
 
 import jparsec.graph.ChartSeriesElement;
+import jparsec.graph.CreateChart;
 import jparsec.io.ConsoleReport;
 
 public class ProcessSpectrumTest {
@@ -19,7 +20,7 @@ public class ProcessSpectrumTest {
         ProcessSpectrum.TIMES_SIGMA = 5.0;
         SpectrumLine[] lines = ProcessSpectrum.reduceSpectrum(sp, -1);
         Spectrum30m.XUNIT xUnit = Spectrum30m.XUNIT.VELOCITY_KMS;
-        jparsec.graph.CreateChart ch = sp.getChart(500, 500, xUnit);
+        CreateChart ch = sp.getChart(500, 500, xUnit);
 
         if (lines != null) {
             System.out.println("Found " + lines.length + " lines");
