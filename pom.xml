@@ -1,5 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns='http://maven.apache.org/POM/4.0.0' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+         xsi:schemaLocation='http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd'>
     <modelVersion>4.0.0</modelVersion>
     <groupId>es.oan.conga</groupId>
     <artifactId>jparsec</artifactId>
@@ -8,72 +8,110 @@
     <name>jparsec</name>
     <url>http://maven.apache.org</url>
 
+    <properties>
+        <!-- Plugin version numbers -->
+        <!-- Properties for maven-compiler-plugin -->
+        <maven.compiler.compilerVersion>1.6</maven.compiler.compilerVersion>
+        <maven.compiler.source>1.6</maven.compiler.source>
+        <maven.compiler.target>1.6</maven.compiler.target>
+        <maven.compiler.fork>true</maven.compiler.fork>
+        <maven.compiler.verbose>true</maven.compiler.verbose>
+        <maven.compiler.debug>true</maven.compiler.debug>
+        <maven.compiler.optimize>true</maven.compiler.optimize>
+        <!-- Properties for maven-javadoc-plugin -->
+        <author>false</author>
+        <notimestamp>true</notimestamp>
+        <additionalparam>-Xdoclint:none</additionalparam>
+        <!-- Properties for maven-checkstyle-plugin -->
+        <!-- checkstyle.config.location>${project.basedir}/src/main/checkstyle/checkstyle.xml</checkstyle.config.location-->
+        <!-- Other properties -->
+        <project.build.sourceEncoding>iso-8859-1</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>iso-8859-1</project.reporting.outputEncoding>
+
+        <conga.url>http://conga.oan.es/~alonso/jparsec/lib</conga.url>
+        <version.jparsec>0.107</version.jparsec>
+        <version.testng>6.9.6</version.testng>
+        <version.checkstyle>6.8.1</version.checkstyle>
+        <version.nrjavaserial>3.9.3.1</version.nrjavaserial>
+        <version.jsch>0.1.53</version.jsch>
+        <version.surfaceplotter>2.0.1</version.surfaceplotter>
+        <version.javax.mail-api>1.5.4</version.javax.mail-api>
+        <version.miglayout-swing>5.0</version.miglayout-swing>
+        <version.jfree>1.0.19</version.jfree>
+        <version.junit>4.12</version.junit>
+        <version.jz3d>0.9.1</version.jz3d>
+        <version.nom-tam-fits>1.13.0</version.nom-tam-fits>
+        <version.jmathplot>1.0.1</version.jmathplot>
+        <version.plantuml>8028</version.plantuml>
+        <version.SGT_toolkit>3.0</version.SGT_toolkit>
+        <version.cds.savot>2.6</version.cds.savot>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.3</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                    <showWarnings>true</showWarnings>
+                    <showDeprecation>true</showDeprecation>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.7</version>
+                <executions>
+                    <execution>
+                        <id>download-remote-resources</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <mkdir dir='${project.basedir}/lib' />
+                                <get src='${conga.url}/cds/cds.astro.jar'    dest='${project.basedir}/lib/' usetimestamp='true' />
+                                <get src='${conga.url}/orbital_elements.jar' dest='${project.basedir}/lib/' usetimestamp='true' />
+                                <get src='${conga.url}/sgt_v30.jar'          dest='${project.basedir}/lib/' usetimestamp='true' />
+                                <get src='${conga.url}/sky.jar'              dest='${project.basedir}/lib/' usetimestamp='true' />
+                                <get src='${conga.url}/skyViewWCS.jar'       dest='${project.basedir}/lib/' usetimestamp='true' />
+                                <get src='${conga.url}/sunspot.jar'          dest='${project.basedir}/lib/' usetimestamp='true' />
+                                <get src='${conga.url}/textures.jar'         dest='${project.basedir}/lib/' usetimestamp='true' />
+                                <get src='${conga.url}/visad.jar'            dest='${project.basedir}/lib/' usetimestamp='true' />
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.googlecode.addjars-maven-plugin</groupId>
+                <artifactId>addjars-maven-plugin</artifactId>
+                <version>1.0.5</version>
+                <executions>
+                    <execution>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>add-jars</goal>
+                        </goals>
+                        <configuration>
+                            <resources>
+                                <resource>
+                                    <directory>${project.basedir}/lib</directory>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
     <dependencies>
-        <!-- Scientific Graphics Toolkit from NOAA/PMEL (Don Denbo)
-                 Version 3.0 (the latest) was released in Sept 2003
-                http://www.epic.noaa.gov/java/sgt/ -->
-        <!--
-        <dependency>
-            <groupId>gov.noaa.pmel</groupId>
-            <artifactId>SGT_toolkit</artifactId>
-            <version>${version.SGT_toolkit}</version>
-        </dependency>
-        -->
-
-        <!--
-        <dependency>
-            <groupId>uk.ac.rdg.resc</groupId>
-            <artifactId>edal-graphics</artifactId>
-            <version>1.0-rc1</version>
-        </dependency>
-        -->
-
-        <dependency>
-            <groupId>gov.noaa.pmel</groupId>
-            <artifactId>sgt</artifactId>
-            <version>${version.jparsec}</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/sgt_v30.jar</systemPath>
-        </dependency>
-
-        <dependency>
-            <groupId>es.oan.conga</groupId>
-            <artifactId>orbital_elements</artifactId>
-            <version>${version.jparsec}</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/orbital_elements.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>es.oan.conga</groupId>
-            <artifactId>sky</artifactId>
-            <version>${version.jparsec}</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/sky.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>es.oan.conga</groupId>
-            <artifactId>skyViewWCS</artifactId>
-            <version>${version.jparsec}</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/skyViewWCS.jar</systemPath>
-        </dependency>
-
-        <dependency>
-            <groupId>visad</groupId>
-            <artifactId>visad</artifactId>
-            <version>${version.jparsec}</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/visad.jar</systemPath>
-        </dependency>
-
-        <dependency>
-            <groupId>cds</groupId>
-            <artifactId>cds.astro</artifactId>
-            <version>${version.jparsec}</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/cds.astro.jar</systemPath>
-        </dependency>
-
         <!-- SAVOT -->
         <!-- http://cdsweb.u-strasbg.fr/cdsdevcorner/savot2.6.gml -->
 
@@ -193,8 +231,102 @@
             <artifactId>nrjavaserial</artifactId>
             <version>${version.nrjavaserial}</version>
         </dependency>
+
+        <!-- Scientific Graphics Toolkit from NOAA/PMEL (Don Denbo)
+                 Version 3.0 (the latest) was released in Sept 2003
+                http://www.epic.noaa.gov/java/sgt/ -->
+        <!--
+        <dependency>
+            <groupId>gov.noaa.pmel</groupId>
+            <artifactId>SGT_toolkit</artifactId>
+            <version>${version.SGT_toolkit}</version>
+        </dependency>
+        -->
+
+        <!--
+        <dependency>
+            <groupId>uk.ac.rdg.resc</groupId>
+            <artifactId>edal-graphics</artifactId>
+            <version>1.0-rc1</version>
+        </dependency>
+        -->
+
+        <!--
+        <dependency>
+            <groupId>libs</groupId>
+            <artifactId>sgt</artifactId>
+            <version>_v30</version>
+            <scope>provided</scope>
+            <type>jar</type>
+            <optional>true</optional>
+            <systemPath>${project.basedir}/lib/sgt_v30.jar</systemPath>
+        </dependency>
+        -->
+
+        <!--
+        <dependency>
+            <groupId>es.oan.conga</groupId>
+            <artifactId>orbital_elements</artifactId>
+            <version>${version.jparsec}</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/orbital_elements.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>es.oan.conga</groupId>
+            <artifactId>sky</artifactId>
+            <version>${version.jparsec}</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/sky.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>es.oan.conga</groupId>
+            <artifactId>skyViewWCS</artifactId>
+            <version>${version.jparsec}</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/skyViewWCS.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>cds</groupId>
+            <artifactId>cds.astro</artifactId>
+            <version>${version.jparsec}</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/cds.astro.jar</systemPath>
+        </dependency>
+        -->
+
+        <!--
+        <dependency>
+            <groupId>visad</groupId>
+            <artifactId>visad</artifactId>
+            <version>${version.jparsec}</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/visad.jar</systemPath>
+        </dependency>
+        -->
     </dependencies>
+
     <repositories>
+        <!-- This allows us to include local maven repos in each module
+            to contain dependencies which are not available through maven. We have only
+            a single example, in the graphics module. We could define it in the graphics
+            pom.xml, but that means that javadoc generation fails when we call it from
+            this level. -->
+        <!--
+        <repository>
+            <id>libs</id>
+            <name>Non-maven dependencies</name>
+            <releases>
+                <enabled>true</enabled>
+                <checksumPolicy>ignore</checksumPolicy>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <url>file://${project.basedir}/lib</url>
+        </repository>
+        -->
+
         <repository>
             <id>freehep</id>
             <name>freehep maven2 repo</name>
@@ -218,70 +350,29 @@
             <id>savot</id>
             <url>http://maven.mse.jhu.edu/m2repository/</url>
         </repository>
+
+        <!--
         <repository>
-            <id>geotoolkit</id>
-            <name>Geotoolkit binaries</name>
-            <url>http://maven.geotoolkit.org/</url>
+            <id>unidata</id>
+            <name>Unidata repositories</name>
+            <url>https://artifacts.unidata.ucar.edu/content/repositories/unidata</url>
+        </repository>
+        <repository>
+            <id>unidata-3rd-party</id>
+            <name>Unidata 3rd party repositories</name>
+            <url>https://artifacts.unidata.ucar.edu/content/repositories/unidata-3rdparty</url>
         </repository>
         <repository>
             <id>mvnsearch</id>
             <name>mvnsearch</name>
             <url>http://www.mvnsearch.org/maven2/</url>
         </repository>
+
         <repository>
-            <!-- This allows us to include local maven repos in each module
-                to contain dependencies which are not available through maven. We have only
-                a single example, in the graphics module. We could define it in the graphics
-                pom.xml, but that means that javadoc generation fails when we call it from
-                this level. -->
-            <id>libs</id>
-            <name>Non-maven dependencies</name>
-            <releases>
-                <enabled>true</enabled>
-                <checksumPolicy>ignore</checksumPolicy>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <url>file://${project.basedir}/lib</url>
+            <id>geotoolkit</id>
+            <name>Geotoolkit binaries</name>
+            <url>http://maven.geotoolkit.org/</url>
         </repository>
+        -->
     </repositories>
-
-    <properties>
-        <!-- Plugin version numbers -->
-        <!-- Properties for maven-compiler-plugin -->
-        <maven.compiler.compilerVersion>1.6</maven.compiler.compilerVersion>
-        <maven.compiler.source>1.6</maven.compiler.source>
-        <maven.compiler.target>1.6</maven.compiler.target>
-        <maven.compiler.fork>true</maven.compiler.fork>
-        <maven.compiler.verbose>true</maven.compiler.verbose>
-        <maven.compiler.debug>true</maven.compiler.debug>
-        <maven.compiler.optimize>true</maven.compiler.optimize>
-        <!-- Properties for maven-javadoc-plugin -->
-        <author>false</author>
-        <notimestamp>true</notimestamp>
-        <additionalparam>-Xdoclint:none</additionalparam>
-        <!-- Properties for maven-checkstyle-plugin -->
-        <!-- checkstyle.config.location>${project.basedir}/src/main/checkstyle/checkstyle.xml</checkstyle.config.location-->
-        <!-- Other properties -->
-        <project.build.sourceEncoding>iso-8859-1</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>iso-8859-1</project.reporting.outputEncoding>
-
-        <version.jparsec>0.107</version.jparsec>
-        <version.testng>6.9.6</version.testng>
-        <version.checkstyle>6.8.1</version.checkstyle>
-        <version.nrjavaserial>3.9.3.1</version.nrjavaserial>
-        <version.jsch>0.1.53</version.jsch>
-        <version.surfaceplotter>2.0.1</version.surfaceplotter>
-        <version.javax.mail-api>1.5.4</version.javax.mail-api>
-        <version.miglayout-swing>5.0</version.miglayout-swing>
-        <version.jfree>1.0.19</version.jfree>
-        <version.junit>4.12</version.junit>
-        <version.jz3d>0.9.1</version.jz3d>
-        <version.nom-tam-fits>1.13.0</version.nom-tam-fits>
-        <version.jmathplot>1.0.1</version.jmathplot>
-        <version.plantuml>8028</version.plantuml>
-        <version.SGT_toolkit>3.0</version.SGT_toolkit>
-        <version.cds.savot>2.6</version.cds.savot>
-    </properties>
 </project>
