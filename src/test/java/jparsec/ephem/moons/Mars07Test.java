@@ -5,17 +5,12 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import static org.testng.Assert.assertEquals;
 
-/**
- * Test.
- */
-@Test
 public class Mars07Test {
     /**
      * For unit testing only.
      *
      * //@param args Not used.
      */
-    /*
     public static void main(String args[]) throws Exception {
         System.out.println("Mars07 test");
         double jd = 2451605.00;
@@ -37,7 +32,6 @@ public class Mars07Test {
 // Should be
 // -0.000088636495  0.000087252940  0.000095540292 -0.000534197094 -0.000568224917  0.000023172689
     }
-    */
 
     @DataProvider (name = "Mars07_MoonPosition_1")
     Object[][] data_test_Mars07_MoonPosition_1() {
