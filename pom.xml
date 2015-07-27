@@ -107,13 +107,20 @@
                                 <mkdir dir='${project.basedir}/lib' />
 
                                 <get src='${conga.url}/cds/cds.astro.jar'    dest='${project.basedir}/lib/' usetimestamp='true' />
+                                <get src='${conga.url}/eop.jar'              dest='${project.basedir}/lib/' usetimestamp='true' />
+                                <get src='${conga.url}/images.jar'           dest='${project.basedir}/lib/' usetimestamp='true' />
+                                <get src='${conga.url}/jpl_ephem.jar'        dest='${project.basedir}/lib/' usetimestamp='true' />
                                 <get src='${conga.url}/orbital_elements.jar' dest='${project.basedir}/lib/' usetimestamp='true' />
+                                <get src='${conga.url}/radex.jar'            dest='${project.basedir}/lib/' usetimestamp='true' />
                                 <get src='${conga.url}/sgt_v30.jar'          dest='${project.basedir}/lib/' usetimestamp='true' />
                                 <get src='${conga.url}/sky.jar'              dest='${project.basedir}/lib/' usetimestamp='true' />
+                                <get src='${conga.url}/sky2000.jar'          dest='${project.basedir}/lib/' usetimestamp='true' />
                                 <get src='${conga.url}/skyViewWCS.jar'       dest='${project.basedir}/lib/' usetimestamp='true' />
                                 <get src='${conga.url}/sunspot.jar'          dest='${project.basedir}/lib/' usetimestamp='true' />
                                 <get src='${conga.url}/textures.jar'         dest='${project.basedir}/lib/' usetimestamp='true' />
+                                <get src='${conga.url}/telescopes.jar'       dest='${project.basedir}/lib/' usetimestamp='true' />
                                 <get src='${conga.url}/visad.jar'            dest='${project.basedir}/lib/' usetimestamp='true' />
+                                <get src='${conga.url}/vsop87.jar'           dest='${project.basedir}/lib/' usetimestamp='true' />
 
                                 <move file='${project.basedir}/lib/visad.jar'
                                       tofile='${project.basedir}/lib/visad.jar.old'
