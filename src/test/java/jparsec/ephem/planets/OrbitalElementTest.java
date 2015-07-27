@@ -8,6 +8,10 @@ import jparsec.time.AstroDate;
 import jparsec.time.TimeElement;
 import jparsec.time.TimeFormat;
 
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+import static org.testng.Assert.assertEquals;
+
 public class OrbitalElementTest {
     /**
      * Test program.
@@ -17,8 +21,9 @@ public class OrbitalElementTest {
     public static void main(String args[]) throws Exception {
         AstroDate astro = new AstroDate(1991, 10, 5.0);
         OrbitalElement orbit = new OrbitalElement("Encke", 2.2091404, 186.24444 * Constant.DEG_TO_RAD, 0.8502196, 0.0,
-                334.04096 * Constant.DEG_TO_RAD, 11.93911 * Constant.DEG_TO_RAD, new AstroDate(1990, 10, 5.0).jd(), 0.0, Constant.B1950, 0.0, 0.0);
-        orbit = OrbitEphem.getOrbitalElementsOfComet(OrbitEphem.getIndexOfComet("2014 Q1"));
+                334.04096 * Constant.DEG_TO_RAD, 11.93911 * Constant.DEG_TO_RAD,
+                new AstroDate(1990, 10, 5.0).jd(), 0.0, Constant.B1950, 0.0, 0.0);
+        //orbit = OrbitEphem.getOrbitalElementsOfComet(OrbitEphem.getIndexOfComet("2014 Q1"));
         Picture pp = new Picture(orbit.getOrbitImage(orbit.name, 600, 600, 0.65, astro.jd(), true, true));
         pp.show("");
 
@@ -70,5 +75,34 @@ public class OrbitalElementTest {
         pic1.show("1");
         pic2.show("2");
         */
+    }
+
+    private OrbitalElement orbit;
+
+    @BeforeMethod
+    public void beforeMethod () throws Exception {
+        AstroDate astro = new AstroDate(1990, 10, 5.0);
+        orbit = new OrbitalElement("Encke", 2.2091404, 186.24444 * Constant.DEG_TO_RAD, 0.8502196, 0.0,
+            334.04096 * Constant.DEG_TO_RAD, 11.93911 * Constant.DEG_TO_RAD, astro.jd(), 0.0, Constant.B1950, 0.0, 0.0);
+    }
+
+    @Test
+    public void testOrbit_changeToEquinox () throws Exception {
+        orbit.changeToEquinox(Constant.J2000);
+
+        assertEquals(Functions.formatAngleAsDegrees(orbit.inclination,            5), "11.94524");
+        assertEquals(Functions.formatAngleAsDegrees(orbit.ascendingNodeLongitude, 5), "-25.24994");
+        assertEquals(Functions.formatAngleAsDegrees(orbit.argumentOfPerihelion,   5), "186.23352");
+    }
+
+    @Test
+    public void testOrbit_changeReference () throws Exception {
+        orbit.referenceFrame = EphemerisElement.FRAME.FK4;
+        orbit.referenceTime = Constant.B1950;
+        orbit.FK4_to_FK5();
+
+        assertEquals(Functions.formatAngleAsDegrees(orbit.inclination,            5),  "11.94521");
+        assertEquals(Functions.formatAngleAsDegrees(orbit.ascendingNodeLongitude, 5), "-25.24957");
+        assertEquals(Functions.formatAngleAsDegrees(orbit.argumentOfPerihelion,   5), "186.23327");
     }
 }
