@@ -220,7 +220,7 @@ public class Functions
 	 * precision.
 	 *
 	 * @param dec Declination in radians. Must be in the range -Pi/2 to +Pi/2.
-	 * @return String with the format $##ï¿½ ##' ##.###'' ($ is the sign).
+	 * @return String with the format $##° ##' ##.###'' ($ is the sign).
 	 */
 	public static String formatDEC(double dec)
 	{
@@ -233,7 +233,7 @@ public class Functions
 		dec_d = Math.floor(dec_d);
 		dec_m = Math.floor(dec_m);
 
-		out = "" + formatter0.format(dec_d) + "ï¿½ " + formatter0.format(dec_m) + "' " + formatter.format(dec_s) + "\"";
+		out = "" + formatter0.format(dec_d) + "° " + formatter0.format(dec_m) + "' " + formatter.format(dec_s) + "\"";
 		out = DataSet.replaceAll(out, ",", ".", false);
 		if (dec < 0.0 && Functions.parseDeclination(out) != 0.0)
 			out = "-" + out;
@@ -330,7 +330,7 @@ public class Functions
 	 *
 	 * @param dec Declination in radians. Must be in the range -Pi/2 to +Pi/2.
 	 * @param nsec Number of decimal places in arcseconds.
-	 * @return String with the format $##ï¿½ ##' ##.##...'' ($ is the sign).
+	 * @return String with the format $##° ##' ##.##...'' ($ is the sign).
 	 */
 	public static String formatDEC(double dec, int nsec)
 	{
@@ -346,7 +346,7 @@ public class Functions
 		dec_d = Math.floor(dec_d);
 		dec_m = Math.floor(dec_m);
 
-		String out = "" + formatter0.format(dec_d) + "ï¿½ " + formatter0.format(dec_m) + "' " + formatter.format(dec_s) + "\"";
+		String out = "" + formatter0.format(dec_d) + "° " + formatter0.format(dec_m) + "' " + formatter.format(dec_s) + "\"";
 		out = DataSet.replaceAll(out, ",", ".", false);
 		if (dec < 0.0 && Functions.parseDeclination(out) != 0.0)
 			out = "-" + out;
@@ -359,7 +359,7 @@ public class Functions
 	 *
 	 * @param dec Declination in radians. Must be in the range -Pi/2 to +Pi/2.
 	 * @param nmin Number of decimal places in arcminutes.
-	 * @return String with the format $##ï¿½ ##.##...' ($ is the sign).
+	 * @return String with the format $##? ##.##...' ($ is the sign).
 	 */
 	public static String formatDECOnlyMinutes(double dec, int nmin)
 	{
@@ -373,7 +373,7 @@ public class Functions
 		double dec_m = (dec_d - Math.floor(dec_d)) * 60.0;
 		dec_d = Math.floor(dec_d);
 
-		String out = "" + formatter0.format(dec_d) + "ï¿½ " + formatter.format(dec_m) + "'";
+		String out = "" + formatter0.format(dec_d) + "? " + formatter.format(dec_m) + "'";
 		out = DataSet.replaceAll(out, ",", ".", false);
 		if (dec < 0.0 && Functions.parseDeclination(out) != 0.0)
 			out = "-" + out;
@@ -498,7 +498,7 @@ public class Functions
 			}
 		} else
 		{
-			out = "" + (int) val_d + "ï¿½ " + (int) val_m + "' " + formatter.format(val_s) + "\"";
+			out = "" + (int) val_d + "? " + (int) val_m + "' " + formatter.format(val_s) + "\"";
 		}
 		out = DataSet.replaceAll(out, ",", ".", false);
 		if (val < 0.0 && Functions.parseDeclination(out) != 0.0)
@@ -616,8 +616,8 @@ public class Functions
 	 * Returns declination in radians given a formatted string. Numbers
 	 * separated by blank spaces are also supported, in the order degrees, minutes, seconds.
 	 *
-	 * @param dec Declination as a string ##ï¿½ ##' ##.#...'', or ##ï¿½ #.#...'. 'd'
-	 *        is allowed instead of 'ï¿½'.
+	 * @param dec Declination as a string ##? ##' ##.#...'', or ##? #.#...'. 'd'
+	 *        is allowed instead of '?'.
 	 * @return Declination value in radians.
 	 */
 	public static double parseDeclination(String dec)
@@ -627,7 +627,7 @@ public class Functions
 		double decm = 0.0;
 		double decs = 0.0;
 
-		int g = dec.indexOf("ï¿½");
+		int g = dec.indexOf("?");
 		if (g < 0)
 			g = dec.indexOf("d");
 		int m = dec.indexOf("'");
@@ -698,7 +698,7 @@ public class Functions
 	 */
 	public static String getDegreesFromFormattedDEC (String dec)
 	{
-		int h = dec.indexOf("ï¿½");
+		int h = dec.indexOf("?");
 		if (h < 0) h = dec.indexOf("d");
 		String deg = dec.substring(0, h);
 		if (!deg.startsWith("-")) deg = "+"+deg;
@@ -711,7 +711,7 @@ public class Functions
 	 */
 	public static String getMinutesFromFormattedDEC (String dec)
 	{
-		int h = dec.indexOf("ï¿½");
+		int h = dec.indexOf("?");
 		if (h < 0) h = dec.indexOf("d");
 		int m = dec.indexOf("'");
 		String min = dec.substring(h+1, m).trim();
