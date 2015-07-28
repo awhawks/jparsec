@@ -525,8 +525,8 @@
 ! HORIZONS ephemerides cannot be reproduced to the mas (RA, DEC) out of J2000 -> Seems they have an inconsistent mixture of old/new algorithms, including IAU1976 precession but IAU2006 planetary rotation models
 ! Ephemerides for martian/jovian satellites far from J2000 show inconsistencies -> Seems analytical theory not so accurate for year 1600, against numerical integration
 ! HORIZONS uses a different orientation for the north pole of Saturn and Pluto (1.5 and 2.5 degrees of difference respectively), Phobos (1 deg), Titan (1.5 deg), and probably others ?
-!    There are differencies between longitude of central meridian in Jupiter and Saturn with time. Seems JPL uses TCB to obtain it although it is incorrect following G. H. Kaplan et al. 2006 (astro-ph/0602086).
+!    There are differences between longitude of central meridian in Jupiter and Saturn with time. Seems JPL uses TCB to obtain it although it is incorrect following G. H. Kaplan et al. 2006 (astro-ph/0602086).
 ! Minimum inconsistency with Pluto position and DE413: Horizons gives Pluto DE413 position respect DE405 SSB, probably there's an offset with respect DE413 SSB
-! Some mutual events of Jovian/Uranian satellites show differencies with IMCCE predictions (> 10s). 
+! Some mutual events of Jovian/Uranian satellites show differences with IMCCE predictions (> 10s). 
 !    Jupiter satellites predictions cannot be reproduced to that accuracy -> It is rather clear IMCCE is using Lieske's E2x3 or an even older theory, but not L1, since with E2x3 almost 50% of the events match
 !    Uranian mutual events after (and including) 2008 8 12 are not found
