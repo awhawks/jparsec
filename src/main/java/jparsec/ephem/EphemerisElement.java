@@ -619,11 +619,11 @@ public class EphemerisElement implements Serializable
 	public boolean correctForExtinction = false;
 
 	/**
-	 * Sets the precession model to that of Vondr�k et al. 2011 (see A&A 534, A22)
+	 * Sets the precession model to that of Vondr&agrave;k et al. 2011 (see A&A 534, A22)
 	 * instead of the original IAU2006 model by Capitaine et al. 2003. This affects the
 	 * calculation of precession for reduction algorithms IAU2006 and IAU2009. The effect
 	 * is a correct output for dates very far from J2000 epoch. IAU model should not be used
-	 * 10 000 years far from J2000. Vondr�k parameterization allows to reach up to
+	 * 10 000 years far from J2000. Vondr&agrave;k parameterization allows to reach up to
 	 * 200 000 years far from J2000, with an error in the degree level. Default value is
 	 * equals to the value of {@linkplain #ALLOW_VONDRAK_PRECESSION}, which is true at startup.
 	 * Set this value to false to use the original IAU model, or the mentioned static variable

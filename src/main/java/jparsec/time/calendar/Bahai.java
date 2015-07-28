@@ -24,10 +24,10 @@ package jparsec.time.calendar;
 import java.io.Serializable;
 
 /**
- * Implements the Bahá'í calendar.
+ * Implements the Bah&aacute;&apos;&iacute; calendar.
  * <P>
- * A calendar based on the 19 year cycle 1844-1863 of the Báb, the martyred
- * forerunner of Bahá'u'lláh and co-founder of the Bahá'í faith.
+ * A calendar based on the 19 year cycle 1844-1863 of the B&aacute;b, the martyred
+ * forerunner of Bah&aacute;&apos;u&apos;ll&aacute;h and co-founder of the Bah&aacute;&apos;&iacute; faith.
  * Days begin at sunset.
  * <P>
  * See Calendrical Calculations for reference.

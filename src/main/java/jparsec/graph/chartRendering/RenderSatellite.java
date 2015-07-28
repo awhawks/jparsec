@@ -544,7 +544,7 @@ public class RenderSatellite
 				g.drawLine(0, py, render.width, py, true);
 				if (i==0) py += 10 + g.getFont().getSize();
 				int lat = 90 - 30 * i;
-				s = ""+lat+"�";
+				s = ""+lat+"\u00ba";
 				g.drawString(s, 15, py-5);
 			}
 			//int p0[] = this.getTexturePosition(new LocationElement(-Math.PI, 0.0, 1.0));
@@ -558,7 +558,7 @@ public class RenderSatellite
 				g.drawLine(px, 0, px, render.height, true);
 				int lon = -180 + 30 * i * increment;
 				if (lon < -180) lon = lon + 360;
-				s = ""+lon+"�";
+				s = ""+lon+"\u00ba";
 				int dx = 5;
 				if (px > render.width/2) dx = (int) (-5-g.getStringWidth(s));
 				g.drawString(s, px+dx, render.height-5-g.getFont().getSize());

@@ -1115,7 +1115,7 @@ public class PhysicalParameters
 	}
 
 	/**
-	 * Returns the sidereal time at 0� of longitude of a given body using the corresponding IAU model.
+	 * Returns the sidereal time at 0 &ordm; of longitude of a given body using the corresponding IAU model.
 	 * @param JD_TDB Julian day in TDB.
 	 * @param eph Ephemeris object containing target body and ephemeris method.
 	 * @return Apparent sidereal time in radians for an observer at longitude 0.

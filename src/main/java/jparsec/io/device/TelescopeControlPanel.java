@@ -54,6 +54,7 @@ import jparsec.graph.JPARSECStroke;
 import jparsec.graph.SkyChart;
 import jparsec.graph.TextLabel;
 import jparsec.graph.chartRendering.AWTGraphics;
+import jparsec.graph.chartRendering.Graphics;
 import jparsec.graph.chartRendering.Graphics.FONT;
 import jparsec.graph.chartRendering.PlanetRenderElement;
 import jparsec.graph.chartRendering.Projection.PROJECTION;
@@ -522,7 +523,7 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 			resolution[index].select(camera[index].getResolutionMode());
 			imgID[index].select(camera[index].getImageID().ordinal());
 			filter[index].select(camera[index].getFilter().ordinal());
-			JLabel orientation = new JLabel(Translate.translate(1170)+" (�)");
+			JLabel orientation = new JLabel(Translate.translate(1170)+" (\u00ba)");
 			orientation.setForeground(fc);
 
 			if (camera[index].getCameraModel().isDLSR()) {
@@ -949,11 +950,13 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 			if (id == 6) camera[cameraIndex].setAperture(aperture[cameraIndex].getSelectedItem());
 		}
 	}
+
 	private class SlewRateItemListener implements ItemListener {
 		public void itemStateChanged(ItemEvent evt) {
 			telescope.setMoveSpeed(MOVE_SPEED.values()[slewRateCombo.getSelectedIndex()]);
 		}
 	}
+
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		if (firstTime) {
@@ -999,7 +1002,7 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 			}
 
 			if (dome != null && dome.getDomeModel().hasLeftRightControl()) {
-				azField.setText(Functions.formatAngleAsDegrees(dome.getAzimuth(), 3)+"�");
+				azField.setText(Functions.formatAngleAsDegrees(dome.getAzimuth(), 3)+"\u00ba");
 				long t1 = System.currentTimeMillis();
 				if (t1 - lastDomet0 > dome.getSyncTime()*1000 && dome.isOpen() && !dome.isMoving()) {
 					try {
@@ -1139,7 +1142,7 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 				tzl = Translate.translate(1152)+"@SPACE@SPACE", dstl = Translate.translate(1153)+"@SPACE@SPACE", name = "";
 
 
-		String unknownRA = "--h --m --.-s", unknownDEC = "---� --' --\"";
+		String unknownRA = "--h --m --.-s", unknownDEC = "---\u00ba --' --\"";
 		String ra = unknownRA, dec = unknownDEC, az = unknownDEC, el = unknownDEC;
 		if (isConnected) {
 			ra =  Functions.formatRA(locEq.getLongitude(), 1);
@@ -1308,9 +1311,9 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 			}
 
 			int size = 9;
-			g.setFont(jparsec.graph.chartRendering.Graphics.FONT.getDerivedFont(g.getFont(), size, 1));
-			half = 1+size/3;
-			g.drawString(""+t+"�", x, y+size);
+			g.setFont(Graphics.FONT.getDerivedFont(g.getFont(), size, 1));
+			//half = 1+size/3;
+			g.drawString(""+t+"\u00ba", x, y+size);
 			g.drawString(""+h+"%", x+20, y+size);
 			WEATHER_FORECAST w = weather.getForecastInFollowingDays()[0];
 			g.setStroke(JPARSECStroke.STROKE_DEFAULT_LINE);

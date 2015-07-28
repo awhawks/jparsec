@@ -158,14 +158,13 @@ public class SatelliteEphemElement implements Serializable
 	 * value is lower enough.  An empirical relationship between this angle
 	 * and the brightness of the reflection has been determined (Randy John,
 	 * 2002, SKYSAT v0.64, see http://home.comcast.net/~skysat). 2 deg
-	 * corresponds to about 0 mag, 0.5� to -3 mag. The brightest flares are
+	 * corresponds to about 0 mag, 0.5 &deg; to -3 mag. The brightest flares are
 	 * -8 or -9 mag (visible during day), and can last from 10 to 30s.
 	 */
 	public float iridiumAngle;
 
 	/**
-	 * The smallest iridium angle in degrees in case the reflected body is
-	 * the Moon.
+	 * The smallest iridium angle in degrees in case the reflected body is the Moon.
 	 */
 	public float iridiumAngleForMoon;
 

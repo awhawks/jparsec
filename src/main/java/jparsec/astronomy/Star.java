@@ -353,7 +353,7 @@ public class Star
 	/**
 	 * Obtains the contribution of the motion of the Sun in the galaxy to the redshift.
 	 * It is supposed that the Sun moves at 250 km/s (see Turner 2013) towards a direction 
-	 * l = 90�, b = 0�, in galactic coordinates.
+	 * l = 90&deg;, b = 0&deg;, in galactic coordinates.
 	 * 
 	 * @param loc Galactic coordination of the source.
 	 * @return Contribution of the Sun movement in the galaxy to the redshift

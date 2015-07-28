@@ -26,7 +26,7 @@ import java.io.Serializable;
 import jparsec.observer.CityElement;
 
 /**
- * Implements the Future Bahá'í calendar.
+ * Implements the Future Bah&aacute;&apos;&iacute; calendar.
  * See Calendrical Calculations for reference.
  *
  * @author T. Alonso Albi - OAN (Spain)

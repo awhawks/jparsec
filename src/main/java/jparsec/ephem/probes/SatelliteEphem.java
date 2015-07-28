@@ -1371,7 +1371,7 @@ public class SatelliteEphem
 	 * value is lower enough.  An empirical relationship between this angle
 	 * and the brightness of the reflection has been determined (Randy John,
 	 * 2002, SKYSAT v0.64, see http://home.comcast.net/~skysat). 2 deg
-	 * corresponds to about 0 mag, 0.5� to -3 mag. The brightest flares are
+	 * corresponds to about 0 mag, 0.5 &deg; to -3 mag. The brightest flares are
 	 * -8 or -9 mag (visible during day), and can last from 10 to 30s. This
 	 * code comes from Horst Meyerdierks (Sputnik library).
 	 * @param itsR The geocentric position (x, y, z) of the satellite in arbitrary units.
@@ -1419,7 +1419,7 @@ public class SatelliteEphem
 	 * value is lower enough.  An empirical relationship between this angle
 	 * and the brightness of the reflection has been determined (Randy John,
 	 * 2002, SKYSAT v0.64, see http://home.comcast.net/~skysat). 2 deg
-	 * corresponds to about 0 mag, 0.5� to -3 mag. The brightest flares are
+	 * corresponds to about 0 mag, 0.5 &deg; to -3 mag. The brightest flares are
 	 * -8 or -9 mag (visible during day), and can last from 10 to 30s. This
 	 * code comes from Horst Meyerdierks (Sputnik library).
 	 * <P>

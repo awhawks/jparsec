@@ -440,7 +440,7 @@ public class SimpleEventElement implements Serializable {
 				if (eventType == EVENT.MOON_MAXIMUM_DECLINATION || eventType == EVENT.MOON_MINIMUM_DECLINATION ||
 						eventType == EVENT.PLANET_MAXIMUM_ELONGATION || eventType == EVENT.PLANET_MINIMUM_ELONGATION
 						|| eventType == EVENT.PLANET_CONJUNCTION || eventType == EVENT.PLANET_OPPOSITION) {
-					d += "�";
+					d += "\u00ba";
 					if (eventType == EVENT.PLANET_MAXIMUM_ELONGATION && (body.equals(TARGET.MERCURY.getName()) ||
 							body.equals(TARGET.MERCURY.getEnglishName()) || body.equals(TARGET.VENUS.getName()) ||
 							body.equals(TARGET.VENUS.getEnglishName()))) {
@@ -466,7 +466,7 @@ public class SimpleEventElement implements Serializable {
 				} else {
 					String details = fix(this.details, false);
 					if (this.eventType == EVENT.SATURN_RINGS_MAXIMUM_APERTURE) {
-						out += " ("+Functions.formatValue(Double.parseDouble(details), 2)+"�)";
+						out += " ("+Functions.formatValue(Double.parseDouble(details), 2)+"\u00ba)";
 					} else {
 						out += " ("+details+")";
 					}

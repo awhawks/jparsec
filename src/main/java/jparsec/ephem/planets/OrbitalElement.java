@@ -479,17 +479,17 @@ public class OrbitalElement implements Serializable
 	 */
 	@Override
 	public String toString() {
-		StringBuffer out = new StringBuffer("");
+		StringBuffer out = new StringBuffer();
 		String sep = FileIO.getLineSeparator();
 		out.append(this.name + sep);
-		out.append("a (AU)   = " + semimajorAxis + sep);
-		out.append("e		= " + eccentricity + sep);
-		out.append("M (�)	= " + (meanAnomaly * Constant.RAD_TO_DEG) + sep);
-		out.append("n (�/d)  = " + (meanMotion * Constant.RAD_TO_DEG) + sep);
-		out.append("i (�)	= " + (inclination * Constant.RAD_TO_DEG) + sep);
-		out.append("o (�)	= " + (ascendingNodeLongitude * Constant.RAD_TO_DEG) + sep);
-		out.append("w (�)	= " + (argumentOfPerihelion * Constant.RAD_TO_DEG) + sep);
-		out.append("time	 = " + (referenceTime) + sep);
+		out.append("a (AU)   = " + this.semimajorAxis + sep);
+		out.append("e        = " + this.eccentricity + sep);
+		out.append("M (\u00ba)    = " + (this.meanAnomaly * Constant.RAD_TO_DEG) + sep);
+		out.append("n (\u0bba/d)  = " + (this.meanMotion * Constant.RAD_TO_DEG) + sep);
+		out.append("i (\u00ba)    = " + (this.inclination * Constant.RAD_TO_DEG) + sep);
+		out.append("o (\u00ba)    = " + (this.ascendingNodeLongitude * Constant.RAD_TO_DEG) + sep);
+		out.append("w (\u00ba)    = " + (this.argumentOfPerihelion * Constant.RAD_TO_DEG) + sep);
+		out.append("time     = " + (this.referenceTime) + sep);
 		return out.toString();
 	}
 

@@ -77,7 +77,6 @@ import jparsec.ephem.Precession;
 import jparsec.ephem.RiseSetTransit;
 import jparsec.ephem.Target;
 import jparsec.ephem.Target.TARGET;
-import jparsec.ephem.event.EventReport;
 import jparsec.ephem.event.MainEvents;
 import jparsec.ephem.event.MainEvents.EVENT_TIME;
 import jparsec.ephem.event.SimpleEventElement;
@@ -1275,8 +1274,8 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 						if (loc.getLatitude() < 0) s2 = " S";
 
 
-						msg1 +=": "+Functions.formatAngleAsDegrees(Math.abs(loc.getLongitude()), ndec)+"�"+s+", "+Functions.formatAngleAsDegrees(Math.abs(loc.getLatitude()), ndec)+"�"+s2+feature;
-						//msg1 +=": "+Functions.formatDEC(Math.abs(loc.getLongitude()), ndec)+"�"+s+", "+Functions.formatDEC(Math.abs(loc.getLatitude()), ndec)+"�"+s2+feature;
+						msg1 +=": "+Functions.formatAngleAsDegrees(Math.abs(loc.getLongitude()), ndec)+"\u00ba"+s+", "+Functions.formatAngleAsDegrees(Math.abs(loc.getLatitude()), ndec)+"\u00ba"+s2+feature;
+						//msg1 +=": "+Functions.formatDEC(Math.abs(loc.getLongitude()), ndec)+"\u00ba"+s+", "+Functions.formatDEC(Math.abs(loc.getLatitude()), ndec)+"\u00ba"+s2+feature;
 					}
 				}
 				if (msg1.equals("")) {
@@ -1334,7 +1333,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 								msg2 += ""+x+" px, "+y+" px / " +Functions.formatRA(loc.getLongitude(), ndeceq+1)+", "+Functions.formatDEC(loc.getLatitude(), ndeceq);
 							}
 						} else {
-							//msg2 += ""+x+" px, "+y+" px / " +Functions.formatAngleAsDegrees(loc.getLongitude(), ndec)+"�, "+Functions.formatAngleAsDegrees(loc.getLatitude(), ndec)+"�";
+							//msg2 += ""+x+" px, "+y+" px / " +Functions.formatAngleAsDegrees(loc.getLongitude(), ndec)+"\u00ba, "+Functions.formatAngleAsDegrees(loc.getLatitude(), ndec)+"\u00ba";
 							if (ndeceq < 0) {
 								int nd = 1;
 								if (ndeceq < -1) nd = 0;
@@ -2686,7 +2685,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 		  						if (nf != 5) obse = Observatory.findObservatorybyName(s);
 		  						if (obse != null) {
 		  							observer2 = ObserverElement.parseObservatory(obse);
-		  			 				Logger.log(LEVEL.INFO, "Selected new observatory: "+obse.name+", lon "+Functions.formatAngleAsDegrees(observer2.getLongitudeRad(), 3)+"�, lat "+Functions.formatAngleAsDegrees(observer2.getLatitudeRad(), 3)+"�");
+		  			 				Logger.log(LEVEL.INFO, "Selected new observatory: "+obse.name+", lon "+Functions.formatAngleAsDegrees(observer2.getLongitudeRad(), 3)+"\u00ba, lat "+Functions.formatAngleAsDegrees(observer2.getLatitudeRad(), 3)+"\u00ba");
 		  						} else {
 		  							// Name, lon, lat (deg), height (m), Time zone (hours)
 		  							if (nf == 5) {
@@ -2702,7 +2701,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 			  								observer2.setHumidity(ObserverElement.DEFAULT_HUMIDITY);
 			  								observer2.setPressure(ObserverElement.DEFAULT_PRESSURE);
 			  								observer2.setTemperature(ObserverElement.DEFAULT_TEMPERATURE);
-				  			 				Logger.log(LEVEL.INFO, "Selected new observer: "+observer2.getName()+", lon "+Functions.formatAngleAsDegrees(observer2.getLongitudeRad(), 3)+"�, lat "+Functions.formatAngleAsDegrees(observer2.getLatitudeRad(), 3)+"�");
+				  			 				Logger.log(LEVEL.INFO, "Selected new observer: "+observer2.getName()+", lon "+Functions.formatAngleAsDegrees(observer2.getLongitudeRad(), 3)+"\u00ba, lat "+Functions.formatAngleAsDegrees(observer2.getLatitudeRad(), 3)+"\u00ba");
 		  								} catch (Exception exc2) {
 		  									observer2 = null;
 			  								JOptionPane.showMessageDialog(null,
@@ -2726,7 +2725,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 			  						if (index >= 0) obse = Observatory.getObservatoryFromMarsdenList(index);
 			  						if (obse != null) {
 			  							observer2 = ObserverElement.parseObservatory(obse);
-			  			 				Logger.log(LEVEL.INFO, "Selected new observatory: "+obse.name+", lon "+Functions.formatAngleAsDegrees(observer2.getLongitudeRad(), 3)+"�, lat "+Functions.formatAngleAsDegrees(observer2.getLatitudeRad(), 3)+"�");
+			  			 				Logger.log(LEVEL.INFO, "Selected new observatory: "+obse.name+", lon "+Functions.formatAngleAsDegrees(observer2.getLongitudeRad(), 3)+"\u00ba, lat "+Functions.formatAngleAsDegrees(observer2.getLatitudeRad(), 3)+"\u00ba");
 			  						} else {
 			  							JOptionPane.showMessageDialog(null,
 			  			  						replaceVars(t892, new String[] {"%loc"}, new String[] {s}),
@@ -2762,7 +2761,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 	  						}
 
 	  						observer2 = ObserverElement.parseCity(city);
-  			 				Logger.log(LEVEL.INFO, "Selected new city: "+city.name+" ("+city.country+"), lon "+Functions.formatAngleAsDegrees(observer2.getLongitudeRad(), 3)+"�, lat "+Functions.formatAngleAsDegrees(observer2.getLatitudeRad(), 3)+"�");
+  			 				Logger.log(LEVEL.INFO, "Selected new city: "+city.name+" ("+city.country+"), lon "+Functions.formatAngleAsDegrees(observer2.getLongitudeRad(), 3)+"\u00ba, lat "+Functions.formatAngleAsDegrees(observer2.getLatitudeRad(), 3)+"\u00ba");
 	  					}
 	  					if (observer2 != null) {
 	  						updateTime = updateTime0;
@@ -4146,7 +4145,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 				lo = Translate.translate(28);
 				la = Translate.translate(29);
 			}
-			String columns[] = new String[] {Translate.translate(787), Translate.translate(1295), Translate.translate(486), lo+" (�)", la+" (�)", Translate.translate(157), Translate.translate(308)+" (�)"};
+			String columns[] = new String[] {Translate.translate(787), Translate.translate(1295), Translate.translate(486), lo+" (\u00ba)", la+" (\u00ba)", Translate.translate(157), Translate.translate(308)+" (\u00ba)"};
 
 			if (!listShown || table == null || !table.getComponent().isVisible()) {
 				boolean editable[] = null; // All false except boolean
@@ -4348,7 +4347,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 						AWTGraphics.enableAntialiasing(g);
 						g.setColor(Color.BLACK);
 						String label1 = "@rho = "+Functions.formatValue(dstar.getDistance(), 3)+"\"";
-						String label2 = "PA = "+Functions.formatAngleAsDegrees(dstar.getPositionAngle(), 3)+"�";
+						String label2 = "PA = "+Functions.formatAngleAsDegrees(dstar.getPositionAngle(), 3)+"\u00ba";
 						TextLabel tl1 = new TextLabel(label1);
 						tl1.draw(g, 10, ih-40);
 						TextLabel tl2 = new TextLabel(label2);
@@ -4890,7 +4889,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
   			objData[3] = t157 + ": " + objData[3];
   	  		if (id == RenderSky.OBJECT.DEEPSKY) {
 	  			objData[4] = t486 + ": " + objData[4];
-	  			String unit = "�";
+	  			String unit = "\u00ba";
 	  			int ndec = 1;
 	  			try {
 	  				int xp = objData[5].indexOf("x");
@@ -5239,49 +5238,51 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 			timer.start();
 	}
 
-	private Thread thread;
+	//private Thread thread;
 	private Feed feed;
 	private int YEAR = -1;
+
+	/*
 	private class thread00 implements Runnable {
-	public void run() {
-		try {
+		public void run() {
 			try {
-				feed = null;
-				if (obs.getMotherBody() != TARGET.EARTH) return;
-				AstroDate astroi = new AstroDate(time.astroDate.getYear(), 1, 1, 0, 0, 0);
-				AstroDate astrof = new AstroDate(time.astroDate.getYear(), 12, 31, 23, 59, 59);
-				YEAR = time.astroDate.getYear();
-				TimeElement init = new TimeElement(astroi, SCALE.LOCAL_TIME);
-				TimeElement end = new TimeElement(astrof, SCALE.LOCAL_TIME);
-				EphemerisElement eph = new EphemerisElement(TARGET.NOT_A_PLANET, EphemerisElement.COORDINATES_TYPE.APPARENT,
-						EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.TOPOCENTRIC, EphemerisElement.REDUCTION_METHOD.IAU_2006,
-						EphemerisElement.FRAME.DYNAMICAL_EQUINOX_J2000);
+				try {
+					feed = null;
+					if (obs.getMotherBody() != TARGET.EARTH) return;
+					AstroDate astroi = new AstroDate(time.astroDate.getYear(), 1, 1, 0, 0, 0);
+					AstroDate astrof = new AstroDate(time.astroDate.getYear(), 12, 31, 23, 59, 59);
+					YEAR = time.astroDate.getYear();
+					TimeElement init = new TimeElement(astroi, SCALE.LOCAL_TIME);
+					TimeElement end = new TimeElement(astrof, SCALE.LOCAL_TIME);
+					EphemerisElement eph = new EphemerisElement(TARGET.NOT_A_PLANET, EphemerisElement.COORDINATES_TYPE.APPARENT,
+							EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.TOPOCENTRIC, EphemerisElement.REDUCTION_METHOD.IAU_2006,
+							EphemerisElement.FRAME.DYNAMICAL_EQUINOX_J2000);
 
-				EventReport.setEverythingTo(false);
-				EventReport.eclipses = true;
-				EventReport.planetaryEvents = true;
-				EventReport.MercuryVenusTransits = true;
-				EventReport.lunarPhases = true;
-				EventReport.equinoxesAndSolstices = true;
-				EventReport.meteorShowers = true;
+					EventReport.setEverythingTo(false);
+					EventReport.eclipses = true;
+					EventReport.planetaryEvents = true;
+					EventReport.MercuryVenusTransits = true;
+					EventReport.lunarPhases = true;
+					EventReport.equinoxesAndSolstices = true;
+					EventReport.meteorShowers = true;
 
-				EventReport.craters = true;
-				EventReport.cratersOnlyLunarX = true;
-				EventReport.EarthPerihelionAphelion = true;
-				EventReport.lunarPerigeeApogee = true;
-				EventReport.NEOs = true;
-				//if (chart.drawComets || chart.drawAsteroids)
+					EventReport.craters = true;
+					EventReport.cratersOnlyLunarX = true;
+					EventReport.EarthPerihelionAphelion = true;
+					EventReport.lunarPerigeeApogee = true;
+					EventReport.NEOs = true;
+					//if (chart.drawComets || chart.drawAsteroids)
 					EventReport.cometAsteroidVisibleNakedEye = true;
-
-
-				ObserverElement observer = obs.clone();
-				CityElement city = City.findCity("Madrid");
-				ArrayList<SimpleEventElement> list = EventReport.getEvents(init, end, observer, eph, city);
-				feed = EventReport.getFeed(list, observer);
+					ObserverElement observer = obs.clone();
+					CityElement city = City.findCity("Madrid");
+					ArrayList<SimpleEventElement> list = EventReport.getEvents(init, end, observer, eph, city);
+					feed = EventReport.getFeed(list, observer);
+				} catch (Exception exc) {
+					exc.printStackTrace();
+				}
 			} catch (Exception exc) {
-				exc.printStackTrace();
 			}
-		} catch (Exception exc) {}
+		}
 	}
-}
+	*/
 }

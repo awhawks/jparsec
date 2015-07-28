@@ -1007,13 +1007,13 @@ public class StarEphem
 	}
 
 	/**
-	 * Location of the LSR in J2000, 18h 03m 50.2s, 30ï¿½ 00' 16.8", and
+	 * Location of the LSR in J2000, 18h 03m 50.2s, 30º 00' 16.8", and
 	 * 19.5 km/s of speed set as radius.
 	 */
 	public static final LocationElement LSR_J2000_direction = new LocationElement(
-			Functions.parseRightAscension("18h 03m 50.2s"),
-			Functions.parseDeclination("30ï¿½ 00' 16.8\""), 19.5
-			);
+		Functions.parseRightAscension("18h 03m 50.2s"),
+		Functions.parseDeclination("30\u00ba 00' 16.8\""), 19.5
+	);
 
 	/**
 	 * Transforms radial velocity from heliocentric to LSR.
@@ -1023,17 +1023,17 @@ public class StarEphem
 	 * standard solar motion is defined to be the average velocity of spectral
 	 * types A through G as found in general catalogs of radial velocity,
 	 * regardless of luminosity class. This motion is 19.5 km/s toward 18 hrs
-	 * right ascension and 30ï¿½ declination for epoch 1900.0 (galactic
-	 * co-ordinates l=56ï¿½, b=23ï¿½). Basic solar motion is the most probable
+	 * right ascension and 30º declination for epoch 1900.0 (galactic
+	 * co-ordinates l=56&ordm;, b=23&ordm;). Basic solar motion is the most probable
 	 * velocity of stars in the solar neighborhood, so it is weighted more
 	 * heavily by the radial velocities of stars of the most common spectral
 	 * types (A, gK, dM) in the solar vicinity. In this system, the sun moves at
-	 * 15.4 km/s toward l=51ï¿½, b=23ï¿½.
+	 * 15.4 km/s toward l=51&ordm;, b=23&ordm;.
 	 * <P>
 	 * The conventional local standard of rest used for galactic studies is
 	 * essentially based on the standard solar motion. It assumes the sun to
 	 * move at the rounded velocity of 20.0 km/s toward 18 hrs right ascension
-	 * and 30ï¿½ declination for epoch 1900.0. This choice presumes that the
+	 * and 30&ordm; declination for epoch 1900.0. This choice presumes that the
 	 * earlier spectral types involved in determining the standard solar motion,
 	 * being younger, more closely represent the velocity of the interstellar
 	 * gas.

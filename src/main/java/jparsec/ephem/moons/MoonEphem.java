@@ -22,15 +22,14 @@
 package jparsec.ephem.moons;
 
 import java.util.ArrayList;
-
 import jparsec.astronomy.CoordinateSystem;
 import jparsec.ephem.Ephem;
 import jparsec.ephem.EphemerisElement;
+import jparsec.ephem.EphemerisElement.COORDINATES_TYPE;
 import jparsec.ephem.Functions;
 import jparsec.ephem.PhysicalParameters;
 import jparsec.ephem.Precession;
 import jparsec.ephem.Target;
-import jparsec.ephem.EphemerisElement.COORDINATES_TYPE;
 import jparsec.ephem.Target.TARGET;
 import jparsec.ephem.event.MoonEvent;
 import jparsec.ephem.event.MoonEvent.EVENT_DEFINITION;
@@ -41,14 +40,12 @@ import jparsec.graph.DataSet;
 import jparsec.io.FileIO;
 import jparsec.math.Constant;
 import jparsec.math.FastMath;
-import jparsec.observer.City;
-import jparsec.observer.CityElement;
 import jparsec.observer.LocationElement;
 import jparsec.observer.ObserverElement;
 import jparsec.time.AstroDate;
-import jparsec.time.TimeScale;
 import jparsec.time.TimeElement;
 import jparsec.time.TimeElement.SCALE;
+import jparsec.time.TimeScale;
 import jparsec.util.DataBase;
 import jparsec.util.JPARSECException;
 import jparsec.util.Translate;
@@ -1571,7 +1568,7 @@ public class MoonEphem
 					if (occultedArea > 99.999) occultedArea = 100.0;
 
 						if (!moons[body_behind].mutualPhenomena.equals("")) moons[body_behind].mutualPhenomena += ", ";
-						moons[body_behind].mutualPhenomena += Translate.translate(Translate.JPARSEC_OCCULTED)+" "+Translate.translate(Translate.JPARSEC_BY) + " " + moons[body_infront].name + " ("+Functions.formatValue(occultedArea, 1)+"%) (d="+Functions.formatAngleAsDegrees(r * planet_angular_radius, 8)+"�)";
+						moons[body_behind].mutualPhenomena += Translate.translate(Translate.JPARSEC_OCCULTED)+" "+Translate.translate(Translate.JPARSEC_BY) + " " + moons[body_infront].name + " ("+Functions.formatValue(occultedArea, 1)+"%) (d="+Functions.formatAngleAsDegrees(r * planet_angular_radius, 8)+"\u00ba)";
 						double fractionVisible = 1.0 - occultedArea / 100.0;
 						if (fractionVisible == 0.0)
 						{
@@ -1608,7 +1605,7 @@ public class MoonEphem
 					if (occultedArea > 99.999) occultedArea = 100.0;
 
 					if (!moons[body_behind].mutualPhenomena.equals("")) moons[body_behind].mutualPhenomena += ", ";
-						moons[body_behind].mutualPhenomena += Translate.translate(Translate.JPARSEC_ECLIPSED)+" "+Translate.translate(Translate.JPARSEC_BY) + " " + moons[body_infront].name + " ("+Functions.formatValue(occultedArea, 1)+"%) (d="+Functions.formatAngleAsDegrees(r * planet_angular_radius, 8)+"�)";
+						moons[body_behind].mutualPhenomena += Translate.translate(Translate.JPARSEC_ECLIPSED)+" "+Translate.translate(Translate.JPARSEC_BY) + " " + moons[body_infront].name + " ("+Functions.formatValue(occultedArea, 1)+"%) (d="+Functions.formatAngleAsDegrees(r * planet_angular_radius, 8)+"\u00ba)";
 
 						double fractionVisible = 1.0 - occultedArea / 100.0;
 						if (fractionVisible == 0.0)

@@ -106,7 +106,7 @@ public class ConsoleReport
 		double factor1 = Constant.AU * 1000.0 / Constant.PARSEC;
 		double factor2 = 1000.0 / (Constant.LIGHT_YEAR * Constant.LIGHT_TIME_DAYS_PER_AU);
 		String unit1 = "pc", unit2 = "light-years";
-		if (Translate.getDefaultLanguage() == Translate.LANGUAGE.SPANISH) unit2 = "a�os-luz";
+		if (Translate.getDefaultLanguage() == Translate.LANGUAGE.SPANISH) unit2 = "a\u00f1os-luz";
 		int n = 1;
 		if (!isStar || ephem.distance < 100000) {
 			unit1 = "AU";

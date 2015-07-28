@@ -57,7 +57,7 @@ public class Constellation
 		SPANISH,
 		/** Symbolic constant for Spanish constellation names with alternative 
 		 * names for some Zodiacal constellations. Gemelos is shown as 
-		 * G�minis, for instance. */
+		 * G&eacute;minis, for instance. */
 		SPANISH_WITH_ALTERNATE_ZODIAC,
 		/** Symbolic constant for abbreviated constellation names. */
 		ABREVIATED,

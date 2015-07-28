@@ -50,7 +50,7 @@ import jparsec.util.JPARSECException;
  * size change ('@SIZExx', where xx is the size of the text), and @ FOLLOWED BY BOLD, ITALIC, or PLAIN.<P>
  * - You can draw latex formulas with the command '@LATEX{}', with the latex formula between the {}.<P>
  * - You can draw digital clock symbols with the command '@CLOCK{}', with the numbers between the {}.
- * Besides numbers, supported characters are hms�'": _-dDbBtTCUL. The plus + is mapped to a blank space of half width.
+ * Besides numbers, supported characters are hms&ordm;&apos;&quot;: _-dDbBtTCUL. The plus + is mapped to a blank space of half width.
  * In case of bold effect applied, the digits will be drawn with a blur effect.<P>
  * - You can rotate text with the '@ROTATExxx' command, being xxx the angle in degrees.<P>
  * - You can increase/decrease text size with '@SIZE+x' and '@SIZE-x'.<P>
@@ -712,10 +712,10 @@ public class TextLabel {
        // To be used with font Symbol when exporting to PDF
        private static final char[] greekPDF = new char[] {'a', 'b', 'g', 'd', 'e',
     		'z', 'h', 'q', 'i', 'k', 'l', 'm', 'n', 'x', 'o',
-    		'p', 'r', 's', 't', 'u', 'f', 'c', 'y', 'w'}; //, '\u2022', '\t', '�'}; // '\u2022','',''
+    		'p', 'r', 's', 't', 'u', 'f', 'c', 'y', 'w'}; //, '\u2022', '\t', '\u00ac'}; // '\u2022','',''
        private static final char[] greekCapitalPDF = new char[] {'A', 'B', 'G', 'D', 'E',
     		'Z', 'H', 'Q', 'I', 'K', 'L', 'M', 'N', 'X', 'O',
-    		'P', 'R', 'S', 'T', 'U', 'F', 'C', 'Y', 'W'}; //, '\u2022', '\t', '�'};
+    		'P', 'R', 'S', 'T', 'U', 'F', 'C', 'Y', 'W'}; //, '\u2022', '\t', '\u00ac'};
 
        /**
         * Clears the list of text states.
@@ -1862,7 +1862,7 @@ class DigitalClock {
 			if (s.equals("h")) return getDigitImage(DIGIT.CHARACTER_h);
 			if (s.equals("m")) return getDigitImage(DIGIT.CHARACTER_m);
 			if (s.equals("s")) return getDigitImage(DIGIT.CHARACTER_s);
-			if (s.equals("�")) return getDigitImage(DIGIT.CHARACTER_o);
+			if (s.equals("\u00ba")) return getDigitImage(DIGIT.CHARACTER_o);
 			if (s.equals("'")) return getDigitImage(DIGIT.CHARACTER_I);
 			if (s.equals("-")) return getDigitImage(DIGIT.CHARACTER_BAR);
 			if (s.equals("_")) return getDigitImage(DIGIT.CHARACTER_BAR_BOTTOM);
