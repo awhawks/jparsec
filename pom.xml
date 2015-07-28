@@ -25,8 +25,8 @@
         <!-- Properties for maven-checkstyle-plugin -->
         <checkstyle.config.location>${project.basedir}/src/main/checkstyle/checkstyle.xml</checkstyle.config.location>
         <!-- Other properties -->
-        <project.build.sourceEncoding>iso-8859-1</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>iso-8859-1</project.reporting.outputEncoding>
+        <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>utf-8</project.reporting.outputEncoding>
 
         <conga.url>http://conga.oan.es/~alonso/jparsec/lib</conga.url>
         <version.jparsec>0.107</version.jparsec>
@@ -79,6 +79,8 @@
                 <configuration>
                     <source>1.6</source>
                     <target>1.6</target>
+                    <!--encoding>iso-8859-1</encoding-->
+                    <encoding>utf-8</encoding>
                     <showWarnings>true</showWarnings>
                     <showDeprecation>true</showDeprecation>
                 </configuration>
@@ -107,6 +109,7 @@
                                 <mkdir dir='${project.basedir}/lib' />
 
                                 <get src='${conga.url}/cds/cds.astro.jar'    dest='${project.basedir}/lib/' usetimestamp='true' />
+                                <get src='${conga.url}/cologne.jar'          dest='${project.basedir}/lib/' usetimestamp='true' />
                                 <get src='${conga.url}/eop.jar'              dest='${project.basedir}/lib/' usetimestamp='true' />
                                 <get src='${conga.url}/images.jar'           dest='${project.basedir}/lib/' usetimestamp='true' />
                                 <get src='${conga.url}/jpl_ephem.jar'        dest='${project.basedir}/lib/' usetimestamp='true' />
