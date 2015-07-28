@@ -34,7 +34,7 @@ public class UpdateRun {
         Update.updatePadovaAsiagoSNcat();
         Update.updateNovae();
 
-        // suspot.jar
+        // sunspot.jar
         Update.updateSunSpotsDatabase(astro.getYear());
         Update.updateSunSpotsDatabase(astro.getYear() - 1);
 
