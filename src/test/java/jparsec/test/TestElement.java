@@ -224,8 +224,8 @@ public class TestElement implements Serializable {
 		TimeElement time = new TimeElement(astro, SCALE.TERRESTRIAL_TIME);
 		//CityElement city = City.findCity("Madrid", COUNTRY.Spain, false);
 		//ObserverElement observer = ObserverElement.parseCity(city);
-		ObserverElement observer = new ObserverElement("Madrid", Functions.parseDeclination("-03º 42' 36.000\""),
-				Functions.parseDeclination("40º 25' 12.000\""), 693, 1, DST_RULE.N1);
+		ObserverElement observer = new ObserverElement("Madrid", Functions.parseDeclination("-03\u00ba 42' 36.000\""),
+				Functions.parseDeclination("40\u00ba 25' 12.000\""), 693, 1, DST_RULE.N1);
 		EphemerisElement eph = new EphemerisElement(TARGET.NOT_A_PLANET, EphemerisElement.COORDINATES_TYPE.APPARENT,
 				EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.TOPOCENTRIC, EphemerisElement.REDUCTION_METHOD.IAU_2006,
 				EphemerisElement.FRAME.ICRF);
