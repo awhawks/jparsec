@@ -128,14 +128,11 @@ public class CoordinateSystemTest {
 
         LocationElement toEquatorial = CoordinateSystem.galacticToEquatorial(loc, timef, observer, eph);
         assertEquals(Functions.formatRA(toEquatorial.getLongitude()), "17h 45m 37.1991s");
-        assertEquals(Functions.formatDEC(toEquatorial.getLatitude()), "-28 56 10.22");
-        // Should be 17 45 37.19  -28 56 10.22
+        assertEquals(Functions.formatDEC(toEquatorial.getLatitude()), "-28\u00ba 56' 10.221\"");
 
         LocationElement toGalactical = CoordinateSystem.equatorialToGalactic(toEquatorial, timef, observer, eph);
-        System.out.println("l:   " + Functions.formatDEC(toGalactical.getLongitude()));
-        System.out.println("b:   " + Functions.formatDEC(toGalactical.getLatitude()));
 
-        assertEquals(Functions.formatRA(toGalactical.getLongitude()), "0");
-        assertEquals(Functions.formatRA(toGalactical.getLatitude()), "0");
+        assertEquals(Functions.formatRA(toGalactical.getLongitude()), "00h 00m 00.0000s");
+        assertEquals(Functions.formatDEC(toGalactical.getLatitude()), "00\u00ba 00' 00.000\"");
     }
 }

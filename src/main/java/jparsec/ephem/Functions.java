@@ -233,7 +233,7 @@ public class Functions
 		dec_d = Math.floor(dec_d);
 		dec_m = Math.floor(dec_m);
 
-		out = "" + formatter0.format(dec_d) + "° " + formatter0.format(dec_m) + "' " + formatter.format(dec_s) + "\"";
+		out = "" + formatter0.format(dec_d) + "\u00ba " + formatter0.format(dec_m) + "' " + formatter.format(dec_s) + "\"";
 		out = DataSet.replaceAll(out, ",", ".", false);
 		if (dec < 0.0 && Functions.parseDeclination(out) != 0.0)
 			out = "-" + out;
@@ -627,7 +627,7 @@ public class Functions
 		double decm = 0.0;
 		double decs = 0.0;
 
-		int g = dec.indexOf("?");
+		int g = dec.indexOf("\u00ba");
 		if (g < 0)
 			g = dec.indexOf("d");
 		int m = dec.indexOf("'");
