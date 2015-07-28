@@ -964,17 +964,17 @@ public class OrbitalElement implements Serializable
 		int border = 100;
 		g.drawLine(x0, y0-h/2+border, x0, y0+h/2-border, false);
 		g.drawLine(x0-w/2+border, y0, x0+w/2-border, y0, false);
-		String s = "0�";
+		String s = "0\u00ba";
 		if (!showPlanets) s += " (N)";
 		int size = g.getFont().getSize();
 		g.drawString(s, x0-g.getStringWidth(s)/2, y0-h/2+border-size/2);
-		s = "90�";
+		s = "90\u00ba";
 		if (!showPlanets) s += " (E)";
 		g.drawString(s, x0-w/2+border-g.getStringWidth(s)-size/2, y0+size/2);
-		s = "180�";
+		s = "180\u00ba";
 		if (!showPlanets) s += " (S)";
 		g.drawString(s, x0-g.getStringWidth(s)/2, y0+h/2-border+size);
-		s = "270�";
+		s = "270\u00ba";
 		if (!showPlanets) {
 			if (Translate.getDefaultLanguage() == LANGUAGE.SPANISH) {
 				s += " (O)";

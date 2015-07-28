@@ -513,7 +513,7 @@ public class SimpleEventElement implements Serializable {
 					try {
 						out = DataSet.replaceAll(out, translateS[i], Translate.translate(translateS[i]).toLowerCase(), true);
 						if (Translate.getDefaultLanguage() == LANGUAGE.SPANISH && (out.startsWith("new") || out.startsWith("nuevo")) && eventType == EVENT.CALENDAR) {
-							out = "nuevo a�o "+DataSet.replaceAll(FileIO.getRestAfterField(1, out, " ", true), "a�o", "", true).trim();
+							out = "nuevo a\u00f1o "+DataSet.replaceAll(FileIO.getRestAfterField(1, out, " ", true), "a\u00f1o", "", true).trim();
 						}
 					} catch (Exception exc) {}
 				}
