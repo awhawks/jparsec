@@ -1,5 +1,12 @@
+# IntelliJ IDEA meta files
 /.idea
 /*.i??
+
+# local folders
 /lib
 /target
 
+# Eclipse IDE meta files
+/.classpath
+/.project
+/.settings
