@@ -46,20 +46,20 @@ public class SDP4_SGP4Test {
         double JD = TimeScale.getJD(time, observer, eph, TimeElement.SCALE.TERRESTRIAL_TIME);
         System.out.println("JD " + JD + " / index " + index);
         System.out.println("Using PLAN-13 by J. Miller");
-        System.out.println("" + name + " RA: " + Functions.formatRA(ephem.rightAscension));
-        System.out.println("" + name + " DEC: " + Functions.formatDEC(ephem.declination));
-        System.out.println("" + name + " dist: " + ephem.distance);
-        System.out.println("" + name + " elong: " + ephem.elongation * Constant.RAD_TO_DEG);
-        System.out.println("" + name + " azi: " + ephem.azimuth * Constant.RAD_TO_DEG);
-        System.out.println("" + name + " alt: " + ephem.elevation * Constant.RAD_TO_DEG);
-        System.out.println("" + name + " ilum: " + ephem.illumination);
-        System.out.println("" + name + " sub. E. lon:  " + Functions.formatAngle(ephem.subEarthLongitude, 3));
-        System.out.println("" + name + " sub. E. lat:  " + Functions.formatAngle(ephem.subEarthLatitude, 3));
-        System.out.println("" + name + " sub. E. dist: " + ephem.subEarthDistance);
-        System.out.println("" + name + " speed: " + ephem.topocentricSpeed);
-        System.out.println("" + name + " revolution: " + ephem.revolutionsCompleted);
-        System.out.println("" + name + " eclipsed: " + ephem.isEclipsed);
-        System.out.println("" + name + " next pass: " + TimeFormat.formatJulianDayAsDateAndTime(Math.abs(ephem.nextPass), TimeElement.SCALE.LOCAL_TIME));
+        System.out.println(name + " RA: " + Functions.formatRA(ephem.rightAscension));
+        System.out.println(name + " DEC: " + Functions.formatDEC(ephem.declination));
+        System.out.println(name + " dist: " + ephem.distance);
+        System.out.println(name + " elong: " + ephem.elongation * Constant.RAD_TO_DEG);
+        System.out.println(name + " azi: " + ephem.azimuth * Constant.RAD_TO_DEG);
+        System.out.println(name + " alt: " + ephem.elevation * Constant.RAD_TO_DEG);
+        System.out.println(name + " ilum: " + ephem.illumination);
+        System.out.println(name + " sub. E. lon:  " + Functions.formatAngle(ephem.subEarthLongitude, 3));
+        System.out.println(name + " sub. E. lat:  " + Functions.formatAngle(ephem.subEarthLatitude, 3));
+        System.out.println(name + " sub. E. dist: " + ephem.subEarthDistance);
+        System.out.println(name + " speed: " + ephem.topocentricSpeed);
+        System.out.println(name + " revolution: " + ephem.revolutionsCompleted);
+        System.out.println(name + " eclipsed: " + ephem.isEclipsed);
+        System.out.println(name + " next pass: " + TimeFormat.formatJulianDayAsDateAndTime(Math.abs(ephem.nextPass), TimeElement.SCALE.LOCAL_TIME));
 
         if (ephem.rise != null) {
             for (int i = 0; i < ephem.rise.length; i++) {
@@ -76,20 +76,20 @@ public class SDP4_SGP4Test {
         //SDP4 s = new SDP4(SatelliteEphem.getArtificialSatelliteOrbitalElement(index));
         //ephem = s.calcSatellite(time, observer, eph);
         ephem = SDP4_SGP4.satEphemeris(time, observer, eph, true);
-        System.out.println("" + name + " RA: " + Functions.formatRA(ephem.rightAscension));
-        System.out.println("" + name + " DEC: " + Functions.formatDEC(ephem.declination));
-        System.out.println("" + name + " dist: " + ephem.distance);
-        System.out.println("" + name + " elong: " + ephem.elongation * Constant.RAD_TO_DEG);
-        System.out.println("" + name + " azi: " + ephem.azimuth * Constant.RAD_TO_DEG);
-        System.out.println("" + name + " alt: " + ephem.elevation * Constant.RAD_TO_DEG);
-        System.out.println("" + name + " ilum: " + ephem.illumination);
-        System.out.println("" + name + " sub. E. lon:  " + Functions.formatAngle(ephem.subEarthLongitude, 3));
-        System.out.println("" + name + " sub. E. lat:  " + Functions.formatAngle(ephem.subEarthLatitude, 3));
-        System.out.println("" + name + " sub. E. dist: " + ephem.subEarthDistance);
-        System.out.println("" + name + " speed: " + ephem.topocentricSpeed);
-        System.out.println("" + name + " revolution: " + ephem.revolutionsCompleted);
-        System.out.println("" + name + " eclipsed: " + ephem.isEclipsed);
-        System.out.println("" + name + " next pass: " + TimeFormat.formatJulianDayAsDateAndTime(Math.abs(ephem.nextPass), TimeElement.SCALE.LOCAL_TIME));
+        System.out.println(name + " RA: " + Functions.formatRA(ephem.rightAscension));
+        System.out.println(name + " DEC: " + Functions.formatDEC(ephem.declination));
+        System.out.println(name + " dist: " + ephem.distance);
+        System.out.println(name + " elong: " + ephem.elongation * Constant.RAD_TO_DEG);
+        System.out.println(name + " azi: " + ephem.azimuth * Constant.RAD_TO_DEG);
+        System.out.println(name + " alt: " + ephem.elevation * Constant.RAD_TO_DEG);
+        System.out.println(name + " ilum: " + ephem.illumination);
+        System.out.println(name + " sub. E. lon:  " + Functions.formatAngle(ephem.subEarthLongitude, 3));
+        System.out.println(name + " sub. E. lat:  " + Functions.formatAngle(ephem.subEarthLatitude, 3));
+        System.out.println(name + " sub. E. dist: " + ephem.subEarthDistance);
+        System.out.println(name + " speed: " + ephem.topocentricSpeed);
+        System.out.println(name + " revolution: " + ephem.revolutionsCompleted);
+        System.out.println(name + " eclipsed: " + ephem.isEclipsed);
+        System.out.println(name + " next pass: " + TimeFormat.formatJulianDayAsDateAndTime(Math.abs(ephem.nextPass), TimeElement.SCALE.LOCAL_TIME));
 
         if (ephem.rise != null) {
             for (int i = 0; i < ephem.rise.length; i++) {
@@ -120,21 +120,21 @@ public class SDP4_SGP4Test {
         eph.targetBody.setIndex(index);
         SDP4_SGP4 s = new SDP4_SGP4(SatelliteEphem.getArtificialSatelliteOrbitalElement(index));
         ephem = s.calcSatellite(time, observer, eph);
-        System.out.println("" + name + " RA: " + Functions.formatRA(ephem.rightAscension));
-        System.out.println("" + name + " DEC: " + Functions.formatDEC(ephem.declination));
-        System.out.println("" + name + " dist: " + ephem.distance);
-        System.out.println("" + name + " elong: " + ephem.elongation * Constant.RAD_TO_DEG);
-        System.out.println("" + name + " azi: " + ephem.azimuth * Constant.RAD_TO_DEG);
-        System.out.println("" + name + " alt: " + ephem.elevation * Constant.RAD_TO_DEG);
-        System.out.println("" + name + " ilum: " + ephem.illumination);
-        System.out.println("" + name + " sub. E. lon:  " + Functions.formatAngle(ephem.subEarthLongitude, 3));
-        System.out.println("" + name + " sub. E. lat:  " + Functions.formatAngle(ephem.subEarthLatitude, 3));
-        System.out.println("" + name + " sub. E. dist: " + ephem.subEarthDistance);
-        System.out.println("" + name + " speed: " + ephem.topocentricSpeed);
-        System.out.println("" + name + " revolution: " + ephem.revolutionsCompleted);
-        System.out.println("" + name + " eclipsed: " + ephem.isEclipsed);
-        System.out.println("" + name + " iridium angle: " + ephem.iridiumAngle);
-        System.out.println("" + name + " next pass: " + TimeFormat.formatJulianDayAsDateAndTime(Math.abs(ephem.nextPass), TimeElement.SCALE.LOCAL_TIME));
+        System.out.println(name + " RA: " + Functions.formatRA(ephem.rightAscension));
+        System.out.println(name + " DEC: " + Functions.formatDEC(ephem.declination));
+        System.out.println(name + " dist: " + ephem.distance);
+        System.out.println(name + " elong: " + ephem.elongation * Constant.RAD_TO_DEG);
+        System.out.println(name + " azi: " + ephem.azimuth * Constant.RAD_TO_DEG);
+        System.out.println(name + " alt: " + ephem.elevation * Constant.RAD_TO_DEG);
+        System.out.println(name + " ilum: " + ephem.illumination);
+        System.out.println(name + " sub. E. lon:  " + Functions.formatAngle(ephem.subEarthLongitude, 3));
+        System.out.println(name + " sub. E. lat:  " + Functions.formatAngle(ephem.subEarthLatitude, 3));
+        System.out.println(name + " sub. E. dist: " + ephem.subEarthDistance);
+        System.out.println(name + " speed: " + ephem.topocentricSpeed);
+        System.out.println(name + " revolution: " + ephem.revolutionsCompleted);
+        System.out.println(name + " eclipsed: " + ephem.isEclipsed);
+        System.out.println(name + " iridium angle: " + ephem.iridiumAngle);
+        System.out.println(name + " next pass: " + TimeFormat.formatJulianDayAsDateAndTime(Math.abs(ephem.nextPass), TimeElement.SCALE.LOCAL_TIME));
 
         astro = new AstroDate(2011, AstroDate.OCTOBER, 26, 12, 0, 0);
         time = new TimeElement(astro, TimeElement.SCALE.UNIVERSAL_TIME_UTC);
@@ -172,14 +172,14 @@ public class SDP4_SGP4Test {
         System.out.println("Done in " + (float) ((t1 - t0) / 1000.0) + "s");
 
         /*
-         Test data from http://www.chiandh.me.uk/ephem/iriday.shtml (2011, 10, 26)
-          name			start	(hour, azimut 0=N, elevation)		peak			end
-          IRIDIUM 31 [+]  14:51:18  258.5�  42.6�  14:51:21  257.0�  42.3�  1.7�  14:51:25  255.0�  41.9�
-          IRIDIUM 5 [+]  16:47:33  212.1�  31.4�  16:47:42  210.5�  29.8�  0.2�  16:47:52  209.0�  28.1�
-          IRIDIUM 4 [+]  04:49:01   7.8�  27.5�  04:49:12   7.6�  25.6�  1.5�  04:49:25   7.4�  23.5�
-          IRIDIUM 56 [+]  06:59:41   2.6�  68.2�  06:59:45   2.7�  66.3�  0.9�  06:59:49   2.9�  64.5�
-          IRIDIUM 17 [-]  09:02:33  187.2�  77.2�  09:02:35  187.5�  78.3�  1.7�  09:02:37  187.8�  79.3�
-          IRIDIUM 62 [+] 09:24:33   92.4�  60.2�  09:24:38   97.0�  59.7�  0.4�  09:24:43  101.5�  59.0�
+Test data from http://www.chiandh.me.uk/ephem/iriday.shtml (2011, 10, 26)
+name			start	(hour, azimut 0=N, elevation)		peak			end
+IRIDIUM 31 [+] 14:51:18  258.5 &deg;  42.6 &deg;  14:51:21  257.0 &deg;  42.3 &deg;  1.7 &deg;  14:51:25  255.0 &deg;  41.9 &deg;
+IRIDIUM  5 [+] 16:47:33  212.1 &deg;  31.4 &deg;  16:47:42  210.5 &deg;  29.8 &deg;  0.2 &deg;  16:47:52  209.0 &deg;  28.1 &deg;
+IRIDIUM  4 [+] 04:49:01    7.8 &deg;  27.5 &deg;  04:49:12    7.6 &deg;  25.6 &deg;  1.5 &deg;  04:49:25    7.4 &deg;  23.5 &deg;
+IRIDIUM 56 [+] 06:59:41    2.6 &deg;  68.2 &deg;  06:59:45    2.7 &deg;  66.3 &deg;  0.9 &deg;  06:59:49    2.9 &deg;  64.5 &deg;
+IRIDIUM 17 [-] 09:02:33  187.2 &deg;  77.2 &deg;  09:02:35  187.5 &deg;  78.3 &deg;  1.7 &deg;  09:02:37  187.8 &deg;  79.3 &deg;
+IRIDIUM 62 [+] 09:24:33   92.4 &deg;  60.2 &deg;  09:24:38   97.0 &deg;  59.7 &deg;  0.4 &deg;  09:24:43  101.5 &deg;  59.0 &deg;
          */
     }
 }

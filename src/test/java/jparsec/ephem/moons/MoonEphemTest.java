@@ -97,8 +97,8 @@ public class MoonEphemTest {
         TimeElement time = new TimeElement(new AstroDate(1600, 1, 1), TimeElement.SCALE.TERRESTRIAL_TIME);
         MoonEphemElement ephem[] = MoonEphem.saturnianSatellitesEphemerides_TASS17(time, observer, eph, false);
         System.out.println(ephem[5].name + ": " + Functions.formatRA(ephem[5].rightAscension, 6) + ", " + Functions.formatDEC(ephem[5].declination, 5) + ", " + ephem[5].distance);
-        //IMCCE          13h 45m 15.35365s,   -08° 17' 57.0768",  9.99873438
-        //JPARSEC        13h 45m 15.3536950s, -08° 17' 57.07677", 9.99873438032
+        //IMCCE          13h 45m 15.35365s,   -08 &ordm; 17' 57.0768",  9.99873438
+        //JPARSEC        13h 45m 15.3536950s, -08 &ordm; 17' 57.07677", 9.99873438032
         */
 
         double jd = 2451545.0 + 15 * 365.25;

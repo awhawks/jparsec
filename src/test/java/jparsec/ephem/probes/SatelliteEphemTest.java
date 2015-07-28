@@ -221,9 +221,9 @@ public class SatelliteEphemTest {
                         String fe = " (" + Functions.formatAngleAsDegrees(end.azimuth, 1) + ", " + Functions.formatAngleAsDegrees(end.elevation, 1) + ", " + Functions.formatValue(end.magnitude, 1) + ")";
                         String fm = " (" + Functions.formatAngleAsDegrees(max.azimuth, 1) + ", " + Functions.formatAngleAsDegrees(max.elevation, 1) + ", " + Functions.formatValue(max.magnitude, 1) + ")";
                         if (end.isEclipsed || start.isEclipsed || max.isEclipsed) {
-                            System.out.println("*** " + SatelliteEphem.getArtificialSatelliteName(n) + ": " + TimeFormat.formatJulianDayAsDateAndTime((Double) o[0], null) + fs + "/" + TimeFormat.formatJulianDayAsDateAndTime((Double) o[1], null) + fe + "/" + TimeFormat.formatJulianDayAsDateAndTime((Double) o[2], null) + fm + "/" + (Double) o[3]);
+                            System.out.println("*** " + SatelliteEphem.getArtificialSatelliteName(n) + ": " + TimeFormat.formatJulianDayAsDateAndTime((Double) o[0], null) + fs + "/" + TimeFormat.formatJulianDayAsDateAndTime((Double) o[1], null) + fe + "/" + TimeFormat.formatJulianDayAsDateAndTime((Double) o[2], null) + fm + "/" + o[3]);
                         } else {
-                            System.out.println(SatelliteEphem.getArtificialSatelliteName(n) + ": " + TimeFormat.formatJulianDayAsDateAndTime((Double) o[0], null) + fs + "/" + TimeFormat.formatJulianDayAsDateAndTime((Double) o[1], null) + fe + "/" + TimeFormat.formatJulianDayAsDateAndTime((Double) o[2], null) + fm + "/" + (Double) o[3]);
+                            System.out.println(SatelliteEphem.getArtificialSatelliteName(n) + ": " + TimeFormat.formatJulianDayAsDateAndTime((Double) o[0], null) + fs + "/" + TimeFormat.formatJulianDayAsDateAndTime((Double) o[1], null) + fe + "/" + TimeFormat.formatJulianDayAsDateAndTime((Double) o[2], null) + fm + "/" + o[3]);
                         }
                     }
                 }
@@ -233,22 +233,22 @@ public class SatelliteEphemTest {
             System.out.println("Done in " + (float) ((t1 - t0) / 1000.0) + "s");
 
             /*
-IRIDIUM 5: 26-oct-2011 17:47:33 (32.1, 31.4)/26-oct-2011 17:47:53 (28.8, 27.9)/26-oct-2011 17:47:42 (30.5, 29.8)/0.21889741718769073
-IRIDIUM 4: 27-oct-2011 05:49:01 (187.8, 27.5)/27-oct-2011 05:49:26 (187.4, 23.4)/27-oct-2011 05:49:12 (187.6, 25.6)/1.4930144548416138
-IRIDIUM 17: 27-oct-2011 10:02:33 (7.2, 77.3)/27-oct-2011 10:02:38 (8.0, 79.9)/27-oct-2011 10:02:35 (7.5, 78.4)/1.6581141948699951
-IRIDIUM 31: 26-oct-2011 15:51:18 (78.4, 42.6)/26-oct-2011 15:51:25 (74.9, 41.9)/26-oct-2011 15:51:21 (76.9, 42.3)/1.6713924407958984
+IRIDIUM  5: 26-oct-2011 17:47:33 ( 32.1, 31.4)/26-oct-2011 17:47:53 ( 28.8, 27.9)/26-oct-2011 17:47:42 ( 30.5, 29.8)/0.21889741718769073
+IRIDIUM  4: 27-oct-2011 05:49:01 (187.8, 27.5)/27-oct-2011 05:49:26 (187.4, 23.4)/27-oct-2011 05:49:12 (187.6, 25.6)/1.4930144548416138
+IRIDIUM 17: 27-oct-2011 10:02:33 (  7.2, 77.3)/27-oct-2011 10:02:38 (  8.0, 79.9)/27-oct-2011 10:02:35 (  7.5, 78.4)/1.6581141948699951
+IRIDIUM 31: 26-oct-2011 15:51:18 ( 78.4, 42.6)/26-oct-2011 15:51:25 ( 74.9, 41.9)/26-oct-2011 15:51:21 ( 76.9, 42.3)/1.6713924407958984
 IRIDIUM 56: 27-oct-2011 07:59:40 (182.6, 68.3)/27-oct-2011 07:59:49 (183.0, 64.1)/27-oct-2011 07:59:44 (182.8, 66.4)/0.8697885274887085
 IRIDIUM 62: 27-oct-2011 10:24:32 (-88.2, 60.2)/27-oct-2011 10:24:43 (-78.3, 58.9)/27-oct-2011 10:24:37 (-83.6, 59.7)/0.4163323938846588
 Done in 467.015s
 
-             Test data from http://www.chiandh.me.uk/ephem/iriday.shtml (2011, 10, 26)
-              name			start	(hour, azimut 0=N, elevation)		peak			end
-              IRIDIUM 31 [+]  14:51:18  258.5�  42.6�  14:51:21  257.0�  42.3�  1.7�  14:51:25  255.0�  41.9�
-              IRIDIUM 5 [+]  16:47:33  212.1�  31.4�  16:47:42  210.5�  29.8�  0.2�  16:47:52  209.0�  28.1�
-              IRIDIUM 4 [+]  04:49:01   7.8�  27.5�  04:49:12   7.6�  25.6�  1.5�  04:49:25   7.4�  23.5�
-              IRIDIUM 56 [+]  06:59:41   2.6�  68.2�  06:59:45   2.7�  66.3�  0.9�  06:59:49   2.9�  64.5�
-              IRIDIUM 17 [-]  09:02:33  187.2�  77.2�  09:02:35  187.5�  78.3�  1.7�  09:02:37  187.8�  79.3�
-              IRIDIUM 62 [+] 09:24:33   92.4�  60.2�  09:24:38   97.0�  59.7�  0.4�  09:24:43  101.5�  59.0�
+Test data from http://www.chiandh.me.uk/ephem/iriday.shtml (2011, 10, 26)
+name			start	(hour, azimut 0=N, elevation)		peak			end
+IRIDIUM 31 [+] 14:51:18  258.5 &deg;  42.6 &deg;  14:51:21  257.0 &deg;  42.3 &deg;  1.7 &deg;  14:51:25  255.0 &deg;  41.9 &deg;
+IRIDIUM 5 [+]  16:47:33  212.1 &deg;  31.4 &deg;  16:47:42  210.5 &deg;  29.8 &deg;  0.2 &deg;  16:47:52  209.0 &deg;  28.1 &deg;
+IRIDIUM 4 [+]  04:49:01    7.8 &deg;  27.5 &deg;  04:49:12    7.6 &deg;  25.6 &deg;  1.5 &deg;  04:49:25    7.4 &deg;  23.5 &deg;
+IRIDIUM 56 [+] 06:59:41    2.6 &deg;  68.2 &deg;  06:59:45    2.7 &deg;  66.3 &deg;  0.9 &deg;  06:59:49    2.9 &deg;  64.5 &deg;
+IRIDIUM 17 [-] 09:02:33  187.2 &deg;  77.2 &deg;  09:02:35  187.5 &deg;  78.3 &deg;  1.7 &deg;  09:02:37  187.8 &deg;  79.3 &deg;
+IRIDIUM 62 [+] 09:24:33   92.4 &deg;  60.2 &deg;  09:24:38   97.0 &deg;  59.7 &deg;  0.4 &deg;  09:24:43  101.5 &deg;  59.0 &deg;
              */
         } catch (JPARSECException ve) {
             JPARSECException.showException(ve);

@@ -44,7 +44,8 @@ public class PlanetEphemTest {
 
             LocationElement ephem_loc0 = Ephem.toMeanEquatorial(ephem.getEquatorialLocation(), time, observer, eph);
             System.out.println("Mean: " + Functions.formatRA(ephem_loc0.getLongitude()) + "/" + Functions.formatDEC(ephem_loc0.getLatitude()) + "/" + ephem_loc0.getRadius());
-            // Should be: RA: 06h 21m 14.0671s/23� 14' 18.920"/4.175983896906823. Exact is: RA: 06h 21m 14.0665s, DEC: 23� 14' 18.920", DIST: 4.175983897448329
+            // Should be: RA: 06h 21m 14.0671s, DEC: 23 &ordm; 14' 18.920", DIST: 4.175983896906823.
+            // Exact is:  RA: 06h 21m 14.0665s, DEC: 23 &ordm; 14' 18.920", DIST: 4.175983897448329
 
             astro = new AstroDate(2011, AstroDate.JUNE, 15, 21, 21, 0);
             time = new TimeElement(astro, TimeElement.SCALE.UNIVERSAL_TIME_UTC);

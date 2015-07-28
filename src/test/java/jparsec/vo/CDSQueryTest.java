@@ -65,12 +65,12 @@ public class CDSQueryTest {
 
             // (July 2011) It is clear CDS uses IAU 1976 algorithms
             // See http://ned.ipac.caltech.edu/help/calc_doc.txt
-            // For 6h 5m 22s / -6Âº 22' 25"
+            // For 6h 5m 22s / -6 &ordm; 22' 25"
             // NASA/IPAC gives 06h 07m 48.27712s   -06d 22' 53.7507" (http://ned.ipac.caltech.edu/forms/calculator.html)
             // CDS       gives 06h 07m 48.2727s    -06d 22' 53.763"
             // JPARSEC   gives 06h 07m 48.27269s   -06d 22' 53.7628"
 
-            // JPARSEC = CDS == AA Supplement, up to the milliarcsecond
+            // JPARSEC = CDS == AA Supplement, up to the milli-arcsecond
         } catch (JPARSECException e) {
             e.showException();
         } catch (Exception exc) {
