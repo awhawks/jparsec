@@ -55,7 +55,7 @@ import jparsec.util.Translate;
 /**
  * Calculates eclipse maps and local circumstances. Based on
  * Elements of solar eclipses 1951-2200, by Jean Meeus. Check also the
- * interesting work by J. García Ferrer (in Spanish) at
+ * interesting work by J. Garc&iacute;a Ferrer (in Spanish) at
  * http://personal.telefonica.terra.es/web/xgarciaf/eclipse/eclipse.htm,
  * used for the implementation done here.<P>
  * Bessel elements used in this class are those computed by Shinobu Takesako
@@ -1593,7 +1593,7 @@ public class RenderEclipse {
 //				g.drawString(Translate.translate(1094)+": "+Functions.formatRA((ME-DT/3600.)/Constant.RAD_TO_HOUR, 0)+" "+ts, px, py+=step);
 //			}
 
-			g.drawString(Translate.translate(1095)+": "+Functions.formatValue(Ephem.getApparentElevation(eph0, obs, mALT, 10)*Constant.RAD_TO_DEG, 1)+"º", px, py+=step);
+			g.drawString(Translate.translate(1095)+": "+Functions.formatValue(Ephem.getApparentElevation(eph0, obs, mALT, 10)*Constant.RAD_TO_DEG, 1)+"\u00ba", px, py+=step);
 			if (G >= 0) {
 				py = 10;
 				if (first && last) {
@@ -1609,8 +1609,8 @@ public class RenderEclipse {
 						g.drawString(Translate.translate(1097)+": "+Functions.formatRA((lTD-DT/3600.)/Constant.RAD_TO_HOUR, 0)+" "+ts, px, py);
 					}
 					//py+=step/2;
-					g.drawString(Translate.translate(1095)+": "+Functions.formatValue(Ephem.getApparentElevation(eph0, obs, fALT, 10)*Constant.RAD_TO_DEG, 1)+"º", px2, py+=step);
-					g.drawString(Translate.translate(1095)+": "+Functions.formatValue(Ephem.getApparentElevation(eph0, obs, lALT, 10)*Constant.RAD_TO_DEG, 1)+"º", px, py);
+					g.drawString(Translate.translate(1095)+": "+Functions.formatValue(Ephem.getApparentElevation(eph0, obs, fALT, 10)*Constant.RAD_TO_DEG, 1)+"\u00ba", px2, py+=step);
+					g.drawString(Translate.translate(1095)+": "+Functions.formatValue(Ephem.getApparentElevation(eph0, obs, lALT, 10)*Constant.RAD_TO_DEG, 1)+"\u00ba", px, py);
 					py+=step/2;
 				}
 				if (!ShowWithoutLT) {
@@ -2159,7 +2159,7 @@ public class RenderEclipse {
 			time.add(ME / 24.0);
 			double elev = Ephem.getEphemeris(time, obs, eph, false).elevation;
 			time.add(-ME / 24.0);
-			g.drawString(Translate.translate(1094)+": "+Functions.formatRA((ME-DT/3600.)/Constant.RAD_TO_HOUR, 0)+" "+ts+" ("+Translate.translate(29)+" "+Functions.formatAngleAsDegrees(elev, 1)+"º)", px, py+=step);
+			g.drawString(Translate.translate(1094)+": "+Functions.formatRA((ME-DT/3600.)/Constant.RAD_TO_HOUR, 0)+" "+ts+" ("+Translate.translate(29)+" "+Functions.formatAngleAsDegrees(elev, 1)+"\u00ba)", px, py+=step);
 			py = 10;
 			String alt = "";
 			if (ShowWithoutLT) alt = Translate.translate(29)+" ";
@@ -2176,18 +2176,18 @@ public class RenderEclipse {
 				 */
 				time.add(P0[0] / 24.0);
 				elev = Ephem.getEphemeris(time, obs, eph, false).elevation;
-				g.drawString(Translate.translate(1109)+": "+Functions.formatRA((P0[0]-DT/3600.)/Constant.RAD_TO_HOUR, 0)+" "+ts+" ("+alt+Functions.formatAngleAsDegrees(elev, 1)+"º)", px2, py+=step);
+				g.drawString(Translate.translate(1109)+": "+Functions.formatRA((P0[0]-DT/3600.)/Constant.RAD_TO_HOUR, 0)+" "+ts+" ("+alt+Functions.formatAngleAsDegrees(elev, 1)+"\u00ba)", px2, py+=step);
 				time.add((-P0[0]+F0[0]) / 24.0);
 				elev = Ephem.getEphemeris(time, obs, eph, false).elevation;
-				g.drawString(Translate.translate(1110)+": "+Functions.formatRA((F0[0]-DT/3600.)/Constant.RAD_TO_HOUR, 0)+" "+ts+" ("+alt+Functions.formatAngleAsDegrees(elev, 1)+"º)", px, py);
+				g.drawString(Translate.translate(1110)+": "+Functions.formatRA((F0[0]-DT/3600.)/Constant.RAD_TO_HOUR, 0)+" "+ts+" ("+alt+Functions.formatAngleAsDegrees(elev, 1)+"\u00ba)", px, py);
 				//py+=step/2;
 
 				time.add((-F0[0]+P0[1]) / 24.0);
 				elev = Ephem.getEphemeris(time, obs, eph, false).elevation;
-				g.drawString(Translate.translate(1111)+": "+Functions.formatRA((P0[1]-DT/3600.)/Constant.RAD_TO_HOUR, 0)+" "+ts+" ("+alt+Functions.formatAngleAsDegrees(elev, 1)+"º)", px2, py+=step);
+				g.drawString(Translate.translate(1111)+": "+Functions.formatRA((P0[1]-DT/3600.)/Constant.RAD_TO_HOUR, 0)+" "+ts+" ("+alt+Functions.formatAngleAsDegrees(elev, 1)+"\u00ba)", px2, py+=step);
 				time.add((-P0[1]+F0[1]) / 24.0);
 				elev = Ephem.getEphemeris(time, obs, eph, false).elevation;
-				g.drawString(Translate.translate(1112)+": "+Functions.formatRA((F0[1]-DT/3600.)/Constant.RAD_TO_HOUR, 0)+" "+ts+" ("+alt+Functions.formatAngleAsDegrees(elev, 1)+"º)", px, py);
+				g.drawString(Translate.translate(1112)+": "+Functions.formatRA((F0[1]-DT/3600.)/Constant.RAD_TO_HOUR, 0)+" "+ts+" ("+alt+Functions.formatAngleAsDegrees(elev, 1)+"\u00ba)", px, py);
 				//py+=step/2;
 				g.drawString(Translate.translate(1113)+": "+Functions.formatRA((P0[2]-DT/3600.)/Constant.RAD_TO_HOUR, 0)+" "+ts, px2, py+=step);
 				g.drawString(Translate.translate(1114)+": "+Functions.formatRA((F0[2]-DT/3600.)/Constant.RAD_TO_HOUR, 0)+" "+ts, px, py);
@@ -2196,10 +2196,10 @@ public class RenderEclipse {
 				if (I > 0) {
 					time.add(P0[0] / 24.0);
 					elev = Ephem.getEphemeris(time, obs, eph, false).elevation;
-					g.drawString(Translate.translate(1111)+": "+Functions.formatRA((P0[0]-DT/3600.)/Constant.RAD_TO_HOUR, 0)+" "+ts+" ("+alt+Functions.formatAngleAsDegrees(elev, 1)+"º)", px2, py+=step);
+					g.drawString(Translate.translate(1111)+": "+Functions.formatRA((P0[0]-DT/3600.)/Constant.RAD_TO_HOUR, 0)+" "+ts+" ("+alt+Functions.formatAngleAsDegrees(elev, 1)+"\u00ba)", px2, py+=step);
 					time.add((-P0[0]+F0[0]) / 24.0);
 					elev = Ephem.getEphemeris(time, obs, eph, false).elevation;
-					g.drawString(Translate.translate(1112)+": "+Functions.formatRA((F0[0]-DT/3600.)/Constant.RAD_TO_HOUR, 0)+" "+ts+" ("+alt+Functions.formatAngleAsDegrees(elev, 1)+"º)", px, py);
+					g.drawString(Translate.translate(1112)+": "+Functions.formatRA((F0[0]-DT/3600.)/Constant.RAD_TO_HOUR, 0)+" "+ts+" ("+alt+Functions.formatAngleAsDegrees(elev, 1)+"\u00ba)", px, py);
 					//py+=step/2;
 					g.drawString(Translate.translate(1113)+": "+Functions.formatRA((P0[1]-DT/3600.)/Constant.RAD_TO_HOUR, 0)+" "+ts, px2, py+=step);
 					g.drawString(Translate.translate(1114)+": "+Functions.formatRA((F0[1]-DT/3600.)/Constant.RAD_TO_HOUR, 0)+" "+ts, px, py);

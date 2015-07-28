@@ -4485,7 +4485,7 @@ public class RenderSky
 		}
 
 		double factor = 1;
-		if (sc > 180) factor = 2; // Images covering large fields (>3º) should disappear faster
+		if (sc > 180) factor = 2; // Images covering large fields (>3\u00ba) should disappear faster
 		int w = 1, h = 1;
 		if (radius_x*factor < imgMaxWidth || radius_y*factor < imgMaxHeight) {
 			if (!recovered) {
@@ -4636,7 +4636,7 @@ public class RenderSky
 	private static final String types[] = new String[] {"unk", "gal", "neb", "pneb", "ocl", "gcl", "galpart", "qua", "duplicate", "duplicateInNGC", "star/s", "notFound"};
 	//private static final String types2[] = new String[] {"unknown", "galaxy", "nebula", "planetary nebula", "open cluster", "globular cluster", "region of galaxy", "quasar", "duplicate", "duplicate in NGC", "star/s", "not found"};
 	private static final int types2Int[] = new int[] {819, 40, 959, 960, 1297, 961, 953, 954, 955, 956, 957, 958};
-//	private static final String types2Spa[] = new String[] {"desconocido", "galaxia", "nebulosa", "nebulosa planetaria", "cúmulo abierto", "cúmulo globular", "región de una galaxia", "quasar", "duplicado", "duplicado en el NGC", "estrella/s", "no encontrado"};
+//	private static final String types2Spa[] = new String[] {"desconocido", "galaxia", "nebulosa", "nebulosa planetaria", "c\u00famulo abierto", "c\u00famulo globular", "regi\u00f3n de una galaxia", "quasar", "duplicado", "duplicado en el NGC", "estrella/s", "no encontrado"};
 	private static final String nodraw2[] = new String[] {"LMC", "292", "Mel22", "7000", "I.5067", "6533", "6523"};
 	private float lastObjMaglim = -1, maglimNotDrag = -1, maglimStarsNotDrag = -1;
 	private static ArrayList<String> imagesNotFound = new ArrayList<String>();
@@ -5469,7 +5469,7 @@ public class RenderSky
 						{
 							val = (float) (360.0 - i * eclStep);
 							if (val < 0) val = (float) Functions.normalizeDegrees(val);
-							drawString(render.drawCoordinateGridEclipticColor, render.drawCoordinateGridFont, Integer.toString((int) (val+0.5))+"º", pos[0], pos[1], -radius, false);
+							drawString(render.drawCoordinateGridEclipticColor, render.drawCoordinateGridFont, Integer.toString((int) (val+0.5))+"\u00ba", pos[0], pos[1], -radius, false);
 						}
 					} else {				
 						if (!eclipticDrawn && render.drawCoordinateGridLabels && isInTheScreen((int)pos[0], (int)pos[1], -(int)g.getStringWidth(ecl0))) {
@@ -5720,7 +5720,7 @@ public class RenderSky
 					if ((!labelDrawn || tol<oldTol)) {
 						if (coordinate_system != CoordinateSystem.COORDINATE_SYSTEM.EQUATORIAL) {
 							int v = (int) (ra * 15.0 + 0.5);
-							label = Integer.toString(v)+"º";
+							label = Integer.toString(v)+"\u00ba";
 							if (coordinate_system == CoordinateSystem.COORDINATE_SYSTEM.HORIZONTAL) {
 								if (v == 0) label += " (N)";
 								if (v == 180) label += " (S)";
@@ -5939,7 +5939,7 @@ public class RenderSky
 						if ((!labelDrawn || tol < oldTol) && tol < labelTolerance) {
 							value = (int) (Math.abs(dec) + 0.5);
 							if (dec < 0) value = -value;
-							label = Integer.toString(value) + "º";
+							label = Integer.toString(value) + "\u00ba";
 
 							index = DataSet.getIndex(labelsAxesNameY, label);
 							if (index < 0 || tol<oldTol) {
@@ -6160,7 +6160,7 @@ public class RenderSky
 						}
 						if (coordinate_system != CoordinateSystem.COORDINATE_SYSTEM.EQUATORIAL) {
 							int v = (int) (ra * 15.0 + 0.5);
-							label = Integer.toString(v)+"º";
+							label = Integer.toString(v)+"\u00ba";
 							if (coordinate_system == CoordinateSystem.COORDINATE_SYSTEM.HORIZONTAL) {
 								if (v == 0) label += " (N)";
 								if (v == 180) label += " (S)";
@@ -6375,7 +6375,7 @@ public class RenderSky
 						if ((!labelDrawn || tol < oldTol) && tol < labelTolerance) {
 							value = (int) (Math.abs(dec) + 0.5);
 							if (dec < 0) value = -value;
-							label = Integer.toString(value) + "º";
+							label = Integer.toString(value) + "\u00ba";
 							index = DataSet.getIndex(labelsAxesNameY, label);
 							if (index < 0 || tol<oldTol) {
 								if (index >= 0) {

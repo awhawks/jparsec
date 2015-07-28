@@ -329,7 +329,7 @@ public class FastMath
 	 * Calculates the arc-sine of the argument.
 	 * Accuracy similar or better compared to sin and cos
 	 * functions except for arguments very close to 1 or -1, where
-	 * errors up to 0.1º can be reached. 33x faster than intrinsic.
+	 * errors up to 0.1 &deg; can be reached. 33x faster than intrinsic.
 	 * @param x Argument.
 	 * @return Its arc-sine.
 	 */
@@ -357,7 +357,7 @@ public class FastMath
 	 * Calculates the arc-cosine of the argument.
 	 * Accuracy similar or better compared to sin and cos
 	 * functions except for arguments very close to 1 or -1, where
-	 * errors up to 0.1º can be reached. 33x faster than intrinsic.
+	 * errors up to 0.1 &deg; can be reached. 33x faster than intrinsic.
 	 * @param x Argument.
 	 * @return Its arc-cosine.
 	 */

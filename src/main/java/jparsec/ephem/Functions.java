@@ -220,7 +220,7 @@ public class Functions
 	 * precision.
 	 *
 	 * @param dec Declination in radians. Must be in the range -Pi/2 to +Pi/2.
-	 * @return String with the format $##° ##' ##.###'' ($ is the sign).
+	 * @return String with the format $##&deg; ##' ##.###'' ($ is the sign).
 	 */
 	public static String formatDEC(double dec)
 	{
@@ -330,7 +330,7 @@ public class Functions
 	 *
 	 * @param dec Declination in radians. Must be in the range -Pi/2 to +Pi/2.
 	 * @param nsec Number of decimal places in arcseconds.
-	 * @return String with the format $##° ##' ##.##...'' ($ is the sign).
+	 * @return String with the format $##&deg; ##' ##.##...'' ($ is the sign).
 	 */
 	public static String formatDEC(double dec, int nsec)
 	{
@@ -346,7 +346,7 @@ public class Functions
 		dec_d = Math.floor(dec_d);
 		dec_m = Math.floor(dec_m);
 
-		String out = "" + formatter0.format(dec_d) + "° " + formatter0.format(dec_m) + "' " + formatter.format(dec_s) + "\"";
+		String out = "" + formatter0.format(dec_d) + "\u00b0 " + formatter0.format(dec_m) + "' " + formatter.format(dec_s) + "\"";
 		out = DataSet.replaceAll(out, ",", ".", false);
 		if (dec < 0.0 && Functions.parseDeclination(out) != 0.0)
 			out = "-" + out;

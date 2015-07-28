@@ -657,7 +657,7 @@ public class EarthOrientationParameters
 	}
 
 	/**
-	 * Transforms dx and dy values into dpsi and deps. Vondrák et al. formulae
+	 * Transforms dx and dy values into dpsi and deps. Vondr&agrave;k et al. formulae
 	 * for obliquity and precession is used.
 	 *
 	 * @param dX Celestial pole x offset in arcseconds.

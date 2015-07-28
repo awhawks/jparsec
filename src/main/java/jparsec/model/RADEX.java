@@ -34,7 +34,7 @@ import jparsec.util.Logger.LEVEL;
  * RADEX program, adequate to calculate the strengths of atomic and
  * molecular lines from interstellar clouds, which are assumed to be
  * homogeneous. The use of this class is subject to reference to the
- * original paper: Van der Tak, F.F.S., Black, J.H., Schöier, F.L.,
+ * original paper: Van der Tak, F.F.S., Black, J.H., Sch&ouml;ier, F.L.,
  * Jansen, D.J., van Dishoeck, E.F., 2007, A&A 468, 627-635.<P>
  *
  * This Java version corresponds to the translation of the original

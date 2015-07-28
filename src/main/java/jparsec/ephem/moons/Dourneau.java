@@ -54,7 +54,7 @@ public class Dourneau
 	
 	/**
 	 * This is an implementation of the method of computing Saturn's moons
-	 * created by Gérard Dourneau, as presented by Jean Meeus. Adapted from
+	 * created by G&eacute;rard Dourneau, as presented by Jean Meeus. Adapted from
 	 * original code by Kerry Shetline. It has not been extensively checked,
 	 * although it seems to be ok, within the arcsecond compared with TASS 1.7.
 	 * <P>

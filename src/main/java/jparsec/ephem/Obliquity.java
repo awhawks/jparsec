@@ -177,7 +177,7 @@ public class Obliquity
 			rval = y * Constant.ARCSEC_TO_RAD;
 			
 			if (Math.abs(t) > 100)
-				JPARSECException.addWarning("Date is too far from J2000, obliquity forced to Vondrák et al. 2011 model.");
+				JPARSECException.addWarning("Date is too far from J2000, obliquity forced to Vondr\u00e1k et al. 2011 model.");
 		} else {
 			u = u0 = t / 100.; // u is in julian 10000's of years
 			rval = rvalStart;
