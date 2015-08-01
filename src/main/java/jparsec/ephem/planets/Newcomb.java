@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- *
+ * 
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *
+ *  
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- *
+ * 
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,31 +18,34 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */
+ */					
 package jparsec.ephem.planets;
 
 import jparsec.ephem.Ephem;
 import jparsec.ephem.EphemerisElement;
-import jparsec.ephem.EphemerisElement.FRAME;
 import jparsec.ephem.Functions;
 import jparsec.ephem.IAU2006;
 import jparsec.ephem.Nutation;
 import jparsec.ephem.PhysicalParameters;
 import jparsec.ephem.Precession;
+import jparsec.ephem.EphemerisElement.FRAME;
 import jparsec.ephem.Target.TARGET;
 import jparsec.math.Constant;
 import jparsec.math.matrix.Matrix;
+import jparsec.observer.City;
+import jparsec.observer.CityElement;
 import jparsec.observer.LocationElement;
 import jparsec.observer.ObserverElement;
+import jparsec.time.AstroDate;
+import jparsec.time.TimeScale;
 import jparsec.time.TimeElement;
 import jparsec.time.TimeElement.SCALE;
-import jparsec.time.TimeScale;
 import jparsec.util.DataBase;
 import jparsec.util.JPARSECException;
 
 /**
  * Applies Newcomb's solar theory, published in 1898.
- *
+ * 
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -57,11 +60,11 @@ public class Newcomb
 	 * Terms smaller than 0.1" or 0.0000001 AU are neglected here. The greatest
 	 * possible error amounts to 2" in longitude, 0.5" in latitude, and 0.000005
 	 * AU in distance.<P>
-	 *
+	 * 
 	 * Reference:
-	 *
+	 * 
 	 * <I>Practical Ephemeris Calculations</I>, Oliver Montenbruck. 1989.
-	 *
+	 * 
 	 * @param JD Julian day in dynamical time.
 	 * @return Array with (x, y, z) coordinates.
 	 */
@@ -72,12 +75,11 @@ public class Newcomb
 		// Long period perturbation of the mean longitude and the mean anomaly
 		// of the sun
 		double DLP = 0.0;
-		double DLP_data[][] = {
-				new double[] { 1.882, -0.016, 57.24, 150.27 },
-				new double[] { 6.40, 0.0, 231.19, 20.20 },
-				new double[] { 0.266, 0.0, 31.80, 119.00 }
-		};
-
+		double DLP_data[][] =
+		{ new double[]
+		{ 1.882, -0.016, 57.24, 150.27 }, new double[]
+		{ 6.40, 0.0, 231.19, 20.20 }, new double[]
+		{ 0.266, 0.0, 31.80, 119.00 } };
 		for (int i = 0; i < 3; i++)
 		{
 			DLP += (DLP_data[i][0] + DLP_data[i][1] * T) * Math.sin(Functions
@@ -97,7 +99,8 @@ public class Newcomb
 		// Mean anomaly of the sun, Venus, Mars, Jupiter, and Saturn
 		double G[] = new double[]
 		{
-				Functions.normalizeRadians((358.4758333 + 35999 * T + 179.10 * Constant.ARCSEC_TO_DEG * T - 0.54 * Constant.ARCSEC_TO_DEG * T * T) * Constant.DEG_TO_RAD + DLP),
+				Functions
+						.normalizeRadians((358.4758333 + 35999 * T + 179.10 * Constant.ARCSEC_TO_DEG * T - 0.54 * Constant.ARCSEC_TO_DEG * T * T) * Constant.DEG_TO_RAD + DLP),
 				0.0,
 				Functions.normalizeRadians((212.45 + 58517.493 * T) * Constant.DEG_TO_RAD),
 				0.0,
@@ -289,17 +292,20 @@ public class Newcomb
 	 * solar theory. Typical error is 0.3 arcseconds, but it could be as high as
 	 * 2 arcseconds for certain dates.
 	 * <P>
-	 *
+	 * 
 	 * @param time Time object containing the date.
 	 * @param obs Observer object containing the observer position.
 	 * @param eph Ephemeris object with the target and ephemeris
-	 *		properties.
+	 *        properties.
 	 * @return Ephem object containing full ephemeris data.
 	 * @deprecated This is a very old but accurate method. Better results will
-	 *			 be obtained with Series96 or VSOP theories.
+	 *             be obtained with Series96 or VSOP theories.
 	 * @throws JPARSECException Thrown if the calculation fails.
 	 */
-	public static EphemElement newcombSunEphemeris(TimeElement time, ObserverElement obs, EphemerisElement eph)
+	public static EphemElement newcombSunEphemeris(TimeElement time, // Time
+																		// Element
+			ObserverElement obs, // Observer Element
+			EphemerisElement eph) // Ephemeris Element
 			throws JPARSECException
 	{
 		if (eph.targetBody != TARGET.SUN)
@@ -358,7 +364,7 @@ public class Newcomb
 			// is slightly better.
 			// Here we prefer to use only Newcomb's theory independently
 			geo_eq = Ephem.aberration(geo_eq, earth_pos, light_time);
-
+			
 			DataBase.addData("GCRS", geo_eq, true);
 		} else {
 			DataBase.addData("GCRS", null, true);
@@ -376,7 +382,7 @@ public class Newcomb
 
 			if (eph.frame == FRAME.FK4) {
 				// Transform from B1950 to mean equinox of date
-				 geo_date = Precession.precess(Constant.B1950, JD_TDB, geo_date, eph);
+				 geo_date = Precession.precess(Constant.B1950, JD_TDB, geo_date, eph);	
 			} else {
 				// Transform from J2000 to mean equinox of date
 				geo_date = Precession.precessFromJ2000(JD_TDB, geo_date, eph);
@@ -391,7 +397,7 @@ public class Newcomb
 				/* Correct nutation */
 				true_eq = Nutation.nutateInEquatorialCoordinates(JD_TDB, eph, geo_date, true);
 			}
-
+	
 			// Correct for polar motion
 			if (eph.ephemType == EphemerisElement.COORDINATES_TYPE.APPARENT &&
 					eph.correctForPolarMotion)
@@ -400,7 +406,7 @@ public class Newcomb
 				true_eq = mat.times(new Matrix(true_eq)).getColumn(0);
 			}
 		}
-
+		
 		// Pass to coordinates as seen from another body, if necessary
 		if (obs.getMotherBody() != TARGET.NOT_A_PLANET && obs.getMotherBody() != TARGET.EARTH)
 			true_eq = Ephem.getPositionFromBody(LocationElement.parseRectangularCoordinates(true_eq), time, obs, eph).getRectangularCoordinates();
@@ -424,12 +430,18 @@ public class Newcomb
 			ephem_elem = Ephem.topocentricCorrection(time, obs, eph, ephem_elem);
 
 		/* Physical ephemeris */
-		ephem_elem = PhysicalParameters.physicalParameters(JD_TDB, ephem_elem, ephem_elem, obs, eph);
-		if (obs.getMotherBody() != TARGET.NOT_A_PLANET && obs.getMotherBody() != TARGET.EARTH) {
-			LocationElement locE = ephem_elem.getEquatorialLocation();
-			locE = Ephem.getPositionFromEarth(locE, time, obs, eph);
-			ephem_elem.constellation = jparsec.astronomy.Constellation.getConstellationName(locE.getLongitude(),
-					locE.getLatitude(), JD_TDB, eph);
+		try
+		{
+			ephem_elem = PhysicalParameters.physicalParameters(JD_TDB, ephem_elem, ephem_elem, obs, eph);
+			if (obs.getMotherBody() != TARGET.NOT_A_PLANET && obs.getMotherBody() != TARGET.EARTH) {
+				LocationElement locE = ephem_elem.getEquatorialLocation();
+				locE = Ephem.getPositionFromEarth(locE, time, obs, eph);
+				ephem_elem.constellation = jparsec.astronomy.Constellation.getConstellationName(locE.getLongitude(),
+						locE.getLatitude(), JD_TDB, eph);
+			}
+		} catch (JPARSECException ve)
+		{
+			throw ve;
 		}
 
 		/* Horizontal coordinates */
@@ -444,5 +456,59 @@ public class Newcomb
 
 		ephem_elem.name = TARGET.SUN.getName();
 		return ephem_elem;
+	}
+
+	/**
+	 * For unit testing only.
+	 * @param args Not used.
+	 */
+	public static void main(String args[])
+	{
+		System.out.println("Newcomb Test");
+
+		try
+		{
+			AstroDate astro = new AstroDate(Constant.B1950); // 1, AstroDate.january, 2006);
+			TimeElement time = new TimeElement(astro, SCALE.UNIVERSAL_TIME_UT1);
+			CityElement city = City.findCity("Madrid");
+			ObserverElement observer = ObserverElement.parseCity(city);
+			EphemerisElement eph = new EphemerisElement(TARGET.SUN, EphemerisElement.COORDINATES_TYPE.APPARENT,
+					EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.TOPOCENTRIC, EphemerisElement.REDUCTION_METHOD.WILLIAMS_1994,
+					EphemerisElement.FRAME.ICRF);
+
+			EphemElement ephem = Ephem.getEphemeris(time, observer, eph, false, true);
+			String name = eph.targetBody.getName();
+			System.out.println("" + name + " RA: " + Functions.formatRA(ephem.rightAscension));
+			System.out.println("" + name + " DEC: " + Functions.formatDEC(ephem.declination));
+			System.out.println("" + name + " dist: " + ephem.distance);
+
+			ephem = newcombSunEphemeris(time, observer, eph);
+			System.out.println("NEWCOMB");
+
+			double JD = TimeScale.getJD(time, observer, eph, SCALE.UNIVERSAL_TIME_UT1);
+			System.out.println("lon " + observer.getLongitudeDeg());
+			System.out.println("lat " + observer.getLatitudeDeg());
+			System.out.println("alt " + observer.getHeight());
+			System.out.println("JD " + JD);
+			System.out.println("" + name + " RA: " + Functions.formatRA(ephem.rightAscension));
+			System.out.println("" + name + " DEC: " + Functions.formatDEC(ephem.declination));
+			System.out.println("" + name + " dist: " + ephem.distance);
+			System.out.println("" + name + " ecl.lon: " + ephem.heliocentricEclipticLongitude * Constant.RAD_TO_DEG);
+			System.out.println("" + name + " ecl.lat: " + ephem.heliocentricEclipticLatitude * Constant.RAD_TO_DEG);
+			System.out.println("" + name + " ecl.r: " + ephem.distanceFromSun);
+			System.out.println("" + name + " azi: " + ephem.azimuth * Constant.RAD_TO_DEG);
+			System.out.println("" + name + " alt: " + ephem.elevation * Constant.RAD_TO_DEG);
+			System.out.println("" + name + " ang. rad: " + ephem.angularRadius * Constant.RAD_TO_ARCSEC);
+			System.out.println("" + name + " mag: " + ephem.magnitude);
+			System.out.println("" + name + " axis: " + ephem.positionAngleOfAxis * Constant.RAD_TO_DEG);
+			System.out.println("" + name + " pole: " + ephem.positionAngleOfPole * Constant.RAD_TO_DEG);
+			System.out.println("" + name + " meridian: " + ephem.longitudeOfCentralMeridian * Constant.RAD_TO_DEG);
+
+			JPARSECException.showWarnings();
+
+		} catch (JPARSECException ve)
+		{
+			JPARSECException.showException(ve);
+		}
 	}
 }

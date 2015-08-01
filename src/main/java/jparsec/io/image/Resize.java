@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- *
+ * 
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *
+ *  
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- *
+ * 
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,11 +18,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */
+ */					
 package jparsec.io.image;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.io.File;
+
+import javax.imageio.ImageIO;
+
 import jparsec.graph.DataSet;
 import jparsec.math.FastMath;
 import jparsec.util.JPARSECException;
@@ -30,12 +34,12 @@ import jparsec.util.JPARSECException;
 /**
  * Advanced image/2d array resize method based on the image resize plugin at
  * http://bigwww.epfl.ch/algorithms/ijplugins/resize/, implementing the method
- * by A. Mu&ntilde;oz Barrutia, T. Blu, M. Unser, "Least-Squares Image Resizing Using
- * Finite Differences," IEEE Transactions on Image Processing, vol. 10, no. 9,
+ * by A. Muñoz Barrutia, T. Blu, M. Unser, "Least-Squares Image Resizing Using 
+ * Finite Differences," IEEE Transactions on Image Processing, vol. 10, no. 9, 
  * pp. 1365-1378, September 2001.<P>
  * This method should only be used (or it is only safe to be used) to reduce the
  * size of an image.
- *
+ * 
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -62,7 +66,7 @@ public class Resize
 	private static final double cte2 = (Math.sqrt(664.0 + Math.sqrt(438976.0)) - Math.sqrt(304.0) - 19.0);
 	private static final double cte3 = (Math.sqrt(67.5 - Math.sqrt(4436.25)) + Math.sqrt(26.25) - 6.5);
 	private static final double cte4 = (Math.sqrt(67.5 + Math.sqrt(4436.25)) - Math.sqrt(26.25) - 6.5);
-
+	
 	/**
 	 * This flag is by default set to false, which means that resampling
 	 * an image to greater sizes will throw an error. You can set this
@@ -77,7 +81,7 @@ public class Resize
    * Resizes an image.
    * @param image The input image.
    * @param width The new width. Set to 0 to calculate automatically.
-   * @param height The new height. Set to 0 to calculate automatically.
+   * @param height The new height. Set to 0 to calculate automatically. 
    * Width and height cannot be both 0.
    * @param sameRatio True to maintain original image ratio.
    * @return The output image.
@@ -85,7 +89,7 @@ public class Resize
    */
   public static BufferedImage resize(BufferedImage image, int width, int height, boolean sameRatio) throws JPARSECException {
 		if (width < 1 && height < 1) return image;
-
+		
 		int origWidth = image.getWidth();
 		int origHeight = image.getHeight();
 
@@ -105,9 +109,9 @@ public class Resize
 					double scale = scaleW;
 					if (scaleH < scaleW) {
 						scale = scaleH;
-						width = (int) (scale * origWidth + 0.5);
+						width = (int) (scale * origWidth + 0.5);			
 					} else {
-						height = (int) (scale * origHeight + 0.5);
+						height = (int) (scale * origHeight + 0.5);				
 					}
 				}
 			}
@@ -128,15 +132,15 @@ public class Resize
    * Resizes a 2d array data [x][y].
    * @param image The input image.
    * @param width The new width. Set to 0 to calculate automatically.
-   * @param height The new height. Set to 0 to calculate automatically.
+   * @param height The new height. Set to 0 to calculate automatically. 
    * Width and height cannot be both 0.
    * @param sameRatio True to maintain original image ratio.
    * @return The output data.
-   * @throws JPARSECException If an error occurs.
+   * @throws JPARSECException If an error occurs. 
    */
   public static double[][] resize(double[][] image, int width, int height, boolean sameRatio) throws JPARSECException {
 	  if (width < 1 && height < 1) return image;
-
+		
 		int origWidth = image.length;
 		int origHeight = image[0].length;
 
@@ -156,9 +160,9 @@ public class Resize
 					double scale = scaleW;
 					if (scaleH < scaleW) {
 						scale = scaleH;
-						width = (int) (scale * origWidth + 0.5);
+						width = (int) (scale * origWidth + 0.5);			
 					} else {
-						height = (int) (scale * origHeight + 0.5);
+						height = (int) (scale * origHeight + 0.5);				
 					}
 				}
 			}
@@ -175,7 +179,7 @@ public class Resize
 		return r.computeZoom(image, false, analyDegree, syntheDegree, interpDegree, zoomY, zoomX, shiftY, shiftX);
   }
 
-  private BufferedImage computeZoom(BufferedImage input, boolean inversable, int analyDegree, int syntheDegree, int interpDegree, double zoomY, double zoomX, double shiftY,
+  private BufferedImage computeZoom(BufferedImage input, boolean inversable, int analyDegree, int syntheDegree, int interpDegree, double zoomY, double zoomX, double shiftY, 
 		  double shiftX) throws JPARSECException
   {
 	this.analyEven = 0;
@@ -279,66 +283,66 @@ public class Resize
 	    image = new BufferedImage(finalSizeX, Math.max(finalSizeY, workingSizeY), BufferedImage.TYPE_INT_ARGB);
     } else {
 	    output = new BufferedImage(finalSizeX, workingSizeY, BufferedImage.TYPE_INT_ARGB);
-	    image = new BufferedImage(finalSizeX, workingSizeY, BufferedImage.TYPE_INT_ARGB);
+	    image = new BufferedImage(finalSizeX, workingSizeY, BufferedImage.TYPE_INT_ARGB);    	
     }
 
     for (int c=0; c< 4; c++) {
 	    if (inversable)
 	    {
 	    	BufferedImage inverImage = new BufferedImage(workingSizeX, workingSizeY, BufferedImage.TYPE_INT_ARGB);
-
+	
 	      for (int x = 0; x < nx; ++x) {
 	        for (int y = 0; y < ny; ++y) {
 	          inverImage.setRGB(x, y, input.getRGB(x, y));
 	        }
 	      }
-
+	
 	      if (workingSizeX > nx) {
 	        getColumn(inverImage, nx - 1, workingColumn, c);
 	        for (int y = nx; y < workingSizeX; ++y) {
 	          putColumn(inverImage, y, workingColumn, c);
 	        }
 	      }
-
+	
 	      if (workingSizeY > ny) {
 	        getRow(inverImage, ny - 1, workingRow, c);
 	        for (int y = ny; y < workingSizeY; ++y) {
 	          putRow(inverImage, y, workingRow, c);
 	        }
-
+	
 	      }
-
+	
 	      for (int y = 0; y < workingSizeY; ++y) {
 	        getRow(inverImage, y, workingRow, c);
 	        getInterpolationCoefficients(workingRow, interpDegree);
 	        resamplingRow(workingRow, outputRow, addVectorWidth, addOutputVectorWidth, periodRowSym, periodRowAsym);
-
+	
 	        putRow(image, y, outputRow, c);
 	      }
-
+	
 	      for (int y = 0; y < finalSizeX; ++y) {
 	        getColumn(image, y, workingColumn, c);
 	        getInterpolationCoefficients(workingColumn, interpDegree);
 	        resamplingColumn(workingColumn, outputColumn, addVectorHeight, addOutputVectorHeight, periodColumnSym, periodColumnAsym);
-
+	
 	        putColumn2(output, y, outputColumn, c);
 	      }
-
+	
 	    } else {
-
+	
 		    for (int y = 0; y < workingSizeY; ++y) {
 		    	getRow(input, y, workingRow, c);
 		        getInterpolationCoefficients(workingRow, interpDegree);
 		        resamplingRow(workingRow, outputRow, addVectorWidth, addOutputVectorWidth, periodRowSym, periodRowAsym);
-
+		
 		        putRow(image, y, outputRow, c);
 		    }
-
+		
 		    for (int y = 0; y < finalSizeX; ++y) {
 		    	getColumn(image, y, workingColumn, c);
 		        getInterpolationCoefficients(workingColumn, interpDegree);
 		        resamplingColumn(workingColumn, outputColumn, addVectorHeight, addOutputVectorHeight, periodColumnSym, periodColumnAsym);
-
+		
 		        putColumn2(output, y, outputColumn, c);
 		    }
 	    }
@@ -346,7 +350,7 @@ public class Resize
     return output.getSubimage(0, 0, finalSizeX, finalSizeY);
   }
 
-  private double[][] computeZoom(double[][] input, boolean inversable, int analyDegree, int syntheDegree, int interpDegree, double zoomY, double zoomX, double shiftY,
+  private double[][] computeZoom(double[][] input, boolean inversable, int analyDegree, int syntheDegree, int interpDegree, double zoomY, double zoomX, double shiftY, 
 		  double shiftX) throws JPARSECException
   {
 	this.analyEven = 0;
@@ -494,19 +498,19 @@ public class Resize
 	        getRow(input, y, workingRow);
 	        getInterpolationCoefficients(workingRow, interpDegree);
 	        resamplingRow(workingRow, outputRow, addVectorWidth, addOutputVectorWidth, periodRowSym, periodRowAsym);
-
+	
 	        putRow(image, y, outputRow);
 	    }
-
+	
 	    for (int y = 0; y < finalSizeX; ++y) {
 	        getColumn(image, y, workingColumn);
 	        getInterpolationCoefficients(workingColumn, interpDegree);
 	        resamplingColumn(workingColumn, outputColumn, addVectorHeight, addOutputVectorHeight, periodColumnSym, periodColumnAsym);
-
+	
 	        putColumn(output, y, outputColumn);
 	    }
     }
-
+    
     double out[][] = new double[finalSizeX][finalSizeY];
     for (i=0; i<finalSizeX; i++) {
     	out[i] = DataSet.getSubArray(output[i], 0, finalSizeY-1);
@@ -750,17 +754,17 @@ public class Resize
     {
     case 0:
       if (Math.abs(x) < 0.5) {
-        betan = 1.0;
+        betan = 1.0; 
         break;
       }
 
       if (x != -0.5) break;
-      betan = 1.0;
+      betan = 1.0; 
       break;
     case 1:
       x = Math.abs(x);
       if (x >= 1.0) break;
-      betan = 1.0 - x;
+      betan = 1.0 - x; 
       break;
     case 2:
       x = Math.abs(x);
@@ -771,7 +775,7 @@ public class Resize
 
       if (x >= 1.5) break;
       x -= 1.5;
-      betan = x * x * 0.5;
+      betan = x * x * 0.5; 
       break;
     case 3:
       x = Math.abs(x);
@@ -848,15 +852,15 @@ public class Resize
       }
 
       if (x < 2.0) {
-    	  betan = x * (x * (x * (x * (x * (x * (0.05 - (x / 240.0)) - 0.2333333333333333) + 0.5) - 0.388888888888889) - 0.1) - 0.07777777777777778) + 0.4904761904761905;
+    	  betan = x * (x * (x * (x * (x * (x * (0.05 - (x / 240.0)) - 0.2333333333333333) + 0.5) - 0.388888888888889) - 0.1) - 0.07777777777777778) + 0.4904761904761905; 
     	  break;
       }
-
+      
       if (x < 3.0) {
-    	  betan = x * (x * (x * (x * (x * (x * (x * 0.001388888888888889 - 0.02777777777777778) + 0.2333333333333333) - 1.055555555555556) + 2.722222222222222) - 3.833333333333334) + 2.411111111111111) - 0.2206349206349206;
+    	  betan = x * (x * (x * (x * (x * (x * (x * 0.001388888888888889 - 0.02777777777777778) + 0.2333333333333333) - 1.055555555555556) + 2.722222222222222) - 3.833333333333334) + 2.411111111111111) - 0.2206349206349206; 
     	  break;
       }
-
+    	  
       if (x >= 4.0) break;
       a = 4.0 - x;
       x = a * a * a;
@@ -1291,5 +1295,36 @@ public class Resize
     }
 
     throw new JPARSECException("Invalid filter half-length (should be [2..4])");
+  }
+  
+  /**
+   * Test program.
+   * @param args Not used.
+   */
+  public static void main(String args[]) {
+	  try {
+//		String path = "/home/alonso/000000109.png";
+		String path = "/home/alonso/documentos/presentaciones/2011/tesis/img/escalasTiempo.png";
+//		String path = "/home/alonso/documentos/presentaciones/2011/tesis/img/atmosfera.png";
+//		String path = "/home/alonso/documentos/presentaciones/2011/tesis/img/datacube1a.png";
+		int w = 1920, h = 0;
+		
+		Resize.ALLOW_RESIZE_TO_GREATER_SIZES = true;
+
+		BufferedImage in = ImageIO.read(new File(path));
+/*		Picture pic = new Picture(in);
+		pic.getScaledInstance(w*2, 0, true);
+		in = pic.getImage();
+*/		
+		long t0 = System.currentTimeMillis();
+		BufferedImage out = Resize.resize(in, w, h, true);
+		long t1 = System.currentTimeMillis();
+		Picture p2 = new Picture(out);
+		p2.show("Resize class image");
+//		pic.show("Original");
+		System.out.println("Spline interpolation shown in "+(t1-t0)/1000.0+" seconds.");
+	  } catch (Exception exc) {
+		  exc.printStackTrace();
+	  }
   }
 }

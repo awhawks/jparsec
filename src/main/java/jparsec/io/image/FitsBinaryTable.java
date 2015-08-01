@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- *
+ * 
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *
+ *  
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- *
+ * 
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */
+ */					
 package jparsec.io.image;
 
 import jparsec.graph.DataSet;
@@ -26,20 +26,12 @@ import jparsec.io.FileIO;
 import jparsec.util.JPARSECException;
 import jparsec.util.Logger;
 import jparsec.util.Logger.LEVEL;
-import nom.tam.fits.AsciiTable;
-import nom.tam.fits.AsciiTableHDU;
-import nom.tam.fits.BasicHDU;
-import nom.tam.fits.BinaryTable;
-import nom.tam.fits.BinaryTableHDU;
-import nom.tam.fits.Fits;
-import nom.tam.fits.FitsException;
-import nom.tam.fits.Header;
-import nom.tam.fits.HeaderCard;
-import nom.tam.fits.HeaderCardException;
+
+import nom.tam.fits.*;
 
 /**
  * A class to manipulate binary tables in .fits files.
- * One of the main methods contain a program to write fits files
+ * One of the main methods contain a program to write fits files 
  * that conforms to ALMA Test Interferometer Raw Data Format.<P>
  * Please note this class is old and experimental, and several bugs
  * where found in the ALMA specification during its development.<P>
@@ -47,7 +39,7 @@ import nom.tam.fits.HeaderCardException;
  * @author T. Alonso-Albi - OAN (Spain)
  * @version 1.0
  */
-public class FitsBinaryTable
+public class FitsBinaryTable 
 {
 	// private constructor so that this class cannot be instantiated.
 	private FitsBinaryTable() {}
@@ -75,20 +67,20 @@ public class FitsBinaryTable
 			header[i] = new ImageHeaderElement(key, value, comment);
 			header[i].format = format;
 		}
-
 		return header;
+		
 	}
 
 	/**
 	 * Creates an HDU with a binary table.
-	 * @param header The header for the table, excluding
+	 * @param header The header for the table, excluding 
 	 * parameters that depends on the table. Standard parameters to use
 	 * are EXTNAME for the name of the table, and TABLEREV for the revision
 	 * number (format version) of the table.
 	 * @param table The table with elements ordered as [rows][columns]. The first row
 	 * should contain the names for the different columns.
 	 * @return The HDU.
-	 * @throws FitsException Thrown by nom.tam.fits in case of error
+	 * @throws FitsException Thrown by nom.tam.fits in case of error 
 	 * initializing a binary table object.
 	 * @throws JPARSECException In case the header or table contains invalid data.
 	 */
@@ -104,17 +96,17 @@ public class FitsBinaryTable
 		}
 		return createBinaryTable(header, t);
 	}
-
+	
 	/**
 	 * Creates an HDU with an Ascii table.
-	 * @param header The header for the table, excluding
+	 * @param header The header for the table, excluding 
 	 * parameters that depends on the table. Standard parameters to use
 	 * are EXTNAME for the name of the table, and TABLEREV for the revision
 	 * number (format version) of the table.
 	 * @param table The table with elements ordered as [rows][columns]. The first row
 	 * should contain the names for the different columns.
 	 * @return The HDU.
-	 * @throws FitsException Thrown by nom.tam.fits in case of error
+	 * @throws FitsException Thrown by nom.tam.fits in case of error 
 	 * initializing a binary table object.
 	 * @throws JPARSECException In case the header or table contains invalid data.
 	 */
@@ -130,24 +122,24 @@ public class FitsBinaryTable
 		}
 		return createAsciiTable(header, t);
 	}
-
+	
 	/**
 	 * Creates an HDU with a binary table.
-	 * @param header The header for the table, excluding
+	 * @param header The header for the table, excluding 
 	 * parameters that depends on the table. Standard parameters to use
 	 * are EXTNAME for the name of the table, and TABLEREV for the revision
 	 * number (format version) of the table.
 	 * @param table The table. table.length is the number of rows,
 	 * and table[0].length the columns for the first row.
 	 * @return The HDU.
-	 * @throws FitsException Thrown by nom.tam.fits in case of error
+	 * @throws FitsException Thrown by nom.tam.fits in case of error 
 	 * initializing a binary table object.
 	 * @throws JPARSECException In case the header or table contains invalid data.
 	 */
-	public static BasicHDU createBinaryTable(ImageHeaderElement header[],
+	public static BasicHDU createBinaryTable(ImageHeaderElement header[], 
 			ImageHeaderElement table[][]) throws FitsException, JPARSECException {
 		if (table == null) return FitsIO.createHDU(null, header);
-
+		
 		int nrow = table.length;
 		int ncol = table[0].length;
 		BinaryTable binaryTable = new BinaryTable();
@@ -172,7 +164,7 @@ public class FitsBinaryTable
 			try {
 				for (int k=0; k<data.length; k++)
 				{
-					if (data[k].length()>length && length>0 && ndim == 0)
+					if (data[k].length()>length && length>0 && ndim == 0) 
 						Logger.log(LEVEL.WARNING, "Error inserting column "+data[k]+". Its size ("+data[k].length()+") is greater than limiting value of "+length+".");
 				}
 				if (ndim > 0) throw new JPARSECException("This keyword will need further processing after following switch clause.");
@@ -236,7 +228,7 @@ public class FitsBinaryTable
 						float[][][] objE3 = null;
 						String[][][] objS3 = null;
 						boolean[][][] objB3 = null;
-						int[][] objJ2 = null;
+						int[][] objJ2 = null; 
 						double[][] objD2 = null;
 						float[][] objE2 = null;
 						String[][] objS2 = null;
@@ -317,7 +309,7 @@ public class FitsBinaryTable
 							}
 							break;
 						}
-
+						
 						switch (format)
 						{
 						case BOOLEAN_L:
@@ -372,18 +364,18 @@ public class FitsBinaryTable
 							throw new JPARSECException("Cannot recognize column format '"+format+"'.");
 						}
 					}
-
+					
 					binaryTable.addColumn(column);
 				} catch (Exception exc)
 				{
 					throw new JPARSECException(exc);
 				}
 			}
-		}
+		}			
 		BasicHDU bhdu = Fits.makeHDU(binaryTable);
 		Header h = bhdu.getHeader();
 		completeHeader(h, header);
-
+		
 		// Set columns names (TTYPE and TUNIT keywords)
 		BinaryTableHDU bthdu = (BinaryTableHDU) bhdu;
 		for (int i=0; i<ncol; i++)
@@ -399,12 +391,12 @@ public class FitsBinaryTable
 			bthdu.setColumnName(i, table[0][i].key, comment);
 			if (!unit.equals("")) bthdu.addValue("TUNIT"+(i+1), unit, "");
 		}
-
-		// Move binary table header entries to the end
+		
+		// Move binary table header entries to the end 
 		// (probably not needed, just for stetic)
 		h = bthdu.getHeader();
 		int tf = h.getIntValue("TFIELDS");
-		HeaderCard card[][] = new HeaderCard[4][tf];
+		String card[][] = new String[4][tf];
 		for (int i=0; i<tf; i++)
 		{
 			card[0][i] = removeCard(h, "TTYPE"+(i+1));
@@ -414,32 +406,32 @@ public class FitsBinaryTable
 		}
 		for (int i=0; i<tf; i++)
 		{
-			if (null != card[0][i]) h.addLine(card[0][i]);
-			if (null != card[1][i]) h.addLine(card[1][i]);
-			if (null != card[2][i]) h.addLine(card[2][i]);
-			if (null != card[3][i]) h.addLine(card[3][i]);
+			if (!card[0][i].equals("")) h.addLine(card[0][i]);
+			if (!card[1][i].equals("")) h.addLine(card[1][i]);
+			if (!card[2][i].equals("")) h.addLine(card[2][i]);
+			if (!card[3][i].equals("")) h.addLine(card[3][i]);
 		}
-
-		return bhdu;
+		
+		return bhdu;		
 	}
 
 	/**
 	 * Creates an HDU with an Ascii table.
-	 * @param header The header for the table, excluding
+	 * @param header The header for the table, excluding 
 	 * parameters that depends on the table. Standard parameters to use
 	 * are EXTNAME for the name of the table, and TABLEREV for the revision
 	 * number (format version) of the table.
 	 * @param table The table. table.length is the number of rows,
 	 * and table[0].length the columns for the first row.
 	 * @return The HDU.
-	 * @throws FitsException Thrown by nom.tam.fits in case of error
+	 * @throws FitsException Thrown by nom.tam.fits in case of error 
 	 * initializing a binary table object.
 	 * @throws JPARSECException In case the header or table contains invalid data.
 	 */
-	public static BasicHDU createAsciiTable(ImageHeaderElement header[],
+	public static BasicHDU createAsciiTable(ImageHeaderElement header[], 
 			ImageHeaderElement table[][]) throws FitsException, JPARSECException {
 		if (table == null) return FitsIO.createHDU(null, header);
-
+		
 		int nrow = table.length;
 		int ncol = table[0].length;
 		AsciiTable binaryTable = new AsciiTable();
@@ -464,7 +456,7 @@ public class FitsBinaryTable
 			try {
 				for (int k=0; k<data.length; k++)
 				{
-					if (data[k].length()>length && length>0 && ndim == 0)
+					if (data[k].length()>length && length>0 && ndim == 0) 
 						Logger.log(LEVEL.WARNING, "Error inserting column "+data[k]+". Its size ("+data[k].length()+") is greater than limiting value of "+length+".");
 				}
 				if (ndim > 0) throw new JPARSECException("This keyword will need further processing after following switch clause.");
@@ -528,7 +520,7 @@ public class FitsBinaryTable
 						float[][][] objE3 = null;
 						String[][][] objS3 = null;
 						boolean[][][] objB3 = null;
-						int[][] objJ2 = null;
+						int[][] objJ2 = null; 
 						double[][] objD2 = null;
 						float[][] objE2 = null;
 						String[][] objS2 = null;
@@ -609,7 +601,7 @@ public class FitsBinaryTable
 							}
 							break;
 						}
-
+						
 						switch (format)
 						{
 						case BOOLEAN_L:
@@ -664,18 +656,18 @@ public class FitsBinaryTable
 							throw new JPARSECException("Cannot recognize column format '"+format+"'.");
 						}
 					}
-
+					
 					binaryTable.addColumn(column);
 				} catch (Exception exc)
 				{
 					throw new JPARSECException(exc);
 				}
 			}
-		}
+		}			
 		BasicHDU bhdu = Fits.makeHDU(binaryTable);
 		Header h = bhdu.getHeader();
 		completeHeader(h, header);
-
+		
 		// Set columns names (TTYPE and TUNIT keywords)
 		AsciiTableHDU bthdu = (AsciiTableHDU) bhdu;
 		for (int i=0; i<ncol; i++)
@@ -691,12 +683,12 @@ public class FitsBinaryTable
 			bthdu.setColumnName(i, table[0][i].key, comment);
 			if (!unit.equals("")) bthdu.addValue("TUNIT"+(i+1), unit, "");
 		}
-
-		// Move binary table header entries to the end
+		
+		// Move binary table header entries to the end 
 		// (probably not needed, just for stetic)
 		h = bthdu.getHeader();
 		int tf = h.getIntValue("TFIELDS");
-		HeaderCard card[][] = new HeaderCard[4][tf];
+		String card[][] = new String[4][tf];
 		for (int i=0; i<tf; i++)
 		{
 			card[0][i] = removeCard(h, "TTYPE"+(i+1));
@@ -706,34 +698,25 @@ public class FitsBinaryTable
 		}
 		for (int i=0; i<tf; i++)
 		{
-			if (null != card[0][i]) h.addLine(card[0][i]);
-			if (null != card[1][i]) h.addLine(card[1][i]);
-			if (null != card[2][i]) h.addLine(card[2][i]);
-			if (null != card[3][i]) h.addLine(card[3][i]);
+			if (!card[0][i].equals("")) h.addLine(card[0][i]);
+			if (!card[1][i].equals("")) h.addLine(card[1][i]);
+			if (!card[2][i].equals("")) h.addLine(card[2][i]);
+			if (!card[3][i].equals("")) h.addLine(card[3][i]);
 		}
-
-		return bhdu;
+		
+		return bhdu;		
 	}
-
+	
 	/**
-	 * Removes a key and returns its card.
+	 * Removes a key and returns it card.
 	 * @param h The header.
 	 * @param key The key to search for.
 	 * @return The card, or empty string if key is not found.
 	 */
-	private static HeaderCard removeCard(Header h, String key)
+	private static String removeCard(Header h, String key)
 	{
-		HeaderCard hc = h.findCard(key);
-		if (null == hc) {
-			return null;
-		}
-
-		h.deleteKey(key);
-		return hc;
-		/*
 		String card = "";
 		boolean exist = h.containsKey(key);
-		h.getC
 		if (exist) {
 			int nc = h.getNumberOfCards();
 			int keyN = -1;
@@ -753,7 +736,6 @@ public class FitsBinaryTable
 			}
 		}
 		return card;
-		*/
 	}
 
 	/**
@@ -768,7 +750,7 @@ public class FitsBinaryTable
 	throws JPARSECException, HeaderCardException {
 		return completeHeader(new Header(), header);
 	}
-
+	
 	/**
 	 * Completes a fits header adding the cards from a given {@linkplain ImageHeaderElement}
 	 * object.
@@ -786,7 +768,7 @@ public class FitsBinaryTable
 			COLUMN_FORMAT format = FitsBinaryTable.getColumnFormat(header[i]);
 			if (format == FitsBinaryTable.COLUMN_FORMAT.UNKNOWN)
 				throw new JPARSECException("Column format "+header[i].format+" in header keyword "+header[i].key+" is unknown.");
-
+			
 			int length = FitsBinaryTable.getColumnLength(header[i]);
 			double val = 0.0;
 			try {
@@ -806,7 +788,7 @@ public class FitsBinaryTable
 						if (header[i].value.equals("F") || header[i].value.equals("false")) b = false;
 						h.addValue(header[i].key, b, header[i].comment);
 					} catch (Exception e3) {
-						if (header[i].value.length()>length && length>0)
+						if (header[i].value.length()>length && length>0) 
 							Logger.log(LEVEL.WARNING, "Error inserting column "+header[i].value+". Its size ("+header[i].value.length()+") is greater than limiting value of "+length+".");
 						h.addValue(header[i].key, header[i].value, header[i].comment);
 					}
@@ -815,7 +797,7 @@ public class FitsBinaryTable
 		}
 		return h;
 	}
-
+	
 	/**
 	 * Returns column length given its format.
 	 * @param i The header object.
@@ -868,7 +850,7 @@ public class FitsBinaryTable
 		/** ID constant for undefined column format. */
 		UNKNOWN
 	};
-
+	
 	/**
 	 * Returns column format. Possible values are:
 	 * J, A, D, E, L, I, C, M, X, B.
@@ -910,7 +892,7 @@ public class FitsBinaryTable
 			String f = format.substring(pi+1, pf);
 			d = FileIO.getNumberOfFields(f, ",", true);
 		}
-
+		
 		return d;
 	}
 
@@ -930,7 +912,7 @@ public class FitsBinaryTable
 			String f = format.substring(pi+1, pf);
 			d = Integer.parseInt(FileIO.getField(dim, f, ",", true));
 		}
-
+		
 		return d;
 	}
 
@@ -968,21 +950,21 @@ public class FitsBinaryTable
 	 */
 	public static String[][] getBinaryTable(BasicHDU bt) throws JPARSECException, FitsException {
 		if (!FitsIO.isBinaryTable(bt)) throw new JPARSECException("Input HDU is not a binary table!");
-
-		BinaryTableHDU bintable = (BinaryTableHDU) bt;
-		String[][] table = new String[bintable.getNRows()+1][bintable.getNCols()];
-		for (int j=0; j<bintable.getNCols(); j++) {
-			table[0][j] = bintable.getColumnName(j);
-		}
-		for (int j=0; j<bintable.getNRows(); j++) {
-			Object[] data = bintable.getRow(j);
-			for (int k=0; k<data.length; k++) {
-				table[j+1][k] = data[k].toString();
-			}
-		}
+		
+    	BinaryTableHDU bintable = (BinaryTableHDU) bt;
+    	String[][] table = new String[bintable.getNRows()+1][bintable.getNCols()];
+    	for (int j=0; j<bintable.getNCols(); j++) {
+    		table[0][j] = bintable.getColumnName(j);
+    	}
+    	for (int j=0; j<bintable.getNRows(); j++) {
+    		Object[] data = bintable.getRow(j);
+    		for (int k=0; k<data.length; k++) {
+    			table[j+1][k] = data[k].toString();
+    		}
+    	}
 		return table;
 	}
-
+	
 	/**
 	 * Returns the object in the binary table at a specific row and column.
 	 * @param bt The binary table.
@@ -994,11 +976,11 @@ public class FitsBinaryTable
 	 */
 	public static Object getBinaryTableElement(BasicHDU bt, int row, int column) throws JPARSECException, FitsException {
 		if (!FitsIO.isBinaryTable(bt)) throw new JPARSECException("Input HDU is not a binary table!");
-
-		BinaryTableHDU bintable = (BinaryTableHDU) bt;
+		
+    	BinaryTableHDU bintable = (BinaryTableHDU) bt;
 		return bintable.getRow(row)[column];
 	}
-
+	
 	/**
 	 * Transforms a binary table into a String table containing the names of the
 	 * columns in the first row, and the data for each row after the first one.
@@ -1009,19 +991,19 @@ public class FitsBinaryTable
 	 */
 	public static String[][] getAsciiTable(BasicHDU bt) throws JPARSECException, FitsException {
 		if (!FitsIO.isAsciiTable(bt)) throw new JPARSECException("Input HDU is not an Ascii table!");
-
-		AsciiTableHDU bintable = (AsciiTableHDU) bt;
-		String[][] table = new String[bintable.getNRows()+1][bintable.getNCols()];
-		for (int j=0; j<bintable.getNCols(); j++) {
-			table[0][j] = bintable.getColumnName(j);
-		}
-		for (int j=0; j<bintable.getNRows(); j++) {
-			Object[] data = bintable.getRow(j);
-			for (int k=0; k<data.length; k++) {
-				table[j+1][k] = ((String[]) data[k])[0];
-			}
-		}
+		
+    	AsciiTableHDU bintable = (AsciiTableHDU) bt;
+    	String[][] table = new String[bintable.getNRows()+1][bintable.getNCols()];
+    	for (int j=0; j<bintable.getNCols(); j++) {
+    		table[0][j] = bintable.getColumnName(j);
+    	}
+    	for (int j=0; j<bintable.getNRows(); j++) {
+    		Object[] data = bintable.getRow(j);
+    		for (int k=0; k<data.length; k++) {
+    			table[j+1][k] = ((String[]) data[k])[0];
+    		}
+    	}
 		return table;
 	}
 }
-
+ 

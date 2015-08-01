@@ -53,21 +53,21 @@ public class MoonEphemElement implements Serializable
 	 * @param ecl True if the satellite is not illuminated.
 	 * @param ocl True if the satellite is oculted.
 	 * @param tran True is the satellite is transiting as seen by the
-	 *		observer.
+	 *        observer.
 	 * @param shadow_transiting True if the shadow is transiting.
 	 * @param inf True if z is lower than 0.0.
 	 * @param x X position in units of equatorial radii respect to planet and
-	 *		the sky plane.
+	 *        the sky plane.
 	 * @param y Y position in units of equatorial radii respect to planet and
-	 *		the sky plane.
+	 *        the sky plane.
 	 * @param z Z position in units of equatorial radii respect to planet and
-	 *		the sky plane.
+	 *        the sky plane.
 	 * @param x_sun X position in units of equatorial radii respect to Sun and
-	 *		the sky plane.
+	 *        the sky plane.
 	 * @param y_sun Y position in units of equatorial radii respect to Sun and
-	 *		the sky plane.
+	 *        the sky plane.
 	 * @param z_sun Z position in units of equatorial radii respect to Sun and
-	 *		the sky plane.
+	 *        the sky plane.
 	 */
 	public MoonEphemElement(String nom, double ra, double dec, double dist, double dist_sun, double azi, double ele,
 			float ill, float elo, boolean ecl, boolean ocl, boolean tran, boolean shadow_transiting,
@@ -102,6 +102,29 @@ public class MoonEphemElement implements Serializable
 	public MoonEphemElement()
 	{
 		name = "";
+		rightAscension = 0.0;
+		declination = 0.0;
+		distance = 0.0;
+		azimuth = 0.0;
+		elevation = 0.0;
+		eclipsed = false;
+		occulted = false;
+		transiting = false;
+		inferior = false;
+		xPosition = 0.0;
+		yPosition = 0.0;
+		zPosition = 0.0;
+		xPositionFromSun = 0.0;
+		yPositionFromSun = 0.0;
+		zPositionFromSun = 0.0;
+		phase = 0.0f;
+		elongation = 0.0f;
+		magnitude = 0.0f;
+		angularRadius = 0.0f;
+		heliocentricEclipticLongitude = 0.0;
+		heliocentricEclipticLatitude = 0.0;
+		phaseAngle = 0.0f;
+		paralacticAngle = 0.0f;
 		mutualPhenomena = "";
 	}
 
@@ -339,9 +362,9 @@ public class MoonEphemElement implements Serializable
 	/**
 	 * To clone the object.
 	 */
-	@Override
 	public MoonEphemElement clone()
 	{
+		if (this == null) return null;
 		MoonEphemElement moon = new MoonEphemElement();
 		moon.rightAscension = this.rightAscension;
 		moon.name = this.name;
@@ -380,118 +403,60 @@ public class MoonEphemElement implements Serializable
 		moon.zPositionFromSun = this.zPositionFromSun;
 		return moon;
 	}
-
 	/**
 	 * Return true if the object is equals to another moon
 	 * ephem object.
 	 */
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (!(o instanceof MoonEphemElement)) return false;
+	public boolean equals(Object m)
+	{
+		if (m == null) {
+			if (this == null) return true;
+			return false;
+		}
+		if (this == null) {
+			return false;
+		}
+		boolean equals = true;
+		MoonEphemElement moon = (MoonEphemElement) m;
+		if (moon.rightAscension != this.rightAscension) equals = false;
+		if (!moon.name.equals(this.name)) equals = false;
+		if (moon.declination != this.declination) equals = false;
+		if (moon.distance != this.distance) equals = false;
+		if (moon.azimuth != this.azimuth) equals = false;
+		if (moon.angularRadius != this.angularRadius) equals = false;
+		if (moon.brightLimbAngle != this.brightLimbAngle) equals = false;
+		if (moon.distanceFromSun != this.distanceFromSun) equals = false;
+		if (moon.eclipsed != this.eclipsed) equals = false;
+		if (moon.elevation != this.elevation) equals = false;
+		if (moon.elongation != this.elongation) equals = false;
+		if (moon.heliocentricEclipticLatitude != this.heliocentricEclipticLatitude) equals = false;
+		if (moon.heliocentricEclipticLongitude != this.heliocentricEclipticLongitude) equals = false;
+		if (moon.inferior != this.inferior) equals = false;
+		if (moon.longitudeOfCentralMeridian != this.longitudeOfCentralMeridian) equals = false;
+		if (moon.magnitude != this.magnitude) equals = false;
+		if (moon.northPoleDEC != this.northPoleDEC) equals = false;
+		if (moon.northPoleRA != this.northPoleRA) equals = false;
+		if (moon.occulted != this.occulted) equals = false;
+		if (moon.paralacticAngle != this.paralacticAngle) equals = false;
+		if (moon.phase != this.phase) equals = false;
+		if (moon.phaseAngle != this.phaseAngle) equals = false;
+		if (moon.mutualPhenomena != this.mutualPhenomena) equals = false;
+		if (moon.positionAngleOfAxis != this.positionAngleOfAxis) equals = false;
+		if (moon.positionAngleOfPole != this.positionAngleOfPole) equals = false;
+		if (moon.shadowTransiting != this.shadowTransiting) equals = false;
+		if (moon.subsolarLatitude != this.subsolarLatitude) equals = false;
+		if (moon.subsolarLongitude != this.subsolarLongitude) equals = false;
+		if (moon.transiting != this.transiting) equals = false;
+		if (moon.xPosition != this.xPosition) equals = false;
+		if (moon.xPositionFromSun != this.xPositionFromSun) equals = false;
+		if (moon.yPosition != this.yPosition) equals = false;
+		if (moon.yPositionFromSun != this.yPositionFromSun) equals = false;
+		if (moon.zPosition != this.zPosition) equals = false;
+		if (moon.zPositionFromSun != this.zPositionFromSun) equals = false;
 
-		MoonEphemElement that = (MoonEphemElement) o;
-
-		if (Double.compare(that.rightAscension, rightAscension) != 0) return false;
-		if (Double.compare(that.declination, declination) != 0) return false;
-		if (Double.compare(that.distance, distance) != 0) return false;
-		if (Double.compare(that.distanceFromSun, distanceFromSun) != 0) return false;
-		if (Float.compare(that.angularRadius, angularRadius) != 0) return false;
-		if (Double.compare(that.azimuth, azimuth) != 0) return false;
-		if (Double.compare(that.elevation, elevation) != 0) return false;
-		if (Float.compare(that.elongation, elongation) != 0) return false;
-		if (Float.compare(that.magnitude, magnitude) != 0) return false;
-		if (Float.compare(that.phase, phase) != 0) return false;
-		if (eclipsed != that.eclipsed) return false;
-		if (shadowTransiting != that.shadowTransiting) return false;
-		if (occulted != that.occulted) return false;
-		if (transiting != that.transiting) return false;
-		if (inferior != that.inferior) return false;
-		if (Double.compare(that.xPosition, xPosition) != 0) return false;
-		if (Double.compare(that.yPosition, yPosition) != 0) return false;
-		if (Double.compare(that.zPosition, zPosition) != 0) return false;
-		if (Double.compare(that.xPositionFromSun, xPositionFromSun) != 0) return false;
-		if (Double.compare(that.yPositionFromSun, yPositionFromSun) != 0) return false;
-		if (Double.compare(that.zPositionFromSun, zPositionFromSun) != 0) return false;
-		if (Double.compare(that.positionAngleOfAxis, positionAngleOfAxis) != 0) return false;
-		if (Double.compare(that.positionAngleOfPole, positionAngleOfPole) != 0) return false;
-		if (Double.compare(that.longitudeOfCentralMeridian, longitudeOfCentralMeridian) != 0) return false;
-		if (Float.compare(that.brightLimbAngle, brightLimbAngle) != 0) return false;
-		if (Double.compare(that.subsolarLatitude, subsolarLatitude) != 0) return false;
-		if (Double.compare(that.subsolarLongitude, subsolarLongitude) != 0) return false;
-		if (Double.compare(that.northPoleRA, northPoleRA) != 0) return false;
-		if (Double.compare(that.northPoleDEC, northPoleDEC) != 0) return false;
-		if (Double.compare(that.heliocentricEclipticLongitude, heliocentricEclipticLongitude) != 0) return false;
-		if (Double.compare(that.heliocentricEclipticLatitude, heliocentricEclipticLatitude) != 0) return false;
-		if (Float.compare(that.phaseAngle, phaseAngle) != 0) return false;
-		if (Float.compare(that.paralacticAngle, paralacticAngle) != 0) return false;
-		if (name != null ? !name.equals(that.name) : that.name != null) return false;
-		return !(mutualPhenomena != null ? !mutualPhenomena.equals(that.mutualPhenomena) : that.mutualPhenomena != null);
+		return equals;
 	}
-
-	@Override
-	public int hashCode() {
-		int result;
-		long temp;
-		result = name != null ? name.hashCode() : 0;
-		temp = Double.doubleToLongBits(rightAscension);
-		result = 31 * result + (int) (temp ^ (temp >>> 32));
-		temp = Double.doubleToLongBits(declination);
-		result = 31 * result + (int) (temp ^ (temp >>> 32));
-		temp = Double.doubleToLongBits(distance);
-		result = 31 * result + (int) (temp ^ (temp >>> 32));
-		temp = Double.doubleToLongBits(distanceFromSun);
-		result = 31 * result + (int) (temp ^ (temp >>> 32));
-		result = 31 * result + (angularRadius != +0.0f ? Float.floatToIntBits(angularRadius) : 0);
-		temp = Double.doubleToLongBits(azimuth);
-		result = 31 * result + (int) (temp ^ (temp >>> 32));
-		temp = Double.doubleToLongBits(elevation);
-		result = 31 * result + (int) (temp ^ (temp >>> 32));
-		result = 31 * result + (elongation != +0.0f ? Float.floatToIntBits(elongation) : 0);
-		result = 31 * result + (magnitude != +0.0f ? Float.floatToIntBits(magnitude) : 0);
-		result = 31 * result + (phase != +0.0f ? Float.floatToIntBits(phase) : 0);
-		result = 31 * result + (eclipsed ? 1 : 0);
-		result = 31 * result + (shadowTransiting ? 1 : 0);
-		result = 31 * result + (occulted ? 1 : 0);
-		result = 31 * result + (transiting ? 1 : 0);
-		result = 31 * result + (inferior ? 1 : 0);
-		temp = Double.doubleToLongBits(xPosition);
-		result = 31 * result + (int) (temp ^ (temp >>> 32));
-		temp = Double.doubleToLongBits(yPosition);
-		result = 31 * result + (int) (temp ^ (temp >>> 32));
-		temp = Double.doubleToLongBits(zPosition);
-		result = 31 * result + (int) (temp ^ (temp >>> 32));
-		temp = Double.doubleToLongBits(xPositionFromSun);
-		result = 31 * result + (int) (temp ^ (temp >>> 32));
-		temp = Double.doubleToLongBits(yPositionFromSun);
-		result = 31 * result + (int) (temp ^ (temp >>> 32));
-		temp = Double.doubleToLongBits(zPositionFromSun);
-		result = 31 * result + (int) (temp ^ (temp >>> 32));
-		result = 31 * result + (mutualPhenomena != null ? mutualPhenomena.hashCode() : 0);
-		temp = Double.doubleToLongBits(positionAngleOfAxis);
-		result = 31 * result + (int) (temp ^ (temp >>> 32));
-		temp = Double.doubleToLongBits(positionAngleOfPole);
-		result = 31 * result + (int) (temp ^ (temp >>> 32));
-		temp = Double.doubleToLongBits(longitudeOfCentralMeridian);
-		result = 31 * result + (int) (temp ^ (temp >>> 32));
-		result = 31 * result + (brightLimbAngle != +0.0f ? Float.floatToIntBits(brightLimbAngle) : 0);
-		temp = Double.doubleToLongBits(subsolarLatitude);
-		result = 31 * result + (int) (temp ^ (temp >>> 32));
-		temp = Double.doubleToLongBits(subsolarLongitude);
-		result = 31 * result + (int) (temp ^ (temp >>> 32));
-		temp = Double.doubleToLongBits(northPoleRA);
-		result = 31 * result + (int) (temp ^ (temp >>> 32));
-		temp = Double.doubleToLongBits(northPoleDEC);
-		result = 31 * result + (int) (temp ^ (temp >>> 32));
-		temp = Double.doubleToLongBits(heliocentricEclipticLongitude);
-		result = 31 * result + (int) (temp ^ (temp >>> 32));
-		temp = Double.doubleToLongBits(heliocentricEclipticLatitude);
-		result = 31 * result + (int) (temp ^ (temp >>> 32));
-		result = 31 * result + (phaseAngle != +0.0f ? Float.floatToIntBits(phaseAngle) : 0);
-		result = 31 * result + (paralacticAngle != +0.0f ? Float.floatToIntBits(paralacticAngle) : 0);
-		return result;
-	}
-
+	
 	/**
 	 * Retrieves the location of this object in the equatorial
 	 * system. Radius vector is set to unity in case distance is 0.

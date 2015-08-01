@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- *
+ * 
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *
+ *  
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- *
+ * 
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */
+ */					
 package jparsec.math;
 
 import jparsec.ephem.Functions;
@@ -28,24 +28,24 @@ import jparsec.ephem.Functions;
  * Memory consumption is low, about 7 kB per trigonometric table, and speed is
  * several times better. Some methods comes from the FastMath library by Bill Rossi,
  * integrated in Apache Commons Math.
- *
+ * 
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
-public class FastMath
+public class FastMath 
 {
 	// private constructor so that this class cannot be instantiated.
 	private FastMath() {}
-
+	
 	// The value of N cannot be too high in old computers due to memory limitations
 	private static int N = 3600; // 0.1 degree precision
 	private static float[] sin = null;
 	private static float[] tan = null;
 	private static float[] asin = null;
-	protected static final double PI2 = Constant.TWO_PI;
-	protected static double STEP = PI2 / N, STEP_INVERSE = 1.0 / STEP;
+	private static final double PI2 = Constant.TWO_PI;
+	private static double STEP = PI2 / N, STEP_INVERSE = 1.0 / STEP;
 	private static int A_N = N * 10; // 0.01 degree precision
-	protected static double A_STEP = 1.0 / A_N;
+	private static double A_STEP = 1.0 / A_N;
 	private static double PI3_OVER_2 = 3.0 * Constant.PI_OVER_TWO;
 	private static double pow10[] = null;
 	private static int N_4 = N + N / 4;
@@ -61,7 +61,7 @@ public class FastMath
 	 * Set to true to use exact mode, with no speed optimization. Default is false.
 	 */
 	public static boolean EXACT_MODE = false;
-
+	
 	/** Exponential evaluated at integer values,
      * exp(x) =  expIntTableA[x + 750] + expIntTableB[x+750].
      */
@@ -90,7 +90,7 @@ public class FastMath
 
     /** Factorial table, for Taylor series expansions. */
     private static final double FACT[] = new double[20];
-
+    
 	/**
 	 * Initializes the cache for sin and cos and the rest.
 	 */
@@ -111,7 +111,7 @@ public class FastMath
 			double aval = (double) i * A_STEP;
 			asin[i] = (float) Math.asin(aval);
 		}
-
+	
 		pow10 = new double[634];
 		for (int i=0; i<pow10.length;i++)
 		{
@@ -124,7 +124,7 @@ public class FastMath
         for (i = 1; i < FACT.length; i++) {
             FACT[i] = FACT[i-1] * i;
         }
-
+        
         double tmp[] = new double[2];
         double recip[] = new double[2];
 
@@ -141,7 +141,7 @@ public class FastMath
                 EXP_INT_TABLE_B[750-i] = recip[1];
             }
         }
-
+        
         // Populate expFracTable
         for (i = 0; i < EXP_FRAC_TABLE_A.length; i++) {
             slowexp(i/1024.0, tmp);
@@ -149,13 +149,13 @@ public class FastMath
             EXP_FRAC_TABLE_B[i] = tmp[1];
         }
 	}
-
+	
 	/**
 	 * Sets the maximum number of angles to calculate.
 	 * Default value is 3600, producing errors in the sin/cos
-	 * values of around 4E-7 if {@linkplain #ACCURATE_MODE} is true.
+	 * values of around 4E-7 if {@linkplain #ACCURATE_MODE} is true. 
 	 * The initialization of the
-	 * variables sin and cos is also done when calling this
+	 * variables sin and cos is also done when calling this 
 	 * method.
 	 * @param n The number of angles.
 	 */
@@ -175,7 +175,7 @@ public class FastMath
 	public static int getMaximumNumberOfAngles() {
 		return N;
 	}
-
+	
 	/**
 	 * Returns the resolution of the calculations,
 	 * defined as the number of calculation angles
@@ -185,7 +185,7 @@ public class FastMath
 	public static double getResolution() {
 		return STEP;
 	}
-
+	
 	/**
 	 * Calculates the sine of the argument.
 	 * @param x Argument.
@@ -194,18 +194,18 @@ public class FastMath
 	public static double sin(double x)
 	{
 		if (EXACT_MODE) return Math.sin(x);
-
+		
 		if (sin == null) FastMath.initialize();
 		if (x < 0 || x > PI2)
 			x = Functions.normalizeRadians(x);
-
+		
 		if (!ACCURATE_MODE) return sin[(int) (0.5 + x * STEP_INVERSE)];
 		double di = x * STEP_INVERSE;
 		int i = (int) di;
 		if (i == di) return sin[i];
 		return sin[i] + (sin[1 + i] - sin[i]) * (di - i);
 	}
-
+	
 	/**
 	 * Calculates the cosine of the argument.
 	 * @param x Argument.
@@ -214,11 +214,11 @@ public class FastMath
 	public static double cos(double x)
 	{
 		if (EXACT_MODE) return Math.cos(x);
-
+		
 		if (sin == null) FastMath.initialize();
 		if (x < 0 || x > PI2)
 			x = Functions.normalizeRadians(x);
-
+		
 		double di = N_4 - x * STEP_INVERSE;
 		if (di > N) di -= N;
 		if (!ACCURATE_MODE) return sin[(int) (0.5 + di)];
@@ -226,7 +226,7 @@ public class FastMath
 		if (i == di) return sin[i];
 		return sin[i] + (sin[1 + i] - sin[i]) * (di - i);
 	}
-
+	
 	/**
 	 * Computes the sine and cosine of the argument in one call.
 	 * @param x The argument.
@@ -241,11 +241,11 @@ public class FastMath
 			sincos[1] = Math.cos(x);
 			return;
 		}
-
+		
 		if (sin == null) FastMath.initialize();
 		if (x < 0 || x > PI2)
 			x = Functions.normalizeRadians(x);
-
+		
 		double di = x * STEP_INVERSE;
 		if (fast || !ACCURATE_MODE) {
 			sincos[0] = sin[(int) (0.5 + di)];
@@ -282,20 +282,20 @@ public class FastMath
 	public static double tan(double x)
 	{
 		if (EXACT_MODE) return Math.tan(x);
-
+		
 		if (tan == null) FastMath.initialize();
 		if (x < 0 || x > PI2)
 			x = Functions.normalizeRadians(x);
 		if (Math.abs(Constant.PI_OVER_TWO-x) < 0.01 || Math.abs(PI3_OVER_2-x) < 0.01) return Math.tan(x);
-
+		
 		if (!ACCURATE_MODE) return tan[(int) (0.5 + x * STEP_INVERSE)];
-
+		
 		double di = x * STEP_INVERSE;
 		int i = (int) di;
 		if (i == N) return tan[i];
 		return tan[i] + (tan[1 + i] - tan[i]) * (di - i);
 	}
-
+	
 	/**
 	 * Calculates the sine of the argument.
 	 * @param x Argument.
@@ -324,12 +324,12 @@ public class FastMath
 	{
 		return (float) tan(x);
 	}
-
+	
 	/**
 	 * Calculates the arc-sine of the argument.
 	 * Accuracy similar or better compared to sin and cos
 	 * functions except for arguments very close to 1 or -1, where
-	 * errors up to 0.1 &deg; can be reached. 33x faster than intrinsic.
+	 * errors up to 0.1º can be reached. 33x faster than intrinsic.
 	 * @param x Argument.
 	 * @return Its arc-sine.
 	 */
@@ -337,13 +337,13 @@ public class FastMath
 	{
 		if (EXACT_MODE) return Math.asin(x);
 		if (x == 0) return x;
-
+		
 		double s = 1;
 		if (x < 0) {
 			x = Math.abs(x);
 			s = -1;
 		}
-
+		
 		if (asin == null) FastMath.initialize();
 		if (!ACCURATE_MODE) return s*asin[(int) (0.5 + x * A_N)];
 
@@ -357,7 +357,7 @@ public class FastMath
 	 * Calculates the arc-cosine of the argument.
 	 * Accuracy similar or better compared to sin and cos
 	 * functions except for arguments very close to 1 or -1, where
-	 * errors up to 0.1 &deg; can be reached. 33x faster than intrinsic.
+	 * errors up to 0.1º can be reached. 33x faster than intrinsic.
 	 * @param x Argument.
 	 * @return Its arc-cosine.
 	 */
@@ -389,7 +389,7 @@ public class FastMath
 		if (x < 20) {
 			return val >> x;
 		} else {
-			return (int) (val / Math.pow(2.0, x));
+			return (int) (val / Math.pow(2.0, x));			
 		}
 	}
 
@@ -416,13 +416,13 @@ public class FastMath
 	 * For angles between +/- 45 deg this function uses
 	 * {@linkplain #atan(double)}, with an accuracy 3 times
 	 * better and only slightly worse performance.
-	 * @param y Y value.
+	 * @param y Y value. 
 	 * @param x X value.
 	 * @return The atan2.
 	 */
 	public static double atan2(double y, double x) {
 		if (EXACT_MODE) return Math.atan2(y, x);
-
+		
 		if (Math.abs(y) <= Math.abs(x)) {
 			if (y >= 0.0 && x <= 0.0) {
 				if (x == 0.0 && y == 0.0) return 0;
@@ -432,10 +432,10 @@ public class FastMath
 			if (y < 0.0 && x <= 0.0) {
 				if (x == 0) return -Constant.PI_OVER_TWO;
 				return -Math.PI + FastMath.atan(y/x);
-			}
+			}		
 			return FastMath.atan(y/x);
 		}
-
+		
         if ( x == 0.0 )
         {
     		if (x == 0.0 && y == 0.0) return 0;
@@ -467,7 +467,7 @@ public class FastMath
 	 * Function created by Simon Hosie, see http://www.dsprelated.com/showmessage/10922/1.php.
 	 * <P>
 	 * In case {@linkplain #ACCURATE_MODE} is true more terms will be used, with a precision
-	 * up to 8E-5 radians (0.005 deg), but calculations will be slightly slower. This mode is
+	 * up to 8E-5 radians (0.005 deg), but calculations will be slightly slower. This mode is 
 	 * still 4.5 times faster than intrinsic Math.atan2.
 	 * @param y Y value.
 	 * @param x X value.
@@ -475,7 +475,7 @@ public class FastMath
 	 */
 	public static double atan2_accurate(double y, double x) {
 		if (EXACT_MODE) return Math.atan2(y, x);
-
+		
         if ( x == 0.0 )
         {
                 if ( y > 0.0 ) return Constant.PI_OVER_TWO;
@@ -487,7 +487,7 @@ public class FastMath
                 if ( x >= 0.0 ) return 0;
                 if ( x < 0.0 ) return Math.PI;
         }
-
+        
 		double result = 0;
 		double y2;
 
@@ -555,7 +555,7 @@ public class FastMath
 				x = 64 * x + y2;
 			}
 		}
-
+		
 		/* linear interpolation of the remaining 64-ant */
 		return result + 0.99483995637409152 * y / x;
 	}
@@ -570,10 +570,10 @@ public class FastMath
 		if (n > 0) return 1;
 		return -1;
 	}
-
+	
 
 	// http://martin.ankerl.com/2007/10/04/optimized-pow-approximation-for-java-and-c-c/
-
+	
 	/**
 	 * Returns the approximate arctan of the argument. Maximum error is 0.09 deg.
 	 * 20 times faster than intrinsic function. For x outside -1 to 1 the
@@ -584,24 +584,24 @@ public class FastMath
 	public static double atan(double x)
 	{
 		if (EXACT_MODE || x < -1.0 || x > 1.0) return Math.atan(x);
-
+		
 		if (x < 0.0) return Constant.PI_OVER_FOUR * x + x*(x + 1.0)*(0.2447 - 0.0663*x);
 	    return Constant.PI_OVER_FOUR * x - x*(x - 1.0)*(0.2447 + 0.0663*x);
 	}
 
 	/**
 	 * Performs fast approximate exponential function, with a maximum error
-	 * of 4%, and usually around 2%. 10 times faster than intrinsic function,
+	 * of 4%, and usually around 2%. 10 times faster than intrinsic function, 
 	 * and 3 times faster than {@linkplain #exp(double)}.
 	 * @param val The argument.
 	 * @return The exponential.
 	 */
 	public static double exp_approx(double val) {
 		if (EXACT_MODE) return Math.exp(val);
-
+		
 	    return Double.longBitsToDouble(((long) (1512775 * val + 1072632447)) << 32);
 	}
-
+	
 	// ****** METHODS FROM APACHE COMMONS MATH ******
 
     /**
@@ -662,7 +662,7 @@ public class FastMath
         /* Resplit */
         resplit(ans);
     }
-
+    
     /** Compute the reciprocal of in.  Use the following algorithm.
      *  in = c + d.
      *  want to find x + y such that x+y = 1/(c+d) and x is much
@@ -764,7 +764,7 @@ public class FastMath
         result[1] = result[1] - (tmp - result[0] - zs[1]);
         result[0] = tmp;
     }
-
+    
     /** Compute exp(x) - 1
      * @param x number to compute shifted exponential
      * @return exp(x) - 1
@@ -964,7 +964,7 @@ public class FastMath
 
         return ys[0] + ys[1];
     }
-
+	
 	/**
      * Exponential function. Just slightly faster than intrinsic exp.
      *
@@ -989,7 +989,7 @@ public class FastMath
 		//if (EXACT_MODE) return Math.exp(val);
         return exp(val, 0.0, null);
 	}
-
+	
     /**
      * Internal helper method for exponential function.
      * @param x original argument of the exponential function
@@ -1149,7 +1149,7 @@ public class FastMath
 
         return ys[0] + ys[1];
     }
-
+    
     /** Add two numbers in split form.
      * @param a first term of addition
      * @param b second term of addition
@@ -1161,10 +1161,10 @@ public class FastMath
 
         resplit(ans);
     }
-
+    
 	/**
-	 * Performs fast pow function. When y is integer and below +/- 6 output is exact
-	 * and 6 times faster than Math.pow. When y is integer and x = 10 the function
+	 * Performs fast pow function. When y is integer and below +/- 6 output is exact 
+	 * and 6 times faster than Math.pow. When y is integer and x = 10 the function 
 	 * {@linkplain #multiplyBy10ToTheX(double, int)} is called, otherwise Math.pow is called.
 	 * @param x Base.
 	 * @param y Exponent.
@@ -1186,8 +1186,8 @@ public class FastMath
 			if (y == -4) return 1.0/(z*z);
 			if (y == -5) return 1.0/(z*z*x);
 		}
-
-		//if (EXACT_MODE)
+		
+		//if (EXACT_MODE) 
 			return Math.pow(x, y);
 
 	}
@@ -1554,16 +1554,16 @@ public class FastMath
 	 */
 	public static double sqrt(double a) {
 		if (ACCURATE_MODE || EXACT_MODE) return Math.sqrt(a);
-
+		
 	    long x = Double.doubleToLongBits(a) >> 32;
 	    double y = Double.longBitsToDouble((x + 1072632448) << 31);
-
+	 
 	    // repeat the following line for more precision, but uncommenting
 	    // will be as fast as intrinsic ...
 	    // y = (y + a / y) * 0.5;
 	    return y;
 	}
-
+	
 	   /**
      * Return the exponent of a double number, removing the bias.
      * <p>
@@ -1757,7 +1757,7 @@ public class FastMath
         }
 
     }
-
+    
     /**
      * Absolute value.
      * @param x number from which absolute value is requested
@@ -1861,5 +1861,446 @@ public class FastMath
 		if (n < 9) return (Integer.parseInt(s) * pow10[326-n]) * pow10[exp+325];
 
 		return (Long.parseLong(s) * pow10[326-n]) * pow10[exp+325];
+	}
+	
+	/**
+	 * Test program.
+	 * @param args Unused
+	 */
+	public static void main(String args[])
+	{
+		System.out.println("FastMath test");
+
+		double a = 0.123;
+		System.out.println(Math.cos(a)+"/"+FastMath.cos(a));
+		
+		double totalJava = 0, totalJPARSEC = 0;
+		
+		//ACCURATE_MODE = false;
+		long t0 = System.currentTimeMillis();
+		FastMath.initialize();
+		long t1 = System.currentTimeMillis();
+		double dt = (t1-t0)/1000.0;
+		System.out.println("Initialize needs "+dt+" seconds");
+		int n = 100000000;
+		t0 = System.currentTimeMillis();
+		double y = 0;
+		for (int i=1; i<=n; i++)
+		{
+			double x = PI2 / i;
+			y += Math.sin(x);
+		}
+		t1 = System.currentTimeMillis();
+		dt = (t1-t0)/1000.0;
+		System.out.println("JAVA calculates "+n+" sines in "+dt+" seconds.");
+		totalJava += dt;
+		y = 0;
+		t0 = System.currentTimeMillis();
+		for (int i=1; i<=n; i++)
+		{
+			double x = PI2 / i;
+			y += FastMath.sin(x);
+		}
+		t1 = System.currentTimeMillis();
+		dt = (t1-t0)/1000.0;
+		System.out.println("FastMath calculates "+n+" sines in "+dt+" seconds.");
+		totalJPARSEC += dt;
+		double maxError = -1.0;
+		for (int i=1; i<=n; i++)
+		{
+			double x = PI2 / i + STEP * 0.5; // to get max errors
+			double x1 = Math.sin(x);
+			double x2 = FastMath.sin(x);
+			double dif = Math.abs(x1-x2);
+			if (dif > maxError || maxError < 0)
+				maxError = dif;
+		}
+		System.out.println("Maximum error found "+maxError);
+
+		t0 = System.currentTimeMillis();
+		y = 0;
+		for (int i=1; i<=n; i++)
+		{
+			double x = PI2 / i;
+			y += Math.cos(x);
+		}
+		t1 = System.currentTimeMillis();
+		dt = (t1-t0)/1000.0;
+		System.out.println("JAVA calculates "+n+" cosines in "+dt+" seconds.");
+		totalJava += dt;
+		y = 0;
+		t0 = System.currentTimeMillis();
+		for (int i=1; i<=n; i++)
+		{
+			double x = PI2 / i;
+			y += FastMath.cos(x);
+		}
+		t1 = System.currentTimeMillis();
+		dt = (t1-t0)/1000.0;
+		System.out.println("FastMath calculates "+n+" cosines in "+dt+" seconds.");
+		totalJPARSEC += dt;
+		maxError = -1.0;
+		for (int i=1; i<=n; i++)
+		{
+			double x = PI2 / i + STEP * 0.5; // to get max errors
+			double x1 = Math.cos(x);
+			double x2 = FastMath.cos(x);
+			double dif = Math.abs(x1-x2);
+			if (dif > maxError || maxError < 0)
+				maxError = dif;
+		}
+		System.out.println("Maximum error found "+maxError);
+
+		t0 = System.currentTimeMillis();
+		y = 0;
+		n /= 10;
+		double step = 2.0 / (double) n;
+		for (double i=-1; i<=1; i=i+step)
+		{
+			y += Math.asin(i);
+		}
+		t1 = System.currentTimeMillis();
+		dt = (t1-t0)/1000.0;
+		System.out.println("JAVA calculates "+n+" arc-sines in "+dt+" seconds.");
+		totalJava += dt;
+		y = 0;
+		t0 = System.currentTimeMillis();
+		for (double i=-1; i<=1; i=i+step)
+		{
+			y += FastMath.asin(i);
+		}
+		t1 = System.currentTimeMillis();
+		dt = (t1-t0)/1000.0;
+		System.out.println("FastMath calculates "+n+" arc-sines in "+dt+" seconds.");
+		totalJPARSEC += dt;
+		maxError = -1.0;
+		for (double i=-1; i<=1; i=i+step)
+		{
+			double x = i + A_STEP * 0.5; // to get max errors
+			double x1 = Math.asin(x);
+			double x2 = FastMath.asin(x);
+			double dif = Math.abs(x1-x2);
+			if (dif > maxError || maxError < 0)
+				maxError = dif;
+		}
+		System.out.println("Maximum error found "+maxError);
+
+		t0 = System.currentTimeMillis();
+		y = 0;
+		for (double i=-1; i<=1; i=i+step)
+		{
+			y += Math.acos(i);
+		}
+		t1 = System.currentTimeMillis();
+		dt = (t1-t0)/1000.0;
+		System.out.println("JAVA calculates "+n+" arc-cosines in "+dt+" seconds.");
+		totalJava += dt;
+		y = 0;
+		t0 = System.currentTimeMillis();
+		for (double i=-1; i<=1; i=i+step)
+		{
+			y += FastMath.acos(i);
+		}
+		t1 = System.currentTimeMillis();
+		dt = (t1-t0)/1000.0;
+		System.out.println("FastMath calculates "+n+" arc-cosines in "+dt+" seconds.");
+		totalJPARSEC += dt;
+		maxError = -1.0;
+		for (double i=-1; i<=1; i=i+step)
+		{
+			double x = i + A_STEP * 0.5; // to get max errors
+			double x1 = Math.acos(x);
+			double x2 = FastMath.acos(x);
+			double dif = Math.abs(x1-x2);
+			if (dif > maxError || maxError < 0)
+				maxError = dif;
+		}
+		System.out.println("Maximum error found "+maxError);
+
+		double z = 0;
+		t0 = System.currentTimeMillis();
+		for (y=-1000; y<=1000; y=y+0.0001) {
+			z += Math.atan2(y, 1);
+		}
+		t1 = System.currentTimeMillis();
+		dt = (t1-t0)/1000.0;
+		System.out.println("Java calculates 20000000 atan2s in "+dt+" seconds.");
+		totalJava += dt;
+		t0 = System.currentTimeMillis();
+		for (y=-1000; y<=1000; y=y+0.0001) {
+			z += FastMath.atan2(y, 1);
+		}
+		t1 = System.currentTimeMillis();
+		dt = (t1-t0)/1000.0;
+		System.out.println("FastMath calculates 20000000 atan2s in "+dt+" seconds.");
+		totalJPARSEC += dt;
+		maxError = -1;
+		for (y=-1000; y<=1000; y=y+0.0001) {
+			double atan = Math.atan2(y, 1);
+			double atan1 = FastMath.atan2(y, 1);
+			if (maxError == -1 || Math.abs(atan-atan1) > maxError) maxError = Math.abs(atan-atan1);
+		}
+		System.out.println("Maximum error found "+maxError);		
+		
+		z = 0;
+		t0 = System.currentTimeMillis();
+		for (y=-1000; y<=1000; y=y+0.0001) {
+			z += Math.atan2(y, 1);
+		}
+		t1 = System.currentTimeMillis();
+		dt = (t1-t0)/1000.0;
+		System.out.println("Java calculates 20000000 atan2s in "+dt+" seconds.");
+		totalJava += dt;
+		t0 = System.currentTimeMillis();
+		for (y=-1000; y<=1000; y=y+0.0001) {
+			z += FastMath.atan2_accurate(y, 1);
+		}
+		t1 = System.currentTimeMillis();
+		dt = (t1-t0)/1000.0;
+		System.out.println("FastMath calculates 20000000 atan2s in "+dt+" seconds using the 'accurate' version of the function.");
+		totalJPARSEC += dt;
+		maxError = -1;
+		for (y=-1000; y<=1000; y=y+0.0001) {
+			double atan = Math.atan2(y, 1);
+			double atan1 = FastMath.atan2_accurate(y, 1);
+			if (maxError == -1 || Math.abs(atan-atan1) > maxError) maxError = Math.abs(atan-atan1);
+		}
+		System.out.println("Maximum error found "+maxError);		
+		
+		z = 0;
+		t0 = System.currentTimeMillis();
+		for (y=-1; y<=1; y=y+0.0000001) {
+			z += Math.atan(y);
+		}
+		t1 = System.currentTimeMillis();
+		dt = (t1-t0)/1000.0;
+		System.out.println("Java calculates 20000000 atans in "+dt+" seconds.");
+		totalJava += dt;
+		t0 = System.currentTimeMillis();
+		for (y=-1; y<=1; y=y+0.0000001) {
+			z += FastMath.atan(y);
+		}
+		t1 = System.currentTimeMillis();
+		dt = (t1-t0)/1000.0;
+		System.out.println("FastMath calculates 20000000 atans in "+dt+" seconds.");
+		totalJPARSEC += dt;
+		maxError = -1;
+		for (y=-1; y<=1; y=y+0.0000001) {
+			double atan = Math.atan(y);
+			double atan1 = FastMath.atan(y);
+			if (maxError == -1 || Math.abs(atan-atan1) > maxError) maxError = Math.abs(atan-atan1);
+		}
+		System.out.println("Maximum error found "+maxError);
+
+		z = 0;
+		t0 = System.currentTimeMillis();
+		for (y=2; y<=100; y=y+0.0001) {
+			z += Math.log(y);
+		}
+		t1 = System.currentTimeMillis();
+		dt = (t1-t0)/1000.0;
+		System.out.println("Java calculates 1000000 log in "+dt+" seconds.");
+		totalJava += dt;
+		t0 = System.currentTimeMillis();
+		for (y=2; y<=100; y=y+0.0001) {
+			z += FastMath.log(y);
+		}
+		t1 = System.currentTimeMillis();
+		dt = (t1-t0)/1000.0;
+		System.out.println("FastMath calculates 1000000 log in "+dt+" seconds.");
+		totalJPARSEC += dt;
+		maxError = -1;
+		for (y=2; y<=100; y=y+0.0001) {
+			double atan = Math.log(y);
+			double atan1 = FastMath.log(y);
+			if (maxError == -1 || Math.abs(atan-atan1)/atan > maxError) maxError = Math.abs(atan-atan1)/atan;
+		}
+		System.out.println("Maximum (relative) error found "+maxError);
+
+		z = 0;
+		t0 = System.currentTimeMillis();
+		for (y=-100; y<=100; y=y+0.0001) {
+			z += Math.exp(y);
+		}
+		t1 = System.currentTimeMillis();
+		dt = (t1-t0)/1000.0;
+		System.out.println("Java calculates 2000000 exp in "+dt+" seconds.");
+		totalJava += dt;
+		t0 = System.currentTimeMillis();
+		for (y=-100; y<=100; y=y+0.0001) {
+			z += FastMath.exp(y);
+		}
+		t1 = System.currentTimeMillis();
+		dt = (t1-t0)/1000.0;
+		System.out.println("FastMath calculates 2000000 exp in "+dt+" seconds.");
+		totalJPARSEC += dt;
+		maxError = -1;
+		for (y=-100; y<=100; y=y+0.0001) {
+			double atan = Math.exp(y);
+			double atan1 = FastMath.exp(y);
+			if (maxError == -1 || Math.abs(atan-atan1)/atan > maxError) maxError = Math.abs(atan-atan1)/atan;
+		}
+		System.out.println("Maximum (relative) error found "+maxError);
+		
+		z = 0;
+		t0 = System.currentTimeMillis();
+		for (y=0.1; y<=100; y=y+0.00001) {
+			z += Math.pow(y, 100-y);
+		}
+		t1 = System.currentTimeMillis();
+		dt = (t1-t0)/1000.0;
+		System.out.println("Java calculates 10000000 pows in "+dt+" seconds.");
+		totalJava += dt;
+		t0 = System.currentTimeMillis();
+		for (y=0.1; y<=100; y=y+0.00001) {
+			z += FastMath.pow(y, 100-y);
+		}
+		t1 = System.currentTimeMillis();
+		dt = (t1-t0)/1000.0;
+		System.out.println("FastMath calculates 10000000 pows in "+dt+" seconds.");
+		totalJPARSEC += dt;
+		maxError = -1;
+		for (y=0.1; y<=100; y=y+0.00001) {
+			double atan = Math.pow(y, 100-y);
+			double atan1 = FastMath.pow(y, 100-y);
+			if (maxError == -1 || Math.abs(atan-atan1)/atan > maxError) maxError = Math.abs(atan-atan1)/atan;
+		}
+		System.out.println("Maximum (relative) error found "+maxError);	
+
+		double val = 2.0;
+		double max = 1000.0;
+		z = 0;
+		t0 = System.currentTimeMillis();
+		for (y=0.1; y<=max; y=y+0.0001) {
+			z += Math.pow(y, val);
+		}
+		t1 = System.currentTimeMillis();
+		dt = (t1-t0)/1000.0;
+		System.out.println("Java calculates 10000000 pows(x, "+val+") in "+dt+" seconds.");
+		totalJava += dt;
+		t0 = System.currentTimeMillis();
+		for (y=0.1; y<=max; y=y+0.0001) {
+			z += FastMath.pow(y, val);
+		}
+		t1 = System.currentTimeMillis();
+		dt = (t1-t0)/1000.0;
+		System.out.println("FastMath calculates 10000000 pows(x, "+val+") in "+dt+" seconds.");
+		totalJPARSEC += dt;
+		maxError = -1;
+		for (y=0.1; y<=max; y=y+0.0001) {
+			double atan = Math.pow(y, val);
+			double atan1 = FastMath.pow(y, val);
+			if (maxError == -1 || Math.abs(atan-atan1)/atan > maxError) maxError = Math.abs(atan-atan1)/atan;
+		}
+		System.out.println("Maximum (relative) error found "+maxError);	
+		
+		max = 6000;
+		z = 0;
+		t0 = System.currentTimeMillis();
+		for (y=0.1; y<=max; y=y+0.0001) {
+			z += Math.sqrt(y);
+		}
+		t1 = System.currentTimeMillis();
+		dt = (t1-t0)/1000.0;
+		System.out.println("Java calculates 600000000 sqrts in "+dt+" seconds.");
+		totalJava += dt;
+		t0 = System.currentTimeMillis();
+		for (y=0.1; y<=max; y=y+0.0001) {
+			z += FastMath.sqrt(y);
+		}
+		t1 = System.currentTimeMillis();
+		dt = (t1-t0)/1000.0;
+		System.out.println("FastMath calculates 600000000 sqrts in "+dt+" seconds.");
+		totalJPARSEC += dt;
+		maxError = -1;
+		for (y=0.1; y<=max; y=y+0.0001) {
+			double atan = Math.sqrt(y);
+			double atan1 = FastMath.sqrt(y);
+			if (maxError == -1 || Math.abs(atan-atan1)/atan > maxError) maxError = Math.abs(atan-atan1)/atan;
+		}
+		System.out.println("Maximum (relative) error found "+maxError);
+		
+		max = 6;
+		z = 0;
+		t0 = System.currentTimeMillis();
+		for (y=0.1; y<=max; y=y+0.000001) {
+			z += Math.tan(y);
+		}
+		t1 = System.currentTimeMillis();
+		dt = (t1-t0)/1000.0;
+		System.out.println("Java calculates 6000000 tans in "+dt+" seconds.");
+		totalJava += dt;
+		t0 = System.currentTimeMillis();
+		for (y=0.1; y<=max; y=y+0.000001) {
+			z += FastMath.tan(y);
+		}
+		t1 = System.currentTimeMillis();
+		dt = (t1-t0)/1000.0;
+		System.out.println("FastMath calculates 6000000 tans in "+dt+" seconds.");
+		totalJPARSEC += dt;
+		maxError = -1;
+		for (y=0.1; y<=max; y=y+0.000001) {
+			double atan = Math.tan(y);
+			double atan1 = FastMath.tan(y);
+			if (maxError == -1 || Math.abs(atan-atan1)/atan > maxError) maxError = Math.abs(atan-atan1)/atan;
+		}
+		System.out.println("Maximum (relative) error found "+maxError);	
+		
+		max = 6;
+		z = 0;
+		t0 = System.currentTimeMillis();
+		for (y=0.1; y<=max; y=y+0.000001) {
+			z += Math.hypot(y, max-y);
+		}
+		t1 = System.currentTimeMillis();
+		dt = (t1-t0)/1000.0;
+		System.out.println("Java calculates 6000000 hypot in "+dt+" seconds.");
+		totalJava += dt;
+		t0 = System.currentTimeMillis();
+		for (y=0.1; y<=max; y=y+0.000001) {
+			z += FastMath.hypot(y, max-y);
+		}
+		t1 = System.currentTimeMillis();
+		dt = (t1-t0)/1000.0;
+		System.out.println("FastMath calculates 6000000 hypot in "+dt+" seconds.");
+		totalJPARSEC += dt;
+		maxError = -1;
+		for (y=0.1; y<=max; y=y+0.000001) {
+			double atan = Math.hypot(y, max-y);
+			double atan1 = FastMath.hypot(y, max-y);
+			if (maxError == -1 || Math.abs(atan-atan1)/atan > maxError) maxError = Math.abs(atan-atan1)/atan;
+		}
+		System.out.println("Maximum (relative) error found "+maxError);
+
+		
+		max = 6E5;
+		z = 0;
+		t0 = System.currentTimeMillis();
+		for (y=0.1; y<=max; y=y+0.1) {
+			z += Double.parseDouble(""+y);
+		}
+		t1 = System.currentTimeMillis();
+		dt = (t1-t0)/1000.0;
+		System.out.println("Java calculates 6000000 parseDoubles in "+dt+" seconds.");
+		totalJava += dt;
+		t0 = System.currentTimeMillis();
+		for (y=0.1; y<=max; y=y+0.1) {
+			z += FastMath.parseDouble(""+y);
+		}
+		t1 = System.currentTimeMillis();
+		dt = (t1-t0)/1000.0;
+		System.out.println("FastMath calculates 6000000 parseDoubles in "+dt+" seconds.");
+		totalJPARSEC += dt;
+		maxError = -1;
+		for (y=0.1; y<=max; y=y+0.1) {
+			double atan = Double.parseDouble(""+y);
+			double atan1 = FastMath.parseDouble(""+y);
+			if (maxError == -1 || Math.abs(atan-atan1)/atan > maxError) maxError = Math.abs(atan-atan1)/atan;
+		}
+		System.out.println("Maximum (relative) error found "+maxError);
+
+		System.out.println();
+		System.out.println("Total time (Java):    "+totalJava);
+		System.out.println("Total time (JPARSEC): "+totalJPARSEC);
 	}
 }

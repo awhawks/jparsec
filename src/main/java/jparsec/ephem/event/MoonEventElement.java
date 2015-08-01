@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- *
+ * 
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *
+ *  
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- *
+ * 
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,17 +18,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */
+ */					
 package jparsec.ephem.event;
 
-import java.io.Serializable;
-import jparsec.ephem.EphemerisElement;
-import jparsec.ephem.Target.TARGET;
-import jparsec.observer.ObserverElement;
-import jparsec.time.TimeElement;
+import jparsec.time.*;
 import jparsec.time.TimeElement.SCALE;
-import jparsec.time.TimeScale;
-import jparsec.util.JPARSECException;
+import jparsec.util.*;
+import jparsec.observer.*;
+import jparsec.ephem.*;
+import jparsec.ephem.Target.TARGET;
+
+import java.io.*;
 
 /**
  * Manages data related to satellite events.
@@ -59,7 +59,7 @@ public class MoonEventElement implements Serializable {
 	 */
 	public MoonEventElement.EVENT eventType;
 	/**
-	 * Holds details on the event. For mutual events it contains a number
+	 * Holds details on the event. For mutual events it contains a number 
 	 * with the percentage of eclipse/occultation, the date of that maximum,
 	 * and the distance between both bodies in degrees.
 	 */
@@ -86,16 +86,16 @@ public class MoonEventElement implements Serializable {
 	 * This flag is false always except when calculating natural satellites events
 	 * (mutual and non-mutual). In this case this flag will be true for those
 	 * events that are simultaneous (several events going on at the same time).
-	 * In practice, this flag is true always for non-mutual events involving two or
+	 * In practice, this flag is true always for non-mutual events involving two or 
 	 * more satellites, and also true always for mutual events (since they involve
 	 * two satellites).
 	 */
 	public boolean severalSimultaneousEvents = false;
-
+	
 	/**
 	 * The set of moon events.
 	 */
-	public enum EVENT {
+	public static enum EVENT {
 		/** ID code for an eclipse event. */
 		ECLIPSED,
 		/** Id code for an occultation event. */
@@ -109,7 +109,7 @@ public class MoonEventElement implements Serializable {
 	/**
 	 * The set of moon subevents (start and end times).
 	 */
-	public enum SUBEVENT {
+	public static enum SUBEVENT {
 		/** ID code for an event that begins. */
 		START,
 		/** Id code for an event that ends. */
@@ -117,18 +117,18 @@ public class MoonEventElement implements Serializable {
 		/** Id code for an event that begins and ends. */
 		TIME
 	};
-
+	
 	/**
 	 * Holds a description of the events.
 	 */
 	public static final String[] EVENTS = new String[] {"Eclipsed", "Occulted", "Transiting",
 		"Shadow transiting"};
-
+	
 	/**
 	 * Empty constructor.
 	 */
 	public MoonEventElement() {}
-
+	
 	/**
 	 * Constructor for a simple event.
 	 * @param jd Event time.
@@ -147,7 +147,6 @@ public class MoonEventElement implements Serializable {
 		this.visibleFromEarth = true;
 		this.subType = MoonEventElement.SUBEVENT.TIME;
 	}
-
 	/**
 	 * Full constructor.
 	 * @param jdi initial time.
@@ -168,7 +167,7 @@ public class MoonEventElement implements Serializable {
 		this.visibleFromEarth = true;
 		this.subType = MoonEventElement.SUBEVENT.TIME;
 	}
-
+	
 	/**
 	 * Transforms the event time into another time scale.
 	 * @param obs Observer object.
@@ -182,11 +181,11 @@ public class MoonEventElement implements Serializable {
 	throws JPARSECException {
 		TimeElement time = new TimeElement(this.startTime, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
 		if (!start) time = new TimeElement(this.endTime, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
-
+		
 		double out = TimeScale.getJD(time, obs, eph, timeScale);
 		return out;
 	}
-
+	
 	/**
 	 * Reports the current event to the console.
 	 * @throws JPARSECException If an error occurs.
@@ -195,13 +194,12 @@ public class MoonEventElement implements Serializable {
 	throws JPARSECException {
 		System.out.println(this.mainBody.getName()+" "+MoonEventElement.EVENTS[this.eventType.ordinal()]+" by "+this.secondaryBody.getName()+" between "+this.startTime+" and "+this.endTime+" (TDB). Details: "+this.details+".");
 	}
-
 	/**
 	 * Clones this instance.
 	 */
-    @Override
 	public MoonEventElement clone()
 	{
+		if (this == null) return null;
 		MoonEventElement e = new MoonEventElement(this.startTime, this.endTime, this.mainBody, this.secondaryBody,
 				this.eventType, this.details);
 		e.elevation = this.elevation;
@@ -210,52 +208,31 @@ public class MoonEventElement implements Serializable {
 		e.severalSimultaneousEvents = this.severalSimultaneousEvents;
 		return e;
 	}
-
 	/**
 	 * Returns wether the input Object contains the same information
 	 * as this instance.
 	 */
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof MoonEventElement)) return false;
-
-        MoonEventElement that = (MoonEventElement) o;
-
-        if (Double.compare(that.startTime, startTime) != 0) return false;
-        if (Double.compare(that.endTime, endTime) != 0) return false;
-        if (visibleFromEarth != that.visibleFromEarth) return false;
-        if (Double.compare(that.elevation, elevation) != 0) return false;
-        if (severalSimultaneousEvents != that.severalSimultaneousEvents) return false;
-        if (mainBody != that.mainBody) return false;
-        if (secondaryBody != that.secondaryBody) return false;
-        if (eventType != that.eventType) return false;
-        if (details != null ? !details.equals(that.details) : that.details != null) return false;
-
-        return subType == that.subType;
-    }
-
-    /**
-     * {@inheritDoc}
-     * @return
-     */
-    @Override
-    public int hashCode() {
-        int result;
-        long temp;
-        temp = Double.doubleToLongBits(startTime);
-        result = (int) (temp ^ (temp >>> 32));
-        temp = Double.doubleToLongBits(endTime);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        result = 31 * result + (mainBody != null ? mainBody.hashCode() : 0);
-        result = 31 * result + (secondaryBody != null ? secondaryBody.hashCode() : 0);
-        result = 31 * result + (eventType != null ? eventType.hashCode() : 0);
-        result = 31 * result + (details != null ? details.hashCode() : 0);
-        result = 31 * result + (subType != null ? subType.hashCode() : 0);
-        result = 31 * result + (visibleFromEarth ? 1 : 0);
-        temp = Double.doubleToLongBits(elevation);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        result = 31 * result + (severalSimultaneousEvents ? 1 : 0);
-        return result;
-    }
+	public boolean equals(Object e)
+	{
+		if (e == null) {
+			if (this == null) return true;
+			return false;
+		}
+		if (this == null) {
+			return false;
+		}
+		boolean equals = true;
+		MoonEventElement ee = (MoonEventElement) e;
+		if (!ee.details.equals(this.details)) equals = false;
+		if (ee.endTime != this.endTime) equals = false;
+		if (ee.elevation != this.elevation) equals = false;
+		if (ee.startTime != this.startTime) equals = false;
+		if (ee.mainBody != this.mainBody) equals = false;
+		if (ee.eventType != this.eventType) equals = false;
+		if (ee.secondaryBody != this.secondaryBody) equals = false;
+		if (ee.visibleFromEarth != this.visibleFromEarth) equals = false;
+		if (ee.subType != this.subType) equals = false;
+		if (ee.severalSimultaneousEvents != this.severalSimultaneousEvents) equals = false;
+		return equals;
+	}
 }

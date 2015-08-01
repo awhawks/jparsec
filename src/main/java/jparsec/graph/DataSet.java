@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- *
+ * 
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *
+ *  
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- *
+ * 
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */
+ */					
 package jparsec.graph;
 
 
@@ -29,16 +29,20 @@ import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.regex.Pattern;
+
+import nom.tam.util.ArrayFuncs;
+//import java.util.StringTokenizer;
+
 import jparsec.astrophysics.MeasureElement;
+import jparsec.io.ConsoleReport;
 import jparsec.io.FileIO;
 import jparsec.math.Evaluation;
 import jparsec.math.FastMath;
 import jparsec.util.JPARSECException;
-import nom.tam.util.ArrayFuncs;
 
 /**
  * A class to perform useful operations with datasets.
- *
+ * 
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -46,10 +50,10 @@ public class DataSet
 {
 	// private constructor so that this class cannot be instantiated.
 	private DataSet() {}
-
+	
 	/**
 	 * Creates an xy dataset of values from a given function.
-	 *
+	 * 
 	 * @param function Function f(x) as it is written in Java.
 	 * @param x0 Initial x value of the dataset.
 	 * @param xf Final x value.
@@ -85,7 +89,7 @@ public class DataSet
 	 * Creates an array of values by applying a math operation to all the
 	 * values. For example, a function "5*x" creates a new array with the same
 	 * values multiplied by 5.
-	 *
+	 * 
 	 * @param function Function f(x) as it is written in Java.
 	 * @param val Array of values.
 	 * @return An array with the result of the operation applied to each value
@@ -111,7 +115,7 @@ public class DataSet
 	/**
 	 * Obtains minimum value of an array.
 	 * Possible NaN values are ignored.
-	 *
+	 * 
 	 * @param v Array.
 	 * @return Minimum value.
 	 * @throws JPARSECException If an error occurs.
@@ -120,7 +124,7 @@ public class DataSet
 	throws JPARSECException {
 		if (v == null) throw new JPARSECException("no points in the input data.");
 		if (v.length < 1) throw new JPARSECException("no points in the input data.");
-
+		
 		double min = v[0];
 		if (v.length > 1) {
 			for (int i = 1; i < v.length; i++)
@@ -129,13 +133,13 @@ public class DataSet
 					min = v[i];
 			}
 		}
-
+		
 		return min;
 	}
 
 	/**
 	 * Obtains maximum value of an array. Possible NaN values are ignored.
-	 *
+	 * 
 	 * @param v Array.
 	 * @return Maximum value. -1 is returned as an invalid result.
 	 * @throws JPARSECException If an error occurs.
@@ -152,12 +156,12 @@ public class DataSet
 					max = v[i];
 			}
 		}
-
+		
 		return max;
 	}
 	/**
 	 * Obtains maximum value of an array. Possible NaN values are ignored.
-	 *
+	 * 
 	 * @param data Array.
 	 * @return Maximum value. -1 is returned as an invalid result
 	 * (if all input values are NaN).
@@ -178,7 +182,7 @@ public class DataSet
 
 	/**
 	 * Obtains maximum value of an array. Possible NaN values are ignored.
-	 *
+	 * 
 	 * @param data Array.
 	 * @return The index of the maximum for the first and second dimensions
 	 * of the array. input[x][y] -> (x, y).
@@ -204,7 +208,7 @@ public class DataSet
 
 	/**
 	 * Obtains minimum value of an array. Possible NaN values are ignored.
-	 *
+	 * 
 	 * @param data Array.
 	 * @return Minimum value. -1 is returned as an invalid result
 	 * (if all input values are NaN).
@@ -225,7 +229,7 @@ public class DataSet
 
 	/**
 	 * Obtains minimum value of an array. Possible NaN values are ignored.
-	 *
+	 * 
 	 * @param data Array.
 	 * @return The index of the minimum for the first and second dimensions
 	 * of the array. input[x][y] -> (x, y).
@@ -252,7 +256,7 @@ public class DataSet
 	/**
 	 * Obtains index of the minimum value of an array of doubles.
 	 * Possible NaN values are ignored.
-	 *
+	 * 
 	 * @param x Array.
 	 * @return Index of the minimum value. -1 is returned as an invalid result.
 	 * @throws JPARSECException If an error occurs.
@@ -270,14 +274,14 @@ public class DataSet
 					min = i;
 			}
 		}
-
+		
 		return min;
 	}
 
 	/**
 	 * Obtains index of the maximum value of an array of doubles.
 	 * Possible NaN values are ignored.
-	 *
+	 * 
 	 * @param x Array.
 	 * @return Index of the maximum value.
 	 * @throws JPARSECException If an error occurs.
@@ -286,7 +290,7 @@ public class DataSet
 	throws JPARSECException {
 		if (x == null) throw new JPARSECException("invalid input.");
 		if (x.length < 1) throw new JPARSECException("invalid input.");
-
+		
 		int max = 0;
 		if (x.length > 1) {
 			for (int i = 1; i < x.length; i++)
@@ -295,13 +299,13 @@ public class DataSet
 					max = i;
 			}
 		}
-
+		
 		return max;
 	}
 
 	/**
 	 * Obtains string array representing an array of double values.
-	 *
+	 * 
 	 * @param array Input array of doubles.
 	 * @return String array.
 	 */
@@ -318,7 +322,7 @@ public class DataSet
 
 	/**
 	 * Obtains string array representing an array of int values.
-	 *
+	 * 
 	 * @param array Input array of ints.
 	 * @return String array.
 	 */
@@ -332,10 +336,10 @@ public class DataSet
 		}
 		return out;
 	}
-
+	
 	/**
 	 * Obtains string array representing an array of float values.
-	 *
+	 * 
 	 * @param array Input array of floats.
 	 * @return String array.
 	 */
@@ -349,11 +353,11 @@ public class DataSet
 		}
 		return out;
 	}
-
+	
 	/**
 	 * Obtains double array representing an array of string values. Maths
 	 * are allowed.
-	 *
+	 * 
 	 * @param array Input array of strings.
 	 * @return Double array.
 	 * @throws JPARSECException If an error occurs.
@@ -372,7 +376,7 @@ public class DataSet
 	/**
 	 * Obtains float array representing an array of string values. Maths
 	 * are allowed.
-	 *
+	 * 
 	 * @param array Input array of strings.
 	 * @return Float array.
 	 * @throws JPARSECException If an error occurs.
@@ -391,7 +395,7 @@ public class DataSet
 	/**
 	 * Obtains double array representing an array of string values. Maths
 	 * are allowed.
-	 *
+	 * 
 	 * @param array Input array of strings.
 	 * @return Double array.
 	 * @throws JPARSECException If an error occurs.
@@ -406,10 +410,10 @@ public class DataSet
 		}
 		return out;
 	}
-
+	
 	/**
 	 * Obtains a subDataset taking all points with x greater or equal to certain value.
-	 *
+	 * 
 	 * @param x X values.
 	 * @param y Y values.
 	 * @param dx X errors. Can be null.
@@ -458,7 +462,7 @@ public class DataSet
 
 	/**
 	 * Obtains a subDataset taking all points with x lower or equal to certain value.
-	 *
+	 * 
 	 * @param x X values.
 	 * @param y Y values.
 	 * @param dx X errors. Can be null.
@@ -507,7 +511,7 @@ public class DataSet
 
 	/**
 	 * Obtains a subDataset taking all points without limits.
-	 *
+	 * 
 	 * @param x X values.
 	 * @param y Y values.
 	 * @param dx X errors. Can be null.
@@ -522,7 +526,7 @@ public class DataSet
 		for (int i = 0; i < x.length; i++)
 		{
 			String valX = x[i];
-			String valY = y[i];
+			String valY = y[i];			
 			if (valX.startsWith("<") || valX.startsWith(">") || valY.startsWith("<") || valY.startsWith(">"))
 			{
 				nlimits++;
@@ -537,7 +541,7 @@ public class DataSet
 		for (int i = 0; i < x.length; i++)
 		{
 			String valX = x[i];
-			String valY = y[i];
+			String valY = y[i];			
 			if (!valX.startsWith("<") && !valX.startsWith(">") && !valY.startsWith("<") && !valY.startsWith(">"))
 			{
 				n++;
@@ -553,15 +557,15 @@ public class DataSet
 		out.add(outY);
 		out.add(outdX);
 		out.add(outdY);
-
+		
 		return out;
 	}
-
+	
 	/**
 	 * Obtain double precision values of an array of strings, including
 	 * possible upper and lower limits, such as "<5" or ">5". Math operations
 	 * are allowed, for example "5*3" in any component.
-	 *
+	 * 
 	 * @param arg Array of strings.
 	 * @return A ArrayList with two componentes, the array of double values, and an
 	 *         array of int values with 1 for upper limits and -1 for lowers.
@@ -595,7 +599,7 @@ public class DataSet
 	 * Obtain double precision values of an array of strings, excluding
 	 * possible upper and lower limits, such as "<5" or ">5". Math operations
 	 * are allowed, for example "5*3" in any component.
-	 *
+	 * 
 	 * @param arg Array of strings.
 	 * @return The array of double values.
 	 * @throws JPARSECException If an error occurs.
@@ -631,7 +635,7 @@ public class DataSet
 	 * Obtain double precision values of an array of strings, excluding
 	 * possible upper and lower limits, such as "<5" or ">5". Math operations
 	 * are allowed, for example "5*3" in any component.
-	 *
+	 * 
 	 * @param arg Array of strings, with numbers or math operations, and with or
 	 *        without limit information.
 	 * @param limit_arg Array of strings to be also checked, if, for example,
@@ -672,7 +676,7 @@ public class DataSet
 
 	/**
 	 * Obtains a subDataset taking all points with x greater or equal to certain value.
-	 *
+	 * 
 	 * @param x X values.
 	 * @param y Y values.
 	 * @param dx X errors. Can be null.
@@ -720,7 +724,7 @@ public class DataSet
 
 	/**
 	 * Obtains a subDataset taking all points with x lower or equal to certain value.
-	 *
+	 * 
 	 * @param x X values.
 	 * @param y Y values.
 	 * @param dx X errors. Can be null.
@@ -768,7 +772,7 @@ public class DataSet
 
 	/**
 	 * Obtains a subDataset taking all points with y greater or equal to certain value.
-	 *
+	 * 
 	 * @param x X values.
 	 * @param y Y values.
 	 * @param dx X errors. Can be null.
@@ -816,7 +820,7 @@ public class DataSet
 
 	/**
 	 * Obtains a subDataset taking all points with y lower or equal to certain value.
-	 *
+	 * 
 	 * @param x X values.
 	 * @param y Y values.
 	 * @param dx X errors. Can be null.
@@ -861,7 +865,7 @@ public class DataSet
 		v.add(dyo);
 		return v;
 	}
-
+	
 	/**
 	 * Parses a double to a String. Performance compared to intrinsic
 	 * java method varies a lot: between 20% faster to 100% faster
@@ -873,7 +877,7 @@ public class DataSet
 	public static double parseDouble(String s) {
 		return FastMath.parseDouble(s);
 	}
-
+	
 	/**
 	 * Parses a float from a String. Performance compared to intrinsic
 	 * java method varies a lot: between 20% faster to 400% faster
@@ -884,9 +888,9 @@ public class DataSet
 	public static float parseFloat(String s) {
 		return (float) FastMath.parseDouble(s);
 	}
-
+	
 	private static double tryToConvertToDouble(String val) throws JPARSECException
-	{
+	{			
 		try
 		{
 			return DataSet.parseDouble(val);
@@ -910,7 +914,7 @@ public class DataSet
 	/**
 	 * Return double value without a possible limit. For "5" returns 5, for "<5"
 	 * returns also 5.
-	 *
+	 * 
 	 * @param arg String value.
 	 * @return Double value.
 	 * @throws JPARSECException If an error occurs.
@@ -926,7 +930,7 @@ public class DataSet
 	/**
 	 * Obtain string values of an array of strings, including possible upper and
 	 * lower limits, such as "<5" or ">5".
-	 *
+	 * 
 	 * @param arg Array of strings.
 	 * @return A ArrayList with two components, the array of strings without
 	 *         limits information, and an array of int values with 1 for upper
@@ -959,7 +963,7 @@ public class DataSet
 	/**
 	 * Obtain string values of two array of x and y values, excluding points
 	 * with upper and lower limits, such as "<5" or ">5".
-	 *
+	 * 
 	 * @param argx Array of x strings.
 	 * @param argy Array of y strings.
 	 * @return A ArrayList with two components, the array of x and y strings.
@@ -1002,7 +1006,7 @@ public class DataSet
 	/**
 	 * Obtain string values of two array of x and y values, excluding points
 	 * with upper and lower limits, such as "<5" or ">5".
-	 *
+	 * 
 	 * @param argx Array of x strings.
 	 * @param argy Array of y strings.
 	 * @param argxerror Array of x errors.
@@ -1063,7 +1067,7 @@ public class DataSet
 	/**
 	 * Obtain string values of an array of strings, excluding possible upper and
 	 * lower limits, such as "<5" or ">5".
-	 *
+	 * 
 	 * @param arg Array of strings.
 	 * @return The array of string values.
 	 */
@@ -1097,7 +1101,7 @@ public class DataSet
 	/**
 	 * Obtain string values of an array of strings, excluding possible upper and
 	 * lower limits, such as "<5" or ">5".
-	 *
+	 * 
 	 * @param arg Array of strings.
 	 * @param limit_arg Array of strings to be also checked, if, for example,
 	 *        limits are set only in one axis and arg contains the values
@@ -1136,7 +1140,7 @@ public class DataSet
 
 	/**
 	 * Return string value without a possible limit.
-	 *
+	 * 
 	 * @param arg String value.
 	 * @return String value, skipping a limit if it exists.
 	 */
@@ -1162,11 +1166,11 @@ public class DataSet
 		}
 		return true;
 	}
-
+	
 	/**
 	 * A method for reordering points in x descent order. This method can also
 	 * eliminates repeated x points.
-	 *
+	 * 
 	 * @param x_val X set of values.
 	 * @param y_val Y set of values. Can be null.
 	 * @param eliminateRepeatedPoints True to eliminate repeated x points.
@@ -1199,11 +1203,11 @@ public class DataSet
 		if (y_val != null) vo.add(yo);
 		return vo;
 	}
-
+		
 	/**
 	 * A method for reordering points in x crescent order. This method can also
 	 * eliminates repeated x points.
-	 *
+	 * 
 	 * @param x_val X set of values.
 	 * @param y_val Y set of values. Can be null.
 	 * @param eliminateRepeatedPoints True to eliminate repeated x points.
@@ -1283,7 +1287,7 @@ public class DataSet
 	/**
 	 * A method for reordering points in x crescent order, including errors. This method can also
 	 * eliminates repeated x points.
-	 *
+	 * 
 	 * @param x_val X set of values.
 	 * @param y_val Y set of values
 	 * @param dx_val dX set of values. Can be null.
@@ -1383,7 +1387,7 @@ public class DataSet
 	/**
 	 * A method for reordering points in x crescent order, when arrays are given
 	 * as strings. This method does not eliminate repeated x points.
-	 *
+	 * 
 	 * @param x_val X set of values.
 	 * @param y_val Y set of values
 	 * @param dx X errors. Can be null.
@@ -1401,7 +1405,7 @@ public class DataSet
 			v.add(dy);
 			return v;
 		}
-
+		
 		// Now lets re-order the points in abscisa crescent order
 		int size = x_val.length;
 		int min_value = -1;
@@ -1469,7 +1473,7 @@ public class DataSet
 	/**
 	 * A method for reordering points in x crescent order, when arrays are given
 	 * as strings. This method does not eliminate repeated x points.
-	 *
+	 * 
 	 * @param x_val X set of values.
 	 * @return New set of values.
 	 * @throws JPARSECException If an error occurs.
@@ -1525,7 +1529,7 @@ public class DataSet
 	/**
 	 * A method for reordering points in certain x order, when arrays are given
 	 * as strings. This method does not eliminate repeated x points.
-	 *
+	 * 
 	 * @param x_val X set of values.
 	 * @param y_val Y set of values
 	 * @param dx X errors set of values.
@@ -1705,12 +1709,12 @@ public class DataSet
 	{
 		if (v == null) return null;
 		if (v.length == 0) return "";
-
+		
 		int size = v.length;
 
 		StringBuilder text = new StringBuilder(10 + size*v[0].length() / 2);
 		String s = jparsec.io.FileIO.getLineSeparator();
-
+		
 		text.append(v[0]);
 		for (int i = 1; i < size; i++)
 		{
@@ -1720,7 +1724,7 @@ public class DataSet
 
 		return text.toString();
 	}
-
+	
 	/**
 	 * Returns the index of a given point in the dataset.
 	 * @param x X values.
@@ -1773,7 +1777,7 @@ public class DataSet
 		}
 		return -1;
 	}
-
+	
 	/**
 	 * Returns the index of a given point in the dataset.
 	 * @param x X values.
@@ -1829,7 +1833,7 @@ public class DataSet
 				return i;
 			}
 		}
-*/
+*/		
 		return -1;
 	}
 
@@ -1903,11 +1907,11 @@ public class DataSet
 		}
 		return o;
 	}
-
+	
     /**
-     * Transform a primitive array (int[], double[], ...)
+     * Transform a primitive array (int[], double[], ...) 
      * to an object array (Integer[], Double[]). <P>
-     *
+     * 
      * This method comes from JFreeChart code.
      *
      * @param arr The array.
@@ -1915,7 +1919,7 @@ public class DataSet
      * @return An array.
      * @throws JPARSECException If an error occurs.
      */
-    public static Object toArray(Object arr)
+    public static Object toArray(Object arr) 
     throws JPARSECException {
 
         if (arr == null) {
@@ -1983,7 +1987,7 @@ public class DataSet
         }
         return newarr;
     }
-
+    
     /**
      * Obtains a String representation of an array. See
      * http://www.javapractices.com/topic/TopicAction.do?Id=131
@@ -2030,7 +2034,7 @@ public class DataSet
     	int a1 = array1.length;
     	String out[] = new String[a1 + array2.length];
     	System.arraycopy(array1, 0, out, 0, a1);
-    	System.arraycopy(array2, 0, out, a1, array2.length);
+    	System.arraycopy(array2, 0, out, a1, array2.length);    	
     	return out;
     }
 
@@ -2053,7 +2057,7 @@ public class DataSet
     		throw new JPARSECException("Array 1 has type "+array1.getClass().getComponentType()+", while array2 has type "+array2.getClass().getComponentType()+". They must be the same.");
     	Object out[] = (Object[]) Array.newInstance(array1.getClass().getComponentType(), a1 + array2.length);
     	System.arraycopy(array1, 0, out, 0, a1);
-    	System.arraycopy(array2, 0, out, a1, array2.length);
+    	System.arraycopy(array2, 0, out, a1, array2.length);    	
     	return out;
     }
     /**
@@ -2070,7 +2074,7 @@ public class DataSet
     	int a1 = array1.length;
     	String out[] = new String[a1 + 1];
     	System.arraycopy(array1, 0, out, 0, a1);
-    	//System.arraycopy(array2, 0, out, a1, 1);
+    	//System.arraycopy(array2, 0, out, a1, 1);    	
     	out[a1] = array2;
     	return out;
     }
@@ -2106,7 +2110,7 @@ public class DataSet
     	System.arraycopy(array2, 0, out, array1.length, array2.length);
     	return out;
     }
-
+    
     /**
      * Appends a float array to another array.
      * @param array1 First array.
@@ -2148,22 +2152,22 @@ public class DataSet
      */
     public static String[] eliminateRowFromTable(String table[], int row)
     throws JPARSECException {
-
+    	
     	if (row <= 0 || row > table.length) throw new JPARSECException("row "+(row)+" out of range 1-"+(table.length)+".");
-
+    	
     	String out[] = new String[table.length-1];
     	if (row > 1) System.arraycopy(table, 0, out, 0, row - 1);
     	if (row < table.length) System.arraycopy(table, row, out, row - 1, table.length - row);
     	return out;
     }
-
+    
     /**
-     * Formats a table by ordering the elements in ascending/descending mode for a given column,
+     * Formats a table by ordering the elements in ascending/descending mode for a given column, 
      * and maintaining the length of each column.
      * @param table Table to format.
      * @param separator Separator used in the table.
      * @param order Field number to order (>= 1). If positive, that field will be
-     * ordered in crescent. If negative, in descent. Set to 0 to maintain
+     * ordered in crescent. If negative, in descent. Set to 0 to maintain 
      * ordering as input.
      * @return Formatted table.
      * @throws JPARSECException If an error occurs.
@@ -2171,7 +2175,7 @@ public class DataSet
     public static String[] formatTable(String[] table, String separator, int order)
     throws JPARSECException {
     	int n = jparsec.io.FileIO.getNumberOfFields(table[0], separator, true);
-
+    	
     	if (order != 0)
     	{
 	    	String newTable[] = new String[table.length];
@@ -2196,13 +2200,13 @@ public class DataSet
 	    	} while (tableSize > 0);
 	    	table = newTable;
     	}
-
+    	
     	int len[] = new int[n];
     	for (int i=0; i<n; i++)
     	{
     		len[i] = getMaxLength(table, i+1, separator);
     	}
-
+    	
     	String out[] = new String[table.length];
     	for (int i=0; i<out.length; i++)
     	{
@@ -2213,7 +2217,7 @@ public class DataSet
     			fieldN ++;
     			field = jparsec.io.FileIO.getField(fieldN, table[i], separator, true);
     			if (fieldN < len.length) {
-    				field = jparsec.io.FileIO.addSpacesAfterAString(field, len[fieldN]);
+    				field = jparsec.io.FileIO.addSpacesAfterAString(field, len[fieldN]);    				
     			}
     			out[i] += field;
     			if (fieldN < len.length) out[i] += separator;
@@ -2233,7 +2237,7 @@ public class DataSet
     }
     /**
      * Transforms a string into an array for a given field separator.
-     * This functions uses intrinsic {@linkplain java.util.StringTokenizer} to separate
+     * This functions uses intrinsic {@linkplain java.util.StringTokenizer} to separate 
      * the fields. For short Strings it is faster to call {@linkplain #toStringArray(String, String, boolean)}.
      * In addition, take into account that the intrinsic function could skip empty values assuming
      * two consecutive separators as only one.
@@ -2280,7 +2284,7 @@ public class DataSet
     	}
     	return out;
     }
-
+    
     /**
      * Transforms a string into an array for a given field separator.
      * @param text Text.
@@ -2318,7 +2322,7 @@ public class DataSet
 	    	}
 	    	return array;
     	}
-*/
+*/    	
     }
 
     /**
@@ -2426,7 +2430,7 @@ public class DataSet
     			{
     				int field = j+1;
     				if (j > columnIndex) field --;
-
+    				
     				if (j != columnIndex) {
 	    				out[i] += FileIO.getField(field, table[i], separator, true);
     				} else {
@@ -2456,7 +2460,7 @@ public class DataSet
     	out = DataSet.addStringArray(out, DataSet.getSubArray(table, rowIndex, table.length-1));
     	return out;
     }
-
+    
 	/**
 	 * Replaces all matches of a string with another string.
 	 * @param table String to be modified.
@@ -2467,16 +2471,16 @@ public class DataSet
 	 * 'strange symbols' like backslashes or so. If true direct String method
 	 * will be used (indexOf), if false intrinsic replaceAll will be used (faster).
 	 * A basic test that searches for strange symbols is done to try to avoid
-	 * problems when using intrinsic {@linkplain String#replaceAll(String, String)}.
+	 * problems when using intrinsic {@linkplain String#replaceAll(String, String)}. 
 	 * @return The new string with the replacements.
 	 */
 	public static String replaceAll(String table, String symbol, String replacement, boolean hasStrangeSymbols)
-	{
+	{		
 		if (table.indexOf(symbol) < 0) return table;
-		if (replacement == null) replacement = "";
+		if (replacement == null) replacement = ""; 
 		if (!hasStrangeSymbols) {
 			// Basic check
-			String strange = ".,\\/\"|#$%~\u00bd&()=?'\u00bf\u00a1!";
+			String strange = ".,\\/\"|#$%~½&()=?'¿¡!";
 			for (int i=0; i<strange.length(); i++) {
 				if (symbol.indexOf(strange.substring(i, i+1)) >= 0 ||
 						replacement.indexOf(strange.substring(i, i+1)) >= 0) {
@@ -2497,12 +2501,12 @@ public class DataSet
 				String tmp = table.substring(0, a);
 				if (replacement != null) tmp+= replacement;
 				tmp += table.substring(a + symbol.length());
-
+				
 				table = tmp;
 				a = table.indexOf(symbol);
 			} while (a >= 0);
 		}
-
+	
 		return table;
 */	}
 
@@ -2531,7 +2535,7 @@ public class DataSet
 					tmp += table.substring(a + symbol.length());
 					break;
 				}
-
+				
 				if (table.substring(a+symbol.length()).indexOf(symbol) < 0) {
 					a = -1;
 				} else {
@@ -2542,7 +2546,7 @@ public class DataSet
 			} while (a >= 0);
 			table = tmp;
 		}
-
+	
 		return table;
 	}
 	/**
@@ -2558,12 +2562,12 @@ public class DataSet
 	public static String[] replaceAll(String array[], String symbol, String replacement, boolean hasStrangeSymbols)
 	{
 		String out[] = new String[array.length];
-
+		
 		for (int i=0; i<array.length; i++)
 		{
 			out[i] = DataSet.replaceAll(array[i], symbol, replacement, hasStrangeSymbols);
 		}
-
+	
 		return out;
 	}
 
@@ -2580,15 +2584,15 @@ public class DataSet
 	public static String[] replaceOne(String array[], String symbol, String replacement, int pos)
 	{
 		String out[] = new String[array.length];
-
+		
 		for (int i=0; i<array.length; i++)
 		{
 			out[i] = DataSet.replaceOne(array[i], symbol, replacement, pos);
 		}
-
+	
 		return out;
 	}
-
+	
 	/**
 	 * Sorts a given array alphabetically.
 	 * @param array The array. Note it is modified, clone it in input to avoid it.
@@ -2600,7 +2604,7 @@ public class DataSet
 		Collections.sort(list);
 		return (String[]) list.toArray();
 	}
-
+	    
     /**
      * Obtains a sub-dataset.
      * @param v The array of values.
@@ -2615,7 +2619,7 @@ public class DataSet
     	System.arraycopy(v, index0, o, 0, l);
     	return o;
     }
-
+    
     /**
      * Obtains a sub-dataset.
      * @param v The array of values.
@@ -2630,7 +2634,7 @@ public class DataSet
     	System.arraycopy(v, index0, o, 0, l);
     	return o;
     }
-
+    
     /**
      * Obtains a sub-dataset.
      * @param v The array of values.
@@ -2654,13 +2658,13 @@ public class DataSet
      */
     public static Object[] getSubArray(Object[] v, int index0, int indexf)
     {
-    	int l = indexf - index0 + 1;
+    	int l = indexf - index0 + 1; 
     	//Object o[] = new Object[l];
     	Object o[] = (Object[]) Array.newInstance(v.getClass().getComponentType(), l);
     	System.arraycopy(v, index0, o, 0, l);
     	return o;
     }
-
+    
     /**
      * Returns the limit '<' or '>'.
      * @param val The value.
@@ -2673,7 +2677,7 @@ public class DataSet
     	if (val.startsWith(">")) limit = ">";
     	return limit;
     }
-
+    
     /**
      * Transforms an array to a string.
      * @param array The array.
@@ -2684,7 +2688,7 @@ public class DataSet
     {
     	if (array == null) return null;
     	if (array.length == 0) return "";
-
+    	
     	StringBuilder v = new StringBuilder(10 + array.length * array[0].length() / 2);
 		v.append(array[0]);
 		String s = "";
@@ -2696,7 +2700,7 @@ public class DataSet
     	}
     	return v.toString();
     }
-
+    
     /**
      * Returns the closest index to a given value in an array.
      * @param array The array.
@@ -2717,7 +2721,7 @@ public class DataSet
     	}
     	return index;
     }
-
+  
     /**
      * Returns the indexes of some specific element in a given array of elements.
      * @param val The array.
@@ -2792,10 +2796,10 @@ public class DataSet
     	}
     	return DataSet.arrayListToStringArray(v);
     }
-
+    
 	/**
 	 * Obtains double array 2d representing a 2d array of floats.
-	 *
+	 * 
 	 * @param array Input array 2d of floats.
 	 * @return Double array 2d.
 	 * @throws JPARSECException If an error occurs.
@@ -2817,7 +2821,7 @@ public class DataSet
 	/**
 	 * Obtains double array 2d (matrix) representing a set of double arrays
 	 * given as columns.
-	 *
+	 * 
 	 * @param columns The set of columns, all should have same number of elements, or
 	 * at least the first one must be the longest one.
 	 * @return Double array 2d.
@@ -2835,7 +2839,7 @@ public class DataSet
 
 	/**
 	 * Obtains double array 2d representing a 2d array of floats.
-	 *
+	 * 
 	 * @param array Input array 2d of floats.
 	 * @return Double array 2d.
 	 * @throws JPARSECException If an error occurs.
@@ -2857,7 +2861,7 @@ public class DataSet
 	/**
 	 * Obtains short array 2d representing a 2d array of doubles,
 	 * using cast.
-	 *
+	 * 
 	 * @param array Input array 2d of doubles.
 	 * @return Short array 2d.
 	 * @throws JPARSECException If an error occurs.
@@ -2878,7 +2882,7 @@ public class DataSet
 
 	/**
 	 * Obtains int array 2d representing a 2d array of shorts.
-	 *
+	 * 
 	 * @param array Input array 2d of shorts.
 	 * @param offset Value to be added to the output ints, for instance
 	 * +32768.
@@ -2901,7 +2905,7 @@ public class DataSet
 
 	/**
 	 * Obtains short array 2d representing a 2d array of ints.
-	 *
+	 * 
 	 * @param array Input array 2d of ints.
 	 * @param offset Value to be added to the input ints before the cast to short,
 	 * for instance -32768.
@@ -2924,7 +2928,7 @@ public class DataSet
 
 	/**
 	 * Obtains int array 2d representing a 2d array of bytes.
-	 *
+	 * 
 	 * @param array Input array 2d of bytes.
 	 * @param offset A constant to add to each output int value,
 	 * for instance +128.
@@ -2947,7 +2951,7 @@ public class DataSet
 
 	/**
 	 * Obtains byte array 2d representing a 2d array of ints.
-	 *
+	 * 
 	 * @param array Input array 2d of ints.
 	 * @param offset A constant to add to each input int value before
 	 * the cast to byte, for instance -128.
@@ -2971,7 +2975,7 @@ public class DataSet
 	/**
 	 * Obtains byte array 2d representing a 2d array of doubles,
 	 * using simple cast.
-	 *
+	 * 
 	 * @param array Input array 2d of doubles.
 	 * @return Byte array 2d.
 	 * @throws JPARSECException If an error occurs.
@@ -2993,7 +2997,7 @@ public class DataSet
 	/**
 	 * Obtains a byte array 1d representing an array of integers,
 	 * using simple cast.
-	 *
+	 * 
 	 * @param array Input array 1d of integers.
 	 * @return Byte array 1d.
 	 * @throws JPARSECException If an error occurs.
@@ -3011,7 +3015,7 @@ public class DataSet
 
 	/**
 	 * Obtains float array 2d representing a 2d array of doubles.
-	 *
+	 * 
 	 * @param array Input array 2d of doubles.
 	 * @return Float array 2d.
 	 * @throws JPARSECException If an error occurs.
@@ -3032,7 +3036,7 @@ public class DataSet
 
 	/**
 	 * Obtains float array representing an array of doubles.
-	 *
+	 * 
 	 * @param array Input array of doubles.
 	 * @return Float array.
 	 */
@@ -3049,7 +3053,7 @@ public class DataSet
 
 	/**
 	 * Obtains double array representing an array of floats.
-	 *
+	 * 
 	 * @param array Input array of floats.
 	 * @return Doubles array.
 	 */
@@ -3067,7 +3071,7 @@ public class DataSet
 	/**
 	 * Obtains an int array 2d representing a 2d array of doubles. The values and rounded
 	 * to the nearest integer.
-	 *
+	 * 
 	 * @param array Input array 2d of doubles.
 	 * @return Integer array 2d.
 	 * @throws JPARSECException If an error occurs.
@@ -3089,7 +3093,7 @@ public class DataSet
 	/**
 	 * Obtains an int array by converting double values to integers. The values and rounded
 	 * to the nearest integer.
-	 *
+	 * 
 	 * @param array Input array of doubles.
 	 * @return Integer array.
 	 * @throws JPARSECException If an error occurs.
@@ -3104,10 +3108,10 @@ public class DataSet
 		}
 		return out;
 	}
-
+	
 	/**
 	 * Obtains double array 2d representing a 2d array of ints.
-	 *
+	 * 
 	 * @param array Input array 2d of ints.
 	 * @return Double array 2d.
 	 * @throws JPARSECException If an error occurs.
@@ -3170,7 +3174,7 @@ public class DataSet
 		double out[] = new double[input.length-1];
 		if (index > 0) System.arraycopy(input, 0, out, 0, index);
 		if (index < input.length - 1) System.arraycopy(input, index + 1, out, index, input.length - 1 - index);
-		return out;
+		return out; 
 	}
 
 	/**
@@ -3185,9 +3189,9 @@ public class DataSet
 		int out[] = new int[input.length-1];
 		if (index > 0) System.arraycopy(input, 0, out, 0, index);
 		if (index < input.length - 1) System.arraycopy(input, index + 1, out, index, input.length - 1 - index);
-		return out;
+		return out; 
 	}
-
+	
 	/**
 	 * Removes an index from an array.
 	 * @param input The array.
@@ -3200,7 +3204,7 @@ public class DataSet
     	Object out[] = (Object[]) Array.newInstance(input.getClass().getComponentType(), input.length-1);
 		if (index > 0) System.arraycopy(input, 0, out, 0, index);
 		if (index < input.length - 1) System.arraycopy(input, index + 1, out, index, input.length - 1 - index);
-		return out;
+		return out; 
 	}
 
 	/**
@@ -3251,7 +3255,7 @@ public class DataSet
 	/**
 	 * A method for reordering objects in crescent order of some values in another
 	 * array.
-	 *
+	 * 
 	 * @param list Array of objects.
 	 * @param val Values for each of the objects
 	 * @return ArrayList with the objects listed in crescent order of the values.
@@ -3269,7 +3273,7 @@ public class DataSet
 		do {
 			int index = DataSet.getIndexOfMinimum(v);
 			out.add(l.get(index));
-
+			
 			v = DataSet.deleteIndex(v, index);
 			l.remove(index);
 		} while (v.length > 0);
@@ -3279,7 +3283,7 @@ public class DataSet
 	/**
 	 * A method for reordering objects in crescent order of some values in another
 	 * array.
-	 *
+	 * 
 	 * @param list Array of objects.
 	 * @param val Values for each of the objects
 	 * @return Array with the objects listed in crescent order of the values.
@@ -3289,18 +3293,18 @@ public class DataSet
 	throws JPARSECException {
 		if (val == null || list == null) return null;
 		String[] out = new String[list.length];
-
+		
 		if (val.length == 0 || list.length == 0) return out;
 
 		double max = DataSet.getMaximumValue(val), newMax = max + 1;
-
+		
 		double v[] = val.clone();
 		int oindex = 0;
 		do {
 			int index = DataSet.getIndexOfMinimum(v);
 			out[oindex] = list[index];
 			oindex ++;
-
+			
 			v[index] = newMax;
 		} while (oindex < list.length);
 		return out;
@@ -3309,7 +3313,7 @@ public class DataSet
 	/**
 	 * A method for reordering objects in crescent order of some values in another
 	 * array.
-	 *
+	 * 
 	 * @param list Array of objects.
 	 * @param val Values for each of the objects
 	 * @return Array with the objects listed in crescent order of the values.
@@ -3324,14 +3328,14 @@ public class DataSet
 		if (val.length == 0 || list.length == 0) return out;
 
 		double max = DataSet.getMaximumValue(val), newMax = max + 1;
-
+		
 		double v[] = val.clone();
 		int oindex = 0;
 		do {
 			int index = DataSet.getIndexOfMinimum(v);
 			out[oindex] = list[index];
 			oindex ++;
-
+			
 			v[index] = newMax;
 		} while (oindex < list.length);
 		return out;
@@ -3340,7 +3344,7 @@ public class DataSet
 	/**
 	 * A method for reordering objects in descent order of some values in another
 	 * array.
-	 *
+	 * 
 	 * @param list Array of objects.
 	 * @param val Values for each of the objects
 	 * @return ArrayList with the objects listed in descent order of the values.
@@ -3358,7 +3362,7 @@ public class DataSet
 		do {
 			int index = DataSet.getIndexOfMaximum(v);
 			out.add(l.get(index));
-
+			
 			v = DataSet.deleteIndex(v, index);
 			l.remove(index);
 		} while (v.length > 0);
@@ -3368,7 +3372,7 @@ public class DataSet
 	/**
 	 * A method for reordering objects in descent order of some values in another
 	 * array.
-	 *
+	 * 
 	 * @param list Array of objects.
 	 * @param val Values for each of the objects
 	 * @return Array with the objects listed in descent order of the values.
@@ -3378,18 +3382,18 @@ public class DataSet
 	throws JPARSECException {
 		if (val == null || list == null) return null;
 		String[] out = new String[list.length];
-
+		
 		if (val.length == 0 || list.length == 0) return out;
 
 		double min = DataSet.getMinimumValue(val), newMin = min - 1;
-
+		
 		double v[] = val.clone();
 		int oindex = 0;
 		do {
 			int index = DataSet.getIndexOfMaximum(v);
 			out[oindex] = list[index];
 			oindex ++;
-
+			
 			v[index] = newMin;
 		} while (oindex < list.length);
 		return out;
@@ -3398,7 +3402,7 @@ public class DataSet
 	/**
 	 * A method for reordering objects in descent order of some values in another
 	 * array.
-	 *
+	 * 
 	 * @param list Array of objects.
 	 * @param val Values for each of the objects
 	 * @return Array with the objects listed in descent order of the values.
@@ -3413,14 +3417,14 @@ public class DataSet
 		if (val.length == 0 || list.length == 0) return out;
 
 		double min = DataSet.getMinimumValue(val), newMin = min - 1;
-
+		
 		double v[] = val.clone();
 		int oindex = 0;
 		do {
 			int index = DataSet.getIndexOfMaximum(v);
 			out[oindex] = list[index];
 			oindex ++;
-
+			
 			v[index] = newMin;
 		} while (oindex < list.length);
 		return out;
@@ -3437,13 +3441,13 @@ public class DataSet
 		if (in1 == null && in2 == null) return true;
 		if (in1 == null || in2 == null || in1.length != in2.length) return false;
 		if (in1.length == 0 && in2.length == 0) return true;
-
+		
 		for (int i = 0; i < in1.length; i++) {
 			if (in1[i] != in2[i]) return false;
 		}
 		return true;
 	}
-
+	
 	/**
 	 * Returns if the values in two arrays are the same.
 	 * @param in1 First array.
@@ -3455,7 +3459,7 @@ public class DataSet
 		if (in1 == null && in2 == null) return true;
 		if (in1.length == 0 && in2.length == 0) return true;
 		if (in1 == null || in2 == null || in1.length != in2.length) return false;
-
+		
 		for (int i = 0; i < in1.length; i++) {
 			if (!in1[i].equals(in2[i])) return false;
 		}
@@ -3490,24 +3494,24 @@ public class DataSet
   private static int getArrayDimensions(Object array) {
     return getArrayDimensions(array.getClass());
   }
-
+  
 /**
    * Returns the given Array in a string representation. Even though the
    * parameter is of type "Object" one can hand over primitve arrays, e.g.
    * int[3] or double[2][4].
    * <P>Method by Joseph A. Huwaldt.
-   *
+   * 
    * @param array       the array to return in a string representation
    * @return            the array as string
    */
   public static String arrayToString(Object array) {
     String        result;
     int           dimensions;
-    int           i;
+    int           i;       
 
     result     = "";
     dimensions = getArrayDimensions(array);
-
+    
     if (dimensions == 0) {
       result = "null";
     }
@@ -3528,7 +3532,7 @@ public class DataSet
         result += "[" + arrayToString(Array.get(array, i)) + "]";
       }
     }
-
+    
     return result;
   }
 
@@ -3553,7 +3557,7 @@ public class DataSet
 		  if (n == 8) return s4+s4;
 		  if (n == 9) return s4+s4+s;
 		  if (n == 10) return s4+s4+s2;
-/*
+/*		  
 		  if (n == 11) return s4+s4+s2+s;
 		  if (n == 12) return s4+s4+s4;
 		  if (n == 13) return s4+s4+s4+s;
@@ -3562,20 +3566,20 @@ public class DataSet
 		  if (n == 16) return s4+s4+s4+s4;
 		  if (n == 17) return s4+s4+s4+s4+s;
 		  if (n == 18) return s4+s4+s4+s4+s2;
-*/
+*/		  
 	  }
       final StringBuilder sb = new StringBuilder(s);
       for(int i = 1; i < n; i++) {
           sb.append(s);
       }
       return sb.toString();
-
+      
   }
 
   private static final String Digits     = "(\\p{Digit}+)";
   private static final String HexDigits  = "(\\p{XDigit}+)";
 
-  // an exponent is 'e' or 'E' followed by an optionally
+  // an exponent is 'e' or 'E' followed by an optionally 
   // signed decimal integer.
   private static final String Exp        = "[eE][+-]?"+Digits;
   private static final String fpRegex    =
@@ -3587,11 +3591,11 @@ public class DataSet
              // A decimal floating-point string representing a finite positive
              // number without a leading sign has at most five basic pieces:
              // Digits . Digits ExponentPart FloatTypeSuffix
-             //
+             // 
              // Since this method allows integer-only strings as input
              // in addition to strings of floating-point literals, the
              // two sub-patterns below are simplifications of the grammar
-             // productions from the Java Language Specification, 2nd
+             // productions from the Java Language Specification, 2nd 
              // edition, section 3.10.2.
 
              // Digits ._opt Digits_opt ExponentPart_opt FloatTypeSuffix_opt
@@ -3621,7 +3625,7 @@ public class DataSet
    * check'. Fast check just checks if the String contains some invalid
    * characters, any of these: ABCDFGHIJKLNOPQRSTUVWXYZ/*+()%&<>?abcdeghijklmnopqrstuvwxyz.
    * @param s The string.
-   * @return True or false. Note a double string can be valid while starting with a +.
+   * @return True or false. Note a double string can be valid while starting with a +. 
    */
   public static boolean isDoubleFastCheck(String s) {
 		for (int i = 0; i < s.length(); i++)
@@ -3633,7 +3637,7 @@ public class DataSet
 
   /**
    * Checks if a given String is a double number or a possibly valid math
-   * operation, using a 'fast check'. Fast check just checks if the String
+   * operation, using a 'fast check'. Fast check just checks if the String 
    * contains some invalid characters, any of these: ABCDFGHJKLNOQRSTUVWXYZjkvwz.
    * @param s The string.
    * @return True or false.
@@ -3660,7 +3664,7 @@ public class DataSet
 
   /**
    * Capitalize a String by setting the first character to
-   * uppercase in the first word and, optionally, also the
+   * uppercase in the first word and, optionally, also the 
    * others.
    * @param s The string.
    * @param all True to capitalize the first character in
@@ -3707,7 +3711,7 @@ public class DataSet
 				for (int j=0; j<data[i].length; j++)
 				{
 					int pj = j;
-					if (invert2) pj = data[0].length-1-j;
+					if (invert2) pj = data[0].length-1-j;					
 					out[pj][pi] = data[i][j];
 				}
 			}
@@ -3715,7 +3719,7 @@ public class DataSet
 		{
 			return null;
 		}
-
+		
 		String bc = ArrayFuncs.getBaseClass(o).getName();
 		if (bc.equals("double")) return out;
 		if (bc.equals("int")) return DataSet.toIntArray(out);
@@ -3724,7 +3728,7 @@ public class DataSet
 		if (bc.equals("byte")) return DataSet.toByteArray(out);;
 		throw new JPARSECException("Cannot recognize the type of the input data, shouldbe a 2d array of type double, int, float, short, or byte.");
   }
-
+  
   /**
    * Return the kth smallest value in a set of doubles.
    * @param in Values.
@@ -3748,10 +3752,10 @@ public class DataSet
               while (a[i]<x) i++ ;
               while (x<a[j]) j-- ;
               if (i<=j) {
-            	  t=a[i];
-            	  a[i]=a[j];
+            	  t=a[i]; 
+            	  a[i]=a[j]; 
             	  a[j]=t;
-                  i++ ;
+                  i++ ; 
                   j-- ;
               }
           } while (i<=j) ;
@@ -3768,7 +3772,7 @@ public class DataSet
    * usually the length of the array in.
    * @param k kth smallest value to return.
    * @return The kth smallest value in array in.
-   * @throws JPARSECException If an error occurs.
+   * @throws JPARSECException If an error occurs. 
    */
   public static MeasureElement getKthSmallestValue(MeasureElement in[], int n, int k) throws JPARSECException
   {
@@ -3785,10 +3789,10 @@ public class DataSet
               while (a[i].getValue()<x.getValue()) i++ ;
               while (x.getValue()<a[j].getValue()) j-- ;
               if (i<=j) {
-            	  t=a[i];
-            	  a[i]=a[j];
+            	  t=a[i]; 
+            	  a[i]=a[j]; 
             	  a[j]=t;
-                  i++ ;
+                  i++ ; 
                   j-- ;
               }
           } while (i<=j) ;
@@ -3888,7 +3892,7 @@ public class DataSet
     public static int getNumberOfDimensions(Object o) {
     	return getNumberOfDimensions(o.getClass());
     }
-
+    
 	/**
 	 * Returns the number of dimensions in an array.
 	 * @param type An object representing and array with an
@@ -3914,10 +3918,10 @@ public class DataSet
     	for (int i=array.length-1; i>=0; i--) {
     		if (array[i] == valueToRemove) {
     			if (i == 0) {
-    				array = DataSet.getSubArray(array, i+1, array.length-1);
+    				array = DataSet.getSubArray(array, i+1, array.length-1);    				
     			} else {
     				if (i == array.length-1) {
-    					array = DataSet.getSubArray(array, 0, i-1);
+    					array = DataSet.getSubArray(array, 0, i-1);    					
     				} else {
     					array = DataSet.addDoubleArray(DataSet.getSubArray(array, 0, i-1), DataSet.getSubArray(array, i+1, array.length-1));
     				}
@@ -3925,5 +3929,138 @@ public class DataSet
     		}
     	}
     	return array;
+    }
+    
+    /**
+     * For unit testing only.
+     * @param args Not used.
+     */
+    public static void main(String args[])
+    {
+    	System.out.println("DataSet test");
+
+    	String table[] = new String[] {
+    			"f1c1 f1c2 f1c3 f1c4",
+    			"f2c1 f2c2 f2c3 f2c4",
+    			"f3c1 f3c2 f3c3 f3c4",
+    			"f4c1 f4c2 f4c3 f4c4",
+    			"f5c1 f5c2 f5c3 f5c4",
+    			"f6c1 f6c2 f6c3 f6c4",
+    	};
+    	String separator = " ";
+    	int columnIndex = 1;
+    	
+    	String newColumn[] = DataSet.extractColumnFromTable(table, separator, columnIndex);
+    	try {
+			table = DataSet.eliminateRowFromTable(table, 6);
+		} catch (JPARSECException e) {
+			e.printStackTrace();
+		} //(table, separator, columnIndex);
+    	ConsoleReport.stringArrayReport(table);
+    	ConsoleReport.stringArrayReport(newColumn);
+    	ConsoleReport.stringArrayReport(table);
+    	table = DataSet.addColumnInTable(table, separator, newColumn, columnIndex);
+    	ConsoleReport.stringArrayReport(table);    
+    	
+    	
+    	// Performance check for tryToConvertToDouble
+    	FastMath.initialize();
+    	int n = 100000;
+    	String value = "2.225073858507201E-318";
+//    	value = "+12345.6E+65";
+//    	value = "1.0";
+    	double sum = 0;
+    	long t1;
+    	long t0 = System.currentTimeMillis();
+    	for (int i=0; i<n; i++) {
+    		try {    		
+    			sum += DataSet.parseDouble(value);
+    		} catch (Exception exc) {}
+    	}
+    	t1 = System.currentTimeMillis();
+    	System.out.println("Sum = "+sum+", time = "+(float)((t1-t0)*0.001)+"s");
+
+    	sum = 0.0;
+    	t0 = System.currentTimeMillis();
+    	for (int i=0; i<n; i++) {
+    		try {    		
+    			//if (DataSet.isDoubleFastCheck(value)) 
+    			sum += Double.parseDouble(value);
+    		} catch (Exception exc) {}
+    	}
+    	t1 = System.currentTimeMillis();
+    	System.out.println("Sum = "+sum+", time = "+(float)((t1-t0)*0.001)+"s");
+    	
+    	sum = 0.0;
+    	t0 = System.currentTimeMillis();
+    	for (int i=0; i<n; i++) {
+    		try {    		
+    			//if (DataSet.isDoubleFastCheck(value)) 
+    			sum += DataSet.parseDouble(value);
+    		} catch (Exception exc) {
+    			exc.printStackTrace();
+    		}
+    	}
+    	t1 = System.currentTimeMillis();
+    	System.out.println("Sum = "+sum+", time = "+(float)((t1-t0)*0.001)+"s");
+    	
+    	sum = 0.0;
+    	t0 = System.currentTimeMillis();
+    	for (int i=0; i<n; i++) {
+    		try {    		
+    			//if (DataSet.isDoubleFastCheck(value)) 
+    			sum += Double.parseDouble(value);
+    		} catch (Exception exc) {}
+    	}
+    	t1 = System.currentTimeMillis();
+    	System.out.println("Sum = "+sum+", time = "+(float)((t1-t0)*0.001)+"s");
+    	
+    	sum = 0.0;
+    	t0 = System.currentTimeMillis();
+    	for (int i=0; i<n; i++) {
+    		try {    		
+    			//if (DataSet.isDoubleFastCheck(value)) 
+    			sum += DataSet.parseDouble(value);
+    		} catch (Exception exc) {
+    			exc.printStackTrace();
+    		}
+    	}
+    	t1 = System.currentTimeMillis();
+    	System.out.println("Sum = "+sum+", time = "+(float)((t1-t0)*0.001)+"s");
+    	
+    	sum = 0.0;
+    	t0 = System.currentTimeMillis();
+    	for (int i=0; i<n; i++) {
+    		try {    		
+    			//if (DataSet.isDoubleFastCheck(value)) 
+    			sum += Double.parseDouble(value);
+    		} catch (Exception exc) {}
+    	}
+    	t1 = System.currentTimeMillis();
+    	System.out.println("Sum = "+sum+", time = "+(float)((t1-t0)*0.001)+"s");
+    	
+    	sum = 0.0;
+    	t0 = System.currentTimeMillis();
+    	for (int i=0; i<n; i++) {
+    		try {    		
+    			//if (DataSet.isDoubleFastCheck(value)) 
+    			sum += DataSet.parseDouble(value);
+    		} catch (Exception exc) {
+    			exc.printStackTrace();
+    		}
+    	}
+    	t1 = System.currentTimeMillis();
+    	System.out.println("Sum = "+sum+", time = "+(float)((t1-t0)*0.001)+"s");
+    	
+    	sum = 0.0;
+    	t0 = System.currentTimeMillis();
+    	for (int i=0; i<n; i++) {
+    		try {    		
+    			//if (DataSet.isDoubleFastCheck(value)) 
+    			sum += Double.parseDouble(value);
+    		} catch (Exception exc) {}
+    	}
+    	t1 = System.currentTimeMillis();
+    	System.out.println("Sum = "+sum+", time = "+(float)((t1-t0)*0.001)+"s");
     }
 }

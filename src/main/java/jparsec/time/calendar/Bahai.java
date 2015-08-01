@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- *
+ * 
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *
+ *  
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- *
+ * 
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,26 +18,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */
+ */					
 package jparsec.time.calendar;
 
 import java.io.Serializable;
 
 /**
- * Implements the Bah&aacute;&apos;&iacute; calendar.
+ * Implements the Bahai calendar.
  * <P>
- * A calendar based on the 19 year cycle 1844-1863 of the B&aacute;b, the martyred
- * forerunner of Bah&aacute;&apos;u&apos;ll&aacute;h and co-founder of the Bah&aacute;&apos;&iacute; faith.
- * Days begin at sunset.
+ * A calendar based on the 19 year cycle 1844-1863 of the Báb, the martyred
+ * forerunner of Bahá'u'lálh and co-founder of the Bahá'í faith. Days begin at
+ * sunset.
  * <P>
  * See Calendrical Calculations for reference.
- *
+ * 
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
 public class Bahai implements Serializable
 {
-	private static final long serialVersionUID = 1L;
+	static final long serialVersionUID = 1L;
 
 	/**
 	 * Major.
@@ -108,7 +108,7 @@ public class Bahai implements Serializable
 
 	/**
 	 * Constructs a Bahai date with a Julian day.
-	 *
+	 * 
 	 * @param jd Julian day.
 	 */
 	public Bahai(int jd)
@@ -118,7 +118,7 @@ public class Bahai implements Serializable
 
 	/**
 	 * Constructor using major, cycle, year, month, day.
-	 *
+	 * 
 	 * @param mj Major.
 	 * @param c Cycle.
 	 * @param y Year.
@@ -136,7 +136,7 @@ public class Bahai implements Serializable
 
 	/**
 	 * Pass to fixed date.
-	 *
+	 * 
 	 * @param major Major.
 	 * @param cycle Cycle.
 	 * @param year Year.
@@ -170,7 +170,7 @@ public class Bahai implements Serializable
 	/**
 	 * Gets the major, cycle, year, month, day of the instance from the fixed
 	 * day.
-	 *
+	 * 
 	 * @param fixed Fixed day number.
 	 */
 	public void fromFixed(long fixed)
@@ -193,7 +193,7 @@ public class Bahai implements Serializable
 
 	/**
 	 * Gets the new year.
-	 *
+	 * 
 	 * @param year Year to get its first day.
 	 * @return The fixed day of the beggining of the year.
 	 */
@@ -204,7 +204,7 @@ public class Bahai implements Serializable
 
 	/**
 	 * Transforms a Bahai date into a Julian day.
-	 *
+	 * 
 	 * @param major Major.
 	 * @param cycle Cycle.
 	 * @param year Year.
@@ -233,5 +233,30 @@ public class Bahai implements Serializable
 	public void fromJulianDay(int jd)
 	{
 		fromFixed(jd - Gregorian.EPOCH);
+	}
+
+	/**
+	 * For unit testing only.
+	 * @param args Not used.
+	 */
+	public static void main(String args[])
+	{
+		System.out.println("Bahai Test");
+
+		int jd = 2451545;
+		Bahai h = new Bahai(jd);
+		System.out.println("JD " + jd + " = " + h.major + "/" + h.cycle + "/" + h.year + "/" + h.month + "/" + h.day);
+
+		Bahai h2 = new Bahai(h.major, h.cycle, h.year, h.month, h.day);
+		System.out
+				.println("JD " + h2.toJulianDay() + " = " + h2.major + "/" + h2.cycle + "/" + h2.year + "/" + h2.month + "/" + h2.day);
+
+		System.out.println(Calendar.nameFromDayOfWeek(Calendar.dayOfWeekFromFixed(h2.toFixed()), Bahai.DAY_OF_WEEK_NAMES));
+		String month = Calendar.nameFromMonth(h2.day, Bahai.DAY_OF_MONTH_NAMES);
+		month += " " + Calendar.nameFromNumber(h2.month, Bahai.DAY_OF_MONTH_NAMES);
+		System.out.println(month);
+		System.out.println(Calendar.nameFromMonth(h2.year, Bahai.YEAR_NAMES));
+
+		System.out.println("(until sunset)");
 	}
 }

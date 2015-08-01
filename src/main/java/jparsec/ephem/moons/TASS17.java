@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- *
+ * 
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *
+ *  
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- *
+ * 
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */
+ */					
 package jparsec.ephem.moons;
 
 import java.io.BufferedReader;
@@ -26,8 +26,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+
 import jparsec.ephem.Functions;
 import jparsec.graph.DataSet;
+import jparsec.io.ConsoleReport;
 import jparsec.io.FileIO;
 import jparsec.math.Constant;
 import jparsec.util.JPARSECException;
@@ -39,7 +41,7 @@ import jparsec.util.Logger.LEVEL;
  * satellites of Saturn. For reference see A. Vienne \& L. Duriez, A\&A 297,
  * 588-605 (1995), and A\&A 324, 366 (1997). Objects are Mimas, Enceladus,
  * Tethys, Dione, Rhea, Titan, Hyperion, and Iapetus.
- *
+ * 
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -47,7 +49,7 @@ public class TASS17
 {
 	// private constructor so that this class cannot be instantiated.
 	private TASS17() {}
-
+	
 	/**
 	 * Implements TASS 1.7 theory. Output vector contains ecliptic coordinates
 	 * (AU) of eight satellites, and also the velocity components, in AU/day.
@@ -57,7 +59,7 @@ public class TASS17
 	 * Positions and velocities of the satellites Mimas, Enceladus, Tethys,
 	 * Dione, Rhea, Titan, Hyperion and Iapetus referred to the center of Saturn
 	 * and to the mean ecliptic and mean equinox for J2000.0 epoch.
-	 *
+	 * 
 	 * @param JD Julian day in TDB.
 	 * @param nsat Satellite number, from 1 (Mimas) to 7 (Iapetus).
 	 * @param truncate True for truncated version (faster), false for full
@@ -495,5 +497,21 @@ public class TASS17
 		{ 0.0, P, VL, ZR, ZI, ZTR, ZTI };
 
 		return ELEM;
+	}
+	
+	/**
+	 * Test program.
+	 * @param args Not used.
+	 */
+	public static void main(String args[]) {
+		
+		try {
+			double jd = 2421677.4;
+			double e[] = TASS17.TASS17_theory(jd, 1, false);
+			
+			ConsoleReport.doubleArrayReport(e, "f2.12");
+		} catch (Exception exc) {
+			exc.printStackTrace();
+		}
 	}
 }

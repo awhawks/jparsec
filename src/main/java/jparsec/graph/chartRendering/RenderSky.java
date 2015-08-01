@@ -2585,7 +2585,6 @@ public class RenderSky
     		}
 			for (int tsizeIndex=1; tsizeIndex < starImg.length; tsizeIndex ++) {
 	        	int ss = (int) (tsizeIndex*2*starFactor[index]);
-	        	if (g.renderingToAndroid()) ss += 2;
 	        	for (int i=0; i<7; i++) {
 	        		String sname = name + "_"+index+"_"+tsizeIndex+"_"+i+".png";
 		    		starImg[tsizeIndex][i] = g.getImage(sname);
@@ -4485,7 +4484,7 @@ public class RenderSky
 		}
 
 		double factor = 1;
-		if (sc > 180) factor = 2; // Images covering large fields (>3\u00ba) should disappear faster
+		if (sc > 180) factor = 2; // Images covering large fields (>3º) should disappear faster
 		int w = 1, h = 1;
 		if (radius_x*factor < imgMaxWidth || radius_y*factor < imgMaxHeight) {
 			if (!recovered) {
@@ -4636,7 +4635,7 @@ public class RenderSky
 	private static final String types[] = new String[] {"unk", "gal", "neb", "pneb", "ocl", "gcl", "galpart", "qua", "duplicate", "duplicateInNGC", "star/s", "notFound"};
 	//private static final String types2[] = new String[] {"unknown", "galaxy", "nebula", "planetary nebula", "open cluster", "globular cluster", "region of galaxy", "quasar", "duplicate", "duplicate in NGC", "star/s", "not found"};
 	private static final int types2Int[] = new int[] {819, 40, 959, 960, 1297, 961, 953, 954, 955, 956, 957, 958};
-//	private static final String types2Spa[] = new String[] {"desconocido", "galaxia", "nebulosa", "nebulosa planetaria", "c\u00famulo abierto", "c\u00famulo globular", "regi\u00f3n de una galaxia", "quasar", "duplicado", "duplicado en el NGC", "estrella/s", "no encontrado"};
+//	private static final String types2Spa[] = new String[] {"desconocido", "galaxia", "nebulosa", "nebulosa planetaria", "cúmulo abierto", "cúmulo globular", "región de una galaxia", "quasar", "duplicado", "duplicado en el NGC", "estrella/s", "no encontrado"};
 	private static final String nodraw2[] = new String[] {"LMC", "292", "Mel22", "7000", "I.5067", "6533", "6523"};
 	private float lastObjMaglim = -1, maglimNotDrag = -1, maglimStarsNotDrag = -1;
 	private static ArrayList<String> imagesNotFound = new ArrayList<String>();
@@ -5469,7 +5468,7 @@ public class RenderSky
 						{
 							val = (float) (360.0 - i * eclStep);
 							if (val < 0) val = (float) Functions.normalizeDegrees(val);
-							drawString(render.drawCoordinateGridEclipticColor, render.drawCoordinateGridFont, Integer.toString((int) (val+0.5))+"\u00ba", pos[0], pos[1], -radius, false);
+							drawString(render.drawCoordinateGridEclipticColor, render.drawCoordinateGridFont, Integer.toString((int) (val+0.5))+"º", pos[0], pos[1], -radius, false);
 						}
 					} else {				
 						if (!eclipticDrawn && render.drawCoordinateGridLabels && isInTheScreen((int)pos[0], (int)pos[1], -(int)g.getStringWidth(ecl0))) {
@@ -5555,7 +5554,7 @@ public class RenderSky
 				{
 					g.drawLine(pos[0]-r, pos[1], pos[0]+r, pos[1], true);
 					g.drawLine(pos[0], pos[1]-r, pos[0], pos[1]+r, true);
-					drawString(render.drawCoordinateGridColor, render.drawCoordinateGridFont, label[i], pos[0], pos[1], -radius, false);
+					if (render.drawCoordinateGridLabels) drawString(render.drawCoordinateGridColor, render.drawCoordinateGridFont, label[i], pos[0], pos[1], -radius, false);
 				}				
 			}
 		}
@@ -5720,7 +5719,7 @@ public class RenderSky
 					if ((!labelDrawn || tol<oldTol)) {
 						if (coordinate_system != CoordinateSystem.COORDINATE_SYSTEM.EQUATORIAL) {
 							int v = (int) (ra * 15.0 + 0.5);
-							label = Integer.toString(v)+"\u00ba";
+							label = Integer.toString(v)+"º";
 							if (coordinate_system == CoordinateSystem.COORDINATE_SYSTEM.HORIZONTAL) {
 								if (v == 0) label += " (N)";
 								if (v == 180) label += " (S)";
@@ -5939,7 +5938,7 @@ public class RenderSky
 						if ((!labelDrawn || tol < oldTol) && tol < labelTolerance) {
 							value = (int) (Math.abs(dec) + 0.5);
 							if (dec < 0) value = -value;
-							label = Integer.toString(value) + "\u00ba";
+							label = Integer.toString(value) + "º";
 
 							index = DataSet.getIndex(labelsAxesNameY, label);
 							if (index < 0 || tol<oldTol) {
@@ -6160,7 +6159,7 @@ public class RenderSky
 						}
 						if (coordinate_system != CoordinateSystem.COORDINATE_SYSTEM.EQUATORIAL) {
 							int v = (int) (ra * 15.0 + 0.5);
-							label = Integer.toString(v)+"\u00ba";
+							label = Integer.toString(v)+"º";
 							if (coordinate_system == CoordinateSystem.COORDINATE_SYSTEM.HORIZONTAL) {
 								if (v == 0) label += " (N)";
 								if (v == 180) label += " (S)";
@@ -6375,7 +6374,7 @@ public class RenderSky
 						if ((!labelDrawn || tol < oldTol) && tol < labelTolerance) {
 							value = (int) (Math.abs(dec) + 0.5);
 							if (dec < 0) value = -value;
-							label = Integer.toString(value) + "\u00ba";
+							label = Integer.toString(value) + "º";
 							index = DataSet.getIndex(labelsAxesNameY, label);
 							if (index < 0 || tol<oldTol) {
 								if (index >= 0) {
@@ -8650,7 +8649,7 @@ public class RenderSky
 			if (projection.obs.getMotherBody() != TARGET.EARTH && projection.obs.getMotherBody() != TARGET.NOT_A_PLANET) {
 				locStar0 = projection.getPositionFromBody(locStar0, false);
  			}
-			LocationElement ll = projection.getApparentLocationInSelectedCoordinateSystem(locStar0, true, true, 0);
+			LocationElement ll = projection.getApparentLocationInSelectedCoordinateSystem(locStar0, true, false, 0);
 			
 			if (drawAll) {
 				float[] pos0 = projection.projectPosition(ll, 0, false);
@@ -9240,7 +9239,7 @@ public class RenderSky
 			locE = projection.getPositionFromEarth(locE, true);
 
 		se.constellation = Constellation.getConstellationName(locE.getLongitude(), locE.getLatitude(), jd, projection.eph);
-		EphemElement ephem = new EphemElement();
+		EphemElement ephem = new EphemElement(); 
   		ephem.angularRadius = 0;
   		ephem.rightAscension = se.rightAscension;
   		ephem.declination = se.declination;
@@ -13967,7 +13966,7 @@ public class RenderSky
 
 				LocationElement eq = loc;
 				float ss[] = (float[]) obj[5];
-				loc = projection.getApparentLocationInSelectedCoordinateSystem(loc, true, true, ss[0]/pixels_per_radian);
+				loc = projection.getApparentLocationInSelectedCoordinateSystem(loc, true, false, ss[0]/pixels_per_radian);
 				if (drawAll) {
 					float size0 = (float) (ss[0] * pixels_per_degree) + 1;
 					float[] pos0 = projection.projectPosition(loc, 0, false);
@@ -14028,7 +14027,7 @@ public class RenderSky
 									if (projection.obs.getMotherBody() != TARGET.EARTH && projection.obs.getMotherBody() != TARGET.NOT_A_PLANET) {
 										loc = projection.getPositionFromBody(loc, this.fast);
 									}
-									loc = projection.getApparentLocationInSelectedCoordinateSystem(loc, true, true, 0);
+									loc = projection.getApparentLocationInSelectedCoordinateSystem(loc, true, false, 0);
 									if (drawAll) {
 										float[] pos0 = projection.projectPosition(loc, 0, false);
 										if (pos0 != null && !this.isInTheScreen((int)pos0[0], (int)pos0[1], 0)) pos0 = null;

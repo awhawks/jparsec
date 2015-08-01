@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- *
+ * 
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *
+ *  
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- *
+ * 
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */
+ */					
 package jparsec.ephem.event;
 
 import jparsec.astronomy.*;
@@ -38,7 +38,7 @@ import jparsec.math.matrix.Matrix;
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
-public class LunarEvent
+public class LunarEvent 
 {
 	// private constructor so that this class cannot be instantiated.
 	private LunarEvent() {}
@@ -49,15 +49,15 @@ public class LunarEvent
 	 * recommendations, and it seems the values from Eckhardt's theory are closer
 	 * to those obtained using JPL ephemerides, for a few centuries around year 2000.
 	 * IAU lunar rotation model is no longer used in JPARSEC.<P>
-	 *
+	 * 
 	 * An adequate ephemeris object should be provided, with the algorithm to apply to
 	 * obtain the lunar position. The returning values will be referred to the geocenter
 	 * or the topocentric place depending on it.<P>
-	 *
+	 * 
 	 * Reference:<P>
-	 *
+	 * 
 	 * Eckhardt, D.H., "Theory of the Libration of the Moon", Moon and planets 25, 3 (1981).
-	 *
+	 * 
 	 * @param time Time object.
 	 * @param obs Observer object.
 	 * @param eph Ephemeris object.
@@ -78,21 +78,21 @@ public class LunarEvent
 
 		return LunarEvent.getEckhardtMoonLibrations(jd, eph.ephemMethod, ephem.getEquatorialLocation());
 	}
-
+	
 	/**
 	 * Obtains the orientation of the Moon according to Eckhardt's analytical theory.<P>
 	 * The results in current dates are about 0.1 deg from those obtained using IAU
 	 * recommendations, and it seems the values from Eckhardt's theory are closer
 	 * to those obtained using JPL ephemerides.<P>
-	 *
+	 * 
 	 * An adequate ephemeris object should be provided, with the algorithm to apply to
 	 * obtain the lunar position. The returning values will be refered to the geocenter
 	 * or the topocentric place depending on it.<P>
-	 *
+	 * 
 	 * Reference:<P>
-	 *
+	 * 
 	 * Eckhardt, D.H., "Theory of the Libration of the Moon", Moon and planets 25, 3 (1981).
-	 *
+	 * 
 	 * @param jd Julian day in TT.
 	 * @param ephemMethod Ephem method to apply, constants defined in {@linkplain EphemerisElement}.
 	 * @param locEquatorial Equatorial apparent position of the Moon for date jd.
@@ -101,7 +101,7 @@ public class LunarEvent
 	 * mean equinox of date.
 	 * @throws JPARSECException If an error occurs.
 	 */
-	public static double[] getEckhardtMoonLibrations(double jd, EphemerisElement.REDUCTION_METHOD ephemMethod,
+	public static double[] getEckhardtMoonLibrations(double jd, EphemerisElement.REDUCTION_METHOD ephemMethod, 
 			LocationElement locEquatorial)
 	throws JPARSECException {
 		double t = Functions.toCenturies(jd);
@@ -113,7 +113,7 @@ public class LunarEvent
 		LocationElement locEcliptic = CoordinateSystem.equatorialToEcliptic(locEquatorial, eps, false);
 		double moonLon = locEcliptic.getLongitude();
 		double moonLat = locEcliptic.getLatitude();
-
+				
 		// Obtain mean parameters for the Moon.
 		double k1 = (119.75 + 131.849 * t) * Constant.DEG_TO_RAD;
 		double k2 = (72.56 + 20.186 * t) * Constant.DEG_TO_RAD;
@@ -131,7 +131,7 @@ public class LunarEvent
 		double I = 1.54242 * Constant.DEG_TO_RAD;
 		// Moon's mean ascending node longitude
 		double omega = (125.0445550 - 1934.1361849 * t + 0.0020762 * t * t + t * t * t / 467410.0 - t * t * t * t / 18999000.0) * Constant.DEG_TO_RAD;
-
+		
 		// Obtain optical librations
 		Nutation.calcNutation(t, eph);
 		double nutLon = Nutation.getNutationInLongitude();
@@ -142,19 +142,19 @@ public class LunarEvent
 		double lp = Functions.normalizeRadians(A - F);
 		double sinbp = - Math.sin(W) * Math.cos(moonLat) * Math.sin(I) - Math.sin(moonLat) * Math.cos(I);
 		double bp = Math.asin(sinbp);
-
+		
 		// Obtain rho, sigma, and tau parameters
 		double rho = -0.02752 * Math.cos(Mp) - 0.02245 * Math.sin(F) + 0.00684 * Math.cos(Mp - 2.0 * F);
 		rho -= 0.00293 * Math.cos(2.0 * F) + 0.00085 * Math.cos(2.0 * F - 2.0 * D) + 0.00054 * Math.cos(Mp - 2.0 * D);
 		rho -= 0.00020 * Math.sin(Mp + F) + 0.00020 * Math.cos(Mp + 2.0 * F) + 0.00020 * Math.cos(Mp - F);
 		rho += 0.00014 * Math.cos(Mp + 2.0 * F - 2.0 * D);
-
+		
 		double sigma = -0.02816 * Math.sin(Mp) + 0.02244 * Math.cos(F) - 0.00682 * Math.sin(Mp -2.0 * F);
 		sigma += -0.00279 * Math.sin(2.0 * F) - 0.00083 * Math.sin(2.0 * F - 2.0 * D) + 0.00069 * Math.sin(Mp - 2.0 * D);
 		sigma += 0.00040 * Math.cos(Mp + F) - 0.00025 * Math.sin(2.0 * Mp) - 0.00023 * Math.sin(Mp + 2.0 * F);
 		sigma += 0.00020 * Math.cos(Mp - F) - 0.00019 * Math.sin(Mp - F) + 0.00013 * Math.sin(Mp + 2.0 * F - 2.0 * D);
 		sigma += -0.00010 * Math.cos(Mp - 3.0 * F);
-
+		
 		double tau = 0.02520 * E * Math.sin(M) + 0.00473 * Math.sin(2.0 * Mp - 2.0 * F) - 0.00467 * Math.sin(Mp);
 		tau += 0.00396 * Math.sin(k1) + 0.00276 * Math.sin(2.0 * Mp -2.0 * D) + 0.00196 * Math.sin(omega);
 		tau += -0.00183 * Math.cos(Mp - F) + 0.00115 * Math.sin(Mp - 2.0 * D) - 0.00096 * Math.sin(Mp - D);
@@ -162,7 +162,7 @@ public class LunarEvent
 		tau += 0.00027 * Math.sin(2.0 * Mp - M - 2.0 * D) + 0.00023 * Math.sin(k2) - 0.00014 * Math.sin(2.0 * D);
 		tau += 0.00014 * Math.cos(2.0 * Mp - 2.0 * F) - 0.00012 * Math.sin(Mp - 2.0 * F) - 0.00012 * Math.sin(2.0 * Mp);
 		tau += 0.00011 * Math.sin(2.0 * Mp - 2.0 * M - 2.0 * D);
-
+		
 		rho = rho * Constant.DEG_TO_RAD;
 		sigma = sigma * Constant.DEG_TO_RAD;
 		tau = tau * Constant.DEG_TO_RAD;
@@ -170,7 +170,7 @@ public class LunarEvent
 		// Obtain physical librations
 		double lpp = -tau + (rho * Math.cos(A) + sigma * Math.sin(A)) * Math.tan(bp);
 		double bpp = sigma * Math.cos(A) - rho * Math.sin(A);
-
+		
 		// Obtain total librations
 		double l = lp + lpp;
 		double b = bp + bpp;
@@ -185,7 +185,7 @@ public class LunarEvent
 
 		return new double[] {l, b, p};
 	}
-
+	
 	// See Astronomical Algorithms by J. Meeus.
     private static double[][] moonPerigeeCoefficients = {
         {2, 0, 0, -1.6769, 0},
@@ -354,7 +354,7 @@ public class LunarEvent
     private static double calcK(double jd) throws JPARSECException {
 		AstroDate astro = new AstroDate(jd);
 		double year = astro.getAstronomicalYear() + (astro.getMonth() - 1.0 + astro.getDayPlusFraction() / (1.0 + astro.getDaysInMonth())) / 12.0;
-
+		
         double kapprox = (year - 1999.973) * 13.2555;
         return kapprox;
     }
@@ -406,7 +406,7 @@ public class LunarEvent
 		if (MeanJD > jd && eventType != EVENT_TIME.PREVIOUS) {
 			double km = k - 1;
 			double MeanJDm = meanPerigeeApogee(km);
-			if ((MeanJDm > jd && eventType == EVENT_TIME.NEXT) ||
+			if ((MeanJDm > jd && eventType == EVENT_TIME.NEXT) || 
 					(Math.abs(jd-MeanJDm) < Math.abs(jd-MeanJD) && eventType == EVENT_TIME.CLOSEST)) {
 				k = km;
 				MeanJD = MeanJDm;
@@ -415,14 +415,14 @@ public class LunarEvent
 		if (MeanJD < jd && eventType != EVENT_TIME.NEXT) {
 			double kp = k + 1;
 			double MeanJDp = meanPerigeeApogee(kp);
-			if ((MeanJDp < jd && eventType == EVENT_TIME.PREVIOUS) ||
+			if ((MeanJDp < jd && eventType == EVENT_TIME.PREVIOUS) || 
 					(Math.abs(jd-MeanJDp) < Math.abs(jd-MeanJD) && eventType == EVENT_TIME.CLOSEST)) {
 				k = kp;
 				MeanJD = MeanJDp;
 			}
 		}
 
-
+		
         double T = k / 1325.55;
         double Tsquared = T * T;
         double Tcubed = Tsquared * T;
@@ -496,7 +496,7 @@ public class LunarEvent
 		if (MeanJD > jd && eventType != EVENT_TIME.PREVIOUS) {
 			double km = k - 1;
 			double MeanJDm = meanPerigeeApogee(km);
-			if ((MeanJDm > jd && eventType == EVENT_TIME.NEXT) ||
+			if ((MeanJDm > jd && eventType == EVENT_TIME.NEXT) || 
 					(Math.abs(jd-MeanJDm) < Math.abs(jd-MeanJD) && eventType == EVENT_TIME.CLOSEST)) {
 				k = km;
 				MeanJD = MeanJDm;
@@ -505,14 +505,14 @@ public class LunarEvent
 		if (MeanJD < jd && eventType != EVENT_TIME.NEXT) {
 			double kp = k + 1;
 			double MeanJDp = meanPerigeeApogee(kp);
-			if ((MeanJDp < jd && eventType == EVENT_TIME.PREVIOUS) ||
+			if ((MeanJDp < jd && eventType == EVENT_TIME.PREVIOUS) || 
 					(Math.abs(jd-MeanJDp) < Math.abs(jd-MeanJD) && eventType == EVENT_TIME.CLOSEST)) {
 				k = kp;
 				MeanJD = MeanJDp;
 			}
 		}
-
-
+		
+		
         double T = k / 1325.55;
         double Tsquared = T * T;
         double Tcubed = Tsquared * T;
@@ -535,7 +535,7 @@ public class LunarEvent
                     * moonApogeeCoefficients[i][ 2]);
         }
         jd = MeanJD + Sigma;
-
+        
         nApogeeCoefficients = moonApogeeParalllaxCoefficients.length;
         double Parallax = 3245.251;
         for (int i = 0; i < nApogeeCoefficients; i++) {
@@ -546,7 +546,7 @@ public class LunarEvent
                     * moonApogeeParalllaxCoefficients[i][2]);
         }
         double p = (Parallax / 3600.0) * Constant.DEG_TO_RAD;
-
+        
 		// Correct Meeus results for secular acceleration
 		double deltaT = TimeScale.dynamicalTimeCorrectionForMoonSecularAcceleration(jd) - jd;
 		jd -= deltaT;
@@ -588,9 +588,9 @@ public class LunarEvent
     	double omega = 83.3532430 + 4096.0137111 * T - 0.0103238 * T * T - T * T * T / 80053.0 + T * T * T * T / 18999000.0;
     	return Functions.normalizeRadians(omega * Constant.DEG_TO_RAD);
     }
-
+    
     /**
-     * Calculates the instant of the a pass of the Moon through its descending node,
+     * Calculates the instant of the a pass of the Moon through its descending node, 
      * following Meeus. Accuracy is usually better than 1 minute, and always better than 3.
      * Time is corrected for Moon secular acceleration.
      * @param jd The starting Julian day of calculations (TDB).
@@ -604,7 +604,7 @@ public class LunarEvent
     public static SimpleEventElement getPassThroughDescendingNode(double jd, EVENT_TIME eventType) throws JPARSECException {
 		AstroDate astro = new AstroDate(jd);
 		double year = astro.getAstronomicalYear() + (astro.getMonth() - 1.0 + astro.getDayPlusFraction() / (1.0 + astro.getDaysInMonth())) / 12.0;
-
+		
         double k = (year - 2000.05) * 13.4223;
 		double kapprox = k;
 		k = 0.5 + Math.floor(k + 0.5);
@@ -624,19 +624,19 @@ public class LunarEvent
 			double km = k - 1;
 			T = km / 1342.23;
 			double newjde = 2451565.1619 + 27.212220817 * km + 0.0002572 * T * T + 0.000000021 * T * T * T - 0.000000000088 * T * T * T * T;
-			if ((newjde > jd && eventType == EVENT_TIME.NEXT) ||
+			if ((newjde > jd && eventType == EVENT_TIME.NEXT) || 
 					(Math.abs(jd-newjde) < Math.abs(jd-jde) && eventType == EVENT_TIME.CLOSEST)) k = km;
 		}
 		if (jde < jd && eventType != EVENT_TIME.NEXT) {
 			double kp = k + 1;
 			T = kp / 1342.23;
 			double newjde = 2451565.1619 + 27.212220817 * kp + 0.0002572 * T * T + 0.000000021 * T * T * T - 0.000000000088 * T * T * T * T;
-			if ((newjde < jd && eventType == EVENT_TIME.PREVIOUS) ||
+			if ((newjde < jd && eventType == EVENT_TIME.PREVIOUS) || 
 					(Math.abs(jd-newjde) < Math.abs(jd-jde) && eventType == EVENT_TIME.CLOSEST)) k = kp;
 		}
 		T = k / 1342.23;
-
-
+				
+		
 		double D = 183.6380 + 331.73735691 * k + 0.001505 * T * T + 0.00000209 * T * T * T - 0.000000010 * T * T * T * T;
 		double M = 17.4006 + 26.82037250 * k + 0.0000999 * T * T + 0.00000006 * T * T * T;
 		double Mp = 38.3776 + 355.52747322 * k + 0.0123577 * T * T + 0.000014628 * T * T * T - 0.000000069 * T * T * T * T;
@@ -655,12 +655,12 @@ public class LunarEvent
 		jd = 2451565.1619 + 27.212220817 * k + 0.0002572 * T * T + 0.000000021 * T * T * T - 0.000000000088 * T * T * T * T -
 			0.4721 * Math.sin(Mp) - 0.1649 * Math.sin(2.0 * D) - 0.0868 * Math.sin(2.0 * D - Mp) +
 			0.0084 * Math.sin(2.0 * D + Mp) - 0.0083 * E * Math.sin(2.0 * D - M) - 0.0039 * E * Math.sin(2.0 * D - M - Mp) +
-			0.0034 * Math.sin(2.0 * Mp) - 0.0031 * Math.sin(2.0 * D - 2.0 * Mp) + 0.0030 * E * Math.sin(2.0 * D + M) +
+			0.0034 * Math.sin(2.0 * Mp) - 0.0031 * Math.sin(2.0 * D - 2.0 * Mp) + 0.0030 * E * Math.sin(2.0 * D + M) + 
 			0.0028 * E * Math.sin(M - Mp) + 0.0026 * E * Math.sin(M) + 0.0025 * Math.sin(4.0 * D) + 0.0024 * Math.sin(D) +
-			0.0022 * E * Math.sin(M + Mp) + 0.0017 * Math.sin(omega) + 0.0014 * Math.sin(4.0 * D - Mp) +
-			0.0005 * E * Math.sin(2.0 * D + M - Mp) + 0.0004 * E * Math.sin(2.0 * D - M + Mp) -
+			0.0022 * E * Math.sin(M + Mp) + 0.0017 * Math.sin(omega) + 0.0014 * Math.sin(4.0 * D - Mp) + 
+			0.0005 * E * Math.sin(2.0 * D + M - Mp) + 0.0004 * E * Math.sin(2.0 * D - M + Mp) - 
 			0.0003 * E * Math.sin(2.0 * D - 2.0 * M) + 0.0003 * E * Math.sin(4.0 * D - M) + 0.0003 * (Math.sin(V) + Math.sin(P));
-
+		
 		// Correct Meeus results for secular acceleration
 		double deltaT = TimeScale.dynamicalTimeCorrectionForMoonSecularAcceleration(jd) - jd;
 		jd -= deltaT;
@@ -668,10 +668,10 @@ public class LunarEvent
         SimpleEventElement se = new SimpleEventElement(jd, SimpleEventElement.EVENT.MOON_DESCENDING_NODE, "");
         se.body = TARGET.Moon.getName();
         return se;
-    }
-
+    }    
+    
     /**
-     * Calculates the instant of the a pass of the Moon through its ascending node,
+     * Calculates the instant of the a pass of the Moon through its ascending node, 
      * following Meeus. Accuracy is usually better than 1 minute, and always better than 3.
      * Time is corrected for Moon secular acceleration.
      * @param jd The starting Julian day of calculations (TDB).
@@ -685,7 +685,7 @@ public class LunarEvent
     public static SimpleEventElement getPassThroughAscendingNode(double jd, EVENT_TIME eventType) throws JPARSECException {
 		AstroDate astro = new AstroDate(jd);
 		double year = astro.getAstronomicalYear() + (astro.getMonth() - 1.0 + astro.getDayPlusFraction() / (1.0 + astro.getDaysInMonth())) / 12.0;
-
+		
         double k = (year - 2000.05) * 13.4223;
 		double kapprox = k;
 		k = 1.0 + Math.floor(k);
@@ -705,14 +705,14 @@ public class LunarEvent
 			double km = k - 1;
 			T = km / 1342.23;
 			double newjde = 2451565.1619 + 27.212220817 * km + 0.0002572 * T * T + 0.000000021 * T * T * T - 0.000000000088 * T * T * T * T;
-			if ((newjde > jd && eventType == EVENT_TIME.NEXT) ||
+			if ((newjde > jd && eventType == EVENT_TIME.NEXT) || 
 					(Math.abs(jd-newjde) < Math.abs(jd-jde) && eventType == EVENT_TIME.CLOSEST)) k = km;
 		}
 		if (jde < jd && eventType != EVENT_TIME.NEXT) {
 			double kp = k + 1;
 			T = kp / 1342.23;
 			double newjde = 2451565.1619 + 27.212220817 * kp + 0.0002572 * T * T + 0.000000021 * T * T * T - 0.000000000088 * T * T * T * T;
-			if ((newjde < jd && eventType == EVENT_TIME.PREVIOUS) ||
+			if ((newjde < jd && eventType == EVENT_TIME.PREVIOUS) || 
 					(Math.abs(jd-newjde) < Math.abs(jd-jde) && eventType == EVENT_TIME.CLOSEST)) k = kp;
 		}
 		T = k / 1342.23;
@@ -735,10 +735,10 @@ public class LunarEvent
 		jd = 2451565.1619 + 27.212220817 * k + 0.0002572 * T * T + 0.000000021 * T * T * T - 0.000000000088 * T * T * T * T -
 			0.4721 * Math.sin(Mp) - 0.1649 * Math.sin(2.0 * D) - 0.0868 * Math.sin(2.0 * D - Mp) +
 			0.0084 * Math.sin(2.0 * D + Mp) - 0.0083 * E * Math.sin(2.0 * D - M) - 0.0039 * E * Math.sin(2.0 * D - M - Mp) +
-			0.0034 * Math.sin(2.0 * Mp) - 0.0031 * Math.sin(2.0 * D - 2.0 * Mp) + 0.0030 * E * Math.sin(2.0 * D + M) +
+			0.0034 * Math.sin(2.0 * Mp) - 0.0031 * Math.sin(2.0 * D - 2.0 * Mp) + 0.0030 * E * Math.sin(2.0 * D + M) + 
 			0.0028 * E * Math.sin(M - Mp) + 0.0026 * E * Math.sin(M) + 0.0025 * Math.sin(4.0 * D) + 0.0024 * Math.sin(D) +
-			0.0022 * E * Math.sin(M + Mp) + 0.0017 * Math.sin(omega) + 0.0014 * Math.sin(4.0 * D - Mp) +
-			0.0005 * E * Math.sin(2.0 * D + M - Mp) + 0.0004 * E * Math.sin(2.0 * D - M + Mp) -
+			0.0022 * E * Math.sin(M + Mp) + 0.0017 * Math.sin(omega) + 0.0014 * Math.sin(4.0 * D - Mp) + 
+			0.0005 * E * Math.sin(2.0 * D + M - Mp) + 0.0004 * E * Math.sin(2.0 * D - M + Mp) - 
 			0.0003 * E * Math.sin(2.0 * D - 2.0 * M) + 0.0003 * E * Math.sin(4.0 * D - M) + 0.0003 * (Math.sin(V) + Math.sin(P));
 
 		// Correct Meeus results for secular acceleration
@@ -748,30 +748,30 @@ public class LunarEvent
         SimpleEventElement se = new SimpleEventElement(jd, SimpleEventElement.EVENT.MOON_ASCENDING_NODE, "");
         se.body = TARGET.Moon.getName();
         return se;
-    }
+    }    
 
 	/**
-	 * Calculates the instant of a given lunar maximum geocentric declination,
+	 * Calculates the instant of a given lunar maximum geocentric declination, 
 	 * following Meeus's Astronomical Algorithms. Error is a few minutes at J2000, and could
 	 * reach half an hour 3000 years after or before J2000 epoch. Time is corrected by Moon
 	 * secular acceleration.
 	 * @param jd The starting Julian day of calculations.
-	 * @param eventType The event type (next, last, or closest to input date).  The use of the
-	 * closest option is recommended when possible, since next/previous events could give incorrect
+	 * @param eventType The event type (next, last, or closest to input date).  The use of the 
+	 * closest option is recommended when possible, since next/previous events could give incorrect 
 	 * events for a given date far from J2000.
 	 * @return The event. The details field will contains the value of the declination in degrees.
 	 * @throws JPARSECException If an error occurs.
 	 */
-	public static SimpleEventElement MoonMaximumDeclination(double jd, EVENT_TIME eventType)
+	public static SimpleEventElement MoonMaximumDeclination(double jd, EVENT_TIME eventType) 
 	throws JPARSECException {
 		AstroDate astro = new AstroDate(jd);
 		double year = astro.getAstronomicalYear() + (astro.getMonth() - 1.0 + astro.getDayPlusFraction() / (1.0 + astro.getDaysInMonth())) / 12.0;
-
+		
 		double kapprox = (year - 2000.03) * 13.3686;
 		double k = Math.round(kapprox);
 		if (eventType == EVENT_TIME.PREVIOUS && k > kapprox) k --;
 		if (eventType == EVENT_TIME.NEXT && k < kapprox) k ++;
-
+		
 		double T = k / 1336.86;
 		double jde = 2451562.5897 + 27.321582241 * k + 0.000100692 * T * T - 0.000000141 * T * T * T;
 		if (jde > jd && eventType == EVENT_TIME.PREVIOUS) k --;
@@ -780,28 +780,28 @@ public class LunarEvent
 			double km = k - 1;
 			T = km / 1336.86;
 			double newjde = 2451562.5897 + 27.321582241 * km + 0.000100692 * T * T - 0.000000141 * T * T * T;
-			if ((newjde > jd && eventType == EVENT_TIME.NEXT) ||
+			if ((newjde > jd && eventType == EVENT_TIME.NEXT) || 
 					(Math.abs(jd-newjde) < Math.abs(jd-jde) && eventType == EVENT_TIME.CLOSEST)) k = km;
 		}
 		if (jde < jd && eventType != EVENT_TIME.NEXT) {
 			double kp = k + 1;
 			T = kp / 1336.86;
 			double newjde = 2451562.5897 + 27.321582241 * kp + 0.000100692 * T * T - 0.000000141 * T * T * T;
-			if ((newjde < jd && eventType == EVENT_TIME.PREVIOUS) ||
+			if ((newjde < jd && eventType == EVENT_TIME.PREVIOUS) || 
 					(Math.abs(jd-newjde) < Math.abs(jd-jde) && eventType == EVENT_TIME.CLOSEST)) k = kp;
 		}
 		T = k / 1336.86;
-
+		
 		double D = 152.3039 + 333.0705546 * k - 0.0004025 * T * T + 0.00000011 * T * T * T;
 		double M = 14.8591 + 26.9281592 * k - 0.0000544 * T * T - 0.00000010 * T * T * T;
 		double Mp = 4.6881 + 356.9562795 * k + 0.0103126 * T * T + 0.00001251 * T * T * T;
 		double F = 325.8867 + 1.4467806 * k - 0.0020708 * T * T - 0.00000215 * T * T * T;
-
+		
 		D *= Constant.DEG_TO_RAD;
 		M *= Constant.DEG_TO_RAD;
 		Mp *= Constant.DEG_TO_RAD;
 		F *= Constant.DEG_TO_RAD;
-
+		
 		jde = 2451562.5897 + 27.321582241 * k + 0.000100692 * T * T - 0.000000141 * T * T * T;
 		double E = 1.0 - 0.002516 * T - 0.0000074 * T * T;
 		double coefs[] = new double[] {
@@ -811,7 +811,7 @@ public class LunarEvent
 				-0.0021, 0.0019, 0.0018, 0.0018, 0.0017, 0.0017, -0.0014, 0.0013, 0.0013, 0.0012,
 				0.0011, -0.0011, 0.0010, 0.0010, -0.0009, 0.0007, -0.0007
 		};
-
+		
 		jde += coefs[0] * Math.cos(F) + coefs[1] * Math.sin(Mp) + coefs[2] * Math.sin(2.0*F) +
 				coefs[3] * Math.sin(2.0*D-Mp) + coefs[4] * Math.cos(Mp-F) + coefs[5] * Math.cos(Mp+F) +
 				coefs[6] * Math.sin(2.0*D) + coefs[7] * E * Math.sin(M) + coefs[8] * Math.cos(3.0*F) +
@@ -827,16 +827,16 @@ public class LunarEvent
 				coefs[36] * Math.sin(3.0*Mp+F) + coefs[37] * Math.sin(2.0*D-Mp+F) + coefs[38] * Math.cos(2.0*D-2.0*Mp) +
 				coefs[39] * Math.cos(D+F) + coefs[40] * E * Math.sin(M+Mp) + coefs[41] * Math.sin(2.0*D-2.0*F) +
 				coefs[42] * Math.cos(2.0*Mp+F) + coefs[43] * Math.cos(3.0*Mp+F);
-
+				
 		double dec = 23.6961 - 0.013004 * T;
-
+		
 		coefs = new double[] {
 				5.1093, 0.2658, 0.1448, -0.0322, 0.0133, 0.0125, -0.0124, -0.0101, 0.0097, -0.0087,
 				0.0074, 0.0067, 0.0063, 0.0060, -0.0057, -0.0056, 0.0052, 0.0041, -0.0040, 0.0038,
 				-0.0034, -0.0029, 0.0029, -0.0028, -0.0028, -0.0023, -0.0021, 0.0019, 0.0018, 0.0017,
 				0.0015, 0.0014, -0.0012, -0.0012, -0.0010, -0.0010, 0.0006
 		};
-
+		
 		dec += coefs[0] * Math.sin(F) + coefs[1] * Math.cos(2.0*F) + coefs[2] * Math.sin(2.0*D-F) +
 				coefs[3] * Math.sin(3.0*F) + coefs[4] * Math.cos(2.0*D-2.0*F) + coefs[5] * Math.cos(2.0*D) +
 				coefs[6] * Math.sin(Mp-F) + coefs[7] * Math.sin(Mp+2.0*F) + coefs[8] * Math.cos(F) +
@@ -861,27 +861,27 @@ public class LunarEvent
 	}
 
 	/**
-	 * Calculates the instant of a given lunar minimum geocentric declination,
+	 * Calculates the instant of a given lunar minimum geocentric declination, 
 	 * following Meeus's Astronomical Algorithms. Error is a few minutes at J2000, and could
 	 * reach half an hour 3000 years after or before J2000 epoch. Time is corrected by Moon
 	 * secular acceleration.
 	 * @param jd The starting Julian day of calculations.
-	 * @param eventType The event type (next, last, or closest to input date).  The use of the
-	 * closest option is recommended when possible, since next/previous events could give incorrect
+	 * @param eventType The event type (next, last, or closest to input date).  The use of the 
+	 * closest option is recommended when possible, since next/previous events could give incorrect 
 	 * events for a given date far from J2000.
 	 * @return The event. The details field will contains the value of the declination in degrees.
 	 * @throws JPARSECException If an error occurs.
 	 */
-	public static SimpleEventElement MoonMinimumDeclination(double jd, EVENT_TIME eventType)
+	public static SimpleEventElement MoonMinimumDeclination(double jd, EVENT_TIME eventType) 
 	throws JPARSECException {
 		AstroDate astro = new AstroDate(jd);
 		double year = astro.getAstronomicalYear() + (astro.getMonth() - 1.0 + astro.getDayPlusFraction() / (1.0 + astro.getDaysInMonth())) / 12.0;
-
+		
 		double kapprox = (year - 2000.03) * 13.3686;
 		double k = Math.round(kapprox);
 		if (eventType == EVENT_TIME.PREVIOUS && k > kapprox) k --;
 		if (eventType == EVENT_TIME.NEXT && k < kapprox) k ++;
-
+		
 		double T = k / 1336.86;
 		double jde = 2451548.9289 + 27.321582241 * k + 0.000100692 * T * T - 0.000000141 * T * T * T;
 		if (jde > jd && eventType == EVENT_TIME.PREVIOUS) k --;
@@ -890,30 +890,30 @@ public class LunarEvent
 			double km = k - 1;
 			T = km / 1336.86;
 			double newjde = 2451548.9289 + 27.321582241 * km + 0.000100692 * T * T - 0.000000141 * T * T * T;
-			if ((newjde > jd && eventType == EVENT_TIME.NEXT) ||
+			if ((newjde > jd && eventType == EVENT_TIME.NEXT) || 
 					(Math.abs(jd-newjde) < Math.abs(jd-jde) && eventType == EVENT_TIME.CLOSEST)) k = km;
 		}
 		if (jde < jd && eventType != EVENT_TIME.NEXT) {
 			double kp = k + 1;
 			T = kp / 1336.86;
 			double newjde = 2451548.9289 + 27.321582241 * kp + 0.000100692 * T * T - 0.000000141 * T * T * T;
-			if ((newjde < jd && eventType == EVENT_TIME.PREVIOUS) ||
+			if ((newjde < jd && eventType == EVENT_TIME.PREVIOUS) || 
 					(Math.abs(jd-newjde) < Math.abs(jd-jde) && eventType == EVENT_TIME.CLOSEST)) k = kp;
 		}
 		T = k / 1336.86;
-
+		
 		double D = 345.6676 + 333.0705546 * k - 0.0004025 * T * T + 0.00000011 * T * T * T;
 		double M = 1.3951 + 26.9281592 * k - 0.0000544 * T * T - 0.00000010 * T * T * T;
 		double Mp = 186.2100 + 356.9562795 * k + 0.0103126 * T * T + 0.00001251 * T * T * T;
 		double F = 145.1633 + 1.4467806 * k - 0.0020708 * T * T - 0.00000215 * T * T * T;
-
+		
 		D *= Constant.DEG_TO_RAD;
 		M *= Constant.DEG_TO_RAD;
 		Mp *= Constant.DEG_TO_RAD;
 		F *= Constant.DEG_TO_RAD;
-
+		
 		jde = 2451548.9289 + 27.321582241 * k + 0.000100692 * T * T - 0.000000141 * T * T * T;
-
+		
 		double E = 1.0 - 0.002516 * T - 0.0000074 * T * T;
 		double coefs[] = new double[] {
 				-0.8975, -0.4726, -0.1030, -0.0976, 0.0541, 0.0516, -0.0438, 0.0112, 0.0157,
@@ -922,7 +922,7 @@ public class LunarEvent
 				-0.0021, -0.0019, -0.0006, -0.0018, -0.0017, 0.0017, 0.0014, -0.0013, -0.0013, 0.0012,
 				0.0011, 0.0011, 0.0010, 0.0010, -0.0009, -0.0007, -0.0007
 		};
-
+		
 		jde += coefs[0] * Math.cos(F) + coefs[1] * Math.sin(Mp) + coefs[2] * Math.sin(2.0*F) +
 				coefs[3] * Math.sin(2.0*D-Mp) + coefs[4] * Math.cos(Mp-F) + coefs[5] * Math.cos(Mp+F) +
 				coefs[6] * Math.sin(2.0*D) + coefs[7] * E * Math.sin(M) + coefs[8] * Math.cos(3.0*F) +
@@ -938,16 +938,16 @@ public class LunarEvent
 				coefs[36] * Math.sin(3.0*Mp+F) + coefs[37] * Math.sin(2.0*D-Mp+F) + coefs[38] * Math.cos(2.0*D-2.0*Mp) +
 				coefs[39] * Math.cos(D+F) + coefs[40] * E * Math.sin(M+Mp) + coefs[41] * Math.sin(2.0*D-2.0*F) +
 				coefs[42] * Math.cos(2.0*Mp+F) + coefs[43] * Math.cos(3.0*Mp+F);
-
+				
 		double dec = 23.6961 - 0.013004 * T;
-
+		
 		coefs = new double[] {
 				-5.1093, 0.2658, -0.1448, 0.0322, 0.0133, 0.0125, -0.0015, 0.0101, -0.0097, 0.0087,
 				0.0074, 0.0067, -0.0063, -0.0060, 0.0057, -0.0056, -0.0052, -0.0041, -0.0040, -0.0038,
 				0.0034, -0.0029, 0.0029, 0.0028, -0.0028, 0.0023, 0.0021, 0.0019, 0.0018, -0.0017,
 				0.0015, 0.0014, 0.0012, -0.0012, 0.0010, -0.0010, 0.0037
 		};
-
+		
 		dec += coefs[0] * Math.sin(F) + coefs[1] * Math.cos(2.0*F) + coefs[2] * Math.sin(2.0*D-F) +
 				coefs[3] * Math.sin(3.0*F) + coefs[4] * Math.cos(2.0*D-2.0*F) + coefs[5] * Math.cos(2.0*D) +
 				coefs[6] * Math.sin(Mp-F) + coefs[7] * Math.sin(Mp+2.0*F) + coefs[8] * Math.cos(F) +
@@ -976,14 +976,14 @@ public class LunarEvent
 	/**
 	 * Returns the lunar libration angles for JPL or Moshier ephemerides. The conversion from
 	 * Mean Earth system to Principal Axis system is performed using Williams et al. 2008 formulae
-	 * if ephemerides algorithm is DE422, and Seidelmann et al. 2007 (Konopliv et al. 2001)
-	 * for the rest of DE4xx and Moshier's method. Results are very close to Eckhardt's theory,
+	 * if ephemerides algorithm is DE422, and Seidelmann et al. 2007 (Konopliv et al. 2001) 
+	 * for the rest of DE4xx and Moshier's method. Results are very close to Eckhardt's theory, 
 	 * and better than those reported by IAU approximations for the lunar north pole or rotation.
 	 * @param time Time object.
-	 * @param obs Observer.
+	 * @param obs Observer. 
 	 * @param eph Ephemerides properties. They are forced to be apparent and for the equinox
 	 * of date. Algorithm must be Moshier or JPL DE403/405/413/414/422methods.
-	 * @return An array with total libration (physical + optical) in longitude and latitude, and axis
+	 * @return An array with total libration (physical + optical) in longitude and latitude, and axis 
 	 * position angle. Units are radians, referred to mean equinox of date.
 	 * @throws JPARSECException If an error occurs.
 	 */
@@ -994,35 +994,35 @@ public class LunarEvent
 		eph_copy.equinox = EphemerisElement.EQUINOX_OF_DATE;
 		eph_copy.targetBody = TARGET.Moon;
 		EphemElement ephemMoon = Ephem.getEphemeris(time, obs, eph_copy, false);
-
+		
 		return LunarEvent.getJPLMoonLibrations(time, obs, eph, ephemMoon.getEquatorialLocation());
     }
-
+    
 	/**
 	 * Returns the lunar libration angles for JPL or Moshier ephemerides. The conversion from
 	 * Mean Earth system to Principal Axis system is performed using Williams et al. 2008 formulae
-	 * if ephemerides algorithm is DE422, and Seidelmann et al. 2007 (Konopliv et al. 2001)
-	 * for the rest of DE4xx and Moshier's method. Results are very close to Eckhardt's theory,
+	 * if ephemerides algorithm is DE422, and Seidelmann et al. 2007 (Konopliv et al. 2001) 
+	 * for the rest of DE4xx and Moshier's method. Results are very close to Eckhardt's theory, 
 	 * and better than those reported by IAU approximations for the lunar north pole or rotation.
 	 * @param time Time object.
-	 * @param obs Observer.
+	 * @param obs Observer. 
 	 * @param eph Ephemerides properties. They are forced to be apparent and for the equinox
 	 * of date. Algorithm must be Moshier or JPL DE403/405/413/414/422 methods.
 	 * @param locEquatorial Equatorial apparent position of the Moon for date jd.
-	 * @return An array with total libration (physical + optical) in longitude and latitude, and axis
+	 * @return An array with total libration (physical + optical) in longitude and latitude, and axis 
 	 * position angle. Units are radians, referred to mean equinox of date.
 	 * @throws JPARSECException If an error occurs.
-	 */
+	 */ 
     public static double[] getJPLMoonLibrations(TimeElement time, ObserverElement obs,
     		EphemerisElement eph, LocationElement locEquatorial) throws JPARSECException {
 		double jd = TimeScale.getJD(time, obs, eph, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
-
+		
 		LocationElement eclMoon = CoordinateSystem.equatorialToEcliptic(locEquatorial, time ,obs, eph);
-
+		
 		double I = 5553.6 * Constant.ARCSEC_TO_RAD;
-
+		
 		double t = Functions.toCenturies(jd); // - locEquatorial.getRadius() * Constant.LIGHT_TIME_DAYS_PER_AU); // Neglecting this since produces slowdown for nutation calculation
-
+		
 		// Mean longitude of the ascending node of the Moon.
 		double om = Functions
 				.mod3600(450160.398036 + t * (-6962890.5431 + t * (7.4722 + t * (0.007702 + t * (-0.00005939))))) * Constant.ARCSEC_TO_RAD;
@@ -1041,11 +1041,11 @@ public class LunarEvent
 
 		double l = Math.atan2(cossin, coscos) - lm + om;
 		double b = Math.asin(sinb);
-
+		
 		double sinsin = -Math.sin(eps) * Math.sin(om + N);
 		cossin = Math.sin(I) * Math.cos(eps) - Math.cos(I) * Math.sin(eps) * Math.cos(om + N);
 		//double delta = Math.atan2(sinsin, cossin);
-
+		
 		//double cosi = Math.cos(I) * Math.cos(eps) + Math.sin(I) * Math.sin(eps) * Math.cos(om+N);
 		sinsin = -Math.sin(I) * Math.sin(om + N);
 		cossin = Math.cos(I) * Math.sin(eps) - Math.sin(I) * Math.cos(eps) * Math.cos(om + N);
@@ -1057,9 +1057,9 @@ public class LunarEvent
 		double Cp = Math.atan2(cossin, coscos); // axis PA
 
 		// Seidelmann et al. 2007 (Konopliv et al. 2001, page 7): values for DE403/Moshier.
-		// Sorry I don't have the values for DE405/413/414, so I use DE403 values.
+		// Sorry I don't have the values for DE405/413/414, so I use DE403 values. 
 		// I also assume DE422 values = DE421 ones
-		double ra1 = 0.1462, ra2 = 79.0768, ra3 = 63.8986;
+		double ra1 = 0.1462, ra2 = 79.0768, ra3 = 63.8986;	
 		double lib[] = null;
 		switch (eph.algorithm) {
 		case JPL_DE422:
@@ -1096,17 +1096,17 @@ public class LunarEvent
 		Matrix r1Tor2 = r3.times(r2);
 		r1Tor2 = r1Tor2.times(r1);
 		//r1Tor2.print(11, 9);
-
+		
 		Matrix NPB = IAU2006.getNPB(time, obs, eph);
 		//NPB.print(11, 9);
-
+		
 		Matrix r1Eps = Matrix.getR1(eps);
 		//r1Eps.print(11, 9);
 
 		r2 = r1Tor2.times(rSelTor1);
 		Matrix rDate = (r1Eps.times(NPB)).times(r2);
 		//rDate.print(11, 9);
-
+		
 		double zDate[] = rDate.getColumn(2);
 		DoubleVector zd = new DoubleVector(zDate);
 		DoubleVector omegaI = zd.crossProduct(new DoubleVector(new double[] {1, 0, 0}));
@@ -1120,7 +1120,7 @@ public class LunarEvent
 		DoubleVector xd = new DoubleVector(xDate);
 		double cosPSI = omega.innerProduct(xd);
 		double sinPSI = (zd.crossProduct(omega)).innerProduct(xd);
-
+		
 		double phiC = Math.atan2(omega.get(1), omega.get(0));
 		double thetaC = Math.acos(zDate[2]);
 		double psiC = Math.atan2(sinPSI, cosPSI);
@@ -1136,11 +1136,11 @@ public class LunarEvent
 
 		l = Math.atan2(cossin, coscos) - lm + om;
 		b = Math.asin(sinb);
-
+		
 		sinsin = -Math.sin(eps) * Math.sin(om + N);
 		cossin = Math.sin(I) * Math.cos(eps) - Math.cos(I) * Math.sin(eps) * Math.cos(om + N);
 		//delta = Math.atan2(sinsin, cossin);
-
+		
 		//cosi = Math.cos(I) * Math.cos(eps) + Math.sin(I) * Math.sin(eps) * Math.cos(om+N);
 		sinsin = -Math.sin(I) * Math.sin(om + N);
 		cossin = Math.cos(I) * Math.sin(eps) - Math.sin(I) * Math.cos(eps) * Math.cos(om + N);
@@ -1153,26 +1153,101 @@ public class LunarEvent
 
 		return new double[] {l, b, Cp};
     }
-
+    
 	/**
 	 * Returns the number in Ernest W. Brown's numbered series of lunar
-	 * cycles for the specified JD. The base Julian day for Ernest W.
+	 * cycles for the specified JD. The base Julian day for Ernest W. 
 	 * Brown's numbered series of lunations is 1923 Jan 17 02:41 UT.
 	 * This date has been widely quoted as "Jan 16 1923" and indeed it
 	 * was (in EST) at Yale University where Prof. Brown worked.<P>
-	 *
+	 * 
 	 * A lunation starts with a new Moon.<P>
-	 *
+	 * 
 	 * The output of this method is the correct lunation number for the
 	 * specified Julian day in TT, in case a new lunation number started
 	 * just before the input date. Note Meeus also introduced another
 	 * lunation number starting from the first new moon in year 2000
 	 * (Jan 6, 18:14 UTC). Meeus lunation = Brown lunation - 953.
-	 *
+	 * 
 	 * @param jd Julian day in TDB.
 	 * @return Lunation number.
 	 */
 	public static int getBrownLunationNumber(double jd) {
 		return Star.getBrownLunationNumber(jd);
+	}
+	
+	/**
+	 * For unit testing only.
+	 * @param args Not used.
+	 */
+	public static void main(String args[])
+	{
+		System.out.println("LunarEvent test");
+		
+		try {
+			AstroDate astro = new AstroDate(1992, AstroDate.APRIL, 12, 0, 0, 0);
+			TimeElement time = new TimeElement(astro, SCALE.TERRESTRIAL_TIME);
+			String city = "Madrid";
+			ObserverElement obs = new ObserverElement(new CityElement(city));
+			EphemerisElement eph = new EphemerisElement(TARGET.Moon, EphemerisElement.COORDINATES_TYPE.APPARENT, EphemerisElement.EQUINOX_OF_DATE,
+					EphemerisElement.TOPOCENTRIC, EphemerisElement.REDUCTION_METHOD.IAU_1976, EphemerisElement.FRAME.ICRF, EphemerisElement.ALGORITHM.MOSHIER);
+
+			eph.correctForEOP = false;
+			
+			System.out.println("Lunar librations for jd = "+astro.jd());
+			double r[] = LunarEvent.getEckhardtMoonLibrations(time, obs, eph);
+			System.out.println("Using Eckhardt's theory");
+			System.out.println("l = "+Functions.formatAngleAsDegrees(r[0], 2) + ", b = "+Functions.formatAngleAsDegrees(r[1], 2) + ", p = "+Functions.formatAngleAsDegrees(r[2], 2));
+			// Meeus (Eckhardt): l = -1.23, b = 4.20, p = 15.08 (geocentric)
+			// Meeus (Eckhardt): l = -1.74, b = 4.90, p = 14.88 (topocentric)
+			// IAU:   l = -1.33, b = 4.17, p = 15.086 (geocentric)
+			// IAU:   l = -1.84, b = 4.87, p = 14.88 (Madrid)
+			// IAU has better b!
+
+			//double jd = 2455713.5;
+			//time = new TimeElement(jd, SCALE.TERRESTRIAL_TIME);
+			System.out.println("Now using "+eph.algorithm.toString()+" algorithm");
+			double angles[] = getJPLMoonLibrations(time, obs, eph);
+			System.out.println("l = "+Functions.formatAngleAsDegrees(angles[0], 5)); // -4.067 (for 2455713.5)
+			System.out.println("b = "+Functions.formatAngleAsDegrees(angles[1], 5)); // -2.765
+			System.out.println("p = "+Functions.formatAngleAsDegrees(angles[2], 5)); // -13.800
+
+			
+			astro = new AstroDate(2004, 1, 1);
+			SimpleEventElement s = LunarEvent.getPerigee(astro.jd(), MainEvents.EVENT_TIME.NEXT);
+			System.out.println(s.toString()); // 19:26 and 362 767 km, according to http://www.saao.ac.za/public-info/sun-moon-stars/moon-index/lunar-perigee-apogee-2004-2020/
+			s = LunarEvent.getApogee(astro.jd(), MainEvents.EVENT_TIME.NEXT);
+			System.out.println(s.toString()); // 20:20 and 405 706 km, according to http://www.saao.ac.za/public-info/sun-moon-stars/moon-index/lunar-perigee-apogee-2004-2020/
+			astro = new AstroDate(1988, 10, 1);
+			s = LunarEvent.getApogee(astro.jd(), MainEvents.EVENT_TIME.NEXT);
+			System.out.println(s.toString()); // 20:29 TD according to Meeus (I obtain 20:30), parallax = 54' 0.679
+			astro = new AstroDate(2052, 12, 1);
+			s = LunarEvent.getPerigee(astro.jd(), MainEvents.EVENT_TIME.NEXT);
+			System.out.println(s.toString()); // Distance should be 356 421 according to Meeus, but I obtain 356 321. An obvious typo error.
+			astro = new AstroDate(2424, 12, 15);
+			s = LunarEvent.getApogee(astro.jd(), MainEvents.EVENT_TIME.NEXT);
+			System.out.println(s.toString()); // Distance = 406 712
+			
+			s = LunarEvent.getPassThroughAscendingNode((new AstroDate(1987, 5, 15)).jd(), EVENT_TIME.CLOSEST);
+			System.out.println(s.toString());
+
+			astro = new AstroDate(1988, 12, 21);
+			s = LunarEvent.MoonMaximumDeclination(astro.jd(), MainEvents.EVENT_TIME.CLOSEST);
+			System.out.println(s.toString());
+			// Meeus: 22 dic 1988 20h 02m, 28.1562
+
+			astro = new AstroDate(2049, 4, 15);
+			s = LunarEvent.MoonMinimumDeclination(astro.jd(), MainEvents.EVENT_TIME.CLOSEST);
+			System.out.println(s.toString());
+			// Meeus: 21 apr 2049 14h, 22.1384
+			
+			astro = new AstroDate(-5, 3, 10);
+			s = LunarEvent.MoonMaximumDeclination(astro.jd(), MainEvents.EVENT_TIME.CLOSEST);
+			System.out.println(s.toString());
+			// Meeus: 16 mar -5 15h, 28.9739
+		} catch (JPARSECException e)
+		{
+			e.showException();
+		}
 	}
 }

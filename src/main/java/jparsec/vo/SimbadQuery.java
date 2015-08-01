@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- *
+ * 
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *
+ *  
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- *
+ * 
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,18 +18,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */
+ */					
 package jparsec.vo;
+
+import jparsec.graph.DataSet;
+import jparsec.io.*;
+import jparsec.math.*;
+import jparsec.util.*;
+import jparsec.vo.GeneralQuery;
+import jparsec.vo.SimbadElement;
 
 import java.io.Serializable;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.StringTokenizer;
-import jparsec.graph.DataSet;
-import jparsec.io.FileIO;
-import jparsec.io.ReadFile;
-import jparsec.math.Constant;
-import jparsec.util.JPARSECException;
+import java.util.*;
+
 
 /**
  * A class to solve objects using Simbad.
@@ -37,10 +39,9 @@ import jparsec.util.JPARSECException;
  * @version 1.0
  */
 public class SimbadQuery implements Serializable {
-	private static final long serialVersionUID = 1L;
+	static final long serialVersionUID = 1L;
 
 	private String query;
-
 	/**
 	 * Constructor to query for a given object.
 	 * @param name Object.
@@ -49,7 +50,6 @@ public class SimbadQuery implements Serializable {
 	{
 		this.query = name;
 	}
-
 	/**
 	 * Perform the query.
 	 * @return Response from server as a Simbad object.
@@ -64,7 +64,7 @@ public class SimbadQuery implements Serializable {
 	/**
 	 * Call simbad and obtain data for an object.
 	 * @param name Object name.
-	 * @return Simbad object, null if it is not found.
+	 * @return Simbad object, null if it is not found. 
 	 * @throws JPARSECException If an error occurs.
 	 */
 	public static SimbadElement query(String name)
@@ -74,24 +74,24 @@ public class SimbadQuery implements Serializable {
 		} catch (Exception e)
 		{
 			e.printStackTrace();
-			throw new JPARSECException("Simbad could not solve "+name, e);
+			throw new JPARSECException("Simbad could not solve "+name, e);				
 		}
 	}
-
+	
 	private static SimbadElement parsePlainTextFromSimbad(String text)
 	{
 		if (text == null) return null;
 		if (text.equals("")) return null;
 		if (text.indexOf("#=V=VizieR") >= 0) return null; // Usually wrong data when result contains VizieR and not #=S=Simbad
-
+		
 		SimbadElement oe = new SimbadElement();
-
+		
 		oe.spectralType = findHeader(text, "%S ");
 		if (oe.spectralType != null) {
 			if (oe.spectralType.length() > 2) oe.spectralType = oe.spectralType.substring(0, 2);
 			if (oe.spectralType.endsWith(".")) oe.spectralType = oe.spectralType.substring(0,1)+"0";
 		}
-
+		
 		oe.type = findHeader(text, "%T ");
 		String mb = findHeader(text, "%M.B ");
 		String mv = findHeader(text, "%M.V ");
@@ -100,7 +100,7 @@ public class SimbadQuery implements Serializable {
 		} else {
 			oe.bMinusV = SimbadElement.B_MINUS_V_UNAVAILABLE;
 		}
-
+		
 		String pos = findHeader(text, "%J ");
 		if (pos == null) return null;
 		oe.rightAscension = DataSet.parseDouble(FileIO.getField(1, pos, " ", true)) * Constant.DEG_TO_RAD;
@@ -108,7 +108,7 @@ public class SimbadQuery implements Serializable {
 		String name = FileIO.getField(1, findHeader(text, "# "), "#", true).trim();
 		oe.name = name;
 		oe.otherNames = findHeaders(text, "%I ");
-
+		
 		String mov = findHeader(text, "%P ");
 		String rad = findHeader(text, "%V z");
 		if (mov != null) {
@@ -129,7 +129,7 @@ public class SimbadQuery implements Serializable {
 
 		return oe;
 	}
-
+	
 	private static String findHeader(String text, String header)
 	{
 		String out = null;
@@ -139,7 +139,7 @@ public class SimbadQuery implements Serializable {
 			String a = tok.nextToken();
 			if (a.startsWith(header)) out = a.substring(header.length()).trim();
 		}
-
+		
 		if (out != null && out.startsWith(":")) out = out.substring(1).trim();
 		if (out != null && out.startsWith("~")) out = out.substring(1).trim();
 		return out;
@@ -153,8 +153,48 @@ public class SimbadQuery implements Serializable {
 			String a = tok.nextToken();
 			if (a.startsWith(header)) v.add(a.substring(header.length()).trim());
 		}
-
+		
 		if (v.size() < 1) return null;
 		return DataSet.arrayListToStringArray(v);
+	}
+	
+	/**
+	 * For unit testing only.
+	 * @param args Not used.
+	 */
+	public static void main(String args[])
+	{		
+		try {
+			String name = "HD259431";
+			if (args != null && args.length > 0) {
+				name = DataSet.toString(args, " ");
+				System.out.println("<HTML><pre>");
+			} else {
+				System.out.println("SimbadQuery test");
+			}
+
+			
+			SimbadElement oe = SimbadQuery.query(name);
+			System.out.println(oe.name);
+			System.out.println(oe.rightAscension);
+			System.out.println(oe.declination);
+			System.out.println(oe.type);
+			System.out.println(oe.spectralType);
+			System.out.println(oe.bMinusV);
+			System.out.println(oe.properMotionRA);
+			System.out.println(oe.properMotionDEC);
+			System.out.println(oe.properMotionRadialV);
+			System.out.println(oe.parallax);
+			if (oe.otherNames != null && oe.otherNames.length>0) {
+				for (int i=0; i<oe.otherNames.length; i++) {
+					System.out.println(oe.otherNames[i]);
+				}
+			}
+			if (args != null && args.length > 0) 
+				System.out.println("</pre></HTML>");
+		} catch (Exception e)
+		{
+			System.out.println(DataSet.toString(JPARSECException.toStringArray(e.getStackTrace()), FileIO.getLineSeparator()));
+		}
 	}
 }

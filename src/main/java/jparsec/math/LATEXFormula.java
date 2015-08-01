@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- *
+ * 
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *
+ *  
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- *
+ * 
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,21 +18,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */
+ */					
 package jparsec.math;
 
-import be.ugent.caagt.jmathtex.TeXConstants;
-import be.ugent.caagt.jmathtex.TeXFormula;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+
 import javax.swing.Icon;
 import javax.swing.JLabel;
+
+import be.ugent.caagt.jmathtex.TeXConstants;
+import be.ugent.caagt.jmathtex.TeXFormula;
+
 import jparsec.graph.DataSet;
+import jparsec.io.image.Picture;
 
 /**
  * A class to create equations using JMathTex library.
@@ -40,13 +44,15 @@ import jparsec.graph.DataSet;
  * @version 1.0
  */
 public class LATEXFormula implements Serializable {
+	
 	private static final long serialVersionUID = 1L;
+
 	private int style;
 	private int size;
 	private String expression;
 	private String code;
 	private TeXFormula formula;
-
+	
 	/**
 	 * ID constant for style display (default recommended).
 	 */
@@ -127,7 +133,7 @@ public class LATEXFormula implements Serializable {
 		this.style = style;
         formula = new TeXFormula(this.code);
 	}
-
+	
 	/**
 	 * Returns the LATEX code of the formula.
 	 * @return The code.
@@ -150,7 +156,7 @@ public class LATEXFormula implements Serializable {
 	public int getSize() {
 		return size;
 	}
-
+	
 	/**
 	 * Sets the LATEX code of the formula.
 	 * @param code The LATEX code.
@@ -168,7 +174,7 @@ public class LATEXFormula implements Serializable {
 	public TeXFormula getFormula() {
 		return formula;
 	}
-
+	
 	/**
 	 * Returns the formula as an image.
 	 * @return The image.
@@ -197,7 +203,7 @@ public class LATEXFormula implements Serializable {
         g2.dispose();
         return image;
 	}
-
+	
 	/**
 	 * Draw the formula to a Graphics device.
 	 * @param g The Graphics device.
@@ -205,9 +211,9 @@ public class LATEXFormula implements Serializable {
 	public void draw(Graphics g)
 	{
         Icon icon = formula.createTeXIcon(this.style, this.size);
-        icon.paintIcon(new JLabel(), g, 0, 0); // component can't be null
+        icon.paintIcon(new JLabel(), g, 0, 0); // component can't be null		
 	}
-
+	
 	private String parse(String element, String code)
 	{
 		String le = element.toLowerCase();
@@ -219,7 +225,7 @@ public class LATEXFormula implements Serializable {
 		code = DataSet.replaceAll(code, "jparsec", "\\"+le, true);
 		return code;
 	}
-
+	
 	private String parseExpression()
 	{
 		String code = this.expression;
@@ -244,7 +250,7 @@ public class LATEXFormula implements Serializable {
 
 		return code;
 	}
-
+	
 	/**
 	 * Returns the LATEX code to draw an integral.
 	 * @param from Lower bound of the integral.
@@ -256,7 +262,7 @@ public class LATEXFormula implements Serializable {
 		String out = "\\int_{"+from+"}^{"+to+"}";
 		return out;
 	}
-
+	
 	/**
 	 * Returns the LATEX code for a fraction.
 	 * @param up Upper component of the fraction.
@@ -280,13 +286,13 @@ public class LATEXFormula implements Serializable {
 		return out;
 	}
 
+    
 	private void writeObject(ObjectOutputStream out)
 	throws IOException {
 		out.writeObject(expression);
 		out.writeInt(size);
 		out.writeInt(style);
 	}
-
 	private void readObject(ObjectInputStream in)
 	throws IOException, ClassNotFoundException {
 		expression = (String) in.readObject();
@@ -295,4 +301,28 @@ public class LATEXFormula implements Serializable {
 		this.code = this.parseExpression();
         formula = new TeXFormula(this.code);
  	}
+
+	/**
+	 * Test program.
+	 * @param args Unused.
+	 */
+    public static void main(String[] args) {
+        try {
+        	String expression = LATEXFormula.getIntegral("t=0", "2pi")+
+        			LATEXFormula.getFraction("sqrt(t)", 
+        			LATEXFormula.getBetweenParentesis("1+cos^2(t)"))+" dt";
+        	LATEXFormula formula = new LATEXFormula(expression, LATEXFormula.STYLE_DISPLAY,
+        			LATEXFormula.SIZE_HUGE);
+//        	Or, alternatively
+//        	formula.setCode("\\int_{t=0}^{2\\pi}\\frac{\\sqrt{t}}{(1+\\mathrm{cos}^2{t})}\\nbspdt");
+        	System.out.println(formula.code);
+        	BufferedImage image = formula.getAsImage();
+
+        	Picture p = new Picture(image);
+        	p.show("LATEX formula");
+        	p.write("/home/alonso/formula.png");
+        } catch (Exception ex) {
+        	ex.printStackTrace();
+        }
+    }
 }

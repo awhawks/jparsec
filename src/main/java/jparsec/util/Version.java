@@ -53,7 +53,7 @@ public class Version
 	/**
 	 * Author of the library.
 	 */
-	public static final String AUTHOR = "Tom\u00e1s Alonso Albi, OAN (Spain)";
+	public static final String AUTHOR = "Tomás Alonso Albi, OAN (Spain)";
 
 	/**
 	 * Returns the JPARSEC library release data.
@@ -375,7 +375,7 @@ public class Version
 				release,
 				jre,
 				null,
-				"Tom\u00e1s Alonso Albi"
+				"Tomás Alonso Albi"
 			);
         } catch (Exception exc) {  }
 

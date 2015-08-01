@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- *
+ * 
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *
+ *  
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- *
+ * 
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,12 +18,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */
+ */	
 package jparsec.astrophysics;
 
+import java.awt.Color;
 import java.util.ArrayList;
 
-import java.util.Arrays;
 import jparsec.ephem.Functions;
 import jparsec.graph.ChartElement3D;
 import jparsec.graph.ChartSeriesElement3D;
@@ -32,12 +32,11 @@ import jparsec.graph.DataSet;
 import jparsec.math.matrix.Matrix;
 import jparsec.math.matrix.SingularValueDecomposition;
 import jparsec.util.JPARSECException;
-import org.jzy3d.colors.Color;
 
 /**
  * A class to hold the results of a PCA (Principal Component Analysis) calculation.
  * Internal implementation is based on singular value decomposition, using matrices.
- * The implemented follows the tutorial at
+ * The implemented follows the tutorial at 
  * http://www.ce.yildiz.edu.tr/personal/songul/file/1097/principal_components.pdf.
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
@@ -46,7 +45,7 @@ public class PCAElement {
 
 	private SingularValueDecomposition svd;
 	private final double[][] originalData;
-
+	
 	/**
 	 * Constructor for a matrix of data. First index of the array
 	 * should have as size the number of independent variables, the
@@ -62,7 +61,7 @@ public class PCAElement {
 	/**
 	 * Constructor for a list of variables. Each double array in
 	 * the list will contain the values for each independent variable.
-	 * Length should be the same for all them.
+	 * Length should be the same for all them. 
 	 * @param data The data.
 	 * @throws JPARSECException If an error occurs.
 	 */
@@ -70,7 +69,7 @@ public class PCAElement {
 		originalData = DataSet.toDoubleArray(data);
 		init(originalData);
 	}
-
+	
 	private void init(double[][] m0) throws JPARSECException {
 		double m[][] = DataSet.cloneArray(this.originalData);
 		for (int i=0; i<m.length; i++) {
@@ -107,7 +106,7 @@ public class PCAElement {
 	public double[] getSingularValues() {
 		return svd.getSingularValues().clone();
 	}
-
+	
 	/**
 	 * Returns the singular vectors.
 	 * @return Singular vectors.
@@ -115,7 +114,7 @@ public class PCAElement {
 	public double[][] getSingularVectors() {
 		return DataSet.cloneArray(svd.getU().getArray());
 	}
-
+	
 	/**
 	 * Reproduces the original data up to certain level
 	 * given the value of the components to use.
@@ -128,7 +127,7 @@ public class PCAElement {
 	 */
 	public double[][] reproduceOriginalData(int n) throws JPARSECException {
 		if (n < 1 || n > svd.rank()) throw new JPARSECException("The number of components must be between 1-"+svd.rank());
-
+		
 		Matrix fdata = new Matrix(getNewValues());
 		double v[][] = this.getSingularVectors();
 		for (int i=n; i<v.length; i++) {
@@ -208,7 +207,6 @@ public class PCAElement {
 	/**
 	 * Clones this instance. In case of error null is returned.
 	 */
-	@Override
 	public PCAElement clone() {
 		try {
 			return new PCAElement(this.originalData);
@@ -216,14 +214,15 @@ public class PCAElement {
 			return null;
 		}
 	}
-
+	
 	/**
 	 * Checks if this instance is equals to another object or not.
 	 */
-	@Override
 	public boolean equals(Object o) {
+		if (o == null && this == null) return true;
 		if (o == null) return false;
-
+		if (this == null) return false;
+		
 		PCAElement t = (PCAElement) o;
 		double[][] data1 = this.originalData, data2 = t.originalData;
 		if (data1.length != data2.length) return false;
@@ -232,13 +231,6 @@ public class PCAElement {
 			if (!eq) return false;
 		}
 		return true;
-	}
-
-	@Override
-	public int hashCode() {
-		int result = svd != null ? svd.hashCode() : 0;
-		result = 31 * result + (originalData != null ? Arrays.deepHashCode(originalData) : 0);
-		return result;
 	}
 
 	/**
@@ -287,7 +279,7 @@ public class PCAElement {
 		int index = 0;
 		for (int i=0; i<v.length; i++) {
 			if (i != xIndex && i != yIndex && i != zIndex) continue;
-
+			
 			double mm[] = m.clone();
 			for (int j=0; j<m.length; j++) {
 				mm[j] += v[i][j];
@@ -295,13 +287,14 @@ public class PCAElement {
 			xv[i] = new double[] {m[xIndex], mm[xIndex]};
 			yv[i] = new double[] {m[yIndex], mm[yIndex]};
 			if (originalData.length > zIndex) zv[i] = new double[] {m[zIndex], mm[zIndex]};
-
+			
 			index ++;
 			series[index] = new ChartSeriesElement3D(xv[i], yv[i], zv[i], "");
 			series[index].drawLines = true;
 			series[index].color = Color.RED;
 		}
-
+		
+		
 		ChartElement3D chart = new ChartElement3D(series, title, xLabel, yLabel, zLabel);
 		chart.showToolbar = true;
 		chart.showLegend = false;
@@ -313,7 +306,7 @@ public class PCAElement {
 		c.setSameScale();
 		return c;
 	}
-
+	
 	/**
 	 * Returns the new values of the input data for a given axis
 	 * along the corresponding singular vector.

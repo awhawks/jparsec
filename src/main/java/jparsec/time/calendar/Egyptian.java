@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- *
+ * 
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *
+ *  
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- *
+ * 
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,20 +18,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */
+ */					
 package jparsec.time.calendar;
 
 import java.io.Serializable;
 
+import jparsec.time.AstroDate;
+import jparsec.util.JPARSECException;
+
 /**
  * Implements the Egyptian calendar. See Calendrical Calculations for reference.
- *
+ * 
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
 public class Egyptian implements Serializable
 {
-	private static final long serialVersionUID = 1L;
+	static final long serialVersionUID = 1L;
 
 	/**
 	 * The year.
@@ -67,7 +70,7 @@ public class Egyptian implements Serializable
 
 	/**
 	 * Julian day constructor.
-	 *
+	 * 
 	 * @param jd Julian day.
 	 */
 	public Egyptian(int jd)
@@ -77,7 +80,7 @@ public class Egyptian implements Serializable
 
 	/**
 	 * Constructor with the date.
-	 *
+	 * 
 	 * @param y Year.
 	 * @param m Month.
 	 * @param d Day.
@@ -91,7 +94,7 @@ public class Egyptian implements Serializable
 
 	/**
 	 * To fixed day..
-	 *
+	 * 
 	 * @param year Year.
 	 * @param month Month.
 	 * @param day Day.
@@ -113,7 +116,7 @@ public class Egyptian implements Serializable
 
 	/**
 	 * Sets the date from the fixed day.
-	 *
+	 * 
 	 * @param l Fixed day.
 	 */
 	public void fromFixed(long l)
@@ -126,7 +129,7 @@ public class Egyptian implements Serializable
 
 	/**
 	 * Transforms a Egyptian date into a Julian day
-	 *
+	 * 
 	 * @param year Year.
 	 * @param month Month.
 	 * @param day Day.
@@ -153,5 +156,28 @@ public class Egyptian implements Serializable
 	public void fromJulianDay(int jd)
 	{
 		fromFixed(jd - Gregorian.EPOCH);
+	}
+
+	/**
+	 * For unit testing only.
+	 * @param args Not used.
+	 */
+	public static void main(String args[])
+	{
+		System.out.println("Egyptian Test");
+
+		try {
+			int jd = (int) (new AstroDate(2010, 1, 12)).jd();
+			Egyptian h = new Egyptian(jd);
+			System.out.println("JD " + jd + " = " + h.year + "/" + h.month + "/" + h.day);
+	
+			Egyptian h2 = new Egyptian(h.year, h.month, h.day);
+			System.out.println("JD " + h2.toJulianDay() + " = " + h2.year + "/" + h2.month + "/" + h2.day);
+	
+			System.out.println(Calendar.nameFromMonth(h2.month, Egyptian.MONTH_NAMES));
+			//System.out.println(CalendarGenericConversion.getDayOfWeekName(jd, CalendarGenericConversion.EGYPTIAN));
+		} catch (JPARSECException e1) {
+			e1.printStackTrace();
+		}
 	}
 }

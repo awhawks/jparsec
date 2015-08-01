@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- *
+ * 
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *
+ *  
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- *
+ * 
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */
+ */					
 package jparsec.math;
 
 import java.awt.Color;
@@ -35,7 +35,7 @@ import jparsec.util.JPARSECException;
 
 /**
  * Provides method to perform numerical integration.
- *
+ * 
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -55,7 +55,7 @@ public class Integration implements Serializable
 	 * @throws JPARSECException If an error occurs.
 	 */
 	public Integration(double x[], double y[], double x1, double x2) throws JPARSECException {
-		if (x != null && y != null) {
+		if (x != null && y != null) { 
 			ArrayList<double[]> l = DataSet.sortInCrescent(x, y, true);
 			this.x = l.get(0);
 			this.y = l.get(1);
@@ -64,7 +64,7 @@ public class Integration implements Serializable
 		this.x2 = x2;
 		interp = new Interpolation(x, y, false);
 	}
-
+	
 	/**
 	 * Simple low accuracy numerical integration method, based on the midpoint
 	 * rule.
@@ -186,14 +186,59 @@ public class Integration implements Serializable
 				y, null, null, "Y", true, Color.BLACK, ChartSeriesElement.SHAPE_CIRCLE,
 				ChartSeriesElement.REGRESSION.SPLINE_INTERPOLATION);
 		ChartSeriesElement series[] = new ChartSeriesElement[] {chartSeries1};
-		ChartElement chart = new ChartElement(series, ChartElement.TYPE.XY_CHART,
+		ChartElement chart = new ChartElement(series, ChartElement.TYPE.XY_CHART, 
 				ChartElement.SUBTYPE.XY_SCATTER,
-				"X, Y",
+				"X, Y", 
 				"X", "Y", false, 800, 600);
 		CreateChart ch = new CreateChart(chart);
 		Marker marker = new org.jfree.chart.plot.IntervalMarker(x1, x2);
 		marker.setPaint(new Color(255, 0, 0, 128));
 		((org.jfree.chart.plot.XYPlot) ch.getChart().getPlot()).addDomainMarker(marker);
 		return ch;
+	}
+	
+	/**
+	 * For unit testing only.
+	 * @param args Not used.
+	 */
+	public static void main(String args[])
+	{
+		System.out.println("Integration test");
+
+		int np = 3000;
+		double x0 = 1.1, xf = 1000.0;
+		double x[] = new double[np];
+		double y[] = new double[x.length];
+
+		// Prepare x values in log scale
+		x = DataSet.getSetOfValues(x0, xf, np, true);
+
+		try
+		{
+			// Use 1.0/x as function.
+			for (int i = 0; i < x.length; i++)
+			{
+				y[i] = Evaluation.evaluate("1.0/x", new String[] {"x "+x[i]});
+	
+//				System.out.println(x[i] + " / " + y[i]);
+			}
+			double x1 = 2.0, x2 = xf - 1.0;
+			double step = (x2 - x1) * 0.00001;
+			
+			double exact = Math.log(x2) - Math.log(x1);
+
+			Integration intgr = new Integration(x, y, x1, x2);
+			double integral = intgr.simpleIntegrationUsingSpline(step);
+			System.out.println("simple integration spline I = " + integral);
+			integral = intgr.simpleIntegration(step);
+			System.out.println("simple integration        I = " + integral);
+			System.out.println("Exact = " + exact);
+			
+			CreateChart ch = intgr.getChart();
+			ch.showChartInJFreeChartPanel();
+		} catch (JPARSECException e)
+		{
+			JPARSECException.showException(e);
+		}
 	}
 }

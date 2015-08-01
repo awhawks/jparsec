@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- *
+ * 
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *
+ *  
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- *
+ * 
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,60 +18,37 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */
+ */					
 package jparsec.graph;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
+import visad.*;
+//import visad.java2d.DisplayImplJ2D;
+//import visad.java2d.DirectManipulationRendererJ2D;
+import visad.java3d.*;
+import visad.util.*;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.rmi.RemoteException;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JSlider;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.KeyListener;
+
+import javax.swing.*;
+
+import jparsec.astronomy.Difraction;
+import jparsec.astronomy.TelescopeElement;
 import jparsec.ephem.Functions;
+import jparsec.io.Serialization;
 import jparsec.util.JPARSECException;
 import jparsec.util.Logger;
-import jparsec.util.Logger.LEVEL;
 import jparsec.util.Translate;
-import visad.CellImpl;
-import visad.ColorControl;
-import visad.ConstantMap;
-import visad.DataReference;
-import visad.DataReferenceImpl;
-import visad.Display;
-import visad.DisplayEvent;
-import visad.DisplayImpl;
-import visad.DisplayListener;
-import visad.FlatField;
-import visad.FunctionType;
-import visad.GraphicsModeControl;
-import visad.Gridded3DSet;
-import visad.Linear2DSet;
-import visad.MathType;
-import visad.Real;
-import visad.RealTupleType;
-import visad.RealType;
-import visad.SI;
-import visad.ScalarMap;
-import visad.Set;
-import visad.VisADException;
-import visad.java3d.DirectManipulationRendererJ3D;
-import visad.java3d.DisplayImplJ3D;
-import visad.util.SelectRangeWidget;
-import visad.util.Util;
-import visad.util.VisADSlider;
+import jparsec.util.Logger.LEVEL;
 
 /**
  * A class to show cubes of data and surfaces using VisAD. A chart created with
@@ -84,7 +61,7 @@ import visad.util.VisADSlider;
 public class CreateVISADChart implements DisplayListener, Serializable {
 
 	static final long serialVersionUID = 1;
-
+	
   // Declare variables
 
   // The quantities to be displayed in x- and y-axes
@@ -150,13 +127,13 @@ public class CreateVISADChart implements DisplayListener, Serializable {
    * declination, and velocity.
    * @param initVelocity Initial velocity to show.
    * @param cube The cube to show.
-   * @param showVPlane True to show a second panel with the flux
+   * @param showVPlane True to show a second panel with the flux 
    * in a given velocity plain.
    * @throws JPARSECException If an exception occurs.
    */
   public CreateVISADChart (VISADCubeElement cube, double initVelocity, boolean showVPlane)
     throws JPARSECException {
-	start(cube, initVelocity, showVPlane);
+	    start(cube, initVelocity, showVPlane);
   }
 
   /**
@@ -167,7 +144,7 @@ public class CreateVISADChart implements DisplayListener, Serializable {
    */
   public CreateVISADChart (VISADCubeElement cube)
     throws JPARSECException {
-	start(cube, (cube.finalZ + cube.initZ) / 2.0, true);
+	    start(cube, (cube.finalZ + cube.initZ) / 2.0, true);
   }
 
   /**
@@ -178,69 +155,69 @@ public class CreateVISADChart implements DisplayListener, Serializable {
    */
   public void update(VISADCubeElement cube, double initVelocity)
   throws JPARSECException {
-	CreateVISADChart c = new CreateVISADChart(cube, initVelocity, showVPlane);
-	try {
-		cubeFF.setSamples(cube.getSamples(cube.getCube()), false);
-		rangeZ.setRange(Math.min(cube.initZ, cube.finalZ), Math.max(cube.initZ, cube.finalZ));
-		rangeX.setRange(Math.min(cube.initX, cube.finalX), Math.max(cube.initX, cube.finalX));
-		rangeY.setRange(Math.min(cube.initY, cube.finalY), Math.max(cube.initY, cube.finalY));
-		cursorDataRef.setData(c.cursorDataRef.getData());
-		cubeDataRef.setData(c.cubeDataRef.getData());
-		greyPlaneRef.setData(c.greyPlaneRef.getData());
-		double scale = (Math.max(cube.initZ, cube.finalZ)-Math.min(cube.initZ, cube.finalZ))/ (double) (cube.getNLevels()-1);
-		scale = scale / 100.0;
-		int min = (int) Functions.roundDownToPlace(Math.min(cube.initZ, cube.finalZ)/scale, 0);
-		int max = (int) Functions.roundUpToPlace(Math.max(cube.initZ, cube.finalZ)/scale, 0);
-		latSlider = new VisADSlider(velocity.getName(), min, max, 1, scale, cursorDataRef, declination, false);
-		this.setVelSliderValue((float) this.initVelocity);
+	  CreateVISADChart c = new CreateVISADChart(cube, initVelocity, showVPlane);
+	  try {
+		  cubeFF.setSamples(cube.getSamples(cube.getCube()), false);
+		  rangeZ.setRange(Math.min(cube.initZ, cube.finalZ), Math.max(cube.initZ, cube.finalZ));
+		  rangeX.setRange(Math.min(cube.initX, cube.finalX), Math.max(cube.initX, cube.finalX));
+		  rangeY.setRange(Math.min(cube.initY, cube.finalY), Math.max(cube.initY, cube.finalY));
+		  cursorDataRef.setData(c.cursorDataRef.getData());
+		  cubeDataRef.setData(c.cubeDataRef.getData());
+		  greyPlaneRef.setData(c.greyPlaneRef.getData());
+		  double scale = (Math.max(cube.initZ, cube.finalZ)-Math.min(cube.initZ, cube.finalZ))/ (double) (cube.getNLevels()-1);
+		  scale = scale / 100.0;
+		  int min = (int) Functions.roundDownToPlace(Math.min(cube.initZ, cube.finalZ)/scale, 0);
+		  int max = (int) Functions.roundUpToPlace(Math.max(cube.initZ, cube.finalZ)/scale, 0);
+		  latSlider = new VisADSlider(velocity.getName(), min, max, 1, scale, cursorDataRef, declination, false);
+		  this.setVelSliderValue((float) this.initVelocity);
 
-		this.cube = c.cube;
-		this.cube.initZ = cube.initZ;
-		this.cube.finalZ = cube.finalZ;
-		this.cube.initX = cube.initX;
-		this.cube.finalX = cube.finalX;
-		this.cube.initY = cube.initY;
-		this.cube.finalY = cube.finalY;
-		eastMap.setRange(cube.initX, cube.finalX);
-		northMap.setRange(cube.initY, cube.finalY);
-		altMap.setRange(cube.initZ, cube.finalZ);
-		displays[0].reAutoScale();
-		displays[0].reDisplayAll();
-	} catch (RemoteException exc)
-	{
-		throw new JPARSECException("remote exception.", exc);
-	} catch (Exception ex)
-	{
-		throw new JPARSECException("VisAD exception.", ex);
-	}
+		  this.cube = c.cube;
+		  this.cube.initZ = cube.initZ;
+		  this.cube.finalZ = cube.finalZ;
+		  this.cube.initX = cube.initX;
+		  this.cube.finalX = cube.finalX;
+		  this.cube.initY = cube.initY;
+		  this.cube.finalY = cube.finalY;
+		  eastMap.setRange(cube.initX, cube.finalX);
+		  northMap.setRange(cube.initY, cube.finalY);
+		  altMap.setRange(cube.initZ, cube.finalZ);
+		  displays[0].reAutoScale();
+		  displays[0].reDisplayAll();
+	  } catch (RemoteException exc)
+	  {
+		  throw new JPARSECException("remote exception.", exc);
+	  } catch (Exception ex)
+	  {
+		  throw new JPARSECException("VisAD exception.", ex);		  
+	  }
   }
-
+  
   private void start(VISADCubeElement cube, double initVelocity, boolean showVPlane)
   throws JPARSECException{
-	try {
-		this.showVPlane = showVPlane;
-		// Create the quantities
-		rightAscension = cube.rightAscension;
-		declination = cube.declination;
-		velocity = cube.velocity;
-		flux = cube.flux;
-		this.initVelocity = initVelocity;
-		this.cube = cube;
-		if (showVPlane) {
-			init();
-		} else {
-			init2();
-		}
-		} catch (RemoteException exc)
-		{
-			throw new JPARSECException("remote exception.", exc);
-		}
-		catch (VisADException ex)
-		{
-			throw new JPARSECException("VisAD exception.", ex);
-		}
+	  try {
+		  this.showVPlane = showVPlane;
+		    // Create the quantities
+		    rightAscension = cube.rightAscension;
+		    declination = cube.declination;
+		    velocity = cube.velocity;
+		    flux = cube.flux;
+		    this.initVelocity = initVelocity;
+		    this.cube = cube;
+		    if (showVPlane) {
+		    	init();
+		    } else {
+		    	init2();    	
+		    }
+		  } catch (RemoteException exc)
+		  {
+			  throw new JPARSECException("remote exception.", exc);
+		  }
+		  catch (VisADException ex)
+		  {
+			  throw new JPARSECException("VisAD exception.", ex);		  
+		  }
   }
-
+  
     private void init()
     throws RemoteException, VisADException {
     //...the domain2D
@@ -350,7 +327,7 @@ public class CreateVISADChart implements DisplayListener, Serializable {
     int max = (int) Functions.roundUpToPlace(Math.max(cube.initZ, cube.finalZ)/scale, 0);
     latSlider = new VisADSlider(velocity.getName(), min, max, 1, scale, cursorDataRef, declination, false);
     this.setVelSliderValue((float) this.initVelocity);
-
+ 
      // this slider will control the number of points
     VisADSlider pointsSlider = new VisADSlider(nPointsRef, 1000, 50000, 10000, RealType.Generic, Translate.translate(945)); //"Points in plane");
 
@@ -480,7 +457,7 @@ public class CreateVISADChart implements DisplayListener, Serializable {
             try {
               displays[0].getProjectionControl().resetProjection();
             } catch (Exception ex) {    }
-	panel.requestFocusInWindow();
+	        panel.requestFocusInWindow();
           }
         });
 
@@ -511,7 +488,7 @@ public class CreateVISADChart implements DisplayListener, Serializable {
 
   private Component createRangeSliders(){
     JPanel p = new JPanel();
-    p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
+    p.setLayout(new BoxLayout(p,BoxLayout.Y_AXIS));
     try {
       p.add( new SelectRangeWidget( rangeX ) );
       p.add( new SelectRangeWidget( rangeY ) );
@@ -522,39 +499,39 @@ public class CreateVISADChart implements DisplayListener, Serializable {
   }
 
   private JCheckBox createSyncCheck(){
-	JCheckBox cb = new JCheckBox(Translate.translate(927), true); //"Link Displays",true);
-	cb.addItemListener(new ItemListener() {
-	public void itemStateChanged(ItemEvent e) {
-	displaysAreLinked = (e.getStateChange() == ItemEvent.SELECTED);
-	panel.requestFocusInWindow();
-	}
-	});
-	return cb;
-	}
+	    JCheckBox cb = new JCheckBox(Translate.translate(927), true); //"Link Displays",true);
+	    cb.addItemListener(new ItemListener() {
+	      public void itemStateChanged(ItemEvent e) {
+	        displaysAreLinked = (e.getStateChange() == ItemEvent.SELECTED);
+	        panel.requestFocusInWindow();
+	      }
+	    });
+	    return cb;
+	  }
 
   /**
    * Synchronizes the displays if necessary.
    */
-	public void displayChanged(DisplayEvent e)
-		throws VisADException, RemoteException {
-		if (e.getId() == DisplayEvent.FRAME_DONE) {
-			doSynchronize();
-		}
-	}
+  public void displayChanged(DisplayEvent e)
+  throws VisADException, RemoteException {
+	  if (e.getId() == DisplayEvent.FRAME_DONE) {
+	    doSynchronize();
+	  }
+}
 
   private void doSynchronize(){
-	if (panel.isFocusOwner()) {
-		panel.requestFocusInWindow();
-	} else {
-		if (surfaceMode && panel.getX() == 0 && panel.getWidth() == panel.getParent().getWidth() && panel.getHeight() == panel.getParent().getHeight())
-			panel.requestFocusInWindow();
-	}
-	try{
-		if(displaysAreLinked){
-			displays[1].getProjectionControl().setMatrix(displays[0].getProjectionControl().getMatrix());
-		}
-	} catch(Exception ex){  }
-	}
+	  if (panel.isFocusOwner()) {
+		  panel.requestFocusInWindow();
+	  } else {
+		  if (surfaceMode && panel.getX() == 0 && panel.getWidth() == panel.getParent().getWidth() && panel.getHeight() == panel.getParent().getHeight())
+			  panel.requestFocusInWindow();
+	  }
+	    try{
+	      if(displaysAreLinked){
+	        displays[1].getProjectionControl().setMatrix(displays[0].getProjectionControl().getMatrix());
+	      }
+	    } catch(Exception ex){  }
+	  }
 
   /**
    * Shows the chart in a JFrame.
@@ -577,164 +554,268 @@ public class CreateVISADChart implements DisplayListener, Serializable {
    * @param chart The grid chart object.
    */
   public void setColorTable(GridChartElement chart) {
-	// Create a different color table
-	// Note: table has red, green and blue components
-	int tableLength = chart.colorModelResolution;
-	float[][] myColorTable = new float[3][tableLength];
-	for(int i=0;i<tableLength;i++){
-	myColorTable[0][i]= chart.red[i];
-	myColorTable[1][i]= chart.green[i];
-	myColorTable[2][i]= chart.blue[i];
-	}
-
-	// Get the ColorControl from the altitude RGB map
-	ColorControl colCont = (ColorControl) rgbMap.getControl();
-
-	// Set the table
-	try {
+	  // Create a different color table
+	  // Note: table has red, green and blue components
+	  int tableLength = chart.colorModelResolution;
+	  float[][] myColorTable = new float[3][tableLength];
+	  for(int i=0;i<tableLength;i++){
+	    myColorTable[0][i]= chart.red[i];
+	    myColorTable[1][i]= chart.green[i];
+	    myColorTable[2][i]= chart.blue[i];
+	  }
+	
+	  // Get the ColorControl from the altitude RGB map
+	  ColorControl colCont = (ColorControl) rgbMap.getControl();
+	
+	  // Set the table
+	  try {
 		colCont.setTable(myColorTable );
-	} catch (Exception exc) {
+	  } catch (Exception exc) {
 			Logger.log(LEVEL.ERROR, "Error setting the table. Message was: "+exc.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(exc.getStackTrace()));
-	}
+	  }
   }
-
+  
   /**
    * Constructor for a 3d surface. The labels for x, y, and z axis (legend) should
    * not contain any strange characters (spaces, point, comma, ...).
    * @param chart The surface element object.
    * @throws JPARSECException If an error occurs.
    */
-	public CreateVISADChart (GridChartElement chart)
-	throws JPARSECException
-	{
-		surfaceMode = true;
-		gridChart = chart.clone();
-		init(gridChart);
-	}
-	private void init(GridChartElement chart) throws JPARSECException
-	{
-		try {
-			// Create the quantities
-			// Use RealType(String name, Unit unit, Set set);
-			declination = RealType.getRealType(chart.yLabel, SI.meter, null);
-			rightAscension = RealType.getRealType(chart.xLabel, SI.meter, null);
-			domain2D = new RealTupleType(declination, rightAscension);
-			velocity = RealType.getRealType(chart.legend, null, null);
-
-			// Create a FunctionType (domain_tuple -> range_tuple )
-			// Use FunctionType(MathType domain, MathType range)
-			FunctionType func_domain_alt = new FunctionType( domain2D, velocity);
-
-			// Create the domain Set using an
-			// LinearDSet(MathType type, double first1, double last1, int lengthX,
-			//				 double first2, double last2, int lengthY)
-			// note the "inverted" first and last values of latitude
-			int NCOLS = chart.data[0].length;
-			int NROWS = chart.data.length;
-			greyPlane = new Linear2DSet(domain2D, chart.limits[2], chart.limits[3], NROWS,
-								  chart.limits[0],  chart.limits[1], NCOLS);
-
-			// Our 'flat' array
-			double[][] flat_samples = new double[1][NCOLS * NROWS];
-
-			// Fill our 'flat' array with the altitude values
-			// by looping over NCOLS and NROWS
-
-			// Note the use of an index variable, indicating the order of the samples
-			int index = 0;
-			for(int c = 0; c < NCOLS; c++)
-			for(int r = 0; r < NROWS; r++){
-
-				// set altitude altitude
-				flat_samples[0][ index ] = chart.data[r][c];
-
-				// increment index
-				index++;
-			}
-
-			// Create a FlatField
-			// Use FlatField(FunctionType type, Set domain_set)
-			temperPlane = new FlatField( func_domain_alt, greyPlane);
-
-			// ...and put the altitude values above into it
-			// Note the argument false, meaning that the array won't be copied
-			temperPlane.setSamples( flat_samples , false );
-
-			// Create Display and its maps
-			displays = new DisplayImpl[1];
-			displays[0] = new DisplayImplJ3D("display1");
-
-			// Get display's graphics mode control and draw scales
-			GraphicsModeControl dispGMC = (GraphicsModeControl)  displays[0].getGraphicsModeControl();
-			dispGMC.setScaleEnable(true);
-
-			// Also enable Texture
-			dispGMC.setTextureEnable(false);
-
-			// Create the ScalarMaps: latitude to XAxis, longitude to YAxis and
-			// altitude to ZAxis and to RGB
-			// Use ScalarMap(ScalarType scalar, DisplayRealType display_scalar)
-			northMap = new ScalarMap( declination,    Display.YAxis );
-			eastMap = new ScalarMap( rightAscension, Display.XAxis );
-
-			rgbMap = new ScalarMap( velocity,  Display.RGB );
-			altMap = new ScalarMap( velocity,  Display.ZAxis );
-
-			// Add maps to display
-			displays[0].addMap( northMap );
-			displays[0].addMap( eastMap );
-
-			displays[0].addMap( altMap );
-			displays[0].addMap( rgbMap );
-
-			// Create a different color table
-			setColorTable(chart);
-
-			// Create a data reference and set the FlatField as our data
-			greyPlaneRef = new DataReferenceImpl("greyPlaneRef");
-			greyPlaneRef.setData( temperPlane );
-
-			if (chart.opacity == GridChartElement.OPACITY.VARIABLE_WITH_Z) {
-				ScalarMap altAlphaMap = new ScalarMap( velocity,  Display.Alpha );
+	  public CreateVISADChart (GridChartElement chart)
+	  throws JPARSECException 
+	  {
+		  surfaceMode = true;
+		  gridChart = chart.clone();
+		  init(gridChart);
+	  }
+	  private void init(GridChartElement chart) throws JPARSECException 
+	  { 
+		  try {	
+			  // Create the quantities
+			  // Use RealType(String name, Unit unit, Set set);
+			  declination = RealType.getRealType(chart.yLabel, SI.meter, null);
+			  rightAscension = RealType.getRealType(chart.xLabel, SI.meter, null);
+			  domain2D = new RealTupleType(declination, rightAscension);
+			  velocity = RealType.getRealType(chart.legend, null, null);
+			
+			  // Create a FunctionType (domain_tuple -> range_tuple )
+			  // Use FunctionType(MathType domain, MathType range)
+			  FunctionType func_domain_alt = new FunctionType( domain2D, velocity);
+			
+			  // Create the domain Set using an
+			  // LinearDSet(MathType type, double first1, double last1, int lengthX,
+			  //				 double first2, double last2, int lengthY)
+			  // note the "inverted" first and last values of latitude
+			  int NCOLS = chart.data[0].length;
+			  int NROWS = chart.data.length;
+			  greyPlane = new Linear2DSet(domain2D, chart.limits[2], chart.limits[3], NROWS,
+			  					          chart.limits[0],  chart.limits[1], NCOLS);
+			
+			  // Our 'flat' array
+			  double[][] flat_samples = new double[1][NCOLS * NROWS];
+			
+			  // Fill our 'flat' array with the altitude values
+			  // by looping over NCOLS and NROWS
+			
+			  // Note the use of an index variable, indicating the order of the samples
+			  int index = 0;
+			  for(int c = 0; c < NCOLS; c++)
+			    for(int r = 0; r < NROWS; r++){
+			
+				      // set altitude altitude
+				      flat_samples[0][ index ] = chart.data[r][c];
+			
+				      // increment index
+				      index++;
+			    }
+			
+			  // Create a FlatField
+			  // Use FlatField(FunctionType type, Set domain_set)
+			  temperPlane = new FlatField( func_domain_alt, greyPlane);
+			
+			  // ...and put the altitude values above into it
+			  // Note the argument false, meaning that the array won't be copied
+			  temperPlane.setSamples( flat_samples , false );
+			
+			  // Create Display and its maps
+			  displays = new DisplayImpl[1];
+			  displays[0] = new DisplayImplJ3D("display1");
+			
+			  // Get display's graphics mode control and draw scales
+			  GraphicsModeControl dispGMC = (GraphicsModeControl)  displays[0].getGraphicsModeControl();
+			  dispGMC.setScaleEnable(true);
+			
+			  // Also enable Texture
+			  dispGMC.setTextureEnable(false);
+			
+			  // Create the ScalarMaps: latitude to XAxis, longitude to YAxis and
+			  // altitude to ZAxis and to RGB
+			  // Use ScalarMap(ScalarType scalar, DisplayRealType display_scalar)
+			  northMap = new ScalarMap( declination,    Display.YAxis );
+			  eastMap = new ScalarMap( rightAscension, Display.XAxis );
+			
+			  rgbMap = new ScalarMap( velocity,  Display.RGB );
+			  altMap = new ScalarMap( velocity,  Display.ZAxis );
+			
+			  // Add maps to display
+			  displays[0].addMap( northMap );
+			  displays[0].addMap( eastMap );
+			
+			  displays[0].addMap( altMap );
+			  displays[0].addMap( rgbMap );
+			
+			  // Create a different color table
+			  setColorTable(chart);
+			
+			  // Create a data reference and set the FlatField as our data
+			  greyPlaneRef = new DataReferenceImpl("greyPlaneRef");
+			  greyPlaneRef.setData( temperPlane );
+			
+			  if (chart.opacity == GridChartElement.OPACITY.VARIABLE_WITH_Z) {
+				  ScalarMap altAlphaMap = new ScalarMap( velocity,  Display.Alpha );
 					displays[0].addMap( altAlphaMap );
 					displays[0].addReference( greyPlaneRef);
-			} else {
-				float opacity = 0.25f;
-				if (chart.opacity == GridChartElement.OPACITY.OPAQUE) opacity = 1f;
-				if (chart.opacity == GridChartElement.OPACITY.SEMI_TRANSPARENT) opacity = 0.5f;
-				ConstantMap[] constAlpha_CMap = { new ConstantMap( opacity, Display.Alpha) };
-				displays[0].addReference( greyPlaneRef, constAlpha_CMap);
-			}
+			  } else {
+				  float opacity = 0.25f;
+				  if (chart.opacity == GridChartElement.OPACITY.OPAQUE) opacity = 1f;
+				  if (chart.opacity == GridChartElement.OPACITY.SEMI_TRANSPARENT) opacity = 0.5f;
+				  ConstantMap[] constAlpha_CMap = { new ConstantMap( opacity, Display.Alpha) };
+				  displays[0].addReference( greyPlaneRef, constAlpha_CMap);		  
+			  }
+			
+			  displays[0].addDisplayListener(this);
 
-			displays[0].addDisplayListener(this);
-
-			// Set maps ranges
-			eastMap.setRange(chart.limits[0], chart.limits[1]);
-			northMap.setRange(chart.limits[2], chart.limits[3]);
-			altMap.setRange(chart.getMinimum(), chart.getMaximum());
-
-			// Create application window and add display to window
-			panel = new JPanel();
-			panel.setLayout(new BorderLayout());
-			panel.add(displays[0].getComponent());
-		} catch (RemoteException exc)
-		{
-			throw new JPARSECException("remote exception.", exc);
-		}
-		catch (VisADException ex)
-		{
-			throw new JPARSECException("VisAD exception.", ex);
-		}
+			  // Set maps ranges
+			  eastMap.setRange(chart.limits[0], chart.limits[1]);
+			  northMap.setRange(chart.limits[2], chart.limits[3]);
+			  altMap.setRange(chart.getMinimum(), chart.getMaximum());
+			
+			  // Create application window and add display to window
+			  panel = new JPanel();
+			  panel.setLayout(new BorderLayout());
+			  panel.add(displays[0].getComponent());
+		  } catch (RemoteException exc)
+		  {
+			  throw new JPARSECException("remote exception.", exc);
+		  }
+		  catch (VisADException ex)
+		  {
+			  throw new JPARSECException("VisAD exception.", ex);		  
+		  }
 	}
 
-	/**
-	 * Returns the VISAD cube object.
-	 * @return VISAD cube object.
-	 */
-	public VISADCubeElement getCube()
-	{
-		return this.cube;
-	}
+	  /**
+	   * Returns the VISAD cube object.
+	   * @return VISAD cube object.
+	   */
+	  public VISADCubeElement getCube()
+	  {
+		  return this.cube;
+	  }
+	  
+  /**
+   * Test program.
+   * @param args Not used.
+   */
+  public static void main(String[] args)
+  {
+	  try {
+		  TelescopeElement telescope = TelescopeElement.NEWTON_20cm;
+		  int field = 10;
+		  int nplane = 16;
+		  
+		  float data[][][] = new float[nplane][field*10+1][field*10+1];
+		  int initDiam = 200, finalDiam = 20;
+		  for (int i=0; i<nplane; i++)
+		  {
+			  telescope.diameter = initDiam + (finalDiam - initDiam) * i / 16;
+			  telescope.centralObstruction = telescope.diameter / 10;
+			  double dat[][] = Difraction.pattern(telescope, field);
+			  for (int ix=0; ix<dat.length; ix++)
+			  {
+				  for (int iy=0; iy<dat[0].length; iy++)
+				  {
+					  data[i][iy][ix] = (float) dat[iy][ix];					  
+				  }
+			  }
+		  }
+
+		  VISADCubeElement cube = new VISADCubeElement(data,
+				  new float[] {field, -field, -field, field, initDiam, finalDiam},
+				  "dx", VISADCubeElement.UNIT.RADIAN,
+				  "dy", VISADCubeElement.UNIT.RADIAN,
+				  "Diameter", VISADCubeElement.UNIT.KILOMETER_PER_SECOND,
+				  "Flux", VISADCubeElement.UNIT.KELVIN);
+		  CreateVISADChart p = new CreateVISADChart(cube, 50.0, false);
+		  p.show(800, 600);
+		  System.out.println("diam "+p.getVelSliderValue());
+
+//			Serialization.writeObject(cube, "/home/alonso/visadTest2");
+//			Serialization.writeObject(p, "/home/alonso/createVisadTest2");
+
+/*		  field = 50;
+		  float data2[][][] = new float[16][field*10+1][field*10+1];
+		  for (int i=0; i<16; i++)
+		  {
+			  telescope.diameter = initDiam + (finalDiam - initDiam) * i / 16;
+			  telescope.centralObstruction = telescope.diameter / 10;
+			  double dat[][] = Difraction.pattern(telescope, field);
+			  for (int ix=0; ix<dat.length; ix++)
+			  {
+				  for (int iy=0; iy<dat[0].length; iy++)
+				  {
+					  data2[i][iy][ix] = (float) dat[iy][ix];					  
+				  }
+			  }
+		  }
+
+		  VISADCubeElement cube2 = new VISADCubeElement(data,
+				  new float[] {field, -field, -field, field, initDiam, finalDiam},
+				  "dx", VISADCubeElement.UNIT_RADIAN,
+				  "dy", VISADCubeElement.UNIT_RADIAN,
+				  "Diameter", VISADCubeElement.UNIT_KILOMETER_PER_SECOND,
+				  "Flux", VISADCubeElement.UNIT_KELVIN);
+		  p.update(cube2, 0);
+*/
+		  // Second example
+		  // Show levels and chart types
+		  // Retrieve levels at cursor position
+		  // Show multiple surfaces (and points?)
+			field = 10;
+			double dat[][] = Difraction.pattern(telescope, field);
+			GridChartElement chart = new GridChartElement("Difraction pattern",
+					"offsetX", "offsetY", "RelativeIntensity", GridChartElement.COLOR_MODEL.RED_TO_BLUE, 
+					new double[] {field, -field, -field, field}, dat, 
+					new double[] {0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0}, 400);
+
+/*			GridChartElement chart2 = GridChartElement.getSurfaceFromPoints(new DoubleVector[] {
+					new DoubleVector(1, 1, 0),
+					new DoubleVector(2, 1, 1),
+					new DoubleVector(3, 1, 0),
+					new DoubleVector(1, 2, 1),
+					new DoubleVector(2, 2, 4),
+					new DoubleVector(3, 2, 1),
+					new DoubleVector(1, 3, 0),
+					new DoubleVector(2, 3, 1),
+					new DoubleVector(3, 3, 0)
+				}, 20);
+			chart.data = chart2.data;
+			chart.limits = chart2.limits;
+*/
+			
+			chart.type = GridChartElement.TYPE.RASTER_CONTOUR;
+			chart.opacity = GridChartElement.OPACITY.OPAQUE;
+			
+		    CreateVISADChart vt = new CreateVISADChart(chart);
+		    vt.show(600, 600);
+			Serialization.writeObject(p, "/home/alonso/visadTest");
+			Serialization.writeObject(vt, "/home/alonso/visadSurfaceTest");
+
+	  } catch (Exception e)
+	  {
+		  e.printStackTrace();
+	  }
+  }
 
   private void init2()
   throws RemoteException, VisADException {
@@ -845,13 +926,13 @@ public class CreateVISADChart implements DisplayListener, Serializable {
   int max = (int) Functions.roundUpToPlace(Math.max(cube.initZ, cube.finalZ)/scale, 0);
   latSlider = new VisADSlider(velocity.getName(), min, max, 1, scale, cursorDataRef, declination, false);
   this.setVelSliderValue((float) this.initVelocity);
-
+ 
   // Create the Displays and their maps
 
   // One 2D display
   displays = new DisplayImpl[1];
   displaysAreLinked = false;
-
+  
   for( int i = 0; i<displays.length;i++){
     displays[i] = new DisplayImplJ3D("display" + i);
   }
@@ -924,16 +1005,16 @@ public class CreateVISADChart implements DisplayListener, Serializable {
   guiPanel.add(createSyncCheck());
   guiPanel.add(createResetButton());
 
-  panel.add(guiPanel, BorderLayout.SOUTH);
+  panel.add(guiPanel, BorderLayout.SOUTH);  
 }
-
+  
   /**
    * Returns the velocity slider.
    * @return Velocity slider.
    */
   public VisADSlider getVelSlider()
   {
-	return this.latSlider;
+	  return this.latSlider;
   }
   /**
    * Returns the velocity slider value.
@@ -941,13 +1022,13 @@ public class CreateVISADChart implements DisplayListener, Serializable {
    */
   public float getVelSliderValue()
   {
-	JSlider sl = (JSlider) (latSlider.getComponent(0));
-	int v = sl.getValue();
-	float init = Math.min(this.getCube().initZ, this.getCube().finalZ);
-	float fin = Math.max(this.getCube().initZ, this.getCube().finalZ);
-	double step = (fin - init) / (double) sl.getMaximum();
-	float vel = init + (float) (step * (double) v);
-	return vel;
+	  JSlider sl = (JSlider) (latSlider.getComponent(0));
+	  int v = sl.getValue();
+	  float init = Math.min(this.getCube().initZ, this.getCube().finalZ);
+	  float fin = Math.max(this.getCube().initZ, this.getCube().finalZ);
+	  double step = (fin - init) / (double) sl.getMaximum();
+	  float vel = init + (float) (step * (double) v);
+	  return vel;
   }
   /**
    * Sets the velocity slider value.
@@ -955,12 +1036,12 @@ public class CreateVISADChart implements DisplayListener, Serializable {
    */
   public void setVelSliderValue(float v)
   {
-	JSlider sl = (JSlider) (latSlider.getComponent(0));
-	float init = Math.min(this.getCube().initZ, this.getCube().finalZ);
-	float fin = Math.max(this.getCube().initZ, this.getCube().finalZ);
-	double step = (fin - init) / (double) sl.getMaximum();
-	int vel = (int) ((v-init)/step + 0.5);
-	sl.setValue(vel);
+	  JSlider sl = (JSlider) (latSlider.getComponent(0));
+	  float init = Math.min(this.getCube().initZ, this.getCube().finalZ);
+	  float fin = Math.max(this.getCube().initZ, this.getCube().finalZ);
+	  double step = (fin - init) / (double) sl.getMaximum();
+	  int vel = (int) ((v-init)/step + 0.5);
+	  sl.setValue(vel);
   }
 
   /**
@@ -969,7 +1050,7 @@ public class CreateVISADChart implements DisplayListener, Serializable {
    */
   public ScalarMap getRangeX()
   {
-	return this.rangeX;
+	  return this.rangeX;
   }
   /**
    * Return Y range of the map.
@@ -977,7 +1058,7 @@ public class CreateVISADChart implements DisplayListener, Serializable {
    */
   public ScalarMap getRangeY()
   {
-	return this.rangeY;
+	  return this.rangeY;
   }
   /**
    * Return Z range of the map.
@@ -985,16 +1066,16 @@ public class CreateVISADChart implements DisplayListener, Serializable {
    */
   public ScalarMap getRangeZ()
   {
-	return this.rangeZ;
+	  return this.rangeZ;
   }
-
+  
  	private void writeObject(ObjectOutputStream out)
 	throws IOException {
  		boolean grid3d = false;
  		if (gridChart != null) grid3d = true;
 		out.writeBoolean(grid3d);
 		if (grid3d) {
-			out.writeObject(this.gridChart);
+			out.writeObject(this.gridChart);			
 		} else {
 			out.writeFloat(this.getVelSliderValue());
 			out.writeObject(this.cube);

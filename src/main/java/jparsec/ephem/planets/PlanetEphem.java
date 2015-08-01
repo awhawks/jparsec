@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- *
+ * 
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *
+ *  
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- *
+ * 
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,20 +18,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */
+ */					
 package jparsec.ephem.planets;
 
-import jparsec.ephem.Ephem;
-import jparsec.ephem.EphemerisElement;
+import jparsec.ephem.*;
 import jparsec.ephem.EphemerisElement.ALGORITHM;
 import jparsec.ephem.EphemerisElement.COORDINATES_TYPE;
 import jparsec.ephem.EphemerisElement.FRAME;
 import jparsec.ephem.EphemerisElement.REDUCTION_METHOD;
-import jparsec.ephem.Functions;
-import jparsec.ephem.IAU2006;
-import jparsec.ephem.Nutation;
-import jparsec.ephem.PhysicalParameters;
-import jparsec.ephem.Precession;
 import jparsec.ephem.Target.TARGET;
 import jparsec.ephem.event.LunarEvent;
 import jparsec.ephem.moons.MoonEphem;
@@ -39,12 +33,12 @@ import jparsec.ephem.planets.imcce.Vsop;
 import jparsec.graph.DataSet;
 import jparsec.math.Constant;
 import jparsec.math.matrix.Matrix;
-import jparsec.observer.LocationElement;
-import jparsec.observer.ObserverElement;
+import jparsec.observer.*;
+import jparsec.time.AstroDate;
 import jparsec.time.SiderealTime;
+import jparsec.time.TimeScale;
 import jparsec.time.TimeElement;
 import jparsec.time.TimeElement.SCALE;
-import jparsec.time.TimeScale;
 import jparsec.util.DataBase;
 import jparsec.util.JPARSECException;
 
@@ -55,7 +49,7 @@ import jparsec.util.JPARSECException;
  * arcsecond level when comparing to the long time span ephemeris JPL DE406.
  * <P>
  * This code is based on the work by Steve L. Moshier.
- *
+ * 
  * @author T. Alonso Albi - OAN (Spain)
  * @author S. L. Moshier
  * @version 1.0
@@ -64,7 +58,7 @@ public class PlanetEphem
 {
 	// private constructor so that this class cannot be instantiated.
 	private PlanetEphem() {}
-
+	
 	/* Compute mean elements at Julian date J. */
 	private static double ss[][] = new double[20][41];
 	private static double cc[][] = new double[20][41];
@@ -76,14 +70,14 @@ public class PlanetEphem
 
 	/**
 	 * Obtain mean elements of the planets.
-	 *
+	 * 
 	 * @param J Julian day.
 	 * @return An array with the mean longitudes.
 	 */
 	private static double[] meanElements(double J)
 	{
 		if (lastArg != null && lastJ == J) return lastArg.clone();
-
+		
 		double x, T, T2;
 
 		double Args[] = new double[20];
@@ -201,7 +195,7 @@ public class PlanetEphem
 	 * Generic program to accumulate sum of trigonometric series in three
 	 * variables (e.g., longitude, latitude, radius) of the same list of
 	 * arguments.
-	 *
+	 * 
 	 * @param J Julian day.
 	 * @param arg_tbl
 	 * @param distance
@@ -391,10 +385,10 @@ public class PlanetEphem
 		}
 
 		if (distance == 0.0) return new double[] {
-				Functions.normalizeRadians(Constant.ARCSEC_TO_RAD * sl),
+				Functions.normalizeRadians(Constant.ARCSEC_TO_RAD * sl), 
 				Functions.normalizeRadians(Constant.ARCSEC_TO_RAD * sb),
 				Functions.normalizeRadians(Constant.ARCSEC_TO_RAD * sr)};
-
+		
 		double pobj[] = new double[3];
 		pobj[0] = Constant.ARCSEC_TO_RAD * sl;
 		pobj[1] = Constant.ARCSEC_TO_RAD * sb;
@@ -411,7 +405,7 @@ public class PlanetEphem
 	 * Generic program to accumulate sum of trigonometric series in three
 	 * variables (e.g., longitude, latitude, radius) of the same list of
 	 * arguments.
-	 *
+	 * 
 	 * @param J Julian day.
 	 * @param arg_tbl
 	 * @param distance
@@ -429,6 +423,7 @@ public class PlanetEphem
 			double rad_tbl[], int[] max_harmonic, int max_power_of_t, int maxargs, double timescale, double trunclvl,
 			boolean libration)
 	{
+
 		int i, j, k, m, k1, ip, np, nt;
 		int p[];
 		double pl[];
@@ -594,7 +589,7 @@ public class PlanetEphem
 		sl = sl * 0.0001;
 		sb = sb * 0.0001;
 		sr = sr * 0.0001;
-
+		
 		if (distance == 0.0) return new double[] {Constant.ARCSEC_TO_RAD * sl + PlanetEphem.Ea_arcsec, Constant.ARCSEC_TO_RAD * sb,
 				Constant.ARCSEC_TO_RAD * sr};
 
@@ -613,7 +608,7 @@ public class PlanetEphem
 	/**
 	 * Generic program to accumulate sum of trigonometric series in two
 	 * variables (e.g., longitude, radius) of the same list of arguments.
-	 *
+	 * 
 	 * @param J Julian day.
 	 * @param arg_tbl
 	 * @param distance
@@ -770,8 +765,8 @@ public class PlanetEphem
 		double pobj[] = new double[3];
 		sl = sl * 0.0001;
 		sr = sr * 0.0001;
-
-		if (distance == 0.0) return new double[] {Constant.ARCSEC_TO_RAD * sl + PlanetEphem.LP_equinox,
+		
+		if (distance == 0.0) return new double[] {Constant.ARCSEC_TO_RAD * sl + PlanetEphem.LP_equinox, 
 				lat, Constant.ARCSEC_TO_RAD * sr};
 
 		pobj[0] = Constant.ARCSEC_TO_RAD * sl + PlanetEphem.LP_equinox;
@@ -788,7 +783,7 @@ public class PlanetEphem
 	/**
 	 * Generic program to accumulate sum of trigonometric series in one
 	 * variables (e.g., latitude) of the same list of arguments.
-	 *
+	 * 
 	 * @param J Julian day.
 	 * @param arg_tbl
 	 * @param distance
@@ -921,7 +916,7 @@ public class PlanetEphem
 	/**
 	 * Prepare lookup table of sin and cos ( i*Lj ) for required multiple
 	 * angles.
-	 *
+	 * 
 	 * @param k
 	 * @param arg
 	 * @param n
@@ -952,7 +947,7 @@ public class PlanetEphem
 	/**
 	 * Obtain position of a planet. Rectangular heliocentric coordinates mean
 	 * equinox and ecliptic J2000. For the Moon the geocentric position is returned.
-	 *
+	 * 
 	 * @param JD Time in Julian day.
 	 * @param planet Planet ID constant (From Sun to Pluto, Moon, barycenters, and libration).
 	 * @return Array with the x, y, z results.
@@ -969,15 +964,15 @@ public class PlanetEphem
 
 		switch (planet)
 		{
-		case Libration:
+		case Libration: 
 			p = g3plan(JD, Moshier_libration.args, Moshier_libration.distance, Moshier_libration.tabb, Moshier_libration.tabl,
 					Moshier_libration.tabr, Moshier_libration.max_harmonic, Moshier_libration.max_power_of_t,
 					Moshier_libration.maxargs, Moshier_libration.timescale, Moshier_libration.trunclvl, true);
-
+			
 			// For ecliptic mean equinox of date
 			double args[] = PlanetEphem.meanElements(JD);
 			p[0] -= args[2];
-
+			
 			  // phi+psi
 			  p[2] += LP_equinox + 6.48e5 * Constant.ARCSEC_TO_RAD;
 			  if (p[2] < -6.45e5 * Constant.ARCSEC_TO_RAD)
@@ -989,7 +984,7 @@ public class PlanetEphem
 			  if (p[0] < -6.45e5 * Constant.ARCSEC_TO_RAD)
 			    p[0] += 1.296e6 * Constant.ARCSEC_TO_RAD;
 			  if (p[0] > 6.45e5 * Constant.ARCSEC_TO_RAD)
-			    p[0] -= 1.296e6 * Constant.ARCSEC_TO_RAD;
+			    p[0] -= 1.296e6 * Constant.ARCSEC_TO_RAD;			  
 			p[2] -= p[0];
 
 			// From Euler angles to matrix M
@@ -1012,10 +1007,10 @@ public class PlanetEphem
 			M[2][1] = -sinth*cosphi;
 			M[2][2] = costh;
 			Matrix mM = new Matrix(M);
-
+			
 			// Get rotation matrix around x axis with eps
 			Matrix mQ = Matrix.getR1(84381.406173 * Constant.ARCSEC_TO_RAD);
-
+			
 			// Get precession matrix
 			eph.ephemMethod = REDUCTION_METHOD.JPL_DE4xx;
 			p = Precession.getAngles(false, JD, eph);
@@ -1043,10 +1038,10 @@ public class PlanetEphem
 				P[2][1] = -sinth*cosphi;
 				P[2][2] = costh;
 			Matrix mP = new Matrix(P);
-
+			
 			// Precess Q
 			mP = mP.times(mQ);
-
+			
 			// Space to body
 			Matrix mM2000 = mM.times(mP);
 
@@ -1069,7 +1064,7 @@ public class PlanetEphem
 			  p[0] = phi;
 			  p[1] = theta;
 			  p[2] = psi;
-
+			  
 			return p;
 		case MERCURY:
 			p = gplan(JD, Moshier_Mercury.args, Moshier_Mercury.distance, Moshier_Mercury.tabb, Moshier_Mercury.tabl,
@@ -1117,11 +1112,13 @@ public class PlanetEphem
 			p = gplan(JD, Moshier_Pluto.args, Moshier_Pluto.distance, Moshier_Pluto.tabb, Moshier_Pluto.tabl,
 					Moshier_Pluto.tabr, Moshier_Pluto.max_harmonic, Moshier_Pluto.max_power_of_t,
 					Moshier_Pluto.maxargs, Moshier_Pluto.timescale, Moshier_Pluto.trunclvl);
-
+			
 			// Return position of Pluto's body center
-            p = Ephem.eclipticToEquatorial(p, Constant.J2000, eph);
-            p = MoonEphem.fromPlutoBarycenterToPlutoCenter(p, JD, EphemerisElement.REDUCTION_METHOD.IAU_2009, true);
-            p = Ephem.equatorialToEcliptic(p, Constant.J2000, eph);
+			if (planet == TARGET.Pluto) {
+				p = Ephem.eclipticToEquatorial(p, Constant.J2000, eph);
+				p = MoonEphem.fromPlutoBarycenterToPlutoCenter(p, JD, EphemerisElement.REDUCTION_METHOD.IAU_2009, true);
+				p = Ephem.equatorialToEcliptic(p, Constant.J2000, eph);
+			}
 			break;
 		case Moon:
 			double moon_lat = g1plan(JD, Moshier_Moon_lat.args, Moshier_Moon_lat.distance, Moshier_Moon_lat.tabl,
@@ -1174,7 +1171,7 @@ public class PlanetEphem
 	/**
 	 * Get rectangular ecliptic geocentric position of a planet in equinox
 	 * J2000, and ICRF frame.
-	 *
+	 * 
 	 * @param JD Julian day in TDB.
 	 * @param planet Planet ID.
 	 * @param light_time Light time to planet in days.
@@ -1182,7 +1179,7 @@ public class PlanetEphem
 	 * of the planet.
 	 * @param obs The observer object. Can be null for the Earth's center.
 	 * @return Array with x, y, z, vx, vy, vz coordinates. Note velocity components are those
-	 * for the Earth (used for aberration correction) not those for the planet relative to the
+	 * for the Earth (used for aberration correction) not those for the planet relative to the 
 	 * geocenter.
 	 * @throws JPARSECException Thrown if the calculation fails.
 	 */
@@ -1237,11 +1234,11 @@ public class PlanetEphem
 	 * for planets, and below 0.1 arcseconds for the Moon, when comparing with
 	 * JPL results. Typical errors are much lower. Fit is valid from 3000 B.C.
 	 * to 3000 A.D. for giant planets, and from 1350 B.C. to 3000 A.D. for inner
-	 * planets. To calculate approximate ephemerides of inner planets up to 3000
+	 * planets. To calculate approximate ephemerides of inner planets up to 3000 
 	 * B.C. use VSOP87, or ELP2000 for more acurrate ephemeris for the Moon before
 	 * year 1600. The Moon position will contains lunar librations computed also
 	 * from Moshier's fit.
-	 *
+	 * 
 	 * @param time Time object containing the date.
 	 * @param obs Observer object containing the observer position.
 	 * @param eph Ephemeris object with the target and ephemeris
@@ -1256,7 +1253,7 @@ public class PlanetEphem
 			ObserverElement obs, // Observer Element
 			EphemerisElement eph) // Ephemeris Element
 			throws JPARSECException
-	{
+	{		
 		// Check Ephemeris object
 		if (!EphemerisElement.checkEphemeris(eph))
 		{
@@ -1274,7 +1271,7 @@ public class PlanetEphem
 			lastTDB = -1;
 			lastObserver = null;
 		}
-
+		
 		EphemElement ephem_elem = PlanetEphem.MoshierCalc(time, obs, eph, true);
 
 		/* Physical ephemeris */
@@ -1284,7 +1281,7 @@ public class PlanetEphem
 		EphemElement ephem_elem2 = ephem_elem;
 		if (eph.ephemType != EphemerisElement.COORDINATES_TYPE.APPARENT || eph.equinox != EphemerisElement.EQUINOX_OF_DATE) {
 			if (JD_TDB == lastTDB && lastEphem2 != null) {
-				ephem_elem2 = lastEphem2;
+				ephem_elem2 = lastEphem2;				
 			} else {
 				new_eph = eph.clone();
 				new_eph.ephemType = COORDINATES_TYPE.APPARENT;
@@ -1304,13 +1301,13 @@ public class PlanetEphem
 				lastSun = ephemSun;
 			} catch (Exception exc) { // To obtain Earth position in ephemerides of giant planets before 1350 B.C.
 		 		Object gcrs = DataBase.getData("GCRS", true);
-				ephemSun = Vsop.vsopEphemeris(time, obs, new_eph);
+				ephemSun = Vsop.vsopEphemeris(time, obs, new_eph);			
 				DataBase.addData("GCRS", gcrs, true);
 				lastSun = ephemSun;
 			}
 		}
 		if (lastObserver == null) lastObserver = obs.clone();
-
+		
 		ephem_elem2 = PhysicalParameters.physicalParameters(JD_TDB, ephemSun, ephem_elem2, obs, eph);
 		PhysicalParameters.setPhysicalParameters(ephem_elem, ephem_elem2, time, obs, eph);
 
@@ -1341,14 +1338,14 @@ public class PlanetEphem
 			EphemerisElement eph, boolean addGCRS) // Ephemeris Element
 			throws JPARSECException
 	{
-		if ((!eph.targetBody.isPlanet() && eph.targetBody != TARGET.SUN && eph.targetBody != TARGET.Pluto && eph.targetBody != TARGET.Moon)
+		if ((!eph.targetBody.isPlanet() && eph.targetBody != TARGET.SUN && eph.targetBody != TARGET.Pluto && eph.targetBody != TARGET.Moon) 
 				|| ((eph.targetBody == TARGET.EARTH || eph.targetBody == TARGET.Earth_Moon_Barycenter) && obs.getMotherBody() == TARGET.EARTH)
 				)
 			throw new JPARSECException("target object '"+eph.targetBody+"' is invalid.");
 
 		// Obtain julian day in Barycentric Dynamical Time
 		double JD_TDB = TimeScale.getJD(time, obs, eph, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
-
+		
 		// Check Julian day for time span validity
 		// Rigorous criteria
 		if (eph.preferPrecisionInEphemerides) {
@@ -1389,7 +1386,7 @@ public class PlanetEphem
 			} while (Math.abs(light_time - light_time_corrected) > (1.0E-6 / Constant.SECONDS_PER_DAY));
 			light_time = light_time_corrected;
 		}
-
+		
 		// Obtain light time to Sun (first order approx)
 		double geo_sun_0[] = null;
 		if (lastTDB == JD_TDB && lastSun0 != null) {
@@ -1420,7 +1417,7 @@ public class PlanetEphem
 			double[] planetocentricPositionOfTargetSatellite = (double[]) o;
 			helio_object = Functions.sumVectors(helio_object, planetocentricPositionOfTargetSatellite);
 		}
-
+		
 		if (eph.targetBody != TARGET.Moon)
 		{
 			LocationElement locP = LocationElement.parseRectangularCoordinates(helio_object);
@@ -1450,18 +1447,18 @@ public class PlanetEphem
 		// Correct for solar deflection and aberration
 		if (eph.ephemType == EphemerisElement.COORDINATES_TYPE.APPARENT)
 		{
-			if (eph.preferPrecisionInEphemerides &&
+			if (eph.preferPrecisionInEphemerides && 
 					(obs.getMotherBody() != TARGET.EARTH || (eph.targetBody != TARGET.SUN && eph.targetBody != TARGET.Moon))) {
 				double sun[] = PlanetEphem.getHeliocentricEclipticPositionJ2000(JD_TDB - lightTimeS, TARGET.SUN);
-				//geo_eq = Ephem.solarDeflection(geo_eq, Ephem.eclipticToEquatorial(geo_sun_0, Constant.J2000, eph),
+				//geo_eq = Ephem.solarDeflection(geo_eq, Ephem.eclipticToEquatorial(geo_sun_0, Constant.J2000, eph), 
 				//		Ephem.eclipticToEquatorial(Functions.substract(helio_object, sun), Constant.J2000, eph));
-				geo_eq = Ephem.solarAndPlanetaryDeflection(geo_eq, baryc, //Ephem.eclipticToEquatorial(geo_sun_0, Constant.J2000, eph),
+				geo_eq = Ephem.solarAndPlanetaryDeflection(geo_eq, baryc, //Ephem.eclipticToEquatorial(geo_sun_0, Constant.J2000, eph), 
 						Ephem.eclipticToEquatorial(Functions.substract(helio_object, sun), Constant.J2000, eph),
 						new TARGET[] {TARGET.JUPITER, TARGET.SATURN, TARGET.EARTH}, JD_TDB, false, obs);
 			}
 			if (obs.getMotherBody() != TARGET.EARTH || eph.targetBody != TARGET.Moon)
 				geo_eq = Ephem.aberration(geo_eq, baryc, light_time);
-
+			
 			if (addGCRS) DataBase.addData("GCRS", geo_eq, true);
 		} else {
 			if (addGCRS) DataBase.addData("GCRS", null, true);
@@ -1476,8 +1473,8 @@ public class PlanetEphem
 		double geo_date[];
 		if (eph.frame == FRAME.FK4) {
 			// Transform from B1950 to mean equinox of date
-			 geo_date = Precession.precess(Constant.B1950, JD_TDB, geo_eq, eph);
-			 helio_object = Precession.precess(Constant.B1950, JD_TDB, helio_object, eph);
+			 geo_date = Precession.precess(Constant.B1950, JD_TDB, geo_eq, eph);	
+			 helio_object = Precession.precess(Constant.B1950, JD_TDB, helio_object, eph);	
 		} else {
 			// Transform from J2000 to mean equinox of date
 			geo_date = Precession.precessFromJ2000(JD_TDB, geo_eq, eph);
@@ -1495,7 +1492,7 @@ public class PlanetEphem
 				/* Correct nutation */
 				true_eq = Nutation.nutateInEquatorialCoordinates(JD_TDB, eph, geo_date, true);
 			}
-
+	
 			// Correct for polar motion
 			if (eph.ephemType == EphemerisElement.COORDINATES_TYPE.APPARENT &&
 					eph.correctForPolarMotion)
@@ -1507,7 +1504,7 @@ public class PlanetEphem
 				true_eq = Functions.rotateZ(true_eq, gast);
 			}
 		}
-
+		
 		// Set some variables to improve performance when using loops with the
 		// same calculation time
 		if (lastSun0 == null) {
@@ -1515,11 +1512,11 @@ public class PlanetEphem
 			lastSun0 = geo_sun_0;
 			lastBaryc = baryc;
 		}
-
+		
 		// Pass to coordinates as seen from another body, if necessary
 		if (obs.getMotherBody() != TARGET.NOT_A_PLANET && obs.getMotherBody() != TARGET.EARTH)
 			true_eq = Ephem.getPositionFromBody(LocationElement.parseRectangularCoordinates(true_eq), time, obs, eph).getRectangularCoordinates();
-
+		
 		// Get equatorial coordinates
 		LocationElement ephem_loc = LocationElement.parseRectangularCoordinates(true_eq);
 
@@ -1534,7 +1531,7 @@ public class PlanetEphem
 		// Note distances are apparent, not true
 		ephem_elem.distanceFromSun = loc_elem.getRadius();
 
-		if (eph.targetBody == TARGET.SUN) ephem_elem.heliocentricEclipticLatitude = ephem_elem.heliocentricEclipticLongitude =
+		if (eph.targetBody == TARGET.SUN) ephem_elem.heliocentricEclipticLatitude = ephem_elem.heliocentricEclipticLongitude = 
 			ephem_elem.distanceFromSun = 0;
 
 		/* Topocentric correction */
@@ -1543,5 +1540,64 @@ public class PlanetEphem
 
 		ephem_elem.name = eph.targetBody.getName();
 		return ephem_elem;
+	}
+
+	/**
+	 * For unit testing only.
+	 * @param args Not used.
+	 */
+	public static void main(String args[])
+	{
+		System.out.println("PlanetEphem Test");
+
+		try
+		{
+			AstroDate astro = new AstroDate(1990, AstroDate.JANUARY, 3, 12, 7, 38.002);
+			TimeElement time = new TimeElement(astro, SCALE.LOCAL_TIME);
+			CityElement city = City.findCity("Madrid");
+			EphemerisElement eph = new EphemerisElement(TARGET.JUPITER, EphemerisElement.COORDINATES_TYPE.APPARENT,
+					EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.TOPOCENTRIC, 
+					EphemerisElement.REDUCTION_METHOD.IAU_1976, // Same results as those given by Horizons
+					EphemerisElement.FRAME.ICRF);
+			eph.algorithm = EphemerisElement.ALGORITHM.MOSHIER; //.JPL_DE405;
+			ObserverElement observer = ObserverElement.parseCity(city);
+//			ObserverElement observer = ObserverElement.parseObservatory(observatory);
+
+			eph.correctForEOP = false;
+			eph.correctForPolarMotion = false;
+			
+			EphemElement ephem = PlanetEphem.MoshierEphemeris(time, observer, eph);
+			System.out.println(ephem.getEquatorialLocation().toStringAsEquatorialLocation());
+			
+			LocationElement ephem_loc0 = Ephem.toMeanEquatorial(ephem.getEquatorialLocation(), time, observer, eph);
+			System.out.println("Mean: "+Functions.formatRA(ephem_loc0.getLongitude())+"/"+Functions.formatDEC(ephem_loc0.getLatitude())+"/"+ephem_loc0.getRadius());
+			// Should be: RA: 06h 21m 14.0671s/23º 14' 18.920"/4.175983896906823. Exact is: RA: 06h 21m 14.0665s, DEC: 23º 14' 18.920", DIST: 4.175983897448329
+
+			astro = new AstroDate(2011, AstroDate.JUNE, 15, 21, 21, 0);
+			time = new TimeElement(astro, SCALE.UNIVERSAL_TIME_UTC);
+			eph = new EphemerisElement(TARGET.Moon, EphemerisElement.COORDINATES_TYPE.APPARENT,
+					EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.GEOCENTRIC, 
+					EphemerisElement.REDUCTION_METHOD.IAU_2006,
+					EphemerisElement.FRAME.DYNAMICAL_EQUINOX_J2000);
+			eph.algorithm = EphemerisElement.ALGORITHM.MOSHIER;
+			city = City.findCity("Madrid");
+			observer = ObserverElement.parseCity(city);
+
+			ephem = Ephem.getEphemeris(time, observer, eph, false);
+			System.out.println(ephem.getEquatorialLocation().toStringAsEquatorialLocation());
+
+			city = City.findCity("Kabul");
+			observer = ObserverElement.parseCity(city);
+			ephem = Ephem.getEphemeris(time, observer, eph, false);
+			System.out.println(ephem.getEquatorialLocation().toStringAsEquatorialLocation());
+
+			city = City.findCity("Madrid");
+			observer = ObserverElement.parseCity(city);
+			ephem = Ephem.getEphemeris(time, observer, eph, false);
+			System.out.println(ephem.getEquatorialLocation().toStringAsEquatorialLocation());
+		} catch (JPARSECException ve)
+		{
+			JPARSECException.showException(ve);
+		}
 	}
 }

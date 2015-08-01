@@ -385,7 +385,7 @@ public class Country
 		Puerto_Rico,
 		/** Constant ID for Qatar. */
 		Qatar,
-		/** Constant ID for R&eacute;union. */
+		/** Constant ID for Réunion. */
 		Reunion,
 		/** Constant ID for Romania. */
 		Romania,
@@ -409,7 +409,7 @@ public class Country
 		Samoa,
 		/** Constant ID for San Marino. */
 		San_Marino,
-		/** Constant ID for S&atilde;o Tom&eacute; and Pr&iacute;ncipe. */
+		/** Constant ID for São Tomé and Príncipe. */
 		Sao_Tome_and_Principe,
 		/** Constant ID for Saudi Arabia. */
 		Saudi_Arabia,
@@ -629,7 +629,7 @@ public class Country
 				return "Puerto Rico";
 
 			if (this == COUNTRY.Reunion)
-				return "R\u00e9union";
+				return "Réunion";
 
 			if (this == COUNTRY.Saint_Helena)
 				return "Saint Helena";
@@ -650,7 +650,7 @@ public class Country
 				return "San Marino";
 
 			if (this == COUNTRY.Sao_Tome_and_Principe)
-				return "S\u00e3o Tom\u00e9 and Pr\u00edncipe";
+				return "São Tomé and Príncipe";
 
 			if (this == COUNTRY.Saudi_Arabia)
 				return "Saudi Arabia";
@@ -1463,7 +1463,7 @@ public class Country
 		if (country.equals("Qatar"))
 			c = COUNTRY.Qatar;
 
-		if (country.equals("R\u00e9union"))
+		if (country.equals("Réunion"))
 			c = COUNTRY.Reunion;
 
 		if (country.equals("Romania"))
@@ -1499,7 +1499,7 @@ public class Country
 		if (country.equals("San Marino"))
 			c = COUNTRY.San_Marino;
 
-		if (country.equals("S\u00e3o Tom\u00e9 and Pr\u00edncipe"))
+		if (country.equals("São Tomé and Príncipe"))
 			c = COUNTRY.Sao_Tome_and_Principe;
 
 		if (country.equals("Saudi Arabia"))
@@ -1535,7 +1535,7 @@ public class Country
 		if (country.equals("South Africa Republic"))
 			c = COUNTRY.South_Africa_Republic;
 
-		if (country.equals("Spain") || country.equals("Espa\u00f1a"))
+		if (country.equals("Spain") || country.equals("España"))
 			c = COUNTRY.Spain;
 
 		if (country.equals("Sri Lanka"))

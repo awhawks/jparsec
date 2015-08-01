@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- *
+ * 
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *
+ *  
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- *
+ * 
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */
+ */					
 package jparsec.ephem.stars;
 
 import jparsec.astronomy.CoordinateSystem;
@@ -28,19 +28,24 @@ import jparsec.ephem.Target.TARGET;
 import jparsec.ephem.planets.EphemElement;
 import jparsec.graph.DataSet;
 import jparsec.io.FileIO;
+import jparsec.io.ReadFile;
 import jparsec.math.Constant;
+import jparsec.observer.City;
+import jparsec.observer.CityElement;
 import jparsec.observer.LocationElement;
 import jparsec.observer.ObserverElement;
+import jparsec.time.AstroDate;
 import jparsec.time.TimeElement;
-import jparsec.time.TimeElement.SCALE;
+import jparsec.time.TimeFormat;
 import jparsec.time.TimeScale;
+import jparsec.time.TimeElement.SCALE;
 import jparsec.util.JPARSECException;
 
 /**
- * Convenient class for variable stars ephemerides, calculated according to
- * <i>Up-to-date Linear Elements of Close Binaries</i>, J.M. Kreiner, 2004,
+ * Convenient class for variable stars ephemerides, calculated according to 
+ * <i>Up-to-date Linear Elements of Close Binaries</i>, J.M. Kreiner, 2004, 
  * Acta Astronomica, vol. 54, pp 207-210. See http://www.as.up.krakow.pl/o-c/cont.html
- * for more information on the variable stars.
+ * for more information on the variable stars. 
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -50,7 +55,7 @@ public class VariableStarElement {
 
 	/**
 	 * Constructs a variable star object providing the values of the fields.
-	 *
+	 * 
 	 * @param nom Name.
 	 * @param ra Right Ascension in radians.
 	 * @param dec Declination in radians.
@@ -75,13 +80,22 @@ public class VariableStarElement {
 	 */
 	public VariableStarElement()
 	{
+		rightAscension = 0.0;
+		declination = 0.0;
 		name = "";
 		magRange = "";
+		period = 0;
+		minimaTime = 0;
+		minimaDuration = 0;
 		type = "";
 		spectralType = "";
 		eclipsingType = "";
 		maximaDates = "";
 		minimaDates= "";
+		isEclipsing = false;
+		phase = 0;
+		nextMinima = 0;
+		onlySecondaryMinima = false;
 	}
 
 	/**
@@ -96,7 +110,7 @@ public class VariableStarElement {
 	 * Magnitude range for the variable.
 	 */
 	public String magRange;
-
+	
 	/**
 	 * J2000 Right ascension in radians from the catalog.
 	 */
@@ -113,7 +127,7 @@ public class VariableStarElement {
 	public boolean isEclipsing;
 
 	/* ECLIPSING STARS PARAMETERS */
-
+	
 	/**
 	 * Spectral type for eclipsing stars.
 	 */
@@ -136,7 +150,7 @@ public class VariableStarElement {
 	public String type;
 
 	/* LONG-PERIOD PARAMETERS */
-
+	
 	/**
 	 * Dates of maxima for long-period variable stars, given as Julian days
 	 * separated by comma.
@@ -147,14 +161,15 @@ public class VariableStarElement {
 	 * separated by comma.
 	 */
 	public String minimaDates;
-
+		
 	/**
 	 * To clone the object.
 	 */
-    @Override
 	public VariableStarElement clone()
 	{
-		VariableStarElement out = new VariableStarElement(this.name, this.rightAscension, this.declination, magRange, type, period, minimaTime);
+		if (this == null) return null;
+		VariableStarElement out = new VariableStarElement(this.name, this.rightAscension, this.declination, 
+				magRange, type, period, minimaTime);
 		out.spectralType = this.spectralType;
 		out.eclipsingType = this.eclipsingType;
 		out.maximaDates = this.maximaDates;
@@ -166,76 +181,60 @@ public class VariableStarElement {
 		out.minimaDuration = this.minimaDuration;
 		return out;
 	}
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof VariableStarElement)) return false;
-
-        VariableStarElement that = (VariableStarElement) o;
-
-        if (Double.compare(that.period, period) != 0) return false;
-        if (Double.compare(that.rightAscension, rightAscension) != 0) return false;
-        if (Double.compare(that.declination, declination) != 0) return false;
-        if (isEclipsing != that.isEclipsing) return false;
-        if (Double.compare(that.minimaTime, minimaTime) != 0) return false;
-        if (Double.compare(that.minimaDuration, minimaDuration) != 0) return false;
-        if (Double.compare(that.getPhase(), getPhase()) != 0) return false;
-        if (Double.compare(that.getNextMinima(), getNextMinima()) != 0) return false;
-        if (onlySecondaryMinima != that.onlySecondaryMinima) return false;
-        if (name != null ? !name.equals(that.name) : that.name != null) return false;
-        if (magRange != null ? !magRange.equals(that.magRange) : that.magRange != null) return false;
-        if (spectralType != null ? !spectralType.equals(that.spectralType) : that.spectralType != null) return false;
-        if (eclipsingType != null ? !eclipsingType.equals(that.eclipsingType) : that.eclipsingType != null)
-            return false;
-        if (type != null ? !type.equals(that.type) : that.type != null) return false;
-        if (maximaDates != null ? !maximaDates.equals(that.maximaDates) : that.maximaDates != null) return false;
-        return !(minimaDates != null ? !minimaDates.equals(that.minimaDates) : that.minimaDates != null);
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result;
-        long temp;
-        result = name != null ? name.hashCode() : 0;
-        temp = Double.doubleToLongBits(period);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        result = 31 * result + (magRange != null ? magRange.hashCode() : 0);
-        temp = Double.doubleToLongBits(rightAscension);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        temp = Double.doubleToLongBits(declination);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        result = 31 * result + (isEclipsing ? 1 : 0);
-        result = 31 * result + (spectralType != null ? spectralType.hashCode() : 0);
-        result = 31 * result + (eclipsingType != null ? eclipsingType.hashCode() : 0);
-        temp = Double.doubleToLongBits(minimaTime);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        temp = Double.doubleToLongBits(minimaDuration);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        result = 31 * result + (type != null ? type.hashCode() : 0);
-        result = 31 * result + (maximaDates != null ? maximaDates.hashCode() : 0);
-        result = 31 * result + (minimaDates != null ? minimaDates.hashCode() : 0);
-        temp = Double.doubleToLongBits(getPhase());
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        temp = Double.doubleToLongBits(getNextMinima());
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        result = 31 * result + (onlySecondaryMinima ? 1 : 0);
-        return result;
-    }
-
-    /**
+	/**
 	 * Returns true if the input object is equals to this
 	 * instance.
 	 */
+	public boolean equals(Object s)
+	{
+		if (s == null) {
+			if (this == null) return true;
+			return false;
+		}
+		if (this == null) {
+			return false;
+		}
+		boolean equals = true;
+		VariableStarElement se = (VariableStarElement) s;
+		if (!se.name.equals(this.name)) equals = false;
+		if (se.declination != this.declination) equals = false;
+		if (se.rightAscension != this.rightAscension) equals = false;
+		if (!se.type.equals(this.type)) equals = false;
+		if (!se.magRange.equals(this.magRange)) equals = false;
+		if (se.period != this.period) equals = false;
+		if (se.minimaTime != this.minimaTime) equals = false;
+
+		if (se.eclipsingType == null && eclipsingType != null) equals = false;
+		if (se.eclipsingType != null && eclipsingType == null) equals = false;
+		if (se.eclipsingType != null && eclipsingType != null && !se.eclipsingType.equals(eclipsingType)) equals = false;
+
+		if (se.spectralType == null && spectralType != null) equals = false;
+		if (se.spectralType != null && spectralType == null) equals = false;
+		if (se.spectralType != null && spectralType != null && !se.spectralType.equals(spectralType)) equals = false;
+
+		if (se.maximaDates == null && maximaDates != null) equals = false;
+		if (se.maximaDates != null && maximaDates == null) equals = false;
+		if (se.maximaDates != null && maximaDates != null && !se.maximaDates.equals(maximaDates)) equals = false;
+
+		if (se.minimaDates == null && minimaDates != null) equals = false;
+		if (se.minimaDates != null && minimaDates == null) equals = false;
+		if (se.minimaDates != null && minimaDates != null && !se.minimaDates.equals(minimaDates)) equals = false;
+
+		if (se.phase != this.phase) equals = false;
+		if (se.minimaDuration != this.minimaDuration) equals = false;
+		if (se.nextMinima != this.nextMinima) equals = false;
+		if (se.onlySecondaryMinima != this.onlySecondaryMinima) equals = false;
+		if (se.isEclipsing != this.isEclipsing) equals = false;
+		return equals;
+	}
 
 	private double phase, nextMinima;
 	private boolean onlySecondaryMinima;
-
+	
 	/**
-	 * Return phase for an eclipsing star, from 0 to 1.
-	 * 0 or 1 is primary minima (in case of circular orbit), 0.5
-	 * is approximatelly the secondary minima.
+	 * Return phase for an eclipsing star, from 0 to 1. 
+	 * 0 or 1 is primary minima (in case of circular orbit), 0.5 
+	 * is approximatelly the secondary minima. 
 	 * @return Phase.
 	 */
 	public double getPhase() {
@@ -254,17 +253,17 @@ public class VariableStarElement {
 	 * Return next minima for a long-period variable star.
 	 * @param time Time object.
 	 * @param observer Observer object.
-	 * @return Julian day of the next minima, or 0
+	 * @return Julian day of the next minima, or 0 
 	 * if cannot be calculated.
 	 * @throws JPARSECException If an error occurs.
 	 */
 	public double getNextMinima(TimeElement time, ObserverElement observer) throws JPARSECException {
 		if (minimaDates.equals("") || isEclipsing) return 0;
-
+		
 		EphemerisElement eph = new EphemerisElement(TARGET.SUN, EphemerisElement.COORDINATES_TYPE.APPARENT,
 				EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.TOPOCENTRIC, EphemerisElement.REDUCTION_METHOD.IAU_2006,
 				EphemerisElement.FRAME.ICRF, EphemerisElement.ALGORITHM.MOSHIER);
-
+		
 		double jd = TimeScale.getJD(time, observer, eph, SCALE.UNIVERSAL_TIME_UTC);
 
 		double out = 0;
@@ -279,17 +278,17 @@ public class VariableStarElement {
 	 * Return next maxima for a long-period variable star.
 	 * @param time Time object.
 	 * @param observer Observer object.
-	 * @return Julian day of the next maxima, or 0
+	 * @return Julian day of the next maxima, or 0 
 	 * if cannot be calculated.
 	 * @throws JPARSECException If an error occurs.
 	 */
 	public double getNextMaxima(TimeElement time, ObserverElement observer) throws JPARSECException {
 		if (maximaDates.equals("") || isEclipsing) return 0;
-
+		
 		EphemerisElement eph = new EphemerisElement(TARGET.SUN, EphemerisElement.COORDINATES_TYPE.APPARENT,
 				EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.TOPOCENTRIC, EphemerisElement.REDUCTION_METHOD.IAU_2006,
 				EphemerisElement.FRAME.ICRF, EphemerisElement.ALGORITHM.MOSHIER);
-
+		
 		double jd = TimeScale.getJD(time, observer, eph, SCALE.UNIVERSAL_TIME_UTC);
 
 		double out = 0;
@@ -301,7 +300,7 @@ public class VariableStarElement {
 	}
 
 	/**
-	 * Return if the observations of this star were done only for secondary minimas,
+	 * Return if the observations of this star were done only for secondary minimas, 
 	 * for an eclipsing star.
 	 * @return True or false.
 	 */
@@ -329,7 +328,7 @@ public class VariableStarElement {
 	 */
 	public void calcEphemeris(TimeElement time, ObserverElement observer, boolean preferPrecision) throws JPARSECException {
 		if (!isEclipsing) return;
-
+		
 		EphemerisElement eph = new EphemerisElement(TARGET.SUN, EphemerisElement.COORDINATES_TYPE.APPARENT,
 				EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.TOPOCENTRIC, EphemerisElement.REDUCTION_METHOD.IAU_2006,
 				EphemerisElement.FRAME.ICRF, EphemerisElement.ALGORITHM.MOSHIER);
@@ -337,7 +336,7 @@ public class VariableStarElement {
 		double jul = TimeScale.getJD(time, observer, eph, SCALE.UNIVERSAL_TIME_UTC);
 
 		double helioToGeo = 0.0;
-
+		
 		// Correct minima time from heliocentric Julian day to (geocentric) Julian day.
 		// Too slow, and only 8 minutes of correction at most.
 		if (preferPrecision) {
@@ -353,18 +352,18 @@ public class VariableStarElement {
 		double f1 = (jul - minimaTime) / period;
 		phase = f1 - Math.floor(f1);
 		onlySecondaryMinima = false;
-		if (type != null && type.toLowerCase().contains("sec")) onlySecondaryMinima = true;
-
+		if (type != null && type.toLowerCase().indexOf("sec") >= 0) onlySecondaryMinima = true;
+		
 		double nextPhase = 1.0 - phase;
 		// Following line disabled to return always primary minima
-		//if (onlySecondaryMinima) nextPhase = 0.5 - phase;
+		//if (onlySecondaryMinima) nextPhase = 0.5 - phase; 
 		if (nextPhase <= 0.0) nextPhase += 1.0;
 
 		nextMinima = jul + nextPhase * period;
 		double UTC_TO_LT = (observer.getTimeZone() + (double) TimeScale.getDST(nextMinima, observer)) / Constant.HOURS_PER_DAY;
 		nextMinima += UTC_TO_LT + helioToGeo;
 	}
-
+	
 	/**
 	 * Returns the path in the classpath to the AAVSO bulletin for a given year.
 	 * @param year The year.
@@ -373,12 +372,48 @@ public class VariableStarElement {
 	public static String getPathBulletinAAVSO(int year) {
 		return DataSet.replaceAll(PATH_VARIABLE_STAR_AAVSO_BULLETIN_2011, "2011", ""+year, true);
 	}
-
+	
 	/**
 	 * Returns the equatorial position of this star.
 	 * @return Equatorial position.
 	 */
 	public LocationElement getEquatorialPosition() {
 		return new LocationElement(rightAscension, declination, 1);
+	}
+	
+	/**
+	 * Testing program.
+	 * @param args Not used.
+	 */
+	public static void main(String args[]) {
+		System.out.println("Variable star ephemeris test");
+		
+		try {
+			String name = "W CET";
+			
+			int year = 2014;
+			ReadFile re = new ReadFile();
+			re.setPath(VariableStarElement.getPathBulletinAAVSO(year));
+			re.readFileOfVariableStars();
+			System.out.println(re.getNumberOfObjects());
+			int index = re.searchByName(name);
+			VariableStarElement vstar = re.getVariableStarElement(index);
+
+			AstroDate astro = new AstroDate(year, 1, 1);
+			TimeElement time = new TimeElement(astro.jd(), SCALE.UNIVERSAL_TIME_UTC);
+			CityElement city = City.findCity("Madrid");
+			ObserverElement observer = ObserverElement.parseCity(city);
+
+			if (vstar.isEclipsing) {
+				vstar.calcEphemeris(time, observer, false);
+				System.out.println(vstar.name+" PHASE    "+vstar.getPhase());
+				System.out.println(vstar.name+" MIN " + TimeFormat.formatJulianDayAsDate(vstar.getNextMinima(time, observer)));
+			} else {
+				System.out.println(vstar.name+" MAX " + TimeFormat.formatJulianDayAsDate(vstar.getNextMaxima(time, observer)));
+				System.out.println(vstar.name+" MIN " + TimeFormat.formatJulianDayAsDate(vstar.getNextMinima(time, observer)));
+			}
+		} catch (Exception exc) {
+			exc.printStackTrace();
+		}
 	}
 }
