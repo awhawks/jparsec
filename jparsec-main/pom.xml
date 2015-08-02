@@ -1,0 +1,720 @@
+<project xmlns='http://maven.apache.org/POM/4.0.0' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+         xsi:schemaLocation='http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd'>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>es.oan.conga</groupId>
+    <artifactId>jparsec</artifactId>
+    <packaging>jar</packaging>
+    <version>${version.jparsec}</version>
+    <name>jparsec-main</name>
+    <url>http://conga.oan.es/~alonso/doku.php?id=jparsec</url>
+
+    <properties>
+        <!-- Plugin version numbers -->
+        <!-- Properties for maven-compiler-plugin -->
+        <maven.compiler.compilerVersion>1.6</maven.compiler.compilerVersion>
+        <maven.compiler.source>1.6</maven.compiler.source>
+        <maven.compiler.target>1.6</maven.compiler.target>
+        <maven.compiler.fork>true</maven.compiler.fork>
+        <maven.compiler.verbose>true</maven.compiler.verbose>
+        <maven.compiler.debug>true</maven.compiler.debug>
+        <maven.compiler.optimize>true</maven.compiler.optimize>
+        <!-- Properties for maven-javadoc-plugin -->
+        <author>false</author>
+        <notimestamp>true</notimestamp>
+        <additionalparam>-Xdoclint:none</additionalparam>
+        <!-- Properties for maven-checkstyle-plugin -->
+        <checkstyle.config.location>${project.basedir}/src/main/checkstyle/checkstyle.xml</checkstyle.config.location>
+        <!-- Other properties -->
+        <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>utf-8</project.reporting.outputEncoding>
+
+        <conga.url>http://conga.oan.es/~alonso/jparsec/lib</conga.url>
+        <version.jparsec>0.107</version.jparsec>
+        <version.testng>6.9.6</version.testng>
+        <version.checkstyle>6.8.1</version.checkstyle>
+        <version.nrjavaserial>3.9.3.1</version.nrjavaserial>
+        <version.jsch>0.1.53</version.jsch>
+        <version.surfaceplotter>2.0.1</version.surfaceplotter>
+        <version.javax.mail-api>1.5.4</version.javax.mail-api>
+        <version.miglayout-swing>5.0</version.miglayout-swing>
+        <version.jfree>1.0.19</version.jfree>
+        <version.junit>4.12</version.junit>
+        <version.jz3d>0.9.1</version.jz3d>
+        <version.nom-tam-fits>1.13.0</version.nom-tam-fits>
+        <version.jmathplot>1.0.1</version.jmathplot>
+        <version.plantuml>8028</version.plantuml>
+        <version.SGT_toolkit>3.0</version.SGT_toolkit>
+        <version.cds.savot>2.6</version.cds.savot>
+
+        <maven-assembly-plugin.version>2.5.5</maven-assembly-plugin.version>
+        <maven-changes-plugin.version>2.11</maven-changes-plugin.version>
+        <maven-clean-plugin.version>2.6.1</maven-clean-plugin.version>
+        <maven-compiler-plugin.version>3.3</maven-compiler-plugin.version>
+        <maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
+        <maven-dependency-plugin.version>2.10</maven-dependency-plugin.version>
+        <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
+        <maven-install-plugin.version>2.5.2</maven-install-plugin.version>
+        <maven-jar-plugin.version>2.6</maven-jar-plugin.version>
+        <maven-javadoc-plugin.version>2.10.3</maven-javadoc-plugin.version>
+        <maven-jxr-plugin.version>2.5</maven-jxr-plugin.version>
+        <maven-plugin-plugin.version>3.4</maven-plugin-plugin.version>
+        <maven-pmd-plugin.version>3.5</maven-pmd-plugin.version>
+        <maven-project-info-reports-plugin.version>2.8</maven-project-info-reports-plugin.version>
+        <maven-repository-plugin.version>2.4</maven-repository-plugin.version>
+        <maven-resources-plugin.version>2.7</maven-resources-plugin.version>
+        <maven-site-plugin.version>3.4</maven-site-plugin.version>
+        <maven-source-plugin.version>2.4</maven-source-plugin.version>
+        <maven-surefire-plugin.version>2.18.1</maven-surefire-plugin.version>
+        <maven-surefire-report-plugin.version>2.18.1</maven-surefire-report-plugin.version>
+        <maven-toolchains-plugin.version>1.1</maven-toolchains-plugin.version>
+        <maven-checkstyle-plugin.version>2.16</maven-checkstyle-plugin.version>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.3</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                    <!--encoding>iso-8859-1</encoding-->
+                    <encoding>utf-8</encoding>
+                    <showWarnings>true</showWarnings>
+                    <showDeprecation>true</showDeprecation>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.7</version>
+                <executions>
+                    <execution>
+                        <id>download-remote-resources</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <move file='${project.basedir}/lib/visad.jar.old'
+                                      tofile='${project.basedir}/lib/visad.jar'
+                                      preservelastmodified='true'
+                                      overwrite='true'
+                                      force='true'
+                                      failonerror='false' />
+
+                                <mkdir dir='${project.basedir}/lib' />
+
+                                <get src='${conga.url}/cds/cds.astro.jar'    dest='${project.basedir}/lib/' usetimestamp='true' />
+                                <!--
+                                <get src='${conga.url}/cologne.jar'          dest='${project.basedir}/lib/' usetimestamp='true' />
+                                <get src='${conga.url}/eop.jar'              dest='${project.basedir}/lib/' usetimestamp='true' />
+                                -->
+                                <get src='${conga.url}/images.jar'           dest='${project.basedir}/lib/' usetimestamp='true' />
+                                <get src='${conga.url}/jpl_ephem.jar'        dest='${project.basedir}/lib/' usetimestamp='true' />
+                                <!--
+                                <get src='${conga.url}/orbital_elements.jar' dest='${project.basedir}/lib/' usetimestamp='true' />
+                                -->
+                                <get src='${conga.url}/radex.jar'            dest='${project.basedir}/lib/' usetimestamp='true' />
+                                <get src='${conga.url}/sgt_v30.jar'          dest='${project.basedir}/lib/' usetimestamp='true' />
+                                <!--
+                                <get src='${conga.url}/sky.jar'              dest='${project.basedir}/lib/' usetimestamp='true' />
+                                -->
+                                <get src='${conga.url}/sky2000.jar'          dest='${project.basedir}/lib/' usetimestamp='true' />
+                                <get src='${conga.url}/skyViewWCS.jar'       dest='${project.basedir}/lib/' usetimestamp='true' />
+                                <!--
+                                <get src='${conga.url}/sunspot.jar'          dest='${project.basedir}/lib/' usetimestamp='true' />
+                                -->
+                                <get src='${conga.url}/textures.jar'         dest='${project.basedir}/lib/' usetimestamp='true' />
+                                <get src='${conga.url}/telescopes.jar'       dest='${project.basedir}/lib/' usetimestamp='true' />
+                                <get src='${conga.url}/visad.jar'            dest='${project.basedir}/lib/' usetimestamp='true' />
+                                <get src='${conga.url}/vsop87.jar'           dest='${project.basedir}/lib/' usetimestamp='true' />
+
+                                <move file='${project.basedir}/lib/visad.jar'
+                                      tofile='${project.basedir}/lib/visad.jar.old'
+                                      preservelastmodified='true'
+                                      overwrite='true'
+                                      force='true'
+                                      failonerror='false' />
+
+                                <jar destfile='${project.basedir}/lib/visad.jar'>
+                                    <zipfileset src='${project.basedir}/lib/visad.jar.old' excludes='nom/**/*' />
+                                </jar>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>com.googlecode.addjars-maven-plugin</groupId>
+                <artifactId>addjars-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>add-jars</goal>
+                        </goals>
+                        <configuration>
+                            <resources>
+                                <resource>
+                                    <directory>${project.basedir}/lib</directory>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!--plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-checkstyle-plugin</artifactId>
+              <executions>
+                <execution>
+                  <id>run-checkstyle</id>
+                  <phase>process-sources</phase>
+                  <goals>
+                    <goal>checkstyle</goal>
+                  </goals>
+                </execution>
+              </executions>
+            </plugin-->
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <includes>
+                        <include>**/*Test.java</include>
+                    </includes>
+                    <argLine>-Xmx2G</argLine>
+                    <parallel>classes</parallel>
+                    <threadCount>4</threadCount>
+                    <!-- remove slow SuiteHTMLReporter -->
+                    <properties>
+                        <property>
+                            <name>usedefaultlisteners</name>
+                            <value>false</value>
+                        </property>
+                        <property>
+                            <name>listener</name>
+                            <value>org.testng.reporters.ExitCodeListener</value>
+                        </property>
+                        <property>
+                            <name>reporter</name>
+                            <value>org.testng.reporters.FailedReporter,org.testng.reporters.XMLReporter,org.testng.reporters.JUnitReportReporter</value>
+                        </property>
+                    </properties>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+                        <manifest>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${maven-checkstyle-plugin.version}</version>
+                <configuration>
+                    <reportSets>
+                        <reportSet>
+                            <reports>
+                                <report>checkstyle</report>
+                            </reports>
+                        </reportSet>
+                    </reportSets>
+                </configuration>
+            </plugin>
+        </plugins>
+
+        <pluginManagement>
+            <plugins>
+                <!-- Maven build and reporting plugins (alphabetical) -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <version>${maven-assembly-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-changes-plugin</artifactId>
+                    <version>${maven-changes-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-clean-plugin</artifactId>
+                    <version>${maven-clean-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven-compiler-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>${maven-deploy-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>${maven-dependency-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-gpg-plugin</artifactId>
+                    <version>${maven-gpg-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-install-plugin</artifactId>
+                    <version>${maven-install-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>${maven-jar-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>${maven-javadoc-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jxr-plugin</artifactId>
+                    <version>${maven-jxr-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-plugin-plugin</artifactId>
+                    <version>${maven-plugin-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-pmd-plugin</artifactId>
+                    <version>${maven-pmd-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-project-info-reports-plugin</artifactId>
+                    <version>${maven-project-info-reports-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-repository-plugin</artifactId>
+                    <version>${maven-repository-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>${maven-resources-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>${maven-site-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>${maven-source-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${maven-surefire-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-report-plugin</artifactId>
+                    <version>${maven-surefire-report-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-toolchains-plugin</artifactId>
+                    <version>${maven-toolchains-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.eclipse.m2e</groupId>
+                    <artifactId>lifecycle-mapping</artifactId>
+                    <version>1.0.0</version>
+                    <configuration>
+                        <lifecycleMappingMetadata>
+                            <pluginExecutions>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>org.apache.felix</groupId>
+                                        <artifactId>maven-bundle-plugin</artifactId>
+                                        <versionRange>[2.4.0,)</versionRange>
+                                        <goals>
+                                            <goal>manifest</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <ignore></ignore>
+                                    </action>
+                                </pluginExecution>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>org.apache.maven.plugins</groupId>
+                                        <artifactId>maven-toolchains-plugin</artifactId>
+                                        <versionRange>[1.0,)</versionRange>
+                                        <goals>
+                                            <goal>toolchain</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <ignore></ignore>
+                                    </action>
+                                </pluginExecution>
+                            </pluginExecutions>
+                        </lifecycleMappingMetadata>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-checkstyle-plugin</artifactId>
+                    <version>${maven-checkstyle-plugin.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>es.oan.conga</groupId>
+            <artifactId>cologne</artifactId>
+            <version>${version.jparsec}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>es.oan.conga</groupId>
+            <artifactId>eop</artifactId>
+            <version>${version.jparsec}</version>
+        </dependency>
+
+        <!--
+        <dependency>
+            <groupId>es.oan.conga</groupId>
+            <artifactId>images</artifactId>
+            <version>${version.jparsec}</version>
+        </dependency>
+        -->
+        <dependency>
+            <groupId>es.oan.conga</groupId>
+            <artifactId>jpl</artifactId>
+            <version>${version.jparsec}</version>
+        </dependency>
+
+        <!--
+        <dependency>
+            <groupId>es.oan.conga</groupId>
+            <artifactId>jpl_ephem</artifactId>
+            <version>${version.jparsec}</version>
+        </dependency>
+        -->
+
+        <dependency>
+            <groupId>es.oan.conga</groupId>
+            <artifactId>orbital_elements</artifactId>
+            <version>${version.jparsec}</version>
+        </dependency>
+
+        <!--
+        <dependency>
+            <groupId>es.oan.conga</groupId>
+            <artifactId>radex</artifactId>
+            <version>${version.jparsec}</version>
+        </dependency>
+        -->
+
+        <dependency>
+            <groupId>es.oan.conga</groupId>
+            <artifactId>sky</artifactId>
+            <version>${version.jparsec}</version>
+        </dependency>
+
+        <!--
+        <dependency>
+            <groupId>es.oan.conga</groupId>
+            <artifactId>sky2000</artifactId>
+            <version>${version.jparsec}</version>
+        </dependency>
+        -->
+
+        <dependency>
+            <groupId>es.oan.conga</groupId>
+            <artifactId>sunspot</artifactId>
+            <version>${version.jparsec}</version>
+        </dependency>
+
+        <!--
+        <dependency>
+            <groupId>es.oan.conga</groupId>
+            <artifactId>telescopes</artifactId>
+            <version>${version.jparsec}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>es.oan.conga</groupId>
+            <artifactId>textures</artifactId>
+            <version>${version.jparsec}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>es.oan.conga</groupId>
+            <artifactId>vsop87</artifactId>
+            <version>${version.jparsec}</version>
+        </dependency>
+        -->
+
+        <!-- SAVOT -->
+        <!-- http://cdsweb.u-strasbg.fr/cdsdevcorner/savot2.6.gml -->
+
+        <dependency>
+            <groupId>cds.savot</groupId>
+            <artifactId>savot-model</artifactId>
+            <version>${version.cds.savot}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cds.savot</groupId>
+            <artifactId>savot-common</artifactId>
+            <version>${version.cds.savot}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cds.savot</groupId>
+            <artifactId>savot-pullengine</artifactId>
+            <version>${version.cds.savot}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cds.savot</groupId>
+            <artifactId>savot-saxengine</artifactId>
+            <version>${version.cds.savot}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cds.savot</groupId>
+            <artifactId>savot-writer</artifactId>
+            <version>${version.cds.savot}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.puppycrawl.tools</groupId>
+            <artifactId>checkstyle</artifactId>
+            <version>${version.checkstyle}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>${version.testng}</version>
+        </dependency>
+        <dependency>
+            <groupId>jsky</groupId>
+            <artifactId>jsky-coords</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>be.ugent.caagt</groupId>
+            <artifactId>jmathtex</artifactId>
+            <version>0.7pre</version>
+        </dependency>
+        <dependency>
+            <groupId>net.sourceforge.plantuml</groupId>
+            <artifactId>plantuml</artifactId>
+            <version>${version.plantuml}</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${version.junit}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jfree</groupId>
+            <artifactId>jfreechart</artifactId>
+            <version>${version.jfree}</version>
+        </dependency>
+        <dependency>
+            <groupId>gov.nasa.gsfc.heasarc</groupId>
+            <artifactId>nom-tam-fits</artifactId>
+            <version>${version.nom-tam-fits}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.yannrichet</groupId>
+            <artifactId>JMathPlot</artifactId>
+            <version>${version.jmathplot}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jzy3d</groupId>
+            <artifactId>jzy3d-api</artifactId>
+            <version>${version.jz3d}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jzy3d</groupId>
+            <artifactId>jzy3d-depthpeeling</artifactId>
+            <version>${version.jz3d}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jzy3d</groupId>
+            <artifactId>jzy3d-g2d</artifactId>
+            <version>${version.jz3d}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.miglayout</groupId>
+            <artifactId>miglayout-swing</artifactId>
+            <version>${version.miglayout-swing}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>javax.mail-api</artifactId>
+            <version>${version.javax.mail-api}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.ericaro</groupId>
+            <artifactId>surfaceplotter</artifactId>
+            <version>${version.surfaceplotter}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.jcraft</groupId>
+            <artifactId>jsch</artifactId>
+            <version>${version.jsch}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.bidib.com.neuronrobotics</groupId>
+            <artifactId>nrjavaserial</artifactId>
+            <version>${version.nrjavaserial}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-checkstyle-plugin</artifactId>
+            <version>2.16</version>
+        </dependency>
+    </dependencies>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>${maven-project-info-reports-plugin.version}</version>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>dependencies</report>
+                            <report>dependency-info</report>
+                            <report>issue-tracking</report>
+                            <report>license</report>
+                            <report>mailing-list</report>
+                            <report>project-team</report>
+                            <report>scm</report>
+                            <report>summary</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>${maven-javadoc-plugin.version}</version>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>javadoc</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <version>${maven-surefire-report-plugin.version}</version>
+                <configuration>
+                    <showSuccess>true</showSuccess>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-changes-plugin</artifactId>
+                <version>${maven-changes-plugin.version}</version>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>changes-report</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jxr-plugin</artifactId>
+                <version>${maven-jxr-plugin.version}</version>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>jxr</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${maven-checkstyle-plugin.version}</version>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>checkstyle</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+        </plugins>
+    </reporting>
+
+    <!--
+    <repositories>
+        <repository>
+            <id>freehep</id>
+            <name>freehep maven2 repo</name>
+            <url>http://java.freehep.org/maven2</url>
+        </repository>
+        <repository>
+            <id>jzy3d-snapshots</id>
+            <name>Jzy3d Snapshots</name>
+            <url>http://maven.jzy3d.org/snapshots</url>
+        </repository>
+        <repository>
+            <id>jzy3d-releases</id>
+            <name>Jzy3d releases</name>
+            <url>http://maven.jzy3d.org/releases</url>
+        </repository>
+        <repository>
+            <id>itest-legacy-mvn-repo</id>
+            <url>https://raw.github.com/iTest-UCM/itest-legacy/mvn-repo/mvn-repo/</url>
+        </repository>
+        <repository>
+            <id>savot</id>
+            <url>http://maven.mse.jhu.edu/m2repository/</url>
+        </repository>
+    </repositories>
+    -->
+
+</project>

@@ -1,10 +1,12 @@
 # IntelliJ IDEA meta files
 /.idea
-/*.i??
+*.iml
+*.ipr
+*.iws
 
 # local folders
-/lib
-/target
+lib
+target
 
 # Eclipse IDE meta files
 /.classpath
