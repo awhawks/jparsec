@@ -88,6 +88,7 @@ public class ProcessORB {
         retrieveBrightAsteroids(hc, targetDir, "MPC_asteroids_bright.txt");
         retrieveObservatories(hc, targetDir, URL_OBSERVATORIES, "MPC_observatories.txt");
         retrieveSatMag(hc, targetDir, URL_ARTIFICIAL_SATELLITES_SIZE_AND_MAGNITUDE, "sat_mag.txt");
+        retrieveNaturalSatellites(hc, targetDir, "JPL_natural_satellites.txt");
     }
 
     private static void retrieveBrightAsteroids(CloseableHttpClient hc, Path targetDir, String fileName) throws Exception {
@@ -175,6 +176,139 @@ public class ProcessORB {
         Files.setLastModifiedTime(outFile, time);
     }
 
+    /**
+     * Updates the orbital elements of natural satellites from JPL website.
+     * This is a little risky operation, since it is known that JPL updates
+     * this site quite often, and sometimes the new format of the html file
+     * could be modified. Some effort has been made to try to avoid problems.
+     *
+     * @throws Exception If an error occurs.
+     */
+    private static void retrieveNaturalSatellites(CloseableHttpClient hc, Path targetDir, String fileName) throws Exception {
+        HttpGet get = new HttpGet(URL_NATURAL_SATELLITES);
+        CloseableHttpResponse response = hc.execute(get);
+        HttpEntity entity = response.getEntity();
+        String content = EntityUtils.toString(entity);
+        EntityUtils.consume(entity);
+
+        String satElems = "";
+
+        String refLaplace = "Mean orbital elements referred to the local Laplace planes";
+        String refEcliptic = "Mean ecliptic orbital elements";
+        String refPlanetEquator = "Mean orbital elements referred to the planet equator";
+        String refEquatorial = "Mean equatorial orbital elements";
+        String sep = System.getProperty("line.separator");
+        //TARGET lastPlanet = TARGET.NOT_A_PLANET;
+        String lastPlanet = "unknown";
+        boolean newTable;
+        String subFile = content;
+        int beginTable = subFile.indexOf("<TABLE");
+
+        do {
+            // Get the next table
+            int lastH3 = subFile.substring(0, beginTable).lastIndexOf("<H3");
+            String pre = "";
+
+            if (lastH3 >= 0) {
+                String preTable = subFile.substring(lastH3, beginTable).toLowerCase();
+
+                if (preTable.indexOf("laplace") > 0) {
+                    pre += refLaplace + sep;
+                } else {
+                    if (preTable.indexOf("ecliptic") > 0) {
+                        pre += refEcliptic + sep;
+                    } else {
+                        if (preTable.indexOf("equatorial") > 0) {
+                            pre += refEquatorial + sep;
+                        } else {
+                            if (preTable.indexOf("equator") > 0) pre += refPlanetEquator + sep;
+                        }
+                    }
+                }
+
+                String epoch = preTable.substring(preTable.indexOf("epoch") + 5).trim();
+                epoch = epoch.substring(0, epoch.indexOf("<")).trim();
+                pre += "Epoch " + epoch.toUpperCase() + sep;
+                String sol = preTable.substring(preTable.indexOf("</b>") + 4).trim();
+                sol = sol.substring(0, sol.indexOf("<hr>")).replaceAll("<a .*<\\/a>", "").trim();
+
+                if (!preTable.contains("</b>")) {
+                    sol = "";
+                }
+
+                pre += "Solution " + sol.toUpperCase() + sep;
+            }
+
+            int endTable = subFile.indexOf("</TABLE>");
+            int endBeginTable = beginTable + subFile.substring(beginTable).indexOf(">") + 1;
+            String table = subFile.substring(endBeginTable, endTable);
+            newTable = true;
+            int beginTR = table.indexOf("<TR");
+
+            do {
+                int endBeginTR = beginTR + table.substring(beginTR).indexOf(">") + 1;
+                int endTR = table.indexOf("</TR>");
+                String tr = table.substring(endBeginTR, endTR);
+                String line = "";
+                int beginTD = tr.indexOf("<TD");
+
+                do {
+                    int endBeginTD = beginTD + tr.substring(beginTD).indexOf(">") + 1;
+                    int endTD = tr.indexOf("</TD>");
+                    String td = tr.substring(endBeginTD, endTD);
+                    int beginTag = td.indexOf("<");
+
+                    do {
+                        int endTag = td.indexOf(">");
+                        String newtd = "";
+
+                        if (beginTag > 0) {
+                            newtd = td.substring(0, beginTag);
+                        }
+
+                        newtd += td.substring(endTag + 1);
+                        td = newtd;
+                        beginTag = td.indexOf("<");
+                    } while (beginTag >= 0);
+
+                    line += td + "   ";
+                    tr = tr.substring(endTD + 5);
+                    beginTD = tr.indexOf("<TD");
+                } while (beginTD >= 0);
+
+                if (!line.startsWith(" ") &&
+                    !line.startsWith("&") &&
+                    !line.startsWith("a ") &&
+                    !line.startsWith("("))
+                {
+                    if (newTable) {
+                        newTable = false;
+                        String sat = line.substring(0, line.indexOf(' '));
+                        lastPlanet = Satellite2Planet.planetOf(sat);
+                        pre = "*" + sep + lastPlanet + sep + pre;
+                        satElems += pre;
+                    }
+
+                    satElems += line + sep;
+                }
+
+                table = table.substring(endTR + 5);
+                beginTR = table.indexOf("<TR");
+            } while (beginTR >= 0);
+
+            // Update the position in the html file to go to the next table
+            // if there is any
+            subFile = subFile.substring(endTable + 8);
+            beginTable = subFile.indexOf("<TABLE");
+        } while (beginTable >= 0);
+
+        ByteArrayInputStream bais = new ByteArrayInputStream(satElems.getBytes());
+        Path outFile = targetDir.resolve(fileName);
+        Files.copy(bais, outFile, StandardCopyOption.REPLACE_EXISTING);
+        bais.close();
+        //setLastModificationTime(response, outFile);
+    }
+
     private static void retrieveFileFromURL(CloseableHttpClient hc, Path path, String url, String catalogName) throws Exception {
         HttpGet get = new HttpGet(url);
         CloseableHttpResponse response = hc.execute(get);
@@ -192,7 +326,7 @@ public class ProcessORB {
         setLastModificationTime(response, outFile);
     }
 
-    private static void setLastModificationTime (CloseableHttpResponse response, Path outFile) throws Exception {
+    private static void setLastModificationTime(CloseableHttpResponse response, Path outFile) throws Exception {
         Header header = response.getFirstHeader("Last-Modified");
         String lastModified = header.getValue();
         Date date = DateUtils.parseDate(lastModified);
