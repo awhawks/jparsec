@@ -23,6 +23,7 @@ package jparsec.ephem.probes;
 
 import java.io.Serializable;
 
+import java.util.Arrays;
 import jparsec.graph.DataSet;
 import jparsec.observer.LocationElement;
 
@@ -238,9 +239,9 @@ public class SatelliteEphemElement implements Serializable
 	/**
 	 * To clone the object.
 	 */
+	@Override
 	public SatelliteEphemElement clone()
 	{
-		if (this == null) return null;
 		SatelliteEphemElement s = new SatelliteEphemElement(this.name, this.rightAscension, this.declination,
 				this.distance, this.azimuth, this.elevation, this.subEarthLongitude, this.subEarthLatitude,
 				this.subEarthDistance, this.topocentricSpeed, this.elongation, this.illumination, this.isEclipsed,
@@ -257,48 +258,85 @@ public class SatelliteEphemElement implements Serializable
 		if (transitElevation != null) s.transitElevation = this.transitElevation.clone();
 		return s;
 	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof SatelliteEphemElement)) return false;
+
+		SatelliteEphemElement that = (SatelliteEphemElement) o;
+
+		if (Double.compare(that.rightAscension, rightAscension) != 0) return false;
+		if (Double.compare(that.declination, declination) != 0) return false;
+		if (Double.compare(that.distance, distance) != 0) return false;
+		if (Double.compare(that.azimuth, azimuth) != 0) return false;
+		if (Double.compare(that.elevation, elevation) != 0) return false;
+		if (Float.compare(that.subEarthLongitude, subEarthLongitude) != 0) return false;
+		if (Float.compare(that.subEarthLatitude, subEarthLatitude) != 0) return false;
+		if (Float.compare(that.subEarthDistance, subEarthDistance) != 0) return false;
+		if (Float.compare(that.elongation, elongation) != 0) return false;
+		if (Float.compare(that.illumination, illumination) != 0) return false;
+		if (isEclipsed != that.isEclipsed) return false;
+		if (revolutionsCompleted != that.revolutionsCompleted) return false;
+		if (Double.compare(that.nextPass, nextPass) != 0) return false;
+		if (Float.compare(that.iridiumAngle, iridiumAngle) != 0) return false;
+		if (Float.compare(that.iridiumAngleForMoon, iridiumAngleForMoon) != 0) return false;
+		if (Float.compare(that.magnitude, magnitude) != 0) return false;
+		if (Float.compare(that.angularRadius, angularRadius) != 0) return false;
+		if (Float.compare(that.topocentricSpeed, topocentricSpeed) != 0) return false;
+		if (Float.compare(that.sunElevation, sunElevation) != 0) return false;
+		if (name != null ? !name.equals(that.name) : that.name != null) return false;
+		if (!Arrays.equals(rise, that.rise)) return false;
+		if (!Arrays.equals(set, that.set)) return false;
+		if (!Arrays.equals(transit, that.transit)) return false;
+		if (!Arrays.equals(transitElevation, that.transitElevation)) return false;
+
+		return !(location != null ? !location.equals(that.location) : that.location != null);
+	}
+
+	@Override
+	public int hashCode() {
+		int result;
+		long temp;
+		result = name != null ? name.hashCode() : 0;
+		temp = Double.doubleToLongBits(rightAscension);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(declination);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(distance);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(azimuth);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(elevation);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		result = 31 * result + (subEarthLongitude != +0.0f ? Float.floatToIntBits(subEarthLongitude) : 0);
+		result = 31 * result + (subEarthLatitude != +0.0f ? Float.floatToIntBits(subEarthLatitude) : 0);
+		result = 31 * result + (subEarthDistance != +0.0f ? Float.floatToIntBits(subEarthDistance) : 0);
+		result = 31 * result + (elongation != +0.0f ? Float.floatToIntBits(elongation) : 0);
+		result = 31 * result + (illumination != +0.0f ? Float.floatToIntBits(illumination) : 0);
+		result = 31 * result + (isEclipsed ? 1 : 0);
+		result = 31 * result + revolutionsCompleted;
+		temp = Double.doubleToLongBits(nextPass);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		result = 31 * result + (iridiumAngle != +0.0f ? Float.floatToIntBits(iridiumAngle) : 0);
+		result = 31 * result + (iridiumAngleForMoon != +0.0f ? Float.floatToIntBits(iridiumAngleForMoon) : 0);
+		result = 31 * result + (magnitude != +0.0f ? Float.floatToIntBits(magnitude) : 0);
+		result = 31 * result + (angularRadius != +0.0f ? Float.floatToIntBits(angularRadius) : 0);
+		result = 31 * result + (rise != null ? Arrays.hashCode(rise) : 0);
+		result = 31 * result + (set != null ? Arrays.hashCode(set) : 0);
+		result = 31 * result + (transit != null ? Arrays.hashCode(transit) : 0);
+		result = 31 * result + (transitElevation != null ? Arrays.hashCode(transitElevation) : 0);
+		result = 31 * result + (topocentricSpeed != +0.0f ? Float.floatToIntBits(topocentricSpeed) : 0);
+		result = 31 * result + (sunElevation != +0.0f ? Float.floatToIntBits(sunElevation) : 0);
+		result = 31 * result + (location != null ? location.hashCode() : 0);
+		return result;
+	}
+
 	/**
-	 * Returns if a given object is equals to this satellite
+	 * Returns true if a given object is equal to this satellite
 	 * ephemeris object.
 	 */
-	public boolean equals(Object s)
-	{
-		if (s == null) {
-			if (this == null) return true;
-			return false;
-		}
-		if (this == null) {
-			return false;
-		}
-		SatelliteEphemElement see = (SatelliteEphemElement) s;
-		boolean equals = true;
-		if (see.rightAscension != this.rightAscension) equals = false;
-		if (see.declination != this.declination) equals = false;
-		if (see.subEarthLatitude != this.subEarthLatitude) equals = false;
-		if (see.isEclipsed != this.isEclipsed) equals = false;
-		if (see.subEarthLongitude != this.subEarthLongitude) equals = false;
-		if (see.illumination != this.illumination) equals = false;
-		if (see.iridiumAngle != this.iridiumAngle) equals = false;
-		if (see.iridiumAngleForMoon != this.iridiumAngleForMoon) equals = false;
-		if (see.elevation != this.elevation) equals = false;
-		if (see.topocentricSpeed != this.topocentricSpeed) equals = false;
-		if (see.elongation != this.elongation) equals = false;
-		if (see.azimuth != this.azimuth) equals = false;
-		if (see.sunElevation != this.sunElevation) equals = false;
-		if (see.subEarthDistance != this.subEarthDistance) equals = false;
-		if (see.revolutionsCompleted != this.revolutionsCompleted) equals = false;
-		if (see.distance != this.distance) equals = false;
-		if (see.magnitude != this.magnitude) equals = false;
-		if (see.nextPass != this.nextPass) equals = false;
-		if (!see.name.equals(this.name)) equals = false;
-		if (see.angularRadius != this.angularRadius) equals = false;
-		if (!DataSet.sameArrayValues(see.rise, this.rise)) equals = false;
-		if (!DataSet.sameArrayValues(see.set, this.set)) equals = false;
-		if (see.transit != this.transit) equals = false;
-		if (see.transitElevation != this.transitElevation) equals = false;
-		return equals;
-	}
-	
+
 	private LocationElement location;
 	/**
 	 * Sets the location of this body in a custom coordinate system,

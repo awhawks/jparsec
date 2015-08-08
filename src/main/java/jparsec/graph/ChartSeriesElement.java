@@ -26,6 +26,7 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
 
+import java.util.Arrays;
 import jparsec.astrophysics.MeasureElement;
 import jparsec.math.GenericFit;
 import jparsec.math.LinearFit;
@@ -894,9 +895,9 @@ public class ChartSeriesElement implements Serializable
 	/**
 	 * To clone the object.
 	 */
+	@Override
 	public ChartSeriesElement clone()
 	{
-		if (this == null) return null;
 		ChartSeriesElement c = new ChartSeriesElement();
 		c.color = this.color;
 		if (this.colorsForPieCharts != null) c.colorsForPieCharts = this.colorsForPieCharts.clone();
@@ -924,89 +925,81 @@ public class ChartSeriesElement implements Serializable
 		try { c.enable = this.enable; } catch (Exception exc) {}
 		return c;
 	}
-	/**
-	 * Returns true if the input object is equals to this chart object.
-	 */
-	public boolean equals(Object c)
-	{
-		if (c == null) {
-			if (this == null) return true;
-			return false;
-		}
-		if (this == null) {
-			return false;
-		}
-		ChartSeriesElement chart = (ChartSeriesElement) c;
-		boolean equals = true;
-		if (!ChartSeriesElement.equalShapes(this.shape, chart.shape)) equals = false;
-		if (!this.stroke.equals(chart.stroke)) equals = false;
-		if (!this.legend.equals(chart.legend)) equals = false;
-		try { if (this.enable != chart.enable) equals = false; } catch (Exception exc) {}
-		if (this.showErrorBars != chart.showErrorBars) equals = false;
-		if (this.xMinimumValue != chart.xMinimumValue) equals = false;
-		if (this.yMinimumValue != chart.yMinimumValue) equals = false;
-		if (this.pointersAngle != chart.pointersAngle) equals = false;
-		if (this.pointersLabelOffsetFactor != chart.pointersLabelOffsetFactor) equals = false;
-		if (!this.regressionType.equals(chart.regressionType)) equals = false;
-		if (this.showArrowInPointers != chart.showArrowInPointers) equals = false;
-		if (this.showErrorBars != chart.showErrorBars) equals = false;
-		if (this.showLegend != chart.showLegend) equals = false;
-		if (this.showLines != chart.showLines) equals = false;
-		if (this.showShapes != chart.showShapes) equals = false;
-		if (this.sizeOfArrowInLimits != chart.sizeOfArrowInLimits) equals = false;
-		if (this.useCustomColorsInPieCharts != chart.useCustomColorsInPieCharts) equals = false;
-		
-		if (this.color.hashCode() != chart.color.hashCode()) equals = false;
-		if (this.colorsForPieCharts.hashCode() != chart.colorsForPieCharts.hashCode()) equals = false;
 
-		if (this.dxValues.length == chart.dxValues.length)
-		{
-			for (int i=0; i<this.dxValues.length; i++)
-			{
-				if (this.dxValues[i] != chart.dxValues[i]) equals = false;
-			}
-		} else {
-			equals = false;
-		}
-		if (this.dyValues.length == chart.dyValues.length)
-		{
-			for (int i=0; i<this.dyValues.length; i++)
-			{
-				if (this.dyValues[i] != chart.dyValues[i]) equals = false;
-			}
-		} else {
-			equals = false;
-		}
-		if (this.xValues.length == chart.xValues.length)
-		{
-			for (int i=0; i<this.xValues.length; i++)
-			{
-				if (!this.xValues[i].equals(chart.xValues[i])) equals = false;
-			}
-		} else {
-			equals = false;
-		}
-		if (this.yValues.length == chart.yValues.length)
-		{
-			for (int i=0; i<this.yValues.length; i++)
-			{
-				if (!this.yValues[i].equals(chart.yValues[i])) equals = false;
-			}
-		} else {
-			equals = false;
-		}
-		if (this.pointers.length == chart.pointers.length)
-		{
-			for (int i=0; i<this.pointers.length; i++)
-			{
-				if (!this.pointers[i].equals(chart.pointers[i])) equals = false;
-			}
-		} else {
-			equals = false;
-		}
-		return equals;
+	/**
+	 * Returns true if the input object is equal to this chart object.
+	 */
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof ChartSeriesElement)) return false;
+
+		ChartSeriesElement that = (ChartSeriesElement) o;
+
+		if (showLegend != that.showLegend) return false;
+		if (useCustomColorsInPieCharts != that.useCustomColorsInPieCharts) return false;
+		if (showShapes != that.showShapes) return false;
+		if (showLines != that.showLines) return false;
+		if (shapeSize != that.shapeSize) return false;
+		if (sizeOfArrowInLimits != that.sizeOfArrowInLimits) return false;
+		if (showArrowInPointers != that.showArrowInPointers) return false;
+		if (showErrorBars != that.showErrorBars) return false;
+		if (Float.compare(that.pointersLabelOffsetFactor, pointersLabelOffsetFactor) != 0) return false;
+		if (Double.compare(that.xMinimumValue, xMinimumValue) != 0) return false;
+		if (Double.compare(that.yMinimumValue, yMinimumValue) != 0) return false;
+		if (enable != that.enable) return false;
+
+		if (!Arrays.equals(xValues, that.xValues)) return false;
+
+		if (!Arrays.equals(yValues, that.yValues)) return false;
+		if (!Arrays.equals(dxValues, that.dxValues)) return false;
+		if (!Arrays.equals(dyValues, that.dyValues)) return false;
+		if (legend != null ? !legend.equals(that.legend) : that.legend != null) return false;
+		if (color != null ? !color.equals(that.color) : that.color != null) return false;
+
+		if (!Arrays.equals(colorsForPieCharts, that.colorsForPieCharts)) return false;
+		if (shape != null ? !shape.equals(that.shape) : that.shape != null) return false;
+		if (regressionType != that.regressionType) return false;
+		if (stroke != null ? !stroke.equals(that.stroke) : that.stroke != null) return false;
+
+		if (!Arrays.equals(pointers, that.pointers)) return false;
+
+		return pointersAngle == that.pointersAngle;
 	}
-	
+
+	@Override
+	public int hashCode() {
+		int result;
+		long temp;
+		result = xValues != null ? Arrays.hashCode(xValues) : 0;
+		result = 31 * result + (yValues != null ? Arrays.hashCode(yValues) : 0);
+		result = 31 * result + (dxValues != null ? Arrays.hashCode(dxValues) : 0);
+		result = 31 * result + (dyValues != null ? Arrays.hashCode(dyValues) : 0);
+		result = 31 * result + (legend != null ? legend.hashCode() : 0);
+		result = 31 * result + (showLegend ? 1 : 0);
+		result = 31 * result + (color != null ? color.hashCode() : 0);
+		result = 31 * result + (colorsForPieCharts != null ? Arrays.hashCode(colorsForPieCharts) : 0);
+		result = 31 * result + (useCustomColorsInPieCharts ? 1 : 0);
+		result = 31 * result + (shape != null ? shape.hashCode() : 0);
+		result = 31 * result + (showShapes ? 1 : 0);
+		result = 31 * result + (showLines ? 1 : 0);
+		result = 31 * result + (regressionType != null ? regressionType.hashCode() : 0);
+		result = 31 * result + shapeSize;
+		result = 31 * result + sizeOfArrowInLimits;
+		result = 31 * result + (stroke != null ? stroke.hashCode() : 0);
+		result = 31 * result + (pointers != null ? Arrays.hashCode(pointers) : 0);
+		result = 31 * result + (pointersAngle != null ? pointersAngle.hashCode() : 0);
+		result = 31 * result + (showArrowInPointers ? 1 : 0);
+		result = 31 * result + (showErrorBars ? 1 : 0);
+		result = 31 * result + (pointersLabelOffsetFactor != +0.0f ? Float.floatToIntBits(pointersLabelOffsetFactor) : 0);
+		temp = Double.doubleToLongBits(xMinimumValue);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(yMinimumValue);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		result = 31 * result + (enable ? 1 : 0);
+		return result;
+	}
+
 	/**
 	 * Tests whether two shapes are similar or not.
 	 * @param s1 One shape.

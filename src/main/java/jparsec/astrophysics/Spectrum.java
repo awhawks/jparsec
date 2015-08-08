@@ -23,6 +23,7 @@ package jparsec.astrophysics;
 
 import java.io.*;
 
+import java.util.Arrays;
 import jparsec.astrophysics.gildas.Spectrum30m;
 import jparsec.astrophysics.gildas.SpectrumLine;
 import jparsec.astrophysics.gildas.Spectrum30m.XUNIT;
@@ -280,9 +281,9 @@ public class Spectrum implements Serializable
 	/**
 	 * Clones this instance.
 	 */
+	@Override
 	public Spectrum clone()
 	{
-		if (this == null) return null;
 		FluxElement f[] = new FluxElement[spectrum.length];
 		for (int i=0; i<f.length; i++) {
 			f[i] = spectrum[i].clone();
@@ -309,59 +310,81 @@ public class Spectrum implements Serializable
 		s.velocityResolution = this.velocityResolution;
 		return s;
 	}
-	
+
 	/**
 	 * Check is this instance is equals to another.
 	 */
-	public boolean equals(Object o)
-	{
-		if (o == null) {
-			if (this == null) return true;
-			return false;
-		}
-		if (this == null) {
-			return false;
-		}
-		boolean equals = true;
-		Spectrum s = (Spectrum) o;
-		
-		if (this.spectrum == null) {
-			if (s.spectrum != null) equals = false;
-		} else {
-			if (s.spectrum == null) equals = false;
-		}
-		if (equals) {
-			if (s.spectrum.length != this.spectrum.length) {
-				equals = false;
-			} else {
-				for (int i=0; i<this.spectrum.length; i++) {
-					if (!this.spectrum[i].equals(s.spectrum[i])) equals = false;
-				}
-			}
-		}
-		if (!this.spectrum.equals(s.spectrum)) equals = false;
-		if (!this.backend.equals(s.backend)) equals = false;
-		if (!this.line.equals(s.line)) equals = false;
-		if (!this.source.equals(s.source)) equals = false;
-		if (this.beamEfficiency != s.beamEfficiency) equals = false;
-		if (this.dec != s.dec) equals = false;
-		if (this.epochJD != s.epochJD) equals = false;
-		if (this.integrationTime != s.integrationTime) equals = false;
-		if (this.observationNumber != s.observationNumber) equals = false;
-		if (this.observingTimeJD != s.observingTimeJD) equals = false;
-		if (this.offsetX != s.offsetX) equals = false;
-		if (this.offsetY != s.offsetY) equals = false;
-		if (this.ra != s.ra) equals = false;
-		if (this.referenceChannel != s.referenceChannel) equals = false;
-		if (this.referenceVelocity != s.referenceVelocity) equals = false;
-		if (this.referenceFrequency != s.referenceFrequency) equals = false;
-		if (this.imgFrequency != s.imgFrequency) equals = false;
-		if (this.scanNumber != s.scanNumber) equals = false;
-		if (this.sigmaRMS != s.sigmaRMS) equals = false;
-		if (this.velocityResolution != s.velocityResolution) equals = false;
-		return equals;
-	}	
-	
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof Spectrum)) return false;
+
+		Spectrum spectrum1 = (Spectrum) o;
+
+		if (Double.compare(spectrum1.ra, ra) != 0) return false;
+		if (Double.compare(spectrum1.dec, dec) != 0) return false;
+		if (Double.compare(spectrum1.epochJD, epochJD) != 0) return false;
+		if (Double.compare(spectrum1.observingTimeJD, observingTimeJD) != 0) return false;
+		if (Double.compare(spectrum1.referenceChannel, referenceChannel) != 0) return false;
+		if (Double.compare(spectrum1.referenceFrequency, referenceFrequency) != 0) return false;
+		if (Double.compare(spectrum1.imgFrequency, imgFrequency) != 0) return false;
+		if (Double.compare(spectrum1.referenceVelocity, referenceVelocity) != 0) return false;
+		if (Double.compare(spectrum1.velocityResolution, velocityResolution) != 0) return false;
+		if (Double.compare(spectrum1.sigmaRMS, sigmaRMS) != 0) return false;
+		if (scanNumber != spectrum1.scanNumber) return false;
+		if (observationNumber != spectrum1.observationNumber) return false;
+		if (Double.compare(spectrum1.offsetX, offsetX) != 0) return false;
+		if (Double.compare(spectrum1.offsetY, offsetY) != 0) return false;
+		if (Double.compare(spectrum1.integrationTime, integrationTime) != 0) return false;
+		if (Double.compare(spectrum1.beamEfficiency, beamEfficiency) != 0) return false;
+		if (!Arrays.equals(spectrum, spectrum1.spectrum)) return false;
+		if (source != null ? !source.equals(spectrum1.source) : spectrum1.source != null) return false;
+		if (backend != null ? !backend.equals(spectrum1.backend) : spectrum1.backend != null) return false;
+
+		return !(line != null ? !line.equals(spectrum1.line) : spectrum1.line != null);
+	}
+
+	@Override
+	public int hashCode() {
+		int result;
+		long temp;
+		result = spectrum != null ? Arrays.hashCode(spectrum) : 0;
+		temp = Double.doubleToLongBits(ra);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(dec);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(epochJD);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		result = 31 * result + (source != null ? source.hashCode() : 0);
+		temp = Double.doubleToLongBits(observingTimeJD);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(referenceChannel);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(referenceFrequency);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(imgFrequency);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(referenceVelocity);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(velocityResolution);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(sigmaRMS);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		result = 31 * result + scanNumber;
+		result = 31 * result + observationNumber;
+		result = 31 * result + (backend != null ? backend.hashCode() : 0);
+		result = 31 * result + (line != null ? line.hashCode() : 0);
+		temp = Double.doubleToLongBits(offsetX);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(offsetY);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(integrationTime);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(beamEfficiency);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		return result;
+	}
+
 	/**
 	 * Returns a perfect Gaussian spectrum given the parameters of the Gaussian.
 	 * @param np The number of points in the spectrum.

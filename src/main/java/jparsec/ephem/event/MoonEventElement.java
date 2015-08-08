@@ -197,9 +197,9 @@ public class MoonEventElement implements Serializable {
 	/**
 	 * Clones this instance.
 	 */
+	@Override
 	public MoonEventElement clone()
 	{
-		if (this == null) return null;
 		MoonEventElement e = new MoonEventElement(this.startTime, this.endTime, this.mainBody, this.secondaryBody,
 				this.eventType, this.details);
 		e.elevation = this.elevation;
@@ -208,31 +208,48 @@ public class MoonEventElement implements Serializable {
 		e.severalSimultaneousEvents = this.severalSimultaneousEvents;
 		return e;
 	}
+
 	/**
-	 * Returns wether the input Object contains the same information
+	 * Returns whether the argument contains the same information
 	 * as this instance.
 	 */
-	public boolean equals(Object e)
-	{
-		if (e == null) {
-			if (this == null) return true;
-			return false;
-		}
-		if (this == null) {
-			return false;
-		}
-		boolean equals = true;
-		MoonEventElement ee = (MoonEventElement) e;
-		if (!ee.details.equals(this.details)) equals = false;
-		if (ee.endTime != this.endTime) equals = false;
-		if (ee.elevation != this.elevation) equals = false;
-		if (ee.startTime != this.startTime) equals = false;
-		if (ee.mainBody != this.mainBody) equals = false;
-		if (ee.eventType != this.eventType) equals = false;
-		if (ee.secondaryBody != this.secondaryBody) equals = false;
-		if (ee.visibleFromEarth != this.visibleFromEarth) equals = false;
-		if (ee.subType != this.subType) equals = false;
-		if (ee.severalSimultaneousEvents != this.severalSimultaneousEvents) equals = false;
-		return equals;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof MoonEventElement)) return false;
+
+		MoonEventElement that = (MoonEventElement) o;
+
+		if (Double.compare(that.startTime, startTime) != 0) return false;
+		if (Double.compare(that.endTime, endTime) != 0) return false;
+		if (visibleFromEarth != that.visibleFromEarth) return false;
+		if (Double.compare(that.elevation, elevation) != 0) return false;
+		if (severalSimultaneousEvents != that.severalSimultaneousEvents) return false;
+		if (mainBody != that.mainBody) return false;
+		if (secondaryBody != that.secondaryBody) return false;
+		if (eventType != that.eventType) return false;
+		if (details != null ? !details.equals(that.details) : that.details != null) return false;
+
+		return subType == that.subType;
+	}
+
+	@Override
+	public int hashCode() {
+		int result;
+		long temp;
+		temp = Double.doubleToLongBits(startTime);
+		result = (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(endTime);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		result = 31 * result + (mainBody != null ? mainBody.hashCode() : 0);
+		result = 31 * result + (secondaryBody != null ? secondaryBody.hashCode() : 0);
+		result = 31 * result + (eventType != null ? eventType.hashCode() : 0);
+		result = 31 * result + (details != null ? details.hashCode() : 0);
+		result = 31 * result + (subType != null ? subType.hashCode() : 0);
+		result = 31 * result + (visibleFromEarth ? 1 : 0);
+		temp = Double.doubleToLongBits(elevation);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		result = 31 * result + (severalSimultaneousEvents ? 1 : 0);
+		return result;
 	}
 }

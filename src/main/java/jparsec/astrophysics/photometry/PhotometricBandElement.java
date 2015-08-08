@@ -486,9 +486,9 @@ public class PhotometricBandElement implements Serializable
     /**
      * To clone the object.
      */
+	@Override
     public PhotometricBandElement clone()
     {
-    	if (this == null) return null;
     	PhotometricBandElement p = new PhotometricBandElement();
     	p.bandWidth = this.bandWidth;
     	p.bandWidthError = this.bandWidthError;
@@ -507,30 +507,42 @@ public class PhotometricBandElement implements Serializable
     /**
      * Checks if this object is equal to another one.
      * @param band Object to compare with.
-     * @return True is it is equal.
+     * @return True if it is equal.
      */
-    public boolean equals(Object band)
-    {
-		if (band == null) {
-			if (this == null) return true;
-			return false;
-		}
-		if (this == null) {
-			return false;
-		}
-		PhotometricBandElement p = (PhotometricBandElement) band;
-    	boolean isEqual = true;
-       	if (p.bandWidth != this.bandWidth) isEqual = false;
-       	if (p.bandWidthError != this.bandWidthError) isEqual = false;
-       	if (p.effectiveWavelength != this.effectiveWavelength) isEqual = false;
-       	if (p.effectiveWavelengthError != this.effectiveWavelengthError) isEqual = false;
-       	if (p.fluxAt0Magnitude != this.fluxAt0Magnitude) isEqual = false;
-       	if (p.fluxAt0MagnitudeError != this.fluxAt0MagnitudeError) isEqual = false;
-       	if (p.magnitude0ForFlux != this.magnitude0ForFlux) isEqual = false;
-       	if (!p.fieldName.equals(this.fieldName)) isEqual = false;
-       	if (p.fluxGivenAsMagnitude != this.fluxGivenAsMagnitude) isEqual = false;
-       	if (!p.name.equals(this.name)) isEqual = false;
-       	if (p.beam != this.beam) isEqual = false;
-    	return isEqual;
-    }
+	@Override
+	public boolean equals(Object band) {
+		if (this == band) return true;
+		if (!(band instanceof PhotometricBandElement)) return false;
+
+		PhotometricBandElement that = (PhotometricBandElement) band;
+
+		if (Float.compare(that.effectiveWavelength, effectiveWavelength) != 0) return false;
+		if (Float.compare(that.effectiveWavelengthError, effectiveWavelengthError) != 0) return false;
+		if (Float.compare(that.bandWidth, bandWidth) != 0) return false;
+		if (Float.compare(that.bandWidthError, bandWidthError) != 0) return false;
+		if (Float.compare(that.fluxAt0Magnitude, fluxAt0Magnitude) != 0) return false;
+		if (Float.compare(that.fluxAt0MagnitudeError, fluxAt0MagnitudeError) != 0) return false;
+		if (Float.compare(that.magnitude0ForFlux, magnitude0ForFlux) != 0) return false;
+		if (fluxGivenAsMagnitude != that.fluxGivenAsMagnitude) return false;
+		if (Float.compare(that.beam, beam) != 0) return false;
+		if (fieldName != null ? !fieldName.equals(that.fieldName) : that.fieldName != null) return false;
+
+		return !(name != null ? !name.equals(that.name) : that.name != null);
+	}
+
+	@Override
+	public int hashCode() {
+		int result = (effectiveWavelength != +0.0f ? Float.floatToIntBits(effectiveWavelength) : 0);
+		result = 31 * result + (effectiveWavelengthError != +0.0f ? Float.floatToIntBits(effectiveWavelengthError) : 0);
+		result = 31 * result + (bandWidth != +0.0f ? Float.floatToIntBits(bandWidth) : 0);
+		result = 31 * result + (bandWidthError != +0.0f ? Float.floatToIntBits(bandWidthError) : 0);
+		result = 31 * result + (fluxAt0Magnitude != +0.0f ? Float.floatToIntBits(fluxAt0Magnitude) : 0);
+		result = 31 * result + (fluxAt0MagnitudeError != +0.0f ? Float.floatToIntBits(fluxAt0MagnitudeError) : 0);
+		result = 31 * result + (magnitude0ForFlux != +0.0f ? Float.floatToIntBits(magnitude0ForFlux) : 0);
+		result = 31 * result + (fluxGivenAsMagnitude ? 1 : 0);
+		result = 31 * result + (beam != +0.0f ? Float.floatToIntBits(beam) : 0);
+		result = 31 * result + (fieldName != null ? fieldName.hashCode() : 0);
+		result = 31 * result + (name != null ? name.hashCode() : 0);
+		return result;
+	}
 }

@@ -26,6 +26,7 @@ import java.awt.geom.GeneralPath;
 import java.awt.image.BufferedImage;
 import java.io.Serializable;
 
+import java.util.Arrays;
 import jparsec.ephem.Ephem;
 import jparsec.ephem.EphemerisElement;
 import jparsec.ephem.Functions;
@@ -389,9 +390,9 @@ public class OrbitalElement implements Serializable
 	/**
 	 * To clone the object.
 	 */
+	@Override
 	public OrbitalElement clone()
 	{
-		if (this == null) return null;
 		OrbitalElement orbit = new OrbitalElement(this.name, this.semimajorAxis, this.argumentOfPerihelion,
 				this.eccentricity, this.meanAnomaly, this.ascendingNodeLongitude, this.inclination,
 				this.referenceTime, this.meanMotion, this.referenceEquinox, this.beginOfApplicableTime,
@@ -402,46 +403,89 @@ public class OrbitalElement implements Serializable
 		return orbit;
 	}
 	/**
-	 * Returns if a given object is equal to this orbital
+	 * Returns true if a given object is equal to this orbital
 	 * elements object.
 	 */
-	public boolean equals(Object o)
-	{
-		if (o == null) {
-			if (this == null) return true;
-			return false;
-		}
-		if (this == null) {
-			return false;
-		}
-		boolean equals = true;
-		OrbitalElement orbit = (OrbitalElement) o;
-		if (!this.name.equals(orbit.name)) equals = false;
-		if (this.semimajorAxis != orbit.semimajorAxis) equals = false;
-		if (this.argumentOfPerihelion != orbit.argumentOfPerihelion) equals = false;
-		if (this.inclination != orbit.inclination) equals = false;
-		if (this.beginOfApplicableTime != orbit.beginOfApplicableTime) equals = false;
-		if (this.perihelionLongitude != orbit.perihelionLongitude) equals = false;
-		if (this.magnitudeSlope != orbit.magnitudeSlope) equals = false;
-		if (this.ascendingNodeLongitude != orbit.ascendingNodeLongitude) equals = false;
-		if (this.referenceEquinox != orbit.referenceEquinox) equals = false;
-		if (this.meanLongitude != orbit.meanLongitude) equals = false;
-		if (this.meanAnomaly != orbit.meanAnomaly) equals = false;
-		if (this.meanMotion != orbit.meanMotion) equals = false;
-		if (this.endOfApplicableTime != orbit.endOfApplicableTime) equals = false;
-		if (this.perihelionDistance != orbit.perihelionDistance) equals = false;
-		if (this.centralBody != orbit.centralBody) equals = false;
-		if (this.eccentricity != orbit.eccentricity) equals = false;
-		if (this.referenceTime != orbit.referenceTime) equals = false;
-		if (this.referenceFrame != orbit.referenceFrame) equals = false;
-		if (this.absoluteMagnitude != orbit.absoluteMagnitude) equals = false;		
-		if (this.magnitudeModel != orbit.magnitudeModel) equals = false;		
-		return equals;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof OrbitalElement)) return false;
+
+		OrbitalElement that = (OrbitalElement) o;
+
+		if (Double.compare(that.semimajorAxis, semimajorAxis) != 0) return false;
+		if (Double.compare(that.meanLongitude, meanLongitude) != 0) return false;
+		if (Double.compare(that.eccentricity, eccentricity) != 0) return false;
+		if (Double.compare(that.perihelionLongitude, perihelionLongitude) != 0) return false;
+		if (Double.compare(that.ascendingNodeLongitude, ascendingNodeLongitude) != 0) return false;
+		if (Double.compare(that.inclination, inclination) != 0) return false;
+		if (Double.compare(that.referenceTime, referenceTime) != 0) return false;
+		if (Double.compare(that.meanAnomaly, meanAnomaly) != 0) return false;
+		if (Double.compare(that.argumentOfPerihelion, argumentOfPerihelion) != 0) return false;
+		if (Double.compare(that.meanMotion, meanMotion) != 0) return false;
+		if (Double.compare(that.referenceEquinox, referenceEquinox) != 0) return false;
+		if (Double.compare(that.beginOfApplicableTime, beginOfApplicableTime) != 0) return false;
+		if (Double.compare(that.endOfApplicableTime, endOfApplicableTime) != 0) return false;
+		if (Float.compare(that.absoluteMagnitude, absoluteMagnitude) != 0) return false;
+		if (Float.compare(that.magnitudeSlope, magnitudeSlope) != 0) return false;
+		if (Double.compare(that.perihelionDistance, perihelionDistance) != 0) return false;
+		if (Double.compare(that.lastJD, lastJD) != 0) return false;
+		if (referenceFrame != that.referenceFrame) return false;
+		if (name != null ? !name.equals(that.name) : that.name != null) return false;
+		if (centralBody != that.centralBody) return false;
+		if (magnitudeModel != that.magnitudeModel) return false;
+
+		return Arrays.equals(lastSun, that.lastSun);
+	}
+
+	@Override
+	public int hashCode() {
+		int result;
+		long temp;
+		temp = Double.doubleToLongBits(semimajorAxis);
+		result = (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(meanLongitude);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(eccentricity);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(perihelionLongitude);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(ascendingNodeLongitude);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(inclination);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(referenceTime);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(meanAnomaly);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(argumentOfPerihelion);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(meanMotion);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(referenceEquinox);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		result = 31 * result + (referenceFrame != null ? referenceFrame.hashCode() : 0);
+		temp = Double.doubleToLongBits(beginOfApplicableTime);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		result = 31 * result + (name != null ? name.hashCode() : 0);
+		temp = Double.doubleToLongBits(endOfApplicableTime);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		result = 31 * result + (absoluteMagnitude != +0.0f ? Float.floatToIntBits(absoluteMagnitude) : 0);
+		result = 31 * result + (magnitudeSlope != +0.0f ? Float.floatToIntBits(magnitudeSlope) : 0);
+		temp = Double.doubleToLongBits(perihelionDistance);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		result = 31 * result + (centralBody != null ? centralBody.hashCode() : 0);
+		result = 31 * result + (magnitudeModel != null ? magnitudeModel.hashCode() : 0);
+		result = 31 * result + (lastSun != null ? Arrays.hashCode(lastSun) : 0);
+		temp = Double.doubleToLongBits(lastJD);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		return result;
 	}
 
 	/**
 	 * Returns a string representation of this object.
 	 */
+	@Override
 	public String toString() {
 		StringBuffer out = new StringBuffer("");
 		String sep = FileIO.getLineSeparator();
@@ -456,6 +500,7 @@ public class OrbitalElement implements Serializable
 		out.append("time     = " + (referenceTime) + sep);
 		return out.toString();
 	}
+
 	/**
 	 * To obtain the brightest apparent magnitude an asteroid could reach.
 	 * Note the magnitude returned depends on the magnitude model selected for the orbital

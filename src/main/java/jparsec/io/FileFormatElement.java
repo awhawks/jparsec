@@ -78,30 +78,36 @@ public class FileFormatElement implements Serializable
 	/**
 	 * Returns a clone of this instance;
 	 */
+	@Override
 	public FileFormatElement clone()
 	{
-		if (this == null) return null;
 		return new FileFormatElement(this.startingPosition, this.endingPosition, this.fieldName);
 	}
+
 	/**
-	 * Returns if the input object is equals to this instance.
+	 * Returns true if the input object is equal to this instance.
 	 */
-	public boolean equals(Object f)
-	{
-		if (f == null) {
-			if (this == null) return true;
-			return false;
-		}
-		if (this == null) {
-			return false;
-		}
-		FileFormatElement ffe = (FileFormatElement) f;
-		boolean equals = true;
-		if (this.startingPosition != ffe.startingPosition) equals = false;
-		if (this.endingPosition != ffe.endingPosition) equals = false;
-		if (!this.fieldName.equals(ffe.fieldName)) equals = false;
-		return equals;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof FileFormatElement)) return false;
+
+		FileFormatElement that = (FileFormatElement) o;
+
+		if (startingPosition != that.startingPosition) return false;
+		if (endingPosition != that.endingPosition) return false;
+
+		return !(fieldName != null ? !fieldName.equals(that.fieldName) : that.fieldName != null);
 	}
+
+	@Override
+	public int hashCode() {
+		int result = startingPosition;
+		result = 31 * result + endingPosition;
+		result = 31 * result + (fieldName != null ? fieldName.hashCode() : 0);
+		return result;
+	}
+
 	/**
 	 * A {@linkplain FileFormatElement} object suitable for reading asteroids in the MPC format.
 	 * During the reading process angles are adequate transfomed to radians.

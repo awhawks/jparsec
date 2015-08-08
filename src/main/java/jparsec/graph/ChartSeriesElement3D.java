@@ -25,6 +25,7 @@ import java.awt.*;
 //import javax.vecmath.Point3d;
 import java.io.Serializable;
 
+import java.util.Arrays;
 import jparsec.io.Serialization;
 import jparsec.io.image.ImageSplineTransform;
 import jparsec.math.DoubleVector;
@@ -256,14 +257,14 @@ public class ChartSeriesElement3D implements Serializable
 	 * base of the chart, only when the data is not a surface and
 	 * {@linkplain ChartSeriesElement3D#drawLines} is false.
 	 */
-	public boolean isBarPlot = false;	
+	public boolean isBarPlot = false;
 
 	/**
 	 * To clone the object.
 	 */
+	@Override
 	public ChartSeriesElement3D clone()
 	{
-		if (this == null) return null;
 		ChartSeriesElement3D c = new ChartSeriesElement3D();
 		c.color = new Color(this.color.getRed(), this.color.getGreen(), this.color.getBlue(), this.color.getAlpha());
 		if (dxValues != null) c.dxValues = this.dxValues.clone();
@@ -280,89 +281,55 @@ public class ChartSeriesElement3D implements Serializable
 		if (pointers != null) c.pointers = this.pointers.clone();
 		return c;
 	}
-	
+
 	/**
-	 * Returns true if the input object is equals to this chart object.
+	 * Returns true if the input object is equal to this chart object.
 	 * The z array is not checked.
 	 */
-	public boolean equals(Object c)
-	{
-		if (c == null) {
-			if (this == null) return true;
-			return false;
-		}
-		if (this == null) {
-			return false;
-		}
-		ChartSeriesElement3D chart = (ChartSeriesElement3D) c;
-		boolean equals = true;
-		if (!this.legend.equals(chart.legend)) equals = false;
-		if (this.showErrorBars != chart.showErrorBars) equals = false;
-		if (this.isSurface != chart.isSurface) equals = false;
-		if (this.drawLines != chart.drawLines) equals = false;
-		if (this.isBarPlot != chart.isBarPlot) equals = false;
-		
-		if (this.color.hashCode() != chart.color.hashCode()) equals = false;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof ChartSeriesElement3D)) return false;
 
-		if (this.pointers.length == chart.pointers.length)
-		{
-			for (int i=0; i<this.pointers.length; i++)
-			{
-				if (this.pointers[i] != chart.pointers[i]) equals = false;
-			}
-		} else {
-			equals = false;
-		}
+		ChartSeriesElement3D that = (ChartSeriesElement3D) o;
 
-		if (this.dxValues.length == chart.dxValues.length)
-		{
-			for (int i=0; i<this.dxValues.length; i++)
-			{
-				if (this.dxValues[i] != chart.dxValues[i]) equals = false;
-			}
-		} else {
-			equals = false;
-		}
-		if (this.dyValues.length == chart.dyValues.length)
-		{
-			for (int i=0; i<this.dyValues.length; i++)
-			{
-				if (this.dyValues[i] != chart.dyValues[i]) equals = false;
-			}
-		} else {
-			equals = false;
-		}
-		if (this.xValues.length == chart.xValues.length)
-		{
-			for (int i=0; i<this.xValues.length; i++)
-			{
-				if (this.xValues[i] != chart.xValues[i]) equals = false;
-			}
-		} else {
-			equals = false;
-		}
-		if (this.yValues.length == chart.yValues.length)
-		{
-			for (int i=0; i<this.yValues.length; i++)
-			{
-				if (this.yValues[i] != chart.yValues[i]) equals = false;
-			}
-		} else {
-			equals = false;
-		}
-		if (this.dzValues.length == chart.dzValues.length)
-		{
-			for (int i=0; i<this.dzValues.length; i++)
-			{
-				if (this.dzValues[i] != chart.dzValues[i]) equals = false;
-			}
-		} else {
-			equals = false;
-		}
-		return equals;
+		if (showErrorBars != that.showErrorBars) return false;
+		if (isSurface != that.isSurface) return false;
+		if (drawLines != that.drawLines) return false;
+		if (isBarPlot != that.isBarPlot) return false;
+
+		if (!Arrays.equals(xValues, that.xValues)) return false;
+
+		if (!Arrays.equals(yValues, that.yValues)) return false;
+		//if (zValues != null ? !zValues.equals(that.zValues) : that.zValues != null) return false;
+		if (!Arrays.equals(dxValues, that.dxValues)) return false;
+		if (!Arrays.equals(dyValues, that.dyValues)) return false;
+		if (!Arrays.equals(dzValues, that.dzValues)) return false;
+		if (legend != null ? !legend.equals(that.legend) : that.legend != null) return false;
+
+		if (!Arrays.equals(pointers, that.pointers)) return false;
+
+		return !(color != null ? !color.equals(that.color) : that.color != null);
 	}
-	
-	
+
+	@Override
+	public int hashCode() {
+		int result = xValues != null ? Arrays.hashCode(xValues) : 0;
+		result = 31 * result + (yValues != null ? Arrays.hashCode(yValues) : 0);
+		//result = 31 * result + (zValues != null ? zValues.hashCode() : 0);
+		result = 31 * result + (dxValues != null ? Arrays.hashCode(dxValues) : 0);
+		result = 31 * result + (dyValues != null ? Arrays.hashCode(dyValues) : 0);
+		result = 31 * result + (dzValues != null ? Arrays.hashCode(dzValues) : 0);
+		result = 31 * result + (legend != null ? legend.hashCode() : 0);
+		result = 31 * result + (pointers != null ? Arrays.hashCode(pointers) : 0);
+		result = 31 * result + (color != null ? color.hashCode() : 0);
+		result = 31 * result + (showErrorBars ? 1 : 0);
+		result = 31 * result + (isSurface ? 1 : 0);
+		result = 31 * result + (drawLines ? 1 : 0);
+		result = 31 * result + (isBarPlot ? 1 : 0);
+		return result;
+	}
+
 	/**
 	 * Returns the characteristic name of this instance.
 	 * @return The characteristic name, currently equals to the legend.
@@ -398,7 +365,7 @@ public class ChartSeriesElement3D implements Serializable
             	x[index] = px;
             	y[index] = py;
             	z[index] = data[i][j];
-            }        	
+            }
         }
 		ChartSeriesElement3D s = new ChartSeriesElement3D(x, y, z, "");
 		return s;

@@ -24,6 +24,7 @@ package jparsec.graph;
 import java.awt.Color;
 import java.io.Serializable;
 
+import java.util.Arrays;
 import jparsec.util.JPARSECException;
 import jparsec.util.Logger;
 import jparsec.util.Logger.LEVEL;
@@ -176,9 +177,9 @@ public class ChartElement3D implements Serializable
 	/**
 	 * To clone the object.
 	 */
+	@Override
 	public ChartElement3D clone()
 	{
-		if (this == null) return null;
 		ChartElement3D c = null;
 		try {
 			c = new ChartElement3D(this.series.clone(), this.title, this.xLabel,
@@ -205,51 +206,61 @@ public class ChartElement3D implements Serializable
 	}
 
 	/**
-	 * Returns true if the input object is equals to this chart object. An hypothetical sub-chart
+	 * Returns true if the input object is equal to this chart object. An hypothetical sub-chart
 	 * is not tested for equality.
 	 */
-	public boolean equals(Object c)
-	{
-		if (c == null) {
-			if (this == null) return true;
-			return false;
-		}
-		if (this == null) {
-			return false;
-		}
-		ChartElement3D chart = (ChartElement3D) c;
-		boolean equals = true;
-		if (this.xAxisInLogScale != chart.xAxisInLogScale) equals = false;
-		if (this.yAxisInLogScale != chart.yAxisInLogScale) equals = false;
-		if (this.zAxisInLogScale != chart.zAxisInLogScale) equals = false;
-		if (this.showErrorBars != chart.showErrorBars) equals = false;
-		if (this.showGridX != chart.showGridX) equals = false;
-		if (this.showGridY != chart.showGridY) equals = false;
-		if (this.showGridZ != chart.showGridZ) equals = false;
-		if (this.showLegend != chart.showLegend) equals = false;
-		if (this.showTitle != chart.showTitle) equals = false;
-		if (this.showToolbar != chart.showToolbar) equals = false;
-		if (this.imageWidth != chart.imageWidth) equals = false;
-		if (this.imageHeight != chart.imageHeight) equals = false;
-		if (!this.xLabel.equals(chart.xLabel)) equals = false;
-		if (!this.yLabel.equals(chart.yLabel)) equals = false;
-		if (!this.zLabel.equals(chart.zLabel)) equals = false;
-		if (!this.title.equals(chart.title)) equals = false;
-		
-		if (this.background.hashCode() != chart.background.hashCode()) equals = false;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof ChartElement3D)) return false;
 
-		if (this.series.length == chart.series.length)
-		{
-			for (int i=0; i<this.series.length; i++)
-			{
-				if (!this.series[i].equals(chart.series[i])) equals = false;
-			}
-		} else {
-			equals = false;
-		}
-		return equals;
+		ChartElement3D that = (ChartElement3D) o;
+
+		if (imageWidth != that.imageWidth) return false;
+		if (imageHeight != that.imageHeight) return false;
+		if (xAxisInLogScale != that.xAxisInLogScale) return false;
+		if (yAxisInLogScale != that.yAxisInLogScale) return false;
+		if (zAxisInLogScale != that.zAxisInLogScale) return false;
+		if (showErrorBars != that.showErrorBars) return false;
+		if (showTitle != that.showTitle) return false;
+		if (showGridX != that.showGridX) return false;
+		if (showGridY != that.showGridY) return false;
+		if (showGridZ != that.showGridZ) return false;
+		if (showLegend != that.showLegend) return false;
+		if (showToolbar != that.showToolbar) return false;
+
+		if (!Arrays.equals(series, that.series)) return false;
+		if (xLabel != null ? !xLabel.equals(that.xLabel) : that.xLabel != null) return false;
+		if (yLabel != null ? !yLabel.equals(that.yLabel) : that.yLabel != null) return false;
+		if (zLabel != null ? !zLabel.equals(that.zLabel) : that.zLabel != null) return false;
+		if (title != null ? !title.equals(that.title) : that.title != null) return false;
+
+		return !(background != null ? !background.equals(that.background) : that.background != null);
 	}
-	
+
+	@Override
+	public int hashCode() {
+		int result = series != null ? Arrays.hashCode(series) : 0;
+		result = 31 * result + (xLabel != null ? xLabel.hashCode() : 0);
+		result = 31 * result + (yLabel != null ? yLabel.hashCode() : 0);
+		result = 31 * result + (zLabel != null ? zLabel.hashCode() : 0);
+		result = 31 * result + (title != null ? title.hashCode() : 0);
+		result = 31 * result + imageWidth;
+		result = 31 * result + imageHeight;
+		result = 31 * result + (xAxisInLogScale ? 1 : 0);
+		result = 31 * result + (yAxisInLogScale ? 1 : 0);
+		result = 31 * result + (zAxisInLogScale ? 1 : 0);
+		result = 31 * result + (showErrorBars ? 1 : 0);
+		result = 31 * result + (showTitle ? 1 : 0);
+		result = 31 * result + (background != null ? background.hashCode() : 0);
+		result = 31 * result + (showGridX ? 1 : 0);
+		result = 31 * result + (showGridY ? 1 : 0);
+		result = 31 * result + (showGridZ ? 1 : 0);
+		result = 31 * result + (showLegend ? 1 : 0);
+		result = 31 * result + (showToolbar ? 1 : 0);
+		return result;
+	}
+
 	/**
 	 * Obtains the maximum value of x. For category charts the index of the maximum value
 	 * will be returned.

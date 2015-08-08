@@ -175,9 +175,9 @@ public class StarElement implements Serializable
 	/**
 	 * To clone the object.
 	 */
+	@Override
 	public StarElement clone()
 	{
-		if (this == null) return null;
 		StarElement out = new StarElement(this.name, this.rightAscension, this.declination, this.parallax,
 				this.magnitude, this.properMotionRA, this.properMotionDEC, this.properMotionRadialV,
 				this.equinox, this.frame);
@@ -185,34 +185,54 @@ public class StarElement implements Serializable
 		out.type = this.type;
 		return out;
 	}
+
 	/**
-	 * Returns true if the input object is equals to this
+	 * Returns true if the input object is equal to this
 	 * instance.
 	 */
-	public boolean equals(Object s)
-	{
-		if (s == null) {
-			if (this == null) return true;
-			return false;
-		}
-		if (this == null) {
-			return false;
-		}
-		boolean equals = true;
-		StarElement se = (StarElement) s;
-		if (se.properMotionRA != this.properMotionRA) equals = false;
-		if (!se.name.equals(this.name)) equals = false;
-		if (se.declination != this.declination) equals = false;
-		if (se.parallax != this.parallax) equals = false;
-		if (se.properMotionDEC != this.properMotionDEC) equals = false;
-		if (se.magnitude != this.magnitude) equals = false;
-		if (se.properMotionRadialV != this.properMotionRadialV) equals = false;
-		if (se.rightAscension != this.rightAscension) equals = false;
-		if (se.equinox != this.equinox) equals = false;
-		if (se.frame != this.frame) equals = false;
-		if (!se.spectrum.equals(this.spectrum)) equals = false;
-		if (!se.type.equals(this.type)) equals = false;
-		return equals;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof StarElement)) return false;
+
+		StarElement that = (StarElement) o;
+
+		if (Double.compare(that.rightAscension, rightAscension) != 0) return false;
+		if (Double.compare(that.declination, declination) != 0) return false;
+		if (Double.compare(that.parallax, parallax) != 0) return false;
+		if (Float.compare(that.magnitude, magnitude) != 0) return false;
+		if (Float.compare(that.properMotionRA, properMotionRA) != 0) return false;
+		if (Float.compare(that.properMotionDEC, properMotionDEC) != 0) return false;
+		if (Float.compare(that.properMotionRadialV, properMotionRadialV) != 0) return false;
+		if (Double.compare(that.equinox, equinox) != 0) return false;
+		if (name != null ? !name.equals(that.name) : that.name != null) return false;
+		if (frame != that.frame) return false;
+		if (spectrum != null ? !spectrum.equals(that.spectrum) : that.spectrum != null) return false;
+
+		return !(type != null ? !type.equals(that.type) : that.type != null);
+	}
+
+	@Override
+	public int hashCode() {
+		int result;
+		long temp;
+		result = name != null ? name.hashCode() : 0;
+		temp = Double.doubleToLongBits(rightAscension);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(declination);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(parallax);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		result = 31 * result + (magnitude != +0.0f ? Float.floatToIntBits(magnitude) : 0);
+		result = 31 * result + (properMotionRA != +0.0f ? Float.floatToIntBits(properMotionRA) : 0);
+		result = 31 * result + (properMotionDEC != +0.0f ? Float.floatToIntBits(properMotionDEC) : 0);
+		result = 31 * result + (properMotionRadialV != +0.0f ? Float.floatToIntBits(properMotionRadialV) : 0);
+		temp = Double.doubleToLongBits(equinox);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		result = 31 * result + (frame != null ? frame.hashCode() : 0);
+		result = 31 * result + (spectrum != null ? spectrum.hashCode() : 0);
+		result = 31 * result + (type != null ? type.hashCode() : 0);
+		return result;
 	}
 
 	/**

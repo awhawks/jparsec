@@ -24,6 +24,7 @@ package jparsec.vo;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import java.util.Arrays;
 import jparsec.ephem.Functions;
 import jparsec.ephem.stars.StarElement;
 import jparsec.graph.DataSet;
@@ -152,13 +153,13 @@ public class SimbadElement implements Serializable
 		if (this.parallax != 0) dist = 1000.0 / this.parallax;
 		return new LocationElement(this.rightAscension, this.declination, dist);
 	}
-	
+
 	/**
 	 * Clones this instance.
 	 */
+	@Override
 	public SimbadElement clone()
 	{
-		if (this == null) return null;
 		SimbadElement s = new SimbadElement();
 		s.declination = this.declination;
 		s.name = this.name;
@@ -173,37 +174,55 @@ public class SimbadElement implements Serializable
 		s.bMinusV = this.bMinusV;
 		return s;
 	}
+
 	/**
-	 * Returns true if the input object is equals to this instance.
+	 * Returns true if the input object is equal to this instance.
 	 */
-	public boolean equals(Object o)
-	{
-		if (o == null) {
-			if (this == null) return true;
-			return false;
-		}
-		if (this == null) {
-			return false;
-		}
-		SimbadElement s = (SimbadElement) o;
-		boolean equals = true;
-		if (s.declination != this.declination) equals = false;
-		if (!s.name.equals(this.name)) equals = false;
-		if (s.otherNames.hashCode() != this.otherNames.hashCode()) equals = false;
-		if (s.properMotionDEC != this.properMotionDEC) equals = false;
-		if (s.properMotionRA != this.properMotionRA) equals = false;
-		if (s.properMotionRadialV != this.properMotionRadialV) equals = false;
-		if (s.rightAscension != this.rightAscension) equals = false;
-		if (s.parallax != this.parallax) equals = false;
-		if (s.bMinusV != this.bMinusV) equals = false;
-		if (!s.spectralType.equals(this.spectralType)) equals = false;
-		if (!s.type.equals(this.type)) equals = false;
-		return equals;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof SimbadElement)) return false;
+
+		SimbadElement that = (SimbadElement) o;
+
+		if (Double.compare(that.rightAscension, rightAscension) != 0) return false;
+		if (Double.compare(that.declination, declination) != 0) return false;
+		if (Float.compare(that.bMinusV, bMinusV) != 0) return false;
+		if (Float.compare(that.properMotionRA, properMotionRA) != 0) return false;
+		if (Float.compare(that.properMotionDEC, properMotionDEC) != 0) return false;
+		if (Float.compare(that.properMotionRadialV, properMotionRadialV) != 0) return false;
+		if (Float.compare(that.parallax, parallax) != 0) return false;
+		if (name != null ? !name.equals(that.name) : that.name != null) return false;
+		if (!Arrays.equals(otherNames, that.otherNames)) return false;
+		if (spectralType != null ? !spectralType.equals(that.spectralType) : that.spectralType != null) return false;
+
+		return !(type != null ? !type.equals(that.type) : that.type != null);
 	}
-	
+
+	@Override
+	public int hashCode() {
+		int result;
+		long temp;
+		result = name != null ? name.hashCode() : 0;
+		result = 31 * result + (otherNames != null ? Arrays.hashCode(otherNames) : 0);
+		temp = Double.doubleToLongBits(rightAscension);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(declination);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		result = 31 * result + (spectralType != null ? spectralType.hashCode() : 0);
+		result = 31 * result + (type != null ? type.hashCode() : 0);
+		result = 31 * result + (bMinusV != +0.0f ? Float.floatToIntBits(bMinusV) : 0);
+		result = 31 * result + (properMotionRA != +0.0f ? Float.floatToIntBits(properMotionRA) : 0);
+		result = 31 * result + (properMotionDEC != +0.0f ? Float.floatToIntBits(properMotionDEC) : 0);
+		result = 31 * result + (properMotionRadialV != +0.0f ? Float.floatToIntBits(properMotionRadialV) : 0);
+		result = 31 * result + (parallax != +0.0f ? Float.floatToIntBits(parallax) : 0);
+		return result;
+	}
+
 	/**
 	 * Returns a string representation of this Simbad object.
 	 */
+	@Override
 	public String toString() {
 		StringBuffer out = new StringBuffer("");
 		String sep = FileIO.getLineSeparator(), plus = "";

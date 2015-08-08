@@ -48,6 +48,7 @@ import java.io.Writer;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.StringTokenizer;
 
@@ -1554,7 +1555,7 @@ public class Matrix
 	            for (int j=0; j<n; j++)
 	            {
 	            	newData[iindex][j] = this.data[i][j];
-	            }        	
+	            }
       	}
       }
       Matrix m = new Matrix(newData);
@@ -1566,15 +1567,25 @@ public class Matrix
    * Returns if a matrix is equal to the current one.
    * @param o The matrix to be compared.
    */
-  public boolean equals(Object o) 
-  {
-      Matrix A = this;
-      Matrix B = (Matrix) o;
-      if (B.m != A.m || B.n != A.n) return false;
-      for (int i = 0; i < m; i++)
-          for (int j = 0; j < n; j++)
-              if (A.data[i][j] != B.data[i][j]) return false;
-      return true;
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof Matrix)) return false;
+
+    Matrix matrix = (Matrix) o;
+
+    if (m != matrix.m) return false;
+    if (n != matrix.n) return false;
+
+    return Arrays.deepEquals(data, matrix.data);
+  }
+
+  @Override
+  public int hashCode() {
+    int result = data != null ? Arrays.deepHashCode(data) : 0;
+    result = 31 * result + m;
+    result = 31 * result + n;
+    return result;
   }
 
   /**

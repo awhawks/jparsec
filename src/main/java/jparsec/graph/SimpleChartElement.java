@@ -25,6 +25,7 @@ import java.awt.Color;
 import java.awt.Paint;
 import java.io.Serializable;
 
+import java.util.Arrays;
 import jparsec.graph.ChartElement.SUBTYPE;
 import jparsec.graph.ChartElement.TYPE;
 import jparsec.util.JPARSECException;
@@ -243,9 +244,9 @@ public class SimpleChartElement implements Serializable
 	/**
 	 * To clone the object.
 	 */
+	@Override
 	public SimpleChartElement clone()
 	{
-		if (this == null) return null;
 		SimpleChartElement s = null;
 		try { 
 			s = new SimpleChartElement(this.chartType, this.subType, this.xValues.clone(), this.yValues.clone(),
@@ -260,62 +261,55 @@ public class SimpleChartElement implements Serializable
 		s.xValuesForPieAndCategoryCharts = this.xValuesForPieAndCategoryCharts.clone();
 		return s;
 	}
+
 	/**
 	 * Returns true if the input object is equals to this chart object.
 	 */
-	public boolean equals(Object c)
-	{
-		if (c == null) {
-			if (this == null) return true;
-			return false;
-		}
-		if (this == null) {
-			return false;
-		}
-		SimpleChartElement chart = (SimpleChartElement) c;
-		boolean equals = true;
-		if (this.changeOrientationToHorizontal != chart.changeOrientationToHorizontal) equals = false;
-		if (this.xAxisInLogScale != chart.xAxisInLogScale) equals = false;
-		if (this.yAxisInLogScale != chart.yAxisInLogScale) equals = false;
-		if (this.showLegend != chart.showLegend) equals = false;
-		if (this.imageWidth != chart.imageWidth) equals = false;
-		if (this.imageHeight != chart.imageHeight) equals = false;
-		if (this.chartType != chart.chartType) equals = false;
-		if (this.subType != chart.subType) equals = false;
-		if (!this.legend.equals(chart.legend)) equals = false;
-		if (!this.xLabel.equals(chart.xLabel)) equals = false;
-		if (!this.yLabel.equals(chart.yLabel)) equals = false;
-		if (!this.title.equals(chart.title)) equals = false;
-		
-		if (this.backgroundGradient.hashCode() != chart.backgroundGradient.hashCode()) equals = false;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof SimpleChartElement)) return false;
 
-		if (this.xValues.length == chart.xValues.length)
-		{
-			for (int i=0; i<this.xValues.length; i++)
-			{
-				if (this.xValues[i] != chart.xValues[i]) equals = false;
-			}
-		} else {
-			equals = false;
-		}
-		if (this.yValues.length == chart.yValues.length)
-		{
-			for (int i=0; i<this.yValues.length; i++)
-			{
-				if (this.yValues[i] != chart.yValues[i]) equals = false;
-			}
-		} else {
-			equals = false;
-		}
-		if (this.xValuesForPieAndCategoryCharts.length == chart.xValuesForPieAndCategoryCharts.length)
-		{
-			for (int i=0; i<this.xValuesForPieAndCategoryCharts.length; i++)
-			{
-				if (this.xValuesForPieAndCategoryCharts[i] != chart.xValuesForPieAndCategoryCharts[i]) equals = false;
-			}
-		} else {
-			equals = false;
-		}
-		return equals;
+		SimpleChartElement that = (SimpleChartElement) o;
+
+		if (showLegend != that.showLegend) return false;
+		if (changeOrientationToHorizontal != that.changeOrientationToHorizontal) return false;
+		if (imageWidth != that.imageWidth) return false;
+		if (imageHeight != that.imageHeight) return false;
+		if (xAxisInLogScale != that.xAxisInLogScale) return false;
+		if (yAxisInLogScale != that.yAxisInLogScale) return false;
+		if (chartType != that.chartType) return false;
+		if (!Arrays.equals(xValues, that.xValues)) return false;
+		// Probably incorrect - comparing Object[] arrays with Arrays.equals
+		if (!Arrays.equals(xValuesForPieAndCategoryCharts, that.xValuesForPieAndCategoryCharts)) return false;
+		if (!Arrays.equals(yValues, that.yValues)) return false;
+		if (xLabel != null ? !xLabel.equals(that.xLabel) : that.xLabel != null) return false;
+		if (yLabel != null ? !yLabel.equals(that.yLabel) : that.yLabel != null) return false;
+		if (title != null ? !title.equals(that.title) : that.title != null) return false;
+		if (legend != null ? !legend.equals(that.legend) : that.legend != null) return false;
+		if (subType != that.subType) return false;
+
+		return !(backgroundGradient != null ? !backgroundGradient.equals(that.backgroundGradient) : that.backgroundGradient != null);
+	}
+
+	@Override
+	public int hashCode() {
+		int result = chartType != null ? chartType.hashCode() : 0;
+		result = 31 * result + (xValues != null ? Arrays.hashCode(xValues) : 0);
+		result = 31 * result + (xValuesForPieAndCategoryCharts != null ? Arrays.hashCode(xValuesForPieAndCategoryCharts) : 0);
+		result = 31 * result + (yValues != null ? Arrays.hashCode(yValues) : 0);
+		result = 31 * result + (xLabel != null ? xLabel.hashCode() : 0);
+		result = 31 * result + (yLabel != null ? yLabel.hashCode() : 0);
+		result = 31 * result + (title != null ? title.hashCode() : 0);
+		result = 31 * result + (legend != null ? legend.hashCode() : 0);
+		result = 31 * result + (showLegend ? 1 : 0);
+		result = 31 * result + (changeOrientationToHorizontal ? 1 : 0);
+		result = 31 * result + (subType != null ? subType.hashCode() : 0);
+		result = 31 * result + imageWidth;
+		result = 31 * result + imageHeight;
+		result = 31 * result + (xAxisInLogScale ? 1 : 0);
+		result = 31 * result + (yAxisInLogScale ? 1 : 0);
+		result = 31 * result + (backgroundGradient != null ? backgroundGradient.hashCode() : 0);
+		return result;
 	}
 }

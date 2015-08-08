@@ -193,37 +193,44 @@ public class ImageHeaderElement implements Serializable {
 	/**
 	 * Clones this instance.
 	 */
+	@Override
 	public ImageHeaderElement clone()
 	{
-		if (this == null) return null;
 		ImageHeaderElement i = new ImageHeaderElement(this.key, this.value, this.comment);
 		i.format = this.format;
 		return i;
 	}
+
 	/**
-	 * Returns true if this instance is equals to another.
+	 * Returns true if this instance is equal to another.
 	 */
-	public boolean equals(Object o)
-	{
-		if (o == null) {
-			if (this == null) return true;
-			return false;
-		}
-		if (this == null) {
-			return false;
-		}
-		boolean equals = true;
-		ImageHeaderElement i = (ImageHeaderElement) o;
-		if (!i.value.equals(this.value)) equals = false;
-		if (!i.key.equals(this.key)) equals = false;
-		if (!i.comment.equals(this.comment)) equals = false;
-		if (!i.format.equals(this.format)) equals = false;
-		return equals;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof ImageHeaderElement)) return false;
+
+		ImageHeaderElement that = (ImageHeaderElement) o;
+
+		if (key != null ? !key.equals(that.key) : that.key != null) return false;
+		if (value != null ? !value.equals(that.value) : that.value != null) return false;
+		if (comment != null ? !comment.equals(that.comment) : that.comment != null) return false;
+
+		return !(format != null ? !format.equals(that.format) : that.format != null);
+	}
+
+	@Override
+	public int hashCode() {
+		int result = key != null ? key.hashCode() : 0;
+		result = 31 * result + (value != null ? value.hashCode() : 0);
+		result = 31 * result + (comment != null ? comment.hashCode() : 0);
+		result = 31 * result + (format != null ? format.hashCode() : 0);
+		return result;
 	}
 
 	/**
 	 * Returns a string representation of this header entry.
 	 */
+	@Override
 	public String toString() {
 		String out = this.key+" -> "+this.value;
 		if (format != null && !this.format.equals("")) out += " ("+format+")";

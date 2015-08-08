@@ -24,6 +24,7 @@ package jparsec.graph.chartRendering;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import java.util.Arrays;
 import jparsec.astronomy.Constellation;
 import jparsec.astronomy.CoordinateSystem;
 import jparsec.astronomy.TelescopeElement;
@@ -1544,13 +1545,13 @@ public class SkyRenderElement implements Serializable
 		if (index >= 0) out = true;
 		return out;
 	}
-	
+
 	/**
 	 * Clones this instance.
 	 */
+	@Override
 	public SkyRenderElement clone()
 	{
-		if (this == null) return null;
 		SkyRenderElement s = new SkyRenderElement();
 		s.centralLatitude = this.centralLatitude;
 		s.centralLongitude = this.centralLongitude;
@@ -1683,165 +1684,283 @@ public class SkyRenderElement implements Serializable
 		s.drawCentralCrux = this.drawCentralCrux;
 		return s;
 	}
+
 	/**
 	 * Returns true if the input object is equals to this instance.
 	 */
-	public boolean equals(Object o)
-	{
-		if (o == null) {
-			if (this == null) return true;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof SkyRenderElement)) return false;
+
+		SkyRenderElement that = (SkyRenderElement) o;
+
+		if (width != that.width) return false;
+		if (height != that.height) return false;
+		if (Double.compare(that.centralLongitude, centralLongitude) != 0) return false;
+		if (Double.compare(that.centralLatitude, centralLatitude) != 0) return false;
+		if (Float.compare(that.poleAngle, poleAngle) != 0) return false;
+		if (Float.compare(that.hourAngle, hourAngle) != 0) return false;
+		if (enableTransparentColors != that.enableTransparentColors) return false;
+		if (drawConstellationLimits != that.drawConstellationLimits) return false;
+		if (drawConstellationNames != that.drawConstellationNames) return false;
+		if (drawConstellationNamesUppercase != that.drawConstellationNamesUppercase) return false;
+		if (drawCoordinateGrid != that.drawCoordinateGrid) return false;
+		if (drawCoordinateGridCelestialPoints != that.drawCoordinateGridCelestialPoints) return false;
+		if (drawCoordinateGridHighZoom != that.drawCoordinateGridHighZoom) return false;
+		if (drawExternalGrid != that.drawExternalGrid) return false;
+		if (drawCoordinateGridEcliptic != that.drawCoordinateGridEcliptic) return false;
+		if (drawCoordinateGridEclipticLabels != that.drawCoordinateGridEclipticLabels) return false;
+		if (drawStars != that.drawStars) return false;
+		if (drawNebulaeContours != that.drawNebulaeContours) return false;
+		if (drawMeteorShowers != that.drawMeteorShowers) return false;
+		if (drawMeteorShowersOnlyActive != that.drawMeteorShowersOnlyActive) return false;
+		if (drawMilkyWayContours != that.drawMilkyWayContours) return false;
+		if (fillMilkyWay != that.fillMilkyWay) return false;
+		if (fillNebulae != that.fillNebulae) return false;
+		if (drawDeepSkyObjects != that.drawDeepSkyObjects) return false;
+		if (drawDeepSkyObjectsTextures != that.drawDeepSkyObjectsTextures) return false;
+		if (drawDeepSkyObjectsOnlyMessier != that.drawDeepSkyObjectsOnlyMessier) return false;
+		if (drawDeepSkyObjectsAllMessierAndCaldwell != that.drawDeepSkyObjectsAllMessierAndCaldwell) return false;
+		if (drawDeepSkyObjectsLabels != that.drawDeepSkyObjectsLabels) return false;
+		if (drawStarsColors != that.drawStarsColors) return false;
+		if (drawStarsColor != that.drawStarsColor) return false;
+		if (drawStarsSymbols != that.drawStarsSymbols) return false;
+		if (drawStarsPositionAngleInDoubles != that.drawStarsPositionAngleInDoubles) return false;
+		if (Float.compare(that.drawStarsLimitingMagnitude, drawStarsLimitingMagnitude) != 0) return false;
+		if (Float.compare(that.drawObjectsLimitingMagnitude, drawObjectsLimitingMagnitude) != 0) return false;
+		if (Float.compare(that.drawMinorObjectsLimitingMagnitude, drawMinorObjectsLimitingMagnitude) != 0) return false;
+		if (drawSuperNovaAndNovaEvents != that.drawSuperNovaAndNovaEvents) return false;
+		if (drawSuperNovaEventsNumberOfYears != that.drawSuperNovaEventsNumberOfYears) return false;
+		if (drawSuperNovaEventsColor != that.drawSuperNovaEventsColor) return false;
+		if (drawDeepSkyObjectsColor != that.drawDeepSkyObjectsColor) return false;
+		if (drawMeteorShowersColor != that.drawMeteorShowersColor) return false;
+		if (drawConstellationContoursColor != that.drawConstellationContoursColor) return false;
+		if (drawConstellationLimitsColor != that.drawConstellationLimitsColor) return false;
+		if (drawConstellationNamesColor != that.drawConstellationNamesColor) return false;
+		if (drawBrightNebulaeContoursColor != that.drawBrightNebulaeContoursColor) return false;
+		if (drawDarkNebulaeContoursColor != that.drawDarkNebulaeContoursColor) return false;
+		if (drawMilkyWayContoursColor != that.drawMilkyWayContoursColor) return false;
+		if (fillMilkyWayColor != that.fillMilkyWayColor) return false;
+		if (fillBrightNebulaeColor != that.fillBrightNebulaeColor) return false;
+		if (drawCoordinateGridColor != that.drawCoordinateGridColor) return false;
+		if (drawCoordinateGridEclipticColor != that.drawCoordinateGridEclipticColor) return false;
+		if (drawSunSpotsColor != that.drawSunSpotsColor) return false;
+		if (drawPlanetsMoonSun != that.drawPlanetsMoonSun) return false;
+		if (drawSunSpotsLabels != that.drawSunSpotsLabels) return false;
+		if (drawPlanetsLabels != that.drawPlanetsLabels) return false;
+		if (drawStarsGreekSymbols != that.drawStarsGreekSymbols) return false;
+		if (drawStarsGreekSymbolsOnlyIfHasProperName != that.drawStarsGreekSymbolsOnlyIfHasProperName) return false;
+		if (Float.compare(that.drawStarsLabelsLimitingMagnitude, drawStarsLabelsLimitingMagnitude) != 0) return false;
+		if (Float.compare(that.limitOfSeparationForDoubleStars, limitOfSeparationForDoubleStars) != 0) return false;
+		if (Float.compare(that.limitOfDifferenceOfMagnitudesForVariableStars, limitOfDifferenceOfMagnitudesForVariableStars) != 0)
 			return false;
-		}
-		if (this == null) {
+		if (drawConstellationContoursMarginBetweenLineAndStar != that.drawConstellationContoursMarginBetweenLineAndStar)
 			return false;
-		}
-		SkyRenderElement s = (SkyRenderElement) o;
-		boolean equals = true;
+		if (overlayDSSimageInNextRendering != that.overlayDSSimageInNextRendering) return false;
+		if (drawMagnitudeLabels != that.drawMagnitudeLabels) return false;
+		if (drawCentralCrux != that.drawCentralCrux) return false;
+		if (drawMinorObjectsLabels != that.drawMinorObjectsLabels) return false;
+		if (drawAsteroids != that.drawAsteroids) return false;
+		if (drawComets != that.drawComets) return false;
+		if (drawTransNeptunianObjects != that.drawTransNeptunianObjects) return false;
+		if (drawArtificialSatellites != that.drawArtificialSatellites) return false;
+		if (drawArtificialSatellitesIridiumFlares != that.drawArtificialSatellitesIridiumFlares) return false;
+		if (drawSpaceProbes != that.drawSpaceProbes) return false;
+		if (drawOcularFieldOfView != that.drawOcularFieldOfView) return false;
+		if (drawCoordinateGridLabels != that.drawCoordinateGridLabels) return false;
+		if (drawCoordinateGridCardinalPoints != that.drawCoordinateGridCardinalPoints) return false;
+		if (drawSkyBelowHorizon != that.drawSkyBelowHorizon) return false;
+		if (drawSkyCorrectingLocalHorizon != that.drawSkyCorrectingLocalHorizon) return false;
+		if (drawSunSpots != that.drawSunSpots) return false;
+		if (background != that.background) return false;
+		if (drawOcularFieldOfViewColor != that.drawOcularFieldOfViewColor) return false;
+		if (drawFaintStars != that.drawFaintStars) return false;
+		if (drawFastLabelsInWideFields != that.drawFastLabelsInWideFields) return false;
+		if (drawIcons != that.drawIcons) return false;
+		if (drawClever != that.drawClever) return false;
+		if (drawWithAntialiasing != that.drawWithAntialiasing) return false;
+		if (fillGalaxyColor != that.fillGalaxyColor) return false;
+		if (fillGlobularColor != that.fillGlobularColor) return false;
+		if (fillOpenColor != that.fillOpenColor) return false;
+		if (drawFaintStarsTimeOut != that.drawFaintStarsTimeOut) return false;
+		if (useSuperScriptForRA != that.useSuperScriptForRA) return false;
+		if (Float.compare(that.updateTime, updateTime) != 0) return false;
+		if (Float.compare(that.updateTimeFullUpdate, updateTimeFullUpdate) != 0) return false;
+		if (projection != that.projection) return false;
+		if (coordinateSystem != that.coordinateSystem) return false;
+		if (planetRender != null ? !planetRender.equals(that.planetRender) : that.planetRender != null) return false;
+		if (telescope != null ? !telescope.equals(that.telescope) : that.telescope != null) return false;
+		// Probably incorrect - comparing Object[] arrays with Arrays.equals
+		if (!Arrays.equals(trajectory, that.trajectory)) return false;
+		if (drawConstellationContours != that.drawConstellationContours) return false;
+		if (drawConstellationNamesType != that.drawConstellationNamesType) return false;
+		if (drawMilkyWayContoursWithTextures != that.drawMilkyWayContoursWithTextures) return false;
+		if (drawStarsRealistic != that.drawStarsRealistic) return false;
+		if (drawStarsLabels != that.drawStarsLabels) return false;
+		if (drawFastLinesMode != that.drawFastLinesMode) return false;
+		if (drawHorizonTexture != that.drawHorizonTexture) return false;
+		if (drawArtificialSatellitesOnlyThese != null ? !drawArtificialSatellitesOnlyThese.equals(that.drawArtificialSatellitesOnlyThese) : that.drawArtificialSatellitesOnlyThese != null)
+			return false;
+		if (drawLeyend != that.drawLeyend) return false;
+		if (drawConstellationNamesFont != that.drawConstellationNamesFont) return false;
+		if (drawStarsNamesFont != that.drawStarsNamesFont) return false;
+		if (drawPlanetsNamesFont != that.drawPlanetsNamesFont) return false;
+		if (drawDeepSkyObjectsNamesFont != that.drawDeepSkyObjectsNamesFont) return false;
+		if (drawMinorObjectsNamesFont != that.drawMinorObjectsNamesFont) return false;
+		if (drawCoordinateGridFont != that.drawCoordinateGridFont) return false;
+		if (drawNebulaeStroke != null ? !drawNebulaeStroke.equals(that.drawNebulaeStroke) : that.drawNebulaeStroke != null)
+			return false;
+		if (drawMilkyWayStroke != null ? !drawMilkyWayStroke.equals(that.drawMilkyWayStroke) : that.drawMilkyWayStroke != null)
+			return false;
+		if (drawDeepSkyObjectsStroke != null ? !drawDeepSkyObjectsStroke.equals(that.drawDeepSkyObjectsStroke) : that.drawDeepSkyObjectsStroke != null)
+			return false;
+		if (drawConstellationStroke != null ? !drawConstellationStroke.equals(that.drawConstellationStroke) : that.drawConstellationStroke != null)
+			return false;
+		if (drawConstellationLimitsStroke != null ? !drawConstellationLimitsStroke.equals(that.drawConstellationLimitsStroke) : that.drawConstellationLimitsStroke != null)
+			return false;
+		if (drawCoordinateGridStroke != null ? !drawCoordinateGridStroke.equals(that.drawCoordinateGridStroke) : that.drawCoordinateGridStroke != null)
+			return false;
+		if (drawFastLabels != that.drawFastLabels) return false;
+		if (anaglyphMode != that.anaglyphMode) return false;
+		if (!Arrays.equals(drawExternalCatalogs, that.drawExternalCatalogs)) return false;
 
-		if (s.centralLatitude != this.centralLatitude) equals = false;
-		if (s.centralLongitude != this.centralLongitude) equals = false;
-		if (s.coordinateSystem != this.coordinateSystem) equals = false;
-		if (s.drawArtificialSatellites != this.drawArtificialSatellites) equals = false;
-		if (s.drawArtificialSatellitesIridiumFlares != this.drawArtificialSatellitesIridiumFlares) equals = false;
-		if (s.drawArtificialSatellitesOnlyThese == null && this.drawArtificialSatellitesOnlyThese != null) equals = false;
-		if (s.drawArtificialSatellitesOnlyThese != null && this.drawArtificialSatellitesOnlyThese == null) equals = false;
-		if (s.drawArtificialSatellitesOnlyThese != null && this.drawArtificialSatellitesOnlyThese != null && 
-				!s.drawArtificialSatellitesOnlyThese.equals(this.drawArtificialSatellitesOnlyThese)) equals = false;
-		if (s.drawAsteroids != this.drawAsteroids) equals = false;
-		if (s.drawComets != this.drawComets) equals = false;
-		if (s.drawOcularFieldOfViewColor != this.drawOcularFieldOfViewColor) equals = false;
-		if (s.enableTransparentColors != this.enableTransparentColors) equals = false;
-		if (s.drawConstellationContours != this.drawConstellationContours) equals = false;
-		if (s.drawConstellationContoursMarginBetweenLineAndStar != this.drawConstellationContoursMarginBetweenLineAndStar) equals = false;
-		if (s.drawConstellationContoursColor != this.drawConstellationContoursColor) equals = false;
-		if (s.drawConstellationLimits != this.drawConstellationLimits) equals = false;
-		if (s.drawConstellationLimitsColor != this.drawConstellationLimitsColor) equals = false;
-		if (s.drawConstellationNames != this.drawConstellationNames) equals = false;
-		if (s.drawConstellationNamesUppercase != this.drawConstellationNamesUppercase) equals = false;
-		if (s.drawConstellationNamesColor != this.drawConstellationNamesColor) equals = false;
-		if (s.drawConstellationNamesFont != this.drawConstellationNamesFont) equals = false;
-		if (s.drawConstellationNamesType != this.drawConstellationNamesType) equals = false;
-		if (s.drawLeyend != this.drawLeyend) equals = false;
-		if (s.drawCoordinateGrid != this.drawCoordinateGrid) equals = false;
-		if (s.drawCoordinateGridCelestialPoints != this.drawCoordinateGridCelestialPoints) equals = false;
-		if (s.drawCoordinateGridHighZoom != this.drawCoordinateGridHighZoom) equals = false;
-		if (s.drawExternalGrid != this.drawExternalGrid) equals = false;
-		if (s.drawCoordinateGridColor != this.drawCoordinateGridColor) equals = false;
-		if (s.drawCoordinateGridEcliptic != this.drawCoordinateGridEcliptic) equals = false;
-		if (s.drawCoordinateGridEclipticLabels != this.drawCoordinateGridEclipticLabels) equals = false;
-		if (s.drawCoordinateGridEclipticColor != this.drawCoordinateGridEclipticColor) equals = false;
-		if (s.drawCoordinateGridFont != this.drawCoordinateGridFont) equals = false;
-		if (s.drawCoordinateGridLabels != this.drawCoordinateGridLabels) equals = false;
-		if (s.drawDeepSkyObjects != this.drawDeepSkyObjects) equals = false;
-		if (s.drawDeepSkyObjectsTextures != this.drawDeepSkyObjectsTextures) equals = false;
-		if (s.drawDeepSkyObjectsColor != this.drawDeepSkyObjectsColor) equals = false;
-		if (s.drawMeteorShowersColor != this.drawMeteorShowersColor) equals = false;
-		if (s.drawDeepSkyObjectsLabels != this.drawDeepSkyObjectsLabels) equals = false;
-		if (s.drawDeepSkyObjectsNamesFont != this.drawDeepSkyObjectsNamesFont) equals = false;
-		if (s.drawDeepSkyObjectsOnlyMessier != this.drawDeepSkyObjectsOnlyMessier) equals = false;
-		if (s.drawDeepSkyObjectsAllMessierAndCaldwell != this.drawDeepSkyObjectsAllMessierAndCaldwell) equals = false;
-		if (s.drawMinorObjectsLabels != this.drawMinorObjectsLabels) equals = false;
-		if (s.drawFaintStars != this.drawFaintStars) equals = false;
-		if (s.drawMinorObjectsNamesFont != this.drawMinorObjectsNamesFont) equals = false;
-		if (s.drawNebulaeContours != this.drawNebulaeContours) equals = false;
-		if (s.drawMeteorShowers != this.drawMeteorShowers) equals = false;
-		if (s.drawMeteorShowersOnlyActive != this.drawMeteorShowersOnlyActive) equals = false;
-		if (s.drawMilkyWayContours != this.drawMilkyWayContours) equals = false;
-		if (s.fillMilkyWay != this.fillMilkyWay) equals = false;
-		if (s.drawMilkyWayContoursWithTextures != this.drawMilkyWayContoursWithTextures) equals = false;
-		if (s.drawBrightNebulaeContoursColor != this.drawBrightNebulaeContoursColor) equals = false;
-		if (s.drawDarkNebulaeContoursColor != this.drawDarkNebulaeContoursColor) equals = false;
-		if (s.drawMilkyWayContoursColor != this.drawMilkyWayContoursColor) equals = false;
-		if (s.fillMilkyWayColor != this.fillMilkyWayColor) equals = false;
-		if (s.fillNebulae != this.fillNebulae) equals = false;
-		if (s.fillBrightNebulaeColor != this.fillBrightNebulaeColor) equals = false;
-		if (s.drawObjectsLimitingMagnitude != this.drawObjectsLimitingMagnitude) equals = false;
-		if (s.drawMinorObjectsLimitingMagnitude != this.drawMinorObjectsLimitingMagnitude) equals = false;
-		if (s.drawOcularFieldOfView != this.drawOcularFieldOfView) equals = false;
-		if (s.drawPlanetsLabels != this.drawPlanetsLabels) equals = false;
-		if (s.drawPlanetsMoonSun != this.drawPlanetsMoonSun) equals = false;
-		if (s.drawSkyBelowHorizon != this.drawSkyBelowHorizon) equals = false;
-		if (s.drawCoordinateGridCardinalPoints != this.drawCoordinateGridCardinalPoints) equals = false;
-		if (s.drawSkyCorrectingLocalHorizon != this.drawSkyCorrectingLocalHorizon) equals = false;
-		if (s.drawSpaceProbes != this.drawSpaceProbes) equals = false;
-		if (s.drawStars != this.drawStars) equals = false;
-		if (s.drawStarsColor != this.drawStarsColor) equals = false;
-		if (s.background != this.background) equals = false;
-		if (s.drawStarsColors != this.drawStarsColors) equals = false;
-		if (s.drawStarsLabels != this.drawStarsLabels) equals = false;
-		if (s.drawStarsGreekSymbols != this.drawStarsGreekSymbols) equals = false;
-		if (s.drawStarsGreekSymbolsOnlyIfHasProperName != this.drawStarsGreekSymbolsOnlyIfHasProperName) equals = false;
-		if (s.drawStarsLimitingMagnitude != this.drawStarsLimitingMagnitude) equals = false;
-		if (s.drawStarsLabelsLimitingMagnitude != this.drawStarsLabelsLimitingMagnitude) equals = false;
-		if (s.drawStarsNamesFont != this.drawStarsNamesFont) equals = false;
-		if (s.drawPlanetsNamesFont != this.drawPlanetsNamesFont) equals = false;
-		if (s.drawStarsSymbols != this.drawStarsSymbols) equals = false;
-		if (s.drawStarsPositionAngleInDoubles != this.drawStarsPositionAngleInDoubles) equals = false;
-		if (s.drawSunSpots != this.drawSunSpots) equals = false;
-		if (s.drawSunSpotsColor != this.drawSunSpotsColor) equals = false;
-		if (s.drawSunSpotsLabels != this.drawSunSpotsLabels) equals = false;
-		if (s.drawSuperNovaAndNovaEvents != this.drawSuperNovaAndNovaEvents) equals = false;
-		if (s.drawSuperNovaEventsNumberOfYears != this.drawSuperNovaEventsNumberOfYears) equals = false;
-		if (s.drawSuperNovaEventsColor != this.drawSuperNovaEventsColor) equals = false;
-		if (s.drawTransNeptunianObjects != this.drawTransNeptunianObjects) equals = false;
-		if (s.drawFastLinesMode != this.drawFastLinesMode) equals = false;
-		if (s.drawHorizonTexture != this.drawHorizonTexture) equals = false;
-		
-		if (s.colorModel != this.colorModel) equals = false;
-		if (s.height != this.height) equals = false;
-		if (s.hourAngle != this.hourAngle) equals = false;
-		if (s.poleAngle != this.poleAngle) equals = false;
-		if (s.planetRender.equals(this.planetRender)) equals = false;
-		if (s.projection != this.projection) equals = false;
-		if (s.telescope.equals(this.telescope)) equals = false;
-		if (s.trajectory.equals(this.trajectory)) equals = false;
-		if (s.width != this.width) equals = false;
+		if (!Arrays.equals(externalCatalogs, that.externalCatalogs)) return false;
 
-		if (!s.drawNebulaeStroke.equals(this.drawNebulaeStroke)) equals = false;
-		if (!s.drawMilkyWayStroke.equals(this.drawMilkyWayStroke)) equals = false;
-		if (!s.drawDeepSkyObjectsStroke.equals(this.drawDeepSkyObjectsStroke)) equals = false;
-		if (!s.drawConstellationLimitsStroke.equals(this.drawConstellationLimitsStroke)) equals = false;
-		if (!s.drawCoordinateGridStroke.equals(this.drawCoordinateGridStroke)) equals = false;
-		if (!s.drawConstellationStroke.equals(this.drawConstellationStroke)) equals = false;
+		if (!Arrays.equals(externalCatalogNames, that.externalCatalogNames)) return false;
 
-		if (s.limitOfDifferenceOfMagnitudesForVariableStars != this.limitOfDifferenceOfMagnitudesForVariableStars) equals = false;
-		if (s.limitOfSeparationForDoubleStars != this.limitOfSeparationForDoubleStars) equals = false;
+		return colorModel == that.colorModel;
+	}
 
-		if (s.drawFastLabels != this.drawFastLabels) equals = false;
-		if (s.drawFastLabelsInWideFields != this.drawFastLabelsInWideFields) equals = false;
-		if (s.drawIcons != this.drawIcons) equals = false;
-		if (s.drawClever != this.drawClever) equals = false;
-		if (s.drawWithAntialiasing != this.drawWithAntialiasing) equals = false;
-
-		if (s.fillGalaxyColor != this.fillGalaxyColor) equals = false;
-		if (s.fillGlobularColor != this.fillGlobularColor) equals = false;
-		if (s.fillOpenColor != this.fillOpenColor) equals = false;
-		if (s.useSuperScriptForRA != this.useSuperScriptForRA) equals = false;
-		if (s.anaglyphMode != this.anaglyphMode) equals = false;
-		if (s.updateTime != this.updateTime) equals = false;
-		if (s.updateTimeFullUpdate != this.updateTimeFullUpdate) equals = false;
-		if (!DataSet.sameArrayValues(s.externalCatalogs, this.externalCatalogs)) equals = false;
-		if (!DataSet.sameArrayValues(s.externalCatalogNames, this.externalCatalogNames)) equals = false;
-		if (s.drawExternalCatalogs == null && this.drawExternalCatalogs != null) {
-			equals = false;
-		} else {
-			if (s.drawExternalCatalogs != null && this.drawExternalCatalogs == null) {
-				equals = false;
-			} else {
-				if (s.drawExternalCatalogs != null && s.drawExternalCatalogs.length == this.drawExternalCatalogs.length) {
-					for (int i=0; i<s.drawExternalCatalogs.length; i++) {
-						if (s.drawExternalCatalogs[i] != this.drawExternalCatalogs[i]) equals = false;						
-					}
-				} else {
-					equals = false;					
-				}
-			}			
-		}
-		if (s.drawStarsRealistic != this.drawStarsRealistic) equals = false;
-		if (s.overlayDSSimageInNextRendering != this.overlayDSSimageInNextRendering) equals = false;
-		if (s.drawMagnitudeLabels != this.drawMagnitudeLabels) equals = false;
-		if (s.drawCentralCrux != this.drawCentralCrux) equals = false;
-		return equals;
+	@Override
+	public int hashCode() {
+		int result;
+		long temp;
+		result = width;
+		result = 31 * result + height;
+		temp = Double.doubleToLongBits(centralLongitude);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(centralLatitude);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		result = 31 * result + (projection != null ? projection.hashCode() : 0);
+		result = 31 * result + (poleAngle != +0.0f ? Float.floatToIntBits(poleAngle) : 0);
+		result = 31 * result + (hourAngle != +0.0f ? Float.floatToIntBits(hourAngle) : 0);
+		result = 31 * result + (coordinateSystem != null ? coordinateSystem.hashCode() : 0);
+		result = 31 * result + (planetRender != null ? planetRender.hashCode() : 0);
+		result = 31 * result + (telescope != null ? telescope.hashCode() : 0);
+		result = 31 * result + (trajectory != null ? Arrays.hashCode(trajectory) : 0);
+		result = 31 * result + (enableTransparentColors ? 1 : 0);
+		result = 31 * result + (drawConstellationContours != null ? drawConstellationContours.hashCode() : 0);
+		result = 31 * result + (drawConstellationLimits ? 1 : 0);
+		result = 31 * result + (drawConstellationNames ? 1 : 0);
+		result = 31 * result + (drawConstellationNamesUppercase ? 1 : 0);
+		result = 31 * result + (drawConstellationNamesType != null ? drawConstellationNamesType.hashCode() : 0);
+		result = 31 * result + (drawCoordinateGrid ? 1 : 0);
+		result = 31 * result + (drawCoordinateGridCelestialPoints ? 1 : 0);
+		result = 31 * result + (drawCoordinateGridHighZoom ? 1 : 0);
+		result = 31 * result + (drawExternalGrid ? 1 : 0);
+		result = 31 * result + (drawCoordinateGridEcliptic ? 1 : 0);
+		result = 31 * result + (drawCoordinateGridEclipticLabels ? 1 : 0);
+		result = 31 * result + (drawStars ? 1 : 0);
+		result = 31 * result + (drawNebulaeContours ? 1 : 0);
+		result = 31 * result + (drawMeteorShowers ? 1 : 0);
+		result = 31 * result + (drawMeteorShowersOnlyActive ? 1 : 0);
+		result = 31 * result + (drawMilkyWayContours ? 1 : 0);
+		result = 31 * result + (fillMilkyWay ? 1 : 0);
+		result = 31 * result + (fillNebulae ? 1 : 0);
+		result = 31 * result + (drawMilkyWayContoursWithTextures != null ? drawMilkyWayContoursWithTextures.hashCode() : 0);
+		result = 31 * result + (drawDeepSkyObjects ? 1 : 0);
+		result = 31 * result + (drawDeepSkyObjectsTextures ? 1 : 0);
+		result = 31 * result + (drawDeepSkyObjectsOnlyMessier ? 1 : 0);
+		result = 31 * result + (drawDeepSkyObjectsAllMessierAndCaldwell ? 1 : 0);
+		result = 31 * result + (drawDeepSkyObjectsLabels ? 1 : 0);
+		result = 31 * result + (drawStarsColors ? 1 : 0);
+		result = 31 * result + (drawStarsRealistic != null ? drawStarsRealistic.hashCode() : 0);
+		result = 31 * result + drawStarsColor;
+		result = 31 * result + (drawStarsSymbols ? 1 : 0);
+		result = 31 * result + (drawStarsPositionAngleInDoubles ? 1 : 0);
+		result = 31 * result + (drawStarsLimitingMagnitude != +0.0f ? Float.floatToIntBits(drawStarsLimitingMagnitude) : 0);
+		result = 31 * result + (drawObjectsLimitingMagnitude != +0.0f ? Float.floatToIntBits(drawObjectsLimitingMagnitude) : 0);
+		result = 31 * result + (drawMinorObjectsLimitingMagnitude != +0.0f ? Float.floatToIntBits(drawMinorObjectsLimitingMagnitude) : 0);
+		result = 31 * result + (drawSuperNovaAndNovaEvents ? 1 : 0);
+		result = 31 * result + drawSuperNovaEventsNumberOfYears;
+		result = 31 * result + drawSuperNovaEventsColor;
+		result = 31 * result + drawDeepSkyObjectsColor;
+		result = 31 * result + drawMeteorShowersColor;
+		result = 31 * result + drawConstellationContoursColor;
+		result = 31 * result + drawConstellationLimitsColor;
+		result = 31 * result + drawConstellationNamesColor;
+		result = 31 * result + drawBrightNebulaeContoursColor;
+		result = 31 * result + drawDarkNebulaeContoursColor;
+		result = 31 * result + drawMilkyWayContoursColor;
+		result = 31 * result + fillMilkyWayColor;
+		result = 31 * result + fillBrightNebulaeColor;
+		result = 31 * result + drawCoordinateGridColor;
+		result = 31 * result + drawCoordinateGridEclipticColor;
+		result = 31 * result + drawSunSpotsColor;
+		result = 31 * result + (drawPlanetsMoonSun ? 1 : 0);
+		result = 31 * result + (drawSunSpotsLabels ? 1 : 0);
+		result = 31 * result + (drawPlanetsLabels ? 1 : 0);
+		result = 31 * result + (drawStarsLabels != null ? drawStarsLabels.hashCode() : 0);
+		result = 31 * result + (drawStarsGreekSymbols ? 1 : 0);
+		result = 31 * result + (drawStarsGreekSymbolsOnlyIfHasProperName ? 1 : 0);
+		result = 31 * result + (drawStarsLabelsLimitingMagnitude != +0.0f ? Float.floatToIntBits(drawStarsLabelsLimitingMagnitude) : 0);
+		result = 31 * result + (limitOfSeparationForDoubleStars != +0.0f ? Float.floatToIntBits(limitOfSeparationForDoubleStars) : 0);
+		result = 31 * result + (limitOfDifferenceOfMagnitudesForVariableStars != +0.0f ? Float.floatToIntBits(limitOfDifferenceOfMagnitudesForVariableStars) : 0);
+		result = 31 * result + (drawFastLinesMode != null ? drawFastLinesMode.hashCode() : 0);
+		result = 31 * result + drawConstellationContoursMarginBetweenLineAndStar;
+		result = 31 * result + (drawHorizonTexture != null ? drawHorizonTexture.hashCode() : 0);
+		result = 31 * result + (overlayDSSimageInNextRendering ? 1 : 0);
+		result = 31 * result + (drawMagnitudeLabels ? 1 : 0);
+		result = 31 * result + (drawCentralCrux ? 1 : 0);
+		result = 31 * result + (drawMinorObjectsLabels ? 1 : 0);
+		result = 31 * result + (drawAsteroids ? 1 : 0);
+		result = 31 * result + (drawComets ? 1 : 0);
+		result = 31 * result + (drawTransNeptunianObjects ? 1 : 0);
+		result = 31 * result + (drawArtificialSatellites ? 1 : 0);
+		result = 31 * result + (drawArtificialSatellitesOnlyThese != null ? drawArtificialSatellitesOnlyThese.hashCode() : 0);
+		result = 31 * result + (drawArtificialSatellitesIridiumFlares ? 1 : 0);
+		result = 31 * result + (drawSpaceProbes ? 1 : 0);
+		result = 31 * result + (drawOcularFieldOfView ? 1 : 0);
+		result = 31 * result + (drawCoordinateGridLabels ? 1 : 0);
+		result = 31 * result + (drawLeyend != null ? drawLeyend.hashCode() : 0);
+		result = 31 * result + (drawConstellationNamesFont != null ? drawConstellationNamesFont.hashCode() : 0);
+		result = 31 * result + (drawStarsNamesFont != null ? drawStarsNamesFont.hashCode() : 0);
+		result = 31 * result + (drawPlanetsNamesFont != null ? drawPlanetsNamesFont.hashCode() : 0);
+		result = 31 * result + (drawDeepSkyObjectsNamesFont != null ? drawDeepSkyObjectsNamesFont.hashCode() : 0);
+		result = 31 * result + (drawMinorObjectsNamesFont != null ? drawMinorObjectsNamesFont.hashCode() : 0);
+		result = 31 * result + (drawCoordinateGridFont != null ? drawCoordinateGridFont.hashCode() : 0);
+		result = 31 * result + (drawCoordinateGridCardinalPoints ? 1 : 0);
+		result = 31 * result + (drawSkyBelowHorizon ? 1 : 0);
+		result = 31 * result + (drawSkyCorrectingLocalHorizon ? 1 : 0);
+		result = 31 * result + (drawSunSpots ? 1 : 0);
+		result = 31 * result + background;
+		result = 31 * result + drawOcularFieldOfViewColor;
+		result = 31 * result + (drawNebulaeStroke != null ? drawNebulaeStroke.hashCode() : 0);
+		result = 31 * result + (drawMilkyWayStroke != null ? drawMilkyWayStroke.hashCode() : 0);
+		result = 31 * result + (drawDeepSkyObjectsStroke != null ? drawDeepSkyObjectsStroke.hashCode() : 0);
+		result = 31 * result + (drawConstellationStroke != null ? drawConstellationStroke.hashCode() : 0);
+		result = 31 * result + (drawConstellationLimitsStroke != null ? drawConstellationLimitsStroke.hashCode() : 0);
+		result = 31 * result + (drawCoordinateGridStroke != null ? drawCoordinateGridStroke.hashCode() : 0);
+		result = 31 * result + (drawFaintStars ? 1 : 0);
+		result = 31 * result + (drawFastLabels != null ? drawFastLabels.hashCode() : 0);
+		result = 31 * result + (drawFastLabelsInWideFields ? 1 : 0);
+		result = 31 * result + (drawIcons ? 1 : 0);
+		result = 31 * result + (drawClever ? 1 : 0);
+		result = 31 * result + (drawWithAntialiasing ? 1 : 0);
+		result = 31 * result + fillGalaxyColor;
+		result = 31 * result + fillGlobularColor;
+		result = 31 * result + fillOpenColor;
+		result = 31 * result + drawFaintStarsTimeOut;
+		result = 31 * result + (useSuperScriptForRA ? 1 : 0);
+		result = 31 * result + (anaglyphMode != null ? anaglyphMode.hashCode() : 0);
+		result = 31 * result + (updateTime != +0.0f ? Float.floatToIntBits(updateTime) : 0);
+		result = 31 * result + (updateTimeFullUpdate != +0.0f ? Float.floatToIntBits(updateTimeFullUpdate) : 0);
+		result = 31 * result + (drawExternalCatalogs != null ? Arrays.hashCode(drawExternalCatalogs) : 0);
+		result = 31 * result + (externalCatalogs != null ? Arrays.hashCode(externalCatalogs) : 0);
+		result = 31 * result + (externalCatalogNames != null ? Arrays.hashCode(externalCatalogNames) : 0);
+		result = 31 * result + (colorModel != null ? colorModel.hashCode() : 0);
+		return result;
 	}
 
 	/**
@@ -1861,8 +1980,9 @@ public class SkyRenderElement implements Serializable
 		 * should be set to this value for an adequate anaglyph effect. */
 		WHITE_BACKGROUND_SIMPLE_GREEN_RED_OR_RED_CYAN_ANAGLYPH,
 		/** Mode optimized for printing. */
-		PRINT_MODE};
-	
+		PRINT_MODE
+	}
+
 	private COLOR_MODE colorModel;
 
 	/**
@@ -1942,7 +2062,7 @@ public class SkyRenderElement implements Serializable
 //			fillMilkyWayColor = 128<<24 | 240<<16 | 240<<8 | 246;
 			if (this.anaglyphMode.isDubois()) {
 				//drawMilkyWayContoursColor = 240<<24 | 132<<16 | 132<<8 | 132;
-				fillMilkyWayColor = 255<<24 | 190<<16 | 190<<8 | 220;				
+				fillMilkyWayColor = 255<<24 | 190<<16 | 190<<8 | 220;
 			}
 			drawCoordinateGridColor = 192<<24 | 0<<16 | 0<<8 | 0;
 			drawOcularFieldOfViewColor = 255<<24 | 0<<16 | 0<<8 | 0;

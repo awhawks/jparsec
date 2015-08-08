@@ -618,35 +618,47 @@ public class LocationElement implements Serializable
 	/**
 	 * To clone the object.
 	 */
+	@Override
 	public LocationElement clone()
 	{
-		if (this == null) return null;
 		LocationElement loc = new LocationElement(this.getLongitude(), this.getLatitude(),
 				this.getRadius());
 		return loc;
 	}
+
 	/**
-	 * Returns true if the input object is equals to this instance.
+	 * Returns true if the input object is equal to this instance.
 	 */
-	public boolean equals(Object l)
-	{
-		if (l == null) {
-			if (this == null) return true;
-			return false;
-		}
-		if (this == null) {
-			return false;
-		}
-		LocationElement loc = (LocationElement) l;
-		if (loc.getLongitude() != this.getLongitude() ||
-				loc.getLatitude() != this.getLatitude() ||
-				loc.getRadius() != this.getRadius()) return false;
-		return true;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof LocationElement)) return false;
+
+		LocationElement that = (LocationElement) o;
+
+		if (Double.compare(that.lat, lat) != 0) return false;
+		if (Double.compare(that.lon, lon) != 0) return false;
+
+		return Double.compare(that.rad, rad) == 0;
 	}
-	
+
+	@Override
+	public int hashCode() {
+		int result;
+		long temp;
+		temp = Double.doubleToLongBits(lat);
+		result = (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(lon);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(rad);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		return result;
+	}
+
 	/**
 	 * Returns a String representation of this object.
 	 */
+	@Override
 	public String toString() {
 		String out = "lon: "+Functions.formatDEC(this.lon)+", lat: "+Functions.formatDEC(this.lat)+", rad: "+this.rad;
 		return out;

@@ -369,7 +369,7 @@ public class  DoubleVector implements Cloneable {
    */
   public double norm2()
   {
-    return Math.sqrt( sum2() );
+    return Math.sqrt(sum2());
   }
 
   /** Returns ||u-v||^2.
@@ -667,7 +667,7 @@ public class  DoubleVector implements Cloneable {
    * Returns the reverse vector.
    * @return Reverse vector.
    */ 
-  public DoubleVector  rev() {
+  public DoubleVector rev() {
     int n = size();
     DoubleVector w = new DoubleVector( n );
     for(int i = 0; i < n; i++ )
@@ -689,25 +689,27 @@ public class  DoubleVector implements Cloneable {
   }
 
   /**
-   * Checks if this vector is equals to another.
+   * Checks if this vector is equal to another.
    * @param v The other vector.
    * @return True is they have the same components, 
    * false otherwise.
    */
-  public boolean equals(DoubleVector v)
-  {
-	double f1[] = this.getArray();
-	double f2[] = v.getArray();
-	if (f1.length != f2.length) return false;
-	boolean same = true;
-	for (int i=0; i<f1.length; i++)
-	{
-		if (f1[i] != f2[i]) {
-			same = false;
-			break;
-		}
-	}
-	return same;
+  @Override
+  public boolean equals(Object v) {
+    if (this == v) return true;
+    if (!(v instanceof DoubleVector)) return false;
+
+    DoubleVector that = (DoubleVector) v;
+
+    if (sizeOfVector != that.sizeOfVector) return false;
+    return Arrays.equals(V, that.V);
+  }
+
+  @Override
+  public int hashCode() {
+    int result = V != null ? Arrays.hashCode(V) : 0;
+    result = 31 * result + sizeOfVector;
+    return result;
   }
 
   /**

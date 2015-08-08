@@ -112,9 +112,9 @@ public class Extinction implements Serializable {
 	/**
 	 * Clones this instance.
 	 */
+	@Override
 	public Object clone()
 	{
-		if (this == null) return null;
 		Extinction e = new Extinction(this.rv, this.av);
 		e.enableExtinction = this.enableExtinction;
 		e.main = this.main;
@@ -123,29 +123,46 @@ public class Extinction implements Serializable {
 		e.sp = this.sp;
 		return e;
 	}
+
 	/**
-	 * Checks if this instance is equals to another.
+	 * Checks if this instance is equal to another.
 	 */
-	public boolean equals(Object o)
-	{
-		if (o == null) {
-			if (this == null) return true;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof Extinction)) return false;
+
+		Extinction that = (Extinction) o;
+
+		if (Double.compare(that.rv, rv) != 0) return false;
+		if (Double.compare(that.av, av) != 0) return false;
+		if (Double.compare(that.observedBV, observedBV) != 0) return false;
+		if (main != that.main) return false;
+		if (enableExtinction != that.enableExtinction) return false;
+		if (Double.compare(that.maximumWavelengthToComputeExtinction, maximumWavelengthToComputeExtinction) != 0)
 			return false;
-		}
-		if (this == null) {
-			return false;
-		}
-		boolean equals = true;
-		Extinction e = (Extinction) o;
-		if (e.av != this.av) equals = false;
-		if (e.maximumWavelengthToComputeExtinction != this.maximumWavelengthToComputeExtinction) equals = false;
-		if (e.observedBV != this.observedBV) equals = false;
-		if (e.rv != this.rv) equals = false;
-		if (e.enableExtinction != this.enableExtinction) equals = false;
-		if (e.main != this.main) equals = false;
-		if (!e.sp.equals(this.sp)) equals = false;
-		return equals;
+
+		return !(sp != null ? !sp.equals(that.sp) : that.sp != null);
 	}
+
+	@Override
+	public int hashCode() {
+		int result;
+		long temp;
+		temp = Double.doubleToLongBits(rv);
+		result = (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(av);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(observedBV);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		result = 31 * result + (sp != null ? sp.hashCode() : 0);
+		result = 31 * result + (main ? 1 : 0);
+		result = 31 * result + (enableExtinction ? 1 : 0);
+		temp = Double.doubleToLongBits(maximumWavelengthToComputeExtinction);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		return result;
+	}
+
 	/**
 	 * Returns the observed B minus V.
 	 * @return The B-V color.

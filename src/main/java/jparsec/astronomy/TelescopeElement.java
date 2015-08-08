@@ -521,36 +521,42 @@ public class TelescopeElement implements Serializable
 	 * @param telescope A telescope object.
 	 * @return True or false.
 	 */
-	public boolean equals(Object telescope)
-	{
-		if (telescope == null) {
-			if (this == null) return true;
-			return false;
-		}
-		if (this == null) {
-			return false;
-		}
-		TelescopeElement tel = (TelescopeElement) telescope;
-		boolean equals = true;
-		if (!this.name.equals(tel.name)) equals = false;
-		if (this.focalLength != tel.focalLength) equals = false;
-		if (this.diameter != tel.diameter) equals = false;
-		if (this.centralObstruction != tel.centralObstruction) equals = false;
-		if (this.spidersSize != tel.spidersSize) equals = false;
-		if (this.cromatismLevel != tel.cromatismLevel) equals = false;
-		if ((ocular == null && tel.ocular != null) || (tel.ocular == null && ocular != null)) {
-			equals = false;
-		} else {
-			if (ocular != null && !this.ocular.equals(tel.ocular)) equals = false;
-		}
-		if ((ccd == null && tel.ccd != null) || (tel.ccd == null && ccd != null)) {
-			equals = false;
-		} else {
-			if (ccd != null && !this.ccd.equals(tel.ccd)) equals = false;
-		}
-		if (this.invertHorizontal != tel.invertHorizontal) equals = false;
-		if (this.invertVertical != tel.invertVertical) equals = false;
-		return equals;
+	@Override
+	public boolean equals(Object telescope) {
+		if (this == telescope) return true;
+
+		if (!(telescope instanceof TelescopeElement)) return false;
+
+		TelescopeElement that = (TelescopeElement) telescope;
+
+		if (focalLength != that.focalLength) return false;
+		if (diameter != that.diameter) return false;
+		if (centralObstruction != that.centralObstruction) return false;
+		if (spidersSize != that.spidersSize) return false;
+		if (Float.compare(that.cromatismLevel, cromatismLevel) != 0) return false;
+		if (invertHorizontal != that.invertHorizontal) return false;
+		if (invertVertical != that.invertVertical) return false;
+		if (name != null ? !name.equals(that.name) : that.name != null) return false;
+		if (ocular != null ? !ocular.equals(that.ocular) : that.ocular != null) return false;
+		if (lastOcular != null ? !lastOcular.equals(that.lastOcular) : that.lastOcular != null) return false;
+
+		return !(ccd != null ? !ccd.equals(that.ccd) : that.ccd != null);
+	}
+
+	@Override
+	public int hashCode() {
+		int result = name != null ? name.hashCode() : 0;
+		result = 31 * result + focalLength;
+		result = 31 * result + diameter;
+		result = 31 * result + centralObstruction;
+		result = 31 * result + spidersSize;
+		result = 31 * result + (ocular != null ? ocular.hashCode() : 0);
+		result = 31 * result + (lastOcular != null ? lastOcular.hashCode() : 0);
+		result = 31 * result + (ccd != null ? ccd.hashCode() : 0);
+		result = 31 * result + (cromatismLevel != +0.0f ? Float.floatToIntBits(cromatismLevel) : 0);
+		result = 31 * result + (invertHorizontal ? 1 : 0);
+		result = 31 * result + (invertVertical ? 1 : 0);
+		return result;
 	}
 
 	/**

@@ -193,48 +193,73 @@ public class DoubleStarElement {
 	/**
 	 * To clone the object.
 	 */
+	@Override
 	public DoubleStarElement clone()
 	{
-		if (this == null) return null;
 		DoubleStarElement out = new DoubleStarElement(this.name, this.rightAscension, this.declination, wds, ads,
 				hd, hipparcos, magPrimary, magSecondary, orbit.clone(), orbitGrade, notes, reference, orbitPNG);
 		out.pa = this.pa;
 		out.rho = this.rho;
 		return out;
 	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof DoubleStarElement)) return false;
+
+		DoubleStarElement that = (DoubleStarElement) o;
+
+		if (orbitGrade != that.orbitGrade) return false;
+		if (Double.compare(that.rightAscension, rightAscension) != 0) return false;
+		if (Double.compare(that.declination, declination) != 0) return false;
+		if (Double.compare(that.pa, pa) != 0) return false;
+		if (Double.compare(that.rho, rho) != 0) return false;
+		if (name != null ? !name.equals(that.name) : that.name != null) return false;
+		if (wds != null ? !wds.equals(that.wds) : that.wds != null) return false;
+		if (ads != null ? !ads.equals(that.ads) : that.ads != null) return false;
+		if (hd != null ? !hd.equals(that.hd) : that.hd != null) return false;
+		if (hipparcos != null ? !hipparcos.equals(that.hipparcos) : that.hipparcos != null) return false;
+		if (magPrimary != null ? !magPrimary.equals(that.magPrimary) : that.magPrimary != null) return false;
+		if (magSecondary != null ? !magSecondary.equals(that.magSecondary) : that.magSecondary != null) return false;
+		if (orbit != null ? !orbit.equals(that.orbit) : that.orbit != null) return false;
+		if (notes != null ? !notes.equals(that.notes) : that.notes != null) return false;
+		if (reference != null ? !reference.equals(that.reference) : that.reference != null) return false;
+
+		return !(orbitPNG != null ? !orbitPNG.equals(that.orbitPNG) : that.orbitPNG != null);
+	}
+
+	@Override
+	public int hashCode() {
+		int result;
+		long temp;
+		result = name != null ? name.hashCode() : 0;
+		result = 31 * result + (wds != null ? wds.hashCode() : 0);
+		result = 31 * result + (ads != null ? ads.hashCode() : 0);
+		result = 31 * result + (hd != null ? hd.hashCode() : 0);
+		result = 31 * result + (hipparcos != null ? hipparcos.hashCode() : 0);
+		result = 31 * result + (magPrimary != null ? magPrimary.hashCode() : 0);
+		result = 31 * result + (magSecondary != null ? magSecondary.hashCode() : 0);
+		result = 31 * result + (orbit != null ? orbit.hashCode() : 0);
+		result = 31 * result + orbitGrade;
+		result = 31 * result + (notes != null ? notes.hashCode() : 0);
+		result = 31 * result + (reference != null ? reference.hashCode() : 0);
+		result = 31 * result + (orbitPNG != null ? orbitPNG.hashCode() : 0);
+		temp = Double.doubleToLongBits(rightAscension);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(declination);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(pa);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(rho);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		return result;
+	}
+
 	/**
-	 * Returns true if the input object is equals to this
+	 * Returns true if the input object is equal to this
 	 * instance.
 	 */
-	public boolean equals(Object s)
-	{
-		if (s == null) {
-			if (this == null) return true;
-			return false;
-		}
-		if (this == null) {
-			return false;
-		}
-		boolean equals = true;
-		DoubleStarElement se = (DoubleStarElement) s;
-		if (!se.name.equals(this.name)) equals = false;
-		if (se.declination != this.declination) equals = false;
-		if (se.rightAscension != this.rightAscension) equals = false;
-		if (!se.wds.equals(this.wds)) equals = false;
-		if (!se.ads.equals(this.ads)) equals = false;
-		if (!se.hd.equals(this.hd)) equals = false;
-		if (!se.hipparcos.equals(this.hipparcos)) equals = false;
-		if (!se.magPrimary.equals(this.magPrimary)) equals = false;
-		if (!se.magSecondary.equals(this.magSecondary)) equals = false;
-		if (se.orbitGrade != this.orbitGrade) equals = false;
-		if (!se.notes.equals(this.notes)) equals = false;
-		if (!se.reference.equals(this.reference)) equals = false;
-		if (!se.orbitPNG.equals(this.orbitPNG)) equals = false;
-		if (!se.orbit.equals(this.orbit)) equals = false;
-		if (se.pa != this.pa) equals = false;
-		if (se.rho != this.rho) equals = false;
-		return equals;
-	}
 
 	private double pa, rho;
 	/**

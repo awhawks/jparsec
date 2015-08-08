@@ -310,14 +310,14 @@ public class MoonOrbitalElement implements Serializable
 		EQUATOR, 
 		/** Planet equator reference plane for the elements. Horizons can provide elements 
 		 * for this plane, as 'Body Mean Equator and Node of Date'. */
-		PLANET_EQUATOR};
-	
+		PLANET_EQUATOR}
+
 	/**
 	 * To clone the object.
 	 */
+	@Override
 	public MoonOrbitalElement clone()
 	{
-		if (this == null) return null;
 		MoonOrbitalElement orbit = new MoonOrbitalElement(this.name, this.semimajorAxis, this.meanAnomaly,
 				this.eccentricity, this.argumentOfPeriapsis, this.ascendingNodeLongitude, this.inclination,
 				this.referenceTime, this.meanMotion, this.referenceEquinox, this.beginOfApplicableTime,
@@ -330,43 +330,88 @@ public class MoonOrbitalElement implements Serializable
 		orbit.periapsisLongitude = this.periapsisLongitude;
 		return orbit;
 	}
+
 	/**
-	 * Returns true if the input object is equals to this moon orbital
+	 * Returns true if the input object is equal to this moon orbital
 	 * element object..
 	 */
-	public boolean equals(Object o)
-	{
-		if (o == null) {
-			if (this == null) return true;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof MoonOrbitalElement)) return false;
+
+		MoonOrbitalElement that = (MoonOrbitalElement) o;
+
+		if (Double.compare(that.semimajorAxis, semimajorAxis) != 0) return false;
+		if (Double.compare(that.meanLongitude, meanLongitude) != 0) return false;
+		if (Double.compare(that.eccentricity, eccentricity) != 0) return false;
+		if (Double.compare(that.periapsisLongitude, periapsisLongitude) != 0) return false;
+		if (Double.compare(that.ascendingNodeLongitude, ascendingNodeLongitude) != 0) return false;
+		if (Double.compare(that.inclination, inclination) != 0) return false;
+		if (Double.compare(that.referenceTime, referenceTime) != 0) return false;
+		if (Double.compare(that.meanAnomaly, meanAnomaly) != 0) return false;
+		if (Double.compare(that.argumentOfPeriapsis, argumentOfPeriapsis) != 0) return false;
+		if (Double.compare(that.meanMotion, meanMotion) != 0) return false;
+		if (Double.compare(that.referenceEquinox, referenceEquinox) != 0) return false;
+		if (Double.compare(that.beginOfApplicableTime, beginOfApplicableTime) != 0) return false;
+		if (Double.compare(that.endOfApplicableTime, endOfApplicableTime) != 0) return false;
+		if (Double.compare(that.periapsisDistance, periapsisDistance) != 0) return false;
+		if (Double.compare(that.LaplacePoleRA, LaplacePoleRA) != 0) return false;
+		if (Double.compare(that.LaplacePoleDEC, LaplacePoleDEC) != 0) return false;
+		if (Double.compare(that.argumentOfPeriapsisPrecessionRate, argumentOfPeriapsisPrecessionRate) != 0)
 			return false;
-		}
-		if (this == null) {
-			return false;
-		}
-		boolean equals = true;
-		MoonOrbitalElement orbit = (MoonOrbitalElement) o;
-		if (orbit.name.equals(this.name)) equals = false;
-		if (orbit.semimajorAxis != this.semimajorAxis) equals = false;
-		if (orbit.meanAnomaly != this.meanAnomaly) equals = false;
-		if (orbit.eccentricity != this.eccentricity) equals = false;
-		if (orbit.argumentOfPeriapsis != this.argumentOfPeriapsis) equals = false;
-		if (orbit.ascendingNodeLongitude != this.ascendingNodeLongitude) equals = false;
-		if (orbit.inclination != this.inclination) equals = false;
-		if (orbit.referenceTime != this.referenceTime) equals = false;
-		if (orbit.meanMotion != this.meanMotion) equals = false;
-		if (orbit.referenceEquinox != this.referenceEquinox) equals = false;
-		if (orbit.beginOfApplicableTime != this.beginOfApplicableTime) equals = false;
-		if (orbit.endOfApplicableTime != this.endOfApplicableTime) equals = false;
-		if (orbit.LaplacePoleRA != this.LaplacePoleRA) equals = false;
-		if (orbit.LaplacePoleDEC != this.LaplacePoleDEC) equals = false;
-		if (orbit.argumentOfPeriapsisPrecessionRate != this.argumentOfPeriapsisPrecessionRate) equals = false;
-		if (orbit.referencePlane != this.referencePlane) equals = false;
-		if (orbit.ascendingNodePrecessionRate != this.ascendingNodePrecessionRate) equals = false;
-		if (orbit.referenceEphemeris != this.referenceEphemeris) equals = false;
-		if (orbit.centralBody != this.centralBody) equals = false;
-		if (orbit.periapsisDistance != this.periapsisDistance) equals = false;
-		if (orbit.periapsisLongitude != this.periapsisLongitude) equals = false;
-		if (orbit.meanLongitude != this.meanLongitude) equals = false;
-		return equals;
+		if (Double.compare(that.ascendingNodePrecessionRate, ascendingNodePrecessionRate) != 0) return false;
+		if (name != null ? !name.equals(that.name) : that.name != null) return false;
+		if (centralBody != that.centralBody) return false;
+		if (referencePlane != that.referencePlane) return false;
+
+		return !(referenceEphemeris != null ? !referenceEphemeris.equals(that.referenceEphemeris) : that.referenceEphemeris != null);
+	}
+
+	@Override
+	public int hashCode() {
+		int result;
+		long temp;
+		temp = Double.doubleToLongBits(semimajorAxis);
+		result = (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(meanLongitude);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(eccentricity);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(periapsisLongitude);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(ascendingNodeLongitude);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(inclination);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(referenceTime);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(meanAnomaly);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(argumentOfPeriapsis);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(meanMotion);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(referenceEquinox);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(beginOfApplicableTime);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		result = 31 * result + (name != null ? name.hashCode() : 0);
+		temp = Double.doubleToLongBits(endOfApplicableTime);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(periapsisDistance);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		result = 31 * result + (centralBody != null ? centralBody.hashCode() : 0);
+		result = 31 * result + (referencePlane != null ? referencePlane.hashCode() : 0);
+		temp = Double.doubleToLongBits(LaplacePoleRA);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(LaplacePoleDEC);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(argumentOfPeriapsisPrecessionRate);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(ascendingNodePrecessionRate);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		result = 31 * result + (referenceEphemeris != null ? referenceEphemeris.hashCode() : 0);
+		return result;
 	}
 }

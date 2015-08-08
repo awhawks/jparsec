@@ -738,9 +738,9 @@ public class EphemerisElement implements Serializable
 	/**
 	 * To clone the object.
 	 */
+	@Override
 	public EphemerisElement clone()
 	{
-		if (this == null) return null;
 		// Create new EphemerisElement identical to the input
 		EphemerisElement new_eph = new EphemerisElement(this.targetBody, this.ephemType, this.equinox,
 				this.isTopocentric, this.ephemMethod, this.frame, this.algorithm, this.orbit);
@@ -758,49 +758,59 @@ public class EphemerisElement implements Serializable
 		return new_eph;
 	}
 	/**
-	 * Returns if the input object is equals to this ephemeris object.
+	 * Returns if the input object is equal to this ephemeris object.
 	 */
-	public boolean equals(Object eph)
-	{
-		if (eph == null) {
-			if (this == null) return true;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof EphemerisElement)) return false;
+
+		EphemerisElement that = (EphemerisElement) o;
+
+		if (Double.compare(that.equinox, equinox) != 0) return false;
+		if (isTopocentric != that.isTopocentric) return false;
+		if (correctEquatorialCoordinatesForRefraction != that.correctEquatorialCoordinatesForRefraction) return false;
+		if (correctForExtinction != that.correctForExtinction) return false;
+		if (useVondrak2011PrecessionFormulaInsteadOfIAU2006 != that.useVondrak2011PrecessionFormulaInsteadOfIAU2006)
 			return false;
-		}
-		if (this == null) {
-			return false;
-		}
-		boolean equals = true;
-		EphemerisElement e = (EphemerisElement) eph;
-		if (e.targetBody != this.targetBody) equals = false;
-		if (e.targetBody.getIndex() != this.targetBody.getIndex()) equals = false;
-		if (e.ephemType != this.ephemType) equals = false;
-		if (e.ephemMethod != this.ephemMethod) equals = false;
-		if (e.equinox != this.equinox) equals = false;
-		if (e.frame != this.frame) equals = false;
-		if (e.algorithm != this.algorithm) equals = false;
-		if (e.isTopocentric != this.isTopocentric) equals = false;
-		if (e.wavelength != this.wavelength) equals = false;
-		if (e.orbit != null || orbit != null) {
-			if (e.orbit == null && orbit != null) {
-				equals = false;
-			} else {
-				if (e.orbit != null && orbit == null) {
-					equals = false;
-				} else {
-					if (!e.orbit.equals(this.orbit)) equals = false;
-				}
-			}
-		}
-		if (e.correctEOPForDiurnalSubdiurnalTides != this.correctEOPForDiurnalSubdiurnalTides) equals = false;
-		if (e.correctEquatorialCoordinatesForRefraction != this.correctEquatorialCoordinatesForRefraction) equals = false;
-		if (e.correctForEOP != this.correctForEOP) equals = false;
-		if (e.correctForExtinction != this.correctForExtinction) equals = false;
-		if (e.correctForPolarMotion != this.correctForPolarMotion) equals = false;
-		if (e.useVondrak2011PrecessionFormulaInsteadOfIAU2006 != this.useVondrak2011PrecessionFormulaInsteadOfIAU2006) equals = false;
-		if (e.preferPrecisionInEphemerides != this.preferPrecisionInEphemerides) equals = false;
-		return equals;
+		if (correctForPolarMotion != that.correctForPolarMotion) return false;
+		if (correctForEOP != that.correctForEOP) return false;
+		if (correctEOPForDiurnalSubdiurnalTides != that.correctEOPForDiurnalSubdiurnalTides) return false;
+		if (preferPrecisionInEphemerides != that.preferPrecisionInEphemerides) return false;
+		if (targetBody != that.targetBody) return false;
+		if (ephemMethod != that.ephemMethod) return false;
+		if (frame != that.frame) return false;
+		if (ephemType != that.ephemType) return false;
+		if (algorithm != that.algorithm) return false;
+		if (orbit != null ? !orbit.equals(that.orbit) : that.orbit != null) return false;
+
+		return wavelength == that.wavelength;
 	}
-	
+
+	@Override
+	public int hashCode() {
+		int result;
+		long temp;
+		result = targetBody != null ? targetBody.hashCode() : 0;
+		temp = Double.doubleToLongBits(equinox);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		result = 31 * result + (isTopocentric ? 1 : 0);
+		result = 31 * result + (ephemMethod != null ? ephemMethod.hashCode() : 0);
+		result = 31 * result + (frame != null ? frame.hashCode() : 0);
+		result = 31 * result + (ephemType != null ? ephemType.hashCode() : 0);
+		result = 31 * result + (algorithm != null ? algorithm.hashCode() : 0);
+		result = 31 * result + (orbit != null ? orbit.hashCode() : 0);
+		result = 31 * result + (wavelength != null ? wavelength.hashCode() : 0);
+		result = 31 * result + (correctEquatorialCoordinatesForRefraction ? 1 : 0);
+		result = 31 * result + (correctForExtinction ? 1 : 0);
+		result = 31 * result + (useVondrak2011PrecessionFormulaInsteadOfIAU2006 ? 1 : 0);
+		result = 31 * result + (correctForPolarMotion ? 1 : 0);
+		result = 31 * result + (correctForEOP ? 1 : 0);
+		result = 31 * result + (correctEOPForDiurnalSubdiurnalTides ? 1 : 0);
+		result = 31 * result + (preferPrecisionInEphemerides ? 1 : 0);
+		return result;
+	}
+
 	/**
 	 * Optimizes the options in this instance to obtain the fastest possible ephemerides. Flags
 	 * adjusted to false are {@linkplain #preferPrecisionInEphemerides}, {@linkplain #correctForEOP},

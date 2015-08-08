@@ -186,13 +186,13 @@ public class SatelliteRenderElement implements Serializable
 			zoomFactor = 1.0f;
 		}
 	};
-	
+
 	/**
 	 * To clone the object.
 	 */
+	@Override
 	public SatelliteRenderElement clone()
 	{
-		if (this == null) return null;
 		SatelliteRenderElement out = new SatelliteRenderElement(this.width, this.height);
 
 		out.showSatellite = this.showSatellite;
@@ -211,37 +211,54 @@ public class SatelliteRenderElement implements Serializable
 		out.highlightMoon = this.highlightMoon;
 		return out;
 	}
+
 	/**
 	 * Returns true if the input object is equal to this instance.
 	 */
-	public boolean equals(Object e)
-	{
-		if (e == null) {
-			if (this == null) return true;
-			return false;
-		}
-		if (this == null) {
-			return false;
-		}
-		boolean equals = true;
-		SatelliteRenderElement ere = (SatelliteRenderElement) e;
-		if (ere.showSatellite != this.showSatellite) equals = false;
-		if (ere.showMoon != this.showMoon) equals = false;
-		if (ere.showSun != this.showSun) equals = false;
-		if (ere.height != this.height) equals = false;
-		if (ere.width != this.width) equals = false;
-		if (!ere.anaglyphMode.equals(this.anaglyphMode)) equals = false;
-		if (ere.showObserver != this.showObserver) equals = false;
-		if (ere.showOrbits != this.showOrbits) equals = false;
-		if (ere.showDayAndNight != this.showDayAndNight) equals = false;
-		if (ere.showOrbitsColor != this.showOrbitsColor) equals = false;
-		if (ere.showSatellitesColor != this.showSatellitesColor) equals = false;
-		if (ere.showObserverColor != this.showObserverColor) equals = false;
-		if (ere.observerInRedAtNight != this.observerInRedAtNight) equals = false;
-		if (ere.showEarth != this.showEarth) equals = false;
-		if (ere.highlightMoon != this.highlightMoon) equals = false;
-		if (ere.planetMap != this.planetMap) equals = false;
-		
-		return equals;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof SatelliteRenderElement)) return false;
+
+		SatelliteRenderElement that = (SatelliteRenderElement) o;
+
+		if (width != that.width) return false;
+		if (height != that.height) return false;
+		if (showObserver != that.showObserver) return false;
+		if (showSatellite != that.showSatellite) return false;
+		if (showMoon != that.showMoon) return false;
+		if (showSun != that.showSun) return false;
+		if (showOrbits != that.showOrbits) return false;
+		if (showDayAndNight != that.showDayAndNight) return false;
+		if (showOrbitsColor != that.showOrbitsColor) return false;
+		if (showSatellitesColor != that.showSatellitesColor) return false;
+		if (showObserverColor != that.showObserverColor) return false;
+		if (observerInRedAtNight != that.observerInRedAtNight) return false;
+		if (showEarth != that.showEarth) return false;
+		if (highlightMoon != that.highlightMoon) return false;
+		if (anaglyphMode != that.anaglyphMode) return false;
+
+		return planetMap == that.planetMap;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = width;
+		result = 31 * result + height;
+		result = 31 * result + (showObserver ? 1 : 0);
+		result = 31 * result + (showSatellite ? 1 : 0);
+		result = 31 * result + (showMoon ? 1 : 0);
+		result = 31 * result + (showSun ? 1 : 0);
+		result = 31 * result + (showOrbits ? 1 : 0);
+		result = 31 * result + (showDayAndNight ? 1 : 0);
+		result = 31 * result + showOrbitsColor;
+		result = 31 * result + showSatellitesColor;
+		result = 31 * result + showObserverColor;
+		result = 31 * result + (observerInRedAtNight ? 1 : 0);
+		result = 31 * result + (showEarth ? 1 : 0);
+		result = 31 * result + (anaglyphMode != null ? anaglyphMode.hashCode() : 0);
+		result = 31 * result + (planetMap != null ? planetMap.hashCode() : 0);
+		result = 31 * result + (highlightMoon ? 1 : 0);
+		return result;
 	}
 }

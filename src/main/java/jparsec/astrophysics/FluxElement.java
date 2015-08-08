@@ -80,32 +80,37 @@ public class FluxElement implements Serializable
 	 */
 	public FluxElement clone()
 	{
-		if (this == null) return null;
 		if (photometricBand == null) return new FluxElement(this.x.clone(), this.y.clone(), null);
 		FluxElement p = new FluxElement(this.x.clone(), this.y.clone(), this.photometricBand.clone());
 		return p;
 	}
-	
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+
+		if (!(o instanceof FluxElement)) return false;
+
+		FluxElement that = (FluxElement) o;
+
+		if (x != null ? !x.equals(that.x) : that.x != null) return false;
+		if (y != null ? !y.equals(that.y) : that.y != null) return false;
+
+		return !(photometricBand != null ? !photometricBand.equals(that.photometricBand) : that.photometricBand != null);
+	}
+
+	@Override
+	public int hashCode() {
+		int result = x != null ? x.hashCode() : 0;
+		result = 31 * result + (y != null ? y.hashCode() : 0);
+		result = 31 * result + (photometricBand != null ? photometricBand.hashCode() : 0);
+		return result;
+	}
+
 	/**
-	 * Returns if this instance is equals to another.
+	 * Returns true if this instance is equal to another.
 	 */
-	public boolean equals(Object o)
-	{
-		if (o == null) {
-			if (this == null) return true;
-			return false;
-		}
-		if (this == null) {
-			return false;
-		}
-		FluxElement p = (FluxElement) o;
-		boolean equals = true;
-		if (!this.x.equals(p.x)) equals = false;
-		if (!this.y.equals(p.y)) equals = false;
-		if (!this.photometricBand.equals(p.photometricBand)) equals = false;
-		return equals;
-	}	
-	
+
 	private MeasureElement transformX(String newUnit)
 	throws JPARSECException {
 		if (newUnit == null || this.x.unit == null || this.x.unit.equals(newUnit)) return this.x;

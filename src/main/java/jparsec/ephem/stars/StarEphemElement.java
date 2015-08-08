@@ -157,13 +157,13 @@ public class StarEphemElement implements Serializable
 		if (d == 0.0) d = 1;
 		return new LocationElement(rightAscension, declination, d);
 	}
-	
+
 	/**
 	 * To clone the object.
 	 */
+	@Override
 	public StarEphemElement clone()
 	{
-		if (this == null) return null;
 		StarEphemElement s = new StarEphemElement();
 		s.azimuth = this.azimuth;
 		s.constellation = this.constellation;
@@ -181,34 +181,60 @@ public class StarEphemElement implements Serializable
 
 		return s;
 	}
+
 	/**
-	 * Returns true if the input object is equals to this
+	 * Returns true if the input object is equal to this
 	 * instance.
 	 */
-	public boolean equals(Object s)
-	{
-		if (s == null) {
-			if (this == null) return true;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof StarEphemElement)) return false;
+
+		StarEphemElement that = (StarEphemElement) o;
+
+		if (Double.compare(that.rightAscension, rightAscension) != 0) return false;
+		if (Double.compare(that.declination, declination) != 0) return false;
+		if (Double.compare(that.distance, distance) != 0) return false;
+		if (Float.compare(that.magnitude, magnitude) != 0) return false;
+		if (Float.compare(that.paralacticAngle, paralacticAngle) != 0) return false;
+		if (Double.compare(that.azimuth, azimuth) != 0) return false;
+		if (Double.compare(that.elevation, elevation) != 0) return false;
+		if (Double.compare(that.rise, rise) != 0) return false;
+		if (Double.compare(that.set, set) != 0) return false;
+		if (Double.compare(that.transit, transit) != 0) return false;
+		if (Float.compare(that.transitElevation, transitElevation) != 0) return false;
+		if (constellation != null ? !constellation.equals(that.constellation) : that.constellation != null)
 			return false;
-		}
-		if (this == null) {
-			return false;
-		}
-		boolean equals = true;
-		StarEphemElement see = (StarEphemElement) s;
-		if (see.azimuth != this.azimuth) equals = false;
-		if (!see.constellation.equals(this.constellation)) equals = false;
-		if (!see.name.equals(this.name)) equals = false;
-		if (see.declination != this.declination) equals = false;
-		if (see.distance != this.distance) equals = false;
-		if (see.elevation != this.elevation) equals = false;
-		if (see.magnitude != this.magnitude) equals = false;
-		if (see.paralacticAngle != this.paralacticAngle) equals = false;
-		if (see.rightAscension != this.rightAscension) equals = false;
-		if (see.rise != this.rise) equals = false;
-		if (see.set != this.set) equals = false;
-		if (see.transit != this.transit) equals = false;
-		if (see.transitElevation != this.transitElevation) equals = false;
-		return equals;
+
+		return !(name != null ? !name.equals(that.name) : that.name != null);
 	}
-};
+
+	@Override
+	public int hashCode() {
+		int result;
+		long temp;
+		temp = Double.doubleToLongBits(rightAscension);
+		result = (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(declination);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(distance);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		result = 31 * result + (magnitude != +0.0f ? Float.floatToIntBits(magnitude) : 0);
+		result = 31 * result + (paralacticAngle != +0.0f ? Float.floatToIntBits(paralacticAngle) : 0);
+		temp = Double.doubleToLongBits(azimuth);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(elevation);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(rise);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(set);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(transit);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		result = 31 * result + (transitElevation != +0.0f ? Float.floatToIntBits(transitElevation) : 0);
+		result = 31 * result + (constellation != null ? constellation.hashCode() : 0);
+		result = 31 * result + (name != null ? name.hashCode() : 0);
+		return result;
+	}
+}

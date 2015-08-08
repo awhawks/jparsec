@@ -23,6 +23,7 @@ package jparsec.graph.chartRendering;
 
 import java.io.Serializable;
 
+import java.util.Arrays;
 import jparsec.astronomy.TelescopeElement;
 import jparsec.ephem.Target.TARGET;
 import jparsec.ephem.moons.MoonEphemElement;
@@ -286,9 +287,9 @@ public class PlanetRenderElement implements Serializable
 	/**
 	 * To clone the object.
 	 */
+	@Override
 	public PlanetRenderElement clone()
 	{
-		if (this == null) return null;
 		PlanetRenderElement out = new PlanetRenderElement(this.width, this.height, this.axes, this.textures,
 				this.satellitesMain, this.satellitesAll, this.northUp, this.difraction);
 
@@ -310,57 +311,61 @@ public class PlanetRenderElement implements Serializable
 		out.highQuality = this.highQuality;
 		return out;
 	}
+
 	/**
 	 * Returns true if the input object is equal to this instance.
 	 */
-	public boolean equals(Object e)
-	{
-		if (e == null) {
-			if (this == null) return true;
-			return false;
-		}
-		if (this == null) {
-			return false;
-		}
-		boolean equals = true;
-		PlanetRenderElement ere = (PlanetRenderElement) e;
-		if (ere.showLabels != this.showLabels) equals = false;
-		if (ere.axes != this.axes) equals = false;
-		if (ere.axesNOSE != this.axesNOSE) equals = false;
-		if (ere.textures != this.textures) equals = false;
-		if (ere.height != this.height) equals = false;
-		if (ere.width != this.width) equals = false;
-		if (ere.satellitesMain != this.satellitesMain) equals = false;
-		if (ere.satellitesAll != this.satellitesAll) equals = false;
-		if (ere.difraction != this.difraction) equals = false;
-		if (ere.northUp != this.northUp) equals = false;
-		if (ere.target != this.target) equals = false;
-		if (!ere.telescope.equals(this.telescope)) equals = false;
-		if (!ere.ephemSun.equals(this.ephemSun)) equals = false;
-		if (!ere.ephem.equals(this.ephem)) equals = false;
-		if (ere.background != this.background) equals = false;
-		if (ere.foreground != this.foreground) equals = false;
-		if (ere.anaglyphMode != this.anaglyphMode) equals = false;
-		if (ere.highQuality != this.highQuality) equals = false;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof PlanetRenderElement)) return false;
 
-		if (moonephem == null || ere.moonephem == null) {
-			if (ere.moonephem != null || moonephem != null) equals = false; 
-		} else {
-			if (this.moonephem.length == ere.moonephem.length)
-			{
-				for (int i=0; i<this.moonephem.length; i++)
-				{
-					if (this.moonephem[i] == null) {
-						if (ere.moonephem[i] != null) equals = false;
-					} else {
-						if (!this.moonephem[i].equals(ere.moonephem[i])) equals = false;
-					}
-				}
-			} else {
-				equals = false;
-			}
-		}
+		PlanetRenderElement that = (PlanetRenderElement) o;
 
-		return equals;
+		if (width != that.width) return false;
+		if (height != that.height) return false;
+		if (textures != that.textures) return false;
+		if (axes != that.axes) return false;
+		if (axesNOSE != that.axesNOSE) return false;
+		if (northUp != that.northUp) return false;
+		if (satellitesMain != that.satellitesMain) return false;
+		if (highQuality != that.highQuality) return false;
+		if (satellitesAll != that.satellitesAll) return false;
+		if (difraction != that.difraction) return false;
+		if (showLabels != that.showLabels) return false;
+		if (background != that.background) return false;
+		if (foreground != that.foreground) return false;
+		if (ephem != null ? !ephem.equals(that.ephem) : that.ephem != null) return false;
+		if (telescope != null ? !telescope.equals(that.telescope) : that.telescope != null) return false;
+
+		if (!Arrays.equals(moonephem, that.moonephem)) return false;
+		if (ephemSun != null ? !ephemSun.equals(that.ephemSun) : that.ephemSun != null) return false;
+		if (target != that.target) return false;
+
+		return anaglyphMode == that.anaglyphMode;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = ephem != null ? ephem.hashCode() : 0;
+		result = 31 * result + (telescope != null ? telescope.hashCode() : 0);
+		result = 31 * result + (moonephem != null ? Arrays.hashCode(moonephem) : 0);
+		result = 31 * result + (ephemSun != null ? ephemSun.hashCode() : 0);
+		result = 31 * result + width;
+		result = 31 * result + height;
+		result = 31 * result + (textures ? 1 : 0);
+		result = 31 * result + (axes ? 1 : 0);
+		result = 31 * result + (axesNOSE ? 1 : 0);
+		result = 31 * result + (northUp ? 1 : 0);
+		result = 31 * result + (satellitesMain ? 1 : 0);
+		result = 31 * result + (highQuality ? 1 : 0);
+		result = 31 * result + (satellitesAll ? 1 : 0);
+		result = 31 * result + (difraction ? 1 : 0);
+		result = 31 * result + (target != null ? target.hashCode() : 0);
+		result = 31 * result + (showLabels ? 1 : 0);
+		result = 31 * result + background;
+		result = 31 * result + foreground;
+		result = 31 * result + (anaglyphMode != null ? anaglyphMode.hashCode() : 0);
+		return result;
 	}
 }

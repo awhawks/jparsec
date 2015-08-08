@@ -163,44 +163,72 @@ public class SatelliteOrbitalElement implements Serializable
 	/**
 	 * To clone the object.
 	 */
+	@Override
 	public SatelliteOrbitalElement clone()
 	{
-		if (this == null) return null;
 		SatelliteOrbitalElement s = new SatelliteOrbitalElement(this.name, this.satelliteNumber, this.year, this.day,
 				this.firstDerivative, this.inclination, this.ascendingNodeRA, this.eccentricity, this.meanAnomaly,
 				this.argumentOfPerigee, this.meanMotion, this.revolutionNumber, this.secondDerivative, this.drag);
 		return s;
 	}
+
 	/**
-	 * Returns if a given object is equals to this satellite
+	 * Returns true if a given object is equal to this satellite
 	 * ephemeris object.
 	 */
-	public boolean equals(Object s)
-	{
-		if (s == null) {
-			if (this == null) return true;
-			return false;
-		}
-		if (this == null) {
-			return false;
-		}
-		SatelliteOrbitalElement soe = (SatelliteOrbitalElement) s;
-		boolean equals = true;
-		if (soe.argumentOfPerigee != this.argumentOfPerigee) equals = false;
-		if (soe.ascendingNodeRA != this.ascendingNodeRA) equals = false;
-		if (soe.day != this.day) equals = false;
-		if (soe.eccentricity != this.eccentricity) equals = false;
-		if (soe.firstDerivative != this.firstDerivative) equals = false;
-		if (soe.secondDerivative != this.secondDerivative) equals = false;
-		if (soe.drag != this.drag) equals = false;
-		if (soe.inclination != this.inclination) equals = false;
-		if (soe.meanAnomaly != this.meanAnomaly) equals = false;
-		if (soe.meanMotion != this.meanMotion) equals = false;
-		if (!soe.name.equals(this.name)) equals = false;
-		if (soe.revolutionNumber != this.revolutionNumber) equals = false;
-		if (soe.satelliteNumber != this.satelliteNumber) equals = false;
-		if (soe.year != this.year) equals = false;
-		return equals;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof SatelliteOrbitalElement)) return false;
+
+		SatelliteOrbitalElement that = (SatelliteOrbitalElement) o;
+
+		if (satelliteNumber != that.satelliteNumber) return false;
+		if (year != that.year) return false;
+		if (Double.compare(that.day, day) != 0) return false;
+		if (Double.compare(that.firstDerivative, firstDerivative) != 0) return false;
+		if (Double.compare(that.secondDerivative, secondDerivative) != 0) return false;
+		if (Double.compare(that.drag, drag) != 0) return false;
+		if (Double.compare(that.inclination, inclination) != 0) return false;
+		if (Double.compare(that.ascendingNodeRA, ascendingNodeRA) != 0) return false;
+		if (Double.compare(that.eccentricity, eccentricity) != 0) return false;
+		if (Double.compare(that.meanAnomaly, meanAnomaly) != 0) return false;
+		if (Double.compare(that.argumentOfPerigee, argumentOfPerigee) != 0) return false;
+		if (Double.compare(that.meanMotion, meanMotion) != 0) return false;
+		if (revolutionNumber != that.revolutionNumber) return false;
+
+		return !(name != null ? !name.equals(that.name) : that.name != null);
+	}
+
+	@Override
+	public int hashCode() {
+		int result;
+		long temp;
+		result = name != null ? name.hashCode() : 0;
+		result = 31 * result + satelliteNumber;
+		result = 31 * result + year;
+		temp = Double.doubleToLongBits(day);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(firstDerivative);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(secondDerivative);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(drag);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(inclination);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(ascendingNodeRA);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(eccentricity);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(meanAnomaly);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(argumentOfPerigee);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(meanMotion);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		result = 31 * result + revolutionNumber;
+		return result;
 	}
 
 	/**
@@ -215,7 +243,7 @@ public class SatelliteOrbitalElement implements Serializable
 		SPARE,
 		/** Failed, the Iridium satellite cannot flare. */
 		FAILED
-	};
+	}
 
 	/**
 	 * Returns the status of an Iridium satellite.

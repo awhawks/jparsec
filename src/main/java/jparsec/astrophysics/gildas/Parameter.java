@@ -108,35 +108,39 @@ public class Parameter implements Serializable {
 	/**
 	 * Checks if two parameters are the same.
 	 */
-	public boolean equals(Object o)
-	{
-		if (o == null) {
-			if (this == null) return true;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof Parameter)) return false;
+
+		Parameter parameter = (Parameter) o;
+
+		if (value != null ? !value.equals(parameter.value) : parameter.value != null) return false;
+		if (description != null ? !description.equals(parameter.description) : parameter.description != null)
 			return false;
-		}
-		if (this == null) {
-			if (o == null) return true;
-			return false;
-		}
-		boolean equals = true;
-		Parameter p = (Parameter) o;
-		if (p.dataType != this.dataType) equals = false;
-		if (!p.description.equals(this.description)) equals = false;
-		if (!p.value.equals(this.value)) equals = false;
-		return equals;
+
+		return dataType == parameter.dataType;
 	}
-	
+
+	@Override
+	public int hashCode() {
+		int result = value != null ? value.hashCode() : 0;
+		result = 31 * result + (description != null ? description.hashCode() : 0);
+		result = 31 * result + (dataType != null ? dataType.hashCode() : 0);
+		return result;
+	}
+
 	/**
 	 * Clones this instance.
 	 */
+	@Override
 	public Parameter clone()
 	{
-		if (this == null) return null; 
 		Parameter p = new Parameter(this.value, this.description);
 		p.dataType = this.dataType;
 		return p;
 	}
-	
+
 	/**
 	 * Searches for a given parameter by its description.
 	 * @param param The array of parameters.
