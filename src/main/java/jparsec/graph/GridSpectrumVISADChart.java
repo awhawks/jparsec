@@ -338,7 +338,7 @@ public class GridSpectrumVISADChart implements Serializable, MouseMotionListener
 					GridChartElement.COLOR_MODEL.BLUE_TO_RED, 
 					new double[] {x0, xf, y0, yf},  DataSet.toDoubleArray(data0), 
 					contour, 400);
-			chart.subTitle = "("+Translate.translate(938)+" "+Functions.formatAngle(lmvObs.beamMajor, 1)+"\"x"+Functions.formatAngle(lmvObs.beamMinor, 2)+"\"x"+Functions.formatAngleAsDegrees(lmvObs.beamPA, 0)+"º)";
+			chart.subTitle = "("+Translate.translate(938)+" "+Functions.formatAngle(lmvObs.beamMajor, 1)+"\"x"+Functions.formatAngle(lmvObs.beamMinor, 2)+"\"x"+Functions.formatAngleAsDegrees(lmvObs.beamPA, 0)+"\u00ba)";
 			chart.levelsOrientation = GridChartElement.WEDGE_ORIENTATION.VERTICAL_RIGHT;
 			chart.levelsBorderStyle = GridChartElement.WEDGE_BORDER.NO_BORDER;
 			gridChartObs = new CreateGridChart(chart);
@@ -848,7 +848,7 @@ public class GridSpectrumVISADChart implements Serializable, MouseMotionListener
 							GridChartElement.COLOR_MODEL.BLUE_TO_RED, 
 							new double[] {x0, xf, y0, yf},  DataSet.toDoubleArray(data0), 
 							contour, 400);
-					chart.subTitle = "("+Translate.translate(938)+" "+Functions.formatAngle(lmvObs.beamMajor, 1)+"\"x"+Functions.formatAngle(lmvObs.beamMinor, 2)+"\"x"+Functions.formatAngleAsDegrees(lmvObs.beamPA, 0)+"º)";
+					chart.subTitle = "("+Translate.translate(938)+" "+Functions.formatAngle(lmvObs.beamMajor, 1)+"\"x"+Functions.formatAngle(lmvObs.beamMinor, 2)+"\"x"+Functions.formatAngleAsDegrees(lmvObs.beamPA, 0)+"\u00ba)";
 					chart.levelsOrientation = GridChartElement.WEDGE_ORIENTATION.VERTICAL_RIGHT;
 					chart.levelsBorderStyle = GridChartElement.WEDGE_BORDER.NO_BORDER;
 			        int panelHeight = (h - Y0 * 5);

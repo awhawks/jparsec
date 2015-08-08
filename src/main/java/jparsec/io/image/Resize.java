@@ -34,7 +34,7 @@ import jparsec.util.JPARSECException;
 /**
  * Advanced image/2d array resize method based on the image resize plugin at
  * http://bigwww.epfl.ch/algorithms/ijplugins/resize/, implementing the method
- * by A. Muñoz Barrutia, T. Blu, M. Unser, "Least-Squares Image Resizing Using 
+ * by A. Mu&ntilde;oz Barrutia, T. Blu, M. Unser, "Least-Squares Image Resizing Using
  * Finite Differences," IEEE Transactions on Image Processing, vol. 10, no. 9, 
  * pp. 1365-1378, September 2001.<P>
  * This method should only be used (or it is only safe to be used) to reduce the

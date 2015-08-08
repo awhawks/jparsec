@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.math;
 
 import jparsec.ephem.Functions;
@@ -329,7 +329,7 @@ public class FastMath
 	 * Calculates the arc-sine of the argument.
 	 * Accuracy similar or better compared to sin and cos
 	 * functions except for arguments very close to 1 or -1, where
-	 * errors up to 0.1º can be reached. 33x faster than intrinsic.
+	 * errors up to 0.1 &ordm; can be reached. 33x faster than intrinsic.
 	 * @param x Argument.
 	 * @return Its arc-sine.
 	 */
@@ -357,7 +357,7 @@ public class FastMath
 	 * Calculates the arc-cosine of the argument.
 	 * Accuracy similar or better compared to sin and cos
 	 * functions except for arguments very close to 1 or -1, where
-	 * errors up to 0.1º can be reached. 33x faster than intrinsic.
+	 * errors up to 0.1 &ordm; can be reached. 33x faster than intrinsic.
 	 * @param x Argument.
 	 * @return Its arc-cosine.
 	 */

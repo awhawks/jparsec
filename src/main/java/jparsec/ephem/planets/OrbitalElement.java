@@ -448,11 +448,11 @@ public class OrbitalElement implements Serializable
 		out.append(this.name+sep);
 		out.append("a (AU)   = " + semimajorAxis + sep);
 		out.append("e        = " + eccentricity + sep);
-		out.append("M (º)    = " + (meanAnomaly * Constant.RAD_TO_DEG) + sep);
-		out.append("n (º/d)  = " + (meanMotion * Constant.RAD_TO_DEG) + sep);
-		out.append("i (º)    = " + (inclination * Constant.RAD_TO_DEG) + sep);
-		out.append("o (º)    = " + (ascendingNodeLongitude * Constant.RAD_TO_DEG) + sep);
-		out.append("w (º)    = " + (argumentOfPerihelion * Constant.RAD_TO_DEG) + sep);
+		out.append("M (\u00ba)    = " + (meanAnomaly * Constant.RAD_TO_DEG) + sep);
+		out.append("n (\u00ba/d)  = " + (meanMotion * Constant.RAD_TO_DEG) + sep);
+		out.append("i (\u00ba)    = " + (inclination * Constant.RAD_TO_DEG) + sep);
+		out.append("o (\u00ba)    = " + (ascendingNodeLongitude * Constant.RAD_TO_DEG) + sep);
+		out.append("w (\u00ba)    = " + (argumentOfPerihelion * Constant.RAD_TO_DEG) + sep);
 		out.append("time     = " + (referenceTime) + sep);
 		return out.toString();
 	}
@@ -926,17 +926,17 @@ public class OrbitalElement implements Serializable
 		int border = 100;
 		g.drawLine(x0, y0-h/2+border, x0, y0+h/2-border, false);
 		g.drawLine(x0-w/2+border, y0, x0+w/2-border, y0, false);
-		String s = "0º";
+		String s = "0\u00ba";
 		if (!showPlanets) s += " (N)";
 		int size = g.getFont().getSize();
 		g.drawString(s, x0-g.getStringWidth(s)/2, y0-h/2+border-size/2);
-		s = "90º";
+		s = "90\u00ba";
 		if (!showPlanets) s += " (E)";
 		g.drawString(s, x0-w/2+border-g.getStringWidth(s)-size/2, y0+size/2);
-		s = "180º";
+		s = "180\u00ba";
 		if (!showPlanets) s += " (S)";
 		g.drawString(s, x0-g.getStringWidth(s)/2, y0+h/2-border+size);
-		s = "270º";
+		s = "270\u00ba";
 		if (!showPlanets) {
 			if (Translate.getDefaultLanguage() == LANGUAGE.SPANISH) {
 				s += " (O)";				

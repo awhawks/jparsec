@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.graph;
 
 import java.awt.Font;
@@ -51,18 +51,18 @@ import jparsec.util.JPARSECException;
  * size change ('@SIZExx', where xx is the size of the text), and @ FOLLOWED BY BOLD, ITALIC, or PLAIN.<P>
  * - You can draw latex formulas with the command '@LATEX{}', with the latex formula between the {}.<P>
  * - You can draw digital clock symbols with the command '@CLOCK{}', with the numbers between the {}. 
- * Besides numbers, supported characters are hmsº'": _-dDbBtTCUL. The plus + is mapped to a blank space of half width.
+ * Besides numbers, supported characters are hms &ordm;'": _-dDbBtTCUL. The plus + is mapped to a blank space of half width.
  * In case of bold effect applied, the digits will be drawn with a blur effect.<P>
  * - You can rotate text with the '@ROTATExxx' command, being xxx the angle in degrees.<P>
  * - You can increase/decrease text size with '@SIZE+x' and '@SIZE-x'.<P>
  * - You can use transparent color to hide something with '@TRANSPARENT'.<P>
  * - You can justify text to the right, center, or left of the input position using '@RIGHT', '@CENTER', and '@LEFT'.<P>
  * - You can insert a blank space inside a subscript/superscript with '@SPACE', in those cases where
- * programatically the text is split or cut whenever a blank space like ' ' is found.<P>
+ * programmatically the text is split or cut whenever a blank space like ' ' is found.<P>
  * - It is recommended to clear the list of text states whenever a new text if written with {@link TextLabel#clearTextStateList()}.<P>
  * 
  *  Example:<P>
- *  ln(@REDy{^@ORANGEx_i}@SIZE20@GREENHI@BLUE@ALPHA@BETA@GAMMA@SIZE10@BLACK) = ln (y^xi HI alfa beta gamma ),
+ *  ln(@REDy{^@ORANGEx_i}@SIZE20@GREENHI@BLUE@ALPHA@BETA@GAMMA@SIZE10@BLACK) = ln (y^xi HI alfa beta gamma),
  *  where the Greek characters will be drawn in Greek, HI in a bigger size, and some portions in different colors.
  *  <P>
  *  Other special symbols include the sun, the planets, and the constellations. However, all these
@@ -694,10 +694,10 @@ public class TextLabel extends Object {
        // To be used with font Symbol when exporting to PDF
        private static final char[] greekPDF = new char[] {'a', 'b', 'g', 'd', 'e', 
     		'z', 'h', 'q', 'i', 'k', 'l', 'm', 'n', 'x', 'o', 
-    		'p', 'r', 's', 't', 'u', 'f', 'c', 'y', 'w'}; //, '\u2022', '\t', '¬'}; // '\u2022','',''
+    		'p', 'r', 's', 't', 'u', 'f', 'c', 'y', 'w'}; //, '\u2022', '\t', '\u00ac'}; // '\u2022','',''
        private static final char[] greekCapitalPDF = new char[] {'A', 'B', 'G', 'D', 'E', 
     		'Z', 'H', 'Q', 'I', 'K', 'L', 'M', 'N', 'X', 'O', 
-    		'P', 'R', 'S', 'T', 'U', 'F', 'C', 'Y', 'W'}; //, '\u2022', '\t', '¬'};
+    		'P', 'R', 'S', 'T', 'U', 'F', 'C', 'Y', 'W'}; //, '\u2022', '\t', '\u00ac'};
 
        /**
         * Clears the list of text states.
@@ -1843,7 +1843,7 @@ class DigitalClock {
 			if (s.equals("h")) return getDigitImage(DIGIT.CHARACTER_h);
 			if (s.equals("m")) return getDigitImage(DIGIT.CHARACTER_m);
 			if (s.equals("s")) return getDigitImage(DIGIT.CHARACTER_s);
-			if (s.equals("º")) return getDigitImage(DIGIT.CHARACTER_o);
+			if (s.equals("\u00ba")) return getDigitImage(DIGIT.CHARACTER_o);
 			if (s.equals("'")) return getDigitImage(DIGIT.CHARACTER_I);
 			if (s.equals("-")) return getDigitImage(DIGIT.CHARACTER_BAR);
 			if (s.equals("_")) return getDigitImage(DIGIT.CHARACTER_BAR_BOTTOM);

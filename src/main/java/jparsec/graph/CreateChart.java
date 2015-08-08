@@ -171,8 +171,8 @@ public class CreateChart implements Serializable
 		g.setColor(new Color(255, 0, 0, 128));
 		g.setStroke(AWTGraphics.getStroke(new JPARSECStroke(JPARSECStroke.STROKE_DEFAULT_LINE, 0.1f)));
 		g.fillOval(x-rx, y-ry, 2*rx, 2*ry);	
-		g.draw(AWTGraphics.rotateShape(new Ellipse2D.Double(2-rx*0.5, 5-ry*0.5, rx, ry), -45 * Constant.DEG_TO_RAD)); // Rotate 45º using the Graphics2D transform
-		g.fill(AWTGraphics.rotateShape(g, new Ellipse2D.Double(2-rx*0.5, 5-ry*0.5, rx, ry), -45 * Constant.DEG_TO_RAD)); // Rotate 45º using the original transform
+		g.draw(AWTGraphics.rotateShape(new Ellipse2D.Double(2-rx*0.5, 5-ry*0.5, rx, ry), -45 * Constant.DEG_TO_RAD)); // Rotate 45\u00ba using the Graphics2D transform
+		g.fill(AWTGraphics.rotateShape(g, new Ellipse2D.Double(2-rx*0.5, 5-ry*0.5, rx, ry), -45 * Constant.DEG_TO_RAD)); // Rotate 45\u00ba using the original transform
 		g.drawLine(2, 5, 1, 2);
 		p1.show("");
 		
@@ -216,7 +216,7 @@ public class CreateChart implements Serializable
 				ChartSeriesElement.REGRESSION.NONE);
 		ChartSeriesElement chartSeries2 = new ChartSeriesElement(vx,
 				y1, null, null,
-				"dM/dt = 10^{-3} M_{@SUN}/año", true, Color.BLACK, ChartSeriesElement.SHAPE_EMPTY,
+				"dM/dt = 10^{-3} M_{@SUN}/a\u00f1o", true, Color.BLACK, ChartSeriesElement.SHAPE_EMPTY,
 				ChartSeriesElement.REGRESSION.NONE);
 		ChartSeriesElement chartSeries3 = new ChartSeriesElement(vx,
 				y2, null, null,
@@ -235,8 +235,8 @@ public class CreateChart implements Serializable
 				chartSeries3, chartSeries4};
 		ChartElement chart4 = new ChartElement(series, ChartElement.TYPE.XY_CHART, 
 				ChartElement.SUBTYPE.XY_SCATTER,
-				"Acreción y tiempo de Kelvin-Helmholtz", 
-				"Masa de la estrella (M_{@SUN})", "Tiempo (años)", false, 802, 482);
+				"Acreci\u00f3n y tiempo de Kelvin-Helmholtz", 
+				"Masa de la estrella (M_{@SUN})", "Tiempo (a\u00f1os)", false, 802, 482);
 		chart4.xAxisInLogScale = true;
 		chart4.yAxisInLogScale = true;
 		// Modifiers (test lot more...)
@@ -253,9 +253,9 @@ public class CreateChart implements Serializable
 		chart4.series[2].color = Color.GREEN;
 		chart4.series[3].color = Color.RED;
 		chart4.series[0].pointers = new String[] {"10 t_{kh}"};
-		chart4.series[1].pointers = new String[] {"10 dM/dt = 10^{-3} M_{@SUN}/año"};
-		chart4.series[2].pointers = new String[] {"10 dM/dt = 10^{-4} M_{@SUN}/año"};
-		chart4.series[3].pointers = new String[] {"10 dM/dt = 10^{-5} M_{@SUN}/año"};
+		chart4.series[1].pointers = new String[] {"10 dM/dt = 10^{-3} M_{@SUN}/a\u00f1o"};
+		chart4.series[2].pointers = new String[] {"10 dM/dt = 10^{-4} M_{@SUN}/a\u00f1o"};
+		chart4.series[3].pointers = new String[] {"10 dM/dt = 10^{-5} M_{@SUN}/a\u00f1o"};
 		chart4.series[1].pointersAngle = ChartSeriesElement.POINTER_ANGLE.TO_OUTSIDE;
 		chart4.series[2].pointersAngle = ChartSeriesElement.POINTER_ANGLE.TO_OUTSIDE;
 		chart4.series[3].pointersAngle = ChartSeriesElement.POINTER_ANGLE.TO_OUTSIDE;

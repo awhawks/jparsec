@@ -174,7 +174,7 @@ public class Difraction
 	}
 	
 	/**
-	 * Resamples a given difraction pattern to a given resolution, using P. Thévenaz
+	 * Resamples a given difraction pattern to a given resolution, using P. Th&eacute;venaz
 	 * 2d interpolation.
 	 * This method should only be used with patterns generated with
 	 * this class.

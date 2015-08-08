@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.ephem;
 
 import jparsec.astronomy.Constellation;
@@ -1115,7 +1115,7 @@ public class PhysicalParameters
 	}
 	
 	/**
-	 * Returns the sidereal time at 0º of longitude of a given body using the corresponding IAU model.
+	 * Returns the sidereal time at 0 &ordm; of longitude of a given body using the corresponding IAU model.
 	 * @param JD_TDB Julian day in TDB.
 	 * @param eph Ephemeris object containing target body and ephemeris method.
 	 * @return Apparent sidereal time in radians for an observer at longitude 0.

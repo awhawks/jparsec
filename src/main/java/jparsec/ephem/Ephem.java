@@ -18,9 +18,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.ephem;
-
 
 import java.util.ArrayList;
 
@@ -2487,7 +2486,7 @@ public class Ephem
 			
 			// FK5 coordinates of Sun calculated directly = FK4 transformed to FK5 => fully consistent
 			Sun Right ascension: 17h 56m 15.8827s
-			Sun Declination: -23º 26' 11.944"
+			Sun Declination: -23 &ordm; 26' 11.944"
 			*/
 			
 			// Testing synchronization
@@ -2543,14 +2542,14 @@ public class Ephem
 			//ephem = Vsop.vsopEphemeris(timeF, observer, eph);
 			System.out.println("RA:  " + Functions.formatRA(ephem.rightAscension, 5));
 			System.out.println("DEC: " + Functions.formatDEC(ephem.declination, 4));
-			
+
 			/*
 RA:  10h 00m 31.59382s
-DEC: 12º 51' 13.3634"
+DEC: 12 &ordm; 51' 13.3634"
 RA2:  01h 41m 49.40292s
-DEC2: 10º 01' 47.6673"
+DEC2: 10 &ordm; 01' 47.6673"
 RA:  18h 43m 27.72859s
-DEC: -23º 06' 56.9669"
+DEC: -23 &ordm; 06' 56.9669"
 			 */
 
 			// For ALMA

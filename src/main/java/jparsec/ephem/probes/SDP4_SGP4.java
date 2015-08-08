@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.ephem.probes;
 
 import java.util.ArrayList;
@@ -312,9 +312,9 @@ public class SDP4_SGP4
 						System.out.println(SatelliteEphem.getArtificialSatelliteName(n)+": "+TimeFormat.formatJulianDayAsDateAndTime((Double)o[0], null)+fs+"/"+TimeFormat.formatJulianDayAsDateAndTime((Double)o[1], null)+fe+"/"+TimeFormat.formatJulianDayAsDateAndTime((Double)o[2], null)+fm+"/"+(Double)o[3]);
 					}
 					if (flares.size() == 0)
-						System.out.println(SatelliteEphem.getArtificialSatelliteName(n));					
+						System.out.println(SatelliteEphem.getArtificialSatelliteName(n));
 				} else {
-					System.out.println(SatelliteEphem.getArtificialSatelliteName(n));					
+					System.out.println(SatelliteEphem.getArtificialSatelliteName(n));
 				}
 			}
 			long t1 = System.currentTimeMillis();
@@ -323,14 +323,13 @@ public class SDP4_SGP4
 			/*
 			 Test data from http://www.chiandh.me.uk/ephem/iriday.shtml (2011, 10, 26)
 			  name			start	(hour, azimut 0=N, elevation)		peak			end
-			  IRIDIUM 31 [+]  14:51:18  258.5°  42.6°  14:51:21  257.0°  42.3°  1.7°  14:51:25  255.0°  41.9°
-			  IRIDIUM 5 [+]  16:47:33  212.1°  31.4°  16:47:42  210.5°  29.8°  0.2°  16:47:52  209.0°  28.1°
-			  IRIDIUM 4 [+]  04:49:01   7.8°  27.5°  04:49:12   7.6°  25.6°  1.5°  04:49:25   7.4°  23.5°
-			  IRIDIUM 56 [+]  06:59:41   2.6°  68.2°  06:59:45   2.7°  66.3°  0.9°  06:59:49   2.9°  64.5°
-			  IRIDIUM 17 [-]  09:02:33  187.2°  77.2°  09:02:35  187.5°  78.3°  1.7°  09:02:37  187.8°  79.3°
-			  IRIDIUM 62 [+] 09:24:33   92.4°  60.2°  09:24:38   97.0°  59.7°  0.4°  09:24:43  101.5°  59.0°			  
-			 */			  
-
+			  IRIDIUM 31 [+]  14:51:18  258.5\u00b0  42.6\u00b0  14:51:21  257.0\u00b0  42.3\u00b0  1.7\u00b0  14:51:25  255.0\u00b0  41.9\u00b0
+			  IRIDIUM 5 [+]  16:47:33  212.1\u00b0  31.4\u00b0  16:47:42  210.5\u00b0  29.8\u00b0  0.2\u00b0  16:47:52  209.0\u00b0  28.1\u00b0
+			  IRIDIUM 4 [+]  04:49:01   7.8\u00b0  27.5\u00b0  04:49:12   7.6\u00b0  25.6\u00b0  1.5\u00b0  04:49:25   7.4\u00b0  23.5\u00b0
+			  IRIDIUM 56 [+]  06:59:41   2.6\u00b0  68.2\u00b0  06:59:45   2.7\u00b0  66.3\u00b0  0.9\u00b0  06:59:49   2.9\u00b0  64.5\u00b0
+			  IRIDIUM 17 [-]  09:02:33  187.2\u00b0  77.2\u00b0  09:02:35  187.5\u00b0  78.3\u00b0  1.7\u00b0  09:02:37  187.8\u00b0  79.3\u00b0
+			  IRIDIUM 62 [+] 09:24:33   92.4\u00b0  60.2\u00b0  09:24:38   97.0\u00b0  59.7\u00b0  0.4\u00b0  09:24:43  101.5\u00b0  59.0\u00b0			  
+			 */
 		} catch (Exception exc) {
 			exc.printStackTrace();
 		}

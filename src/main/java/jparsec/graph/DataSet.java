@@ -2480,7 +2480,7 @@ public class DataSet
 		if (replacement == null) replacement = ""; 
 		if (!hasStrangeSymbols) {
 			// Basic check
-			String strange = ".,\\/\"|#$%~½&()=?'¿¡!";
+			String strange = ".,\\/\"|#$%~\u00bd&()=?'\u00bf\u00a1!";
 			for (int i=0; i<strange.length(); i++) {
 				if (symbol.indexOf(strange.substring(i, i+1)) >= 0 ||
 						replacement.indexOf(strange.substring(i, i+1)) >= 0) {

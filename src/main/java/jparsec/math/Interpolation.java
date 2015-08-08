@@ -928,11 +928,11 @@ public class Interpolation implements Serializable
 
 			x = new double[] {25.0, 26.0, 27.0, 28.0, 29.0};
 			y = new double[] {
-					Functions.parseDeclination("-01º 11' 21.23\""),
-					Functions.parseDeclination("-00º 28' 12.31\""),
-					Functions.parseDeclination("00º 16' 07.02\""),
-					Functions.parseDeclination("01º 01' 00.13\""),
-					Functions.parseDeclination("01º 45' 46.33\"")
+					Functions.parseDeclination("-01\u00ba 11' 21.23\""),
+					Functions.parseDeclination("-00\u00ba 28' 12.31\""),
+					Functions.parseDeclination("00\u00ba 16' 07.02\""),
+					Functions.parseDeclination("01\u00ba 01' 00.13\""),
+					Functions.parseDeclination("01\u00ba 45' 46.33\"")
 			};
 			interp = new Interpolation(x, y, false);
 			System.out.println("Zero at x = "+interp.MeeusZero());

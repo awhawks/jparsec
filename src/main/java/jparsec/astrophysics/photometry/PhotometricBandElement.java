@@ -367,19 +367,19 @@ public class PhotometricBandElement implements Serializable
 			10.2f, 0.0f, (float) (6.0*2.0), 0.0f, (float) (4.3E-25/Constant.JY_TO_W_HZ_M2), 0.0f, BEAM_JOHNSON);
 
     /**
-     * Photometric data for DENIS I band. Fouqué et al., 2000.
+     * Photometric data for DENIS I band. Fouqu&eacute; et al., 2000.
      */
     public static final PhotometricBandElement BAND_I_DENIS = new PhotometricBandElement(
 			"DENIS I",
 			0.791f, 0.010f, (float) (0.0*2.0), 0.0f, 2499f, 0.0f, BEAM_DENIS);
     /**
-     * Photometric data for DENIS J band. Fouqué et al., 2000.
+     * Photometric data for DENIS J band. Fouqu&eacute; et al., 2000.
      */
     public static final PhotometricBandElement BAND_J_DENIS = new PhotometricBandElement(
 			"DENIS J",
 			1.228f, 0.020f, (float) (0.0*2.0), 0.0f, 1595f, 0.0f, BEAM_DENIS);
     /**
-     * Photometric data for DENIS Ks band. Fouqué et al., 2000.
+     * Photometric data for DENIS Ks band. Fouqu&eacute; et al., 2000.
      */
     public static final PhotometricBandElement BAND_Ks_DENIS = new PhotometricBandElement(
 			"DENIS Ks",
