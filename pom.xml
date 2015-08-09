@@ -142,7 +142,7 @@
                                       failonerror='false' />
 
                                 <jar destfile='${project.basedir}/lib/visad.jar'>
-                                    <zipfileset src='${project.basedir}/lib/visad.jar.old' excludes='nom/**/*' />
+                                    <zipfileset src='${project.basedir}/lib/visad.jar.old' includes='visad/**/*'/>
                                 </jar>
                             </target>
                         </configuration>
