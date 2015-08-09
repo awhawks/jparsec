@@ -1079,7 +1079,6 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 	
 	/**
 	 * Returns if the weather conditions are fine to continue observations or not.
-	 * @param weather The weather station.
 	 * @return True if everything is fine, false if alarm should be launched.
 	 */
 	private boolean checkWeatherConditions() {
