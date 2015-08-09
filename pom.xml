@@ -28,6 +28,8 @@
         <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>utf-8</project.reporting.outputEncoding>
 
+        <target.dir>${basedir}/target/jars</target.dir>
+
         <conga.url>http://conga.oan.es/~alonso/jparsec/lib</conga.url>
         <version.jparsec>0.107</version.jparsec>
         <version.testng>6.9.6</version.testng>

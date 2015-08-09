@@ -14,10 +14,6 @@
         <relativePath>..</relativePath>
     </parent>
 
-    <properties>
-        <target.dir>target/jars</target.dir>
-    </properties>
-
     <build>
         <plugins>
             <plugin>
@@ -45,7 +41,7 @@
                 <configuration>
                     <classesDirectory>${target.dir}</classesDirectory>
                     <includes>
-                        <include>jparsec/**/*</include>
+                        <include>jparsec/data/telescopes/**/*</include>
                     </includes>
                 </configuration>
             </plugin>
