@@ -372,27 +372,27 @@ public class Elp2000
 				ZZr[iv] += calcELEM3(elp_plan_perturb15_4.Rad, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
 				break;
 			case 16:
-				elp4 = elp_plan_perturb2.Lon;
+				elp4 = elp_plan_perturb2_lon.Lon;
 				ZZr[iv] += calcELEM3(elp4, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
 				break;
 			case 17:
-				elp4 = elp_plan_perturb2.Lat;
+				elp4 = elp_plan_perturb2_lat.Lat;
 				ZZr[iv] += calcELEM3(elp4, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
 				break;
 			case 18:
-				elp4 = elp_plan_perturb2.Rad;
+				elp4 = elp_plan_perturb2_rad.Rad;
 				ZZr[iv] += calcELEM3(elp4, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
 				break;
 			case 19:
-				elp4 = elp_plan_perturb2.Lon_t;
+				elp4 = elp_plan_perturb2_lon_t.Lon_t;
 				ZZr[iv] += calcELEM3(elp4, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
 				break;
 			case 20:
-				elp4 = elp_plan_perturb2.Lat_t;
+				elp4 = elp_plan_perturb2_lat_t.Lat_t;
 				ZZr[iv] += calcELEM3(elp4, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
 				break;
 			case 21:
-				elp4 = elp_plan_perturb2.Rad_t;
+				elp4 = elp_plan_perturb2_rad_t.Rad_t;
 				ZZr[iv] += calcELEM3(elp4, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
 				break;
 			case 22:
