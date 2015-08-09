@@ -89,6 +89,9 @@
                         <arg>-J-Xmx4096m</arg>
                         <arg>-verbose</arg>
                     </compilerArgs>
+                    <excludes>
+                        <exclude>jparsec/graph/CreateJZY3DChart.java</exclude>
+                    </excludes>
                 </configuration>
             </plugin>
 
