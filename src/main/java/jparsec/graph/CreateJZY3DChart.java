@@ -18,11 +18,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */			
+ */
 package jparsec.graph;
 
 import java.awt.Graphics;
-import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -41,6 +40,7 @@ import org.jzy3d.contour.DefaultContourColoringPolicy;
 import org.jzy3d.contour.MapperContourMeshGenerator;
 import org.jzy3d.maths.Coord3d;
 import org.jzy3d.maths.Range;
+import org.jzy3d.maths.Rectangle;
 import org.jzy3d.plot3d.builder.Builder;
 import org.jzy3d.plot3d.builder.Mapper;
 import org.jzy3d.plot3d.builder.concrete.OrthonormalGrid;
@@ -209,7 +209,7 @@ public class CreateJZY3DChart {
 
 	private void init(final GridChartElement gridChart) throws JPARSECException {
 		if (gridChart.opacity == null) {
-	        chart = new Chart(Quality.Advanced, "awt");			
+	        chart = new Chart(Quality.Advanced, "awt");
 		} else {
 			switch (gridChart.opacity) {
 			case OPAQUE:
@@ -362,7 +362,7 @@ public class CreateJZY3DChart {
 	public void showChart(int i, int j) {
 		if (chart_elem == null) {
 			if (grid_chart_elem == null) {
-				ChartLauncher.openStaticChart(chart, new Rectangle(0, 0, i, j), fxy);				
+				ChartLauncher.openStaticChart(chart, new Rectangle(0, 0, i, j), fxy);
 			} else {
 				ChartLauncher.openStaticChart(chart, new Rectangle(0, 0, i, j), grid_chart_elem.title);
 			}
@@ -401,7 +401,7 @@ public class CreateJZY3DChart {
 			if (grid_chart_elem == null) {
 				try {
 					init(fxy, min, max, n);
-				} catch (Exception exc) {}				
+				} catch (Exception exc) {}
 			} else {
 				try {
 					init(grid_chart_elem);
@@ -410,7 +410,7 @@ public class CreateJZY3DChart {
 		} else {
 			try {
 				init(chart_elem);
-			} catch (Exception exc) {}			
+			} catch (Exception exc) {}
 		}
  	}
 	

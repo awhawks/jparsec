@@ -82,7 +82,16 @@
                     <!--encoding>iso-8859-1</encoding-->
                     <encoding>utf-8</encoding>
                     <showWarnings>true</showWarnings>
-                    <showDeprecation>true</showDeprecation>
+                    <showDeprecation>false</showDeprecation> <!-- JDK 1.6 stops if it encounters deprecation Warnings !! -->
+                    <compilerArgs>
+                        <!-- this is really necessary for JDK 1.6, otherwise ELP2000 classes are not accepted! -->
+                        <arg>-J-Xms4096m</arg>
+                        <arg>-J-Xmx4096m</arg>
+                        <arg>-verbose</arg>
+                    </compilerArgs>
+                    <excludes>
+                        <exclude>jparsec/graph/CreateJZY3DChart.java</exclude>
+                    </excludes>
                 </configuration>
             </plugin>
 
@@ -134,7 +143,7 @@
                                       failonerror='false' />
 
                                 <jar destfile='${project.basedir}/lib/visad.jar'>
-                                    <zipfileset src='${project.basedir}/lib/visad.jar.old' excludes='nom/**/*' />
+                                    <zipfileset src='${project.basedir}/lib/visad.jar.old' includes='visad/**/*'/>
                                 </jar>
                             </target>
                         </configuration>
