@@ -1,8 +1,8 @@
 eclipse.preferences.version=1
-encoding/src/main/java=utf-8
-encoding/src/main/resources=utf-8
-encoding/src/test/java=utf-8
-encoding/src/test/resources=utf-8
+encoding/src/main/java=iso-8859-1
+encoding/src/main/resources=iso-8859-1
+encoding/src/test/java=iso-8859-1
+encoding/src/test/resources=iso-8859-1
 org.eclipse.jdt.core.compiler.codegen.inlineJsrBytecode=enabled
 org.eclipse.jdt.core.compiler.codegen.methodParameters=do not generate
 org.eclipse.jdt.core.compiler.codegen.targetPlatform=1.6
