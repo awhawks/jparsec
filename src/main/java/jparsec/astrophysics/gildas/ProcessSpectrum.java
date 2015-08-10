@@ -27,12 +27,10 @@ import java.util.TreeMap;
 
 import jparsec.astrophysics.MeasureElement;
 import jparsec.astrophysics.Spectrum;
-import jparsec.astrophysics.gildas.Spectrum30m.XUNIT;
 import jparsec.ephem.Functions;
 import jparsec.graph.ChartSeriesElement;
 import jparsec.graph.DataSet;
 import jparsec.io.CatalogRead;
-import jparsec.io.ConsoleReport;
 import jparsec.io.FileIO;
 import jparsec.math.Constant;
 import jparsec.math.FastMath;
@@ -1639,9 +1637,9 @@ public class ProcessSpectrum {
 					    		}
 					    	}
 							pss.v = datas;
-			
+
 							double l[] = pss.fitLineBetweenChannels(sigma, sl[lindex].minChannel, sl[lindex].maxChannel, sl[lindex].yMin, sl[lindex].yMax, false);
-	
+
 			    			sl[lindex].vel = l[0]; 
 			    			sl[lindex].velError = l[4];
 			    			sl[lindex].width = l[1];
@@ -1674,50 +1672,8 @@ public class ProcessSpectrum {
 				    	break;
 				    }
 			    }
-			}					
+			}
 		}
 		return new Object[] {sl, ps};
-	}
-	
-	/**
-	 * Test program.
-	 * @param args Not used.
-	 */
-	public static void main(String args[]) {
-		System.out.println("ProcessSpectrum test");
-		
-		try {
-			
-			String file = "/home/alonso/colaboraciones/Rafael/2013/largeProgram/out.30m";
-			
-			Gildas30m g30m = new Gildas30m(file);
-			int list[] = g30m.getListOfSpectrums(true);
-			Spectrum30m sp = g30m.getSpectrum(list[0]);
-			
-			ProcessSpectrum.TIMES_SIGMA = 5.0;
-			SpectrumLine[] lines = ProcessSpectrum.reduceSpectrum(sp, -1);
-			XUNIT xUnit = XUNIT.VELOCITY_KMS;
-			jparsec.graph.CreateChart ch = sp.getChart(500, 500, xUnit);
-			if (lines != null) {
-				System.out.println("Found "+lines.length+" lines");
-				ProcessSpectrum ps = new ProcessSpectrum(sp);
-				for (int i=0; i<lines.length; i++) {
-					System.out.println(i+" ("+lines[i].minChannel+"-"+lines[i].maxChannel+"): vel = "+lines[i].vel+" km/s, peak = "+lines[i].peakT+" K, width = "+lines[i].width+" km/s, area = "+lines[i].area+" K km/s");
-					ChartSeriesElement series = ps.getGaussianFit(lines[i].getGaussianParameters(), xUnit);
-					series.legend = "Fit to line "+(i+1);
-					ch.addSeries(series);
-				}
-			}
-			ch.showChartInJFreeChartPanel();
-
-			double freq = 256329.5, width = 1, maxT = 1000, maxrint = -7;
-			boolean jpl = false, splatalogue = true, onlyAtm = false, onlyLessProbable = false;
-			String out[] = ProcessSpectrum.identifyLine(freq, width, maxT, maxrint, jpl, splatalogue, onlyAtm, onlyLessProbable);
-			ConsoleReport.stringArrayReport(out);
-
-		} catch (Exception exc) {
-			exc.printStackTrace();
-		}
-		
 	}
 }

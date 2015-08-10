@@ -21,22 +21,26 @@
  */	
 package jparsec.io.device;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Choice;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.image.BufferedImage;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.Timer;
 import javax.swing.border.TitledBorder;
-
-import net.miginfocom.swing.MigLayout;
 
 import jparsec.astronomy.Constellation;
 import jparsec.astronomy.CoordinateSystem;
@@ -52,11 +56,11 @@ import jparsec.graph.JPARSECStroke;
 import jparsec.graph.SkyChart;
 import jparsec.graph.TextLabel;
 import jparsec.graph.chartRendering.AWTGraphics;
+import jparsec.graph.chartRendering.Graphics.FONT;
 import jparsec.graph.chartRendering.PlanetRenderElement;
+import jparsec.graph.chartRendering.Projection.PROJECTION;
 import jparsec.graph.chartRendering.RenderPlanet;
 import jparsec.graph.chartRendering.SkyRenderElement;
-import jparsec.graph.chartRendering.Graphics.FONT;
-import jparsec.graph.chartRendering.Projection.PROJECTION;
 import jparsec.graph.chartRendering.SkyRenderElement.FAST_LINES;
 import jparsec.graph.chartRendering.SkyRenderElement.LEYEND_POSITION;
 import jparsec.graph.chartRendering.SkyRenderElement.MILKY_WAY_TEXTURE;
@@ -78,11 +82,11 @@ import jparsec.io.device.GenericTelescope.TELESCOPE_MODEL;
 import jparsec.io.device.GenericTelescope.TELESCOPE_TYPE;
 import jparsec.io.device.GenericWeatherStation.WEATHER_FORECAST;
 import jparsec.io.device.GenericWeatherStation.WEATHER_STATION_MODEL;
+import jparsec.io.device.ObservationManager.AVERAGE_METHOD;
 import jparsec.io.device.ObservationManager.COMBINATION_METHOD;
 import jparsec.io.device.ObservationManager.DRIZZLE;
 import jparsec.io.device.ObservationManager.IMAGE_ORIENTATION;
 import jparsec.io.device.ObservationManager.INTERPOLATION;
-import jparsec.io.device.ObservationManager.AVERAGE_METHOD;
 import jparsec.io.device.implementation.CanonEOS40D50D1000D;
 import jparsec.io.device.implementation.CelestronTelescope;
 import jparsec.io.device.implementation.MeadeTelescope;
@@ -100,6 +104,7 @@ import jparsec.util.Translate;
 import jparsec.util.Translate.LANGUAGE;
 import jparsec.vo.SimbadElement;
 import jparsec.vo.SimbadQuery;
+import net.miginfocom.swing.MigLayout;
 
 /**
  * A control panel to send/receive commands from the telescope. For
@@ -210,69 +215,6 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 	private boolean firstTime = true, headlessMode = false;
 	private Timer timer;
 
-	/**
-	 * Test program.
-	 * @param args Not used.
-	 */
-	public static void main(String args[]) {
-		try {
-			// Translate.setDefaultLanguage(LANGUAGE.SPANISH);
-			
-			JFrame app = new JFrame(Translate.translate(1127));
-			app.addWindowListener(new WindowAdapter() {
-				public void windowClosing(WindowEvent evt) {
-					System.exit(0);
-				}
-			});
-			app.setIconImage(ReadFile.readImageResource(FileIO.DATA_IMAGES_DIRECTORY+"telescope_transparentOK.png"));
-
-			// Set the hardware
-			TELESCOPE_MODEL telescopeModel = TELESCOPE_MODEL.VIRTUAL_TELESCOPE_EQUATORIAL_MOUNT; //.MEADE_AUTOSTAR;
-			DOME_MODEL domeModel = DOME_MODEL.VIRTUAL_DOME;
-			CAMERA_MODEL cameraModel[] = new CAMERA_MODEL[] {CAMERA_MODEL.VIRTUAL_CAMERA}; //CAMERA_MODEL.CANON_EOS_40D_400D_50D_500D_1000D;
-			WEATHER_STATION_MODEL weatherStation = WEATHER_STATION_MODEL.VIRTUAL_WEATHER_STATION;
-			ObservationManager obsManager = new ObservationManager("/home/alonso/", "today", telescopeModel, cameraModel, domeModel, weatherStation);
-			obsManager.setTelescopeType(TELESCOPE_TYPE.SCHMIDT_CASSEGRAIN);
-			obsManager.setCameraMinimumIntervalBetweenShots(0, 20);
-			obsManager.setCombineMethod(COMBINATION_METHOD.MEDIAN);
-			obsManager.setInterpolationMethod(INTERPOLATION.BICUBIC);
-			obsManager.setDrizzleMethod(DRIZZLE.NO_DRIZZLE);
-			obsManager.setAverageMethod(AVERAGE_METHOD.PONDERATION);
-			obsManager.setTelescopeParkPosition(new LocationElement(0, Constant.PI_OVER_TWO, 1)); // Park to the zenith
-			// Ports for telescope and camera are set to null to automatically scan and select the first one available
-			boolean addSky = true;
-			
-			TelescopeControlPanel tcp = new TelescopeControlPanel(obsManager, addSky);
-			Dimension d = tcp.getPreferredSize();
-			
-			// Border + window title
-			d.height += 80;
-			d.width += 10;
-			
-			app.add(tcp);
-			app.setSize(d);
-			app.setVisible(true);
-			
-			if (obsManager.reductionPossible()) {
-				JFrame app2 = new JFrame(Translate.translate(1188));
-				app2.addWindowListener(new WindowAdapter() {
-					public void windowClosing(WindowEvent evt) {
-						System.exit(0);
-					}
-				});
-				app2.setIconImage(ReadFile.readImageResource(FileIO.DATA_IMAGES_DIRECTORY+"planetaryNeb_transparentOK.png"));
-				Dimension d2 = obsManager.getPreferredSize();
-				d2.height += 80;
-				d2.width += 10;
-				app2.add(obsManager);
-				app2.setSize(d2);
-				app2.setVisible(true);
-			}
-		} catch (Exception exc) {
-			exc.printStackTrace();
-		}
-	}
-	
 	/**
 	 * Constructs a telescope panel.
 	 * @param manager The observation manager with the hardware and reduction properties set.
@@ -1850,7 +1792,7 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 					int index = DataSet.getIndex(times, val);
 					if (index < 0) {
 						try {
-							int time = Integer.parseInt(val);
+							Integer.parseInt(val);
 							continue;
 						} catch (Exception exc2) {
 							error = "TIME "+val+" is not a valid TIME value for camera #"+(cameraIndex+1)+". Correct values are (besides any given integer number of seconds): "+DataSet.toString(times, ",");
@@ -2390,7 +2332,7 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 					int index = DataSet.getIndex(values, val);
 					if (index < 0) {
 						log.append("ERROR! "+val+" is invalid"+sep);
-						continue;						
+						continue;
 					}
 					if (index == 0) obsManager.setInterpolationMethod(INTERPOLATION.NEAREST_NEIGHBOR);
 					if (index == 1) obsManager.setInterpolationMethod(INTERPOLATION.BILINEAR);
@@ -2433,25 +2375,15 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 					log.append("OK"+sep);
 				}
 				if (command[i].equals("DISCONNECT")) {
-					if (dome != null) dome.close();					
+					if (dome != null) dome.close();
 					telescope.disconnect();
 					log.append("OK"+sep);
 				}
-				log.append("WARNING: this command was ignored "+sep);			
+				log.append("WARNING: this command was ignored "+sep);
 			}		
 		} catch (Exception exc) {
 			log.append("ERROR! "+exc.getMessage()+sep);
 		}
 		return log.toString();
-	}
-	
-	private Thread displayImg = null;
-	private class displayThread implements Runnable {
-		public displayThread() { }
-		public void run() {
-			try {
-				display.setIcon(new ImageIcon(getDisplay()));
-			} catch (Exception exc) { }
-		}		
 	}
 }

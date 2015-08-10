@@ -21,8 +21,9 @@
  */					
 package jparsec.vo;
 
-import java.net.*;
-import jparsec.util.*;
+import java.net.InetAddress;
+
+import jparsec.util.JPARSECException;
 
 /**
  * A class with useful net functions.
@@ -65,23 +66,6 @@ public class NetUtils
 		} catch (Exception exc)
 		{
 			throw new JPARSECException("cannot obtain local host.", exc);
-		}
-	}
-
-	/**
-	 * A test program.
-	 * @param args Unused.
-	 */
-	public static void main(String args[])
-	{
-		System.out.println("NetUtils test");
-		
-		try {
-			System.out.println(NetUtils.getLocalHostName());
-			System.out.println(NetUtils.getLocalHostAddress());
-		} catch (JPARSECException exc)
-		{
-			exc.showException();
 		}
 	}
 }

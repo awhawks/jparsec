@@ -28,17 +28,12 @@ import jparsec.ephem.Target.TARGET;
 import jparsec.ephem.planets.EphemElement;
 import jparsec.graph.DataSet;
 import jparsec.io.FileIO;
-import jparsec.io.ReadFile;
 import jparsec.math.Constant;
-import jparsec.observer.City;
-import jparsec.observer.CityElement;
 import jparsec.observer.LocationElement;
 import jparsec.observer.ObserverElement;
-import jparsec.time.AstroDate;
 import jparsec.time.TimeElement;
-import jparsec.time.TimeFormat;
-import jparsec.time.TimeScale;
 import jparsec.time.TimeElement.SCALE;
+import jparsec.time.TimeScale;
 import jparsec.util.JPARSECException;
 
 /**
@@ -379,41 +374,5 @@ public class VariableStarElement {
 	 */
 	public LocationElement getEquatorialPosition() {
 		return new LocationElement(rightAscension, declination, 1);
-	}
-	
-	/**
-	 * Testing program.
-	 * @param args Not used.
-	 */
-	public static void main(String args[]) {
-		System.out.println("Variable star ephemeris test");
-		
-		try {
-			String name = "W CET";
-			
-			int year = 2014;
-			ReadFile re = new ReadFile();
-			re.setPath(VariableStarElement.getPathBulletinAAVSO(year));
-			re.readFileOfVariableStars();
-			System.out.println(re.getNumberOfObjects());
-			int index = re.searchByName(name);
-			VariableStarElement vstar = re.getVariableStarElement(index);
-
-			AstroDate astro = new AstroDate(year, 1, 1);
-			TimeElement time = new TimeElement(astro.jd(), SCALE.UNIVERSAL_TIME_UTC);
-			CityElement city = City.findCity("Madrid");
-			ObserverElement observer = ObserverElement.parseCity(city);
-
-			if (vstar.isEclipsing) {
-				vstar.calcEphemeris(time, observer, false);
-				System.out.println(vstar.name+" PHASE    "+vstar.getPhase());
-				System.out.println(vstar.name+" MIN " + TimeFormat.formatJulianDayAsDate(vstar.getNextMinima(time, observer)));
-			} else {
-				System.out.println(vstar.name+" MAX " + TimeFormat.formatJulianDayAsDate(vstar.getNextMaxima(time, observer)));
-				System.out.println(vstar.name+" MIN " + TimeFormat.formatJulianDayAsDate(vstar.getNextMinima(time, observer)));
-			}
-		} catch (Exception exc) {
-			exc.printStackTrace();
-		}
 	}
 }

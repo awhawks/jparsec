@@ -23,18 +23,17 @@ package jparsec.vo;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.awt.*;
 
 import jparsec.astrophysics.MeasureElement;
 import jparsec.astrophysics.Table;
 import jparsec.ephem.Functions;
 import jparsec.graph.DataSet;
+import jparsec.io.ApplicationLauncher;
 import jparsec.io.FileIO;
 import jparsec.io.ReadFile;
 import jparsec.io.WriteFile;
-import jparsec.io.image.*;
-import jparsec.io.image.FitsIO.PICTURE_LEVEL;
-import jparsec.io.ApplicationLauncher;
+import jparsec.io.image.FitsIO;
+import jparsec.io.image.Picture;
 import jparsec.math.Constant;
 import jparsec.math.FastMath;
 import jparsec.util.JPARSECException;
@@ -945,44 +944,5 @@ public class SExtractor {
 			};
 		}
 		return new Table(data);
-	}
-	
-	/**
-	 * Test program.
-	 * @param args Unused.
-	 */
-	public static void main (String args[])
-	{
-		System.out.println("SExtractor test");
-
-		try {
-			String dir = "/home/alonso/java/librerias/masymas/tres-3/";
-			String file = "TRES-3-025-070725-.fit"; // Input fits file at 'dir'
-			String config = "machine.config"; // Default configuration file of SExtractor, should be at 'dir'
-			Logger.setLoggerLevel(LEVEL.TRACE_LEVEL1);
-			
-			SExtractor sex = new SExtractor(dir, config);
-			sex.execute(file);
-			
-			// Show image and the brightest detected sources
-			FitsIO f = new FitsIO(dir+file);
-			Picture p = f.getPicture(0, PICTURE_LEVEL.LINEAR_INTERPOLATION, true);
-			Graphics2D g = (Graphics2D) p.getImage().getGraphics();
-			g.setColor(Color.RED);
-			for (int i=0; i<sex.getNumberOfSources(); i++)
-			{
-				int r = sex.getDetectionWidth(i);
-				int x = (int) (sex.getX(i).getValue()-r/2.0+0.5) - 1;
-				int y = (int) (sex.getY(i).getValue()-r/2.0+0.5) - 1;
-				g.drawOval(x, y, r, r);
-			}
-			
-			System.out.println(sex.toString());
-			p.show(file);
-			//p.write("/home/alonso/test.png");
-		} catch (Exception exc)
-		{
-			exc.printStackTrace();
-		}
 	}
 }

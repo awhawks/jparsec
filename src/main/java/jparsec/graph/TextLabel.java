@@ -21,16 +21,16 @@
  */					
 package jparsec.graph;
 
-import java.awt.Font;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
 import java.awt.image.BufferedImage;
-import java.util.*;
-
-import javax.swing.*;
+import java.util.ArrayList;
+import java.util.Stack;
+import java.util.Vector;
 
 import jparsec.io.image.Picture;
 import jparsec.math.Constant;
@@ -73,43 +73,10 @@ import jparsec.util.JPARSECException;
  * @author  T. Alonso Albi - OAN (Spain)
  * @author  Leigh Brookshaw
  */
-public class TextLabel extends Object {
+public class TextLabel {
 
-	/**
-	 * For unit testing only.
-	 * @param args Not used.
-	 */
-	public static void main(String args[])
-	{
-		JFrame frame = new JFrame();
-		frame.setSize(800, 600);
-		frame.pack();
-		frame.setVisible(true);
-		Graphics g = frame.getGraphics();
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	private static Color digitalClockOutColor;
 
-		do {
-			try {
-				//String latex = "@latex{\\int_{t=0}^{2\\pi}\\frac{\\sqrt{t}}{(1+\\mathrm{cos}^2{t})}\\nbspdt}";
-				//String s = "@ROTATE015HOLA@MARS@JUPITER@SUN@EARTHln(@REDy{^@ORANGEx_{i}}@SIZE40@BOLD@GREENH"+latex+"I@BLUE@ALPHA@BETA@ITALIC@GAMMA@SIZE10@BLACK@ALPHA)";
-				//s = "X_{C^{1_{8}@SPACEhola} O} hola";
-				String s = "@CLOCK{12h 50m 37.6\"}";
-				TextLabel t = new TextLabel(s,
-//						TextLabel.readFont(TextLabel.FONTS_FILE, TextLabel.FONTS_PATH_DEJAVU_SANS),
-						new Font("Dialog", Font.PLAIN, 30), 
-						Color.BLACK, TextLabel.ALIGN.CENTER);
-				TextLabel.setRenderUnicodeAsImages(true);
-				int x = frame.getWidth() / 2, y = frame.getHeight() / 2;
-				t.draw(g, x, y);
-				//System.out.println(t.getSimplifiedString());
-			} catch (Exception exc)
-			{
-				exc.printStackTrace();
-			}
-		} while (frame.isVisible());
-	}
-
-	private static Color digitalClockOutColor = null;
 	/**
 	 * Sets the color to be used to draw segments of a digital clock
 	 * where there's no 'light', including transparency. Default is
@@ -119,7 +86,7 @@ public class TextLabel extends Object {
 	public static void setDigitalClockOutColor(Color col) {
 		digitalClockOutColor = col;
 	}
-	
+
 	/**
 	 * The set of align values.
 	 */
@@ -132,7 +99,7 @@ public class TextLabel extends Object {
 		RIGHT,
 		/** Position the Text to the left of the  point and displaced 1/2 of its width. */
 		LEFT_PLUS
-	};
+	}
 
 	/**
 	 * The possible formatting for doubles.
@@ -142,13 +109,12 @@ public class TextLabel extends Object {
 		SCIENTIFIC,
 		/** Format to use when parsing a double. */
 		ALGEBRAIC
-	};
+	}
 
   /*
   ** Minimum Point size allowed for script characters
   */
      final static int MINIMUM_SIZE  =  6;
-
 
   /**
    * Decrease in size of successive script levels.

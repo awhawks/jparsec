@@ -37,19 +37,19 @@
 package jparsec.math.matrix;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.Serializable;
 import java.io.StreamTokenizer;
-import java.io.StringReader;
-import java.io.StringWriter;
 import java.io.Writer;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.Locale;
 import java.util.StringTokenizer;
+import java.util.Vector;
 
 import jparsec.ephem.Functions;
 import jparsec.graph.DataSet;
@@ -1332,7 +1332,7 @@ public class Matrix
     tokenizer.wordChars(0,255);
     tokenizer.whitespaceChars(0, ' ');
     tokenizer.eolIsSignificant(true);
-    java.util.Vector v = new java.util.Vector();
+    Vector v = new Vector();
 
     // Ignore initial empty lines
     while (tokenizer.nextToken() == StreamTokenizer.TT_EOL);
@@ -1353,19 +1353,16 @@ public class Matrix
       v.addElement(row = new double[n]);
       int j = 0;
       do {
-        if (j >= n) throw new java.io.IOException
-          ("Row " + v.size() + " is too long.");
+        if (j >= n) throw new IOException("Row " + v.size() + " is too long.");
         row[j++] = Double.valueOf(tokenizer.sval).doubleValue();
       } while (tokenizer.nextToken() == StreamTokenizer.TT_WORD);
-      if (j < n) throw new java.io.IOException
-        ("Row " + v.size() + " is too short.");
+      if (j < n) throw new IOException("Row " + v.size() + " is too short.");
     }
     int m = v.size();  // Now we've got the number of rows.
     double[][] A = new double[m][];
     v.copyInto(A);  // copy the rows out of the vector
     return new Matrix(A);
   }
-
 
   /** 
    * Check if size(A) == size(B) 
@@ -1633,92 +1630,4 @@ public class Matrix
 		m.data[2] = new double[] {0.0, 0.0, 1.0};
 		return m;
 	}
-	
-  /**
-   * Main method for testing this class.
-   * @param args Not used.
-   */
-  public static void main(String[] args) {
-    Matrix        I;
-    Matrix        A;
-    Matrix        B;
-
-    try {
-      // Identity
-      System.out.println("\nIdentity\n");
-      I = Matrix.identity(3, 5);
-      System.out.println("I(3,5)\n" + I);
-      
-      // basic operations - square
-      System.out.println("\nbasic operations - square\n");
-      A = Matrix.random(3, 3);
-      B = Matrix.random(3, 3);
-      System.out.println("A\n" + A);
-      System.out.println("B\n" + B);
-      System.out.println("A'\n" + A.inverse());
-      System.out.println("A^T\n" + A.transpose());
-      System.out.println("A+B\n" + A.plus(B));
-      System.out.println("A*B\n" + A.times(B));
-      System.out.println("X from A*X=B\n" + A.solve(B));
-
-      // basic operations - non square
-      System.out.println("\nbasic operations - non square\n");
-      A = Matrix.random(2, 3);
-      B = Matrix.random(3, 4);
-      System.out.println("A\n" + A);
-      System.out.println("B\n" + B);
-      System.out.println("A*B\n" + A.times(B));
-
-      // sqrt
-      System.out.println("\nsqrt (1)\n");
-      A = new Matrix(new double[][]{{5,-4,1,0,0},{-4,6,-4,1,0},{1,-4,6,-4,1},{0,1,-4,6,-4},{0,0,1,-4,5}});
-      System.out.println("A\n" + A);
-      System.out.println("sqrt(A)\n" + A.sqrt());
-
-      // sqrt
-      System.out.println("\nsqrt (2)\n");
-      A = new Matrix(new double[][]{{7, 10},{15, 22}});
-      System.out.println("A\n" + A);
-      System.out.println("sqrt(A)\n" + A.sqrt());
-      System.out.println("det(A)\n" + A.det() + "\n");
-
-      // eigenvalue decomp.
-      System.out.println("\nEigenvalue Decomposition\n");
-      EigenvalueDecomposition evd = A.eig();
-      System.out.println("[V,D] = eig(A)");
-      System.out.println("- V\n" + evd.getV());
-      System.out.println("- D\n" + evd.getD());
-
-      // LU decomp.
-      A = Matrix.random(3, 3);
-      System.out.println("\nLU Decomposition\n");
-      LUDecomposition lud = A.lu();
-      System.out.println("[L,U,P] = lu(A)");
-      System.out.println("- L\n" + lud.getL());
-      System.out.println("- U\n" + lud.getU());
-      System.out.println("- P\n" + DataSet.arrayToString(lud.getPivot()) + "\n");
-
-      // writer/reader
-      System.out.println("\nWriter/Reader\n");
-      StringWriter writer = new StringWriter();
-      A.write(writer);
-      System.out.println("A.write(Writer)\n" + writer);
-      A = new Matrix(new StringReader(writer.toString()));
-      System.out.println("A = new Matrix.read(Reader)\n" + A);
-
-      // Matlab
-      System.out.println("\nMatlab-Format\n");
-      String matlab = "[ 1   2;3 4 ]";
-      System.out.println("Matlab: " + matlab);
-      System.out.println("from Matlab:\n" + Matrix.parseMatlab(matlab));
-      System.out.println("to Matlab:\n" + Matrix.parseMatlab(matlab).toMatlab());
-      matlab = "[1 2 3 4;3 4 5 6;7 8 9 10]";
-      System.out.println("Matlab: " + matlab);
-      System.out.println("from Matlab:\n" + Matrix.parseMatlab(matlab));
-      System.out.println("to Matlab:\n" + Matrix.parseMatlab(matlab).toMatlab() + "\n");
-    }
-    catch (Exception e) {
-      e.printStackTrace();
-    }
-  }
 }

@@ -21,8 +21,8 @@
  */					
 package jparsec.math;
 
-import java.awt.Graphics2D;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -34,9 +34,7 @@ import javax.swing.JLabel;
 
 import be.ugent.caagt.jmathtex.TeXConstants;
 import be.ugent.caagt.jmathtex.TeXFormula;
-
 import jparsec.graph.DataSet;
-import jparsec.io.image.Picture;
 
 /**
  * A class to create equations using JMathTex library.
@@ -286,7 +284,6 @@ public class LATEXFormula implements Serializable {
 		return out;
 	}
 
-    
 	private void writeObject(ObjectOutputStream out)
 	throws IOException {
 		out.writeObject(expression);
@@ -301,28 +298,4 @@ public class LATEXFormula implements Serializable {
 		this.code = this.parseExpression();
         formula = new TeXFormula(this.code);
  	}
-
-	/**
-	 * Test program.
-	 * @param args Unused.
-	 */
-    public static void main(String[] args) {
-        try {
-        	String expression = LATEXFormula.getIntegral("t=0", "2pi")+
-        			LATEXFormula.getFraction("sqrt(t)", 
-        			LATEXFormula.getBetweenParentesis("1+cos^2(t)"))+" dt";
-        	LATEXFormula formula = new LATEXFormula(expression, LATEXFormula.STYLE_DISPLAY,
-        			LATEXFormula.SIZE_HUGE);
-//        	Or, alternatively
-//        	formula.setCode("\\int_{t=0}^{2\\pi}\\frac{\\sqrt{t}}{(1+\\mathrm{cos}^2{t})}\\nbspdt");
-        	System.out.println(formula.code);
-        	BufferedImage image = formula.getAsImage();
-
-        	Picture p = new Picture(image);
-        	p.show("LATEX formula");
-        	p.write("/home/alonso/formula.png");
-        } catch (Exception ex) {
-        	ex.printStackTrace();
-        }
-    }
 }

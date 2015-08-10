@@ -21,20 +21,14 @@
  */					
 package jparsec.graph;
 
-import gov.noaa.pmel.sgt.swing.JPlotLayout;
-import gov.noaa.pmel.util.Domain;
-
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -52,7 +46,6 @@ import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -63,9 +56,8 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.TitledBorder;
 
-import visad.util.SelectRangeWidget;
-import visad.util.VisADSlider;
-
+import gov.noaa.pmel.sgt.swing.JPlotLayout;
+import gov.noaa.pmel.util.Domain;
 import jparsec.astronomy.CoordinateSystem;
 import jparsec.astrophysics.gildas.LMVCube;
 import jparsec.ephem.EphemerisElement;
@@ -82,8 +74,10 @@ import jparsec.time.TimeElement;
 import jparsec.time.TimeElement.SCALE;
 import jparsec.util.JPARSECException;
 import jparsec.util.Logger;
-import jparsec.util.Translate;
 import jparsec.util.Logger.LEVEL;
+import jparsec.util.Translate;
+import visad.util.SelectRangeWidget;
+import visad.util.VisADSlider;
 
 /**
  * A VISAD chart element consisting on a grid chart, a VISAD cube, and the control panel, to show
@@ -1255,42 +1249,5 @@ public class VISADChart implements Serializable, MouseMotionListener, MouseListe
 	 */
 	public String getFile() {
 		return path;
-	}
-	
-	/**
-	 * Test program.
-	 * @param args Not used.
-	 */
-	public static void main(String args[]) {
-		System.out.println("VISADChart test");
-		
-		try {
-			int w = 640;
-			//final VISADChart v = (VISADChart) Serialization.readObject("/home/alonso/eclipse/libreria_jparsec/presentation/testPanel/visadChartTest");
-			final VISADChart v = new VISADChart("/home/alonso/reduccion/2010/reajusteRMonConDataCube/rmon_K.lmv", 0, 0, w);
-			
-			final JFrame frame = new JFrame("Example");
-			final JPanel panel = v.getComponent();
-			frame.add(panel);
-			frame.pack();
-			frame.setResizable(true);
-			frame.setVisible(true);
-			frame.setSize(new Dimension(w, w));
-			frame.addComponentListener(new ComponentAdapter() {
-				@Override
-				public void componentResized(ComponentEvent e) {
-					panel.setBounds(0, 0, frame.getWidth(), frame.getHeight());
-				}
-			});
-			panel.addComponentListener(new ComponentAdapter() {
-				@Override
-				public void componentResized(ComponentEvent e) {
-					v.update();
-				}
-			});
-			//Serialization.writeObject(v, "/home/alonso/visadChartTest");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}	
 	}
 }

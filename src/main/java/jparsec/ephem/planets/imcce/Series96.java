@@ -30,31 +30,26 @@ import java.io.InputStreamReader;
 import jparsec.ephem.Ephem;
 import jparsec.ephem.EphemerisElement;
 import jparsec.ephem.EphemerisElement.ALGORITHM;
+import jparsec.ephem.EphemerisElement.FRAME;
+import jparsec.ephem.EphemerisElement.REDUCTION_METHOD;
 import jparsec.ephem.Functions;
 import jparsec.ephem.IAU2006;
 import jparsec.ephem.Nutation;
 import jparsec.ephem.PhysicalParameters;
 import jparsec.ephem.Precession;
-import jparsec.ephem.EphemerisElement.FRAME;
-import jparsec.ephem.EphemerisElement.REDUCTION_METHOD;
 import jparsec.ephem.Target.TARGET;
 import jparsec.ephem.moons.MoonEphem;
 import jparsec.ephem.planets.EphemElement;
-import jparsec.ephem.planets.JPLEphemeris;
 import jparsec.ephem.planets.PlanetEphem;
-import jparsec.io.ConsoleReport;
 import jparsec.io.FileIO;
 import jparsec.math.Constant;
 import jparsec.math.matrix.Matrix;
-import jparsec.observer.City;
-import jparsec.observer.CityElement;
 import jparsec.observer.LocationElement;
 import jparsec.observer.ObserverElement;
-import jparsec.time.AstroDate;
 import jparsec.time.SiderealTime;
-import jparsec.time.TimeScale;
 import jparsec.time.TimeElement;
 import jparsec.time.TimeElement.SCALE;
+import jparsec.time.TimeScale;
 import jparsec.util.DataBase;
 import jparsec.util.JPARSECException;
 import jparsec.util.Translate;
@@ -701,43 +696,6 @@ public class Series96
 		ephem_elem.name = eph.targetBody.getName();
 
 		return ephem_elem;
-	}
-
-	/**
-	 * For unit testing only.
-	 * @param args Not used.
-	 */
-	public static void main(String args[])
-	{
-		System.out.println("Series96 Test");
-
-		try
-		{
-			AstroDate astro = new AstroDate(2049, AstroDate.JANUARY, 1, 0, 0, 0);
-			TimeElement time = new TimeElement(astro, SCALE.TERRESTRIAL_TIME);
-			CityElement city = City.findCity("Madrid");
-			EphemerisElement eph = new EphemerisElement(TARGET.NEPTUNE, EphemerisElement.COORDINATES_TYPE.APPARENT,
-					EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.GEOCENTRIC, EphemerisElement.REDUCTION_METHOD.IAU_2006,
-					EphemerisElement.FRAME.ICRF);
-			ObserverElement observer = ObserverElement.parseCity(city);
-
-			EphemElement ephem = Series96.series96Ephemeris(time, observer, eph);
-
-			ephem.name = eph.targetBody.getName() + " (Series96)";
-			ConsoleReport.basicEphemReportToConsole(ephem);
-
-			eph.algorithm = EphemerisElement.ALGORITHM.JPL_DE403;
-			JPLEphemeris jpl = new JPLEphemeris(EphemerisElement.ALGORITHM.JPL_DE403);
-			ephem = jpl.getJPLEphemeris(time, observer, eph);
-
-			ephem.name = eph.targetBody.getName() + " (DE403)";
-			ConsoleReport.basicEphemReportToConsole(ephem);
-
-			JPARSECException.showWarnings();
-		} catch (JPARSECException ve)
-		{
-			JPARSECException.showException(ve);
-		}
 	}
 };
 

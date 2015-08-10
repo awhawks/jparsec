@@ -21,7 +21,6 @@
  */					
 package jparsec.graph;
 
-
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -33,7 +32,6 @@ import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.KeyAdapter;
@@ -70,21 +68,16 @@ import jparsec.astrophysics.gildas.Gildas30m;
 import jparsec.astrophysics.gildas.LMVCube;
 import jparsec.astrophysics.gildas.Parameter;
 import jparsec.astrophysics.gildas.Spectrum30m;
-import jparsec.astrophysics.gildas.SpectrumHeader30m;
 import jparsec.astrophysics.gildas.Spectrum30m.XUNIT;
+import jparsec.astrophysics.gildas.SpectrumHeader30m;
 import jparsec.ephem.Functions;
-import jparsec.graph.ChartElement;
-import jparsec.graph.ChartSeriesElement;
-import jparsec.graph.CreateChart;
-import jparsec.graph.DataSet;
 import jparsec.io.FileIO;
-import jparsec.io.Serialization;
 import jparsec.io.image.Picture;
 import jparsec.math.Constant;
 import jparsec.util.JPARSECException;
 import jparsec.util.Logger;
-import jparsec.util.Translate;
 import jparsec.util.Logger.LEVEL;
+import jparsec.util.Translate;
 
 /**
  * Implements a panel to show 30m and lmv spectra for different sources and molecules.
@@ -1027,50 +1020,6 @@ public class SpectraChart implements ActionListener, ListSelectionListener, Comp
 	}
 
 	/**
-	 * Test program.
-	 * @param args Not used.
-	 */
-	public static void main(String args[]) {
-		System.out.println("Spectra panel test");
-
-		Translate.setDefaultLanguage(Translate.LANGUAGE.SPANISH);
-		try {
-			String files[] = new String[] {
-					"/home/alonso/reduccion/2006/hot_cores/cb3/fich_cb3_map.30m",
-					"/home/alonso/reduccion/2006/hot_cores/cepe/fich_cepe.30m",
-					"/home/alonso/reduccion/2006/hot_cores/ic1396/fich_ic1396.30m",
-//					"/home/alonso/reduccion/2006/hot_cores/omc2/fich_omc2.30m",
-//					"/home/alonso/reduccion/2006/hot_cores/n7129/n7129.30m",
-					"/home/alonso/reduccion/2006/hot_cores/serp-firs1/fich_serp-firs1.30m",
-//					"/home/alonso/reduccion/2006/hot_cores/s140/fich_s140.30m",
-					"/home/alonso/reduccion/2011/observacionesSep2010/PVCEP_reduced.30m",
-					"/home/alonso/reduccion/2011/observacionesSep2010/HKORI_reduced.30m"
-//					"/home/alonso/reduccion/2010/reajusteRMonConDataCube/rmon_K.lmv"
-			};
-			int w = 630, h = 430;
-			final SpectraChart s = new SpectraChart(files, w, h, 12, 0, null, null, false, false);
-			Serialization.writeObject(s, "/home/alonso/spectrumChart");
-			//final SpectraChart s = (SpectraChart) Serialization.readObject("/home/alonso/spectrumChart");
-			
-			final JFrame f = new JFrame();
-			//f.setUndecorated(true);
-			f.add(s.getComponent());
-			f.setPreferredSize(new Dimension(w, h));
-			f.pack();
-			f.setVisible(true);
-			f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			f.addComponentListener(new ComponentAdapter() {
-				@Override
-				public void componentResized(ComponentEvent e) {
-					s.panel.setSize(f.getSize());
-				}
-			});
-		} catch (Exception e1) {
-			e1.printStackTrace();
-		}
-	}
-
-	/**
 	 * Nothing.
 	 */
 	public void componentHidden(ComponentEvent arg0) {
@@ -1445,13 +1394,15 @@ class CombinedListItemElement2 implements Serializable, ActionListener, ListSele
 		frame.setVisible(false);
 		frame.removeAll();
 		frame.dispose();
-        
+
         return new Dimension(twidth, theight);
 	}
 }
 
 class MyCellRenderer extends JLabel implements ListCellRenderer {
-	 public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+  private static final long serialVersionUID = 1L;
+
+  public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
 	 // Get text to display.
 	 String s = value.toString();
 	 // Set the text.

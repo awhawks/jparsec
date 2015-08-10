@@ -22,9 +22,13 @@
 package jparsec.astrophysics;
 
 import jparsec.graph.DataSet;
-import jparsec.io.*;
-import jparsec.util.*;
-import jparsec.math.*;
+import jparsec.io.FileIO;
+import jparsec.io.ReadFile;
+import jparsec.io.UnixSpecialCharacter;
+import jparsec.math.CGSConstant;
+import jparsec.math.Constant;
+import jparsec.math.Interpolation;
+import jparsec.util.JPARSECException;
 
 /**
  * Provides useful calculations for single dish antennas.
@@ -211,31 +215,5 @@ public class SingleDish {
 	 */
 	public double getBeam(double freq) {
 		return 74000.0 / (freq * this.diameter);
-	}
-	
-	/**
-	 * A test program.
-	 * @param args Unused.
-	 */
-	public static void main (String args[])
-	{
-		System.out.println("SingleDish test");
-		
-		try {
-			SingleDish sd = new SingleDish(TELESCOPE.IRAM30m);
-			double freq = 372.67251;
-			System.out.println("Frequency (GHz): "+freq);
-			System.out.println("Beam (\"): "+sd.getBeam(freq));
-//			System.out.println("Jy/K in Ta ("+sd.name+"):  "+sd.getJyKInTa(freq));
-//			System.out.println("Jy/K in Tmb ("+sd.name+"): "+sd.getJyKInTmb(freq));
-			sd = new SingleDish(TELESCOPE.JCMT);
-			System.out.println("Jy/K in Ta ("+sd.name+"):  "+sd.getJyKInTa(freq));
-			System.out.println("Jy/K in Tmb ("+sd.name+"): "+sd.getJyKInTmb(freq));
-			System.out.println("main beam eff ("+sd.name+"): "+sd.getBeamEfficiency(freq));
-			
-		} catch (Exception exc)
-		{
-			exc.printStackTrace();
-		}
 	}
 }

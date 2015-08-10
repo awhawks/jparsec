@@ -28,8 +28,8 @@ import java.io.Serializable;
 
 import jparsec.ephem.Ephem;
 import jparsec.ephem.EphemerisElement;
-import jparsec.ephem.Functions;
 import jparsec.ephem.EphemerisElement.FRAME;
+import jparsec.ephem.Functions;
 import jparsec.ephem.Target.TARGET;
 import jparsec.ephem.moons.MoonOrbitalElement;
 import jparsec.ephem.moons.MoonPhysicalParameters;
@@ -43,7 +43,6 @@ import jparsec.graph.chartRendering.AWTGraphics;
 import jparsec.graph.chartRendering.Graphics;
 import jparsec.graph.chartRendering.Graphics.FONT;
 import jparsec.io.FileIO;
-import jparsec.io.image.Picture;
 import jparsec.math.Constant;
 import jparsec.math.FastMath;
 import jparsec.observer.City;
@@ -51,7 +50,6 @@ import jparsec.observer.CityElement;
 import jparsec.observer.ObserverElement;
 import jparsec.time.AstroDate;
 import jparsec.time.TimeElement;
-import jparsec.time.TimeFormat;
 import jparsec.time.TimeElement.SCALE;
 import jparsec.time.TimeScale;
 import jparsec.util.JPARSECException;
@@ -1041,7 +1039,7 @@ public class OrbitalElement implements Serializable
 		CreateChart ch = new CreateChart(chart);
 		return ch;
 	}
-	
+
 	/**
 	 * Returns the distance curve of this minor object in a given time interval,
 	 * respect both the Earth and the Sun.
@@ -1104,60 +1102,5 @@ public class OrbitalElement implements Serializable
 				title, Translate.translate(1202), Translate.translate(299)+" ("+au+")", false);
 		CreateChart ch = new CreateChart(chart);
 		return ch;
-	}
-	
-	/**
-	 * Test program.
-	 * @param args Not used.
-	 */
-	public static void main(String args[]) {
-		try {
-			AstroDate astro = new AstroDate(1991, 10, 5.0);
-			OrbitalElement orbit = new OrbitalElement("Encke", 2.2091404, 186.24444 * Constant.DEG_TO_RAD, 0.8502196, 0.0, 
-					334.04096 * Constant.DEG_TO_RAD, 11.93911 * Constant.DEG_TO_RAD, new AstroDate(1990, 10, 5.0).jd(), 0.0, Constant.B1950, 0.0, 0.0);
-			orbit = OrbitEphem.getOrbitalElementsOfComet(OrbitEphem.getIndexOfComet("2014 Q1"));
-			Picture pp = new Picture(orbit.getOrbitImage(orbit.name, 600, 600, 0.65, astro.jd(), true, true));
-			pp.show("");
-			
-			OrbitalElement orbit1 = orbit.clone();
-			orbit1.changeToEquinox(Constant.J2000);                                               // Should be ...
-			System.out.println(Functions.formatAngleAsDegrees(orbit1.inclination, 5));            // 11.94524 
-			System.out.println(Functions.formatAngleAsDegrees(orbit1.ascendingNodeLongitude, 5)); // -25.24994
-			System.out.println(Functions.formatAngleAsDegrees(orbit1.argumentOfPerihelion, 5));   // 186.23352
-			
-			OrbitalElement orbit2 = orbit.clone();
-			orbit2.referenceFrame = FRAME.FK4;
-			orbit2.referenceTime = Constant.B1950;
-//			orbit2.FK4_to_FK5();
-			System.out.println(Functions.formatAngleAsDegrees(orbit2.inclination, 5));            // 11.94521
-			System.out.println(Functions.formatAngleAsDegrees(orbit2.ascendingNodeLongitude, 5)); // -25.24957
-			System.out.println(Functions.formatAngleAsDegrees(orbit2.argumentOfPerihelion, 5));   // 186.23327
-			
-			astro = new AstroDate(1986, 2, 9.45891);
-			OrbitalElement orbit3 = new OrbitalElement("Halley", 17.9400782, 111.84644 * Constant.DEG_TO_RAD, 0.96727426, 0.0, 
-					0 * Constant.DEG_TO_RAD, 0 * Constant.DEG_TO_RAD, astro.jd(), 0.01297082 * Constant.DEG_TO_RAD, Constant.B1950, 0.0, 0.0);
-			System.out.println(TimeFormat.formatJulianDayAsDateAndTime(orbit3.getNextPassThroughMeanAscendingNode(), SCALE.TERRESTRIAL_TIME)); // Nov 9 1985, 3:49
-			System.out.println(TimeFormat.formatJulianDayAsDateAndTime(orbit3.getNextPassThroughMeanDescendingNode(), SCALE.TERRESTRIAL_TIME)); // Mar 10 1986, 8:52
-
-/*			Translate.setDefaultLanguage(LANGUAGE.SPANISH);
-			AstroDate init = new AstroDate();
-			AstroDate end = init.clone();
-			end.add(365.25 * 40);
-			orbit3.magnitudeModel = MAGNITUDE_MODEL.COMET_gk;
-			CreateChart ch = orbit3.getLightCurveChart(new TimeElement(init, SCALE.BARYCENTRIC_DYNAMICAL_TIME), new TimeElement(end, SCALE.BARYCENTRIC_DYNAMICAL_TIME), new ObserverElement(), 
-					new EphemerisElement(), 200);
-			ch.showChartInJFreeChartPanel();
-			CreateChart ch2 = orbit3.getDistanceChart(new TimeElement(init, SCALE.BARYCENTRIC_DYNAMICAL_TIME), new TimeElement(end, SCALE.BARYCENTRIC_DYNAMICAL_TIME), new ObserverElement(), 
-					new EphemerisElement(), 200);
-			ch2.showChartInJFreeChartPanel();
-			
-			Picture pic1 = new Picture(ChartElement.getSimpleChart(ch.getChartElement()));
-			Picture pic2 = new Picture(ChartElement.getSimpleChart(ch2.getChartElement()));
-			pic1.show("1");
-			pic2.show("2");
-*/			
-		} catch (Exception exc) {
-			exc.printStackTrace();
-		}
 	}
 }

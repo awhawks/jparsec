@@ -21,21 +21,21 @@
  */					
 package jparsec.io;
 
+import java.lang.reflect.Field;
+import java.text.DecimalFormat;
+import java.util.Properties;
+import java.util.Set;
+
 import jparsec.ephem.Functions;
 import jparsec.ephem.Target;
 import jparsec.ephem.Target.TARGET;
 import jparsec.ephem.planets.EphemElement;
 import jparsec.graph.DataSet;
 import jparsec.math.Constant;
-import jparsec.time.TimeFormat;
 import jparsec.time.TimeElement.SCALE;
+import jparsec.time.TimeFormat;
 import jparsec.util.JPARSECException;
 import jparsec.util.Translate;
-
-import java.lang.reflect.Field;
-import java.text.DecimalFormat;
-import java.util.Properties;
-import java.util.Set;
 
 /**
  * A class with static methods to report results of calculations in an adequate format.
@@ -531,7 +531,7 @@ public class ConsoleReport
 			}
 			
 			String className = o.getClass().getCanonicalName();
-			Class c = Class.forName(className);
+			Class<?> c = Class.forName(className);
 			Field f[] = c.getFields();
 			String out = className+": ";
 			for (int i=0; i<f.length; i++) {
@@ -547,21 +547,5 @@ public class ConsoleReport
 			e.printStackTrace();
 			throw new JPARSECException("cannot report fields.", e);
 		}
-	}
-
-	/**
-	 * For unit testing only.
-	 * @param args Not used.
-	 */
-	public static void main(String args[])
-	{
-		System.out.println("ConsoleReport test");
-		
-		String val[] = DataSet.toStringValues(new double[] {
-				-123.123,  -12, 12, 321.1234567
-		});
-		String format = "1x, f5.3, 3x, 2I3, 1x, A5";
-		String out = ConsoleReport.formatAsFortran(val, format, true);
-		System.out.println(out);
 	}
 }

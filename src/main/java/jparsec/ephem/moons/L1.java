@@ -37,33 +37,7 @@ public class L1
 	// private constructor so that this class cannot be instantiated.
 	private L1() {}
 	
-	/**
-	 * Testing program.
-	 * @param args Not used.
-	 */
-	public static void main(String args[]) {
-		for (int nsat = 1; nsat <= 4; nsat ++) {
-			double ELEM[] = L1.L1_theory_old(2451545, nsat, 1, 1);
-			System.out.println(ELEM[0]+"/"+ELEM[1]+"/"+ELEM[2]+"/"+ELEM[3]+"/"+ELEM[4]+"/"+ELEM[5]);
-// Should be
-// Io
-//			  2.671999370920431E-003  7.644018403387422E-004  4.087344808808269E-004
-//			  -3.116203340625001E-003  8.645679572984422E-003  4.066210333795641E-003
-// Europa
-//			  -3.751373844521062E-003 -2.136179970327756E-003 -1.056765216826830E-003
-//			   4.310591732986133E-003 -6.143199976514738E-003 -2.800434328620005E-003
-// Ganymede
-//			  -5.490036250442612E-003 -4.112229247907583E-003 -2.033821277493470E-003
-//			   4.036147912130572E-003 -4.364866691392988E-003 -2.037111499364415E-003
-// Callisto
-//			   2.172082907229073E-003  1.118792302205555E-002  5.322275059416266E-003
-//			  -4.662583658656747E-003  7.976685330152526E-004  3.092058747362411E-004			
-			ELEM = L1.L1_theory(2441669, nsat);
-			System.out.println(ELEM[0]+"/"+ELEM[1]+"/"+ELEM[2]+"/"+ELEM[3]+"/"+ELEM[4]+"/"+ELEM[5]);
-// Should be	
-//-0.012136434071684304/0.003374929866115463/0.0014374540796792653/-0.0013542058539217942/-0.0040620093629751275/-0.0019470410148563256
-		}
-	}
+
 	/**
 	 * L1 Ephemerides v1.2. Output vector is in equatorial coordinates, in
 	 * AU and AU/day. Tchebycheff polynomials are used to represent very long 

@@ -34,16 +34,11 @@ import jparsec.ephem.moons.MoonPhysicalParameters;
 import jparsec.ephem.planets.EphemElement;
 import jparsec.math.Constant;
 import jparsec.math.FastMath;
-import jparsec.observer.City;
-import jparsec.observer.CityElement;
-import jparsec.observer.Observatory;
-import jparsec.observer.ObservatoryElement;
 import jparsec.observer.ObserverElement;
 import jparsec.time.TimeElement.SCALE;
 import jparsec.util.Configuration;
 import jparsec.util.DataBase;
 import jparsec.util.JPARSECException;
-import jparsec.util.Logger;
 
 /**
  * Calculate mean or apparent sidereal time through different methods. Depending
@@ -730,50 +725,6 @@ public class SiderealTime
 		DataBase.addData("EECT", new double[] {EECT_last_value, EECT_last_calc_T}, true);
 		return ct;
 	}
-
-	/**
-	 * For unit testing only.
-	 * @param args Not used.
-	 */
-	public static void main(String args[])
-	{
-		System.out.println("Ephem Test");
-
-		try
-		{
-			Logger.disableLogging();
-			AstroDate astro = new AstroDate(2015, AstroDate.MARCH, 17, 13, 51, 30);
-			TimeElement time = new TimeElement(astro, SCALE.UNIVERSAL_TIME_UT1);
-			ObservatoryElement obs = Observatory.findObservatorybyName("Yebes");
-			//CityElement city = City.findCity("Madrid");
-			//ObserverElement observer = ObserverElement.parseCity(city);
-			ObserverElement observer = ObserverElement.parseObservatory(obs);
-			EphemerisElement eph = new EphemerisElement(TARGET.Moon, EphemerisElement.COORDINATES_TYPE.APPARENT,
-					EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.GEOCENTRIC, EphemerisElement.REDUCTION_METHOD.IAU_2006,
-					EphemerisElement.FRAME.ICRF, EphemerisElement.ALGORITHM.JPL_DE405);
-
-//			eph.optimizeForSpeed();
-			double gmst = SiderealTime.greenwichMeanSiderealTime(time, observer, eph);
-			double ast = SiderealTime.apparentSiderealTime(time, observer, eph);
-			double eceq = SiderealTime.equationOfEquinoxes(time, observer, eph);
-			double eqTime = SiderealTime.equationOfTime(time, observer, eph);
-
-			System.out.println("jd " + astro.jd() + " / dst " + TimeScale.getDST(astro.jd(), observer));
-			System.out.println("GMST: " + Functions.formatRA(gmst, 8));
-			System.out.println("AST: " + Functions.formatRA(ast, 8));
-			System.out.println("ECEQ: " + Functions.formatRA(eceq, 8));
-			System.out.println("ECTime: " + Functions.formatRAWithNegativeTime(eqTime, 8));
-			
-			eph.preferPrecisionInEphemerides = false;
-			eceq = SiderealTime.equationOfEquinoxes(time, observer, eph);
-			System.out.println("ECEQ: " + Functions.formatRA(eceq, 8));
-			JPARSECException.showWarnings();
-
-		} catch (JPARSECException ve)
-		{
-			JPARSECException.showException(ve);
-		}
-	}
 }
 
 final class eect00
@@ -868,3 +819,4 @@ final class eect00
 	// Sine and cosine coefficients for t^1
 	static double SE1[] = { -0.87e-6, +0.00e-6, };
 }
+

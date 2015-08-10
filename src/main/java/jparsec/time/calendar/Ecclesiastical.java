@@ -23,8 +23,6 @@ package jparsec.time.calendar;
 
 import java.io.Serializable;
 
-import jparsec.time.*;
-
 /**
  * Implements the Ecclesiastical calendar. See Calendrical Calculations for
  * reference.
@@ -103,23 +101,5 @@ public class Ecclesiastical implements Serializable
 		long l2 = (long) Math.floor(Calendar.apparentFromLocal(Calendar.localFromUniversal(Calendar.lunarPhaseAfter(d,
 				180.0), Calendar.JERUSALEM))); // 180 = Moon lon - Sun lon at full moon phase
 		return Calendar.kDayAfter(l2, 0);
-	}
-
-	/**
-	 * Test program.
-	 * @param args Unused.
-	 */
-	public static void main (String args[])
-	{
-		System.out.println("Ecclesiastical test");
-		
-		try {
-			long fixed = 2009; //Calendar.fixedFromJD(2454986.0);
-			System.out.println("Easter "+TimeFormat.formatJulianDayAsDate(Calendar.jdFromFixed(Ecclesiastical.easter(fixed))));
-			System.out.println("Pentecost "+TimeFormat.formatJulianDayAsDate(Calendar.jdFromFixed(Ecclesiastical.pentecost(fixed))));
-		} catch (Exception exc)
-		{
-			exc.printStackTrace();
-		}
 	}
 }
