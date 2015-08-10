@@ -23,6 +23,7 @@ package jparsec.graph;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.UnsupportedEncodingException;
@@ -33,6 +34,7 @@ import jparsec.io.ReadFile;
 import jparsec.io.image.Picture;
 
 import org.stathissideris.ascii2image.core.ConversionOptions;
+import org.stathissideris.ascii2image.core.ProcessingOptions;
 import org.stathissideris.ascii2image.graphics.BitmapRenderer;
 import org.stathissideris.ascii2image.graphics.Diagram;
 import org.stathissideris.ascii2image.text.TextGrid;
@@ -296,18 +298,19 @@ public class CreateDitaaChart {
 		co.renderingOptions.setDropShadows(this.shadows);
 		co.renderingOptions.setAntialias(this.antialiasing);
 		co.renderingOptions.setScale(this.scale);
-		co.processingOptions.setAllCornersAreRound(this.round);
-		co.processingOptions.setPerformSeparationOfCommonEdges(this.separateCommonEdges);
-		co.processingOptions.setCharacterEncoding(encoding);
-		Color col = new Color(background.getRed(), background.getGreen(), background.getBlue(), background.getAlpha());
-		if (transparent) col = new Color(background.getRed(), background.getGreen(), background.getBlue(), 0);
-		co.renderingOptions.setBackgroundColor(col);
-		Diagram diagram = new Diagram(grid, co);
-		
+		ProcessingOptions po = new ProcessingOptions();
+		po.setAllCornersAreRound(this.round);
+		po.setPerformSeparationOfCommonEdges(this.separateCommonEdges);
+		po.setCharacterEncoding(encoding);
+		// FIXME where to set the background color ??
+		//Color col = new Color(background.getRed(), background.getGreen(), background.getBlue(), background.getAlpha());
+		//if (transparent) col = new Color(background.getRed(), background.getGreen(), background.getBlue(), 0);
+		//co.renderingOptions.setBackgroundColor(col);
+		Diagram diagram = new Diagram(grid, co, po);
 		RenderedImage image = new BitmapRenderer().renderToImage(diagram, co.renderingOptions);
 		return (BufferedImage) image;
 	}
-	
+
 	/**
 	 * Renders a diagram to an external Graphics object.
 	 * @param g2 The graphics object.
@@ -329,17 +332,18 @@ public class CreateDitaaChart {
 		co.renderingOptions.setDropShadows(this.shadows);
 		co.renderingOptions.setAntialias(this.antialiasing);
 		co.renderingOptions.setScale(this.scale);
-		co.processingOptions.setAllCornersAreRound(this.round);
-		co.processingOptions.setPerformSeparationOfCommonEdges(this.separateCommonEdges);
-		co.processingOptions.setCharacterEncoding(encoding);
+		ProcessingOptions po = new ProcessingOptions();
+		po.setAllCornersAreRound(this.round);
+		po.setPerformSeparationOfCommonEdges(this.separateCommonEdges);
+		po.setCharacterEncoding(encoding);
 		Color col = new Color(background.getRed(), background.getGreen(), background.getBlue(), background.getAlpha());
 		if (transparent) col = new Color(background.getRed(), background.getGreen(), background.getBlue(), 0);
-		co.renderingOptions.setBackgroundColor(col);
-		Diagram diagram = new Diagram(grid, co);
-		
-		new BitmapRenderer().render(diagram, g2, co.renderingOptions);
+		g2.setBackground(col);
+		Diagram diagram = new Diagram(grid, co, po);
+		RenderedImage image = new BitmapRenderer().renderToImage(diagram, co.renderingOptions);
+		g2.drawRenderedImage(image, new AffineTransform());
 	}
-	
+
 	/**
 	 * Sets if antialiasing should be used. Default is true.
 	 * @param a True or false.
