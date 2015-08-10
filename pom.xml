@@ -114,6 +114,7 @@
                                 <get src='${conga.url}/images.jar'           dest='${project.basedir}/lib/' usetimestamp='true' />
                                 <get src='${conga.url}/jpl_ephem.jar'        dest='${project.basedir}/lib/' usetimestamp='true' />
                                 <get src='${conga.url}/orbital_elements.jar' dest='${project.basedir}/lib/' usetimestamp='true' />
+                                <get src='${conga.url}/org.jzy3d-0.9.jar'    dest='${project.basedir}/lib/' usetimestamp='true' />
                                 <get src='${conga.url}/radex.jar'            dest='${project.basedir}/lib/' usetimestamp='true' />
                                 <get src='${conga.url}/sgt_v30.jar'          dest='${project.basedir}/lib/' usetimestamp='true' />
                                 <get src='${conga.url}/sky.jar'              dest='${project.basedir}/lib/' usetimestamp='true' />
