@@ -36,13 +36,13 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
-import sun.org.mozilla.javascript.internal.NativeArray;
+// FIXME Java 7+ have builtin-JavaScript engine
+//import sun.org.mozilla.javascript.internal.NativeArray;
 
 import jparsec.graph.ChartElement;
 import jparsec.graph.ChartSeriesElement;
 import jparsec.graph.CreateChart;
 import jparsec.graph.DataSet;
-import jparsec.io.ConsoleReport;
 import jparsec.io.FileIO;
 import jparsec.util.JPARSECException;
 
@@ -685,6 +685,7 @@ public class Evaluation implements Serializable
 	 * @param n NativeArray.
 	 * @return String array
 	 */
+	/*
 	public static String[] nativeArrayToStringArray(NativeArray n)
 	{
 		String arr[] = new String[(int) n.getLength()];
@@ -695,7 +696,7 @@ public class Evaluation implements Serializable
 		}
 	
 		return arr;
-	}
+	}*/
 
 	/**
 	 * Transforms a NativeArray (Java Script) to double array.
@@ -703,6 +704,7 @@ public class Evaluation implements Serializable
 	 * @param n NativeArray.
 	 * @return Double array.
 	 */
+	/*
 	public static double[] nativeArrayToDoubleArray(NativeArray n)
 	{
 		double arr[] = new double[(int) n.getLength()];
@@ -714,6 +716,7 @@ public class Evaluation implements Serializable
 	
 		return arr;
 	}
+	*/
 
 	/**
 	 * Returns the evaluation function.
@@ -800,8 +803,9 @@ public class Evaluation implements Serializable
 			expression += "var xx = new Array (x, y, z)\n";
 			expression += "xx"; // To get the array
 			System.out.println("Expression: \n"+expression);
-			double out[] = Evaluation.nativeArrayToDoubleArray((NativeArray) eval.evaluatePureJavaExpression(expression));
-			ConsoleReport.doubleArrayReport(out, "f2.5");
+			// FIXME Java 7+ have builtin JavaScript engine!
+			//double out[] = Evaluation.nativeArrayToDoubleArray((NativeArray) eval.evaluatePureJavaExpression(expression));
+			//ConsoleReport.doubleArrayReport(out, "f2.5");
 		} catch (Exception exc)
 		{
 			exc.printStackTrace();
