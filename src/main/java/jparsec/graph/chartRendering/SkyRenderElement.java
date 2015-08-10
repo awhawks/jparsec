@@ -24,7 +24,6 @@ package jparsec.graph.chartRendering;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import java.util.Arrays;
 import jparsec.astronomy.Constellation;
 import jparsec.astronomy.CoordinateSystem;
 import jparsec.astronomy.TelescopeElement;
@@ -51,7 +50,7 @@ import jparsec.util.Translate.LANGUAGE;
  * constructor allows to instantiate an object selecting the values of the main
  * fields. There are much more variables (any variable name starting with
  * draw...) that can be set optionally.
- *
+ * 
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -66,9 +65,14 @@ public class SkyRenderElement implements Serializable
 	public SkyRenderElement()
 	{
 		this.coordinateSystem = CoordinateSystem.COORDINATE_SYSTEM.EQUATORIAL;
+		this.centralLongitude = 0.0;
+		this.centralLatitude = 0.0;
 		this.projection = Projection.PROJECTION.STEREOGRAPHICAL;
 		this.width = height = 100;
-		this.telescope = new TelescopeElement();
+		this.poleAngle = 0f;
+
+		this.trajectory = null;
+		telescope = new TelescopeElement();
 		this.setColorMode(COLOR_MODE.BLACK_BACKGROUND);
 	}
 
@@ -77,7 +81,7 @@ public class SkyRenderElement implements Serializable
 	 * default) like to draw constellations, nebula, and others like colors
 	 * should be set after constructing this object. Default color model is normal
 	 * with white background.
-	 *
+	 * 
 	 * @param coord_system Coordinate system.
 	 * @param proj Projection type.
 	 * @param lon0 Central position in the selected system.
@@ -98,6 +102,9 @@ public class SkyRenderElement implements Serializable
 		this.height = h;
 		this.planetRender = pr;
 		this.telescope = tel;
+		this.poleAngle = 0f;
+
+		this.trajectory = null;
 		this.setColorMode(COLOR_MODE.WHITE_BACKGROUND);
 	}
 
@@ -129,7 +136,7 @@ public class SkyRenderElement implements Serializable
 	public Projection.PROJECTION projection;
 
 	/**
-	 * Holds the direction of the pole in the current projection, angle in radians. Rotation
+	 * Holds the direction of the pole in the current projection, angle in radians. Rotation 
 	 * is towards east if no vertical inversion is applied in the telescope object, which means
 	 * that +PI/2 will show the west region upwards.
 	 */
@@ -169,7 +176,7 @@ public class SkyRenderElement implements Serializable
 	 * Set whether to draw or not constellations and which set of lines. Default
 	 * value is the JPARSEC set of lines (for Western culture).
 	 */
-	public CONSTELLATION_CONTOUR drawConstellationContours = CONSTELLATION_CONTOUR.DEFAULT;
+	public CONSTELLATION_CONTOUR drawConstellationContours = CONSTELLATION_CONTOUR.DEFAULT; 
 
 	/**
 	 * Set whether to draw or not constellations limits.
@@ -191,7 +198,7 @@ public class SkyRenderElement implements Serializable
 	 * when the set of constellation lines is the default JPARSEC one,
 	 * otherwise the names of the constellations for the different
 	 * cultures are available only in Spanish or English.
-	 */
+	 */ 
 	public Constellation.CONSTELLATION_NAME drawConstellationNamesType = Constellation.CONSTELLATION_NAME.LATIN;
 
 	/**
@@ -221,8 +228,8 @@ public class SkyRenderElement implements Serializable
 	public boolean drawCoordinateGridEcliptic = true;
 
 	/**
-	 * Set whether to draw or not the numeric labels for the ecliptic when
-	 * rendering sky in other coordinate systems, such as equatorial, galactic,
+	 * Set whether to draw or not the numeric labels for the ecliptic when 
+	 * rendering sky in other coordinate systems, such as equatorial, galactic, 
 	 * or horizontal.
 	 */
 	public boolean drawCoordinateGridEclipticLabels = true;
@@ -241,15 +248,15 @@ public class SkyRenderElement implements Serializable
 	 * Set whether to draw or not the radians of meteor showers. Default is false.
 	 */
 	public boolean drawMeteorShowers = false;
-
-	/**
-	 * Set to false to show all showers, true (default value) for those active currently.
-	 * In case this flag is flase, current active showers will be rendered without alpha
-	 * color component, and labels in bold face. In any case most intense showers will be
+	
+	/** 
+	 * Set to false to show all showers, true (default value) for those active currently. 
+	 * In case this flag is flase, current active showers will be rendered without alpha 
+	 * color component, and labels in bold face. In any case most intense showers will be 
 	 * rendered using a stroke with greater width.
 	 */
 	public boolean drawMeteorShowersOnlyActive = true;
-
+	
 	/**
 	 * Set whether to draw or not Milky Way.
 	 */
@@ -277,7 +284,7 @@ public class SkyRenderElement implements Serializable
 	public boolean drawDeepSkyObjects = true;
 
 	/**
-	 * Set whether to draw or not the real images of the
+	 * Set whether to draw or not the real images of the 
 	 * deep sky objects on the sky for reduced fields of view.
 	 */
 	public boolean drawDeepSkyObjectsTextures = true;
@@ -306,15 +313,15 @@ public class SkyRenderElement implements Serializable
 	public boolean drawStarsColors = false;
 
 	/**
-	 * Select if stars should be rendered in a realistic way (using textures) or not.
+	 * Select if stars should be rendered in a realistic way (using textures) or not. 
 	 * Symbols for double and variable stars will not be drawn if something different
 	 * from NONE is selected. Default value is NONE.
 	 */
 	public REALISTIC_STARS drawStarsRealistic = REALISTIC_STARS.NONE;
-
+	
 	/**
 	 * Set the color for stars, only when {@linkplain SkyRenderElement#drawStarsColors}
-	 * is false; This will be also the color for the planets in intermediate fields, when
+	 * is false; This will be also the color for the planets in intermediate fields, when 
 	 * they appear as little disks.
 	 */
 	public int drawStarsColor = 156<<24 | 0<<16 | 0<<8 | 0;
@@ -338,7 +345,7 @@ public class SkyRenderElement implements Serializable
 	 * be drawn using USNO-B1 catalog, by calling Vizier database (only if Internet
 	 * connection is available). If the limit is 12.0 or brighter, and fainter than 10,
 	 * Karchenko's catalog will be used instead due to speed considerations. In this
-	 * case, a field limit of 3 degrees will be used.
+	 * case, a field limit of 3 degrees will be used. 
 	 */
 	public float drawStarsLimitingMagnitude = 7.5f;
 
@@ -357,7 +364,7 @@ public class SkyRenderElement implements Serializable
 	public boolean drawSuperNovaAndNovaEvents = true;
 
 	/**
-	 * Set during how many (Julian) years a SN event would still be visible in
+	 * Set during how many (Julian) years a SN event would still be visible in 
 	 * the rendering. Default value is 3 years.
 	 */
 	public int drawSuperNovaEventsNumberOfYears = 3;
@@ -403,7 +410,7 @@ public class SkyRenderElement implements Serializable
 	public int drawDarkNebulaeContoursColor = 128<<24 | 120<<16 | 120<<8 | 255;
 
 	/**
-	 * Color attribute for drawing Milky Way.
+	 * Color attribute for drawing Milky Way. 
 	 */
 	public int drawMilkyWayContoursColor = 128<<24 | 180<<16 | 180<<8 | 255;
 
@@ -413,7 +420,7 @@ public class SkyRenderElement implements Serializable
 	public int fillMilkyWayColor = 128<<24 | 244<<16 | 244<<8 | 255;
 
 	/**
-	 * Color attribute to fill nebulae. Default value is -1
+	 * Color attribute to fill nebulae. Default value is -1 
 	 * to use the same color as the nebulae contours.
 	 */
 	public int fillBrightNebulaeColor = -1;
@@ -460,11 +467,11 @@ public class SkyRenderElement implements Serializable
 	 * True to show Greek symbols only if the star has proper name.
 	 */
 	public boolean drawStarsGreekSymbolsOnlyIfHasProperName = false;
-
+	
 	/**
 	 * Set limiting magnitude for stars labels;
 	 */
-	public float drawStarsLabelsLimitingMagnitude = 4.0f;
+	public float drawStarsLabelsLimitingMagnitude = 4.0f; 
 
 	/**
 	 * Minimum separation in arcseconds of a double star to draw it as a double.
@@ -489,12 +496,12 @@ public class SkyRenderElement implements Serializable
 	 * 20 px. Set to 0 to draw all lines from one star to the other.
 	 */
 	public int drawConstellationContoursMarginBetweenLineAndStar = 20;
-
+	
 	/**
 	 * Selects the texture to draw at horizon, none by default.
 	 */
 	public HORIZON_TEXTURE drawHorizonTexture = HORIZON_TEXTURE.NONE;
-
+	
 	/**
 	 * Set this flag to true to overlay an DSS image in the next rendering. This
 	 * is only allowed when deep sky objects are shown and the field of view is
@@ -508,16 +515,16 @@ public class SkyRenderElement implements Serializable
 	 * Labels are drawn only if limiting magnitude is equal or above 8.5.
 	 */
 	public boolean drawMagnitudeLabels = false;
-
+	
 	/**
 	 * Selects if a central crux should be drawn to mark the screen center.
 	 */
 	public boolean drawCentralCrux = false;
-
+	
 	/**
 	 * The set of options to draw fast lines for better performance.
 	 */
-	public enum FAST_LINES {
+	public static enum FAST_LINES {
 		/** Never use fast mode. */
 		NONE,
 		/** Use fast line rendering for grid. */
@@ -526,9 +533,9 @@ public class SkyRenderElement implements Serializable
 		GRID_AND_CONSTELLATIONS,
 		/** Use fast line rendering for grid and Milky Way outline. */
 		GRID_AND_MILKY_WAY,
-		/** Use fast line rendering for grid, Milky Way outline, and constellations. */
+		/** Use fast line rendering for grid, Milky Way outline, and constellations. */ 
 		GRID_AND_MILKY_WAY_AND_CONSTELLATIONS;
-
+		
 		/** Set to true to allow drawing fast ovals using images. */
 		private boolean fastOvals = false;
 
@@ -558,7 +565,7 @@ public class SkyRenderElement implements Serializable
 			if (this == NONE) return false;
 			return true;
 		}
-
+		
 		/**
 		 * Returns true if fast constellations are enabled.
 		 * @return True or false.
@@ -567,7 +574,7 @@ public class SkyRenderElement implements Serializable
 			if (this == NONE || this == ONLY_GRID || this == GRID_AND_MILKY_WAY) return false;
 			return true;
 		}
-
+		
 		/**
 		 * Returns true if fast Milky Way is enabled.
 		 * @return True or false.
@@ -576,19 +583,19 @@ public class SkyRenderElement implements Serializable
 			if (this == NONE || this == ONLY_GRID || this == GRID_AND_CONSTELLATIONS) return false;
 			return true;
 		}
-
+		
 		/**
 		 * Resets the fast ovals flag to its default value (false).
 		 */
 		public void clear() {
 			fastOvals = false;
 		}
-	}
-
+	};
+	
 	/**
 	 * The set of options to draw star labels.
 	 */
-	public enum STAR_LABELS {
+	public static enum STAR_LABELS {
 		/** No labels. */
 		NONE,
 		/** Normal labels, like Alp And. */
@@ -597,24 +604,24 @@ public class SkyRenderElement implements Serializable
 		ONLY_PROPER_NAME,
 		/** Proper common name in Spanish. */
 		ONLY_PROPER_NAME_SPANISH
-	}
+	};
 
 	/**
 	 * The set of options to draw texture at horizon.
 	 */
-	public enum HORIZON_TEXTURE {
+	public static enum HORIZON_TEXTURE {
 		/** No texture. */
 		NONE,
 		/** Veleta 30m telescope site, at Granada (Spain). */
 		VELETA_30m,
 		/** A generic village. */
 		VILLAGE
-	}
+	};
 
 	/**
 	 * The set of values to select the kind of realistic stars to render.
 	 */
-	public enum REALISTIC_STARS { // DON'T CHANGE ORDERING
+	public static enum REALISTIC_STARS { // DON'T CHANGE ORDERING
 		/** Starred mode. */
 		STARRED,
 		/** Difuse star mode. */
@@ -627,12 +634,12 @@ public class SkyRenderElement implements Serializable
 		/** Same as none, but faint stars located on top of brighter ones
 		 * are rendered with an halo around to show them more clearly. */
 		NONE_CUTE
-	}
+	};
 
 	/**
 	 * The set of values to select how to draw labels.
 	 */
-	public enum SUPERIMPOSED_LABELS {
+	public static enum SUPERIMPOSED_LABELS {
 		/** Fast labels without calculating positions to avoid superimposing them. */
 		FAST,
 		/** Avoid superimposing in a fasr way. */
@@ -647,7 +654,7 @@ public class SkyRenderElement implements Serializable
 	 * The set of textures for the milky way. All images except the optical
 	 * one were taken from http://lambda.gsfc.nasa.gov/product/map/current/sos/7year/.
 	 */
-	public enum MILKY_WAY_TEXTURE {
+	public static enum MILKY_WAY_TEXTURE {
 		/** Draw without texture. */
 		NO_TEXTURE,
 		/** Use the optical image by Nick Risinger. */
@@ -671,11 +678,11 @@ public class SkyRenderElement implements Serializable
 		null, "milkyway.jpg", "halpha_Finkbeiner_2003.jpg", "21cm_Kalberla_2005.jpg", "co_Dame_2001.jpg",
 		"dust_Schlegel_1998.jpg", "wmap.jpg"
 	};
-
+	
 	/**
 	 * The set of values to select how to draw labels.
 	 */
-	public enum LEYEND_POSITION {
+	public static enum LEYEND_POSITION {
 		/** No leyend. */
 		NO_LEYEND,
 		/** Leyend in horizontal orientation on top. */
@@ -690,16 +697,16 @@ public class SkyRenderElement implements Serializable
 
 	/**
 	 * The set of options to draw constellation contours. All values here except
-	 * the default set of lines are derived from the GPL work by Jason Harris and
+	 * the default set of lines are derived from the GPL work by Jason Harris and 
 	 * Clemens ?, included in KStars. This selection also affects the labels for
 	 * constellation names.
 	 */
-	public enum CONSTELLATION_CONTOUR {
+	public static enum CONSTELLATION_CONTOUR {
 		/** No constellations. */
 		NONE,
 		/** Default JPARSEC lines. */
 		DEFAULT,
-		/** Western set of constellation lines. Similar to JPARSEC default set,
+		/** Western set of constellation lines. Similar to JPARSEC default set, 
 		 * but not the same. */
 		Western,
 		/** Chinese set of constellation lines. */
@@ -722,7 +729,7 @@ public class SkyRenderElement implements Serializable
 		Polynesian,
 		/** Tupi-Guarani set of constellation lines. */
 		Tupi_Guarani
-	}
+	};
 
 	/**
 	 * Set whether to draw or not the labels for asteroids, comets, probes, and
@@ -820,13 +827,13 @@ public class SkyRenderElement implements Serializable
 	drawDeepSkyObjectsNamesFont = Graphics.FONT.SANS_SERIF_ITALIC_12;
 	drawMinorObjectsNamesFont = Graphics.FONT.SANS_SERIF_PLAIN_12;
 	drawCoordinateGridFont = Graphics.FONT.SANS_SERIF_PLAIN_15;
-*/
+*/	
 
 	/**
 	 * True (default value) to show N, S, E, and W points in the sky.
 	 */
 	public boolean drawCoordinateGridCardinalPoints = true;
-
+	
 	/**
 	 * Sets whether to draw or not the sky below the observer's horizon.
 	 * True as default.
@@ -834,7 +841,7 @@ public class SkyRenderElement implements Serializable
 	public boolean drawSkyBelowHorizon = true;
 
 	/**
-	 * Sets whether to correct for refraction in observer's horizon. This also
+	 * Sets whether to correct for refraction in observer's horizon. This also 
 	 * corrects local horizon for depression. Only considered
 	 * if also {@linkplain SkyRenderElement#drawSkyBelowHorizon} is false.
 	 * False as default.
@@ -851,12 +858,12 @@ public class SkyRenderElement implements Serializable
 	 * Sets background color. Also the color to fill dark nebula.
 	 */
 	public int background = 255<<24 | 255<<16 | 255<<8 | 255;
-
+	
 	/**
 	 * The color for the grid used to show the field of view of a telescope.
 	 */
 	public int drawOcularFieldOfViewColor = 255<<24 | 0<<16 | 0<<8 | 0;
-
+	
 	/**
 	 * Stroke to draw nebula.
 	 */
@@ -903,10 +910,10 @@ public class SkyRenderElement implements Serializable
 	 * True to draw icons for planets, probes, ...
 	 */
 	public boolean drawIcons = true;
-
+	
 	/**
 	 * True to hide objects depending on the field of view, in a clever way. Setting
-	 * this to false will show most objects (but not stars) independently of the field
+	 * this to false will show most objects (but not stars) independently of the field 
 	 * of view, but the disks of planets and satellites will not appear. Note projection is forced
 	 * to cylindrical for fields of view lower than 30 degrees to show correctly the
 	 * relative positions of planets, satellites, and stars in case the clever flag is true.
@@ -918,7 +925,7 @@ public class SkyRenderElement implements Serializable
 	 * True to use antialiasing to increasing rendering quality.
 	 */
 	public boolean drawWithAntialiasing = true;
-
+	
 	/**
 	 * The color to fill a galaxy. Set to -1 as default to avoid the fill.
 	 */
@@ -955,17 +962,17 @@ public class SkyRenderElement implements Serializable
 	 * real-time mode. Default value is 3600s. Will force the update of everything.
 	 */
 	public float updateTimeFullUpdate = 3600;
-
+	
 	/**
 	 * Default value is null, which means that all external catalogs defined will be shown.
 	 * Define the array and set each to true or false to enable/disable each of them.
 	 */
 	public boolean drawExternalCatalogs[] = null;
-
+	
 	private String[] externalCatalogs = new String[0];
 	private String[] externalCatalogNames = new String[0];
 	private static int externalCatalogCounter = 0;
-
+	
 	/** Id constant for a field name to be used in a {@linkplain FileFormatElement} object for an external catalog. */
 	public static final String EXTERNAL_CATALOG_FIELD_NAME1 = "NAME1";
 	/** Id constant for a field name to be used in a {@linkplain FileFormatElement} object for an external catalog. */
@@ -1020,10 +1027,10 @@ public class SkyRenderElement implements Serializable
 	 * @param path The path to the file.
 	 * @param format The format. The identifiers for the fields should be set using the symbolic
 	 * constants in this class. Flux field can be used instead of magnitude to use a logarithmic scale. The angular
-	 * size can be set in degrees or arcsec, using major/minor values (and the position angle) or the same value
+	 * size can be set in degrees or arcsec, using major/minor values (and the position angle) or the same value 
 	 * for both axes. The coordinates type is a field used to include objects with ecliptic/galactic coordinates
 	 * instead of equatorial. Valid values in the files are those starting with 'EQ', 'EC', 'GA'. In this case
-	 * the RA/DEC fields corresponds to ecliptic/galactic longitudes/latitudes. Default equinox is year 2000 if it
+	 * the RA/DEC fields corresponds to ecliptic/galactic longitudes/latitudes. Default equinox is year 2000 if it 
 	 * is not specified. RA/DEC should be mean coordinates referred to a given equinox.
 	 * @throws JPARSECException If an error occurs.
 	 */
@@ -1039,17 +1046,17 @@ public class SkyRenderElement implements Serializable
 	 * @param contents The contents of the file.
 	 * @param format The format. The identifiers for the fields should be set using the symbolic
 	 * constants in this class. Flux field can be used instead of magnitude to use a logarithmic scale. The angular
-	 * size can be set in degrees or arcsec, using major/minor values (and the position angle) or the same value
+	 * size can be set in degrees or arcsec, using major/minor values (and the position angle) or the same value 
 	 * for both axes. The coordinates type is a field used to include objects with ecliptic/galactic coordinates
 	 * instead of equatorial. Valid values in the files are those starting with 'EQ', 'EC', 'GA'. In this case
-	 * the RA/DEC fields corresponds to ecliptic/galactic longitudes/latitudes. Default equinox is year 2000 if it
+	 * the RA/DEC fields corresponds to ecliptic/galactic longitudes/latitudes. Default equinox is year 2000 if it 
 	 * is not specified. RA/DEC should be mean coordinates referred to a given equinox.
 	 * @throws JPARSECException  If an error occurs.
 	 */
 	public void addExternalCatalog(String name, String objType, int rgb, String[] contents, FileFormatElement[] format) throws JPARSECException {
 		addExternalCatalog(name, objType, rgb, contents, format, true);
 	}
-
+	
 	/**
 	 * Adds an external catalog to render certain objects to memory. Since the sky rendering class already takes into account main
 	 * astronomical objects, the catalog is added as a subset of deep sky objects.
@@ -1059,17 +1066,17 @@ public class SkyRenderElement implements Serializable
 	 * @param contents The contents of the file.
 	 * @param format The format. The identifiers for the fields should be set using the symbolic
 	 * constants in this class. Flux field can be used instead of magnitude to use a logarithmic scale. The angular
-	 * size can be set in degrees or arcsec, using major/minor values (and the position angle) or the same value
+	 * size can be set in degrees or arcsec, using major/minor values (and the position angle) or the same value 
 	 * for both axes. The coordinates type is a field used to include objects with ecliptic/galactic coordinates
 	 * instead of equatorial. Valid values in the files are those starting with 'EQ', 'EC', 'GA'. In this case
-	 * the RA/DEC fields corresponds to ecliptic/galactic longitudes/latitudes. Default equinox is year 2000 if it
+	 * the RA/DEC fields corresponds to ecliptic/galactic longitudes/latitudes. Default equinox is year 2000 if it 
 	 * is not specified. RA/DEC should be mean coordinates referred to a given equinox.
 	 * @throws JPARSECException  If an error occurs.
 	 */
 	public void addExternalCatalog(String name, String objType, int rgb, ArrayList<String> contents, FileFormatElement[] format) throws JPARSECException {
 		addExternalCatalog(name, objType, rgb, contents, format, true);
 	}
-
+	
 	/**
 	 * Adds an external catalog to render objects. Since the sky rendering class already takes into account main
 	 * astronomical objects, the catalog is added as a subset of deep sky objects.
@@ -1079,10 +1086,10 @@ public class SkyRenderElement implements Serializable
 	 * @param contents The contents of the file.
 	 * @param format The format. The identifiers for the fields should be set using the symbolic
 	 * constants in this class. Flux field can be used instead of magnitude to use a logarithmic scale. The angular
-	 * size can be set in degrees or arcsec, using major/minor values (and the position angle) or the same value
+	 * size can be set in degrees or arcsec, using major/minor values (and the position angle) or the same value 
 	 * for both axes. The coordinates type is a field used to include objects with ecliptic/galactic coordinates
 	 * instead of equatorial. Valid values in the files are those starting with 'EQ', 'EC', 'GA'. In this case
-	 * the RA/DEC fields corresponds to ecliptic/galactic longitudes/latitudes. Default equinox is year 2000 if it
+	 * the RA/DEC fields corresponds to ecliptic/galactic longitudes/latitudes. Default equinox is year 2000 if it 
 	 * is not specified. RA/DEC should be mean coordinates referred to a given equinox.
 	 * @param inMemory True to hold the catalog in memory, false for disk. True is strongly recommended for better
 	 * performance.
@@ -1091,7 +1098,7 @@ public class SkyRenderElement implements Serializable
 	public synchronized void addExternalCatalog(String name, String objType, int rgb, ArrayList<String> contents, FileFormatElement[] format,
 			boolean inMemory) throws JPARSECException {
 		ArrayList<Object> list = new ArrayList<Object>();
-
+		
 		ReadFormat rf = new ReadFormat(format);
 		boolean fluxMode = false;
 		ArrayList<Double> listFlux = new ArrayList<Double>();
@@ -1135,7 +1142,7 @@ public class SkyRenderElement implements Serializable
 
 				s = getField(line, rf, SkyRenderElement.EXTERNAL_CATALOG_FIELD_SIZE_DEG);
 				if (s != null) {
-					maxSize = (float) Double.parseDouble(s);
+					maxSize = (float) Double.parseDouble(s);					
 					minSize = maxSize;
 				} else {
 					s = getField(line, rf, SkyRenderElement.EXTERNAL_CATALOG_FIELD_SIZE_ARCSEC);
@@ -1152,7 +1159,7 @@ public class SkyRenderElement implements Serializable
 							if (s != null) {
 								maxSize = (float) (Double.parseDouble(s) / 3600.0);
 								tt = 1;
-							}
+							}					
 						}
 
 						s = getField(line, rf, SkyRenderElement.EXTERNAL_CATALOG_FIELD_MINSIZE_DEG);
@@ -1164,7 +1171,7 @@ public class SkyRenderElement implements Serializable
 							if (s != null) {
 								minSize = (float) (Double.parseDouble(s) / 3600.0);
 								tt = 1;
-							}
+							}					
 						}
 
 					}
@@ -1187,7 +1194,7 @@ public class SkyRenderElement implements Serializable
 						} else {
 							continue;
 						}
-					}
+					}					
 				}
 				s = getField(line, rf, SkyRenderElement.EXTERNAL_CATALOG_FIELD_DEC_DEG_WITH_DECIMALS);
 				if (s != null) {
@@ -1221,7 +1228,7 @@ public class SkyRenderElement implements Serializable
 					}
 					if (ctype.startsWith("GA")) {
 						loc = CoordinateSystem.galacticToEquatorial(loc, jd, fast);
-					}
+					}					
 				}
 				if (jd != Constant.J2000) {
 					EphemerisElement eph = new EphemerisElement();
@@ -1230,11 +1237,11 @@ public class SkyRenderElement implements Serializable
 							LocationElement.parseLocationElement(loc), eph));
 				}
 
-				list.add(new Object[] {name1, name2, tt, loc, (float)Double.parseDouble(mag),
+				list.add(new Object[] {name1, name2, tt, loc, (float)Double.parseDouble(mag), 
 						new float[] {maxSize, minSize}, pa, com, rgb});
 			}
 		}
-
+		
 		if (fluxMode) {
 			double flux[] = DataSet.arrayListToDoubleArray(listFlux);
 			double max = DataSet.getMaximumValue(flux), min = DataSet.getMinimumValue(flux);
@@ -1242,16 +1249,16 @@ public class SkyRenderElement implements Serializable
 			for (int i=0; i<list.size(); i++) {
 				Object o[] = (Object[]) list.get(i);
 				double mag = (Float) o[4];
-
+				
 				mag = 1.0 + (mag - min) / (max - min); // 1 to 2. Note log(1) = 0
 				mag = Math.log(mag) / Math.log(2.0); // 0 to 1, in log scale
 				mag = minMag - mag * (minMag - maxMag);
-
+				
 				o[4] = (float)mag;
 				list.set(i, o);
 			}
 		}
-
+		
 		String id = "RenderSkyExternalCatalog"+externalCatalogCounter;
 		DataBase.addData(id, list.toArray(), inMemory);
 		if (!this.externalCatalogAvailable(id)) {
@@ -1270,7 +1277,7 @@ public class SkyRenderElement implements Serializable
 		}
 		//return id;
 	}
-
+	
 	/**
 	 * Adds an external catalog to render objects. Since the sky rendering class already takes into account main
 	 * astronomical objects, the catalog is added as a subset of deep sky objects.
@@ -1280,10 +1287,10 @@ public class SkyRenderElement implements Serializable
 	 * @param contents The contents of the file.
 	 * @param format The format. The identifiers for the fields should be set using the symbolic
 	 * constants in this class. Flux field can be used instead of magnitude to use a logarithmic scale. The angular
-	 * size can be set in degrees or arcsec, using major/minor values (and the position angle) or the same value
+	 * size can be set in degrees or arcsec, using major/minor values (and the position angle) or the same value 
 	 * for both axes. The coordinates type is a field used to include objects with ecliptic/galactic coordinates
 	 * instead of equatorial. Valid values in the files are those starting with 'EQ', 'EC', 'GA'. In this case
-	 * the RA/DEC fields corresponds to ecliptic/galactic longitudes/latitudes. Default equinox is year 2000 if it
+	 * the RA/DEC fields corresponds to ecliptic/galactic longitudes/latitudes. Default equinox is year 2000 if it 
 	 * is not specified. RA/DEC should be mean coordinates referred to a given equinox.
 	 * @param inMemory True to hold the catalog in memory, false for disk. True is strongly recommended for better
 	 * performance.
@@ -1292,7 +1299,7 @@ public class SkyRenderElement implements Serializable
 	public synchronized void addExternalCatalog(String name, String objType, int rgb, String[] contents, FileFormatElement[] format,
 			boolean inMemory) throws JPARSECException {
 		ArrayList<Object> list = new ArrayList<Object>();
-
+		
 		ReadFormat rf = new ReadFormat(format);
 		boolean fluxMode = false;
 		ArrayList<Double> listFlux = new ArrayList<Double>();
@@ -1335,7 +1342,7 @@ public class SkyRenderElement implements Serializable
 
 				s = getField(contents[i], rf, SkyRenderElement.EXTERNAL_CATALOG_FIELD_SIZE_DEG);
 				if (s != null) {
-					maxSize = (float) Double.parseDouble(s);
+					maxSize = (float) Double.parseDouble(s);					
 					minSize = maxSize;
 				} else {
 					s = getField(contents[i], rf, SkyRenderElement.EXTERNAL_CATALOG_FIELD_SIZE_ARCSEC);
@@ -1352,7 +1359,7 @@ public class SkyRenderElement implements Serializable
 							if (s != null) {
 								maxSize = (float) (Double.parseDouble(s) / 3600.0);
 								tt = 1;
-							}
+							}					
 						}
 
 						s = getField(contents[i], rf, SkyRenderElement.EXTERNAL_CATALOG_FIELD_MINSIZE_DEG);
@@ -1364,7 +1371,7 @@ public class SkyRenderElement implements Serializable
 							if (s != null) {
 								minSize = (float) (Double.parseDouble(s) / 3600.0);
 								tt = 1;
-							}
+							}					
 						}
 
 					}
@@ -1387,7 +1394,7 @@ public class SkyRenderElement implements Serializable
 						} else {
 							continue;
 						}
-					}
+					}					
 				}
 				s = getField(contents[i], rf, SkyRenderElement.EXTERNAL_CATALOG_FIELD_DEC_DEG_WITH_DECIMALS);
 				if (s != null) {
@@ -1421,7 +1428,7 @@ public class SkyRenderElement implements Serializable
 					}
 					if (ctype.startsWith("GA")) {
 						loc = CoordinateSystem.galacticToEquatorial(loc, jd, fast);
-					}
+					}					
 				}
 				if (jd != Constant.J2000) {
 					EphemerisElement eph = new EphemerisElement();
@@ -1430,11 +1437,11 @@ public class SkyRenderElement implements Serializable
 							LocationElement.parseLocationElement(loc), eph));
 				}
 
-				list.add(new Object[] {name1, name2, tt, loc, (float)Double.parseDouble(mag),
+				list.add(new Object[] {name1, name2, tt, loc, (float)Double.parseDouble(mag), 
 						new float[] {maxSize, minSize}, pa, com, rgb});
 			}
 		}
-
+		
 		if (fluxMode) {
 			double flux[] = DataSet.arrayListToDoubleArray(listFlux);
 			double max = DataSet.getMaximumValue(flux), min = DataSet.getMinimumValue(flux);
@@ -1442,16 +1449,16 @@ public class SkyRenderElement implements Serializable
 			for (int i=0; i<list.size(); i++) {
 				Object o[] = (Object[]) list.get(i);
 				double mag = (Float) o[4];
-
+				
 				mag = 1.0 + (mag - min) / (max - min); // 1 to 2. Note log(1) = 0
 				mag = Math.log(mag) / Math.log(2.0); // 0 to 1, in log scale
 				mag = minMag - mag * (minMag - maxMag);
-
+				
 				o[4] = (float)mag;
 				list.set(i, o);
 			}
 		}
-
+		
 		String id = "RenderSkyExternalCatalog"+externalCatalogCounter;
 		DataBase.addData(id, list.toArray(), inMemory);
 		if (!this.externalCatalogAvailable(id)) {
@@ -1483,9 +1490,9 @@ public class SkyRenderElement implements Serializable
 			return null;
 		}
 	}
-
+	
 	/**
-	 * Returns the number of external catalogs defined. Note this is a static value that
+	 * Returns the number of external catalogs defined. Note this is a static value that 
 	 * corresponds to the total number of external catalogs defined in all threads, for
 	 * a given thread some of those catalogs could be null.
 	 * @return The number of total external catalogs.
@@ -1501,7 +1508,7 @@ public class SkyRenderElement implements Serializable
 	public int getNumberOfExternalCatalogs() {
 		return externalCatalogs.length;
 	}
-
+	
 	/**
 	 * Returns the number of external catalogs currently enabled to be shown, and defined in this instance.
 	 * @return The number of external catalogs currently enabled for this instance.
@@ -1524,7 +1531,7 @@ public class SkyRenderElement implements Serializable
 		if (externalCatalogNames == null || (index < 0 || index >= externalCatalogNames.length)) return null;
 		return externalCatalogNames[index];
 	}
-
+	
 	/**
 	 * Returns if a given catalog id is available for this instance.
 	 * @param id The id of the external catalog.
@@ -1537,7 +1544,7 @@ public class SkyRenderElement implements Serializable
 		if (index >= 0) out = true;
 		return out;
 	}
-
+	
 	/**
 	 * Clones this instance.
 	 */
@@ -1640,7 +1647,7 @@ public class SkyRenderElement implements Serializable
 		s.externalCatalogNames = this.externalCatalogNames.clone();
 		s.drawExternalCatalogs = null;
 		if (this.drawExternalCatalogs != null) s.drawExternalCatalogs = this.drawExternalCatalogs.clone();
-
+		
 		s.height = this.height;
 		s.hourAngle = this.hourAngle;
 		s.poleAngle = this.poleAngle;
@@ -1654,7 +1661,7 @@ public class SkyRenderElement implements Serializable
 			}
 		}
 		s.width = this.width;
-
+		
 		s.drawFastLinesMode = this.drawFastLinesMode;
 		s.drawHorizonTexture = this.drawHorizonTexture;
 		s.limitOfDifferenceOfMagnitudesForVariableStars = this.limitOfDifferenceOfMagnitudesForVariableStars;
@@ -1676,291 +1683,173 @@ public class SkyRenderElement implements Serializable
 		s.drawCentralCrux = this.drawCentralCrux;
 		return s;
 	}
-
 	/**
 	 * Returns true if the input object is equals to this instance.
 	 */
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof SkyRenderElement)) return false;
+	public boolean equals(Object o)
+	{
+		if (o == null) {
+			if (this == null) return true;
+			return false;
+		}
+		if (this == null) {
+			return false;
+		}
+		SkyRenderElement s = (SkyRenderElement) o;
+		boolean equals = true;
 
-        SkyRenderElement that = (SkyRenderElement) o;
+		if (s.centralLatitude != this.centralLatitude) equals = false;
+		if (s.centralLongitude != this.centralLongitude) equals = false;
+		if (s.coordinateSystem != this.coordinateSystem) equals = false;
+		if (s.drawArtificialSatellites != this.drawArtificialSatellites) equals = false;
+		if (s.drawArtificialSatellitesIridiumFlares != this.drawArtificialSatellitesIridiumFlares) equals = false;
+		if (s.drawArtificialSatellitesOnlyThese == null && this.drawArtificialSatellitesOnlyThese != null) equals = false;
+		if (s.drawArtificialSatellitesOnlyThese != null && this.drawArtificialSatellitesOnlyThese == null) equals = false;
+		if (s.drawArtificialSatellitesOnlyThese != null && this.drawArtificialSatellitesOnlyThese != null && 
+				!s.drawArtificialSatellitesOnlyThese.equals(this.drawArtificialSatellitesOnlyThese)) equals = false;
+		if (s.drawAsteroids != this.drawAsteroids) equals = false;
+		if (s.drawComets != this.drawComets) equals = false;
+		if (s.drawOcularFieldOfViewColor != this.drawOcularFieldOfViewColor) equals = false;
+		if (s.enableTransparentColors != this.enableTransparentColors) equals = false;
+		if (s.drawConstellationContours != this.drawConstellationContours) equals = false;
+		if (s.drawConstellationContoursMarginBetweenLineAndStar != this.drawConstellationContoursMarginBetweenLineAndStar) equals = false;
+		if (s.drawConstellationContoursColor != this.drawConstellationContoursColor) equals = false;
+		if (s.drawConstellationLimits != this.drawConstellationLimits) equals = false;
+		if (s.drawConstellationLimitsColor != this.drawConstellationLimitsColor) equals = false;
+		if (s.drawConstellationNames != this.drawConstellationNames) equals = false;
+		if (s.drawConstellationNamesUppercase != this.drawConstellationNamesUppercase) equals = false;
+		if (s.drawConstellationNamesColor != this.drawConstellationNamesColor) equals = false;
+		if (s.drawConstellationNamesFont != this.drawConstellationNamesFont) equals = false;
+		if (s.drawConstellationNamesType != this.drawConstellationNamesType) equals = false;
+		if (s.drawLeyend != this.drawLeyend) equals = false;
+		if (s.drawCoordinateGrid != this.drawCoordinateGrid) equals = false;
+		if (s.drawCoordinateGridCelestialPoints != this.drawCoordinateGridCelestialPoints) equals = false;
+		if (s.drawCoordinateGridHighZoom != this.drawCoordinateGridHighZoom) equals = false;
+		if (s.drawExternalGrid != this.drawExternalGrid) equals = false;
+		if (s.drawCoordinateGridColor != this.drawCoordinateGridColor) equals = false;
+		if (s.drawCoordinateGridEcliptic != this.drawCoordinateGridEcliptic) equals = false;
+		if (s.drawCoordinateGridEclipticLabels != this.drawCoordinateGridEclipticLabels) equals = false;
+		if (s.drawCoordinateGridEclipticColor != this.drawCoordinateGridEclipticColor) equals = false;
+		if (s.drawCoordinateGridFont != this.drawCoordinateGridFont) equals = false;
+		if (s.drawCoordinateGridLabels != this.drawCoordinateGridLabels) equals = false;
+		if (s.drawDeepSkyObjects != this.drawDeepSkyObjects) equals = false;
+		if (s.drawDeepSkyObjectsTextures != this.drawDeepSkyObjectsTextures) equals = false;
+		if (s.drawDeepSkyObjectsColor != this.drawDeepSkyObjectsColor) equals = false;
+		if (s.drawMeteorShowersColor != this.drawMeteorShowersColor) equals = false;
+		if (s.drawDeepSkyObjectsLabels != this.drawDeepSkyObjectsLabels) equals = false;
+		if (s.drawDeepSkyObjectsNamesFont != this.drawDeepSkyObjectsNamesFont) equals = false;
+		if (s.drawDeepSkyObjectsOnlyMessier != this.drawDeepSkyObjectsOnlyMessier) equals = false;
+		if (s.drawDeepSkyObjectsAllMessierAndCaldwell != this.drawDeepSkyObjectsAllMessierAndCaldwell) equals = false;
+		if (s.drawMinorObjectsLabels != this.drawMinorObjectsLabels) equals = false;
+		if (s.drawFaintStars != this.drawFaintStars) equals = false;
+		if (s.drawMinorObjectsNamesFont != this.drawMinorObjectsNamesFont) equals = false;
+		if (s.drawNebulaeContours != this.drawNebulaeContours) equals = false;
+		if (s.drawMeteorShowers != this.drawMeteorShowers) equals = false;
+		if (s.drawMeteorShowersOnlyActive != this.drawMeteorShowersOnlyActive) equals = false;
+		if (s.drawMilkyWayContours != this.drawMilkyWayContours) equals = false;
+		if (s.fillMilkyWay != this.fillMilkyWay) equals = false;
+		if (s.drawMilkyWayContoursWithTextures != this.drawMilkyWayContoursWithTextures) equals = false;
+		if (s.drawBrightNebulaeContoursColor != this.drawBrightNebulaeContoursColor) equals = false;
+		if (s.drawDarkNebulaeContoursColor != this.drawDarkNebulaeContoursColor) equals = false;
+		if (s.drawMilkyWayContoursColor != this.drawMilkyWayContoursColor) equals = false;
+		if (s.fillMilkyWayColor != this.fillMilkyWayColor) equals = false;
+		if (s.fillNebulae != this.fillNebulae) equals = false;
+		if (s.fillBrightNebulaeColor != this.fillBrightNebulaeColor) equals = false;
+		if (s.drawObjectsLimitingMagnitude != this.drawObjectsLimitingMagnitude) equals = false;
+		if (s.drawMinorObjectsLimitingMagnitude != this.drawMinorObjectsLimitingMagnitude) equals = false;
+		if (s.drawOcularFieldOfView != this.drawOcularFieldOfView) equals = false;
+		if (s.drawPlanetsLabels != this.drawPlanetsLabels) equals = false;
+		if (s.drawPlanetsMoonSun != this.drawPlanetsMoonSun) equals = false;
+		if (s.drawSkyBelowHorizon != this.drawSkyBelowHorizon) equals = false;
+		if (s.drawCoordinateGridCardinalPoints != this.drawCoordinateGridCardinalPoints) equals = false;
+		if (s.drawSkyCorrectingLocalHorizon != this.drawSkyCorrectingLocalHorizon) equals = false;
+		if (s.drawSpaceProbes != this.drawSpaceProbes) equals = false;
+		if (s.drawStars != this.drawStars) equals = false;
+		if (s.drawStarsColor != this.drawStarsColor) equals = false;
+		if (s.background != this.background) equals = false;
+		if (s.drawStarsColors != this.drawStarsColors) equals = false;
+		if (s.drawStarsLabels != this.drawStarsLabels) equals = false;
+		if (s.drawStarsGreekSymbols != this.drawStarsGreekSymbols) equals = false;
+		if (s.drawStarsGreekSymbolsOnlyIfHasProperName != this.drawStarsGreekSymbolsOnlyIfHasProperName) equals = false;
+		if (s.drawStarsLimitingMagnitude != this.drawStarsLimitingMagnitude) equals = false;
+		if (s.drawStarsLabelsLimitingMagnitude != this.drawStarsLabelsLimitingMagnitude) equals = false;
+		if (s.drawStarsNamesFont != this.drawStarsNamesFont) equals = false;
+		if (s.drawPlanetsNamesFont != this.drawPlanetsNamesFont) equals = false;
+		if (s.drawStarsSymbols != this.drawStarsSymbols) equals = false;
+		if (s.drawStarsPositionAngleInDoubles != this.drawStarsPositionAngleInDoubles) equals = false;
+		if (s.drawSunSpots != this.drawSunSpots) equals = false;
+		if (s.drawSunSpotsColor != this.drawSunSpotsColor) equals = false;
+		if (s.drawSunSpotsLabels != this.drawSunSpotsLabels) equals = false;
+		if (s.drawSuperNovaAndNovaEvents != this.drawSuperNovaAndNovaEvents) equals = false;
+		if (s.drawSuperNovaEventsNumberOfYears != this.drawSuperNovaEventsNumberOfYears) equals = false;
+		if (s.drawSuperNovaEventsColor != this.drawSuperNovaEventsColor) equals = false;
+		if (s.drawTransNeptunianObjects != this.drawTransNeptunianObjects) equals = false;
+		if (s.drawFastLinesMode != this.drawFastLinesMode) equals = false;
+		if (s.drawHorizonTexture != this.drawHorizonTexture) equals = false;
+		
+		if (s.colorModel != this.colorModel) equals = false;
+		if (s.height != this.height) equals = false;
+		if (s.hourAngle != this.hourAngle) equals = false;
+		if (s.poleAngle != this.poleAngle) equals = false;
+		if (s.planetRender.equals(this.planetRender)) equals = false;
+		if (s.projection != this.projection) equals = false;
+		if (s.telescope.equals(this.telescope)) equals = false;
+		if (s.trajectory.equals(this.trajectory)) equals = false;
+		if (s.width != this.width) equals = false;
 
-        if (width != that.width) return false;
-        if (height != that.height) return false;
-        if (Double.compare(that.centralLongitude, centralLongitude) != 0) return false;
-        if (Double.compare(that.centralLatitude, centralLatitude) != 0) return false;
-        if (Float.compare(that.poleAngle, poleAngle) != 0) return false;
-        if (Float.compare(that.hourAngle, hourAngle) != 0) return false;
-        if (enableTransparentColors != that.enableTransparentColors) return false;
-        if (drawConstellationLimits != that.drawConstellationLimits) return false;
-        if (drawConstellationNames != that.drawConstellationNames) return false;
-        if (drawConstellationNamesUppercase != that.drawConstellationNamesUppercase) return false;
-        if (drawCoordinateGrid != that.drawCoordinateGrid) return false;
-        if (drawCoordinateGridCelestialPoints != that.drawCoordinateGridCelestialPoints) return false;
-        if (drawCoordinateGridHighZoom != that.drawCoordinateGridHighZoom) return false;
-        if (drawExternalGrid != that.drawExternalGrid) return false;
-        if (drawCoordinateGridEcliptic != that.drawCoordinateGridEcliptic) return false;
-        if (drawCoordinateGridEclipticLabels != that.drawCoordinateGridEclipticLabels) return false;
-        if (drawStars != that.drawStars) return false;
-        if (drawNebulaeContours != that.drawNebulaeContours) return false;
-        if (drawMeteorShowers != that.drawMeteorShowers) return false;
-        if (drawMeteorShowersOnlyActive != that.drawMeteorShowersOnlyActive) return false;
-        if (drawMilkyWayContours != that.drawMilkyWayContours) return false;
-        if (fillMilkyWay != that.fillMilkyWay) return false;
-        if (fillNebulae != that.fillNebulae) return false;
-        if (drawDeepSkyObjects != that.drawDeepSkyObjects) return false;
-        if (drawDeepSkyObjectsTextures != that.drawDeepSkyObjectsTextures) return false;
-        if (drawDeepSkyObjectsOnlyMessier != that.drawDeepSkyObjectsOnlyMessier) return false;
-        if (drawDeepSkyObjectsAllMessierAndCaldwell != that.drawDeepSkyObjectsAllMessierAndCaldwell) return false;
-        if (drawDeepSkyObjectsLabels != that.drawDeepSkyObjectsLabels) return false;
-        if (drawStarsColors != that.drawStarsColors) return false;
-        if (drawStarsColor != that.drawStarsColor) return false;
-        if (drawStarsSymbols != that.drawStarsSymbols) return false;
-        if (drawStarsPositionAngleInDoubles != that.drawStarsPositionAngleInDoubles) return false;
-        if (Float.compare(that.drawStarsLimitingMagnitude, drawStarsLimitingMagnitude) != 0) return false;
-        if (Float.compare(that.drawObjectsLimitingMagnitude, drawObjectsLimitingMagnitude) != 0) return false;
-        if (Float.compare(that.drawMinorObjectsLimitingMagnitude, drawMinorObjectsLimitingMagnitude) != 0) return false;
-        if (drawSuperNovaAndNovaEvents != that.drawSuperNovaAndNovaEvents) return false;
-        if (drawSuperNovaEventsNumberOfYears != that.drawSuperNovaEventsNumberOfYears) return false;
-        if (drawSuperNovaEventsColor != that.drawSuperNovaEventsColor) return false;
-        if (drawDeepSkyObjectsColor != that.drawDeepSkyObjectsColor) return false;
-        if (drawMeteorShowersColor != that.drawMeteorShowersColor) return false;
-        if (drawConstellationContoursColor != that.drawConstellationContoursColor) return false;
-        if (drawConstellationLimitsColor != that.drawConstellationLimitsColor) return false;
-        if (drawConstellationNamesColor != that.drawConstellationNamesColor) return false;
-        if (drawBrightNebulaeContoursColor != that.drawBrightNebulaeContoursColor) return false;
-        if (drawDarkNebulaeContoursColor != that.drawDarkNebulaeContoursColor) return false;
-        if (drawMilkyWayContoursColor != that.drawMilkyWayContoursColor) return false;
-        if (fillMilkyWayColor != that.fillMilkyWayColor) return false;
-        if (fillBrightNebulaeColor != that.fillBrightNebulaeColor) return false;
-        if (drawCoordinateGridColor != that.drawCoordinateGridColor) return false;
-        if (drawCoordinateGridEclipticColor != that.drawCoordinateGridEclipticColor) return false;
-        if (drawSunSpotsColor != that.drawSunSpotsColor) return false;
-        if (drawPlanetsMoonSun != that.drawPlanetsMoonSun) return false;
-        if (drawSunSpotsLabels != that.drawSunSpotsLabels) return false;
-        if (drawPlanetsLabels != that.drawPlanetsLabels) return false;
-        if (drawStarsGreekSymbols != that.drawStarsGreekSymbols) return false;
-        if (drawStarsGreekSymbolsOnlyIfHasProperName != that.drawStarsGreekSymbolsOnlyIfHasProperName) return false;
-        if (Float.compare(that.drawStarsLabelsLimitingMagnitude, drawStarsLabelsLimitingMagnitude) != 0) return false;
-        if (Float.compare(that.limitOfSeparationForDoubleStars, limitOfSeparationForDoubleStars) != 0) return false;
-        if (Float.compare(that.limitOfDifferenceOfMagnitudesForVariableStars, limitOfDifferenceOfMagnitudesForVariableStars) != 0)
-            return false;
-        if (drawConstellationContoursMarginBetweenLineAndStar != that.drawConstellationContoursMarginBetweenLineAndStar)
-            return false;
-        if (overlayDSSimageInNextRendering != that.overlayDSSimageInNextRendering) return false;
-        if (drawMagnitudeLabels != that.drawMagnitudeLabels) return false;
-        if (drawCentralCrux != that.drawCentralCrux) return false;
-        if (drawMinorObjectsLabels != that.drawMinorObjectsLabels) return false;
-        if (drawAsteroids != that.drawAsteroids) return false;
-        if (drawComets != that.drawComets) return false;
-        if (drawTransNeptunianObjects != that.drawTransNeptunianObjects) return false;
-        if (drawArtificialSatellites != that.drawArtificialSatellites) return false;
-        if (drawArtificialSatellitesIridiumFlares != that.drawArtificialSatellitesIridiumFlares) return false;
-        if (drawSpaceProbes != that.drawSpaceProbes) return false;
-        if (drawOcularFieldOfView != that.drawOcularFieldOfView) return false;
-        if (drawCoordinateGridLabels != that.drawCoordinateGridLabels) return false;
-        if (drawCoordinateGridCardinalPoints != that.drawCoordinateGridCardinalPoints) return false;
-        if (drawSkyBelowHorizon != that.drawSkyBelowHorizon) return false;
-        if (drawSkyCorrectingLocalHorizon != that.drawSkyCorrectingLocalHorizon) return false;
-        if (drawSunSpots != that.drawSunSpots) return false;
-        if (background != that.background) return false;
-        if (drawOcularFieldOfViewColor != that.drawOcularFieldOfViewColor) return false;
-        if (drawFaintStars != that.drawFaintStars) return false;
-        if (drawFastLabelsInWideFields != that.drawFastLabelsInWideFields) return false;
-        if (drawIcons != that.drawIcons) return false;
-        if (drawClever != that.drawClever) return false;
-        if (drawWithAntialiasing != that.drawWithAntialiasing) return false;
-        if (fillGalaxyColor != that.fillGalaxyColor) return false;
-        if (fillGlobularColor != that.fillGlobularColor) return false;
-        if (fillOpenColor != that.fillOpenColor) return false;
-        if (drawFaintStarsTimeOut != that.drawFaintStarsTimeOut) return false;
-        if (useSuperScriptForRA != that.useSuperScriptForRA) return false;
-        if (Float.compare(that.updateTime, updateTime) != 0) return false;
-        if (Float.compare(that.updateTimeFullUpdate, updateTimeFullUpdate) != 0) return false;
-        if (projection != that.projection) return false;
-        if (coordinateSystem != that.coordinateSystem) return false;
-        if (planetRender != null ? !planetRender.equals(that.planetRender) : that.planetRender != null) return false;
-        if (telescope != null ? !telescope.equals(that.telescope) : that.telescope != null) return false;
-        // Probably incorrect - comparing Object[] arrays with Arrays.equals
-        if (!Arrays.equals(trajectory, that.trajectory)) return false;
-        if (drawConstellationContours != that.drawConstellationContours) return false;
-        if (drawConstellationNamesType != that.drawConstellationNamesType) return false;
-        if (drawMilkyWayContoursWithTextures != that.drawMilkyWayContoursWithTextures) return false;
-        if (drawStarsRealistic != that.drawStarsRealistic) return false;
-        if (drawStarsLabels != that.drawStarsLabels) return false;
-        if (drawFastLinesMode != that.drawFastLinesMode) return false;
-        if (drawHorizonTexture != that.drawHorizonTexture) return false;
-        if (drawArtificialSatellitesOnlyThese != null ? !drawArtificialSatellitesOnlyThese.equals(that.drawArtificialSatellitesOnlyThese) : that.drawArtificialSatellitesOnlyThese != null)
-            return false;
-        if (drawLeyend != that.drawLeyend) return false;
-        if (drawConstellationNamesFont != that.drawConstellationNamesFont) return false;
-        if (drawStarsNamesFont != that.drawStarsNamesFont) return false;
-        if (drawPlanetsNamesFont != that.drawPlanetsNamesFont) return false;
-        if (drawDeepSkyObjectsNamesFont != that.drawDeepSkyObjectsNamesFont) return false;
-        if (drawMinorObjectsNamesFont != that.drawMinorObjectsNamesFont) return false;
-        if (drawCoordinateGridFont != that.drawCoordinateGridFont) return false;
-        if (drawNebulaeStroke != null ? !drawNebulaeStroke.equals(that.drawNebulaeStroke) : that.drawNebulaeStroke != null)
-            return false;
-        if (drawMilkyWayStroke != null ? !drawMilkyWayStroke.equals(that.drawMilkyWayStroke) : that.drawMilkyWayStroke != null)
-            return false;
-        if (drawDeepSkyObjectsStroke != null ? !drawDeepSkyObjectsStroke.equals(that.drawDeepSkyObjectsStroke) : that.drawDeepSkyObjectsStroke != null)
-            return false;
-        if (drawConstellationStroke != null ? !drawConstellationStroke.equals(that.drawConstellationStroke) : that.drawConstellationStroke != null)
-            return false;
-        if (drawConstellationLimitsStroke != null ? !drawConstellationLimitsStroke.equals(that.drawConstellationLimitsStroke) : that.drawConstellationLimitsStroke != null)
-            return false;
-        if (drawCoordinateGridStroke != null ? !drawCoordinateGridStroke.equals(that.drawCoordinateGridStroke) : that.drawCoordinateGridStroke != null)
-            return false;
-        if (drawFastLabels != that.drawFastLabels) return false;
-        if (anaglyphMode != that.anaglyphMode) return false;
-        if (!Arrays.equals(drawExternalCatalogs, that.drawExternalCatalogs)) return false;
-        // Probably incorrect - comparing Object[] arrays with Arrays.equals
-        if (!Arrays.equals(externalCatalogs, that.externalCatalogs)) return false;
-        // Probably incorrect - comparing Object[] arrays with Arrays.equals
-        if (!Arrays.equals(externalCatalogNames, that.externalCatalogNames)) return false;
-        return colorModel == that.colorModel;
+		if (!s.drawNebulaeStroke.equals(this.drawNebulaeStroke)) equals = false;
+		if (!s.drawMilkyWayStroke.equals(this.drawMilkyWayStroke)) equals = false;
+		if (!s.drawDeepSkyObjectsStroke.equals(this.drawDeepSkyObjectsStroke)) equals = false;
+		if (!s.drawConstellationLimitsStroke.equals(this.drawConstellationLimitsStroke)) equals = false;
+		if (!s.drawCoordinateGridStroke.equals(this.drawCoordinateGridStroke)) equals = false;
+		if (!s.drawConstellationStroke.equals(this.drawConstellationStroke)) equals = false;
 
-    }
+		if (s.limitOfDifferenceOfMagnitudesForVariableStars != this.limitOfDifferenceOfMagnitudesForVariableStars) equals = false;
+		if (s.limitOfSeparationForDoubleStars != this.limitOfSeparationForDoubleStars) equals = false;
 
-    @Override
-    public int hashCode() {
-        int result;
-        long temp;
-        result = width;
-        result = 31 * result + height;
-        temp = Double.doubleToLongBits(centralLongitude);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        temp = Double.doubleToLongBits(centralLatitude);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        result = 31 * result + (projection != null ? projection.hashCode() : 0);
-        result = 31 * result + (poleAngle != +0.0f ? Float.floatToIntBits(poleAngle) : 0);
-        result = 31 * result + (hourAngle != +0.0f ? Float.floatToIntBits(hourAngle) : 0);
-        result = 31 * result + (coordinateSystem != null ? coordinateSystem.hashCode() : 0);
-        result = 31 * result + (planetRender != null ? planetRender.hashCode() : 0);
-        result = 31 * result + (telescope != null ? telescope.hashCode() : 0);
-        result = 31 * result + (trajectory != null ? Arrays.hashCode(trajectory) : 0);
-        result = 31 * result + (enableTransparentColors ? 1 : 0);
-        result = 31 * result + (drawConstellationContours != null ? drawConstellationContours.hashCode() : 0);
-        result = 31 * result + (drawConstellationLimits ? 1 : 0);
-        result = 31 * result + (drawConstellationNames ? 1 : 0);
-        result = 31 * result + (drawConstellationNamesUppercase ? 1 : 0);
-        result = 31 * result + (drawConstellationNamesType != null ? drawConstellationNamesType.hashCode() : 0);
-        result = 31 * result + (drawCoordinateGrid ? 1 : 0);
-        result = 31 * result + (drawCoordinateGridCelestialPoints ? 1 : 0);
-        result = 31 * result + (drawCoordinateGridHighZoom ? 1 : 0);
-        result = 31 * result + (drawExternalGrid ? 1 : 0);
-        result = 31 * result + (drawCoordinateGridEcliptic ? 1 : 0);
-        result = 31 * result + (drawCoordinateGridEclipticLabels ? 1 : 0);
-        result = 31 * result + (drawStars ? 1 : 0);
-        result = 31 * result + (drawNebulaeContours ? 1 : 0);
-        result = 31 * result + (drawMeteorShowers ? 1 : 0);
-        result = 31 * result + (drawMeteorShowersOnlyActive ? 1 : 0);
-        result = 31 * result + (drawMilkyWayContours ? 1 : 0);
-        result = 31 * result + (fillMilkyWay ? 1 : 0);
-        result = 31 * result + (fillNebulae ? 1 : 0);
-        result = 31 * result + (drawMilkyWayContoursWithTextures != null ? drawMilkyWayContoursWithTextures.hashCode() : 0);
-        result = 31 * result + (drawDeepSkyObjects ? 1 : 0);
-        result = 31 * result + (drawDeepSkyObjectsTextures ? 1 : 0);
-        result = 31 * result + (drawDeepSkyObjectsOnlyMessier ? 1 : 0);
-        result = 31 * result + (drawDeepSkyObjectsAllMessierAndCaldwell ? 1 : 0);
-        result = 31 * result + (drawDeepSkyObjectsLabels ? 1 : 0);
-        result = 31 * result + (drawStarsColors ? 1 : 0);
-        result = 31 * result + (drawStarsRealistic != null ? drawStarsRealistic.hashCode() : 0);
-        result = 31 * result + drawStarsColor;
-        result = 31 * result + (drawStarsSymbols ? 1 : 0);
-        result = 31 * result + (drawStarsPositionAngleInDoubles ? 1 : 0);
-        result = 31 * result + (drawStarsLimitingMagnitude != +0.0f ? Float.floatToIntBits(drawStarsLimitingMagnitude) : 0);
-        result = 31 * result + (drawObjectsLimitingMagnitude != +0.0f ? Float.floatToIntBits(drawObjectsLimitingMagnitude) : 0);
-        result = 31 * result + (drawMinorObjectsLimitingMagnitude != +0.0f ? Float.floatToIntBits(drawMinorObjectsLimitingMagnitude) : 0);
-        result = 31 * result + (drawSuperNovaAndNovaEvents ? 1 : 0);
-        result = 31 * result + drawSuperNovaEventsNumberOfYears;
-        result = 31 * result + drawSuperNovaEventsColor;
-        result = 31 * result + drawDeepSkyObjectsColor;
-        result = 31 * result + drawMeteorShowersColor;
-        result = 31 * result + drawConstellationContoursColor;
-        result = 31 * result + drawConstellationLimitsColor;
-        result = 31 * result + drawConstellationNamesColor;
-        result = 31 * result + drawBrightNebulaeContoursColor;
-        result = 31 * result + drawDarkNebulaeContoursColor;
-        result = 31 * result + drawMilkyWayContoursColor;
-        result = 31 * result + fillMilkyWayColor;
-        result = 31 * result + fillBrightNebulaeColor;
-        result = 31 * result + drawCoordinateGridColor;
-        result = 31 * result + drawCoordinateGridEclipticColor;
-        result = 31 * result + drawSunSpotsColor;
-        result = 31 * result + (drawPlanetsMoonSun ? 1 : 0);
-        result = 31 * result + (drawSunSpotsLabels ? 1 : 0);
-        result = 31 * result + (drawPlanetsLabels ? 1 : 0);
-        result = 31 * result + (drawStarsLabels != null ? drawStarsLabels.hashCode() : 0);
-        result = 31 * result + (drawStarsGreekSymbols ? 1 : 0);
-        result = 31 * result + (drawStarsGreekSymbolsOnlyIfHasProperName ? 1 : 0);
-        result = 31 * result + (drawStarsLabelsLimitingMagnitude != +0.0f ? Float.floatToIntBits(drawStarsLabelsLimitingMagnitude) : 0);
-        result = 31 * result + (limitOfSeparationForDoubleStars != +0.0f ? Float.floatToIntBits(limitOfSeparationForDoubleStars) : 0);
-        result = 31 * result + (limitOfDifferenceOfMagnitudesForVariableStars != +0.0f ? Float.floatToIntBits(limitOfDifferenceOfMagnitudesForVariableStars) : 0);
-        result = 31 * result + (drawFastLinesMode != null ? drawFastLinesMode.hashCode() : 0);
-        result = 31 * result + drawConstellationContoursMarginBetweenLineAndStar;
-        result = 31 * result + (drawHorizonTexture != null ? drawHorizonTexture.hashCode() : 0);
-        result = 31 * result + (overlayDSSimageInNextRendering ? 1 : 0);
-        result = 31 * result + (drawMagnitudeLabels ? 1 : 0);
-        result = 31 * result + (drawCentralCrux ? 1 : 0);
-        result = 31 * result + (drawMinorObjectsLabels ? 1 : 0);
-        result = 31 * result + (drawAsteroids ? 1 : 0);
-        result = 31 * result + (drawComets ? 1 : 0);
-        result = 31 * result + (drawTransNeptunianObjects ? 1 : 0);
-        result = 31 * result + (drawArtificialSatellites ? 1 : 0);
-        result = 31 * result + (drawArtificialSatellitesOnlyThese != null ? drawArtificialSatellitesOnlyThese.hashCode() : 0);
-        result = 31 * result + (drawArtificialSatellitesIridiumFlares ? 1 : 0);
-        result = 31 * result + (drawSpaceProbes ? 1 : 0);
-        result = 31 * result + (drawOcularFieldOfView ? 1 : 0);
-        result = 31 * result + (drawCoordinateGridLabels ? 1 : 0);
-        result = 31 * result + (drawLeyend != null ? drawLeyend.hashCode() : 0);
-        result = 31 * result + (drawConstellationNamesFont != null ? drawConstellationNamesFont.hashCode() : 0);
-        result = 31 * result + (drawStarsNamesFont != null ? drawStarsNamesFont.hashCode() : 0);
-        result = 31 * result + (drawPlanetsNamesFont != null ? drawPlanetsNamesFont.hashCode() : 0);
-        result = 31 * result + (drawDeepSkyObjectsNamesFont != null ? drawDeepSkyObjectsNamesFont.hashCode() : 0);
-        result = 31 * result + (drawMinorObjectsNamesFont != null ? drawMinorObjectsNamesFont.hashCode() : 0);
-        result = 31 * result + (drawCoordinateGridFont != null ? drawCoordinateGridFont.hashCode() : 0);
-        result = 31 * result + (drawCoordinateGridCardinalPoints ? 1 : 0);
-        result = 31 * result + (drawSkyBelowHorizon ? 1 : 0);
-        result = 31 * result + (drawSkyCorrectingLocalHorizon ? 1 : 0);
-        result = 31 * result + (drawSunSpots ? 1 : 0);
-        result = 31 * result + background;
-        result = 31 * result + drawOcularFieldOfViewColor;
-        result = 31 * result + (drawNebulaeStroke != null ? drawNebulaeStroke.hashCode() : 0);
-        result = 31 * result + (drawMilkyWayStroke != null ? drawMilkyWayStroke.hashCode() : 0);
-        result = 31 * result + (drawDeepSkyObjectsStroke != null ? drawDeepSkyObjectsStroke.hashCode() : 0);
-        result = 31 * result + (drawConstellationStroke != null ? drawConstellationStroke.hashCode() : 0);
-        result = 31 * result + (drawConstellationLimitsStroke != null ? drawConstellationLimitsStroke.hashCode() : 0);
-        result = 31 * result + (drawCoordinateGridStroke != null ? drawCoordinateGridStroke.hashCode() : 0);
-        result = 31 * result + (drawFaintStars ? 1 : 0);
-        result = 31 * result + (drawFastLabels != null ? drawFastLabels.hashCode() : 0);
-        result = 31 * result + (drawFastLabelsInWideFields ? 1 : 0);
-        result = 31 * result + (drawIcons ? 1 : 0);
-        result = 31 * result + (drawClever ? 1 : 0);
-        result = 31 * result + (drawWithAntialiasing ? 1 : 0);
-        result = 31 * result + fillGalaxyColor;
-        result = 31 * result + fillGlobularColor;
-        result = 31 * result + fillOpenColor;
-        result = 31 * result + drawFaintStarsTimeOut;
-        result = 31 * result + (useSuperScriptForRA ? 1 : 0);
-        result = 31 * result + (anaglyphMode != null ? anaglyphMode.hashCode() : 0);
-        result = 31 * result + (updateTime != +0.0f ? Float.floatToIntBits(updateTime) : 0);
-        result = 31 * result + (updateTimeFullUpdate != +0.0f ? Float.floatToIntBits(updateTimeFullUpdate) : 0);
-        result = 31 * result + (drawExternalCatalogs != null ? Arrays.hashCode(drawExternalCatalogs) : 0);
-        result = 31 * result + (externalCatalogs != null ? Arrays.hashCode(externalCatalogs) : 0);
-        result = 31 * result + (externalCatalogNames != null ? Arrays.hashCode(externalCatalogNames) : 0);
-        result = 31 * result + (colorModel != null ? colorModel.hashCode() : 0);
-        return result;
-    }
+		if (s.drawFastLabels != this.drawFastLabels) equals = false;
+		if (s.drawFastLabelsInWideFields != this.drawFastLabelsInWideFields) equals = false;
+		if (s.drawIcons != this.drawIcons) equals = false;
+		if (s.drawClever != this.drawClever) equals = false;
+		if (s.drawWithAntialiasing != this.drawWithAntialiasing) equals = false;
 
-    /**
+		if (s.fillGalaxyColor != this.fillGalaxyColor) equals = false;
+		if (s.fillGlobularColor != this.fillGlobularColor) equals = false;
+		if (s.fillOpenColor != this.fillOpenColor) equals = false;
+		if (s.useSuperScriptForRA != this.useSuperScriptForRA) equals = false;
+		if (s.anaglyphMode != this.anaglyphMode) equals = false;
+		if (s.updateTime != this.updateTime) equals = false;
+		if (s.updateTimeFullUpdate != this.updateTimeFullUpdate) equals = false;
+		if (!DataSet.sameArrayValues(s.externalCatalogs, this.externalCatalogs)) equals = false;
+		if (!DataSet.sameArrayValues(s.externalCatalogNames, this.externalCatalogNames)) equals = false;
+		if (s.drawExternalCatalogs == null && this.drawExternalCatalogs != null) {
+			equals = false;
+		} else {
+			if (s.drawExternalCatalogs != null && this.drawExternalCatalogs == null) {
+				equals = false;
+			} else {
+				if (s.drawExternalCatalogs != null && s.drawExternalCatalogs.length == this.drawExternalCatalogs.length) {
+					for (int i=0; i<s.drawExternalCatalogs.length; i++) {
+						if (s.drawExternalCatalogs[i] != this.drawExternalCatalogs[i]) equals = false;						
+					}
+				} else {
+					equals = false;					
+				}
+			}			
+		}
+		if (s.drawStarsRealistic != this.drawStarsRealistic) equals = false;
+		if (s.overlayDSSimageInNextRendering != this.overlayDSSimageInNextRendering) equals = false;
+		if (s.drawMagnitudeLabels != this.drawMagnitudeLabels) equals = false;
+		if (s.drawCentralCrux != this.drawCentralCrux) equals = false;
+		return equals;
+	}
+
+	/**
 	 * The set of available color modes to render the sky.
 	 * Each of them will produce a default set of recommended
 	 * colors.
 	 */
-	public enum COLOR_MODE {
+	public static enum COLOR_MODE {
 		/** White background color mode. */
 		WHITE_BACKGROUND,
 		/** Black background color mode. */
@@ -1972,9 +1861,8 @@ public class SkyRenderElement implements Serializable
 		 * should be set to this value for an adequate anaglyph effect. */
 		WHITE_BACKGROUND_SIMPLE_GREEN_RED_OR_RED_CYAN_ANAGLYPH,
 		/** Mode optimized for printing. */
-		PRINT_MODE
-	}
-
+		PRINT_MODE};
+	
 	private COLOR_MODE colorModel;
 
 	/**

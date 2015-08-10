@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- *
+ * 
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *
+ *  
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- *
+ * 
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */
+ */					
 package jparsec.vo;
 
 import jparsec.graph.DataSet;
@@ -33,7 +33,7 @@ import java.io.*;
  * @since version 1.0
  */
 public class ADSElement implements Serializable {
-	private static final long serialVersionUID = 1L;
+	static final long serialVersionUID = 1L;
 
 	/**
 	 * Publication year.
@@ -59,9 +59,9 @@ public class ADSElement implements Serializable {
 	 * Author surname.
 	 */
 	public String author;
-
+	
 	private String bibTex;
-
+	
 	/**
 	 * Constructor for a bibtex reference.
 	 * @param year Year.
@@ -98,7 +98,7 @@ public class ADSElement implements Serializable {
 		publicationType = DataSet.replaceAll(publicationType, ".", "", true);
 		int page = Integer.parseInt(p);
 		if (publicationType.equals(".")) publicationType = null;
-
+		
 		this.year = year;
 		this.journal = journal;
 		this.volume = vol;
@@ -107,7 +107,7 @@ public class ADSElement implements Serializable {
 		this.author = author;
 	}
 	/**
-	 * Obtains the bib code or the closest possible match
+	 * Obtains the bib code or the closest possible match 
 	 * if no full information is available.
 	 * @return Bib code.
 	 */
@@ -135,7 +135,7 @@ public class ADSElement implements Serializable {
 		} else {
 			author = "";
 		}
-
+		
 		String bib = ""+year;
 		if (!journal.equals("")) {
 			bib += journal;
@@ -152,7 +152,7 @@ public class ADSElement implements Serializable {
 		}
 		return bib;
 	}
-
+	
 	/**
 	 * Returns bibtex entry for the article. Requires a call
 	 * to {@linkplain ADSQuery}, but only the first time is called.
@@ -179,16 +179,16 @@ public class ADSElement implements Serializable {
 	    			if (o[i].toLowerCase().startsWith("}")) {
 	    				break;
 	    			}
-	    		}
+	    		}	    		
 	    	} catch (Exception e)
 	    	{
 	    		throw new JPARSECException("Error retieving bibtex entry.", e);
 	    	}
 		}
-
+		
 		return bibTex;
 	}
-
+	
 	/**
 	 * Obtains the abstract for this bibtex instance.
 	 * @return Abstract.
@@ -197,7 +197,7 @@ public class ADSElement implements Serializable {
 	public String getAbstract()
 	throws JPARSECException {
 		String abs = "";
-		String query = ADSQuery.ADS_HARVARD_ABSTRACTS_URL;
+		String query = ADSQuery.ADS_HARVARD_ABSTRACTS_URL; 
 
 		query += this.getBibCode();
    		String out = ADSQuery.query(query);
@@ -211,7 +211,7 @@ public class ADSElement implements Serializable {
    		}
    		return abs;
 	}
-
+	
 	/**
 	 * Obtains the abstract for this bibtex instance.
 	 * @param bibEntry The bibliographic entry.
@@ -221,7 +221,7 @@ public class ADSElement implements Serializable {
 	public static String getAbstract(String bibEntry)
 	throws JPARSECException {
 		String abs = "";
-		String query = ADSQuery.ADS_HARVARD_ABSTRACTS_URL;
+		String query = ADSQuery.ADS_HARVARD_ABSTRACTS_URL; 
 
 		query += bibEntry;
    		String out = ADSQuery.query(query);
@@ -235,7 +235,7 @@ public class ADSElement implements Serializable {
    		}
    		return abs;
 	}
-
+	
 	/**
 	 * Obtains the article for this bibtex object. If the article requires
 	 * subscription, no file will be created.
@@ -250,10 +250,10 @@ public class ADSElement implements Serializable {
 		String query = "http://adsabs.harvard.edu/cgi-bin/nph-data_query?bibcode=";
 		query += DataSet.replaceAll(this.getBibCode(), "&", "%26", true);
 		query += "&db_key=AST&link_type=ARTICLE";
-
+		
 		GeneralQuery.queryFile(query, fileName, timeout);
 	}
-
+	
 	/**
 	 * ID constant for A&A journal.
 	 */
@@ -287,15 +287,15 @@ public class ADSElement implements Serializable {
 	 * ID constant for an article.
 	 */
 	public static final String PUBLICATION_TYPE_ARTICLE = ".";
-
+	
 	private ADSElement() {}
-
+	
 	/**
 	 * Clones this instance.
 	 */
-    @Override
 	public ADSElement clone()
 	{
+		if (this == null) return null;
 		ADSElement s = new ADSElement();
 		s.author = this.author;
 		s.bibTex = this.bibTex;
@@ -306,37 +306,55 @@ public class ADSElement implements Serializable {
 		s.year = this.year;
 		return s;
 	}
-
 	/**
 	 * Returns true if the input object is equals to this instance.
 	 */
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof ADSElement)) return false;
+	public boolean equals(Object o)
+	{
+		if (o == null) {
+			if (this == null) return true;
+			return false;
+		}
+		if (this == null) {
+			return false;
+		}
+		ADSElement s = (ADSElement) o;
+		boolean equals = true;
+		if (s.year != this.year) equals = false;
+		if (!s.author.equals(this.author)) equals = false;
+		if (s.volume != this.volume) equals = false;
+		if (s.page != this.page) equals = false;
+		if (!s.publicationType.equals(this.publicationType)) equals = false;
+		if (!s.bibTex.equals(this.bibTex)) equals = false;
+		if (!s.journal.equals(this.journal)) equals = false;
+		return equals;
+	}
+	
+    /**
+     * For unit testing only.
+	 * @param args Not used.
+     */
+    public static void main( String args[] )
+    {
+   		int year = 2006;
+   		String journal = "ApJ";
+   		int volume = 649;
+   		String publicationType = "Letter";
+   		int	page = 119;
+   		String author = "Fuente";
 
-        ADSElement that = (ADSElement) o;
-
-        if (year != that.year) return false;
-        if (page != that.page) return false;
-        if (journal != null ? !journal.equals(that.journal) : that.journal != null) return false;
-        if (volume != null ? !volume.equals(that.volume) : that.volume != null) return false;
-        if (publicationType != null ? !publicationType.equals(that.publicationType) : that.publicationType != null)
-            return false;
-        if (author != null ? !author.equals(that.author) : that.author != null) return false;
-
-        return !(bibTex != null ? !bibTex.equals(that.bibTex) : that.bibTex != null);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = year;
-        result = 31 * result + (journal != null ? journal.hashCode() : 0);
-        result = 31 * result + (volume != null ? volume.hashCode() : 0);
-        result = 31 * result + (publicationType != null ? publicationType.hashCode() : 0);
-        result = 31 * result + page;
-        result = 31 * result + (author != null ? author.hashCode() : 0);
-        result = 31 * result + (bibTex != null ? bibTex.hashCode() : 0);
-        return result;
+   		ADSElement bib = new ADSElement(year, journal, volume, publicationType, page, author);
+   		String bibTex = bib.getBibCode();
+   		System.out.println(bibTex);
+   		try {
+   	   		String bibTexEntry = bib.getBibTexEntry();
+   	   		System.out.println(bibTexEntry);
+   	   		bib.getArticle("/home/alonso/myarticle.pdf", 30000);
+   			String abs = bib.getAbstract();
+   			System.out.println(abs);
+   		} catch (Exception e)
+   		{
+   			e.printStackTrace();
+   		}
     }
 }

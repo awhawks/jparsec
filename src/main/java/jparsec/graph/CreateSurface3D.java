@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- *
+ * 
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *
+ *  
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- *
+ * 
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */
+ */					
 package jparsec.graph;
 
 import java.awt.BorderLayout;
@@ -43,6 +43,7 @@ import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.ResourceBundle;
+
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.Icon;
@@ -51,11 +52,15 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
+
+import jparsec.astronomy.Difraction;
+import jparsec.astronomy.TelescopeElement;
 import jparsec.graph.GridChartElement.COLOR_MODEL;
 import jparsec.math.Evaluation;
 import jparsec.util.JPARSECException;
 import jparsec.util.Logger;
 import jparsec.util.Logger.LEVEL;
+
 import net.ericaro.surfaceplotter.DefaultSurfaceModel;
 import net.ericaro.surfaceplotter.Mapper;
 import net.ericaro.surfaceplotter.beans.JGridBagScrollPane;
@@ -66,7 +71,7 @@ import net.ericaro.surfaceplotter.surface.SurfaceModel.PlotColor;
 import net.ericaro.surfaceplotter.surface.SurfaceModel.PlotType;
 import net.ericaro.surfaceplotter.surface.VerticalConfigurationPanel;
 
-/**
+/** 
  * Creates a surface plot using the SurfacePlotter library by Eric
  * Aro and Yanto Suryono. A surface plot can be rotated, zoomed, and
  * resized with the mouse. F2 key allows to show/hide a panel with more
@@ -77,15 +82,15 @@ import net.ericaro.surfaceplotter.surface.VerticalConfigurationPanel;
 public class CreateSurface3D implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-
+	
 	private GridChartElement chart[];
 	private String f[];
 	private double[] lim;
-
+	
 	private JPanel panel;
 	private JFrame frame;
 	private DefaultSurfaceModel sm;
-
+	
 	/**
 	 * Creates a surface from a grid chart object. Note certain
 	 * properties of the object are not supported in this class,
@@ -113,7 +118,7 @@ public class CreateSurface3D implements Serializable {
 	 * Creates a surface plot from a function. The plot
 	 * is restricted to the input limits.
 	 * @param f The function f(x, y) in Java notation.
-	 * @param lim Limits of the plot: minimum x,
+	 * @param lim Limits of the plot: minimum x, 
 	 * maximum x, minimum y, and maximum y.
 	 * @param xLabel the label for x axis.
 	 * @param yLabel the label for y axis.
@@ -137,7 +142,7 @@ public class CreateSurface3D implements Serializable {
 	 * is restricted to the input limits.
 	 * @param f1 The first function f(x, y) in Java notation.
 	 * @param f2 The second function f(x, y) in Java notation. Can be null.
-	 * @param lim Limits of the plot: minimum x,
+	 * @param lim Limits of the plot: minimum x, 
 	 * maximum x, minimum y, and maximum y.
 	 * @param xLabel the label for x axis.
 	 * @param yLabel the label for y axis.
@@ -214,7 +219,7 @@ public class CreateSurface3D implements Serializable {
 		sm = new DefaultSurfaceModel();
 
 		sm.setPlotFunction2(false);
-
+		
 		sm.setCalcDivisions(50);
 		sm.setDispDivisions(50);
 		sm.setContourLines(10);
@@ -234,14 +239,14 @@ public class CreateSurface3D implements Serializable {
 		sm.setPlotColor(PlotColor.SPECTRUM);
 
 		configureModel(sm, grid);
-
+		
 		sm.setFirstFunctionOnly(true);
 		sm.setMapper(new Mapper() {
 			public  float f1( float x, float y)
 			{
 				return (float) grid.getIntensityAt(x, y);
 			}
-
+			
 			public  float f2( float x, float y)
 			{
 				return 0;
@@ -252,12 +257,12 @@ public class CreateSurface3D implements Serializable {
 
 	private SurfaceModel createDefaultSurfaceModel(final GridChartElement grid[]) {
 		if (grid.length == 1) return createDefaultSurfaceModel(grid[0]);
-
+		
 		chart = grid;
 		sm = new DefaultSurfaceModel();
 
 		sm.setPlotFunction12(true, true);
-
+		
 		sm.setCalcDivisions(50);
 		sm.setDispDivisions(50);
 		sm.setContourLines(10);
@@ -275,7 +280,7 @@ public class CreateSurface3D implements Serializable {
 		sm.setMesh(false);
 		sm.setPlotType(PlotType.SURFACE);
 		sm.setPlotColor(PlotColor.SPECTRUM);
-
+		
 		configureModel(sm, grid[0]);
 
 		sm.setMapper(new Mapper() {
@@ -283,7 +288,7 @@ public class CreateSurface3D implements Serializable {
 			{
 				return (float) grid[0].getIntensityAt(x, y);
 			}
-
+			
 			public  float f2( float x, float y)
 			{
 				return (float) grid[1].getIntensityAt(x, y);
@@ -297,7 +302,7 @@ public class CreateSurface3D implements Serializable {
 		sm = new DefaultSurfaceModel();
 
 		sm.setPlotFunction2(false);
-
+		
 		sm.setCalcDivisions(50);
 		sm.setDispDivisions(50);
 		sm.setContourLines(10);
@@ -316,7 +321,7 @@ public class CreateSurface3D implements Serializable {
 		sm.setPlotType(PlotType.SURFACE);
 		sm.setFirstFunctionOnly(true);
 		sm.setPlotColor(PlotColor.SPECTRUM);
-
+		
 		final Evaluation js = new Evaluation();
 		sm.setMapper(new Mapper() {
 			public  float f1( float x, float y)
@@ -327,7 +332,7 @@ public class CreateSurface3D implements Serializable {
 					return 0;
 				}
 			}
-
+			
 			public  float f2( float x, float y)
 			{
 				return 0;
@@ -339,11 +344,11 @@ public class CreateSurface3D implements Serializable {
 	private SurfaceModel createDefaultSurfaceModel(final String f[], double lim[]) {
 		if (f.length == 1) return createDefaultSurfaceModel(f[0], lim);
 		this.f = f;
-
+		
 		sm = new DefaultSurfaceModel();
 
 		sm.setPlotFunction12(true, true);
-
+		
 		sm.setCalcDivisions(50);
 		sm.setDispDivisions(50);
 		sm.setContourLines(10);
@@ -362,7 +367,7 @@ public class CreateSurface3D implements Serializable {
 		sm.setPlotType(PlotType.SURFACE);
 
 		sm.setPlotColor(PlotColor.SPECTRUM);
-
+		
 		final Evaluation js = new Evaluation();
 		sm.setMapper(new Mapper() {
 			public  float f1( float x, float y)
@@ -373,7 +378,7 @@ public class CreateSurface3D implements Serializable {
 					return 0;
 				}
 			}
-
+			
 			public  float f2( float x, float y)
 			{
 				try {
@@ -390,11 +395,11 @@ public class CreateSurface3D implements Serializable {
 		panel = new JPanel();
 		panel.setLayout(new BorderLayout());
 		initComponents();
-
+		
 		String name = (String) configurationToggler.getValue(Action.NAME);
 		panel.getActionMap().put(name, configurationToggler);
 		panel.getInputMap(JPanel.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0), name);
-
+		
 		setModel(model);
 	}
 
@@ -458,7 +463,7 @@ public class CreateSurface3D implements Serializable {
 		panel.invalidate();
 		panel.revalidate();
 	}
-
+	
 
 	private void toggleConfiguration() {
 		setConfigurationVisible(!isConfigurationVisible());
@@ -479,7 +484,7 @@ public class CreateSurface3D implements Serializable {
 		if (e.getClickCount()>=2)
 			toggleConfiguration();
 	}
-
+	
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
 		ResourceBundle bundle = ResourceBundle.getBundle("net.ericaro.surfaceplotter.JSurfacePanel");
@@ -574,7 +579,7 @@ public class CreateSurface3D implements Serializable {
 		if (!isSurfaceCalculated) sm.plot().execute();
 		isSurfaceCalculated = true;
 	}
-
+	
 	/**
 	 * Returns the component.
 	 * @return The panel.
@@ -631,35 +636,35 @@ public class CreateSurface3D implements Serializable {
 			if (!isShown && frame == null) this.show(w, h, "", false);
 			w = frame.getWidth();
 			h = frame.getHeight();
-			buf = new BufferedImage(w-10, h-34, BufferedImage.TYPE_INT_RGB);
+		    buf = new BufferedImage(w-10, h-34, BufferedImage.TYPE_INT_RGB);
 			Graphics g = buf.createGraphics();
 			g.setColor(Color.WHITE);
 			g.clearRect(0, 0, w, h);
 			g.dispose();
-			Thread t = new Thread(new Runnable() {
-				public void run() {
-					try {
-						Thread.sleep(1000);
-						do {
-							try {
-								Thread.sleep(1000);
-							} catch (InterruptedException e) {
-								Logger.log(LEVEL.ERROR, "Error sleeping thread. Message was: "+e.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e.getStackTrace()));
-							}
-						} while (!surface.isValid() || !surface.isEnabled());
-						Graphics g = buf.createGraphics();
-						panel.paintAll(g);
-					} catch (Exception e) {
-						Logger.log(LEVEL.ERROR, "Error painting chart to image. Message was: "+e.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e.getStackTrace()));
-					}
-					if (!isShown) frame.dispose();
-				}
+		    Thread t = new Thread(new Runnable() {
+		    	public void run() {
+	    			try {
+	    				Thread.sleep(1000);
+			    		do {
+			    			try {
+			    				Thread.sleep(1000);
+			    			} catch (InterruptedException e) {
+			    				Logger.log(LEVEL.ERROR, "Error sleeping thread. Message was: "+e.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e.getStackTrace()));
+			    			}
+		    			} while (!surface.isValid() || !surface.isEnabled());
+	    				Graphics g = buf.createGraphics();
+	    				panel.paintAll(g);
+	    			} catch (Exception e) {
+	    				Logger.log(LEVEL.ERROR, "Error painting chart to image. Message was: "+e.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e.getStackTrace()));
+	    			}	    		
+	    			if (!isShown) frame.dispose();					    	
+		    	}
 			});
-			t.start();
-			return buf;
+		    t.start();
+		    return buf;
 		} catch (Exception e) {
 			throw new JPARSECException("could not get the image.", e);
-		}
+		}	    		
 	}
 
 	/**
@@ -673,7 +678,7 @@ public class CreateSurface3D implements Serializable {
 		if (ext > 0) file_name = file_name.substring(0, ext);
 
 		File plotFile = new File(file_name + ".svg");
-
+		
 		try
 		{
 			calc();
@@ -687,7 +692,7 @@ public class CreateSurface3D implements Serializable {
 			w = frame.getWidth();
 			h = frame.getHeight();
 			final Dimension size = new Dimension(w, h);
-
+			
 			// Using reflection so that everything will work without freehep in classpath
 			final Class c = Class.forName("org.freehep.graphicsio.svg.SVGGraphics2D");
 			Constructor cc = c.getConstructor(new Class[] {plotFile.getClass(), size.getClass()});
@@ -695,35 +700,35 @@ public class CreateSurface3D implements Serializable {
 			Method m = c.getMethod("startExport", null);
 			m.invoke(svgGraphics, null);
 
-			Thread t = new Thread(new Runnable() {
-				public void run() {
-					try {
-						Thread.sleep(1000);
-						do {
-							try {
-								Thread.sleep(1000);
-							} catch (InterruptedException e) {
-								Logger.log(LEVEL.ERROR, "Error sleeping thread. Message was: "+e.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e.getStackTrace()));
-							}
-						} while (!surface.isValid() || !surface.isEnabled());
-						panel.paintComponents((Graphics2D) (svgGraphics));
-
-						Method mm = c.getMethod("endExport", null);
-						mm.invoke(svgGraphics, null);
-					} catch (Exception e) {
-						Logger.log(LEVEL.ERROR, "Error painting chart to image. Message was: "+e.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e.getStackTrace()));
-					}
-					if (!isShown) frame.dispose();
-				}
+		    Thread t = new Thread(new Runnable() {
+		    	public void run() {
+	    			try {
+	    				Thread.sleep(1000);
+			    		do {
+			    			try {
+			    				Thread.sleep(1000);
+			    			} catch (InterruptedException e) {
+			    				Logger.log(LEVEL.ERROR, "Error sleeping thread. Message was: "+e.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e.getStackTrace()));
+			    			}
+		    			} while (!surface.isValid() || !surface.isEnabled());
+	    				panel.paintComponents((Graphics2D) (svgGraphics));
+	    				
+	    				Method mm = c.getMethod("endExport", null);
+	    				mm.invoke(svgGraphics, null);
+	    			} catch (Exception e) {
+	    				Logger.log(LEVEL.ERROR, "Error painting chart to image. Message was: "+e.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e.getStackTrace()));
+	    			}	    		
+	    			if (!isShown) frame.dispose();					    	
+		    	}
 			});
-			t.start();
+		    t.start();
 
 		} catch (Exception e)
 		{
 			throw new JPARSECException("cannot write to file.", e);
 		}
 	}
-
+	
 	/**
 	 * Exports the chart as an EPS file.
 	 * @param file_name Path to output file.
@@ -735,7 +740,7 @@ public class CreateSurface3D implements Serializable {
 		if (ext > 0) file_name = file_name.substring(0, ext);
 
 		File plotFile = new File(file_name + ".eps");
-
+		
 		try
 		{
 			calc();
@@ -749,7 +754,7 @@ public class CreateSurface3D implements Serializable {
 			w = frame.getWidth();
 			h = frame.getHeight();
 			final Dimension size = new Dimension(w, h);
-
+			
 			// Using reflection so that everything will work without freehep in classpath
 			final Class c = Class.forName("org.freehep.graphicsio.ps.PSGraphics2D");
 			Constructor cc = c.getConstructor(new Class[] {plotFile.getClass(), size.getClass()});
@@ -757,35 +762,35 @@ public class CreateSurface3D implements Serializable {
 			Method m = c.getMethod("startExport", null);
 			m.invoke(psGraphics, null);
 
-			Thread t = new Thread(new Runnable() {
-				public void run() {
-					try {
-						Thread.sleep(1000);
-						do {
-							try {
-								Thread.sleep(1000);
-							} catch (InterruptedException e) {
-								Logger.log(LEVEL.ERROR, "Error sleeping thread. Message was: "+e.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e.getStackTrace()));
-							}
-						} while (!surface.isValid() || !surface.isEnabled());
-						panel.paintComponents((Graphics2D) (psGraphics));
-
-						Method mm = c.getMethod("endExport", null);
-						mm.invoke(psGraphics, null);
-					} catch (Exception e) {
-						Logger.log(LEVEL.ERROR, "Error painting chart to image. Message was: "+e.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e.getStackTrace()));
-					}
-					if (!isShown) frame.dispose();
-				}
+		    Thread t = new Thread(new Runnable() {
+		    	public void run() {
+	    			try {
+	    				Thread.sleep(1000);
+			    		do {
+			    			try {
+			    				Thread.sleep(1000);
+			    			} catch (InterruptedException e) {
+			    				Logger.log(LEVEL.ERROR, "Error sleeping thread. Message was: "+e.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e.getStackTrace()));
+			    			}
+		    			} while (!surface.isValid() || !surface.isEnabled());
+	    				panel.paintComponents((Graphics2D) (psGraphics));
+	    				
+	    				Method mm = c.getMethod("endExport", null);
+	    				mm.invoke(psGraphics, null);
+	    			} catch (Exception e) {
+	    				Logger.log(LEVEL.ERROR, "Error painting chart to image. Message was: "+e.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e.getStackTrace()));
+	    			}	    		
+	    			if (!isShown) frame.dispose();					    	
+		    	}
 			});
-			t.start();
+		    t.start();
 
 		} catch (Exception e)
 		{
 			throw new JPARSECException("cannot write to file.", e);
 		}
 	}
-
+	
 	/**
 	 * Exports the chart as an PDF file.
 	 * @param file_name Path to output file.
@@ -797,7 +802,7 @@ public class CreateSurface3D implements Serializable {
 		if (ext > 0) file_name = file_name.substring(0, ext);
 
 		File plotFile = new File(file_name + ".pdf");
-
+		
 		try
 		{
 			calc();
@@ -811,7 +816,7 @@ public class CreateSurface3D implements Serializable {
 			w = frame.getWidth();
 			h = frame.getHeight();
 			final Dimension size = new Dimension(w, h);
-
+			
 			// Using reflection so that everything will work without freehep in classpath
 			final Class c = Class.forName("org.freehep.graphicsio.pdf.PDFGraphics2D");
 			Constructor cc = c.getConstructor(new Class[] {plotFile.getClass(), size.getClass()});
@@ -819,35 +824,35 @@ public class CreateSurface3D implements Serializable {
 			Method m = c.getMethod("startExport", null);
 			m.invoke(pdfGraphics, null);
 
-			Thread t = new Thread(new Runnable() {
-				public void run() {
-					try {
-						Thread.sleep(1000);
-						do {
-							try {
-								Thread.sleep(1000);
-							} catch (InterruptedException e) {
-								Logger.log(LEVEL.ERROR, "Error sleeping thread. Message was: "+e.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e.getStackTrace()));
-							}
-						} while (!surface.isValid() || !surface.isEnabled());
-						panel.paintComponents((Graphics2D) (pdfGraphics));
-
-						Method mm = c.getMethod("endExport", null);
-						mm.invoke(pdfGraphics, null);
-					} catch (Exception e) {
-						Logger.log(LEVEL.ERROR, "Error painting chart to image. Message was: "+e.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e.getStackTrace()));
-					}
-					if (!isShown) frame.dispose();
-				}
+		    Thread t = new Thread(new Runnable() {
+		    	public void run() {
+	    			try {
+	    				Thread.sleep(1000);
+			    		do {
+			    			try {
+			    				Thread.sleep(1000);
+			    			} catch (InterruptedException e) {
+			    				Logger.log(LEVEL.ERROR, "Error sleeping thread. Message was: "+e.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e.getStackTrace()));
+			    			}
+		    			} while (!surface.isValid() || !surface.isEnabled());
+	    				panel.paintComponents((Graphics2D) (pdfGraphics));
+	    				
+	    				Method mm = c.getMethod("endExport", null);
+	    				mm.invoke(pdfGraphics, null);
+	    			} catch (Exception e) {
+	    				Logger.log(LEVEL.ERROR, "Error painting chart to image. Message was: "+e.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e.getStackTrace()));
+	    			}	    		
+	    			if (!isShown) frame.dispose();					    	
+		    	}
 			});
-			t.start();
+		    t.start();
 
 		} catch (Exception e)
 		{
 			throw new JPARSECException("cannot write to file.", e);
 		}
 	}
-
+	
 	private void writeObject(ObjectOutputStream out)
 	throws IOException {
 		out.writeObject(this.chart);
@@ -874,7 +879,7 @@ public class CreateSurface3D implements Serializable {
 		if (chart != null) {
 			init(createDefaultSurfaceModel(chart));
 		} else {
-			init(createDefaultSurfaceModel(f, lim));
+			init(createDefaultSurfaceModel(f, lim));		
 			if (f.length > 2) {
 				surface.setXLabel(f[2]);
 				surface.setYLabel(f[3]);
@@ -885,4 +890,48 @@ public class CreateSurface3D implements Serializable {
 		this.setTitleText(t);
 		this.setConfigurationVisible(c);
  	}
+
+	/**
+	 * Test program.
+	 * @param args Not used.
+	 */
+	public static void main(String[] args) {
+		
+		try {
+			int w = 800, h = 600;
+			float x0 = -2f, y0 = -Math.abs(x0), xf = -x0, yf = -y0;
+			TelescopeElement telescope = TelescopeElement.NEWTON_20cm;
+			double data[][] = Difraction.pattern(telescope, (int) Math.abs(xf)*2);
+			double values[] = DataSet.getSetOfValues(0, 1, 11, false);
+	
+			GridChartElement chart = new GridChartElement("Difraction pattern",
+					"@DELTAx (\")", "@DELTAy (\")", 
+					"Relative Intensity (|@PSI|)",
+					GridChartElement.COLOR_MODEL.RED_TO_BLUE, 
+					new double[] {x0, xf, y0, yf}, data, 
+					values, 800);
+			
+			//chart.subTitle = "Newton 20cm";
+			//chart.levelsOrientation = GridChartElement.WEDGE_ORIENTATION.HORIZONTAL_BOTTOM;
+			//chart.levelsBorderStyle = GridChartElement.WEDGE_BORDER.NO_BORDER;
+			//chart.type = GridChartElement.TYPE.RASTER_CONTOUR;
+			//chart.pointers = new String[] {"0 0 1 1 @BLUEArrow from (1, 1) to (0, 0)@BLACK"};
+
+			CreateSurface3D cs1 = new CreateSurface3D(chart);
+			cs1.show(w, h, "Surface test 1", true);
+
+			CreateSurface3D cs2 = new CreateSurface3D("Math.sin(x)", new double[] {-5, 5, -5, 5}, "x", "y", "Functions", COLOR_MODEL.RED_TO_BLUE);
+/*			cs2.getModel().setXMin(-2.5f);
+			cs2.getModel().setXMax(2.5f);
+			cs2.getModel().setYMin(-2.5f);
+			cs2.getModel().setYMax(2.5f);
+*/			cs2.show(w, h, "Surface test 2", false);
+			//Picture p1 = new Picture(cs1.chartAsBufferedImage());
+			//p1.show("My surface chart");
+
+			//Serialization.writeObject(cs1, "/home/alonso/surface3dTest");
+		} catch (Exception exc) {
+			exc.printStackTrace();
+		}
+	}
 }

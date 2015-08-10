@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- *
+ * 
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *
+ *  
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- *
+ * 
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,8 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */
+ */					
 package jparsec.time;
+
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
@@ -39,7 +40,7 @@ import jparsec.util.Translate.LANGUAGE;
 
 /**
  * A class to store date/time values with a precision of one second or better. Support to
- * retrieve the Julian day number is given for the Gregorian and Julian calendars.
+ * retrieve the Julian day number is given for the Gregorian and Julian calendars. 
  * <P>
  * Selectable dates are not limited in years, but there are some invalid dates (non
  * existent) in the civil calendar, between October 5, 1582 and October 14, 1582. They can be
@@ -63,7 +64,7 @@ import jparsec.util.Translate.LANGUAGE;
  * <P>
  * Date/time can be specified either in the Gregorian Calendar or the Julian
  * Calendar for any instant using {@linkplain DateTimeOps}.
- *
+ * 
  * @see java.util.GregorianCalendar
  * @see DateTimeOps
  * @author T. Alonso Albi - OAN (Spain)
@@ -72,7 +73,7 @@ import jparsec.util.Translate.LANGUAGE;
  */
 public class AstroDate implements Serializable
 {
-	private static final long serialVersionUID = 1L;
+	static final long serialVersionUID = 1L;
 
 	/**
 	 * Default constructor for current instant.
@@ -89,15 +90,15 @@ public class AstroDate implements Serializable
 	 * @param month Month of the year (1..12).
 	 * @param day Day of the month (1...31).
 	 * @param seconds Time in seconds past midnight. This must be in the range
-	 *		from 0 to Astro.SECONDS_PER_DAY-1.
+	 *        from 0 to Astro.SECONDS_PER_DAY-1.
 	 */
 	private AstroDate(int year, int month, int day, double seconds)
 	{
-		if (year == 0)
-			try {
-				JPARSECException.addWarning("Year should never be 0. Assumed to be -1 = 1 b.C.");
-			} catch (Exception exc) {
-				if (JPARSECException.isTreatWarningsAsErrors()) throw new RuntimeException("Year should never be 0.");
+		if (year == 0) 
+			try { 
+				JPARSECException.addWarning("Year should never be 0. Assumed to be -1 = 1 b.C."); 
+			} catch (Exception exc) { 
+				if (JPARSECException.isTreatWarningsAsErrors()) throw new RuntimeException("Year should never be 0."); 
 			}
 
 		if (year < 0) year++;
@@ -118,11 +119,11 @@ public class AstroDate implements Serializable
 	 */
 	public AstroDate(int year, int month, int day, int hour, int min, double sec)
 	{
-		if (year == 0)
-			try {
-				JPARSECException.addWarning("Year should never be 0. Assumed to be -1 = 1 b.C.");
-			} catch (Exception exc) {
-				if (JPARSECException.isTreatWarningsAsErrors()) throw new RuntimeException("Year should never be 0.");
+		if (year == 0) 
+			try { 
+				JPARSECException.addWarning("Year should never be 0. Assumed to be -1 = 1 b.C."); 
+			} catch (Exception exc) { 
+				if (JPARSECException.isTreatWarningsAsErrors()) throw new RuntimeException("Year should never be 0."); 
 			}
 
 		if (year < 0) year++;
@@ -140,13 +141,13 @@ public class AstroDate implements Serializable
 	 */
 	public AstroDate(int year, int month, int day)
 	{
-		if (year == 0)
-			try {
-				JPARSECException.addWarning("Year should never be 0. Assumed to be -1 = 1 b.C.");
-			} catch (Exception exc) {
-				if (JPARSECException.isTreatWarningsAsErrors()) throw new RuntimeException("Year should never be 0.");
+		if (year == 0) 
+			try { 
+				JPARSECException.addWarning("Year should never be 0. Assumed to be -1 = 1 b.C."); 
+			} catch (Exception exc) { 
+				if (JPARSECException.isTreatWarningsAsErrors()) throw new RuntimeException("Year should never be 0."); 
 			}
-
+		
 		if (year < 0) year++;
 		this.day = day;
 		this.month = month;
@@ -157,7 +158,7 @@ public class AstroDate implements Serializable
 	/**
 	 * Creates an instance from a date expressed in a common way,
 	 * like the standarized format Fri, 29 Jul 2011 23:30:44 +0200,
-	 * a simple way like 2001 Jan 1 or Feb 17 2005 10:00:00, MJD50000.125,
+	 * a simple way like 2001 Jan 1 or Feb 17 2005 10:00:00, MJD50000.125, 
 	 * and so on.<P>
 	 * The date is parsed by means of the cds package.
 	 * @param cdsDate Date.
@@ -185,7 +186,7 @@ public class AstroDate implements Serializable
 							month = i;
 							break;
 						}
-					}
+					}					
 				}
 				if (month == -1) throw new JPARSECException("Cannot recognize month '"+mo+"'.");
 			}
@@ -195,8 +196,8 @@ public class AstroDate implements Serializable
 			int m = Integer.parseInt(FileIO.getField(2, time, ":", false));
 			int s = Integer.parseInt(FileIO.getField(3, time, ":", false));
 			second = s + m * Constant.SECONDS_PER_MINUTE + h * Constant.SECONDS_PER_HOUR;
-
-			if (year == 0) JPARSECException.addWarning("Year should never be 0. Assumed to be -1 = 1 b.C.");
+			
+			if (year == 0) JPARSECException.addWarning("Year should never be 0. Assumed to be -1 = 1 b.C."); 
 			if (year < 0) year ++;
 			return;
 		} catch (Exception exc) {}
@@ -214,15 +215,15 @@ public class AstroDate implements Serializable
 			this.month = astro.month;
 			this.day = astro.day;
 			this.second = astro.second;
-
-			if (year == 0) JPARSECException.addWarning("Year should never be 0. Assumed to be -1 = 1 b.C.");
+			
+			if (year == 0) JPARSECException.addWarning("Year should never be 0. Assumed to be -1 = 1 b.C."); 
 			if (year < 0) year ++;
 		} catch (Exception e)
 		{
 			throw new JPARSECException("CDS library is not in classpath, or could not understand "+cdsDate+" as a date.", e);
 		}
 	}
-
+	
 	/**
 	 * Day (with decimals), Month, Year constructor (time defaults to 00:00:00 =
 	 * midnight).
@@ -232,11 +233,11 @@ public class AstroDate implements Serializable
 	 */
 	public AstroDate(int year, int month, double day)
 	{
-		if (year == 0)
-			try {
-				JPARSECException.addWarning("Year should never be 0. Assumed to be -1 = 1 b.C.");
-			} catch (Exception exc) {
-				if (JPARSECException.isTreatWarningsAsErrors()) throw new RuntimeException("Year should never be 0.");
+		if (year == 0) 
+			try { 
+				JPARSECException.addWarning("Year should never be 0. Assumed to be -1 = 1 b.C."); 
+			} catch (Exception exc) { 
+				if (JPARSECException.isTreatWarningsAsErrors()) throw new RuntimeException("Year should never be 0."); 
 			}
 
 		if (year < 0) year++;
@@ -248,7 +249,7 @@ public class AstroDate implements Serializable
 
 	/**
 	 * Convert a GregorianCalendar instance to an {@linkplain AstroDate}. <BR>
-	 *
+	 * 
 	 * @param cal An instance of java.util.GregorianCalendar.
 	 * @deprecated Dates cannot be represented in a {@linkplain GregorianCalendar}
 	 * with a precision better than 1 ms.
@@ -280,7 +281,7 @@ public class AstroDate implements Serializable
 		AstroDate tmp = new AstroDate(1970, 1, 1, 0.0);
 		double jd = tmp.jd() + t / (1000.0 * Constant.SECONDS_PER_DAY);
 		tmp = new AstroDate(jd);
-
+		
 		this.year = tmp.year;
 		this.month = tmp.month;
 		this.day = tmp.day;
@@ -289,7 +290,7 @@ public class AstroDate implements Serializable
 
 	/**
 	 * Julian Day constructor of a Gregorian {@linkplain AstroDate}. <BR>
-	 *
+	 * 
 	 * @param jd Julian day number.
 	 * @throws JPARSECException If the Julian day is invalid.
 	 */
@@ -327,9 +328,9 @@ public class AstroDate implements Serializable
 
 	/**
 	 * Julian Day constructor of a Gregorian {@linkplain AstroDate}.
-	 *
+	 * 
 	 * @param jd Julian day number as a big decimal. Internal precision
-	 * of this class (the seconds from midnight are stored as a double)
+	 * of this class (the seconds from midnight are stored as a double) 
 	 * is around 0.5 nanoseconds or better (precision will be close to
 	 * the femptosecond close to midnight, which is second 0).
 	 * @throws JPARSECException If the Julian day is invalid.
@@ -369,7 +370,7 @@ public class AstroDate implements Serializable
 	/**
 	 * Convert an {@linkplain AstroDate} to a Julian Day. See Meeus, Astronomical
 	 * Algorithms, chapter 7.
-	 *
+	 * 
 	 * @param ad The date to convert.
 	 * @param julian true = Julian calendar, else Gregorian.
 	 * @return The Julian Day that corresponds to the specified {@linkplain AstroDate}.
@@ -408,7 +409,7 @@ public class AstroDate implements Serializable
 	 * calendar if the {@linkplain AstroDate} is October, 15, 1582 or later. The Julian
 	 * calendar will be used for dates before October, 5, 1582. Intermediate
 	 * dates will throw an error.
-	 *
+	 * 
 	 * @param ad The date to convert.
 	 * @return The Julian Day that corresponds to the specified {@linkplain AstroDate}.
 	 * @throws JPARSECException If the Julian day is invalid.
@@ -424,7 +425,7 @@ public class AstroDate implements Serializable
 		if (Y < 1582) julian = true;
 		if (Y == 1582 && M < 10) julian = true;
 		if (Y == 1582 && M == 10 && D < 5) julian = true;
-
+ 
 		double jd = jd(ad, julian);
 
 		return jd;
@@ -440,15 +441,15 @@ public class AstroDate implements Serializable
 		this.year = astro.year;
 		this.month = astro.month;
 		this.day = astro.day;
-		this.second = astro.second;
+		this.second = astro.second;		
 	}
-
+	
 	/**
 	 * Convert this instance of {@linkplain AstroDate} to a Julian Day.
-	 *
+	 * 
 	 * @param julian true = Julian calendar, else Gregorian.
 	 * @return The Julian Day that corresponds to this {@linkplain AstroDate}
-	 *		 instance.
+	 *         instance.
 	 * @throws JPARSECException If the Julian day is invalid.
 	 */
 	public double jd(boolean julian) throws JPARSECException
@@ -459,7 +460,7 @@ public class AstroDate implements Serializable
 	/**
 	 * Convert an {@linkplain AstroDate} to a Julian Day. See Meeus, Astronomical
 	 * Algorithms, chapter 7.
-	 *
+	 * 
 	 * @param ad The date to convert.
 	 * @param julian true = Julian calendar, else Gregorian.
 	 * @return The Julian Day that corresponds to the specified {@linkplain AstroDate}.
@@ -479,7 +480,7 @@ public class AstroDate implements Serializable
 		int A = Y / 100;
 		int B = julian ? 0 : 2 - A + A / 4;
 
-		BigDecimal dayFraction = new BigDecimal(ad.second).divide(new BigDecimal(Constant.SECONDS_PER_DAY),
+		BigDecimal dayFraction = new BigDecimal(ad.second).divide(new BigDecimal(Constant.SECONDS_PER_DAY), 
 				Configuration.BIG_DECIMAL_PRECISION_DECIMAL_PLACES, Configuration.BIG_DECIMAL_PRECISION_ROUNDING_MODE);
 
 		BigDecimal jd = dayFraction.add(new BigDecimal((int) (365.25D * (Y + 4716)) + (int) (30.6001 * (M + 1)) + D + B - 1524.5));
@@ -499,7 +500,7 @@ public class AstroDate implements Serializable
 	 * calendar if the {@linkplain AstroDate} is October, 15, 1582 or later. The Julian
 	 * calendar will be used for dates before October, 5, 1582. Intermediate
 	 * dates will throw an error.
-	 *
+	 * 
 	 * @param ad The date to convert.
 	 * @return The Julian Day that corresponds to the specified {@linkplain AstroDate}.
 	 * @throws JPARSECException If the Julian day is invalid.
@@ -521,10 +522,10 @@ public class AstroDate implements Serializable
 
 	/**
 	 * Convert this instance of {@linkplain AstroDate} to a Julian Day.
-	 *
+	 * 
 	 * @param julian true = Julian calendar, else Gregorian.
 	 * @return The Julian Day that corresponds to this {@linkplain AstroDate}
-	 *		 instance.
+	 *         instance.
 	 * @throws JPARSECException If the Julian day is invalid.
 	 */
 	public BigDecimal exactJD(boolean julian) throws JPARSECException
@@ -559,9 +560,9 @@ public class AstroDate implements Serializable
 	 * calendar if the {@linkplain AstroDate} is October, 15, 1582 or later. The Julian
 	 * calendar will be used for dates before October, 5, 1582. Intermediate
 	 * dates will throw an error.
-	 *
+	 * 
 	 * @return The Julian Day that corresponds to this {@linkplain AstroDate}
-	 *		 instance.
+	 *         instance.
 	 * @throws JPARSECException If the Julian day is invalid.
 	 */
 	public double jd() throws JPARSECException
@@ -589,9 +590,9 @@ public class AstroDate implements Serializable
 	 * calendar if the {@linkplain AstroDate} is October, 15, 1582 or later. The Julian
 	 * calendar will be used for dates before October, 5, 1582. Intermediate
 	 * dates will throw an error.
-	 *
+	 * 
 	 * @return The Julian Day that corresponds to this {@linkplain AstroDate}
-	 *		 instance.
+	 *         instance.
 	 * @throws JPARSECException If the Julian day is invalid.
 	 */
 	public BigDecimal exactJD() throws JPARSECException
@@ -615,7 +616,7 @@ public class AstroDate implements Serializable
 	/**
 	 * Check if the {@linkplain AstroDate} instance contains an invalid date. A date is
 	 * invalid between October 5, 1582 and October 14, 1582.
-	 *
+	 * 
 	 * @return true if the date is invalid, false otherwise.
 	 */
 	public boolean isInvalid()
@@ -634,7 +635,7 @@ public class AstroDate implements Serializable
 
 	/**
 	 * Gets the year.
-	 *
+	 * 
 	 * @return The year part of this instance of {@linkplain AstroDate}.
 	 */
 	public int getYear()
@@ -646,7 +647,7 @@ public class AstroDate implements Serializable
 
 	/**
 	 * Gets the year following astronomical criteria, where year 0 exists.
-	 *
+	 * 
 	 * @return The year part of this instance of {@linkplain AstroDate}.
 	 */
 	public int getAstronomicalYear()
@@ -657,7 +658,7 @@ public class AstroDate implements Serializable
 
 	/**
 	 * Sets the year.
-	 *
+	 * 
 	 * @param y The year part of this instance of {@linkplain AstroDate}.
 	 */
 	public void setYear(int y)
@@ -668,7 +669,7 @@ public class AstroDate implements Serializable
 
 	/**
 	 * Gets the month.
-	 *
+	 * 
 	 * @return The month part of this instance of {@linkplain AstroDate} (1..12).
 	 */
 	public int getMonth()
@@ -678,9 +679,9 @@ public class AstroDate implements Serializable
 
 	/**
 	 * Sets the month.
-	 *
+	 * 
 	 * @param m The month part of this instance of {@linkplain AstroDate} (1..12)<BR>.
-	 *		Value is not checked!
+	 *        Value is not checked!
 	 */
 	public void setMonth(int m)
 	{
@@ -689,7 +690,7 @@ public class AstroDate implements Serializable
 
 	/**
 	 * Gets the day.
-	 *
+	 * 
 	 * @return The day part of this instance of {@linkplain AstroDate} (1..31).
 	 */
 	public int getDay()
@@ -699,9 +700,9 @@ public class AstroDate implements Serializable
 
 	/**
 	 * Gets the day plus fraction of days.
-	 *
+	 * 
 	 * @return The day plus fraction of day part of this instance of {@linkplain AstroDate}
-	 *		 [1.0 ... 32.0).
+	 *         [1.0 ... 32.0).
 	 */
 	public double getDayPlusFraction()
 	{
@@ -710,9 +711,9 @@ public class AstroDate implements Serializable
 
 	/**
 	 * Sets the day.
-	 *
+	 * 
 	 * @param d The day part of this instance of {@linkplain AstroDate} (1..31).
-	 *		Value is not checked!
+	 *        Value is not checked!
 	 */
 	public void setDay(int d)
 	{
@@ -724,9 +725,9 @@ public class AstroDate implements Serializable
 	 * This function truncates, and does not round up to nearest hour. For
 	 * example, this function will return '1' at all times from 01:00:00 to
 	 * 01:59:59 inclusive.
-	 *
+	 * 
 	 * @return The hour of the day for this instance of {@linkplain AstroDate},
-	 *		 not rounded.
+	 *         not rounded.
 	 */
 	public int getHour()
 	{
@@ -738,9 +739,9 @@ public class AstroDate implements Serializable
 	 * This function truncates, and does not round up to nearest minute. For
 	 * example, this function will return 20 at all times from 1:20:00 to
 	 * 1:20:59 inclusive.
-	 *
+	 * 
 	 * @return The minute of the hour for this instance of {@linkplain AstroDate},
-	 *		 not rounded.
+	 *         not rounded.
 	 */
 	public int getMinute()
 	{
@@ -762,9 +763,9 @@ public class AstroDate implements Serializable
 	 * Returns the hour of the day rounded to nearest hour. For example, this
 	 * function will return '1' at times 01:00:00 to 01:29:59, and '2' at times
 	 * 01:30:00 to 01:59:59.
-	 *
+	 * 
 	 * @return The hour of the day for this instance of {@linkplain AstroDate},
-	 *		 rounded to the nearest hour.
+	 *         rounded to the nearest hour.
 	 */
 	public int getRoundedHour()
 	{
@@ -776,9 +777,9 @@ public class AstroDate implements Serializable
 	 * Returns the minute of the hour for this instance of {@linkplain AstroDate},
 	 * rounded to nearest minute. For example, this function will return 20 at
 	 * times 1:20:00 to 1:20:29, and 21 at times 1:20:30 to 1:20:59.
-	 *
+	 * 
 	 * @return The minute of the hour for this instance of {@linkplain AstroDate},
-	 *		 rounded to the nearest minute.
+	 *         rounded to the nearest minute.
 	 */
 	public int getRoundedMinute()
 	{
@@ -787,9 +788,9 @@ public class AstroDate implements Serializable
 
 	/**
 	 * Get the rounded second. <BR>
-	 *
+	 * 
 	 * @return The second of the day for this instance of {@linkplain AstroDate},
-	 *		 rounded to the nearest second.
+	 *         rounded to the nearest second.
 	 */
 	public int getRoundedSecond()
 	{
@@ -821,7 +822,7 @@ public class AstroDate implements Serializable
 	public int getDaysInMonth() {
 		return DateTimeOps.getDaysInMonth(this.year, this.month);
 	}
-
+	
 	/**
 	 * Returns the fraction of day elapsed from previous midnight.
 	 * @param jd Julian day.
@@ -833,12 +834,12 @@ public class AstroDate implements Serializable
 		if (frac > 1.0) frac = frac - 1.0;
 		return frac;
 	}
-
+	
 	/**
 	 * Convert this {@linkplain AstroDate} instance to a GregorianCalendar.
-	 *
+	 * 
 	 * @return An instance of java.util.GregorianCalendar built using
-	 *		 this instance of {@linkplain AstroDate}.
+	 *         this instance of {@linkplain AstroDate}.
 	 */
 	public GregorianCalendar toGCalendar()
 	{
@@ -866,7 +867,7 @@ public class AstroDate implements Serializable
 	 * nearest minute.
 	 * <P>
 	 * The format of the returned string is YYYY-MM-DD hh:mm.
-	 *
+	 * 
 	 * @return A formatted date/time String.
 	 * @throws JPARSECException If the date is invalid.
 	 */
@@ -875,11 +876,11 @@ public class AstroDate implements Serializable
 		AstroDate astro = new AstroDate(this.jd() + 0.5 / 1440.0); // round up minute
 		return ""+astro.getYear() + "-" + Functions.fmt(astro.month, 2, '-') + Functions.fmt(astro.day, 2, ' ') + Functions.fmt(astro.getHour(), 2, ':') + Functions.fmt(astro.getMinute(), 2);
 	}
-
+	
 	/**
 	 * Convert this {@linkplain AstroDate} instance to a String,
 	 * formatted like 'September, 5, 2012 [, 00:00]'.
-	 *
+	 * 
 	 * @param showTime true to show the time.
 	 * @return A formatted date/time String.
 	 * @throws JPARSECException If the calendar month is invalid.
@@ -902,7 +903,7 @@ public class AstroDate implements Serializable
 		}
 		return date;
 	}
-
+	
 	/**
 	 * Convert this {@linkplain AstroDate} instance to a String formatted to the
 	 * minute, with Time Zone indicator. <BR>
@@ -910,7 +911,7 @@ public class AstroDate implements Serializable
 	 * <P>
 	 * The format of the returned string is YYYY-MM-DD hh:mm TZ,
 	 * where TZ is a locale-specific timezone name (e.g., "EST").
-	 *
+	 * 
 	 * @return A formatted date/time String.
 	 * @throws JPARSECException For an invalid date.
 	 */
@@ -963,7 +964,7 @@ public class AstroDate implements Serializable
 			out = ""+year+"-";
 			if (year <= 9999) out = Functions.fmt(year, 4, '-');
 			out += Functions.fmt(astro.month, 2, '-') + Functions.fmt(astro.day, 2, ' ') + Functions.fmt(astro.getHour(), 2, ':');
-			out += Functions.fmt(astro.getMinute(), 2);
+			out += Functions.fmt(astro.getMinute(), 2);			
 			if (astro.getYear() < 0) out += " "+Translate.translate(1068);
 		} else {
 			AstroDate astro = this;
@@ -1006,18 +1007,18 @@ public class AstroDate implements Serializable
 				}
 			}
 		}
-		String out = week+", "+this.getDay()+" "+m+" "+this.getYear()+" "+ Functions.fmt(getHour(), 2, ':') + Functions.fmt(getMinute(), 2, ':') +
+		String out = week+", "+this.getDay()+" "+m+" "+this.getYear()+" "+ Functions.fmt(getHour(), 2, ':') + Functions.fmt(getMinute(), 2, ':') + 
 				Functions.fmt((int) (getSeconds()+0.5), 2)+" "+utc;
 		return out;
 	}
-
+	
 	/**
 	 * Convert <B>this</B> {@linkplain AstroDate} instance to a String,
 	 * with Time Zone indicator.
 	 * <P>
 	 * The format of the returned string is YYYY-MM-DD hh:mm:ss TZ,
 	 * where TZ is a locale-specific timezone name (e.g., "EST").
-	 *
+	 * 
 	 * @return A formatted date/time String.
 	 */
 	public String toStringTZ()
@@ -1025,7 +1026,7 @@ public class AstroDate implements Serializable
 		TimeZone tz = TimeZone.getDefault();
 		return toString() + ' ' + tz.getDisplayName(DateTimeOps.dstOffset(toGCalendar()) != 0, TimeZone.SHORT);
 	}
-
+	
 	/**
 	 * Returns the month name.
 	 * @return Month name.
@@ -1036,7 +1037,7 @@ public class AstroDate implements Serializable
 		if (out.toLowerCase().equals("may") && Translate.getDefaultLanguage() == LANGUAGE.SPANISH) out += "o";
 		return DataSet.capitalize(out, false);
 	}
-
+	
 	/**
 	 * Returns the day of week name.
 	 * @return Day of week name.
@@ -1048,15 +1049,19 @@ public class AstroDate implements Serializable
 		return DataSet.capitalize(Translate.translate(DAY_OF_WEEK_NAMES[n]), false);
 	}
 
+	
 	/**
 	 * Names of the days of the week.
 	 */
-	public static final String DAY_OF_WEEK_NAMES[] = { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
+	public static final String DAY_OF_WEEK_NAMES[] =
+	{ "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
 
 	/**
 	 * Names of the months.
 	 */
-	public static final String MONTH_NAMES[] = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
+	public static final String MONTH_NAMES[] =
+	{ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November",
+			"December" };
 
 	/**
 	 * Day of the month.
@@ -1143,38 +1148,46 @@ public class AstroDate implements Serializable
 	 * @param astro The other date.
 	 * @return True if both dates are the same.
 	 */
-	@Override
-	public boolean equals(Object astro) {
-		if (this == astro) return true;
-		if (!(astro instanceof AstroDate)) return false;
-
-		AstroDate astroDate = (AstroDate) astro;
-
-		if (getDay() != astroDate.getDay()) return false;
-		if (getMonth() != astroDate.getMonth()) return false;
-		if (getYear() != astroDate.getYear()) return false;
-
-		return Double.compare(astroDate.second, second) == 0;
+	public boolean equals(AstroDate astro) {
+		if (astro == null && this == null) return true;
+		if (astro != null && this == null) return false;
+		if (astro == null && this != null) return false;
+		
+		if (this.year != astro.year) return false;
+		if (this.month != astro.month) return false;
+		if (this.day != astro.day) return false;
+		if (this.second != astro.second) return false;
+		return true;
 	}
-
-	@Override
-	public int hashCode() {
-		int result;
-		long temp;
-		result = getDay();
-		result = 31 * result + getMonth();
-		result = 31 * result + getYear();
-		temp = Double.doubleToLongBits(second);
-		result = 31 * result + (int) (temp ^ (temp >>> 32));
-		return result;
-	}
-
 	/**
 	 * Clones this instance.
 	 * @return A copy of this date.
 	 */
-	@Override
 	public AstroDate clone() {
 		return new AstroDate(year, month, day, second);
+	}
+	
+	/**
+	 * For unit testing only.
+	 * @param args Not used.
+	 */
+	public static void main(String args[])
+	{
+		System.out.println("AstroDate Test");
+
+		// Note that year -1001 = 1001 B.C., and -4713 = 4713 B.C.
+		// Year 0 does not exist, will produce error
+		try
+		{
+			AstroDate astro = new AstroDate(-12000, 1, 1);
+			System.out.println(astro.jd()+"/"+astro.toStandarizedString(null)+"/"+astro.toString(0));
+			AstroDate astro2 = new AstroDate(astro.toStandarizedString(null));
+			System.out.println(astro2.jd()+"/"+astro2.toStandarizedString(null)+"/"+astro2.toString(0));
+			System.out.println(astro.getYear()+"/"+astro.getAstronomicalYear());
+		} catch (JPARSECException ve)
+		{
+			//JPARSECException.showException(ve);
+			System.out.println(ve.getStackTraceDetails());
+		}
 	}
 }

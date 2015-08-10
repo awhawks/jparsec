@@ -1,10 +1,10 @@
-/**
+/*
  * This file is part of JPARSEC library.
- *
+ * 
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *
+ *  
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- *
+ * 
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,18 +18,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */
+ */					
 package jparsec.ephem.moons;
 
 import java.util.ArrayList;
+
 import jparsec.astronomy.CoordinateSystem;
 import jparsec.ephem.Ephem;
 import jparsec.ephem.EphemerisElement;
-import jparsec.ephem.EphemerisElement.COORDINATES_TYPE;
 import jparsec.ephem.Functions;
 import jparsec.ephem.PhysicalParameters;
 import jparsec.ephem.Precession;
 import jparsec.ephem.Target;
+import jparsec.ephem.EphemerisElement.COORDINATES_TYPE;
 import jparsec.ephem.Target.TARGET;
 import jparsec.ephem.event.MoonEvent;
 import jparsec.ephem.event.MoonEvent.EVENT_DEFINITION;
@@ -40,12 +41,14 @@ import jparsec.graph.DataSet;
 import jparsec.io.FileIO;
 import jparsec.math.Constant;
 import jparsec.math.FastMath;
+import jparsec.observer.City;
+import jparsec.observer.CityElement;
 import jparsec.observer.LocationElement;
 import jparsec.observer.ObserverElement;
 import jparsec.time.AstroDate;
+import jparsec.time.TimeScale;
 import jparsec.time.TimeElement;
 import jparsec.time.TimeElement.SCALE;
-import jparsec.time.TimeScale;
 import jparsec.util.DataBase;
 import jparsec.util.JPARSECException;
 import jparsec.util.Translate;
@@ -57,7 +60,7 @@ import jparsec.util.Translate;
  * sometimes also the main ones). There are methods to obtain the ephemerides for all
  * satellites orbiting a planet by combining the two methods. JPL elliptic elements
  * usually provide ephemerides within the arcsecond level compared to the main theories.
- *
+ * 
  * @see TimeElement
  * @see ObserverElement
  * @see EphemerisElement
@@ -69,6 +72,124 @@ public class MoonEphem
 {
 	// private constructor so that this class cannot be instantiated.
 	private MoonEphem() {}
+	
+	/**
+	 * For unit testing only.
+	 * @param args Not used.
+	 */
+	public static void main(String args[])
+	{
+		System.out.println("MoonEphem Test");
+
+		try
+		{
+			CityElement city = City.findCity("Madrid");
+			ObserverElement observer = ObserverElement.parseCity(city);
+			EphemerisElement eph = new EphemerisElement(TARGET.NOT_A_PLANET, EphemerisElement.COORDINATES_TYPE.APPARENT,
+					EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.GEOCENTRIC, EphemerisElement.REDUCTION_METHOD.IAU_1976,
+					EphemerisElement.FRAME.ICRF);
+			eph.algorithm = EphemerisElement.ALGORITHM.JPL_DE405;
+			eph.correctForEOP = false;
+			//Configuration.JPL_EPHEMERIDES_FILES_EXTERNAL_PATH = "/home/alonso/eclipse/libreria_jparsec/ephem/test";
+
+/*			String id[] = DataSet.extractColumnFromTable(ORBITS, " ", 0);
+			String did[] = DataSet.getDifferentElements(id);
+			if (did.length != id.length) System.out.println("There are repeated elements in ORBITS!");
+			String[] compare = OLD_ORBITS.clone(); // Change to NEW_ORBITS when updating
+			
+			String nid[] = DataSet.extractColumnFromTable(compare, " ", 0);
+			String obj[] = id.clone();
+			String cb[] = DataSet.extractColumnFromTable(ORBITS, " ", 1);
+			for (int i=0; i<nid.length; i++) {
+				int index = DataSet.getIndex(id, nid[i]);
+				if (index < 0) System.out.println("New satellite "+nid[i]);
+			}
+			for (int i=0; i<id.length; i++) {
+				int index = DataSet.getIndex(nid, id[i]);
+				if (index < 0) {
+					System.out.println("No new data for "+id[i]);
+					index = DataSet.getIndex(obj, id[i]);
+					obj = DataSet.eliminateRowFromTable(obj, 1+index);
+					cb = DataSet.eliminateRowFromTable(cb, 1+index);
+				}
+			}
+			String cloneORBITS[] = ORBITS.clone();
+			for (int i=0; i<obj.length; i++) {
+				double maxD = -1;
+				int ncalc = 50;
+				double tstep = 50;
+				for (double jd = 2451545; jd < 2451545 + ncalc*tstep; jd = jd + tstep) {
+					AstroDate astro = new AstroDate(jd); //2454887.00625); // Testing date: 2011-dec-1
+					TimeElement time = new TimeElement(astro, SCALE.UNIVERSAL_TIME_UTC);
+					TARGET target = Target.getID(obj[i]);
+					eph.targetBody = TARGET.values()[Integer.parseInt(cb[i])]; //target.getCentralBody();
+					String sid = target.getEnglishName();
+					if (target == TARGET.NOT_A_PLANET) sid = obj[i];
+					
+					ORBITS = cloneORBITS;
+					MoonEphemElement ephem1 = MoonEphem.calcJPLSatellite(time, observer, eph, sid);
+					
+					ORBITS = compare;
+					MoonEphemElement ephem2 = MoonEphem.calcJPLSatellite(time, observer, eph, sid);
+
+					//System.out.println(sid);
+					//System.out.println(ephem1.getEquatorialLocation().toStringAsEquatorialLocation());
+					//System.out.println(ephem2.getEquatorialLocation().toStringAsEquatorialLocation());
+					double dist = LocationElement.getAngularDistance(ephem1.getEquatorialLocation(), ephem2.getEquatorialLocation());
+					if (dist > maxD || maxD == -1) maxD = dist;
+				}				
+				
+				System.out.println("Maximum difference found for "+obj[i]+": "+(maxD * Constant.RAD_TO_ARCSEC)+"\"");
+			}
+
+			JPARSECException.showWarnings();
+*/
+
+			/*
+			Configuration.JPL_EPHEMERIDES_FILES_EXTERNAL_PATH = "/home/alonso/eclipse/libreria_jparsec/ephem/test/";
+			eph.useVondrak2011PrecessionFormulaInsteadOfIAU2006 = false;
+			TimeElement time = new TimeElement(new AstroDate(1600, 1, 1), TimeElement.SCALE.TERRESTRIAL_TIME);
+			MoonEphemElement ephem[] = MoonEphem.saturnianSatellitesEphemerides_TASS17(time, observer, eph, false);
+			System.out.println(ephem[5].name+": "+Functions.formatRA(ephem[5].rightAscension, 6)+", "+Functions.formatDEC(ephem[5].declination, 5)+", "+ephem[5].distance);
+			//IMCCE     	 13h 45m 15.35365s,   -08º 17' 57.0768",  9.99873438	
+			//JPARSEC		 13h 45m 15.3536950s, -08º 17' 57.07677", 9.99873438032
+			*/
+			
+			double jd = 2451545.0 + 15 * 365.25;
+			double testPos[] = GUST86.GUST86_theory(jd, 5, 3);
+			testPos = Precession.precess(Constant.J1950, Constant.J2000, testPos, eph);
+			//testPos = Ephem.eclipticToEquatorial(testPos, Constant.J2000, eph);
+			
+			// Elements for Oberon from Horizons
+			String oberonElements = "2456123.500000000 = A.D. 2012-Jul-15 00:00:00.0000 (CT)\n"+
+					 "EC= 1.813799361026376E-03 QR= 3.893220361896172E-03 IN= 1.798019718252132E+02\n"+
+					 "OM= 3.288631399182058E+02 W = 3.004505321279436E+02 Tp=  2456128.448374000378\n"+
+					 "N = 2.673603454600160E+01 MA= 2.277001017849925E+02 TA= 2.275466065146315E+02\n"+
+					 "A = 3.900294713956159E-03 AD= 3.907369066016147E-03 PR= 1.346497362503739E+01";
+			String elem[] = DataSet.toStringArray(oberonElements, FileIO.getLineSeparator(), true);
+			MoonOrbitalElement orbit = new MoonOrbitalElement(elem, "Oberon", TARGET.URANUS);
+			
+			double p[] = MoonEphem.rocks(jd, orbit, eph.ephemMethod);
+			System.out.println(p[0]+"/"+p[1]+"/"+p[2]);
+			System.out.println(testPos[0]+"/"+testPos[1]+"/"+testPos[2]);
+			// The conclusion is that elements from Horizons can be used 2 years around the reference time
+
+			// Test on Charon
+			jd = (new AstroDate(2010, 1, 1, 0, 0, 0)).jd();
+			orbit = getMoonElements("Charon", jd)[0];
+			System.out.println(jd);
+			p = MoonEphem.rocks(jd, orbit, eph.ephemMethod);
+			System.out.println(p[0]*Constant.AU+"/"+p[1]*Constant.AU+"/"+p[2]*Constant.AU);
+			
+			// Get (very good) approximate barycentric position of Pluto
+			p = Functions.scalarProduct(p, -1.0 / 8.0);
+			System.out.println(p[0]*Constant.AU+"/"+p[1]*Constant.AU+"/"+p[2]*Constant.AU);
+		} catch (Exception ve)
+		{
+			ve.printStackTrace();
+		}
+
+	}
 
 	/**
 	 * Corrects the equatorial coordinates of Pluto from the barycenter of the Pluto system to the
@@ -88,7 +209,7 @@ public class MoonEphem
 	 * @return The input position corrected for the true position of Pluto.
 	 * @throws JPARSECException If an error occurs.
 	 */
-	public static double[] fromPlutoBarycenterToPlutoCenter(double pos[], double jd, EphemerisElement.REDUCTION_METHOD method,
+	public static double[] fromPlutoBarycenterToPlutoCenter(double pos[], double jd, EphemerisElement.REDUCTION_METHOD method, 
 			boolean checkOffset) throws JPARSECException {
 		if (checkOffset) {
 			Object o = DataBase.getData("offsetPosition", true);
@@ -104,13 +225,13 @@ public class MoonEphem
 		dp = Functions.scalarProduct(dp, -1.0 / 8.0);
 		return Functions.sumVectors(pos, dp);
 	}
-
+	
 	static synchronized EphemElement getBodyEphem(TimeElement time, ObserverElement obs,
 			EphemerisElement eph, double offset[], double JD)
 	throws JPARSECException {
 		if (!eph.targetBody.isNaturalSatellite() && eph.algorithm == EphemerisElement.ALGORITHM.NATURAL_SATELLITE)
 			eph.algorithm = EphemerisElement.ALGORITHM.MOSHIER;
-
+		
 		MoonEphem.setEphemerisOffset(eph, offset, JD);
 
 		EphemElement ephem_plan = Ephem.getEphemeris(time, obs, eph, false);
@@ -119,7 +240,7 @@ public class MoonEphem
 
 		return ephem_plan;
 	}
-
+	
 	private static void setEphemerisOffset(EphemerisElement eph, double[] eq, double JD)
 	throws JPARSECException {
 		if (!eq.equals(OFFSET0)) {
@@ -150,17 +271,17 @@ public class MoonEphem
 				throw new JPARSECException("unsupported algorithm "+eph.algorithm+" in natural satellites ephemeris calculations.");
 			}
 		}
-
+		
 		DataBase.addData("offsetPosition", eq, true);
 	}
-
-	protected static MoonOrbitalElement[] getMoonElements(String target, double jd) throws JPARSECException {
+	
+	private static MoonOrbitalElement[] getMoonElements(String target, double jd) throws JPARSECException {
 		double limit0 = new AstroDate(OLD_YEAR, 1, 1).jd();
 		//double limitf = new AstroDate(YEAR, 1, 1).jd();
-
-		String orb[] = MoonEphem.ORBITS;
+		
+		String orb[] = MoonEphem.ORBITS; 
 		if (jd <= limit0) orb = OLD_ORBITS;
-
+		
 		if (target != null) {
 			int index = DataSet.getIndexStartingWith(orb, target+" ");
 			if (index >= 0) {
@@ -170,7 +291,7 @@ public class MoonEphem
  		}
 
 		TARGET centralBody = Target.getID(target);
-		if (!centralBody.isPlanet() && centralBody != TARGET.Pluto)
+		if (!centralBody.isPlanet() && centralBody != TARGET.Pluto) 
 			throw new JPARSECException("satellite "+target+" not found in the set of JPL elements.");
 
 		ArrayList<MoonOrbitalElement> list = new ArrayList<MoonOrbitalElement>();
@@ -180,14 +301,14 @@ public class MoonEphem
 			int cb = Integer.parseInt(FileIO.getField(2, orb[i], " ", true));
 			if (cb == centralBody.ordinal()) {
 				MoonOrbitalElement out = getMoonOrbit(orb[i]);
-
+				
 				if (out.referenceTime < jd + 75 * 365.25 && out.referenceTime > jd - 75 * 365.25) {
 					list.add(out);
 					added.add(out.name);
 				}
 			}
 		}
-
+		
 		// Add more satellites from dependency
 		// This feature is disabled due to the high level of inconsistencies I find in the
 		// orbital elements of natural satellites as given in http://ssd.jpl.nasa.gov/?sat_elem.
@@ -200,14 +321,14 @@ public class MoonEphem
 		for (int i = 0; i < v.length; i++)
 		{
 			MoonOrbitalElement moon = (MoonOrbitalElement) v[i];
-
+			
 			if (!added.contains(moon.name)) {
 				//if (moon.referencePlane == REFERENCE_PLANE.EQUATOR || moon.referencePlane == REFERENCE_PLANE.LAPLACE
-				//	 || moon.referencePlane == REFERENCE_PLANE.PLANET_EQUATOR)
+				//	 || moon.referencePlane == REFERENCE_PLANE.PLANET_EQUATOR) 
 					list.add(moon);
 			}
 		}
-*/
+*/		
 		MoonOrbitalElement out[] = new MoonOrbitalElement[list.size()];
 		for (int i=0; i<list.size(); i++) {
 			out[i] = list.get(i);
@@ -235,7 +356,7 @@ public class MoonEphem
 			ra = Double.parseDouble(FileIO.getField(13, record, " ", true));
 			dec = Double.parseDouble(FileIO.getField(14, record, " ", true));
 		}
-
+		 
 		MoonOrbitalElement out = new MoonOrbitalElement(sma, ml, e, pl, anl, inc, epoch);
 		out.name = nom;
 		out.meanMotion = mm;
@@ -246,11 +367,11 @@ public class MoonEphem
 		out.referenceEquinox = Constant.J2000;
 		out.referencePlane = MoonOrbitalElement.REFERENCE_PLANE.LAPLACE;
 		out.centralBody = TARGET.values()[cb];
-		//if (!laplace) throw new JPARSECException("Unsupported elements");
+		//if (!laplace) throw new JPARSECException("Unsupported elements"); 
 		if (!laplace) out.referencePlane = REFERENCE_PLANE.EQUATOR;
 		return out;
 	}
-
+	
 	/**
 	 * Calculate position of minor satellites, providing full data. This method
 	 * uses orbital elements from the JPL. See <A
@@ -264,20 +385,20 @@ public class MoonEphem
 	 * no known rotational models. For this reason, no full ephemeris can be
 	 * calculated for satellites that are not listed in {@linkplain TARGET} class (That's, by
 	 * the way, the reason to skip them). Otherwise, partial ephemerides can be
-	 * obtained for those satellites (position) using
-	 * {@linkplain MoonEphem#calcJPLSatellite(TimeElement, ObserverElement, EphemerisElement, String)}
+	 * obtained for those satellites (position) using 
+	 * {@linkplain MoonEphem#calcJPLSatellite(TimeElement, ObserverElement, EphemerisElement, String)} 
 	 * method.
 	 * <P>
 	 * To obtain the ephemeris the position of the mother planet is calculated
 	 * using the algorithm selected in the ephemeris object. Valid algorithms
-	 * includes the Moshier fit, Series96, VSOP, and JPL ephemerides. Deflection due
+	 * includes the Moshier fit, Series96, VSOP, and JPL ephemerides. Deflection due 
 	 * to planet is ignored.
 	 * <P>
 	 * Note that this method calculates only the position of the selected object, which
 	 * means that mutual phenomena events between this and other satellites cannot be
 	 * calculated, only mutual phenomena between this satellite and the mother planet can
-	 * be calculated.
-	 *
+	 * be calculated.  
+	 * 
 	 * @param time Time object containing the date.
 	 * @param obs Observer object containing the observer position.
 	 * @param eph Ephemeris object with the target and ephemeris
@@ -299,7 +420,7 @@ public class MoonEphem
 				throw new JPARSECException("invalid target/central body.");
 
 			double jd = TimeScale.getJD(time, obs, eph, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
-
+			
 			// Get elements for target
 			MoonOrbitalElement orbit = getMoonElements(eph.targetBody.getEnglishName(), jd)[0];
 
@@ -323,8 +444,8 @@ public class MoonEphem
 	 * Note that this method calculates only the position of the selected object, which
 	 * means that mutual phenomena events between this and other satellites cannot be
 	 * calculated, only mutual phenomena between this satellite and the mother planet can
-	 * be calculated.
-	 *
+	 * be calculated.  
+	 * 
 	 * @param time Time object containing the date.
 	 * @param obs Observer object containing the observer position.
 	 * @param eph Ephemeris object with the mother planet as target and ephemeris properties.
@@ -370,14 +491,14 @@ public class MoonEphem
 	 * should be set to the Id constant of the mother planet, since the constant for
 	 * the satellite itself is supposed to be unavailable (existent satellites can be
 	 * obtained as well, but it is mandatory to use the mother planet Id constant). Valid algorithms
-	 * includes the Moshier fit, Series96, VSOP, and JPL ephemerides. Deflection due
+	 * includes the Moshier fit, Series96, VSOP, and JPL ephemerides. Deflection due 
 	 * to planet is ignored.
 	 * <P>
 	 * Note that this method calculates only the position of the selected object, which
 	 * means that mutual phenomena events between this and other satellites cannot be
 	 * calculated, only mutual phenomena between this satellite and the mother planet can
-	 * be calculated.
-	 *
+	 * be calculated.  
+	 * 
 	 * @param time Time object containing the date.
 	 * @param obs Observer object containing the observer position.
 	 * @param eph Ephemeris object with the mother planet as target and ephemeris
@@ -406,7 +527,7 @@ public class MoonEphem
 			MoonOrbitalElement orbit = getMoonElements(satName, jd)[0];
 
 			MoonEphemElement moon = MoonEphem.solveSatellite(time, obs, eph, orbit, central_body);
-
+			
 			return moon;
 		} catch (JPARSECException ve)
 		{
@@ -415,7 +536,7 @@ public class MoonEphem
 	}
 
 	private static final double[] OFFSET0 = new double[] {0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
-
+	
 	private static MoonEphemElement solveSatellite(TimeElement time, ObserverElement obs, EphemerisElement eph,
 			MoonOrbitalElement orbit, TARGET central_body)
 	throws JPARSECException {
@@ -446,7 +567,7 @@ public class MoonEphem
 		{
 			light_time = light_time_new;
 			if (eph.ephemType == COORDINATES_TYPE.GEOMETRIC) light_time = 0.0;
-
+ 
 			double ELEM[] = MoonEphem.rocks(JD - light_time, orbit, eph.ephemMethod);
 
 			if (ELEM == null) throw new JPARSECException("cannot solve the orbit of this satellite.");
@@ -492,15 +613,15 @@ public class MoonEphem
 	 * <P>
 	 * To obtain the ephemeris the position of the mother planet is calculated
 	 * using the algorithm selected in the ephemeris object. Valid algorithms
-	 * includes the Moshier fit, Series96, VSOP, and JPL ephemerides. Deflection due
+	 * includes the Moshier fit, Series96, VSOP, and JPL ephemerides. Deflection due 
 	 * to planet is ignored.
-	 *
+	 * 
 	 * @param time Time object containing the date.
 	 * @param obs Observer object containing the observer position.
 	 * @param eph Ephemeris object with the central body as target, and
 	 *        ephemeris properties.
 	 * @return Moon ephem set of objects containing full ephemeris data. In case the input time
-	 * is more than 50 years away from the reference time of the elements for some satellite,
+	 * is more than 50 years away from the reference time of the elements for some satellite, 
 	 * that satellite will be ignored.
 	 * @throws JPARSECException If the calculation fails or in case there's no satellite with
 	 * valid orbital elements.
@@ -515,7 +636,7 @@ public class MoonEphem
 			double JD = TimeScale.getJD(time, obs, eph, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
 /*			double minDate = 2433282.5, maxDate = 2469807.5; // 1950, 1, 1 to 2050, 1, 1
 			AstroDate lastModified = Configuration.getResourceLastModifiedTime(
-					FileIO.DATA_ORBITAL_ELEMENTS_JARFILE,
+					FileIO.DATA_ORBITAL_ELEMENTS_JARFILE, 
 					FileIO.DATA_ORBITAL_ELEMENTS_DIRECTORY, FileIO.getFileNameFromPath(PATH_TO_JPL_SATELLITES_FILE));
 			if (lastModified != null) {
 				AstroDate maxDate2 = new AstroDate(lastModified.getYear() + 20, 1, 1);
@@ -523,7 +644,7 @@ public class MoonEphem
 				if (JD > Math.max(maxDate, maxDate2.jd())) return null;
 			} else {
 				if (JD < minDate) return null;
-				if (JD > maxDate) return null;
+				if (JD > maxDate) return null;				
 			}
 */
 			// Determine central body
@@ -534,7 +655,7 @@ public class MoonEphem
 
 			// Get elements for targets
 			MoonOrbitalElement orbits[] = getMoonElements(eph.targetBody.getName(), JD);
-
+			
 			MoonEphemElement moons[] = new MoonEphemElement[orbits.length];
 			boolean found = false;
 /*			for (int index = 0; index < orbits.length; index++)
@@ -546,7 +667,7 @@ public class MoonEphem
 				}
 			}
 */			if (found) moons = new MoonEphemElement[orbits.length-1];
-
+			
 			int delete = 0, mindex = -1;
 			for (int index = 0; index < orbits.length; index++)
 			{
@@ -580,7 +701,7 @@ public class MoonEphem
 					if (eph.ephemType == COORDINATES_TYPE.GEOMETRIC) light_time = 0.0;
 
 					double ELEM[] = MoonEphem.rocks(JD - light_time, orbit, eph.ephemMethod);
-
+					
 					if (ELEM == null) {
 						ephem = null;
 						break;
@@ -589,7 +710,7 @@ public class MoonEphem
 					// Precession to J2000 if necessary
 					if (orbit.referenceEquinox != EphemerisElement.EQUINOX_J2000)
 						ELEM = Precession.precess(orbit.referenceEquinox, Constant.J2000, ELEM, eph);
-
+ 
 					// Obtain position of satellite
 					ephem = MoonEphem.getBodyEphem(time, obs, new_eph, new double[] {ELEM[0], ELEM[1], ELEM[2], 0.0, 0.0, 0.0}, JD);
 
@@ -612,7 +733,7 @@ public class MoonEphem
 					moon = null;
 					delete ++;
 				}
-
+				
 				moons[mindex] = moon;
 
 				// Obtain relative phenomena
@@ -635,7 +756,7 @@ public class MoonEphem
 						ObserverElement obs2 = obs.clone();
 						obs2.forceObserverOnEarth();
 						MoonEphemElement moon2[] = calcAllJPLSatellites(time, obs2, eph);
-
+						
 						if (moon2.length > 0 && !Double.isInfinite(moon2[0].distance) && !Double.isNaN(moon2[0].distance)) {
 							TimeElement time2 = time.clone();
 							time2.add((moon2[0].distance-moons[0].distance)*Constant.LIGHT_TIME_DAYS_PER_AU);
@@ -683,15 +804,15 @@ public class MoonEphem
 	 * <P>
 	 * To obtain the ephemeris the position of the mother planet is calculated
 	 * using the algorithm selected in the ephemeris object. Valid algorithms
-	 * includes the Moshier fit, Series96, VSOP, and JPL ephemerides. Deflection due
+	 * includes the Moshier fit, Series96, VSOP, and JPL ephemerides. Deflection due 
 	 * to planet is ignored.
-	 *
+	 * 
 	 * @param time Time object containing the date.
 	 * @param obs Observer object containing the observer position.
 	 * @param eph Ephemeris object with the central body as target, and
 	 *        ephemeris properties.
 	 * @param addJPL True to add satellites from JPL elements.
-	 * @return Moon ephem set of objects containing full ephemeris data, or null
+	 * @return Moon ephem set of objects containing full ephemeris data, or null 
 	 * for an unsupported central body.
 	 * @throws JPARSECException If the calculation fails.
 	 */
@@ -703,9 +824,9 @@ public class MoonEphem
 			// Determine central body
 			TARGET central_body = eph.targetBody;
 			if (central_body.isNaturalSatellite()) central_body = central_body.getCentralBody();
-
+			
 			MoonEphemElement m[] = null;
-
+			
 			switch (central_body) {
 			case MARS:
 				m = MoonEphem.martianSatellitesEphemerides_2007(time, obs, eph);
@@ -731,7 +852,7 @@ public class MoonEphem
 			default:
 				return null;
 			}
-
+			
 			if (m == null) m = new MoonEphemElement[0];
 			if (m.length > 0) {
 				boolean found = false;
@@ -758,7 +879,7 @@ public class MoonEphem
 			MoonEphemElement moon[] = MoonEphem.calcAllJPLSatellites(time, obs, eph);
 			if (moon == null || moon.length == 0) return m;
 
-			ArrayList<MoonEphemElement> al = new ArrayList<MoonEphemElement>();
+			ArrayList<MoonEphemElement> al = new ArrayList<MoonEphemElement>(); 
 			for (int i=0; i<moon.length; i++) {
 				if (moon[i] != null) {
 					for (int j = 0; j < m.length; j ++) {
@@ -770,9 +891,9 @@ public class MoonEphem
 					if (moon[i] != null) al.add(moon[i]);
 				}
 			}
-
+			
 			if (al.size() == 0) return m;
-
+			
 			MoonEphemElement om[] = new MoonEphemElement[m.length + al.size()];
 			for (int i=0; i<m.length; i++) {
 				om[i] = m[i];
@@ -787,9 +908,9 @@ public class MoonEphem
 		}
 	}
 	/**
-	 * This is an implementation of the 2007 Martian satellites ephemerides by
+	 * This is an implementation of the 2007 Martian satellites ephemerides by 
 	 * V. Lainey et al. For reference see
-	 * Lainey, V., Dehant, V. and Paetzold, M. "First numerical ephemerides of the Martian moons",
+	 * Lainey, V., Dehant, V. and Paetzold, M. "First numerical ephemerides of the Martian moons", 
 	 * Astron. Astrophys., vol 465 pp.1075-1084	(2007).
 	 * <P>
 	 * This is the best available theory for the motion of the Martian satellites
@@ -797,9 +918,9 @@ public class MoonEphem
 	 * <P>
 	 * Satellites are positioned respect to Mars. For Mars coordinates,
 	 * the algorithm selected in the ephemeris object is used. Valid algorithms
-	 * includes the Moshier fit, Series96, VSOP, and JPL ephemerides. Deflection due
+	 * includes the Moshier fit, Series96, VSOP, and JPL ephemerides. Deflection due 
 	 * to planet is ignored, since the effect is negligible.
-	 *
+	 * 
 	 * @param time Time object.
 	 * @param obs Observer object.
 	 * @param eph Ephemeris object.
@@ -821,7 +942,7 @@ public class MoonEphem
 
 			// Obtain position of planet
 			new_eph.targetBody = TARGET.MARS;
-			EphemElement ephem_mars = MoonEphem.getBodyEphem(time, obs, new_eph, OFFSET0, JD);
+			EphemElement ephem_mars = MoonEphem.getBodyEphem(time, obs, new_eph, OFFSET0, JD); 
 
 			EphemElement ephem[] = new EphemElement[2];
 			MoonEphemElement moon[] = new MoonEphemElement[2];
@@ -851,12 +972,12 @@ public class MoonEphem
 
 				// Obtain relative phenomena
 				if (nsat == 2) {
-					moon = MoonEphem.satellitesPhenomena(moon, ephem_mars.angularRadius);
+					moon = MoonEphem.satellitesPhenomena(moon, ephem_mars.angularRadius);						
 					// Little trick with poor performance to obtain eclipse phenomena independently of
 					// the mother object. Basically we go back to Earth to compute them from there.
 					if (obs.getMotherBody() != TARGET.EARTH && moon.length > 0) {
 						ObserverElement obs2 = obs.clone();
-						obs2.forceObserverOnEarth();
+						obs2.forceObserverOnEarth();						
 						MoonEphemElement moon2[] = martianSatellitesEphemerides_2007(time, obs2, eph);
 						if (moon2.length > 0 && !Double.isInfinite(moon2[0].distance) && !Double.isNaN(moon2[0].distance)) {
 							TimeElement time2 = time.clone();
@@ -902,9 +1023,9 @@ public class MoonEphem
 	 * <P>
 	 * Satellites are positioned respect to Jupiter. For Jupiter coordinates,
 	 * the algorithm selected in the ephemeris object is used. Valid algorithms
-	 * includes the Moshier fit, Series96, VSOP, and JPL ephemerides. Deflection due
+	 * includes the Moshier fit, Series96, VSOP, and JPL ephemerides. Deflection due 
 	 * to planet is ignored, since the effect is negligible.
-	 *
+	 * 
 	 * @param time Time object.
 	 * @param obs Observer object.
 	 * @param eph Ephemeris object.
@@ -926,7 +1047,7 @@ public class MoonEphem
 
 			// Obtain position of planet
 			new_eph.targetBody = TARGET.JUPITER;
-			EphemElement ephem_jup = MoonEphem.getBodyEphem(time, obs, new_eph, OFFSET0, JD);
+			EphemElement ephem_jup = MoonEphem.getBodyEphem(time, obs, new_eph, OFFSET0, JD); 
 
 			EphemElement ephem[] = new EphemElement[4];
 			MoonEphemElement moon[] = new MoonEphemElement[4];
@@ -941,7 +1062,7 @@ public class MoonEphem
 
 					double ELEM[] = L1.L1_theory(JD - light_time, nsat);
 
-					// Obtain position of satellite
+					// Obtain position of satellite 
 					ephem[nsat-1] = MoonEphem.getBodyEphem(time, obs, new_eph, new double[] {ELEM[0], ELEM[1], ELEM[2], 0.0, 0.0, 0.0}, JD);
 
 					light_time_new = ephem[nsat - 1].lightTime;
@@ -951,7 +1072,7 @@ public class MoonEphem
 				moon[nsat - 1] = MoonEphemElement.parseEphemElement(ephem[nsat - 1]);
 				new_eph.targetBody = TARGET.values()[TARGET.Io.ordinal() + nsat - 1];
 				moon[nsat - 1] = MoonPhysicalParameters.physicalParameters(JD, ephem_sun, moon[nsat - 1], obs, new_eph);
-				moon[nsat - 1] = MoonEphem.satellitePhenomena(moon[nsat - 1], ephem_jup, TARGET.JUPITER);
+				moon[nsat - 1] = MoonEphem.satellitePhenomena(moon[nsat - 1], ephem_jup, TARGET.JUPITER); 
 				moon[nsat - 1].name = TARGET.values()[TARGET.Io.ordinal() + nsat - 1].getName();
 
 				// Obtain relative phenomena
@@ -961,7 +1082,7 @@ public class MoonEphem
 					// the mother object. Basically we go back to Earth to compute them from there.
 					if (obs.getMotherBody() != TARGET.EARTH && moon.length > 0) {
 						ObserverElement obs2 = obs.clone();
-						obs2.forceObserverOnEarth();
+						obs2.forceObserverOnEarth();						
 						MoonEphemElement moon2[] = galileanSatellitesEphemerides_L1(time, obs2, eph);
 						if (moon2.length > 0 && !Double.isInfinite(moon2[0].distance) && !Double.isNaN(moon2[0].distance)) {
 							TimeElement time2 = time.clone();
@@ -1007,9 +1128,9 @@ public class MoonEphem
 	 * <P>
 	 * Satellites are positioned respect to Saturn. For Saturn coordinates, the
 	 * the algorithm selected in the ephemeris object is used. Valid algorithms
-	 * includes the Moshier fit, Series96, VSOP, and JPL ephemerides. Deflection due
+	 * includes the Moshier fit, Series96, VSOP, and JPL ephemerides. Deflection due 
 	 * to planet is ignored, since the effect is negligible.
-	 *
+	 * 
 	 * @param time Time object containing the date.
 	 * @param obs Observer object containing the observer position.
 	 * @param eph Ephemeris object with the target and ephemeris
@@ -1037,7 +1158,7 @@ public class MoonEphem
 
 			// Obtain position of planet
 			new_eph.targetBody = TARGET.SATURN;
-			EphemElement ephem_sat = MoonEphem.getBodyEphem(time, obs, new_eph, OFFSET0, JD);
+			EphemElement ephem_sat = MoonEphem.getBodyEphem(time, obs, new_eph, OFFSET0, JD); 
 
 			EphemElement ephem[] = new EphemElement[8];
 			MoonEphemElement moon[] = new MoonEphemElement[8];
@@ -1056,7 +1177,7 @@ public class MoonEphem
 					// Note that ecliptic -> equatorial should be done for time JD instead of J2000,
 					// to obtain J2000 equatorial position. TASS is respect J2000 ecliptic but coordinates
 					// are calculated for time JD, with a different ecliptic (Earth's tilt). This is
-					// independent from precession
+					// independent from precession 
 					double ELEM[] = Ephem.eclipticToEquatorial(ecl, JD, eph);
 
 					// Obtain position of satellite
@@ -1079,7 +1200,7 @@ public class MoonEphem
 					// the mother object. Basically we go back to Earth to compute them from there.
 					if (obs.getMotherBody() != TARGET.EARTH && moon.length > 0) {
 						ObserverElement obs2 = obs.clone();
-						obs2.forceObserverOnEarth();
+						obs2.forceObserverOnEarth();						
 						MoonEphemElement moon2[] = saturnianSatellitesEphemerides_TASS17(time, obs2, eph, false);
 						if (moon2.length > 0 && !Double.isInfinite(moon2[0].distance) && !Double.isNaN(moon2[0].distance)) {
 							TimeElement time2 = time.clone();
@@ -1124,9 +1245,9 @@ public class MoonEphem
 	 * <P>
 	 * Satellites are positioned respect to Uranus. For Uranus coordinates, the
 	 * the algorithm selected in the ephemeris object is used. Valid algorithms
-	 * includes the Moshier fit, Series96, VSOP, and JPL ephemerides. Deflection due
+	 * includes the Moshier fit, Series96, VSOP, and JPL ephemerides. Deflection due 
 	 * to planet is ignored, since the effect is negligible.
-	 *
+	 * 
 	 * @param time Time object containing the date.
 	 * @param obs Observer object containing the observer position.
 	 * @param eph Ephemeris object with the target and ephemeris
@@ -1149,8 +1270,8 @@ public class MoonEphem
 
 			// Obtain position of planet
 			new_eph.targetBody = TARGET.URANUS;
-			EphemElement ephem_ura = MoonEphem.getBodyEphem(time, obs, new_eph, OFFSET0, JD);
-
+			EphemElement ephem_ura = MoonEphem.getBodyEphem(time, obs, new_eph, OFFSET0, JD); 
+			
 			EphemElement ephem[] = new EphemElement[5];
 			MoonEphemElement moon[] = new MoonEphemElement[5];
 			for (int i = 0; i < 5; i++)
@@ -1185,7 +1306,7 @@ public class MoonEphem
 					// the mother object. Basically we go back to Earth to compute them from there.
 					if (obs.getMotherBody() != TARGET.EARTH && moon.length > 0) {
 						ObserverElement obs2 = obs.clone();
-						obs2.forceObserverOnEarth();
+						obs2.forceObserverOnEarth();						
 						MoonEphemElement moon2[] = uranianSatellitesEphemerides_GUST86(time, obs2, eph);
 						if (moon2.length > 0 && !Double.isInfinite(moon2[0].distance) && !Double.isNaN(moon2[0].distance)) {
 							TimeElement time2 = time.clone();
@@ -1226,7 +1347,7 @@ public class MoonEphem
 	/**
 	 * Obtain relative position of a satellite respect to it's mother planet.
 	 * Based on code from the IMCCE.
-	 *
+	 * 
 	 * @param VP Geocentric equatorial coordinates (x, y, z) of the planet.
 	 * @param VS Planetocentric equatorial coordinates (x, y, z) of the
 	 *        satellite.
@@ -1323,7 +1444,7 @@ public class MoonEphem
 		return new double[]	{ x, y, z, x_sun, y_sun, z_sun };
 	}
 
-	private static double[] fromPlanetEquatorToFromOtherDirection(double xyz[], double dlon, double dlat) {
+	private static double[] fromPlanetEquatorToFromOtherDirection(double xyz[], double dlon, double dlat) { 
 		double px = xyz[0], py = xyz[1], pz = xyz[2];
 
 		if (dlon != 0.0) {
@@ -1342,7 +1463,7 @@ public class MoonEphem
 			py = pr * Math.sin(pang + dlat);
 		}
 
-		return new double[] {px, py, pz};
+		return new double[] {px, py, pz};	
 	}
 
 	// Calculates satellites phenomena like transits, eclipses, etc.,
@@ -1386,13 +1507,13 @@ public class MoonEphem
 		incl_pole += diff;
 		double dlat = -(subslat - incl_pole);
 		if (planet.isPlanet() && planet.ordinal() >= TARGET.JUPITER.ordinal() && planet.ordinal() <= TARGET.NEPTUNE.ordinal()) {
-			dlon = ephem.subsolarLongitude - ephem.longitudeOfCentralMeridianSystemIII;
+			dlon = ephem.subsolarLongitude - ephem.longitudeOfCentralMeridianSystemIII;			
 		}
 		double pos[] = MoonEphem.fromPlanetEquatorToFromOtherDirection(new double[] {ppx, ppy, ppz}, dlon, -dlat);
 		moon.xPositionFromSun = pos[0];
 		moon.yPositionFromSun = pos[1];
 		moon.zPositionFromSun = pos[2];
-*/
+*/		
 
 		// From the Sun: rotate to the bright limb angle, rotate along the
 		// phase angle, and back
@@ -1417,8 +1538,8 @@ public class MoonEphem
 		moon.yPositionFromSun = ppy;
 		moon.zPositionFromSun = ppz;
 
-
-
+		
+		
 		// Check for events
 		double flattening = planet.equatorialRadius / planet.polarRadius;
 		double satSize = moon.angularRadius / ephem.angularRadius;
@@ -1426,14 +1547,14 @@ public class MoonEphem
 		EVENT_DEFINITION ed = MoonEvent.getEventDefinition();
 		if (ed == EVENT_DEFINITION.ENTIRE_SATELLITE) satSize = -satSize;
 		if (ed == EVENT_DEFINITION.SATELLITE_CENTER || ed == EVENT_DEFINITION.AUTOMATIC) satSize = 0;
-
+		
 		// From the observer
 		boolean inferior = (moon.zPosition <= 0.0);
 		double Y1 = moon.yPosition * flattening;
 		boolean withinDisc = (Math.sqrt(moon.xPosition * moon.xPosition + Y1 * Y1) <= (1.0 + satSize));
 		boolean transiting = withinDisc && inferior;
 		boolean withinDiscOcc = withinDisc;
-		if (ed == EVENT_DEFINITION.AUTOMATIC_FOR_DRAWING) withinDiscOcc = (Math.sqrt(moon.xPosition * moon.xPosition + Y1 * Y1) <= (1.0 + satSizeOccultation));
+		if (ed == EVENT_DEFINITION.AUTOMATIC_FOR_DRAWING) withinDiscOcc = (Math.sqrt(moon.xPosition * moon.xPosition + Y1 * Y1) <= (1.0 + satSizeOccultation)); 
 		boolean occulted = withinDiscOcc && !inferior;
 
 		moon.transiting = transiting;
@@ -1455,7 +1576,7 @@ public class MoonEphem
 				if (fractionVisible > 0.0) moon.magnitude -= Math.log10(fractionVisible) * 2.5;
 			}
 		} else {
-			if (moon.occulted) moon.magnitude = EphemElement.INVALID_MAGNITUDE;
+			if (moon.occulted) moon.magnitude = EphemElement.INVALID_MAGNITUDE;			
 		}
 
 		// From Sun
@@ -1468,9 +1589,9 @@ public class MoonEphem
 		if (ed == EVENT_DEFINITION.AUTOMATIC_FOR_DRAWING) {
 			withinDisc_sunOcc = (Math.sqrt(moon.xPositionFromSun * moon.xPositionFromSun + Y1 * Y1) < (1.0 + satSizeOccultation));
 			eclipsed = withinDisc_sunOcc && !inferior_sun;
-
+			
 			double satRadius = satSize * planet.equatorialRadius;
-			double satPlanDistance = (Math.sqrt(moon.xPositionFromSun * moon.xPositionFromSun + moon.yPositionFromSun * moon.yPositionFromSun + moon.zPositionFromSun * moon.zPositionFromSun) - 1.0) * planet.equatorialRadius;
+			double satPlanDistance = (Math.sqrt(moon.xPositionFromSun * moon.xPositionFromSun + moon.yPositionFromSun * moon.yPositionFromSun + moon.zPositionFromSun * moon.zPositionFromSun) - 1.0) * planet.equatorialRadius; 
 			double sun_size = FastMath.atan2_accurate(TARGET.SUN.equatorialRadius, ephem.distanceFromSun * Constant.AU);
 			double shadow_cone_dist = satRadius / FastMath.tan(sun_size);
 			double shadow_size = (satSize * (1.0 - 0.5 * satPlanDistance / shadow_cone_dist));
@@ -1499,7 +1620,7 @@ public class MoonEphem
 				if (fractionVisible > 0.0) moon.magnitude -= Math.log10(fractionVisible) * 2.5;
 			}
 		} else {
-			if (moon.eclipsed) moon.magnitude = EphemElement.INVALID_MAGNITUDE;
+			if (moon.eclipsed) moon.magnitude = EphemElement.INVALID_MAGNITUDE;			
 		}
 
 		return moon;
@@ -1514,13 +1635,13 @@ public class MoonEphem
 			r = tmp;
 		}
 		if (R >= (r+d)) return Math.PI * r * r;
-
+			
 		double a = r * r * Math.acos((d * d + r * r - R * R) / (2.0 * d * r));
 		a += R * R * Math.acos((d * d + R * R - r * r) / (2.0 * d * R));
 		a -= 0.5 * Math.sqrt((-d+r+R) * (d+r-R) * (d-r+R) * (d+r+R));
 		return a;
 	}
-
+	
 	// Calculates satellites phenomena like transits, eclipses, etc.
 	// Calculations are respect to the other satellites (mutual)
 	static MoonEphemElement[] satellitesPhenomena(MoonEphemElement[] moons_obj, double planet_angular_radius)
@@ -1541,7 +1662,7 @@ public class MoonEphem
 				double r = Math.sqrt(Math.pow(moons[i].xPosition - moons[j].xPosition, 2.0) + Math.pow(moons[i].yPosition - moons[j].yPosition, 2.0));
 				double ri = Math.sqrt(Math.pow(moons[i].xPosition, 2.0) + Math.pow(moons[i].yPosition, 2.0));
 				double rj = Math.sqrt(Math.pow(moons[j].xPosition, 2.0) + Math.pow(moons[j].yPosition, 2.0));
-
+				
 				int biggerSize = i, smallerSize = j;
 				if (moons[biggerSize].angularRadius < moons[smallerSize].angularRadius) {
 					int tmp = biggerSize;
@@ -1568,7 +1689,7 @@ public class MoonEphem
 					if (occultedArea > 99.999) occultedArea = 100.0;
 
 						if (!moons[body_behind].mutualPhenomena.equals("")) moons[body_behind].mutualPhenomena += ", ";
-						moons[body_behind].mutualPhenomena += Translate.translate(Translate.JPARSEC_OCCULTED)+" "+Translate.translate(Translate.JPARSEC_BY) + " " + moons[body_infront].name + " ("+Functions.formatValue(occultedArea, 1)+"%) (d="+Functions.formatAngleAsDegrees(r * planet_angular_radius, 8)+"\u00ba)";
+						moons[body_behind].mutualPhenomena += Translate.translate(Translate.JPARSEC_OCCULTED)+" "+Translate.translate(Translate.JPARSEC_BY) + " " + moons[body_infront].name + " ("+Functions.formatValue(occultedArea, 1)+"%) (d="+Functions.formatAngleAsDegrees(r * planet_angular_radius, 8)+"º)";
 						double fractionVisible = 1.0 - occultedArea / 100.0;
 						if (fractionVisible == 0.0)
 						{
@@ -1583,7 +1704,7 @@ public class MoonEphem
 				r = Math.sqrt(Math.pow(moons[i].xPositionFromSun - moons[j].xPositionFromSun, 2.0) + Math.pow(moons[i].yPositionFromSun - moons[j].yPositionFromSun, 2.0));
 				ri = Math.sqrt(Math.pow(moons[i].xPositionFromSun, 2.0) + Math.pow(moons[i].yPositionFromSun, 2.0));
 				rj = Math.sqrt(Math.pow(moons[j].xPositionFromSun, 2.0) + Math.pow(moons[j].yPositionFromSun, 2.0));
-
+				
 				int body_behind = i;
 				int body_infront = j;
 				double planet_angular_radius_fromSat = ri;
@@ -1605,8 +1726,8 @@ public class MoonEphem
 					if (occultedArea > 99.999) occultedArea = 100.0;
 
 					if (!moons[body_behind].mutualPhenomena.equals("")) moons[body_behind].mutualPhenomena += ", ";
-						moons[body_behind].mutualPhenomena += Translate.translate(Translate.JPARSEC_ECLIPSED)+" "+Translate.translate(Translate.JPARSEC_BY) + " " + moons[body_infront].name + " ("+Functions.formatValue(occultedArea, 1)+"%) (d="+Functions.formatAngleAsDegrees(r * planet_angular_radius, 8)+"\u00ba)";
-
+						moons[body_behind].mutualPhenomena += Translate.translate(Translate.JPARSEC_ECLIPSED)+" "+Translate.translate(Translate.JPARSEC_BY) + " " + moons[body_infront].name + " ("+Functions.formatValue(occultedArea, 1)+"%) (d="+Functions.formatAngleAsDegrees(r * planet_angular_radius, 8)+"º)";
+						
 						double fractionVisible = 1.0 - occultedArea / 100.0;
 						if (fractionVisible == 0.0)
 						{
@@ -1626,7 +1747,7 @@ public class MoonEphem
 	 * Page 373 of the Explanatory Supplement of the Astronomical Almanac.
 	 * <P>
 	 * Code taken from Guide software.
-	 *
+	 * 
 	 * @param time Time object containing the date.
 	 * @param obs Observer object containing the observer position.
 	 * @param eph Ephemeris object with the target and ephemeris
@@ -1634,9 +1755,9 @@ public class MoonEphem
 	 * @return Object with the ephemeris.
 	 * @throws JPARSECException If the calculation fails.
 	 * @deprecated Better ephemerides for Triton can be obtained
-	 * using elliptic elements from JPL.
+	 * using elliptic elements from JPL. 
 	 */
-	public static MoonEphemElement triton(TimeElement time, ObserverElement obs,
+	public static MoonEphemElement triton(TimeElement time, ObserverElement obs, 
 			EphemerisElement eph) throws JPARSECException
 	{
 		try
@@ -1654,7 +1775,7 @@ public class MoonEphem
 			double n = (359.28 + 54.308 * t_cent) * Constant.DEG_TO_RAD;
 			double t0 = 2433282.5;
 			double theta = (151.401 + .57806 * (jd - t0) / 365.25) * Constant.DEG_TO_RAD;
-
+			
 			/* Semimajor axis is 488.49 arcseconds at one AU, so semimajor is in AU */
 			double semimajor = 488.49 * Constant.DEG_TO_RAD / 3600.;
 			double longitude = (200.913 + 61.2588532 * (jd - t0)) * Constant.DEG_TO_RAD;
@@ -1676,7 +1797,7 @@ public class MoonEphem
 
 			double pole[] = Precession.precessFromJ2000(Constant.B1950, LocationElement
 					.parseLocationElement(new LocationElement(ra, dec, 1.0)), eph);
-
+						
 			LocationElement loc = LocationElement.parseRectangularCoordinates(pole);
 			/* Vectors defining invariable plane, expressed in B1950: */
 			double x_axis[] = LocationElement.parseLocationElement(new LocationElement(loc.getLongitude() + Math.PI,
@@ -1751,7 +1872,7 @@ public class MoonEphem
 
 	/**
 	 * Compute positions of minor satellites. From Guide software.
-	 *
+	 * 
 	 * @param jd Julian day in dynamical time.
 	 * @param orbit Orbital elements of the satellite.
 	 * @param ephem_method Ephemeris method to apply.
@@ -1759,7 +1880,7 @@ public class MoonEphem
 	 *         equator J2000, in AU.
 	 * @throws JPARSECException If an error occurs.
 	 */
-	protected static double[] rocks(double jd, MoonOrbitalElement orbit, EphemerisElement.REDUCTION_METHOD ephem_method)
+	private static double[] rocks(double jd, MoonOrbitalElement orbit, EphemerisElement.REDUCTION_METHOD ephem_method)
 	throws JPARSECException {
 		double output_vect[] = new double[] { 0.0, 0.0, 0.0 };
 
@@ -1776,7 +1897,7 @@ public class MoonEphem
 			avect[0] = -Math.sin(orbit.LaplacePoleRA);
 			avect[1] = Math.cos(orbit.LaplacePoleRA);
 			avect[2] = 0.;
-
+	
 			/* bvect is at right angles to Laplacian pole */
 			/* _and_ to avect: */
 			tsin = Math.sin(orbit.LaplacePoleDEC);
@@ -1784,7 +1905,7 @@ public class MoonEphem
 			bvect[0] = -avect[1] * tsin;
 			bvect[1] = avect[0] * tsin;
 			bvect[2] = tcos;
-
+	
 			/* cvect is the Laplacian pole vector: */
 			cvect[0] = avect[1] * tcos;
 			cvect[1] = -avect[0] * tcos;
@@ -1813,7 +1934,7 @@ public class MoonEphem
 
 		/* Just as we rotated (h,k), we gotta rotate */
 		/* the (p,q) vector to account for precession */
-		/* in the Laplacian plane: */
+		/* in the Laplacian plane: */		
 		tsin = Math.sin(dt * orbit.ascendingNodePrecessionRate);
 		tcos = Math.cos(dt * orbit.ascendingNodePrecessionRate);
 		double sat_p = Math.tan(orbit.inclination * 0.5) * Math.sin(orbit.ascendingNodeLongitude);
@@ -1831,13 +1952,13 @@ public class MoonEphem
 		a_fraction = tcos + p * dot_prod;
 		b_fraction = tsin - q * dot_prod;
 		c_fraction = dot_prod;
-
+		
 		double pos[] = new double[] {a_fraction * r, b_fraction * r, c_fraction * r};
 
 		// This method from IMCCE should not be used with incl > 90 deg.
 		// It gives the same output to the mas.
 //		TARGET t = Target.getID(orbit.name);
-//		pos = ELEM2PV(t.relativeMass > 0.0 ? (1.0 / t.relativeMass) : 0.0,
+//		pos = ELEM2PV(t.relativeMass > 0.0 ? (1.0 / t.relativeMass) : 0.0, 
 //				new double[] {0.0, orbit.semimajorAxis, mean_lon, k, h, q, p});
 
 		if (orbit.referencePlane != MoonOrbitalElement.REFERENCE_PLANE.LAPLACE) {
@@ -1858,7 +1979,7 @@ public class MoonEphem
 					CA = -CA;
 					SD = -SD;
 				}
-
+				
 				double TRANS[][] = new double[3][3];
 				TRANS[0][0] = SA;
 				TRANS[1][0] = -CA;
@@ -1890,7 +2011,7 @@ public class MoonEphem
 			eph.equinox = orbit.referenceTime;
 			eph.ephemMethod = ephem_method;
 			eph.targetBody = orbit.centralBody;
-			pos = Ephem.eclipticToEquatorial(pos, jd, eph);
+			pos = Ephem.eclipticToEquatorial(pos, jd, eph); 
 			pos = Precession.precessToJ2000(orbit.referenceTime, pos, eph);
 			return pos;
 		}
@@ -1964,7 +2085,7 @@ public class MoonEphem
 
 		return XV;
 	}
-
+	
 	/**
 	 * Default path to JPL natural satellites file.
 	 */
@@ -2045,7 +2166,7 @@ public class MoonEphem
 		"Proteus 8 2451545.0 7.864149366337052E-4 5.0E-4 6.6863389110977565 11.066033229467287 0.001308996938995747 5.50007352510225 5.5984162747407895 0.00134815233847637 0.001351647979803448 5.225620500226142 0.7405781082062339",
 		"Charon 9 2451545.0 -1.1722091978315161E-4 0.0022 2.730427988404969 5.310862380893545 1.7453292519943296E-5 1.4867936298964095 0.9837102327428984 0.0 0.0"
 	};
-
+	
 	// Orbits of natural satellites respect to local Laplace plane. Format is:
 	// Name, central body ID, epoch JD, a (AU), e, periapsis long (rad), mean lon, incl, ascending node long, mean motion (rad/day), apsis rate, node rate (rad/day), Laplace pole RA, DEC
 	// This is a backup of the old original data from Guide, which is periodically updated in JPARSEC to obtain the data above using JPL website.

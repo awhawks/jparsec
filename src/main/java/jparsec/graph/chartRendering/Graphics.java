@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- *
+ * 
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *
+ *  
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- *
+ * 
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */
+ */					
 package jparsec.graph.chartRendering;
 
 import jparsec.graph.JPARSECStroke;
@@ -26,7 +26,7 @@ import jparsec.graph.chartRendering.SkyRenderElement.COLOR_MODE;
 
 /**
  * The main Graphics interface to provide rendering support in different platforms.
- *
+ * 
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -34,14 +34,14 @@ public interface Graphics {
 
 	/**
 	 * The set of color modes for the anaglyph method.
-	 * There are two simple anaglyph modes (green-red and red-cyan glasses) to obtain
-	 * an adequate anaglyph effect without losing too much performance in sky rendering.
-	 * In case you select one of these you should also select the
+	 * There are two simple anaglyph modes (green-red and red-cyan glasses) to obtain 
+	 * an adequate anaglyph effect without losing too much performance in sky rendering. 
+	 * In case you select one of these you should also select the 
 	 * {@linkplain COLOR_MODE#WHITE_BACKGROUND_SIMPLE_GREEN_RED_OR_RED_CYAN_ANAGLYPH}
 	 * color mode. For other anaglyph methods the set of colors can be freely adjusted,
 	 * and can be applied to sky, planetary, and satellite rendering.
 	 */
-	enum ANAGLYPH_COLOR_MODE {
+	public static enum ANAGLYPH_COLOR_MODE {
 		/** ID value for no anaglyph mode. */
 		NO_ANAGLYPH,
 		/** Simple green-red anaglyph: green for left eye, red for right. Only for
@@ -60,35 +60,37 @@ public interface Graphics {
 		TRUE_3D_MODE_LEFT_RIGHT,
 		/** Returns a true 3d image with left/view mode, and half width for each view. */
 		TRUE_3D_MODE_LEFT_RIGHT_HALF_WIDTH;
-
+		
 		private float z0 = 100f;
 		private float d = 0.5f;
-
+		
 		/**
 		 * Returns true if the mode is set to a real 3d mode (Dubois or left/right view).
-		 * @return True for any Dubois method and for the true left/right 3d mode, false
+		 * @return True for any Dubois method and for the true left/right 3d mode, false 
 		 * otherwise.
 		 */
 		public boolean isReal3D() {
-			return this == DUBOIS_AMBER_BLUE || this == DUBOIS_GREEN_MAGENTA || this == DUBOIS_RED_CYAN ||
-					this == TRUE_3D_MODE_LEFT_RIGHT || this == TRUE_3D_MODE_LEFT_RIGHT_HALF_WIDTH;
+			if (this == DUBOIS_AMBER_BLUE || this == DUBOIS_GREEN_MAGENTA || this == DUBOIS_RED_CYAN ||
+					this == TRUE_3D_MODE_LEFT_RIGHT || this == TRUE_3D_MODE_LEFT_RIGHT_HALF_WIDTH) return true;
+			return false;
 		}
-
 		/**
 		 * Returns true if the mode is a 3d one.
 		 * @return True in case the mode is not set to {@linkplain #NO_ANAGLYPH}.
 		 */
 		public boolean is3D() {
-			return this != NO_ANAGLYPH;
+			if (this == NO_ANAGLYPH) return false;
+			return true;
 		}
 		/**
 		 * Returns true if the mode is set to any of the Dubois methods.
 		 * @return True for any Dubois method, false otherwise.
 		 */
 		public boolean isDubois() {
-			return this == DUBOIS_AMBER_BLUE || this == DUBOIS_GREEN_MAGENTA || this == DUBOIS_RED_CYAN;
+			if (this == DUBOIS_AMBER_BLUE || this == DUBOIS_GREEN_MAGENTA || this == DUBOIS_RED_CYAN) return true;
+			return false;
 		}
-
+		
 		/**
 		 * Returns the reference z position, 100 by default.
 		 * Levels visible in depth will be from 0 to 2*z. This means that
@@ -99,7 +101,7 @@ public interface Graphics {
 		public float getReferenceZ() {
 			return z0;
 		}
-
+		
 		/**
 		 * Returns the eye separation, (8 / reference z) for red-cyan and
 		 * green-red simple anaglyph, and 0.5 by default
@@ -139,69 +141,69 @@ public interface Graphics {
 			if (d > 5.0f) d = 5.0f;
 			this.d = d;
 		}
-
+		
 		/**
 		 * Resets reference z and eye separation values to their
 		 * default values.
 		 */
 		public void clear() {
 			z0 = 100f;
-			d = 0.5f;
+			d = 0.5f;			
 		}
 	}
-
+	
 	  /**
 	   *  Dubois anaglyph matrix, green-magenta for left eye, see http://www.flickr.com/photos/e_dubois/5132528166/
 	   */
-	  float[] duboisGM_left = new float[] {
+	  public static final float[] duboisGM_left = new float[] {
 	              -0.062f,  0.284f, -0.015f,
 	              -0.158f,  0.668f, -0.027f,
 	              -0.039f,  0.143f,  0.021f};
 	  /**
 	   *  Dubois anaglyph matrix, green-magenta for right eye, see http://www.flickr.com/photos/e_dubois/5132528166/
 	   */
-	  float[] duboisGM_right = new float[] {
+	  public static final float[] duboisGM_right = new float[] {
 	               0.529f, -0.016f,  0.009f,
 	               0.705f, -0.015f,  0.075f,
 	               0.024f, -0.065f,  0.937f};
 	  /**
 	   *  Dubois anaglyph matrix, amber-blue for left eye, see http://www.flickr.com/photos/e_dubois/5230654930/
 	   */
-	  float[] duboisAB_left = new float[] {
+	  public static final float[] duboisAB_left = new float[] {
 	               1.062f, -0.026f, -0.038f,
 	              -0.205f,  0.908f, -0.173f,
 	               0.299f,  0.068f,  0.022f};
 	  /**
 	   *  Dubois anaglyph matrix, amber-blue for right eye, see http://www.flickr.com/photos/e_dubois/5230654930/
 	   */
-	  float[] duboisAB_right = new float[] {
+	  public static final float[] duboisAB_right = new float[] {
 	              -0.016f,  0.006f,  0.094f,
 	              -0.123f,  0.062f,  0.185f,
 	              -0.017f, -0.017f,  0.911f};
 	  /**
 	   * Dubois anaglyph matrix, red-cyan for left eye, see http://www.site.uottawa.ca/~edubois/anaglyph/LeastSquaresHowToPhotoshop.pdf
 	   */
-	  float[] duboisRC_left = new float[] {
+	  public static final float[] duboisRC_left = new float[] {
 	               0.437f, -0.062f, -0.048f,
 	               0.449f, -0.062f, -0.050f,
 	               0.164f, -0.024f, -0.017f};
 	  /**
 	   * Dubois anaglyph matrix, red-cyan for right eye, see http://www.site.uottawa.ca/~edubois/anaglyph/LeastSquaresHowToPhotoshop.pdf
 	   */
-	  float[] duboisRC_right = new float[] {
+	  public static final float[] duboisRC_right = new float[] {
 	              -0.011f,  0.377f, -0.026f,
 	              -0.032f,  0.761f, -0.093f,
 	              -0.007f,  0.009f,  1.234f};
 
 	  static final String SANS_SERIF = "SansSerif", DIALOG = "Dialog", SYMBOL = "Symbol";
 	  /** Font styles. */
-	int PLAIN = 0, BOLD = 1, ITALIC = 2;
+	public static final int PLAIN = 0, BOLD = 1, ITALIC = 2;
 	/**
 	 * The set of supported fonts for rendering. There are 3:
 	 * Dialog, SansSerif, and Symbol. Symbol is not directly
 	 * supported by Java
 	 */
-	enum FONT {
+	public static enum FONT {
 		SANS_SERIF_PLAIN_5(SANS_SERIF, PLAIN, 5),
 		SANS_SERIF_PLAIN_6(SANS_SERIF, PLAIN, 6),
 		SANS_SERIF_PLAIN_7(SANS_SERIF, PLAIN, 7),
@@ -233,7 +235,7 @@ public interface Graphics {
 		SANS_SERIF_PLAIN_33(SANS_SERIF, PLAIN, 33),
 		SANS_SERIF_PLAIN_34(SANS_SERIF, PLAIN, 34),
 		SANS_SERIF_PLAIN_35(SANS_SERIF, PLAIN, 35),
-
+		
 		SANS_SERIF_BOLD_5(SANS_SERIF, BOLD, 5),
 		SANS_SERIF_BOLD_6(SANS_SERIF, BOLD, 6),
 		SANS_SERIF_BOLD_7(SANS_SERIF, BOLD, 7),
@@ -265,7 +267,7 @@ public interface Graphics {
 		SANS_SERIF_BOLD_33(SANS_SERIF, BOLD, 33),
 		SANS_SERIF_BOLD_34(SANS_SERIF, BOLD, 34),
 		SANS_SERIF_BOLD_35(SANS_SERIF, BOLD, 35),
-
+		
 		SANS_SERIF_ITALIC_5(SANS_SERIF, ITALIC, 5),
 		SANS_SERIF_ITALIC_6(SANS_SERIF, ITALIC, 6),
 		SANS_SERIF_ITALIC_7(SANS_SERIF, ITALIC, 7),
@@ -297,7 +299,7 @@ public interface Graphics {
 		SANS_SERIF_ITALIC_33(SANS_SERIF, ITALIC, 33),
 		SANS_SERIF_ITALIC_34(SANS_SERIF, ITALIC, 34),
 		SANS_SERIF_ITALIC_35(SANS_SERIF, ITALIC, 35),
-
+		
 		DIALOG_PLAIN_5(DIALOG, PLAIN, 5),
 		DIALOG_PLAIN_6(DIALOG, PLAIN, 6),
 		DIALOG_PLAIN_7(DIALOG, PLAIN, 7),
@@ -329,7 +331,7 @@ public interface Graphics {
 		DIALOG_PLAIN_33(DIALOG, PLAIN, 33),
 		DIALOG_PLAIN_34(DIALOG, PLAIN, 34),
 		DIALOG_PLAIN_35(DIALOG, PLAIN, 35),
-
+		
 		DIALOG_BOLD_5(DIALOG, BOLD, 5),
 		DIALOG_BOLD_6(DIALOG, BOLD, 6),
 		DIALOG_BOLD_7(DIALOG, BOLD, 7),
@@ -361,7 +363,7 @@ public interface Graphics {
 		DIALOG_BOLD_33(DIALOG, BOLD, 33),
 		DIALOG_BOLD_34(DIALOG, BOLD, 34),
 		DIALOG_BOLD_35(DIALOG, BOLD, 35),
-
+		
 		DIALOG_ITALIC_5(DIALOG, ITALIC, 5),
 		DIALOG_ITALIC_6(DIALOG, ITALIC, 6),
 		DIALOG_ITALIC_7(DIALOG, ITALIC, 7),
@@ -393,7 +395,7 @@ public interface Graphics {
 		DIALOG_ITALIC_33(DIALOG, ITALIC, 33),
 		DIALOG_ITALIC_34(DIALOG, ITALIC, 34),
 		DIALOG_ITALIC_35(DIALOG, ITALIC, 35),
-
+		
 		SYMBOL_PLAIN_5(SYMBOL, PLAIN, 5),
 		SYMBOL_PLAIN_6(SYMBOL, PLAIN, 6),
 		SYMBOL_PLAIN_7(SYMBOL, PLAIN, 7),
@@ -425,20 +427,20 @@ public interface Graphics {
 		SYMBOL_PLAIN_33(SYMBOL, PLAIN, 33),
 		SYMBOL_PLAIN_34(SYMBOL, PLAIN, 34),
 		SYMBOL_PLAIN_35(SYMBOL, PLAIN, 35);
-
+		
 		private static final int MIN_SIZE = 5, MAX_SIZE = 35;
 		private static final String TYPES[] = new String[] {"_PLAIN_", "_BOLD_", "_ITALIC_"};
-
+		
 		private String name;
 		private int type;
 		private int size;
-
-        FONT(String name, int type, int size) {
+		
+		private FONT(String name, int type, int size) {
 			this.name = name;
 			this.type = type;
 			this.size = size;
 		}
-
+		
 		/**
 		 * Returns the font name.
 		 * @return Font name.
@@ -545,7 +547,7 @@ public interface Graphics {
 	/**
 	 * Draws an straight line from (x0, y0) to (xf, yf).
 	 * x0 and xf or y0 and yf should be equal, otherwise
-	 * a fast line method is called.
+	 * a fast line method is called. 
 	 * @param i x0.
 	 * @param j y0.
 	 * @param k xf.
@@ -557,7 +559,7 @@ public interface Graphics {
 	 * Draws an straight line from (x0, y0) to (xf, yf),
 	 * for distances dist1 and dist2.
 	 * x0 and xf or y0 and yf should be equal, otherwise
-	 * a fast line method is called.
+	 * a fast line method is called. 
 	 * @param i x0.
 	 * @param j y0.
 	 * @param k xf.
@@ -567,7 +569,7 @@ public interface Graphics {
 	 */
 	void drawStraightLine(float i, float j, float k, float l, float dist1,
 			float dist2);
-
+	
 	/**
 	 * Sets a color from RGB components.
 	 * @param r Red, 0-255.
@@ -580,7 +582,7 @@ public interface Graphics {
 	/**
 	 * Draws an image at (x, y).
 	 * @param img The image object, previously read
-	 * using {@linkplain #getImage(String)}. For
+	 * using {@linkplain #getImage(String)}. For 
 	 * Java desktop it will an Image or ToolkitImage
 	 * object.
 	 * @param x X position.
@@ -592,7 +594,7 @@ public interface Graphics {
 	 * Returns the anaglyph mode.
 	 * @return Anaglyph color mode.
 	 */
-	ANAGLYPH_COLOR_MODE getAnaglyphMode();
+	ANAGLYPH_COLOR_MODE getAnaglyphMode(); 
 
 	/**
 	 * Draws an image at (x, y), with a given
@@ -600,7 +602,7 @@ public interface Graphics {
 	 * drawing images in (almost) vector graphics format
 	 * for scaling factors lower than unity.
 	 * @param img The image object, previously read
-	 * using {@linkplain #getImage(String)}. For
+	 * using {@linkplain #getImage(String)}. For 
 	 * Java desktop it will an Image or ToolkitImage
 	 * object.
 	 * @param x X position.
@@ -612,9 +614,9 @@ public interface Graphics {
 
 	/**
 	 * Returns an image.
-	 * @param url The path of an image resource in the
+	 * @param url The path of an image resource in the 
 	 * classpath.
-	 * @return The image object. For Java desktop it
+	 * @return The image object. For Java desktop it 
 	 * will a ToolkitImage object.
 	 */
 	Object getImage(String url);
@@ -624,7 +626,7 @@ public interface Graphics {
 	 * @param w The width.
 	 * @param h The height.
 	 * @param pixels the RGB colors of the pixels.
-	 * @return The image object. For Java desktop it
+	 * @return The image object. For Java desktop it 
 	 * will a BufferedImage object.
 	 */
 	Object getImage(int w, int h, int[] pixels);
@@ -637,7 +639,7 @@ public interface Graphics {
 	 * @param sameRatio True to maintain the image w/h ratio.
 	 * @param useSpline True to allow using spline technique for
 	 * resizing, in case the implementation supports it.
-	 * @return The image object. For Java desktop it
+	 * @return The image object. For Java desktop it 
 	 * will a BufferedImage object.
 	 */
 	Object getScaledImage(Object image, int w, int h, boolean sameRatio, boolean useSpline);
@@ -652,7 +654,7 @@ public interface Graphics {
 	 * resizing, in case the implementation supports it.
 	 * @param dy Number of pixels to move the image down. In case of not 0
 	 * the output image will be of greater size, recentered in vertical.
-	 * @return The image object. For Java desktop it
+	 * @return The image object. For Java desktop it 
 	 * will a BufferedImage object.
 	 */
 	Object getScaledImage(Object image, int w, int h, boolean sameRatio, boolean useSpline, int dy);
@@ -667,7 +669,7 @@ public interface Graphics {
 	 * @param ang Rotation angle in radians.
 	 * @param scalex Scale factor in x axis, after rotation.
 	 * @param scaley Scale factor in y axis, after rotation.
-	 * @return The image object. For Java desktop it
+	 * @return The image object. For Java desktop it 
 	 * will a BufferedImage object.
 	 */
 	Object getRotatedAndScaledImage(Object image, float radius_x,
@@ -679,7 +681,7 @@ public interface Graphics {
 	 * @return The copy.
 	 */
 	Object cloneImage(Object image);
-
+	
 	/**
 	 * Returns an image as a set of pixels.
 	 * @param image The image object.
@@ -690,7 +692,7 @@ public interface Graphics {
 	/**
 	 * Returns an image with inverted colors.
 	 * @param image Input image.
-	 * @return The output image object. For Java desktop it
+	 * @return The output image object. For Java desktop it 
 	 * will a BufferedImage object.
 	 */
 	Object getColorInvertedImage(Object image);
@@ -701,11 +703,11 @@ public interface Graphics {
 	 * @param r True to invert red channel.
 	 * @param g True to invert green channel.
 	 * @param b True to invert blue channel.
-	 * @return The output image object. For Java desktop it
+	 * @return The output image object. For Java desktop it 
 	 * will a BufferedImage object.
 	 */
 	Object getColorInvertedImage(Object image, boolean r, boolean g, boolean b);
-
+	
 	/**
 	 * Returns the width and height of an image.
 	 * @param img The image.
@@ -752,7 +754,7 @@ public interface Graphics {
 	 * @param col color.
 	 */
 	void drawPoint(int i, int j, int col);
-
+	
 	/**
 	 * Fills a rectangle within (x0, y0)-(x0+width, y0+height).
 	 * @param i x0.
@@ -778,12 +780,12 @@ public interface Graphics {
 	 * less quality) mode.
 	 */
 	void drawOval(float i, float j, float k, float l, boolean fastMode);
-
+	
 	/**
 	 * To disable antialiasing in shapes and text.
 	 */
 	void disableAntialiasing();
-
+	
 	/**
 	 * To enable antialiasing in shapes and text.
 	 */
@@ -809,7 +811,7 @@ public interface Graphics {
 	 * @return Four integers with x0, y0, width, height.
 	 */
 	int[] getClip();
-
+	
 	/**
 	 * Sets the stroke.
 	 * @param stroke The stroke object
@@ -869,7 +871,7 @@ public interface Graphics {
 	 * @return Its width.
 	 */
 	float getStringWidth(String labels);
-
+	
 	/**
 	 * Returns the RGB color at a given position. In case Dubois
 	 * anaglyph is selected this method returns the RGB color
@@ -955,7 +957,7 @@ public interface Graphics {
 	 * @return The color at (x, y).
 	 */
 	int getRGBRight(int i, int j, float z);
-
+	
 	/**
 	 * Returns the width of the image in this Graphics.
 	 * @return The width in pixels.
@@ -1078,9 +1080,9 @@ public interface Graphics {
 	 * @return The inverted color.
 	 */
 	int invertColor(int color);
-
+	
 	// Now methods for GeneralPath
-
+	
 	/**
 	 * Initializes a GeneralPath object.
 	 * @return The GeneralPath.
@@ -1132,7 +1134,7 @@ public interface Graphics {
 	void generalPathClosePath(Object obj);
 
 	// Now methods for rendering in anaglyph mode
-
+	
 	/**
 	 * Draws an oval within (x0, y0)-(x0+width, y0+height)
 	 * at a given distance.
@@ -1143,7 +1145,7 @@ public interface Graphics {
 	 * @param dist The distance.
 	 */
 	void drawOval(float i, float j, float k, float l, float dist);
-
+	
 	/**
 	 * Fills an oval within (x0, y0)-(x0+width, y0+height)
 	 * at a given distance.
@@ -1194,7 +1196,7 @@ public interface Graphics {
 	 * @param z The distance.
 	 */
 	void fill(Object s, float z);
-
+	
 	/**
 	 * Draws a String at a given distance.
 	 * @param s The string.
@@ -1203,11 +1205,11 @@ public interface Graphics {
 	 * @param z Distance.
 	 */
 	void drawString(String s, float x, float y, float z);
-
+	
 	/**
 	 * Draws an image at (x, y), distance z.
 	 * @param img The image object, previously read
-	 * using {@linkplain #getImage(String)}. For
+	 * using {@linkplain #getImage(String)}. For 
 	 * Java desktop it will an Image or ToolkitImage
 	 * object.
 	 * @param x X position.
@@ -1215,14 +1217,14 @@ public interface Graphics {
 	 * @param z Distance.
 	 */
 	void drawImage(Object img, float x, float y, float z);
-
+	
 	/**
 	 * Draws an image at (x, y), distance z, and with a given
 	 * scale in x/y. This method is designed to support
 	 * drawing images in (almost) vector graphics format
 	 * for scaling factors lower than unity.
 	 * @param img The image object, previously read
-	 * using {@linkplain #getImage(String)}. For
+	 * using {@linkplain #getImage(String)}. For 
 	 * Java desktop it will an Image or ToolkitImage
 	 * object.
 	 * @param x X position.
@@ -1244,14 +1246,14 @@ public interface Graphics {
 	 * @param z Distance.
 	 */
 	void fillRect(float i, float j, float width, float height, float z);
-
+	
 	/**
 	 * Draws a shape at distance z.
 	 * @param path The shape.
 	 * @param z Distance.
 	 */
 	void draw(Object path, float z);
-
+	
 	/**
 	 * Draws a rectangle at distance z.
 	 * @param x X.
@@ -1265,7 +1267,7 @@ public interface Graphics {
 	/** Disables the analyph mode. */
 	void disableAnaglyph();
 
-	/** Sets the left and right images of the anaglyph in the current Graphics.
+	/** Sets the left and right images of the anaglyph in the current Graphics. 
 	 * @param image1 Left image.
 	 * @param image2 Right image.
 	 */
@@ -1275,8 +1277,8 @@ public interface Graphics {
 	 * drawing them into a given (x, y) position.
 	 * @param image1 Left image.
 	 * @param image2 Right image.
-	 * @param x X position to draw the images on the current views.
-	 * @param y Y position to draw the images on the current views.
+	 * @param x X position to draw the images on the current views. 
+	 * @param y Y position to draw the images on the current views. 
 	 */
 	void setAnaglyph(Object image1, Object image2, float x, float y);
 
@@ -1306,7 +1308,7 @@ public interface Graphics {
 	   * Creates an anaglyph image from left and right eye views. This method uses
 	   * the method described in <i>Conversion of a Stereo Pair to Anaglyph with the
 	   * Lest-Squares Projection Method</i> (2009), by Eric Dubois (for CRT/Plasma
-	   * displays). The result is an anaglyph that can be viewed with a pair of 3d
+	   * displays). The result is an anaglyph that can be viewed with a pair of 3d 
 	   * glasses with some color for the left eye, and another for the right one.
 	   * @param leftImg Left image. Should be in RGB color space.
 	   * @param rightImg Right image. Should be in RGB color space.
@@ -1334,7 +1336,7 @@ public interface Graphics {
 
 	/**
 	 * Transforms to transparent the color in a given image.
-	 * @param img The image.
+	 * @param img The image. 
 	 * @param color The color.
 	 * @param fromBlack True to set as transparent all colors from
 	 * black to the input one.
@@ -1421,7 +1423,7 @@ public interface Graphics {
 	 * @param radians Angle in radians.
 	 */
 	void rotate(double radians);
-
+	
 	/**
 	 * Traslates the Graphics context. Support is minimal, use with care.
 	 * @param x X traslation.
@@ -1434,7 +1436,7 @@ public interface Graphics {
 	 * @return Angle in radians.
 	 */
 	double getRotation();
-
+	
 	/**
 	 * Returns the traslation values for this instance.
 	 * @return Traslation in x and in y.
@@ -1457,15 +1459,15 @@ public interface Graphics {
 	 * Clears the elements in the database.
 	 */
 	void clearDataBase();
-
+	
 	/**
 	 * Returns an object from the database.
-	 * @param id The identifier, for instance the path to an image in
+	 * @param id The identifier, for instance the path to an image in 
 	 * getImage method.
 	 * @return The object, or null if none is found.
 	 */
 	Object getFromDataBase(String id);
-
+	
 	/**
 	 * Changes a color in an image.
 	 * @param img The image.
@@ -1476,293 +1478,293 @@ public interface Graphics {
 	 * @return The new image.
 	 */
 	//Object changeColor(Object img, int col0, int col1, boolean both);
-
+	
 	  /** RGB color for IndianRed. */
-	  int COLOR_RED_IndianRed = -3318692;
+	  public static final int COLOR_RED_IndianRed = -3318692;
 	  /** RGB color for LightCoral. */
-	  int COLOR_RED_LightCoral = -1015680;
+	  public static final int COLOR_RED_LightCoral = -1015680;
 	  /** RGB color for Salmon. */
-	  int COLOR_RED_Salmon = -360334;
+	  public static final int COLOR_RED_Salmon = -360334;
 	  /** RGB color for DarkSalmon. */
-	  int COLOR_RED_DarkSalmon = -1468806;
+	  public static final int COLOR_RED_DarkSalmon = -1468806;
 	  /** RGB color for LightSalmon. */
-	  int COLOR_RED_LightSalmon = -24454;
+	  public static final int COLOR_RED_LightSalmon = -24454;
 	  /** RGB color for Crimson. */
-	  int COLOR_RED_Crimson = -2354116;
+	  public static final int COLOR_RED_Crimson = -2354116;
 	  /** RGB color for Red. */
-	  int COLOR_RED_Red = -65536;
+	  public static final int COLOR_RED_Red = -65536;
 	  /** RGB color for FireBrick. */
-	  int COLOR_RED_FireBrick = -5103070;
+	  public static final int COLOR_RED_FireBrick = -5103070;
 	  /** RGB color for DarkRed. */
-	  int COLOR_RED_DarkRed = -7667712;
+	  public static final int COLOR_RED_DarkRed = -7667712;
 	  /** RGB color for Pink. */
-	  int COLOR_PINK_Pink = -16181;
+	  public static final int COLOR_PINK_Pink = -16181;
 	  /** RGB color for LightPink. */
-	  int COLOR_PINK_LightPink = -18751;
+	  public static final int COLOR_PINK_LightPink = -18751;
 	  /** RGB color for HotPink. */
-	  int COLOR_PINK_HotPink = -38476;
+	  public static final int COLOR_PINK_HotPink = -38476;
 	  /** RGB color for DeepPink. */
-	  int COLOR_PINK_DeepPink = -60269;
+	  public static final int COLOR_PINK_DeepPink = -60269;
 	  /** RGB color for MediumVioletRed. */
-	  int COLOR_PINK_MediumVioletRed = -3730043;
+	  public static final int COLOR_PINK_MediumVioletRed = -3730043;
 	  /** RGB color for PaleVioletRed. */
-	  int COLOR_PINK_PaleVioletRed = -2396013;
+	  public static final int COLOR_PINK_PaleVioletRed = -2396013;
 	  /** RGB color for LightSalmon. */
-	  int COLOR_ORANGE_LightSalmon = -24454;
+	  public static final int COLOR_ORANGE_LightSalmon = -24454;
 	  /** RGB color for Coral. */
-	  int COLOR_ORANGE_Coral = -32944;
+	  public static final int COLOR_ORANGE_Coral = -32944;
 	  /** RGB color for Tomato. */
-	  int COLOR_ORANGE_Tomato = -40121;
+	  public static final int COLOR_ORANGE_Tomato = -40121;
 	  /** RGB color for OrangeRed. */
-	  int COLOR_ORANGE_OrangeRed = -47872;
+	  public static final int COLOR_ORANGE_OrangeRed = -47872;
 	  /** RGB color for DarkOrange. */
-	  int COLOR_ORANGE_DarkOrange = -29696;
+	  public static final int COLOR_ORANGE_DarkOrange = -29696;
 	  /** RGB color for Orange. */
-	  int COLOR_ORANGE_Orange = -23296;
+	  public static final int COLOR_ORANGE_Orange = -23296;
 	  /** RGB color for Gold. */
-	  int COLOR_YELLOW_Gold = -10496;
+	  public static final int COLOR_YELLOW_Gold = -10496;
 	  /** RGB color for Yellow. */
-	  int COLOR_YELLOW_Yellow = -256;
+	  public static final int COLOR_YELLOW_Yellow = -256;
 	  /** RGB color for LightYellow. */
-	  int COLOR_YELLOW_LightYellow = -32;
+	  public static final int COLOR_YELLOW_LightYellow = -32;
 	  /** RGB color for LemonChiffon. */
-	  int COLOR_YELLOW_LemonChiffon = -1331;
+	  public static final int COLOR_YELLOW_LemonChiffon = -1331;
 	  /** RGB color for LightGoldenrodYellow. */
-	  int COLOR_YELLOW_LightGoldenrodYellow = -329006;
+	  public static final int COLOR_YELLOW_LightGoldenrodYellow = -329006;
 	  /** RGB color for PapayaWhip. */
-	  int COLOR_YELLOW_PapayaWhip = -4139;
+	  public static final int COLOR_YELLOW_PapayaWhip = -4139;
 	  /** RGB color for Moccasin. */
-	  int COLOR_YELLOW_Moccasin = -6987;
+	  public static final int COLOR_YELLOW_Moccasin = -6987;
 	  /** RGB color for PeachPuff. */
-	  int COLOR_YELLOW_PeachPuff = -9543;
+	  public static final int COLOR_YELLOW_PeachPuff = -9543;
 	  /** RGB color for PaleGoldenrod. */
-	  int COLOR_YELLOW_PaleGoldenrod = -1120086;
+	  public static final int COLOR_YELLOW_PaleGoldenrod = -1120086;
 	  /** RGB color for Khaki. */
-	  int COLOR_YELLOW_Khaki = -989556;
+	  public static final int COLOR_YELLOW_Khaki = -989556;
 	  /** RGB color for DarkKhaki. */
-	  int COLOR_YELLOW_DarkKhaki = -4343957;
+	  public static final int COLOR_YELLOW_DarkKhaki = -4343957;
 	  /** RGB color for Lavender. */
-	  int COLOR_PURPLE_Lavender = -1644806;
+	  public static final int COLOR_PURPLE_Lavender = -1644806;
 	  /** RGB color for Thistle. */
-	  int COLOR_PURPLE_Thistle = -2572328;
+	  public static final int COLOR_PURPLE_Thistle = -2572328;
 	  /** RGB color for Plum. */
-	  int COLOR_PURPLE_Plum = -2252579;
+	  public static final int COLOR_PURPLE_Plum = -2252579;
 	  /** RGB color for Violet. */
-	  int COLOR_PURPLE_Violet = -1146130;
+	  public static final int COLOR_PURPLE_Violet = -1146130;
 	  /** RGB color for Orchid. */
-	  int COLOR_PURPLE_Orchid = -2461482;
+	  public static final int COLOR_PURPLE_Orchid = -2461482;
 	  /** RGB color for Fuchsia. */
-	  int COLOR_PURPLE_Fuchsia = -65281;
+	  public static final int COLOR_PURPLE_Fuchsia = -65281;
 	  /** RGB color for Magenta. */
-	  int COLOR_PURPLE_Magenta = -65281;
+	  public static final int COLOR_PURPLE_Magenta = -65281;
 	  /** RGB color for MediumOrchid. */
-	  int COLOR_PURPLE_MediumOrchid = -4565549;
+	  public static final int COLOR_PURPLE_MediumOrchid = -4565549;
 	  /** RGB color for MediumPurple. */
-	  int COLOR_PURPLE_MediumPurple = -7114533;
+	  public static final int COLOR_PURPLE_MediumPurple = -7114533;
 	  /** RGB color for Amethyst. */
-	  int COLOR_PURPLE_Amethyst = -6723892;
+	  public static final int COLOR_PURPLE_Amethyst = -6723892;
 	  /** RGB color for BlueViolet. */
-	  int COLOR_PURPLE_BlueViolet = -7722014;
+	  public static final int COLOR_PURPLE_BlueViolet = -7722014;
 	  /** RGB color for DarkViolet. */
-	  int COLOR_PURPLE_DarkViolet = -7077677;
+	  public static final int COLOR_PURPLE_DarkViolet = -7077677;
 	  /** RGB color for DarkOrchid. */
-	  int COLOR_PURPLE_DarkOrchid = -6737204;
+	  public static final int COLOR_PURPLE_DarkOrchid = -6737204;
 	  /** RGB color for DarkMagenta. */
-	  int COLOR_PURPLE_DarkMagenta = -7667573;
+	  public static final int COLOR_PURPLE_DarkMagenta = -7667573;
 	  /** RGB color for Purple. */
-	  int COLOR_PURPLE_Purple = -8388480;
+	  public static final int COLOR_PURPLE_Purple = -8388480;
 	  /** RGB color for Indigo. */
-	  int COLOR_PURPLE_Indigo = -11861886;
+	  public static final int COLOR_PURPLE_Indigo = -11861886;
 	  /** RGB color for SlateBlue. */
-	  int COLOR_PURPLE_SlateBlue = -9807155;
+	  public static final int COLOR_PURPLE_SlateBlue = -9807155;
 	  /** RGB color for DarkSlateBlue. */
-	  int COLOR_PURPLE_DarkSlateBlue = -12042869;
+	  public static final int COLOR_PURPLE_DarkSlateBlue = -12042869;
 	  /** RGB color for MediumSlateBlue. */
-	  int COLOR_PURPLE_MediumSlateBlue = -8689426;
+	  public static final int COLOR_PURPLE_MediumSlateBlue = -8689426;
 	  /** RGB color for GreenYellow. */
-	  int COLOR_GREEN_GreenYellow = -5374161;
+	  public static final int COLOR_GREEN_GreenYellow = -5374161;
 	  /** RGB color for Chartreuse. */
-	  int COLOR_GREEN_Chartreuse = -8388864;
+	  public static final int COLOR_GREEN_Chartreuse = -8388864;
 	  /** RGB color for LawnGreen. */
-	  int COLOR_GREEN_LawnGreen = -8586240;
+	  public static final int COLOR_GREEN_LawnGreen = -8586240;
 	  /** RGB color for Lime. */
-	  int COLOR_GREEN_Lime = -16711936;
+	  public static final int COLOR_GREEN_Lime = -16711936;
 	  /** RGB color for LimeGreen. */
-	  int COLOR_GREEN_LimeGreen = -13447886;
+	  public static final int COLOR_GREEN_LimeGreen = -13447886;
 	  /** RGB color for PaleGreen. */
-	  int COLOR_GREEN_PaleGreen = -6751336;
+	  public static final int COLOR_GREEN_PaleGreen = -6751336;
 	  /** RGB color for LightGreen. */
-	  int COLOR_GREEN_LightGreen = -7278960;
+	  public static final int COLOR_GREEN_LightGreen = -7278960;
 	  /** RGB color for MediumSpringGreen. */
-	  int COLOR_GREEN_MediumSpringGreen = -16713062;
+	  public static final int COLOR_GREEN_MediumSpringGreen = -16713062;
 	  /** RGB color for SpringGreen. */
-	  int COLOR_GREEN_SpringGreen = -16711809;
+	  public static final int COLOR_GREEN_SpringGreen = -16711809;
 	  /** RGB color for MediumSeaGreen. */
-	  int COLOR_GREEN_MediumSeaGreen = -12799119;
+	  public static final int COLOR_GREEN_MediumSeaGreen = -12799119;
 	  /** RGB color for SeaGreen. */
-	  int COLOR_GREEN_SeaGreen = -13726889;
+	  public static final int COLOR_GREEN_SeaGreen = -13726889;
 	  /** RGB color for ForestGreen. */
-	  int COLOR_GREEN_ForestGreen = -14513374;
+	  public static final int COLOR_GREEN_ForestGreen = -14513374;
 	  /** RGB color for Green. */
-	  int COLOR_GREEN_Green = -16744448;
+	  public static final int COLOR_GREEN_Green = -16744448;
 	  /** RGB color for DarkGreen. */
-	  int COLOR_GREEN_DarkGreen = -16751616;
+	  public static final int COLOR_GREEN_DarkGreen = -16751616;
 	  /** RGB color for YellowGreen. */
-	  int COLOR_GREEN_YellowGreen = -6632142;
+	  public static final int COLOR_GREEN_YellowGreen = -6632142;
 	  /** RGB color for OliveDrab. */
-	  int COLOR_GREEN_OliveDrab = -9728477;
+	  public static final int COLOR_GREEN_OliveDrab = -9728477;
 	  /** RGB color for Olive. */
-	  int COLOR_GREEN_Olive = -8355840;
+	  public static final int COLOR_GREEN_Olive = -8355840;
 	  /** RGB color for DarkOliveGreen. */
-	  int COLOR_GREEN_DarkOliveGreen = -11179217;
+	  public static final int COLOR_GREEN_DarkOliveGreen = -11179217;
 	  /** RGB color for MediumAquamarine. */
-	  int COLOR_GREEN_MediumAquamarine = -10039894;
+	  public static final int COLOR_GREEN_MediumAquamarine = -10039894;
 	  /** RGB color for DarkSeaGreen. */
-	  int COLOR_GREEN_DarkSeaGreen = -7357297;
+	  public static final int COLOR_GREEN_DarkSeaGreen = -7357297;
 	  /** RGB color for LightSeaGreen. */
-	  int COLOR_GREEN_LightSeaGreen = -14634326;
+	  public static final int COLOR_GREEN_LightSeaGreen = -14634326;
 	  /** RGB color for DarkCyan. */
-	  int COLOR_GREEN_DarkCyan = -16741493;
+	  public static final int COLOR_GREEN_DarkCyan = -16741493;
 	  /** RGB color for Teal. */
-	  int COLOR_GREEN_Teal = -16744320;
+	  public static final int COLOR_GREEN_Teal = -16744320;
 	  /** RGB color for Aqua. */
-	  int COLOR_BLUE_Aqua = -16711681;
+	  public static final int COLOR_BLUE_Aqua = -16711681;
 	  /** RGB color for Cyan. */
-	  int COLOR_BLUE_Cyan = -16711681;
+	  public static final int COLOR_BLUE_Cyan = -16711681;
 	  /** RGB color for LightCyan. */
-	  int COLOR_BLUE_LightCyan = -2031617;
+	  public static final int COLOR_BLUE_LightCyan = -2031617;
 	  /** RGB color for PaleTurquoise. */
-	  int COLOR_BLUE_PaleTurquoise = -5247250;
+	  public static final int COLOR_BLUE_PaleTurquoise = -5247250;
 	  /** RGB color for Aquamarine. */
-	  int COLOR_BLUE_Aquamarine = -8388652;
+	  public static final int COLOR_BLUE_Aquamarine = -8388652;
 	  /** RGB color for Turquoise. */
-	  int COLOR_BLUE_Turquoise = -12525360;
+	  public static final int COLOR_BLUE_Turquoise = -12525360;
 	  /** RGB color for MediumTurquoise. */
-	  int COLOR_BLUE_MediumTurquoise = -12004916;
+	  public static final int COLOR_BLUE_MediumTurquoise = -12004916;
 	  /** RGB color for DarkTurquoise. */
-	  int COLOR_BLUE_DarkTurquoise = -16724271;
+	  public static final int COLOR_BLUE_DarkTurquoise = -16724271;
 	  /** RGB color for CadetBlue. */
-	  int COLOR_BLUE_CadetBlue = -10510688;
+	  public static final int COLOR_BLUE_CadetBlue = -10510688;
 	  /** RGB color for SteelBlue. */
-	  int COLOR_BLUE_SteelBlue = -12156236;
+	  public static final int COLOR_BLUE_SteelBlue = -12156236;
 	  /** RGB color for LightSteelBlue. */
-	  int COLOR_BLUE_LightSteelBlue = -5192482;
+	  public static final int COLOR_BLUE_LightSteelBlue = -5192482;
 	  /** RGB color for PowderBlue. */
-	  int COLOR_BLUE_PowderBlue = -5185306;
+	  public static final int COLOR_BLUE_PowderBlue = -5185306;
 	  /** RGB color for LightBlue. */
-	  int COLOR_BLUE_LightBlue = -5383962;
+	  public static final int COLOR_BLUE_LightBlue = -5383962;
 	  /** RGB color for SkyBlue. */
-	  int COLOR_BLUE_SkyBlue = -7876885;
+	  public static final int COLOR_BLUE_SkyBlue = -7876885;
 	  /** RGB color for LightSkyBlue. */
-	  int COLOR_BLUE_LightSkyBlue = -7876870;
+	  public static final int COLOR_BLUE_LightSkyBlue = -7876870;
 	  /** RGB color for DeepSkyBlue. */
-	  int COLOR_BLUE_DeepSkyBlue = -16728065;
+	  public static final int COLOR_BLUE_DeepSkyBlue = -16728065;
 	  /** RGB color for DodgerBlue. */
-	  int COLOR_BLUE_DodgerBlue = -14774017;
+	  public static final int COLOR_BLUE_DodgerBlue = -14774017;
 	  /** RGB color for CornflowerBlue. */
-	  int COLOR_BLUE_CornflowerBlue = -10185235;
+	  public static final int COLOR_BLUE_CornflowerBlue = -10185235;
 	  /** RGB color for MediumSlateBlue. */
-	  int COLOR_BLUE_MediumSlateBlue = -8689426;
+	  public static final int COLOR_BLUE_MediumSlateBlue = -8689426;
 	  /** RGB color for RoyalBlue. */
-	  int COLOR_BLUE_RoyalBlue = -12490271;
+	  public static final int COLOR_BLUE_RoyalBlue = -12490271;
 	  /** RGB color for Blue. */
-	  int COLOR_BLUE_Blue = -16776961;
+	  public static final int COLOR_BLUE_Blue = -16776961;
 	  /** RGB color for MediumBlue. */
-	  int COLOR_BLUE_MediumBlue = -16777011;
+	  public static final int COLOR_BLUE_MediumBlue = -16777011;
 	  /** RGB color for DarkBlue. */
-	  int COLOR_BLUE_DarkBlue = -16777077;
+	  public static final int COLOR_BLUE_DarkBlue = -16777077;
 	  /** RGB color for Navy. */
-	  int COLOR_BLUE_Navy = -16777088;
+	  public static final int COLOR_BLUE_Navy = -16777088;
 	  /** RGB color for MidnightBlue. */
-	  int COLOR_BLUE_MidnightBlue = -15132304;
+	  public static final int COLOR_BLUE_MidnightBlue = -15132304;
 	  /** RGB color for Cornsilk. */
-	  int COLOR_BROWN_Cornsilk = -1828;
+	  public static final int COLOR_BROWN_Cornsilk = -1828;
 	  /** RGB color for BlanchedAlmond. */
-	  int COLOR_BROWN_BlanchedAlmond = -5171;
+	  public static final int COLOR_BROWN_BlanchedAlmond = -5171;
 	  /** RGB color for Bisque. */
-	  int COLOR_BROWN_Bisque = -6972;
+	  public static final int COLOR_BROWN_Bisque = -6972;
 	  /** RGB color for NavajoWhite. */
-	  int COLOR_BROWN_NavajoWhite = -8531;
+	  public static final int COLOR_BROWN_NavajoWhite = -8531;
 	  /** RGB color for Wheat. */
-	  int COLOR_BROWN_Wheat = -663885;
+	  public static final int COLOR_BROWN_Wheat = -663885;
 	  /** RGB color for BurlyWood. */
-	  int COLOR_BROWN_BurlyWood = -2180985;
+	  public static final int COLOR_BROWN_BurlyWood = -2180985;
 	  /** RGB color for Tan. */
-	  int COLOR_BROWN_Tan = -2968436;
+	  public static final int COLOR_BROWN_Tan = -2968436;
 	  /** RGB color for RosyBrown. */
-	  int COLOR_BROWN_RosyBrown = -4419697;
+	  public static final int COLOR_BROWN_RosyBrown = -4419697;
 	  /** RGB color for SandyBrown. */
-	  int COLOR_BROWN_SandyBrown = -744352;
+	  public static final int COLOR_BROWN_SandyBrown = -744352;
 	  /** RGB color for Goldenrod. */
-	  int COLOR_BROWN_Goldenrod = -2448096;
+	  public static final int COLOR_BROWN_Goldenrod = -2448096;
 	  /** RGB color for DarkGoldenrod. */
-	  int COLOR_BROWN_DarkGoldenrod = -4684277;
+	  public static final int COLOR_BROWN_DarkGoldenrod = -4684277;
 	  /** RGB color for Peru. */
-	  int COLOR_BROWN_Peru = -3308225;
+	  public static final int COLOR_BROWN_Peru = -3308225;
 	  /** RGB color for Chocolate. */
-	  int COLOR_BROWN_Chocolate = -2987746;
+	  public static final int COLOR_BROWN_Chocolate = -2987746;
 	  /** RGB color for SaddleBrown. */
-	  int COLOR_BROWN_SaddleBrown = -7650029;
+	  public static final int COLOR_BROWN_SaddleBrown = -7650029;
 	  /** RGB color for Sienna. */
-	  int COLOR_BROWN_Sienna = -6270419;
+	  public static final int COLOR_BROWN_Sienna = -6270419;
 	  /** RGB color for Brown. */
-	  int COLOR_BROWN_Brown = -5952982;
+	  public static final int COLOR_BROWN_Brown = -5952982;
 	  /** RGB color for Maroon. */
-	  int COLOR_BROWN_Maroon = -8388608;
+	  public static final int COLOR_BROWN_Maroon = -8388608;
 	  /** RGB color for White. */
-	  int COLOR_WHITE_White = -1;
+	  public static final int COLOR_WHITE_White = -1;
 	  /** RGB color for Snow. */
-	  int COLOR_WHITE_Snow = -1286;
+	  public static final int COLOR_WHITE_Snow = -1286;
 	  /** RGB color for Honeydew. */
-	  int COLOR_WHITE_Honeydew = -983056;
+	  public static final int COLOR_WHITE_Honeydew = -983056;
 	  /** RGB color for MintCream. */
-	  int COLOR_WHITE_MintCream = -655366;
+	  public static final int COLOR_WHITE_MintCream = -655366;
 	  /** RGB color for Azure. */
-	  int COLOR_WHITE_Azure = -983041;
+	  public static final int COLOR_WHITE_Azure = -983041;
 	  /** RGB color for AliceBlue. */
-	  int COLOR_WHITE_AliceBlue = -984833;
+	  public static final int COLOR_WHITE_AliceBlue = -984833;
 	  /** RGB color for GhostWhite. */
-	  int COLOR_WHITE_GhostWhite = -460545;
+	  public static final int COLOR_WHITE_GhostWhite = -460545;
 	  /** RGB color for WhiteSmoke. */
-	  int COLOR_WHITE_WhiteSmoke = -657931;
+	  public static final int COLOR_WHITE_WhiteSmoke = -657931;
 	  /** RGB color for Seashell. */
-	  int COLOR_WHITE_Seashell = -2578;
+	  public static final int COLOR_WHITE_Seashell = -2578;
 	  /** RGB color for Beige. */
-	  int COLOR_WHITE_Beige = -657956;
+	  public static final int COLOR_WHITE_Beige = -657956;
 	  /** RGB color for OldLace. */
-	  int COLOR_WHITE_OldLace = -133658;
+	  public static final int COLOR_WHITE_OldLace = -133658;
 	  /** RGB color for FloralWhite. */
-	  int COLOR_WHITE_FloralWhite = -1296;
+	  public static final int COLOR_WHITE_FloralWhite = -1296;
 	  /** RGB color for Ivory. */
-	  int COLOR_WHITE_Ivory = -16;
+	  public static final int COLOR_WHITE_Ivory = -16;
 	  /** RGB color for AntiqueWhite. */
-	  int COLOR_WHITE_AntiqueWhite = -332841;
+	  public static final int COLOR_WHITE_AntiqueWhite = -332841;
 	  /** RGB color for Linen. */
-	  int COLOR_WHITE_Linen = -331546;
+	  public static final int COLOR_WHITE_Linen = -331546;
 	  /** RGB color for LavenderBlush. */
-	  int COLOR_WHITE_LavenderBlush = -3851;
+	  public static final int COLOR_WHITE_LavenderBlush = -3851;
 	  /** RGB color for MistyRose. */
-	  int COLOR_WHITE_MistyRose = -6943;
+	  public static final int COLOR_WHITE_MistyRose = -6943;
 	  /** RGB color for Gainsboro. */
-	  int COLOR_GRAY_Gainsboro = -2302756;
+	  public static final int COLOR_GRAY_Gainsboro = -2302756;
 	  /** RGB color for LightGrey. */
-	  int COLOR_GRAY_LightGrey = -2894893;
+	  public static final int COLOR_GRAY_LightGrey = -2894893;
 	  /** RGB color for Silver. */
-	  int COLOR_GRAY_Silver = -4144960;
+	  public static final int COLOR_GRAY_Silver = -4144960;
 	  /** RGB color for DarkGray. */
-	  int COLOR_GRAY_DarkGray = -5658199;
+	  public static final int COLOR_GRAY_DarkGray = -5658199;
 	  /** RGB color for Gray. */
-	  int COLOR_GRAY_Gray = -8355712;
+	  public static final int COLOR_GRAY_Gray = -8355712;
 	  /** RGB color for DimGray. */
-	  int COLOR_GRAY_DimGray = -9868951;
+	  public static final int COLOR_GRAY_DimGray = -9868951;
 	  /** RGB color for LightSlateGray. */
-	  int COLOR_GRAY_LightSlateGray = -8943463;
+	  public static final int COLOR_GRAY_LightSlateGray = -8943463;
 	  /** RGB color for SlateGray. */
-	  int COLOR_GRAY_SlateGray = -9404272;
+	  public static final int COLOR_GRAY_SlateGray = -9404272;
 	  /** RGB color for DarkSlateGray. */
-	  int COLOR_GRAY_DarkSlateGray = -13676721;
+	  public static final int COLOR_GRAY_DarkSlateGray = -13676721;
 	  /** RGB color for Black. */
-	  int COLOR_GRAY_Black = -16777216;
+	  public static final int COLOR_GRAY_Black = -16777216;	  
 }
 
 /**
@@ -1772,15 +1774,15 @@ class Rectangle {
 	/** Parameters of the rectangle. */
 	private float x, y, width, height;
 	private float maxx, maxy;
-
 	/**
 	 * Empty constructor.
 	 */
 	public Rectangle() {
+		x = y = width = height = 0.0f;
 		maxx = -1;
 		maxy = -1;
 	}
-
+	
 	/**
 	 * The constructor.
 	 * @param x X.
@@ -1793,7 +1795,7 @@ class Rectangle {
 		this.y = y;
 		this.width = width;
 		this.height = height;
-
+		
 		maxx = x + width - 1;
 		maxy = y + height - 1;
 	}
@@ -1815,16 +1817,16 @@ class Rectangle {
 		if (x < this.x) return false;
 		if (x > maxx) return false;
 		if (y < this.y) return false;
-
-		return (y <= maxy);
+		if (y > maxy) return false;
+		return true;
 	}
-
+	
 	  /**
 	   * Check if a specified line intersects a specified rectangle.
-	   *
+	   * 
 	   * @param lx0, ly0        1st end point of line
 	   * @param ly1, ly1        2nd end point of line
-	   * @param lx1, ly1  Upper left and lower right corner of rectangle
+	   * @param x0, y0, x1, y1  Upper left and lower right corner of rectangle
 	   *                        (inclusive).
 	   * @return                True if the line intersects the rectangle,
 	   *                        false otherwise.
@@ -1833,7 +1835,7 @@ class Rectangle {
 			  float lx1, float ly1)
 	  {
 		  float x0 = x, y0 = y, x1 = x + width, y1 = y + height;
-
+		  
 		  // Is one of the line endpoints inside the rectangle
 		  if (isPointInsideRectangle (x0, y0, x1, y1, lx0, ly0) ||
 				  isPointInsideRectangle (x0, y0, x1, y1, lx1, ly1))
@@ -1852,23 +1854,26 @@ class Rectangle {
 			  return true;
 
 		  // Check against bottom rectangle line
-		  return isLineIntersectingLine (lx0, ly0, lx1, ly1, x0, y1, x1, y1);
-	  }
+		  if (isLineIntersectingLine (lx0, ly0, lx1, ly1,
+	                                         x0, y1, x1, y1))
+			  return true;
 
+		  return false;
+	  }
+	  
 	  private boolean isLineIntersectingLine (float x0, float y0, float x1, float y1,
 			  float x2, float y2, float x3, float y3)
 	  {
 		  int s1 = sameSide (x0, y0, x1, y1, x2, y2, x3, y3);
 		  int s2 = sameSide (x2, y2, x3, y3, x0, y0, x1, y1);
-
+		
 		  return s1 <= 0 && s2 <= 0;
 	  }
-
 	  private int sameSide (float x0, float y0, float x1, float y1,
 			  float px0, float py0, float px1, float py1)
 	  {
 		  int  sameSide = 0;
-
+		    
 		  double dx  = x1  - x0;
 		  double dy  = y1  - y0;
 		  double dx1 = px0 - x0;
@@ -1888,14 +1893,13 @@ class Rectangle {
 			  sameSide = !isBetween (x0, x1, px0) && !isBetween (x0, x1, px1) ? 1 : 0;
 
 		  return sameSide;
-	  }
-
+	  }	  
 	  private boolean isPointInsideRectangle (float x0, float y0, float x1, float y1,
 			  float x, float y)
 	  {
 		  return x >= x0 && x < x1 && y >= y0 && y < y1;
 	  }
-
+	  
 	  private boolean isBetween (float a, float b, float c)
 	  {
 		  return b > a ? c >= a && c <= b : c >= b && c <= a;

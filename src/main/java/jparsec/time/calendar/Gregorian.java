@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- *
+ * 
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *
+ *  
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- *
+ * 
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */
+ */					
 package jparsec.time.calendar;
 
 import java.io.Serializable;
@@ -31,13 +31,13 @@ import java.io.Serializable;
  * who changed the rules for century leap years from the old Julian calendar.
  * <P>
  * See Calendrical Calculations for reference.
- *
+ * 
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
 public class Gregorian implements Serializable
 {
-	private static final long serialVersionUID = 1L;
+	static final long serialVersionUID = 1L;
 
 	/**
 	 * The year.
@@ -62,12 +62,15 @@ public class Gregorian implements Serializable
 	/**
 	 * Names of the days of the week.
 	 */
-	public static final String DAY_OF_WEEK_NAMES[] = { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
+	public static final String DAY_OF_WEEK_NAMES[] =
+	{ "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
 
 	/**
 	 * Names of the months.
 	 */
-	public static final String MONTH_NAMES[] = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
+	public static final String MONTH_NAMES[] =
+	{ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November",
+			"December" };
 
 	/**
 	 * Default constructor.
@@ -76,7 +79,7 @@ public class Gregorian implements Serializable
 
 	/**
 	 * Create a Gregorian object from a Julian day.
-	 *
+	 * 
 	 * @param jd Julian day.
 	 */
 	public Gregorian(int jd)
@@ -86,7 +89,7 @@ public class Gregorian implements Serializable
 
 	/**
 	 * Explicit constructor.
-	 *
+	 * 
 	 * @param y Year.
 	 * @param m Month.
 	 * @param d Day.
@@ -100,7 +103,7 @@ public class Gregorian implements Serializable
 
 	/**
 	 * To fixed date.
-	 *
+	 * 
 	 * @param l Year.
 	 * @param i Month.
 	 * @param j Day.
@@ -115,7 +118,7 @@ public class Gregorian implements Serializable
 
 	/**
 	 * To fixed day.
-	 *
+	 * 
 	 * @return Fixed day.
 	 */
 	public long toFixed()
@@ -125,7 +128,7 @@ public class Gregorian implements Serializable
 
 	/**
 	 * Transforms a Gregorian date into a Julian day
-	 *
+	 * 
 	 * @param year Year.
 	 * @param month Month.
 	 * @param day Day.
@@ -147,7 +150,7 @@ public class Gregorian implements Serializable
 
 	/**
 	 * Sets a Gregorian date with a given Julian day
-	 *
+	 * 
 	 * @param jd Julian day.
 	 */
 	public void fromJulianDay(int jd)
@@ -157,7 +160,7 @@ public class Gregorian implements Serializable
 
 	/**
 	 * Sets the date from a fixed date.
-	 *
+	 * 
 	 * @param l Fixed day.
 	 */
 	public void fromFixed(long l)
@@ -171,7 +174,7 @@ public class Gregorian implements Serializable
 
 	/**
 	 * Is this a leap year?
-	 *
+	 * 
 	 * @param l Year.
 	 * @return True if it is a leap year.
 	 */
@@ -189,7 +192,7 @@ public class Gregorian implements Serializable
 
 	/**
 	 * Gets the last day of the month.
-	 *
+	 * 
 	 * @return Number of days in this month.
 	 */
 	public int lastDayOfMonth()
@@ -211,7 +214,7 @@ public class Gregorian implements Serializable
 
 	/**
 	 * Gets day number in current year..
-	 *
+	 * 
 	 * @return Day number.
 	 */
 	public long dayNumber()
@@ -221,7 +224,7 @@ public class Gregorian implements Serializable
 
 	/**
 	 * Get days remaining until end of year.
-	 *
+	 * 
 	 * @return Number of days.
 	 */
 	public long daysRemaining()
@@ -231,7 +234,7 @@ public class Gregorian implements Serializable
 
 	/**
 	 * Gets independence day.
-	 *
+	 * 
 	 * @param l Fixed day.
 	 * @return Such date.
 	 */
@@ -242,7 +245,7 @@ public class Gregorian implements Serializable
 
 	/**
 	 * Gets labor day.
-	 *
+	 * 
 	 * @param l Fixed day.
 	 * @return Such date.
 	 */
@@ -253,7 +256,7 @@ public class Gregorian implements Serializable
 
 	/**
 	 * Gets memorial day.
-	 *
+	 * 
 	 * @param l Fixed day.
 	 * @return Such date.
 	 */
@@ -264,7 +267,7 @@ public class Gregorian implements Serializable
 
 	/**
 	 * Gets election day.
-	 *
+	 * 
 	 * @param l Fixed day.
 	 * @return Such date.
 	 */
@@ -275,7 +278,7 @@ public class Gregorian implements Serializable
 
 	/**
 	 * Gets Christmas day.
-	 *
+	 * 
 	 * @param l Fixed day.
 	 * @return Such date.
 	 */
@@ -286,7 +289,7 @@ public class Gregorian implements Serializable
 
 	/**
 	 * Gets advent day.
-	 *
+	 * 
 	 * @param l Fixed day.
 	 * @return Such date.
 	 */
@@ -297,7 +300,7 @@ public class Gregorian implements Serializable
 
 	/**
 	 * Gets epiphany day.
-	 *
+	 * 
 	 * @param l Fixed day.
 	 * @return Such date.
 	 */
@@ -308,7 +311,7 @@ public class Gregorian implements Serializable
 
 	/**
 	 * Gets the year from a fixed date.
-	 *
+	 * 
 	 * @param l Fixed date.
 	 * @return Year.
 	 */
@@ -323,10 +326,29 @@ public class Gregorian implements Serializable
 		long l7 = Calendar.mod(l5, 1461L);
 		long l8 = Calendar.quotient(l7, 365D);
 		long l9 = 400L * l2 + 100L * l4 + 4L * l6 + l8;
-
 		if (l4 == 4L || l8 == 4L)
 			return l9;
 		else
 			return l9 + 1L;
+	}
+
+	/**
+	 * For unit testing only.
+	 * @param args Not used.
+	 */
+	public static void main(String args[])
+	{
+		System.out.println("Gregorian Test");
+
+		int jd = 2086491;
+		Gregorian h = new Gregorian(jd);
+		System.out.println("JD " + jd + " = " + h.year + "/" + h.month + "/" + h.day);
+
+		Gregorian h2 = new Gregorian(h.year, h.month, h.day);
+		System.out.println("JD " + h2.toJulianDay() + " = " + h2.year + "/" + h2.month + "/" + h2.day);
+
+		System.out.println(Calendar.nameFromMonth(h2.month, Gregorian.MONTH_NAMES));
+		System.out.println(Calendar.nameFromDayOfWeek(Calendar.dayOfWeekFromFixed(h2.toFixed()),
+				Gregorian.DAY_OF_WEEK_NAMES));
 	}
 }

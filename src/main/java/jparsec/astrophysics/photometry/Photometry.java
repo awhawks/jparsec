@@ -759,7 +759,7 @@ public class Photometry
 	/**
 	 * The set of filters.
 	 */
-	public enum FILTER {
+	public static enum FILTER {
 		/** ID constant for Johnson's U filter. */
 		U_JOHNSON,
 		/** ID constant for Johnson's V filter. */
@@ -1037,5 +1037,85 @@ public class Photometry
 		// and filters.
 		if (vega) color = color + Photometry.VEGA_MAGNITUDES[filterID1.ordinal()] - Photometry.VEGA_MAGNITUDES[filterID2.ordinal()];
 		return color;
+	}
+
+	/**
+	 * For unit testing only.
+	 * @param args Not used.
+	 */
+	public static void main(String args[])
+	{
+		System.out.println("Photometry test");
+		
+		try {
+		
+			double mag = 7.461, dmag = 0.03;
+			MeasureElement flux = Photometry.getFluxFromMagnitude(mag, dmag, PhotometricBandElement.BAND_J_2MASS);
+			
+			System.out.println("Flux "+flux.toString());
+	
+			MeasureElement m = Photometry.getMagnitudeFromFlux(flux.getValue(), flux.error, PhotometricBandElement.BAND_J_2MASS);
+			
+			System.out.println("mag "+m.toString());
+
+			// Another easier way, just
+			m.convert(MeasureElement.UNIT_Y_JY);
+			System.out.println("Flux "+m.toString());
+			
+			// Testing case for Vega: color indexes should be zero if vega flag is true, or very close at least if vega flag is false
+			double Teff = 9700;
+			
+			FILTER filter1 = FILTER.B_JOHNSON;
+			FILTER filter2 = FILTER.V_JOHNSON;
+			String name = filter1.name()+"-"+filter2.name();
+			double color = Photometry.getBlackBodyColorIndex(Teff, filter1, filter2, true);
+			System.out.println(name+" (Tef = "+Teff+", using black body = incorrect) = "+color);
+			double mass = 2.2, r = 2.5;
+			color = Photometry.getColorIndexUsingKuruczModels(mass, r, Teff, filter1, filter2, true);
+			System.out.println(name+" (Tef = "+Teff+") = "+color);
+			
+			// Now we do some color index calculations for the SUN, using black bodies and Kurucz stellar models, 
+			// and Vega as reference. The last 'true' means that we will use Vega spectrum as reference for 
+			// magnitude 0. If set to false, a synthetic star (black body) will be used.
+			Teff = 5770;
+			mass = 1.0;
+			r = 1.0;
+			color = Photometry.getBlackBodyColorIndex(Teff, filter1, filter2, true);
+			System.out.println(name+" (Tef = "+Teff+", using black body = incorrect) = "+color); // quite unaccurate
+			color = Photometry.getColorIndexUsingKuruczModels(mass, r, Teff, filter1, filter2, true);
+			System.out.println(name+" (Tef = "+Teff+") = "+color); // better
+			// Should be close to 0.656 or 0.67 depending on authors, so Kurucz models are more accurate, as expected
+			
+			// Show a chart with the filters
+			ChartSeriesElement series[] = new ChartSeriesElement[5];
+			Color[] col = new Color[] {Color.MAGENTA, Color.BLUE, Color.YELLOW, Color.RED, Color.ORANGE};
+			for (int i=0; i<5; i++) {
+				series[i] = new ChartSeriesElement(Photometry.getFilterWavelengths(FILTER.values()[i]),
+						Photometry.getFilterTransmitancy(FILTER.values()[i])
+						, null, null, FILTER.values()[i].name(), true, col[i], 
+						ChartSeriesElement.SHAPE_EMPTY, ChartSeriesElement.REGRESSION.NONE);
+				series[i].showLines = true;
+				series[i].showShapes = false;
+			}
+			ChartElement chart = new ChartElement(series, ChartElement.TYPE.XY_CHART, 
+					ChartElement.SUBTYPE.XY_SCATTER,
+					"Johnson UBVRI filter transmitancies", 
+					"Wavelength (@mum)", "Transmitancy", false, 800, 480);
+			CreateChart ch = new CreateChart(chart);
+			ch.showChartInJFreeChartPanelWithAdvancedControls();
+
+			// Cross test
+			
+			CreateChart ch2 = ((Photometry.getFilterSpectrum(FILTER.values()[0], 100))).getChart(800, 600, Spectrum30m.XUNIT.FREQUENCY_MHZ);
+			//CreateChart ch2 = (((new Kurucz(1, 1, 8000)).getSpectrum(1000))).getChart(800, 600, Spectrum30m.XUNIT.FREQUENCY_MHZ);
+			ch2.getChartElement().series[0].xValues = DataSet.toStringValues(DataSet.applyFunction(Constant.SPEED_OF_LIGHT+"/x", DataSet.toDoubleValues(ch2.getChartElement().series[0].xValues)));
+			ch2.getChartElement().yAxisInLogScale = true;
+			ch2.updateChart();
+			ch2.showChartInJFreeChartPanel();
+			
+		} catch (JPARSECException exc)
+		{
+			exc.showException();
+		}
 	}
 }

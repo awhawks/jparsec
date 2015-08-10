@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- *
+ * 
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *
+ *  
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- *
+ * 
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,12 +18,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */
+ */					
 package jparsec.math;
 
 import java.awt.Color;
 
-import java.util.Arrays;
 import jparsec.graph.ChartElement;
 import jparsec.graph.ChartSeriesElement;
 import jparsec.graph.CreateChart;
@@ -31,21 +30,21 @@ import jparsec.util.JPARSECException;
 
 /**
 *  <p> Represents a polynomial equation of the form
-*	  p(x) = A + B*x + C*x^2 + D*x^3 + ...
-*	  where A, B, C, etc are either real or complex coefficients.
+*      p(x) = A + B*x + C*x^2 + D*x^3 + ...
+*      where A, B, C, etc are either real or complex coefficients.
 *  </p>
 *  <p> Includes a method for finding the zeros of a complex polynomial
-*	  by the three stage complex algorithm of Jenkins and Traub.  The
-*	  method finds the zeros one at a time in roughly increasing
-*	  order of modulus and deflates the polynomial to one of lower
-*	  degree.  This method is extremely fast and timing is quite
-*	  insenstive to distribution of zeros.
+*      by the three stage complex algorithm of Jenkins and Traub.  The
+*      method finds the zeros one at a time in roughly increasing
+*      order of modulus and deflates the polynomial to one of lower
+*      degree.  This method is extremely fast and timing is quite
+*      insenstive to distribution of zeros.
 *  </p>
 *
 *  <p> Zero finder ported from FORTRAN version of algorithm 419
-*	  courtesy <a href="http://www.netlib.org/">Netlib Repository</a>.
+*      courtesy <a href="http://www.netlib.org/">Netlib Repository</a>.
 *  </p>
-*
+*  
 *  <p> This class is not thread-safe. </p>
 *
 *  @author  Joseph A. Huwaldt	Date:	July 15, 2000
@@ -59,51 +58,51 @@ public class Polynomial implements Cloneable, java.io.Serializable {
 
 	//  The base of the number system being used.
 	private static final double BASE = 2;
-
+	
 	//  The number of base digits in each floating-point number (double precision)
 	private static final double kT = 53;
-
+	
 	//  The largest exponent in the number system.
 //	private static final double kM = 1024;
-
+	
 	//  The smallest exponent in the number system.
 	private static final double kN = -1022;
-
+	
 	//  The maximum relative representation error.  Fortran code:  BASE**(1-T)
 	private static final double ETA = Math.pow(BASE, 1 - kT);
-
+	
 	//  Infinity.  FORTRAN code:  BASE*(1.0D0-BASE**(-T))*BASE**(M-1)
 	private static final double INFIN = Double.MAX_VALUE;
-
+	
 	//  The smallest number that can be represented.  Fortran code:  (BASE**(N+3))/BASE**3
 	private static final double SMALNO = Math.pow(BASE, kN+3)/Math.pow(BASE, 3);
-
+	
 	//  Error bounds on complex addition.
 	private static final double ARE = ETA;
-
+	
 	//  Error bounds on complex multiplication.
 	private static final double MRE = 2*Math.sqrt(2.)*ETA;
-
+	
 	private static final double COSR = -0.060756474;
 	private static final double SINR = 0.99756405;
-
+	
 	// Array of complex coefficients in order of increasing power.
 	private Complex[] coef;
-
-
+	
+	
 	// ****   The following are used only by the root finding routines.   ****
-
+	
 	// Temporary storage space for complex numbers with real and imaginary parts.
 	private transient double PVr, PVi, Tr, Ti, Sr, Si, Zr, Zi;
-
-
+			
+	
 	/**
 	*  Default constructor that creates the polynomial p(x) = 0.
 	*
 	**/
 	public Polynomial() { }
-
-
+	
+	
 	/**
 	*  Constructor that takes an array of complex coefficients.
 	*  Coefficients are supplied in order of increasing power.
@@ -111,13 +110,13 @@ public class Polynomial implements Cloneable, java.io.Serializable {
 	*  coefficients[] = {A, B, C, D, E}.
 	*
 	*  @param  coefficients  An array of complex coefficients
-	*						in order of increasing power.
+	*                        in order of increasing power.
 	**/
 	public Polynomial(Complex[] coefficients) {
 		coef = coefficients.clone();
 	}
-
-
+	
+	
 	/**
 	*  Constructor that takes an array of real coefficients.
 	*  Coefficients are supplied in order of increasing power.
@@ -125,21 +124,21 @@ public class Polynomial implements Cloneable, java.io.Serializable {
 	*  coefficients[] = {A, B, C, D, E}.
 	*
 	*  @param  coefficients  An array of real coefficients
-	*						in order of increasing power.
+	*                        in order of increasing power.
 	**/
 	public Polynomial(double[] coefficients) {
-
+	
 		int length = coefficients.length;
-
+		
 		// Allocate memory for complex representation of coefficients.
 		coef = new Complex[length];
-
+		
 		// Create a complex coefficient with only a real part for each coefficient.
 		for (int i=0; i < length; ++i)
 			coef[i] = new Complex(coefficients[i], 0.0);
 	}
-
-
+	
+	
 	/**
 	*  Sets the complex coefficients to the given array of values.
 	*  Coefficients are supplied in order of increasing power.
@@ -147,12 +146,12 @@ public class Polynomial implements Cloneable, java.io.Serializable {
 	*  coefficients[] = {A, B, C, D, E}.
 	*
 	*  @param  coefficients  An array of complex coefficients
-	*						in order of increasing power.
+	*                        in order of increasing power.
 	**/
 	public void setCoefficients(Complex[] coefficients) {
 		coef = coefficients.clone();
 	}
-
+	
 	/**
 	*  Sets the real coefficients to the given array of values.
 	*  Coefficients are supplied in order of increasing power.
@@ -160,20 +159,20 @@ public class Polynomial implements Cloneable, java.io.Serializable {
 	*  coefficients[] = {A, B, C, D, E}.
 	*
 	*  @param  coefficients  An array of real coefficients
-	*						in order of increasing power.
+	*                        in order of increasing power.
 	**/
 	public void setCoefficients(double[] coefficients) {
-
+	
 		int length = coefficients.length;
-
+		
 		// Allocate memory for complex representation of coefficients.
 		coef = new Complex[length];
-
+		
 		// Create a complex coefficient with only a real part for each coefficient.
 		for (int i=0; i < length; ++i)
 			coef[i] = new Complex(coefficients[i], 0.0);
 	}
-
+	
 	/**
 	*  Returns a reference to the generally complex coefficients
 	*  for this polynomial.Coefficients are provided in order of
@@ -182,24 +181,24 @@ public class Polynomial implements Cloneable, java.io.Serializable {
 	*  coefficients[] = {A, B, C, D, E}.
 	*
 	*  @return Reference to an array of complex coefficients in order
-	*		   of decreasing power.
+	*           of decreasing power.
 	**/
 	public Complex[] getCoefficients() {
 		return coef;
 	}
-
+	
 	/**
 	*  Evaluate this polynomial at a complex x and return the
 	*  generally complex result.
 	*
 	*  @param  x The generally Complex point at which to
-	*			evaluate this polynomial.
+	*            evaluate this polynomial.
 	*  @return  The evaluation of this polynomial at x.
 	**/
 	public Complex evaluate(Complex x) {
 		return evaluate(x.real, x.imaginary);
 	}
-
+		
 	/**
 	*  Evaluate this polynomial at a real x and return the
 	*  generally complex result.
@@ -210,52 +209,52 @@ public class Polynomial implements Cloneable, java.io.Serializable {
 	public Complex evaluate(double x) {
 		return evaluate(x, 0.);
 	}
-
+	
 	/**
 	*  Evaluate this polynomial at a complex x and returns the
 	*  generally complex result.
 	*  Uses the method of Horner Recurrence.
 	*
 	*  @param  xr  The real component of the point at which
-	*			  to evaluate this polynomial.
+	*              to evaluate this polynomial.
 	*  @param  xi  The imaginary component of the point at which
-	*			  to evaluate this polynomial.
+	*              to evaluate this polynomial.
 	*  @return  The evaluation of this polynomial at the complex x.
 	**/
 	public Complex evaluate(double xr, double xi) {
 		if (coef == null)
 			return new Complex(0.,0.);
-
+				
 		int NN = coef.length;
-
+		
 		// Begin evaluation.
 		double pvr = coef[NN - 1].real;
 		double pvi = coef[NN - 1].imaginary;
 		for (int i = NN - 2; i >= 0; --i) {
-			// real:	 pv = pv*x + c[i]
+			// real:     pv = pv*x + c[i]
 			// Complex:  pv = pv.mul(x).add(coef[i]);
 			double temp = pvr;
 			pvr = pvr*xr - pvi*xi + coef[i].real;
 			pvi = temp*xi + pvi*xr + coef[i].imaginary;
 		}
-
+		
 		return new Complex(pvr, pvi);
 	}
 
 	/**
-	*  Evaluate the slope "dP(x)/dx" of this polynomial at a
+	*  Evaluate the slope "dP(x)/dx" of this polynomial at a 
 	*  complex x and return the generally complex result.
 	*
 	*  @param  x The generally Complex point at which to
-	*			evaluate this polynomial.
+	*            evaluate this polynomial.
 	*  @return  The slope "dP(x)/dx" of this polynomial at the complex x.
 	**/
 	public Complex slope(Complex x) {
 		return slope(x.real, x.imaginary);
 	}
-
+	
 	/**
-	*  Evaluate the slope "dP(x)/dx" of this polynomial at a
+	*  Evaluate the slope "dP(x)/dx" of this polynomial at a 
 	*  complex x and return the generally complex result.
 	*
 	*  @param  x The real point at which to evaluate this polynomial.
@@ -264,38 +263,38 @@ public class Polynomial implements Cloneable, java.io.Serializable {
 	public Complex slope(double x) {
 		return slope(x, 0.);
 	}
-
+	
 	/**
-	*  Evaluate the slope "dP(x)/dx" of this polynomial at a
+	*  Evaluate the slope "dP(x)/dx" of this polynomial at a 
 	*  complex x and return the generally complex result.
 	*  Uses the method of Horner Recurrence with added
 	*  slope calculation.
 	*
 	*  @param  xr  The real component of the point at which
-	*			  to evaluate this polynomial.
+	*              to evaluate this polynomial.
 	*  @param  xi  The imaginary component of the point at which
-	*			  to evaluate this polynomial.
+	*              to evaluate this polynomial.
 	*  @return  The slope "dP(x)/dx" of this polynomial at the complex x.
 	**/
 	public Complex slope(double xr, double xi) {
 		if (coef == null)
 			return new Complex(0., 0.);
-
+		
 		int NN = coef.length;
-
+		
 		// Begin evaluation.
 		double dpr = coef[NN - 1].real * (NN - 1);
 		double dpi = coef[NN - 1].imaginary * (NN - 1);
 		for (int i = NN - 2; i >= 1; --i) {
-			// real:	 dp = dp*x + p
+			// real:     dp = dp*x + p
 			double temp = dpr;
 			dpr = dpr*xr - dpi*xi + i * coef[i].real;
 			dpi = temp*xi + dpi*xr + i * coef[i].imaginary;
 		}
-
+		
 		return new Complex(dpr, dpi);
 	}
-
+	
 	/**
 	*  Finds all the roots or zeros of this polynomial.  Zeros may be
 	*  real or complex.
@@ -308,13 +307,13 @@ public class Polynomial implements Cloneable, java.io.Serializable {
 	*  historical applications to be very reliable.
 	*
 	*  @return  An array of all the generally complex zeros
-	*		   or roots of this polynomial.
+	*           or roots of this polynomial.
 	*  @throws JPARSECException if there is a problem finding the zeros of the
-	*		 polynomial.
+	*         polynomial.
 	**/
 	public Complex[] zeros() throws JPARSECException {
 		Complex[] zeros = null;
-
+		
 		if (coef != null && coef.length > 0) {
 			//	Create arrays of coefficients required by the root finder.
 			int NN = coef.length;
@@ -324,14 +323,14 @@ public class Polynomial implements Cloneable, java.io.Serializable {
 				Pr[i] = coef[NN - 1 - i].real;
 				Pi[i] = coef[NN - 1 - i].imaginary;
 			}
-
+			
 			//  Call the Jacob & Traub zero finder.
 			zeros = cpoly(Pr, Pi);
 		}
-
+		
 		return zeros;
 	}
-
+	
 	/**
 	*  The result is true if and only if the argument is not null
 	*  and is a Polynomial object that has exactly the same
@@ -343,69 +342,63 @@ public class Polynomial implements Cloneable, java.io.Serializable {
 	*           object that has exactly the same coefficients as
 	*           this object.
 	**/
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) return true;
-		if (!(obj instanceof Polynomial)) return false;
-
-		Polynomial that = (Polynomial) obj;
-
-		if (Double.compare(that.PVr, PVr) != 0) return false;
-		if (Double.compare(that.PVi, PVi) != 0) return false;
-		if (Double.compare(that.Tr, Tr) != 0) return false;
-		if (Double.compare(that.Ti, Ti) != 0) return false;
-		if (Double.compare(that.Sr, Sr) != 0) return false;
-		if (Double.compare(that.Si, Si) != 0) return false;
-		if (Double.compare(that.Zr, Zr) != 0) return false;
-		if (Double.compare(that.Zi, Zi) != 0) return false;
-
-		return Arrays.equals(coef, that.coef);
-	}
-
-	@Override
-	public int hashCode() {
-		int result;
-		long temp;
-		result = coef != null ? Arrays.hashCode(coef) : 0;
-		temp = Double.doubleToLongBits(PVr);
-		result = 31 * result + (int) (temp ^ (temp >>> 32));
-		temp = Double.doubleToLongBits(PVi);
-		result = 31 * result + (int) (temp ^ (temp >>> 32));
-		temp = Double.doubleToLongBits(Tr);
-		result = 31 * result + (int) (temp ^ (temp >>> 32));
-		temp = Double.doubleToLongBits(Ti);
-		result = 31 * result + (int) (temp ^ (temp >>> 32));
-		temp = Double.doubleToLongBits(Sr);
-		result = 31 * result + (int) (temp ^ (temp >>> 32));
-		temp = Double.doubleToLongBits(Si);
-		result = 31 * result + (int) (temp ^ (temp >>> 32));
-		temp = Double.doubleToLongBits(Zr);
-		result = 31 * result + (int) (temp ^ (temp >>> 32));
-		temp = Double.doubleToLongBits(Zi);
-		result = 31 * result + (int) (temp ^ (temp >>> 32));
-		return result;
-	}
+    public boolean equals(Object obj) {
+	
+		if (obj == this)	return true;
+		if (obj == null)	return false;
+		if (getClass() != obj.getClass()) return false;
+		
+		//  Check for either/both coefficient arrays being "null".
+		Polynomial newObj = (Polynomial)obj;
+		if (coef == newObj.coef)	return true;
+		if (coef == null) {
+			if (newObj.coef.length == 1 && newObj.coef[0].real == 0 && newObj.coef[0].imaginary == 0)
+				return true;
+			else
+				return false;
+		}
+		if (newObj.coef == null) {
+			if (coef.length == 1 && newObj.coef[0].real == 0 && newObj.coef[0].imaginary == 0)
+				return true;
+			else
+				return false;
+		}
+		
+		//	Compare coefficient array lengths.
+		int length = coef.length;
+		if (length != newObj.coef.length)   return false;
+		
+		// Compare each coefficient.
+		boolean retVal = true;
+		for (int i=0; i < length; ++i) {
+			if (!coef[i].equals(newObj.coef[i])) {
+				retVal = false;
+				break;
+			}
+		}
+	
+		return retVal;
+    }
 
 	/**
 	*  Creates a String representation of this polynomial.
 	*
 	*  @return  The String representation of this object.
 	**/
-	@Override
-	public String toString() {
-		StringBuffer buffer = new StringBuffer();
-
-		if (coef != null) {
-			int NN = coef.length;
+    public String toString() {
+    	StringBuffer buffer = new StringBuffer();
+    	
+    	if (coef != null) {
+    		int NN = coef.length;
 
 			//  Output constant.
-			if (coef[0].abs() > 0.) {
-				if (coef[0].imaginary != 0.)
-					buffer.append(coef[0].toString());
-				else
-					buffer.append(coef[0].real);
-			}
-
+    		if (coef[0].abs() > 0.) {
+    			if (coef[0].imaginary != 0.)
+    				buffer.append(coef[0].toString());
+    			else
+    				buffer.append(coef[0].real);
+    		}
+			
 			if (NN > 1) {
 				//  Output term times X.
 				if (coef[1].abs() > 0.) {
@@ -416,7 +409,7 @@ public class Polynomial implements Cloneable, java.io.Serializable {
 						buffer.append(coef[1].real);
 					buffer.append("*x");
 				}
-
+				
 				//  Output higher terms.
 				for (int i=2; i < NN; ++i) {
 					if (coef[i].abs() > 0.) {
@@ -429,21 +422,20 @@ public class Polynomial implements Cloneable, java.io.Serializable {
 						buffer.append(i);
 					}
 				}
-			}
+    		}
 
-		} else
-			// No coefficients, so polynomial == 0.
-			buffer.append("0.");
-
+    	} else
+    		// No coefficients, so polynomial == 0.
+    		buffer.append("0.");
+    	
 		return buffer.toString();
-	}
+    }
 
 	/**
 	*  Make a copy of this Polynomial object.
 	*
 	*  @return  Returns a clone of this Polynomial object.
 	**/
-	@Override
 	public  Polynomial clone() {
 		Polynomial newObject = new Polynomial(this.coef.clone());
 		newObject.PVi = this.PVi;
@@ -458,48 +450,175 @@ public class Polynomial implements Cloneable, java.io.Serializable {
 	}
 
 	/**
+	 *  Used to test out the methods in this class.
+	 *  @param args Unused.
+	 **/
+	public static void main(String args[]) {
+	
+		System.out.println();
+		System.out.println("Testing Polynomial...");
+		
+		try {
+			// Evaluate p(x) = x^2 + 2*x + 1.
+			double[] coef = new double[3];
+			coef[0] = 1.;
+			coef[1] = 2.;
+			coef[2] = 1.;
+			Polynomial poly = new Polynomial(coef);
+			
+			System.out.println("    EXAMPLE 0:  A VERY SIMPLE POLYNOMIAL.");
+			System.out.println("    p(x) = " + poly);
+			System.out.println("    p(5) = " + poly.evaluate(5.));
+			System.out.println("    Zeros of p(x) are:");
+			Complex[] zeros = poly.zeros();
+			for (int i=0; i < zeros.length; ++i) {
+				System.out.println("        " + zeros[i]);
+			}
+			
+			System.out.println("    EXAMPLE 1.  POLYNOMIAL WITH ZEROS 1,2,...,10.");
+			coef = new double[11];
+			coef[10] = 1;
+			coef[9] = -55;
+			coef[8] = 1320;
+			coef[7] = -18150;
+			coef[6] = 157773;
+			coef[5] = -902055;
+			coef[4] = 3416930;
+			coef[3] = -8409500;
+			coef[2] = 12753576;
+			coef[1] = -10628640;
+			coef[0] = 3628800;
+			poly = new Polynomial(coef);
+			System.out.println("    p(x) = " + poly);
+			zeros = poly.zeros();
+			for (int i=0; i < zeros.length; ++i) {
+				System.out.println("        " + zeros[i]);
+			}
+			CreateChart ch = poly.getChart(0, 10, 100);
+			ch.showChartInJFreeChartPanel();
+			
+			System.out.println("    EXAMPLE 2. ZEROS ON IMAGINARY AXIS DEGREE 3.");
+			Complex[] ccoef = new Complex[4];
+			ccoef[3] = new Complex(1,0);
+			ccoef[2] = new Complex(0,-10001.0001);
+			ccoef[1] = new Complex(-10001.0001,0);
+			ccoef[0] = new Complex(0,1);
+			poly = new Polynomial(ccoef);
+			System.out.println("    p(x) = " + poly);
+			zeros = poly.zeros();
+			for (int i=0; i < zeros.length; ++i) {
+				System.out.println("        " + zeros[i]);
+			}
+			
+			System.out.println("    EXAMPLE 3. ZEROS AT 1+I,1/2*(1+I)....1/(2**-9)*(1+I).");
+			ccoef = new Complex[11];
+			ccoef[10] = new Complex(1., 0.);
+			ccoef[9] = new Complex(-1.998046875, -1.998046875);
+			ccoef[8] = new Complex(0., 2.658859252929688);
+			ccoef[7] = new Complex(0.7567065954208374, -7.567065954208374E-1);
+			ccoef[6] = new Complex(-0.2002119533717632, 0.);
+			ccoef[5] = new Complex(1.271507365163416E-2, 1.271507365163416E-2);
+			ccoef[4] = new Complex(0., -7.820779428584501E-4);
+			ccoef[3] = new Complex(-1.154642632172909E-5, 1.154642632172909E-5);
+			ccoef[2] = new Complex(1.584803612786345E-7, 0.);
+			ccoef[1] = new Complex(-4.652065399568528E-10, -4.652065399568528E-10);
+			ccoef[0] = new Complex(0., 9.094947017729282E-13);
+			poly = new Polynomial(ccoef);
+			System.out.println("    p(x) = " + poly);
+			zeros = poly.zeros();
+			for (int i=0; i < zeros.length; ++i) {
+				System.out.println("        " + zeros[i]);
+			}
+
+			System.out.println("    EXAMPLE 4. MULTIPLE ZEROS.");
+			ccoef[10] = new Complex(1, 0);
+			ccoef[9] = new Complex(-10, -10);
+			ccoef[8] = new Complex(3, 100);
+			ccoef[7] = new Complex(284, -334);
+			ccoef[6] = new Complex(-1293, 200);
+			ccoef[5] = new Complex(2374, 1394);
+			ccoef[4] = new Complex(-1587, -3836);
+			ccoef[3] = new Complex(-920, 4334);
+			ccoef[2] = new Complex(2204, -2352);
+			ccoef[1] = new Complex(-1344, 504);
+			ccoef[0] = new Complex(288, 0.);
+			poly = new Polynomial(ccoef);
+			System.out.println("    p(x) = " + poly);
+			zeros = poly.zeros();
+			for (int i=0; i < zeros.length; ++i) {
+				System.out.println("        " + zeros[i]);
+			}
+
+			System.out.println("    EXAMPLE 5. 12 ZEROS EVENLY DISTRIBUTED ON A CIRCLE OF RADIUS" +
+								" 1 CENTERED AT 0+2I.");
+			ccoef = new Complex[13];
+			ccoef[12] = new Complex(1, 0);
+			ccoef[11] = new Complex(0, -24);
+			ccoef[10] = new Complex(-264, 0);
+			ccoef[9] = new Complex(0, 1760);
+			ccoef[8] = new Complex(7920, 0);
+			ccoef[7] = new Complex(0, -25344);
+			ccoef[6] = new Complex(-59136, 0);
+			ccoef[5] = new Complex(0, 101376);
+			ccoef[4] = new Complex(126720, 0);
+			ccoef[3] = new Complex(0, -112640);
+			ccoef[2] = new Complex(-67584, 0);
+			ccoef[1] = new Complex(0, 24576);
+			ccoef[0] = new Complex(4095, 0);
+			poly = new Polynomial(ccoef);
+			System.out.println("    p(x) = " + poly);
+			zeros = poly.zeros();
+			for (int i=0; i < zeros.length; ++i)
+				System.out.println("        " + zeros[i]);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
+	}
+	
+	/**
 	*  <p> Finds all the zeros of a complex polynomial.  </p>
 	*
 	*  <p> This program finds all the zeros of a complex polynomial by the
-	*	  three stage complex algorithm of Jenkins and Traub.  The
-	*	  program finds the zeros one at a time in roughly increasing
-	*	  order of modulus and deflates the polynomial to one of lower
-	*	  degree.  The program is extremely fast and timing is quite
-	*	  insenstive to distribution of zeros.
+	*      three stage complex algorithm of Jenkins and Traub.  The
+	*      program finds the zeros one at a time in roughly increasing
+	*      order of modulus and deflates the polynomial to one of lower
+	*      degree.  The program is extremely fast and timing is quite
+	*      insenstive to distribution of zeros.
 	*  </p>
 	*
 	*  <p> Ported from FORTRAN to Java by Joseph A. Huwaldt, July 20, 2000  </p>
 	*
 	*  <p> FORTRAN version from <a href="http://www.netlib.org/">Netlib Repository</a>
-	*	  where it is listed as "419.f".  A PDF file describing the algorithm
-	*	  and it's history with references is also available from Netlib.
+	*      where it is listed as "419.f".  A PDF file describing the algorithm
+	*      and it's history with references is also available from Netlib.
 	*  </p>
 	*
 	*  <p> FORTRAN version had the following note at the top.
-	*	  ALGORITHM 419 COLLECTED ALGORITHMS FROM ACM.
-	*	  ALGORITHM APPEARED IN COMM. ACM, VOL. 15, NO. 02, P. 097.
-	*	  Original Algol 60 zpolyzerofinder version by Jenkins, 1969.
-	*	  (as noted in PDF scan of original ACM document).
+	*      ALGORITHM 419 COLLECTED ALGORITHMS FROM ACM.
+	*      ALGORITHM APPEARED IN COMM. ACM, VOL. 15, NO. 02, P. 097.
+	*      Original Algol 60 zpolyzerofinder version by Jenkins, 1969.
+	*      (as noted in PDF scan of original ACM document).
 	*  </p>
 	*
 	*  @param  Pr  Array of real part of the polynomial coefficients
-	*			  in order of decreasing powers.  Will contain garbage
-	*			  after calling this method!
+	*              in order of decreasing powers.  Will contain garbage
+	*              after calling this method!
 	*  @param  Pi  Array of imaginary part of the polynomial coefficients
-	*			  in order of decreasing powers.  Will contain garbage
-	*			  after calling this method!
+	*              in order of decreasing powers.  Will contain garbage
+	*              after calling this method!
 	*  @return An array of generaly complex zeros of the polynomial.
 	*  @throws JPARSECException if this routine was unable to locate the
-	*		  polynomial's zeros.
+	*          polynomial's zeros.
 	**/
 	protected Complex[] cpoly(double[] Pr, double[] Pi) throws JPARSECException {
 		int NN = Pr.length;
 		int degree = NN - 1;
-
+		
 		//  Algorithm fails if the leading coefficient is zero.
 		if (Pr[0] == 0. && Pi[0] == 0.)
 			throw new JPARSECException("leading coefficient is zero.");
-
+		
 		//  Allocate memory for arrays used by this method.
 		double[] Hr = new double[NN];
 		double[] Hi = new double[NN];
@@ -510,7 +629,7 @@ public class Polynomial implements Cloneable, java.io.Serializable {
 		double[] SHr = new double[NN];
 		double[] SHi = new double[NN];
 		Complex[] zeros = new Complex[degree];
-
+		
 		//  Initialization of variables.
 		double XX = Math.sqrt(2.)/2.;
 		double YY = -XX;
@@ -522,11 +641,11 @@ public class Polynomial implements Cloneable, java.io.Serializable {
 			zeros[idNN2] = new Complex(0.,0.);
 			--NN;
 		}
-
+		
 		//  Calculate the modulus of the coefficients.
 		for (int i=0; i < NN; ++i)
 			SHr[i] = cmod(Pr[i], Pi[i]);
-
+		
 		//  Scale the polynomial if needed.
 		double bound = scale(NN, SHr);
 		if (bound != 1.0) {
@@ -535,7 +654,7 @@ public class Polynomial implements Cloneable, java.io.Serializable {
 				Pi[i] *= bound;
 			}
 		}
-
+		
 		//  Start the algorithm for one zero.
 		out:
 		while (true) {
@@ -545,19 +664,19 @@ public class Polynomial implements Cloneable, java.io.Serializable {
 				zeros[degree-1] = new Complex(Tr, Ti);
 				return zeros;
 			}
-
+			
 			//  Calculate a lower bound on the modulus of the zeros.
 			for (int i=0; i < NN; ++i)
 				SHr[i] = cmod(Pr[i], Pi[i]);
-
+			
 			bound = cauchy(NN, SHr, SHi);
-
+			
 			// Outer loop to control 2 major passes with different sequences of shifts.
 			for (int cnt1=0; cnt1 < 2; ++cnt1) {
-
+			
 				//	First stage calculation, no shift.
 				noShift(NN, 5, Pr, Pi, Hr, Hi);
-
+				
 				//  Inner loop to select a shift.
 				for (int cnt2=0; cnt2 < 9; ++cnt2) {
 					//  Shift is chosen with a modulus bound and amplitude rotated
@@ -567,7 +686,7 @@ public class Polynomial implements Cloneable, java.io.Serializable {
 					XX = XXX;
 					Sr = bound*XX;
 					Si = bound*YY;
-
+					
 					//  Second stage calculation, fixed shift.
 					boolean conv = fxShift(NN, 10*cnt2, Pr, Pi, QPr, QPi, Hr, Hi,
 												QHr, QHi, SHr, SHi);		// Outputs Zr, Zi.
@@ -580,25 +699,25 @@ public class Polynomial implements Cloneable, java.io.Serializable {
 							Pr[i] = QPr[i];
 							Pi[i] = QPi[i];
 						}
-
+						
 						// The 2nd stage jumps directly back to 3rd stage iteration.
 						continue out;
 					}
-
+					
 				//  If iteration is unsuccessful, another shift is chosen.
 				}
-
+				
 				//  If 9 shifts fail, the outer loop is repeated with another
 				//  sequence of shifts.
 			}
-
+			
 		//  The zero finder has failed on two major passes.  Return empty handed.
 			throw new JPARSECException("Found fewer than " + degree + " zeros.");
 		}
-
+		
 		// We can never get here.
 	}
-
+	
 	/**
 	*  Evaluate this polynomial at a complex x and returns the
 	*  generally complex result as a pair of class variables.
@@ -610,9 +729,9 @@ public class Polynomial implements Cloneable, java.io.Serializable {
 	*
 	*  @param  NN  The number of coefficients to use in the evaluation.
 	*  @param  Sr  The real component of the point at which
-	*			  to evaluate this polynomial.
+	*              to evaluate this polynomial.
 	*  @param  Si  The imaginary component of the point at which
-	*			  to evaluate this polynomial.
+	*              to evaluate this polynomial.
 	*  @param  Pr, Pi  Real & Imaginary coefficients of the polynomial.
 	*  @param  Qr, Qi  Arrays to contain partial sums.
 	**/
@@ -621,21 +740,21 @@ public class Polynomial implements Cloneable, java.io.Serializable {
 		// Begin evaluation.
 		double pvr = Qr[0] = Pr[0];
 		double pvi = Qi[0] = Pi[0];
-
+		
 		for (int i = 1; i < NN; ++i) {
 			double temp = pvr;
 			pvr = pvr*Sr - pvi*Si + Pr[i];
 			pvi = temp*Si + pvi*Sr + Pi[i];
-
+			
 			Qr[i] = pvr;
 			Qi[i] = pvi;
 		}
-
+		
 		// Use a class variable to pass results back when doing root finding.
 		PVr = pvr;
 		PVi = pvi;
 	}
-
+	
 	/**
 	*  Bounds the error in evaluating the polynomial by
 	*  the method of Horner Recurrance.
@@ -649,14 +768,14 @@ public class Polynomial implements Cloneable, java.io.Serializable {
 	*  @param  MRE  Error bounds on complex multiplication.
 	**/
 	private static double errEv(int NN, double[] Qr, double[] Qi, double MS, double MP,
-									double ARE, double MRE) {
+									double ARE, double MRE) {		
 		double E = cmod(Qr[0], Qi[0])*MRE/(ARE + MRE);
 		for (int i=0; i < NN; ++i)
 			E = E*MS + cmod(Qr[i], Qi[i]);
-
+		
 		return (E*(ARE + MRE) - MP*MRE);
 	}
-
+	
 	/**
 	*  Computes a lower bound on the moduli of the zeros of
 	*  a polynomial.
@@ -667,9 +786,9 @@ public class Polynomial implements Cloneable, java.io.Serializable {
 	**/
 	private static double cauchy(int NN, double[] PT, double[] Q) {
 		int NNm1 = NN - 1;
-
+		
 		PT[NNm1] = -PT[NNm1];
-
+		
 		//	Compute the upper estimate of bound.
 		int N = NN - 1;
 		int Nm1 = N - 1;
@@ -689,7 +808,7 @@ public class Polynomial implements Cloneable, java.io.Serializable {
 			X = XM;
 		}
 		double DX = X;
-
+		
 		// Do newton iteration until X converges to two decimal places.
 		while (Math.abs(DX/X) > 0.005) {
 			Q[0] = PT[0];
@@ -702,10 +821,10 @@ public class Polynomial implements Cloneable, java.io.Serializable {
 			DX = F/DF;
 			X = X - DX;
 		}
-
+		
 		return X;
 	}
-
+	
 	/**
 	*  Returns a scale factor to multiply the coefficients of the
 	*  polynomial.  The scaling is done to avoid overflow and to
@@ -729,11 +848,11 @@ public class Polynomial implements Cloneable, java.io.Serializable {
 			if (X != 0. && X < min)
 				min = X;
 		}
-
+		
 		// Scale only if there are very large or very small components.
 		double scale = 1.;
 		if (min >= lo && max <= hi)	return scale;
-
+		
 		X = lo/min;
 		if (X > 1.) {
 			sc = X;
@@ -741,19 +860,19 @@ public class Polynomial implements Cloneable, java.io.Serializable {
 				sc = 1.;
 		} else
 			sc = 1./Math.sqrt(max*min);
-
+		
 		double L = Math.log(sc)/Math.log(BASE) + 0.5;
 		scale = Math.pow(BASE, L);
-
+		
 		return scale;
 	}
-
+	
 	/**
 	*  Complex division C = A/B, avoiding overflow.  Results are
 	*  stored in class variables Tr and Ti to avoid overhead of
 	*  creating a Complex object during root finding.
 	*  Results are stored in class variables Tr and Ti.
-	*
+	*  
 	*  @param  Ar  The real part of the complex numerator.
 	*  @param  Ai  The imaginary part of the complex numerator.
 	*  @param  Br  The real part of the complex denominator.
@@ -766,22 +885,22 @@ public class Polynomial implements Cloneable, java.io.Serializable {
 			Ti = INFIN;
 			return;
 		}
-
+		
 		if (Math.abs(Br) >= Math.abs(Bi)) {
 			double R = Bi/Br;
 			double D = Br + R*Bi;
 			Tr = (Ar + Ai*R)/D;
 			Ti = (Ai - Ar*R)/D;
-
+			
 		} else {
 			double R = Br/Bi;
 			double D = Bi + R*Br;
 			Tr = (Ar*R + Ai)/D;
 			Ti = (Ai*R - Ar)/D;
 		}
-
+		
 	}
-
+	
 	/**
 	*  Calculates the modulus or magnitude of a complex
 	*  number avoiding overflow.
@@ -801,19 +920,19 @@ public class Polynomial implements Cloneable, java.io.Serializable {
 
 		if (re == 0.0)
 			ans = im;
-
+		
 		else if (im == 0.0)
 			ans = re;
-
+		
 		else if (re > im) {
 			double temp = im/re;
 			ans = re*Math.sqrt(1. + temp*temp);
-
+			
 		} else {
 			double temp = re/im;
 			ans = im*Math.sqrt(1. + temp*temp);
 		}
-
+		
 		return ans;
 	}
 
@@ -830,13 +949,13 @@ public class Polynomial implements Cloneable, java.io.Serializable {
 		int N = NN - 1;
 		int Nm1 = N - 1;
 		int NNm1 = NN - 1;
-
+		
 		for (int i=0; i < N; ++i) {
 			double XNi = NNm1 - i;
 			Hr[i] = XNi*Pr[i]/N;
 			Hi[i] = XNi*Pi[i]/N;
 		}
-
+		
 		for (int jj=0; jj < L1; ++jj) {
 			if (cmod(Hr[Nm1], Hi[Nm1]) > ETA*10.*cmod(Pr[Nm1],Pi[Nm1])) {
 				// Divide the negative coefficient by the derivative.
@@ -850,7 +969,7 @@ public class Polynomial implements Cloneable, java.io.Serializable {
 				}
 				Hr[0] = Pr[0];
 				Hi[0] = Pi[0];
-
+				
 			} else {
 				// If the constant term is essentially zero, shift H coefficients.
 				for (int i=1; i <= Nm1; ++i) {
@@ -862,25 +981,25 @@ public class Polynomial implements Cloneable, java.io.Serializable {
 				Hi[0] = 0.;
 			}
 		}
-
+		
 	}
-
+	
 	/**
 	*  Computes T = -P(S)/H(S).
 	*  Sets class variables Tr, Ti.
 	*
-	*  @param  NN	The number of coefficients to use in the evaluation.
-	*  @param  Sr	The real part of the point we are evaluating the polynomial at.
-	*  @param  Si	The imaginary part of the point we are evaluating the polynomial at.
+	*  @param  NN    The number of coefficients to use in the evaluation.
+	*  @param  Sr    The real part of the point we are evaluating the polynomial at.
+	*  @param  Si    The imaginary part of the point we are evaluating the polynomial at.
 	*  @param  Hr, Hi  Arrays containing ?
 	*  @param  QHr, QHi  Arrays containing partial sums of H(S) polynomial.
 	*  @return True if H(S) is essentially zero.
 	**/
-	private boolean calcT(int NN, double Sr, double Si, double[] Hr, double[] Hi,
+	private boolean calcT(int NN, double Sr, double Si, double[] Hr, double[] Hi, 
 									double[] QHr, double[] QHi) {
 		int N = NN - 1;
 		int Nm1 = N - 1;
-
+		
 		//	Evaluate H(S).
 		double tempR = PVr;
 		double tempI = PVi;
@@ -888,19 +1007,19 @@ public class Polynomial implements Cloneable, java.io.Serializable {
 		double HVr = PVr;
 		double HVi = PVi;
 		PVr = tempR;	PVi = tempI;
-
+		
 		// Is H(S) essentially zero?
 		boolean bool = cmod(HVr, HVi) <= ARE*10.*cmod(Hr[Nm1], Hi[Nm1]);
 		if (bool) {
 			Tr = 0.;
 			Ti = 0.;
-
+			
 		} else
 			cdiv(-PVr, -PVi, HVr, HVi);		// Outputs Tr, Ti.
-
+		
 		return bool;
 	}
-
+	
 	/**
 	*  Calculates the next shifted H polynomial.
 	*
@@ -913,7 +1032,7 @@ public class Polynomial implements Cloneable, java.io.Serializable {
 	private void nextH(int NN, boolean bool, double[] Hr, double[] Hi,
 						double[] QPr, double[] QPi, double[] QHr, double[] QHi ) {
 		int N = NN - 1;
-
+		
 		if (!bool) {
 			for (int j=1; j < N; ++j) {
 				double T1 = QHr[j-1];
@@ -923,7 +1042,7 @@ public class Polynomial implements Cloneable, java.io.Serializable {
 			}
 			Hr[0] = QPr[0];
 			Hi[0] = QPi[0];
-
+			
 		} else {
 			// If H(S) is zero, replace H with QH.
 			for (int j=1; j < N; ++j) {
@@ -933,9 +1052,9 @@ public class Polynomial implements Cloneable, java.io.Serializable {
 			Hr[0] = 0.;
 			Hi[0] = 0.;
 		}
-
+		
 	}
-
+	
 	/**
 	*  Carries out the third stage iteration.
 	*  On entry Zr, Zi contains the initial iteration.  If the iteration
@@ -957,15 +1076,15 @@ public class Polynomial implements Cloneable, java.io.Serializable {
 		boolean B = false;
 		boolean bool = false;
 		double OMP = 0., RelSTP = 0.;
-
+		
 		Sr = Zr;
 		Si = Zi;
-
+		
 		// Main loop for stage three.
 		for (int i=0; i < L3; ++i) {
 			//	Evaluate P at S and test for convergence.
 			polyEv(NN, Sr, Si, Pr, Pi, QPr, QPi);		//	Outputs PVr, PVi.
-
+			
 			double MP = cmod(PVr, PVi);
 			double MS = cmod(Sr, Si);
 			if (MP <= 20*errEv(NN, QPr, QPi, MS, MP, ARE, MRE)) {
@@ -974,12 +1093,12 @@ public class Polynomial implements Cloneable, java.io.Serializable {
 				Zr = Sr;
 				Zi = Si;
 				return true;
-
+				
 			}
-
+			
 			if (i == 0) {
 				OMP = MP;
-
+				
 			} else {
 				if (!B && MP >= OMP && RelSTP < 0.05) {
 					//	Iteration has stalled.  Probably a cluster of zeros.  Do 5 fixed
@@ -992,21 +1111,21 @@ public class Polynomial implements Cloneable, java.io.Serializable {
 					Si = Sr*R1 + Si*(1. + R1);
 					Sr = R2;
 					polyEv(NN, Sr, Si, Pr, Pi, QPr, QPi);		//	Outputs PVr, PVi.
-
+					
 					for (int j=0; j < 5; ++j) {
 						bool = calcT(NN, Sr, Si, Hr, Hi, QHr, QHi);	// Outputs Tr, Ti.
 						nextH(NN, bool, Hr, Hi, QPr, QPi, QHr, QHi);
 					}
-
+					
 					OMP = INFIN;
-
+					
 				} else {
 					//	Exit if polynomial value increases significantly.
 					if (MP*0.1 > OMP)	return conv;
 					OMP = MP;
 				}
 			}
-
+			
 			// Calculate next iteration.
 			bool = calcT(NN, Sr, Si, Hr, Hi, QHr, QHi);			// Outputs Tr, Ti.
 			nextH(NN, bool, Hr, Hi, QPr, QPi, QHr, QHi);
@@ -1017,7 +1136,7 @@ public class Polynomial implements Cloneable, java.io.Serializable {
 				Si = Si + Ti;
 			}
 		}
-
+		
 		return conv;
 	}
 
@@ -1042,26 +1161,26 @@ public class Polynomial implements Cloneable, java.io.Serializable {
 							double SHr[], double SHi[]) {
 		boolean conv = false;
 		int N = NN - 1;
-
+		
 		// Evaluate Polynomial at S.
 		polyEv(NN, Sr, Si, Pr, Pi, QPr, QPi);	// Outputs PVr, PVi.
 		boolean test = true;
 		boolean pasd = false;
-
+		
 		// Calculate 1st T = -P(S)/H(S).
 		boolean bool = calcT(NN, Sr, Si, Hr, Hi, QHr, QHi);	// Outputs Tr, Ti.
-
+		
 		// Main loop for one 2nd stage step.
 		for (int j = 0; j < L2; ++j) {
 			double OTr = Tr;
 			double OTi = Ti;
-
+			
 			// Compute next H polynomial and new T.
 			nextH(NN, bool, Hr, Hi, QPr, QPi, QHr, QHi);
 			bool = calcT(NN, Sr, Si, Hr, Hi, QHr, QHi);		// Outputs Tr, Ti.
 			Zr = Sr + Tr;
 			Zi = Si + Ti;
-
+			
 			// Test for convergence unless stage 3 has failed once or
 			// this is the last H polynomial.
 			if (!bool && test && j != L2-1) {
@@ -1079,7 +1198,7 @@ public class Polynomial implements Cloneable, java.io.Serializable {
 						conv = vrShift(NN, 10, Pr, Pi, QPr, QPi, Hr, Hi, QHr, QHi);	// Outputs Zr, Zi.
 						if (conv)
 							return conv;
-
+						
 						//	The iteration failed to converge.  Turn off testing and
 						//	restore H, S, PV and T.
 						test = false;
@@ -1089,10 +1208,10 @@ public class Polynomial implements Cloneable, java.io.Serializable {
 						}
 						Sr = SVSr;
 						Si = SVSi;
-
+						
 						polyEv(NN, Sr, Si, Pr, Pi, QPr, QPi);			// Outputs PVr, PVi.
 						bool = calcT(NN, Sr, Si, Hr, Hi, QHr, QHi);		// Outputs Tr, Ti.
-
+						
 					} else {
 						pasd = true;
 					}
@@ -1101,13 +1220,13 @@ public class Polynomial implements Cloneable, java.io.Serializable {
 				}
 			}
 		}
-
+		
 		//	Attempt an iteration with final H polynomial from second stage.
 		conv = vrShift(NN, 10, Pr, Pi, QPr, QPi, Hr, Hi, QHr, QHi);		// Outputs Zr, Zi.
-
+		
 		return conv;
-	}
-
+	}	
+	
 	/**
 	 * Returns a chart showing the polynomial.
 	 * @param min Minimum value of x.
@@ -1120,16 +1239,16 @@ public class Polynomial implements Cloneable, java.io.Serializable {
 		double dy[] = new double[np], dx[] = new double[dy.length];
 		for (int i=0; i<dy.length; i++) {
 			dx[i] = min + (max - min) * i / (dy.length - 1.0);
-			dy[i] = this.evaluate(dx[i]).real;
+			dy[i] = this.evaluate(dx[i]).real;				
 		}
 		ChartSeriesElement chartSeries1 = new ChartSeriesElement(dx,
 				dy, null, null, "Y", true, Color.RED, ChartSeriesElement.SHAPE_CIRCLE,
 				ChartSeriesElement.REGRESSION.SPLINE_INTERPOLATION);
 
 		ChartSeriesElement series[] = new ChartSeriesElement[] {chartSeries1};
-		ChartElement chart = new ChartElement(series, ChartElement.TYPE.XY_CHART,
+		ChartElement chart = new ChartElement(series, ChartElement.TYPE.XY_CHART, 
 				ChartElement.SUBTYPE.XY_SCATTER,
-				"X, Y",
+				"X, Y", 
 				"X", "Y", false, 800, 600);
 		CreateChart ch = new CreateChart(chart);
 		return ch;

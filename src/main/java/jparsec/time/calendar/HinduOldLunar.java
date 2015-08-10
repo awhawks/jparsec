@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- *
+ * 
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *
+ *  
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- *
+ * 
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */
+ */					
 package jparsec.time.calendar;
 
 import java.io.Serializable;
@@ -26,13 +26,13 @@ import java.io.Serializable;
 /**
  * Implements the Old Hindu Lunar calendar. See Calendrical Calculations for
  * reference.
- *
+ * 
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
 public class HinduOldLunar implements Serializable
 {
-	private static final long serialVersionUID = 1L;
+	static final long serialVersionUID = 1L;
 
 	/**
 	 * Year.
@@ -67,12 +67,15 @@ public class HinduOldLunar implements Serializable
 	/**
 	 * Day of week names.
 	 */
-	public static final String DAY_OF_WEEK_NAMES[] = { "Ravivara", "Chandravara", "Mangalavara", "Buddhavara", "Brihaspatvara", "Sukravara", "Sanivara" };
+	public static final String DAY_OF_WEEK_NAMES[] =
+	{ "Ravivara", "Chandravara", "Mangalavara", "Buddhavara", "Brihaspatvara", "Sukravara", "Sanivara" };
 
 	/**
 	 * Month names.
 	 */
-	public static final String MONTH_NAMES[] = { "Chaitra", "Vaisakha", "Jyaishtha", "Ashadha", "Sravana", "Bhadrapada", "Asvina", "Kartika", "Margasirsha", "Pausha", "Magha", "Phalguna" };
+	public static final String MONTH_NAMES[] =
+	{ "Chaitra", "Vaisakha", "Jyaishtha", "Ashadha", "Sravana", "Bhadrapada", "Asvina", "Kartika", "Margasirsha",
+			"Pausha", "Magha", "Phalguna" };
 
 	/**
 	 * Default constructor.
@@ -81,7 +84,7 @@ public class HinduOldLunar implements Serializable
 
 	/**
 	 * Julian day constructor.
-	 *
+	 * 
 	 * @param jd Julian day.
 	 */
 	public HinduOldLunar(int jd)
@@ -91,7 +94,7 @@ public class HinduOldLunar implements Serializable
 
 	/**
 	 * Explicit constructor.
-	 *
+	 * 
 	 * @param hyear Year.
 	 * @param hmonth Month.
 	 * @param hleap Leap month.
@@ -107,7 +110,7 @@ public class HinduOldLunar implements Serializable
 
 	/**
 	 * To fixed day.
-	 *
+	 * 
 	 * @param year Year.
 	 * @param month Month.
 	 * @param leap Leap month.
@@ -125,7 +128,7 @@ public class HinduOldLunar implements Serializable
 
 	/**
 	 * To fixed day.
-	 *
+	 * 
 	 * @return Fixed day.
 	 */
 	public long toFixed()
@@ -135,14 +138,15 @@ public class HinduOldLunar implements Serializable
 
 	/**
 	 * Sets the date from fixed date.
-	 *
+	 * 
 	 * @param l Fixed day.
 	 */
 	public void fromFixed(long l)
 	{
 		double d = (double) HinduOldSolar.dayCount(l) + 0.25D;
 		double d1 = d - Calendar.mod(d, 29.530581807581694D);
-		leapMonth = Calendar.mod(d1, 30.43822337962963D) <= 0.90764157204793605D && Calendar.mod(d1, 30.43822337962963D) > 0.0D;
+		leapMonth = Calendar.mod(d1, 30.43822337962963D) <= 0.90764157204793605D && Calendar
+				.mod(d1, 30.43822337962963D) > 0.0D;
 		month = 1 + (int) Calendar.mod(Math.ceil(d1 / 30.43822337962963D), 12D);
 		day = 1 + (int) Calendar.mod(Calendar.quotient(d, 0.9843527269193898D), 30L);
 		year = (long) Math.ceil((d1 + 30.43822337962963D) / 365.25868055555554D) - 1L;
@@ -150,7 +154,7 @@ public class HinduOldLunar implements Serializable
 
 	/**
 	 * Informs if the year is or not a leap one.
-	 *
+	 * 
 	 * @param y Year.
 	 * @return True or false.
 	 */
@@ -161,7 +165,7 @@ public class HinduOldLunar implements Serializable
 
 	/**
 	 * Transforms a Hindu date into a Julian day.
-	 *
+	 * 
 	 * @param year Year.
 	 * @param month Month.
 	 * @param leap Leap month.
@@ -175,7 +179,7 @@ public class HinduOldLunar implements Serializable
 
 	/**
 	 * Transforms a Hindu date into a Julian day.
-	 *
+	 * 
 	 * @return Julian day.
 	 */
 	public int toJulianDay()
@@ -185,11 +189,34 @@ public class HinduOldLunar implements Serializable
 
 	/**
 	 * Sets a Hindu date with a given Julian day.
-	 *
+	 * 
 	 * @param jd Julian day.
 	 */
 	public void fromJulianDay(int jd)
 	{
 		fromFixed(jd - Gregorian.EPOCH);
+	}
+
+	/**
+	 * For unit testing only.
+	 * @param args Not used.
+	 */
+	public static void main(String args[])
+	{
+		System.out.println("Old Hindu Lunar Test");
+
+		int jd = 2451545;
+		HinduOldLunar h = new HinduOldLunar(jd);
+		System.out.println("JD " + jd + " = " + h.year + "/" + h.month + "/" + h.leapMonth + "/" + h.day);
+
+		HinduOldLunar h2 = new HinduOldLunar(h.year, h.month, h.leapMonth, h.day);
+		System.out
+				.println("JD " + h2.toJulianDay() + " = " + h2.year + "/" + h2.month + "/" + h2.leapMonth + "/" + h2.day);
+
+		System.out.println(Calendar.nameFromMonth(h2.month, HinduOldLunar.MONTH_NAMES));
+		System.out.println(Calendar.nameFromDayOfWeek(Calendar.dayOfWeekFromFixed(h2.toFixed()),
+				HinduOldLunar.DAY_OF_WEEK_NAMES));
+
+		System.out.println("(from sunrise)");
 	}
 }

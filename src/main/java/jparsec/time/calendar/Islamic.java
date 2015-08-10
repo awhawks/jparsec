@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- *
+ * 
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *
+ *  
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- *
+ * 
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */
+ */					
 package jparsec.time.calendar;
 
 import java.io.Serializable;
@@ -31,13 +31,13 @@ import jparsec.observer.CityElement;
  * The lunar calendar used by Moslems. Days begin at sunset.
  * <P>
  * See Calendrical Calculations for reference.
- *
+ * 
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
 public class Islamic implements Serializable
 {
-	private static final long serialVersionUID = 1L;
+	static final long serialVersionUID = 1L;
 
 	/**
 	 * The year.
@@ -62,17 +62,22 @@ public class Islamic implements Serializable
 	/**
 	 * Mecca location.
 	 */
-	public static final CityElement MECCA = new CityElement("Mecca, Saudi Arabia", Calendar.angle(39D, 49D, 24D), Calendar.angle(21D, 25D, 24D), 2D, 1000);
+	public static final CityElement MECCA = new CityElement("Mecca, Saudi Arabia", Calendar.angle(39D, 49D, 24D),
+			Calendar.angle(21D, 25D, 24D), 2D, 1000);
 
 	/**
 	 * Day of week names.
 	 */
-	public static final String DAY_OF_WEEK_NAMES[] = { "yaum al-ahad", "yaum al-ithnayna", "yaum ath-thalatha'", "yaum al-arba`a'", "yaum al-hamis", "yaum al-jum`a", "yaum as-sabt" };
+	public static final String DAY_OF_WEEK_NAMES[] =
+	{ "yaum al-ahad", "yaum al-ithnayna", "yaum ath-thalatha'", "yaum al-arba`a'", "yaum al-hamis", "yaum al-jum`a",
+			"yaum as-sabt" };
 
 	/**
 	 * Month names.
 	 */
-	public static final String MONTH_NAMES[] = { "Muharram", "Safar", "Rabi I", "Rabi II", "Jumada I", "Jumada II", "Rajab", "Sha`ban", "Ramadan", "Shawwal", "Dhu al-Qa`da", "Dhu al-Hijja" };
+	public static final String MONTH_NAMES[] =
+	{ "Muharram", "Safar", "Rabi I", "Rabi II", "Jumada I", "Jumada II", "Rajab", "Sha`ban", "Ramadan", "Shawwal",
+			"Dhu al-Qa`da", "Dhu al-Hijja" };
 
 	/**
 	 * Default constructor.
@@ -81,7 +86,7 @@ public class Islamic implements Serializable
 
 	/**
 	 * Julian day constructor.
-	 *
+	 * 
 	 * @param jd Julian day.
 	 */
 	public Islamic(int jd)
@@ -91,7 +96,7 @@ public class Islamic implements Serializable
 
 	/**
 	 * Explicit constructor.
-	 *
+	 * 
 	 * @param y Year.
 	 * @param m Month.
 	 * @param d Day.
@@ -105,7 +110,7 @@ public class Islamic implements Serializable
 
 	/**
 	 * To fixed date.
-	 *
+	 * 
 	 * @param y Year.
 	 * @param m Month.
 	 * @param d Day.
@@ -119,7 +124,7 @@ public class Islamic implements Serializable
 
 	/**
 	 * To fixed date.
-	 *
+	 * 
 	 * @return Fixed date.
 	 */
 	public long toFixed()
@@ -129,7 +134,7 @@ public class Islamic implements Serializable
 
 	/**
 	 * Sets the date from a fixed day.
-	 *
+	 * 
 	 * @param l Fixed date.
 	 */
 	public void fromFixed(long l)
@@ -142,7 +147,7 @@ public class Islamic implements Serializable
 
 	/**
 	 * To know if the year is a leap one.
-	 *
+	 * 
 	 * @param l Fixed day.
 	 * @return True if it is a leap year.
 	 */
@@ -153,7 +158,7 @@ public class Islamic implements Serializable
 
 	/**
 	 * Transforms an Islamic date into a Julian day
-	 *
+	 * 
 	 * @param year Year.
 	 * @param month Month.
 	 * @param day Day.
@@ -166,7 +171,7 @@ public class Islamic implements Serializable
 
 	/**
 	 * Transforms an Islamic date into a Julian day
-	 *
+	 * 
 	 * @return Julian day.
 	 */
 	public int toJulianDay()
@@ -176,11 +181,37 @@ public class Islamic implements Serializable
 
 	/**
 	 * Sets an Islamic date with a given Julian day
-	 *
+	 * 
 	 * @param jd Julian day.
 	 */
 	public void fromJulianDay(int jd)
 	{
 		fromFixed(jd - Gregorian.EPOCH);
+	}
+
+	/**
+	 * For unit testing only.
+	 * @param args Not used.
+	 */
+	public static void main(String args[])
+	{
+		System.out.println("*Islamic Test");
+
+		try {
+			int jd = (int) (new jparsec.time.AstroDate(2009, 6, 24, 22, 0, 0)).jd();
+			Islamic h = new Islamic(jd);
+			System.out.println("JD " + jd + " = " + h.year + "/" + h.month + "/" + h.day);
+	
+			Islamic h2 = new Islamic(h.year, h.month, h.day);
+			System.out.println("JD " + h2.toJulianDay() + " = " + h2.year + "/" + h2.month + "/" + h2.day);
+	
+			System.out.println(Calendar.nameFromMonth(h2.month, Islamic.MONTH_NAMES));
+			System.out.println(Calendar
+					.nameFromDayOfWeek(Calendar.dayOfWeekFromFixed(h2.toFixed()), Islamic.DAY_OF_WEEK_NAMES));
+			System.out.println("(until sunset)");
+		} catch (Exception exc)
+		{
+			exc.printStackTrace();
+		}
 	}
 }

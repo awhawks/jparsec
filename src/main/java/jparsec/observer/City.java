@@ -80,14 +80,14 @@ public final class City
 	 * The list of capitals for each of the Spanish provinces.
 	 */
 	public static final String SpainCapitals[] = new String[] {
-			"Girona", "Ourense", "Donostia-San Sebasti\u00e1n", "Lleida", "Castell\u00f3n de la Plana", 
+			"Girona", "Ourense", "Donostia-San Sebastián", "Lleida", "Castellón de la Plana", 
 			"Pamplona", "Vitoria-Gasteiz", 
-			"Albacete", "Alicante", "Almer\u00eda", "Oviedo", "\u00c1vila", "Badajoz",
-			"Palma de Mallorca", "Barcelona", "Burgos", "C\u00e1ceres", "C\u00e1diz", "Santander",
-			"Ceuta", "Ciudad Real", "C\u00f3rdoba", "Cuenca", "Zaragoza", 
-			"Granada", "Guadalajara", "Huelva", "Huesca", "Ja\u00e9n", "La Coru\u00f1a",
-			"Logro\u00f1o", "Las Palmas de Gran Canaria", "Le\u00f3n", "Lugo", "Madrid", "M\u00e1laga", 
-			"Melilla", "M\u00e9rida", "Murcia", "Palencia", "Pontevedra",
+			"Albacete", "Alicante", "Almería", "Oviedo", "Ávila", "Badajoz",
+			"Palma de Mallorca", "Barcelona", "Burgos", "Cáceres", "Cádiz", "Santander",
+			"Ceuta", "Ciudad Real", "Córdoba", "Cuenca", "Zaragoza", 
+			"Granada", "Guadalajara", "Huelva", "Huesca", "Jaén", "La Coruña",
+			"Logroño", "Las Palmas de Gran Canaria", "León", "Lugo", "Madrid", "Málaga", 
+			"Melilla", "Mérida", "Murcia", "Palencia", "Pontevedra",
 			"Salamanca", "Santa Cruz de Tenerife", "Santiago de Compostela", "Segovia", "Sevilla", 
 			"Soria", "Tarragona", "Teruel", "Toledo", "Valencia", "Valladolid", "Bilbao", "Zamora",
 	};
@@ -96,14 +96,14 @@ public final class City
 	 * The list of Spanish provinces (regions) in Spain.
 	 */
 	public static final String SpainProvinces[] = new String[] {
-			"Girona", "Orense", "Guip\u00fazcoa", "Lleida", "Castell\u00f3n", 
-			"Navarra", "\u00c1lava", 
-			"Albacete", "Alicante", "Almer\u00eda", "Asturias", "\u00c1vila", "Badajoz",
-			"Baleares", "Barcelona", "Burgos", "C\u00e1ceres", "C\u00e1diz", "Santander",
-			"Ceuta", "Ciudad Real", "C\u00f3rdoba", "Cuenca", "Zaragoza", 
-			"Granada", "Guadalajara", "Huelva", "Huesca", "Ja\u00e9n", "La Coru\u00f1a",
-			"La Rioja", "Las Palmas", "Le\u00f3n", "Lugo", "Madrid", "M\u00e1laga", 
-			"Melilla", "M\u00e9rida", "Murcia", "Palencia", "Pontevedra",
+			"Girona", "Orense", "Guipúzcoa", "Lleida", "Castellón", 
+			"Navarra", "Álava", 
+			"Albacete", "Alicante", "Almería", "Asturias", "Ávila", "Badajoz",
+			"Baleares", "Barcelona", "Burgos", "Cáceres", "Cádiz", "Santander",
+			"Ceuta", "Ciudad Real", "Córdoba", "Cuenca", "Zaragoza", 
+			"Granada", "Guadalajara", "Huelva", "Huesca", "Jaén", "La Coruña",
+			"La Rioja", "Las Palmas", "León", "Lugo", "Madrid", "Málaga", 
+			"Melilla", "Mérida", "Murcia", "Palencia", "Pontevedra",
 			"Salamanca", "Santa Cruz de Tenerife", "Santiago de Compostela", "Segovia", "Sevilla", 
 			"Soria", "Tarragona", "Teruel", "Toledo", "Valencia", "Valladolid", "Vizcaya", "Zamora",
 	};

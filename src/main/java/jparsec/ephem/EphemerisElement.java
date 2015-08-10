@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- *
+ * 
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *
+ *  
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- *
+ * 
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */
+ */					
 package jparsec.ephem;
 
 import java.io.Serializable;
@@ -33,8 +33,8 @@ import jparsec.util.JPARSECException;
  * Support class to perform ephemerides calculations. This class provides
  * methods and fields that can be passed to any ephemeris calculation method to
  * obtain certain kind of ephemeris results. Output ephemeris type ({@linkplain
- * EphemerisElement#ephemType}), output equinox ({@linkplain EphemerisElement#equinox}), ephem methods to apply
- * ({@linkplain EphemerisElement#ephemMethod}), topocentric or geocentric ephemeris ({@linkplain
+ * EphemerisElement#ephemType}), output equinox ({@linkplain EphemerisElement#equinox}), ephem methods to apply 
+ * ({@linkplain EphemerisElement#ephemMethod}), topocentric or geocentric ephemeris ({@linkplain 
  * EphemerisElement#isTopocentric}), frame of the results ({@linkplain EphemerisElement#frame}), and of
  * course the target body of the ephemeris ({@linkplain EphemerisElement#targetBody}) are some of the
  * selectable parameters. These fields are lowercase, while uppercase parameters
@@ -62,8 +62,8 @@ import jparsec.util.JPARSECException;
  * that the official ephemeris adopted by the IAU are JPL DE406, and the 'apparent place'
  * of a planet is defined by the IAU to correspond to a position referred to the
  * true equator and equinox of date, which means that the positions should be apparent
- * respect the equinox of date, and based on the dynamical equinox of J2000 (see USNO
- * circular 179). So some sources such as the Astronomical Almanac gives position using the
+ * respect the equinox of date, and based on the dynamical equinox of J2000 (see USNO 
+ * circular 179). So some sources such as the Astronomical Almanac gives position using the 
  * dynamical equinox of J2000 as frame, although other sources uses ICRF. Difference is 0.01".
  * If you are in doubt, dynamical equinox of J2000 is recommended.
  *
@@ -77,7 +77,7 @@ import jparsec.util.JPARSECException;
  * and the Ecliptic (Hilton et al. 2006, Celest. Mech., 94, 351-367). The
  * recommendation is to adopt this theory replacing the inconsistent precession
  * part of the IAU2000A precession-nutation model (2006). Here, we have
- * directly applied Capitaine et al. theory for IAU2006 and beyond, although
+ * directly applied Capitaine et al. theory for IAU2006 and beyond, although 
  * support to the original IAU2000 model is still given.
  *
  * This library provides results with and accuracy up to the milliarcsecond
@@ -94,7 +94,7 @@ import jparsec.util.JPARSECException;
  * Please read the documentation for the different algorithms to apply and methods
  * for reducing coordinates in the corresponding parameters to choose an adequate
  * and consistent ephemeris object.
- *
+ * 
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -123,21 +123,21 @@ public class EphemerisElement implements Serializable
 	 * Explicit constructor for planets. It defines an Ephemeris object by
 	 * giving the values of the different fields. Ephemeris algorithm is set to
 	 * Moshier.
-	 *
+	 * 
 	 * @param planet Planet ID constant.
-	 * @param ephem_type Can be {@linkplain COORDINATES_TYPE#APPARENT}, {@linkplain
+	 * @param ephem_type Can be {@linkplain COORDINATES_TYPE#APPARENT}, {@linkplain 
 	 *        COORDINATES_TYPE#ASTROMETRIC}, or {@linkplain COORDINATES_TYPE#GEOMETRIC}.
-	 * @param equinox Can be {@linkplain EphemerisElement#EQUINOX_J2000}, {@linkplain
+	 * @param equinox Can be {@linkplain EphemerisElement#EQUINOX_J2000}, {@linkplain 
 	 *        EphemerisElement#EQUINOX_OF_DATE}, or any positive Julian day.
 	 * @param topocentric True for topocentric results, false for geocentric.
-	 * @param apply_method {@linkplain REDUCTION_METHOD#JPL_DE4xx}, {@linkplain
-	 *        REDUCTION_METHOD#WILLIAMS_1994}, {@linkplain REDUCTION_METHOD#SIMON_1994},
+	 * @param apply_method {@linkplain REDUCTION_METHOD#JPL_DE4xx}, {@linkplain 
+	 *        REDUCTION_METHOD#WILLIAMS_1994}, {@linkplain REDUCTION_METHOD#SIMON_1994}, 
 	 *        {@linkplain REDUCTION_METHOD#IAU_1976}, {@linkplain REDUCTION_METHOD#LASKAR_1986}, {@linkplain REDUCTION_METHOD#IAU_2000},
 	 *        {@linkplain REDUCTION_METHOD#IAU_2006}, or {@linkplain REDUCTION_METHOD#IAU_2009}.
-	 * @param frame Reference frame, {@linkplain FRAME#ICRF} or
+	 * @param frame Reference frame, {@linkplain FRAME#ICRF} or 
 	 *        {@linkplain FRAME#ICRF}.
 	 */
-	public EphemerisElement(TARGET planet, COORDINATES_TYPE ephem_type, double equinox, boolean topocentric, REDUCTION_METHOD apply_method,
+	public EphemerisElement(TARGET planet, COORDINATES_TYPE ephem_type, double equinox, boolean topocentric, REDUCTION_METHOD apply_method, 
 			FRAME frame)
 	{
 		targetBody = planet;
@@ -152,18 +152,18 @@ public class EphemerisElement implements Serializable
 	/**
 	 * Explicit constructor for any object. It defines an Ephemeris object by
 	 * giving the values of most of the fields.
-	 *
+	 * 
 	 * @param planet Planet ID constant.
-	 * @param ephem_type Can be {@linkplain COORDINATES_TYPE#APPARENT}, {@linkplain
+	 * @param ephem_type Can be {@linkplain COORDINATES_TYPE#APPARENT}, {@linkplain 
 	 *        COORDINATES_TYPE#ASTROMETRIC}, or {@linkplain COORDINATES_TYPE#GEOMETRIC}.
-	 * @param equinox Can be {@linkplain EphemerisElement#EQUINOX_J2000}, {@linkplain
+	 * @param equinox Can be {@linkplain EphemerisElement#EQUINOX_J2000}, {@linkplain 
 	 *        EphemerisElement#EQUINOX_OF_DATE}, or any positive Julian day.
 	 * @param topocentric True for topocentric results, false for geocentric.
-	 * @param apply_method {@linkplain REDUCTION_METHOD#JPL_DE4xx}, {@linkplain
-	 *        REDUCTION_METHOD#WILLIAMS_1994}, {@linkplain REDUCTION_METHOD#SIMON_1994},
+	 * @param apply_method {@linkplain REDUCTION_METHOD#JPL_DE4xx}, {@linkplain 
+	 *        REDUCTION_METHOD#WILLIAMS_1994}, {@linkplain REDUCTION_METHOD#SIMON_1994}, 
 	 *        {@linkplain REDUCTION_METHOD#IAU_1976}, {@linkplain REDUCTION_METHOD#LASKAR_1986}, {@linkplain REDUCTION_METHOD#IAU_2000},
 	 *        {@linkplain REDUCTION_METHOD#IAU_2006}, or {@linkplain REDUCTION_METHOD#IAU_2009}.
-	 * @param frame Reference frame, {@linkplain FRAME#ICRF} or
+	 * @param frame Reference frame, {@linkplain FRAME#ICRF} or 
 	 *        {@linkplain FRAME#ICRF}.
 	 * @param algorithm Algorithm to apply.
 	 */
@@ -182,18 +182,18 @@ public class EphemerisElement implements Serializable
 	/**
 	 * Explicit constructor for any object. It defines an Ephemeris object by
 	 * giving the values of all the fields.
-	 *
+	 * 
 	 * @param planet Planet ID constant.
-	 * @param ephem_type Can be {@linkplain COORDINATES_TYPE#APPARENT}, {@linkplain
+	 * @param ephem_type Can be {@linkplain COORDINATES_TYPE#APPARENT}, {@linkplain 
 	 *        COORDINATES_TYPE#ASTROMETRIC}, or {@linkplain COORDINATES_TYPE#GEOMETRIC}.
-	 * @param equinox Can be {@linkplain EphemerisElement#EQUINOX_J2000}, {@linkplain
+	 * @param equinox Can be {@linkplain EphemerisElement#EQUINOX_J2000}, {@linkplain 
 	 *        EphemerisElement#EQUINOX_OF_DATE}, or any positive Julian day.
 	 * @param topocentric True for topocentric results, false for geocentric.
-	 * @param apply_method {@linkplain REDUCTION_METHOD#JPL_DE4xx}, {@linkplain
-	 *        REDUCTION_METHOD#WILLIAMS_1994}, {@linkplain REDUCTION_METHOD#SIMON_1994},
+	 * @param apply_method {@linkplain REDUCTION_METHOD#JPL_DE4xx}, {@linkplain 
+	 *        REDUCTION_METHOD#WILLIAMS_1994}, {@linkplain REDUCTION_METHOD#SIMON_1994}, 
 	 *        {@linkplain REDUCTION_METHOD#IAU_1976}, {@linkplain REDUCTION_METHOD#LASKAR_1986}, {@linkplain REDUCTION_METHOD#IAU_2000},
 	 *        {@linkplain REDUCTION_METHOD#IAU_2006}, or {@linkplain REDUCTION_METHOD#IAU_2009}.
-	 * @param frame Reference frame, {@linkplain FRAME#ICRF} or
+	 * @param frame Reference frame, {@linkplain FRAME#ICRF} or 
 	 *        {@linkplain FRAME#ICRF}.
 	 * @param algorithm Algorithm to apply.
 	 * @param orbit Orbital Element set.
@@ -270,30 +270,30 @@ public class EphemerisElement implements Serializable
 	/**
 	 * The different set of reduction algorithms that can be applied in JPARSEC.
 	 */
-	public enum REDUCTION_METHOD {
+	public static enum REDUCTION_METHOD {
 		/**
 		 * Constant ID for selecting IAU 2000 formulae of precession, obliquity,
 		 * nutation, and Greenwich mean sidereal time. Pole movement is considered
 		 * when possible. Planetary rotation models are set to IAU 2000 resolutions.
 		 * @deprecated It is not recommended since the precession is inconsistent.
 		 */
-		IAU_2000,
+		IAU_2000, 
 		/**
 		 * Constant ID for selecting IAU 2006 formulae of obliquity, nutation, and
-		 * Greenwich mean sidereal time. Note that the precession algorithm is from
+		 * Greenwich mean sidereal time. Note that the precession algorithm is from 
 		 * Capitaine et al. 2003 (Astronomy & Astrophysics 412, 567-586, 2003), officially
 		 * adopted by the IAU as a replacement of the precession part of IAU2000A
-		 * precession-nutation model. See also Hilton et al. 2006. Pole movement is
-		 * considered when possible. Should be used by default for better precission
-		 * in modern theories like JPL DE405 and above. Planetary rotation models are
+		 * precession-nutation model. See also Hilton et al. 2006. Pole movement is 
+		 * considered when possible. Should be used by default for better precission 
+		 * in modern theories like JPL DE405 and above. Planetary rotation models are 
 		 * set to IAU 2006 resolutions.
 		 */
-		IAU_2006,
+		IAU_2006, 
 		/**
 		 * Same as IAU2006, but planetary rotation models are those recommended by
 		 * the IAU working group on carthographic coordinates, in 2009.
 		 */
-		IAU_2009,
+		IAU_2009, 
 		/**
 		 * Constant ID for selecting JPL DE403/404/405/406 formulae for precession,
 		 * obliquity, nutation (IAU 1980), and Greenwich mean sidereal time. Quite
@@ -305,26 +305,26 @@ public class EphemerisElement implements Serializable
 		 * Constant ID for selecting Williams formulae of precession (DE403 JPL
 		 * Ephemeris), nutation (IAU 1980), obliquity, and Greenwich mean sidereal
 		 * time. See James G. Williams, "Contributions to the Earth's obliquity rate,
-		 * precession, and nutation," Astron. J. 108, 711-724 (1994). It is convenient
+		 * precession, and nutation," Astron. J. 108, 711-724 (1994). It is convenient 
 		 * to use this when obtaining ephemeris of the Moon using Moshier method.
 		 */
-		WILLIAMS_1994,
+		WILLIAMS_1994, 
 		/**
 		 * Constant ID for selecting SIMON formulae of precession, obliquity,
-		 * nutation (IAU 1980), and Greenwich mean sidereal time. See
+		 * nutation (IAU 1980), and Greenwich mean sidereal time. See 
 		 * J. L. Simon, P. Bretagnon, J. Chapront, M. Chapront-Touze', G. Francou,
 		 * and J. Laskar, "Numerical Expressions for precession formulae and mean
 		 * elements for the Moon and the planets," Astronomy and Astrophysics 282,
 		 * 663-683 (1994).
 		 */
-		SIMON_1994,
+		SIMON_1994, 
 		/**
 		 * Constant ID for selecting Laskar formulae of precession, nutation (IAU
 		 * 1980), and Greenwich mean sidereal time. See J. Laskar,
 		 * "Secular terms of classical planetary theories using the results of
 		 * general theory," Astronomy and Astrophysics 157, 59070 (1986).
 		 */
-		LASKAR_1986,
+		LASKAR_1986, 
 		/**
 		 * Constant ID for selecting IAU 1976 formulae of precession, nutation (IAU
 		 * 1980), and Greenwich mean sidereal time. This will use
@@ -334,8 +334,8 @@ public class EphemerisElement implements Serializable
 		 * Precession Quantities Based upon the IAU (1976) System of Astronomical
 		 * Constants," Astronomy and Astrophysics 58, 1-16 (1977).
 		 */
-		IAU_1976
-	}
+		IAU_1976};
+
 
 	/**
 	 * Array with the method names, ordered as the same way as the individual
@@ -347,13 +347,13 @@ public class EphemerisElement implements Serializable
 	/**
 	 * The set of coordinate types.
 	 */
-	public enum COORDINATES_TYPE {
+	public static enum COORDINATES_TYPE {
 		/**
-		 * Constant ID for apparent ephemeris calculation, as seen from Earth surface.
+		 * Constant ID for apparent ephemeris calculation, as seen from Earth surface. 
 		 * If no special ephemeris calculation is required, select this.
 		 */
 		APPARENT,
-		/**
+		/** 
 		 * Constant ID for astrometric ephemeris calculation, corrected for light-time
 		 * and stellar aberration (Earth speed), but not planetary aberration (object
 		 * speed in its movement around the Sun), neither nutation. They are mean positions
@@ -365,8 +365,7 @@ public class EphemerisElement implements Serializable
 		 * objects not corrected for aberration, nutation, or light-time.
 		 */
 		GEOMETRIC
-	}
-
+		};
 	/**
 	 * Array with the ephem type names, ordered as the same way as the individual
 	 * variables are set.
@@ -387,7 +386,7 @@ public class EphemerisElement implements Serializable
 	/**
 	 * The set of output frames.
 	 */
-	public enum FRAME {
+	public static enum FRAME {
 		/**
 		 * Value ID for ICRF reference frame. An offset is conveniently applied to
 		 * transform from mean dynamical frame. This correction is
@@ -397,15 +396,15 @@ public class EphemerisElement implements Serializable
 		ICRF,
 		/**
 		 * Value ID for dynamical equinox of J2000 frame, adequate (in combination with
-		 * other options like apparent positions and equinox of date) to obtain ephemerides
-		 * for the true equator and equinox of date. The difference with ICRF is about 0.02".
+		 * other options like apparent positions and equinox of date) to obtain ephemerides 
+		 * for the true equator and equinox of date. The difference with ICRF is about 0.02". 
 		 * If you are in doubt, DO SELECT THIS.
 		 */
 		DYNAMICAL_EQUINOX_J2000,
 		/**
 		 * ID for selecting old FK5 frame in output positions. Select this in
-		 * combination with astrometric positions (and a given epoch, like J2000)
-		 * to obtain planetary positions that can be compared to stellar catalogs in
+		 * combination with astrometric positions (and a given epoch, like J2000) 
+		 * to obtain planetary positions that can be compared to stellar catalogs in 
 		 * FK5 frame.
 		 */
 		FK5,
@@ -413,20 +412,21 @@ public class EphemerisElement implements Serializable
 		 * ID for selecting very old FK4 frame in output positions.
 		 */
 		FK4
-	}
-
+		};
+		
 	/**
 	 * Array with the frame names, ordered as the same way as the individual
 	 * variables are set.
 	 */
-	public static final String[] FRAMES = new String[] {"ICRF", "Dynamical equinox", "FK5", "FK4"};
+	public static final String[] FRAMES = new String[] {"ICRF", 
+		"Dynamical equinox", "FK5", "FK4"};
 
 	/**
 	 * The set of available algorithms. JPL ephemerides requires the ephemerides
 	 * files, most of which are available for JPARSEC in the 20th and 21st centuries.
 	 * You can also use external files, with no date limitation for DE406 and DE422.
 	 */
-	public enum ALGORITHM {
+	public static enum ALGORITHM {
 		/**
 		 * ID value for JPL DE430 ephemeris algorithm.
 		 * Available from 1900 to 2100.
@@ -478,8 +478,8 @@ public class EphemerisElement implements Serializable
 		JPL_DE200,
 		/**
 		 * ID value for Moshier ephemeris algorithm. Good precission in ancient times
-		 * for the planets (but not the Moon), but other algorithms are better for 20th and 21st centuries.
-		 * You may consider using ELP2000 for the Moon instead of this,
+		 * for the planets (but not the Moon), but other algorithms are better for 20th and 21st centuries. 
+		 * You may consider using ELP2000 for the Moon instead of this, 
 		 * especially in ancient times, despite that ELP2000 has poor performance.
 		 */
 		MOSHIER,
@@ -490,7 +490,7 @@ public class EphemerisElement implements Serializable
 		 */
 		VSOP87_ELP2000ForMoon,
 		/**
-		 * ID value for Series96 (20th and 21st centuries) or Moshier Moon ephemeris algorithm.
+		 * ID value for Series96 (20th and 21st centuries) or Moshier Moon ephemeris algorithm. 
 		 * You may consider using JPL DE406 instead.
 		 */
 		SERIES96_MOSHIERForMoon,
@@ -518,8 +518,8 @@ public class EphemerisElement implements Serializable
 		 * ID value for star ephemeris algorithm.
 		 */
 		STAR
-	}
-
+	};
+	
 	/**
 	 * Array with the JPL ephemeris versions ordered as the constants in the algorithm enum.
 	 */
@@ -529,20 +529,20 @@ public class EphemerisElement implements Serializable
 	 * Array with the algorithm names, ordered as the same way as the individual
 	 * variables are set in the enum.
 	 */
-	public static final String[] ALGORITHMS = new String[] {"JPL DE430", "JPL DE424", "JPL DE422", "JPL DE414",
-		"JPL DE413", "JPL DE406", "JPL DE405", "JPL DE403", "JPL DE200",
+	public static final String[] ALGORITHMS = new String[] {"JPL DE430", "JPL DE424", "JPL DE422", "JPL DE414", 
+		"JPL DE413", "JPL DE406", "JPL DE405", "JPL DE403", "JPL DE200", 
 		"Moshier", "VSOP87 / ELP2000 for Moon", "Series96 / Moshier for Moon", "Newcomb", "Asteroid / comet",
 		"Space probe", "Natural satellite", "Artificial satellite", "Star"};
 
 	/**
-	 * The different set of observing wavelengths. This will affect objects positions
+	 * The different set of observing wavelengths. This will affect objects positions 
 	 * corrected by refraction.
 	 */
-	public enum OBSERVING_WAVELENGTH {
+	public static enum OBSERVING_WAVELENGTH {
 		/** Optical wavelengths. Default value, Bennet (1982) formulae
-		 * for refraction will be used. Classical formulae commonly used,
-		 * but less accurate. See Journal of Navigation (Royal Institute) 35,
-		 * 255-259, and also Explanatory Supplement to the Astronomical
+		 * for refraction will be used. Classical formulae commonly used, 
+		 * but less accurate. See Journal of Navigation (Royal Institute) 35, 
+		 * 255-259, and also Explanatory Supplement to the Astronomical 
 		 * Almanac, p. 144. This formula is used for observed elevations
 		 * between -4 and 90 deg. */
 		OPTICAL_BENNET,
@@ -552,7 +552,7 @@ public class EphemerisElement implements Serializable
 		/** Optical wavelengths. Yan (1996) formulae for refraction will be
 		 * used, with an accuracy of 0.3". See also Magnum (2001),
 		 * ALMA Memorandum 366, and the corrections/comments by NRAO at
-		 * https://safe.nrao.edu/wiki/pub/Main/RefBendDelayCalc/RefBendDelayCalc.pdf.
+		 * https://safe.nrao.edu/wiki/pub/Main/RefBendDelayCalc/RefBendDelayCalc.pdf. 
 		 * The observing wavelength in microns
 		 * can be set in the corresponding variable of the enum constant,
 		 * in case a value different from 0.555 microns is desired.
@@ -564,7 +564,7 @@ public class EphemerisElement implements Serializable
 		 * to the THz. Maximum error comparing with the atmospheric model by
 		 * Liebe (1996) for ALMA site is 2% at 500 GHz, and it is
 		 * around 1% for nu > 300 GHz. Between 100 and 300 GHz the
-		 * error is only 0.5%. This formula is used for observed elevations between
+		 * error is only 0.5%. This formula is used for observed elevations between 
 		 * -1 and 90 deg.  */
 		RADIO_YAN,
 		/**
@@ -576,9 +576,9 @@ public class EphemerisElement implements Serializable
 		 * calculations.
 		 */
 		NUMERICAL_INTEGRATION;
-
+		
 		/**
-		 * Defines the observing wavelength for the source. This affects the Yan formulae
+		 * Defines the observing wavelength for the source. This affects the Yan formulae 
 		 * in the optical refraction case, which is designed to drop some terms for 0.532 microns,
 		 * although the eye has its maximum sensitivity in 0.555 microns. Default value is
 		 * 0.555 microns. In radio wavelengths refraction is independent from frequency.
@@ -587,7 +587,7 @@ public class EphemerisElement implements Serializable
 		 * refraction in radio wavelengths.
 		 */
 		public double observingWavelength = 0.555;
-
+		
 		/**
 		 * Resets the observing wavelength to its default value
 		 * of 0.555 microns.
@@ -596,7 +596,7 @@ public class EphemerisElement implements Serializable
 			observingWavelength = 0.555;
 		}
 	}
-
+	
 	/**
 	 * The observing wavelength. Default value is optical with Bennet (1982) refraction model.
 	 */
@@ -604,28 +604,28 @@ public class EphemerisElement implements Serializable
 
 	/**
 	 * True to correct output right ascension and declination for local refraction effects,
-	 * and equinox based calculations, in case coordinates are topocentric and apparent.
+	 * and equinox based calculations, in case coordinates are topocentric and apparent. 
 	 * Default value is false.
 	 */
 	public boolean correctEquatorialCoordinatesForRefraction = false;
 
 	/**
-	 * Extinction correction flag for equinox based calculations. If set to true, in every ephemerides
+	 * Extinction correction flag for equinox based calculations. If set to true, in every ephemerides 
 	 * calculation with topocentric results and apparent coordinates the apparent
 	 * magnitude will be corrected for extinction (only in that case, topocentric plus
-	 * apparent). Default value is false to keep always the same value for the output
-	 * magnitude.
+	 * apparent). Default value is false to keep always the same value for the output 
+	 * magnitude.  
 	 */
 	public boolean correctForExtinction = false;
 
 	/**
-	 * Sets the precession model to that of Vondr&agrave;k et al. 2011 (see A&A 534, A22)
+	 * Sets the precession model to that of Vondrák et al. 2011 (see A&A 534, A22)
 	 * instead of the original IAU2006 model by Capitaine et al. 2003. This affects the
 	 * calculation of precession for reduction algorithms IAU2006 and IAU2009. The effect
 	 * is a correct output for dates very far from J2000 epoch. IAU model should not be used
-	 * 10 000 years far from J2000. Vondr&agrave;k parameterization allows to reach up to
+	 * 10 000 years far from J2000. Vondrák parameterization allows to reach up to
 	 * 200 000 years far from J2000, with an error in the degree level. Default value is
-	 * equals to the value of {@linkplain #ALLOW_VONDRAK_PRECESSION}, which is true at startup.
+	 * equals to the value of {@linkplain #ALLOW_VONDRAK_PRECESSION}, which is true at startup. 
 	 * Set this value to false to use the original IAU model, or the mentioned static variable
 	 * to use always the original IAU model. Only for equinox based calculations.
 	 */
@@ -633,7 +633,7 @@ public class EphemerisElement implements Serializable
 
 	/**
 	 * True (default value) to correct for pole motion using the Earth orientation parameters
-	 * in equinox based calculations. Not supported in Android.
+	 * in equinox based calculations. Not supported in Android. 
 	 */
 	public boolean correctForPolarMotion = true;
 
@@ -658,15 +658,15 @@ public class EphemerisElement implements Serializable
 	 * (maybe) faster ephemeris, but generally with enough precision. Note that
 	 * if you calculate ephemerides with JPL algorithms in a given date the
 	 * performance could be better compared to setting this flag to false (which
-	 * forces the Series96/Moshier methods). When calling ephemeris through
-	 * {@linkplain Ephem#getEphemeris(jparsec.time.TimeElement, jparsec.observer.ObserverElement, jparsec.ephem.EphemerisElement, boolean, boolean)}
+	 * forces the Series96/Moshier methods). When calling ephemeris through 
+	 * {@linkplain Ephem#getEphemeris(jparsec.time.TimeElement, jparsec.observer.ObserverElement, jparsec.ephem.EphemerisElement, boolean, boolean)} 
 	 * method the best possible algorithm will be used if this
 	 * is set to true, although Moshier method is forced when JPL
 	 * ephemeris files cannot be found and Series96 cannot be applied, so no
 	 * dependency problems will appear, although the theory used could be
 	 * different from the one selected in the ephemeris object.<P>
 	 * When this flag is set to false Moshier ephemerides can be used between
-	 * years -3000 to +3000, with true the lower limit for inner planets is -1350.
+	 * years -3000 to +3000, with true the lower limit for inner planets is -1350. 
 	 */
 	public boolean preferPrecisionInEphemerides = true;
 
@@ -677,39 +677,47 @@ public class EphemerisElement implements Serializable
 	 * is required this flag should be set to false.
 	 */
 	public static boolean ALLOW_VONDRAK_PRECESSION = true;
-
+	
 	/**
 	 * Returns a String representation of this object.
 	 */
-    @Override
 	public String toString() {
 		String out = "target: "+this.targetBody+", algorithm: "+this.algorithm+", eph method: "+this.ephemMethod+", eph type: "+this.ephemType+", frame: "+this.frame+", equinox: "+this.equinox+", topocentric: "+this.isTopocentric;
 		return out;
 	}
-
+	
 	/**
 	 * Check if the Ephemeris object is valid or not. A very basic check is made for
 	 * target body.
-	 *
+	 * 
 	 * @param eph Ephemeris object.
 	 * @return True if it is adequate for calculations, false otherwise.
 	 * @throws JPARSECException Thrown if the object is invalid.
 	 */
 	public static boolean checkEphemeris(EphemerisElement eph) throws JPARSECException
 	{
+		boolean is_correct = false;
 		int check = 0;
 
-		if (eph.equinox > 0 || eph.equinox == EphemerisElement.EQUINOX_OF_DATE)
-			check++;
-		if (eph.targetBody == TARGET.Nutation || eph.targetBody == TARGET.Libration ||
-				eph.targetBody == TARGET.Solar_System_Barycenter)
-			throw new JPARSECException("target body cannot be '"+eph.targetBody.getName()+"'.");
-		if (eph.algorithm == ALGORITHM.NEWCOMB && eph.targetBody != TARGET.SUN)
-			throw new JPARSECException("target body must be the Sun.");
-		if (eph.algorithm == ALGORITHM.NATURAL_SATELLITE && !eph.targetBody.isNaturalSatellite())
-			throw new JPARSECException("target body must be a natural satellite.");
+		try
+		{
+			if (eph.equinox > 0 || eph.equinox == EphemerisElement.EQUINOX_OF_DATE)
+				check++;
+			if (eph.targetBody == TARGET.Nutation || eph.targetBody == TARGET.Libration ||
+					eph.targetBody == TARGET.Solar_System_Barycenter)
+				throw new JPARSECException("target body cannot be '"+eph.targetBody.getName()+"'.");
+			if (eph.algorithm == ALGORITHM.NEWCOMB && eph.targetBody != TARGET.SUN)
+				throw new JPARSECException("target body must be the Sun.");
+			if (eph.algorithm == ALGORITHM.NATURAL_SATELLITE && !eph.targetBody.isNaturalSatellite())
+				throw new JPARSECException("target body must be a natural satellite.");
 
-		return (check == 1);
+			if (check == 1) is_correct = true;
+		} catch (JPARSECException ve)
+		{
+			throw ve;
+		}
+
+		return is_correct;
 	}
 
 	/**
@@ -730,9 +738,9 @@ public class EphemerisElement implements Serializable
 	/**
 	 * To clone the object.
 	 */
-    @Override
 	public EphemerisElement clone()
 	{
+		if (this == null) return null;
 		// Create new EphemerisElement identical to the input
 		EphemerisElement new_eph = new EphemerisElement(this.targetBody, this.ephemType, this.equinox,
 				this.isTopocentric, this.ephemMethod, this.frame, this.algorithm, this.orbit);
@@ -749,65 +757,54 @@ public class EphemerisElement implements Serializable
 		new_eph.preferPrecisionInEphemerides = this.preferPrecisionInEphemerides;
 		return new_eph;
 	}
-
 	/**
 	 * Returns if the input object is equals to this ephemeris object.
 	 */
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof EphemerisElement)) return false;
-
-        EphemerisElement that = (EphemerisElement) o;
-
-        if (Double.compare(that.equinox, equinox) != 0) return false;
-        if (isTopocentric != that.isTopocentric) return false;
-        if (correctEquatorialCoordinatesForRefraction != that.correctEquatorialCoordinatesForRefraction) return false;
-        if (correctForExtinction != that.correctForExtinction) return false;
-        if (useVondrak2011PrecessionFormulaInsteadOfIAU2006 != that.useVondrak2011PrecessionFormulaInsteadOfIAU2006)
-            return false;
-        if (correctForPolarMotion != that.correctForPolarMotion) return false;
-        if (correctForEOP != that.correctForEOP) return false;
-        if (correctEOPForDiurnalSubdiurnalTides != that.correctEOPForDiurnalSubdiurnalTides) return false;
-        if (preferPrecisionInEphemerides != that.preferPrecisionInEphemerides) return false;
-        if (targetBody != that.targetBody) return false;
-        if (ephemMethod != that.ephemMethod) return false;
-        if (frame != that.frame) return false;
-        if (ephemType != that.ephemType) return false;
-        if (algorithm != that.algorithm) return false;
-        if (orbit != null ? !orbit.equals(that.orbit) : that.orbit != null) return false;
-
-        return wavelength == that.wavelength;
-    }
-
-    @Override
-    public int hashCode() {
-        int result;
-        long temp;
-        result = targetBody != null ? targetBody.hashCode() : 0;
-        temp = Double.doubleToLongBits(equinox);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        result = 31 * result + (isTopocentric ? 1 : 0);
-        result = 31 * result + (ephemMethod != null ? ephemMethod.hashCode() : 0);
-        result = 31 * result + (frame != null ? frame.hashCode() : 0);
-        result = 31 * result + (ephemType != null ? ephemType.hashCode() : 0);
-        result = 31 * result + (algorithm != null ? algorithm.hashCode() : 0);
-        result = 31 * result + (orbit != null ? orbit.hashCode() : 0);
-        result = 31 * result + (wavelength != null ? wavelength.hashCode() : 0);
-        result = 31 * result + (correctEquatorialCoordinatesForRefraction ? 1 : 0);
-        result = 31 * result + (correctForExtinction ? 1 : 0);
-        result = 31 * result + (useVondrak2011PrecessionFormulaInsteadOfIAU2006 ? 1 : 0);
-        result = 31 * result + (correctForPolarMotion ? 1 : 0);
-        result = 31 * result + (correctForEOP ? 1 : 0);
-        result = 31 * result + (correctEOPForDiurnalSubdiurnalTides ? 1 : 0);
-        result = 31 * result + (preferPrecisionInEphemerides ? 1 : 0);
-        return result;
-    }
-
-    /**
+	public boolean equals(Object eph)
+	{
+		if (eph == null) {
+			if (this == null) return true;
+			return false;
+		}
+		if (this == null) {
+			return false;
+		}
+		boolean equals = true;
+		EphemerisElement e = (EphemerisElement) eph;
+		if (e.targetBody != this.targetBody) equals = false;
+		if (e.targetBody.getIndex() != this.targetBody.getIndex()) equals = false;
+		if (e.ephemType != this.ephemType) equals = false;
+		if (e.ephemMethod != this.ephemMethod) equals = false;
+		if (e.equinox != this.equinox) equals = false;
+		if (e.frame != this.frame) equals = false;
+		if (e.algorithm != this.algorithm) equals = false;
+		if (e.isTopocentric != this.isTopocentric) equals = false;
+		if (e.wavelength != this.wavelength) equals = false;
+		if (e.orbit != null || orbit != null) {
+			if (e.orbit == null && orbit != null) {
+				equals = false;
+			} else {
+				if (e.orbit != null && orbit == null) {
+					equals = false;
+				} else {
+					if (!e.orbit.equals(this.orbit)) equals = false;
+				}
+			}
+		}
+		if (e.correctEOPForDiurnalSubdiurnalTides != this.correctEOPForDiurnalSubdiurnalTides) equals = false;
+		if (e.correctEquatorialCoordinatesForRefraction != this.correctEquatorialCoordinatesForRefraction) equals = false;
+		if (e.correctForEOP != this.correctForEOP) equals = false;
+		if (e.correctForExtinction != this.correctForExtinction) equals = false;
+		if (e.correctForPolarMotion != this.correctForPolarMotion) equals = false;
+		if (e.useVondrak2011PrecessionFormulaInsteadOfIAU2006 != this.useVondrak2011PrecessionFormulaInsteadOfIAU2006) equals = false;
+		if (e.preferPrecisionInEphemerides != this.preferPrecisionInEphemerides) equals = false;
+		return equals;
+	}
+	
+	/**
 	 * Optimizes the options in this instance to obtain the fastest possible ephemerides. Flags
 	 * adjusted to false are {@linkplain #preferPrecisionInEphemerides}, {@linkplain #correctForEOP},
-	 * and {@linkplain #correctForPolarMotion}.
+	 * and {@linkplain #correctForPolarMotion}. 
 	 */
 	public void optimizeForSpeed() {
 		this.preferPrecisionInEphemerides = this.correctForEOP = this.correctForPolarMotion = false;
@@ -815,7 +812,7 @@ public class EphemerisElement implements Serializable
 	/**
 	 * Optimizes the options in this instance to obtain the most accurate possible ephemerides. Flags
 	 * adjusted to true are {@linkplain #preferPrecisionInEphemerides}, {@linkplain #correctForEOP},
-	 * and {@linkplain #correctForPolarMotion}.
+	 * and {@linkplain #correctForPolarMotion}. 
 	 */
 	public void optimizeForAccuracy() {
 		this.preferPrecisionInEphemerides = this.correctForEOP = this.correctForPolarMotion = true;

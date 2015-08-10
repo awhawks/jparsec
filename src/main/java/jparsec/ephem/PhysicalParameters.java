@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- *
+ * 
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *
+ *  
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- *
+ * 
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */
+ */					
 package jparsec.ephem;
 
 import jparsec.astronomy.Constellation;
@@ -44,7 +44,7 @@ import jparsec.util.Logger.LEVEL;
  * for the different values of the ephem method to apply in the ephemeris object.
  * The default method (for values different from IAU 2006 and IAU 2009) is the
  * IAU 2000 recommendations for the orientations of the planetary axes.
- *
+ * 
  * @see Ephem
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
@@ -53,16 +53,16 @@ public class PhysicalParameters
 {
 	// private constructor so that this class cannot be instantiated.
 	private PhysicalParameters() {}
-
+	
 	/**
 	 * Obtain physical parameters of the planet: elongation, phase, phase angle,
 	 * angular radius, visual magnitude (AA supplement), and axis orientation.
 	 * This method is applicable for the Sun, the Moon, any planet, Pluto, and
 	 * the asteroids Ida, Vesta, Gaspra, and Eros. Previous calculation of basic
 	 * ephemeris is required.<P>
-	 * The axis orientation for the Moon is computed using Eckhardt's theory,
+	 * The axis orientation for the Moon is computed using Eckhardt's theory, 
 	 * instead of the IAU rotation model.
-	 *
+	 * 
 	 * @param JD Julian day in dynamical time.
 	 * @param ephem_sun Ephem object with ephemeris of sun (should be apparent, equinox of date).
 	 * @param ephem_obj Ephem object to take and store data (should be apparent, equinox of date).
@@ -78,7 +78,7 @@ public class PhysicalParameters
 			EphemerisElement eph) // Ephemeris Element
 			throws JPARSECException
 	{
-
+	
 		EphemElement ephem = ephem_obj.clone();
 
 		// Put distances and angles in a more comfortable way
@@ -102,7 +102,7 @@ public class PhysicalParameters
 			// Returns true apparent elongation, not geometric (aberration ... everything corrected).
 			ephem.elongation = (float) LocationElement.getAngularDistance(ephem.getEquatorialLocation(), ephem_sun.getEquatorialLocation());
 			RP = Math.sqrt(-(Math.cos(ephem.elongation) * 2.0 * RE * RO - RE * RE - RO * RO));
-
+			
 			// Phase and phase angle. Note phase angle can be
 			// negative to represent the case LE < LP (before opposition)
 			double DPH = ((RP * RP + RO * RO - RE * RE) / (2.0 * RP * RO));
@@ -126,7 +126,7 @@ public class PhysicalParameters
 		} catch (Exception exc) {	}
 
 		// Continue only for supported objects
-		if (!eph.targetBody.isPlanet() && eph.targetBody != TARGET.Pluto && eph.targetBody != TARGET.SUN && eph.targetBody != TARGET.Moon
+		if (!eph.targetBody.isPlanet() && eph.targetBody != TARGET.Pluto && eph.targetBody != TARGET.SUN && eph.targetBody != TARGET.Moon 
 				&& !eph.targetBody.isAsteroid())
 			return ephem;
 
@@ -141,7 +141,7 @@ public class PhysicalParameters
 		ephem.surfaceBrightness = 0.0f;
 
 		if (eph.targetBody == TARGET.NOT_A_PLANET) return ephem;
-
+		
 		// Visual magnitude and axis orientation
 		double rr = ephem.distance * ephem.distanceFromSun;
 		if (eph.targetBody == TARGET.SUN) rr = ephem.distance;
@@ -150,7 +150,7 @@ public class PhysicalParameters
 		double mag = 0.0;
 		double lon0 = 0.0; // Initial longitude at JD = 2451545.0
 		double rot_per_day = 0.0; // Degrees per day of rotation of planet
-
+		
 		double rotationModel[] = null;
 		switch (eph.ephemMethod) {
 		case IAU_1976:
@@ -191,14 +191,14 @@ public class PhysicalParameters
 				}
 			}
 		}
-
+		
 		// Compute surface brightness and magnitude corrected by phase
 		if (ephem.magnitude !=  EphemElement.INVALID_MAGNITUDE &&
-				(ephem.angularRadius * Constant.RAD_TO_ARCSEC > 0.5))
+				(ephem.angularRadius * Constant.RAD_TO_ARCSEC > 0.5)) 
 			ephem.surfaceBrightness = (float) Star.getSurfaceBrightness(mag, ephem.angularRadius * Constant.RAD_TO_ARCSEC);
 
 		if (eph.targetBody == TARGET.Moon && obs.getMotherBody() == TARGET.EARTH) {
-			// Substitute librations by the results of Eckhardt's theory. IAU rotation model is extremely inaccurate (in
+			// Substitute librations by the results of Eckhardt's theory. IAU rotation model is extremely inaccurate (in 
 			// longitude of central meridian) far from year 2000.
 			try {
 				double v[] = LunarEvent.getEckhardtMoonLibrations(JD, eph.ephemMethod, ephem_obj.getEquatorialLocation());
@@ -207,7 +207,7 @@ public class PhysicalParameters
 				ephem.positionAngleOfAxis = v[2];
 			} catch (Exception e) { }
 		}
-
+		
 		// Correct visual magnitude of Saturn because of the rings brightness
 		// http://ntrs.nasa.gov/archive/nasa/casi.ntrs.nasa.gov/19710009758.pdf
 		if (eph.targetBody == TARGET.SATURN && ephem.magnitude != EphemElement.INVALID_MAGNITUDE)
@@ -230,7 +230,7 @@ public class PhysicalParameters
 	 */
 	public static LocationElement getPlanetaryAxisDirection(double JD, EphemerisElement eph) throws JPARSECException {
 		if (eph.targetBody.isNaturalSatellite()) return MoonPhysicalParameters.getBodyNorthPole(JD, eph);
-
+		
 		double rr = 1.0, PH = 0;
 		double rotationModel[] = null;
 
@@ -252,20 +252,20 @@ public class PhysicalParameters
 				break;
 			}
 		}
-
+		
 		if (rotationModel == null) return null;
 		LocationElement loc = new LocationElement(rotationModel[1], rotationModel[2], 1.0);
 		if (eph.equinox != Constant.J2000) loc = LocationElement.parseRectangularCoordinates(Precession.precess(Constant.J2000, eph.getEpoch(JD), loc.getRectangularCoordinates(), eph));
 		return loc;
 	}
-
+	
 	/**
 	 * Calculate moon axis orientation as established by the IAU. These formulae
 	 * is an approximation of the real movement of the lunar axis. Previous
 	 * calculation of lunar ephemeris is required. Better results for the longitude
 	 * of the central meridian (libration in longitude) can be obtained with
-	 * {@linkplain LunarEvent#getEckhardtMoonLibrations(double, EphemerisElement.REDUCTION_METHOD, LocationElement)}.
-	 *
+	 * {@linkplain LunarEvent#getEckhardtMoonLibrations(double, int, EphemElement)}.
+	 * 
 	 * @param JD Julian day in TT.
 	 * @return orientation data.
 	 */
@@ -315,7 +315,7 @@ public class PhysicalParameters
 	 * direction of the north pole of rotation. Previous calculation of basic
 	 * ephemeris is required, as well as knowledge of axis orientation. The
 	 * IAU 2000/2006/2009 models are used, see <I> REPORT OF THE IAU/IAG WORKING GROUP ON
-	 * CARTOGRAPHIC COORDINATES AND ROTATIONAL ELEMENTS: 2009</I>, B. A. Archinal
+	 * CARTOGRAPHIC COORDINATES AND ROTATIONAL ELEMENTS: 2009</I>, B. A. Archinal 
 	 * et al, in Celestial Mechanics and Dynamical Astronomy, 2011.
 	 * <P>
 	 * Note 1: The program use the dynamical north pole of rotation. In giant
@@ -329,7 +329,7 @@ public class PhysicalParameters
 	 * this is a difference in light time that affects the central meridian
 	 * longitude on the disk in certain instant, this correction depends on the
 	 * position in the disk surface.
-	 *
+	 * 
 	 * @param JD Julian day in TDB.
 	 * @param ephem_sun EphemElement with all data for the sun.
 	 * @param ephem_obj EphemElement with all data completed except those fields
@@ -338,7 +338,7 @@ public class PhysicalParameters
 	 * @param rot_per_day Rotation speed in degrees/day.
 	 * @param eph Ephemeris object defining the ephemeris properties.
 	 * @param motherBody The mother body for the calculations. Can be set to null
-	 * for the Earth.
+	 * for the Earth. 
 	 * @return Ephem object with all the fields.
 	 * @throws JPARSECException If an error occurs.
 	 */
@@ -352,7 +352,7 @@ public class PhysicalParameters
 		// Obtain direction of the north pole of rotation referred to the equinox
 		// of date
 		ephem = Precession.precessPoleFromJ2000(JD, ephem, eph);
-
+				
 		// Correct also for Nutation ? Disabled. Effect is only 0.5" in Jupiter.
 		// Note aberration is not needed in this kind of calculations
 		//LocationElement loc = LocationElement.parseRectangularCoordinates(Nutation.nutateInEquatorialCoordinates(JD, eph, (new LocationElement(ephem.northPoleRA, ephem.northPoleDEC, 1.0)).getRectangularCoordinates(), true));
@@ -373,9 +373,9 @@ public class PhysicalParameters
 		}
 
 		/* Correct Julian day and obtain it in TCB (Barycentric Coordinate
-		 * Time), referred to the barycenter of the solar system. Note that
-		 * following G. H. Kaplan et al. 2006 (astro-ph/0602086) = USNO
-		 * Circular 179, this correction is not needed, since the time
+		 * Time), referred to the barycenter of the solar system. Note that 
+		 * following G. H. Kaplan et al. 2006 (astro-ph/0602086) = USNO 
+		 * Circular 179, this correction is not needed, since the time 
 		 * argument in Seidelmann et al. 2002 is TDB, not TCB. So there was
 		 * an error in Seidelmann et al. 2002.
 		 */
@@ -418,7 +418,7 @@ public class PhysicalParameters
 			//D = Math.cos(dec) * Math.sin(ephem.northPoleRA - ra);
 			//N = Math.sin(ephem.northPoleDEC) * Math.cos(dec) * Math.cos(ephem.northPoleRA - ra);
 			//N = N - Math.cos(ephem.northPoleDEC) * Math.sin(dec);
-
+			
 			fromSun = Ephem.getGeocentricPosition(locEq, locEqSun);
 			ephem_loc = LocationElement.parseRectangularCoordinates(fromSun);
 			ra = ephem_loc.getLongitude();
@@ -512,7 +512,7 @@ public class PhysicalParameters
 	 * to planetogeodetic by applying the formula: geo_lat =
 	 * atan(tan(planeto_lat) / (1.0 - shape)^2), where shape = (equatorial -
 	 * polar radius) / (equatorial radius).
-	 *
+	 * 
 	 * @param pole_ra Right ascension of the north pole.
 	 * @param pole_dec Declination of the north pole.
 	 * @param p_ra Right ascension of some planet as seen by the observer.
@@ -534,10 +534,10 @@ public class PhysicalParameters
 
 		return incc;
 	}
-
+	
 	private static double[] getIAU2009Model(TARGET target, double JD, double rr, double PH) throws JPARSECException {
 		double mag = 0, northPoleRA = 0, northPoleDEC = 0, rot_per_day = 0, lon0 = 0;
-
+		
 		double calc_time = Functions.toCenturies(JD);
 
 		// Magnitudes for planets from http://stjarnhimlen.se/comp/ppcomp.html, no reference there.
@@ -643,14 +643,14 @@ public class PhysicalParameters
 			northPoleDEC = (59.0 * Constant.DEG_TO_RAD);
 			lon0 = 170.9;
 			rot_per_day = 952.1532;
-			break;
+			break;			
 		case Pallas:
 			mag = 0.0 + 5.0 * Math.log10(rr);
 			northPoleRA = (33.0 * Constant.DEG_TO_RAD);
 			northPoleDEC = (-3.0 * Constant.DEG_TO_RAD);
 			lon0 = 38.0;
 			rot_per_day = 1105.8036;
-			break;
+			break;			
 		case Vesta:
 			mag = 0.0 + 5.0 * Math.log10(rr);
 			northPoleRA = (305.8 * Constant.DEG_TO_RAD);
@@ -736,7 +736,7 @@ public class PhysicalParameters
 
 	private static double[] getIAU2006Model(TARGET target, double JD, double rr, double PH) throws JPARSECException {
 		double mag = 0, northPoleRA = 0, northPoleDEC = 0, rot_per_day = 0, lon0 = 0;
-
+		
 		double calc_time = Functions.toCenturies(JD);
 
 		switch (target)
@@ -879,7 +879,7 @@ public class PhysicalParameters
 			rot_per_day = 390.0;
 			break;
 
-
+			
 		case Ceres:
 		case Pallas:
 		case Lutetia:
@@ -899,10 +899,10 @@ public class PhysicalParameters
 		}
 		return new double[] {mag, northPoleRA, northPoleDEC, lon0, rot_per_day};
 	}
-
+	
 	private static double[] getIAU2000Model(TARGET target, double JD, double rr, double PH) throws JPARSECException {
 		double mag = 0, northPoleRA = 0, northPoleDEC = 0, rot_per_day = 0, lon0 = 0;
-
+		
 		double calc_time = Functions.toCenturies(JD);
 
 		switch (target)
@@ -1072,7 +1072,7 @@ public class PhysicalParameters
 		ephem_output.northPoleDEC = ephem_input.northPoleDEC;
 		ephem_output.magnitude = ephem_input.magnitude;
 		ephem_output.surfaceBrightness = ephem_input.surfaceBrightness;
-
+		
 		if (obs.getMotherBody() != TARGET.NOT_A_PLANET && obs.getMotherBody() != TARGET.EARTH) {
 			try {
 				LocationElement locE = ephem_output.getEquatorialLocation();
@@ -1085,7 +1085,7 @@ public class PhysicalParameters
 			}
 		}
 	}
-
+	
 	/**
 	 * Returns the mean rotation rate of a given body using the corresponding IAU model.
 	 * @param eph Ephemeris object containing target body and ephemeris method.
@@ -1113,9 +1113,9 @@ public class PhysicalParameters
 		}
 		return rotationModel[4] * Math.PI / (24.0 * 3600.0 * 180.0);
 	}
-
+	
 	/**
-	 * Returns the sidereal time at 0 &ordm; of longitude of a given body using the corresponding IAU model.
+	 * Returns the sidereal time at 0º of longitude of a given body using the corresponding IAU model.
 	 * @param JD_TDB Julian day in TDB.
 	 * @param eph Ephemeris object containing target body and ephemeris method.
 	 * @return Apparent sidereal time in radians for an observer at longitude 0.
@@ -1143,7 +1143,7 @@ public class PhysicalParameters
 		double lon = Functions.normalizeDegrees(90.0 + rotationModel[3] + rotationModel[4] * (JD - 2451545.0)) * Constant.DEG_TO_RAD;
 		return lon;
 	}
-
+	
 	/**
 	 * Returns the orientation of the north pole of rotation of a given body using the corresponding IAU model.
 	 * This method gives the same value as {@linkplain #getPlanetaryAxisDirection(double, EphemerisElement)}.

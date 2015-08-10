@@ -21,6 +21,8 @@
  */					
 package jparsec.astronomy;
 
+import java.text.DecimalFormat;
+
 import jparsec.ephem.EphemerisElement;
 import jparsec.ephem.Target.TARGET;
 import jparsec.ephem.planets.EphemElement;
@@ -57,7 +59,7 @@ public class VisualLimit
 	 * @param fbd The fixed brightness data.
 	 * @param abd The angular brightness data.
 	 */
-	protected VisualLimit(int bandMask, VisualLimitFixedBrightnessData fbd, VisualLimitAngularBrightnessData abd)
+	private VisualLimit(int bandMask, VisualLimitFixedBrightnessData fbd, VisualLimitAngularBrightnessData abd)
 	{
 		this.mask = bandMask;
 		setBrightnessParams(fbd);
@@ -86,9 +88,9 @@ public class VisualLimit
 		this.mask = bandMask;
 		setBrightnessParams(v.fixed);
 		computeSkyBrightness(v.angular);
-		computeExtinction();
+		computeExtinction();		
 	}
-
+	
 	/**
 	 * Set the fixed brightness parameters.
 	 * 
@@ -309,7 +311,7 @@ public class VisualLimit
 		return extinction[i];
 	}
 
-	protected static final int BANDS = 5;
+	private static final int BANDS = 5;
 
 	private static double magToBrightness(double m)
 	{
@@ -429,7 +431,7 @@ public class VisualLimit
 		double mag_limit = v.limitingMagnitude();
 		return mag_limit;
 	}
-
+	
 	private static VisualLimit getInstance(TimeElement time, ObserverElement obs, EphemElement ephem_sun,
 			EphemElement ephem_moon, double azimuth, double elevation, int bandMask) throws JPARSECException {
 		if (obs.getMotherBody() != TARGET.EARTH) throw new JPARSECException("Observer must be located on Earth.");
@@ -527,21 +529,32 @@ public class VisualLimit
 			EphemElement ephem) throws JPARSECException
 	{
 		if (obs.getMotherBody() != TARGET.EARTH) throw new JPARSECException("Observer must be located on Earth.");
+		try
+		{
+			EphemerisElement sun_eph = (EphemerisElement) eph.clone();
+			sun_eph.targetBody = TARGET.SUN;
+			sun_eph.algorithm = EphemerisElement.ALGORITHM.MOSHIER;
+			EphemElement ephem_sun = PlanetEphem.MoshierEphemeris(time, obs, sun_eph);
 
-		EphemerisElement sun_eph = (EphemerisElement) eph.clone();
-		sun_eph.targetBody = TARGET.SUN;
-		sun_eph.algorithm = EphemerisElement.ALGORITHM.MOSHIER;
-		EphemElement ephem_sun = PlanetEphem.MoshierEphemeris(time, obs, sun_eph);
+			EphemerisElement moon_eph = (EphemerisElement) eph.clone();
+			moon_eph.targetBody = TARGET.Moon;
+			moon_eph.algorithm = EphemerisElement.ALGORITHM.MOSHIER;
+			EphemElement ephem_moon = PlanetEphem.MoshierEphemeris(time, obs, moon_eph);
 
-		EphemerisElement moon_eph = (EphemerisElement) eph.clone();
-		moon_eph.targetBody = TARGET.Moon;
-		moon_eph.algorithm = EphemerisElement.ALGORITHM.MOSHIER;
-		EphemElement ephem_moon = PlanetEphem.MoshierEphemeris(time, obs, moon_eph);
+			double limiting_magnitude = VisualLimit.getLimitingMagnitude(time, obs, ephem_sun, ephem_moon,
+					ephem.azimuth, ephem.elevation);
 
-		double limiting_magnitude = VisualLimit.getLimitingMagnitude(time, obs, ephem_sun, ephem_moon, ephem.azimuth, ephem.elevation);
-		boolean isVisible = ephem.magnitude <= limiting_magnitude;
+			boolean isVisible = true;
 
-		return isVisible;
+			if (ephem.magnitude > limiting_magnitude)
+				isVisible = false;
+
+			return isVisible;
+		} catch (JPARSECException ve)
+		{
+			throw ve;
+		}
+
 	}
 
 	/**
@@ -584,9 +597,203 @@ public class VisualLimit
 
 		VisualLimit v = new VisualLimit(bandMask, f, a);
 		double[] bright = new double[5];
-
-		bright = new double[] { v.getExtinction(0), v.getExtinction(1), v.getExtinction(2), v.getExtinction(3), v.getExtinction(4) };
+		try
+		{
+			bright = new double[]
+			{ v.getExtinction(0), v.getExtinction(1), v.getExtinction(2), v.getExtinction(3), v.getExtinction(4) };
+		} catch (JPARSECException ve)
+		{
+			throw ve;
+		}
 
 		return bright;
 	}
-}
+
+	/**
+	 * Testing program.
+	 * @param args Unused.
+	 */
+	public static void main(String args[])
+	{
+
+		double zenithAngle = 0.0;
+
+		VisualLimitFixedBrightnessData f = new VisualLimitFixedBrightnessData(Math.toRadians(180), // zenithAngleMoon
+				Math.toRadians(180), // zenithAngSun
+				Math.toRadians(180), // moonElongation // 180 = full moon
+				1000, // htAboveSeaInMeters
+				Math.toRadians(40), // latitude
+				15, // temperatureInC
+				40, // relativeHumidity
+				1998, // year
+				2 // month
+		);
+
+		// Values varying across the sky:
+		VisualLimitAngularBrightnessData a = new VisualLimitAngularBrightnessData(Math.toRadians(zenithAngle), // zenithAngle
+				Math.toRadians(50), // distMoon
+				Math.toRadians(40)); // distSun
+
+		int bandMask = 0x1F; // all five bands: 1 + 2 + 4 + 8 + 16 = 31
+
+		VisualLimit v = new VisualLimit(bandMask, f, a);
+
+		DecimalFormat nf = new DecimalFormat("0.#####E0");
+		try
+		{
+			for (int i = 0; i < BANDS; i++)
+			{
+				System.out.println("k: " + nf.format(v.getK(i)) + ", br: " + nf.format(v.getBrightness(i) / 1.11E-15) + ", ex: " + nf.format(v.getExtinction(i)));
+			}
+		} catch (JPARSECException ve)
+		{
+			JPARSECException.showException(ve);
+		}
+
+		System.out.println("Limiting magnitude: " + nf.format(v.limitingMagnitude()));
+	}
+};
+
+/**
+ * A support class for VisualLimit.
+ * <P>
+ * Holds values which vary across the sky.
+ * 
+ * @author T. Alonso Albi - OAN (Spain)
+ * @author Mark Huss
+ * @version 1.0
+ */
+class VisualLimitAngularBrightnessData
+{
+
+	/**
+	 * Constructor for an empty object.
+	 */
+	public VisualLimitAngularBrightnessData()
+	{
+		zenithAngle = 0D;
+		moonAngularDistance = 0D;
+		sunAngularDistance = 0D;
+	}
+
+	/**
+	 * Constructor of an explicit defined object.
+	 * 
+	 * @param za Zenith angle.
+	 * @param dm Angular distance of the Moon.
+	 * @param ds Angular distance of the Sun.
+	 */
+	public VisualLimitAngularBrightnessData(double za, double dm, double ds)
+	{
+		zenithAngle = za;
+		moonAngularDistance = dm;
+		sunAngularDistance = ds;
+	}
+
+	/**
+	 * The zenith angle in radians.
+	 */
+	public double zenithAngle;
+
+	/**
+	 * The lunar angular distance in radians.
+	 */
+	public double moonAngularDistance;
+
+	/**
+	 * The solar angular distance in radians.
+	 */
+	public double sunAngularDistance;
+};
+
+class VisualLimitFixedBrightnessData
+{
+
+	/**
+	 * Constructor of an empty object.
+	 */
+	public VisualLimitFixedBrightnessData()
+	{
+		moonZenithAngle = 0D;
+		sunZenithAngle = 0D;
+		moonElongation = 0D;
+		heightAboveSeaLevel = 0D;
+		latitude = 0D;
+		temperature = 0D;
+		relativeHumidity = 0D;
+		year = 0D;
+		month = 0D;
+	}
+
+	/**
+	 * Constructor of an explicit defined object.
+	 * 
+	 * @param zm Lunar zenith angle.
+	 * @param zs Solar zenith angle.
+	 * @param me Moon elongation.
+	 * @param h Height above sea level.
+	 * @param lat Latitude.
+	 * @param t Temperature.
+	 * @param rh Relative humidity.
+	 * @param y Year.
+	 * @param m Month.
+	 */
+	public VisualLimitFixedBrightnessData(double zm, double zs, double me, double h, double lat, double t, double rh,
+			double y, double m)
+	{
+		moonZenithAngle = zm;
+		sunZenithAngle = zs;
+		moonElongation = me;
+		heightAboveSeaLevel = h;
+		latitude = lat;
+		temperature = t;
+		relativeHumidity = rh;
+		year = y;
+		month = m;
+	}
+
+	/**
+	 * The lunar zenith angle in radians.
+	 */
+	public double moonZenithAngle;
+
+	/**
+	 * The solar zenith angle in radians.
+	 */
+	public double sunZenithAngle;
+
+	/**
+	 * The lunar elongation in radians.
+	 */
+	public double moonElongation;
+
+	/**
+	 * Altitude (above sea level) in meters.
+	 */
+	public double heightAboveSeaLevel;
+
+	/**
+	 * Latitude in radians.
+	 */
+	public double latitude;
+
+	/**
+	 * Temperature in degrees Celsius.
+	 */
+	public double temperature;
+
+	/**
+	 * Relative humidity, from 0 to 100.
+	 */
+	public double relativeHumidity;
+
+	/**
+	 * Year.
+	 */
+	public double year;
+
+	/**
+	 * Month.
+	 */
+	public double month;
+};

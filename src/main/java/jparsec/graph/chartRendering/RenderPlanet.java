@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- *
+ * 
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *
+ *  
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- *
+ * 
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */
+ */					
 package jparsec.graph.chartRendering;
 
 import java.util.ArrayList;
@@ -71,13 +71,13 @@ import jparsec.util.*;
  * fully accurate, so it's serves only as an approximation supposing a perfect
  * aligned telescope and a very clear atmosphere.
  * <P>
- * Models comes from Bj&ouml;rn J&oacute;nsson & David Seal <a target="_blank" href = "
- * http://maps.jpl.nasa.gov">http://maps.jpl.nasa.gov</a>. The model for
- * Mercury is from James Hastings <a target="_blank" href = "
- * http://gw.marketingden.com/planets/planets.html">http://gw.marketingden.com/planets/planets.html</a>.
+ * Models comes from Björn Jónsson & David Seal <A target="_blank" href = "
+ * http://maps.jpl.nasa.gov">http://maps.jpl.nasa.gov</A>. The model for
+ * Mercury is from James Hastings <A target="_blank" href = "
+ * http://gw.marketingden.com/planets/planets.html">http://gw.marketingden.com/planets/planets.html</A>.
  * Some models for the moons comes from Celestia software.
  * <P>
- *
+ * 
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -85,7 +85,7 @@ public class RenderPlanet
 {
 	PLANET_MAP earthMap = null;
 	boolean showDayAndNight = true;
-
+	
 	boolean renderingSky = false;
 	String motherBody = null;
 	double northAngle = 0;
@@ -97,7 +97,7 @@ public class RenderPlanet
 	int texture_step;
 	int hugeFactor = 0;
 	float upperLimbFactor = 1f, lowerLimbFactor = 1f, cenitAngle = 0;
-
+	
 	private float satX[] = new float[0];
 	private float satY[] = new float[0];
 	private float satZ[] = new float[0];
@@ -117,8 +117,8 @@ public class RenderPlanet
 	private static Graphics lastRender;
 	private static float lastPosX, lastPosY;
 	private static float lastScale;
-
-
+	
+	
 	/**
 	 * Render object that holds render parameters.
 	 */
@@ -130,12 +130,12 @@ public class RenderPlanet
 	public float xPosition, yPosition;
 	/** True to simulate Earth illuminating Moon's dark side. */
 	public boolean illuminateMoonByEarth = true;
-
+	
 	private float planet_size = 0, scaleFactor = 1.0f;
 	private RenderSky renderSky;
 	private static double[] isatOrdered = null;
 	static boolean repaint = false;
-
+	
 	/**
 	 * This variable holds how many times the size of the rendering window
 	 * is increased to calculate the output image (reduced by the same amount
@@ -149,7 +149,7 @@ public class RenderPlanet
 	 */
 	public static float MAXIMUM_TEXTURE_QUALITY_FACTOR = 1.5f;
 	/**
-	 * True to allow using an spline technique (in case the instance of
+	 * True to allow using an spline technique (in case the instance of 
 	 * {@linkplain Graphics} supports it) to resize the image in high
 	 * quality mode. Default value is false, which gives better (besides
 	 * much faster) results when the background is white, for instance. It is
@@ -162,7 +162,7 @@ public class RenderPlanet
 	 * This flag allows to force the background color to white before applying
 	 * some scaling operations to the rendering, allowing for better output
 	 * quality in case the desired background is white. In this case, set this
-	 * flag to true and the background color to black. This has no effect in
+	 * flag to true and the background color to black. This has no effect in 
 	 * case anaglyph mode is selected.
 	 */
 	public static boolean FORCE_WHITE_BACKGROUND = false;
@@ -177,7 +177,7 @@ public class RenderPlanet
 	 * value for this flag is false.
 	 */
 	public static boolean FORCE_HIGHT_QUALITY = false;
-
+	
 	static double geodeticToGeocentric(double equatorial_radius, double polar_radius, double lat0) throws JPARSECException
 	{
 		// Get ellipsoid
@@ -233,7 +233,7 @@ public class RenderPlanet
 	}
 
 	void refractionCorrection(EphemerisElement eph, ObserverElement obs, float angr) throws JPARSECException {
-		// Rude correction for refraction in certain cases
+		// Rude correction for refraction in certain cases 
 		// Planets are also enabled since satellites are positioned using their apparent elevations.
 		// This method is called from RenderSky for sky rendering, but not for planetary rendering alone
 //		if (eph.targetBody == TARGET.SUN || eph.targetBody == TARGET.Moon) {
@@ -252,17 +252,17 @@ public class RenderPlanet
 //			lowerLimbFactor = 1f;
 //		}
 	}
-
+	
 	private Object[] readRingTexture(Graphics g, String s, int r) {
 		boolean unlit = false;
 		if (FastMath.sign(render.ephem.positionAngleOfPole) != FastMath.sign(render.ephem.subsolarLatitude)) unlit = true;
-
+		
 		Object img = null, rings2 = null;
 		boolean newModel = true;
 		int desiredW = (int)((r/100.0)+0.5)*100;
 		if (desiredW < 100) desiredW = 100;
 		g.disableInversion();
-
+		
 		if (render.target == TARGET.SATURN) {
 			if (newModel) {
 				Object back = null, forw = null;
@@ -283,7 +283,7 @@ public class RenderPlanet
 				back = g.getScaledImage(back, desiredW, 33, false, true);
 				color = g.getScaledImage(color, desiredW, 33, false, true);
 				rings2 = g.getScaledImage(rings2, desiredW, 33, false, true);
-
+				
 				img = g.cloneImage(back);
 				int size[] = g.getSize(img);
 				for (int x=0;x<size[0]; x++) {
@@ -294,7 +294,7 @@ public class RenderPlanet
 					int ba = g.getRGB(back, x, 30);
 					double cba = g.getGreen(ba) / 255.0;
 					double bag = (Math.pow(cba, gamma) * 255.0);
-
+					
 					// Correct for phase angle
 					if (forw != null) {
 						int fa = g.getRGB(forw, x, 30);
@@ -302,7 +302,7 @@ public class RenderPlanet
 						double fag = (Math.pow(cfa, gamma) * 255.0);
 						bag = bag + (fag - bag) * Math.min(1.0, Math.abs(render.ephem.phaseAngle/0.78)/Math.PI); // 140 deg should be maximum value according to Bjorn Johnsson
 					}
-
+					
 					int ocr = offset + (int)(cr*bag);
 					int ocg = offset + (int)(cg*bag);
 					int ocb = offset + (int)(cb*bag);
@@ -316,8 +316,8 @@ public class RenderPlanet
 					int c = g.getColor();
 					for (int y=0;y<size[1]; y++) {
 						g.setRGB(img, x, y, c);
-					}
-
+					}						
+					
 					double tr = (0xff & (g.getRGB(rings2,x, 30) >> 8)) / 255.0;
 					int transp = (int)(Math.pow(tr, gamma) * 255.0);
 					transp = 192-((128-transp)*4)/3;
@@ -326,8 +326,8 @@ public class RenderPlanet
 					g.setColor(transp, transp, transp, 255);
 					c = g.getColor();
 					for (int y=0;y<size[1]; y++) {
-						g.setRGB(rings2, x, y, c);
-					}
+						g.setRGB(rings2, x, y, c);						
+					}						
 				}
 				g.enableInversion();
 				return new Object[] {img, rings2};
@@ -341,7 +341,7 @@ public class RenderPlanet
 						double cr = g.getRed(ca);
 						double cg = g.getGreen(ca);
 						double cb = g.getBlue(ca);
-
+						
 						double tr = 1.0 - (0xff & (g.getRGB(rings2,x, 30) >> 8)) / 255.0;
 						cr *= tr;
 						cg *= tr;
@@ -349,8 +349,8 @@ public class RenderPlanet
 						g.setColor((int)cr, (int)cg, (int)cb, 255);
 						int c = g.getColor();
 						for (int y=0;y<size[1]; y++) {
-							g.setRGB(img, x, y, c);
-						}
+							g.setRGB(img, x, y, c);						
+						}						
 					}
 				}
 			}
@@ -365,7 +365,7 @@ public class RenderPlanet
 					double cr = g.getRed(ca);
 					double cg = g.getGreen(ca);
 					double cb = g.getBlue(ca);
-
+					
 					double tr = 1.0 - (0xff & (g.getRGB(rings2,x, 30) >> 8)) / 255.0;
 					cr *= tr;
 					cg *= tr;
@@ -373,8 +373,8 @@ public class RenderPlanet
 					g.setColor((int)cr, (int)cg, (int)cb, 255);
 					int c = g.getColor();
 					for (int y=0;y<size[1]; y++) {
-						g.setRGB(img, x, y, c);
-					}
+						g.setRGB(img, x, y, c);						
+					}						
 				}
 			}
 		}
@@ -401,12 +401,12 @@ public class RenderPlanet
 				Logger.log(LEVEL.ERROR, "Could not remove rings textures from memory.");
 			}
 		}
-*/
+*/		
 	}
 
 	private void renderAxes(Graphics g, float posx, float posy, int r, double incl_north, double incl_up, double refz, float scaleFactor) {
 		if (render.axes && r > 0)
-		{
+		{		
 			double dx0 = (double) (r + 2.0*scaleFactor) * FastMath.cos((Constant.PI_OVER_TWO - incl_up));
 			double dy0 = (double) (r + 2.0*scaleFactor) * FastMath.sin((Constant.PI_OVER_TWO - incl_up));
 			double dx = (r + 15.0*scaleFactor) * FastMath.cos((Constant.PI_OVER_TWO - incl_up));
@@ -440,7 +440,7 @@ public class RenderPlanet
 	}
 
 	private void renderRings(Graphics g, int r, boolean dubois, float scale, double diameter, double oblateness,
-			double refz, int backgroundCol, double posx, double posy, double subslat,
+			double refz, int backgroundCol, double posx, double posy, double subslat, 
 			double dlon, double incl_up, double incl_pole, double distCenter, double timesOut,
 			boolean onPlanet, boolean behindPlanet, boolean shadow) {
 		// Draw planetary rings with textures
@@ -483,16 +483,16 @@ public class RenderPlanet
 					images.set(index+1,  rings2);
 				}
 			}
-*/
+*/			
 			int size[] = g.getSize(img);
 			int texture_width = size[0];
 
 			double km2pix = scale * 2.0 / diameter;
 			double rr1 = ring_radius[render.target.ordinal() - TARGET.SATURN.ordinal()][0] * km2pix;
 			double rr2 = ring_radius[render.target.ordinal() - TARGET.SATURN.ordinal()][pz-1] * km2pix;
-			//double rrDispersion = 0;
+			//double rrDispersion = 0; 
 			//if (render.target == TARGET.SATURN) rrDispersion = km2pix * 136800;
-
+			
 			// Draw the shadow of the rings on the surface of Saturn
 			Object screenCopy = g.cloneImage(g.getImage(0,0,g.getWidth(),g.getHeight())); //(int)(posx-r), (int)(posy-r), (int)(2*r+1), (int)(2*r+1)));
 			boolean visible = true;
@@ -522,19 +522,19 @@ public class RenderPlanet
 							double zpx = rr3 * FastMath.cos(alfa) / r;
 							zpz = rr3 * FastMath.sin(alfa) / r;
 							double zpy = 0;
-
+	
 							// Get position from Sun starting from coordinates respect planet equator
 							double[] pos = fromPlanetEquatorToFromOtherDirection(new double[] {zpx, zpy, zpz}, 0, subslat);
 							if (Math.abs(pos[0]) > 1.0 || Math.abs(pos[1]) > 1.0) continue;
 							if (pos[2] < 0) continue;
-
+	
 							// Project into planet surface and go to vision from observer
 							pos[2] = Math.sqrt(1.0 - pos[0]*pos[0]-pos[1]*pos[1]*oblateness2);
 							pos = fromPlanetEquatorToFromOtherDirection(pos, 0, -subslat);
 							//double projectionDist = Math.abs(pos[1]);
 							pos = fromPlanetEquatorToFromOtherDirection(pos, dlon, incl_pole);
 							if (pos[2] < 0) continue;
-
+							
 							double Zx = pos[0]*r, Zy = pos[1]*r;
 							double rr = (Zx * Zx + Zy * Zy);
 							if (rr > r2) continue;
@@ -546,11 +546,11 @@ public class RenderPlanet
 							dy = posy + Zy;
 							dx = (int) (dx+0.5);
 							dy = (int) (dy+0.5);
-
+	
 							if (isInTheScreen(dx, dy, 0)) {
 								if (!dubois && (g.getRGB((int) dx, (int) dy) == backgroundCol || g.getRGB((int) dx, (int) dy) != g.getRGB(screenCopy, (int) dx, (int) dy))) continue;
 								float dist = getDist(pos[2], refz);
-
+								
 								if (!dubois) {
 									//g.setColor(0, 0, 0, transp);
 									//g.fillOval((int)dx, (int)dy, 1, 1);
@@ -561,7 +561,7 @@ public class RenderPlanet
 									int red3 = 0xff & (my_color_old >> 16);
 									int green3 = 0xff & (my_color_old >> 8);
 									int blue3 = 0xff & my_color_old;
-
+									
 /*									if (render.target == TARGET.SATURN && rr3 < rrDispersion) {
 										float brightnessFactor = 0.25f + (red3 + green3 + blue3) / (255f);
 										red3 += (int) (projectionDist * 36.0 * brightnessFactor);
@@ -571,14 +571,14 @@ public class RenderPlanet
 										if (green3 > 255) green3 = 255;
 										if (blue3 > 255) blue3 = 255;
 									}
-*/
+*/									
 									// Apply simple illumination model: final
 									// planet color = original background *
 									// transparency
 									int red4 = (int) (red3 * (1.0 - transp2));
 									int green4 = (int) (green3 * (1.0 - transp2));
 									int blue4 = (int) (blue3 * (1.0 - transp2));
-
+	
 									// Compound RGB color
 									g.setColor(red4, green4, blue4, 255);
 									drawPoint(dx, dy, dist, true, g, dubois);
@@ -598,7 +598,7 @@ public class RenderPlanet
 											my_color_old = g.getRGB(screenCopy, ii, jj);
 										}
 		//							}
-
+		
 									// If planet exists here, then apply transparency
 									if (pos[2] >= 0)
 									{
@@ -623,7 +623,7 @@ public class RenderPlanet
 										int red4 = (int) (red3 * (1.0 - transp2));
 										int green4 = (int) (green3 * (1.0 - transp2));
 										int blue4 = (int) (blue3 * (1.0 - transp2));
-
+		
 										// Compound RGB color
 										g.setColor(red4, green4, blue4, 255);
 										drawPoint(dx, dy, dist, true, g, dubois);
@@ -634,15 +634,15 @@ public class RenderPlanet
 					}
 					screenCopy = g.cloneImage(g.getImage(0,0,g.getWidth(),g.getHeight())); //(int)(posx-r), (int)(posy-r), (int)(2*r+1), (int)(2*r+1)));
 				}
-
+				
 				// Draw the rings with textures after the shadows
 				if (!onPlanet && !behindPlanet) return;
-
+				
 				int red3 = g.getRed(render.background);
 				int green3 = g.getGreen(render.background);
 				int blue3 = g.getBlue(render.background);
-
-				//double planetBorder = (1.0+1.0/r);
+				
+				//double planetBorder = (1.0+1.0/r); 
 				double dxr = 0.0, posr2 = 0.0;
 				int my_color = 0, my_color2 = 0;
 				Object screenCopy2 = null;
@@ -675,7 +675,7 @@ public class RenderPlanet
 					//double halfrr3 = rr3 * 0.5, frr3 = rr3 * 0.75;
 					for (double alfa = alpha0; alfa < alpha1; alfa = alfa + dalfa)
 					{
-						double zpx = rr3 * FastMath.cos(alfa);
+						double zpx = rr3 * FastMath.cos(alfa);				
 	/*					if (accelerate) {
 							if (Math.abs(zpx) > frr3) {
 								alfa += dalfa * 0.75;
@@ -685,20 +685,20 @@ public class RenderPlanet
 						}
 	*/					zpz = rr3 * FastMath.sin(alfa);
 						double zpy = 0;
-
+	
 						double[] pos = fromPlanetEquatorToFromOtherDirection(new double[] {zpx, zpy, zpz}, 0, subslat);
 						if (render.target == TARGET.SATURN) shadowDist = Math.sqrt((pos[0] * pos[0] + pos[1] * pos[1] / oblateness2)) / r;
-
+						
 						visible = pos[2] > 0;
 						if (!visible) {
 							double posr = (pos[0] * pos[0] + pos[1] * pos[1] / oblatenessSun2);
 							if (posr > r2) visible = true;
 						}
-
+	
 						pos = fromPlanetEquatorToFromOtherDirection(new double[] {zpx, zpy, zpz}, dlon, incl_pole);
 						double posr = (pos[0] * pos[0] + pos[1] * pos[1] / oblateness2);
 						if (!dubois && pos[2] < 0 && posr < r2*0.8) continue;
-
+	
 						double Zx = pos[0], Zy = pos[1];
 						double ang = FastMath.atan2_accurate(Zy, Zx);
 						double rr = FastMath.hypot(Zx, Zy); //Math.sqrt(Zx * Zx + Zy * Zy);
@@ -706,7 +706,7 @@ public class RenderPlanet
 						double ZZy = rr * FastMath.sin(ang - incl_up);
 						dx = posx + ZZx;
 						dy = posy + ZZy;
-
+						
 						if (isInTheScreen(dx, dy, 0))
 						{
 							// FIXME
@@ -725,7 +725,7 @@ public class RenderPlanet
 								} else {
 									dalfa = dalfa0;
 								}
-
+								
 								double ddx = (0.5f + dist - render.anaglyphMode.getReferenceZ()) * render.anaglyphMode.getEyeSeparation();
 								if (render.telescope.invertHorizontal) ddx = -ddx;
 								dxr = dx + ddx - posx;
@@ -736,7 +736,7 @@ public class RenderPlanet
 								double yd = rrd * FastMath.sin(ang + incl_up);
 								double rrr2 = FastMath.hypot(xd, yd/oblateness); // Math.sqrt(xd*xd + yd*yd / oblateness2);
 								posr2 = rrr2 / r;
-
+	
 								dxr = dx - ddx - posx;
 								rrd = FastMath.hypot(dxr, dyr); //Math.sqrt(dxr * dxr + dyr*dyr);
 								ang = FastMath.atan2_accurate(dyr, dxr);
@@ -748,7 +748,7 @@ public class RenderPlanet
 							} else {
 								posr = Math.sqrt(posr) / r;
 							}
-
+							
 							// Get pixel color
 							int ii = (int) (ZZx + posx); //r);
 							int jj = (int) (ZZy + posy); //r);
@@ -766,8 +766,8 @@ public class RenderPlanet
 									my_color = g.getRGB(screenCopy, ii, jj);
 								}
 	//						}
-
-
+	
+							
 							// eliminate possible background stars in the dark region of the Saturn rings
 							if (!visible) { // Region of the rings in shadow
 								my_color = backgroundCol;
@@ -780,7 +780,7 @@ public class RenderPlanet
 										} else {
 											g.setColor(my_color, transp);
 										}
-										g.fillOvalAnaglyphLeft((float)dx, (float)dy, -1.0f, -1.0f, dist);
+										g.fillOvalAnaglyphLeft((float)dx, (float)dy, -1.0f, -1.0f, dist);									
 									}
 									if (isInTheScreen(dxr, dy, 0)) {
 										if (posr2 > 0.99 && (posr2> 1.0+0.5/r || (g.getRGBRight((int) dx, (int) dy, dist) == backgroundCol)) || pos[2] > 0) {
@@ -791,7 +791,7 @@ public class RenderPlanet
 												g.setColor(my_color2, transp);
 											}
 											g.setColor(my_color2, transp);
-											g.fillOvalAnaglyphRight((float)dx, (float)dy, -1.0f, -1.0f, dist);
+											g.fillOvalAnaglyphRight((float)dx, (float)dy, -1.0f, -1.0f, dist);									
 										}
 									}
 								} else {
@@ -818,7 +818,7 @@ public class RenderPlanet
 								}
 								continue;
 							}
-
+							
 							// Operate the color
 							if (posr > 0.99 && (posr> 1.0+0.5/r || ((!dubois && rgb0 == backgroundCol) || (dubois && g.getRGBLeft((int) dx, (int) dy, dist) == backgroundCol))) || pos[2] > 0)
 							{
@@ -827,10 +827,10 @@ public class RenderPlanet
 								red3 = 0xff & (my_color >> 16);
 								green3 = 0xff & (my_color >> 8);
 								blue3 = 0xff & my_color;
-
+	
 								// Apply illumination model for rings:
 								// final color = ring color * opacity +
-								// background * transparency
+								// background * transparency 
 								// I also add a term which computes the sun
 								// inclination above rings
 								int red4 = (int) ((red * transp2 + red3 * (1.0 - transp2)));
@@ -839,7 +839,7 @@ public class RenderPlanet
 								if (red4 > 254) red4 = 254;
 								if (green4 > 254) green4 = 254;
 								if (blue4 > 254) blue4 = 254;
-
+	
 								// Draw
 								g.setColor(red4, green4, blue4, 255); //190 + (int)(transp2 * 64));
 								if (dubois) {
@@ -855,7 +855,7 @@ public class RenderPlanet
 								red3 = 0xff & (my_color2 >> 16);
 								green3 = 0xff & (my_color2 >> 8);
 								blue3 = 0xff & my_color2;
-
+	
 								// Apply illumination model for rings:
 								// final color = ring color * opacity +
 								// background * transparency
@@ -867,7 +867,7 @@ public class RenderPlanet
 								if (red4 > 254) red4 = 254;
 								if (green4 > 254) green4 = 254;
 								if (blue4 > 254) blue4 = 254;
-
+	
 								// Draw
 								g.setColor(red4, green4, blue4, 255);
 								g.fillOvalAnaglyphRight((float)dx, (float)dy, 1.1f, 1.1f, dist);
@@ -875,9 +875,9 @@ public class RenderPlanet
 						} else {
 							if (r > rlim) { // acelerate rings for very high zoom
 								double rx = 0, ry = 0;
-								if (dx > render.width*scaleFactor) rx = dx - render.width*scaleFactor;
-								if (dx < 0) rx = -dx;
-								if (dy > render.height*scaleFactor) ry = dy - render.height*scaleFactor;
+								if (dx > render.width*scaleFactor) rx = dx - render.width*scaleFactor; 
+								if (dx < 0) rx = -dx; 
+								if (dy > render.height*scaleFactor) ry = dy - render.height*scaleFactor; 
 								if (dy < 0) ry = -dy;
 								double d = FastMath.hypot(rx, ry)/r; //Math.sqrt(rx*rx+ry*ry)/r;
 								alfa = alfa + d * Constant.PI_OVER_SIX;
@@ -898,11 +898,11 @@ public class RenderPlanet
 			if (render.target == TARGET.SATURN) pz = 7;
 			// Approximate y/x relative factor
 			double a00 = oblateness * oblateness * Math.abs(FastMath.sin(render.ephem.positionAngleOfPole));
-			double r2 = r * r;
+			double r2 = r * r; 
 			for (int i = 1; i <= pz; i++)
 			{
 				double rr1 = (double) ring_radius[render.target.ordinal() - TARGET.SATURN.ordinal()][i-1] * (double) r * 2.0 / (double) diameter;
-				double tmp = 0;
+				double tmp = 0; 
 				double alfaStep = Math.PI / (rr1 * 4.0);
 				if (alfaStep < Math.PI / 50.0) alfaStep = Math.PI / 50.0;
 				float olddx=-1, olddy=-1,olddz = -1;
@@ -923,7 +923,7 @@ public class RenderPlanet
 							double dz = Math.sqrt(rr1*rr1-rr*rr)/r;
 							if (FastMath.sign(incl_pole) != FastMath.sign(zpy)) dz = -dz;
 							if (olddx >=0 && olddy >= 0)
-								g.drawLine((float) dx, (float) dy, olddx, olddy, getDist(dz, refz), getDist(olddz, refz));
+								g.drawLine((float) dx, (float) dy, olddx, olddy, getDist(dz, refz), getDist(olddz, refz));								
 							olddx = (float) dx;
 							olddy = (float) dy;
 							olddz = (float) dz;
@@ -931,14 +931,14 @@ public class RenderPlanet
 							olddx = olddy = olddz = -1;
 						}
 					} else {
-						olddx = olddy = olddz = -1;
+						olddx = olddy = olddz = -1;						
 					}
 				}
 			}
 		}
 	}
-
-	private void drawPlanetGrid(Graphics g, double incl_rotation, double incl_pole, double incl_up,
+	
+	private void drawPlanetGrid(Graphics g, double incl_rotation, double incl_pole, double incl_up, 
 			float scale, int r, double oblateness, float posx, float posy, boolean dubois, double refz) throws JPARSECException {
 		// Draw planet without textures
 		double x1 = FastMath.cos(incl_rotation) * FastMath.cos(incl_pole);
@@ -965,7 +965,7 @@ public class RenderPlanet
 				g.setColor(render.foreground, false);
 				g.drawOval(posx + (float) dx - 3, posy + (float) dy - 3, 6, 6, true);
 			}
-
+			
 		}
 
 		// White if it is above horizon, blue otherwise
@@ -1007,7 +1007,7 @@ public class RenderPlanet
 			do
 			{
 				b = b + piOver36;
-
+				
 				// Rotate into the sphere
 				double u = LocationElement.getApproximateAngularDistance(new LocationElement(a, Constant.PI_OVER_TWO - b, 1.0), loc0);
 				double b1 = b; //RenderPlanet.geocentricToGeodetic(render.target.equatorialRadius, render.target.polarRadius, b);
@@ -1016,7 +1016,7 @@ public class RenderPlanet
 				double w = scale * (FastMath.cos(b1) * FastMath.cos(b0) + FastMath.sin(b1) * FastMath.sin(b0) * FastMath.sin(a + a0)) * oblateness;
 				double e = FastMath.hypot(q, w);
 				if (e > 500) {
-					t = FastMath.atan2_accurate(w, q);
+					t = FastMath.atan2_accurate(w, q);					
 				} else {
 					t = FastMath.atan2(w, q);
 				}
@@ -1027,17 +1027,17 @@ public class RenderPlanet
 				if (u <= (Constant.PI_OVER_TWO) && b >= 0.0)
 				{
 					double z = 0;
-
+					
 					// Draw properly
 					if (started && nn > 0 && b > piOver32 && pV)
 					{
 						float yp0 = posy - (float)w, yp1 = posy - previous_y[nn];
-
+						
 						if (!dubois) {
 							if (hq) {
 								g.drawLine(posx + (float)q, yp0, posx + previous_x[nn], yp1, true);
 							} else {
-								g.drawStraightLine(posx + (float)q, yp0, posx + previous_x[nn], yp1);
+								g.drawStraightLine(posx + (float)q, yp0, posx + previous_x[nn], yp1);								
 							}
 						} else {
 							z = Math.sqrt(r2 - e * e);
@@ -1048,17 +1048,17 @@ public class RenderPlanet
 							} else {
 								g.drawStraightLine(posx + (float)q, yp0, posx + previous_x[nn],
 										yp1, getDist(z/r, refz), getDist(prev_z/r, refz));
-
+								
 							}
 						}
 							double longit = a + a0 + incl_rotation - Constant.PI_OVER_TWO;
 							if (render.target == TARGET.Moon || render.target == TARGET.SUN || render.target == TARGET.MERCURY || render.target == TARGET.VENUS || render.target == TARGET.EARTH)
 								longit = -a - a0 + incl_rotation + Constant.PI_OVER_TWO;
 							int deg = (int) (Functions.normalizeDegrees(longit * Constant.RAD_TO_DEG + 1));
-							deg = 10 * (deg / 10);
+							deg = 10 * (int) (deg / 10);
 							if (Math.abs(b - Constant.PI_OVER_TWO) < piOver36*0.5 && deg % 20 == 0 && r > 100*dpi)
 							{
-								String label = "" + deg+"\u00ba";
+								String label = "" + deg+"º";
 								if (render.showLabels) g.drawString(label, posx + (int) q, posy - (int) w, getDist(z/r, refz));
 							}
 					}
@@ -1071,7 +1071,7 @@ public class RenderPlanet
 							if (hq) {
 								g.drawLine(posx + (float)q, yp0, posx + previous_x[nn + 1], yp1, true);
 							} else {
-								g.drawStraightLine(posx + (float)q, yp0, posx + previous_x[nn + 1], yp1);
+								g.drawStraightLine(posx + (float)q, yp0, posx + previous_x[nn + 1], yp1);								
 							}
 						} else {
 							z = Math.sqrt(r2 - e * e);
@@ -1093,7 +1093,7 @@ public class RenderPlanet
 			} while (b <= (Math.PI * 0.92));
 		} while (a <= (Constant.TWO_PI));
 	}
-
+	
 	private static boolean similarRenders(PlanetRenderElement ere, PlanetRenderElement ere2)
 	{
 		if (ere == null) {
@@ -1124,7 +1124,7 @@ public class RenderPlanet
 		//if (ere.highQuality != ere2.highQuality) equals = false;
 
 		if (ere2.moonephem == null || ere.moonephem == null) {
-			if (ere.moonephem != null || ere2.moonephem != null) equals = false;
+			if (ere.moonephem != null || ere2.moonephem != null) equals = false; 
 		} else {
 			if (ere2.moonephem.length == ere.moonephem.length)
 			{
@@ -1143,10 +1143,10 @@ public class RenderPlanet
 
 		return equals;
 	}
-
+	
 	/**
 	 * Renderize a planet.
-	 *
+	 * 
 	 * @param gg Graphics object.
 	 * @throws JPARSECException Thrown if the calculation fails.
 	 */
@@ -1158,7 +1158,7 @@ public class RenderPlanet
 		double field = render.telescope.getField() * Constant.RAD_TO_ARCSEC;
 		float scale = (float) (render.width * render.ephem.angularRadius * Constant.RAD_TO_ARCSEC / field), scale0 = scale;
 		int r = (int) scale;
-
+		
 		boolean hq = render.highQuality && render.textures;
 		if (!RenderPlanet.FORCE_HIGHT_QUALITY && field > 3600 && hq == true && RenderPlanet.MAXIMUM_TEXTURE_QUALITY_FACTOR > 1) hq = false;
 
@@ -1170,11 +1170,11 @@ public class RenderPlanet
 				}
 			}
 		}
-*/
+*/		
 		repaint = false;
-		if ((field < 3600 || scale > 2) && render.textures && render.target != TARGET.SUN && renderingSky && lastRenderElement != null &&
-				similarRenders(lastRenderElement, render) &&
-				lastScale >= scale && lastScale > 2) {
+		if ((field < 3600 || scale > 2) && render.textures && render.target != TARGET.SUN && renderingSky && lastRenderElement != null && 
+				similarRenders(lastRenderElement, render) && 
+				lastScale >= scale && lastScale > 2) { 
 			repaint = true;
 			if (lastScale > scale && (lastScale*2 > render.width || lastScale*2 > render.height)) repaint = false;
 		}
@@ -1195,7 +1195,7 @@ public class RenderPlanet
 			if (repaint || fastGridAndBye || scale <= 2) { // *
 				g = gg;
 			} else {
-				g = gg.getGraphics();
+				g = gg.getGraphics();			
 				g.setFont(gg.getFont());
 			}
 		}
@@ -1248,11 +1248,11 @@ public class RenderPlanet
 		incl_pole = RenderPlanet.geodeticToGeocentric(render.target.equatorialRadius, render.target.polarRadius, incl_pole);
 		double subslat = render.ephem.subsolarLatitude;
 		subslat = RenderPlanet.geodeticToGeocentric(render.target.equatorialRadius, render.target.polarRadius, subslat);
-
+		
 		double dlon = -(render.ephem.subsolarLongitude - render.ephem.longitudeOfCentralMeridian);
 		double dlat = -(subslat - incl_pole);
 		if (render.target.isPlanet() && render.target.ordinal() >= TARGET.JUPITER.ordinal() && render.target.ordinal() <= TARGET.NEPTUNE.ordinal()) {
-			dlon = (render.ephem.subsolarLongitude - render.ephem.longitudeOfCentralMeridianSystemIII);
+			dlon = (render.ephem.subsolarLongitude - render.ephem.longitudeOfCentralMeridianSystemIII);			
 		}
 
 		// Set initial shape and size parameters
@@ -1262,11 +1262,11 @@ public class RenderPlanet
 		float posy = (int) (yPosition * scaleFactor);
 		double refz = render.anaglyphMode.getReferenceZ();
 		planet_size = scale;
-
+		
 		double screenRadiusX = render.width*scaleFactor*0.5;
 		double screenRadiusY = render.height*scaleFactor*0.5;
 		double screenRadiusMax = (screenRadiusX + screenRadiusY)*0.5;
-		double distCenterX = Math.abs(1-posx/screenRadiusX), distCenterY = Math.abs(1-posy/screenRadiusY);
+		double distCenterX = Math.abs(1-posx/screenRadiusX), distCenterY = Math.abs(1-posy/screenRadiusY); 
 		double distCenter = Math.min(distCenterX, distCenterY);
 		if (distCenter < 1.0) distCenter = Math.max(distCenterX, distCenterY);
 		double timesOut = 0;
@@ -1304,7 +1304,7 @@ public class RenderPlanet
 
 			Object img = lastRender.getRendering();
 			//if (imgScale != 1.0f) img = g.getScaledImage(img, (int)(g.getWidth(img)*imgScale), (int)(g.getHeight(img)*imgScale), true, ALLOW_SPLINE_RESIZING);
-
+			
 			int s = 2+(int)(scale0+1);
 			if (render.target == TARGET.SATURN || render.target == TARGET.URANUS || render.target == TARGET.NEPTUNE) s*=4;
 			int cl[] = gg.getClip();
@@ -1332,16 +1332,16 @@ public class RenderPlanet
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-
+			
 			this.renderAxes(gg, posx, posy, r, incl_north, incl_up, refz, 1);
-
+			
 			return;
 		}
-
+		
 		// Render everything
 		isatOrdered = null;
 		double dx, dy;
-
+		
 		// Draw background unless we are rendering the sky
 		g.setColor(this.render.background, false);
 		if (!renderingSky)
@@ -1349,16 +1349,16 @@ public class RenderPlanet
 		int backgroundCol = g.getColor();
 		boolean dubois = render.anaglyphMode.isReal3D();
 		boolean ih = render.telescope.invertHorizontal, iv = render.telescope.invertVertical;
-
+			
 		// Renderize planet
 		g.setColor(render.foreground, false);
 		int br = g.getRed(render.background), bg = g.getGreen(render.background), bb = g.getBlue(render.background);
 		if (r < 2 && !fastGridAndBye) fastGridAndBye = true;
-		if (((r > render.width && !render.highQuality && !RenderPlanet.FORCE_HIGHT_QUALITY) ||
+		if (((r > render.width && !render.highQuality && !RenderPlanet.FORCE_HIGHT_QUALITY) || 
 				(r > render.width/1.5 && g.renderingToAndroid())) && render.textures && !fastGridAndBye) fastGridAndBye = true;
 		if (!fastGridAndBye && render.textures && r > 2 && render.target != TARGET.SUN)
 		{
-//			if (ringsTexturesVisible)
+//			if (ringsTexturesVisible) 
 //				this.renderRings(g, r, dubois, scale, diameter, oblateness, refz, backgroundCol, posx, posy, subslat, dlon, incl_up, incl_pole, distCenter, timesOut, false, true, false);
 
 			// Get the texture
@@ -1367,7 +1367,7 @@ public class RenderPlanet
 			Object img = null, img2 = null;
 //			if (index < 0) {
 				if (render.target == TARGET.EARTH && earthMap != null && earthMap.EarthMapSource != null) {
-					img = g.getImage(earthMap.EarthMapSource);
+					img = g.getImage(earthMap.EarthMapSource);					
 				} else {
 					img = g.getImage(FileIO.DATA_TEXTURES_DIRECTORY + s + ".jpg");
 				}
@@ -1386,17 +1386,17 @@ public class RenderPlanet
 			} else {
 				img = images.get(index);
 			}
-*/
+*/			
 			int texture_width = size[0];
 			int texture_height = size[1];
-
+			
 			// Obtain sun illumination position
 			double dr = (double) r * Math.abs(FastMath.sin(render.ephem.phaseAngle));
 			double sun_x = posx + dr * FastMath.cos((-Constant.PI_OVER_TWO - render.ephem.brightLimbAngle + incl_north));
 			double sun_y = posy + dr * FastMath.sin((-Constant.PI_OVER_TWO - render.ephem.brightLimbAngle + incl_north));
 			double sun_z = -r * Math.abs(FastMath.cos(render.ephem.phaseAngle));
 			if (phase < 0.5) sun_z = -sun_z;
-
+ 
 			texture_step = texture_height / (4 * r);
 			if (texture_step < 1) texture_step = 1;
 
@@ -1437,8 +1437,8 @@ public class RenderPlanet
 			double r2 = r * r;
 			double thpi = (th-1.0) / Math.PI;
 			double sinp = Math.sin(incl_pole), cosp = Math.cos(incl_pole);
-
-			if (planetVisible)
+			
+			if (planetVisible) 
 			{
 				int white = ((255&0x0ff)<<24)|((255&0x0ff)<<16)|((255&0x0ff)<<8)|(255&0x0ff);
 				float SaturnLimbFactor = 0.95f;
@@ -1451,7 +1451,7 @@ public class RenderPlanet
 							dx = i - posx;
 							dy = posy - j;
 							double dxdy2 = dx * dx + dy * dy;
-
+		
 							if (dxdy2 <= r2) {
 								// Obtain planetographic position
 								double rr = Math.sqrt(dxdy2)/r;
@@ -1463,7 +1463,7 @@ public class RenderPlanet
 								if (dxdy2 <= 1.0)
 								{
 									double tmp = dxdy2;
-
+									
 									double dz = Math.sqrt(1.0 - dxdy2);
 									double tmp2 = dy * sinp + dz * cosp;
 									dy = dy * cosp - dz * sinp;
@@ -1472,7 +1472,7 @@ public class RenderPlanet
 									double lon = a0minus2pi - lat;
 									if (lon < 0.0) lon += Constant.TWO_PI;
 									lat = Math.asin(-dy / Math.sqrt(dx * dx + dy * dy + dz * dz));
-
+	
 									int jindex = (int)(0.5+(Constant.PI_OVER_TWO - lat) * thpi);
 									int iindex = (int)(0.5+lon*tw2pi);
 									if (iindex >= tw) iindex -= tw;
@@ -1488,12 +1488,12 @@ public class RenderPlanet
 							    		c = 255<<24 | red<<16 | green<<8 | blue;
 									}
 									setPixel(i, j, c, white, sun_x, sun_y, sun_z, dz0, r2, br, bg, bb, g, render.target, img2, iindex, jindex);
-
+	  
 									// Save pixel for later use if we have to apply transparency
 									// effects on rings
 									float d = getDist(dz0/r, refz);
 									drawPoint(i, j, d, true, g, dubois);
-
+		
 									if (r > 7 && doit && !g.renderingToAndroid()) {
 										tmp = Math.sqrt(tmp);
 										if (first) {
@@ -1523,7 +1523,7 @@ public class RenderPlanet
 											setPixel(i-1, j, c, white, sun_x, sun_y, sun_z, oldz, r2, br, bg, bb, g, render.target, img2, oldi, oldj);
 											float z = getDist(oldz/r, refz);
 											drawPoint(i-1, j, z, true, g, dubois);
-
+											
 /*											if (dubois && render.anaglyphMode.getEyeSeparation() > 1) {
 												if (g.getRGBLeft((int)i-2, (int)j, z) == backgroundCol)
 													g.fillOvalAnaglyphLeft(i-2, j, 1, 1, z);
@@ -1534,7 +1534,7 @@ public class RenderPlanet
 												if (g.getRGBRight((int)i, (int)j, z) == backgroundCol)
 													g.fillOvalAnaglyphRight(i, j, 1, 1, z);
 											}
-*/
+*/											
 											double ntmp = tmp + (tmp-oldtmp);
 											if (tmp < 1.0 && ntmp > 1.0) {
 												doit = false;
@@ -1550,16 +1550,16 @@ public class RenderPlanet
 								}
 							}
 						}
-					}
+					}					
 				}
 				// This is to occultate possible background stars behind the planet when gg
-				// comes from sky rendering
+				// comes from sky rendering 
 				Object o = null, o2 = null;
 				int rec[] = g.getClip();
 				if (dubois) {
 					Object li = g.getImage(rec[0], rec[1], rec[2], rec[3]);
 					Object ri = g.getImage2(rec[0], rec[1], rec[2], rec[3]);
-					//li = g.getScaledImage(li, gg.getWidth(), gg.getHeight(), true, ALLOW_SPLINE_RESIZING);
+					//li = g.getScaledImage(li, gg.getWidth(), gg.getHeight(), true, ALLOW_SPLINE_RESIZING);			
 					//ri = g.getScaledImage(ri, gg.getWidth(), gg.getHeight(), true, ALLOW_SPLINE_RESIZING);
 					o = li;
 					o2 = ri;
@@ -1581,7 +1581,7 @@ public class RenderPlanet
 							o2 = g.getRotatedAndScaledImage(o2, (posx-rec[0])*scaleFactor, (posy-rec[1])*scaleFactor, cenitAngle, 1.0f, 1.0f);
 							int sizeo2[] = g.getSize(o2);
 							o2 = g.getScaledImage(o2, sizeo2[0], (int)(sizeo2[1]*upperLimbFactor), false, RenderPlanet.ALLOW_SPLINE_RESIZING);
-							o2 = g.getRotatedAndScaledImage(o2, (posx-rec[0])*scaleFactor, (posy-rec[1])*upperLimbFactor*scaleFactor, -cenitAngle, 1.0f, 1.0f);
+							o2 = g.getRotatedAndScaledImage(o2, (posx-rec[0])*scaleFactor, (posy-rec[1])*upperLimbFactor*scaleFactor, -cenitAngle, 1.0f, 1.0f);							
 						}
 						de = (int)((posy-rec[1])*(1.0/upperLimbFactor - 1.0));
 						ppy += de;
@@ -1598,7 +1598,7 @@ public class RenderPlanet
 					gg.drawImage(o, rec[0], ppy, 1.0f/scaleFactor, 1.0f/scaleFactor);
 				}
 				gg.enableInversion();
-
+				
 				try {
 					this.renderizeSatelliteShadows(g, posx, posy, incl_north, incl_up, scale, oblateness, render.ephem.distance, dlon, dlat);
 					if (gg.renderingToExternalGraphics()) this.renderizeSatelliteShadows(gg, xPosition, yPosition, incl_north, incl_up, scale0, oblateness, render.ephem.distance, dlon, dlat);
@@ -1609,7 +1609,7 @@ public class RenderPlanet
 			posx = posx / scaleFactor;
 			posy = posy / scaleFactor;
 			scaleFactor = 1;
-
+			
 			// Minimum size of 30 pixels for grid (planet without textures)
 			if (planetVisible) {
 				float dpi = 1;
@@ -1626,7 +1626,7 @@ public class RenderPlanet
 						gg.setColor(render.target == TARGET.SUN ? Graphics.COLOR_ORANGE_Orange : render.foreground, false);
 //						gg.setColor(render.foreground, false);
 						gg.fillOval(posx - min_r, posy - min_r, 2 * min_r+1, 2 * min_r+1, false);
-					}
+					}					
 				} else {
 					if (scale > 30*dpi)
 					{
@@ -1644,7 +1644,7 @@ public class RenderPlanet
 			}
 		}
 
-
+		 		
 		boolean textures = render.textures;
 		if (!ringsTexturesVisible) render.textures = false;
 		if (fastGridAndBye) {
@@ -1733,14 +1733,14 @@ public class RenderPlanet
 					}
 				}
 			}
-
+			
 			g.enableAntialiasing();
 			if (renderingSky && scale > 2) {
 				Object o = null;
 				if (dubois) {
 					Object li = g.getImage(rec[0], rec[1], rec[2], rec[3]);
 					Object ri = g.getImage2(rec[0], rec[1], rec[2], rec[3]);
-					//li = g.getScaledImage(li, gg.getWidth(), gg.getHeight(), true, ALLOW_SPLINE_RESIZING);
+					//li = g.getScaledImage(li, gg.getWidth(), gg.getHeight(), true, ALLOW_SPLINE_RESIZING);			
 					//ri = g.getScaledImage(ri, gg.getWidth(), gg.getHeight(), true, ALLOW_SPLINE_RESIZING);
 					o = g.blendImagesToAnaglyphMode(li, ri);
 				} else {
@@ -1749,12 +1749,12 @@ public class RenderPlanet
 				}
 				lastRender.drawImage(o, rec[0], rec[1]);
 			}
-		}
-
+		}		
+		
 		// Renderize axes
 		this.renderAxes(g, posx, posy, r, incl_north, incl_up, refz, scaleFactor);
 
-
+		
 		if (!renderingSky && !useSkySatPos && render.showLabels && satR.length > 0) {
 			int offsetLabel = (int) (g.getFont().getSize() * 2 / 3);
 			g.setColor(render.foreground, false);
@@ -1768,7 +1768,7 @@ public class RenderPlanet
 		if (dubois) {
 			Object li = g.getImage(rec[0], rec[1], rec[2], rec[3]);
 			Object ri = g.getImage2(rec[0], rec[1], rec[2], rec[3]);
-			//li = g.getScaledImage(li, gg.getWidth(), gg.getHeight(), true, ALLOW_SPLINE_RESIZING);
+			//li = g.getScaledImage(li, gg.getWidth(), gg.getHeight(), true, ALLOW_SPLINE_RESIZING);			
 			//ri = g.getScaledImage(ri, gg.getWidth(), gg.getHeight(), true, ALLOW_SPLINE_RESIZING);
 			//o = g.blendImagesToAnaglyphMode(li, ri);
 			g.setAnaglyph(li, ri);
@@ -1776,7 +1776,7 @@ public class RenderPlanet
 			o2 = g.getImage2(rec[0], rec[1], rec[2], rec[3]);
 		} else {
 			o = g.getRendering(rec[0], rec[1], rec[2], rec[3]);
-
+			
 			// I use this code to improve quality in renderings with white background in an external program
 			if (FORCE_WHITE_BACKGROUND) {
 				int col[] = g.getImageAsPixels(o);
@@ -1792,10 +1792,10 @@ public class RenderPlanet
 				}
 				o = g.getImage(rec[2], rec[3], col);
 			}
-
+			
 			//if (hq) o = g.getScaledImage(o, gg.getWidth(), gg.getHeight(), true, ALLOW_SPLINE_RESIZING);
 		}
-
+		
 		// Simulate refraction
 		float sf = 1.0f;
 		boolean imgResized = false;
@@ -1810,7 +1810,7 @@ public class RenderPlanet
 					cl = gg.getInvertedRectangle(cl);
 					rec[0] = cl[0];
 					rec[1] = cl[1];
-
+					
 					o = gg.getRotatedAndScaledImage(o, (posx-rec[0])*sf, (posy-rec[1])*sf, cenitAngle, 1.0f, 1.0f);
 					int sizeo[] = gg.getSize(o);
 					o = gg.getScaledImage(o, sizeo[0], (int)(sizeo[1]*upperLimbFactor), false, RenderPlanet.ALLOW_SPLINE_RESIZING);
@@ -1819,11 +1819,11 @@ public class RenderPlanet
 						o2 = gg.getRotatedAndScaledImage(o2, (posx-rec[0])*sf, (posy-rec[1])*sf, cenitAngle, 1.0f, 1.0f);
 						int sizeo2[] = gg.getSize(o2);
 						o2 = gg.getScaledImage(o2, sizeo2[0], (int)(sizeo2[1]*upperLimbFactor), false, RenderPlanet.ALLOW_SPLINE_RESIZING);
-						o2 = gg.getRotatedAndScaledImage(o2, (posx-rec[0])*sf, (posy-rec[1])*upperLimbFactor*sf, -cenitAngle, 1.0f, 1.0f);
+						o2 = gg.getRotatedAndScaledImage(o2, (posx-rec[0])*sf, (posy-rec[1])*upperLimbFactor*sf, -cenitAngle, 1.0f, 1.0f);						
 					}
 					de = (int)((posy-rec[1])*(1.0/upperLimbFactor - 1.0));
 					rec[1] += de;
-
+					
 					lastRender.setColor(backgroundCol, 255);
 					gg.setColor(backgroundCol, 255);
 					lastRender.disableInversion();
@@ -1857,7 +1857,7 @@ public class RenderPlanet
 			gg.setAnaglyph(o, o2, rec[0] / scaleFactor, rec[1] / scaleFactor); //, 1.0f / scaleFactor, 1.0f / scaleFactor);
 		}
 //		}
-
+		
 		scale = scale0;
 		posx = (int) (xPosition);
 		posy = (int) (yPosition);
@@ -1866,11 +1866,11 @@ public class RenderPlanet
 			scaleFactor = 1.0f;
 			try {
 				this.renderizeSatellites(gg, posx, posy, incl_north, incl_up, scale, oblateness, render.ephem.distance, dlon, dlat);
-			} catch (Exception e) {
+			} catch (Exception e) {	
 				e.printStackTrace();
 			}
 		}
-
+		
 		// Re-scale planet size and satellite positions for correct planetographic coordinates from RenderPlanet
 		planet_size /= sf;
 		if (satX != null) {
@@ -1884,7 +1884,7 @@ public class RenderPlanet
 
 	static void updateRendering(Graphics gg, float newScale) {
 		if (lastRender == null) return;
-
+		
 		if (newScale < lastScale) lastScale = newScale;
 		lastRender.disableInversion();
 		gg.disableInversion();
@@ -1893,7 +1893,7 @@ public class RenderPlanet
 		if (scale == 1) {
 			lastRender.drawImage(gg.getRendering(rec2[0], rec2[1], rec2[2], rec2[3]), rec2[0], rec2[1]);
 			Object o = lastRender.getRendering();
-			gg.setAnaglyph(o, o);
+			gg.setAnaglyph(o, o);			
 		} else {
 			lastRender.drawImage(gg.getRendering(rec2[0], rec2[1], rec2[2], rec2[3]), (int)(rec2[0]*scale), (int)(rec2[1]*scale), scale, scale);
 			Object o = gg.getScaledImage(lastRender.getRendering(), gg.getWidth(), gg.getHeight(), true, RenderPlanet.ALLOW_SPLINE_RESIZING);
@@ -1902,8 +1902,8 @@ public class RenderPlanet
 		gg.enableInversion();
 		//lastRender.disableAnaglyph();
 	}
-
-	private void setPixel(float i, float j, int c, int white,
+	
+	private void setPixel(float i, float j, int c, int white, 
 			double sun_x, double sun_y, double sun_z, double dz0, double r2, int br, int bg, int bb, Graphics g,
 			TARGET target, Object img2, int iindex, int jindex) {
 		// Treat RGB compounds of the pixel
@@ -1911,11 +1911,11 @@ public class RenderPlanet
 		int green = 0xff & (c >> 8);
 		int blue = 0xff & c;
 
-		if (target != TARGET.SUN && this.showDayAndNight) {
+		if (target != TARGET.SUN && this.showDayAndNight) {	
 			double ry = 1.0;
-
+	
 			double z02 = ((sun_x - i) * (sun_x - i) + (sun_y - j) * (sun_y - j) + (-sun_z - dz0) * (-sun_z - dz0)) / r2;
-
+	
 			// Apply a model of illumination, more or less based on
 			// physical arguments and to achieve a realistic visual impression
 			if (z02 <= 4.0) {
@@ -1923,11 +1923,11 @@ public class RenderPlanet
 				if (target != null && (target.compareTo(TARGET.JUPITER) >= 0 && target.compareTo(TARGET.NEPTUNE) <= 0)) {
 					ry = z02 * 0.52; // Gaseous planets
 				} else {
-					ry = z02 * 0.45; // Terrestrial planets
+					ry = z02 * 0.45; // Terrestrial planets					
 				}
 				if (render.background == white) ry = -ry;
 			}
-
+			
 			// Simulate Moon illuminated by Earth
 			if (illuminateMoonByEarth && target != null && ry > 0.9 && sun_z > 0 && z02 <= 4.0 && (target.isNaturalSatellite() || target == TARGET.Moon)) { // && target == TARGET.Moon) {
 				double dang = sun_z / Math.sqrt(r2);
@@ -1937,7 +1937,7 @@ public class RenderPlanet
 					ry = ry + (0.9 - ry) * Math.pow(dang * 3.0, 0.2);
 				}
 			}
-
+			
 			// Decrease/Increase brightness carefully
 			red = (red - (int) (red * ry));
 			green = (green - (int) (green * ry));
@@ -1960,7 +1960,7 @@ public class RenderPlanet
 				green = (int)(green + Math.pow(green2, ry+.5) * ry * 0.5 / 10.0);
 				blue = (int)(blue + Math.pow(blue2, ry+.5) * ry * 0.5 / 10.0);
 			}
-
+			
 			if (red < 1) red = 1;
 			if (green < 1) green = 1;
 			if (blue < 1) blue = 1;
@@ -1968,13 +1968,13 @@ public class RenderPlanet
 			if (green > 254) green = 254;
 			if (blue > 254) blue = 254;
 		}
-
+		
 		if (red == br && green == bg && blue == bb) blue ++;
-
+		
 		// Compound RGB color
 		g.setColor(red, green, blue, 255);
 	}
-
+	
 	private float getDist(double z, double refz) {
 		if (Double.isNaN(z)) z = 0;
 		// input z > 0 => towards observer, in planetary radii
@@ -1993,7 +1993,7 @@ public class RenderPlanet
 			isVisible = true;
 
 		if (m == null) return isVisible;
-
+		
 		if (m.eclipsed || m.occulted) {
 			if (!renderingSky || render.textures) isVisible = false;
 		}
@@ -2018,7 +2018,7 @@ public class RenderPlanet
 				g.fillOval((float)dx, (float)dy, 1, 1, false);
 				return;
 			}
-
+			
 			if (dubois) {
 				float dr = 1;
 				if (duboisBigger) dr = 1.05f;
@@ -2032,11 +2032,12 @@ public class RenderPlanet
 	/**
 	 * Transforms a given position xyz in planetary radii from Sun-centered coordinates to Earth-centered.
 	 * @param xyz Position.
-	 * @param dlon Phase angle.
-	 * @param dlat Position angle of axis.
+	 * @param brightLimbAngle Bright limb angle.
+	 * @param phaseAngle Phase angle.
+	 * @param positionAngleOfAxis Position angle of axis.
 	 * @return Earth-centered coordinates.
 	 */
-	private static double[] fromPlanetEquatorToFromOtherDirection(double xyz[], double dlon, double dlat) {
+	private static double[] fromPlanetEquatorToFromOtherDirection(double xyz[], double dlon, double dlat) { 
 		double px = xyz[0], py = xyz[1], pz = xyz[2];
 
 		if (dlon != 0.0) {
@@ -2055,21 +2056,21 @@ public class RenderPlanet
 			py = pr * FastMath.sin(pa);
 		}
 
-		return new double[] {px, py, pz};
+		return new double[] {px, py, pz};	
 	}
 
 	void drawOvalShadow(double posx, double sx, double posy, double sy, MoonEphemElement m, EphemElement e, double incl_up, double scale, double dr,
 			Graphics g, double sun_dr, double dlon, double dlat)
-	{
+	{		 
 		if (isVisible((int) (posx + sx + 0.5), (int) (posy + sy + 0.5), (int) (dr + sun_dr), null))
-		{
+		{ 
 			int pixel = g.getColor();
 			// Get position of the center of the shadow respect to planet axis
 			double salfa = FastMath.atan2_accurate(sy, sx);
 			double srr = FastMath.hypot(sx, sy); //Math.sqrt(sx*sx+sy*sy);
 			double sdx0 = srr * FastMath.cos(salfa + incl_up);
 			double sdy0 = srr * FastMath.sin(salfa + incl_up);
-
+			
 			float refz = render.anaglyphMode.getReferenceZ();
 			double sampling = (int) (dr + sun_dr); // size of shadow + penumbra. Penumbra exagerated to render softly the edges
 			double scale2 = scale * scale;
@@ -2117,15 +2118,15 @@ public class RenderPlanet
 		double sdx = (srr * FastMath.cos(salfa + incl_up) - sdx0) / scale;
 		double sdy = (srr * FastMath.sin(salfa + incl_up) - sdy0) / scale;
 		double sdr = sdx * sdx + sdy * sdy;
-
+		
 		// if we are inside shadow + penumbra ...
 		if (sdr <= sampling2) {
 			if (first) {
 				sdr = sampling;
 			} else {
-				sdr = Math.sqrt(sdr)*scale;
+				sdr = Math.sqrt(sdr)*scale;				
 			}
-
+			
 			// OK, now get position of satellite respect to sun and project it onto
 			// planet surface, just calculating the adequate value of z = cos beta (r = 1 on planet).
 			double x = m.xPositionFromSun+sdx;
@@ -2134,12 +2135,12 @@ public class RenderPlanet
 			double a = FastMath.atan2_accurate(y, x);
 			double sinb = x / FastMath.cos(a);
 			double cosb = Math.sqrt(1.0 - sinb * sinb);
-
+			
 			// Now pass the vision from Sun to from Earth to see where is this point around the shadow center.
 			// From Sun the apparent shape is round, but from Earth not necessarily.
 			double xyz[] = fromPlanetEquatorToFromOtherDirection(new double[] {x, y, cosb}, dlon, dlat);
 			if (xyz[2] < 0.0) return;
-
+			
 			// Rotate back again from planet axis to current orientation, and set position in pixels
 			srr = FastMath.hypot(xyz[0], xyz[1])*scale; //Math.sqrt(xyz[0]*xyz[0]+xyz[1]*xyz[1])*scale;
 			salfa = FastMath.atan2_accurate(xyz[1], xyz[0]);
@@ -2149,7 +2150,7 @@ public class RenderPlanet
 			// Get shadow position
 			int shadowX = (int) (posx + sdx + 0.5);
 			int shadowY = (int) (posy + sdy + 0.5);
-
+			
 			if (isInTheScreen(shadowX, shadowY, 0)) {
 				// After all this fun, now simply draw shadow and penumbra
 				float sdz = getDist(Math.sqrt(scale2-srr*srr)/scale, refz);
@@ -2158,77 +2159,77 @@ public class RenderPlanet
 						if (g.getRGBLeft(screenCopy, shadowX, shadowY, sdz) == g.getRGBLeft(shadowX, shadowY, sdz)) { // dont process a pixel twice
 /*							if (sdr<dr) {
 								g.setColor(pixel, false);
-								g.fillOvalAnaglyphLeft(shadowX, shadowY, 1, 1, sdz);
+								g.fillOvalAnaglyphLeft(shadowX, shadowY, 1, 1, sdz);						
 								if (texture_step == 1) { // More points to avoid gaps when rendering to a big size
-									g.fillOvalAnaglyphLeft(shadowX-1, shadowY, 1, 1, sdz);
-									g.fillOvalAnaglyphLeft(shadowX, shadowY-1, 1, 1, sdz);
-									g.fillOvalAnaglyphLeft(shadowX-1, shadowY-1, 1, 1, sdz);
+									g.fillOvalAnaglyphLeft(shadowX-1, shadowY, 1, 1, sdz);						
+									g.fillOvalAnaglyphLeft(shadowX, shadowY-1, 1, 1, sdz);						
+									g.fillOvalAnaglyphLeft(shadowX-1, shadowY-1, 1, 1, sdz);						
 								}
-							} else {
+							} else { 
 */								// Reduce intensity from penumbra to edge softly
 								int c = g.getRGBLeft(shadowX, shadowY, sdz);
 								int red = g.getRed(c);
 								int green = g.getGreen(c);
 								int blue = g.getBlue(c);
-
+	
 								float penumbraIntensity = (0.3f + 0.7f * (float) ((sdr-dr)/(sampling-dr)));
 								if (penumbraIntensity < 0.0) penumbraIntensity = 0.0f;
 								red = (int) (penumbraIntensity*red);
 								green = (int) (penumbraIntensity*green);
 								blue = (int) (penumbraIntensity*blue);
 								g.setColor(red, green, blue, 255);
-								g.fillOvalAnaglyphLeft(shadowX, shadowY, 1, 1, sdz);
+								g.fillOvalAnaglyphLeft(shadowX, shadowY, 1, 1, sdz);						
 								if (texture_step == 1) { // More points to avoid gaps when rendering to a big size
-									g.fillOvalAnaglyphLeft(shadowX-1, shadowY, 1, 1, sdz);
-									g.fillOvalAnaglyphLeft(shadowX, shadowY-1, 1, 1, sdz);
-									g.fillOvalAnaglyphLeft(shadowX-1, shadowY-1, 1, 1, sdz);
+									g.fillOvalAnaglyphLeft(shadowX-1, shadowY, 1, 1, sdz);						
+									g.fillOvalAnaglyphLeft(shadowX, shadowY-1, 1, 1, sdz);						
+									g.fillOvalAnaglyphLeft(shadowX-1, shadowY-1, 1, 1, sdz);						
 								}
 //							}
-						}
+						}							
 					} catch (Exception exc) {}
 					try {
 						if (g.getRGBRight(screenCopy2, shadowX, shadowY, sdz) == g.getRGBRight(shadowX, shadowY, sdz)) { // dont process a pixel twice
 /*							if (sdr<dr) {
 								g.setColor(pixel, false);
-								g.fillOvalAnaglyphRight(shadowX, shadowY, 1, 1, sdz);
+								g.fillOvalAnaglyphRight(shadowX, shadowY, 1, 1, sdz);						
 								if (texture_step == 1) { // More points to avoid gaps when rendering to a big size
-									g.fillOvalAnaglyphRight(shadowX-1, shadowY, 1, 1, sdz);
-									g.fillOvalAnaglyphRight(shadowX, shadowY-1, 1, 1, sdz);
-									g.fillOvalAnaglyphRight(shadowX-1, shadowY-1, 1, 1, sdz);
+									g.fillOvalAnaglyphRight(shadowX-1, shadowY, 1, 1, sdz);						
+									g.fillOvalAnaglyphRight(shadowX, shadowY-1, 1, 1, sdz);						
+									g.fillOvalAnaglyphRight(shadowX-1, shadowY-1, 1, 1, sdz);						
 								}
-							} else {
+							} else { 
 */								// Reduce intensity from penumbra to edge softly
 								int c = g.getRGBRight(shadowX, shadowY, sdz);
 								int red = g.getRed(c);
 								int green = g.getGreen(c);
 								int blue = g.getBlue(c);
-
+	
 								float penumbraIntensity = (0.3f + 0.7f * (float) ((sdr-dr)/(sampling-dr)));
 								if (penumbraIntensity < 0.0) penumbraIntensity = 0.0f;
 								red = (int) (penumbraIntensity*red);
 								green = (int) (penumbraIntensity*green);
 								blue = (int) (penumbraIntensity*blue);
 								g.setColor(red, green, blue, 255);
-								g.fillOvalAnaglyphRight(shadowX, shadowY, 1, 1, sdz);
+								g.fillOvalAnaglyphRight(shadowX, shadowY, 1, 1, sdz);	
 								if (texture_step == 1) { // More points to avoid gaps when rendering to a big size
-									g.fillOvalAnaglyphRight(shadowX-1, shadowY, 1, 1, sdz);
-									g.fillOvalAnaglyphRight(shadowX, shadowY-1, 1, 1, sdz);
-									g.fillOvalAnaglyphRight(shadowX-1, shadowY-1, 1, 1, sdz);
+									g.fillOvalAnaglyphRight(shadowX-1, shadowY, 1, 1, sdz);						
+									g.fillOvalAnaglyphRight(shadowX, shadowY-1, 1, 1, sdz);						
+									g.fillOvalAnaglyphRight(shadowX-1, shadowY-1, 1, 1, sdz);						
 								}
 //							}
-						}
+						}							
 					} catch (Exception exc) {}
 				} else {
 					if (g.getRGB(screenCopy, shadowX, shadowY) == g.getRGB(shadowX, shadowY)) { // dont process a pixel twice
 /*						if (sdr<dr) {
 							g.setColor(pixel, false);
-							g.fillOval(shadowX, shadowY, 1, 1, sdz);
+							g.fillOval(shadowX, shadowY, 1, 1, sdz);						
 							if (texture_step == 1) { // More points to avoid gaps when rendering to a big size
-								g.fillOval(shadowX-1, shadowY, 1, 1, sdz);
-								g.fillOval(shadowX, shadowY-1, 1, 1, sdz);
-								g.fillOval(shadowX-1, shadowY-1, 1, 1, sdz);
+								g.fillOval(shadowX-1, shadowY, 1, 1, sdz);						
+								g.fillOval(shadowX, shadowY-1, 1, 1, sdz);						
+								g.fillOval(shadowX-1, shadowY-1, 1, 1, sdz);						
 							}
-						} else {
+						} else { 
 */							// Reduce intensity from penumbra to edge softly
 							int c = g.getRGB(shadowX, shadowY);
 							int red = g.getRed(c);
@@ -2241,12 +2242,12 @@ public class RenderPlanet
 							green = (int) (penumbraIntensity*green);
 							blue = (int) (penumbraIntensity*blue);
 							g.setColor(red, green, blue, 255);
-							g.fillOval(shadowX, shadowY, 1, 1, sdz);
+							g.fillOval(shadowX, shadowY, 1, 1, sdz);						
 //						}
 					}
 				}
 			}
-		}
+		}			
 	}
 	int[][][] convolve(double pattern[][], double difraction_scale_factor, int difraction_pattern_field,
 			Graphics g, boolean dubois, int rec[])
@@ -2257,20 +2258,20 @@ public class RenderPlanet
 			for (int i=rec[0]; i<rec[0]+rec[2]; i++) {
 				for (int j=rec[1]; j<rec[1]+rec[3]; j++) {
 					screen_in[i-rec[0]][j-rec[1]] = g.getRGB(i, j);
-				}
+				}			
 			}
 		} else {
 			Object img = g.getRendering();
 			for (int i=rec[0]; i<rec[0]+rec[2]; i++) {
 				for (int j=rec[1]; j<rec[1]+rec[3]; j++) {
 					screen_in[i-rec[0]][j-rec[1]] = g.getRGB(img, i, j);
-				}
-			}
+				}			
+			}			
 		}
 		return Difraction.convolve(pattern, difraction_pattern_field, screen_in, field, render.background);
 	}
 
- 	private void renderizeSatellites(Graphics g, float posx, float posy, double incl_north, double incl_up,
+ 	private void renderizeSatellites(Graphics g, float posx, float posy, double incl_north, double incl_up, 
 			double scale, double oblateness, double planetDistance,
 			double dlon, double dlat) throws Exception {
 		// Renderize satellites
@@ -2319,7 +2320,7 @@ public class RenderPlanet
 							if (m.magnitude < brightest || brightest == -1) brightest = m.magnitude;
 						}
 					}
-
+					
 					TARGET satTarget = null;
 					int adds = g.renderingToAndroid() ? 2:1;
 					for (int isat0 = 0; isat0 < moon.length; isat0++)
@@ -2328,7 +2329,7 @@ public class RenderPlanet
 						MoonEphemElement m = moon[isat];
 						if (motherBody != null && m.name.equals(motherBody)) continue;
 						satTarget = null;
-
+						
 						loc = new LocationElement(m.rightAscension, m.declination, m.distance);
 						double pos[] = LocationElement.parseLocationElement(loc);
 						double sat_pos[] = Functions.substract(plan_pos, pos);
@@ -2342,24 +2343,24 @@ public class RenderPlanet
 						} else
 						{
 							double offset[] = MoonEphem.relativePosition(plan_pos, sat_pos);
-
+ 
 							dx = -offset[0];
 							dy = -offset[1];
 
 							double rr = -FastMath.hypot(dx, dy) / planetSize; //Math.sqrt(dx * dx + dy * dy) / planetSize;
 							double alfa = FastMath.atan2_accurate(dy, dx);
 							dx = rr * FastMath.cos(alfa + incl_north);
-							dy = rr * FastMath.sin(alfa + incl_north);
+							dy = rr * FastMath.sin(alfa + incl_north);							
 						}
 
 						float r = (float) (m.angularRadius / planetSize);
 						boolean isVisible = isVisible(planet_posx + dx, planet_posy + dy, (int) r, m);
-						if (m.eclipsed || m.occulted) {
+						if (m.eclipsed || m.occulted) { 
 							if (!renderingSky || render.textures) isVisible = false;
 						}
 
-
-						// Render Satellite
+						
+						// Render Satellite 
  						float zpos = getDist(((planetDistance-m.distance))/planetRadius, refz);
 						float size = r * (g.renderingToAndroid() ? 2:1);
 						posx = planet_posx + (int) (dx + 0.5);
@@ -2367,7 +2368,7 @@ public class RenderPlanet
 
 						double sun_size = FastMath.atan2_accurate(TARGET.SUN.equatorialRadius,
 								render.ephem.distanceFromSun * Constant.AU);
-
+						
 						if (isVisible && render.satellitesMain && !renderingSky)
 						{
 							satX = DataSet.addFloatArray(satX, new float[] {posx});
@@ -2442,16 +2443,16 @@ public class RenderPlanet
 							} else {
 								img = images.get(index);
 							}
-*/
+*/							
 							if (img == null) {
 								g.fillOval((posx - size), (posy - size), 2 * size+1, 2 * size+1, zpos);
 								continue;
 							}
-
+							
 							int sizei[] = g.getSize(img);
 							int texture_width = sizei[0];
 							int texture_height = sizei[1];
-
+							
 							// Obtain sun illumination position
 							double dr = (double) r * Math.abs(FastMath.sin(phase_angle2));
 							double sun_x = posx + dr * FastMath.cos((-Constant.PI_OVER_TWO - incl_bright_limb2 + incl_north2));
@@ -2482,15 +2483,15 @@ public class RenderPlanet
 							double flattening2 = FastMath.pow(render.target.equatorialRadius / render.target.polarRadius, 2.0);
 							for (float j=ly; j<=uy; j++) {
 								boolean first = true, doit = true;
-								if (m.mutualPhenomena != null && !m.mutualPhenomena.equals("")) doit = false;
+								if (m.mutualPhenomena != null && !m.mutualPhenomena.equals("")) doit = false;								
 								int oldi = 0, oldj = 0;
-								double oldz = 0, oldtmp = 0;
+								double oldz = 0, oldtmp = 0; 
 								for (float i=lx; i<=ux; i++) {
 									if (this.isInTheScreen(i, j, 0)) {
 										dx = i - posx;
 										dy = posy - j;
 										double tmp = (dx * dx + dy * dy);
-
+	
 										if (tmp <= r2) {
 											pointEclipsed = false;
 											double spos[] = new double[] {m.xPosition, m.yPosition, m.zPosition};
@@ -2499,7 +2500,7 @@ public class RenderPlanet
 											double tmp2 = Math.sqrt(tmp);
 											double dx2 = tmp2 * FastMath.cos(ang - incl_up2 - incl_axis2);
 											double dy2 = tmp2 * FastMath.sin(ang - incl_up2 - incl_axis2);
-
+											
 											spos[0] += dx2/scale;
 											spos[1] += dy2/scale;
 											pos = fromPlanetEquatorToFromOtherDirection(spos, dlon, -dlat);
@@ -2524,7 +2525,7 @@ public class RenderPlanet
 													}
 												}
 											}
-
+											
 											double dz0 = Math.sqrt(r2 - tmp);
 											if (pointEclipsed) {
 												g.setColor(0, 0, 0, 255);
@@ -2532,13 +2533,13 @@ public class RenderPlanet
 												drawPoint(i, j, zpos, false, g, dubois);
 												continue;
 											}
-
+											
 											tmp = Math.sqrt(tmp) / r;
-
+											
 											// Obtain planetographic position
 											dx = -tmp * FastMath.cos(ang - incl_up2);
 											dy = -tmp * FastMath.sin(ang - incl_up2);
-
+											
 											double dz = dz0/r;
 											tmp2 = dy * sinp + dz * cosp;
 											dy = dy * cosp - dz * sinp;
@@ -2550,7 +2551,7 @@ public class RenderPlanet
 											int jindex = (int)(0.5+(Constant.PI_OVER_TWO - lat) * thpi);
 											int iindex = (int)(0.5+lon*tw2pi);
 											if (iindex >= tw) iindex -= tw;
-
+											
 											boolean both = false;
 											if (m.distance > planetDistance) {
 												if (dubois) {
@@ -2571,7 +2572,7 @@ public class RenderPlanet
 											if (both) {
 												double dxp = i - planet_posx;
 												double dyp = (planet_posy - j);
-
+	
 												double e = FastMath.hypot(dxp, dyp); //Math.sqrt(dxp * dxp + dyp * dyp);
 												double t = FastMath.atan2_accurate(dyp, dxp);
 												dxp = e * FastMath.cos(t + incl_up);
@@ -2588,7 +2589,7 @@ public class RenderPlanet
 														oldj = (oldj + jindex)/2;
 														oldz = (oldz + dz0)/2.0;
 														setPixel(i-1, j, g.getRGB(img, oldi, oldj), white, sun_x, sun_y, sun_z, -oldz, r2, br, bg, bb, g, satTarget, null, oldi, oldj);
-														drawPoint(i-1, j, zpos, false, g, dubois);
+														drawPoint(i-1, j, zpos, false, g, dubois);													
 													}
 													first = true;
 													continue;
@@ -2598,10 +2599,10 @@ public class RenderPlanet
 													}
 												}
 											}
-
+	
 											setPixel(i, j, g.getRGB(img, iindex, jindex), white, sun_x, sun_y, sun_z, -dz0, r2, br, bg, bb, g, satTarget, null, iindex, jindex);
 											drawPoint(i, j, zpos, false, g, dubois);
-
+	
 											if (r > 7 && doit) {
 												if (first) {
 													first = false;
@@ -2634,7 +2635,7 @@ public class RenderPlanet
 											}
 										}
 									}
-								}
+								}					
 							}
 						}
 					}
@@ -2643,11 +2644,11 @@ public class RenderPlanet
 			{
 				e.printStackTrace();
 				throw new JPARSECException("invalid satellite ephemeris.", e);
-			}
+			}			
 		}
 	}
-
- 	private void renderizeSatelliteShadows(Graphics g, float posx, float posy, double incl_north, double incl_up,
+ 	
+ 	private void renderizeSatelliteShadows(Graphics g, float posx, float posy, double incl_north, double incl_up, 
 			double scale, double oblateness, double planetDistance,
 			double dlon, double dlat) throws Exception {
 		// Renderize satellites
@@ -2690,14 +2691,14 @@ public class RenderPlanet
 							if (m.magnitude < brightest || brightest == -1) brightest = m.magnitude;
 						}
 					}
-
+					
 					TARGET satTarget = null;
 					for (int isat0 = 0; isat0 < moon.length; isat0++)
 					{
 						isat = (int) isatOrdered[isat0];
 						MoonEphemElement m = moon[isat];
 						satTarget = null;
-
+						
 						loc = new LocationElement(m.rightAscension, m.declination, m.distance);
 						double pos[] = LocationElement.parseLocationElement(loc);
 						double sat_pos[] = Functions.substract(plan_pos, pos);
@@ -2711,19 +2712,19 @@ public class RenderPlanet
 						} else
 						{
 							double offset[] = MoonEphem.relativePosition(plan_pos, sat_pos);
-
+ 
 							dx = -offset[0];
 							dy = -offset[1];
 
 							double rr = -FastMath.hypot(dx, dy) / planetSize; //Math.sqrt(dx * dx + dy * dy) / planetSize;
 							double alfa = FastMath.atan2_accurate(dy, dx);
 							dx = rr * FastMath.cos(alfa + incl_north);
-							dy = rr * FastMath.sin(alfa + incl_north);
+							dy = rr * FastMath.sin(alfa + incl_north);							
 						}
 
 						float r = (float) (m.angularRadius / planetSize);
-
-						// Render Satellite
+						
+						// Render Satellite 
 						float size = r;
 						posx = planet_posx + (int) (dx + 0.5);
 						posy = planet_posy + (int) (dy + 0.5);
@@ -2739,7 +2740,7 @@ public class RenderPlanet
 							double salfa = FastMath.atan2_accurate(sy, sx);
 							double sdx = srr * FastMath.cos(salfa - incl_up);
 							double sdy = srr * FastMath.sin(salfa - incl_up);
-
+							
 /*							if (upperLimbFactor < 1) {
 								sdx = srr * FastMath.cos(salfa - incl_up + cenitAngle);
 								sdy = srr * FastMath.sin(salfa - incl_up + cenitAngle) * upperLimbFactor;
@@ -2751,7 +2752,7 @@ public class RenderPlanet
 */
 							satTarget = Target.getID(m.name);
 							double satRadius = satTarget.equatorialRadius;
-							double satPlanDistance = Math.sqrt(sat_pos[0] * sat_pos[0] + sat_pos[1] * sat_pos[1] + sat_pos[2] * sat_pos[2]) * Constant.AU - render.target.equatorialRadius;
+							double satPlanDistance = Math.sqrt(sat_pos[0] * sat_pos[0] + sat_pos[1] * sat_pos[1] + sat_pos[2] * sat_pos[2]) * Constant.AU - render.target.equatorialRadius; 
 							double sat_size = FastMath.atan2_accurate(satRadius,	satPlanDistance);
 							float ssize = size;
 							if (sat_size < sun_size) ssize = 0;
@@ -2782,7 +2783,7 @@ public class RenderPlanet
 			{
 				e.printStackTrace();
 				throw new JPARSECException("invalid satellite ephemeris.", e);
-			}
+			}			
 		}
 	}
 	/**
@@ -2794,8 +2795,8 @@ public class RenderPlanet
 	 * apparent rotation will not match that of the observed equatorial nor
 	 * tropical belts in these planets. This function is intended to adjust
 	 * specifically the apparent sight of Jupiter's disk.
-	 *
-	 * @param GRS_lon Observed longitude in radians. Typically obtained
+	 * 
+	 * @param GRS_lon Observed longitude in radians. Typically obtained 
 	 * for a given date calling {@linkplain MainEvents#getJupiterGRSLongitude(double)}.
 	 * @param system System of coordinates of GRS_lon, 1, 2, or 3. Will be
 	 *        usually 2, since the Great Red Spot is in the tropical belt (1
@@ -2815,10 +2816,10 @@ public class RenderPlanet
 	 * Empty constructor to be used from {@linkplain RenderSky} class.
 	 */
 	public RenderPlanet() {}
-
+	
 	/**
 	 * Constructor for a planet render process.
-	 *
+	 * 
 	 * @param time Time object.
 	 * @param obs Observer object.
 	 * @param eph Ephemeris object.
@@ -2870,7 +2871,7 @@ public class RenderPlanet
 	/**
 	 * Obtains planetographic, selenographic, or heliographic position for
 	 * certain screen coordinates. Satellites are optionally considered.
-	 *
+	 * 
 	 * @param x Screen horizontal position in pixels.
 	 * @param y Screen vertical position in pixels.
 	 * @param coordinate_system Reference coordinate system, only for giant
@@ -2885,7 +2886,7 @@ public class RenderPlanet
 			throws JPARSECException
 	{
 		if (this.render.anaglyphMode == ANAGLYPH_COLOR_MODE.TRUE_3D_MODE_LEFT_RIGHT_HALF_WIDTH) x /= 2;
-
+		
 		ArrayList<Object> planets = new ArrayList<Object>();
 		planets.add(new float[] { xPosition, yPosition, planet_size/scaleFactor, (float) render.ephem.distance });
 		planets.add(render.clone());
@@ -2910,7 +2911,7 @@ public class RenderPlanet
 	 * Obtain ID constant of an object in certain screen position. For a valid
 	 * output it is previously necessary to render the sky, and the object must
 	 * be visible.
-	 *
+	 * 
 	 * @param x Horizontal position in the rendering in pixels.
 	 * @param y Horizontal position in the rendering in pixels.
 	 * @param considerSatellites True to consider possible transiting
@@ -2949,7 +2950,7 @@ public class RenderPlanet
 	 * Obtain ID constant of the solar system object closest to certain screen position. For a valid
 	 * output it is previously necessary to render the sky, and the object must
 	 * be visible.
-	 *
+	 * 
 	 * @param x Horizontal position in the rendering in pixels.
 	 * @param y Horizontal position in the rendering in pixels.
 	 * @param considerSatellites True to consider possible transiting
@@ -2983,7 +2984,7 @@ public class RenderPlanet
 	 * Obtain screen coordinates of a given planetographic, heliographic, or
 	 * selenographic position in the current rendered body. Satellites are not
 	 * considered.
-	 *
+	 * 
 	 * @param loc Planetographic/heliographic/selenographic coordinates on the
 	 *        object.
 	 * @param coordinate_system Reference coordinate system of input
@@ -3013,7 +3014,7 @@ public class RenderPlanet
 				coordinate_system, only_if_visible);
 		return pos;
 	}
-
+	
 	float[] getScreenCoordinatesOfPlanetographicPositionForEclipse(LocationElement loc) throws JPARSECException
 	{
 		ArrayList<Object> planets = new ArrayList<Object>();
@@ -3030,11 +3031,11 @@ public class RenderPlanet
 				3, true);
 		return pos;
 	}
-
+	
 	/**
 	 * Obtain screen coordinates of a given planetographic, heliographic, or
 	 * selenographic position in the selected body.
-	 *
+	 * 
 	 * @param loc Planetographic/heliographic/selenographic coordinates on the
 	 *        object.
 	 * @param target The target body, can be a satellite.
@@ -3091,7 +3092,7 @@ public class RenderPlanet
 	public String identifyFeature(int x, int y, boolean considerSatellites, int minimumSize, double maxDist)
 	{
 		String feature = null;
-
+		
 		ArrayList<Object> planets = new ArrayList<Object>();
 		planets.add(new float[] { xPosition, yPosition, planet_size/scaleFactor, (float) render.ephem.distance });
 		planets.add(render.clone());
@@ -3103,7 +3104,7 @@ public class RenderPlanet
 				}
 			}
 		}
-
+		
 		try {
 			renderSky.planets = planets;
 			renderSky.render = new SkyRenderElement();
@@ -3112,7 +3113,7 @@ public class RenderPlanet
 			renderSky.render.telescope = render.telescope;
 			TARGET target = renderSky.getPlanetInScreenCoordinates(x, y, considerSatellites, minimumSize);
 			LocationElement loc = renderSky.getPlanetographicPosition(x, y, 3, considerSatellites);
-
+			
 			feature = RenderPlanet.identifyFeature(loc, target, maxDist);
 			if (feature == null && target == TARGET.JUPITER) {
 				double lon0 = (270 / 2000.0) * Constant.TWO_PI;
@@ -3142,23 +3143,23 @@ public class RenderPlanet
 	 * like feature type, longitude, and latitude (deg), size (km), and details.
 	 */
 	public static String identifyFeature(LocationElement loc, TARGET target, double maxDist)
-	{
+	{ 
 		if (target == TARGET.EARTH) {
 			try {
 				CityElement c = City.findNearestCity(loc, null, maxDist * Constant.DEG_TO_RAD);
-				String feature = c.name + " ("+Translate.translate(1082).toLowerCase()+") ("+c.longitude+"\u00ba) ("+c.latitude+"\u00ba) (0 km) ("+c.country+", "+c.height+", "+c.timeZone+")";
+				String feature = c.name + " ("+Translate.translate(1082).toLowerCase()+") ("+c.longitude+"º) ("+c.latitude+"º) (0 km) ("+c.country+", "+c.height+", "+c.timeZone+")";
 				return feature;
 			} catch (Exception e) {
 				return null;
 			}
 		}
-
+		
 		String feature = null;
 		double minDist = -1;
-
+		
 		try {
 			String n = target.getEnglishName();
-			ArrayList<String> v = ReadFile.readResource(FileIO.DATA_SKY_LOCATIONS_DIRECTORY +n+".txt",
+			ArrayList<String> v = ReadFile.readResource(FileIO.DATA_SKY_LOCATIONS_DIRECTORY +n+".txt", 
 					ReadFile.ENCODING_UTF_8);
 			double lon0 = loc.getLongitude() * Constant.RAD_TO_DEG;
 			double lat0 = loc.getLatitude() * Constant.RAD_TO_DEG;
@@ -3166,16 +3167,16 @@ public class RenderPlanet
 			for (int i=0; i<v.size(); i++)
 			{
 				String line = v.get(i);
-
+				
 				String lat = FileIO.getField(3, line, sep, true);
 				double latp = DataSet.parseDouble(lat);
 				if (maxDist > 0 && Math.abs(latp-lat0) > maxDist) continue;
-
-				String lon = FileIO.getField(4, line, sep, true);
+				
+				String lon = FileIO.getField(4, line, sep, true);				
 				double lonp = DataSet.parseDouble(lon); // Different criteria, East positive ! ?
 				if (target != TARGET.Moon && target != TARGET.MERCURY && target != TARGET.VENUS && target != TARGET.EARTH) lonp = -lonp;
 				if (maxDist > 0 && Math.abs(lonp-lon0) > maxDist && Math.abs(lonp-lon0) < 360.0 - maxDist) continue;
-
+				
 				LocationElement loc0 = new LocationElement(lonp*Constant.DEG_TO_RAD,latp*Constant.DEG_TO_RAD,1.0);
 				double dist = LocationElement.getApproximateAngularDistance(loc, loc0);
 				if (dist < minDist || minDist == -1) {
@@ -3185,18 +3186,18 @@ public class RenderPlanet
 					String size = FileIO.getField(5, line, sep, true);
 					String detail = FileIO.getField(6, line, sep, true);
 					detail += ", "+FileIO.getField(7, line, sep, true);
-					feature = name + " ("+type+") ("+lonp+"\u00ba) ("+lat+"\u00ba) ("+size+" km) ("+detail+")";
+					feature = name + " ("+type+") ("+lonp+"º) ("+lat+"º) ("+size+" km) ("+detail+")";
 				}
 			}
 		} catch (Exception exc) { }
 		if (minDist != -1 && maxDist > 0 && minDist > maxDist * Constant.DEG_TO_RAD) return null;
-
+				
 		return feature;
 	}
-
+	
 	/**
 	 * Returns the position of a feature in the current rendered body.
-	 * @param name Name of the feature.
+	 * @param name Name of the feature. 
 	 * @param target Target body.
 	 * @return Location of the feature, or null if it is not found.
 	 */
@@ -3212,14 +3213,14 @@ public class RenderPlanet
 			for (int i=0; i<v.size(); i++)
 			{
 				String line = v.get(i);
-
+								
 				feature = FileIO.getField(1, line, sep, true);
 				//String t = FileIO.getField(2, line, sep, true);
 				//feature = n + " ("+t+")";
 				if (feature.indexOf(name) >= 0) {
 					String lat = FileIO.getField(3, line, sep, true);
 					String lon = FileIO.getField(4, line, sep, true);
-
+					
 					double lonp = DataSet.parseDouble(lon); // Different criteria, East positive ! ?
 					double latp = DataSet.parseDouble(lat);
 					if (target != TARGET.Moon && target != TARGET.MERCURY && target != TARGET.VENUS && target == TARGET.EARTH) lonp = -lonp;
@@ -3231,14 +3232,14 @@ public class RenderPlanet
 		} catch (Exception exc) { }
 		return out;
 	}
-
+	
 	/**
 	 * Returns a list of features for a given body.
 	 * @param target Target body.
 	 * @return List of features, or null in case of error.
 	 */
 	public static String[] getListOfFeatures(TARGET target)
-	{
+	{	
 		try {
 			String n = target.getEnglishName();
 			ArrayList<String> v = ReadFile.readResource(FileIO.DATA_SKY_LOCATIONS_DIRECTORY +n+".txt",
@@ -3248,7 +3249,7 @@ public class RenderPlanet
 			for (int i=0; i<v.size(); i++)
 			{
 				String line = v.get(i);
-
+				
 				String name = FileIO.getField(1, line, sep, true);
 				String type = FileIO.getField(2, line, sep, true);
 				feature[i] = name + " ("+type+")";
@@ -3258,4 +3259,49 @@ public class RenderPlanet
 			return null;
 		}
 	}
+
+	/**
+	 * For unit testing only.
+	 */
+/*	public static void main(String arg[])
+	{
+		System.out.println("Render Test");
+
+		// Triple eclipse in Jupiter
+		AstroDate astro = new AstroDate(2004, AstroDate.MARCH, 28, 8, 2, 30);
+		// Test of drawing partially a satellite while it is being occulted: Io and Ganymede simultaneosly being occulted, while Europa transiting
+		//AstroDate astro = new AstroDate(2012, AstroDate.JANUARY, 21, 22, 20, 0); // Test also minute 27
+		
+		TimeElement time = new TimeElement(astro, SCALE.UNIVERSAL_TIME_UTC);
+		EphemerisElement eph = new EphemerisElement(TARGET.JUPITER, EphemerisElement.COORDINATES_TYPE.APPARENT,
+				EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.TOPOCENTRIC, EphemerisElement.REDUCTION_METHOD.IAU_2006,
+				EphemerisElement.FRAME.ICRF);
+		
+		PlanetRenderElement render = new PlanetRenderElement(800, 600, true, true, true, false, false, false);
+		
+		TelescopeElement telescope = TelescopeElement.SCHMIDTH_CASSEGRAIN_20cm;
+		telescope.ocular.focalLength = 1f;
+		render.telescope = telescope;
+		try
+		{
+			CityElement city = City.findCity("Madrid");
+			ObserverElement observer = ObserverElement.parseCity(city);
+			System.out.println("JD " + TimeScale.getJD(time, observer, eph, SCALE.TERRESTRIAL_TIME));
+			
+			RenderPlanet renderPlanet = new RenderPlanet();
+			renderPlanet.configurePlanetRendering(time, observer, eph, render);
+			Graphics g = new AWTGraphics(800, 600);
+			renderPlanet.renderize(g);
+			
+			jparsec.io.image.Picture pic = new jparsec.io.image.Picture((java.awt.image.BufferedImage) g.getRendering());
+			pic.show("");
+
+			ConsoleReport.fullEphemReportToConsole(render.ephem);
+		} catch (Exception ve)
+		{
+			ve.printStackTrace();
+		}
+
+	}
+*/	
 }

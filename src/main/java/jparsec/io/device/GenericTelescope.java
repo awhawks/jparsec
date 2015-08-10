@@ -125,7 +125,7 @@ public interface GenericTelescope {
 		REFRACTOR(true, true),
 		REFRACTOR_WITH_ERECTING_PRISM(false, false),
 		/** Hypothetical telescope that only inverts vertically. Like an
-		 * Schmidt-Cassegrain rotated 90 &deg;. */
+		 * Schmidt-Cassegrain rotated 90º. */
 		SC_VERTICALLY_INVERTED(false, true);
 		
 		private boolean ih, iv;
@@ -619,17 +619,17 @@ public interface GenericTelescope {
 	 * ALIGNED      true          Telescope aligned ?
 	 * MOVING       false         Telescope moving ?
 	 * RA           12h 00m 00s   Telescope apparent RA
-	 * DEC          10 &deg; 00' 00"   Telescope apparent DEC
+	 * DEC          10º 00' 00"   Telescope apparent DEC
 	 * RAJ2000      12h 00m 00s   Telescope J2000 RA
-	 * DECJ2000     10 &deg; 00' 00"   Telescope J2000 DEC
-	 * AZ           10 &deg; 00' 00"   Telescope AZ
-	 * EL           10 &deg; 00' 00"   Telescope EL
+	 * DECJ2000     10º 00' 00"   Telescope J2000 DEC
+	 * AZ           10º 00' 00"   Telescope AZ
+	 * EL           10º 00' 00"   Telescope EL
 	 * DATE0        2013-01-01 .. Date and time for the beginning of the observation
-	 * AZ0          10 &deg; 00' 00"   Telescope AZ for the beginning of the observation
-	 * EL0          10 &deg; 00' 00"   Telescope EL for the beginning of the observation
+	 * AZ0          10º 00' 00"   Telescope AZ for the beginning of the observation
+	 * EL0          10º 00' 00"   Telescope EL for the beginning of the observation
 	 * DATE-EFF     2013-01-01 .. Date and time for the middle of the observation
-	 * AZ-EFF       10 &deg; 00' 00"   Telescope AZ for the middle of the observation
-	 * EL-EFF       10 &deg; 00' 00"   Telescope EL for the middle of the observation
+	 * AZ-EFF       10º 00' 00"   Telescope AZ for the middle of the observation
+	 * EL-EFF       10º 00' 00"   Telescope EL for the middle of the observation
 	 * ... + camera entries ...
 	 * FIELD        0.5           Camera field of view (deg)
 	 * CAM_INDE     0             Camera index id value

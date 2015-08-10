@@ -12,8 +12,11 @@ import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.GeneralPath;
 import java.awt.image.BufferedImage;
+
 import javax.swing.Icon;
+
 import jparsec.ephem.Target.TARGET;
+import jparsec.io.image.Picture;
 
 /**
  * An implementation of SVG planetary icons (vector graphics) in AWT,
@@ -39,63 +42,63 @@ public class SVGPlanets {
 		switch (target) {
 		case SUN:
 			Sun sun = new Sun();
-			px = (int)(sun.getOrigX()+sun.getOrigWidth()/2f);
-			py = (int)(sun.getOrigY()+sun.getOrigHeight()/2f);
-			sun.paintIcon(null, g, -px, -py);
+	    	px = (int)(sun.getOrigX()+sun.getOrigWidth()/2f);
+	    	py = (int)(sun.getOrigY()+sun.getOrigHeight()/2f);
+	    	sun.paintIcon(null, g, -px, -py);
 			break;
 		case MERCURY:
 			Mercury mercury = new Mercury();
-			px = (int)(mercury.getOrigX()+mercury.getOrigWidth()/2f);
-			py = (int)(mercury.getOrigY()+mercury.getOrigHeight()/2f);
-			mercury.paintIcon(null, g, -px, -py);
+	    	px = (int)(mercury.getOrigX()+mercury.getOrigWidth()/2f);
+	    	py = (int)(mercury.getOrigY()+mercury.getOrigHeight()/2f);
+	    	mercury.paintIcon(null, g, -px, -py);
 			break;
 		case VENUS:
 			Venus venus = new Venus();
-			px = (int)(venus.getOrigX()+venus.getOrigWidth()/2f);
-			py = (int)(venus.getOrigY()+venus.getOrigHeight()/2f);
-			venus.paintIcon(null, g, -px, -py);
+	    	px = (int)(venus.getOrigX()+venus.getOrigWidth()/2f);
+	    	py = (int)(venus.getOrigY()+venus.getOrigHeight()/2f);
+	    	venus.paintIcon(null, g, -px, -py);
 			break;
 		case EARTH:
 			Earth earth = new Earth();
-			px = (int)(earth.getOrigX()+earth.getOrigWidth()/2f);
-			py = (int)(earth.getOrigY()+earth.getOrigHeight()/2f);
-			earth.paintIcon(null, g, -px, -py);
+	    	px = (int)(earth.getOrigX()+earth.getOrigWidth()/2f);
+	    	py = (int)(earth.getOrigY()+earth.getOrigHeight()/2f);
+	    	earth.paintIcon(null, g, -px, -py);
 			break;
 		case MARS:
 			Mars mars = new Mars();
-			px = (int)(mars.getOrigX()+mars.getOrigWidth()/2f);
-			py = (int)(mars.getOrigY()+mars.getOrigHeight()/2f);
-			mars.paintIcon(null, g, -px, -py);
+	    	px = (int)(mars.getOrigX()+mars.getOrigWidth()/2f);
+	    	py = (int)(mars.getOrigY()+mars.getOrigHeight()/2f);
+	    	mars.paintIcon(null, g, -px, -py);
 			break;
 		case JUPITER:
 			Jupiter jupiter = new Jupiter();
-			px = (int)(jupiter.getOrigX()+jupiter.getOrigWidth()/2f);
-			py = (int)(jupiter.getOrigY()+jupiter.getOrigHeight()/2f);
-			jupiter.paintIcon(null, g, -px, -py);
+	    	px = (int)(jupiter.getOrigX()+jupiter.getOrigWidth()/2f);
+	    	py = (int)(jupiter.getOrigY()+jupiter.getOrigHeight()/2f);
+	    	jupiter.paintIcon(null, g, -px, -py);
 			break;
 		case SATURN:
 			Saturn saturn = new Saturn();
-			px = (int)(saturn.getOrigX()+saturn.getOrigWidth()/2f);
-			py = (int)(saturn.getOrigY()+saturn.getOrigHeight()/2f);
-			saturn.paintIcon(null, g, -px, -py);
+	    	px = (int)(saturn.getOrigX()+saturn.getOrigWidth()/2f);
+	    	py = (int)(saturn.getOrigY()+saturn.getOrigHeight()/2f);
+	    	saturn.paintIcon(null, g, -px, -py);
 			break;
 		case URANUS:
 			Uranus uranus = new Uranus();
-			px = (int)(uranus.getOrigX()+uranus.getOrigWidth()/2f);
-			py = (int)(uranus.getOrigY()+uranus.getOrigHeight()/2f);
-			uranus.paintIcon(null, g, -px, -py);
+	    	px = (int)(uranus.getOrigX()+uranus.getOrigWidth()/2f);
+	    	py = (int)(uranus.getOrigY()+uranus.getOrigHeight()/2f);
+	    	uranus.paintIcon(null, g, -px, -py);
 			break;
 		case NEPTUNE:
 			Neptune neptune = new Neptune();
-			px = (int)(neptune.getOrigX()+neptune.getOrigWidth()/2f);
-			py = (int)(neptune.getOrigY()+neptune.getOrigHeight()/2f);
-			neptune.paintIcon(null, g, -px, -py);
+	    	px = (int)(neptune.getOrigX()+neptune.getOrigWidth()/2f);
+	    	py = (int)(neptune.getOrigY()+neptune.getOrigHeight()/2f);
+	    	neptune.paintIcon(null, g, -px, -py);
 			break;
 		case Pluto:
 			Pluto pluto = new Pluto();
-			px = (int)(pluto.getOrigX()+pluto.getOrigWidth()/2f);
-			py = (int)(pluto.getOrigY()+pluto.getOrigHeight()/2f);
-			pluto.paintIcon(null, g, -px, -py);
+	    	px = (int)(pluto.getOrigX()+pluto.getOrigWidth()/2f);
+	    	py = (int)(pluto.getOrigY()+pluto.getOrigHeight()/2f);
+	    	pluto.paintIcon(null, g, -px, -py);
 			break;
 		}
 	}
@@ -110,181 +113,194 @@ public class SVGPlanets {
 	{
 		int px = 0, py = 0, w = 0, h = 0;
 		BufferedImage image = null;
-
+		 
 		switch (target) {
 		case SUN:
 			Sun sun = new Sun();
 			sun.width = (int) (sun.width*zoom);
 			sun.height = (int) (sun.height*zoom);
-			px = (int)((sun.getOrigX()-1)*zoom);
-			py = (int)((sun.getOrigY()-1)*zoom);
-			w = (int)((sun.getOrigWidth()+2)*zoom);
-			h = (int)((sun.getOrigHeight()+2)*zoom);
-			image = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-			Graphics2D g = image.createGraphics();
-			g.setColor(Color.BLACK);
-			sun.paintIcon(null, g, -px, -py);
-			g.dispose();
+	    	px = (int)((sun.getOrigX()-1)*zoom);
+	    	py = (int)((sun.getOrigY()-1)*zoom);
+	    	w = (int)((sun.getOrigWidth()+2)*zoom);
+	    	h = (int)((sun.getOrigHeight()+2)*zoom);
+	    	image = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+	    	Graphics2D g = image.createGraphics();
+	    	g.setColor(Color.BLACK);
+	    	sun.paintIcon(null, g, -px, -py);
+	    	g.dispose();
 			break;
 		case MERCURY:
 			Mercury mercury = new Mercury();
 			mercury.width = (int) (mercury.width*zoom);
 			mercury.height = (int) (mercury.height*zoom);
-			px = (int)((mercury.getOrigX()-1)*zoom);
-			py = (int)((mercury.getOrigY()-1)*zoom);
-			w = (int)((mercury.getOrigWidth()+2)*zoom);
-			h = (int)((mercury.getOrigHeight()+2)*zoom);
-			image = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-			g = image.createGraphics();
-			g.setColor(Color.BLACK);
-			mercury.paintIcon(null, g, -px, -py);
-			g.dispose();
+	    	px = (int)((mercury.getOrigX()-1)*zoom);
+	    	py = (int)((mercury.getOrigY()-1)*zoom);
+	    	w = (int)((mercury.getOrigWidth()+2)*zoom);
+	    	h = (int)((mercury.getOrigHeight()+2)*zoom);
+	    	image = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+	    	g = image.createGraphics();
+	    	g.setColor(Color.BLACK);
+	    	mercury.paintIcon(null, g, -px, -py);
+	    	g.dispose();
 			break;
 		case VENUS:
 			Venus venus = new Venus();
 			venus.width = (int) (venus.width*zoom);
 			venus.height = (int) (venus.height*zoom);
-			px = (int)((venus.getOrigX()-1)*zoom);
-			py = (int)((venus.getOrigY()-1)*zoom);
-			w = (int)((venus.getOrigWidth()+2)*zoom);
-			h = (int)((venus.getOrigHeight()+2)*zoom);
-			image = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-			g = image.createGraphics();
-			g.setColor(Color.BLACK);
-			venus.paintIcon(null, g, -px, -py);
-			g.dispose();
+	    	px = (int)((venus.getOrigX()-1)*zoom);
+	    	py = (int)((venus.getOrigY()-1)*zoom);
+	    	w = (int)((venus.getOrigWidth()+2)*zoom);
+	    	h = (int)((venus.getOrigHeight()+2)*zoom);
+	    	image = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+	    	g = image.createGraphics();
+	    	g.setColor(Color.BLACK);
+	    	venus.paintIcon(null, g, -px, -py);
+	    	g.dispose();
 			break;
 		case EARTH:
 			Earth earth = new Earth();
 			earth.width = (int) (earth.width*zoom);
 			earth.height = (int) (earth.height*zoom);
-			px = (int)((earth.getOrigX()-1)*zoom);
-			py = (int)((earth.getOrigY()-1)*zoom);
-			w = (int)((earth.getOrigWidth()+2)*zoom);
-			h = (int)((earth.getOrigHeight()+2)*zoom);
-			image = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-			g = image.createGraphics();
-			g.setColor(Color.BLACK);
-			earth.paintIcon(null, g, -px, -py);
-			g.dispose();
+	    	px = (int)((earth.getOrigX()-1)*zoom);
+	    	py = (int)((earth.getOrigY()-1)*zoom);
+	    	w = (int)((earth.getOrigWidth()+2)*zoom);
+	    	h = (int)((earth.getOrigHeight()+2)*zoom);
+	    	image = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+	    	g = image.createGraphics();
+	    	g.setColor(Color.BLACK);
+	    	earth.paintIcon(null, g, -px, -py);
+	    	g.dispose();
 			break;
 		case MARS:
 			Mars mars = new Mars();
 			mars.width = (int) (mars.width*zoom);
 			mars.height = (int) (mars.height*zoom);
-			px = (int)((mars.getOrigX()-1)*zoom);
-			py = (int)((mars.getOrigY()-1)*zoom);
-			w = (int)((mars.getOrigWidth()+2)*zoom);
-			h = (int)((mars.getOrigHeight()+2)*zoom);
-			image = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-			g = image.createGraphics();
-			g.setColor(Color.BLACK);
-			mars.paintIcon(null, g, -px, -py);
-			g.dispose();
+	    	px = (int)((mars.getOrigX()-1)*zoom);
+	    	py = (int)((mars.getOrigY()-1)*zoom);
+	    	w = (int)((mars.getOrigWidth()+2)*zoom);
+	    	h = (int)((mars.getOrigHeight()+2)*zoom);
+	    	image = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+	    	g = image.createGraphics();
+	    	g.setColor(Color.BLACK);
+	    	mars.paintIcon(null, g, -px, -py);
+	    	g.dispose();
 			break;
 		case JUPITER:
 			Jupiter jupiter = new Jupiter();
 			jupiter.width = (int) (jupiter.width*zoom);
 			jupiter.height = (int) (jupiter.height*zoom);
-			px = (int)((jupiter.getOrigX()-1)*zoom);
-			py = (int)((jupiter.getOrigY()-1)*zoom);
-			w = (int)((jupiter.getOrigWidth()+2)*zoom);
-			h = (int)((jupiter.getOrigHeight()+2)*zoom);
-			image = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-			g = image.createGraphics();
-			g.setColor(Color.BLACK);
-			jupiter.paintIcon(null, g, -px, -py);
-			g.dispose();
+	    	px = (int)((jupiter.getOrigX()-1)*zoom);
+	    	py = (int)((jupiter.getOrigY()-1)*zoom);
+	    	w = (int)((jupiter.getOrigWidth()+2)*zoom);
+	    	h = (int)((jupiter.getOrigHeight()+2)*zoom);
+	    	image = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+	    	g = image.createGraphics();
+	    	g.setColor(Color.BLACK);
+	    	jupiter.paintIcon(null, g, -px, -py);
+	    	g.dispose();
 			break;
 		case SATURN:
 			Saturn saturn = new Saturn();
 			saturn.width = (int) (saturn.width*zoom);
 			saturn.height = (int) (saturn.height*zoom);
-			px = (int)((saturn.getOrigX()-1)*zoom);
-			py = (int)((saturn.getOrigY()-1)*zoom);
-			w = (int)((saturn.getOrigWidth()+2)*zoom);
-			h = (int)((saturn.getOrigHeight()+2)*zoom);
-			image = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-			g = image.createGraphics();
-			g.setColor(Color.BLACK);
-			saturn.paintIcon(null, g, -px, -py);
-			g.dispose();
+	    	px = (int)((saturn.getOrigX()-1)*zoom);
+	    	py = (int)((saturn.getOrigY()-1)*zoom);
+	    	w = (int)((saturn.getOrigWidth()+2)*zoom);
+	    	h = (int)((saturn.getOrigHeight()+2)*zoom);
+	    	image = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+	    	g = image.createGraphics();
+	    	g.setColor(Color.BLACK);
+	    	saturn.paintIcon(null, g, -px, -py);
+	    	g.dispose();
 			break;
 		case URANUS:
 			Uranus uranus = new Uranus();
 			uranus.width = (int) (uranus.width*zoom);
 			uranus.height = (int) (uranus.height*zoom);
-			px = (int)((uranus.getOrigX()-1)*zoom);
-			py = (int)((uranus.getOrigY()-1)*zoom);
-			w = (int)((uranus.getOrigWidth()+2)*zoom);
-			h = (int)((uranus.getOrigHeight()+2)*zoom);
-			image = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-			g = image.createGraphics();
-			g.setColor(Color.BLACK);
-			uranus.paintIcon(null, g, -px, -py);
-			g.dispose();
+	    	px = (int)((uranus.getOrigX()-1)*zoom);
+	    	py = (int)((uranus.getOrigY()-1)*zoom);
+	    	w = (int)((uranus.getOrigWidth()+2)*zoom);
+	    	h = (int)((uranus.getOrigHeight()+2)*zoom);
+	    	image = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+	    	g = image.createGraphics();
+	    	g.setColor(Color.BLACK);
+	    	uranus.paintIcon(null, g, -px, -py);
+	    	g.dispose();
 			break;
 		case NEPTUNE:
 			Neptune neptune = new Neptune();
 			neptune.width = (int) (neptune.width*zoom);
 			neptune.height = (int) (neptune.height*zoom);
-			px = (int)((neptune.getOrigX()-1)*zoom);
-			py = (int)((neptune.getOrigY()-1)*zoom);
-			w = (int)((neptune.getOrigWidth()+2)*zoom);
-			h = (int)((neptune.getOrigHeight()+2)*zoom);
-			image = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-			g = image.createGraphics();
-			g.setColor(Color.BLACK);
-			neptune.paintIcon(null, g, -px, -py);
-			g.dispose();
+	    	px = (int)((neptune.getOrigX()-1)*zoom);
+	    	py = (int)((neptune.getOrigY()-1)*zoom);
+	    	w = (int)((neptune.getOrigWidth()+2)*zoom);
+	    	h = (int)((neptune.getOrigHeight()+2)*zoom);
+	    	image = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+	    	g = image.createGraphics();
+	    	g.setColor(Color.BLACK);
+	    	neptune.paintIcon(null, g, -px, -py);
+	    	g.dispose();
 			break;
 		case Pluto:
 			Pluto pluto = new Pluto();
 			pluto.width = (int) (pluto.width*zoom);
 			pluto.height = (int) (pluto.height*zoom);
-			px = (int)((pluto.getOrigX()-1)*zoom);
-			py = (int)((pluto.getOrigY()-1)*zoom);
-			w = (int)((pluto.getOrigWidth()+2)*zoom);
-			h = (int)((pluto.getOrigHeight()+2)*zoom);
-			image = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-			g = image.createGraphics();
-			g.setColor(Color.BLACK);
-			pluto.paintIcon(null, g, -px, -py);
-			g.dispose();
+	    	px = (int)((pluto.getOrigX()-1)*zoom);
+	    	py = (int)((pluto.getOrigY()-1)*zoom);
+	    	w = (int)((pluto.getOrigWidth()+2)*zoom);
+	    	h = (int)((pluto.getOrigHeight()+2)*zoom);
+	    	image = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+	    	g = image.createGraphics();
+	    	g.setColor(Color.BLACK);
+	    	pluto.paintIcon(null, g, -px, -py);
+	    	g.dispose();
 			break;
 		}
 		return image;
 	}
+	
+	/**
+	 * Test program.
+	 * @param args Not used.
+	 */
+    public static void main(String[] args) {
+    	try {
+	    	Picture p = new Picture(drawIcon(TARGET.VENUS, 4));
+	    	p.show("My icon");
+    	} catch (Exception exc) {
+    		exc.printStackTrace();
+    	}
+    }
 }
 
 /**
  * This class has been automatically generated using svg2java
- *
+ * 
  */
 class Jupiter implements Icon {
-
+	
 	private float origAlpha = 1.0f;
 
 	/**
 	 * Paints the transcoded SVG image on the specified graphics context. You
 	 * can install a custom transformation on the graphics context to scale the
 	 * image.
-	 *
+	 * 
 	 * @param g
-	 *			Graphics context.
+	 *            Graphics context.
 	 */
 	public void paint(Graphics2D g) {
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		origAlpha = 1.0f;
-		Composite origComposite = g.getComposite();
-		if (origComposite instanceof AlphaComposite) {
-			AlphaComposite origAlphaComposite =
-				(AlphaComposite)origComposite;
-			if (origAlphaComposite.getRule() == AlphaComposite.SRC_OVER) {
-				origAlpha = origAlphaComposite.getAlpha();
-			}
-		}
-
+        origAlpha = 1.0f;
+        Composite origComposite = g.getComposite();
+        if (origComposite instanceof AlphaComposite) {
+            AlphaComposite origAlphaComposite = 
+                (AlphaComposite)origComposite;
+            if (origAlphaComposite.getRule() == AlphaComposite.SRC_OVER) {
+                origAlpha = origAlphaComposite.getAlpha();
+            }
+        }
+        
 		// _0
 		AffineTransform trans_0 = g.getTransform();
 		paintRootGraphicsNode_0(g);
@@ -380,39 +396,39 @@ class Jupiter implements Icon {
 
 
 
-	/**
-	 * Returns the X of the bounding box of the original SVG image.
-	 * @return The X of the bounding box of the original SVG image.
-	 */
-	public int getOrigX() {
-		return 335;
-	}
+    /**
+     * Returns the X of the bounding box of the original SVG image.
+     * @return The X of the bounding box of the original SVG image.
+     */
+    public int getOrigX() {
+        return 335;
+    }
 
-	/**
-	 * Returns the Y of the bounding box of the original SVG image.
-	 * @return The Y of the bounding box of the original SVG image.
-	 */
-	public int getOrigY() {
-		return 513;
-	}
+    /**
+     * Returns the Y of the bounding box of the original SVG image.
+     * @return The Y of the bounding box of the original SVG image.
+     */
+    public int getOrigY() {
+        return 513;
+    }
 
-	/**
-	 * Returns the width of the bounding box of the original SVG image.
-	 * @return The width of the bounding box of the original SVG image.
-	 */
-	public int getOrigWidth() {
-		return 30;
-	}
+    /**
+     * Returns the width of the bounding box of the original SVG image.
+     * @return The width of the bounding box of the original SVG image.
+     */
+    public int getOrigWidth() {
+        return 30;
+    }
 
-	/**
-	 * Returns the height of the bounding box of the original SVG image.
-	 * @return The height of the bounding box of the original SVG image.
-	 */
-	public int getOrigHeight() {
-		return 39;
-	}
-
-
+    /**
+     * Returns the height of the bounding box of the original SVG image.
+     * @return The height of the bounding box of the original SVG image.
+     */
+    public int getOrigHeight() {
+        return 39;
+    }
+    
+    
 	/**
 	 * The current width of this resizable icon.
 	 */
@@ -427,15 +443,15 @@ class Jupiter implements Icon {
 	 * Creates a new transcoded SVG image.
 	 */
 	public Jupiter() {
-		this.width = getOrigWidth();
-		this.height = getOrigHeight();
+        this.width = getOrigWidth();
+        this.height = getOrigHeight();
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * @see javax.swing.Icon#getIconHeight()
 	 */
-	@Override
+    @Override
 	public int getIconHeight() {
 		return height;
 	}
@@ -444,7 +460,7 @@ class Jupiter implements Icon {
 	 * (non-Javadoc)
 	 * @see javax.swing.Icon#getIconWidth()
 	 */
-	@Override
+    @Override
 	public int getIconWidth() {
 		return width;
 	}
@@ -462,7 +478,7 @@ class Jupiter implements Icon {
 	 * (non-Javadoc)
 	 * @see javax.swing.Icon#paintIcon(java.awt.Component, java.awt.Graphics, int, int)
 	 */
-	@Override
+    @Override
 	public void paintIcon(Component c, Graphics g, int x, int y) {
 		Graphics2D g2d = (Graphics2D) g.create();
 		g2d.translate(x, y);
@@ -478,32 +494,32 @@ class Jupiter implements Icon {
 
 /**
  * This class has been automatically generated using svg2java
- *
+ * 
  */
 class Mars implements Icon {
-
+	
 	private float origAlpha = 1.0f;
 
 	/**
 	 * Paints the transcoded SVG image on the specified graphics context. You
 	 * can install a custom transformation on the graphics context to scale the
 	 * image.
-	 *
+	 * 
 	 * @param g
-	 *			Graphics context.
+	 *            Graphics context.
 	 */
 	public void paint(Graphics2D g) {
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		origAlpha = 1.0f;
-		Composite origComposite = g.getComposite();
-		if (origComposite instanceof AlphaComposite) {
-			AlphaComposite origAlphaComposite =
-				(AlphaComposite)origComposite;
-			if (origAlphaComposite.getRule() == AlphaComposite.SRC_OVER) {
-				origAlpha = origAlphaComposite.getAlpha();
-			}
-		}
-
+        origAlpha = 1.0f;
+        Composite origComposite = g.getComposite();
+        if (origComposite instanceof AlphaComposite) {
+            AlphaComposite origAlphaComposite = 
+                (AlphaComposite)origComposite;
+            if (origAlphaComposite.getRule() == AlphaComposite.SRC_OVER) {
+                origAlpha = origAlphaComposite.getAlpha();
+            }
+        }
+        
 		// _0
 		AffineTransform trans_0 = g.getTransform();
 		paintRootGraphicsNode_0(g);
@@ -584,39 +600,39 @@ class Mars implements Icon {
 
 
 
-	/**
-	 * Returns the X of the bounding box of the original SVG image.
-	 * @return The X of the bounding box of the original SVG image.
-	 */
-	public int getOrigX() {
-		return 334;
-	}
+    /**
+     * Returns the X of the bounding box of the original SVG image.
+     * @return The X of the bounding box of the original SVG image.
+     */
+    public int getOrigX() {
+        return 334;
+    }
 
-	/**
-	 * Returns the Y of the bounding box of the original SVG image.
-	 * @return The Y of the bounding box of the original SVG image.
-	 */
-	public int getOrigY() {
-		return 520;
-	}
+    /**
+     * Returns the Y of the bounding box of the original SVG image.
+     * @return The Y of the bounding box of the original SVG image.
+     */
+    public int getOrigY() {
+        return 520;
+    }
 
-	/**
-	 * Returns the width of the bounding box of the original SVG image.
-	 * @return The width of the bounding box of the original SVG image.
-	 */
-	public int getOrigWidth() {
-		return 34;
-	}
+    /**
+     * Returns the width of the bounding box of the original SVG image.
+     * @return The width of the bounding box of the original SVG image.
+     */
+    public int getOrigWidth() {
+        return 34;
+    }
 
-	/**
-	 * Returns the height of the bounding box of the original SVG image.
-	 * @return The height of the bounding box of the original SVG image.
-	 */
-	public int getOrigHeight() {
-		return 27;
-	}
-
-
+    /**
+     * Returns the height of the bounding box of the original SVG image.
+     * @return The height of the bounding box of the original SVG image.
+     */
+    public int getOrigHeight() {
+        return 27;
+    }
+    
+    
 	/**
 	 * The current width of this resizable icon.
 	 */
@@ -631,15 +647,15 @@ class Mars implements Icon {
 	 * Creates a new transcoded SVG image.
 	 */
 	public Mars() {
-		this.width = getOrigWidth();
-		this.height = getOrigHeight();
+        this.width = getOrigWidth();
+        this.height = getOrigHeight();
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * @see javax.swing.Icon#getIconHeight()
 	 */
-	@Override
+    @Override
 	public int getIconHeight() {
 		return height;
 	}
@@ -648,7 +664,7 @@ class Mars implements Icon {
 	 * (non-Javadoc)
 	 * @see javax.swing.Icon#getIconWidth()
 	 */
-	@Override
+    @Override
 	public int getIconWidth() {
 		return width;
 	}
@@ -666,7 +682,7 @@ class Mars implements Icon {
 	 * (non-Javadoc)
 	 * @see javax.swing.Icon#paintIcon(java.awt.Component, java.awt.Graphics, int, int)
 	 */
-	@Override
+    @Override
 	public void paintIcon(Component c, Graphics g, int x, int y) {
 		Graphics2D g2d = (Graphics2D) g.create();
 		g2d.translate(x, y);
@@ -682,32 +698,32 @@ class Mars implements Icon {
 
 /**
  * This class has been automatically generated using svg2java
- *
+ * 
  */
 class Mercury implements Icon {
-
+	
 	private float origAlpha = 1.0f;
 
 	/**
 	 * Paints the transcoded SVG image on the specified graphics context. You
 	 * can install a custom transformation on the graphics context to scale the
 	 * image.
-	 *
+	 * 
 	 * @param g
-	 *			Graphics context.
+	 *            Graphics context.
 	 */
 	public void paint(Graphics2D g) {
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		origAlpha = 1.0f;
-		Composite origComposite = g.getComposite();
-		if (origComposite instanceof AlphaComposite) {
-			AlphaComposite origAlphaComposite =
-				(AlphaComposite)origComposite;
-			if (origAlphaComposite.getRule() == AlphaComposite.SRC_OVER) {
-				origAlpha = origAlphaComposite.getAlpha();
-			}
-		}
-
+        origAlpha = 1.0f;
+        Composite origComposite = g.getComposite();
+        if (origComposite instanceof AlphaComposite) {
+            AlphaComposite origAlphaComposite = 
+                (AlphaComposite)origComposite;
+            if (origAlphaComposite.getRule() == AlphaComposite.SRC_OVER) {
+                origAlpha = origAlphaComposite.getAlpha();
+            }
+        }
+        
 		// _0
 		AffineTransform trans_0 = g.getTransform();
 		paintRootGraphicsNode_0(g);
@@ -802,39 +818,39 @@ class Mercury implements Icon {
 
 
 
-	/**
-	 * Returns the X of the bounding box of the original SVG image.
-	 * @return The X of the bounding box of the original SVG image.
-	 */
-	public int getOrigX() {
-		return 338;
-	}
+    /**
+     * Returns the X of the bounding box of the original SVG image.
+     * @return The X of the bounding box of the original SVG image.
+     */
+    public int getOrigX() {
+        return 338;
+    }
 
-	/**
-	 * Returns the Y of the bounding box of the original SVG image.
-	 * @return The Y of the bounding box of the original SVG image.
-	 */
-	public int getOrigY() {
-		return 510;
-	}
+    /**
+     * Returns the Y of the bounding box of the original SVG image.
+     * @return The Y of the bounding box of the original SVG image.
+     */
+    public int getOrigY() {
+        return 510;
+    }
 
-	/**
-	 * Returns the width of the bounding box of the original SVG image.
-	 * @return The width of the bounding box of the original SVG image.
-	 */
-	public int getOrigWidth() {
-		return 25;
-	}
+    /**
+     * Returns the width of the bounding box of the original SVG image.
+     * @return The width of the bounding box of the original SVG image.
+     */
+    public int getOrigWidth() {
+        return 25;
+    }
 
-	/**
-	 * Returns the height of the bounding box of the original SVG image.
-	 * @return The height of the bounding box of the original SVG image.
-	 */
-	public int getOrigHeight() {
-		return 46;
-	}
-
-
+    /**
+     * Returns the height of the bounding box of the original SVG image.
+     * @return The height of the bounding box of the original SVG image.
+     */
+    public int getOrigHeight() {
+        return 46;
+    }
+    
+    
 	/**
 	 * The current width of this resizable icon.
 	 */
@@ -849,15 +865,15 @@ class Mercury implements Icon {
 	 * Creates a new transcoded SVG image.
 	 */
 	public Mercury() {
-		this.width = getOrigWidth();
-		this.height = getOrigHeight();
+        this.width = getOrigWidth();
+        this.height = getOrigHeight();
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * @see javax.swing.Icon#getIconHeight()
 	 */
-	@Override
+    @Override
 	public int getIconHeight() {
 		return height;
 	}
@@ -866,7 +882,7 @@ class Mercury implements Icon {
 	 * (non-Javadoc)
 	 * @see javax.swing.Icon#getIconWidth()
 	 */
-	@Override
+    @Override
 	public int getIconWidth() {
 		return width;
 	}
@@ -884,7 +900,7 @@ class Mercury implements Icon {
 	 * (non-Javadoc)
 	 * @see javax.swing.Icon#paintIcon(java.awt.Component, java.awt.Graphics, int, int)
 	 */
-	@Override
+    @Override
 	public void paintIcon(Component c, Graphics g, int x, int y) {
 		Graphics2D g2d = (Graphics2D) g.create();
 		g2d.translate(x, y);
@@ -900,32 +916,32 @@ class Mercury implements Icon {
 
 /**
  * This class has been automatically generated using svg2java
- *
+ * 
  */
 class Neptune implements Icon {
-
+	
 	private float origAlpha = 1.0f;
 
 	/**
 	 * Paints the transcoded SVG image on the specified graphics context. You
 	 * can install a custom transformation on the graphics context to scale the
 	 * image.
-	 *
+	 * 
 	 * @param g
-	 *			Graphics context.
+	 *            Graphics context.
 	 */
 	public void paint(Graphics2D g) {
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		origAlpha = 1.0f;
-		Composite origComposite = g.getComposite();
-		if (origComposite instanceof AlphaComposite) {
-			AlphaComposite origAlphaComposite =
-				(AlphaComposite)origComposite;
-			if (origAlphaComposite.getRule() == AlphaComposite.SRC_OVER) {
-				origAlpha = origAlphaComposite.getAlpha();
-			}
-		}
-
+        origAlpha = 1.0f;
+        Composite origComposite = g.getComposite();
+        if (origComposite instanceof AlphaComposite) {
+            AlphaComposite origAlphaComposite = 
+                (AlphaComposite)origComposite;
+            if (origAlphaComposite.getRule() == AlphaComposite.SRC_OVER) {
+                origAlpha = origAlphaComposite.getAlpha();
+            }
+        }
+        
 		// _0
 		AffineTransform trans_0 = g.getTransform();
 		paintRootGraphicsNode_0(g);
@@ -1000,39 +1016,39 @@ class Neptune implements Icon {
 
 
 
-	/**
-	 * Returns the X of the bounding box of the original SVG image.
-	 * @return The X of the bounding box of the original SVG image.
-	 */
-	public int getOrigX() {
-		return 336;
-	}
+    /**
+     * Returns the X of the bounding box of the original SVG image.
+     * @return The X of the bounding box of the original SVG image.
+     */
+    public int getOrigX() {
+        return 336;
+    }
 
-	/**
-	 * Returns the Y of the bounding box of the original SVG image.
-	 * @return The Y of the bounding box of the original SVG image.
-	 */
-	public int getOrigY() {
-		return 513;
-	}
+    /**
+     * Returns the Y of the bounding box of the original SVG image.
+     * @return The Y of the bounding box of the original SVG image.
+     */
+    public int getOrigY() {
+        return 513;
+    }
 
-	/**
-	 * Returns the width of the bounding box of the original SVG image.
-	 * @return The width of the bounding box of the original SVG image.
-	 */
-	public int getOrigWidth() {
-		return 29;
-	}
+    /**
+     * Returns the width of the bounding box of the original SVG image.
+     * @return The width of the bounding box of the original SVG image.
+     */
+    public int getOrigWidth() {
+        return 29;
+    }
 
-	/**
-	 * Returns the height of the bounding box of the original SVG image.
-	 * @return The height of the bounding box of the original SVG image.
-	 */
-	public int getOrigHeight() {
-		return 40;
-	}
-
-
+    /**
+     * Returns the height of the bounding box of the original SVG image.
+     * @return The height of the bounding box of the original SVG image.
+     */
+    public int getOrigHeight() {
+        return 40;
+    }
+    
+    
 	/**
 	 * The current width of this resizable icon.
 	 */
@@ -1047,15 +1063,15 @@ class Neptune implements Icon {
 	 * Creates a new transcoded SVG image.
 	 */
 	public Neptune() {
-		this.width = getOrigWidth();
-		this.height = getOrigHeight();
+        this.width = getOrigWidth();
+        this.height = getOrigHeight();
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * @see javax.swing.Icon#getIconHeight()
 	 */
-	@Override
+    @Override
 	public int getIconHeight() {
 		return height;
 	}
@@ -1064,7 +1080,7 @@ class Neptune implements Icon {
 	 * (non-Javadoc)
 	 * @see javax.swing.Icon#getIconWidth()
 	 */
-	@Override
+    @Override
 	public int getIconWidth() {
 		return width;
 	}
@@ -1082,7 +1098,7 @@ class Neptune implements Icon {
 	 * (non-Javadoc)
 	 * @see javax.swing.Icon#paintIcon(java.awt.Component, java.awt.Graphics, int, int)
 	 */
-	@Override
+    @Override
 	public void paintIcon(Component c, Graphics g, int x, int y) {
 		Graphics2D g2d = (Graphics2D) g.create();
 		g2d.translate(x, y);
@@ -1098,32 +1114,32 @@ class Neptune implements Icon {
 
 /**
  * This class has been automatically generated using svg2java
- *
+ * 
  */
 class Pluto implements Icon {
-
+	
 	private float origAlpha = 1.0f;
 
 	/**
 	 * Paints the transcoded SVG image on the specified graphics context. You
 	 * can install a custom transformation on the graphics context to scale the
 	 * image.
-	 *
+	 * 
 	 * @param g
-	 *			Graphics context.
+	 *            Graphics context.
 	 */
 	public void paint(Graphics2D g) {
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		origAlpha = 1.0f;
-		Composite origComposite = g.getComposite();
-		if (origComposite instanceof AlphaComposite) {
-			AlphaComposite origAlphaComposite =
-				(AlphaComposite)origComposite;
-			if (origAlphaComposite.getRule() == AlphaComposite.SRC_OVER) {
-				origAlpha = origAlphaComposite.getAlpha();
-			}
-		}
-
+        origAlpha = 1.0f;
+        Composite origComposite = g.getComposite();
+        if (origComposite instanceof AlphaComposite) {
+            AlphaComposite origAlphaComposite = 
+                (AlphaComposite)origComposite;
+            if (origAlphaComposite.getRule() == AlphaComposite.SRC_OVER) {
+                origAlpha = origAlphaComposite.getAlpha();
+            }
+        }
+        
 		// _0
 		AffineTransform trans_0 = g.getTransform();
 		paintRootGraphicsNode_0(g);
@@ -1217,39 +1233,39 @@ class Pluto implements Icon {
 
 
 
-	/**
-	 * Returns the X of the bounding box of the original SVG image.
-	 * @return The X of the bounding box of the original SVG image.
-	 */
-	public int getOrigX() {
-		return 337;
-	}
+    /**
+     * Returns the X of the bounding box of the original SVG image.
+     * @return The X of the bounding box of the original SVG image.
+     */
+    public int getOrigX() {
+        return 337;
+    }
 
-	/**
-	 * Returns the Y of the bounding box of the original SVG image.
-	 * @return The Y of the bounding box of the original SVG image.
-	 */
-	public int getOrigY() {
-		return 514;
-	}
+    /**
+     * Returns the Y of the bounding box of the original SVG image.
+     * @return The Y of the bounding box of the original SVG image.
+     */
+    public int getOrigY() {
+        return 514;
+    }
 
-	/**
-	 * Returns the width of the bounding box of the original SVG image.
-	 * @return The width of the bounding box of the original SVG image.
-	 */
-	public int getOrigWidth() {
-		return 26;
-	}
+    /**
+     * Returns the width of the bounding box of the original SVG image.
+     * @return The width of the bounding box of the original SVG image.
+     */
+    public int getOrigWidth() {
+        return 26;
+    }
 
-	/**
-	 * Returns the height of the bounding box of the original SVG image.
-	 * @return The height of the bounding box of the original SVG image.
-	 */
-	public int getOrigHeight() {
-		return 37;
-	}
-
-
+    /**
+     * Returns the height of the bounding box of the original SVG image.
+     * @return The height of the bounding box of the original SVG image.
+     */
+    public int getOrigHeight() {
+        return 37;
+    }
+    
+    
 	/**
 	 * The current width of this resizable icon.
 	 */
@@ -1264,15 +1280,15 @@ class Pluto implements Icon {
 	 * Creates a new transcoded SVG image.
 	 */
 	public Pluto() {
-		this.width = getOrigWidth();
-		this.height = getOrigHeight();
+        this.width = getOrigWidth();
+        this.height = getOrigHeight();
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * @see javax.swing.Icon#getIconHeight()
 	 */
-	@Override
+    @Override
 	public int getIconHeight() {
 		return height;
 	}
@@ -1281,7 +1297,7 @@ class Pluto implements Icon {
 	 * (non-Javadoc)
 	 * @see javax.swing.Icon#getIconWidth()
 	 */
-	@Override
+    @Override
 	public int getIconWidth() {
 		return width;
 	}
@@ -1299,7 +1315,7 @@ class Pluto implements Icon {
 	 * (non-Javadoc)
 	 * @see javax.swing.Icon#paintIcon(java.awt.Component, java.awt.Graphics, int, int)
 	 */
-	@Override
+    @Override
 	public void paintIcon(Component c, Graphics g, int x, int y) {
 		Graphics2D g2d = (Graphics2D) g.create();
 		g2d.translate(x, y);
@@ -1315,32 +1331,32 @@ class Pluto implements Icon {
 
 /**
  * This class has been automatically generated using svg2java
- *
+ * 
  */
 class Saturn implements Icon {
-
+	
 	private float origAlpha = 1.0f;
 
 	/**
 	 * Paints the transcoded SVG image on the specified graphics context. You
 	 * can install a custom transformation on the graphics context to scale the
 	 * image.
-	 *
+	 * 
 	 * @param g
-	 *			Graphics context.
+	 *            Graphics context.
 	 */
 	public void paint(Graphics2D g) {
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		origAlpha = 1.0f;
-		Composite origComposite = g.getComposite();
-		if (origComposite instanceof AlphaComposite) {
-			AlphaComposite origAlphaComposite =
-				(AlphaComposite)origComposite;
-			if (origAlphaComposite.getRule() == AlphaComposite.SRC_OVER) {
-				origAlpha = origAlphaComposite.getAlpha();
-			}
-		}
-
+        origAlpha = 1.0f;
+        Composite origComposite = g.getComposite();
+        if (origComposite instanceof AlphaComposite) {
+            AlphaComposite origAlphaComposite = 
+                (AlphaComposite)origComposite;
+            if (origAlphaComposite.getRule() == AlphaComposite.SRC_OVER) {
+                origAlpha = origAlphaComposite.getAlpha();
+            }
+        }
+        
 		// _0
 		AffineTransform trans_0 = g.getTransform();
 		paintRootGraphicsNode_0(g);
@@ -1420,39 +1436,39 @@ class Saturn implements Icon {
 
 
 
-	/**
-	 * Returns the X of the bounding box of the original SVG image.
-	 * @return The X of the bounding box of the original SVG image.
-	 */
-	public int getOrigX() {
-		return 341;
-	}
+    /**
+     * Returns the X of the bounding box of the original SVG image.
+     * @return The X of the bounding box of the original SVG image.
+     */
+    public int getOrigX() {
+        return 341;
+    }
 
-	/**
-	 * Returns the Y of the bounding box of the original SVG image.
-	 * @return The Y of the bounding box of the original SVG image.
-	 */
-	public int getOrigY() {
-		return 514;
-	}
+    /**
+     * Returns the Y of the bounding box of the original SVG image.
+     * @return The Y of the bounding box of the original SVG image.
+     */
+    public int getOrigY() {
+        return 514;
+    }
 
-	/**
-	 * Returns the width of the bounding box of the original SVG image.
-	 * @return The width of the bounding box of the original SVG image.
-	 */
-	public int getOrigWidth() {
-		return 20;
-	}
+    /**
+     * Returns the width of the bounding box of the original SVG image.
+     * @return The width of the bounding box of the original SVG image.
+     */
+    public int getOrigWidth() {
+        return 20;
+    }
 
-	/**
-	 * Returns the height of the bounding box of the original SVG image.
-	 * @return The height of the bounding box of the original SVG image.
-	 */
-	public int getOrigHeight() {
-		return 38;
-	}
-
-
+    /**
+     * Returns the height of the bounding box of the original SVG image.
+     * @return The height of the bounding box of the original SVG image.
+     */
+    public int getOrigHeight() {
+        return 38;
+    }
+    
+    
 	/**
 	 * The current width of this resizable icon.
 	 */
@@ -1467,15 +1483,15 @@ class Saturn implements Icon {
 	 * Creates a new transcoded SVG image.
 	 */
 	public Saturn() {
-		this.width = getOrigWidth();
-		this.height = getOrigHeight();
+        this.width = getOrigWidth();
+        this.height = getOrigHeight();
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * @see javax.swing.Icon#getIconHeight()
 	 */
-	@Override
+    @Override
 	public int getIconHeight() {
 		return height;
 	}
@@ -1484,7 +1500,7 @@ class Saturn implements Icon {
 	 * (non-Javadoc)
 	 * @see javax.swing.Icon#getIconWidth()
 	 */
-	@Override
+    @Override
 	public int getIconWidth() {
 		return width;
 	}
@@ -1502,7 +1518,7 @@ class Saturn implements Icon {
 	 * (non-Javadoc)
 	 * @see javax.swing.Icon#paintIcon(java.awt.Component, java.awt.Graphics, int, int)
 	 */
-	@Override
+    @Override
 	public void paintIcon(Component c, Graphics g, int x, int y) {
 		Graphics2D g2d = (Graphics2D) g.create();
 		g2d.translate(x, y);
@@ -1518,32 +1534,32 @@ class Saturn implements Icon {
 
 /**
  * This class has been automatically generated using svg2java
- *
+ * 
  */
 class Sun implements Icon {
-
+	
 	private float origAlpha = 1.0f;
 
 	/**
 	 * Paints the transcoded SVG image on the specified graphics context. You
 	 * can install a custom transformation on the graphics context to scale the
 	 * image.
-	 *
+	 * 
 	 * @param g
-	 *			Graphics context.
+	 *            Graphics context.
 	 */
 	public void paint(Graphics2D g) {
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		origAlpha = 1.0f;
-		Composite origComposite = g.getComposite();
-		if (origComposite instanceof AlphaComposite) {
-			AlphaComposite origAlphaComposite =
-				(AlphaComposite)origComposite;
-			if (origAlphaComposite.getRule() == AlphaComposite.SRC_OVER) {
-				origAlpha = origAlphaComposite.getAlpha();
-			}
-		}
-
+        origAlpha = 1.0f;
+        Composite origComposite = g.getComposite();
+        if (origComposite instanceof AlphaComposite) {
+            AlphaComposite origAlphaComposite = 
+                (AlphaComposite)origComposite;
+            if (origAlphaComposite.getRule() == AlphaComposite.SRC_OVER) {
+                origAlpha = origAlphaComposite.getAlpha();
+            }
+        }
+        
 		// _0
 		AffineTransform trans_0 = g.getTransform();
 		paintRootGraphicsNode_0(g);
@@ -1612,39 +1628,39 @@ class Sun implements Icon {
 
 
 
-	/**
-	 * Returns the X of the bounding box of the original SVG image.
-	 * @return The X of the bounding box of the original SVG image.
-	 */
-	public int getOrigX() {
-		return 334;
-	}
+    /**
+     * Returns the X of the bounding box of the original SVG image.
+     * @return The X of the bounding box of the original SVG image.
+     */
+    public int getOrigX() {
+        return 334;
+    }
 
-	/**
-	 * Returns the Y of the bounding box of the original SVG image.
-	 * @return The Y of the bounding box of the original SVG image.
-	 */
-	public int getOrigY() {
-		return 516;
-	}
+    /**
+     * Returns the Y of the bounding box of the original SVG image.
+     * @return The Y of the bounding box of the original SVG image.
+     */
+    public int getOrigY() {
+        return 516;
+    }
 
-	/**
-	 * Returns the width of the bounding box of the original SVG image.
-	 * @return The width of the bounding box of the original SVG image.
-	 */
-	public int getOrigWidth() {
-		return 34;
-	}
+    /**
+     * Returns the width of the bounding box of the original SVG image.
+     * @return The width of the bounding box of the original SVG image.
+     */
+    public int getOrigWidth() {
+        return 34;
+    }
 
-	/**
-	 * Returns the height of the bounding box of the original SVG image.
-	 * @return The height of the bounding box of the original SVG image.
-	 */
-	public int getOrigHeight() {
-		return 34;
-	}
-
-
+    /**
+     * Returns the height of the bounding box of the original SVG image.
+     * @return The height of the bounding box of the original SVG image.
+     */
+    public int getOrigHeight() {
+        return 34;
+    }
+    
+    
 	/**
 	 * The current width of this resizable icon.
 	 */
@@ -1659,15 +1675,15 @@ class Sun implements Icon {
 	 * Creates a new transcoded SVG image.
 	 */
 	public Sun() {
-		this.width = getOrigWidth();
-		this.height = getOrigHeight();
+        this.width = getOrigWidth();
+        this.height = getOrigHeight();
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * @see javax.swing.Icon#getIconHeight()
 	 */
-	@Override
+    @Override
 	public int getIconHeight() {
 		return height;
 	}
@@ -1676,7 +1692,7 @@ class Sun implements Icon {
 	 * (non-Javadoc)
 	 * @see javax.swing.Icon#getIconWidth()
 	 */
-	@Override
+    @Override
 	public int getIconWidth() {
 		return width;
 	}
@@ -1694,7 +1710,7 @@ class Sun implements Icon {
 	 * (non-Javadoc)
 	 * @see javax.swing.Icon#paintIcon(java.awt.Component, java.awt.Graphics, int, int)
 	 */
-	@Override
+    @Override
 	public void paintIcon(Component c, Graphics g, int x, int y) {
 		Graphics2D g2d = (Graphics2D) g.create();
 		g2d.translate(x, y);
@@ -1710,32 +1726,32 @@ class Sun implements Icon {
 
 /**
  * This class has been automatically generated using svg2java
- *
+ * 
  */
 class Earth implements Icon {
-
+	
 	private float origAlpha = 1.0f;
 
 	/**
 	 * Paints the transcoded SVG image on the specified graphics context. You
 	 * can install a custom transformation on the graphics context to scale the
 	 * image.
-	 *
+	 * 
 	 * @param g
-	 *			Graphics context.
+	 *            Graphics context.
 	 */
 	public void paint(Graphics2D g) {
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		origAlpha = 1.0f;
-		Composite origComposite = g.getComposite();
-		if (origComposite instanceof AlphaComposite) {
-			AlphaComposite origAlphaComposite =
-				(AlphaComposite)origComposite;
-			if (origAlphaComposite.getRule() == AlphaComposite.SRC_OVER) {
-				origAlpha = origAlphaComposite.getAlpha();
-			}
-		}
-
+        origAlpha = 1.0f;
+        Composite origComposite = g.getComposite();
+        if (origComposite instanceof AlphaComposite) {
+            AlphaComposite origAlphaComposite = 
+                (AlphaComposite)origComposite;
+            if (origAlphaComposite.getRule() == AlphaComposite.SRC_OVER) {
+                origAlpha = origAlphaComposite.getAlpha();
+            }
+        }
+        
 		// _0
 		AffineTransform trans_0 = g.getTransform();
 		paintRootGraphicsNode_0(g);
@@ -1815,39 +1831,39 @@ class Earth implements Icon {
 
 
 
-	/**
-	 * Returns the X of the bounding box of the original SVG image.
-	 * @return The X of the bounding box of the original SVG image.
-	 */
-	public int getOrigX() {
-		return 334;
-	}
+    /**
+     * Returns the X of the bounding box of the original SVG image.
+     * @return The X of the bounding box of the original SVG image.
+     */
+    public int getOrigX() {
+        return 334;
+    }
 
-	/**
-	 * Returns the Y of the bounding box of the original SVG image.
-	 * @return The Y of the bounding box of the original SVG image.
-	 */
-	public int getOrigY() {
-		return 516;
-	}
+    /**
+     * Returns the Y of the bounding box of the original SVG image.
+     * @return The Y of the bounding box of the original SVG image.
+     */
+    public int getOrigY() {
+        return 516;
+    }
 
-	/**
-	 * Returns the width of the bounding box of the original SVG image.
-	 * @return The width of the bounding box of the original SVG image.
-	 */
-	public int getOrigWidth() {
-		return 34;
-	}
+    /**
+     * Returns the width of the bounding box of the original SVG image.
+     * @return The width of the bounding box of the original SVG image.
+     */
+    public int getOrigWidth() {
+        return 34;
+    }
 
-	/**
-	 * Returns the height of the bounding box of the original SVG image.
-	 * @return The height of the bounding box of the original SVG image.
-	 */
-	public int getOrigHeight() {
-		return 34;
-	}
-
-
+    /**
+     * Returns the height of the bounding box of the original SVG image.
+     * @return The height of the bounding box of the original SVG image.
+     */
+    public int getOrigHeight() {
+        return 34;
+    }
+    
+    
 	/**
 	 * The current width of this resizable icon.
 	 */
@@ -1862,15 +1878,15 @@ class Earth implements Icon {
 	 * Creates a new transcoded SVG image.
 	 */
 	public Earth() {
-		this.width = getOrigWidth();
-		this.height = getOrigHeight();
+        this.width = getOrigWidth();
+        this.height = getOrigHeight();
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * @see javax.swing.Icon#getIconHeight()
 	 */
-	@Override
+    @Override
 	public int getIconHeight() {
 		return height;
 	}
@@ -1879,7 +1895,7 @@ class Earth implements Icon {
 	 * (non-Javadoc)
 	 * @see javax.swing.Icon#getIconWidth()
 	 */
-	@Override
+    @Override
 	public int getIconWidth() {
 		return width;
 	}
@@ -1897,7 +1913,7 @@ class Earth implements Icon {
 	 * (non-Javadoc)
 	 * @see javax.swing.Icon#paintIcon(java.awt.Component, java.awt.Graphics, int, int)
 	 */
-	@Override
+    @Override
 	public void paintIcon(Component c, Graphics g, int x, int y) {
 		Graphics2D g2d = (Graphics2D) g.create();
 		g2d.translate(x, y);
@@ -1913,32 +1929,32 @@ class Earth implements Icon {
 
 /**
  * This class has been automatically generated using svg2java
- *
+ * 
  */
 class Venus implements Icon {
-
+	
 	private float origAlpha = 1.0f;
 
 	/**
 	 * Paints the transcoded SVG image on the specified graphics context. You
 	 * can install a custom transformation on the graphics context to scale the
 	 * image.
-	 *
+	 * 
 	 * @param g
-	 *			Graphics context.
+	 *            Graphics context.
 	 */
 	public void paint(Graphics2D g) {
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		origAlpha = 1.0f;
-		Composite origComposite = g.getComposite();
-		if (origComposite instanceof AlphaComposite) {
-			AlphaComposite origAlphaComposite =
-				(AlphaComposite)origComposite;
-			if (origAlphaComposite.getRule() == AlphaComposite.SRC_OVER) {
-				origAlpha = origAlphaComposite.getAlpha();
-			}
-		}
-
+        origAlpha = 1.0f;
+        Composite origComposite = g.getComposite();
+        if (origComposite instanceof AlphaComposite) {
+            AlphaComposite origAlphaComposite = 
+                (AlphaComposite)origComposite;
+            if (origAlphaComposite.getRule() == AlphaComposite.SRC_OVER) {
+                origAlpha = origAlphaComposite.getAlpha();
+            }
+        }
+        
 		// _0
 		AffineTransform trans_0 = g.getTransform();
 		paintRootGraphicsNode_0(g);
@@ -2017,39 +2033,39 @@ class Venus implements Icon {
 
 
 
-	/**
-	 * Returns the X of the bounding box of the original SVG image.
-	 * @return The X of the bounding box of the original SVG image.
-	 */
-	public int getOrigX() {
-		return 338;
-	}
+    /**
+     * Returns the X of the bounding box of the original SVG image.
+     * @return The X of the bounding box of the original SVG image.
+     */
+    public int getOrigX() {
+        return 338;
+    }
 
-	/**
-	 * Returns the Y of the bounding box of the original SVG image.
-	 * @return The Y of the bounding box of the original SVG image.
-	 */
-	public int getOrigY() {
-		return 514;
-	}
+    /**
+     * Returns the Y of the bounding box of the original SVG image.
+     * @return The Y of the bounding box of the original SVG image.
+     */
+    public int getOrigY() {
+        return 514;
+    }
 
-	/**
-	 * Returns the width of the bounding box of the original SVG image.
-	 * @return The width of the bounding box of the original SVG image.
-	 */
-	public int getOrigWidth() {
-		return 24;
-	}
+    /**
+     * Returns the width of the bounding box of the original SVG image.
+     * @return The width of the bounding box of the original SVG image.
+     */
+    public int getOrigWidth() {
+        return 24;
+    }
 
-	/**
-	 * Returns the height of the bounding box of the original SVG image.
-	 * @return The height of the bounding box of the original SVG image.
-	 */
-	public int getOrigHeight() {
-		return 37;
-	}
-
-
+    /**
+     * Returns the height of the bounding box of the original SVG image.
+     * @return The height of the bounding box of the original SVG image.
+     */
+    public int getOrigHeight() {
+        return 37;
+    }
+    
+    
 	/**
 	 * The current width of this resizable icon.
 	 */
@@ -2064,15 +2080,15 @@ class Venus implements Icon {
 	 * Creates a new transcoded SVG image.
 	 */
 	public Venus() {
-		this.width = getOrigWidth();
-		this.height = getOrigHeight();
+        this.width = getOrigWidth();
+        this.height = getOrigHeight();
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * @see javax.swing.Icon#getIconHeight()
 	 */
-	@Override
+    @Override
 	public int getIconHeight() {
 		return height;
 	}
@@ -2081,7 +2097,7 @@ class Venus implements Icon {
 	 * (non-Javadoc)
 	 * @see javax.swing.Icon#getIconWidth()
 	 */
-	@Override
+    @Override
 	public int getIconWidth() {
 		return width;
 	}
@@ -2099,7 +2115,7 @@ class Venus implements Icon {
 	 * (non-Javadoc)
 	 * @see javax.swing.Icon#paintIcon(java.awt.Component, java.awt.Graphics, int, int)
 	 */
-	@Override
+    @Override
 	public void paintIcon(Component c, Graphics g, int x, int y) {
 		Graphics2D g2d = (Graphics2D) g.create();
 		g2d.translate(x, y);
@@ -2115,32 +2131,32 @@ class Venus implements Icon {
 
 /**
  * This class has been automatically generated using svg2java
- *
+ * 
  */
 class Uranus implements Icon {
-
+	
 	private float origAlpha = 1.0f;
 
 	/**
 	 * Paints the transcoded SVG image on the specified graphics context. You
 	 * can install a custom transformation on the graphics context to scale the
 	 * image.
-	 *
+	 * 
 	 * @param g
-	 *			Graphics context.
+	 *            Graphics context.
 	 */
 	public void paint(Graphics2D g) {
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		origAlpha = 1.0f;
-		Composite origComposite = g.getComposite();
-		if (origComposite instanceof AlphaComposite) {
-			AlphaComposite origAlphaComposite =
-				(AlphaComposite)origComposite;
-			if (origAlphaComposite.getRule() == AlphaComposite.SRC_OVER) {
-				origAlpha = origAlphaComposite.getAlpha();
-			}
-		}
-
+        origAlpha = 1.0f;
+        Composite origComposite = g.getComposite();
+        if (origComposite instanceof AlphaComposite) {
+            AlphaComposite origAlphaComposite = 
+                (AlphaComposite)origComposite;
+            if (origAlphaComposite.getRule() == AlphaComposite.SRC_OVER) {
+                origAlpha = origAlphaComposite.getAlpha();
+            }
+        }
+        
 		// _0
 		AffineTransform trans_0 = g.getTransform();
 		paintRootGraphicsNode_0(g);
@@ -2263,39 +2279,39 @@ class Uranus implements Icon {
 
 
 
-	/**
-	 * Returns the X of the bounding box of the original SVG image.
-	 * @return The X of the bounding box of the original SVG image.
-	 */
-	public int getOrigX() {
-		return 332;
-	}
+    /**
+     * Returns the X of the bounding box of the original SVG image.
+     * @return The X of the bounding box of the original SVG image.
+     */
+    public int getOrigX() {
+        return 332;
+    }
 
-	/**
-	 * Returns the Y of the bounding box of the original SVG image.
-	 * @return The Y of the bounding box of the original SVG image.
-	 */
-	public int getOrigY() {
-		return 515;
-	}
+    /**
+     * Returns the Y of the bounding box of the original SVG image.
+     * @return The Y of the bounding box of the original SVG image.
+     */
+    public int getOrigY() {
+        return 515;
+    }
 
-	/**
-	 * Returns the width of the bounding box of the original SVG image.
-	 * @return The width of the bounding box of the original SVG image.
-	 */
-	public int getOrigWidth() {
-		return 36;
-	}
+    /**
+     * Returns the width of the bounding box of the original SVG image.
+     * @return The width of the bounding box of the original SVG image.
+     */
+    public int getOrigWidth() {
+        return 36;
+    }
 
-	/**
-	 * Returns the height of the bounding box of the original SVG image.
-	 * @return The height of the bounding box of the original SVG image.
-	 */
-	public int getOrigHeight() {
-		return 36;
-	}
-
-
+    /**
+     * Returns the height of the bounding box of the original SVG image.
+     * @return The height of the bounding box of the original SVG image.
+     */
+    public int getOrigHeight() {
+        return 36;
+    }
+    
+    
 	/**
 	 * The current width of this resizable icon.
 	 */
@@ -2310,15 +2326,15 @@ class Uranus implements Icon {
 	 * Creates a new transcoded SVG image.
 	 */
 	public Uranus() {
-		this.width = getOrigWidth();
-		this.height = getOrigHeight();
+        this.width = getOrigWidth();
+        this.height = getOrigHeight();
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * @see javax.swing.Icon#getIconHeight()
 	 */
-	@Override
+    @Override
 	public int getIconHeight() {
 		return height;
 	}
@@ -2327,7 +2343,7 @@ class Uranus implements Icon {
 	 * (non-Javadoc)
 	 * @see javax.swing.Icon#getIconWidth()
 	 */
-	@Override
+    @Override
 	public int getIconWidth() {
 		return width;
 	}
@@ -2345,7 +2361,7 @@ class Uranus implements Icon {
 	 * (non-Javadoc)
 	 * @see javax.swing.Icon#paintIcon(java.awt.Component, java.awt.Graphics, int, int)
 	 */
-	@Override
+    @Override
 	public void paintIcon(Component c, Graphics g, int x, int y) {
 		Graphics2D g2d = (Graphics2D) g.create();
 		g2d.translate(x, y);

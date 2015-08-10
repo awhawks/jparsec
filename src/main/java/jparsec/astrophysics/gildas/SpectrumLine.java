@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- *
+ * 
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *
+ *  
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- *
+ * 
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */
+ */			
 package jparsec.astrophysics.gildas;
 
 import java.awt.Color;
@@ -47,7 +47,7 @@ public class SpectrumLine implements Serializable {
 	 * values to use the entire range.
 	 */
 	public double yMin = -1, yMax = -1;
-
+	
 	/** Frequency of the line in MHz. */
 	public double freq = -1;
 	/**
@@ -87,10 +87,10 @@ public class SpectrumLine implements Serializable {
 	 * Line label.
 	 */
 	public String label = "";
-
+	
 	/** Special label used for advanced charting with Gildas. */
 	public String labelForChartID = "";
-
+	
 	/**
 	 * True to consider this line in the fit and output it
 	 * in the results.
@@ -110,7 +110,7 @@ public class SpectrumLine implements Serializable {
 	 * Holds the title of the rotational diagrams that this line belongs to, if any.
 	 */
 	public String diagrotIDs[] = null;
-
+	
 	/**
 	 * The index of this line in the set of spectra.
 	 */
@@ -119,12 +119,12 @@ public class SpectrumLine implements Serializable {
 	 * The index of this line in the set of lines for this spectrum.
 	 */
 	public int lineIndex = -1;
-
+	
 	/** Color index. -1 to set it automatically. */
 	public int colorIndex = -1;
-
+	
 	/** List of colors. */
-	public static final Color col[] = new Color[] {
+	public static final Color col[] = new Color[] { 
 			new Color(30, 30, 30), Color.RED, Color.GREEN, Color.BLUE, Color.ORANGE, Color.MAGENTA,
 			Color.PINK, Color.YELLOW, Color.CYAN, Color.GRAY
 	};
@@ -147,8 +147,8 @@ public class SpectrumLine implements Serializable {
 		s.colorIndex = this.colorIndex;
 		if (this.diagrotIDs != null) s.diagrotIDs = this.diagrotIDs;
 		return s;
-	}
-
+	}	
+	
 	/** Returns a string object with the parameters of the Gaussian. */
 	public String toString() {
 		MeasureElement v = new MeasureElement(vel, velError, MeasureElement.UNIT_X_KMS);
@@ -157,10 +157,10 @@ public class SpectrumLine implements Serializable {
 		MeasureElement a = new MeasureElement(area, areaError, "K*km/s");
 
 		String s = "vel = "+v.toString()+", width = "+w.toString()+", peak = "+p.toString()+", area = "+a.toString();
-
+		
 		return s;
 	}
-
+	
 	/**
 	 * Generates a Latex table with the results of the line fitting. Lines are sorted
 	 * by increasing order of frequencies.
@@ -184,7 +184,7 @@ public class SpectrumLine implements Serializable {
 		latex.writeRowInTable(columns, null, null, null);
 		latex.setTextStyle(STYLE.PLAIN);
 		latex.writeHorizontalLine();
-
+		
 		double vels[] = new double[sl0.length];
 		for (int i=0; i<sl0.length; i++)
 		{
@@ -198,13 +198,13 @@ public class SpectrumLine implements Serializable {
 				double line[] = new double[] {
 						sline.vel, sline.width, sline.peakT, sline.area,
 						sline.velError, sline.widthError, sline.peakTError, sline.areaError
-				};
-
+				};			        				
+	 
 				MeasureElement me1 = new MeasureElement(line[0], line[4], "");
 				MeasureElement me2 = new MeasureElement(line[1], line[5], "");
 				MeasureElement me3 = new MeasureElement(line[2], line[6], "");
 				MeasureElement me4 = new MeasureElement(line[3], line[7], "");
-
+				
 				String lIDs = fixLabelForLatex(sline.label);
 				columns = new String[] {
 						""+(i+1),
@@ -249,7 +249,7 @@ public class SpectrumLine implements Serializable {
 		legend = DataSet.replaceAll(legend, "@MAGENTA", "", true);
 		legend = DataSet.replaceAll(legend, "@NEWLINE", " ", true);
 		legend = DataSet.replaceAll(legend, "@PREVIOUSLINE", " ", true);
-
+		
 		// Fix also super/sub scripts that needs the $ symbol
 		String s = "^{", ss = "$^{";
 		int n = legend.indexOf(s), nn = legend.indexOf(ss);
@@ -259,14 +259,14 @@ public class SpectrumLine implements Serializable {
 				int n2 = s2.indexOf("}");
 				s2 = s2.substring(0, n2+1)+"$"+s2.substring(n2+1);
 				legend = legend.substring(0, n) + "$" + s2;
-
+				
 				legend = DataSet.replaceAll(legend, ss, "@@@", true);
 				n = legend.indexOf(s);
 				nn = legend.indexOf(ss);
 			};
 			legend = DataSet.replaceAll(legend, "@@@", ss, true);
 		}
-
+		
 		s = "_{";
 		ss = "$_{";
 		n = legend.indexOf(s);
@@ -277,7 +277,7 @@ public class SpectrumLine implements Serializable {
 				int n2 = s2.indexOf("}");
 				s2 = s2.substring(0, n2+1)+"$"+s2.substring(n2+1);
 				legend = legend.substring(0, n) + "$" + s2;
-
+				
 				legend = DataSet.replaceAll(legend, ss, "@@@", true);
 				n = legend.indexOf(s);
 				nn = legend.indexOf(ss);
@@ -286,7 +286,7 @@ public class SpectrumLine implements Serializable {
 		}
 		return legend;
 	}
-
+	
 	/**
 	 * Returns the Gaussian parameters of this line in the same way as the method
 	 * {@link ProcessSpectrum#fitLines(boolean)}.
@@ -297,13 +297,13 @@ public class SpectrumLine implements Serializable {
 	 */
 	public double[] getGaussianParameters() {
         double out[] = new double[] {
-        		vel, width, peakT, area,
+        		vel, width, peakT, area, 
         		velError, widthError, peakTError, areaError,
         		minChannel, maxChannel, freq
         };
         return out;
 	}
-
+	
 	/**
 	 * Constructs a spectrum line object by giving a set
 	 * of Gaussian Parameters resulting from {@linkplain ProcessSpectrum#fitLines(boolean)}.

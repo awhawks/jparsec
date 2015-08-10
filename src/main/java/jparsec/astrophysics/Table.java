@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- *
+ * 
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *
+ *  
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- *
+ * 
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,10 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */
+ */		
 package jparsec.astrophysics;
 
-import java.util.Arrays;
 import java.util.BitSet;
 
 import jparsec.astrophysics.gildas.LMVCube;
@@ -50,7 +49,7 @@ public class Table {
 	private MeasureElement data[][][];
 	private boolean hasErrors = false;
 	private BitSet mask[][];
-
+	
 	/**
 	 * Constructor for a 1d table without errors.
 	 * @param v The values.
@@ -215,14 +214,14 @@ public class Table {
 				String f = FileIO.getField(i+1, table[j], separator, false);
 				int n2 = FileIO.getNumberOfFields(f, " ", false);
 				if (n2 < 2) {
-					data[0][j][i] = new MeasureElement(DataSet.parseDouble(f), 0, unit);
+					data[0][j][i] = new MeasureElement(DataSet.parseDouble(f), 0, unit);					
 				} else {
 					f = DataSet.replaceAll(f, "(", "", true);
 					f = DataSet.replaceAll(f, ")", "", true);
 					f = DataSet.replaceAll(f, "+/-", "", true);
 					f = DataSet.replaceAll(f, "$\\pm$", "", true);
 					f = DataSet.replaceAll(f, "&plusmn;", "", true);
-					data[0][j][i] = new MeasureElement(DataSet.parseDouble(FileIO.getField(1, f, " ", true)),
+					data[0][j][i] = new MeasureElement(DataSet.parseDouble(FileIO.getField(1, f, " ", true)), 
 							DataSet.parseDouble(FileIO.getField(2, f, " ", true)), unit);
 					hasErrors = true;
 				}
@@ -239,7 +238,7 @@ public class Table {
 	public void addMask(boolean[] mask) throws JPARSECException {
 		int s1 = data.length, s2 = data[0].length, s3 = data[0][0].length;
 		if (s1 > 1 || s2 > 1 || s3 != mask.length) throw new JPARSECException("Cannot add this mask to the current table, dimensions/sizes incompatible.");
-
+		
 		this.mask = new BitSet[1][1];
 		this.mask[0][0] = new BitSet(s3);
 		for (int i=0; i<s3; i++) {
@@ -258,9 +257,9 @@ public class Table {
 					data[k][j][i].unit = unit;
 				}
 			}
-		}
+		}	
 	}
-
+	
 	/**
 	 * Adds a mask to the current table so that operations will not affect
 	 * those values flagged as 'true' in the input mask.
@@ -277,13 +276,13 @@ public class Table {
 		} else {
 			if (s1 > 1 || s2 != mask.length || s3 != mask[0].length) throw new JPARSECException("Cannot add this mask to the current table, dimensions/sizes incompatible.");
 		}
-
+		
 		this.mask = new BitSet[1][s2];
 		for (int j=0; j<s2; j++) {
 			this.mask[0][j] = new BitSet(s3);
 			for (int i=0; i<s3; i++) {
 				if (order_ij) {
-					if (mask[i][j]) this.mask[0][j].set(i);
+					if (mask[i][j]) this.mask[0][j].set(i);					
 				} else {
 					if (mask[j][i]) this.mask[0][j].set(i);
 				}
@@ -297,25 +296,25 @@ public class Table {
 	 * @param mask The input mask.
 	 * @param order_ijk True in case the input mask array is ordered as
 	 * mask[i][j][k], where i are the different columns and j the different rows,
-	 * while k different planes. False for [k][j][i] ordering. Internally the
+	 * while k different planes. False for [k][j][i] ordering. Internally the 
 	 * array is ordered as [k][j][i].
 	 * @throws JPARSECException In case the mask cannot be applied to this table.
 	 */
 	public void addMask(boolean[][][] mask, boolean order_ijk) throws JPARSECException {
 		int s1 = data.length, s2 = data[0].length, s3 = data[0][0].length;
 		if (order_ijk) {
-			if (s1 != mask[0][0].length || s2 != mask[0].length || s3 != mask.length) throw new JPARSECException("Cannot add this mask to the current table, dimensions/sizes incompatible.");
+			if (s1 != mask[0][0].length || s2 != mask[0].length || s3 != mask.length) throw new JPARSECException("Cannot add this mask to the current table, dimensions/sizes incompatible.");			
 		} else {
 			if (s1 != mask.length || s2 != mask[0].length || s3 != mask[0][0].length) throw new JPARSECException("Cannot add this mask to the current table, dimensions/sizes incompatible.");
 		}
-
+		
 		this.mask = new BitSet[s1][s2];
 		for (int k=0; k<s1; k++) {
 			for (int j=0; j<s2; j++) {
 				this.mask[k][j] = new BitSet(s3);
 				for (int i=0; i<s3; i++) {
 					if (order_ijk) {
-						if (mask[i][j][k]) this.mask[k][j].set(i);
+						if (mask[i][j][k]) this.mask[k][j].set(i);					
 					} else {
 						if (mask[k][j][i]) this.mask[k][j].set(i);
 					}
@@ -340,7 +339,7 @@ public class Table {
 	public void addMask(double lowerLimit, double upperLimit, boolean
 			includell, boolean includeul, boolean addMode) throws JPARSECException {
 		int s1 = data.length, s2 = data[0].length, s3 = data[0][0].length;
-
+		
 		if (mask == null || !addMode) this.mask = new BitSet[s1][s2];
 		for (int k=0; k<s1; k++) {
 			for (int j=0; j<s2; j++) {
@@ -351,12 +350,12 @@ public class Table {
 						if (val >= lowerLimit && val <= upperLimit) this.mask[k][j].set(i);
 					} else {
 						if (!includell && !includeul) {
-							if (val > lowerLimit && val < upperLimit) this.mask[k][j].set(i);
+							if (val > lowerLimit && val < upperLimit) this.mask[k][j].set(i);							
 						} else {
 							if (!includell && includeul) {
-								if (val > lowerLimit && val <= upperLimit) this.mask[k][j].set(i);
+								if (val > lowerLimit && val <= upperLimit) this.mask[k][j].set(i);							
 							} else {
-								if (val >= lowerLimit && val < upperLimit) this.mask[k][j].set(i);
+								if (val >= lowerLimit && val < upperLimit) this.mask[k][j].set(i);							
 							}
 						}
 					}
@@ -364,11 +363,11 @@ public class Table {
 			}
 		}
 	}
-
+	
 	/**
 	 * Add the values in a table to the current table.
 	 * @param table The other table.
-	 * @throws JPARSECException If the input table is
+	 * @throws JPARSECException If the input table is 
 	 * not compatible with the current one.
 	 */
 	public void add(Table table) throws JPARSECException {
@@ -386,7 +385,7 @@ public class Table {
 	/**
 	 * Substract the values in a table to the current table.
 	 * @param table The other table.
-	 * @throws JPARSECException If the input table is
+	 * @throws JPARSECException If the input table is 
 	 * not compatible with the current one.
 	 */
 	public void subtract(Table table) throws JPARSECException {
@@ -419,7 +418,7 @@ public class Table {
 	 * Multiply the values in a table with the ones in the current table,
 	 * one by one. This is not matrix product.
 	 * @param table The other table.
-	 * @throws JPARSECException If the input table is
+	 * @throws JPARSECException If the input table is 
 	 * not compatible with the current one.
 	 */
 	public void multiply(Table table) throws JPARSECException {
@@ -438,7 +437,7 @@ public class Table {
 	 * Divide the values in a table with the ones in the current table,
 	 * one by one.
 	 * @param table The other table.
-	 * @throws JPARSECException If the input table is
+	 * @throws JPARSECException If the input table is 
 	 * not compatible with the current one.
 	 */
 	public void divide(Table table) throws JPARSECException {
@@ -467,12 +466,12 @@ public class Table {
 			}
 		}
 	}
-
+	
 	/**
 	 * Raises the values in the current table to the power of the ones
 	 * in the input table, one by one.
 	 * @param table The other table.
-	 * @throws JPARSECException If the input table is
+	 * @throws JPARSECException If the input table is 
 	 * not compatible with the current one.
 	 */
 	public void pow(Table table) throws JPARSECException {
@@ -490,7 +489,7 @@ public class Table {
 	/**
 	 * Raises the values in the current table to the power of the input value.
 	 * @param a The value.
-	 * @throws JPARSECException If the input table is
+	 * @throws JPARSECException If the input table is 
 	 * not compatible with the current one.
 	 */
 	public void pow(double a) throws JPARSECException {
@@ -514,7 +513,7 @@ public class Table {
 		int s1 = data.length, s2 = data[0].length, s3 = data[0][0].length;
 		int st1 = table.data.length, st2 = table.data[0].length, st3 = table.data[0][0].length;
 		if (s1 != st1 || s2 != st2 || s3 != st3) return false;
-
+		
 		if (data[0][0][0].unit == null && table.data[0][0][0].unit == null) return true;
 		if (data[0][0][0].unit == null && table.data[0][0][0].unit != null) return false;
 		if (data[0][0][0].unit != null && table.data[0][0][0].unit == null) return false;
@@ -528,30 +527,43 @@ public class Table {
 	}
 
 	/**
-	 * Returns if this instance is equal to another.
+	 * Returns if this instance is equals to another.
 	 */
-	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || !(o instanceof Table)) return false;
-
-		Table table = (Table) o;
-
-		if (hasErrors != table.hasErrors) return false;
-		if (!Arrays.deepEquals(data, table.data)) return false;
-		if (!Arrays.deepEquals(mask, table.mask)) return false;
-		if (!Arrays.equals(ist, table.ist)) return false;
-
-		return Arrays.equals(istErr, table.istErr);
+		if (o == null && this == null) return true;
+		if (o == null) return false;
+		if (this == null) return false;
+		
+		Table t = (Table) o;
+		if (t.hasErrors != this.hasErrors) return false;
+		if (t.data != null && data == null) return false;
+		if (t.data == null && data != null) return false;
+		if (t.mask != null && mask == null) return false;
+		if (t.mask == null && mask != null) return false;
+		if (!this.isCompatible(t)) return false;
+		
+		if (t.data != null && data != null) {
+			for (int k=0; k<data.length; k++) {
+				for (int j=0; j<data[0].length; j++) {
+					for (int i=0; i<data[0][0].length; i++) {
+						if (!data[k][j][i].equals(t.data[k][j][i])) return false;
+						if (t.mask != null && mask != null) {
+							if (mask[k][j].get(i) != t.mask[k][j].get(i)) return false;
+						}
+					}
+				}
+			}
+		}
+		return true;
 	}
-
+	
 	/**
 	 * Clones this instance.
 	 */
-	@Override
 	public Table clone()
 	{
-		Table t;
+		if (this == null) return null;
+		Table t = null;
 		try {
 			t = new Table(this.getValues(), this.getErrors(), this.data[0][0][0].unit);
 		} catch (Exception exc) {
@@ -572,16 +584,6 @@ public class Table {
 		return t;
 	}
 
-	@Override
-	public int hashCode() {
-		int result = data != null ? Arrays.deepHashCode(data) : 0;
-		result = 31 * result + (hasErrors ? 1 : 0);
-		result = 31 * result + (mask != null ? Arrays.deepHashCode(mask) : 0);
-		result = 31 * result + (ist != null ? Arrays.hashCode(ist) : 0);
-		result = 31 * result + (istErr != null ? Arrays.hashCode(istErr) : 0);
-		return result;
-	}
-
 	/**
 	 * Returns the values in the table as an array.
 	 * @return The array, ordered as k j i.
@@ -595,7 +597,7 @@ public class Table {
 			for (int j=0; j<s2; j++) {
 				for (int k=0; k<s1; k++) {
 					if (data[k][j][i].unit.equals(unit)) {
-						out[k][j][i] = data[k][j][i].getValue();
+						out[k][j][i] = data[k][j][i].getValue();						
 					} else {
 						out[k][j][i] = data[k][j][i].get(unit).getValue();
 					}
@@ -612,7 +614,7 @@ public class Table {
 	public String getUnit() {
 		return data[0][0][0].unit;
 	}
-
+	
 	/**
 	 * Returns the values in the table as an array of integers, using
 	 * simple casting.
@@ -627,7 +629,7 @@ public class Table {
 			for (int j=0; j<s2; j++) {
 				for (int k=0; k<s1; k++) {
 					if (data[k][j][i].unit.equals(unit)) {
-						out[k][j][i] = (int) data[k][j][i].getValue();
+						out[k][j][i] = (int) data[k][j][i].getValue();						
 					} else {
 						out[k][j][i] = (int) data[k][j][i].get(unit).getValue();
 					}
@@ -702,7 +704,6 @@ public class Table {
 	 * Returns a simple string representation of this table.
 	 * Separator is 3 blank spaces.
 	 */
-	@Override
 	public String toString() {
 		StringBuffer out = new StringBuffer("");
 		String sep = FileIO.getLineSeparator(), fieldSep = "   ";
@@ -711,7 +712,7 @@ public class Table {
 			for (int j=0; j<data[0].length; j++) {
 				for (int i=0; i<data[0][0].length; i++) {
 					if (!hasErrors) {
-						out.append(data[k][j][i].value+fieldSep);
+						out.append(data[k][j][i].value+fieldSep);						
 					} else {
 						out.append(data[k][j][i].toString(true)+fieldSep);
 					}
@@ -721,7 +722,7 @@ public class Table {
 		}
 		return out.toString();
 	}
-
+	
 	/**
 	 * Returns a simple string representation of this table.
 	 * @param fieldSep The separator string.
@@ -740,7 +741,7 @@ public class Table {
 						if (format == null) {
 							out.append(data[k][j][i].value+fieldSep);
 						} else {
-							out.append(ConsoleReport.formatAsFortran(new String[] {data[k][j][i].value}, format, true)+fieldSep);
+							out.append(ConsoleReport.formatAsFortran(new String[] {data[k][j][i].value}, format, true)+fieldSep);							
 						}
 					} else {
 						out.append(data[k][j][i].toString(true)+fieldSep);
@@ -751,7 +752,7 @@ public class Table {
 		}
 		return out.toString();
 	}
-
+	
 	/**
 	 * Returns a string representation of this table for a given output format.
 	 * @param format The output format for each of the values in each row.
@@ -774,9 +775,9 @@ public class Table {
 		}
 		return out.toString();
 	}
-
+	
  	/**
- 	 * Convolves the data in the table with a given beam or kernel. This method calls
+ 	 * Convolves the data in the table with a given beam or kernel. This method calls 
  	 * {@linkplain LMVCube#convolveMap(double[][][], double[][], int, int, float[], float, boolean)}
  	 * for both the data and the errors. Mask is not considered in this method.
  	 * @param beam_x Beam major axis size in pixels, for
@@ -836,8 +837,8 @@ public class Table {
  	 */
  	public MeasureElement getMaximum() throws JPARSECException {
     	String unit = this.data[0][0][0].unit;
- 		double[][][] inCube = this.getValues();
- 		double[][][] dinCube = this.getErrors();
+ 		double[][][] inCube = this.getValues(); 		
+ 		double[][][] dinCube = this.getErrors(); 		
  		MeasureElement max = null;
 		for (int i=0; i<data.length; i++) {
 			double m = DataSet.getMaximumValue(inCube[i]);
@@ -849,7 +850,6 @@ public class Table {
 		}
 		return max;
  	}
-
  	/**
  	 * Returns the minimum value in the table.
  	 * @return Minimum value.
@@ -857,8 +857,8 @@ public class Table {
  	 */
  	public MeasureElement getMinimum() throws JPARSECException {
     	String unit = this.data[0][0][0].unit;
- 		double[][][] inCube = this.getValues();
- 		double[][][] dinCube = this.getErrors();
+ 		double[][][] inCube = this.getValues(); 		
+ 		double[][][] dinCube = this.getErrors(); 		
  		MeasureElement min = null;
 		for (int i=0; i<data.length; i++) {
 			double m = DataSet.getMinimumValue(inCube[i]);
@@ -870,7 +870,6 @@ public class Table {
 		}
 		return min;
  	}
-
  	/**
  	 * Returns the index of the maximum value in the table.
  	 * @param unique True to return null in case there are several
@@ -880,7 +879,7 @@ public class Table {
  	 * @throws JPARSECException If an error occurs.
  	 */
  	public int[] getMaximumIndex(boolean unique) throws JPARSECException {
- 		double[][][] inCube = this.getValues();
+ 		double[][][] inCube = this.getValues(); 		
  		double max = -1;
  		int p[] = null, imax = -1, c = 0;
 		for (int i=0; i<data.length; i++) {
@@ -897,7 +896,7 @@ public class Table {
 		if (unique && c > 0) return null;
 		return new int[] {imax, p[0], p[1]};
  	}
-
+ 	
  	/**
  	 * Returns the index of the minimum value in the table.
  	 * @param unique True to return null in case there are several
@@ -907,7 +906,7 @@ public class Table {
  	 * @throws JPARSECException If an error occurs.
  	 */
  	public int[] getMinimumIndex(boolean unique) throws JPARSECException {
- 		double[][][] inCube = this.getValues();
+ 		double[][][] inCube = this.getValues(); 		
  		double min = -1;
  		int p[] = null, imin = -1, c = 0;
 		for (int i=0; i<data.length; i++) {
@@ -948,7 +947,7 @@ public class Table {
  	public MeasureElement get(int i, int j, int k) {
  		return this.data[k][j][i];
  	}
-
+ 	
  	/**
  	 * Returns the number of columns in the table.
  	 * @return Number of columns.
@@ -956,7 +955,6 @@ public class Table {
  	public int getNcolumns() {
  		return data[0][0].length;
  	}
-
  	/**
  	 * Returns the number of rows in the table.
  	 * @return Number of rows.
@@ -964,7 +962,6 @@ public class Table {
  	public int getNrows() {
  		return data[0].length;
  	}
-
  	/**
  	 * Returns the number of planes in the table.
  	 * @return Number of planes.
@@ -1045,7 +1042,7 @@ public class Table {
 
 	  for (int c=0; c<data.length; c++) {
 		  MeasureElement rgb2[][] = new MeasureElement[m][n];
-
+		  
 		  //  Process the main part of the image:
 		  for ( i = 1; i < m - 1; i++ )
 		  {
@@ -1056,7 +1053,7 @@ public class Table {
 		      p[2] = data[c][i][j+1];
 		      p[3] = data[c][i][j-1];
 		      p[4] = data[c][i][j];
-
+		      
 		      if (aggressive > 0 && i > 1 && i < m - 2 && j > 1 && j < n - 2) {
 			      p[5] = data[c][i-1][j-1];
 			      p[6] = data[c][i+1][j+1];
@@ -1075,18 +1072,18 @@ public class Table {
 				      p[18] = data[c][i-1][j-2];
 				      p[19] = data[c][i+1][j+2];
 				      p[20] = data[c][i+1][j-2];
-
+				      
 			    	  rgb2[i][j] = DataSet.getKthSmallestValue (p, p.length, p.length/2); //i4vec_median ( 5, p );
-			      } else {
+			      } else {		
 			    	  rgb2[i][j] = DataSet.getKthSmallestValue (p, 13, 13/2); //i4vec_median ( 5, p );
 			      }
 		      } else {
-			      rgb2[i][j] = DataSet.getKthSmallestValue (p, 5, 5/2); //i4vec_median ( 5, p );
+			      rgb2[i][j] = DataSet.getKthSmallestValue (p, 5, 5/2); //i4vec_median ( 5, p );		    	  
 		      }
 		    }
 		  }
 		  //  Process the four borders.
-		  //  Get an odd number of data points,
+		  //  Get an odd number of data points, 
 		  for ( i = 1; i < m - 1; i++ )
 		  {
 			  j = 0;
@@ -1095,7 +1092,7 @@ public class Table {
 		      p[2] = data[c][i][j];
 		      p[3] = data[c][i][j+1];
 		      p[4] = data[c][i][j+2];
-
+	
 		      if (aggressive > 0) {
 			      p[5] = data[c][i+1][j+1];
 			      p[6] = data[c][i-1][j+1];
@@ -1111,14 +1108,14 @@ public class Table {
 		      } else {
 		    	  rgb2[i][j] = DataSet.getKthSmallestValue (p, 5, 5/2);
 		      }
-
+	
 		      j = n - 1;
 		      p[0] = data[c][i-1][j];
 		      p[1] = data[c][i+1][j];
 		      p[2] = data[c][i][j-2];
 		      p[3] = data[c][i][j-1];
 		      p[4] = data[c][i][j];
-
+	
 		      if (aggressive > 0) {
 			      p[5] = data[c][i+1][j-1];
 			      p[6] = data[c][i-1][j-1];
@@ -1129,13 +1126,13 @@ public class Table {
 				      p[10] = data[c][i-1][j-2];
 			    	  rgb2[i][j] = DataSet.getKthSmallestValue (p, 11, 11/2);
 			      } else {
-			    	  rgb2[i][j] = DataSet.getKthSmallestValue (p, 7, 7/2);
+			    	  rgb2[i][j] = DataSet.getKthSmallestValue (p, 7, 7/2);	    	  
 			      }
 		      } else {
 		    	  rgb2[i][j] = DataSet.getKthSmallestValue (p, 5, 5/2);
 		      }
 		  }
-
+	
 		  for ( j = 1; j < n - 1; j++ )
 		  {
 			  i = 0;
@@ -1144,7 +1141,7 @@ public class Table {
 		      p[2] = data[c][i+2][j];
 		      p[3] = data[c][i][j-1];
 		      p[4] = data[c][i][j+1];
-
+	
 		      if (aggressive > 0) {
 			      p[5] = data[c][i+1][j+1];
 			      p[6] = data[c][i+1][j-1];
@@ -1155,19 +1152,19 @@ public class Table {
 				      p[10] = data[c][i+2][j-1];
 			    	  rgb2[i][j] = DataSet.getKthSmallestValue (p, 11, 11/2);
 			      } else {
-			    	  rgb2[i][j] = DataSet.getKthSmallestValue (p, 7, 7/2);
+			    	  rgb2[i][j] = DataSet.getKthSmallestValue (p, 7, 7/2);	    	  
 			      }
 		      } else {
 		    	  rgb2[i][j] = DataSet.getKthSmallestValue (p, 5, 5/2);
 		      }
-
+		      
 		      i = m - 1;
 		      p[0] = data[c][i-2][j];
 		      p[1] = data[c][i-1][j];
 		      p[2] = data[c][i][j];
 		      p[3] = data[c][i][j-1];
 		      p[4] = data[c][i][j+1];
-
+	
 		      if (aggressive > 0) {
 			      p[5] = data[c][i-1][j-1];
 			      p[6] = data[c][i-1][j+1];
@@ -1178,13 +1175,13 @@ public class Table {
 				      p[10] = data[c][i-2][j-1];
 			    	  rgb2[i][j] = DataSet.getKthSmallestValue (p, 11, 11/2);
 			      } else {
-			    	  rgb2[i][j] = DataSet.getKthSmallestValue (p, 7, 7/2);
+			    	  rgb2[i][j] = DataSet.getKthSmallestValue (p, 7, 7/2);	    	  
 			      }
 		      } else {
 		    	  rgb2[i][j] = DataSet.getKthSmallestValue (p, 5, 5/2);
 		      }
 		  }
-
+	
 		  //  Process the four corners.
 		  i = 0;
 		  j = 0;
@@ -1194,11 +1191,11 @@ public class Table {
 	      if (aggressive > 0) {
 		      p[3] = data[c][i+1][j+1];
 		      p[4] = data[c][i+2][j];
-	    	  rgb2[i][j] = DataSet.getKthSmallestValue (p, 5, 5/2);
+	    	  rgb2[i][j] = DataSet.getKthSmallestValue (p, 5, 5/2);	    	  
 	      } else {
 	    	  rgb2[i][j] = DataSet.getKthSmallestValue (p, 3, 3/2);
 	      }
-
+	
 		  i = 0;
 		  j = n - 1;
 	      p[0] = data[c][i+1][j];
@@ -1207,10 +1204,10 @@ public class Table {
 	      if (aggressive > 0) {
 		      p[3] = data[c][i+1][j-1];
 		      p[4] = data[c][i+2][j];
-	    	  rgb2[i][j] = DataSet.getKthSmallestValue (p, 5, 5/2);
+	    	  rgb2[i][j] = DataSet.getKthSmallestValue (p, 5, 5/2);	    	  
 	      } else {
 	    	  rgb2[i][j] = DataSet.getKthSmallestValue (p, 3, 3/2);
-	      }
+	      }	
 		  i = m - 1;
 		  j = 0;
 	      p[0] = data[c][i-1][j];
@@ -1219,11 +1216,11 @@ public class Table {
 	      if (aggressive > 0) {
 		      p[3] = data[c][i-1][j+1];
 		      p[4] = data[c][i-2][j];
-	    	  rgb2[i][j] = DataSet.getKthSmallestValue (p, 5, 5/2);
+	    	  rgb2[i][j] = DataSet.getKthSmallestValue (p, 5, 5/2);	    	  
 	      } else {
 	    	  rgb2[i][j] = DataSet.getKthSmallestValue (p, 3, 3/2);
 	      }
-
+	      
 		  i = m - 1;
 		  j = n - 1;
 	      p[0] = data[c][i-1][j];
@@ -1232,11 +1229,11 @@ public class Table {
 	      if (aggressive > 0) {
 		      p[3] = data[c][i-1][j-1];
 		      p[4] = data[c][i-2][j];
-	    	  rgb2[i][j] = DataSet.getKthSmallestValue (p, 5, 5/2);
+	    	  rgb2[i][j] = DataSet.getKthSmallestValue (p, 5, 5/2);	    	  
 	      } else {
 	    	  rgb2[i][j] = DataSet.getKthSmallestValue (p, 3, 3/2);
 	      }
-
+	      
 	      data[c] = rgb2;
 	  }
 	}
@@ -1249,8 +1246,8 @@ public class Table {
  	 */
  	public MeasureElement getMaximum(int column) throws JPARSECException {
     	String unit = this.data[0][0][0].unit;
- 		double[][][] inCube = this.getValues();
- 		double[][][] dinCube = this.getErrors();
+ 		double[][][] inCube = this.getValues(); 		
+ 		double[][][] dinCube = this.getErrors(); 		
  		MeasureElement max = null;
 		for (int i=0; i<data.length; i++) {
 			double m = DataSet.getMaximumValue(inCube[i][column]);
@@ -1262,7 +1259,6 @@ public class Table {
 		}
 		return max;
  	}
-
  	/**
  	 * Returns the minimum value in the table for a given column (second dimension).
  	 * @param column The column index.
@@ -1271,8 +1267,8 @@ public class Table {
  	 */
  	public MeasureElement getMinimum(int column) throws JPARSECException {
     	String unit = this.data[0][0][0].unit;
- 		double[][][] inCube = this.getValues();
- 		double[][][] dinCube = this.getErrors();
+ 		double[][][] inCube = this.getValues(); 		
+ 		double[][][] dinCube = this.getErrors(); 		
  		MeasureElement min = null;
 		for (int i=0; i<data.length; i++) {
 			double m = DataSet.getMinimumValue(inCube[i][column]);
@@ -1284,7 +1280,6 @@ public class Table {
 		}
 		return min;
  	}
-
  	/**
  	 * Returns the index of the maximum value in the table for a given column.
  	 * @param column The column index.
@@ -1292,11 +1287,11 @@ public class Table {
  	 * positions in the table with the same maximum value, false
  	 * to return a result (one of those).
  	 * @return The index positions of the maximum. First value is the plane
- 	 * number, usually 0 for single images, the second the row index.
+ 	 * number, usually 0 for single images, the second the row index. 
  	 * @throws JPARSECException If an error occurs.
  	 */
  	public int[] getMaximumIndex(int column, boolean unique) throws JPARSECException {
- 		double[][][] inCube = this.getValues();
+ 		double[][][] inCube = this.getValues(); 		
  		double max = -1;
  		int p = -1, imax = -1, c = 0;
 		for (int i=0; i<data.length; i++) {
@@ -1313,7 +1308,7 @@ public class Table {
 		if (unique && c > 0) return null;
 		return new int[] {imax, p};
  	}
-
+ 	
  	/**
  	 * Returns the index of the minimum value in the table for a given column.
  	 * @param column The column index.
@@ -1321,11 +1316,11 @@ public class Table {
  	 * positions in the table with the same minimum value, false
  	 * to return a result (one of those).
  	 * @return The index positions of the minimum. First value is the plane
- 	 * number, usually 0 for single images, the second the row index.
+ 	 * number, usually 0 for single images, the second the row index. 
  	 * @throws JPARSECException If an error occurs.
  	 */
  	public int[] getMinimumIndex(int column, boolean unique) throws JPARSECException {
- 		double[][][] inCube = this.getValues();
+ 		double[][][] inCube = this.getValues(); 		
  		double min = -1;
  		int p = -1, imin = -1, c = 0;
 		for (int i=0; i<data.length; i++) {
@@ -1344,7 +1339,7 @@ public class Table {
  	}
 
  	/**
- 	 * Reduces the table to those elements in which the values in certain column are
+ 	 * Reduces the table to those elements in which the values in certain column are 
  	 * within a given range.
  	 * @param plane The plane or image number, 0 for the first (0 always if there's only one).
  	 * @param column The column index.
@@ -1360,12 +1355,12 @@ public class Table {
 				copy = (MeasureElement[][]) DataSet.deleteIndex(copy, i);
 				if (mask != null) mask[plane] = (BitSet[]) DataSet.deleteIndex(mask[plane], i);
 			}
-		}
+		} 		
 		data[plane] = copy;
  	}
 
  	/**
- 	 * Reduces the table to those elements in which the values in certain column are
+ 	 * Reduces the table to those elements in which the values in certain column are 
  	 * outside a given range.
  	 * @param plane The plane or image number, 0 for the first (0 always if there's only one).
  	 * @param column The column index.
@@ -1381,7 +1376,7 @@ public class Table {
 				copy = (MeasureElement[][]) DataSet.deleteIndex(copy, i);
 				if (mask != null) mask[plane] = (BitSet[]) DataSet.deleteIndex(mask[plane], i);
 			}
-		}
+		} 		
 		data[plane] = copy;
  	}
 
@@ -1434,7 +1429,7 @@ public class Table {
  		if (data[0].length > 1) return 2;
  		return 1;
  	}
-
+ 	
  	/**
  	 * Resamples the data to a given number of elements in each of the
  	 * three dimensions. The mask is removed.
@@ -1459,15 +1454,15 @@ public class Table {
  	 	 			double x0 = (x * fx0);
  	 	 			data2[z][y][x] = this.interpolate(x0, y0, z0);
  	 	 		}
- 	 		}
+ 	 		} 			
  		}
  		data = data2;
  		ist = null;
  	}
-
+ 	
  	private ImageSplineTransform ist[] = null;
  	private ImageSplineTransform istErr[] = null;
-
+ 	
  	/**
  	 * Interpolates within the data.
  	 * @param x The x index position.
@@ -1481,7 +1476,7 @@ public class Table {
 /* 		if (x == (int) x && y == (int) y && z == (int) z) {
  			return data[(int) z][(int) x][(int) y];
  		}
-*/
+*/ 		
  		if (ist == null) {
  			double[][][] data = this.getValues();
  			double[][][] dataErr = this.getErrors();
@@ -1492,7 +1487,7 @@ public class Table {
  				istErr[i] = new ImageSplineTransform(2, dataErr[i]);
  			}
  		}
-
+ 		
  		int prev = (int) z;
  		double prevVal = ist[prev].interpolate(y, x);
  		double prevErr = istErr[prev].interpolate(y, x);
@@ -1501,6 +1496,6 @@ public class Table {
  		int next = prev + 1;
  		double nextVal = ist[next].interpolate(y, x);
  		double nextErr = istErr[next].interpolate(y, x);
- 		return new MeasureElement(prevVal + (nextVal-prevVal)*(z-prev), prevErr + (nextErr-prevErr)*(z-prev), data[0][0][0].unit);
+ 		return new MeasureElement(prevVal + (nextVal-prevVal)*(z-prev), prevErr + (nextErr-prevErr)*(z-prev), data[0][0][0].unit); 		
  	}
 }

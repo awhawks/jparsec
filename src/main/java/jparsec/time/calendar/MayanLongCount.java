@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- *
+ * 
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *
+ *  
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- *
+ * 
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */
+ */					
 package jparsec.time.calendar;
 
 import java.io.Serializable;
@@ -27,40 +27,40 @@ import java.io.Serializable;
  * Implements the Mayan Long Count calendar.
  * <P>
  * A strictly counting days calendar, based on a cycle of 2 880 000 days.
- *
+ * 
  * See Calendrical Calculations for reference.
- *
+ * 
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
 public class MayanLongCount implements Serializable
 {
-	private static final long serialVersionUID = 1L;
+	static final long serialVersionUID = 1L;
 
 	/**
 	 * 144 000 days.
 	 */
-	public long baktun;
+	public long baktun = 0;
 
 	/**
 	 * 7200 days.
 	 */
-	public int katun;
+	public int katun = 0;
 
 	/**
 	 * 360 days.
 	 */
-	public int tun;
+	public int tun = 0;
 
 	/**
 	 * 20 days.
 	 */
-	public int uinal;
+	public int uinal = 0;
 
 	/**
 	 * 1 day.
 	 */
-	public int kin;
+	public int kin = 0;
 
 	/**
 	 * Calendar epoch.
@@ -74,7 +74,7 @@ public class MayanLongCount implements Serializable
 
 	/**
 	 * Julian day constructor.
-	 *
+	 * 
 	 * @param jd Julian day.
 	 */
 	public MayanLongCount(int jd)
@@ -84,7 +84,7 @@ public class MayanLongCount implements Serializable
 
 	/**
 	 * Explicit constructor.
-	 *
+	 * 
 	 * @param mbaktun Baktun.
 	 * @param mkatun Katun.
 	 * @param mtun Tun.
@@ -102,7 +102,7 @@ public class MayanLongCount implements Serializable
 
 	/**
 	 * To fixed day.
-	 *
+	 * 
 	 * @param baktun Baktun.
 	 * @param katun Katun.
 	 * @param tun Tun.
@@ -117,7 +117,7 @@ public class MayanLongCount implements Serializable
 
 	/**
 	 * To fixed day.
-	 *
+	 * 
 	 * @return Fixed day.
 	 */
 	public long toFixed()
@@ -127,7 +127,7 @@ public class MayanLongCount implements Serializable
 
 	/**
 	 * Sets the date from fixed epoch.
-	 *
+	 * 
 	 * @param l Fixed day.
 	 */
 	public void fromFixed(long l)
@@ -145,7 +145,7 @@ public class MayanLongCount implements Serializable
 
 	/**
 	 * Transforms a Mayan date into a Julian day
-	 *
+	 * 
 	 * @param baktun Baktun.
 	 * @param katun Katun.
 	 * @param tun Tun.
@@ -160,7 +160,7 @@ public class MayanLongCount implements Serializable
 
 	/**
 	 * Transforms a Mayan date into a Julian day
-	 *
+	 * 
 	 * @return Julian day.
 	 */
 	public int toJulianDay()
@@ -170,11 +170,27 @@ public class MayanLongCount implements Serializable
 
 	/**
 	 * Sets a Mayan date with a given Julian day
-	 *
+	 * 
 	 * @param jd Julian day.
 	 */
 	public void fromJulianDay(int jd)
 	{
 		fromFixed(jd - Gregorian.EPOCH);
+	}
+
+	/**
+	 * For unit testing only.
+	 * @param args Not used.
+	 */
+	public static void main(String args[])
+	{
+		System.out.println("Mayan Long Count Test");
+
+		int jd = 2451545;
+		MayanLongCount h = new MayanLongCount(jd);
+		System.out.println("JD " + jd + " = " + h.baktun + "/" + h.katun + "/" + h.tun + "/" + h.uinal + "/" + h.kin);
+
+		MayanLongCount h2 = new MayanLongCount(h.baktun, h.katun, h.tun, h.uinal, h.kin);
+		System.out.println("JD " + h2.toJulianDay() + " = " + h2.baktun + "/" + h2.katun + "/" + h2.tun + "/" + h2.uinal + "/" + h2.kin);
 	}
 }

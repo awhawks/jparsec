@@ -1791,7 +1791,7 @@ public class LATEXReport implements Serializable
 
 	/**
 	 * Replaces normal symbols by it's Latex representation. Currently only for <, >,
-	 * &agrave;, &eacute;, &iacute;, &ouml;, &uacute;, +/-, {, }, _, ^, ~, \, $, #, %, &, &ordm;, &ntilde;. Any of them can be preserved in the
+	 * á, é, í, ó, ú, +/-, {, }, _, ^, ~, \, $, #, %, &, º, ñ. Any of them can be preserved in the
 	 * input by adding the character to {@linkplain LATEXReport#setAvoidFormatting(String)}.
 	 * Default symbols to avoid formatting are \{}~.
 	 * 
@@ -1849,27 +1849,27 @@ public class LATEXReport implements Serializable
 			text = DataSet.replaceAll(text, "<", "*JPARSEC*", true);
 			text = DataSet.replaceAll(text, "*JPARSEC*", "$<$", true);
 		}
-		if (this.avoidFormatting.indexOf("\u00e1")<0) text = DataSet.replaceAll(text, "\u00e1", "\\'{a}", true);
-		if (this.avoidFormatting.indexOf("\u00e9")<0) text = DataSet.replaceAll(text, "\u00e9", "\\'{e}", true);
-		if (this.avoidFormatting.indexOf("\u00ed")<0) text = DataSet.replaceAll(text, "\u00ed", "\\'{i}", true);
-		if (this.avoidFormatting.indexOf("\u00f3")<0) text = DataSet.replaceAll(text, "\u00f3", "\\'{o}", true);
-		if (this.avoidFormatting.indexOf("\u00fa")<0) text = DataSet.replaceAll(text, "\u00fa", "\\'{u}", true);
-		if (this.avoidFormatting.indexOf("\u00f1")<0) text = DataSet.replaceAll(text, "\u00f1", "\\~n", true);
+		if (this.avoidFormatting.indexOf("á")<0) text = DataSet.replaceAll(text, "á", "\\'{a}", true);
+		if (this.avoidFormatting.indexOf("é")<0) text = DataSet.replaceAll(text, "é", "\\'{e}", true);
+		if (this.avoidFormatting.indexOf("í")<0) text = DataSet.replaceAll(text, "í", "\\'{i}", true);
+		if (this.avoidFormatting.indexOf("ó")<0) text = DataSet.replaceAll(text, "ó", "\\'{o}", true);
+		if (this.avoidFormatting.indexOf("ú")<0) text = DataSet.replaceAll(text, "ú", "\\'{u}", true);
+		if (this.avoidFormatting.indexOf("ñ")<0) text = DataSet.replaceAll(text, "ñ", "\\~n", true);
 		if (this.avoidFormatting.indexOf("+/-")<0) text = DataSet.replaceAll(text, "+/-", "$\\pm$", true);
-		if (this.avoidFormatting.indexOf("\u00ba")<0) text = DataSet.replaceAll(text, "\u00ba", "$^\\circ$", true);
-		if (this.avoidFormatting.indexOf("\u00c1")<0) text = DataSet.replaceAll(text, "\u00c1", "\\'{A}", true);
-		if (this.avoidFormatting.indexOf("\u00c9")<0) text = DataSet.replaceAll(text, "\u00c9", "\\'{E}", true);
-		if (this.avoidFormatting.indexOf("\u00cd")<0) text = DataSet.replaceAll(text, "\u00cd", "\\'{I}", true);
-		if (this.avoidFormatting.indexOf("\u00d3")<0) text = DataSet.replaceAll(text, "\u00d3", "\\'{O}", true);
-		if (this.avoidFormatting.indexOf("\u00da")<0) text = DataSet.replaceAll(text, "\u00da", "\\'{U}", true);
-		if (this.avoidFormatting.indexOf("\u00d1")<0) text = DataSet.replaceAll(text, "\u00d1", "\\~N", true);
+		if (this.avoidFormatting.indexOf("º")<0) text = DataSet.replaceAll(text, "º", "$^\\circ$", true);
+		if (this.avoidFormatting.indexOf("Á")<0) text = DataSet.replaceAll(text, "Á", "\\'{A}", true);
+		if (this.avoidFormatting.indexOf("É")<0) text = DataSet.replaceAll(text, "É", "\\'{E}", true);
+		if (this.avoidFormatting.indexOf("Í")<0) text = DataSet.replaceAll(text, "Í", "\\'{I}", true);
+		if (this.avoidFormatting.indexOf("Ó")<0) text = DataSet.replaceAll(text, "Ó", "\\'{O}", true);
+		if (this.avoidFormatting.indexOf("Ú")<0) text = DataSet.replaceAll(text, "Ú", "\\'{U}", true);
+		if (this.avoidFormatting.indexOf("Ñ")<0) text = DataSet.replaceAll(text, "Ñ", "\\~N", true);
 
 		return text;
 	}
 
 	/**
 	 * Replaces normal symbols by it's Latex representation. Currently only for <, >,
-	 * &agrave;, &eacute;, &iacute;, &ouml;, &uacute;, +/-, {, }, _, ^, ~, \, $, #, %, &, &ordm;, &ntilde;. Default symbols to avoid 
+	 * á, é, í, ó, ú, +/-, {, }, _, ^, ~, \, $, #, %, &, º, ñ. Default symbols to avoid 
 	 * formatting are \{}~.
 	 * 
 	 * @param text Input text.
@@ -1928,26 +1928,26 @@ public class LATEXReport implements Serializable
 			text = DataSet.replaceAll(text, "<", "*JPARSEC*", true);
 			text = DataSet.replaceAll(text, "*JPARSEC*", "$<$", true);
 		}
-		if (avoidFormatting.indexOf("\u00e1")<0) text = DataSet.replaceAll(text, "\u00e1", "\\'{a}", true);
-		if (avoidFormatting.indexOf("\u00e9")<0) text = DataSet.replaceAll(text, "\u00e9", "\\'{e}", true);
-		if (avoidFormatting.indexOf("\u00ed")<0) text = DataSet.replaceAll(text, "\u00ed", "\\'{i}", true);
-		if (avoidFormatting.indexOf("\u00f3")<0) text = DataSet.replaceAll(text, "\u00f3", "\\'{o}", true);
-		if (avoidFormatting.indexOf("\u00fa")<0) text = DataSet.replaceAll(text, "\u00fa", "\\'{u}", true);
-		if (avoidFormatting.indexOf("\u00f1")<0) text = DataSet.replaceAll(text, "\u00f1", "\\~n", true);
+		if (avoidFormatting.indexOf("á")<0) text = DataSet.replaceAll(text, "á", "\\'{a}", true);
+		if (avoidFormatting.indexOf("é")<0) text = DataSet.replaceAll(text, "é", "\\'{e}", true);
+		if (avoidFormatting.indexOf("í")<0) text = DataSet.replaceAll(text, "í", "\\'{i}", true);
+		if (avoidFormatting.indexOf("ó")<0) text = DataSet.replaceAll(text, "ó", "\\'{o}", true);
+		if (avoidFormatting.indexOf("ú")<0) text = DataSet.replaceAll(text, "ú", "\\'{u}", true);
+		if (avoidFormatting.indexOf("ñ")<0) text = DataSet.replaceAll(text, "ñ", "\\~n", true);
 		if (avoidFormatting.indexOf("+/-")<0) text = DataSet.replaceAll(text, "+/-", "$\\pm$", true);
-		if (avoidFormatting.indexOf("\u00ba")<0) text = DataSet.replaceAll(text, "\u00ba", "$^\\circ$", true);
-		if (avoidFormatting.indexOf("\u00c1")<0) text = DataSet.replaceAll(text, "\u00c1", "\\'{A}", true);
-		if (avoidFormatting.indexOf("\u00c9")<0) text = DataSet.replaceAll(text, "\u00c9", "\\'{E}", true);
-		if (avoidFormatting.indexOf("\u00cd")<0) text = DataSet.replaceAll(text, "\u00cd", "\\'{I}", true);
-		if (avoidFormatting.indexOf("\u00d3")<0) text = DataSet.replaceAll(text, "\u00d3", "\\'{O}", true);
-		if (avoidFormatting.indexOf("\u00da")<0) text = DataSet.replaceAll(text, "\u00da", "\\'{U}", true);
-		if (avoidFormatting.indexOf("\u00d1")<0) text = DataSet.replaceAll(text, "\u00d1", "\\~N", true);
+		if (avoidFormatting.indexOf("º")<0) text = DataSet.replaceAll(text, "º", "$^\\circ$", true);
+		if (avoidFormatting.indexOf("Á")<0) text = DataSet.replaceAll(text, "Á", "\\'{A}", true);
+		if (avoidFormatting.indexOf("É")<0) text = DataSet.replaceAll(text, "É", "\\'{E}", true);
+		if (avoidFormatting.indexOf("Í")<0) text = DataSet.replaceAll(text, "Í", "\\'{I}", true);
+		if (avoidFormatting.indexOf("Ó")<0) text = DataSet.replaceAll(text, "Ó", "\\'{O}", true);
+		if (avoidFormatting.indexOf("Ú")<0) text = DataSet.replaceAll(text, "Ú", "\\'{U}", true);
+		if (avoidFormatting.indexOf("Ñ")<0) text = DataSet.replaceAll(text, "Ñ", "\\~N", true);
 
 		return text;
 	}
 	
 
-	protected static Spectrum calculate(double parameter1, double parameter2, double parameter3)
+	private static Spectrum calculate(double parameter1, double parameter2, double parameter3)
 	throws JPARSECException	{
 		// Here we apply our model. In this example we simply generate an output spectrum
 		// with 1000 channels, where x is microns (from 1 to 1000), and y the flux in mJy,

@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- *
+ * 
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *
+ *  
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- *
+ * 
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,19 +18,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */
+ */					
 package jparsec.graph;
 
 import gov.noaa.pmel.sgt.swing.JPlotLayout;
 import gov.noaa.pmel.util.Domain;
+
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -43,10 +47,12 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -56,6 +62,12 @@ import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.TitledBorder;
+
+import org.jfree.chart.ChartPanel;
+
+import visad.util.SelectRangeWidget;
+import visad.util.VisADSlider;
+
 import jparsec.astronomy.CoordinateSystem;
 import jparsec.astrophysics.gildas.LMVCube;
 import jparsec.ephem.EphemerisElement;
@@ -72,16 +84,13 @@ import jparsec.time.TimeElement;
 import jparsec.time.TimeElement.SCALE;
 import jparsec.util.JPARSECException;
 import jparsec.util.Logger;
-import jparsec.util.Logger.LEVEL;
 import jparsec.util.Translate;
-import org.jfree.chart.ChartPanel;
-import visad.util.SelectRangeWidget;
-import visad.util.VisADSlider;
+import jparsec.util.Logger.LEVEL;
 
 /**
  * A Grid chart showing integrated intensity and the spectrum in a given map position
  * at the right. Optionally a VISAD chart below with the control panel.
- *
+ * 
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -128,30 +137,30 @@ public class GridSpectrumVISADChart implements Serializable, MouseMotionListener
 	private JScrollPane sp;
 	private JButton resetB;
 	private String[] labels;
-	private JLabel jlabel[] = new JLabel[3];
-	/**
-	 * Integrated intensity flag.
-	 */
-	public boolean integrated = false;
-	private ChartPanel chartPanel;
-	private String path;
+    private JLabel jlabel[] = new JLabel[3];
+    /**
+     * Integrated intensity flag.
+     */
+    public boolean integrated = false;
+    private ChartPanel chartPanel;
+    private String path;
 
-	/**
-	 * The set of coordinate types.
-	 */
-	public enum COORDINATES {
-		/** ID Constant for equatorial coordinates. */
-		EQUATORIAL,
-		/** ID Constant for ecliptic coordinates. */
-		ECLIPTIC,
-		/** ID Constant for galactic coordinates. */
-		GALACTIC,
-		/** ID Constant for equatorial offset in arcseconds. */
-		EQUATORIAL_OFFSET,
-		/** ID Constant for grid coordinates. */
-		GRID_POSITION
-	}
-
+    /**
+     * The set of coordinate types.
+     */
+    public static enum COORDINATES {
+	    /** ID Constant for equatorial coordinates. */
+	    EQUATORIAL,
+	    /** ID Constant for ecliptic coordinates. */
+	    ECLIPTIC,
+	    /** ID Constant for galactic coordinates. */
+	    GALACTIC,
+	    /** ID Constant for equatorial offset in arcseconds. */
+	    EQUATORIAL_OFFSET,
+	    /** ID Constant for grid coordinates. */
+	    GRID_POSITION
+    };
+    
 	/**
 	 * Creates a chart.
 	 * @param path Path to the .lmv file.
@@ -232,19 +241,19 @@ public class GridSpectrumVISADChart implements Serializable, MouseMotionListener
 		this.create();
 	}
 
-
+	
 	private void create() {
 		if (panel != null) panel.removeAll();
-
+		
 		try {
-			int borderSize = X0;
-			int panelHeight = (h - Y0 * 5);
+	        int borderSize = X0;
+	        int panelHeight = (h - Y0 * 5);
 			int gWidth = (w/2 - X0*2);
 			int gHeight = panelHeight*7/15;
 
 			float v0 = lmvObs.getv0();
 			float vf = lmvObs.getvf();
-			vel = v0 + (vf - v0) * 0.5f;
+    		vel = v0 + (vf - v0) * 0.5f;
 			float x0 = (float) (lmvObs.getx0() * Constant.RAD_TO_ARCSEC);
 			float xf = (float) (lmvObs.getxf() * Constant.RAD_TO_ARCSEC);
 			float y0 = (float) (lmvObs.gety0() * Constant.RAD_TO_ARCSEC);
@@ -252,13 +261,13 @@ public class GridSpectrumVISADChart implements Serializable, MouseMotionListener
 			fluxUnit = lmvObs.fluxUnit.trim();
 			VISADCubeElement cube = new VISADCubeElement(lmvObs.getCubeData(),
 					  new float[] {x0, xf, y0, yf, v0, vf},
-					  Translate.translate(904), // "OFFSET_RA",
+					  Translate.translate(904), // "OFFSET_RA", 
 					  VISADCubeElement.UNIT.ARCSEC,
-					  Translate.translate(905), // "OFFSET_DEC",
+					  Translate.translate(905), // "OFFSET_DEC", 
 					  VISADCubeElement.UNIT.ARCSEC,
-					  Translate.translate(906), // "VELOCITY",
+					  Translate.translate(906), // "VELOCITY", 
 					  VISADCubeElement.UNIT.KILOMETER_PER_SECOND,
-					  Translate.translate(907), // "FLUX",
+					  Translate.translate(907), // "FLUX", 
 					  VISADCubeElement.UNIT.KELVIN); // Should be Jy/beam, but VISAD don't accept this unit. Anyway it is not shown ...
 			if (ch != null) {
 				float valx[] = null, valy[] = null, valz[] = null;
@@ -280,56 +289,56 @@ public class GridSpectrumVISADChart implements Serializable, MouseMotionListener
 				}
 			} else {
 				ch = new CreateVISADChart(cube, vel, false);
-				rx = new SelectRangeWidget( ch.getRangeX());
-				ry = new SelectRangeWidget( ch.getRangeY());
-				rz = new SelectRangeWidget( ch.getRangeZ());
+		    	rx = new SelectRangeWidget( ch.getRangeX());
+		    	ry = new SelectRangeWidget( ch.getRangeY());
+		    	rz = new SelectRangeWidget( ch.getRangeZ());
 				ch.displays[0].setName("obs");
 			}
 
-			float data0[][] = lmvObs.getCubeData(lmvObs.axis3Dim/2);
-			if (integrated) {
-				data0 = lmvObs.getCubeData(0);
-				float vfac = Math.abs(lmvObs.velResolution);
-				for (int x=0; x<lmvObs.axis1Dim; x++)
-				{
-					for (int y=0; y<lmvObs.axis2Dim; y++)
-					{
-						data0[x][y] *= vfac;
-					}
-				}
-				for (int z=1; z<lmvObs.axis3Dim; z++)
-				{
-					float data[][] = lmvObs.getCubeData(z);
-					for (int x=0; x<lmvObs.axis1Dim; x++)
-					{
-						for (int y=0; y<lmvObs.axis2Dim; y++)
-						{
-							data0[x][y] += data[x][y] * vfac;
-						}
-					}
-				}
-			}
+    		float data0[][] = lmvObs.getCubeData(lmvObs.axis3Dim/2);
+    		if (integrated) {
+	    		data0 = lmvObs.getCubeData(0);
+	    		float vfac = Math.abs(lmvObs.velResolution);
+    			for (int x=0; x<lmvObs.axis1Dim; x++)
+    			{
+	    			for (int y=0; y<lmvObs.axis2Dim; y++)
+	    			{
+	    				data0[x][y] *= vfac;
+	    			}
+    			}
+    			for (int z=1; z<lmvObs.axis3Dim; z++)
+    			{
+		    		float data[][] = lmvObs.getCubeData(z);
+	    			for (int x=0; x<lmvObs.axis1Dim; x++)
+	    			{
+		    			for (int y=0; y<lmvObs.axis2Dim; y++)
+		    			{
+		    				data0[x][y] += data[x][y] * vfac;
+		    			}
+	    			}
+    			}
+    		}
 
-			double contour[] = null;
-			if (contours != null && contours.length > 0) {
-				contour = new double[contours.length];
-				for (int i=0; i<contour.length;i++)
-				{
-					contour[i] = Double.parseDouble(contours[i]);
-				}
-			}
-			x0 = (float) (lmvObs.getx0() * Constant.RAD_TO_ARCSEC);
-			xf = (float) (lmvObs.getxf() * Constant.RAD_TO_ARCSEC);
-			y0 = (float) (lmvObs.gety0() * Constant.RAD_TO_ARCSEC);
-			yf = (float) (lmvObs.getyf() * Constant.RAD_TO_ARCSEC);
+    		double contour[] = null;
+    		if (contours != null && contours.length > 0) {
+    			contour = new double[contours.length];
+    			for (int i=0; i<contour.length;i++)
+    			{
+    				contour[i] = Double.parseDouble(contours[i]);
+    			}
+    		}
+    		x0 = (float) (lmvObs.getx0() * Constant.RAD_TO_ARCSEC);
+    		xf = (float) (lmvObs.getxf() * Constant.RAD_TO_ARCSEC);
+    		y0 = (float) (lmvObs.gety0() * Constant.RAD_TO_ARCSEC);
+    		yf = (float) (lmvObs.getyf() * Constant.RAD_TO_ARCSEC);
 			GridChartElement chart = new GridChartElement(lmvObs.sourceName.trim()+" "+Translate.translate(937)+" "+lmvObs.line.trim()+" ("+lmvObs.fluxUnit.trim()+")",
-					Translate.translate(909), // "RA offset (\")",
-					Translate.translate(910), // "DEC offset (\")",
-					"",
-					GridChartElement.COLOR_MODEL.BLUE_TO_RED,
-					new double[] {x0, xf, y0, yf},  DataSet.toDoubleArray(data0),
+					Translate.translate(909), // "RA offset (\")", 
+					Translate.translate(910), // "DEC offset (\")", 
+					"", 
+					GridChartElement.COLOR_MODEL.BLUE_TO_RED, 
+					new double[] {x0, xf, y0, yf},  DataSet.toDoubleArray(data0), 
 					contour, 400);
-			chart.subTitle = "("+Translate.translate(938)+" "+Functions.formatAngle(lmvObs.beamMajor, 1)+"\"x"+Functions.formatAngle(lmvObs.beamMinor, 2)+"\"x"+Functions.formatAngleAsDegrees(lmvObs.beamPA, 0)+"\u00ba)";
+			chart.subTitle = "("+Translate.translate(938)+" "+Functions.formatAngle(lmvObs.beamMajor, 1)+"\"x"+Functions.formatAngle(lmvObs.beamMinor, 2)+"\"x"+Functions.formatAngleAsDegrees(lmvObs.beamPA, 0)+"º)";
 			chart.levelsOrientation = GridChartElement.WEDGE_ORIENTATION.VERTICAL_RIGHT;
 			chart.levelsBorderStyle = GridChartElement.WEDGE_BORDER.NO_BORDER;
 			gridChartObs = new CreateGridChart(chart);
@@ -351,7 +360,7 @@ public class GridSpectrumVISADChart implements Serializable, MouseMotionListener
 			ChartSeriesElement.setShapeSize(2);
 			ChartSeriesElement chartSeries1 = new ChartSeriesElement(dataX,
 					dataY, null, null,
-					Translate.translate(396), // "Observed",
+					Translate.translate(396), // "Observed", 
 					true, Color.BLACK, ChartSeriesElement.SHAPE_CIRCLE,
 					ChartSeriesElement.REGRESSION.NONE);
 			chartSeries1.showLines = true;
@@ -361,27 +370,27 @@ public class GridSpectrumVISADChart implements Serializable, MouseMotionListener
 			String unit = lmvObs.fluxUnit.trim();
 			if (unit.equals("Jy/beam")) unit = "Jy beam^{-1}";
 			String title = Translate.translate(939)+" ("+(px+1)+", "+(py+1)+")";
-			ChartElement chartElem = new ChartElement(series, ChartElement.TYPE.XY_CHART,
+			ChartElement chartElem = new ChartElement(series, ChartElement.TYPE.XY_CHART, 
 					ChartElement.SUBTYPE.XY_SCATTER,
-					title,
+					title, 
 					Translate.translate(292)+" (km s^{-1})", Translate.translate(810)+" ("+unit+")", false, 400, 400);
 			chartElem.backgroundGradient = this.background;
 			chartObs = new CreateChart(chartElem);
 			chartPanel = chartObs.getComponent();
-
+			
 			panel = new JPanel();
 			panel.setLayout(null);
 			panel.setBounds(0, 0, w, h); //X0, Y0*3/2, w - X0*4, panelHeight);
-			panel.setBackground(background);
-			panel.setOpaque(true);
-			if (background != null && background.getAlpha() > 200) panel.setOpaque(true);
+	    	panel.setBackground(background);
+	    	panel.setOpaque(true);
+	    	if (background != null && background.getAlpha() > 200) panel.setOpaque(true);
 			if (this.title != null) {
 				panel.setBorder(BorderFactory.createCompoundBorder(
-					BorderFactory.createTitledBorder(null, title, TitledBorder.LEFT, TitledBorder.TOP,
+					BorderFactory.createTitledBorder(null, title, TitledBorder.LEFT, TitledBorder.TOP, 
 							new Font("Dialog", Font.BOLD, 16), Color.BLACK),
 					BorderFactory.createEmptyBorder(borderSize,borderSize,borderSize,borderSize)));
 			}
-			if (posAndFlux == null) posAndFlux = new JTextField[6];
+	    	if (posAndFlux == null) posAndFlux = new JTextField[6];
 			posAndFlux[0] = new JTextField(18);
 			posAndFlux[1] = new JTextField(18);
 			posAndFlux[2] = new JTextField(18);
@@ -396,12 +405,12 @@ public class GridSpectrumVISADChart implements Serializable, MouseMotionListener
 				e.addMouseListener(this);
 				e.addMouseMotionListener(this);
 				e.addMouseWheelListener(this);
-				e.setBackground(background);
+		    	e.setBackground(background);
 				if (!fast) panel.add(e);
 			}
-			chartPanel.setBounds(X0+gWidth, Y0/3, gWidth*29/30, gHeight*23/20);
-			panel.add(chartPanel);
-			panel.setComponentZOrder(chartPanel, 0);
+	        chartPanel.setBounds(X0+gWidth, Y0/3, gWidth*29/30, gHeight*23/20);
+	        panel.add(chartPanel);
+	        panel.setComponentZOrder(chartPanel, 0);
 			if (ch != null) {
 				Component f = ch.displays[0].getComponent();
 				f.setBackground(background);
@@ -409,17 +418,17 @@ public class GridSpectrumVISADChart implements Serializable, MouseMotionListener
 				f.setBounds(X0*3+gWidth/8, Y0+2+panelHeight/2, gWidth*3/4, gWidth*3/4);
 				if (!fast) panel.add(f);
 			}
-
-			int paramWidth = gWidth;
-			panelHeight = h/2;
+			
+	        int paramWidth = gWidth;
+	        panelHeight = h/2;
 			controlPanel = new JPanel();
 			controlPanel.removeAll();
 			controlPanel.setLayout(null);
-			controlPanel.setBounds(X0+gWidth , -Y0*5/2+panelHeight, paramWidth, panelHeight);
+	        controlPanel.setBounds(X0+gWidth , -Y0*5/2+panelHeight, paramWidth, panelHeight);
 			controlPanel.setBackground(background);
 			if (ch != null) {
-				VisADSlider s = null;
-				s = ch.getVelSlider();
+		    	VisADSlider s = null;
+		    	s = ch.getVelSlider();
 				JSlider js = (JSlider) s.getComponent(0);
 				js.removeMouseMotionListener(this);
 				js.removeMouseListener(this);
@@ -429,7 +438,7 @@ public class GridSpectrumVISADChart implements Serializable, MouseMotionListener
 				js.setBackground(background);
 				js.setOpaque(false);
  				s.setBackground(background);
-				controlPanel.add(s);
+				controlPanel.add(s); 
 				if (rangeSliders == null) rangeSliders = createRangeSliders();
 				rangeSliders.setBounds(paramWidth/30, panelHeight/5, paramWidth*28/30, panelHeight*3/7);
 				rangeSliders.setBackground(background2);
@@ -443,7 +452,7 @@ public class GridSpectrumVISADChart implements Serializable, MouseMotionListener
 				if (s1 >=0) contourList.setSelectedIndex(s1);
 				labelContour = new JLabel(Translate.translate(911)); // "Set Contours");
 				labelContour.setBounds(paramWidth*11/20, panelHeight*35/56, paramWidth*2/4, panelHeight/10);
-				controlPanel.add(labelContour);
+				controlPanel.add(labelContour);	
 				sp = new JScrollPane(contourList);
 				sp.setBounds(paramWidth/30, panelHeight*18/28, paramWidth/2-paramWidth*2/15, panelHeight/5);
 				sp.setOpaque(false);
@@ -458,7 +467,7 @@ public class GridSpectrumVISADChart implements Serializable, MouseMotionListener
 				}
 				addContour.setBounds(paramWidth*2/5, panelHeight*83/112, paramWidth*2/7, panelHeight/10);
 				deleteContour.setBounds(paramWidth*69/100, panelHeight*83/112, paramWidth*2/7, panelHeight/10);
-				controlPanel.add(addContour);
+				controlPanel.add(addContour);	
 				controlPanel.add(deleteContour);
 				controlPanel.setForeground(background2);
 				integratedIntensity = new JCheckBox(Translate.translate(925)); // "Integrated");
@@ -472,71 +481,71 @@ public class GridSpectrumVISADChart implements Serializable, MouseMotionListener
 				resetB = createResetButton();
 				resetB.setBounds(paramWidth/2-paramWidth/30, panelHeight*7/8, paramWidth/2, panelHeight/10);
 				controlPanel.add(resetB);
-
+				
 				panel.add(controlPanel);
-				infoPanel = new JPanel();
+		        infoPanel = new JPanel();
 				infoPanel.removeAll();
 				infoPanel.setLayout(null);
 				infoPanel.setBounds(X0, h-Y0*5/2, w - X0*3, Y0*3);
 				infoPanel.setBackground(background);
 
-				int nlines = 3;
-				String equinox = "";
-				if (lmvObs != null && coordType == COORDINATES.EQUATORIAL) {
-					equinox = ""+lmvObs.epoch;
-					if (lmvObs.epoch >=2000) equinox = "J"+equinox;
-					equinox = "("+equinox+") ";
-				}
-				String cx = FileIO.addSpacesBeforeAString(Translate.translate(912), 16), // "			  RA",
-					cy = FileIO.addSpacesBeforeAString(Translate.translate(913), 13); // "		  DEC";
-				if (coordType == COORDINATES.ECLIPTIC) {
-					cx = Translate.translate(914); // "Ecl. Lon";
-					cy = Translate.translate(915); // "Ecl. Lat";
-				}
-				if (coordType == COORDINATES.GALACTIC) {
-					cx = Translate.translate(916); // "Gal. Lon";
-					cy = Translate.translate(917); // "Gal. Lat";
-				}
-				if (coordType == COORDINATES.EQUATORIAL_OFFSET) {
-					cx = FileIO.addSpacesBeforeAString(Translate.translate(940), 17); // "			  dRA";
-					cy = FileIO.addSpacesBeforeAString(Translate.translate(941), 11); // "	   dDEC";
-				}
-				if (coordType == COORDINATES.GRID_POSITION) {
-					cx = Translate.translate(918); // "Grid x";
-					cy = Translate.translate(919); // "Grid y";
-				}
-				labels = new String[] {
-						cx, cy,
-						FileIO.addSpacesBeforeAString(Translate.translate(920), 14) // "	 Intensity"
-				};
-				x = X0*2;
-				y = 0;
-				int boxWidth = (w - 2*X0) * 57 /(160*nlines);
-				if (w < 800) {
-					labels[2] = labels[2].substring(3);
-					if (coordType == COORDINATES.EQUATORIAL || coordType == COORDINATES.EQUATORIAL_OFFSET) cx = cx.substring(5);
-					labels[0] = DataSet.replaceAll(cx, ".0", "", false);
-				}
-				int ySep = Y0*5 / (2+1);
-				int boxHeight = ySep*4/3;
-				for (int i=0; i<nlines;i++)
-				{
-					jlabel[i] = new JLabel(labels[i]);
-					jlabel[i].setBounds(x, y, boxWidth*4/3, boxHeight);
-					jlabel[i].setBackground(background);
-					infoPanel.add(jlabel[i]);
-					posAndFlux[i] = new JTextField(18);
-					posAndFlux[i].setBounds(x+boxWidth*3/2-X0*3, y, boxWidth*4/3, boxHeight);
-					posAndFlux[i].setEditable(false);
-					posAndFlux[i].setBackground(background2);
-					infoPanel.add(posAndFlux[i]);
-					x += boxWidth*55/20;
-				}
-				panel.add(infoPanel);
+		    	int nlines = 3;
+		    	String equinox = "";
+		    	if (lmvObs != null && coordType == COORDINATES.EQUATORIAL) {
+		    		equinox = ""+lmvObs.epoch;
+		    		if (lmvObs.epoch >=2000) equinox = "J"+equinox;
+		        	equinox = "("+equinox+") ";
+		    	} 
+		    	String cx = FileIO.addSpacesBeforeAString(Translate.translate(912), 16), // "              RA", 
+		    		cy = FileIO.addSpacesBeforeAString(Translate.translate(913), 13); // "          DEC";
+		    	if (coordType == COORDINATES.ECLIPTIC) {
+		    		cx = Translate.translate(914); // "Ecl. Lon";
+		    		cy = Translate.translate(915); // "Ecl. Lat";
+		    	}
+		    	if (coordType == COORDINATES.GALACTIC) {
+		    		cx = Translate.translate(916); // "Gal. Lon";
+		    		cy = Translate.translate(917); // "Gal. Lat";
+		    	}
+		    	if (coordType == COORDINATES.EQUATORIAL_OFFSET) {
+		    		cx = FileIO.addSpacesBeforeAString(Translate.translate(940), 17); // "              dRA";
+		    		cy = FileIO.addSpacesBeforeAString(Translate.translate(941), 11); // "       dDEC";
+		    	}
+		    	if (coordType == COORDINATES.GRID_POSITION) {
+		    		cx = Translate.translate(918); // "Grid x";
+		    		cy = Translate.translate(919); // "Grid y";
+		    	}
+		    	labels = new String[] {
+		    			cx, cy, 
+		    			FileIO.addSpacesBeforeAString(Translate.translate(920), 14) // "     Intensity"
+		    	};
+		    	x = X0*2;
+		    	y = 0;
+		    	int boxWidth = (w - 2*X0) * 57 /(160*nlines);
+		    	if (w < 800) {
+		    		labels[2] = labels[2].substring(3);
+		    		if (coordType == COORDINATES.EQUATORIAL || coordType == COORDINATES.EQUATORIAL_OFFSET) cx = cx.substring(5);
+		    		labels[0] = DataSet.replaceAll(cx, ".0", "", false);
+		    	}
+		    	int ySep = Y0*5 / (2+1);
+		    	int boxHeight = ySep*4/3;
+		    	for (int i=0; i<nlines;i++)
+		    	{
+		    		jlabel[i] = new JLabel(labels[i]);
+		        	jlabel[i].setBounds(x, y, boxWidth*4/3, boxHeight);
+		        	jlabel[i].setBackground(background);
+		    		infoPanel.add(jlabel[i]);
+		    		posAndFlux[i] = new JTextField(18);
+		    		posAndFlux[i].setBounds(x+boxWidth*3/2-X0*3, y, boxWidth*4/3, boxHeight);
+		    		posAndFlux[i].setEditable(false);
+		    		posAndFlux[i].setBackground(background2);
+		    		infoPanel.add(posAndFlux[i]);
+		    		x += boxWidth*55/20;
+		    	}
+		    	panel.add(infoPanel);
 			}
 		} catch (Exception exc) {
 			Logger.log(LEVEL.ERROR, "Error creating the chart. Message was: "+exc.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(exc.getStackTrace()));
-		}
+		}		
 	}
 
 	/**
@@ -549,17 +558,17 @@ public class GridSpectrumVISADChart implements Serializable, MouseMotionListener
 			this.getComponent();
 			BufferedImage buf = new BufferedImage(w, h, type);
 			Graphics g = buf.createGraphics();
-
+			
 			// Retrieve the graphics context; this object is used to paint shapes
-			Graphics2D g2d = (Graphics2D)g;
-
-			// Enable antialiasing for shapes
-			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-								 RenderingHints.VALUE_ANTIALIAS_ON);
-
-			// Enable antialiasing for text
-			g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
-								 RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+	        Graphics2D g2d = (Graphics2D)g;
+	    
+	        // Enable antialiasing for shapes
+	        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+	                             RenderingHints.VALUE_ANTIALIAS_ON);
+	    
+	        // Enable antialiasing for text
+	        g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
+	                             RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 			panel.paint(g);
 			return buf;
 		} catch (Exception exc) {
@@ -577,7 +586,7 @@ public class GridSpectrumVISADChart implements Serializable, MouseMotionListener
 		panel.setSize(w, h);
 		return panel;
 	}
-
+	
 	/**
 	 * Returns x position, without scaling.
 	 * @return x.
@@ -644,31 +653,31 @@ public class GridSpectrumVISADChart implements Serializable, MouseMotionListener
 	 * Updates the panel.
 	 */
 	public void mouseDragged(MouseEvent e) {
-		if (ch != null) {
-			if (e.getSource().equals(ch.getVelSlider().getComponent(0))) {
-				if (!integratedIntensity.isSelected()) {
-					updateChart(false, true, -1, -1);
-					panel.validate();
-				}
-			}
-		}
-	}
+    	if (ch != null) {
+    		if (e.getSource().equals(ch.getVelSlider().getComponent(0))) { 
+    			if (!integratedIntensity.isSelected()) {
+    				updateChart(false, true, -1, -1);
+    				panel.validate();
+    			}
+    		}
+    	}
+    }
 
 	/**
 	 * Updates the panel (spectrum shown and coordinates).
 	 */
 	public void mouseMoved(MouseEvent e) {
 		done = false;
-		int mod = e.getModifiers();
-		if (gridChartObs != null) {
-			if (e.getSource().equals(gridChartObs.getDisplay())) {
-				int x = e.getX(), y = e.getY();
-				if (mod == 0) updatePosAndFluxObs(x, y, true);
-			} else {
-				try {
-					int px = lmvObs.axis1Dim / 2-1;
-					int py = lmvObs.axis2Dim / 2-1;
-					if (chartObs.getChartElement().title.indexOf(""+px+", "+py) < 0) {
+    	int mod = e.getModifiers();
+    	if (gridChartObs != null) {
+	    	if (e.getSource().equals(gridChartObs.getDisplay())) {
+	    		int x = e.getX(), y = e.getY();
+	    		if (mod == 0) updatePosAndFluxObs(x, y, true);
+	    	} else {
+	    		try {
+	    			int px = lmvObs.axis1Dim / 2-1;
+	    			int py = lmvObs.axis2Dim / 2-1;
+	    			if (chartObs.getChartElement().title.indexOf(""+px+", "+py) < 0) {
 						float[][][] cubeData = lmvObs.getCubeData();
 						int n = cubeData.length;
 						double dataX[] = new double[n];
@@ -682,7 +691,7 @@ public class GridSpectrumVISADChart implements Serializable, MouseMotionListener
 						}
 						ChartSeriesElement chartSeries1 = new ChartSeriesElement(dataX,
 								dataY, null, null,
-								Translate.translate(396), // "Observed",
+								Translate.translate(396), // "Observed", 
 								true, Color.BLACK, ChartSeriesElement.SHAPE_CIRCLE,
 								ChartSeriesElement.REGRESSION.NONE);
 						chartSeries1.showLines = true;
@@ -693,50 +702,46 @@ public class GridSpectrumVISADChart implements Serializable, MouseMotionListener
 						chartObs.getChartElement().title =Translate.translate(939)+" ("+(px+1)+", "+(py+1)+")";
 						chartPanel.setChart(chartObs.getChart());
 						panel.setComponentZOrder(chartPanel, 0);
-					}
-				} catch (Exception exc) {
-				}
-			}
-		}
+	    			}
+	    		} catch (Exception exc) {
+	    			
+	    		}
+	    	}
+    	}
 	}
 
 	/**
 	 * Nothing.
 	 */
-	@Override
 	public void mouseClicked(MouseEvent arg0) {
 	}
 
 	/**
 	 * Nothing.
 	 */
-	@Override
 	public void mouseEntered(MouseEvent arg0) {
 	}
 
 	/**
 	 * Nothing.
 	 */
-	@Override
 	public void mouseExited(MouseEvent arg0) {
 	}
 
 	/**
 	 * Updates the panel if the slider is clicked.
 	 */
-	@Override
 	public void mousePressed(MouseEvent e) {
-		if (ch != null) {
-			if (e.getSource().equals(ch.getVelSlider().getComponent(0))) {
-				updateChart(false, true, -1, -1);
-			}
-		}
-	}
+    	if (ch != null) {
+    		if (e.getSource().equals(ch.getVelSlider().getComponent(0))) { 
+    			updateChart(false, true, -1, -1);
+    		}
+    	}
+    }
 
 	/**
 	 * Nothing.
 	 */
-	@Override
 	public void mouseReleased(MouseEvent e) {
 	}
 
@@ -745,54 +750,51 @@ public class GridSpectrumVISADChart implements Serializable, MouseMotionListener
 	/**
 	 * Updates the panel when the grid chart range changes.
 	 */
-	@Override
 	public void propertyChange(PropertyChangeEvent event) {
 		if (gridChartObs != null && event.getSource() == gridChartObs.getDisplay()
 				&& event.getPropertyName().equals("domainRange") && !done) {
 			done = true;
 			updateChart(true, true, -1, -1);
 			panel.validate();
-		}
+		}		
 	}
 
 	/**
 	 * Support for changing the plane of the cube in the grid chart.
 	 */
-	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
-		if (gridChartObs != null) {
-			if (e.getSource().equals(gridChartObs.getDisplay())) {
-				int mod = e.getModifiers();
-				int n = e.getWheelRotation();
-				float v0 = lmvObs.getv0();
-				float vf = lmvObs.getvf();
-				float step = (vf - v0)/1000f;
+    	if (gridChartObs != null) {
+	    	if (e.getSource().equals(gridChartObs.getDisplay())) {
+	    		int mod = e.getModifiers();
+	    		int n = e.getWheelRotation();
+	    		float v0 = lmvObs.getv0();
+	    		float vf = lmvObs.getvf();
+	    		float step = (vf - v0)/1000f;
 				float vel0 =ch.getVelSliderValue();
 				if (mod == 0 && lmvObs.axis3Dim <= 1000) step *= 1000f / lmvObs.axis3Dim;
 				vel0 += n*step;
 				ch.setVelSliderValue(vel0);
-				int x = e.getX(), y = e.getY();
+	    		int x = e.getX(), y = e.getY();
 				if (!integratedIntensity.isSelected()) updateChart(false, true, x, y);
 				panel.validate();
-			}
-		}
-
+	    	}
+    	}
+	
 	}
-
-	private void updateChart(boolean anyWay, boolean paint, int x, int y)
-	{
-		boolean doneObs = updateChartObs(anyWay, paint);
-		if (ch != null) vel = ch.getVelSliderValue();
+	
+    private void updateChart(boolean anyWay, boolean paint, int x, int y)
+    {
+    	boolean doneObs = updateChartObs(anyWay, paint);
+    	if (ch != null) vel = ch.getVelSliderValue();
 		if (doneObs && paint) updatePosAndFluxObs(x, y, false);
-	}
-
-	private boolean updateChartObs(boolean anyWay, boolean paint)
-	{
-		boolean done = false;
-		if (ch != null) {
+    }
+    private boolean updateChartObs(boolean anyWay, boolean paint)
+    {
+    	boolean done = false;
+    	if (ch != null) {
 			float vel0 =ch.getVelSliderValue();
-			float v0 = lmvObs.getv0();
-			float vf = lmvObs.getvf();
+    		float v0 = lmvObs.getv0();
+    		float vf = lmvObs.getvf();
 			float step = (lmvObs.axis3Dim-1.0f)/(vf-v0);
 			int plane = (int) (step * (vel-v0) + 0.5f);
 			int plane0 = (int) (step * (vel0-v0) + 0.5f);
@@ -802,54 +804,54 @@ public class GridSpectrumVISADChart implements Serializable, MouseMotionListener
 				vel0 = v0 + plane0 / step;
 				ch.setVelSliderValue(vel0);
 			}
-			if (plane0 != plane || anyWay) {
-				try {
-					float x0 = (float) (lmvObs.getx0() * Constant.RAD_TO_ARCSEC);
-					float xf = (float) (lmvObs.getxf() * Constant.RAD_TO_ARCSEC);
-					float y0 = (float) (lmvObs.gety0() * Constant.RAD_TO_ARCSEC);
-					float yf = (float) (lmvObs.getyf() * Constant.RAD_TO_ARCSEC);
-					float data0[][] = lmvObs.getCubeData(plane0);
-					if (integratedIntensity.isSelected()) {
-						data0 = lmvObs.getCubeData(0);
-						float vfac = Math.abs(lmvObs.velResolution);
-						for (int x=0; x<lmvObs.axis1Dim; x++)
-						{
-							for (int y=0; y<lmvObs.axis2Dim; y++)
-							{
-								data0[x][y] *= vfac;
-							}
-						}
-						for (int z=1; z<lmvObs.axis3Dim; z++)
-						{
-							float data[][] = lmvObs.getCubeData(z);
-							for (int x=0; x<lmvObs.axis1Dim; x++)
-							{
-								for (int y=0; y<lmvObs.axis2Dim; y++)
-								{
-									data0[x][y] += data[x][y] * vfac;
-								}
-							}
-						}
-					}
-					double contour[] = null;
-					if (contours.length > 0) {
-						contour = new double[contours.length];
-						for (int i=0; i<contour.length;i++)
-						{
-							contour[i] = Double.parseDouble(contours[i]);
-						}
-					}
+    		if (plane0 != plane || anyWay) {
+    			try {
+		    		float x0 = (float) (lmvObs.getx0() * Constant.RAD_TO_ARCSEC);
+		    		float xf = (float) (lmvObs.getxf() * Constant.RAD_TO_ARCSEC);
+		    		float y0 = (float) (lmvObs.gety0() * Constant.RAD_TO_ARCSEC);
+		    		float yf = (float) (lmvObs.getyf() * Constant.RAD_TO_ARCSEC);	    		
+		    		float data0[][] = lmvObs.getCubeData(plane0);
+		    		if (integratedIntensity.isSelected()) {
+			    		data0 = lmvObs.getCubeData(0);
+			    		float vfac = Math.abs(lmvObs.velResolution);
+		    			for (int x=0; x<lmvObs.axis1Dim; x++)
+		    			{
+			    			for (int y=0; y<lmvObs.axis2Dim; y++)
+			    			{
+			    				data0[x][y] *= vfac;
+			    			}
+		    			}
+		    			for (int z=1; z<lmvObs.axis3Dim; z++)
+		    			{
+				    		float data[][] = lmvObs.getCubeData(z);
+			    			for (int x=0; x<lmvObs.axis1Dim; x++)
+			    			{
+				    			for (int y=0; y<lmvObs.axis2Dim; y++)
+				    			{
+				    				data0[x][y] += data[x][y] * vfac;
+				    			}
+			    			}
+		    			}
+		    		}
+		    		double contour[] = null;
+		    		if (contours.length > 0) {
+		    			contour = new double[contours.length];
+		    			for (int i=0; i<contour.length;i++)
+		    			{
+		    				contour[i] = Double.parseDouble(contours[i]);
+		    			}
+		    		}
 					GridChartElement chart = new GridChartElement(lmvObs.sourceName.trim()+" "+Translate.translate(937)+" "+lmvObs.line.trim()+" ("+lmvObs.fluxUnit.trim()+")",
-							Translate.translate(909), // "RA offset (\")",
-							Translate.translate(910), // "DEC offset (\")",
-							"",
-							GridChartElement.COLOR_MODEL.BLUE_TO_RED,
-							new double[] {x0, xf, y0, yf},  DataSet.toDoubleArray(data0),
+							Translate.translate(909), // "RA offset (\")", 
+							Translate.translate(910), // "DEC offset (\")", 
+							"", 
+							GridChartElement.COLOR_MODEL.BLUE_TO_RED, 
+							new double[] {x0, xf, y0, yf},  DataSet.toDoubleArray(data0), 
 							contour, 400);
-					chart.subTitle = "("+Translate.translate(938)+" "+Functions.formatAngle(lmvObs.beamMajor, 1)+"\"x"+Functions.formatAngle(lmvObs.beamMinor, 2)+"\"x"+Functions.formatAngleAsDegrees(lmvObs.beamPA, 0)+"\u00ba)";
+					chart.subTitle = "("+Translate.translate(938)+" "+Functions.formatAngle(lmvObs.beamMajor, 1)+"\"x"+Functions.formatAngle(lmvObs.beamMinor, 2)+"\"x"+Functions.formatAngleAsDegrees(lmvObs.beamPA, 0)+"º)";
 					chart.levelsOrientation = GridChartElement.WEDGE_ORIENTATION.VERTICAL_RIGHT;
 					chart.levelsBorderStyle = GridChartElement.WEDGE_BORDER.NO_BORDER;
-					int panelHeight = (h - Y0 * 5);
+			        int panelHeight = (h - Y0 * 5);
 					int gWidth = (w/2 - X0*2);
 					int gHeight = panelHeight*7/15;
 					Domain rangeObs = gridChartObs.getDisplay().getRange();
@@ -859,7 +861,7 @@ public class GridSpectrumVISADChart implements Serializable, MouseMotionListener
 					if (paint) {
 						panel.invalidate();
 						Component g = gridChartObs.getDisplay();
-						g.setBackground(background);
+				    	g.setBackground(background);
 						int dx = 7, dy = 5;
 						g.setBounds(X0-dx*2, Y0-dy*2, gWidth+X0*4+4*dx, gHeight+Y0*2+dy+1);
 						g.addMouseListener(this);
@@ -869,22 +871,22 @@ public class GridSpectrumVISADChart implements Serializable, MouseMotionListener
 						panel.add(g, 0);
 					}
 					done = true;
-				} catch (Exception exc) {
-					Logger.log(LEVEL.ERROR, "Error updating the chart. Message was: "+exc.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(exc.getStackTrace()));
-				}
-			}
-		}
-		return done;
-	}
+    			} catch (Exception exc) {
+    				Logger.log(LEVEL.ERROR, "Error updating the chart. Message was: "+exc.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(exc.getStackTrace()));
+    			}
+    		}
+    	}
+    	return done;
+    }
 
-	private void updatePosAndFluxObs(int x, int y, boolean reCalc)
-	{
+    private void updatePosAndFluxObs(int x, int y, boolean reCalc)
+    {
 		try {
 			double startX = gridChartObs.getDisplay().getRange().getXRange().start;
 			double startY = gridChartObs.getDisplay().getRange().getYRange().start;
 			double endX = gridChartObs.getDisplay().getRange().getXRange().end;
 			double endY = gridChartObs.getDisplay().getRange().getYRange().end;
-
+			
 			if (startX > endX) {
 				double tmp = startX;
 				startX = endX;
@@ -897,10 +899,10 @@ public class GridSpectrumVISADChart implements Serializable, MouseMotionListener
 			}
 
 			if (reCalc) {
-				physX = gridChartObs.getDisplay().getLayer("Layer 1").getXDtoP(x) - 0.1;	// 0 -> 5.27
+				physX = gridChartObs.getDisplay().getLayer("Layer 1").getXDtoP(x) - 0.1;    // 0 -> 5.27
 				physY = gridChartObs.getDisplay().getLayer("Layer 1").getYDtoP(y-2) - 0.6; // 0 -> 4.77
 			}
-
+			
 			// Offsets in arcsec respect to map center
 			double physXMap = startX + (endX - startX) * physX / 5.27;
 			double physYMap = startY + (endY - startY) * physY / 4.77;
@@ -925,29 +927,29 @@ public class GridSpectrumVISADChart implements Serializable, MouseMotionListener
 			fluxUnit = lmvObs.fluxUnit.trim();
 			if (integratedIntensity.isSelected()) fluxUnit+= " km/s";
 			if (physXMap >= startX && physXMap <= endX && physYMap >= startY && physYMap <= endY) {
-				if (coordType.compareTo(COORDINATES.EQUATORIAL_OFFSET) >= 0) {
-					if (coordType == COORDINATES.EQUATORIAL_OFFSET) {
-						posAndFlux[0].setText(Functions.formatAngle(loc.getLongitude(), 2));
-						posAndFlux[1].setText(Functions.formatAngle(loc.getLatitude(), 2));
-					} else {
-						posAndFlux[0].setText(""+(px+1));
-						posAndFlux[1].setText(""+(py+1));
-					}
-				} else {
-					if (coordType == COORDINATES.EQUATORIAL) {
-						posAndFlux[0].setText(Functions.formatRA(loc.getLongitude(), 3));
-					} else {
-						posAndFlux[0].setText(Functions.formatDEC(loc.getLongitude(), 2));
-					}
-					posAndFlux[1].setText(Functions.formatDEC(loc.getLatitude(), 2));
-				}
-				posAndFlux[2].setText(Functions.formatValue(gridChartObs.getIntensityAt(physXMap, physYMap), 3)+" "+fluxUnit);
-				if (posAndFlux[2].getText().startsWith("0,000"))
-					posAndFlux[2].setText(""+(float)gridChartObs.getIntensityAt(physXMap, physYMap)+" "+fluxUnit);
+    			if (coordType.compareTo(COORDINATES.EQUATORIAL_OFFSET) >= 0) {
+        			if (coordType == COORDINATES.EQUATORIAL_OFFSET) {
+        				posAndFlux[0].setText(Functions.formatAngle(loc.getLongitude(), 2));
+        				posAndFlux[1].setText(Functions.formatAngle(loc.getLatitude(), 2));
+        			} else {
+        				posAndFlux[0].setText(""+(px+1));
+        				posAndFlux[1].setText(""+(py+1));        				
+        			}
+    			} else {
+	    			if (coordType == COORDINATES.EQUATORIAL) {
+	    				posAndFlux[0].setText(Functions.formatRA(loc.getLongitude(), 3));
+	    			} else {
+	    				posAndFlux[0].setText(Functions.formatDEC(loc.getLongitude(), 2));    				
+	    			}
+	    			posAndFlux[1].setText(Functions.formatDEC(loc.getLatitude(), 2));
+    			}
+    			posAndFlux[2].setText(Functions.formatValue(gridChartObs.getIntensityAt(physXMap, physYMap), 3)+" "+fluxUnit);
+    			if (posAndFlux[2].getText().startsWith("0,000"))
+    				posAndFlux[2].setText(""+(float)gridChartObs.getIntensityAt(physXMap, physYMap)+" "+fluxUnit);
 			} else {
-				posAndFlux[0].setText("");
-				posAndFlux[1].setText("");
-				posAndFlux[2].setText("");
+		    	posAndFlux[0].setText("");
+		    	posAndFlux[1].setText("");
+		    	posAndFlux[2].setText("");
 			}
 			posAndFlux[0].setCaretPosition(0);
 			posAndFlux[1].setCaretPosition(0);
@@ -983,11 +985,11 @@ public class GridSpectrumVISADChart implements Serializable, MouseMotionListener
 						int pyf = gridChartObs.getDisplay().getLayer("Layer 1").getYPtoD(pyb+0.6); // 0 -> 4.77
 						g.drawLine(pxf, pyf, pxf, pyf+1);
 					}
-				} catch (Exception exc) {
+				} catch (Exception exc) { 
 					Logger.log(LEVEL.ERROR, "Error drawing the beam. Message was: "+exc.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(exc.getStackTrace()));
 				}
 			}
-
+						
 			if (px < 0 || py < 0 || px > lmvObs.axis1Dim-1 || py > lmvObs.axis2Dim-1) {
 				px = lmvObs.axis1Dim/2-1;
 				py = lmvObs.axis1Dim/2-1;
@@ -1005,7 +1007,7 @@ public class GridSpectrumVISADChart implements Serializable, MouseMotionListener
 			}
 			ChartSeriesElement chartSeries1 = new ChartSeriesElement(dataX,
 					dataY, null, null,
-					Translate.translate(396), // "Observed",
+					Translate.translate(396), // "Observed", 
 					true, Color.BLACK, ChartSeriesElement.SHAPE_CIRCLE,
 					ChartSeriesElement.REGRESSION.NONE);
 			chartSeries1.showLines = true;
@@ -1020,15 +1022,15 @@ public class GridSpectrumVISADChart implements Serializable, MouseMotionListener
 		} catch (Exception exc) {
 			Logger.log(LEVEL.ERROR, "Error updating the chart. Message was: "+exc.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(exc.getStackTrace()));
 		}
-	}
+    }
 
-	private LocationElement transformCoord(LocationElement loc)
-	{
-		LocationElement loc_out = loc.clone();
-		try {
-			float epoch = 2000f;
-			if (lmvObs != null) epoch = lmvObs.epoch;
-			double jd = Constant.J2000 + (epoch - 2000f) * 365.25; // approx., I know ...
+    private LocationElement transformCoord(LocationElement loc)
+    {
+    	LocationElement loc_out = loc.clone();
+    	try {
+    		float epoch = 2000f;
+    		if (lmvObs != null) epoch = lmvObs.epoch;
+    		double jd = Constant.J2000 + (epoch - 2000f) * 365.25; // approx., I know ...
 			AstroDate astro = new AstroDate(jd);
 			TimeElement time = new TimeElement(astro, SCALE.TERRESTRIAL_TIME);
 			CityElement city = City.findCity("Madrid");
@@ -1039,65 +1041,63 @@ public class GridSpectrumVISADChart implements Serializable, MouseMotionListener
 			if (coordType == COORDINATES.ECLIPTIC) loc_out = CoordinateSystem.equatorialToEcliptic(loc, time, observer, eph);
 			if (coordType == COORDINATES.GALACTIC) loc_out = CoordinateSystem.equatorialToGalactic(loc, time, observer, eph);
 
-		} catch (Exception exc) {
+    	} catch (Exception exc) {
 			Logger.log(LEVEL.ERROR, "Error rotating coordinates. Message was: "+exc.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(exc.getStackTrace()));
-		}
-		return loc_out;
-	}
+    	}
+    	return loc_out;
+    }
 
-	private Component createRangeSliders(){
-		JPanel p = new JPanel();
-		p.setLayout(new BoxLayout(p,BoxLayout.Y_AXIS));
-		p.setBackground(background2);
-		p.setOpaque(false);
-		try {
-			rx = new SelectRangeWidget( ch.getRangeX());
-			ry = new SelectRangeWidget( ch.getRangeY());
-			rz = new SelectRangeWidget( ch.getRangeZ());
-			p.add(rx);
-			p.add(ry);
-			p.add(rz);
-		}
-		catch (Exception exc) {
+    private Component createRangeSliders(){
+        JPanel p = new JPanel();
+        p.setLayout(new BoxLayout(p,BoxLayout.Y_AXIS));
+        p.setBackground(background2);
+        p.setOpaque(false);
+        try {
+        	rx = new SelectRangeWidget( ch.getRangeX());
+        	ry = new SelectRangeWidget( ch.getRangeY());
+        	rz = new SelectRangeWidget( ch.getRangeZ());
+        	p.add(rx);
+        	p.add(ry);
+        	p.add(rz);
+        }
+        catch (Exception exc) {
 			Logger.log(LEVEL.ERROR, "Error creating range sliders. Message was: "+exc.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(exc.getStackTrace()));
-		}
-		return p;
-	  }
+        }
+        return p;
+      }
 
-	private JButton createResetButton(){
-		final JButton button = new JButton(Translate.translate(926)); // "Reset Displays");
-		button.addActionListener(new ActionListener() {
-		  @Override
-		  public void actionPerformed(ActionEvent e) {
-			try {
-				updateChart(true, true, -1, -1);
-				if (ch != null) ch.displays[0].getProjectionControl().resetProjection();
-				if (gridChartObs != null) gridChartObs.getDisplay().resetZoom();
-				panel.validate();
-				//panel.repaint();
-				panel.requestFocusInWindow();
-			}
-			catch (Exception exc) {
-				Logger.log(LEVEL.ERROR, "Error processing reset button. Message was: "+exc.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(exc.getStackTrace()));
-			}
-		  }
-		});
+    private JButton createResetButton(){
+        final JButton button = new JButton(Translate.translate(926)); // "Reset Displays");
+        button.addActionListener(new ActionListener() {
+          public void actionPerformed(ActionEvent e) {
+            try {
+            	updateChart(true, true, -1, -1);
+            	if (ch != null) ch.displays[0].getProjectionControl().resetProjection();
+            	if (gridChartObs != null) gridChartObs.getDisplay().resetZoom();
+    			panel.validate();
+            	//panel.repaint();
+        		panel.requestFocusInWindow();
+            }
+            catch (Exception exc) {  
+    			Logger.log(LEVEL.ERROR, "Error processing reset button. Message was: "+exc.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(exc.getStackTrace()));
+            }
+          }
+        });
 
-		return button;
-	  }
+        return button;
+      }
 
 	/**
 	 * Support for adding/removing contours and the integrated intensity checkbox.
 	 */
-	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == addContour) {
 			String s = (String)JOptionPane.showInputDialog(
-					null,
-					Translate.translate(921), //
-					Translate.translate(922), //
-					JOptionPane.PLAIN_MESSAGE
-					);
+	                null,
+	                Translate.translate(921), // 
+	                Translate.translate(922), // 
+	                JOptionPane.PLAIN_MESSAGE
+	                );
 			if (s != null && s.length() > 0) {
 				try {
 					int n = contours.length, si = contourList.getSelectedIndex();
@@ -1116,8 +1116,8 @@ public class GridSpectrumVISADChart implements Serializable, MouseMotionListener
 					}
 				} catch (Exception exc) {}
 			}
-			updateChart(true, true, -1, -1);
-			panel.validate();
+        	updateChart(true, true, -1, -1);
+        	panel.validate();
 		}
 		if (e.getSource() == deleteContour) {
 			int index = contourList.getSelectedIndex();
@@ -1132,8 +1132,8 @@ public class GridSpectrumVISADChart implements Serializable, MouseMotionListener
 					}
 				} catch (Exception exc) {}
 			}
-			updateChart(true, true, -1, -1);
-			panel.validate();
+        	updateChart(true, true, -1, -1);
+        	panel.validate();
 		}
 
 		if (e.getSource() == integratedIntensity) {
@@ -1141,7 +1141,7 @@ public class GridSpectrumVISADChart implements Serializable, MouseMotionListener
 			panel.validate();
 		}
 	}
-
+	
 	private void setHeight()
 	{
 		this.h = w * 3 / 4;
@@ -1183,8 +1183,8 @@ public class GridSpectrumVISADChart implements Serializable, MouseMotionListener
 			if (plane >= lmvObs.axis3Dim) plane = lmvObs.axis3Dim-1;
 		}
 		ch.setVelSliderValue(v0 + plane / step);
-		updateChart(true, true, -1, -1);
-		panel.validate();
+    	updateChart(true, true, -1, -1);
+    	panel.validate();
 	}
 	/**
 	 * Set certain parameters for the chart.
@@ -1210,10 +1210,9 @@ public class GridSpectrumVISADChart implements Serializable, MouseMotionListener
 			if (plane >= lmvObs.axis3Dim) plane = lmvObs.axis3Dim-1;
 		}
 		ch.setVelSliderValue(v0 + plane / step);
-		updateChart(true, true, -1, -1);
-		panel.validate();
+    	updateChart(true, true, -1, -1);
+    	panel.validate();
 	}
-
 	/**
 	 * Set certain parameters for the chart.
 	 * @param integrated Integrated intensity or not.
@@ -1227,10 +1226,10 @@ public class GridSpectrumVISADChart implements Serializable, MouseMotionListener
 		contourList.setListData(contours);
 		contourList.setSelectedIndex(contours.length-1);
 		this.contours = contours;
-		updateChart(true, true, -1, -1);
-		panel.validate();
+    	updateChart(true, true, -1, -1);
+    	panel.validate();
 	}
-
+	
 	/**
 	 * Writes the object to a binary file.
 	 * @param out Output stream.
@@ -1244,7 +1243,7 @@ public class GridSpectrumVISADChart implements Serializable, MouseMotionListener
 		out.writeInt(this.background.getRGB());
 		out.writeObject(this.title);
 		out.writeInt(this.coordType.ordinal());
-
+		
 		out.writeFloat(vel);
 		out.writeBoolean(integratedIntensity.isSelected());
 		out.writeObject(contours);
@@ -1284,17 +1283,17 @@ public class GridSpectrumVISADChart implements Serializable, MouseMotionListener
 		int backg = in.readInt();
 		title = (String) in.readObject();
 		coordType = COORDINATES.values()[in.readInt()];
-
+		
 		float vel = in.readFloat();
 		boolean ii = in.readBoolean();
 		String con[] = (String[]) in.readObject();
 		float[] rxVal = (float[]) in.readObject();
 		float[] ryVal = (float[]) in.readObject();
 		float[] rzVal = (float[]) in.readObject();
-
+		
 		lmvObs = (LMVCube) in.readObject();
 		chartObs = (CreateChart) in.readObject();
-
+		
 		x0 = x;
 		y0 = y;
 		w0 = w;
@@ -1303,23 +1302,23 @@ public class GridSpectrumVISADChart implements Serializable, MouseMotionListener
 		background2 = new Color(background.getRed(), background.getGreen(), background.getBlue(), 255);
 
 		this.integrated = ii;
-		jlabel = new JLabel[3];
+		jlabel = new JLabel[3]; 
 		if (contours == null) contours = new String[] {};
 		try {
 			this.create();
-
+			
 			this.setPreferences(vel, ii, con, rxVal[0], rxVal[1], ryVal[0], ryVal[1], rzVal[0], rzVal[1]);
 		} catch (Exception exc) {
 			panel = new JPanel();
 		}
  	}
-
+	
 	/**
 	 * Updates the panel.
 	 */
 	public void update() {
 		if (gridChartObs == null || chartPanel == null) return;
-
+		
 		w = panel.getSize().width;
 		int hh = panel.getSize().height;
 		setHeight();
@@ -1328,7 +1327,7 @@ public class GridSpectrumVISADChart implements Serializable, MouseMotionListener
 			w = (int) (h * 4.0 / 3.0 + 1);
 		}
 
-		int panelHeight = (h - Y0 * 5);
+        int panelHeight = (h - Y0 * 5);
 		int gWidth = (w/2 - X0*2);
 		int gHeight = panelHeight*7/15;
 
@@ -1337,19 +1336,19 @@ public class GridSpectrumVISADChart implements Serializable, MouseMotionListener
 			int dx = 7, dy = 5;
 			e.setBounds(X0-dx*2, Y0-dy*2, gWidth+X0*4+4*dx, gHeight+Y0*2+dy+1);
 		}
-		chartPanel.setBounds(X0+gWidth, Y0/3, gWidth*29/30, gHeight*23/20);
-		panel.setComponentZOrder(chartPanel, 0);
+        chartPanel.setBounds(X0+gWidth, Y0/3, gWidth*29/30, gHeight*23/20);
+        panel.setComponentZOrder(chartPanel, 0);
 		if (ch != null) {
 			Component f = ch.displays[0].getComponent();
 			f.setBounds(X0*3+gWidth/8, Y0+2+panelHeight/2, gWidth*3/4, gWidth*3/4);
 		}
-
-		int paramWidth = gWidth;
-		panelHeight = h/2;
-		controlPanel.setBounds(X0+gWidth , -Y0*5/2+panelHeight, paramWidth, panelHeight);
+				
+        int paramWidth = gWidth;
+        panelHeight = h/2;
+        controlPanel.setBounds(X0+gWidth , -Y0*5/2+panelHeight, paramWidth, panelHeight);
 		if (ch != null) {
-			VisADSlider s = null;
-			s = ch.getVelSlider();
+	    	VisADSlider s = null;
+	    	s = ch.getVelSlider();
 			s.setBounds(paramWidth/15, panelHeight/12, paramWidth*13/15, panelHeight/10);
 			rangeSliders.setBounds(paramWidth/30, panelHeight/5, paramWidth*28/30, panelHeight*3/7);
 			labelContour.setBounds(paramWidth*11/20, panelHeight*35/56, paramWidth*2/4, panelHeight/10);
@@ -1361,26 +1360,66 @@ public class GridSpectrumVISADChart implements Serializable, MouseMotionListener
 			infoPanel.setBounds(X0, h-Y0*5/2, w - X0*3, Y0*3);
 
 			int nlines = 3;
-			x = X0*2;
-			y = 0;
-			int boxWidth = (w - 2*X0) * 57 /(160*nlines);
-			int ySep = Y0*5 / (2+1);
-			int boxHeight = ySep*4/3;
-			for (int i=0; i<nlines;i++)
-			{
-				jlabel[i].setBounds(x, y, boxWidth*4/3, boxHeight);
-				posAndFlux[i].setBounds(x+boxWidth*3/2-X0*3, y, boxWidth*4/3, boxHeight);
-				x += boxWidth*55/20;
-			}
+	    	x = X0*2;
+	    	y = 0;
+	    	int boxWidth = (w - 2*X0) * 57 /(160*nlines);
+	    	int ySep = Y0*5 / (2+1); 
+	    	int boxHeight = ySep*4/3;
+	    	for (int i=0; i<nlines;i++)
+	    	{
+	        	jlabel[i].setBounds(x, y, boxWidth*4/3, boxHeight);
+	    		posAndFlux[i].setBounds(x+boxWidth*3/2-X0*3, y, boxWidth*4/3, boxHeight);
+	    		x += boxWidth*55/20;
+	    	}
 		}
 		panel.revalidate();
 	}
 
 	/**
-	 * Returns the path to the input lmv file.
+	 * Returns the path to the input lmv file. 
 	 * @return The path, or null if the cube was created from scratch.
 	 */
 	public String getFile() {
 		return path;
+	}
+	
+	/**
+	 * Test program.
+	 * @param args Not used.
+	 */
+	public static void main(String args[]) {
+		System.out.println("GridSpectrumVISADChart test");
+		
+		try {
+			int w = 840;
+			final GridSpectrumVISADChart v = new GridSpectrumVISADChart(
+					"/home/alonso/reduccion/2010/reajusteRMonConDataCube/rmon_K.lmv", 
+					w, true, GridSpectrumVISADChart.COORDINATES.EQUATORIAL_OFFSET, new double[] {0, 20, 40, 60, 80, 100});
+			
+			final JFrame frame = new JFrame("");
+			final JPanel panel = v.getComponent();
+			frame.add(panel);
+			frame.pack();
+			frame.setResizable(true);
+			frame.setVisible(true);
+			frame.setSize(new Dimension(w, w*3/4+100));
+			frame.addComponentListener(new ComponentAdapter() {
+				@Override
+				public void componentResized(ComponentEvent e) {
+					panel.setBounds(0, 0, frame.getWidth(), frame.getHeight());
+				}
+			});
+			panel.addComponentListener(new ComponentAdapter() {
+				@Override
+				public void componentResized(ComponentEvent e) {
+					v.update();
+				}
+			});
+
+			//Serialization.writeObject(v, "/home/alonso/gridSpectrum_RMon");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 }

@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- *
+ * 
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *
+ *  
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- *
+ * 
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,30 +18,34 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */
+ */					
 package jparsec.ephem.planets.imcce;
 
 import jparsec.astronomy.CoordinateSystem;
 import jparsec.ephem.Ephem;
 import jparsec.ephem.EphemerisElement;
-import jparsec.ephem.EphemerisElement.FRAME;
 import jparsec.ephem.Functions;
 import jparsec.ephem.IAU2006;
 import jparsec.ephem.Nutation;
 import jparsec.ephem.PhysicalParameters;
 import jparsec.ephem.Precession;
+import jparsec.ephem.EphemerisElement.FRAME;
 import jparsec.ephem.Target.TARGET;
 import jparsec.ephem.planets.EphemElement;
 import jparsec.ephem.planets.JPLEphemeris;
 import jparsec.ephem.planets.PlanetEphem;
+import jparsec.io.ConsoleReport;
 import jparsec.math.Constant;
 import jparsec.math.matrix.Matrix;
+import jparsec.observer.City;
+import jparsec.observer.CityElement;
 import jparsec.observer.LocationElement;
 import jparsec.observer.ObserverElement;
+import jparsec.time.AstroDate;
 import jparsec.time.SiderealTime;
+import jparsec.time.TimeScale;
 import jparsec.time.TimeElement;
 import jparsec.time.TimeElement.SCALE;
-import jparsec.time.TimeScale;
 import jparsec.util.DataBase;
 import jparsec.util.JPARSECException;
 
@@ -57,7 +61,7 @@ import jparsec.util.JPARSECException;
  * <P>
  * 2. <I>The Lunar Ephemeris ELP 2000</I>, Chapront-Touze M., Chapront J.,
  * Astron. & Astrophys. 124, 50 (1983).
- *
+ * 
  * @see Ephem
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
@@ -66,7 +70,7 @@ public class Elp2000
 {
 	// private constructor so that this class cannot be instantiated.
 	private Elp2000() {}
-
+	
 	/**
 	 * Computation of geocentric lunar coordinates from ELP 2000-82 and
 	 * ELP2000-85 theories (M. Chapront-Touze and J. Chapront). Constants fitted
@@ -77,7 +81,7 @@ public class Elp2000
 	 * <P>
 	 * Files, series, constants and coordinate systems are described in the
 	 * notice LUNAR SOLUTION ELP 2000-82B, available from the IMCCE.
-	 *
+	 * 
 	 * @param JD Julian Day in TDB.
 	 * @param prec Truncation level in arcseconds. Pass 0 to use the complete
 	 *        theory (slower).
@@ -368,27 +372,27 @@ public class Elp2000
 				ZZr[iv] += calcELEM3(elp_plan_perturb15_4.Rad, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
 				break;
 			case 16:
-				elp4 = elp_plan_perturb2_lon.Lon;
+				elp4 = elp_plan_perturb2.Lon;
 				ZZr[iv] += calcELEM3(elp4, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
 				break;
 			case 17:
-				elp4 = elp_plan_perturb2_lat.Lat;
+				elp4 = elp_plan_perturb2.Lat;
 				ZZr[iv] += calcELEM3(elp4, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
 				break;
 			case 18:
-				elp4 = elp_plan_perturb2_rad.Rad;
+				elp4 = elp_plan_perturb2.Rad;
 				ZZr[iv] += calcELEM3(elp4, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
 				break;
 			case 19:
-				elp4 = elp_plan_perturb2_lon_t.Lon_t;
+				elp4 = elp_plan_perturb2.Lon_t;
 				ZZr[iv] += calcELEM3(elp4, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
 				break;
 			case 20:
-				elp4 = elp_plan_perturb2_lat_t.Lat_t;
+				elp4 = elp_plan_perturb2.Lat_t;
 				ZZr[iv] += calcELEM3(elp4, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
 				break;
 			case 21:
-				elp4 = elp_plan_perturb2_rad_t.Rad_t;
+				elp4 = elp_plan_perturb2.Rad_t;
 				ZZr[iv] += calcELEM3(elp4, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
 				break;
 			case 22:
@@ -602,7 +606,7 @@ public class Elp2000
 	/**
 	 * Transform J2000 mean inertial coordinates into mean equatorial J2000.
 	 * Specific to this theory (class) to compare positions with DE200.
-	 *
+	 * 
 	 * @param position Ecliptic coordinates (x, y, z) or (x, y, z, vx, vy, vz)
 	 *        refered to mean ecliptic and inertial equinox of J2000.
 	 * @return Equatorial FK5 coordinates.
@@ -661,7 +665,7 @@ public class Elp2000
 	 * which is performed in {@linkplain Elp2000#elp2000Ephemeris(TimeElement, ObserverElement, EphemerisElement)}.
 	 * <P>
 	 * Correction for different years (using the default value) are as follows:
-	 *
+	 * 
 	 * <pre>
 	 * Year       Correction (seconds)
 	 * -2000      -2796
@@ -672,7 +676,7 @@ public class Elp2000
 	 *  2000      -0.362
 	 *  3000      -195
 	 * </pre>
-	 *
+	 * 
 	 * @param jd Julian day in TDB.
 	 * @return Output (corrected) Julian day in TDB.
 	 */
@@ -694,9 +698,9 @@ public class Elp2000
 	 * improved by correcting for Moon secular acceleration.
 	 * <P>
 	 * The time correction for Moon secular acceleration is automatically done, which means that
-	 * this implementation will match JPLDE405 up to the arcsecond level during several millenia.
+	 * this implementation will match JPLDE405 up to the arcsecond level during several millenia. 
 	 * So the results cannot be compared directly with DE200 due to this time correction (well,
-	 * only around year 1955). Another possible
+	 * only around year 1955). Another possible 
 	 * correction you may want to apply is from center of mass to geometric center by means of
 	 * {@linkplain Elp2000#fromMoonBarycenterToGeometricCenter(TimeElement, ObserverElement, EphemerisElement, EphemElement)}.
 	 * <P>
@@ -704,7 +708,7 @@ public class Elp2000
 	 * between 1900 and 2100, and VSOP87A theory outside this interval. This could
 	 * affect the heliocentric position and physical ephemeris.
 	 * <P>
-	 *
+	 * 
 	 * @param time Time object containing the date.
 	 * @param obs Observer object containing the observer position.
 	 * @param eph Ephemeris object with the target and ephemeris
@@ -724,7 +728,7 @@ public class Elp2000
 			throw new JPARSECException("target object is not the Moon.");
 
 		if (obs.getMotherBody() != TARGET.EARTH) throw new JPARSECException("observer must be on Earth in ELP2000.");
-
+		
 		// Check Ephemeris object
 		if (!EphemerisElement.checkEphemeris(eph))
 		{
@@ -738,7 +742,7 @@ public class Elp2000
 		// Obtain julian day in Barycentric Dynamical Time
 		double JD_TDB = TimeScale.getJD(time, obs, eph, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
 		double JD_TDB_corrected = Elp2000.timeCorrectionForSecularAcceleration(JD_TDB);
-
+		
 		// Obtain geocentric position
 		double geo_eq[] = meanJ2000InertialToEquatorialFK5(Elp2000.calc(JD_TDB_corrected, elp_truncation));
 
@@ -792,10 +796,10 @@ public class Elp2000
 		}
 
 		// Here the Sun is supposed to be at barycenter
-		double helio_object[] = Functions.substract(meanJ2000InertialToEquatorialFK5(Elp2000.calc(JD_TDB_corrected - light_time, elp_truncation)),
+		double helio_object[] = Functions.substract(meanJ2000InertialToEquatorialFK5(Elp2000.calc(JD_TDB_corrected - light_time, elp_truncation)), 
 				earth_ltS);
 		if (eph.ephemType == EphemerisElement.COORDINATES_TYPE.ASTROMETRIC) {
-			geo_eq = Ephem.aberration(new double[] {-geo_eq[0], -geo_eq[1], -geo_eq[2], 0, 0, 0},
+			geo_eq = Ephem.aberration(new double[] {-geo_eq[0], -geo_eq[1], -geo_eq[2], 0, 0, 0}, 
 					earth_0, light_time);
 			geo_eq = Functions.scalarProduct(geo_eq, -1.0);
 		}
@@ -807,7 +811,7 @@ public class Elp2000
 				new TARGET[] {TARGET.JUPITER, TARGET.SATURN, TARGET.EARTH}, JD_TDB, false, obs);
 			DataBase.addData("GCRS", geo_eq, true);
 		} else {
-			DataBase.addData("GCRS", null, true);
+			DataBase.addData("GCRS", null, true);			
 		}
 
 		/* Correction to output frame. */
@@ -817,8 +821,8 @@ public class Elp2000
 		double geo_date[];
 		if (eph.frame == FRAME.FK4) {
 			// Transform from B1950 to mean equinox of date
-			 geo_date = Precession.precess(Constant.B1950, JD_TDB, geo_eq, eph);
-			 helio_object = Precession.precess(Constant.B1950, JD_TDB, helio_object, eph);
+			 geo_date = Precession.precess(Constant.B1950, JD_TDB, geo_eq, eph);	
+			 helio_object = Precession.precess(Constant.B1950, JD_TDB, helio_object, eph);	
 		} else {
 			// Transform from J2000 to mean equinox of date
 			geo_date = Precession.precessFromJ2000(JD_TDB, geo_eq, eph);
@@ -834,7 +838,7 @@ public class Elp2000
 			if (eph.ephemType == EphemerisElement.COORDINATES_TYPE.APPARENT)
 				/* Correct nutation */
 				true_eq = Nutation.nutateInEquatorialCoordinates(JD_TDB, eph, geo_date, true);
-
+	
 			// Correct for polar motion
 			if (eph.ephemType == EphemerisElement.COORDINATES_TYPE.APPARENT &&
 					eph.correctForPolarMotion)
@@ -846,7 +850,7 @@ public class Elp2000
 				true_eq = Functions.rotateZ(true_eq, gast);
 			}
 		}
-
+		
 		// Pass to coordinates as seen from another body, if necessary
 		if (obs.getMotherBody() != TARGET.NOT_A_PLANET && obs.getMotherBody() != TARGET.EARTH)
 			true_eq = Ephem.getPositionFromBody(LocationElement.parseRectangularCoordinates(true_eq), time, obs, eph).getRectangularCoordinates();
@@ -871,10 +875,10 @@ public class Elp2000
 
 		/* Physical ephemeris */
 		Object gcrs = DataBase.getData("GCRS", true);
-		EphemerisElement new_eph = new EphemerisElement(eph.targetBody, EphemerisElement.COORDINATES_TYPE.APPARENT,
+		EphemerisElement new_eph = new EphemerisElement(eph.targetBody, EphemerisElement.COORDINATES_TYPE.APPARENT, 
 				EphemerisElement.EQUINOX_OF_DATE, eph.isTopocentric, eph.ephemMethod, eph.frame);
 		EphemElement ephem_elem2 = ephem_elem;
-		if (eph.ephemType != EphemerisElement.COORDINATES_TYPE.APPARENT || eph.equinox != EphemerisElement.EQUINOX_OF_DATE)
+		if (eph.ephemType != EphemerisElement.COORDINATES_TYPE.APPARENT || eph.equinox != EphemerisElement.EQUINOX_OF_DATE) 
 			ephem_elem2 = PlanetEphem.MoshierEphemeris(time, obs, new_eph);
 		new_eph.targetBody = TARGET.SUN;
 		// Priority to Moshier since performance is far better
@@ -920,5 +924,45 @@ public class Elp2000
 		ephem.declination = loc.getLatitude();
 		ephem.distance += 2.0 / Constant.AU; // Geometric center is 2 km away from center of mass
 		return ephem;
+	}
+
+	/**
+	 * For unit testing only.
+	 * @param args Not used.
+	 */
+	public static void main(String args[])
+	{
+		System.out.println("ELP2000 Test");
+
+		try
+		{
+			AstroDate astro = new AstroDate(2435109);
+			TimeElement time = new TimeElement(astro, SCALE.TERRESTRIAL_TIME);
+			CityElement city = City.findCity("Madrid");
+			EphemerisElement eph = new EphemerisElement(TARGET.Moon, EphemerisElement.COORDINATES_TYPE.APPARENT,
+					EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.GEOCENTRIC, EphemerisElement.REDUCTION_METHOD.IAU_2006,
+					EphemerisElement.FRAME.ICRF);
+			ObserverElement observer = ObserverElement.parseCity(city);
+
+			eph.algorithm = EphemerisElement.ALGORITHM.VSOP87_ELP2000ForMoon;
+
+			EphemElement ephem = Ephem.getEphemeris(time, observer, eph, false);
+
+			System.out.println("jd " + astro.jd() + " / dst " + TimeScale.getDST(astro.jd(), observer));
+			
+			ephem.name = eph.targetBody.getName() + " (ELP2000)";
+			ConsoleReport.basicEphemReportToConsole(ephem);
+			
+			eph.algorithm = EphemerisElement.ALGORITHM.JPL_DE200;
+			ephem = Ephem.getEphemeris(time, observer, eph, false);
+			
+			ephem.name = eph.targetBody.getName() + " (DE200)";
+			ConsoleReport.basicEphemReportToConsole(ephem);
+
+			JPARSECException.showWarnings();
+		} catch (JPARSECException ve)
+		{
+			JPARSECException.showException(ve);
+		}
 	}
 }

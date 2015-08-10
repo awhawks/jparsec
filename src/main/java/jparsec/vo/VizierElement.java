@@ -209,7 +209,7 @@ public class VizierElement implements Serializable
 	 */
 	public static final VizierElement MSX6C = new VizierElement(
 			"V/114", "Egan et al. 2003",
-			"MSX6C Infrared Point Source Catalog" //+ FileIO.getLineSeparator() + "The complete MSX6C catalogue in the Galactic Plane (|b|<=6\u00ba)"
+			"MSX6C Infrared Point Source Catalog" //+ FileIO.getLineSeparator() + "The complete MSX6C catalogue in the Galactic Plane (|b|<=6º)"
 			,
 			36.0f,
 			new String[][] {

@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- *
+ * 
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *
+ *  
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- *
+ * 
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,13 +18,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */
+ */					
 package jparsec.graph.chartRendering;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import java.util.Arrays;
 import jparsec.ephem.Ephem;
 import jparsec.ephem.EphemerisElement;
 import jparsec.ephem.Target;
@@ -57,7 +56,7 @@ import jparsec.util.Translate.LANGUAGE;
 /**
  * Support class for sky rendering operations, allowing to represent trajectory
  * paths of Solar System objects or stars.
- *
+ * 
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -70,14 +69,19 @@ public class TrajectoryElement implements Serializable
 	 */
 	public TrajectoryElement()
 	{
+		objectType = null;
 		objectName = "";
 		apparentObjectName = "";
+		startTimeJD = endTimeJD = stepTimeJD = 0.0f;
+		drawLabels = false;
+		labelsSteps = 0;
 		drawLabelsFormat = LABELS.YEAR_MONTH_DAY;
+		autoCentering = autoScale = false;
 	}
 
 	/**
 	 * Explicit constructor.
-	 *
+	 * 
 	 * @param obj_type Object type ID constant. Can be null to search it automatically (any object
 	 * except probes).
 	 * @param obj_name Object name.
@@ -96,10 +100,10 @@ public class TrajectoryElement implements Serializable
 	{
 		if (obj_type == null) {
 			TARGET t = jparsec.ephem.Target.getID(obj_name);
-			if (t == TARGET.NOT_A_PLANET && Translate.getDefaultLanguage() != LANGUAGE.ENGLISH)
+			if (t == TARGET.NOT_A_PLANET && Translate.getDefaultLanguage() != LANGUAGE.ENGLISH) 
 				t = jparsec.ephem.Target.getIDFromEnglishName(obj_name);
 			if (t != TARGET.NOT_A_PLANET) obj_type = OBJECT.PLANET;
-		}
+		}				
 		if (obj_type == null) {
 			LocationElement se = null;
 			int index = StarEphem.getStarTargetIndex(obj_name);
@@ -135,7 +139,7 @@ public class TrajectoryElement implements Serializable
 										n = SatelliteEphem.getArtificialSatelliteTargetIndex(obj_name);
 										if (n < 0) {
 											SatelliteEphem.USE_IRIDIUM_SATELLITES = !SatelliteEphem.USE_IRIDIUM_SATELLITES;
-											SatelliteEphem.setSatellitesFromExternalFile(null);
+											SatelliteEphem.setSatellitesFromExternalFile(null);											
 										}
 									}
 									if (n >= 0) obj_type = OBJECT.ARTIFICIAL_SATELLITE;
@@ -150,8 +154,8 @@ public class TrajectoryElement implements Serializable
 				obj_type = OBJECT.STAR;
 			}
 		}
-
-		if (obj_type == OBJECT.NOVA //|| obj_type == OBJECT.ARTIFICIAL_SATELLITE
+		
+		if (obj_type == OBJECT.NOVA //|| obj_type == OBJECT.ARTIFICIAL_SATELLITE 
 				|| obj_type == OBJECT.DEEPSKY || obj_type == OBJECT.SUPERNOVA)
 			throw new JPARSECException("Unsupported object type.");
 		objectType = obj_type;
@@ -200,7 +204,7 @@ public class TrajectoryElement implements Serializable
 	 * Set the stroke to draw the path. Default is a thin line.
 	 */
 	public JPARSECStroke stroke = JPARSECStroke.STROKE_DEFAULT_LINE_THIN;
-
+	
 	/**
 	 * True if labels should be drawn.
 	 */
@@ -255,7 +259,7 @@ public class TrajectoryElement implements Serializable
 	/**
 	 * The set of label types.
 	 */
-	public enum LABELS {
+	public static enum LABELS {
 		/** Symbolic constant for numeric labels of type YYYY-MM-DD. */
 		YEAR_MONTH_DAY,
 		/** Symbolic constant for numeric labels of type MM-DD. */
@@ -264,21 +268,21 @@ public class TrajectoryElement implements Serializable
 		MONTH_DAY_YEAR,
 		/** Symbolic constant for labels of type DD-MMM, with month expressed with 3 characters. */
 		DAY_MONTH_ABBREVIATION;
-	}
+	};
 
 	/** True (default) to show the time scale. LT (local time) is not shown. */
 	public boolean showTimeScale = true;
-
-	/** True (default) to show the time when it is not 0h or the interval between calculations is very little.
+	
+	/** True (default) to show the time when it is not 0h or the interval between calculations is very little. 
 	 * Setting to false will also hide the time scale. */
 	public boolean showTime = true;
 
 	/**
 	 * Clones this instance.
 	 */
-	@Override
 	public TrajectoryElement clone()
 	{
+		if (this == null) return null;
 		TrajectoryElement t = new TrajectoryElement();
 		t.autoCentering = this.autoCentering;
 		t.autoScale = this.autoScale;
@@ -310,76 +314,57 @@ public class TrajectoryElement implements Serializable
 		}
 		return t;
 	}
-
 	/**
-	 * Returns true if the input object is equal to this instance.
+	 * Returns true if the input object is equals to this instance.
 	 */
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof TrajectoryElement)) return false;
-
-        TrajectoryElement that = (TrajectoryElement) o;
-
-        if (Double.compare(that.startTimeJD, startTimeJD) != 0) return false;
-        if (Double.compare(that.endTimeJD, endTimeJD) != 0) return false;
-        if (Float.compare(that.stepTimeJD, stepTimeJD) != 0) return false;
-        if (drawLabels != that.drawLabels) return false;
-        if (labelsSteps != that.labelsSteps) return false;
-        if (autoCentering != that.autoCentering) return false;
-        if (autoScale != that.autoScale) return false;
-        if (drawPathColor1 != that.drawPathColor1) return false;
-        if (drawPathColor2 != that.drawPathColor2) return false;
-        if (showTimeScale != that.showTimeScale) return false;
-        if (showTime != that.showTime) return false;
-        if (objectType != that.objectType) return false;
-        if (objectName != null ? !objectName.equals(that.objectName) : that.objectName != null) return false;
-        if (apparentObjectName != null ? !apparentObjectName.equals(that.apparentObjectName) : that.apparentObjectName != null)
-            return false;
-        if (stroke != null ? !stroke.equals(that.stroke) : that.stroke != null) return false;
-        if (timeScaleForLabels != that.timeScaleForLabels) return false;
-        if (drawLabelsFormat != that.drawLabelsFormat) return false;
-        if (drawPathFont != that.drawPathFont) return false;
-        // Probably incorrect - comparing Object[] arrays with Arrays.equals
-        if (!Arrays.equals(loc_path, that.loc_path)) return false;
-        if (central_loc != null ? !central_loc.equals(that.central_loc) : that.central_loc != null) return false;
-        return !(star != null ? !star.equals(that.star) : that.star != null);
-    }
-
-    @Override
-    public int hashCode() {
-        int result;
-        long temp;
-        result = objectType != null ? objectType.hashCode() : 0;
-        result = 31 * result + (objectName != null ? objectName.hashCode() : 0);
-        result = 31 * result + (apparentObjectName != null ? apparentObjectName.hashCode() : 0);
-        temp = Double.doubleToLongBits(startTimeJD);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        temp = Double.doubleToLongBits(endTimeJD);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        result = 31 * result + (stepTimeJD != +0.0f ? Float.floatToIntBits(stepTimeJD) : 0);
-        result = 31 * result + (stroke != null ? stroke.hashCode() : 0);
-        result = 31 * result + (drawLabels ? 1 : 0);
-        result = 31 * result + (timeScaleForLabels != null ? timeScaleForLabels.hashCode() : 0);
-        result = 31 * result + (drawLabelsFormat != null ? drawLabelsFormat.hashCode() : 0);
-        result = 31 * result + labelsSteps;
-        result = 31 * result + (autoCentering ? 1 : 0);
-        result = 31 * result + (autoScale ? 1 : 0);
-        result = 31 * result + (drawPathFont != null ? drawPathFont.hashCode() : 0);
-        result = 31 * result + drawPathColor1;
-        result = 31 * result + drawPathColor2;
-        result = 31 * result + (showTimeScale ? 1 : 0);
-        result = 31 * result + (showTime ? 1 : 0);
-        result = 31 * result + (loc_path != null ? Arrays.hashCode(loc_path) : 0);
-        result = 31 * result + (central_loc != null ? central_loc.hashCode() : 0);
-        result = 31 * result + (star != null ? star.hashCode() : 0);
-        return result;
-    }
-
-    /**
+	public boolean equals(Object o)
+	{
+		if (o == null) {
+			if (this == null) return true;
+			return false;
+		}
+		if (this == null) {
+			return false;
+		}
+		TrajectoryElement t = (TrajectoryElement) o;
+		boolean equals = true;
+		if (t.autoCentering != this.autoCentering) equals = false;
+		if (t.autoScale != this.autoScale) equals = false;
+		if (t.drawLabels != this.drawLabels) equals = false;
+		if (t.timeScaleForLabels != this.timeScaleForLabels) equals = false;
+		if (t.drawLabelsFormat != this.drawLabelsFormat) equals = false;
+		if (t.drawPathColor1 != this.drawPathColor1) equals = false;
+		if (t.drawPathColor2 != this.drawPathColor2) equals = false;
+		if (t.drawPathFont != this.drawPathFont) equals = false;
+		if (t.endTimeJD != this.endTimeJD) equals = false;
+		if (t.labelsSteps != this.labelsSteps) equals = false;
+		if (t.objectName != this.objectName) equals = false;
+		if (t.apparentObjectName != this.apparentObjectName) equals = false;
+		if (t.objectType != this.objectType) equals = false;
+		if (t.startTimeJD != this.startTimeJD) equals = false;
+		if (t.stepTimeJD != this.stepTimeJD) equals = false;
+		if (!t.stroke.equals(this.stroke)) equals = false;
+		if (t.showTime != this.showTime) equals = false;
+		if (t.showTimeScale != this.showTimeScale) equals = false;
+		if (!t.central_loc.equals(this.central_loc)) equals = false;
+		if (!equals) return equals;
+		
+		if (t.loc_path == null && this.loc_path != null || t.loc_path != null && this.loc_path == null) return false;
+		for (int i=0; i<t.loc_path.length; i++) {
+			if (t.loc_path[i] == null || loc_path[i] == null) {
+				if (loc_path[i] == null && t.loc_path[i] != null) return false;
+				if (loc_path[i] != null && t.loc_path[i] == null) return false;
+			} else {
+				if (!t.loc_path[i].equals(this.loc_path[i])) return false;
+			}
+		}
+		return equals;
+	}
+	
+	/**
 	 * An array to store the equatorial positions of the object along the path.
 	 */
-	public LocationElement[] loc_path;
+	public LocationElement[] loc_path = null;
 	/**
 	 * Position at the center of the trajectory.
 	 */
@@ -475,14 +460,14 @@ public class TrajectoryElement implements Serializable
 							if (p != null) {
 								orbit = OrbitEphem.getOrbitalElementsOfTransNeptunians();
 								for (int indexO = 0; indexO < orbit.length; indexO++)
-								{
+								{		
 									if (orbit[indexO].name.toLowerCase().indexOf(this.objectName.toLowerCase()) >= 0)
 									{
 										eph_path.orbit = orbit[indexO];
 										aster = indexO;
 									}
 								}
-							}
+							}							
 						}
 					} catch (Exception exc) {}
 //				}
@@ -545,14 +530,14 @@ public class TrajectoryElement implements Serializable
 					} catch (Exception exc) {}
 //				}
 				if (comet < 0)
-					all_ok = false;
+					all_ok = false;				
 			}
 			if (this.objectType == OBJECT.NEO)
 			{
 				eph_path.targetBody = TARGET.NEO;
 				eph_path.algorithm = EphemerisElement.ALGORITHM.ORBIT;
 				int neo = -1;
-
+				
 				ReadFile re2 = new ReadFile(FORMAT.MPC, OrbitEphem.PATH_TO_MPC_NEOs_FILE);
 				re2.readFileOfNEOs(startTimeJD, 365);
 				OrbitalElement[] orbit = (OrbitalElement[]) re2.getReadElements();
@@ -564,7 +549,7 @@ public class TrajectoryElement implements Serializable
 						neo = indexO;
 					}
 				}
-
+				
 				if (neo < 0) all_ok = false;
 			}
 			if (this.objectType == OBJECT.ARTIFICIAL_SATELLITE)
@@ -577,7 +562,7 @@ public class TrajectoryElement implements Serializable
 				if (sat < 0) {
 					SatelliteEphem.USE_IRIDIUM_SATELLITES = !SatelliteEphem.USE_IRIDIUM_SATELLITES;
 					SatelliteEphem.setSatellitesFromExternalFile(null);
-					sat = SatelliteEphem.getArtificialSatelliteTargetIndex(objectName);
+					sat = SatelliteEphem.getArtificialSatelliteTargetIndex(objectName);					
 					if (sat < 0) {
 						SatelliteEphem.USE_IRIDIUM_SATELLITES = !SatelliteEphem.USE_IRIDIUM_SATELLITES;
 						SatelliteEphem.setSatellitesFromExternalFile(null);
@@ -671,17 +656,17 @@ public class TrajectoryElement implements Serializable
 			}
 		} else {
 			throw new JPARSECException(
-					"cannot obtain trajectory (undefined object).");
+					"cannot obtain trajectory (undefined object).");			
 		}
 	}
-
+	
 	/**
 	 * Populates {@linkplain TrajectoryElement#loc_path} with the equatorial positions
 	 * provided as input, forcing the position of the object. This method is useful when
 	 * you have ephemerides obtained with other tools.
 	 * @param positions An array of positions. Its size should be equal at least
 	 * to {@linkplain #getNumberofPointsInTrajectory()}.
-	 * @param objName The name for the object when showing the label, or null to maintain
+	 * @param objName The name for the object when showing the label, or null to maintain 
 	 * the default one.
 	 * @throws JPARSECException If an error occurs.
 	 */
@@ -696,7 +681,7 @@ public class TrajectoryElement implements Serializable
 		if (objName != null) this.apparentObjectName = objName;
 		return;
 	}
-
+	
 	/**
 	 * Returns the number of points to be calculated for the trajectory.
 	 * @return Number of points.
@@ -704,21 +689,21 @@ public class TrajectoryElement implements Serializable
 	public int getNumberofPointsInTrajectory() {
 		return 1 + (int) ((this.endTimeJD - this.startTimeJD) / this.stepTimeJD);
 	}
-
+	
 	private LocationElement calcStar(int my_star, TimeElement time, ObserverElement observer, EphemerisElement eph,
 			ReadFile re)
 			throws JPARSECException
 	{
 		if (star != null) {
 			StarEphemElement star_ephem = StarEphem.starEphemeris(time, observer, eph, star, false);
-			return new LocationElement(star_ephem.rightAscension, star_ephem.declination, 1.0);
+			return new LocationElement(star_ephem.rightAscension, star_ephem.declination, 1.0);			
 		} else {
 			StarElement star = (StarElement) re.getReadElements()[my_star];
 			StarEphemElement star_ephem = StarEphem.starEphemeris(time, observer, eph, star, false);
 			return new LocationElement(star_ephem.rightAscension, star_ephem.declination, 1.0);
 		}
-	}
-
+	}	
+	
 	private StarElement star = null;
 	/**
 	 * Sets the star object to be used to calculate its trajectory instead

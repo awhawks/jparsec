@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- *
+ * 
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *
+ *  
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- *
+ * 
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,16 +18,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */
+ */					
 package jparsec.ephem.probes;
 
 import java.io.Serializable;
-import java.util.Arrays;
+
+import jparsec.graph.DataSet;
 import jparsec.observer.LocationElement;
 
 /**
  * Convenient class to store results of ephemeris of artificial satellites.
- *
+ * 
  * @see SatelliteEphem
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
@@ -38,7 +39,7 @@ public class SatelliteEphemElement implements Serializable
 
 	/**
 	 * Constructs a satellite ephem object giving all the data.
-	 *
+	 * 
 	 * @param nom Name of the satellite.
 	 * @param ra Right ascension.
 	 * @param dec Declination.
@@ -78,12 +79,27 @@ public class SatelliteEphemElement implements Serializable
 	 */
 	public SatelliteEphemElement()
 	{
+		name = "";
+		rightAscension = 0.0;
+		declination = 0.0;
+		distance = 0.0;
+		azimuth = 0.0;
+		elevation = 0.0;
+		subEarthLongitude = 0.0f;
+		subEarthLatitude = 0.0f;
+		subEarthDistance = 0.0f;
+		illumination = 0.0f;
+		isEclipsed = false;
+		revolutionsCompleted = 0;
+		elongation = 0.0f;
+		nextPass = 0.0;
+		topocentricSpeed = 0.0f;
 	}
 
 	/**
 	 * Name of the satellite.
 	 */
-	public String name = "";
+	public String name;
 
 	/**
 	 * Right ascension in radians.
@@ -151,20 +167,21 @@ public class SatelliteEphemElement implements Serializable
 	 * If zero then the event could not be calculated.
 	 */
 	public double nextPass;
-
+	
 	/**
 	 * The smallest iridium angle in degrees. A given Iridium satellite will
 	 * be flaring if it is not eclipsed, above the horizon, and this
-	 * value is lower enough.  An empirical relationship between this angle
-	 * and the brightness of the reflection has been determined (Randy John,
-	 * 2002, SKYSAT v0.64, see http://home.comcast.net/~skysat). 2 deg
-	 * corresponds to about 0 mag, 0.5 &deg; to -3 mag. The brightest flares are
+	 * value is lower enough.  An empirical relationship between this angle 
+	 * and the brightness of the reflection has been determined (Randy John, 
+	 * 2002, SKYSAT v0.64, see http://home.comcast.net/~skysat). 2 deg 
+	 * corresponds to about 0 mag, 0.5° to -3 mag. The brightest flares are 
 	 * -8 or -9 mag (visible during day), and can last from 10 to 30s.
 	 */
 	public float iridiumAngle;
 
 	/**
-	 * The smallest iridium angle in degrees in case the reflected body is the Moon.
+	 * The smallest iridium angle in degrees in case the reflected body is 
+	 * the Moon.
 	 */
 	public float iridiumAngleForMoon;
 
@@ -197,7 +214,7 @@ public class SatelliteEphemElement implements Serializable
 	 * Transit geometric elevation/s from horizon in radians.
 	 */
 	public float transitElevation[];
-
+	
 	/**
 	 * Relative topocentric speed in km/s.
 	 */
@@ -221,9 +238,9 @@ public class SatelliteEphemElement implements Serializable
 	/**
 	 * To clone the object.
 	 */
-	@Override
 	public SatelliteEphemElement clone()
 	{
+		if (this == null) return null;
 		SatelliteEphemElement s = new SatelliteEphemElement(this.name, this.rightAscension, this.declination,
 				this.distance, this.azimuth, this.elevation, this.subEarthLongitude, this.subEarthLatitude,
 				this.subEarthDistance, this.topocentricSpeed, this.elongation, this.illumination, this.isEclipsed,
@@ -240,85 +257,48 @@ public class SatelliteEphemElement implements Serializable
 		if (transitElevation != null) s.transitElevation = this.transitElevation.clone();
 		return s;
 	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (!(o instanceof SatelliteEphemElement)) return false;
-
-		SatelliteEphemElement that = (SatelliteEphemElement) o;
-
-		if (Double.compare(that.rightAscension, rightAscension) != 0) return false;
-		if (Double.compare(that.declination, declination) != 0) return false;
-		if (Double.compare(that.distance, distance) != 0) return false;
-		if (Double.compare(that.azimuth, azimuth) != 0) return false;
-		if (Double.compare(that.elevation, elevation) != 0) return false;
-		if (Float.compare(that.subEarthLongitude, subEarthLongitude) != 0) return false;
-		if (Float.compare(that.subEarthLatitude, subEarthLatitude) != 0) return false;
-		if (Float.compare(that.subEarthDistance, subEarthDistance) != 0) return false;
-		if (Float.compare(that.elongation, elongation) != 0) return false;
-		if (Float.compare(that.illumination, illumination) != 0) return false;
-		if (isEclipsed != that.isEclipsed) return false;
-		if (revolutionsCompleted != that.revolutionsCompleted) return false;
-		if (Double.compare(that.nextPass, nextPass) != 0) return false;
-		if (Float.compare(that.iridiumAngle, iridiumAngle) != 0) return false;
-		if (Float.compare(that.iridiumAngleForMoon, iridiumAngleForMoon) != 0) return false;
-		if (Float.compare(that.magnitude, magnitude) != 0) return false;
-		if (Float.compare(that.angularRadius, angularRadius) != 0) return false;
-		if (Float.compare(that.topocentricSpeed, topocentricSpeed) != 0) return false;
-		if (Float.compare(that.sunElevation, sunElevation) != 0) return false;
-		if (name != null ? !name.equals(that.name) : that.name != null) return false;
-		if (!Arrays.equals(rise, that.rise)) return false;
-		if (!Arrays.equals(set, that.set)) return false;
-		if (!Arrays.equals(transit, that.transit)) return false;
-		if (!Arrays.equals(transitElevation, that.transitElevation)) return false;
-		return !(location != null ? !location.equals(that.location) : that.location != null);
-
-	}
-
-	@Override
-	public int hashCode() {
-		int result;
-		long temp;
-		result = name != null ? name.hashCode() : 0;
-		temp = Double.doubleToLongBits(rightAscension);
-		result = 31 * result + (int) (temp ^ (temp >>> 32));
-		temp = Double.doubleToLongBits(declination);
-		result = 31 * result + (int) (temp ^ (temp >>> 32));
-		temp = Double.doubleToLongBits(distance);
-		result = 31 * result + (int) (temp ^ (temp >>> 32));
-		temp = Double.doubleToLongBits(azimuth);
-		result = 31 * result + (int) (temp ^ (temp >>> 32));
-		temp = Double.doubleToLongBits(elevation);
-		result = 31 * result + (int) (temp ^ (temp >>> 32));
-		result = 31 * result + (subEarthLongitude != +0.0f ? Float.floatToIntBits(subEarthLongitude) : 0);
-		result = 31 * result + (subEarthLatitude != +0.0f ? Float.floatToIntBits(subEarthLatitude) : 0);
-		result = 31 * result + (subEarthDistance != +0.0f ? Float.floatToIntBits(subEarthDistance) : 0);
-		result = 31 * result + (elongation != +0.0f ? Float.floatToIntBits(elongation) : 0);
-		result = 31 * result + (illumination != +0.0f ? Float.floatToIntBits(illumination) : 0);
-		result = 31 * result + (isEclipsed ? 1 : 0);
-		result = 31 * result + revolutionsCompleted;
-		temp = Double.doubleToLongBits(nextPass);
-		result = 31 * result + (int) (temp ^ (temp >>> 32));
-		result = 31 * result + (iridiumAngle != +0.0f ? Float.floatToIntBits(iridiumAngle) : 0);
-		result = 31 * result + (iridiumAngleForMoon != +0.0f ? Float.floatToIntBits(iridiumAngleForMoon) : 0);
-		result = 31 * result + (magnitude != +0.0f ? Float.floatToIntBits(magnitude) : 0);
-		result = 31 * result + (angularRadius != +0.0f ? Float.floatToIntBits(angularRadius) : 0);
-		result = 31 * result + (rise != null ? Arrays.hashCode(rise) : 0);
-		result = 31 * result + (set != null ? Arrays.hashCode(set) : 0);
-		result = 31 * result + (transit != null ? Arrays.hashCode(transit) : 0);
-		result = 31 * result + (transitElevation != null ? Arrays.hashCode(transitElevation) : 0);
-		result = 31 * result + (topocentricSpeed != +0.0f ? Float.floatToIntBits(topocentricSpeed) : 0);
-		result = 31 * result + (sunElevation != +0.0f ? Float.floatToIntBits(sunElevation) : 0);
-		result = 31 * result + (location != null ? location.hashCode() : 0);
-		return result;
-	}
-
 	/**
 	 * Returns if a given object is equals to this satellite
 	 * ephemeris object.
 	 */
-
+	public boolean equals(Object s)
+	{
+		if (s == null) {
+			if (this == null) return true;
+			return false;
+		}
+		if (this == null) {
+			return false;
+		}
+		SatelliteEphemElement see = (SatelliteEphemElement) s;
+		boolean equals = true;
+		if (see.rightAscension != this.rightAscension) equals = false;
+		if (see.declination != this.declination) equals = false;
+		if (see.subEarthLatitude != this.subEarthLatitude) equals = false;
+		if (see.isEclipsed != this.isEclipsed) equals = false;
+		if (see.subEarthLongitude != this.subEarthLongitude) equals = false;
+		if (see.illumination != this.illumination) equals = false;
+		if (see.iridiumAngle != this.iridiumAngle) equals = false;
+		if (see.iridiumAngleForMoon != this.iridiumAngleForMoon) equals = false;
+		if (see.elevation != this.elevation) equals = false;
+		if (see.topocentricSpeed != this.topocentricSpeed) equals = false;
+		if (see.elongation != this.elongation) equals = false;
+		if (see.azimuth != this.azimuth) equals = false;
+		if (see.sunElevation != this.sunElevation) equals = false;
+		if (see.subEarthDistance != this.subEarthDistance) equals = false;
+		if (see.revolutionsCompleted != this.revolutionsCompleted) equals = false;
+		if (see.distance != this.distance) equals = false;
+		if (see.magnitude != this.magnitude) equals = false;
+		if (see.nextPass != this.nextPass) equals = false;
+		if (!see.name.equals(this.name)) equals = false;
+		if (see.angularRadius != this.angularRadius) equals = false;
+		if (!DataSet.sameArrayValues(see.rise, this.rise)) equals = false;
+		if (!DataSet.sameArrayValues(see.set, this.set)) equals = false;
+		if (see.transit != this.transit) equals = false;
+		if (see.transitElevation != this.transitElevation) equals = false;
+		return equals;
+	}
+	
 	private LocationElement location;
 	/**
 	 * Sets the location of this body in a custom coordinate system,
@@ -337,7 +317,7 @@ public class SatelliteEphemElement implements Serializable
 	public LocationElement getLocation() {
 		return this.location;
 	}
-
+	
 	/**
 	 * Returns the equatorial location of this object.
 	 * Radius vector is in km, but it is set to unity in case distance is 0.

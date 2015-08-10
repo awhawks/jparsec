@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- *
+ * 
  * (C) Copyright 2006-2011 by T. Alonso Albi - OAN (Spain).
- *
+ *  
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- *
+ * 
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */
+ */					
 package jparsec.math;
 
 import java.io.Serializable;
@@ -30,7 +30,7 @@ import jparsec.util.JPARSECException;
 
 /**
  * Performs ponderation operation.
- *
+ * 
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -64,7 +64,7 @@ public class MeanValue implements Serializable
 			dzx[i] = x[i].error;
 		}
 	}
-
+	
 	private double mean, meanError, absError, gaussError;
 	private int minNumberMeasures;
 
@@ -133,10 +133,10 @@ public class MeanValue implements Serializable
 			meanError = 0;
 			absError = 0;
 			gaussError = 0;
-			minNumberMeasures = 0;
+			minNumberMeasures = 0;			
 			return;
 		}
-
+		
 		// Initialize and get sums
 		double sum1 = 0, sum2 = 0, maxzx = -1E300, minzx = 1E300;
 		double sumzx = 0, sum3 = 0, cuenta = 0, sum4 = 0;
@@ -229,7 +229,7 @@ public class MeanValue implements Serializable
 	{
 		return Functions.sumComponents(zx) / zx.length;
 	}
-
+	
 	/**
 	 * Returns the median of the input data. In an array of 10
 	 * elements this is equivalent to sort them and return the 5th
@@ -241,7 +241,7 @@ public class MeanValue implements Serializable
 	{
 		return DataSet.getKthSmallestValue (zx, zx.length, zx.length/2);
 	}
-
+	  
 	/**
 	 * Average the values that are within a given 'sigmas' of the median.
 	 * This algorithm is adequate when input array is long, at least 15 values.
@@ -277,11 +277,11 @@ public class MeanValue implements Serializable
 	  		return zx[0];
 	}
 
-	/**
-	 * Kappa-sigma clipping algorithm. We start with a robust estimator: the median.
+	/** 
+	 * Kappa-sigma clipping algorithm. We start with a robust estimator: the median. 
 	 * Then, we eliminate the values that are more than sigmas away from
-	 * the median. For the remaining values, we calculate the mean and variance,
-	 * and iterate (with the mean replacing the median) until no values are eliminated
+	 * the median. For the remaining values, we calculate the mean and variance, 
+	 * and iterate (with the mean replacing the median) until no values are eliminated 
 	 * or the number of iterations is reached. This algorithm is relatively slow but
 	 * works well for input arrays of length 10-15.
 	 * Errors in the measures are not taken into account.
@@ -321,12 +321,12 @@ public class MeanValue implements Serializable
 	  		if (k == 0) break;
 	  		m = sum / k;
 	  		s = Math.abs(sigmas * (sumsq / k - Math.sqrt(m)));
-
+	  		
 	  		if (iter == 0) break;
 	  	} while (k != r);
 	  	return m;
 	}
-
+	 
 	/**
 	 * Returns the dispersion in the input values respect the
 	 * average of the values.
@@ -339,14 +339,51 @@ public class MeanValue implements Serializable
 		}
 		return Math.sqrt(d / zx.length);
 	}
-
+	
 	/**
 	 * Returns a simple average value using the average value as
-	 * measure, and the dispersion as error. To call method
+	 * measure, and the dispersion as error. To call method 
 	 * {@link #ponderate()} is not required.
 	 * @return Average value and dispersion.
 	 */
 	public MeasureElement getMeasuredAverageValue() {
 		return new MeasureElement(getAverageValue(), getDispersion(), null);
+	}
+	
+	/**
+	 * For unit testing only.
+	 * @param args Not used.
+	 */
+	public static void main (String args[])
+	{
+		System.out.println("MeanValue test");
+		
+		try {
+			double x[] = new double[] {0.007225092328677015, 0.006792142191533583, 
+					0.00721567921149969743, 0.0066994947683284005, 0.0072940980534992655};
+			
+			double dx[] = new double[] {0.1471154725454545, 0.1471154725454545, 
+					0.052060499327602934, 0.0, 0.002431366018643544};
+	
+			MeanValue mv = new MeanValue(x, dx);
+			mv.ponderate();
+			
+			System.out.println(mv.getMeasuredMeanValue().toString()+" ("+mv.getMeanValue() + " +/- "+mv.getMeanError()+")");
+			System.out.println(x.length+" measures done, but you should do up to "+mv.getMinimumNumberOfMeasuresRecommended()+" to get a correct value.");
+			
+			double sigmas = 3;
+			int iter = 0;
+			System.out.println("--------------");
+			System.out.println("Mean value:      "+mv.getMeanValue());
+			System.out.println("Arithmetic mean: "+mv.getMeanArithmeticValue());
+			System.out.println("Median:          "+mv.getMedian());
+			System.out.println("Average:         "+mv.getAverageValue());
+			System.out.println("Average median:  "+mv.getAverageUsingMeanAndMedian(sigmas));
+			System.out.println("Average sigma-cl:"+mv.getAverageUsingKappaSigmaClipping(sigmas, iter));
+			JPARSECException.showWarnings();
+		} catch (JPARSECException e)
+		{
+			e.showException();
+		}
 	}
 }
