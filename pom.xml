@@ -108,13 +108,6 @@
                         </goals>
                         <configuration>
                             <target>
-                                <move file='${project.basedir}/lib/visad.jar.old'
-                                      tofile='${project.basedir}/lib/visad.jar'
-                                      preservelastmodified='true'
-                                      overwrite='true'
-                                      force='true'
-                                      failonerror='false' />
-
                                 <mkdir dir='${project.basedir}/lib' />
 
                                 <get src='${conga.url}/cds/cds.astro.jar'    dest='${project.basedir}/lib/' usetimestamp='true' />
@@ -134,17 +127,6 @@
                                 <get src='${conga.url}/telescopes.jar'       dest='${project.basedir}/lib/' usetimestamp='true' />
                                 <get src='${conga.url}/visad.jar'            dest='${project.basedir}/lib/' usetimestamp='true' />
                                 <get src='${conga.url}/vsop87.jar'           dest='${project.basedir}/lib/' usetimestamp='true' />
-
-                                <move file='${project.basedir}/lib/visad.jar'
-                                      tofile='${project.basedir}/lib/visad.jar.old'
-                                      preservelastmodified='true'
-                                      overwrite='true'
-                                      force='true'
-                                      failonerror='false' />
-
-                                <jar destfile='${project.basedir}/lib/visad.jar'>
-                                    <zipfileset src='${project.basedir}/lib/visad.jar.old' includes='visad/**/*'/>
-                                </jar>
                             </target>
                         </configuration>
                     </execution>
