@@ -22,6 +22,7 @@
 package jparsec.graph;
 
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -40,7 +41,6 @@ import org.jzy3d.contour.DefaultContourColoringPolicy;
 import org.jzy3d.contour.MapperContourMeshGenerator;
 import org.jzy3d.maths.Coord3d;
 import org.jzy3d.maths.Range;
-import org.jzy3d.maths.Rectangle;
 import org.jzy3d.plot3d.builder.Builder;
 import org.jzy3d.plot3d.builder.Mapper;
 import org.jzy3d.plot3d.builder.concrete.OrthonormalGrid;
