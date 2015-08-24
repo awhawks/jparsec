@@ -120,9 +120,9 @@ public class CreateJZY3DChart {
 					size += chart3d.series[i].xValues.length;
 			}
 		}
-        Coord3d[] points = new Coord3d[size];
-        Color[]   colors = new Color[size];
-        int index = 0;
+    Coord3d[] points = new Coord3d[size];
+    Color[]   colors = new Color[size];
+    int index = 0;
 		for (int i=0; i<chart3d.series.length; i++) {
 			double px[] = DataSet.toDoubleValues(chart3d.series[i].xValues);
 			double py[] = DataSet.toDoubleValues(chart3d.series[i].yValues);
@@ -190,9 +190,9 @@ public class CreateJZY3DChart {
 					pz = (double[])chart3d.series[i].zValues;
 					for (int j=0; j<chart3d.series[i].xValues.length; j++) {
 						points[index] = new Coord3d(px[j], py[j], pz[j]);
-						colors[index] = new Color(java.awt.Color.BLACK);
+						colors[index] = Color.BLACK;
 						if (chart3d.series[i].color != null)
-							colors[index] = new Color(chart3d.series[i].color);
+							colors[index] = chart3d.series[i].color;
 						index ++;
 					}
 				}
@@ -495,7 +495,7 @@ TODO:
 					new double[] {0, 0.2, 0.4, 0.6, 0.8, 1.0}, 400);
 
 			ChartSeriesElement3D series = new ChartSeriesElement3D(gridChart);
-			series.color = java.awt.Color.RED;
+			series.color = Color.RED;
 			ChartSeriesElement3D series2 = new ChartSeriesElement3D(
 					new double[] {0, 1, 2, -1, -2}, 
 					new double[] {0, 1, 1, -1 ,-1}, 

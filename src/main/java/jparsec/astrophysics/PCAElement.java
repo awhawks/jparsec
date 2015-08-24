@@ -21,8 +21,9 @@
  */	
 package jparsec.astrophysics;
 
-import java.awt.Color;
 import java.util.ArrayList;
+
+import org.jzy3d.colors.Color;
 
 import jparsec.ephem.Functions;
 import jparsec.graph.ChartElement3D;
@@ -293,8 +294,7 @@ public class PCAElement {
 			series[index].drawLines = true;
 			series[index].color = Color.RED;
 		}
-		
-		
+
 		ChartElement3D chart = new ChartElement3D(series, title, xLabel, yLabel, zLabel);
 		chart.showToolbar = true;
 		chart.showLegend = false;

@@ -21,8 +21,14 @@
  */					
 package jparsec.graph;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -32,7 +38,15 @@ import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+
+import org.jzy3d.colors.Color;
+import org.math.plot.Plot3DPanel;
+import org.math.plot.canvas.Plot3DCanvas;
+import org.math.plot.canvas.PlotCanvas;
+import org.math.plot.plotObjects.BaseLabel;
 
 import jparsec.astronomy.Difraction;
 import jparsec.astronomy.TelescopeElement;
@@ -40,11 +54,6 @@ import jparsec.io.FileIO;
 import jparsec.io.image.ImageSplineTransform;
 import jparsec.io.image.Picture;
 import jparsec.util.JPARSECException;
-
-import org.math.plot.*;
-import org.math.plot.canvas.Plot3DCanvas;
-import org.math.plot.canvas.PlotCanvas;
-import org.math.plot.plotObjects.BaseLabel;
 
 /**
  * A class to create 3d charts using JMathPlot visualization library. 
@@ -83,89 +92,82 @@ public class CreateChart3D implements Serializable, MouseWheelListener, MouseLis
 	public JPanel getComponent() {
 		return panel;
 	}
-	private void init(ChartElement3D chart)
+  /**
+   * Convert a Color instance to a java.awt.Color equivalent.
+   * @return the converted Color.
+   */
+  private java.awt.Color convert(Color color) {
+      float rgb[] = color.toArray();
+      return new java.awt.Color((int) (rgb[0] * 255), (int) (rgb[0] * 255), (int) (rgb[0] * 255));
+  }
+
+  private void init(ChartElement3D chart)
 	throws JPARSECException {
 		try {
-			this.chart_elem = chart.clone();		
-			
+			this.chart_elem = chart.clone();
+
 			plot = new Plot3DPanel();
 			if (chart_elem.showLegend)
 				plot = new Plot3DPanel("SOUTH");
 	
 			for (int i=0; i<chart_elem.series.length; i++)
 			{
-				if (chart_elem.series[i].isSurface) {
-					plot.addGridPlot(chart_elem.series[i].legend, chart_elem.series[i].color, 
-							DataSet.toDoubleValues(chart_elem.series[i].xValues), 
-							DataSet.toDoubleValues(chart_elem.series[i].yValues), 
-							(double[][]) chart_elem.series[i].zValues);				
+			  ChartSeriesElement3D series = chart_elem.series[i];
+			  java.awt.Color convertedColor = convert(series.color);
+			  double[] xValues = DataSet.toDoubleValues(series.xValues);
+			  double[] yValues = DataSet.toDoubleValues(series.yValues);
+
+			  if (chart_elem.series[i].isSurface) {
+					plot.addGridPlot(series.legend, convertedColor, xValues, yValues, (double[][]) series.zValues);
 				} else {
-					if (chart_elem.series[i].drawLines) {
+					if (series.drawLines) {
 						try {
-							plot.addLinePlot(chart_elem.series[i].legend, chart_elem.series[i].color, 
-								DataSet.toDoubleValues(chart_elem.series[i].xValues), 
-								DataSet.toDoubleValues(chart_elem.series[i].yValues), 
-								(double[]) chart_elem.series[i].zValues);
+							plot.addLinePlot(series.legend, convertedColor, xValues, yValues, (double[]) series.zValues);
 						} catch (Exception exc)
 						{
-							plot.addLinePlot(chart_elem.series[i].legend, chart_elem.series[i].color, 
-									DataSet.toDoubleValues(chart_elem.series[i].xValues), 
-									DataSet.toDoubleValues(chart_elem.series[i].yValues), 
-									DataSet.toDoubleValues((String[]) chart_elem.series[i].zValues));							
+							plot.addLinePlot(series.legend, convertedColor, xValues, yValues, DataSet.toDoubleValues((String[]) series.zValues));
 						}
 					} else {
-						if (chart_elem.series[i].isBarPlot) {
+						if (series.isBarPlot) {
 							try {
-								plot.addBarPlot(chart_elem.series[i].legend, chart_elem.series[i].color, 
-									DataSet.toDoubleValues(chart_elem.series[i].xValues), 
-									DataSet.toDoubleValues(chart_elem.series[i].yValues), 
-									(double[]) chart_elem.series[i].zValues);
+								plot.addBarPlot(series.legend, convertedColor, xValues, yValues, (double[]) series.zValues);
 							} catch (Exception exc)
 							{
-								plot.addBarPlot(chart_elem.series[i].legend, chart_elem.series[i].color, 
-										DataSet.toDoubleValues(chart_elem.series[i].xValues), 
-										DataSet.toDoubleValues(chart_elem.series[i].yValues), 
-										DataSet.toDoubleValues((String[]) chart_elem.series[i].zValues));							
+								plot.addBarPlot(series.legend, convertedColor, xValues, yValues, DataSet.toDoubleValues((String[]) series.zValues));
 							}
 						} else {
 							try {
-								plot.addScatterPlot(chart_elem.series[i].legend, chart_elem.series[i].color, 
-									DataSet.toDoubleValues(chart_elem.series[i].xValues), 
-									DataSet.toDoubleValues(chart_elem.series[i].yValues), 
-									(double[]) chart_elem.series[i].zValues);				
+								plot.addScatterPlot(series.legend, convertedColor, xValues, yValues, (double[]) series.zValues);
 							} catch (Exception exc)
 							{
-								plot.addScatterPlot(chart_elem.series[i].legend, chart_elem.series[i].color, 
-										DataSet.toDoubleValues(chart_elem.series[i].xValues), 
-										DataSet.toDoubleValues(chart_elem.series[i].yValues), 
-										DataSet.toDoubleValues((String[]) chart_elem.series[i].zValues));							
+								plot.addScatterPlot(series.legend, convertedColor,  xValues, yValues, DataSet.toDoubleValues((String[]) series.zValues));
 							}
 						}
 					}
-					if (chart_elem.series[i].pointers.length > 0) {
-						for (int ix = 0; ix<chart_elem.series[i].pointers.length; ix++)
+					if (series.pointers.length > 0) {
+						for (int ix = 0; ix<series.pointers.length; ix++)
 						{
-							int p = Integer.parseInt(FileIO.getField(1, chart_elem.series[i].pointers[ix], " ", true))-1;
-							plot.addLabel(FileIO.getRestAfterField(1, chart_elem.series[i].pointers[ix], " ", true), 
-									chart_elem.series[i].color, 
-									new double[] {DataSet.getDoubleValueWithoutLimit(chart_elem.series[i].xValues[p]), 
-								DataSet.getDoubleValueWithoutLimit(chart_elem.series[i].yValues[p]), ((double[]) chart_elem.series[i].zValues)[p]});					
+							int p = Integer.parseInt(FileIO.getField(1, series.pointers[ix], " ", true))-1;
+							plot.addLabel(FileIO.getRestAfterField(1, series.pointers[ix], " ", true), 
+									series.color, 
+									new double[] {DataSet.getDoubleValueWithoutLimit(series.xValues[p]), 
+								DataSet.getDoubleValueWithoutLimit(series.yValues[p]), ((double[]) series.zValues)[p]});
 						}
 					}
 				}
 
-				if (!chart_elem.series[i].isSurface) {
+				if (!series.isSurface) {
 					boolean limits = false;
 					double l = (chart_elem.getxMax() - chart_elem.getxMin()) / 10.0;
-					double lim[][] = new double[chart_elem.series[i].xValues.length][3];
-					for (int j = 0; j<chart_elem.series[i].xValues.length; j++)
+					double lim[][] = new double[series.xValues.length][3];
+					for (int j = 0; j<series.xValues.length; j++)
 					{
 						lim[j] = new double[] {0.0, 0.0, 0.0};
-						String lx = DataSet.getLimit(chart_elem.series[i].xValues[j]);
-						String ly = DataSet.getLimit(chart_elem.series[i].yValues[j]);
+						String lx = DataSet.getLimit(series.xValues[j]);
+						String ly = DataSet.getLimit(series.yValues[j]);
 						String lz = "";
 						try {
-							lz = DataSet.getLimit(((String[]) chart_elem.series[i].zValues)[j]);
+							lz = DataSet.getLimit(((String[]) series.zValues)[j]);
 						} catch (Exception exc) {}
 						if (lx.equals("<")) {
 							lim[j][0] = -l;
@@ -194,34 +196,34 @@ public class CreateChart3D implements Serializable, MouseWheelListener, MouseLis
 					}
 					if (limits) plot.addVectortoPlot(i, lim);
 				}
-				
-				if (!chart_elem.series[i].isSurface && (chart_elem.series[i].dxValues != null ||
-						chart_elem.series[i].dyValues != null || chart_elem.series[i].dzValues != null)) {
-					double box[][] = new double[chart_elem.series[i].xValues.length][6];
+
+				if (!series.isSurface && (series.dxValues != null ||
+						series.dyValues != null || series.dzValues != null)) {
+					double box[][] = new double[series.xValues.length][6];
 					boolean ok = true;
-					for (int j = 0; j<chart_elem.series[i].xValues.length; j++)
+					for (int j = 0; j<series.xValues.length; j++)
 					{
 						String pz = "";
 						try {
-							pz = ((String[]) chart_elem.series[i].zValues)[j];
+							pz = ((String[]) series.zValues)[j];
 						} catch (Exception exc1) {
 							try {
-								pz = ""+((double[]) chart_elem.series[i].zValues)[j];
+								pz = ""+((double[]) series.zValues)[j];
 							} catch (Exception exc2) {
 								ok = false;
 								break;
 							}
 						}
 						box[j] = new double[] {
-								DataSet.getDoubleValueWithoutLimit(chart_elem.series[i].xValues[j]), 
-								DataSet.getDoubleValueWithoutLimit(chart_elem.series[i].yValues[j]), 
+								DataSet.getDoubleValueWithoutLimit(series.xValues[j]), 
+								DataSet.getDoubleValueWithoutLimit(series.yValues[j]), 
 								DataSet.getDoubleValueWithoutLimit(pz), 
 								0.0, 0.0, 0.0};
-						if (chart_elem.series[i].dxValues != null) box[j][3] = 2.0 * chart_elem.series[i].dxValues[j];
-						if (chart_elem.series[i].dyValues != null) box[j][4] = 2.0 * chart_elem.series[i].dyValues[j];
-						if (chart_elem.series[i].dzValues != null) box[j][5] = 2.0 * chart_elem.series[i].dzValues[j];
+						if (series.dxValues != null) box[j][3] = 2.0 * series.dxValues[j];
+						if (series.dyValues != null) box[j][4] = 2.0 * series.dyValues[j];
+						if (series.dzValues != null) box[j][5] = 2.0 * series.dzValues[j];
 					}
-					if (ok) plot.addBoxPlot("", chart_elem.series[i].color, box);							
+					if (ok) plot.addBoxPlot("", convertedColor, box);
 				}
 			}
 	

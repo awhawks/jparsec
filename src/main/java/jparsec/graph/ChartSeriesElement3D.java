@@ -21,9 +21,10 @@
  */					
 package jparsec.graph;
 
-import java.awt.*;
 //import javax.vecmath.Point3d;
 import java.io.Serializable;
+
+import org.jzy3d.colors.Color;
 
 import jparsec.io.Serialization;
 import jparsec.io.image.ImageSplineTransform;
@@ -265,7 +266,7 @@ public class ChartSeriesElement3D implements Serializable
 	{
 		if (this == null) return null;
 		ChartSeriesElement3D c = new ChartSeriesElement3D();
-		c.color = new Color(this.color.getRed(), this.color.getGreen(), this.color.getBlue(), this.color.getAlpha());
+		c.color = this.color.clone();
 		if (dxValues != null) c.dxValues = this.dxValues.clone();
 		if (dyValues != null) c.dyValues = this.dyValues.clone();
 		if (dzValues != null) c.dzValues = this.dzValues.clone();
