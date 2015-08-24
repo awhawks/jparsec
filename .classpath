@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry kind="lib" path="lib/org.jzy3d-0.9.jar"/>
 	<classpathentry including="**/*.java" kind="src" output="target/classes" path="src/main/java"/>
 	<classpathentry including="**/*.java" kind="src" output="target/test-classes" path="src/test/java"/>
 	<classpathentry kind="var" path="M2_REPO/javax/inject/javax.inject/1/javax.inject-1.jar"/>
@@ -160,7 +161,6 @@
 	<classpathentry kind="lib" path="lib/images.jar"/>
 	<classpathentry kind="lib" path="lib/jpl_ephem.jar"/>
 	<classpathentry kind="lib" path="lib/orbital_elements.jar"/>
-	<classpathentry kind="lib" path="lib/org.jzy3d-0.9.jar"/>
 	<classpathentry kind="lib" path="lib/radex.jar"/>
 	<classpathentry kind="lib" path="lib/sgt_v30.jar"/>
 	<classpathentry kind="lib" path="lib/sky.jar"/>
@@ -171,5 +171,6 @@
 	<classpathentry kind="lib" path="lib/textures.jar"/>
 	<classpathentry kind="lib" path="lib/visad.jar"/>
 	<classpathentry kind="lib" path="lib/vsop87.jar"/>
+	<classpathentry kind="var" path="M2_REPO"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
