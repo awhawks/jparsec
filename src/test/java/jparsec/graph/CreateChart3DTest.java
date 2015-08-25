@@ -1,9 +1,10 @@
 package jparsec.graph;
 
+import java.awt.Color;
+
 import jparsec.astronomy.Difraction;
 import jparsec.astronomy.TelescopeElement;
 import jparsec.util.JPARSECException;
-import org.jzy3d.colors.Color;
 
 public class CreateChart3DTest {
     /**

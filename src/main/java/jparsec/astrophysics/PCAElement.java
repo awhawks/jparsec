@@ -21,9 +21,8 @@
  */	
 package jparsec.astrophysics;
 
+import java.awt.Color;
 import java.util.ArrayList;
-
-import org.jzy3d.colors.Color;
 
 import jparsec.ephem.Functions;
 import jparsec.graph.ChartElement3D;
