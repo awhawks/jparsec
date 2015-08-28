@@ -258,14 +258,14 @@ public class EventReport {
 				case 10:
 					if (MercuryVenusTransits) s = MainEvents.getMercuryOrVenusTransit(TARGET.MERCURY, jd, jdf, maximumAccuracy);
 					if (s != null) {
-						s.details = Translate.translate(841)+" "+DataSet.replaceAll(s.details.substring(1), ",", "º,", true);
+						s.details = Translate.translate(841)+" "+DataSet.replaceAll(s.details.substring(1), ",", "\u00ba,", true);
 						jd = s.time + 30;
 					}
 					break;
 				case 11:
 					if (MercuryVenusTransits) s = MainEvents.getMercuryOrVenusTransit(TARGET.VENUS, jd, jdf, maximumAccuracy);
 					if (s != null) {
-						s.details = Translate.translate(841)+" "+DataSet.replaceAll(s.details.substring(1), ",", "º,", true);
+						s.details = Translate.translate(841)+" "+DataSet.replaceAll(s.details.substring(1), ",", "\u00ba,", true);
 						jd = s.time + 30;
 					}
 					break;
@@ -1560,7 +1560,7 @@ public class EventReport {
 								event = EVENT.OCCULTATION;
 							}
 							if (limitD > 0) details = Translate.translate(1008)+" "+b0+"-"+b1;
-							String add = " (d = "+Functions.formatValue(p.getY(), 1)+"º)";
+							String add = " (d = "+Functions.formatValue(p.getY(), 1)+"\u00ba)";
 							double init = -1, end = -1;
 							if (event != EVENT.CONJUNCTION) {
 								double find = -1, previous = -1;
@@ -1590,7 +1590,7 @@ public class EventReport {
 								}
 								if (init != -1 && end != -1 && init != end) {
 									TimeElement timeE = new TimeElement(p.getX(), SCALE.TERRESTRIAL_TIME);
-									add = " (d = "+Functions.formatValue(p.getY(), 1)+"º, "+
+									add = " (d = "+Functions.formatValue(p.getY(), 1)+"\u00ba, "+
 										Translate.translate(1022).toLowerCase()+" "+timeE.toMinString()+")";
 								}
 							} 
@@ -1698,7 +1698,7 @@ public class EventReport {
 								if (p.getY() < z.get(meani))
 									details = b1+" "+Translate.translate(164).toLowerCase()+" "+Translate.translate(161)+" "+b0;
 							}
-							String add = " (d = "+Functions.formatValue(p.getY(), 1)+"º";
+							String add = " (d = "+Functions.formatValue(p.getY(), 1)+"\u00ba";
 							if (magStar > -100) add += ", mag = "+Functions.formatValue(magStar, 2);
 							add += ")";
 							double init = -1, end = -1;
@@ -1730,7 +1730,7 @@ public class EventReport {
 								}
 								if (init != -1 && end != -1 && init != end) {
 									TimeElement timeE = new TimeElement(p.getX(), SCALE.TERRESTRIAL_TIME);
-									add = " (d = "+Functions.formatValue(p.getY(), 1)+"º, "+
+									add = " (d = "+Functions.formatValue(p.getY(), 1)+"\u00ba, "+
 										Translate.translate(1022).toLowerCase()+" "+timeE.toMinString();
 									if (magStar > -100) add += ", mag = "+Functions.formatValue(magStar, 2);
 									add += ")";

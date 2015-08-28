@@ -330,7 +330,7 @@ public class DoubleStarElement {
 			AWTGraphics.enableAntialiasing(g);
 			g.setColor(Color.BLACK);
 			String label1 = "@rho = "+Functions.formatValue(dstar.getDistance(), 3)+"\"";
-			String label2 = "PA = "+Functions.formatAngleAsDegrees(dstar.getPositionAngle(), 3)+"º";
+			String label2 = "PA = "+Functions.formatAngleAsDegrees(dstar.getPositionAngle(), 3)+"\u00ba";
 			TextLabel tl1 = new TextLabel(label1);
 			tl1.draw(g, 10, 560);
 			TextLabel tl2 = new TextLabel(label2);

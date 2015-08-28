@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.graph.chartRendering;
 
 import java.util.ArrayList;
@@ -71,10 +71,10 @@ import jparsec.util.*;
  * fully accurate, so it's serves only as an approximation supposing a perfect
  * aligned telescope and a very clear atmosphere.
  * <P>
- * Models comes from Björn Jónsson & David Seal <A target="_blank" href = "
- * http://maps.jpl.nasa.gov">http://maps.jpl.nasa.gov</A>. The model for
- * Mercury is from James Hastings <A target="_blank" href = "
- * http://gw.marketingden.com/planets/planets.html">http://gw.marketingden.com/planets/planets.html</A>.
+ * Models comes from Bj&ouml;rn J&oacute;nsson &amp; David Seal <a target="_blank" href = "
+ * http://maps.jpl.nasa.gov">http://maps.jpl.nasa.gov</a>. The model for
+ * Mercury is from James Hastings <a target="_blank" href = "
+ * http://gw.marketingden.com/planets/planets.html">http://gw.marketingden.com/planets/planets.html</a>.
  * Some models for the moons comes from Celestia software.
  * <P>
  * 
@@ -1058,7 +1058,7 @@ public class RenderPlanet
 							deg = 10 * (int) (deg / 10);
 							if (Math.abs(b - Constant.PI_OVER_TWO) < piOver36*0.5 && deg % 20 == 0 && r > 100*dpi)
 							{
-								String label = "" + deg+"º";
+								String label = "" + deg+"\u00ba";
 								if (render.showLabels) g.drawString(label, posx + (int) q, posy - (int) w, getDist(z/r, refz));
 							}
 					}
@@ -3147,7 +3147,7 @@ public class RenderPlanet
 		if (target == TARGET.EARTH) {
 			try {
 				CityElement c = City.findNearestCity(loc, null, maxDist * Constant.DEG_TO_RAD);
-				String feature = c.name + " ("+Translate.translate(1082).toLowerCase()+") ("+c.longitude+"º) ("+c.latitude+"º) (0 km) ("+c.country+", "+c.height+", "+c.timeZone+")";
+				String feature = c.name + " ("+Translate.translate(1082).toLowerCase()+") ("+c.longitude+"\u00ba) ("+c.latitude+"\u00ba) (0 km) ("+c.country+", "+c.height+", "+c.timeZone+")";
 				return feature;
 			} catch (Exception e) {
 				return null;
@@ -3186,7 +3186,7 @@ public class RenderPlanet
 					String size = FileIO.getField(5, line, sep, true);
 					String detail = FileIO.getField(6, line, sep, true);
 					detail += ", "+FileIO.getField(7, line, sep, true);
-					feature = name + " ("+type+") ("+lonp+"º) ("+lat+"º) ("+size+" km) ("+detail+")";
+					feature = name + " ("+type+") ("+lonp+"\u00ba) ("+lat+"\u00ba) ("+size+" km) ("+detail+")";
 				}
 			}
 		} catch (Exception exc) { }

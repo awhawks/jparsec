@@ -399,8 +399,8 @@ public class MoonEvent {
 					} else {
 						String second = ephem[i].mutualPhenomena.substring(ephem[i].mutualPhenomena.toLowerCase().indexOf(by)+by.length()).trim();
 						String per = second.substring(second.indexOf("(") + 1, second.indexOf("%"));
-						if (second.indexOf("º") >= 0) {
-							String dist = second.substring(second.lastIndexOf("(") + 3, second.lastIndexOf("º"));
+						if (second.indexOf("\u00ba") >= 0) {
+							String dist = second.substring(second.lastIndexOf("(") + 3, second.lastIndexOf("\u00ba"));
 							if (FileIO.getField(3, ev[i].details, ",", true).equals("") || Double.parseDouble(dist) < Double.parseDouble(FileIO.getField(3, ev[i].details, ",", true)))
 								ev[i].details = per+", "+myjd+", "+dist;
 						} else {

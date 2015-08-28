@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.util;
 
 import jparsec.graph.DataSet;
@@ -53,7 +53,7 @@ public class Version
 	/**
 	 * Author of the library.
 	 */
-	public static final String AUTHOR = "Tomás Alonso Albi, OAN (Spain)";
+	public static final String AUTHOR = "Tom\u00e1s Alonso Albi, OAN (Spain)";
 
 	/**
 	 * Returns the JPARSEC library release data.
@@ -285,7 +285,7 @@ public class Version
 						"Integration of orbits of comets/asteroids and light curves in the details of the objects in SkyChart.\n"+
 						"SkyChart shows the Carring rotation number and Brown lunation number in the details of the Sun and Moon.\n"+
 						"SkyChart can show trajectories of artificial satellites and the current Iridium flares."
-												
+
 				+FileIO.getLineSeparator(),
 		};
 		String jre = "1.6u12";
@@ -340,7 +340,7 @@ public class Version
 			"jpl.jar                                       1.01",
 			
 //			"elp2000.jar                                   1.01",
-//			"jsch-0.1.41.jar                               1.00",						
+//			"jsch-0.1.41.jar                               1.00",
 //			"dsn.jar                                       1.00",
 //			"imap.jar                                      1.00",
 //			"pop3.jar                                      1.00",
@@ -369,13 +369,13 @@ public class Version
 			module = new Module(
 				"JPARSEC",
 				DataSet.extractColumnFromTable(library, " ", 0),
-				DataSet.toFloatArray(DataSet.toDoubleValues(DataSet.extractColumnFromTable(library, " ", 1))),				
+				DataSet.toFloatArray(DataSet.toDoubleValues(DataSet.extractColumnFromTable(library, " ", 1))),
 				"http://conga.oan.es/~alonso/jparsec/lib/jparsec",
 				"",
 				release,
 				jre,
 				null,
-				"Tomás Alonso Albi"
+				"Tom\u00e1s Alonso Albi"
 			);
         } catch (Exception exc) {  }
 

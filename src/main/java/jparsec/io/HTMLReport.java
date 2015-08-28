@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.io;
 
 import java.io.Serializable;
@@ -719,25 +719,26 @@ public class HTMLReport implements Serializable {
 	}
 	
 	/**
-	 * Formats a given string changing á by &aacute; for example, and other symbols.
+	 * Formats a given string changing \u00e1 by &aacute; for example, and other symbols.
 	 * @param input Input string.
 	 * @return The output.
 	 */
 	public static String format(String input) {
 		if (input == null) return "";
-		input = DataSet.replaceAll(input, "á", "&aacute;", true);
-		input = DataSet.replaceAll(input, "é", "&eacute;", true);
-		input = DataSet.replaceAll(input, "í", "&iacute;", true);
-		input = DataSet.replaceAll(input, "ó", "&oacute;", true);
-		input = DataSet.replaceAll(input, "ú", "&uacute;", true);
-		input = DataSet.replaceAll(input, "Á", "&Aacute;", true);
-		input = DataSet.replaceAll(input, "É", "&Eacute;", true);
-		input = DataSet.replaceAll(input, "Í", "&Iacute;", true);
-		input = DataSet.replaceAll(input, "Ó", "&Oacute;", true);
-		input = DataSet.replaceAll(input, "Ú", "&Uacute;", true);
-		input = DataSet.replaceAll(input, "ñ", "&ntilde;", true);
-		input = DataSet.replaceAll(input, "Ñ", "&Ntilde;", true);
-		input = DataSet.replaceAll(input, "º", "&deg;", true);
+		input = DataSet.replaceAll(input, "\u00e1", "&aacute;", true);
+		input = DataSet.replaceAll(input, "\u00e9", "&eacute;", true);
+		input = DataSet.replaceAll(input, "\u00ed", "&iacute;", true);
+		input = DataSet.replaceAll(input, "\u00f3", "&oacute;", true);
+		input = DataSet.replaceAll(input, "\u00fa", "&uacute;", true);
+		input = DataSet.replaceAll(input, "\u00c1", "&Aacute;", true);
+		input = DataSet.replaceAll(input, "\u00c9", "&Eacute;", true);
+		input = DataSet.replaceAll(input, "\u00cd", "&Iacute;", true);
+		input = DataSet.replaceAll(input, "\u00d3", "&Oacute;", true);
+		input = DataSet.replaceAll(input, "\u00da", "&Uacute;", true);
+		input = DataSet.replaceAll(input, "\u00f1", "&ntilde;", true);
+		input = DataSet.replaceAll(input, "\u00d1", "&Ntilde;", true);
+		input = DataSet.replaceAll(input, "\u00b0", "&deg;", true);
+		input = DataSet.replaceAll(input, "\u00ba", "&ordm;", true);
 		input = DataSet.replaceAll(input, "\\mu", "&micro;", true);
 		input = DataSet.replaceAll(input, "+/-", "&plusmn;", true);
 		return input;

@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.ephem.planets;
 
 import jparsec.ephem.*;
@@ -1571,7 +1571,7 @@ public class PlanetEphem
 			
 			LocationElement ephem_loc0 = Ephem.toMeanEquatorial(ephem.getEquatorialLocation(), time, observer, eph);
 			System.out.println("Mean: "+Functions.formatRA(ephem_loc0.getLongitude())+"/"+Functions.formatDEC(ephem_loc0.getLatitude())+"/"+ephem_loc0.getRadius());
-			// Should be: RA: 06h 21m 14.0671s/23º 14' 18.920"/4.175983896906823. Exact is: RA: 06h 21m 14.0665s, DEC: 23º 14' 18.920", DIST: 4.175983897448329
+			// Should be: RA: 06h 21m 14.0671s/23\u00ba 14' 18.920"/4.175983896906823. Exact is: RA: 06h 21m 14.0665s, DEC: 23\u00ba 14' 18.920", DIST: 4.175983897448329
 
 			astro = new AstroDate(2011, AstroDate.JUNE, 15, 21, 21, 0);
 			time = new TimeElement(astro, SCALE.UNIVERSAL_TIME_UTC);

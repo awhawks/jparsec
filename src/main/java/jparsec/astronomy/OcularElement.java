@@ -52,7 +52,7 @@ public class OcularElement implements Serializable {
 		focalLength = 20;
 		fieldOfView = 50.0 * Constant.DEG_TO_RAD;
 		reticleSize = 32;
-		name = Translate.translate(Translate.JPARSEC_DEFAULT_OCULAR)+" 1-1/4, 20mm, 50º";
+		name = Translate.translate(Translate.JPARSEC_DEFAULT_OCULAR)+" 1-1/4, 20mm, 50\u00ba";
 	}
 
 	/**
@@ -234,14 +234,14 @@ public class OcularElement implements Serializable {
 /*			for (int i = 0; i < ocul.length; i++)
 			{
 				String name = ocul[i].name;
-				name = DataSet.replaceAll(name, "á", "&aacute;", true);
-				name = DataSet.replaceAll(name, "é", "&eacute;", true);
-				name = DataSet.replaceAll(name, "í", "&iacute;", true);
-				name = DataSet.replaceAll(name, "ó", "&oacute;", true);
-				name = DataSet.replaceAll(name, "ú", "&uacute;", true);
-				name = DataSet.replaceAll(name, "ñ", "&ntilde;", true);
-				name = DataSet.replaceAll(name, "º", "&deg;", true);
-				name = DataSet.replaceAll(name, "ö", "&ouml;", true);
+				name = DataSet.replaceAll(name, "\u00e1", "&aacute;", true);
+				name = DataSet.replaceAll(name, "\u00e9", "&eacute;", true);
+				name = DataSet.replaceAll(name, "\u00ed", "&iacute;", true);
+				name = DataSet.replaceAll(name, "\u00f3", "&oacute;", true);
+				name = DataSet.replaceAll(name, "\u00fa", "&uacute;", true);
+				name = DataSet.replaceAll(name, "\u00f1", "&ntilde;", true);
+				name = DataSet.replaceAll(name, "\u00ba", "&deg;", true);
+				name = DataSet.replaceAll(name, "\u00f6", "&ouml;", true);
 				String val = ""+ocul[i].focalLength+" "+(float) (ocul[i].fieldOfView * Constant.RAD_TO_DEG);
 				System.out.println(" <OPTION value=\""+val+"\">"+name+"</OPTION>");
 			}

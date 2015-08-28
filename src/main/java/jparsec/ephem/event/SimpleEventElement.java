@@ -431,7 +431,7 @@ public class SimpleEventElement implements Serializable {
 				if (eventType == EVENT.MOON_MAXIMUM_DECLINATION || eventType == EVENT.MOON_MINIMUM_DECLINATION ||
 						eventType == EVENT.PLANET_MAXIMUM_ELONGATION || eventType == EVENT.PLANET_MINIMUM_ELONGATION
 						|| eventType == EVENT.PLANET_CONJUNCTION || eventType == EVENT.PLANET_OPPOSITION) {
-					d += "º";
+					d += "\u00ba";
 					if (eventType == EVENT.PLANET_MAXIMUM_ELONGATION && (body.equals(TARGET.MERCURY.getName()) ||
 							body.equals(TARGET.MERCURY.getEnglishName()) || body.equals(TARGET.VENUS.getName()) ||
 							body.equals(TARGET.VENUS.getEnglishName()))) {
@@ -457,7 +457,7 @@ public class SimpleEventElement implements Serializable {
 				} else {
 					String details = fix(this.details, false);
 					if (this.eventType == EVENT.SATURN_RINGS_MAXIMUM_APERTURE) {
-						out += " ("+Functions.formatValue(Double.parseDouble(details), 2)+"º)";						
+						out += " ("+Functions.formatValue(Double.parseDouble(details), 2)+"\u00ba)";						
 					} else {
 						out += " ("+details+")";
 					}
@@ -504,7 +504,7 @@ public class SimpleEventElement implements Serializable {
 					try {
 						out = DataSet.replaceAll(out, translateS[i], Translate.translate(translateS[i]).toLowerCase(), true);
 						if (Translate.getDefaultLanguage() == LANGUAGE.SPANISH && (out.startsWith("new") || out.startsWith("nuevo")) && eventType == EVENT.CALENDAR) {
-							out = "nuevo año "+DataSet.replaceAll(FileIO.getRestAfterField(1, out, " ", true), "año", "", true).trim();
+							out = "nuevo a\u00f1o "+DataSet.replaceAll(FileIO.getRestAfterField(1, out, " ", true), "a\u00f1o", "", true).trim();
 						}
 					} catch (Exception exc) {}
 				}

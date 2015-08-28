@@ -31,15 +31,15 @@ import jparsec.util.Logger.LEVEL;
 
 /**
  * Spline interpolation in 2D applied to rotate or resample images, 
- * based on two different routines by Philippe Thévenaz and A. Muñoz Barrutia et al.
- * Basic implementation of Thévenaz method is taken from SkyView.
- * The implementation by Thévenaz is not as good as the other, and it
+ * based on two different routines by Philippe Th&eacute;venaz and A. Mu&ntilde;oz Barrutia et al.
+ * Basic implementation of Th&eacute;venaz method is taken from SkyView.
+ * The implementation by Th&eacute;venaz is not as good as the other, and it
  * is used to interpolate within the array representing an image. The
- * second method by Muñoz Barrutia et al. is better, and it is used to
+ * second method by Mu&ntilde;oz Barrutia et al. is better, and it is used to
  * change the size of the image.<P>
  * 
- * P. Thévenaz, T. Blu, M. Unser, "Interpolation Revisited," IEEE Transactions on Medical Imaging, vol. 19, no. 7, pp. 739-758, July 2000.<BR>
- * A. Muñoz Barrutia, T. Blu, M. Unser, "Least-Squares Image Resizing Using Finite Differences," IEEE Transactions on Image Processing, 
+ * P. Th&eacute;venaz, T. Blu, M. Unser, "Interpolation Revisited," IEEE Transactions on Medical Imaging, vol. 19, no. 7, pp. 739-758, July 2000.<BR>
+ * A. Mu&ntilde;oz Barrutia, T. Blu, M. Unser, "Least-Squares Image Resizing Using Finite Differences," IEEE Transactions on Image Processing,
  * vol. 10, no. 9, pp. 1365-1378, September 2001.
  * 
  * @author T. Alonso Albi - OAN (Spain)
@@ -1083,7 +1083,7 @@ public class ImageSplineTransform implements Serializable {
     * Resizes the image to another size using the method
     * Least-Squares Image Resizing Using Finite Differences. This method is
     * faster and more accurate than the method using spline interpolation.<P>
-    * A. Muñoz Barrutia, T. Blu, M. Unser, "Least-Squares Image Resizing Using Finite Differences," 
+    * A. Mu&ntilde;oz Barrutia, T. Blu, M. Unser, "Least-Squares Image Resizing Using Finite Differences,"
     * IEEE Transactions on Image Processing, vol. 10, no. 9, pp. 1365-1378, September 2001.
     * @param w New width.
     * @param h New height.
@@ -1102,7 +1102,7 @@ public class ImageSplineTransform implements Serializable {
     * Resizes the image data to another size using the method
     * Least-Squares Image Resizing Using Finite Differences. This method is
     * faster and more accurate than the method using spline interpolation.<P>
-    * A. Muñoz Barrutia, T. Blu, M. Unser, "Least-Squares Image Resizing Using Finite Differences," 
+    * A. Mu&ntilde;oz Barrutia, T. Blu, M. Unser, "Least-Squares Image Resizing Using Finite Differences,"
     * IEEE Transactions on Image Processing, vol. 10, no. 9, pp. 1365-1378, September 2001.
     * @param w New width.
     * @param h New height.
@@ -1115,7 +1115,7 @@ public class ImageSplineTransform implements Serializable {
    
    
    /**
-    * Resizes the image to another size using P. Thévenaz interpolation.
+    * Resizes the image to another size using P. Th&eacute;venaz interpolation.
     * This method is generally slower and less accurate, but sometimes
     * (when resizing to very little sizes) can be better than the one using
     * finite differences.
@@ -1137,7 +1137,7 @@ public class ImageSplineTransform implements Serializable {
 
    
    /**
-    * Resizes the image data to another size using P. Thévenaz interpolation.
+    * Resizes the image data to another size using P. Th&eacute;venaz interpolation.
     * This method is generally slower and less accurate, but sometimes
     * (when resizing to very little sizes) can be better than the one using
     * finite differences.

@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.time.calendar;
 
 import java.io.Serializable;
@@ -26,9 +26,9 @@ import java.io.Serializable;
 /**
  * Implements the Bahai calendar.
  * <P>
- * A calendar based on the 19 year cycle 1844-1863 of the Báb, the martyred
- * forerunner of Bahá'u'lálh and co-founder of the Bahá'í faith. Days begin at
- * sunset.
+ * A calendar based on the 19 year cycle 1844-1863 of the B&aacute;b, the martyred
+ * forerunner of Bah&aacute;'u'l&aacute;lh and co-founder of the Bah&aacute;'&iacute; faith.
+ * Days begin at sunset.
  * <P>
  * See Calendrical Calculations for reference.
  * 
