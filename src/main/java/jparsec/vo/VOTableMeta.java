@@ -168,39 +168,51 @@ public class VOTableMeta implements Serializable {
 		this.ucd = ucd;
 		this.unit = unit;
 	}
-	
+
 	/**
-	 * Returns true if the input object is equals to this instance.
+	 * Returns true if the input object is equal to this instance.
 	 */
-	public boolean equals (Object o)
-	{
-		if (o == null) {
-			if (this == null) return true;
-			return false;
-		}
-		if (this == null) {
-			return false;
-		}
-		VOTableMeta v = (VOTableMeta) o;
-		boolean equals = true;
-		if (!v.arraysize.equals(this.arraysize)) equals = false;
-		if (!v.datatype.equals(this.datatype)) equals = false;
-		if (!v.description.equals(this.description)) equals = false;
-		if (!v.id.equals(this.id)) equals = false;
-		if (!v.name.equals(this.name)) equals = false;
-		if (!v.precision.equals(this.precision)) equals = false;
-		if (!v.ref.equals(this.ref)) equals = false;
-		if (!v.ucd.equals(this.ucd)) equals = false;
-		if (!v.unit.equals(this.unit)) equals = false;
-		if (!v.width.equals(this.width)) equals = false;
-		return equals;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof VOTableMeta)) return false;
+
+		VOTableMeta that = (VOTableMeta) o;
+
+		if (name != null ? !name.equals(that.name) : that.name != null) return false;
+		if (ucd != null ? !ucd.equals(that.ucd) : that.ucd != null) return false;
+		if (unit != null ? !unit.equals(that.unit) : that.unit != null) return false;
+		if (datatype != null ? !datatype.equals(that.datatype) : that.datatype != null) return false;
+		if (arraysize != null ? !arraysize.equals(that.arraysize) : that.arraysize != null) return false;
+		if (description != null ? !description.equals(that.description) : that.description != null) return false;
+		if (id != null ? !id.equals(that.id) : that.id != null) return false;
+		if (precision != null ? !precision.equals(that.precision) : that.precision != null) return false;
+		if (width != null ? !width.equals(that.width) : that.width != null) return false;
+
+		return !(ref != null ? !ref.equals(that.ref) : that.ref != null);
 	}
+
+	@Override
+	public int hashCode() {
+		int result = name != null ? name.hashCode() : 0;
+		result = 31 * result + (ucd != null ? ucd.hashCode() : 0);
+		result = 31 * result + (unit != null ? unit.hashCode() : 0);
+		result = 31 * result + (datatype != null ? datatype.hashCode() : 0);
+		result = 31 * result + (arraysize != null ? arraysize.hashCode() : 0);
+		result = 31 * result + (description != null ? description.hashCode() : 0);
+		result = 31 * result + (id != null ? id.hashCode() : 0);
+		result = 31 * result + (precision != null ? precision.hashCode() : 0);
+		result = 31 * result + (width != null ? width.hashCode() : 0);
+		result = 31 * result + (ref != null ? ref.hashCode() : 0);
+		return result;
+	}
+
 	/**
 	 * Clones this instance.
 	 */
+	@Override
 	public Object clone()
 	{
-		if (this == null) return null;
 		VOTableMeta v = new VOTableMeta();
 
 		v.arraysize = this.arraysize;

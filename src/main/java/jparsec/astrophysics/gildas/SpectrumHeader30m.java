@@ -23,6 +23,7 @@ package jparsec.astrophysics.gildas;
 
 import java.io.Serializable;
 
+import java.util.Arrays;
 import jparsec.io.FileIO;
 
 /**
@@ -120,7 +121,7 @@ public class SpectrumHeader30m
 	    SCAN,
 	    /** ID constant for the index of the position angle. */
 	    POSA
-    };    
+    }
 
     /**
      * The set of 'visible' header parameters, those that appear
@@ -143,35 +144,34 @@ public class SpectrumHeader30m
 	    VISIBLE_OFFSET2,
 	    /** ID constant for the index of the scan number in the visible header. */
 	    VISIBLE_SCAN
-    };
+    }
     
     /**
      * Check if two instances are the same.
      */
-    public boolean equals(Object o)
-    {
-    	boolean equals = true;
-    	SpectrumHeader30m s = (SpectrumHeader30m) o;
-    	if (header != null && s.header != null)
-    	{
-	    	for (int i=0; i<this.header.length; i++)
-	    	{
-	    		if (!s.header[i].equals(this.header[i])) equals = false;
-	    	}
-    	}
-    	if (visibleHeader != null && s.visibleHeader != null)
-    	{
-	    	for (int i=0; i<this.visibleHeader.length; i++)
-	    	{
-	    		if (!s.visibleHeader[i].equals(this.visibleHeader[i])) equals = false;
-	    	}
-    	}
-    	return equals;
-    }
-    
-    /**
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof SpectrumHeader30m)) return false;
+
+		SpectrumHeader30m that = (SpectrumHeader30m) o;
+
+		if (!Arrays.equals(header, that.header)) return false;
+
+		return Arrays.equals(visibleHeader, that.visibleHeader);
+	}
+
+	@Override
+	public int hashCode() {
+		int result = header != null ? Arrays.hashCode(header) : 0;
+		result = 31 * result + (visibleHeader != null ? Arrays.hashCode(visibleHeader) : 0);
+		return result;
+	}
+
+	/**
      * Clones this instance.
      */
+	@Override
     public SpectrumHeader30m clone()
     {
     	Parameter p[] = new Parameter[header.length];

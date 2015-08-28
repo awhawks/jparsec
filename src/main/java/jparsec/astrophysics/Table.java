@@ -21,6 +21,7 @@
  */		
 package jparsec.astrophysics;
 
+import java.util.Arrays;
 import java.util.BitSet;
 
 import jparsec.astrophysics.gildas.LMVCube;
@@ -527,42 +528,40 @@ public class Table {
 	}
 
 	/**
-	 * Returns if this instance is equals to another.
+	 * Returns if this instance is equal to another.
 	 */
+	@Override
 	public boolean equals(Object o) {
-		if (o == null && this == null) return true;
-		if (o == null) return false;
-		if (this == null) return false;
-		
-		Table t = (Table) o;
-		if (t.hasErrors != this.hasErrors) return false;
-		if (t.data != null && data == null) return false;
-		if (t.data == null && data != null) return false;
-		if (t.mask != null && mask == null) return false;
-		if (t.mask == null && mask != null) return false;
-		if (!this.isCompatible(t)) return false;
-		
-		if (t.data != null && data != null) {
-			for (int k=0; k<data.length; k++) {
-				for (int j=0; j<data[0].length; j++) {
-					for (int i=0; i<data[0][0].length; i++) {
-						if (!data[k][j][i].equals(t.data[k][j][i])) return false;
-						if (t.mask != null && mask != null) {
-							if (mask[k][j].get(i) != t.mask[k][j].get(i)) return false;
-						}
-					}
-				}
-			}
-		}
-		return true;
+		if (this == o) return true;
+		if (!(o instanceof Table)) return false;
+
+		Table table = (Table) o;
+
+		if (hasErrors != table.hasErrors) return false;
+		if (!Arrays.deepEquals(data, table.data)) return false;
+		if (!Arrays.deepEquals(mask, table.mask)) return false;
+		// Probably incorrect - comparing Object[] arrays with Arrays.equals
+		if (!Arrays.equals(ist, table.ist)) return false;
+
+		return Arrays.equals(istErr, table.istErr);
 	}
-	
+
+	@Override
+	public int hashCode() {
+		int result = data != null ? Arrays.deepHashCode(data) : 0;
+		result = 31 * result + (hasErrors ? 1 : 0);
+		result = 31 * result + (mask != null ? Arrays.deepHashCode(mask) : 0);
+		result = 31 * result + (ist != null ? Arrays.hashCode(ist) : 0);
+		result = 31 * result + (istErr != null ? Arrays.hashCode(istErr) : 0);
+		return result;
+	}
+
 	/**
 	 * Clones this instance.
 	 */
+	@Override
 	public Table clone()
 	{
-		if (this == null) return null;
 		Table t = null;
 		try {
 			t = new Table(this.getValues(), this.getErrors(), this.data[0][0][0].unit);

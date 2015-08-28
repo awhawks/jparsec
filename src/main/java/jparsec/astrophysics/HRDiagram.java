@@ -28,6 +28,7 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.GeneralPath;
 import java.util.ArrayList;
 
+import java.util.Arrays;
 import jparsec.astronomy.Star;
 import jparsec.astronomy.Star.LUMINOSITY_CLASS;
 import jparsec.graph.ChartElement;
@@ -266,32 +267,42 @@ public class HRDiagram {
 	}
 
 	/**
-	 * Returns if this instance is equals to another.
+	 * Returns true if this instance is equal to another.
 	 */
+	@Override
 	public boolean equals(Object o) {
-		if (o == null) {
-			if (this == null) return true;
-			return false;
-		}
-		if (this == null) {
-			return false;
-		}
-		HRDiagram hr = (HRDiagram) o;
-		if (!hr.source.equals(source)) return false;
-		if (!DataSet.sameArrayValues(T, hr.T)) return false;
-		if (!DataSet.sameArrayValues(Mv, hr.Mv)) return false;
-		if (hr.dist != dist) return false;
-		if (hr.fittedHR != null && fittedHR == null) return false; 
-		if (hr.fittedHR == null && fittedHR != null) return false;
-		if (hr.fittedHR != null || fittedHR != null) {
-			if (!hr.fittedHR.equals(fittedHR)) return false; 
-		}
-		return true;
+		if (this == o) return true;
+		if (!(o instanceof HRDiagram)) return false;
+
+		HRDiagram hrDiagram = (HRDiagram) o;
+
+		if (Double.compare(hrDiagram.dist, dist) != 0) return false;
+		if (!Arrays.equals(T, hrDiagram.T)) return false;
+		if (!Arrays.equals(Mv, hrDiagram.Mv)) return false;
+		if (source != null ? !source.equals(hrDiagram.source) : hrDiagram.source != null) return false;
+		if (fittedHR != null ? !fittedHR.equals(hrDiagram.fittedHR) : hrDiagram.fittedHR != null) return false;
+
+		return Arrays.equals(turnOff, hrDiagram.turnOff);
 	}
-	
+
+	@Override
+	public int hashCode() {
+		int result;
+		long temp;
+		result = T != null ? Arrays.hashCode(T) : 0;
+		result = 31 * result + (Mv != null ? Arrays.hashCode(Mv) : 0);
+		result = 31 * result + (source != null ? source.hashCode() : 0);
+		temp = Double.doubleToLongBits(dist);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		result = 31 * result + (fittedHR != null ? fittedHR.hashCode() : 0);
+		result = 31 * result + (turnOff != null ? Arrays.hashCode(turnOff) : 0);
+		return result;
+	}
+
 	/**
 	 * Clones this instance.
 	 */
+	@Override
 	public HRDiagram clone() {
 		HRDiagram hr = new HRDiagram(T.clone(), Mv.clone(), source);
 		hr.dist = dist;

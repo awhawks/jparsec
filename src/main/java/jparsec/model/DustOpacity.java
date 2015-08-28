@@ -1318,9 +1318,9 @@ public class DustOpacity implements Serializable
 	/**
 	 * To clone the object.
 	 */
+	@Override
 	public Object clone()
 	{
-		if (this == null) return null;
 		DustOpacity d = new DustOpacity();
 		d.abundanceFraction = this.abundanceFraction;
 		if (dustModel != null) d.dustModel = this.dustModel.clone();
@@ -1330,29 +1330,41 @@ public class DustOpacity implements Serializable
 		d.sizeMax = this.sizeMax;
 		return d;
 	}
+
 	/**
-	 * Checks if two instances contains the same data.
+	 * Checks if two instances contain the same data.
 	 */
-	public boolean equals(Object o)
-	{
-		if (o == null) {
-			if (this == null) return true;
-			return false;
-		}
-		if (this == null) {
-			return false;
-		}
-		DustOpacity d = (DustOpacity) o;
-		boolean equal = false;
-		DoubleVector d1 = new DoubleVector(d.dustModel);
-		DoubleVector d2 = new DoubleVector(this.dustModel);
-		if (d.abundanceFraction == this.abundanceFraction &&
-				d1.equals(d2) &&
-				d.grainDensity == this.grainDensity &&
-				d.grainType == this.grainType &&
-				d.sizeDistributionCoefficient == this.sizeDistributionCoefficient &&
-				d.sizeMax == this.sizeMax) equal = true;
-		return equal;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof DustOpacity)) return false;
+
+		DustOpacity that = (DustOpacity) o;
+
+		if (Double.compare(that.sizeDistributionCoefficient, sizeDistributionCoefficient) != 0) return false;
+		if (Double.compare(that.sizeMax, sizeMax) != 0) return false;
+		if (grainType != that.grainType) return false;
+		if (Double.compare(that.grainDensity, grainDensity) != 0) return false;
+		if (Double.compare(that.abundanceFraction, abundanceFraction) != 0) return false;
+
+		return Arrays.equals(dustModel, that.dustModel);
+	}
+
+	@Override
+	public int hashCode() {
+		int result;
+		long temp;
+		temp = Double.doubleToLongBits(sizeDistributionCoefficient);
+		result = (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(sizeMax);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		result = 31 * result + grainType;
+		temp = Double.doubleToLongBits(grainDensity);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(abundanceFraction);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		result = 31 * result + (dustModel != null ? Arrays.hashCode(dustModel) : 0);
+		return result;
 	}
 
 	/**

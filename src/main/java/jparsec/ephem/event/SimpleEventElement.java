@@ -287,9 +287,9 @@ public class SimpleEventElement implements Serializable {
 	/**
 	 * Clones this instance.
 	 */
+	@Override
 	public SimpleEventElement clone()
 	{
-		if (this == null) return null;
 		SimpleEventElement e = new SimpleEventElement(this.time, this.eventType, this.details);
 		e.body = this.body;
 		e.secondaryBody = this.secondaryBody;
@@ -298,42 +298,49 @@ public class SimpleEventElement implements Serializable {
 		e.endTime = this.endTime;
 		return e;
 	}
+
 	/**
-	 * Returns whether the input Object contains the same information
+	 * Returns whether the argument contains the same information
 	 * as this instance.
 	 */
-	public boolean equals(Object e)
-	{
-		if (e == null) {
-			if (this == null) return true;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof SimpleEventElement)) return false;
+
+		SimpleEventElement that = (SimpleEventElement) o;
+
+		if (Double.compare(that.time, time) != 0) return false;
+		if (Double.compare(that.endTime, endTime) != 0) return false;
+		if (eventType != that.eventType) return false;
+		if (details != null ? !details.equals(that.details) : that.details != null) return false;
+		if (eventLocation != null ? !eventLocation.equals(that.eventLocation) : that.eventLocation != null)
 			return false;
-		}
-		if (this == null) {
-			return false;
-		}
-		boolean equals = true;
-		SimpleEventElement ee = (SimpleEventElement) e;
-		if (!ee.details.equals(this.details)) equals = false;
-		if (ee.time != this.time) equals = false;
-		if (ee.endTime != this.endTime) equals = false;
-		if (ee.eventType != this.eventType) equals = false;
-		if (!ee.body.equals(this.body)) equals = false;
-		if (ee.secondaryBody == null || this.secondaryBody == null) {
-			if (ee.secondaryBody != null || this.secondaryBody != null) equals = false;
-		} else {
-			if (!ee.secondaryBody.equals(this.secondaryBody)) equals = false;
-		}
-		if (ee.eventLocation == null || this.eventLocation == null) {
-			if (ee.eventLocation != null || this.eventLocation != null) equals = false;			
-		} else {
-			if (!ee.eventLocation.equals(this.eventLocation)) equals = false;
-		}
-		return equals;
+		if (body != null ? !body.equals(that.body) : that.body != null) return false;
+
+		return !(secondaryBody != null ? !secondaryBody.equals(that.secondaryBody) : that.secondaryBody != null);
+	}
+
+	@Override
+	public int hashCode() {
+		int result;
+		long temp;
+		temp = Double.doubleToLongBits(time);
+		result = (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(endTime);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		result = 31 * result + (eventType != null ? eventType.hashCode() : 0);
+		result = 31 * result + (details != null ? details.hashCode() : 0);
+		result = 31 * result + (eventLocation != null ? eventLocation.hashCode() : 0);
+		result = 31 * result + (body != null ? body.hashCode() : 0);
+		result = 31 * result + (secondaryBody != null ? secondaryBody.hashCode() : 0);
+		return result;
 	}
 
 	/**
 	 * Returns a string representation of this event.
 	 */
+	@Override
 	public String toString() {
 		EphemerisElement eph = new EphemerisElement();
 		eph.correctForEOP = false;

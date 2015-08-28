@@ -22,6 +22,7 @@
 package jparsec.graph;
 
 import java.io.*;
+import java.util.Arrays;
 import jparsec.graph.chartRendering.AWTGraphics;
 
 /**
@@ -290,47 +291,44 @@ public class JPARSECStroke implements Serializable {
         this.dashArray = dash;
         this.dashPhase = dashPhase;
  	}
+
 	/**
 	 * Clones this instance.
 	 */
+	@Override
 	public JPARSECStroke clone()
 	{
-		if (this == null) return null;
         return new JPARSECStroke(this.lineWidth, this.endCap, this.lineJoin, this.miterLimit, this.dashArray, this.dashPhase);
 	}
-	/**
-	 * Returns true if the input object is equals to this stroke.
-	 */
-	public boolean equals(Object s)
-	{
-		if (s == null) {
-			if (this == null) return true;
-			return false;
-		}
-		if (this == null) {
-			return false;
-		}
-		JPARSECStroke j = (JPARSECStroke) s;
-		boolean equals = true;
-		if (this.getLineWidth() != j.getLineWidth()) equals = false;
-		if (this.getEndCap() != j.getEndCap()) equals = false;
-		if (this.getLineJoin() != j.getLineJoin()) equals = false;
-		if (this.getMiterLimit() != j.getMiterLimit()) equals = false;
-		if (this.getDashPhase() != j.getDashPhase()) equals = false;
-		
-		if (this.getDashArray().length == j.getDashArray().length)
-		{
-			float[] f1 = this.getDashArray();
-			float[] f2 = j.getDashArray();
-			for (int i=0; i<this.getDashArray().length; i++)
-			{
-				if (f1[i] != f2[i]) equals = false;
-			}
-		} else {
-			equals = false;
-		}
 
-		return equals;
+	/**
+	 * Returns true if the input object is equal to this stroke.
+	 */
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof JPARSECStroke)) return false;
+
+		JPARSECStroke that = (JPARSECStroke) o;
+
+		if (Float.compare(that.lineWidth, lineWidth) != 0) return false;
+		if (endCap != that.endCap) return false;
+		if (lineJoin != that.lineJoin) return false;
+		if (Float.compare(that.miterLimit, miterLimit) != 0) return false;
+		if (Float.compare(that.dashPhase, dashPhase) != 0) return false;
+
+		return Arrays.equals(dashArray, that.dashArray);
+	}
+
+	@Override
+	public int hashCode() {
+		int result = (lineWidth != +0.0f ? Float.floatToIntBits(lineWidth) : 0);
+		result = 31 * result + endCap;
+		result = 31 * result + lineJoin;
+		result = 31 * result + (miterLimit != +0.0f ? Float.floatToIntBits(miterLimit) : 0);
+		result = 31 * result + (dashArray != null ? Arrays.hashCode(dashArray) : 0);
+		result = 31 * result + (dashPhase != +0.0f ? Float.floatToIntBits(dashPhase) : 0);
+		return result;
 	}
 
 	/**

@@ -88,31 +88,38 @@ public class MeasureElement implements Serializable
 	/**
 	 * Clones this instance.
 	 */
+	@Override
 	public MeasureElement clone()
 	{
-		if (this == null) return null;
 		MeasureElement p = new MeasureElement(this.value, this.error, this.unit);
 		return p;
 	}
 	
 	/**
-	 * Returns if this instance is equals to another.
+	 * Returns true if this instance is equal to another.
 	 */
-	public boolean equals(Object o)
-	{
-		if (o == null) {
-			if (this == null) return true;
-			return false;
-		}
-		if (this == null) {
-			return false;
-		}
-		MeasureElement p = (MeasureElement) o;
-		boolean equals = true;
-		if (!this.value.equals(p.value)) equals = false;
-		if (this.error != p.error) equals = false;
-		if (!this.unit.equals(p.unit)) equals = false;
-		return equals;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof MeasureElement)) return false;
+
+		MeasureElement that = (MeasureElement) o;
+
+		if (Double.compare(that.error, error) != 0) return false;
+		if (value != null ? !value.equals(that.value) : that.value != null) return false;
+
+		return !(unit != null ? !unit.equals(that.unit) : that.unit != null);
+	}
+
+	@Override
+	public int hashCode() {
+		int result;
+		long temp;
+		result = value != null ? value.hashCode() : 0;
+		temp = Double.doubleToLongBits(error);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		result = 31 * result + (unit != null ? unit.hashCode() : 0);
+		return result;
 	}
 
 	/**

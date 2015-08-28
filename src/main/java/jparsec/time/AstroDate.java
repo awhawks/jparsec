@@ -1148,21 +1148,37 @@ public class AstroDate implements Serializable
 	 * @param astro The other date.
 	 * @return True if both dates are the same.
 	 */
-	public boolean equals(AstroDate astro) {
-		if (astro == null && this == null) return true;
-		if (astro != null && this == null) return false;
-		if (astro == null && this != null) return false;
-		
-		if (this.year != astro.year) return false;
-		if (this.month != astro.month) return false;
-		if (this.day != astro.day) return false;
-		if (this.second != astro.second) return false;
-		return true;
+	@Override
+	public boolean equals(Object astro) {
+		if (this == astro) return true;
+		if (!(astro instanceof AstroDate)) return false;
+
+		AstroDate astroDate = (AstroDate) astro;
+
+		if (day != astroDate.day) return false;
+		if (month != astroDate.month) return false;
+		if (year != astroDate.year) return false;
+
+		return Double.compare(astroDate.second, second) == 0;
 	}
+
+	@Override
+	public int hashCode() {
+		int result;
+		long temp;
+		result = day;
+		result = 31 * result + month;
+		result = 31 * result + year;
+		temp = Double.doubleToLongBits(second);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		return result;
+	}
+
 	/**
 	 * Clones this instance.
 	 * @return A copy of this date.
 	 */
+	@Override
 	public AstroDate clone() {
 		return new AstroDate(year, month, day, second);
 	}

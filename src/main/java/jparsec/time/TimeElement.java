@@ -243,9 +243,9 @@ public class TimeElement implements Serializable
 	/**
 	 * Clones this instance.
 	 */
+	@Override
 	public TimeElement clone()
 	{
-		if (this == null) return null;
 		TimeElement time;
 		try {
 			time = new TimeElement(astroDate, this.timeScale);
@@ -255,31 +255,35 @@ public class TimeElement implements Serializable
 		}
 		return time;
 	}
+
 	/**
-	 * Returns whether the input object is equals to this instance.
+	 * Returns whether the input object is equal to this instance.
 	 */
-	public boolean equals(Object t)
-	{
-		if (t == null) {
-			if (this == null) return true;
-			return false;
-		}
-		if (this == null) {
-			return false;
-		}
-		TimeElement te = (TimeElement) t;
-		boolean equals = true;
-		if (te.timeScale != this.timeScale) equals = false;
-		try {
-			if (te.astroDate.jd() != this.astroDate.jd()) equals = false;
-		} catch (Exception e) {	}
-		if (te.decimalsInSeconds != this.decimalsInSeconds) equals = false;
-		return equals;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof TimeElement)) return false;
+
+		TimeElement that = (TimeElement) o;
+
+		if (decimalsInSeconds != that.decimalsInSeconds) return false;
+		if (astroDate != null ? !astroDate.equals(that.astroDate) : that.astroDate != null) return false;
+
+		return timeScale == that.timeScale;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = astroDate != null ? astroDate.hashCode() : 0;
+		result = 31 * result + (timeScale != null ? timeScale.hashCode() : 0);
+		result = 31 * result + decimalsInSeconds;
+		return result;
 	}
 
 	/**
 	 * Returns a simple String representation of this instant.
 	 */
+	@Override
 	public String toString() {
 		try {
 			return astroDate.toString(this.decimalsInSeconds)+" "+getTimeScaleAbbreviation();

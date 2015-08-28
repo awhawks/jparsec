@@ -24,6 +24,7 @@ package jparsec.graph.chartRendering;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import java.util.Arrays;
 import jparsec.ephem.Ephem;
 import jparsec.ephem.EphemerisElement;
 import jparsec.ephem.Target;
@@ -280,9 +281,9 @@ public class TrajectoryElement implements Serializable
 	/**
 	 * Clones this instance.
 	 */
+	@Override
 	public TrajectoryElement clone()
 	{
-		if (this == null) return null;
 		TrajectoryElement t = new TrajectoryElement();
 		t.autoCentering = this.autoCentering;
 		t.autoScale = this.autoScale;
@@ -314,53 +315,73 @@ public class TrajectoryElement implements Serializable
 		}
 		return t;
 	}
+
 	/**
-	 * Returns true if the input object is equals to this instance.
+	 * Returns true if the input object is equal to this instance.
 	 */
-	public boolean equals(Object o)
-	{
-		if (o == null) {
-			if (this == null) return true;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof TrajectoryElement)) return false;
+
+		TrajectoryElement that = (TrajectoryElement) o;
+
+		if (Double.compare(that.startTimeJD, startTimeJD) != 0) return false;
+		if (Double.compare(that.endTimeJD, endTimeJD) != 0) return false;
+		if (Float.compare(that.stepTimeJD, stepTimeJD) != 0) return false;
+		if (drawLabels != that.drawLabels) return false;
+		if (labelsSteps != that.labelsSteps) return false;
+		if (autoCentering != that.autoCentering) return false;
+		if (autoScale != that.autoScale) return false;
+		if (drawPathColor1 != that.drawPathColor1) return false;
+		if (drawPathColor2 != that.drawPathColor2) return false;
+		if (showTimeScale != that.showTimeScale) return false;
+		if (showTime != that.showTime) return false;
+		if (objectType != that.objectType) return false;
+		if (objectName != null ? !objectName.equals(that.objectName) : that.objectName != null) return false;
+		if (apparentObjectName != null ? !apparentObjectName.equals(that.apparentObjectName) : that.apparentObjectName != null)
 			return false;
-		}
-		if (this == null) {
-			return false;
-		}
-		TrajectoryElement t = (TrajectoryElement) o;
-		boolean equals = true;
-		if (t.autoCentering != this.autoCentering) equals = false;
-		if (t.autoScale != this.autoScale) equals = false;
-		if (t.drawLabels != this.drawLabels) equals = false;
-		if (t.timeScaleForLabels != this.timeScaleForLabels) equals = false;
-		if (t.drawLabelsFormat != this.drawLabelsFormat) equals = false;
-		if (t.drawPathColor1 != this.drawPathColor1) equals = false;
-		if (t.drawPathColor2 != this.drawPathColor2) equals = false;
-		if (t.drawPathFont != this.drawPathFont) equals = false;
-		if (t.endTimeJD != this.endTimeJD) equals = false;
-		if (t.labelsSteps != this.labelsSteps) equals = false;
-		if (t.objectName != this.objectName) equals = false;
-		if (t.apparentObjectName != this.apparentObjectName) equals = false;
-		if (t.objectType != this.objectType) equals = false;
-		if (t.startTimeJD != this.startTimeJD) equals = false;
-		if (t.stepTimeJD != this.stepTimeJD) equals = false;
-		if (!t.stroke.equals(this.stroke)) equals = false;
-		if (t.showTime != this.showTime) equals = false;
-		if (t.showTimeScale != this.showTimeScale) equals = false;
-		if (!t.central_loc.equals(this.central_loc)) equals = false;
-		if (!equals) return equals;
-		
-		if (t.loc_path == null && this.loc_path != null || t.loc_path != null && this.loc_path == null) return false;
-		for (int i=0; i<t.loc_path.length; i++) {
-			if (t.loc_path[i] == null || loc_path[i] == null) {
-				if (loc_path[i] == null && t.loc_path[i] != null) return false;
-				if (loc_path[i] != null && t.loc_path[i] == null) return false;
-			} else {
-				if (!t.loc_path[i].equals(this.loc_path[i])) return false;
-			}
-		}
-		return equals;
+		if (stroke != null ? !stroke.equals(that.stroke) : that.stroke != null) return false;
+		if (timeScaleForLabels != that.timeScaleForLabels) return false;
+		if (drawLabelsFormat != that.drawLabelsFormat) return false;
+		if (drawPathFont != that.drawPathFont) return false;
+		// Probably incorrect - comparing Object[] arrays with Arrays.equals
+		if (!Arrays.equals(loc_path, that.loc_path)) return false;
+		if (central_loc != null ? !central_loc.equals(that.central_loc) : that.central_loc != null) return false;
+
+		return !(star != null ? !star.equals(that.star) : that.star != null);
 	}
-	
+
+	@Override
+	public int hashCode() {
+		int result;
+		long temp;
+		result = objectType != null ? objectType.hashCode() : 0;
+		result = 31 * result + (objectName != null ? objectName.hashCode() : 0);
+		result = 31 * result + (apparentObjectName != null ? apparentObjectName.hashCode() : 0);
+		temp = Double.doubleToLongBits(startTimeJD);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(endTimeJD);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		result = 31 * result + (stepTimeJD != +0.0f ? Float.floatToIntBits(stepTimeJD) : 0);
+		result = 31 * result + (stroke != null ? stroke.hashCode() : 0);
+		result = 31 * result + (drawLabels ? 1 : 0);
+		result = 31 * result + (timeScaleForLabels != null ? timeScaleForLabels.hashCode() : 0);
+		result = 31 * result + (drawLabelsFormat != null ? drawLabelsFormat.hashCode() : 0);
+		result = 31 * result + labelsSteps;
+		result = 31 * result + (autoCentering ? 1 : 0);
+		result = 31 * result + (autoScale ? 1 : 0);
+		result = 31 * result + (drawPathFont != null ? drawPathFont.hashCode() : 0);
+		result = 31 * result + drawPathColor1;
+		result = 31 * result + drawPathColor2;
+		result = 31 * result + (showTimeScale ? 1 : 0);
+		result = 31 * result + (showTime ? 1 : 0);
+		result = 31 * result + (loc_path != null ? Arrays.hashCode(loc_path) : 0);
+		result = 31 * result + (central_loc != null ? central_loc.hashCode() : 0);
+		result = 31 * result + (star != null ? star.hashCode() : 0);
+		return result;
+	}
+
 	/**
 	 * An array to store the equatorial positions of the object along the path.
 	 */

@@ -23,6 +23,7 @@ package jparsec.ephem.planets;
 
 import java.io.Serializable;
 
+import java.util.Arrays;
 import jparsec.astronomy.Star;
 import jparsec.ephem.Ephem;
 import jparsec.ephem.EphemerisElement;
@@ -591,9 +592,9 @@ public class EphemElement implements Serializable
 	/**
 	 * To clone the object.
 	 */
+	@Override
 	public EphemElement clone()
 	{
-		if (this == null) return null;
 		EphemElement ephem = new EphemElement(this.rightAscension, this.declination, this.distance,
 				this.angularRadius, this.magnitude, this.distanceFromSun, this.elongation, this.phase,
 				this.phaseAngle, this.positionAngleOfAxis, this.positionAngleOfPole,
@@ -612,63 +613,123 @@ public class EphemElement implements Serializable
 		ephem.location = null;
 		if (this.location != null) ephem.location = this.location.clone();
 		return ephem;
-	}	
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof EphemElement)) return false;
+
+		EphemElement that = (EphemElement) o;
+
+		if (Double.compare(that.rightAscension, rightAscension) != 0) return false;
+		if (Double.compare(that.declination, declination) != 0) return false;
+		if (Double.compare(that.distance, distance) != 0) return false;
+		if (Float.compare(that.angularRadius, angularRadius) != 0) return false;
+		if (Float.compare(that.magnitude, magnitude) != 0) return false;
+		if (Double.compare(that.distanceFromSun, distanceFromSun) != 0) return false;
+		if (Float.compare(that.elongation, elongation) != 0) return false;
+		if (Float.compare(that.phaseAngle, phaseAngle) != 0) return false;
+		if (Float.compare(that.phase, phase) != 0) return false;
+		if (Double.compare(that.positionAngleOfAxis, positionAngleOfAxis) != 0) return false;
+		if (Double.compare(that.positionAngleOfPole, positionAngleOfPole) != 0) return false;
+		if (Double.compare(that.longitudeOfCentralMeridian, longitudeOfCentralMeridian) != 0) return false;
+		if (Double.compare(that.longitudeOfCentralMeridianSystemI, longitudeOfCentralMeridianSystemI) != 0)
+			return false;
+		if (Double.compare(that.longitudeOfCentralMeridianSystemII, longitudeOfCentralMeridianSystemII) != 0)
+			return false;
+		if (Double.compare(that.longitudeOfCentralMeridianSystemIII, longitudeOfCentralMeridianSystemIII) != 0)
+			return false;
+		if (Float.compare(that.brightLimbAngle, brightLimbAngle) != 0) return false;
+		if (Double.compare(that.subsolarLatitude, subsolarLatitude) != 0) return false;
+		if (Double.compare(that.subsolarLongitude, subsolarLongitude) != 0) return false;
+		if (Float.compare(that.paralacticAngle, paralacticAngle) != 0) return false;
+		if (Double.compare(that.azimuth, azimuth) != 0) return false;
+		if (Double.compare(that.elevation, elevation) != 0) return false;
+		if (Double.compare(that.heliocentricEclipticLongitude, heliocentricEclipticLongitude) != 0) return false;
+		if (Double.compare(that.heliocentricEclipticLatitude, heliocentricEclipticLatitude) != 0) return false;
+		if (Double.compare(that.northPoleRA, northPoleRA) != 0) return false;
+		if (Double.compare(that.northPoleDEC, northPoleDEC) != 0) return false;
+		if (Float.compare(that.defectOfIllumination, defectOfIllumination) != 0) return false;
+		if (Float.compare(that.surfaceBrightness, surfaceBrightness) != 0) return false;
+		if (Float.compare(that.lightTime, lightTime) != 0) return false;
+		if (!Arrays.equals(rise, that.rise)) return false;
+		if (!Arrays.equals(set, that.set)) return false;
+		if (!Arrays.equals(transit, that.transit)) return false;
+		if (!Arrays.equals(transitElevation, that.transitElevation)) return false;
+		if (constellation != null ? !constellation.equals(that.constellation) : that.constellation != null)
+			return false;
+		if (name != null ? !name.equals(that.name) : that.name != null) return false;
+		if (status != null ? !status.equals(that.status) : that.status != null) return false;
+
+		return !(location != null ? !location.equals(that.location) : that.location != null);
+	}
+
+	@Override
+	public int hashCode() {
+		int result;
+		long temp;
+		temp = Double.doubleToLongBits(rightAscension);
+		result = (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(declination);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(distance);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		result = 31 * result + (angularRadius != +0.0f ? Float.floatToIntBits(angularRadius) : 0);
+		result = 31 * result + (magnitude != +0.0f ? Float.floatToIntBits(magnitude) : 0);
+		temp = Double.doubleToLongBits(distanceFromSun);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		result = 31 * result + (elongation != +0.0f ? Float.floatToIntBits(elongation) : 0);
+		result = 31 * result + (phaseAngle != +0.0f ? Float.floatToIntBits(phaseAngle) : 0);
+		result = 31 * result + (phase != +0.0f ? Float.floatToIntBits(phase) : 0);
+		temp = Double.doubleToLongBits(positionAngleOfAxis);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(positionAngleOfPole);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(longitudeOfCentralMeridian);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(longitudeOfCentralMeridianSystemI);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(longitudeOfCentralMeridianSystemII);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(longitudeOfCentralMeridianSystemIII);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		result = 31 * result + (brightLimbAngle != +0.0f ? Float.floatToIntBits(brightLimbAngle) : 0);
+		temp = Double.doubleToLongBits(subsolarLatitude);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(subsolarLongitude);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		result = 31 * result + (paralacticAngle != +0.0f ? Float.floatToIntBits(paralacticAngle) : 0);
+		temp = Double.doubleToLongBits(azimuth);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(elevation);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(heliocentricEclipticLongitude);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(heliocentricEclipticLatitude);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(northPoleRA);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(northPoleDEC);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		result = 31 * result + (defectOfIllumination != +0.0f ? Float.floatToIntBits(defectOfIllumination) : 0);
+		result = 31 * result + (rise != null ? Arrays.hashCode(rise) : 0);
+		result = 31 * result + (set != null ? Arrays.hashCode(set) : 0);
+		result = 31 * result + (transit != null ? Arrays.hashCode(transit) : 0);
+		result = 31 * result + (transitElevation != null ? Arrays.hashCode(transitElevation) : 0);
+		result = 31 * result + (constellation != null ? constellation.hashCode() : 0);
+		result = 31 * result + (surfaceBrightness != +0.0f ? Float.floatToIntBits(surfaceBrightness) : 0);
+		result = 31 * result + (lightTime != +0.0f ? Float.floatToIntBits(lightTime) : 0);
+		result = 31 * result + (name != null ? name.hashCode() : 0);
+		result = 31 * result + (status != null ? status.hashCode() : 0);
+		result = 31 * result + (location != null ? location.hashCode() : 0);
+		return result;
+	}
+
 	/**
 	 * Returns if the given object is equal to this ephemeris object.
 	 */
-	public boolean equals(Object e)
-	{
-		if (e == null) {
-			if (this == null) return true;
-			return false;
-		}
-		if (this == null) {
-			return false;
-		}
-		boolean equals = true;
-		EphemElement ephem  =(EphemElement) e;
-		if (this.rightAscension != ephem.rightAscension) equals = false;
-		if (this.declination != ephem.declination) equals = false;
-		if (this.distance != ephem.distance) equals = false;
-		if (this.phase != ephem.phase) equals = false;
-		if (this.angularRadius != ephem.angularRadius) equals = false;
-		if (this.magnitude != ephem.magnitude) equals = false;
-		if (this.distanceFromSun != ephem.distanceFromSun) equals = false;
-		if (this.elongation != ephem.elongation) equals = false;
-		if (this.phaseAngle != ephem.phaseAngle) equals = false;
-		if (this.positionAngleOfAxis != ephem.positionAngleOfAxis) equals = false;
-		if (this.positionAngleOfPole != ephem.positionAngleOfPole) equals = false;
-		if (this.longitudeOfCentralMeridian != ephem.longitudeOfCentralMeridian) equals = false;
-		if (this.subsolarLongitude != ephem.subsolarLongitude) equals = false;
-		if (this.subsolarLatitude != ephem.subsolarLatitude) equals = false;
-		if (this.longitudeOfCentralMeridianSystemI != ephem.longitudeOfCentralMeridianSystemI) equals = false;
-		if (this.longitudeOfCentralMeridianSystemII != ephem.longitudeOfCentralMeridianSystemII) equals = false;
-		if (this.longitudeOfCentralMeridianSystemIII != ephem.longitudeOfCentralMeridianSystemIII) equals = false;
-		if (this.brightLimbAngle != ephem.brightLimbAngle) equals = false;
-		if (this.paralacticAngle != ephem.paralacticAngle) equals = false;
-		if (this.heliocentricEclipticLatitude != ephem.heliocentricEclipticLatitude) equals = false;
-		if (this.surfaceBrightness != ephem.surfaceBrightness) equals = false;
-		if (this.defectOfIllumination != ephem.defectOfIllumination) equals = false;
-		if (this.heliocentricEclipticLongitude != ephem.heliocentricEclipticLongitude) equals = false;
-		if (this.azimuth != ephem.azimuth) equals = false;
-		if (this.elevation != ephem.elevation) equals = false;
-		if (this.northPoleRA != ephem.northPoleRA) equals = false;
-		if (this.northPoleDEC != ephem.northPoleDEC) equals = false;
-		if (!DataSet.sameArrayValues(this.rise, ephem.rise)) equals = false;
-		if (!DataSet.sameArrayValues(this.set, ephem.set)) equals = false;
-		if (this.transit != ephem.transit) equals = false;
-		if (this.transitElevation != ephem.transitElevation) equals = false;
-		if (this.lightTime != ephem.lightTime) equals = false;
-		if (!this.constellation.equals(ephem.constellation)) equals = false;
-		if (!this.name.equals(ephem.name)) equals = false;
-		if (this.location == null || ephem.location == null) {
-			if (this.location != null || ephem.location != null) equals = false;
-		} else {
-			if (!this.location.equals(ephem.location)) equals = false;
-		}
-		return equals;
-	}
-	
+
 	private LocationElement location;
 
 	/**
@@ -712,5 +773,4 @@ public class EphemElement implements Serializable
 		this.declination = loc.getLatitude();
 		this.distance = loc.getRadius();
 	}
-
-};
+}

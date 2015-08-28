@@ -330,9 +330,9 @@ public class TextLabel extends Object {
      /**
       * Clones this instance.
       */
+     @Override
      public TextLabel clone()
      {
-    	 if (this == null) return null;
          TextLabel tl = new TextLabel(this.text, font,color,justification);
          tl.ascent = this.ascent;
          tl.background = this.background;
@@ -360,28 +360,80 @@ public class TextLabel extends Object {
          tl.sup_offset = this.sup_offset;
          return tl;
      }
-     /**
-      * Returns if this instance is equals to a given object.
-      */
-     public boolean equals(Object o)
-     {
- 		if (o == null) {
-			if (this == null) return true;
-			return false;
-		}
-		if (this == null) {
-			return false;
-		}
-		TextLabel tl = (TextLabel) o;
-    	 boolean equals = true;
-    	 if (!tl.text.equals(this.text)) equals = false;
-    	 if (tl.color.getRGB() != this.color.getRGB()) equals = false;
-    	 if (tl.justification != this.justification) equals = false;
-    	 if (!tl.font.equals(this.font)) equals = false;
-    	 return equals;
-     }
 
-  /**
+     /**
+      * Returns true if this instance is equal to a given object.
+      */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof TextLabel)) return false;
+
+        TextLabel textLabel = (TextLabel) o;
+
+        if (Double.compare(textLabel.script_fraction, script_fraction) != 0) return false;
+        if (Double.compare(textLabel.sup_offset, sup_offset) != 0) return false;
+        if (Double.compare(textLabel.sub_offset, sub_offset) != 0) return false;
+        if (fontsize != textLabel.fontsize) return false;
+        if (fontstyle != textLabel.fontstyle) return false;
+        if (width != textLabel.width) return false;
+        if (ascent != textLabel.ascent) return false;
+        if (maxAscent != textLabel.maxAscent) return false;
+        if (descent != textLabel.descent) return false;
+        if (maxDescent != textLabel.maxDescent) return false;
+        if (height != textLabel.height) return false;
+        if (leading != textLabel.leading) return false;
+        if (parse != textLabel.parse) return false;
+        if (font != null ? !font.equals(textLabel.font) : textLabel.font != null) return false;
+        if (color != null ? !color.equals(textLabel.color) : textLabel.color != null) return false;
+        if (background != null ? !background.equals(textLabel.background) : textLabel.background != null) return false;
+        if (background2 != null ? !background2.equals(textLabel.background2) : textLabel.background2 != null)
+            return false;
+        if (text != null ? !text.equals(textLabel.text) : textLabel.text != null) return false;
+        if (fontname != null ? !fontname.equals(textLabel.fontname) : textLabel.fontname != null) return false;
+        if (justification != textLabel.justification) return false;
+        if (lg != null ? !lg.equals(textLabel.lg) : textLabel.lg != null) return false;
+        if (list != null ? !list.equals(textLabel.list) : textLabel.list != null) return false;
+        if (formulas != null ? !formulas.equals(textLabel.formulas) : textLabel.formulas != null) return false;
+
+        return !(dclock != null ? !dclock.equals(textLabel.dclock) : textLabel.dclock != null);
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        temp = Double.doubleToLongBits(script_fraction);
+        result = (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(sup_offset);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(sub_offset);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + (font != null ? font.hashCode() : 0);
+        result = 31 * result + (color != null ? color.hashCode() : 0);
+        result = 31 * result + (background != null ? background.hashCode() : 0);
+        result = 31 * result + (background2 != null ? background2.hashCode() : 0);
+        result = 31 * result + (text != null ? text.hashCode() : 0);
+        result = 31 * result + (fontname != null ? fontname.hashCode() : 0);
+        result = 31 * result + fontsize;
+        result = 31 * result + fontstyle;
+        result = 31 * result + (justification != null ? justification.hashCode() : 0);
+        result = 31 * result + width;
+        result = 31 * result + ascent;
+        result = 31 * result + maxAscent;
+        result = 31 * result + descent;
+        result = 31 * result + maxDescent;
+        result = 31 * result + height;
+        result = 31 * result + leading;
+        result = 31 * result + (parse ? 1 : 0);
+        result = 31 * result + (lg != null ? lg.hashCode() : 0);
+        result = 31 * result + (list != null ? list.hashCode() : 0);
+        result = 31 * result + (formulas != null ? formulas.hashCode() : 0);
+        result = 31 * result + (dclock != null ? dclock.hashCode() : 0);
+        return result;
+    }
+
+    /**
    * Create a New TextLabel object copying the state of the existing
    * object into the new one. The state of the class is the color,
    * font, and justification ie everything but the string.
@@ -1482,6 +1534,7 @@ class TextState extends Object {
       /**
        * Returns the text.
        */
+      @Override
       public String toString() {
              return s.toString();
 	   }
@@ -1878,7 +1931,7 @@ class DigitalClock {
 					g.fillOval(w/2-b-r, h/2-sepY-r, r2, r2);
 					g.fillOval(w/2-b-r, h/2+sepY-r, r2, r2);
 				} else {
-					g.fillOval(w/2-b-r, h-r2, r2, r2);					
+					g.fillOval(w/2-b-r, h-r2, r2, r2);
 				}
 			} else {
 				DIGIT_SECTION s[] = DIGIT_SECTION.values();

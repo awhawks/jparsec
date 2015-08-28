@@ -21,6 +21,7 @@
  */					
 package jparsec.graph;
 
+import java.util.Arrays;
 import jparsec.util.*;
 import jparsec.math.*;
 import jparsec.io.image.ImageSplineTransform;
@@ -325,14 +326,14 @@ public class GridChartElement implements Serializable
 		SEMI_TRANSPARENT,
 		/** ID constant for an increasing opacity with the independent variable. */
 		VARIABLE_WITH_Z
-	};
+	}
 	
 	/**
 	 * To clone the object.
 	 */
+	@Override
 	public GridChartElement clone()
 	{
-		if (this == null) return null;
 		GridChartElement c = null;
 		try {
 			double li[] = limits;
@@ -360,124 +361,70 @@ public class GridChartElement implements Serializable
 	}
 
 	/**
-	 * Returns true if the input object is equals to this chart object.
+	 * Returns true if the input object is equal to this chart object.
 	 */
-	public boolean equals(Object c)
-	{
-		if (c == null) {
-			if (this == null) return true;
-			return false;
-		}
-		if (this == null) {
-			return false;
-		}
-		GridChartElement chart = (GridChartElement) c;
-		boolean equals = true;
-		if (this.invertXaxis != chart.invertXaxis) equals = false;
-		if (this.invertYaxis != chart.invertYaxis) equals = false;
-		if (this.type != chart.type) equals = false;
-		if (this.colorModelResolution != chart.colorModelResolution) equals = false;
-		if (this.colorModel != chart.colorModel) equals = false;
-		if (this.imageWidth != chart.imageWidth) equals = false;
-		if (this.imageHeight != chart.imageHeight) equals = false;
-		if (this.opacity != chart.opacity) equals = false;
-		if (this.ocultLevels != chart.ocultLevels) equals = false;
-		if (this.levelsOrientation != chart.levelsOrientation) equals = false;
-		if (this.levelsBorderStyle != chart.levelsBorderStyle) equals = false;
-		if (!this.xLabel.equals(chart.xLabel)) equals = false;
-		if (!this.yLabel.equals(chart.yLabel)) equals = false;
-		if (!this.legend.equals(chart.legend)) equals = false;
-		if (!this.title.equals(chart.title)) equals = false;
-		if (this.ocultLevelLabels != chart.ocultLevelLabels) equals = false;
-		if (!this.subTitle.equals(chart.subTitle)) equals = false;
-		
-		if (this.red.length == chart.red.length)
-		{
-			for (int i=0; i<this.red.length; i++)
-			{
-				if (this.red[i] != chart.red[i]) equals = false;
-			}
-		} else {
-			equals = false;
-		}
-		if (this.green.length == chart.green.length)
-		{
-			for (int i=0; i<this.green.length; i++)
-			{
-				if (this.green[i] != chart.green[i]) equals = false;
-			}
-		} else {
-			equals = false;
-		}
-		if (this.blue.length == chart.blue.length)
-		{
-			for (int i=0; i<this.blue.length; i++)
-			{
-				if (this.blue[i] != chart.blue[i]) equals = false;
-			}
-		} else {
-			equals = false;
-		}
-		if (this.limits.length == chart.limits.length)
-		{
-			for (int i=0; i<this.limits.length; i++)
-			{
-				if (this.limits[i] != chart.limits[i]) equals = false;
-			}
-		} else {
-			equals = false;
-		}
-		if (this.levels != null && chart.levels != null) {
-			if (this.levels.length == chart.levels.length)
-			{
-				for (int i=0; i<this.levels.length; i++)
-				{
-					if (this.levels[i] != chart.levels[i]) equals = false;
-				}
-			} else {
-				equals = false;
-			}
-		} else {
-			if (this.levels == null && chart.levels == null) {
-				equals = true;			
-			} else {
-				equals = false;							
-			}
-		}
-		if (this.pointers != null && chart.pointers != null) {
-			if (this.pointers.length == chart.pointers.length)
-			{
-				for (int i=0; i<this.pointers.length; i++)
-				{
-					if (!this.pointers[i].equals(chart.pointers[i])) equals = false;
-				}
-			} else {
-				equals = false;
-			}
-		} else {
-			if (this.pointers == null && chart.pointers == null) {
-				equals = true;			
-			} else {
-				equals = false;							
-			}
-		}
-		if (this.data.length == chart.data.length)
-		{
-			for (int i=0; i<this.data.length; i++)
-			{
-				if (this.data[i].length != chart.data[i].length) {
-					equals = false;
-				} else {
-					for (int j=0; j<this.data[i].length; j++)
-					{
-						if (this.data[i][j] != chart.data[i][j]) equals = false;
-					}					
-				}
-			}
-		} else {
-			equals = false;
-		}
-		return equals;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof GridChartElement)) return false;
+
+		GridChartElement that = (GridChartElement) o;
+
+		if (imageWidth != that.imageWidth) return false;
+		if (imageHeight != that.imageHeight) return false;
+		if (colorModelResolution != that.colorModelResolution) return false;
+		if (invertXaxis != that.invertXaxis) return false;
+		if (invertYaxis != that.invertYaxis) return false;
+		if (ocultLevels != that.ocultLevels) return false;
+		if (ocultLevelLabels != that.ocultLevelLabels) return false;
+		if (!Arrays.equals(red, that.red)) return false;
+		if (!Arrays.equals(green, that.green)) return false;
+		if (!Arrays.equals(blue, that.blue)) return false;
+		if (colorModel != that.colorModel) return false;
+		if (xLabel != null ? !xLabel.equals(that.xLabel) : that.xLabel != null) return false;
+		if (yLabel != null ? !yLabel.equals(that.yLabel) : that.yLabel != null) return false;
+		if (legend != null ? !legend.equals(that.legend) : that.legend != null) return false;
+		if (title != null ? !title.equals(that.title) : that.title != null) return false;
+		if (subTitle != null ? !subTitle.equals(that.subTitle) : that.subTitle != null) return false;
+		if (type != that.type) return false;
+		if (!Arrays.equals(limits, that.limits)) return false;
+		if (!Arrays.equals(levels, that.levels)) return false;
+		if (!Arrays.deepEquals(data, that.data)) return false;
+		if (opacity != that.opacity) return false;
+		// Probably incorrect - comparing Object[] arrays with Arrays.equals
+		if (!Arrays.equals(pointers, that.pointers)) return false;
+		if (levelsOrientation != that.levelsOrientation) return false;
+
+		return levelsBorderStyle == that.levelsBorderStyle;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = red != null ? Arrays.hashCode(red) : 0;
+		result = 31 * result + (green != null ? Arrays.hashCode(green) : 0);
+		result = 31 * result + (blue != null ? Arrays.hashCode(blue) : 0);
+		result = 31 * result + (colorModel != null ? colorModel.hashCode() : 0);
+		result = 31 * result + (xLabel != null ? xLabel.hashCode() : 0);
+		result = 31 * result + (yLabel != null ? yLabel.hashCode() : 0);
+		result = 31 * result + (legend != null ? legend.hashCode() : 0);
+		result = 31 * result + (title != null ? title.hashCode() : 0);
+		result = 31 * result + (subTitle != null ? subTitle.hashCode() : 0);
+		result = 31 * result + (type != null ? type.hashCode() : 0);
+		result = 31 * result + imageWidth;
+		result = 31 * result + imageHeight;
+		result = 31 * result + (limits != null ? Arrays.hashCode(limits) : 0);
+		result = 31 * result + (levels != null ? Arrays.hashCode(levels) : 0);
+		result = 31 * result + (data != null ? Arrays.deepHashCode(data) : 0);
+		result = 31 * result + colorModelResolution;
+		result = 31 * result + (invertXaxis ? 1 : 0);
+		result = 31 * result + (invertYaxis ? 1 : 0);
+		result = 31 * result + (opacity != null ? opacity.hashCode() : 0);
+		result = 31 * result + (pointers != null ? Arrays.hashCode(pointers) : 0);
+		result = 31 * result + (ocultLevels ? 1 : 0);
+		result = 31 * result + (ocultLevelLabels ? 1 : 0);
+		result = 31 * result + (levelsOrientation != null ? levelsOrientation.hashCode() : 0);
+		result = 31 * result + (levelsBorderStyle != null ? levelsBorderStyle.hashCode() : 0);
+		return result;
 	}
 
 	/**
@@ -494,7 +441,7 @@ public class GridChartElement implements Serializable
 		RASTER_CONTOUR,
 		/** ID constant for an area fill contour chart. */
 		AREA_FILL_CONTOUR
-	};
+	}
 
 	/**
 	 * The different color models for SGT library.
@@ -508,8 +455,8 @@ public class GridChartElement implements Serializable
 		RED_TO_BLUE,
 		/** ID constant for blue to red color model. */
 		BLUE_TO_RED
-	};
-	
+	}
+
     private static final int[] DEFAULT_RED =
     {  0,  0,  0,  0,  0,  0,  0,  0,
        0,  0,  0,  0,  0,  0,  0,  0,

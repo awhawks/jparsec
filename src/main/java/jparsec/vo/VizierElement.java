@@ -24,6 +24,7 @@ package jparsec.vo;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import java.util.Arrays;
 import jparsec.astrophysics.MeasureElement;
 import jparsec.astrophysics.Spectrum;
 import jparsec.astrophysics.photometry.*;
@@ -851,54 +852,48 @@ public class VizierElement implements Serializable
 		return out;
 	}
 
-
 	/**
 	 * Checks if this element is equal to another one.
 	 */
-	public boolean equals(Object o)
-	{
-		if (o == null) {
-			if (this == null) return true;
-			return false;
-		}
-		if (this == null) {
-			return false;
-		}
-		VizierElement v = (VizierElement) o;
-		boolean isEqual = true;
-		if (v.beam != this.beam) isEqual = false;
-		if (!v.catalogAuthor.equals(this.catalogAuthor)) isEqual = false;
-		if (!v.catalogDescription.equals(this.catalogDescription)) isEqual = false;
-		if (!v.catalogName.equals(this.catalogName)) isEqual = false;
-		if (v.data.clone() != this.data.clone()) isEqual = false;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof VizierElement)) return false;
 
-		if (!isEqual || fields.length != v.fields.length) return false;
-		for (int in=0; in<fields.length; in++) {
-			for (int i=0; i<this.fields[in].length; i++)
-			{
-				String f1 = this.fields[in][i];
-				String f2 = null;
-				if (this.fields[in].length == v.fields[in].length) {
-					f2 = v.fields[in][i];
-					if (!f1.equals(f2)) isEqual = false;
-				} else {
-					isEqual = false;
-				}			
-			}
-		}	
-		
-		for (int i=0; i<this.bands.length; i++)
-		{
-			if (v.bands.length != this.bands.length) {
-				isEqual = false;
-			} else {
-				if (!this.bands[i].equals(v.bands[i])) isEqual = false;
-			}
-		}
-		
-		return isEqual;
+		VizierElement that = (VizierElement) o;
+
+		if (Float.compare(that.beam, beam) != 0) return false;
+		if (tableIndex != that.tableIndex) return false;
+		if (catalogName != null ? !catalogName.equals(that.catalogName) : that.catalogName != null) return false;
+		if (catalogAuthor != null ? !catalogAuthor.equals(that.catalogAuthor) : that.catalogAuthor != null)
+			return false;
+		if (catalogDescription != null ? !catalogDescription.equals(that.catalogDescription) : that.catalogDescription != null)
+			return false;
+		if (!Arrays.deepEquals(fields, that.fields)) return false;
+		if (!Arrays.equals(bands, that.bands)) return false;
+		if (data != null ? !data.equals(that.data) : that.data != null) return false;
+		if (!Arrays.equals(dataFields, that.dataFields)) return false;
+		if (!Arrays.equals(unit, that.unit)) return false;
+
+		return Arrays.equals(links, that.links);
 	}
-	
+
+	@Override
+	public int hashCode() {
+		int result = catalogName != null ? catalogName.hashCode() : 0;
+		result = 31 * result + (catalogAuthor != null ? catalogAuthor.hashCode() : 0);
+		result = 31 * result + (catalogDescription != null ? catalogDescription.hashCode() : 0);
+		result = 31 * result + (beam != +0.0f ? Float.floatToIntBits(beam) : 0);
+		result = 31 * result + (fields != null ? Arrays.deepHashCode(fields) : 0);
+		result = 31 * result + (bands != null ? Arrays.hashCode(bands) : 0);
+		result = 31 * result + (data != null ? data.hashCode() : 0);
+		result = 31 * result + (dataFields != null ? Arrays.hashCode(dataFields) : 0);
+		result = 31 * result + (unit != null ? Arrays.hashCode(unit) : 0);
+		result = 31 * result + (links != null ? Arrays.hashCode(links) : 0);
+		result = 31 * result + tableIndex;
+		return result;
+	}
+
 	/**
 	 * Checks if this element is equal to another one except for the possible
 	 * data vector.
@@ -951,9 +946,9 @@ public class VizierElement implements Serializable
 	/**
 	 * To clone the object.
 	 */
+	@Override
 	public VizierElement clone()
 	{
-		if (this == null) return null;
 		PhotometricBandElement[] bands = new PhotometricBandElement[this.bands.length];
 		for (int i=0; i<this.bands.length; i++)
 		{

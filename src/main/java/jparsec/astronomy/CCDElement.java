@@ -147,28 +147,37 @@ public class CCDElement implements Serializable {
 	 * @param ccd A CCD object.
 	 * @return True or false.
 	 */
-	public boolean equals(Object ccd)
-	{
-		if (ccd == null) {
-			if (this == null) return true;
-			return false;
-		}
-		if (this == null) {
-			return false;
-		}
-		CCDElement o = (CCDElement) ccd;
-		boolean equals = true;
-		if (!this.name.equals(o.name)) equals = false;
-		if (this.chipSizeX != o.chipSizeX) equals = false;
-		if (this.chipSizeY != o.chipSizeY) equals = false;
-		if (this.pixelSizeX != o.pixelSizeX) equals = false;
-		if (this.pixelSizeY != o.pixelSizeY) equals = false;
-		if (this.binningFactor != o.binningFactor) equals = false;
-		if (this.zoomFactor != o.zoomFactor) equals = false;
-		if (this.cameraPA != o.cameraPA) equals = false;
-		return equals;
+	@Override
+	public boolean equals(Object ccd) {
+		if (this == ccd) return true;
+
+		if (!(ccd instanceof CCDElement)) return false;
+
+		CCDElement that = (CCDElement) ccd;
+
+		if (chipSizeX != that.chipSizeX) return false;
+		if (chipSizeY != that.chipSizeY) return false;
+		if (Float.compare(that.pixelSizeX, pixelSizeX) != 0) return false;
+		if (Float.compare(that.pixelSizeY, pixelSizeY) != 0) return false;
+		if (Float.compare(that.cameraPA, cameraPA) != 0) return false;
+		if (binningFactor != that.binningFactor) return false;
+		if (Float.compare(that.zoomFactor, zoomFactor) != 0) return false;
+
+		return !(name != null ? !name.equals(that.name) : that.name != null);
 	}
 
+	@Override
+	public int hashCode() {
+		int result = name != null ? name.hashCode() : 0;
+		result = 31 * result + chipSizeX;
+		result = 31 * result + chipSizeY;
+		result = 31 * result + (pixelSizeX != +0.0f ? Float.floatToIntBits(pixelSizeX) : 0);
+		result = 31 * result + (pixelSizeY != +0.0f ? Float.floatToIntBits(pixelSizeY) : 0);
+		result = 31 * result + (cameraPA != +0.0f ? Float.floatToIntBits(cameraPA) : 0);
+		result = 31 * result + binningFactor;
+		result = 31 * result + (zoomFactor != +0.0f ? Float.floatToIntBits(zoomFactor) : 0);
+		return result;
+	}
 
 	/**
 	 * Return all available intrinsic CCD cameras.

@@ -22,6 +22,7 @@
 package jparsec.test;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import jparsec.astronomy.AtlasChart;
 import jparsec.astronomy.Constellation;
 import jparsec.astronomy.CoordinateSystem;
@@ -125,37 +126,45 @@ public class TestElement implements Serializable {
 	/**
 	 * Clones this instance.
 	 */
+	@Override
 	public TestElement clone()
 	{
-		if (this == null) return null;
 		TestElement e = new TestElement(testID, this.testValues, this.expectedValues);
 		e.out = out;
 		e.err = err;
 		e.foundValues = foundValues.clone();
 		return e;
 	}
+
 	/**
 	 * Returns whether the input Object contains the same information
 	 * as this instance.
 	 */
-	public boolean equals(Object e)
-	{
-		if (e == null) {
-			if (this == null) return true;
-			return false;
-		}
-		if (this == null) {
-			return false;
-		}
-		boolean equals = true;
-		TestElement ee = (TestElement) e;
-		if (!DataSet.sameArrayValues(ee.testValues, this.testValues)) equals = false;
-		if (!DataSet.sameArrayValues(ee.expectedValues, this.expectedValues)) equals = false;
-		if (!DataSet.sameArrayValues(ee.foundValues, this.foundValues)) equals = false;
-		if (ee.testID != this.testID) equals = false;
-		if (!ee.err.equals(this.err)) equals = false;
-		if (!ee.out.equals(this.out)) equals = false;
-		return equals;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof TestElement)) return false;
+
+		TestElement that = (TestElement) o;
+
+		if (testID != that.testID) return false;
+		if (!Arrays.equals(testValues, that.testValues)) return false;
+		if (!Arrays.equals(expectedValues, that.expectedValues)) return false;
+		if (!Arrays.equals(foundValues, that.foundValues)) return false;
+		if (out != null ? !out.equals(that.out) : that.out != null) return false;
+
+		return !(err != null ? !err.equals(that.err) : that.err != null);
+	}
+
+	@Override
+	public int hashCode() {
+		int result = testID != null ? testID.hashCode() : 0;
+		result = 31 * result + (testValues != null ? Arrays.hashCode(testValues) : 0);
+		result = 31 * result + (expectedValues != null ? Arrays.hashCode(expectedValues) : 0);
+		result = 31 * result + (foundValues != null ? Arrays.hashCode(foundValues) : 0);
+		result = 31 * result + (out != null ? out.hashCode() : 0);
+		result = 31 * result + (err != null ? err.hashCode() : 0);
+		return result;
 	}
 
 	/**

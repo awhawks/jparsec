@@ -853,32 +853,38 @@ public class Spectrum30m implements Serializable
     /**
      * Clones this instance.
      */
+	@Override
     public Spectrum30m clone()
     {
-    	if (this == null) return null;
     	Spectrum30m s = new Spectrum30m((TreeMap<String, Parameter>) this.getMap().clone(), this.getHeader().clone(), this.getSpectrumData().clone());
     	return s;
     }
+
     /**
-     * Checks if this instance is equals to another.
+     * Checks if this instance is equal to another.
      */
-    public boolean equals(Object o)
-    {
-		if (o == null) {
-			if (this == null) return true;
-			return false;
-		}
-		if (this == null)
-			return false;
-    	boolean equals = true;
-    	Spectrum30m s = (Spectrum30m) o; 
-    	if (!this.map.equals(s.map)) equals = false;
-    	if (!this.header.equals(s.header)) equals = false;
-    	if (!this.data.equals(s.data)) equals = false;
-    	return equals;
-    }
-    
-    /**
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof Spectrum30m)) return false;
+
+		Spectrum30m that = (Spectrum30m) o;
+
+		if (map != null ? !map.equals(that.map) : that.map != null) return false;
+		if (header != null ? !header.equals(that.header) : that.header != null) return false;
+
+		return Arrays.equals(data, that.data);
+	}
+
+	@Override
+	public int hashCode() {
+		int result = map != null ? map.hashCode() : 0;
+		result = 31 * result + (header != null ? header.hashCode() : 0);
+		result = 31 * result + (data != null ? Arrays.hashCode(data) : 0);
+		return result;
+	}
+
+	/**
      * Returns the current 30m spectrum as a general spectrum object.
      * @param xUnit The unit for the x axis. Y axis will be main beam temperature.
      * @return The spectrum.

@@ -24,6 +24,7 @@ package jparsec.astrophysics;
 import java.awt.Color;
 import java.util.ArrayList;
 
+import java.util.Arrays;
 import jparsec.ephem.Functions;
 import jparsec.graph.ChartElement3D;
 import jparsec.graph.ChartSeriesElement3D;
@@ -207,6 +208,7 @@ public class PCAElement {
 	/**
 	 * Clones this instance. In case of error null is returned.
 	 */
+	@Override
 	public PCAElement clone() {
 		try {
 			return new PCAElement(this.originalData);
@@ -216,21 +218,25 @@ public class PCAElement {
 	}
 	
 	/**
-	 * Checks if this instance is equals to another object or not.
+	 * Checks if this instance is equal to another object or not.
 	 */
+	@Override
 	public boolean equals(Object o) {
-		if (o == null && this == null) return true;
-		if (o == null) return false;
-		if (this == null) return false;
-		
-		PCAElement t = (PCAElement) o;
-		double[][] data1 = this.originalData, data2 = t.originalData;
-		if (data1.length != data2.length) return false;
-		for (int i=0; i<data1.length; i++) {
-			boolean eq = DataSet.sameArrayValues(data1[i], data2[i]);
-			if (!eq) return false;
-		}
-		return true;
+		if (this == o) return true;
+		if (!(o instanceof PCAElement)) return false;
+
+		PCAElement that = (PCAElement) o;
+
+		if (svd != null ? !svd.equals(that.svd) : that.svd != null) return false;
+
+		return Arrays.deepEquals(originalData, that.originalData);
+	}
+
+	@Override
+	public int hashCode() {
+		int result = svd != null ? svd.hashCode() : 0;
+		result = 31 * result + (originalData != null ? Arrays.deepHashCode(originalData) : 0);
+		return result;
 	}
 
 	/**

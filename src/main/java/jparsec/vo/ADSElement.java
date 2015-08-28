@@ -293,9 +293,9 @@ public class ADSElement implements Serializable {
 	/**
 	 * Clones this instance.
 	 */
+	@Override
 	public ADSElement clone()
 	{
-		if (this == null) return null;
 		ADSElement s = new ADSElement();
 		s.author = this.author;
 		s.bibTex = this.bibTex;
@@ -306,31 +306,41 @@ public class ADSElement implements Serializable {
 		s.year = this.year;
 		return s;
 	}
+
 	/**
-	 * Returns true if the input object is equals to this instance.
+	 * Returns true if the input object is equal to this instance.
 	 */
-	public boolean equals(Object o)
-	{
-		if (o == null) {
-			if (this == null) return true;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof ADSElement)) return false;
+
+		ADSElement that = (ADSElement) o;
+
+		if (year != that.year) return false;
+		if (page != that.page) return false;
+		if (journal != null ? !journal.equals(that.journal) : that.journal != null) return false;
+		if (volume != null ? !volume.equals(that.volume) : that.volume != null) return false;
+		if (publicationType != null ? !publicationType.equals(that.publicationType) : that.publicationType != null)
 			return false;
-		}
-		if (this == null) {
-			return false;
-		}
-		ADSElement s = (ADSElement) o;
-		boolean equals = true;
-		if (s.year != this.year) equals = false;
-		if (!s.author.equals(this.author)) equals = false;
-		if (s.volume != this.volume) equals = false;
-		if (s.page != this.page) equals = false;
-		if (!s.publicationType.equals(this.publicationType)) equals = false;
-		if (!s.bibTex.equals(this.bibTex)) equals = false;
-		if (!s.journal.equals(this.journal)) equals = false;
-		return equals;
+		if (author != null ? !author.equals(that.author) : that.author != null) return false;
+
+		return !(bibTex != null ? !bibTex.equals(that.bibTex) : that.bibTex != null);
 	}
-	
-    /**
+
+	@Override
+	public int hashCode() {
+		int result = year;
+		result = 31 * result + (journal != null ? journal.hashCode() : 0);
+		result = 31 * result + (volume != null ? volume.hashCode() : 0);
+		result = 31 * result + (publicationType != null ? publicationType.hashCode() : 0);
+		result = 31 * result + page;
+		result = 31 * result + (author != null ? author.hashCode() : 0);
+		result = 31 * result + (bibTex != null ? bibTex.hashCode() : 0);
+		return result;
+	}
+
+	/**
      * For unit testing only.
 	 * @param args Not used.
      */

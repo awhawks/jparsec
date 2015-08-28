@@ -161,14 +161,14 @@ public class VariableStarElement {
 	 * separated by comma.
 	 */
 	public String minimaDates;
-		
+
 	/**
 	 * To clone the object.
 	 */
+	@Override
 	public VariableStarElement clone()
 	{
-		if (this == null) return null;
-		VariableStarElement out = new VariableStarElement(this.name, this.rightAscension, this.declination, 
+		VariableStarElement out = new VariableStarElement(this.name, this.rightAscension, this.declination,
 				magRange, type, period, minimaTime);
 		out.spectralType = this.spectralType;
 		out.eclipsingType = this.eclipsingType;
@@ -181,56 +181,71 @@ public class VariableStarElement {
 		out.minimaDuration = this.minimaDuration;
 		return out;
 	}
+
 	/**
-	 * Returns true if the input object is equals to this
+	 * Returns true if the input object is equal to this
 	 * instance.
 	 */
-	public boolean equals(Object s)
-	{
-		if (s == null) {
-			if (this == null) return true;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof VariableStarElement)) return false;
+
+		VariableStarElement that = (VariableStarElement) o;
+
+		if (Double.compare(that.period, period) != 0) return false;
+		if (Double.compare(that.rightAscension, rightAscension) != 0) return false;
+		if (Double.compare(that.declination, declination) != 0) return false;
+		if (isEclipsing != that.isEclipsing) return false;
+		if (Double.compare(that.minimaTime, minimaTime) != 0) return false;
+		if (Double.compare(that.minimaDuration, minimaDuration) != 0) return false;
+		if (Double.compare(that.phase, phase) != 0) return false;
+		if (Double.compare(that.nextMinima, nextMinima) != 0) return false;
+		if (onlySecondaryMinima != that.onlySecondaryMinima) return false;
+		if (name != null ? !name.equals(that.name) : that.name != null) return false;
+		if (magRange != null ? !magRange.equals(that.magRange) : that.magRange != null) return false;
+		if (spectralType != null ? !spectralType.equals(that.spectralType) : that.spectralType != null) return false;
+		if (eclipsingType != null ? !eclipsingType.equals(that.eclipsingType) : that.eclipsingType != null)
 			return false;
-		}
-		if (this == null) {
-			return false;
-		}
-		boolean equals = true;
-		VariableStarElement se = (VariableStarElement) s;
-		if (!se.name.equals(this.name)) equals = false;
-		if (se.declination != this.declination) equals = false;
-		if (se.rightAscension != this.rightAscension) equals = false;
-		if (!se.type.equals(this.type)) equals = false;
-		if (!se.magRange.equals(this.magRange)) equals = false;
-		if (se.period != this.period) equals = false;
-		if (se.minimaTime != this.minimaTime) equals = false;
+		if (type != null ? !type.equals(that.type) : that.type != null) return false;
+		if (maximaDates != null ? !maximaDates.equals(that.maximaDates) : that.maximaDates != null) return false;
 
-		if (se.eclipsingType == null && eclipsingType != null) equals = false;
-		if (se.eclipsingType != null && eclipsingType == null) equals = false;
-		if (se.eclipsingType != null && eclipsingType != null && !se.eclipsingType.equals(eclipsingType)) equals = false;
+		return !(minimaDates != null ? !minimaDates.equals(that.minimaDates) : that.minimaDates != null);
+	}
 
-		if (se.spectralType == null && spectralType != null) equals = false;
-		if (se.spectralType != null && spectralType == null) equals = false;
-		if (se.spectralType != null && spectralType != null && !se.spectralType.equals(spectralType)) equals = false;
-
-		if (se.maximaDates == null && maximaDates != null) equals = false;
-		if (se.maximaDates != null && maximaDates == null) equals = false;
-		if (se.maximaDates != null && maximaDates != null && !se.maximaDates.equals(maximaDates)) equals = false;
-
-		if (se.minimaDates == null && minimaDates != null) equals = false;
-		if (se.minimaDates != null && minimaDates == null) equals = false;
-		if (se.minimaDates != null && minimaDates != null && !se.minimaDates.equals(minimaDates)) equals = false;
-
-		if (se.phase != this.phase) equals = false;
-		if (se.minimaDuration != this.minimaDuration) equals = false;
-		if (se.nextMinima != this.nextMinima) equals = false;
-		if (se.onlySecondaryMinima != this.onlySecondaryMinima) equals = false;
-		if (se.isEclipsing != this.isEclipsing) equals = false;
-		return equals;
+	@Override
+	public int hashCode() {
+		int result;
+		long temp;
+		result = name != null ? name.hashCode() : 0;
+		temp = Double.doubleToLongBits(period);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		result = 31 * result + (magRange != null ? magRange.hashCode() : 0);
+		temp = Double.doubleToLongBits(rightAscension);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(declination);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		result = 31 * result + (isEclipsing ? 1 : 0);
+		result = 31 * result + (spectralType != null ? spectralType.hashCode() : 0);
+		result = 31 * result + (eclipsingType != null ? eclipsingType.hashCode() : 0);
+		temp = Double.doubleToLongBits(minimaTime);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(minimaDuration);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		result = 31 * result + (type != null ? type.hashCode() : 0);
+		result = 31 * result + (maximaDates != null ? maximaDates.hashCode() : 0);
+		result = 31 * result + (minimaDates != null ? minimaDates.hashCode() : 0);
+		temp = Double.doubleToLongBits(phase);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(nextMinima);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		result = 31 * result + (onlySecondaryMinima ? 1 : 0);
+		return result;
 	}
 
 	private double phase, nextMinima;
 	private boolean onlySecondaryMinima;
-	
+
 	/**
 	 * Return phase for an eclipsing star, from 0 to 1. 
 	 * 0 or 1 is primary minima (in case of circular orbit), 0.5 

@@ -106,25 +106,35 @@ public class OcularElement implements Serializable {
 	/**
 	 * Returns true if a given ocular is equals to another.
 	 * @param ocular An ocular object.
-	 * @return True or false.
+	 * @return true or false.
 	 */
-	public boolean equals(Object ocular)
-	{
-		if (ocular == null) {
-			if (this == null) return true;
-			return false;
-		}
-		if (this == null) {
-			return false;
-		}
-		OcularElement o = (OcularElement) ocular;
-		boolean equals = true;
-		if (!this.name.equals(o.name)) equals = false;
-		if (this.focalLength != o.focalLength) equals = false;
-		if (this.fieldOfView != o.fieldOfView) equals = false;
-		if (this.reticleSize != o.reticleSize) equals = false;
-		return equals;
+	@Override
+	public boolean equals(Object ocular) {
+		if (this == ocular) return true;
+
+		if (!(ocular instanceof OcularElement)) return false;
+
+		OcularElement that = (OcularElement) ocular;
+
+		if (Float.compare(that.focalLength, focalLength) != 0) return false;
+		if (Double.compare(that.fieldOfView, fieldOfView) != 0) return false;
+		if (reticleSize != that.reticleSize) return false;
+
+		return !(name != null ? !name.equals(that.name) : that.name != null);
 	}
+
+	@Override
+	public int hashCode() {
+		int result;
+		long temp;
+		result = name != null ? name.hashCode() : 0;
+		result = 31 * result + (focalLength != +0.0f ? Float.floatToIntBits(focalLength) : 0);
+		temp = Double.doubleToLongBits(fieldOfView);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		result = 31 * result + reticleSize;
+		return result;
+	}
+
 	/**
 	 * Return all oculars from external file.
 	 * 

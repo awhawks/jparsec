@@ -29,6 +29,7 @@ import java.awt.image.BufferedImage;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import java.util.Arrays;
 import jparsec.ephem.Functions;
 import jparsec.graph.chartRendering.AWTGraphics;
 import jparsec.graph.chartRendering.Graphics;
@@ -275,9 +276,9 @@ public class ChartElement implements Serializable
 	/**
 	 * To clone the object.
 	 */
+	@Override
 	public ChartElement clone()
 	{
-		if (this == null) return null;
 		ChartElement c = null;
 		try {
 			ChartSeriesElement newSeries[] = new ChartSeriesElement[this.series.length];
@@ -309,61 +310,76 @@ public class ChartElement implements Serializable
 	}
 
 	/**
-	 * Returns true if the input object is equals to this chart object. An hypothetical sub-chart
-	 * is not tested for equallity.
+	 * Returns true if the input object is equal to this chart object. An hypothetical sub-chart
+	 * is not tested for equality.
 	 */
-	public boolean equals(Object c)
-	{
-		if (c == null) {
-			if (this == null) return true;
-			return false;
-		}
-		if (this == null) {
-			return false;
-		}
-		ChartElement chart = (ChartElement) c;
-		boolean equals = true;
-		if (this.changeOrientationToHorizontal != chart.changeOrientationToHorizontal) equals = false;
-		if (this.xAxisInLogScale != chart.xAxisInLogScale) equals = false;
-		if (this.yAxisInLogScale != chart.yAxisInLogScale) equals = false;
-		if (this.xAxisInverted != chart.xAxisInverted) equals = false;
-		if (this.yAxisInverted != chart.yAxisInverted) equals = false;
-		if (this.xTickLabels != chart.xTickLabels) equals = false;
-		if (this.yTickLabels != chart.yTickLabels) equals = false;
-		if (this.showErrorBars != chart.showErrorBars) equals = false;
-		if (this.showBackgroundImageOnlyInDataArea != chart.showBackgroundImageOnlyInDataArea) equals = false;
-		if (this.showBackgroundImage != chart.showBackgroundImage) equals = false;
-		if (this.imageWidth != chart.imageWidth) equals = false;
-		if (this.imageHeight != chart.imageHeight) equals = false;
-		if (this.chartType != chart.chartType) equals = false;
-		if (this.subType != chart.subType) equals = false;
-		if (!this.xLabel.equals(chart.xLabel)) equals = false;
-		if (!this.yLabel.equals(chart.yLabel)) equals = false;
-		if (!this.title.equals(chart.title)) equals = false;
-		
-		if (this.backgroundGradient.hashCode() != chart.backgroundGradient.hashCode()) equals = false;
-		if (this.backgroundImage.hashCode() != chart.backgroundImage.hashCode()) equals = false;
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof ChartElement)) return false;
 
-		if (this.series.length == chart.series.length)
-		{
-			for (int i=0; i<this.series.length; i++)
-			{
-				if (!this.series[i].equals(chart.series[i])) equals = false;
-			}
-		} else {
-			equals = false;
-		}
-		if (this.xForCategoryCharts.length == chart.xForCategoryCharts.length)
-		{
-			for (int i=0; i<this.xForCategoryCharts.length; i++)
-			{
-				if (!this.xForCategoryCharts[i].equals(chart.xForCategoryCharts[i])) equals = false;
-			}
-		} else {
-			equals = false;
-		}
-		return equals;
+		ChartElement that = (ChartElement) o;
+
+		if (changeOrientationToHorizontal != that.changeOrientationToHorizontal) return false;
+		if (imageWidth != that.imageWidth) return false;
+		if (imageHeight != that.imageHeight) return false;
+		if (xAxisInLogScale != that.xAxisInLogScale) return false;
+		if (yAxisInLogScale != that.yAxisInLogScale) return false;
+		if (xAxisInverted != that.xAxisInverted) return false;
+		if (yAxisInverted != that.yAxisInverted) return false;
+		if (showErrorBars != that.showErrorBars) return false;
+		if (showBackgroundImage != that.showBackgroundImage) return false;
+		if (showBackgroundImageOnlyInDataArea != that.showBackgroundImageOnlyInDataArea) return false;
+
+		if (!Arrays.equals(series, that.series)) return false;
+		if (chartType != that.chartType) return false;
+		if (xLabel != null ? !xLabel.equals(that.xLabel) : that.xLabel != null) return false;
+		if (yLabel != null ? !yLabel.equals(that.yLabel) : that.yLabel != null) return false;
+		if (title != null ? !title.equals(that.title) : that.title != null) return false;
+
+		if (!Arrays.equals(xForCategoryCharts, that.xForCategoryCharts)) return false;
+		if (subType != that.subType) return false;
+
+		if (!Arrays.equals(subCharts, that.subCharts)) return false;
+
+		if (!Arrays.equals(subChartPosition, that.subChartPosition)) return false;
+		if (backgroundGradient != null ? !backgroundGradient.equals(that.backgroundGradient) : that.backgroundGradient != null)
+			return false;
+		if (backgroundImage != null ? !backgroundImage.equals(that.backgroundImage) : that.backgroundImage != null)
+			return false;
+		if (xTickLabels != that.xTickLabels) return false;
+
+		return yTickLabels == that.yTickLabels;
 	}
+
+	@Override
+	public int hashCode() {
+		int result = series != null ? Arrays.hashCode(series) : 0;
+		result = 31 * result + (chartType != null ? chartType.hashCode() : 0);
+		result = 31 * result + (xLabel != null ? xLabel.hashCode() : 0);
+		result = 31 * result + (yLabel != null ? yLabel.hashCode() : 0);
+		result = 31 * result + (title != null ? title.hashCode() : 0);
+		result = 31 * result + (xForCategoryCharts != null ? Arrays.hashCode(xForCategoryCharts) : 0);
+		result = 31 * result + (changeOrientationToHorizontal ? 1 : 0);
+		result = 31 * result + (subType != null ? subType.hashCode() : 0);
+		result = 31 * result + imageWidth;
+		result = 31 * result + imageHeight;
+		result = 31 * result + (subCharts != null ? Arrays.hashCode(subCharts) : 0);
+		result = 31 * result + (subChartPosition != null ? Arrays.hashCode(subChartPosition) : 0);
+		result = 31 * result + (xAxisInLogScale ? 1 : 0);
+		result = 31 * result + (yAxisInLogScale ? 1 : 0);
+		result = 31 * result + (xAxisInverted ? 1 : 0);
+		result = 31 * result + (yAxisInverted ? 1 : 0);
+		result = 31 * result + (showErrorBars ? 1 : 0);
+		result = 31 * result + (backgroundGradient != null ? backgroundGradient.hashCode() : 0);
+		result = 31 * result + (backgroundImage != null ? backgroundImage.hashCode() : 0);
+		result = 31 * result + (showBackgroundImage ? 1 : 0);
+		result = 31 * result + (showBackgroundImageOnlyInDataArea ? 1 : 0);
+		result = 31 * result + (xTickLabels != null ? xTickLabels.hashCode() : 0);
+		result = 31 * result + (yTickLabels != null ? yTickLabels.hashCode() : 0);
+		return result;
+	}
+
 	/**
 	 * Transforms a {@linkplain SimpleChartElement} into a {@linkplain ChartElement}.
 	 * @param sc A {@linkplain SimpleChartElement}.
@@ -400,7 +416,7 @@ public class ChartElement implements Serializable
 
 		return c;
 	}
-	
+
 	/**
 	 * Adds a new series to the current chart.
 	 * @param series Series object.

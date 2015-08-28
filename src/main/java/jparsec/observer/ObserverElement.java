@@ -25,6 +25,7 @@ import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import java.util.Arrays;
 import jparsec.ephem.Ephem;
 import jparsec.ephem.EphemerisElement;
 import jparsec.ephem.Functions;
@@ -897,9 +898,8 @@ public class ObserverElement implements Serializable {
 	/**
 	 * Clones this instance.
 	 */
+	@Override
 	public ObserverElement clone() {
-		if (this == null)
-			return null;
 		ObserverElement o = new ObserverElement("NO", longitude, latitude, height, timeZone, dstCode, pressure, temperature, humidity, ellipsoid, observerPosition);
 		o.name = this.name;
 		o.geoLat = this.geoLat;
@@ -916,41 +916,59 @@ public class ObserverElement implements Serializable {
 	 * Checks if the actual {@linkplain ObserverElement} is similar to another
 	 * or not.
 	 */
+	@Override
 	public boolean equals(Object o) {
-		if (o == null) {
-			if (this == null)
-				return true;
-			return false;
-		}
-		if (this == null) {
-			return false;
-		}
+		if (this == o) return true;
+		if (!(o instanceof ObserverElement)) return false;
 
-		ObserverElement obs = (ObserverElement) o;
-		boolean equal = true;
+		ObserverElement that = (ObserverElement) o;
 
-		if (!obs.dstCode.equals(this.dstCode)) equal = false;
-		if (obs.geoLat != this.geoLat) equal = false;
-		if (obs.geoLon != this.geoLon) equal = false;
-		if (obs.geoRad != this.geoRad) equal = false;
-		if (obs.height != this.height) equal = false;
-		if (obs.humidity != this.humidity) equal = false;
-		if (obs.isAnObservatory != this.isAnObservatory) equal = false;
-		if (obs.latitude != this.latitude) equal = false;
-		if (obs.longitude != this.longitude) equal = false;
-		if (obs.name == null && name != null) return false;
-		if (obs.name != null && name == null) return false;
-		if (obs.name != null && name != null) { 
-			if (!obs.name.equals(this.name)) equal = false;
-		}
-		if (obs.pressure != this.pressure) equal = false;
-		if (obs.temperature != this.temperature) equal = false;
-		if (obs.timeZone != this.timeZone) equal = false;
-		if (obs.ellipsoid != this.ellipsoid) equal = false;
-		if (!DataSet.sameArrayValues(obs.observerPosition, this.observerPosition)) equal = false;
-		if (obs.motherPlanet != this.motherPlanet) equal = false;
+		if (Double.compare(that.longitude, longitude) != 0) return false;
+		if (Double.compare(that.latitude, latitude) != 0) return false;
+		if (height != that.height) return false;
+		if (Double.compare(that.timeZone, timeZone) != 0) return false;
+		if (pressure != that.pressure) return false;
+		if (temperature != that.temperature) return false;
+		if (humidity != that.humidity) return false;
+		if (Double.compare(that.geoLon, geoLon) != 0) return false;
+		if (Double.compare(that.geoLat, geoLat) != 0) return false;
+		if (Double.compare(that.geoRad, geoRad) != 0) return false;
+		if (isAnObservatory != that.isAnObservatory) return false;
+		if (name != null ? !name.equals(that.name) : that.name != null) return false;
+		if (dstCode != that.dstCode) return false;
+		if (!Arrays.equals(observerPosition, that.observerPosition)) return false;
+		if (motherPlanet != that.motherPlanet) return false;
 
-		return equal;
+		return ellipsoid == that.ellipsoid;
+	}
+
+	@Override
+	public int hashCode() {
+		int result;
+		long temp;
+		result = name != null ? name.hashCode() : 0;
+		temp = Double.doubleToLongBits(longitude);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(latitude);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		result = 31 * result + height;
+		temp = Double.doubleToLongBits(timeZone);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		result = 31 * result + pressure;
+		result = 31 * result + temperature;
+		result = 31 * result + humidity;
+		temp = Double.doubleToLongBits(geoLon);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(geoLat);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(geoRad);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		result = 31 * result + (dstCode != null ? dstCode.hashCode() : 0);
+		result = 31 * result + (isAnObservatory ? 1 : 0);
+		result = 31 * result + (observerPosition != null ? Arrays.hashCode(observerPosition) : 0);
+		result = 31 * result + (motherPlanet != null ? motherPlanet.hashCode() : 0);
+		result = 31 * result + (ellipsoid != null ? ellipsoid.hashCode() : 0);
+		return result;
 	}
 
 	/**

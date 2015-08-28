@@ -23,6 +23,7 @@ package jparsec.math;
 
 import java.awt.Color;
 
+import java.util.Arrays;
 import jparsec.graph.ChartElement;
 import jparsec.graph.ChartSeriesElement;
 import jparsec.graph.CreateChart;
@@ -336,55 +337,60 @@ public class Polynomial implements Cloneable, java.io.Serializable {
 	*  and is a Polynomial object that has exactly the same
 	*  coefficients as this object.
 	*
-	*  @param  obj  The object to be compared with this Polynomial
-	*               object for equality.
-	*  @return  True if the argument is not null and is a Polynomial
-	*           object that has exactly the same coefficients as
-	*           this object.
-	**/
-    public boolean equals(Object obj) {
-	
-		if (obj == this)	return true;
-		if (obj == null)	return false;
-		if (getClass() != obj.getClass()) return false;
-		
-		//  Check for either/both coefficient arrays being "null".
-		Polynomial newObj = (Polynomial)obj;
-		if (coef == newObj.coef)	return true;
-		if (coef == null) {
-			if (newObj.coef.length == 1 && newObj.coef[0].real == 0 && newObj.coef[0].imaginary == 0)
-				return true;
-			else
-				return false;
-		}
-		if (newObj.coef == null) {
-			if (coef.length == 1 && newObj.coef[0].real == 0 && newObj.coef[0].imaginary == 0)
-				return true;
-			else
-				return false;
-		}
-		
-		//	Compare coefficient array lengths.
-		int length = coef.length;
-		if (length != newObj.coef.length)   return false;
-		
-		// Compare each coefficient.
-		boolean retVal = true;
-		for (int i=0; i < length; ++i) {
-			if (!coef[i].equals(newObj.coef[i])) {
-				retVal = false;
-				break;
-			}
-		}
-	
-		return retVal;
-    }
+	*  @param  poly  The polynomial to be compared with this instance
+	*               for equality.
+	*  @return  True if the argument is not null and is an instance
+	*           with exactly the same coefficients as this instance.
+	*/
+	@Override
+	public boolean equals(Object poly) {
+		if (this == poly) return true;
+		if (!(poly instanceof Polynomial)) return false;
+
+		Polynomial that = (Polynomial) poly;
+
+		if (Double.compare(that.PVr, PVr) != 0) return false;
+		if (Double.compare(that.PVi, PVi) != 0) return false;
+		if (Double.compare(that.Tr, Tr) != 0) return false;
+		if (Double.compare(that.Ti, Ti) != 0) return false;
+		if (Double.compare(that.Sr, Sr) != 0) return false;
+		if (Double.compare(that.Si, Si) != 0) return false;
+		if (Double.compare(that.Zr, Zr) != 0) return false;
+		if (Double.compare(that.Zi, Zi) != 0) return false;
+
+		return Arrays.equals(coef, that.coef);
+	}
+
+	@Override
+	public int hashCode() {
+		int result;
+		long temp;
+		result = coef != null ? Arrays.hashCode(coef) : 0;
+		temp = Double.doubleToLongBits(PVr);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(PVi);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(Tr);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(Ti);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(Sr);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(Si);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(Zr);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(Zi);
+		result = 31 * result + (int) (temp ^ (temp >>> 32));
+		return result;
+	}
 
 	/**
 	*  Creates a String representation of this polynomial.
 	*
 	*  @return  The String representation of this object.
-	**/
+	*/
+	@Override
     public String toString() {
     	StringBuffer buffer = new StringBuffer();
     	
@@ -436,6 +442,7 @@ public class Polynomial implements Cloneable, java.io.Serializable {
 	*
 	*  @return  Returns a clone of this Polynomial object.
 	**/
+	@Override
 	public  Polynomial clone() {
 		Polynomial newObject = new Polynomial(this.coef.clone());
 		newObject.PVi = this.PVi;
