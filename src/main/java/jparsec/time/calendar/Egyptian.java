@@ -23,9 +23,6 @@ package jparsec.time.calendar;
 
 import java.io.Serializable;
 
-import jparsec.time.AstroDate;
-import jparsec.util.JPARSECException;
-
 /**
  * Implements the Egyptian calendar. See Calendrical Calculations for reference.
  * 
@@ -156,28 +153,5 @@ public class Egyptian implements Serializable
 	public void fromJulianDay(int jd)
 	{
 		fromFixed(jd - Gregorian.EPOCH);
-	}
-
-	/**
-	 * For unit testing only.
-	 * @param args Not used.
-	 */
-	public static void main(String args[])
-	{
-		System.out.println("Egyptian Test");
-
-		try {
-			int jd = (int) (new AstroDate(2010, 1, 12)).jd();
-			Egyptian h = new Egyptian(jd);
-			System.out.println("JD " + jd + " = " + h.year + "/" + h.month + "/" + h.day);
-	
-			Egyptian h2 = new Egyptian(h.year, h.month, h.day);
-			System.out.println("JD " + h2.toJulianDay() + " = " + h2.year + "/" + h2.month + "/" + h2.day);
-	
-			System.out.println(Calendar.nameFromMonth(h2.month, Egyptian.MONTH_NAMES));
-			//System.out.println(CalendarGenericConversion.getDayOfWeekName(jd, CalendarGenericConversion.EGYPTIAN));
-		} catch (JPARSECException e1) {
-			e1.printStackTrace();
-		}
 	}
 }

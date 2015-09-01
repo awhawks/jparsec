@@ -22,33 +22,45 @@
 package jparsec.astrophysics.gildas;
 
 
-import java.util.*;
 import java.awt.Color;
-import java.io.*;
+import java.io.DataOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.GregorianCalendar;
+import java.util.Set;
+import java.util.TreeMap;
 
-import nom.tam.fits.BinaryTableHDU;
-import jparsec.math.Constant;
-import jparsec.math.FastMath;
-import jparsec.math.Interpolation;
-import jparsec.time.*;
-import jparsec.observer.LocationElement;
 import jparsec.astronomy.CoordinateSystem;
 import jparsec.astrophysics.FluxElement;
 import jparsec.astrophysics.MeasureElement;
 import jparsec.astrophysics.Spectrum;
 import jparsec.astrophysics.Table;
-import jparsec.util.JPARSECException;
-import jparsec.util.Logger;
-import jparsec.util.Logger.LEVEL;
-import jparsec.util.Translate;
 import jparsec.graph.ChartElement;
 import jparsec.graph.ChartSeriesElement;
 import jparsec.graph.CreateChart;
 import jparsec.graph.DataSet;
 import jparsec.graph.JPARSECStroke;
 import jparsec.graph.SimpleChartElement;
-import jparsec.io.image.*;
 import jparsec.io.FileIO;
+import jparsec.io.image.FitsBinaryTable;
+import jparsec.io.image.FitsIO;
+import jparsec.io.image.ImageHeaderElement;
+import jparsec.math.Constant;
+import jparsec.math.FastMath;
+import jparsec.math.Interpolation;
+import jparsec.observer.LocationElement;
+import jparsec.time.AstroDate;
+import jparsec.time.DateTimeOps;
+import jparsec.util.JPARSECException;
+import jparsec.util.Logger;
+import jparsec.util.Logger.LEVEL;
+import jparsec.util.Translate;
+import nom.tam.fits.BinaryTableHDU;
 
 /**
  * A class to hold the properties of an spectrum, including all the information from
@@ -2229,7 +2241,7 @@ public class Spectrum30m implements Serializable
 		if (chan0 > 1 || chanf < data.length)
 			this.setSpectrumData(DataSet.getSubArray(data, chan0-1, chanf-1));
 	}
-	
+
 	/**
 	 * Modifies the rest frequency for this spectrum.
 	 * @param freq The new rest frequency in MHz.
@@ -2247,52 +2259,6 @@ public class Spectrum30m implements Serializable
 			//this.put(Gildas30m.REF_CHAN, new Parameter(refchan, Gildas30m.REF_CHAN_DESC));
 			double img = Double.parseDouble(((Parameter) get(Gildas30m.IMAGE)).value);
 			this.put(Gildas30m.IMAGE, new Parameter(img+(restFreq-freq), Gildas30m.IMAGE_DESC));
-		}
-	}
-	
-	/**
-	 * Test program.
-	 * @param args Not used.
-	 */
-	public static void main(String args[]) {
-		try {
-			String path = "/home/alonso/colaboraciones/Asuncion/2011/figurasMuchasLineas_MonR2/broad-2-new.30m";
-			path  = "/home/alonso/observaciones/veleta_may_2015/060-15/1/WILMAOdp20150601_old30mVersion.30m";
-			Gildas30m g = new Gildas30m(path);
-			int list[] = g.getListOfSpectrums(true);
-			Spectrum30m s = g.getSpectrum(list[0]);
-			
-			Parameter p[] = s.getHeader().getVisibleHeader();
-			System.out.println(s.getHeader().toString());
-			System.out.println("offset "+Double.parseDouble(p[SpectrumHeader30m.VISIBLE_HEADER.VISIBLE_OFFSET1.ordinal()].value)*Constant.RAD_TO_ARCSEC+" "+Double.parseDouble(p[SpectrumHeader30m.VISIBLE_HEADER.VISIBLE_OFFSET2.ordinal()].value)*Constant.RAD_TO_ARCSEC);
-			CreateChart c = s.getChart(800, 600, XUNIT.FREQUENCY_MHZ);
-			c.showChartInJFreeChartPanel();
-			
-			s.modifyRestFrequency(100000);
-			
-/*			double vel = -6938.8, frequency = 87316.94, imgFreq = 95860.29, channel = 1787.0;
-			System.out.println(s.getFrequencyForAGivenVelocity(vel) + " / should be " + frequency);
-			System.out.println(s.getVelocityForAGivenFrequency(frequency) + " / should be " + vel);
-			System.out.println(s.getImageFrequencyForAGivenVelocity(vel) + " / should be " + imgFreq);
-			System.out.println(s.getVelocityForAGivenImageFrequency(imgFreq) + " / should be " + vel);
-			System.out.println(s.getChannel(vel) + " / should be " + channel);			
-			
-			double cvel = s.getCorrectedVelocityForAGivenFrequency(frequency);
-			double cfreq = s.getFrequencyForAGivenCorrectedVelocity(cvel);
-			double cvel2 = s.getCorrectedVelocityForAGivenGildasVelocity(vel);
-			double cvel3 = s.getCorrectedVelocity(channel);
-			double cvel4 = s.getCorrectedVelocityForAGivenImageFrequency(imgFreq);
-			double imgFreq2 = s.getImageFrequencyForAGivenCorrectedVelocity(cvel);
-			System.out.println("Corrected velocities");
-			System.out.println(cvel + " / should be "+cvel2+", "+cvel3+", "+cvel4+" and different from Gildas vel = " + vel);
-			System.out.println(cfreq + " / should be " + frequency);
-			System.out.println(imgFreq2 + " / should be " + imgFreq);
-			System.out.println("Channel width");
-			double vres = s.getVelocityResolution();
-			System.out.println("vres = "+vres+", from JPARSEC is "+s.getChannelWidth(s.getReferenceFrequency()));
-			System.out.println("at line frequency is "+s.getChannelWidth(frequency));
-*/		} catch (Exception exc) {
-			exc.printStackTrace();
 		}
 	}
 }

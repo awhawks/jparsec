@@ -1,8 +1,28 @@
 package jparsec.model;
 
+import jparsec.graph.DataSet;
+import jparsec.io.FileIO;
+import jparsec.io.ReadFile;
+import jparsec.io.WriteFile;
 import jparsec.util.JPARSECException;
 
 public class MieTheoryTest {
+
+  private static void reProcess(String file, String type, DustOpacity dust)
+  throws JPARSECException {
+    String separator = "   ";
+    String file1[] = DataSet.arrayListToStringArray(ReadFile.readAnyExternalFile(file));
+    String fn = dust.getTabulatedFileName();
+    if (!type.equals("abs")) fn = DataSet.replaceAll(fn, "abs.txt", type+".txt", true);
+    String file2[] = DataSet.arrayListToStringArray(ReadFile.readResource(FileIO.DATA_DUST_DIRECTORY+fn));
+    for (int i=0; i<file2.length-3; i++) 
+    {
+      file2[i+3] = FileIO.getField(1, file2[i+3], separator, true) + separator + FileIO.getField(2, file1[i], separator, true) + separator + FileIO.getRestAfterField(1, file2[i+3], separator, true);
+    }
+    file2[2] = DataSet.replaceAll(file2[2], "amax = 1", "amax = 0.1, 1", true);
+    WriteFile.writeAnyExternalFile(fn, file2);
+  }
+
     /**
      * For unit testing only.
      *
@@ -110,11 +130,11 @@ public class MieTheoryTest {
                     WriteFile.writeAnyExternalFile("file_Qg" + gr + "-" + pr + ".txt", file_Qg);
                     */
 
-                    MieTheory.reProcess("file_Qabs" + gr + "-" + pr + ".txt", "abs", dust);
-                    MieTheory.reProcess("file_Qext" + gr + "-" + pr + ".txt", "ext", dust);
-                    MieTheory.reProcess("file_Qsca" + gr + "-" + pr + ".txt", "sca", dust);
-                    MieTheory.reProcess("file_Qbsca" + gr + "-" + pr + ".txt", "bsca", dust);
-                    MieTheory.reProcess("file_Qg" + gr + "-" + pr + ".txt", "g", dust);
+                    reProcess("file_Qabs" + gr + "-" + pr + ".txt", "abs", dust);
+                    reProcess("file_Qext" + gr + "-" + pr + ".txt", "ext", dust);
+                    reProcess("file_Qsca" + gr + "-" + pr + ".txt", "sca", dust);
+                    reProcess("file_Qbsca" + gr + "-" + pr + ".txt", "bsca", dust);
+                    reProcess("file_Qg" + gr + "-" + pr + ".txt", "g", dust);
                 }
             }
 

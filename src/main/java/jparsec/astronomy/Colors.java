@@ -21,7 +21,6 @@
  */					
 package jparsec.astronomy;
 
-import jparsec.astrophysics.photometry.Photometry;
 import jparsec.util.JPARSECException;
 
 /**
@@ -356,54 +355,5 @@ public class Colors
 		}
 		results[1] += bt_minus_vt; /* change a 'delta' into an 'absolute' */
 		return results;
-	}
-
-	/**
-	 * Test program.
-	 * @param args Unused.
-	 */
-	public static void main(String args[])
-	{
-		try {
-			double ival0 = 1.0;
-			double ival = ival0;
-			
-			System.out.println("(V-I) " +ival+ " = (B-V) " + viTobv(ival));
-			System.out.println("(V-I) " +ival+ " = (V-R) " + viTovr(ival));
-			
-			ival = viTobv(ival0);
-			
-			System.out.println("(B-V) " +ival+ " = (V-I) " + bvTovi(ival));
-			
-			ival = viTovr(ival);
-			
-			System.out.println("(V-R) " +ival+ " = (V-I) " + vrTovi(ival));
-			
-			ival = ival0;
-			
-			System.out.println("(V-R) " +ival+ " = (B-V) " + vrTobv(ival));
-			
-			ival = vrTobv(ival);
-
-			System.out.println("(B-V) " +ival+ " = (V-R) " + bvTovr(ival));
-	
-			double ovals[] = bvTychoToJohnson(ival);
-	
-			if (ovals != null)
-			{
-				System.out.println("V-VT =  " + ovals[0]);
-				System.out.println("B-V  =  " + ovals[1]);
-				System.out.println("B-V = (from original formula) " + bvTychoTobvJohnson(ival));
-				double bAndv[] = Photometry.getApproximateJohnsonBVFromTycho(0, -ival, false);
-				double bv = bAndv[0] - bAndv[1]; 
-				System.out.println("B-V = (from Photometry class, ESA method) " + bv);
-				bAndv = Photometry.getApproximateJohnsonBVFromTycho(0, -ival, true);
-				bv = bAndv[0] - bAndv[1]; 
-				System.out.println("B-V = (from Photometry class, Kidger's method) " + bv);
-				System.out.println("V-Hp = " + ovals[2]);
-			}
-		} catch (Exception exc) {
-			exc.printStackTrace();
-		}
 	}
 }

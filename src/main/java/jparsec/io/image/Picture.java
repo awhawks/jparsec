@@ -21,33 +21,75 @@
  */					
 package jparsec.io.image;
 
-import java.io.*;
-import java.awt.*;
-import java.awt.image.*;
-import java.awt.event.*;
-import java.awt.geom.*;
-
-import javax.swing.*;
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GraphicsConfiguration;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.awt.HeadlessException;
+import java.awt.Image;
+import java.awt.MediaTracker;
+import java.awt.RenderingHints;
+import java.awt.Robot;
+import java.awt.Toolkit;
+import java.awt.Transparency;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
+import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.ConvolveOp;
+import java.awt.image.DataBuffer;
+import java.awt.image.FilteredImageSource;
+import java.awt.image.ImageFilter;
+import java.awt.image.ImageProducer;
+import java.awt.image.Kernel;
+import java.awt.image.PixelGrabber;
+import java.awt.image.RGBImageFilter;
+import java.awt.image.RescaleOp;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.net.URL;
 
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.KeyStroke;
+
+import org.jfree.chart.encoders.EncoderUtil;
+import org.jfree.chart.encoders.ImageFormat;
 
 import jparsec.ephem.Functions;
 import jparsec.graph.DataSet;
 import jparsec.io.FileIO;
 import jparsec.io.Printer;
 import jparsec.io.device.ObservationManager;
-import jparsec.util.*;
+import jparsec.util.JPARSECException;
+import jparsec.util.Logger;
 import jparsec.util.Logger.LEVEL;
+import jparsec.util.Translate;
 import jparsec.vo.GeneralQuery;
-
-import org.jfree.chart.encoders.EncoderUtil;
-import org.jfree.chart.encoders.ImageFormat;
-
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
-import java.net.URL;
 
 /**
  * A class to read, write, and process images.
@@ -2484,44 +2526,8 @@ public class Picture
 
 	  this.setColor(rgb[0], rgb[1], rgb[2], rgb[3]);
 	}
-    
-	/**
-	 * For unit testing only.
-	 * @param args Not used.
-	 */
-	public static void main(String args[])
-	{
-		System.out.println("Picture test");
-		
-		try {
-			String path = "/home/alonso/documentos/presentaciones/2011/tesis/img/datacube1a.png";
-			int w = 440, h = 0;
 
-			Picture p1 = new Picture(path);
-			p1.getScaledInstance(w, h, true);
-			p1.show("Default multi-step scaling");
-
-			Picture p2 = new Picture(path);
-			p2.getScaledInstanceUsingSplines(w, h, true);
-			p2.show("Spline interpolated image");
-			
-			Picture p3 = new Picture("/home/alonso/java/librerias/bayesian/noiseExample.png");
-			p3.show("with noise");
-			Picture p4 = new Picture("/home/alonso/java/librerias/bayesian/noiseExample.png");
-			p4.denoise(1);
-			p4.show("without noise");
-			Picture p5 = new Picture("/home/alonso/java/librerias/bayesian/noiseExample.png");
-			for (int i=0; i<3; i++) {
-				p5.denoise(1);
-			}
-			p5.show("even with less noise");
-		} catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
-	
-	private class MyAction implements java.awt.event.ActionListener {
+	private class MyAction implements ActionListener {
 		private Picture image;
 		/**
 		 * Constructor for an image.
@@ -2531,7 +2537,7 @@ public class Picture
 		{
 			image = pio;
 		}
-		public void actionPerformed(java.awt.event.ActionEvent event) {
+		public void actionPerformed(ActionEvent event) {
 			Object obj = event.getSource();
 			if (obj == saveAs)
 			{
@@ -2557,12 +2563,10 @@ public class Picture
 							Translate.translate(Translate.JPARSEC_COULD_NOT_PRINT_THE_CHART), Translate.translate(Translate.JPARSEC_ERROR), JOptionPane.ERROR_MESSAGE);
 	        	}
 			}
-			if (obj == close) frame.dispose();				
+			if (obj == close) frame.dispose();
 		}
 	}
-
 }
-
 
 class DisplayCanvas extends JPanel {
 	static final long serialVersionUID = 1L;

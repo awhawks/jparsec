@@ -21,11 +21,11 @@
  */					
 package jparsec.vo;
 
-import jparsec.graph.DataSet;
-import jparsec.io.*;
-import jparsec.util.*;
+import java.io.Serializable;
 
-import java.io.*;
+import jparsec.graph.DataSet;
+import jparsec.io.FileIO;
+import jparsec.util.JPARSECException;
 
 /**
  * A class to manipulate ADS articles.
@@ -339,32 +339,4 @@ public class ADSElement implements Serializable {
 		result = 31 * result + (bibTex != null ? bibTex.hashCode() : 0);
 		return result;
 	}
-
-	/**
-     * For unit testing only.
-	 * @param args Not used.
-     */
-    public static void main( String args[] )
-    {
-   		int year = 2006;
-   		String journal = "ApJ";
-   		int volume = 649;
-   		String publicationType = "Letter";
-   		int	page = 119;
-   		String author = "Fuente";
-
-   		ADSElement bib = new ADSElement(year, journal, volume, publicationType, page, author);
-   		String bibTex = bib.getBibCode();
-   		System.out.println(bibTex);
-   		try {
-   	   		String bibTexEntry = bib.getBibTexEntry();
-   	   		System.out.println(bibTexEntry);
-   	   		bib.getArticle("/home/alonso/myarticle.pdf", 30000);
-   			String abs = bib.getAbstract();
-   			System.out.println(abs);
-   		} catch (Exception e)
-   		{
-   			e.printStackTrace();
-   		}
-    }
 }

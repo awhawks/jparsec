@@ -25,8 +25,13 @@ import java.awt.Color;
 import java.awt.Shape;
 import java.util.ArrayList;
 
-import jparsec.graph.*;
-import jparsec.io.*;
+import jparsec.graph.ChartElement;
+import jparsec.graph.ChartSeriesElement;
+import jparsec.graph.CreateChart;
+import jparsec.graph.DataSet;
+import jparsec.graph.JPARSECStroke;
+import jparsec.io.FileIO;
+import jparsec.io.ReadFile;
 import jparsec.util.JPARSECException;
 import jparsec.util.Translate;
 
@@ -483,37 +488,5 @@ public class Siess {
 		if (v.size() > 0)
 			tracks = DataSet.arrayListToStringArray(v);
 		return tracks;
-	}
-	
-	/**
-	 * A test program.
-	 * @param args Unused.
-	 */
-	public static void main (String args[])
-	{
-		System.out.println("Siess test");
-		
-		try {
-			Translate.setDefaultLanguage(Translate.LANGUAGE.SPANISH);
-			
-			CreateChart ch = Siess.getTrack(3.0, 7.0, Siess.PHASE_PRE_MS, 
-				Siess.FIELD_EFFECTIVE_TEMPERATURE, Siess.FIELD_LUMINOSITY, 500, 500);
-			
-			String x[] = new String[] {"11220", "15000"};
-			String y[] = new String[] {"5300", "22000"};
-			Siess.addSeriesToTrack(ch, "Our sample", x, y, null, null);
-			
-			ch.showChartInJFreeChartPanel();
-			
-			Siess siess = new Siess("3.5");
-			System.out.println("age 1: "+FileIO.getField(Siess.FIELD_AGE, siess.getModels()[0], " ", true));
-			
-			double luminosity = 300, effectiveTemperature = 11220, lumTolerance = 50, tempTolerance = 200;
-			String tracks[] = Siess.getClosestEvolutionaryTracks(luminosity, lumTolerance, effectiveTemperature, tempTolerance);
-			if (tracks != null) jparsec.io.ConsoleReport.stringArrayReport(tracks);
-		} catch (Exception exc)
-		{
-			exc.printStackTrace();
-		}
 	}
 }

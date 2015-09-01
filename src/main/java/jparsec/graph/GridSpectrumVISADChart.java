@@ -21,20 +21,14 @@
  */					
 package jparsec.graph;
 
-import gov.noaa.pmel.sgt.swing.JPlotLayout;
-import gov.noaa.pmel.util.Domain;
-
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -52,7 +46,6 @@ import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -65,9 +58,8 @@ import javax.swing.border.TitledBorder;
 
 import org.jfree.chart.ChartPanel;
 
-import visad.util.SelectRangeWidget;
-import visad.util.VisADSlider;
-
+import gov.noaa.pmel.sgt.swing.JPlotLayout;
+import gov.noaa.pmel.util.Domain;
 import jparsec.astronomy.CoordinateSystem;
 import jparsec.astrophysics.gildas.LMVCube;
 import jparsec.ephem.EphemerisElement;
@@ -84,8 +76,10 @@ import jparsec.time.TimeElement;
 import jparsec.time.TimeElement.SCALE;
 import jparsec.util.JPARSECException;
 import jparsec.util.Logger;
-import jparsec.util.Translate;
 import jparsec.util.Logger.LEVEL;
+import jparsec.util.Translate;
+import visad.util.SelectRangeWidget;
+import visad.util.VisADSlider;
 
 /**
  * A Grid chart showing integrated intensity and the spectrum in a given map position
@@ -1381,45 +1375,5 @@ public class GridSpectrumVISADChart implements Serializable, MouseMotionListener
 	 */
 	public String getFile() {
 		return path;
-	}
-	
-	/**
-	 * Test program.
-	 * @param args Not used.
-	 */
-	public static void main(String args[]) {
-		System.out.println("GridSpectrumVISADChart test");
-		
-		try {
-			int w = 840;
-			final GridSpectrumVISADChart v = new GridSpectrumVISADChart(
-					"/home/alonso/reduccion/2010/reajusteRMonConDataCube/rmon_K.lmv", 
-					w, true, GridSpectrumVISADChart.COORDINATES.EQUATORIAL_OFFSET, new double[] {0, 20, 40, 60, 80, 100});
-			
-			final JFrame frame = new JFrame("");
-			final JPanel panel = v.getComponent();
-			frame.add(panel);
-			frame.pack();
-			frame.setResizable(true);
-			frame.setVisible(true);
-			frame.setSize(new Dimension(w, w*3/4+100));
-			frame.addComponentListener(new ComponentAdapter() {
-				@Override
-				public void componentResized(ComponentEvent e) {
-					panel.setBounds(0, 0, frame.getWidth(), frame.getHeight());
-				}
-			});
-			panel.addComponentListener(new ComponentAdapter() {
-				@Override
-				public void componentResized(ComponentEvent e) {
-					v.update();
-				}
-			});
-
-			//Serialization.writeObject(v, "/home/alonso/gridSpectrum_RMon");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
 	}
 }

@@ -16,7 +16,6 @@ import java.awt.image.BufferedImage;
 import javax.swing.Icon;
 
 import jparsec.ephem.Target.TARGET;
-import jparsec.io.image.Picture;
 
 /**
  * An implementation of SVG planetary icons (vector graphics) in AWT,
@@ -99,7 +98,7 @@ public class SVGPlanets {
 	    	px = (int)(pluto.getOrigX()+pluto.getOrigWidth()/2f);
 	    	py = (int)(pluto.getOrigY()+pluto.getOrigHeight()/2f);
 	    	pluto.paintIcon(null, g, -px, -py);
-			break;
+		default:	break;
 		}
 	}
 
@@ -254,23 +253,10 @@ public class SVGPlanets {
 	    	g.setColor(Color.BLACK);
 	    	pluto.paintIcon(null, g, -px, -py);
 	    	g.dispose();
-			break;
+		default:	break;
 		}
 		return image;
 	}
-	
-	/**
-	 * Test program.
-	 * @param args Not used.
-	 */
-    public static void main(String[] args) {
-    	try {
-	    	Picture p = new Picture(drawIcon(TARGET.VENUS, 4));
-	    	p.show("My icon");
-    	} catch (Exception exc) {
-    		exc.printStackTrace();
-    	}
-    }
 }
 
 /**

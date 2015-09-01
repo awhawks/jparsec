@@ -29,7 +29,6 @@ import java.io.InputStreamReader;
 
 import jparsec.ephem.Functions;
 import jparsec.graph.DataSet;
-import jparsec.io.ConsoleReport;
 import jparsec.io.FileIO;
 import jparsec.math.Constant;
 import jparsec.util.JPARSECException;
@@ -497,21 +496,5 @@ public class TASS17
 		{ 0.0, P, VL, ZR, ZI, ZTR, ZTI };
 
 		return ELEM;
-	}
-	
-	/**
-	 * Test program.
-	 * @param args Not used.
-	 */
-	public static void main(String args[]) {
-		
-		try {
-			double jd = 2421677.4;
-			double e[] = TASS17.TASS17_theory(jd, 1, false);
-			
-			ConsoleReport.doubleArrayReport(e, "f2.12");
-		} catch (Exception exc) {
-			exc.printStackTrace();
-		}
 	}
 }

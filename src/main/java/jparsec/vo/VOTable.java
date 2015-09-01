@@ -21,17 +21,34 @@
  */					
 package jparsec.vo;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
-import java.io.*;
 
+import cds.savot.model.FieldSet;
+import cds.savot.model.ResourceSet;
+import cds.savot.model.SavotData;
+import cds.savot.model.SavotField;
+import cds.savot.model.SavotResource;
+import cds.savot.model.SavotTD;
+import cds.savot.model.SavotTR;
+import cds.savot.model.SavotTable;
+import cds.savot.model.SavotTableData;
+import cds.savot.model.SavotVOTable;
+import cds.savot.model.TDSet;
+import cds.savot.model.TRSet;
+import cds.savot.model.TableSet;
 import cds.savot.pull.SavotPullEngine;
 import cds.savot.pull.SavotPullParser;
-import cds.savot.model.*;
 import cds.savot.writer.SavotWriter;
-
-import jparsec.io.*;
-import jparsec.util.*;
+import jparsec.io.FileIO;
+import jparsec.util.JPARSECException;
+import jparsec.util.Version;
 
 /**
  * Contains methods to read and write Virtual Observatory (VO) tables.<P>
@@ -296,13 +313,12 @@ public class VOTable implements Serializable {
 	            fieldset.addItem(field);
 	        }
         }
-        
+
         return fieldset;
     }
 
     private static TRSet buildRowSet(String table, String separator) {
         TRSet rowset = new TRSet();
-
         String tab[] = jparsec.graph.DataSet.toStringArray(table, FileIO.getLineSeparator());
         for (int row = 0; row < tab.length; row++) {
         	int n = FileIO.getNumberOfFields(tab[row], separator, true);
@@ -313,10 +329,9 @@ public class VOTable implements Serializable {
                 SavotTD td = new SavotTD();
                 td.setContent(x);
                 tdset.addItem(td);
-            }            
+            }
             SavotTR tr = new SavotTR();
             tr.setTDSet(tdset);
-
             rowset.addItem(tr);
         }
 
@@ -348,39 +363,4 @@ public class VOTable implements Serializable {
         
         return out;
     }
-
-    /**
-     * For unit testing only.
-	 * @param args Not used.
-     */
-	public static void main(String args[])
-	{
-		try {
-			
-			VOTableMeta fieldMeta[] = new VOTableMeta[] {
-				new VOTableMeta("column 1", "1", "description of c1", VOTableMeta.DATATYPE_FLOAT, "4", "4", "ucd c1", "unit c1"), 
-				new VOTableMeta("column 2", "2", "description of c2", "string", "4", "4", "ucd c2", "unit c2"), 
-				new VOTableMeta("column 3", "3", "description of c3", "double", "4", "4", "ucd c3", "unit c3"), 
-				new VOTableMeta("column 4", "4", "description of c4", "something", "4", "4", "ucd c4", "unit c4")
-			};
-			VOTableMeta resourceMeta = new VOTableMeta("resource 1", "r1", "description of resource 1");
-			VOTableMeta tableMeta = new VOTableMeta("table 1", "t1", "description of table 1");
-			String table = "r1c1   r1c2   r1c3   r1c4" + FileIO.getLineSeparator();
-			table += "r2c1   r2c2   r2c3   r2c4" + FileIO.getLineSeparator();
-			table += "r3c1   r3c2   r3c3   r3c4" + FileIO.getLineSeparator();
-			table += "r4c1   r4c2   r4c3   r4c4" + FileIO.getLineSeparator();
-			SavotVOTable s = VOTable.createVOTable(table, " ", resourceMeta, tableMeta, fieldMeta);
-			
-			String votable = VOTable.toString(s);
-			System.out.println(votable);
-			
-			// Now read it and test it
-			SavotVOTable vo = VizierQuery.toVOTable(votable);
-			if (!VOTable.toString(vo).equals(votable))
-				System.out.println("ERROR! Not the same votable");
-		} catch (Exception e)
-		{
-			e.printStackTrace();
-		}		
-	}
 }

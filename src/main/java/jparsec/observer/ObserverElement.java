@@ -50,10 +50,12 @@ import jparsec.math.Constant;
 import jparsec.observer.ReferenceEllipsoid.ELLIPSOID;
 import jparsec.time.SiderealTime;
 import jparsec.time.TimeElement;
-import jparsec.time.TimeScale;
 import jparsec.time.TimeElement.SCALE;
-import jparsec.util.*;
+import jparsec.time.TimeScale;
+import jparsec.util.JPARSECException;
+import jparsec.util.Logger;
 import jparsec.util.Logger.LEVEL;
+import jparsec.util.Translate;
 import jparsec.vo.GeneralQuery;
 
 /**
@@ -1480,7 +1482,7 @@ public class ObserverElement implements Serializable {
 					double moon[] = jpl.getPositionAndVelocity(JD_TDB, TARGET.Moon);
 					return Functions.sumVectors(out, Functions.substract(helio_barycenter, Functions.scalarProduct(moon, 1.0 / (1.0 + jpl.emrat))));
 				} else {
-					return Functions.sumVectors(out, jpl.getPositionAndVelocity(JD_TDB, body));					
+					return Functions.sumVectors(out, jpl.getPositionAndVelocity(JD_TDB, body));
 				}
 
 			default:
@@ -1502,33 +1504,9 @@ public class ObserverElement implements Serializable {
 		EphemerisElement ephIn = eph.clone();
 		ephIn.targetBody = this.getMotherBody();
 		if (ephIn.targetBody.isNaturalSatellite()) {
-			return MoonPhysicalParameters.getBodyMeanRotationRate(ephIn);			
+			return MoonPhysicalParameters.getBodyMeanRotationRate(ephIn);
 		} else {
 			return PhysicalParameters.getBodyMeanRotationRate(ephIn);
-		}
-	}
-	
-	/**
-	 * For unit testing only
-	 * @param args Not used.
-	 */
-	public static void main(String args[]) {
-
-		System.out.println("ObserverElement Test");
-
-		try {
-			String ip = "";
-			ObserverElement obs = new ObserverElement(ip);
-			System.out.println("Current user data:");
-			System.out.println("Location: " + obs.name);
-			System.out.println("Longitude: " + Functions.formatAngle(obs.longitude, 1));
-			System.out.println("Latitude: " + Functions.formatAngle(obs.latitude, 1));
-			System.out.println("Height: " + obs.height);
-			System.out.println("Time Zone: " + obs.timeZone);
-			System.out.println("DST Code: " + obs.dstCode);
-			System.out.println("Tests launched from "+obs.name+", at "+Functions.formatAngleAsDegrees(obs.longitude, 3)+", "+Functions.formatAngleAsDegrees(obs.latitude, 3));
-		} catch (Exception ve) {
-			ve.printStackTrace();
 		}
 	}
 }

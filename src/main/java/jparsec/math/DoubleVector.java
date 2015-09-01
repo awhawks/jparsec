@@ -763,21 +763,4 @@ public class  DoubleVector implements Cloneable {
 	  DoubleVector dv = this.clone().times(1.0 / n2);
 	  return dv;
   }
-  
-  /**
-   * Test program.
-   * @param args Unused.
-   */
-  public static void main( String args[] ) 
-  {
-    DoubleVector u = random(10);
-    DoubleVector v = random(10);
-    DoubleVector a = random(10);
-    DoubleVector w = a; 
-
-    System.out.println( random(10).plus(v).plus(w) );
-    System.out.println(u.equals(v));
-    System.out.println(u.equals(u));
-    System.out.println(u.equals(u.copy()));
-  }
 }

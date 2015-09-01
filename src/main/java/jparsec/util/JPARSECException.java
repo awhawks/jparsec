@@ -30,10 +30,10 @@ import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
-import jparsec.time.AstroDate;
-import jparsec.util.Logger.LEVEL;
 import jparsec.graph.DataSet;
 import jparsec.io.FileIO;
+import jparsec.time.AstroDate;
+import jparsec.util.Logger.LEVEL;
 
 /**
  * An exception is thrown if the caller attempts to pass an invalid value,
@@ -395,23 +395,5 @@ public class JPARSECException extends Exception implements Serializable
 			out[i] = trace[i].toString();
 		}
 		return out;
-	}
-	
-	/**
-	 * For unit testing only.
-	 * @param args Not used.
-	 */
-	public static void main (String args[])
-	{
-		System.out.println("JPARSECException test");
-
-		try {
-			JPARSECException.addWarning("warning from main");
-			System.out.println(JPARSECException.getWarnings());
-			
-			throw new JPARSECException("exception from main");
-		} catch (JPARSECException jpe) {
-			jpe.showException();
-		}
 	}
 }

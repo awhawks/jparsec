@@ -222,42 +222,4 @@ public class OcularElement implements Serializable {
 
 		return ocular;
 	}
-
-	/**
-	 * For unit testing only.
-	 * @param args Not used.
-	 */
-	public static void main(String args[])
-	{
-		System.out.println("OcularElement Test");
-
-		try
-		{
-			OcularElement ocul[] = OcularElement.getAllAvailableOculars();
-
-			System.out.println("List of all oculars");
-			for (int i = 0; i < ocul.length; i++)
-			{
-				System.out.println(ocul[i].name + "/" + ocul[i].focalLength + "/" + ocul[i].fieldOfView + "/" + ocul[i].reticleSize);
-			}
-			
-/*			for (int i = 0; i < ocul.length; i++)
-			{
-				String name = ocul[i].name;
-				name = DataSet.replaceAll(name, "\u00e1", "&aacute;", true);
-				name = DataSet.replaceAll(name, "\u00e9", "&eacute;", true);
-				name = DataSet.replaceAll(name, "\u00ed", "&iacute;", true);
-				name = DataSet.replaceAll(name, "\u00f3", "&oacute;", true);
-				name = DataSet.replaceAll(name, "\u00fa", "&uacute;", true);
-				name = DataSet.replaceAll(name, "\u00f1", "&ntilde;", true);
-				name = DataSet.replaceAll(name, "\u00ba", "&deg;", true);
-				name = DataSet.replaceAll(name, "\u00f6", "&ouml;", true);
-				String val = ""+ocul[i].focalLength+" "+(float) (ocul[i].fieldOfView * Constant.RAD_TO_DEG);
-				System.out.println(" <OPTION value=\""+val+"\">"+name+"</OPTION>");
-			}
-*/		} catch (JPARSECException ve)
-		{
-			JPARSECException.showException(ve);
-		}
-	}
 }

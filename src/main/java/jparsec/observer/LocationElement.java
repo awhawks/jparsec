@@ -25,9 +25,9 @@ import java.io.Serializable;
 
 import jparsec.ephem.Ephem;
 import jparsec.ephem.EphemerisElement;
+import jparsec.ephem.EphemerisElement.ALGORITHM;
 import jparsec.ephem.EphemerisElement.COORDINATES_TYPE;
 import jparsec.ephem.Functions;
-import jparsec.ephem.EphemerisElement.ALGORITHM;
 import jparsec.ephem.Target.TARGET;
 import jparsec.ephem.moons.MoonEphem;
 import jparsec.ephem.planets.EphemElement;
@@ -40,7 +40,6 @@ import jparsec.time.TimeElement;
 import jparsec.util.JPARSECException;
 import jparsec.util.Translate;
 import jparsec.util.Translate.LANGUAGE;
-import jparsec.vo.SimbadQuery;
 
 /**
  * This is a convenience class used for passing around polar coordinates. Units
@@ -697,39 +696,5 @@ public class LocationElement implements Serializable
 		double lonp = dlon / Math.cos(lat);
 		lon += lonp;
 		lat += dlat;
-	}
-
-	/**
-	 * For unit testing only.
-	 * @param args Not used.
-	 */
-	public static void main(String args[])
-	{
-		System.out.println("LocationElement Test");
-
-		double lon1 = Math.random() * Constant.TWO_PI;
-		double lon2 = Math.random() * Constant.TWO_PI;
-		double lat1 = Math.random() * Math.PI - Constant.PI_OVER_TWO;
-		double lat2 = Math.random() * Math.PI - Constant.PI_OVER_TWO;
-
-		LocationElement loc1 = new LocationElement(lon1, lat1, 1.0);
-		LocationElement loc2 = new LocationElement(lon2, lat2, 1.0);
-
-		double PA = LocationElement.getPositionAngle(loc1, loc2) * Constant.RAD_TO_DEG;
-		double PA2 = LocationElement.getApproximatePositionAngle(loc1, loc2) * Constant.RAD_TO_DEG;
-
-		System.out.println(Functions.formatAngle(loc1.lon, 1) + " / " + Functions.formatAngle(loc1.lat, 1));
-		System.out.println(Functions.formatAngle(loc2.lon, 1) + " / " + Functions.formatAngle(loc2.lat, 1));
-		System.out.println("PA: " + PA + " / approx " + PA2);
-		
-		try {
-			String obj = "M31";
-			loc1 = new LocationElement(obj, false);
-			System.out.println(obj+ ": " + loc1.toStringAsEquatorialLocation());
-			loc1 = SimbadQuery.query(obj).getLocation();
-			System.out.println(obj+ ": " + loc1.toStringAsEquatorialLocation());
-		} catch (Exception exc) {
-			exc.printStackTrace();
-		}
 	}
 }

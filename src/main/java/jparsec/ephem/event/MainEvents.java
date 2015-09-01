@@ -45,9 +45,8 @@ import jparsec.observer.LocationElement;
 import jparsec.observer.ObserverElement;
 import jparsec.time.AstroDate;
 import jparsec.time.TimeElement;
-import jparsec.time.TimeFormat;
-import jparsec.time.TimeScale;
 import jparsec.time.TimeElement.SCALE;
+import jparsec.time.TimeScale;
 import jparsec.time.calendar.Calendar;
 import jparsec.util.JPARSECException;
 import jparsec.util.Translate;
@@ -73,8 +72,8 @@ public class MainEvents
 		PREVIOUS,
 		/** ID constant for the closest event in time. */
 		CLOSEST	
-	};
-	
+	}
+
 	/**
 	 * Calculates the instant of a given Moon phase or eclipse, following Meeus's Astronomical
 	 * Algorithms. Error is always below 2 minutes, and usually below 1 minute.
@@ -1778,194 +1777,5 @@ public class MainEvents
 		SimpleEventElement see = new SimpleEventElement(jd, SimpleEventElement.EVENT.JUPITER_GRS_TRANSIT, "");
 		see.body = TARGET.JUPITER.getName();
 		return see;
-	}
-		
-	/**
-	 * Test program.
-	 * @param args Not used.
-	 */
-	public static void main(String args[]) {
-		try {
-			Translate.setDefaultLanguage(Translate.LANGUAGE.SPANISH);
-
-			CityElement city = City.findCity("Madrid");
-			ObserverElement observer = ObserverElement.parseCity(city);
-			EphemerisElement eph = new EphemerisElement(TARGET.SUN, EphemerisElement.COORDINATES_TYPE.APPARENT,
-					EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.GEOCENTRIC, EphemerisElement.REDUCTION_METHOD.IAU_2006,
-					EphemerisElement.FRAME.ICRF, EphemerisElement.ALGORITHM.MOSHIER);
-			eph.preferPrecisionInEphemerides = true;
-			double jd = new AstroDate().jd();
-			SimpleEventElement see = MainEvents.getPlanetaryEvent(TARGET.EARTH, jd, SimpleEventElement.EVENT.PLANET_MAXIMUM_DISTANCE_FROM_SUN, MainEvents.EVENT_TIME.CLOSEST, true);
-			AstroDate astro = new AstroDate(see.getEventTime(observer, eph, TimeElement.SCALE.LOCAL_TIME));				
-			System.out.println(astro.toString());
-			
-			astro = new AstroDate(2015, 5, 15);
-			
-/*			SimpleEventElement s[] = MainEvents.meteorShowers(2010);
-			for (int i=0; i<s.length; i++) {
-				TimeElement time = new TimeElement(s[i].time, SCALE.TERRESTRIAL_TIME);
-				double lt = TimeScale.getJD(time, observer, eph, SCALE.LOCAL_TIME);
-				AstroDate astro2 = new AstroDate(lt);
-				String date = ""+astro2.getDay()+" de "+Translate.translate(Gregorian.MONTH_NAMES[astro2.getMonth()-1])+" de "+astro2.getYear()+", "+Functions.formatValue(astro2.getHour(), 0, 2)+":"+Functions.formatValue(astro2.getMinute(), 0, 2)+" LT";
-
-				String n = FileIO.getField(1, s[i].details, "|", false) + "|" + date + "|" + FileIO.getRestAfterField(2, s[i].details, "|", false);
-				n = DataSet.replaceAll(n, "|", " & ", true) + " \\\\";
-				System.out.println(n);
-			}
-*/			
-			see = MainEvents.getPlanetaryEvent(TARGET.MERCURY, astro.jd(), EVENT.PLANET_MAXIMUM_DISTANCE, EVENT_TIME.CLOSEST, false);
-			if (see != null) System.out.println("Mercury max dist on jd "+ see.time+"/"+TimeFormat.formatJulianDayAsDateAndTime(TimeScale.getJD(new TimeElement(see.time, SCALE.BARYCENTRIC_DYNAMICAL_TIME), observer, eph, SCALE.LOCAL_TIME), SCALE.LOCAL_TIME));
-			
-			see = MainEvents.getPlanetaryEvent(TARGET.MERCURY, astro.jd(), EVENT.PLANET_MINIMUM_DISTANCE, EVENT_TIME.CLOSEST, false);
-			if (see != null) System.out.println("Mercury min dist on jd "+ see.time+"/"+TimeFormat.formatJulianDayAsDateAndTime(TimeScale.getJD(new TimeElement(see.time, SCALE.BARYCENTRIC_DYNAMICAL_TIME), observer, eph, SCALE.LOCAL_TIME), SCALE.LOCAL_TIME));
-			
-			see = MainEvents.getPlanetaryEvent(TARGET.VENUS, astro.jd(), EVENT.PLANET_MAXIMUM_DISTANCE, EVENT_TIME.CLOSEST, false);
-			if (see != null) System.out.println("Venus max dist on jd "+ see.time+"/"+TimeFormat.formatJulianDayAsDateAndTime(TimeScale.getJD(new TimeElement(see.time, SCALE.BARYCENTRIC_DYNAMICAL_TIME), observer, eph, SCALE.LOCAL_TIME), SCALE.LOCAL_TIME));
-			
-			see = MainEvents.getPlanetaryEvent(TARGET.VENUS, astro.jd(), EVENT.PLANET_MINIMUM_DISTANCE, EVENT_TIME.CLOSEST, false);
-			if (see != null) System.out.println("Venus min dist on jd "+ see.time+"/"+TimeFormat.formatJulianDayAsDateAndTime(TimeScale.getJD(new TimeElement(see.time, SCALE.BARYCENTRIC_DYNAMICAL_TIME), observer, eph, SCALE.LOCAL_TIME), SCALE.LOCAL_TIME));
-
-			if (see != null) System.exit(0);
-			
-			see = MainEvents.getMercuryOrVenusTransit(TARGET.VENUS, astro.jd(), astro.jd()+2*365.25, true); //.MoonPhaseOrEclipse(astro.jd(), SimpleEventElement.MOON_LAST_QUARTER, MainEvents.NEXT_EVENT);
-			if (see != null) System.out.println("Venus transit on jd "+ see.time+"/"+TimeFormat.formatJulianDayAsDateAndTime(TimeScale.getJD(new TimeElement(see.time, SCALE.BARYCENTRIC_DYNAMICAL_TIME), observer, eph, SCALE.LOCAL_TIME), SCALE.LOCAL_TIME));
-/*			
-			astro = new AstroDate(-1000, 3, 1);
-			see = MainEvents.MoonPhaseOrEclipse(astro.jd(), SimpleEventElement.EVENT.MOON_LUNAR_ECLIPSE, MainEvents.EVENT_TIME.CLOSEST);
-			if (see != null) System.out.println("Lunar eclipse jd "+ see.time+"/"+TimeFormat.formatJulianDayAsDateAndTime(see.time) + " TT. Details: "+see.details);
-			
-			see = MainEvents.EquinoxesAndSolstices(2011, SimpleEventElement.EVENT.SUN_SUMMER_SOLSTICE);
-			if (see != null) System.out.println("2011 Summer solstice on jd "+ see.time+"/"+TimeFormat.formatJulianDayAsDateAndTime(TimeScale.getJD(new TimeElement(see.time, SCALE.TERRESTRIAL_TIME), observer, eph, SCALE.LOCAL_TIME)));
-			
-			astro = new AstroDate(2011, 7, 15);
-			see = MainEvents.getPlanetaryEvent(TARGET.MARS, astro.jd(), SimpleEventElement.EVENT.PLANET_MAXIMUM_ELONGATION, EVENT_TIME.NEXT);
-			if (see != null) System.out.println("Next Mars opposition on jd "+ see.time+"/"+TimeFormat.formatJulianDayAsDateAndTime(TimeScale.getJD(new TimeElement(see.time, SCALE.TERRESTRIAL_TIME), observer, eph, SCALE.LOCAL_TIME)));
-			
-			// See http://www.skyandtelescope.com/skytel/beyondthepage/91731334.html
-			astro = new AstroDate(2010, 11, 1);
-			see = MainEvents.getJupiterGRSNextTransitTime(TimeScale.getJD(new TimeElement(astro.jd(), SCALE.UNIVERSAL_TIME_UT1), observer, eph, SCALE.TERRESTRIAL_TIME));
-			if (see != null) System.out.println("Next GRS transit in Jupiter on jd "+ see.time+" TT / "+TimeFormat.formatJulianDayAsDateAndTimeOnlyMinutes(TimeScale.getJD(new TimeElement(see.time, SCALE.TERRESTRIAL_TIME), observer, eph, SCALE.UNIVERSAL_TIME_UT1)) + " UT1");
-*/
-			
-			boolean maximumAccuracy = true;
-			long t0 = System.currentTimeMillis();
-			see = MainEvents.SaturnRingsEdgeOn(astro.jd(), EVENT_TIME.NEXT);
-			if (see != null) System.out.println("Next time Saturn rings in edge-on view on jd "+ see.time+" TT / "+TimeFormat.formatJulianDayAsDateAndTimeOnlyMinutes(TimeScale.getJD(new TimeElement(see.time, SCALE.TERRESTRIAL_TIME), observer, eph, SCALE.UNIVERSAL_TIME_UT1), SCALE.UNIVERSAL_TIME_UT1)+". Details: "+see.details);
-			long t1 = System.currentTimeMillis();
-			System.out.println("Calculated in "+(float)((t1-t0)/1000.0)+" seconds");
-
-			t0 = System.currentTimeMillis();
-			see = MainEvents.SaturnRingsMaximumAperture(astro.jd(), EVENT_TIME.NEXT);
-			if (see != null) System.out.println("Next time Saturn rings in maximum aperture on jd "+ see.time+" TT / "+TimeFormat.formatJulianDayAsDateAndTimeOnlyMinutes(TimeScale.getJD(new TimeElement(see.time, SCALE.TERRESTRIAL_TIME), observer, eph, SCALE.UNIVERSAL_TIME_UT1), SCALE.UNIVERSAL_TIME_UT1)+". Details: "+see.details);
-			t1 = System.currentTimeMillis();
-			System.out.println("Calculated in "+(float)((t1-t0)/1000.0)+" seconds");
-
-			t0 = System.currentTimeMillis();
-			see = MainEvents.getPlanetaryEvent(TARGET.MARS, astro.jd(), SimpleEventElement.EVENT.PLANET_MAXIMUM_ELONGATION, EVENT_TIME.NEXT, maximumAccuracy);
-			if (see != null) System.out.println("Next Mars oposition on jd "+ see.time+" TT / "+TimeFormat.formatJulianDayAsDateAndTimeOnlyMinutes(TimeScale.getJD(new TimeElement(see.time, SCALE.TERRESTRIAL_TIME), observer, eph, SCALE.UNIVERSAL_TIME_UT1), SCALE.UNIVERSAL_TIME_UT1)+". Details: "+see.details);
-			t1 = System.currentTimeMillis();
-			System.out.println("Calculated in "+(float)((t1-t0)/1000.0)+" seconds");
-			
-			t0 = System.currentTimeMillis();
-			see = MainEvents.getPlanetaryEvent(TARGET.MARS, astro.jd(), SimpleEventElement.EVENT.PLANET_MINIMUM_DISTANCE_FROM_SUN, EVENT_TIME.NEXT, maximumAccuracy);
-			if (see != null) System.out.println("Next Mars perihelion on jd "+ see.time+" TT / "+TimeFormat.formatJulianDayAsDateAndTimeOnlyMinutes(TimeScale.getJD(new TimeElement(see.time, SCALE.TERRESTRIAL_TIME), observer, eph, SCALE.UNIVERSAL_TIME_UT1), SCALE.UNIVERSAL_TIME_UT1)+". Details: "+see.details);
-			t1 = System.currentTimeMillis();
-			System.out.println("Calculated in "+(float)((t1-t0)/1000.0)+" seconds");
-			
-			see = MainEvents.PerihelionAndAphelion(TARGET.MARS, astro.jd(), SimpleEventElement.EVENT.PLANET_MINIMUM_DISTANCE_FROM_SUN, MainEvents.EVENT_TIME.CLOSEST);
-			if (see != null) System.out.println("Closest Mars perihelion on jd "+ see.time+" TT / "+TimeFormat.formatJulianDayAsDateAndTimeOnlyMinutes(TimeScale.getJD(new TimeElement(see.time, SCALE.TERRESTRIAL_TIME), observer, eph, SCALE.UNIVERSAL_TIME_UT1), SCALE.UNIVERSAL_TIME_UT1) + " (following Meeus). Details: "+see.details);
-			
-			astro = new AstroDate(1993, 11, 1);
-			t0 = System.currentTimeMillis();
-			see = MainEvents.getPlanetaryEvent(TARGET.MERCURY, astro.jd(), SimpleEventElement.EVENT.PLANET_MINIMUM_ELONGATION, EVENT_TIME.CLOSEST, maximumAccuracy);
-			if (see != null) System.out.println(see.body+" conjunction on jd "+see.time+" = "+TimeFormat.formatJulianDayAsDateAndTimeOnlyMinutes(see.time, SCALE.TERRESTRIAL_TIME) + " (JPARSEC). Details: "+see.details);
-			t1 = System.currentTimeMillis();
-			System.out.println("Calculated in "+(float)((t1-t0)/1000.0)+" seconds");
-			see = MainEvents.Conjunction(TARGET.MERCURY, astro.jd(), MainEvents.EVENT_TIME.CLOSEST);
-			if (see != null) System.out.println(see.body+" conjunction on jd "+see.time+" = "+TimeFormat.formatJulianDayAsDateAndTimeOnlyMinutes(see.time, SCALE.TERRESTRIAL_TIME) + " (following Meeus). Details: "+see.details);
-			
-			astro = new AstroDate(2125, 6, 1);
-			t0 = System.currentTimeMillis();
-			see = MainEvents.getPlanetaryEvent(TARGET.SATURN, astro.jd(), SimpleEventElement.EVENT.PLANET_MINIMUM_ELONGATION, EVENT_TIME.CLOSEST, maximumAccuracy);
-			if (see != null) System.out.println(see.body+" conjunction on jd "+see.time+" = "+TimeFormat.formatJulianDayAsDateAndTimeOnlyMinutes(see.time, SCALE.TERRESTRIAL_TIME) + " (JPARSEC). Details: "+see.details);
-			t1 = System.currentTimeMillis();
-			System.out.println("Calculated in "+(float)((t1-t0)/1000.0)+" seconds");
-			see = MainEvents.Conjunction(TARGET.SATURN, astro.jd(), MainEvents.EVENT_TIME.CLOSEST);
-			if (see != null) System.out.println(see.body+" conjunction on jd "+see.time+" = "+TimeFormat.formatJulianDayAsDateAndTimeOnlyMinutes(see.time, SCALE.TERRESTRIAL_TIME) + " (following Meeus). Details: "+see.details);
-			
-			astro = new AstroDate(1993, 11, 15);
-			t0 = System.currentTimeMillis();
-			see = MainEvents.getPlanetaryEvent(TARGET.MERCURY, astro.jd(), SimpleEventElement.EVENT.PLANET_MAXIMUM_ELONGATION, EVENT_TIME.CLOSEST, maximumAccuracy);
-			if (see != null) System.out.println(see.body+" max. elongation on jd "+see.time+" = "+TimeFormat.formatJulianDayAsDateAndTimeOnlyMinutes(see.time, SCALE.TERRESTRIAL_TIME) + " (JPARSEC). Details: "+see.details);
-			t1 = System.currentTimeMillis();
-			System.out.println("Calculated in "+(float)((t1-t0)/1000.0)+" seconds");
-			see = MainEvents.OppositionOrMaxElongation(TARGET.MERCURY, astro.jd(), MainEvents.EVENT_TIME.CLOSEST);
-			if (see != null) System.out.println(see.body+" max. elongation on jd "+see.time+" = "+TimeFormat.formatJulianDayAsDateAndTimeOnlyMinutes(see.time, SCALE.TERRESTRIAL_TIME) + " (following Meeus). Details: "+see.details);
-			
-			astro = new AstroDate(1631, 11, 1);
-			t0 = System.currentTimeMillis();
-			see = MainEvents.getPlanetaryEvent(TARGET.MERCURY, astro.jd(), SimpleEventElement.EVENT.PLANET_MINIMUM_ELONGATION, EVENT_TIME.CLOSEST, maximumAccuracy);
-			if (see != null) System.out.println(see.body+" conjunction on jd "+see.time+" = "+TimeFormat.formatJulianDayAsDateAndTimeOnlyMinutes(see.time, SCALE.TERRESTRIAL_TIME) + " (JPARSEC). Details: "+see.details);
-			t1 = System.currentTimeMillis();
-			System.out.println("Calculated in "+(float)((t1-t0)/1000.0)+" seconds");
-			see = MainEvents.Conjunction(TARGET.MERCURY, astro.jd(), MainEvents.EVENT_TIME.CLOSEST);
-			if (see != null) System.out.println(see.body+" conjunction on jd "+see.time+" = "+TimeFormat.formatJulianDayAsDateAndTimeOnlyMinutes(see.time, SCALE.TERRESTRIAL_TIME) + " (following Meeus). Details: "+see.details);
-			
-			astro = new AstroDate(1882, 12, 1);
-			t0 = System.currentTimeMillis();
-			see = MainEvents.getPlanetaryEvent(TARGET.VENUS, astro.jd(), SimpleEventElement.EVENT.PLANET_MINIMUM_ELONGATION, EVENT_TIME.CLOSEST, maximumAccuracy);
-			if (see != null) System.out.println(see.body+" conjunction on jd "+see.time+" = "+TimeFormat.formatJulianDayAsDateAndTimeOnlyMinutes(see.time, SCALE.TERRESTRIAL_TIME) + " (JPARSEC). Details: "+see.details);
-			t1 = System.currentTimeMillis();
-			System.out.println("Calculated in "+(float)((t1-t0)/1000.0)+" seconds");
-			see = MainEvents.Conjunction(TARGET.VENUS, astro.jd(), MainEvents.EVENT_TIME.CLOSEST);
-			if (see != null) System.out.println(see.body+" conjunction on jd "+see.time+" = "+TimeFormat.formatJulianDayAsDateAndTimeOnlyMinutes(see.time, SCALE.TERRESTRIAL_TIME) + " (following Meeus). Details: "+see.details);
-			
-			astro = new AstroDate(2729, 9, 15);
-			t0 = System.currentTimeMillis();
-			see = MainEvents.getPlanetaryEvent(TARGET.MARS, astro.jd(), SimpleEventElement.EVENT.PLANET_MAXIMUM_ELONGATION, EVENT_TIME.CLOSEST, maximumAccuracy);
-			if (see != null) System.out.println(see.body+" opposition on jd "+see.time+" = "+TimeFormat.formatJulianDayAsDateAndTimeOnlyMinutes(see.time, SCALE.TERRESTRIAL_TIME) + " (JPARSEC). Details: "+see.details);
-			t1 = System.currentTimeMillis();
-			System.out.println("Calculated in "+(float)((t1-t0)/1000.0)+" seconds");
-			see = MainEvents.OppositionOrMaxElongation(TARGET.MARS, astro.jd(), MainEvents.EVENT_TIME.CLOSEST);
-			if (see != null) System.out.println(see.body+" opposition on jd "+see.time+" = "+TimeFormat.formatJulianDayAsDateAndTimeOnlyMinutes(see.time, SCALE.TERRESTRIAL_TIME) + " (following Meeus). Details: "+see.details);
-			
-			astro = new AstroDate(-7, 9, 1);
-			t0 = System.currentTimeMillis();
-			see = MainEvents.getPlanetaryEvent(TARGET.JUPITER, astro.jd(), SimpleEventElement.EVENT.PLANET_MAXIMUM_ELONGATION, EVENT_TIME.CLOSEST, maximumAccuracy);
-			if (see != null) System.out.println(see.body+" opposition on jd "+see.time+" = "+TimeFormat.formatJulianDayAsDateAndTimeOnlyMinutes(see.time, SCALE.TERRESTRIAL_TIME) + " (JPARSEC). Details: "+see.details);
-			t1 = System.currentTimeMillis();
-			System.out.println("Calculated in "+(float)((t1-t0)/1000.0)+" seconds");
-			see = MainEvents.OppositionOrMaxElongation(TARGET.JUPITER, astro.jd(), MainEvents.EVENT_TIME.CLOSEST);
-			if (see != null) System.out.println(see.body+" opposition on jd "+see.time+" = "+TimeFormat.formatJulianDayAsDateAndTimeOnlyMinutes(see.time, SCALE.TERRESTRIAL_TIME) + " (following Meeus). Details: "+see.details);
-			
-			astro = new AstroDate(-7, 9, 1);
-			t0 = System.currentTimeMillis();
-			see = MainEvents.getPlanetaryEvent(TARGET.SATURN, astro.jd(), SimpleEventElement.EVENT.PLANET_MAXIMUM_ELONGATION, EVENT_TIME.CLOSEST, maximumAccuracy);
-			if (see != null) System.out.println(see.body+" opposition on jd "+see.time+" = "+TimeFormat.formatJulianDayAsDateAndTimeOnlyMinutes(see.time, SCALE.TERRESTRIAL_TIME) + " (JPARSEC). Details: "+see.details);
-			t1 = System.currentTimeMillis();
-			System.out.println("Calculated in "+(float)((t1-t0)/1000.0)+" seconds");
-			see = MainEvents.OppositionOrMaxElongation(TARGET.SATURN, astro.jd(), MainEvents.EVENT_TIME.CLOSEST);
-			if (see != null) System.out.println(see.body+" opposition on jd "+see.time+" = "+TimeFormat.formatJulianDayAsDateAndTimeOnlyMinutes(see.time, SCALE.TERRESTRIAL_TIME) + " (following Meeus). Details: "+see.details);
-
-			astro = new AstroDate(1780, 12, 15);
-			t0 = System.currentTimeMillis();
-			see = MainEvents.getPlanetaryEvent(TARGET.URANUS, astro.jd(), SimpleEventElement.EVENT.PLANET_MAXIMUM_ELONGATION, EVENT_TIME.CLOSEST, maximumAccuracy);
-			if (see != null) System.out.println(see.body+" opposition on jd "+see.time+" = "+TimeFormat.formatJulianDayAsDateAndTimeOnlyMinutes(see.time, SCALE.TERRESTRIAL_TIME) + " (JPARSEC). Details: "+see.details);
-			t1 = System.currentTimeMillis();
-			System.out.println("Calculated in "+(float)((t1-t0)/1000.0)+" seconds");
-			see = MainEvents.OppositionOrMaxElongation(TARGET.URANUS, astro.jd(), MainEvents.EVENT_TIME.CLOSEST);
-			if (see != null) System.out.println(see.body+" opposition on jd "+see.time+" = "+TimeFormat.formatJulianDayAsDateAndTimeOnlyMinutes(see.time, SCALE.TERRESTRIAL_TIME) + " (following Meeus). Details: "+see.details);
-			
-			astro = new AstroDate(1846, 8, 15);
-			t0 = System.currentTimeMillis();
-			see = MainEvents.getPlanetaryEvent(TARGET.NEPTUNE, astro.jd(), SimpleEventElement.EVENT.PLANET_MAXIMUM_ELONGATION, EVENT_TIME.CLOSEST, maximumAccuracy);
-			if (see != null) System.out.println(see.body+" opposition on jd "+see.time+" = "+TimeFormat.formatJulianDayAsDateAndTimeOnlyMinutes(see.time, SCALE.TERRESTRIAL_TIME) + " (JPARSEC). Details: "+see.details);
-			t1 = System.currentTimeMillis();
-			System.out.println("Calculated in "+(float)((t1-t0)/1000.0)+" seconds");
-			see = MainEvents.OppositionOrMaxElongation(TARGET.NEPTUNE, astro.jd(), MainEvents.EVENT_TIME.CLOSEST);
-			if (see != null) System.out.println(see.body+" opposition on jd "+see.time+" = "+TimeFormat.formatJulianDayAsDateAndTimeOnlyMinutes(see.time, SCALE.TERRESTRIAL_TIME) + " (following Meeus). Details: "+see.details);
-		} catch (Exception exc) {
-			exc.printStackTrace();
-		}
 	}
 }

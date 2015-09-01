@@ -23,9 +23,6 @@ package jparsec.io.image;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
-import java.io.File;
-
-import javax.imageio.ImageIO;
 
 import jparsec.graph.DataSet;
 import jparsec.math.FastMath;
@@ -34,7 +31,11 @@ import jparsec.util.JPARSECException;
 /**
  * Advanced image/2d array resize method based on the image resize plugin at
  * http://bigwww.epfl.ch/algorithms/ijplugins/resize/, implementing the method
+<<<<<<< HEAD
  * by A. Mu&ntilde;oz Barrutia, T. Blu, M. Unser, "Least-Squares Image Resizing Using
+=======
+ * by A. Mu&ntilde;oz Barrutia, T. Blu, M. Unser, "Least-Squares Image Resizing Using 
+>>>>>>> main-less
  * Finite Differences," IEEE Transactions on Image Processing, vol. 10, no. 9, 
  * pp. 1365-1378, September 2001.<P>
  * This method should only be used (or it is only safe to be used) to reduce the
@@ -60,12 +61,12 @@ public class Resize
 	private int[] indexMinWidth;
 	private int[] indexMaxWidth;
 
-	private static final double sqrt8minus3 = (Math.sqrt(8.0) - 3.0);
-	private static final double sqrt3minus2 = (Math.sqrt(3.0) - 2.0);
-	private static final double cte1 = (Math.sqrt(664.0 - Math.sqrt(438976.0)) + Math.sqrt(304.0) - 19.0);
-	private static final double cte2 = (Math.sqrt(664.0 + Math.sqrt(438976.0)) - Math.sqrt(304.0) - 19.0);
-	private static final double cte3 = (Math.sqrt(67.5 - Math.sqrt(4436.25)) + Math.sqrt(26.25) - 6.5);
-	private static final double cte4 = (Math.sqrt(67.5 + Math.sqrt(4436.25)) - Math.sqrt(26.25) - 6.5);
+	private static final double sqrt8minus3 = Math.sqrt(8.0) - 3.0;
+	private static final double sqrt3minus2 = Math.sqrt(3.0) - 2.0;
+	private static final double cte1 = Math.sqrt(664.0 - Math.sqrt(438976.0)) + Math.sqrt(304.0) - 19.0;
+	private static final double cte2 = Math.sqrt(664.0 + Math.sqrt(438976.0)) - Math.sqrt(304.0) - 19.0;
+	private static final double cte3 = Math.sqrt(67.5 - Math.sqrt(4436.25)) + Math.sqrt(26.25) - 6.5;
+	private static final double cte4 = Math.sqrt(67.5 + Math.sqrt(4436.25)) - Math.sqrt(26.25) - 6.5;
 	
 	/**
 	 * This flag is by default set to false, which means that resampling
@@ -1295,36 +1296,5 @@ public class Resize
     }
 
     throw new JPARSECException("Invalid filter half-length (should be [2..4])");
-  }
-  
-  /**
-   * Test program.
-   * @param args Not used.
-   */
-  public static void main(String args[]) {
-	  try {
-//		String path = "/home/alonso/000000109.png";
-		String path = "/home/alonso/documentos/presentaciones/2011/tesis/img/escalasTiempo.png";
-//		String path = "/home/alonso/documentos/presentaciones/2011/tesis/img/atmosfera.png";
-//		String path = "/home/alonso/documentos/presentaciones/2011/tesis/img/datacube1a.png";
-		int w = 1920, h = 0;
-		
-		Resize.ALLOW_RESIZE_TO_GREATER_SIZES = true;
-
-		BufferedImage in = ImageIO.read(new File(path));
-/*		Picture pic = new Picture(in);
-		pic.getScaledInstance(w*2, 0, true);
-		in = pic.getImage();
-*/		
-		long t0 = System.currentTimeMillis();
-		BufferedImage out = Resize.resize(in, w, h, true);
-		long t1 = System.currentTimeMillis();
-		Picture p2 = new Picture(out);
-		p2.show("Resize class image");
-//		pic.show("Original");
-		System.out.println("Spline interpolation shown in "+(t1-t0)/1000.0+" seconds.");
-	  } catch (Exception exc) {
-		  exc.printStackTrace();
-	  }
   }
 }

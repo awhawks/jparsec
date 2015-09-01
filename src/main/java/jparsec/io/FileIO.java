@@ -32,8 +32,6 @@ import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 
 import jparsec.graph.DataSet;
-import jparsec.time.AstroDate;
-import jparsec.time.TimeFormat;
 import jparsec.util.Configuration;
 import jparsec.util.JPARSECException;
 import jparsec.util.Logger;
@@ -1046,24 +1044,6 @@ public class FileIO
 			Logger.log(LEVEL.ERROR, "Could not locate resource "+fileName+". Details: "+exc.getLocalizedMessage());
 			return -1;
 		}
-    }
-    
-    /**
-     * Test program.
-     * @param args Not used.
-     */
-    public static void main(String args[]) {
-    	System.out.println("FileIO test");
-
-    	try {
-	    	String fileName = "ArtificialSatellites.txt";
-	    	AstroDate astro = new AstroDate(FileIO.getLastModifiedTimeOfResource(FileIO.DATA_ORBITAL_ELEMENTS_JARFILE, FileIO.DATA_ORBITAL_ELEMENTS_DIRECTORY, fileName));
-	    	System.out.println(TimeFormat.formatJulianDayAsDateAndTime(astro.jd(), null));
-	    	
-	    	System.out.println(FileIO.getTemporalDirectory());
-    	} catch (Exception exc) {
-    		exc.printStackTrace();
-    	}
     }
 
     /**

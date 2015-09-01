@@ -21,10 +21,10 @@
  */					
 package jparsec.astrophysics.gildas;
 
-import java.util.*;
+import java.util.GregorianCalendar;
 
 import jparsec.math.Constant;
-import jparsec.time.*;
+import jparsec.time.AstroDate;
 import jparsec.util.JPARSECException;
 
 /**
@@ -116,19 +116,5 @@ public class ConverterFactory
     	double gd = jd - 60549.0 - Constant.JD_MINUS_MJD;
     	if (gd < 0.0) gd = gd - 0.5;
     	return (int) gd;
-    }
-    
-    /**
-     * Test program.
-     * @param args Unused.
-     */
-    public static void main(String args[])
-    {
-    	System.out.println("ConverterFactory test");
-    	
-    	double jd = 2453163.5;
-    	System.out.println(""+jd+" -> "+ConverterFactory.getGILDASdate(jd));
-    	jd = 2453163.7125212005;
-    	System.out.println(""+jd+" -> "+ConverterFactory.getGILDASdate(jd));
     }
 }

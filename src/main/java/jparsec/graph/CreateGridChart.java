@@ -21,18 +21,22 @@
  */					
 package jparsec.graph;
 
-import gov.noaa.pmel.sgt.swing.*;
-import gov.noaa.pmel.sgt.swing.prop.GridAttributeDialog;
-import gov.noaa.pmel.sgt.IndexedColorMap;
-import gov.noaa.pmel.sgt.ColorMap;
-import gov.noaa.pmel.sgt.LabelDrawer;
-import gov.noaa.pmel.sgt.LinearTransform;
-import gov.noaa.pmel.sgt.dm.*;
-import gov.noaa.pmel.util.*;
-import gov.noaa.pmel.sgt.*;
-
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GraphicsEnvironment;
+import java.awt.RenderingHints;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -46,17 +50,49 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.Date;
 
-import javax.swing.*;
 //import javax.vecmath.Point3d;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 
-import jparsec.astronomy.*;
+import gov.noaa.pmel.sgt.Axis;
+import gov.noaa.pmel.sgt.CartesianGraph;
+import gov.noaa.pmel.sgt.CartesianRenderer;
+import gov.noaa.pmel.sgt.ColorMap;
+import gov.noaa.pmel.sgt.ContourLevels;
+import gov.noaa.pmel.sgt.DefaultContourLineAttribute;
+import gov.noaa.pmel.sgt.GridAttribute;
+import gov.noaa.pmel.sgt.GridCartesianRenderer;
+import gov.noaa.pmel.sgt.IndexedColorMap;
+import gov.noaa.pmel.sgt.JPane;
+import gov.noaa.pmel.sgt.Layer;
+import gov.noaa.pmel.sgt.LinearTransform;
+import gov.noaa.pmel.sgt.dm.SGTData;
+import gov.noaa.pmel.sgt.dm.SGTMetaData;
+import gov.noaa.pmel.sgt.dm.SimpleGrid;
+import gov.noaa.pmel.sgt.swing.JClassTree;
+import gov.noaa.pmel.sgt.swing.JPlotLayout;
+import gov.noaa.pmel.sgt.swing.prop.GridAttributeDialog;
+import gov.noaa.pmel.util.Dimension2D;
+import gov.noaa.pmel.util.Domain;
+import gov.noaa.pmel.util.Point2D;
+import gov.noaa.pmel.util.Range2D;
+import gov.noaa.pmel.util.SoTDomain;
+import gov.noaa.pmel.util.SoTRange;
 import jparsec.graph.chartRendering.AWTGraphics;
-import jparsec.io.*;
+import jparsec.io.FileIO;
+import jparsec.io.WriteFile;
 import jparsec.io.image.ImageSplineTransform;
 import jparsec.io.image.Picture;
-import jparsec.math.FastMath;
-import jparsec.util.*;
+import jparsec.util.JPARSECException;
+import jparsec.util.Logger;
 import jparsec.util.Logger.LEVEL;
+import jparsec.util.Translate;
 
 /**
  * Creates grid charts (x-y maps with the variation of a third 
@@ -1216,57 +1252,7 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 		public static void setLabelFontScalingFactor(double scale) {
 			Axis.FONT_SCALE = scale;
 		}
-		
-		
-		/**
-		 * For unit testing only.
-		 * @param args Not used.
-		 */
-		public static void main (String args[])
-		{
-			System.out.println("CreateGridChart test");
 
-			try {
-				float x0 = -2f, y0 = -Math.abs(x0), xf = -x0, yf = -y0;
-				TelescopeElement telescope = TelescopeElement.NEWTON_20cm;
-				double data[][] = Difraction.pattern(telescope, (int) Math.abs(xf)*2);
-				double values[] = DataSet.getSetOfValues(0, 1, 11, false);
-
-				setLabelFontScalingFactor(1.2);
-				GridChartElement chart = new GridChartElement("Difraction pattern",
-						"offset x (\")", "offset y (\")", 
-						"Relative Intensity (|@PSI|)",
-						GridChartElement.COLOR_MODEL.RED_TO_BLUE, 
-						new double[] {x0, xf, y0, yf}, data, 
-						values, 800);
-				chart.subTitle = "Newton 20cm";
-				chart.levelsOrientation = GridChartElement.WEDGE_ORIENTATION.VERTICAL_RIGHT;
-				chart.levelsBorderStyle = GridChartElement.WEDGE_BORDER.NO_BORDER;
-				chart.type = GridChartElement.TYPE.RASTER_CONTOUR;
-				
-				chart.pointers = new String[] {"0 0 1 1 @BLUEArrow from (1, 1) to (0, 0)@GREEN"};
-				CreateGridChart c = new CreateGridChart(chart);
-//				c.showChartInSGTpanel(true);
-				Picture p = new Picture(c.chartAsBufferedImage());
-				Graphics2D g = p.getImage().createGraphics();
-				c.prepareGraphics2D(g, true);
-				g.setColor(new Color(0, 255, 0, 128));
-				int x = 0, y = 0, r = 1;
-				g.setStroke(AWTGraphics.getStroke(new JPARSECStroke(JPARSECStroke.STROKE_DEFAULT_LINE, 0.1f)));
-				g.drawOval(x-r, y-r, 2*r, 2*r);
-				p.show("");
-				
-				//Serialization.writeObject(c, "/home/alonso/gridChartTest");
-
-//				chart.resample(data.length*10, data[0].length*10);
-//				CreateGridChart c2 = new CreateGridChart(chart);
-//				c2.showChartInSGTpanel(false);				
-			} catch (Exception e)
-			{
-				e.printStackTrace();
-			}
-		}
-		  
 		private class MyAction implements java.awt.event.ActionListener {
 			public void actionPerformed(java.awt.event.ActionEvent event) {
 				Object obj = event.getSource();

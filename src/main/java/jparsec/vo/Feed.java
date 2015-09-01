@@ -679,29 +679,4 @@ public class Feed {
 	public void addFeedMessage(FeedMessageElement f) {
 		entries.add(f);
 	}
-	
-	/**
-	 * Test program.
-	 * @param args Not used.
-	 */
-	public static void main(String[] args) {
-		try {
-//			String file = "http://www.vogella.de/article.rss";
-			String file = "http://cyber.law.harvard.edu/rss/examples/rss2sample.xml";
-			Feed feed = Feed.readFeed(new URL(file));
-			System.out.println(feed);
-			for (FeedMessageElement message : feed.getMessages()) {
-				System.out.println(message);
-			}
-			if (file.startsWith("http")) {
-				feed.getMessages().add(
-						Feed.createMessage("hellow", "greetings <a href=\"hi!\"></a>", "my link", "myself", "id", new String[] {
-						"http://www.webmasterworld.com/theme/default/gfx/rss.gif"}, "today")
-				);
-				feed.writeFeed("/home/alonso/test.rss");
-			}
-		} catch (Exception exc) {
-			exc.printStackTrace();
-		}
-	}
 }

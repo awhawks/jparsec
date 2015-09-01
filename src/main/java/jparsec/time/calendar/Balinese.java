@@ -407,35 +407,4 @@ public class Balinese implements Serializable
 	{
 		fromFixed(jd - Gregorian.EPOCH);
 	}
-
-	/**
-	 * For unit testing only.
-	 * @param args Not used.
-	 */
-	public static void main(String args[])
-	{
-		System.out.println("Balinese Test");
-
-		int jd = 2451545;
-		Balinese h = new Balinese(jd);
-		String date = "luang=" + h.luang + ",dwiwara=" + h.dwiwara + ",triwara=" + h.triwara + ",caturwara=" + h.caturwara + ",pancawara=" + h.pancawara + ",sadwara=" + h.sadwara + ",saptawara=" + h.saptawara + ",asatawara=" + h.asatawara + ",sangawara=" + h.sangawara + ",dasawara=" + h.dasawara;
-		System.out.println("JD " + jd + " = " + date);
-
-		Balinese h2 = new Balinese(h.luang, h.dwiwara, h.triwara, h.caturwara, h.pancawara, h.sadwara, h.saptawara,
-				h.asatawara, h.sangawara, h.dasawara);
-		date = "luang=" + h2.luang + ",dwiwara=" + h2.dwiwara + ",triwara=" + h2.triwara + ",caturwara=" + h2.caturwara + ",pancawara=" + h2.pancawara + ",sadwara=" + h2.sadwara + ",saptawara=" + h2.saptawara + ",asatawara=" + h2.asatawara + ",sangawara=" + h2.sangawara + ",dasawara=" + h2.dasawara;
-
-		System.out.println(date);
-
-		System.out.println(Calendar.nameFromNumber(h2.dwiwara, DWIWARA_NAMES));
-		System.out.println(Calendar.nameFromNumber(h2.triwara, TRIWARA_NAMES));
-		System.out.println(Calendar.nameFromNumber(h2.caturwara, CATURWARA_NAMES));
-		System.out.println(Calendar.nameFromNumber(h2.pancawara, PANCAWARA_NAMES));
-		System.out.println(Calendar.nameFromNumber(h2.sadwara, SADWARA_NAMES));
-		System.out.println(Calendar.nameFromNumber(h2.saptawara, SAPTAWARA_NAMES));
-		System.out.println(Calendar.nameFromNumber(h2.asatawara, ASATAWARA_NAMES));
-		System.out.println(Calendar.nameFromNumber(h2.sangawara, SANGAWARA_NAMES));
-		System.out.println(Calendar.nameFromNumber(h2.dasawara, DASAWARA_NAMES));
-		System.out.println(Calendar.nameFromNumber(week(h2), WEEK_NAMES));
-	}
 }

@@ -25,7 +25,7 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import jparsec.graph.*;
+import jparsec.graph.DataSet;
 import jparsec.io.FileIO;
 import jparsec.io.ReadFile;
 import jparsec.util.Logger.LEVEL;
@@ -213,24 +213,7 @@ public class Translate
 	public static int getNumberOfEntries() throws JPARSECException {
 		return ReadFile.readResourceGetNumberOfLines("jparsec/util/english.txt", ReadFile.ENCODING_ISO_8859);
 	}
-	
-	/**
-	 * Test program.
-	 * @param args Unused.
-	 */
-	public static void main(String args[])
-	{
-		System.out.println("Translate test");
 
-		try {
-			String translate[] =  DataSet.arrayListToStringArray(ReadFile.readResource("jparsec/util/english.txt"));
-			int index = DataSet.getIndex(translate, "Position angle");
-			System.out.println(index);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-	}
-	
 	/** ID value for the corresponding String constant. */
 	public static final int JPARSEC_EQUATOR = 18;
 	/** ID value for the corresponding String constant. */
