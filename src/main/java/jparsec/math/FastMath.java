@@ -39,15 +39,15 @@ public class FastMath
 	
 	// The value of N cannot be too high in old computers due to memory limitations
 	private static int N = 3600; // 0.1 degree precision
-	private static float[] sin = null;
-	private static float[] tan = null;
-	private static float[] asin = null;
+	private static float[] sin;
+	private static float[] tan;
+	private static float[] asin;
 	private static final double PI2 = Constant.TWO_PI;
 	private static double STEP = PI2 / N, STEP_INVERSE = 1.0 / STEP;
 	private static int A_N = N * 10; // 0.01 degree precision
-	private static double A_STEP = 1.0 / A_N;
+	protected static double A_STEP = 1.0 / A_N;
 	private static double PI3_OVER_2 = 3.0 * Constant.PI_OVER_TWO;
-	private static double pow10[] = null;
+	private static double pow10[];
 	private static int N_4 = N + N / 4;
 
 	/**
@@ -90,7 +90,15 @@ public class FastMath
 
     /** Factorial table, for Taylor series expansions. */
     private static final double FACT[] = new double[20];
-    
+
+	public static double getPI2() {
+		return PI2;
+	}
+
+	public static double getSTEP() {
+		return STEP;
+	}
+
 	/**
 	 * Initializes the cache for sin and cos and the rest.
 	 */
