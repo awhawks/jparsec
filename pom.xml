@@ -30,7 +30,7 @@
 
         <conga.url>http://conga.oan.es/~alonso/jparsec/lib</conga.url>
         <version.jparsec>0.107</version.jparsec>
-        <version.testng>6.9.6</version.testng>
+        <version.testng>6.8.21</version.testng>
         <version.checkstyle>6.8.1</version.checkstyle>
         <version.nrjavaserial>3.9.3.1</version.nrjavaserial>
         <version.jsch>0.1.53</version.jsch>
@@ -43,6 +43,7 @@
         <version.nom-tam-fits>1.13.0</version.nom-tam-fits>
         <version.jmathplot>1.0.1</version.jmathplot>
         <version.plantuml>8028</version.plantuml>
+        <version.rhino>1.7R4</version.rhino>
         <version.SGT_toolkit>3.0</version.SGT_toolkit>
         <version.cds.savot>2.6</version.cds.savot>
 
@@ -79,19 +80,16 @@
                 <configuration>
                     <source>1.6</source>
                     <target>1.6</target>
-                    <!--encoding>iso-8859-1</encoding-->
                     <encoding>utf-8</encoding>
                     <showWarnings>true</showWarnings>
-                    <showDeprecation>false</showDeprecation> <!-- JDK 1.6 stops if it encounters deprecation Warnings !! -->
-                    <compilerArgs>
-                        <!-- this is really necessary for JDK 1.6, otherwise ELP2000 classes are not accepted! -->
-                        <arg>-J-Xms4096m</arg>
-                        <arg>-J-Xmx4096m</arg>
-                        <arg>-verbose</arg>
-                    </compilerArgs>
+                    <showDeprecation>true</showDeprecation>
+                    <fork>true</fork>
                     <excludes>
                         <exclude>jparsec/graph/CreateJZY3DChart.java</exclude>
                     </excludes>
+                    <testExcludes>
+                        <exclude>jparsec/graph/CreateJZY3DChartTest.java</exclude>
+                    </testExcludes>
                 </configuration>
             </plugin>
 
@@ -255,11 +253,6 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-clean-plugin</artifactId>
                     <version>${maven-clean-plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>${maven-compiler-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -456,6 +449,11 @@
             <artifactId>junit</artifactId>
             <version>${version.junit}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mozilla</groupId>
+            <artifactId>rhino</artifactId>
+            <version>${version.rhino}</version>
         </dependency>
         <dependency>
             <groupId>org.jfree</groupId>
