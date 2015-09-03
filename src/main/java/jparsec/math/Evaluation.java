@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.math;
 
 import java.awt.Color;
@@ -36,15 +36,13 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
-// FIXME Java 7+ have builtin-JavaScript engine
-//import sun.org.mozilla.javascript.internal.NativeArray;
-
 import jparsec.graph.ChartElement;
 import jparsec.graph.ChartSeriesElement;
 import jparsec.graph.CreateChart;
 import jparsec.graph.DataSet;
 import jparsec.io.FileIO;
 import jparsec.util.JPARSECException;
+import org.mozilla.javascript.NativeArray;
 
 /**
  * A class for evaluating functions into numbers. Functions should be expressed
@@ -685,18 +683,18 @@ public class Evaluation implements Serializable
 	 * @param n NativeArray.
 	 * @return String array
 	 */
-	/*
-	public static String[] nativeArrayToStringArray(NativeArray n)
+	public static String[] nativeArrayToStringArray(Object n)
 	{
-		String arr[] = new String[(int) n.getLength()];
+		NativeArray array = (NativeArray) n;
+		String arr[] = new String[(int) array.getLength()];
 	
 		for (int i = 0; i < arr.length; i++)
 		{
-			arr[i] = n.get(i, null).toString();
+			arr[i] = array.get(i, null).toString();
 		}
 	
 		return arr;
-	}*/
+	}
 
 	/**
 	 * Transforms a NativeArray (Java Script) to double array.
@@ -704,19 +702,18 @@ public class Evaluation implements Serializable
 	 * @param n NativeArray.
 	 * @return Double array.
 	 */
-	/*
-	public static double[] nativeArrayToDoubleArray(NativeArray n)
+	public static double[] nativeArrayToDoubleArray(Object n)
 	{
-		double arr[] = new double[(int) n.getLength()];
+		NativeArray array = (NativeArray) n;
+		double arr[] = new double[(int) array.getLength()];
 	
 		for (int i = 0; i < arr.length; i++)
 		{
-			arr[i] = ((Double) n.get(i, null)).doubleValue();
+			arr[i] = (Double) array.get(i, null);
 		}
 	
 		return arr;
 	}
-	*/
 
 	/**
 	 * Returns the evaluation function.

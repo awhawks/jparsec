@@ -1,6 +1,5 @@
 package jparsec.math;
 
-import jdk.nashorn.internal.objects.NativeArray;
 import jparsec.graph.CreateChart;
 import jparsec.io.ConsoleReport;
 
@@ -42,7 +41,7 @@ public class EvaluationTest {
         expression += "var xx = new Array (x, y, z)\n";
         expression += "xx"; // To get the array
         System.out.println("Expression: \n" + expression);
-        double out[] = Evaluation.nativeArrayToDoubleArray((NativeArray) eval.evaluatePureJavaExpression(expression));
+        double out[] = Evaluation.nativeArrayToDoubleArray(eval.evaluatePureJavaExpression(expression));
         ConsoleReport.doubleArrayReport(out, "f2.5");
     }
 }
