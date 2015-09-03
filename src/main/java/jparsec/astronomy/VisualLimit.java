@@ -57,7 +57,7 @@ public class VisualLimit
 	 * @param fbd The fixed brightness data.
 	 * @param abd The angular brightness data.
 	 */
-	private VisualLimit(int bandMask, VisualLimitFixedBrightnessData fbd, VisualLimitAngularBrightnessData abd)
+	protected VisualLimit(int bandMask, VisualLimitFixedBrightnessData fbd, VisualLimitAngularBrightnessData abd)
 	{
 		this.mask = bandMask;
 		setBrightnessParams(fbd);
@@ -86,7 +86,7 @@ public class VisualLimit
 		this.mask = bandMask;
 		setBrightnessParams(v.fixed);
 		computeSkyBrightness(v.angular);
-		computeExtinction();		
+		computeExtinction();
 	}
 	
 	/**
@@ -309,7 +309,7 @@ public class VisualLimit
 		return extinction[i];
 	}
 
-	private static final int BANDS = 5;
+	protected static final int BANDS = 5;
 
 	private static double magToBrightness(double m)
 	{
