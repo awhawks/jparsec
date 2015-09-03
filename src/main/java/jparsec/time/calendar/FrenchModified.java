@@ -172,14 +172,13 @@ public class FrenchModified implements Serializable
 	/**
 	 * Gets the day of the week.
 	 * 
-	 * @param f French instance.
 	 * @return Day of week.
 	 */
-	public static int getDayOfWeek(FrenchModified f)
+	public int getDayOfWeek()
 	{
-		int day = f.day + 9;
-        if(f.month < 13) day = (f.day - 1) % 10;
-        day++;
+		int day = this.day + 9;
+		if (this.month < 13) day = (this.day - 1) % 10;
+		day++;
 		if (day > French.DAY_OF_WEEK_NAMES.length) day -= French.DAY_OF_WEEK_NAMES.length;
 		if (day < 0) day += French.DAY_OF_WEEK_NAMES.length;
 		return day;
@@ -188,14 +187,13 @@ public class FrenchModified implements Serializable
 	/**
 	 * Gets the decadi.
 	 * 
-	 * @param f French instance.
 	 * @return Decadi index (0, 1, 2), or -1 for no decadi.
 	 */
-	public static int getDecadi(FrenchModified f)
+	public int getDecadi()
 	{
 		int week = -1;
-        if(f.month < 13) week = (f.day - 1) / 10 + 1;
-        if (week > 2) week = week - 3;
+		if (this.month < 13) week = (this.day - 1) / 10 + 1;
+		if (week > 2) week = week - 3;
 		return week;
 	}
 }

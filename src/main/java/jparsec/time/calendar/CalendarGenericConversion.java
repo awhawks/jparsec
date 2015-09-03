@@ -483,6 +483,7 @@ public class CalendarGenericConversion
 	public static String getDayOfWeekName(int jd, CALENDAR calendar) throws JPARSECException {
 		String out = "";
 		long day = jd - Gregorian.EPOCH;
+
 		try {
 			switch (calendar)
 			{
@@ -499,7 +500,8 @@ public class CalendarGenericConversion
 				out = Calendar.nameFromDayOfWeek(Calendar.dayOfWeekFromFixed(day), Ethiopic.DAY_OF_WEEK_NAMES);
 				break;
 			case FRENCH:
-				out = Calendar.nameFromNumber(French.getDayOfWeek(new French(jd)), French.DAY_OF_WEEK_NAMES);
+				French f = new French(jd);
+				out = Calendar.nameFromNumber(f.getDayOfWeek(), French.DAY_OF_WEEK_NAMES);
 				break;
 			case GREGORIAN:
 				out = Calendar.nameFromDayOfWeek(Calendar.dayOfWeekFromFixed(day), Gregorian.DAY_OF_WEEK_NAMES);
@@ -517,7 +519,8 @@ public class CalendarGenericConversion
 				out = Calendar.nameFromDayOfWeek(Calendar.dayOfWeekFromFixed(day), Gregorian.DAY_OF_WEEK_NAMES);
 				break;
 			case MODIFIED_FRENCH:
-				out = Calendar.nameFromNumber(French.getDayOfWeek(new French(jd)), French.DAY_OF_WEEK_NAMES);
+				FrenchModified fm = new FrenchModified(jd);
+				out = Calendar.nameFromNumber(fm.getDayOfWeek(), French.DAY_OF_WEEK_NAMES);
 				break;
 			case OBSERVATIONAL_ISLAMIC:
 				out = Calendar.nameFromDayOfWeek(Calendar.dayOfWeekFromFixed(day), Islamic.DAY_OF_WEEK_NAMES);
