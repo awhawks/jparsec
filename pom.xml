@@ -79,6 +79,11 @@
                     <fork>true</fork>
                     <debug>true</debug>
                     <debuglevel>lines,vars,source</debuglevel>
+                    <compilerArgs>
+                        <arg>-J-Xmx2G</arg>
+                        <arg>-J-Xms2G</arg>
+                        <arg>-Xlint:all</arg>
+                    </compilerArgs>
                 </configuration>
             </plugin>
 
