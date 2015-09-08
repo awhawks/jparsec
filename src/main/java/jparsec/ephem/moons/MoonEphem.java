@@ -216,6 +216,10 @@ public class MoonEphem
 		return out;
 	}
 
+	protected static MoonOrbitalElement[] getMoonOrbitalElements(String target, double jd) throws JPARSECException {
+		return getMoonElements(target, jd);
+	}
+
 	private static MoonOrbitalElement getMoonOrbit(String record) throws JPARSECException {
 		String nom = FileIO.getField(1, record, " ", true);
 		int cb = Integer.parseInt(FileIO.getField(2, record, " ", true));
@@ -1906,7 +1910,12 @@ public class MoonEphem
 		return output_vect;
 	}
 
-	private static double squared(double a)
+	protected static double[] getRocks(double jd, MoonOrbitalElement orbit, EphemerisElement.REDUCTION_METHOD ephem_method)
+			throws JPARSECException {
+		return rocks(jd, orbit, ephem_method);
+	}
+
+		private static double squared(double a)
 	{
 		return a * a;
 	}

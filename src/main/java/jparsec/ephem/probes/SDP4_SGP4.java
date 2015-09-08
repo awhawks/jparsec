@@ -181,6 +181,10 @@ public class SDP4_SGP4
 	    ReadNorad12(sat);
   }
 
+  public SatelliteOrbitalElement getSat() {
+    return this.sat;
+  }
+
   /**
    * Initialize the SDP4.
    *

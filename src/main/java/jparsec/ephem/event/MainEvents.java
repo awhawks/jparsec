@@ -29,6 +29,7 @@ import jparsec.ephem.Ephem;
 import jparsec.ephem.EphemerisElement;
 import jparsec.ephem.Functions;
 import jparsec.ephem.Precession;
+import jparsec.ephem.Target;
 import jparsec.ephem.Target.TARGET;
 import jparsec.ephem.event.SimpleEventElement.EVENT;
 import jparsec.ephem.planets.EphemElement;
@@ -394,14 +395,13 @@ public class MainEvents
 	 * @return The event.
 	 * @throws JPARSECException If an error occurs.
 	 */
-	public static SimpleEventElement EquinoxesAndSolstices(int year, SimpleEventElement.EVENT event) throws JPARSECException {
+	public static SimpleEventElement EquinoxesAndSolstices(int year, SimpleEventElement.EVENT event, CityElement city) throws JPARSECException {
 		int m = 3;
 		if (event == SimpleEventElement.EVENT.SUN_SUMMER_SOLSTICE) m = 6;
 		if (event == SimpleEventElement.EVENT.SUN_AUTUMN_EQUINOX) m = 9;
 		if (event == SimpleEventElement.EVENT.SUN_WINTER_SOLSTICE) m = 12;
 		AstroDate astro = new AstroDate(year, m, 1);
 		double jd = astro.jd();
-		CityElement city = City.findCity("Madrid");
 		ObserverElement observer = ObserverElement.parseCity(city);
 		EphemerisElement eph = new EphemerisElement(TARGET.SUN, EphemerisElement.COORDINATES_TYPE.APPARENT,
 				EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.GEOCENTRIC, EphemerisElement.REDUCTION_METHOD.IAU_2006,
@@ -630,7 +630,7 @@ public class MainEvents
 	
 	/**
 	 * Calculates the approximate instant of the closest perihelion or aphelion in time following Meeus.
-	 * In current dates the difference compared to {@linkplain MainEvents#getPlanetaryEvent(Target#TARGET, double, SimpleEventElement#EVENT, MainEvents#EVENT_TIME)}
+	 * In current dates the difference compared to {@linkplain MainEvents#getPlanetaryEvent(TARGET, double, EVENT, EVENT_TIME, boolean)}
 	 * is of a few hours for inner planets and more than one day for giant planets, and the other method 
 	 * is more accurate than this one.
 	 * @param target Target body. Earth is allowed.
@@ -641,8 +641,8 @@ public class MainEvents
 	 * events for a given date far from J2000.
 	 * @return The event. The target body ID value is given in the details field.
 	 * @throws JPARSECException If an error occurs.
-	 * @deprecated {@linkplain MainEvents#getPlanetaryEvent(TARGET, double, EVENT, EVENT_TIME)} is
-	 * recommended instead.
+	 * @deprecated {@linkplain MainEvents#getPlanetaryEvent(TARGET, double, EVENT, EVENT_TIME, boolean)}
+	 * is recommended instead.
 	 */
 	public static SimpleEventElement PerihelionAndAphelion(TARGET target, double jd, EVENT event, EVENT_TIME eventType) throws JPARSECException {
 		AstroDate astro = new AstroDate(jd);
@@ -898,7 +898,7 @@ public class MainEvents
 	 * @return The event. In case the target is Mercury or Venus the details field
 	 * will be 'Superior' for superior conjunction of 'Inferior' for an inferior one.
 	 * @throws JPARSECException If an error occurs.
-	 * @deprecated {@linkplain MainEvents#getPlanetaryEvent(TARGET, double, EVENT, EVENT_TIME)}
+	 * @deprecated {@linkplain MainEvents#getPlanetaryEvent(TARGET, double, EVENT, EVENT_TIME, boolean)}
 	 * will give better results, although this method is indeed used in the other to obtain a fast
 	 * first estimate.
 	 */
@@ -1117,7 +1117,7 @@ public class MainEvents
 			(-0.8611 - 0.0037 * T + 0.00002 * T * T) * Math.cos(M) +
 			(0.0118 - 0.0004 * T + 0.00001 * T * T) * Math.sin(2.0 * M) + 
 			(0.0307 - 0.0003 * T) * Math.cos(2.0 * M) + 
-			(-0.5964) * Math.cos(e) +	
+			(-0.5964) * Math.cos(e) +
 			(0.0728) * Math.cos(g);
 			break;
 		}
@@ -1144,13 +1144,13 @@ public class MainEvents
 	 * will contains the elongation in degrees and the E for maximum elongation towards East, or 'W' 
 	 * for maximum elongation towards west from the Sun.
 	 * @throws JPARSECException If an error occurs.
-	 * @deprecated {@linkplain MainEvents#getPlanetaryEvent(TARGET, double, EVENT, EVENT_TIME)}
+	 * @deprecated {@linkplain MainEvents#getPlanetaryEvent(TARGET, double, EVENT, EVENT_TIME, boolean)}
 	 * will give better results, although this method is indeed used in the other to obtain a fast
 	 * first estimate.
 	 */
 	public static SimpleEventElement OppositionOrMaxElongation(TARGET target, double jd, EVENT_TIME eventType) 
 	throws JPARSECException {
-		double A = 0.0, B = 0.0, M0 = 0.0, M1 = 0.0;
+		double A, B, M0, M1;
 		switch (target) {
 		case MERCURY:
 			A = 2451612.023;

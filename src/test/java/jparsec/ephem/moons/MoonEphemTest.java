@@ -115,16 +115,16 @@ public class MoonEphemTest {
         String elem[] = DataSet.toStringArray(oberonElements, FileIO.getLineSeparator(), true);
         MoonOrbitalElement orbit = new MoonOrbitalElement(elem, "Oberon", Target.TARGET.URANUS);
 
-        double p[] = MoonEphem.rocks(jd, orbit, eph.ephemMethod);
+        double p[] = MoonEphem.getRocks(jd, orbit, eph.ephemMethod);
         System.out.println(p[0] + "/" + p[1] + "/" + p[2]);
         System.out.println(testPos[0] + "/" + testPos[1] + "/" + testPos[2]);
         // The conclusion is that elements from Horizons can be used 2 years around the reference time
 
         // Test on Charon
         jd = (new AstroDate(2010, 1, 1, 0, 0, 0)).jd();
-        orbit = MoonEphem.getMoonElements("Charon", jd)[0];
+        orbit = MoonEphem.getMoonOrbitalElements("Charon", jd)[0];
         System.out.println(jd);
-        p = MoonEphem.rocks(jd, orbit, eph.ephemMethod);
+        p = MoonEphem.getRocks(jd, orbit, eph.ephemMethod);
         System.out.println(p[0] * Constant.AU + "/" + p[1] * Constant.AU + "/" + p[2] * Constant.AU);
 
         // Get (very good) approximate barycentric position of Pluto

@@ -390,12 +390,11 @@ public class Balinese implements Serializable
 	/**
 	 * Gets the week from a Balinese date.
 	 * 
-	 * @param balinese Balinese instance.
 	 * @return Week.
 	 */
-	public static int week(Balinese balinese)
+	public int week()
 	{
-		return (int) (Calendar.quotient(day(balinese) - 1, 7D) + 1L);
+		return (int) (Calendar.quotient(day(this) - 1, 7D) + 1L);
 	}
 
 	/**

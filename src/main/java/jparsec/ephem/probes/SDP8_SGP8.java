@@ -250,6 +250,10 @@ public class SDP8_SGP8
 	    Init();
   }
 
+    public SatelliteOrbitalElement getSat() {
+        return this.sat;
+    }
+
   /**
    * Initialize the SDP8.
    *

@@ -78,7 +78,7 @@ public class SatelliteEphemTest {
             }
             */
 
-            name = SatelliteEphem.readFile.getObjectName(index);
+            name = SatelliteEphem.getArtificialSatelliteName(index);
             double JD = TimeScale.getJD(time, observer, eph, TimeElement.SCALE.TERRESTRIAL_TIME);
             System.out.println("JD " + JD + " / index " + index);
             double st = SiderealTime.apparentSiderealTime(time, observer, eph);

@@ -54,6 +54,8 @@ import jparsec.io.ReadFile.FORMAT;
 import jparsec.math.Constant;
 import jparsec.math.FastMath;
 import jparsec.math.Interpolation;
+import jparsec.observer.City;
+import jparsec.observer.CityElement;
 import jparsec.observer.LocationElement;
 import jparsec.observer.ObserverElement;
 import jparsec.time.AstroDate;
@@ -184,7 +186,7 @@ public class EventReport {
 		AstroDate al0 = new AstroDate(jdl0);
 		AstroDate alf = new AstroDate(jdlf);
 		int year0 = al0.getYear(), yearf = alf.getYear();
-		
+		CityElement madrid = City.findCity("Madrid");
 		// Calculate events
 		for (int event = 0; event <= 54; event ++) {
 			double jd = jd0;
@@ -222,7 +224,7 @@ public class EventReport {
 				case 6:
 					if (equinoxesAndSolstices) {
 						for (int year = year0; year <= yearf; year ++) {
-							s = MainEvents.EquinoxesAndSolstices(year, EVENT.SUN_SPRING_EQUINOX);
+							s = MainEvents.EquinoxesAndSolstices(year, EVENT.SUN_SPRING_EQUINOX, madrid);
 							if (s.time > jd0 && s.time < jdf) list.add(s);
 						}
 					}
@@ -231,7 +233,7 @@ public class EventReport {
 				case 7:
 					if (equinoxesAndSolstices) {
 						for (int year = year0; year <= yearf; year ++) {
-							s = MainEvents.EquinoxesAndSolstices(year, EVENT.SUN_AUTUMN_EQUINOX);
+							s = MainEvents.EquinoxesAndSolstices(year, EVENT.SUN_AUTUMN_EQUINOX, madrid);
 							if (s.time > jd0 && s.time < jdf) list.add(s);
 						}
 					}
@@ -240,7 +242,7 @@ public class EventReport {
 				case 8:
 					if (equinoxesAndSolstices) {
 						for (int year = year0; year <= yearf; year ++) {
-							s = MainEvents.EquinoxesAndSolstices(year, EVENT.SUN_SUMMER_SOLSTICE);
+							s = MainEvents.EquinoxesAndSolstices(year, EVENT.SUN_SUMMER_SOLSTICE, madrid);
 							if (s.time > jd0 && s.time < jdf) list.add(s);
 						}
 					}
@@ -249,7 +251,7 @@ public class EventReport {
 				case 9:
 					if (equinoxesAndSolstices) {
 						for (int year = year0; year <= yearf; year ++) {
-							s = MainEvents.EquinoxesAndSolstices(year, EVENT.SUN_WINTER_SOLSTICE);
+							s = MainEvents.EquinoxesAndSolstices(year, EVENT.SUN_WINTER_SOLSTICE, madrid);
 							if (s.time > jd0 && s.time < jdf) list.add(s);
 						}
 					}

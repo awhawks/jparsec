@@ -97,6 +97,10 @@ public class RenderSatellite
 	 */
 	public static boolean ALLOW_SPLINE_RESIZING = true;
 
+	public SatelliteEphemElement[] getEphemSat() {
+		return this.ephemSat;
+	}
+
 	/**
 	 * Renderize a satellite.
 	 * 
