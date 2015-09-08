@@ -511,7 +511,7 @@ public final class Target
 		if (index < 0) index = DataSet.getIndexStartingWith(names, name);
 		if (index >= 0) return TARGET.values()[index];
 
-		return null;
+		return TARGET.NOT_A_PLANET;
 	}
 
 	/**
@@ -534,7 +534,7 @@ public final class Target
 			}
 		}
 
-		return null;
+		return TARGET.NOT_A_PLANET;
 	}
 
 	/**
