@@ -143,6 +143,6 @@ public class TargetEnglishTest {
 
     @Test
     public void testGetIDFromEnglishNameNull() throws Exception {
-        assertNull(Target.getIDFromEnglishName("nonsense"));
+        assertEquals(Target.TARGET.NOT_A_PLANET, Target.getIDFromEnglishName("nonsense"));
     }
 }

@@ -1,15 +1,15 @@
 package jparsec.ephem;
 
-import static jparsec.ephem.Target.TARGET.*;
-
 import jparsec.util.JPARSECException;
 import jparsec.util.Translate;
+
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import static jparsec.ephem.Target.TARGET.*;
+
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNull;
 import static org.testng.Assert.fail;
 
 public class TargetSpanishTest {
@@ -143,6 +143,6 @@ public class TargetSpanishTest {
 
     @Test
     public void testGetIDNull() throws Exception {
-        assertNull(Target.getID("sinsentido"));
+        assertEquals(Target.TARGET.NOT_A_PLANET, Target.getID("tonter\u00eda"));
     }
 }
