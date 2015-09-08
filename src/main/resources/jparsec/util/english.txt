@@ -1085,7 +1085,7 @@ Ecliptic north pole, a AU from Sun
 Annular eclipse
 starts to be visible to naked eye
 ends to be visible to naked eye
-with maximum magnitude (%mag, elongation %elongº)
+with maximum magnitude (%mag, elongation %elongï¿½)
 Saturn rings in maximum aperture
 No eclipse
 from
@@ -1179,7 +1179,7 @@ Could not shot the foto. Details:
 unrefracted
 Weather conditions are inadequate to continue observations.\nThe observatory has been turned off indefinitely.
 Bulb
-Field of view (º)
+Field of view (ï¿½)
 Extrasolar planets
 Radiosource
 IRAM catalog
@@ -1258,7 +1258,7 @@ Sigma
 Min object type
 Max sources
 Camera # options
-Position error (º)
+Position error (ï¿½)
 Interval between shots (s)
 Dark dir
 Flat dir
@@ -1305,3 +1305,14 @@ Distance to Sun and Earth of
 Nova
 Carrington rotation number
 Brown lunation number
+Ceres
+Pallas
+Lutetia
+Davida
+Steins
+Itokawa
+9P/Tempel 1
+19P/Borrelly
+Nutation
+Libration
+Solar system barycenter

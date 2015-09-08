@@ -18,18 +18,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.ephem;
 
-import java.util.*;
-
+import java.util.ArrayList;
 import jparsec.ephem.moons.MoonEphem;
 import jparsec.graph.DataSet;
+import jparsec.observer.ObserverElement;
+import jparsec.time.TimeElement;
 import jparsec.util.DataBase;
 import jparsec.util.JPARSECException;
 import jparsec.util.Logger;
-import jparsec.util.Translate;
 import jparsec.util.Logger.LEVEL;
+import jparsec.util.Translate;
 import jparsec.util.Translate.LANGUAGE;
 
 /**
@@ -39,7 +40,8 @@ import jparsec.util.Translate.LANGUAGE;
  * Size parameters comes from the IAU2009 recommended values. Note that not all
  * known natural objects are listed here, but only those whose size or
  * rotational parameters are known. Otherwise, ephemeris can also be obtained
- * for objects not listed here (see {@linkplain MoonEphem#calcAllJPLSatellites(jparsec.time.TimeElement, jparsec.observer.ObserverElement, EphemerisElement)}).
+ * for objects not listed here (see
+ * {@linkplain MoonEphem#calcAllJPLSatellites(TimeElement, ObserverElement, EphemerisElement)}).
  * 
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
@@ -52,235 +54,259 @@ public final class Target
 	/**
 	 * The set of targets for JPARSEC ephemerides.
 	 */
-	public static enum TARGET {
+	public enum TARGET {
 		// Object name, equatorial radius (km), polar radius (km), relative mass to the Sun (1, >= 1)
 		// Main Solar System bodies, Sun must be the first
 		/** The Sun */
-		SUN (696000.0, 696000.0, 1.0),
+		SUN (696000.0, 696000.0, 1.0, null, 0),
 		/** Mercury */
-		MERCURY (2439.7, 2439.7, 6023600.0),
+		MERCURY (2439.7, 2439.7, 6023600.0, SUN, 1),
 		/** Venus */
-		VENUS (6051.8, 6051.8, 408523.71),
+		VENUS (6051.8, 6051.8, 408523.71, SUN, 2),
 		/** Earth */
-		EARTH (6378.1366, 6356.7519, 332946.050895),
+		EARTH (6378.1366, 6356.7519, 332946.050895, SUN, 3),
 		/** Mars */
-		MARS (3396.19, 3376.2, 3098708.0),
+		MARS (3396.19, 3376.2, 3098708.0, SUN, 5),
 		/** Jupiter */
-		JUPITER (71492.0, 66854.0, 1047.3486),
+		JUPITER (71492.0, 66854.0, 1047.3486, SUN, 6),
 		/** Saturn */
-		SATURN (60268.0, 54364.0, 3497.898),
+		SATURN (60268.0, 54364.0, 3497.898, SUN, 7),
 		/** Uranus */
-		URANUS (25559.0, 24973.0, 22902.98),
+		URANUS (25559.0, 24973.0, 22902.98, SUN, 8),
 		/** Neptune */
-		NEPTUNE (24764.0, 24341.0, 19412.24),
+		NEPTUNE (24764.0, 24341.0, 19412.24, SUN, 9),
 		/** Dwarf planet Pluto */
-		Pluto (1195.0, 1195.0, 1.352E8),
+		Pluto (1195.0, 1195.0, 1.352E8, SUN, 10),
 		/** The Moon */
-		Moon (1737.4, 1737.4, 2.7068700387534E7),
+		Moon (1737.4, 1737.4, 2.7068700387534E7, EARTH, 4),
 		/** Special target for Earth-Moon barycenter */
-		Earth_Moon_Barycenter (0.0, 0.0, 328900.5614),
+		Earth_Moon_Barycenter (0.0, 0.0, 328900.5614, SUN, 80),
 		// Generic comet/asteroid
 		/** Generic comet */
-		Comet (0.0, 0.0, 0.0),
+		Comet (0.0, 0.0, 0.0, SUN, 74),
 		/** Generic asteroid */
-		Asteroid (0.0, 0.0, 0.0),
+		Asteroid (0.0, 0.0, 0.0, SUN, 73),
 		/** Generic NEO */
-		NEO (0.0, 0.0, 0.0),
+		NEO (0.0, 0.0, 0.0, SUN, 1275),
 		// Special values available in some theories (JPL, Moshier)
 		/**
 		 * Special target for nutation, only for JPL ephemerides.
 		 */
-		Nutation (0, 0, 0),
+		Nutation (0, 0, 0, EARTH, 1315),
 		/**
 		 * Special target for lunar librations, only for Moshier and JPL ephemerides.
 		 */
-		Libration (0, 0, 0),
+		Libration (0, 0, 0, SUN, 1316),
 		/**
 		 * Special target for Solar System barycenter, only for Moshier and JPL ephemerides.
 		 */
-		Solar_System_Barycenter (0, 0, 0),
+		Solar_System_Barycenter (0, 0, 0, SUN, 1317),
 		// Natural satellites, Phobos must be the first and Proteus the last
+
 		/** A satellite of Mars */
-		Phobos (13.0, 9.1, 0.0),
+		Phobos (13.0, 9.1, 0.0, MARS, 82),
 		/** A satellite of Mars */
-		Deimos (7.8, 5.1, 0.0),
+		Deimos (7.8, 5.1, 0.0, MARS, 83),
+
 		/** A satellite of Jupiter */
-		Io (1829.4, 1815.7, 0.0),
+		Io (1829.4, 1815.7, 0.0, JUPITER, 84),
 		/** A satellite of Jupiter */
-		Europa (1562.6, 1559.5, 0.0),
+		Europa (1562.6, 1559.5, 0.0, JUPITER, 85),
 		/** A satellite of Jupiter */
-		Ganymede (2631.2, 2631.2, 0.0),
+		Ganymede (2631.2, 2631.2, 0.0, JUPITER, 86),
 		/** A satellite of Jupiter */
-		Callisto (2410.3, 2410.3, 0.0),
+		Callisto (2410.3, 2410.3, 0.0, JUPITER, 87),
+
 		/** A satellite of Saturn */
-		Mimas (207.8, 190.6, 0.0),
+		Mimas (207.8, 190.6, 0.0, SATURN, 88),
 		/** A satellite of Saturn */
-		Enceladus (256.6, 248.3, 0.0),
+		Enceladus (256.6, 248.3, 0.0, SATURN, 89),
 		/** A satellite of Saturn */
-		Tethys (538.4, 526.3, 0.0),
+		Tethys (538.4, 526.3, 0.0, SATURN, 90),
 		/** A satellite of Saturn */
-		Dione (563.4, 559.6, 0.0),
+		Dione (563.4, 559.6, 0.0, SATURN, 91),
 		/** A satellite of Saturn */
-		Rhea (765.0, 762.4, 0.0),
+		Rhea (765.0, 762.4, 0.0, SATURN, 92),
 		/** A satellite of Saturn */
-		Titan (2575.15, 2574.47, 0.0),
+		Titan (2575.15, 2574.47, 0.0, SATURN, 93),
 		/** A satellite of Saturn */
-		Hyperion (180.1, 102.7, 0.0),
+		Hyperion (180.1, 102.7, 0.0, SATURN, 94),
 		/** A satellite of Saturn */
-		Iapetus (745.7, 712.1, 0.0),
+		Iapetus (745.7, 712.1, 0.0, SATURN, 95),
+
 		/** A satellite of Uranus */
-		Miranda (240.4, 232.9, 0.0),
+		Miranda (240.4, 232.9, 0.0, URANUS, 96),
 		/** A satellite of Uranus */
-		Ariel (581.1, 577.7, 0.0),
+		Ariel (581.1, 577.7, 0.0, URANUS, 97),
 		/** A satellite of Uranus */
-		Umbriel (584.7, 584.7, 0.0),
+		Umbriel (584.7, 584.7, 0.0, URANUS, 98),
 		/** A satellite of Uranus */
-		Titania (788.9, 788.9, 0.0),
+		Titania (788.9, 788.9, 0.0, URANUS, 99),
 		/** A satellite of Uranus */
-		Oberon (761.4, 761.4, 0.0),
+		Oberon (761.4, 761.4, 0.0, URANUS, 100),
 		/** A satellite of Neptune */
-		Triton (1352.6, 1352.6, 0.0),
+
+		Triton (1352.6, 1352.6, 0.0, NEPTUNE, 101),
 		/** A satellite of Neptune */
-		Nereid (170.0, 170.0, 0.0),
+		Nereid (170.0, 170.0, 0.0, NEPTUNE, 102),
 		/** A satellite of Pluto */
-		Charon (605.0, 605.0, 0.0),
+
+		Charon (605.0, 605.0, 0.0, Pluto, 103),
+
 		/** A satellite of Jupiter */
-		Amalthea (125.0, 64.0, 0.0),
+		Amalthea (125.0, 64.0, 0.0, JUPITER, 104),
 		/** A satellite of Jupiter */
-		Thebe (58.0, 42.0, 0.0),
+		Thebe (58.0, 42.0, 0.0, JUPITER, 105),
 		/** A satellite of Jupiter */
-		Adrastea (10.0, 7.0, 0.0),
+		Adrastea (10.0, 7.0, 0.0, JUPITER, 106),
 		/** A satellite of Jupiter */
-		Metis (30.0, 20.0, 0.0),
+		Metis (30.0, 20.0, 0.0, JUPITER, 107),
 		/** A satellite of Jupiter */
-		Himalia (85.0, 85.0, 0.0),
+		Himalia (85.0, 85.0, 0.0, JUPITER, 127),
 		/** A satellite of Jupiter */
-		Elara (40.0, 40.0, 0.0),
+		Elara (40.0, 40.0, 0.0, JUPITER, 128),
 		/** A satellite of Jupiter */
-		Pasiphae (18.0, 18.0, 0.0),
+		Pasiphae (18.0, 18.0, 0.0, JUPITER, 129),
 		/** A satellite of Jupiter */
-		Sinope (14.0, 14.0, 0.0),
+		Sinope (14.0, 14.0, 0.0, JUPITER, 130),
 		/** A satellite of Jupiter */
-		Lysithea (12.0, 12.0, 0.0),
+		Lysithea (12.0, 12.0, 0.0, JUPITER, 131),
 		/** A satellite of Jupiter */
-		Carme (15.0, 15.0, 0.0),
+		Carme (15.0, 15.0, 0.0, JUPITER, 132),
 		/** A satellite of Jupiter */
-		Ananke (10.0, 10.0, 0.0),
+		Ananke (10.0, 10.0, 0.0, JUPITER, 133),
 		/** A satellite of Jupiter */
-		Leda (5.0, 5.0, 0.0),
+		Leda (5.0, 5.0, 0.0, JUPITER, 134),
+
 		/** A satellite of Saturn */
-		Atlas (18.5, 13.5, 0.0),
+		Atlas (18.5, 13.5, 0.0, SATURN, 108),
 		/** A satellite of Saturn */
-		Prometheus (74.0, 34.0, 0.0),
+		Prometheus (74.0, 34.0, 0.0, SATURN, 109),
 		/** A satellite of Saturn */
-		Pandora (55.0, 31.0, 0.0),
+		Pandora (55.0, 31.0, 0.0, SATURN, 110),
 		/** A satellite of Saturn */
-		Pan (10.0, 10.0, 0.0),
+		Pan (10.0, 10.0, 0.0, SATURN, 111),
 		/** A satellite of Saturn */
-		Epimetheus (64.9, 53.1, 0.0),
+		Epimetheus (64.9, 53.1, 0.0, SATURN, 135),
 		/** A satellite of Saturn */
-		Janus (101.5, 76.3, 0.0),
+		Janus (101.5, 76.3, 0.0, SATURN, 136),
 		/** A satellite of Saturn */
-		Telesto (16.3, 10.0, 0.0),
+		Telesto (16.3, 10.0, 0.0, SATURN, 137),
 		/** A satellite of Saturn */
-		Calypso (15.1, 7.0, 0.0),
+		Calypso (15.1, 7.0, 0.0, SATURN, 138),
 		/** A satellite of Saturn */
-		Helene (21.7, 13.0, 0.0),
+		Helene (21.7, 13.0, 0.0, SATURN, 139),
 		/** A satellite of Saturn */
-		Phoebe (109.4, 101.8, 0.0),
+		Phoebe (109.4, 101.8, 0.0, SATURN, 140),
+
 		/** A satellite of Uranus */
-		Cordelia (13.0, 13.0, 0.0),
+		Cordelia (13.0, 13.0, 0.0, URANUS, 112),
 		/** A satellite of Uranus */
-		Ophelia (15.0, 15.0, 0.0),
+		Ophelia (15.0, 15.0, 0.0, URANUS, 113),
 		/** A satellite of Uranus */
-		Cressida (31.0, 31.0, 0.0),
+		Cressida (31.0, 31.0, 0.0, URANUS, 114),
 		/** A satellite of Uranus */
-		Bianca (21.0, 21.0, 0.0),
+		Bianca (21.0, 21.0, 0.0, URANUS, 115),
 		/** A satellite of Uranus */
-		Desdemona (27.0, 27.0, 0.0),
+		Desdemona (27.0, 27.0, 0.0, URANUS, 116),
 		/** A satellite of Uranus */
-		Juliet (42.0, 42.0, 0.0),
+		Juliet (42.0, 42.0, 0.0, URANUS, 117),
 		/** A satellite of Uranus */
-		Portia (54.0, 54.0, 0.0),
+		Portia (54.0, 54.0, 0.0, URANUS, 118),
 		/** A satellite of Uranus */
-		Rosalind (27.0, 27.0, 0.0),
+		Rosalind (27.0, 27.0, 0.0, URANUS, 119),
 		/** A satellite of Uranus */
-		Puck (77.0, 77.0, 0.0),
+		Puck (77.0, 77.0, 0.0, URANUS, 120),
 		/** A satellite of Uranus */
-		Belinda (33.0, 33.0, 0.0),
+		Belinda (33.0, 33.0, 0.0, URANUS, 821),
 		/** A satellite of Neptune */
-		Naiad (29.0, 29.0, 0.0),
+
+		Naiad (29.0, 29.0, 0.0, NEPTUNE, 126),
 		/** A satellite of Neptune */
-		Thalassa (40.0, 40.0, 0.0),
+		Thalassa (40.0, 40.0, 0.0, NEPTUNE, 125),
 		/** A satellite of Neptune */
-		Despina (74.0, 74.0, 0.0),
+		Despina (74.0, 74.0, 0.0, NEPTUNE, 123),
 		/** A satellite of Neptune */
-		Galatea (79.0, 79.0, 0.0),
+		Galatea (79.0, 79.0, 0.0, NEPTUNE, 124),
 		/** A satellite of Neptune */
-		Larissa (104.0, 89.0, 0.0),
+		Larissa (104.0, 89.0, 0.0, NEPTUNE, 122),
 		/** A satellite of Neptune */
-		Proteus (218.0, 201.0, 0.0),
+		Proteus (218.0, 201.0, 0.0, NEPTUNE, 121),
+
 		// Asteroids. Ceres must be the first
 		/** Dwarf planet */
-		Ceres (487.3, 454.7, 0.0),
+		Ceres (487.3, 454.7, 0.0, SUN, 1307),
 		/** An asteroid */
-		Pallas (582.0, 500.0, 0.0),
+		Pallas (582.0, 500.0, 0.0, SUN, 1308),
 		/** An asteroid */
-		Vesta (289.0, 229.0, 0.0),
+		Vesta (289.0, 229.0, 0.0, SUN, 143),
 		/** An asteroid */
-		Lutetia (62.0, 46.5, 0.0),
+		Lutetia (62.0, 46.5, 0.0, SUN, 1309),
 		/** An asteroid */
-		Ida (26.8, 7.6, 0.0),
+		Ida (26.8, 7.6, 0.0, SUN, 141),
 		/** An asteroid */
-		Eros (17.0, 5.5, 0.0),
+		Eros (17.0, 5.5, 0.0, SUN, 144),
 		/** An asteroid */
-		Davida (180.0, 127.0, 0.0),
+		Davida (180.0, 127.0, 0.0, SUN, 1310),
 		/** An asteroid */
-		Gaspra (9.1, 4.4, 0.0),
+		Gaspra (9.1, 4.4, 0.0, SUN, 142),
 		/** An asteroid */
-		Steins (3.24, 2.04, 0.0),
+		Steins (3.24, 2.04, 0.0, SUN, 1311),
 		/** An asteroid */
-		Itokawa (0.535, 0.209, 0.0),
+		Itokawa (0.535, 0.209, 0.0, SUN, 1312),
 		// Comets
 		/** A comet */
-		P9_Tempel_1 (3.7, 2.5, 0.0),
+		P9_Tempel_1 (3.7, 2.5, 0.0, SUN, 1313),
 		/** A comet */
-		P19_Borrelly (3.5, 3.5, 0.0),
-		// Generic unknown body, must be the last item
+		P19_Borrelly (3.5, 3.5, 0.0, SUN, 1314),
 		/**
 		 * ID value for a generic 'not a planet' body, for instance
 		 * a space probe.
 		 */
-		NOT_A_PLANET (0, 0, 0);
-		
+		NOT_A_PLANET (0, 0, 0, SUN, 81);
+		// Generic unknown body, must be the last item
+
 		/**
 		 * The equatorial radius in km.
 		 */
 		public final double equatorialRadius;
+
 		/**
 		 * The polar radius in km.
 		 */
 		public final double polarRadius;
+
 		/**
 		 * The relative mass to the Sun (1), greater or equal to 1. Values
-		 * come from JPL DE405 ephemerides, and are used for correting for
+		 * come from JPL DE405 ephemerides, and are used for correcting for
 		 * light deflection.
 		 */
 		public final double relativeMass;
 
-		private String name = null;
-		private int lang = -1;
-		
+		/**
+		 * The central body
+		 */
+		public final TARGET centralBody;
+
+		/**
+		 * The index of the TARGET name
+		 * It is resolved at run-time to either a Spanish or English name.
+		 */
+		private final int nameIndex;
+
 		/**
 		 * The id number (index) for a comet or asteroid.
 		 */
 		private int id = -1;
-		
-		private TARGET(double eqR, double poR, double rM) {
+
+		TARGET(double eqR, double poR, double rM, TARGET centralBody, int nameIndex) {
 			this.equatorialRadius = eqR;
 			this.polarRadius = poR;
 			this.relativeMass = rM;
+			this.centralBody = centralBody;
+			this.nameIndex = nameIndex;
 		}
+
 		/**
 		 * Sets the index of a body, used to select a minor body 
 		 * when reading asteroids/comets. Default initial value
@@ -290,6 +316,7 @@ public final class Target
 		public void setIndex(int i) {
 			id = i;
 		}
+
 		/**
 		 * Returns the index, or -1 if it is not set.
 		 * @return The index.
@@ -297,7 +324,7 @@ public final class Target
 		public int getIndex() {
 			return id;
 		}
-		
+
 		/**
 		 * Check if the index is indeed a valid index of an object. The check is
 		 * made for main objects suitable for ephemeris calculations, such as the
@@ -311,12 +338,10 @@ public final class Target
 		 */
 		public boolean isValidObjectButNotASatelliteNeitherAnAsteroid()
 		{
-			boolean it_is = false;
-
-			if (this.ordinal() >= TARGET.SUN.ordinal() && this.ordinal() <= TARGET.Asteroid.ordinal() && this != TARGET.Earth_Moon_Barycenter && this != TARGET.EARTH)
-				it_is = true;
-
-			return it_is;
+			return
+				this.ordinal() >= TARGET.SUN.ordinal() &&
+				this.ordinal() <= TARGET.Asteroid.ordinal() &&
+				this != TARGET.Earth_Moon_Barycenter && this != TARGET.EARTH;
 		}
 
 		/**
@@ -327,12 +352,9 @@ public final class Target
 		 */
 		public boolean isNaturalSatellite()
 		{
-			boolean it_is = false;
-
-			if (this.ordinal() >= TARGET.Phobos.ordinal() && this.ordinal() <= TARGET.Proteus.ordinal())
-				it_is = true;
-
-			return it_is;
+			return
+				this.ordinal() >= TARGET.Phobos.ordinal() &&
+				this.ordinal() <= TARGET.Proteus.ordinal();
 		}
 
 		/**
@@ -342,12 +364,9 @@ public final class Target
 		 */
 		public boolean isPlanet()
 		{
-			boolean it_is = false;
-
-			if (this.ordinal() >= TARGET.SUN.ordinal() && this.ordinal() <= TARGET.NEPTUNE.ordinal())
-				it_is = true;
-
-			return it_is;
+			return
+				this.ordinal() >= TARGET.SUN.ordinal() &&
+				this.ordinal() <= TARGET.NEPTUNE.ordinal();
 		}
 
 		/**
@@ -357,128 +376,57 @@ public final class Target
 		 */
 		public boolean isAsteroid()
 		{
-			boolean it_is = false;
 			// Asteroid or comet !
-			if (this.ordinal() >= TARGET.Ceres.ordinal() && this.ordinal() <= TARGET.NOT_A_PLANET.ordinal())
-				it_is = true;
-
-			return it_is;
+			return
+				this.ordinal() >= TARGET.Ceres.ordinal() &&
+				this.ordinal() <= TARGET.NOT_A_PLANET.ordinal();
 		}
 
 		/**
-		 * Obtain the name of an object.
-		 * 
+		 * Obtain the name of an object in the default language.
+		 * The language is either Spanish or English, and is set with {@link Translate#setDefaultLanguage(LANGUAGE) }
+		 *
 		 * @return A string with the name of the object.
 		 */
 		public String getName()
 		{
-			if (name != null && lang == Translate.getDefaultLanguage().ordinal()) return name;
-			lang = Translate.getDefaultLanguage().ordinal();
-			name = null;
-			
-			if (this.ordinal() <= EARTH.ordinal()) {
-				try {
-					name = Translate.getEntry(this.ordinal(), Translate.getDefaultLanguage());
-					return name;
-				} catch (Exception exc) {
-					Logger.log(LEVEL.ERROR, "Cannot translate body name "+this+" to language "+Translate.getDefaultLanguage()+". This error should never happen!");
-					return null;
-				}
-			}
-			int i = -1;
-			if (this == TARGET.Moon) i = 4;
-			if (this == TARGET.Earth_Moon_Barycenter) i = 80;
-			if (this == TARGET.NOT_A_PLANET) i = 81;
-			if (this == TARGET.Comet) i = 74;
-			if (this == TARGET.NEO) i = 1275;
-			if (this == TARGET.Asteroid) i = 73;
-			if (this == TARGET.Belinda) i = 821;
-			if (this == TARGET.Naiad) i = 126;
-			if (this == TARGET.Thalassa) i = 125;
-			if (this == TARGET.Despina) i = 123;
-			if (this == TARGET.Galatea) i = 124;
-			if (this == TARGET.Larissa) i = 122;
-			if (this == TARGET.Proteus) i = 121;
-			if (this == TARGET.Ceres) return "Ceres";
-			if (this == TARGET.Pallas) return "Pallas";
-			if (this == TARGET.Vesta) i = 143;
-			if (this == TARGET.Eros) i = 144;
-			if (this == TARGET.Ida) i = 141;
-			if (this == TARGET.Gaspra) i = 142;
-			if (this.isNaturalSatellite() && i < 0) {
-				if (this.ordinal() <= Metis.ordinal()) i = 82 + this.ordinal() - Phobos.ordinal();
-				if (this.ordinal() >= Himalia.ordinal() && this.ordinal() <= Leda.ordinal()) i = 127 + this.ordinal() - Himalia.ordinal();
-				if (this.ordinal() >= Atlas.ordinal() && this.ordinal() <= Pan.ordinal()) i = 108 + this.ordinal() - Atlas.ordinal();
-				if (this.ordinal() >= Epimetheus.ordinal() && this.ordinal() <= Phoebe.ordinal()) i = 135 + this.ordinal() - Epimetheus.ordinal();
-				if (this.ordinal() >= Cordelia.ordinal() && this.ordinal() <= Puck.ordinal()) i = 112 + this.ordinal() - Cordelia.ordinal();
-			}
-			if (i >= 0) {
-				try {
-					name = Translate.getEntry(i, Translate.getDefaultLanguage());
-					return name;
-				} catch (Exception exc) {
-					Logger.log(LEVEL.ERROR, "Cannot translate body name "+this+" to language "+Translate.getDefaultLanguage()+". This error should never happen!");
-					return null;
-				}
-			}
-			if (this.ordinal() <= Pluto.ordinal()) {
-				try {
-					name = Translate.getEntry(this.ordinal()+1, Translate.getDefaultLanguage());
-					return name;
-				} catch (Exception exc) {
-					Logger.log(LEVEL.ERROR, "Cannot translate body name "+this+" to language "+Translate.getDefaultLanguage()+". This error should never happen!");
-					return null;
-				}
-			}
-
-			name = this.getEnglishName(); //Translate.translate(this.getEnglishName());
-			return name;
+			return getNameForLanguage(Translate.getDefaultLanguage());
 		}
-		
+
 		/**
 		 * Obtain the name of an object.
-		 * 
+		 *
 		 * @return A string with the name of the object.
 		 */
 		public String getEnglishName()
 		{
-			String name = "";
-			
-			switch (this)
-			{
-			case Earth_Moon_Barycenter:
-				name = "Earth-Moon barycenter";
-				break;
-			case NOT_A_PLANET:
-				name = "Not a planet";
-				break;
-			case P9_Tempel_1:
-				name = "9P/Tempel 1";
-				break;
-			case P19_Borrelly:
-				name = "19P/Borrelly";
-				break;
-			default:
-				name = this.name().toLowerCase();
-				name = name.substring(0, 1).toUpperCase() + name.substring(1);
-				break;
-			};
-			return name;
+			return getNameForLanguage(LANGUAGE.ENGLISH);
 		}
-		
+
+		private String getNameForLanguage(final LANGUAGE lang)
+		{
+			try {
+				return Translate.getEntry(nameIndex, lang);
+			} catch (Exception exc) {
+				String message = "Cannot translate body name " + this + " to language " + Translate.getDefaultLanguage() + ". This error should never happen!";
+				Logger.log(LEVEL.ERROR, message);
+				throw new RuntimeException(message);
+			}
+		}
+
 		/**
-		 * Returns flatenning factor = (equatorial radius - polar radius ) /
+		 * Returns flattening factor = (equatorial radius - polar radius ) /
 		 * equatorial radius.
 		 * 
-		 * @return Flatenning factor. Set to 0 if the object size is unknown.
+		 * @return Flattening factor. Set to 0 if the object size is unknown.
 		 */
-		public double getFlatenningFactor()
+		public double getFlatteningFactor()
 		{
 			if (this.equatorialRadius == 0.0) return 0.0;
 
 			return (this.equatorialRadius - this.polarRadius) / this.equatorialRadius;
 		}
-		
+
 		/**
 		 * Obtains the central body ID of certain object (natural satellite).
 		 * 
@@ -486,149 +434,23 @@ public final class Target
 		 */
 		public TARGET getCentralBody()
 		{
-			if (this == TARGET.Moon)
-				return TARGET.EARTH;
-			if (this == TARGET.Charon)
-				return TARGET.Pluto;
-			if (this == TARGET.Phobos)
-				return TARGET.MARS;
-			if (this == TARGET.Deimos)
-				return TARGET.MARS;
-			if (this == TARGET.Io)
-				return TARGET.JUPITER;
-			if (this == TARGET.Europa)
-				return TARGET.JUPITER;
-			if (this == TARGET.Ganymede)
-				return TARGET.JUPITER;
-			if (this == TARGET.Callisto)
-				return TARGET.JUPITER;
-			if (this == TARGET.Amalthea)
-				return TARGET.JUPITER;
-			if (this == TARGET.Thebe)
-				return TARGET.JUPITER;
-			if (this == TARGET.Adrastea)
-				return TARGET.JUPITER;
-			if (this == TARGET.Metis)
-				return TARGET.JUPITER;
-			if (this == TARGET.Mimas)
-				return TARGET.SATURN;
-			if (this == TARGET.Enceladus)
-				return TARGET.SATURN;
-			if (this == TARGET.Tethys)
-				return TARGET.SATURN;
-			if (this == TARGET.Dione)
-				return TARGET.SATURN;
-			if (this == TARGET.Rhea)
-				return TARGET.SATURN;
-			if (this == TARGET.Titan)
-				return TARGET.SATURN;
-			if (this == TARGET.Hyperion)
-				return TARGET.SATURN;
-			if (this == TARGET.Iapetus)
-				return TARGET.SATURN;
-			if (this == TARGET.Atlas)
-				return TARGET.SATURN;
-			if (this == TARGET.Prometheus)
-				return TARGET.SATURN;
-			if (this == TARGET.Pandora)
-				return TARGET.SATURN;
-			if (this == TARGET.Pan)
-				return TARGET.SATURN;
-			if (this == TARGET.Miranda)
-				return TARGET.URANUS;
-			if (this == TARGET.Ariel)
-				return TARGET.URANUS;
-			if (this == TARGET.Umbriel)
-				return TARGET.URANUS;
-			if (this == TARGET.Titania)
-				return TARGET.URANUS;
-			if (this == TARGET.Oberon)
-				return TARGET.URANUS;
-			if (this == TARGET.Cordelia)
-				return TARGET.URANUS;
-			if (this == TARGET.Ophelia)
-				return TARGET.URANUS;
-			if (this == TARGET.Bianca)
-				return TARGET.URANUS;
-			if (this == TARGET.Cressida)
-				return TARGET.URANUS;
-			if (this == TARGET.Desdemona)
-				return TARGET.URANUS;
-			if (this == TARGET.Juliet)
-				return TARGET.URANUS;
-			if (this == TARGET.Portia)
-				return TARGET.URANUS;
-			if (this == TARGET.Rosalind)
-				return TARGET.URANUS;
-			if (this == TARGET.Belinda)
-				return TARGET.URANUS;
-			if (this == TARGET.Puck)
-				return TARGET.URANUS;
-			if (this == TARGET.Triton)
-				return TARGET.NEPTUNE;
-			if (this == TARGET.Nereid)
-				return TARGET.NEPTUNE;
-			if (this == TARGET.Proteus)
-				return TARGET.NEPTUNE;
-			if (this == TARGET.Larissa)
-				return TARGET.NEPTUNE;
-			if (this == TARGET.Despina)
-				return TARGET.NEPTUNE;
-			if (this == TARGET.Galatea)
-				return TARGET.NEPTUNE;
-			if (this == TARGET.Thalassa)
-				return TARGET.NEPTUNE;
-			if (this == TARGET.Naiad)
-				return TARGET.NEPTUNE;
+			return this.centralBody == null ? SUN : this.centralBody;
+		}
+	}
 
-			if (this == TARGET.Himalia)
-				return TARGET.JUPITER;
-			if (this == TARGET.Elara)
-				return TARGET.JUPITER;
-			if (this == TARGET.Pasiphae)
-				return TARGET.JUPITER;
-			if (this == TARGET.Sinope)
-				return TARGET.JUPITER;
-			if (this == TARGET.Lysithea)
-				return TARGET.JUPITER;
-			if (this == TARGET.Carme)
-				return TARGET.JUPITER;
-			if (this == TARGET.Ananke)
-				return TARGET.JUPITER;
-			if (this == TARGET.Leda)
-				return TARGET.JUPITER;
-
-			if (this == TARGET.Epimetheus)
-				return TARGET.SATURN;
-			if (this == TARGET.Janus)
-				return TARGET.SATURN;
-			if (this == TARGET.Telesto)
-				return TARGET.SATURN;
-			if (this == TARGET.Calypso)
-				return TARGET.SATURN;
-			if (this == TARGET.Helene)
-				return TARGET.SATURN;
-			if (this == TARGET.Phoebe)
-				return TARGET.SATURN;
-
-			return TARGET.SUN;
-		}		
-	};
-
-	
 	private static String[] populateStringArrayList()
 	{
 		ArrayList<String> vS = new ArrayList<String>();
-		for (int i=TARGET.SUN.ordinal(); i<=TARGET.NOT_A_PLANET.ordinal(); i++)
-		{
-				vS.add(TARGET.values()[i].getName());
+		for (TARGET target : TARGET.values()) {
+			vS.add(target.getName());
 		}
-		
+
 		String data[] = DataSet.arrayListToStringArray(vS);
 		String lang = Translate.getDefaultLanguage().toString();
 		DataBase.addData("targetNames"+lang, null, data, true);
 		return data;
 	}
+
 	/**
 	 * Returns the names of all available targets.
 	 * @return All names.
@@ -637,21 +459,22 @@ public final class Target
 	{
 		String lang = Translate.getDefaultLanguage().toString();
 		String vS[] = (String[]) DataBase.getData("targetNames"+lang, null, true);
-		if (vS == null) vS = Target.populateStringArrayList();
+		if (vS == null) vS = populateStringArrayList();
 		return vS;
 	}
-	
+
 	private static int[] populateIntegerArrayList()
 	{
 		ArrayList<Integer> vI = new ArrayList<Integer>();
-		for (int i=TARGET.SUN.ordinal(); i<=TARGET.NOT_A_PLANET.ordinal(); i++)
+		for (int i = TARGET.SUN.ordinal(); i <= TARGET.NOT_A_PLANET.ordinal(); i++)
 		{
-			vI.add(new Integer(i));
+			vI.add(i);
 		}
 		int[] data = DataSet.arrayListToIntegerArray(vI);
 		DataBase.addData("targetIDs", null, data, true);
 		return data;
 	}
+
 	/**
 	 * Returns the IDs of all available targets.
 	 * @return All IDs.
@@ -659,7 +482,7 @@ public final class Target
 	public static int[] getIDs()
 	{
 		int vI[] = (int[]) DataBase.getData("targetIDs", null, true);
-		if (vI == null) vI = Target.populateIntegerArrayList();
+		if (vI == null) vI = populateIntegerArrayList();
 		return vI;
 	}
 
@@ -682,43 +505,13 @@ public final class Target
 				return out;
 			} catch (Exception exc) {}
 		}
-		
+
 		String names[] = Target.getNames();
 		int index = DataSet.getIndex(names, name);
 		if (index < 0) index = DataSet.getIndexStartingWith(names, name);
 		if (index >= 0) return TARGET.values()[index];
-		
-		String others[] = new String[] {
-				"Ceres", "Pallas", "Vesta", "Lutetia", "Ida", "Eros", "Davida", "Gaspra",
-				"Steins", "Itokawa", "9P/Tempel 1", "19P/Borrely"
-		};
-		index = DataSet.getIndexContaining(others, name);
-		if (index < 0) return TARGET.NOT_A_PLANET;
-		return TARGET.values()[index];
 
-/*		int ID = TARGET.NOT_A_PLANET.ordinal();
-		String nameUpper = name.toUpperCase();
-		TARGET t[] = TARGET.values();
-		for (int i = TARGET.Ceres.ordinal(); i< TARGET.NOT_A_PLANET.ordinal(); i++) {
-			String n = t[i].getName();
-			n = n.toUpperCase();
-			if (i <= TARGET.Asteroid.ordinal()) {
-				if (n.indexOf(nameUpper) == 0) ID = i;
-				if (n.equals(nameUpper)) break;				
-			} else {
-				if (i >= TARGET.Ceres.ordinal()) {
-					// Search by indexof for asteroids. This is due to the fact that the
-					// ussual name in the catalogs for Ida for example is not 'Ida', but '243
-					// Ida' instead.
-					if (nameUpper.indexOf(n) >= 0) ID = i;					
-				} else {
-					if (nameUpper.equals(n)) ID = i;
-				}
-			}
-		}
-		
-		return t[ID];
-*/		
+		return TARGET.NOT_A_PLANET;
 	}
 
 	/**
@@ -732,29 +525,18 @@ public final class Target
 	public static TARGET getIDFromEnglishName(String name) throws JPARSECException
 	{
 		if (name == null || name.equals("")) throw new JPARSECException("null/empty String as input planet!");
-		int ID = TARGET.NOT_A_PLANET.ordinal();
-		String nameUpper = name.toUpperCase();
-		for (int i = TARGET.SUN.ordinal(); i< TARGET.NOT_A_PLANET.ordinal(); i++) {
-			String n = TARGET.values()[i].getEnglishName();
-			n = n.toUpperCase();
-			if (i <= TARGET.Asteroid.ordinal()) {
-				if (n.indexOf(nameUpper) == 0) ID = i;
-				if (n.equals(nameUpper)) break;				
-			} else {
-				if (i >= TARGET.Ceres.ordinal()) {
-					// Search by indexof for asteroids. This is due to the fact that the
-					// ussual name in the catalogs for Ida for example is not 'Ida', but '243
-					// Ida' instead.
-					if (nameUpper.indexOf(n) >= 0) ID = i;					
-				} else {
-					if (nameUpper.equals(n)) ID = i;
-				}
+
+		for (TARGET target : TARGET.values()) {
+			String n = target.getEnglishName();
+
+			if (0 == name.compareToIgnoreCase(n)) {
+				return target;
 			}
 		}
-		
-		return TARGET.values()[ID];
+
+		return TARGET.NOT_A_PLANET;
 	}
-	
+
 	/**
 	 * Transforms a given latitude from planetocentric to planetogeodetic.
 	 * @param lat Latitude in radians.
@@ -762,10 +544,10 @@ public final class Target
 	 * @return Planetogeodetic latitude.
 	 */
 	public static double planetocentricToPlanetogeodeticLatitude(double lat, TARGET target) {
-		double shape = target.getFlatenningFactor(); // (equatorial - polar radius) / (equatorial radius)
+		double shape = target.getFlatteningFactor(); // (equatorial - polar radius) / (equatorial radius)
 		return Math.atan(Math.tan(lat) / Math.pow(1.0 - shape, 2.0));
 	}
-	
+
 	/**
 	 * Transforms a given latitude from planetogeodetic to planetocentric.
 	 * @param lat Latitude in radians.
@@ -773,7 +555,7 @@ public final class Target
 	 * @return Planetocentric latitude.
 	 */
 	public static double planetogeodeticToPlanetocentricLatitude(double lat, TARGET target) {
-		double shape = target.getFlatenningFactor(); // (equatorial - polar radius) / (equatorial radius)
+		double shape = target.getFlatteningFactor(); // (equatorial - polar radius) / (equatorial radius)
 		return Math.atan(Math.tan(lat) * Math.pow(1.0 - shape, 2.0));
 	}
 }

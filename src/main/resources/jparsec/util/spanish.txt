@@ -1305,3 +1305,14 @@ Distancia a la Tierra y el Sol de
 Nova
 Rotación de Carrington
 Lunación de Brown
+Ceres
+Pallas
+Lutetia
+Davida
+Steins
+Itokawa
+9P/Tempel 1
+19P/Borrelly
+Nutación
+Libración
+Baricentro del Sistema Solar

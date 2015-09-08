@@ -30,7 +30,7 @@
 
         <conga.url>http://conga.oan.es/~alonso/jparsec/lib</conga.url>
         <version.jparsec>0.107</version.jparsec>
-        <version.testng>6.9.6</version.testng>
+        <version.testng>6.8.21</version.testng>
         <version.checkstyle>6.8.1</version.checkstyle>
         <version.nrjavaserial>3.9.3.1</version.nrjavaserial>
         <version.jsch>0.1.53</version.jsch>
@@ -79,19 +79,24 @@
                 <configuration>
                     <source>1.6</source>
                     <target>1.6</target>
-                    <!--encoding>iso-8859-1</encoding-->
-                    <encoding>utf-8</encoding>
+                    <encoding>iso-8859-1</encoding>
                     <showWarnings>true</showWarnings>
-                    <showDeprecation>false</showDeprecation> <!-- JDK 1.6 stops if it encounters deprecation Warnings !! -->
-                    <compilerArgs>
-                        <!-- this is really necessary for JDK 1.6, otherwise ELP2000 classes are not accepted! -->
-                        <arg>-J-Xms4096m</arg>
-                        <arg>-J-Xmx4096m</arg>
-                        <arg>-verbose</arg>
-                    </compilerArgs>
+                    <showDeprecation>true</showDeprecation>
+                    <fork>true</fork>
                     <excludes>
                         <exclude>jparsec/graph/CreateJZY3DChart.java</exclude>
                     </excludes>
+                    <testExcludes>
+                        <exclude>jparsec/astronomy/VisualLimitTest.java</exclude>
+                        <exclude>jparsec/ephem/PrecessionTest.java</exclude>
+                        <exclude>jparsec/ephem/probes/SatelliteEphemTest.java</exclude>
+                        <exclude>jparsec/graph/CreateJZY3DChartTest.java</exclude>
+                        <exclude>jparsec/graph/chartRendering/RenderSatelliteTest.java</exclude>
+                        <exclude>jparsec/math/EvaluationTest.java</exclude>
+                        <exclude>jparsec/math/FastMathTest.java</exclude>
+                        <exclude>jparsec/test/TestElement.java</exclude>
+                        <exclude>jparsec/test/VE.java</exclude>
+                    </testExcludes>
                 </configuration>
             </plugin>
 
@@ -255,11 +260,6 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-clean-plugin</artifactId>
                     <version>${maven-clean-plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>${maven-compiler-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
