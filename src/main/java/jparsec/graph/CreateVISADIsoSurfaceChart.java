@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.graph;
 
 import java.awt.BorderLayout;
@@ -65,32 +65,32 @@ import visad.util.ContourWidget;
  */
 public class CreateVISADIsoSurfaceChart implements DisplayListener, Serializable {
 
-	static final long serialVersionUID = 1;
-	
+	private static final long serialVersionUID = 1;
+
 	  /**
 	   * Complete panel.
 	   */
 	public JPanel panel;
 	private boolean displaysAreLinked = true;
-	
+
 	private RealType rightAscension, declination, velocity;
 
 	/**
 	 * Holds the displays.
 	 */
 	private DisplayImpl[] displays;
-	
+
 	/**
 	 * The input cubes.
 	 */
 	public VISADCubeElement cube, cube2;
 	private String path[];
-	
+
 	/**
 	 * Display panel.
 	 */
 	public JPanel dispPanel;
-	
+
 	/**
 	 * Constructor for a standard VISAD datacube using right ascension,
 	 * declination, and velocity.
@@ -169,7 +169,7 @@ public class CreateVISADIsoSurfaceChart implements DisplayListener, Serializable
 	public String[] getFiles() {
 		return path;
 	}
-	
+
 	private void start(VISADCubeElement cube)
 	throws JPARSECException{
 		try {
@@ -185,7 +185,7 @@ public class CreateVISADIsoSurfaceChart implements DisplayListener, Serializable
 		}
 		catch (VisADException ex)
 		{
-			throw new JPARSECException("VisAD exception.", ex);		  
+			throw new JPARSECException("VisAD exception.", ex);
 		}
 	}
 
@@ -209,28 +209,28 @@ public class CreateVISADIsoSurfaceChart implements DisplayListener, Serializable
 		}
 		catch (VisADException ex)
 		{
-			throw new JPARSECException("VisAD exception.", ex);		  
+			throw new JPARSECException("VisAD exception.", ex);
 		}
 	}
 
     private void init() throws RemoteException, VisADException {
 	    // Create the Displays and their maps
 	    displays = new DisplayImpl[] { new DisplayImplJ3D("display")};
-	
+
 	    // Get display's graphics mode control draw scales
 	    for( int i = 0; i<1;i++){
 	      GraphicsModeControl dispGMC = (GraphicsModeControl) displays[i].getGraphicsModeControl();
 	      dispGMC.setScaleEnable(true);
 	    }
-	
+
 	    displays[0].getGraphicsModeControl().setTextureEnable(false);
-	
+
 	    RealType ir_radiance = RealType.getRealType(Translate.translate(942)); // "Iso_surface_level");
 	    RealType index = RealType.getRealType("index");
 	    RealType[] types = {declination, rightAscension, velocity, ir_radiance};
 	    RealTupleType radiance = new RealTupleType(types);
 	    FunctionType image_tuple = new FunctionType(index, radiance);
-	    
+
 	    Set domain_set = new Integer1DSet(cube.getNColumns()*cube.getNLevels()*cube.getNRows());
 	    FlatField imaget1 = new FlatField(image_tuple, domain_set);
 	    try {
@@ -247,26 +247,26 @@ public class CreateVISADIsoSurfaceChart implements DisplayListener, Serializable
 	    DataReferenceImpl ref_imaget1 = new DataReferenceImpl("ref_imaget1");
 	    ref_imaget1.setData(imaget1);
 	    displays[0].addReference(ref_imaget1, null);
-	    
+
 	    // Create application window, put display into it
 	    panel.setLayout(new BorderLayout());
-	
+
 	    dispPanel = new JPanel( new GridLayout(1,2) );
 	    dispPanel.add(displays[0].getComponent());
 	    panel.add(dispPanel, BorderLayout.CENTER);
-	
+
 	    ContourWidget cw = new ContourWidget(map1contour);
 	    JPanel panels = new JPanel();
 	    panels.setLayout(new GridLayout(2, 1));
-	
+
 	    for (int i=0; i<cw.getComponentCount(); i++) {
 	    	if (cw.getComponent(i).getClass().getName().equals("javax.swing.JSlider")) {
 	    	    final JSlider js1 = (JSlider) cw.getComponent(i);
-	    	    
+
 	    	    JPanel jp = ((JPanel) cw.getComponent(i-1));
 	    		panels.add(jp.getComponent(1), BorderLayout.EAST);
 	    		panels.add(cw.getComponent(i), BorderLayout.CENTER);
-	    		
+
 	    	    js1.addChangeListener(new ChangeListener() {
 					@Override
 					public void stateChanged(ChangeEvent e) {
@@ -276,27 +276,27 @@ public class CreateVISADIsoSurfaceChart implements DisplayListener, Serializable
 	    	    break;
 	    	}
 	    }
-	    
+
 	    this.panel.add(panels, BorderLayout.SOUTH);
     }
 
     private void init2() throws RemoteException, VisADException {
 	    // Create the Displays and their maps
 	    displays = new DisplayImpl[] { new DisplayImplJ3D("display1"), new DisplayImplJ3D("display2")};
-	
+
 	    // Get display's graphics mode control draw scales
 	    for( int i = 0; i< displays.length;i++){
 	      GraphicsModeControl dispGMC = (GraphicsModeControl) displays[i].getGraphicsModeControl();
 	      dispGMC.setScaleEnable(true);
 	      displays[i].getGraphicsModeControl().setTextureEnable(false);
 	    }
-		
+
 	    RealType ir_radiance = RealType.getRealType(Translate.translate(942)); //"Iso_surface_level");
 	    RealType index = RealType.getRealType("index");
 	    RealType[] types = {declination, rightAscension, velocity, ir_radiance};
 	    RealTupleType radiance = new RealTupleType(types);
 	    FunctionType image_tuple = new FunctionType(index, radiance);
-	    
+
 	    Set domain_set1 = new Integer1DSet(cube.getNColumns()*cube.getNLevels()*cube.getNRows());
 	    FlatField imaget1 = new FlatField(image_tuple, domain_set1);
 	    try {
@@ -334,25 +334,25 @@ public class CreateVISADIsoSurfaceChart implements DisplayListener, Serializable
 
 	    // Create application window, put display into it
 	    panel.setLayout(new BorderLayout());
-	
+
 	    dispPanel = new JPanel( new GridLayout(1, 2) );
 	    dispPanel.add(displays[0].getComponent());
 	    dispPanel.add(displays[1].getComponent());
-	    
+
 	    JPanel titles = new JPanel();
 
 	    titles.setLayout(new GridLayout(1, 2));
 	    titles.add(new JLabel(Translate.translate(943)), BorderLayout.EAST);
 	    titles.add(new JLabel(Translate.translate(944)), BorderLayout.WEST);
 	    panel.add(titles, BorderLayout.NORTH);
-	    
+
 	    panel.add(dispPanel, BorderLayout.CENTER);
-	
+
 	    ContourWidget cw = new ContourWidget(map1contour);
 	    ContourWidget cw2 = new ContourWidget(map2contour);
 	    JPanel panels = new JPanel();
 	    panels.setLayout(new GridLayout(2, 1));
-	
+
 	    for (int i=0; i<cw.getComponentCount(); i++) {
 	    	if (cw.getComponent(i).getClass().getName().equals("javax.swing.JSlider")) {
 	    	    final JSlider js2 = (JSlider) cw2.getComponent(i);
@@ -361,7 +361,7 @@ public class CreateVISADIsoSurfaceChart implements DisplayListener, Serializable
 	    	    JPanel jp = ((JPanel) cw.getComponent(i-1));
 	    		panels.add(jp.getComponent(1), BorderLayout.EAST);
 	    		panels.add(cw.getComponent(i), BorderLayout.CENTER);
-	    		
+
 	    	    js1.addChangeListener(new ChangeListener() {
 					@Override
 					public void stateChanged(ChangeEvent e) {
@@ -374,7 +374,7 @@ public class CreateVISADIsoSurfaceChart implements DisplayListener, Serializable
 	    	    break;
 	    	}
 	    }
-	    
+
 	    this.panel.add(panels, BorderLayout.SOUTH);
     }
 
@@ -397,7 +397,7 @@ public class CreateVISADIsoSurfaceChart implements DisplayListener, Serializable
 
     /**
      * Returns the 'samples' object to be used as a FlatField in the
-     * VISAD library. 
+     * VISAD library.
      * @param cube The 3d cube.
      * @return The 2d samples.
      */
@@ -419,8 +419,8 @@ public class CreateVISADIsoSurfaceChart implements DisplayListener, Serializable
     			}
     		}
     	}
-    	
-/*    	
+
+/*
 		// Force sphere isosurface for testing: when resolution is too high
 		// VISAD produces wrong results
 //		System.out.println(ncolumns * nrows * nlevels+"/"+ncolumns+"/"+nrows+"/"+nlevels);
@@ -436,7 +436,7 @@ public class CreateVISADIsoSurfaceChart implements DisplayListener, Serializable
 */
     	return flat_samples;
     }
-    
+
     /**
      * Shows the chart.
      * @param width Width in pixels.

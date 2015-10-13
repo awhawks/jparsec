@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -25,9 +25,7 @@ import java.io.File;
 import java.io.Serializable;
 import java.text.DateFormat;
 
-import jparsec.astrophysics.FluxElement;
 import jparsec.astrophysics.MeasureElement;
-import jparsec.astrophysics.Spectrum;
 import jparsec.astrophysics.Table;
 import jparsec.ephem.Functions;
 import jparsec.graph.DataSet;
@@ -39,40 +37,40 @@ import jparsec.vo.ADSElement;
 
 /**
  * A class to generate reports for Latex.<P>
- * 
+ *
  * The basic process is to write the header, to start the body, to end the body, and
  * to end the document. Any text to write should be located inside the body. Anyway,
  * the header/body and document end are handled or called automatically in case the
  * user don't call them, so it is possible to concentrate just in the content. <P>
- * 
+ *
  * Latex report has been designed to be compatible with html reports. If you create
  * an html report, you can also report to latex by just changing the object instance.
  * Some methods are not completely compatible, though.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
 public class LATEXReport implements Serializable
 {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	private StringBuffer latexCode = new StringBuffer(1000);
 	private StringBuffer bibTexCode = new StringBuffer(1000);
-	
+
 	private HTMLReport.STYLE textStyle = HTMLReport.STYLE.PLAIN;
 	private SIZE textSize = SIZE.NORMAL;
 	private String textColor = COLOR_BLACK;
 
-	private String sep = FileIO.getLineSeparator();	
+	private String sep = FileIO.getLineSeparator();
 	private String msg = Translate.translate(Translate.JPARSEC_AUTOMATICALLY_GENERATED)+" "+Translate.translate(Translate.JPARSEC_BY)+" "+Version.PACKAGE_NAME+" v"+Version.VERSION_ID+
 	" "+Translate.translate(Translate.JPARSEC_ON) + " ";
 
 	private String avoidFormatting = "\\{}~";
 	private boolean fixFigures = false;
-	
+
 	private boolean insideTable = false;
 	private boolean header = false, document = true, beamer = false, justify = false, firstJustify = true;
-	
+
 	/**
 	 * ID constant for a black text color.
 	 */
@@ -115,7 +113,7 @@ public class LATEXReport implements Serializable
 	public void setFixFiguresFlag(boolean b) {
 		fixFigures = b;
 	}
-	
+
 	/**
 	 * Writes the header of the Latex file.
 	 * @param title Title to be seen in the document.
@@ -123,7 +121,7 @@ public class LATEXReport implements Serializable
 	public void writeHeader(String title)
 	{
 		latexCode.append("% "+msg + TimeFormat.dateNow(DateFormat.FULL) + sep);
-		latexCode.append("\\documentclass{article}" + sep); 
+		latexCode.append("\\documentclass{article}" + sep);
 		latexCode.append("\\usepackage{graphicx}" + sep);
 		//latexCode.append("\\usepackage{txfonts}" + sep);
 		latexCode.append("\\usepackage{verbatim}" + sep);
@@ -149,7 +147,7 @@ public class LATEXReport implements Serializable
 		latexCode.append("\\setlength\\evensidemargin{0in}" + sep);
 		latexCode.append("\\setlength\\parindent{0.25in}" + sep);
 		latexCode.append("\\setlength\\parskip{0.25in}" + sep);
-		latexCode.append(sep);		
+		latexCode.append(sep);
 		latexCode.append("\\begin{document}" + sep);
 		header = true;
 		if (title != null) {
@@ -159,7 +157,7 @@ public class LATEXReport implements Serializable
 			latexCode.append("\\maketitle" + sep);
 		}
 	}
-	
+
 	/**
 	 * Writes the header of the Latex file.
 	 * @param title Title to be seen in the document.
@@ -170,9 +168,9 @@ public class LATEXReport implements Serializable
 	{
 		double w = (textWidthPercentage / 100.0) * 8.5;
 		double h = (textHeightPercentage / 100.0) * 11;
-		
+
 		latexCode.append("% "+msg + TimeFormat.dateNow(DateFormat.FULL) + sep);
-		latexCode.append("\\documentclass{article}" + sep); 
+		latexCode.append("\\documentclass{article}" + sep);
 		latexCode.append("\\usepackage{graphicx}" + sep);
 		//latexCode.append("\\usepackage{txfonts}" + sep);
 		latexCode.append("\\usepackage{verbatim}" + sep);
@@ -198,7 +196,7 @@ public class LATEXReport implements Serializable
 		latexCode.append("\\setlength\\evensidemargin{0in}" + sep);
 		latexCode.append("\\setlength\\parindent{0.25in}" + sep);
 		latexCode.append("\\setlength\\parskip{0.25in}" + sep);
-		latexCode.append(sep);		
+		latexCode.append(sep);
 		latexCode.append("\\begin{document}" + sep);
 		header = true;
 		if (title != null) {
@@ -208,7 +206,7 @@ public class LATEXReport implements Serializable
 			latexCode.append("\\maketitle" + sep);
 		}
 	}
-	
+
 	/**
 	 * Writes the header of the Latex file with an author.
 	 * Not compatible with HTML.
@@ -222,9 +220,9 @@ public class LATEXReport implements Serializable
 	 */
 	public void writeHeader(String documentType, String title, String author, String date, String packages[])
 	{
-		if (documentType == null) documentType = "article"; 
+		if (documentType == null) documentType = "article";
 		latexCode.append("% "+msg + TimeFormat.dateNow(DateFormat.FULL) + sep);
-		latexCode.append("\\documentclass{"+documentType+"}" + sep); 
+		latexCode.append("\\documentclass{"+documentType+"}" + sep);
 		latexCode.append("\\usepackage{graphicx}" + sep);
 		latexCode.append("\\usepackage{txfonts}" + sep);
 		latexCode.append("\\usepackage{verbatim}" + sep);
@@ -237,7 +235,7 @@ public class LATEXReport implements Serializable
 		latexCode.append("\\usepackage{natbib}" + sep);
 		if (packages != null && packages.length > 0) {
 			for (int i=0; i<packages.length; i++) {
-				latexCode.append("\\usepackage{"+packages[i]+"}" + sep);				
+				latexCode.append("\\usepackage{"+packages[i]+"}" + sep);
 			}
 		}
 		//latexCode.append("\\usepackage{blindtext}" + sep);
@@ -255,7 +253,7 @@ public class LATEXReport implements Serializable
 		latexCode.append("\\setlength\\evensidemargin{0in}" + sep);
 		latexCode.append("\\setlength\\parindent{0.25in}" + sep);
 		latexCode.append("\\setlength\\parskip{0.25in}" + sep);
-		latexCode.append(sep);		
+		latexCode.append(sep);
 		latexCode.append("\\begin{document}" + sep);
 		header = true;
 		if (author != null) {
@@ -275,7 +273,7 @@ public class LATEXReport implements Serializable
 			latexCode.append("\\maketitle" + sep);
 		}
 	}
-	
+
 	/**
 	 * Writes the header of the Latex file for a presentation.
 	 * Not compatible with HTML.
@@ -294,14 +292,14 @@ public class LATEXReport implements Serializable
 	 * @param leftMargin Left margin as a value in cm for the text location. Null for default value.
 	 * @param rightMargin Right margin as a value in cm for the text location. Null for default value.
 	 */
-	public void writeHeaderForPresentationUsingBeamer(String theme, String title, String author, String institute, String date, 
-			String packages[], boolean hideNavigationControls, boolean showTitlePage, boolean forceSmallNavigationBar, 
+	public void writeHeaderForPresentationUsingBeamer(String theme, String title, String author, String institute, String date,
+			String packages[], boolean hideNavigationControls, boolean showTitlePage, boolean forceSmallNavigationBar,
 			String leftMargin, String rightMargin)
 	{
 		if (theme == null) theme = "Warsaw";
 		header = true;
 		latexCode.append("% "+msg + TimeFormat.dateNow(DateFormat.FULL) + sep);
-		latexCode.append("\\documentclass{beamer}" + sep); 
+		latexCode.append("\\documentclass{beamer}" + sep);
 		latexCode.append("\\usepackage[latin1]{inputenc}" + sep);
 		latexCode.append("\\usepackage{graphicx}" + sep);
 		latexCode.append("\\usepackage{txfonts}" + sep);
@@ -314,7 +312,7 @@ public class LATEXReport implements Serializable
 		latexCode.append("\\usepackage{pdfpages}" + sep);
 		if (packages != null && packages.length > 0) {
 			for (int i=0; i<packages.length; i++) {
-				latexCode.append("\\usepackage{"+packages[i]+"}" + sep);				
+				latexCode.append("\\usepackage{"+packages[i]+"}" + sep);
 			}
 		}
 		//latexCode.append("\\usepackage{blindtext}" + sep);
@@ -343,7 +341,7 @@ public class LATEXReport implements Serializable
 		if (hideNavigationControls) latexCode.append("\\usenavigationsymbolstemplate{}" + sep);
 		if (leftMargin != null) latexCode.append("\\setbeamersize{text margin left="+leftMargin+"cm}" + sep);
 		if (rightMargin != null) latexCode.append("\\setbeamersize{text margin right="+rightMargin+"cm}" + sep);
-		
+
 		if (forceSmallNavigationBar) {
 			latexCode.append("\\setbeamertemplate{headline}" + sep);
 			latexCode.append("{%" + sep);
@@ -356,9 +354,9 @@ public class LATEXReport implements Serializable
 			latexCode.append("\\end{beamercolorbox}%" + sep);
 			latexCode.append("}" + sep);
 		}
-		
+
 		latexCode.append(sep + "\\begin{document}" + sep);
-		
+
 		if (showTitlePage) {
 			latexCode.append("\\begin{frame}[plain]" + sep);
 			latexCode.append("\\titlepage" + sep);
@@ -366,7 +364,7 @@ public class LATEXReport implements Serializable
 		}
 		beamer = true;
 	}
-	
+
 	/**
 	 * Begins the body. Does nothing, only for compatibility with HTML reports.
 	 */
@@ -375,7 +373,7 @@ public class LATEXReport implements Serializable
 	 * Ends the body tag. Does nothing, only for compatibility with HTML reports.
 	 */
 	public void endBody() {}
-	
+
 	/**
 	 * Begins a frame for a presentation.
 	 * @param plain True to begin a plain frame without decorations.
@@ -384,13 +382,13 @@ public class LATEXReport implements Serializable
 	public void beginFrame(boolean plain, boolean addTitlePage) {
 		if (!header) try { writeHeader(""); } catch (Exception exc) {}
 		if (!plain) {
-			latexCode.append(sep + "\\begin{frame}" + sep);			
+			latexCode.append(sep + "\\begin{frame}" + sep);
 		} else {
 			latexCode.append(sep + "\\begin{frame}[plain]" + sep);
-		}		
+		}
 		if (addTitlePage) latexCode.append("\\titlepage" + sep);
 	}
-	
+
 	/**
 	 * Begins a frame for a presentation.
 	 * @param name Name.
@@ -399,12 +397,12 @@ public class LATEXReport implements Serializable
 	{
 		if (!header) try { writeHeader(""); } catch (Exception exc) {}
 		if (name == null) {
-			latexCode.append(sep + "\\begin{frame}" + sep);			
+			latexCode.append(sep + "\\begin{frame}" + sep);
 		} else {
 			latexCode.append(sep + "\\begin{frame}{"+name+"}" + sep);
 		}
 	}
-	
+
 	/**
 	 * Ends a frame of a presentation.
 	 */
@@ -422,7 +420,7 @@ public class LATEXReport implements Serializable
 		if (!header) try { writeHeader(""); } catch (Exception exc) {}
 		latexCode.append(sep + "\\chapter{");
 		this.writeTextWithStyleAndColor(name, false);
-		latexCode.append("}" + sep + sep);		
+		latexCode.append("}" + sep + sep);
 	}
 	/**
 	 * Begins a section.
@@ -433,7 +431,7 @@ public class LATEXReport implements Serializable
 		if (!header) try { writeHeader(""); } catch (Exception exc) {}
 		latexCode.append(sep + "\\section{");
 		this.writeTextWithStyleAndColor(name, false);
-		latexCode.append("}" + sep + sep);		
+		latexCode.append("}" + sep + sep);
 	}
 	/**
 	 * Begins a sub-section.
@@ -444,7 +442,7 @@ public class LATEXReport implements Serializable
 		if (!header) try { writeHeader(""); } catch (Exception exc) {}
 		latexCode.append(sep + "\\subsection{");
 		this.writeTextWithStyleAndColor(name, false);
-		latexCode.append("}" + sep + sep);		
+		latexCode.append("}" + sep + sep);
 	}
 
 	/**
@@ -752,7 +750,7 @@ public class LATEXReport implements Serializable
 					latexCode.append("\\let\\olditem\\item" + sep);
 					firstJustify = false;
 				}
-				latexCode.append("\\renewcommand\\item{\\olditem\\raggedright}" + sep);				
+				latexCode.append("\\renewcommand\\item{\\olditem\\raggedright}" + sep);
 			}
 		}
 		latexCode.append(sep + "\\begin{itemize}" + sep);
@@ -824,7 +822,7 @@ public class LATEXReport implements Serializable
 	public void setLineSpacing(double sp) {
 		latexCode.append(sep + "\\linespread{"+Functions.formatValue(sp, 3)+"}" + sep + sep);
 	}
-	
+
 	/**
 	 * Writes a footnote. Not compatible with HTML.
 	 * @param text Text to write.
@@ -980,7 +978,7 @@ public class LATEXReport implements Serializable
 		latexCode.append("\\end{table}" + sep + sep);
 		insideTable = false;
 	}
-	
+
 	/**
 	 * Writes a label. Not compatible with HTML.
 	 * @param label The label.
@@ -989,7 +987,7 @@ public class LATEXReport implements Serializable
 		if (!header) try { writeHeader(""); } catch (Exception exc) {}
 		if (label != null) latexCode.append("\\label{"+label+"}" + sep);
 	}
-	
+
 	/**
 	 * Ends a long table tag adding a label.
 	 * @param label The label. Set to null to avoid it.
@@ -1004,14 +1002,14 @@ public class LATEXReport implements Serializable
 	}
 	/**
 	 * Write a row in a table.<P>
-	 * 
+	 *
 	 * Align commands are right, left, center.<P>
-	 * 
+	 *
 	 * Column span is the number of columns to be agruped by a given text. If a table has 6 columns
 	 * (length of columns array), then a column span of 6 alows to write text ocuping the whole row,
 	 * as a title for example. In this case the columns array should have length 1 to write only that
 	 * title.
-	 * 
+	 *
 	 * @param columns Columns to be written to complete the row.
 	 * @param bgcolor Background color. Ignored, only for compatibility with HTML report.
 	 * @param align Align command. Set to null to use default left align.
@@ -1021,7 +1019,7 @@ public class LATEXReport implements Serializable
 	{
 		this.writeRowInTable(columns, bgcolor, align, colspan, true);
 	}
-	
+
 	/**
 	 * Writes an entire table object, row by row. Header should be written previously. The table
 	 * is written using parenthesis for the error values, and without units. Parameters like background
@@ -1036,17 +1034,17 @@ public class LATEXReport implements Serializable
 			writeRowInTable(MeasureElement.toString(table.getRowValues(0, i), useParentheses, includeUnit), null, null, null, false);
 		}
 	}
-	
+
 	/**
 	 * Write a row in a table.<P>
-	 * 
+	 *
 	 * Align commands are right, left, center.<P>
-	 * 
+	 *
 	 * Column span is the number of columns to be agruped by a given text. If a table has 6 columns
 	 * (length of columns array), then a column span of 6 alows to write text ocuping the whole row,
 	 * as a title for example. In this case the columns array should have length 1 to write only that
 	 * title.
-	 * 
+	 *
 	 * @param columns Columns to be written to complete the row.
 	 * @param bgcolor Background color. Ignored, only for compatibility with HTML report.
 	 * @param align Align command. Set to null to use default left align.
@@ -1071,7 +1069,7 @@ public class LATEXReport implements Serializable
 		}
 		int begin = latexCode.lastIndexOf("begin{tabular*}");
 		int end = latexCode.lastIndexOf("\\\\");
-		if (end < begin) {		
+		if (end < begin) {
 			latexCode.append("{@{\\extracolsep{\\fill}}"+cols+"}" + sep);
 			latexCode.append("\\hline\\noalign{\\smallskip}" + sep);
 		}
@@ -1085,14 +1083,14 @@ public class LATEXReport implements Serializable
 				} else {
 					line = "\\multicolumn{"+colspan+"}{c}{";
 				}
-				
+
 				if (!line.equals(""))
 				{
 					latexCode.append(line);
 					if (format) {
-						this.writeTextWithStyleAndColor(columns[i], false); 
+						this.writeTextWithStyleAndColor(columns[i], false);
 					} else {
-						latexCode.append(columns[i]);	
+						latexCode.append(columns[i]);
 					}
 					latexCode.append("}");
 					i = i + Integer.parseInt(colspan);
@@ -1100,26 +1098,26 @@ public class LATEXReport implements Serializable
 					if (format) {
 						this.writeTextWithStyleAndColor(columns[i], false);
 					} else {
-						latexCode.append(columns[i]);	
+						latexCode.append(columns[i]);
 					}
 				}
 			}
 			if (i < (columns.length - 1)) latexCode.append(" & ");
 		}
-		latexCode.append(" \\\\"+sep);				
+		latexCode.append(" \\\\"+sep);
 	}
-	
+
 	/**
 	 * Write a row in a table including a possible title (tooltip text) that appears when
 	 * the mouse is on the text item.<P>
-	 * 
+	 *
 	 * Align commands are right, left, center.<P>
-	 * 
+	 *
 	 * Column span is the number of columns to be agruped by a given text. If a table has 6 columns
 	 * (length of columns array), then a column span of 6 alows to write text ocuping the whole row,
 	 * as a title for example. In this case the columns array should have length 1 to write only that
 	 * title.
-	 * 
+	 *
 	 * @param columns Columns to be written to complete the row.
 	 * @param title Title for the tooltip in each column item.
 	 * @param bgcolor Background color. Ignored, only for compatibility with HTML report.
@@ -1133,20 +1131,20 @@ public class LATEXReport implements Serializable
 		{
 			columns[i] = "\\href{"+title[i]+"}{\\nolinkurl{"+columns[i]+"}}";
 		}
-		
+
 		this.writeRowInTable(columns, bgcolor, align, colspan, format);
 	}
 	/**
 	 * Write a row in a table including a possible title (tooltip text) that appears when
 	 * the mouse is on the text item.<P>
-	 * 
+	 *
 	 * Align commands are right, left, center.<P>
-	 * 
+	 *
 	 * Column span is the number of columns to be agruped by a given text. If a table has 6 columns
 	 * (length of columns array), then a column span of 6 alows to write text ocuping the whole row,
 	 * as a title for example. In this case the columns array should have length 1 to write only that
 	 * title.
-	 * 
+	 *
 	 * @param columns Columns to be written to complete the row.
 	 * @param title Title for the tooltip in each column item.
 	 * @param bgcolor Background color. Ignored, only for compatibility with HTML report.
@@ -1159,7 +1157,7 @@ public class LATEXReport implements Serializable
 		{
 			columns[i] = "\\href{"+title[i]+"}{\\nolinkurl{"+columns[i]+"}}";
 		}
-		
+
 		this.writeRowInTable(columns, bgcolor, align, colspan, true);
 	}
 	/**
@@ -1212,7 +1210,7 @@ public class LATEXReport implements Serializable
 			latexCode.append("\\end{tabular}");
 			latexCode.append("\\end{table}" + sep + sep);
 		} else {
-			latexCode.append(sep);			
+			latexCode.append(sep);
 		}
 	}
 	/**
@@ -1227,7 +1225,7 @@ public class LATEXReport implements Serializable
 	 */
 	public String writeImage(String width, String height, String align, String border,
 			String alt, String src)
-	{		
+	{
 		String code = this.beginAlignment(align);
 		if (width != null) {
 			if (width.endsWith("%")) {
@@ -1245,7 +1243,7 @@ public class LATEXReport implements Serializable
 				height += "pt";
 			}
 		}
-		
+
 		String fix = "";
 		if (fixFigures) fix = "[!ht]";
 		code += sep + "\\begin{figure}" + fix + sep;
@@ -1260,12 +1258,12 @@ public class LATEXReport implements Serializable
 			if (align.toLowerCase().equals("left")) code += "\\hspace*{15cm}"+sep;
 			if (align.toLowerCase().equals("right")) code += "\\hspace*{-15cm}"+sep;
 		}
-		
+
 		code += "\\end{figure}"+sep + sep;
 		code += this.endAlignment(align);
 		return code;
 	}
-	
+
 	/**
 	 * Returns the code for an image tag. None of the parameters can be null.
 	 * @param width Width. As a number for pixels or as percentage.
@@ -1278,7 +1276,7 @@ public class LATEXReport implements Serializable
 	 */
 	public String writeImages(String width, String height, String align, String border,
 			String alt, String src[])
-	{		
+	{
 		String code = this.beginAlignment(align);
 		if (width != null) {
 			if (width.endsWith("%")) {
@@ -1296,7 +1294,7 @@ public class LATEXReport implements Serializable
 				height += "pt";
 			}
 		}
-		
+
 		String fix = "";
 		if (fixFigures) fix = "[!ht]";
 		code += sep + "\\begin{figure}" + fix + sep;
@@ -1313,12 +1311,12 @@ public class LATEXReport implements Serializable
 			if (align.toLowerCase().equals("left")) code += "\\hspace*{15cm}"+sep;
 			if (align.toLowerCase().equals("right")) code += "\\hspace*{-15cm}"+sep;
 		}
-		
+
 		code += "\\end{figure}"+sep + sep;
 		code += this.endAlignment(align);
 		return code;
 	}
-	
+
 	/**
 	 * Writes the code for an image tag. Not compatible with HTML.
 	 * @param width Width.
@@ -1328,11 +1326,11 @@ public class LATEXReport implements Serializable
 	 * @param caption Caption for the image. Can be null.
 	 * @param label Label as an id for the image. Can be null.
 	 */
-	public void writeImageWithCaption(String width, String height, String align, 
+	public void writeImageWithCaption(String width, String height, String align,
 			String src, String caption, String label) {
 		this.writeImageWithCaption(width, height, null, align, src, caption, label);
 	}
-	
+
 	/**
 	 * Writes the code for an image tag. Not compatible with HTML.
 	 * @param width Width.
@@ -1343,7 +1341,7 @@ public class LATEXReport implements Serializable
 	 * @param caption Caption for the image. Can be null.
 	 * @param label Label as an id for the image. Can be null.
 	 */
-	public void writeImageWithCaption(String width, String height, String angle, String align, 
+	public void writeImageWithCaption(String width, String height, String angle, String align,
 			String src, String caption, String label)
 	{
 		if (!header) try { writeHeader(""); } catch (Exception exc) {}
@@ -1364,7 +1362,7 @@ public class LATEXReport implements Serializable
 				height += "pt";
 			}
 		}
-		
+
 		String fix = "";
 		if (fixFigures) fix = "[!ht]";
 		code += sep + "\\begin{figure}" + fix + sep;
@@ -1392,7 +1390,7 @@ public class LATEXReport implements Serializable
 		if (label != null && !label.equals("")) code += "\\label{"+label+"}"+sep;
 		code += "\\end{figure}"+sep + sep;
 		code += this.endAlignment(align);
-		
+
 		this.latexCode.append(code);
 	}
 	/**
@@ -1405,7 +1403,7 @@ public class LATEXReport implements Serializable
 	 * @param caption Caption for the image. Can be null.
 	 * @param label Label as an id for the image. Can be null.
 	 */
-	public void writeImagesWithCaption(String width, String height, String angle, String align, 
+	public void writeImagesWithCaption(String width, String height, String angle, String align,
 			String[] src, String caption, String label)
 	{
 		if (!header) try { writeHeader(""); } catch (Exception exc) {}
@@ -1426,7 +1424,7 @@ public class LATEXReport implements Serializable
 				height += "pt";
 			}
 		}
-		
+
 		String fix = "";
 		if (fixFigures) fix = "[!ht]";
 		code += sep + "\\begin{figure}" + fix + sep;
@@ -1453,7 +1451,7 @@ public class LATEXReport implements Serializable
 		if (label != null && !label.equals("")) code += "\\label{"+label+"}"+sep;
 		code += "\\end{figure}"+sep + sep;
 		code += this.endAlignment(align);
-		
+
 		this.latexCode.append(code);
 	}
 	private String beginAlignment(String align)
@@ -1461,7 +1459,7 @@ public class LATEXReport implements Serializable
 		if (align == null) align = "left";
 		if (align.toLowerCase().equals("left")) align = "flushleft";
 		if (align.toLowerCase().equals("right")) align = "flushright";
-		
+
 		String code = "\\begin{"+align.toLowerCase()+"}" + sep;
 		return code;
 	}
@@ -1470,8 +1468,8 @@ public class LATEXReport implements Serializable
 		if (align == null) align = "left";
 		if (align.toLowerCase().equals("left")) align = "flushleft";
 		if (align.toLowerCase().equals("right")) align = "flushright";
-		
-		String code = "\\end{"+align.toLowerCase()+"}" + sep; 
+
+		String code = "\\end{"+align.toLowerCase()+"}" + sep;
 		return code;
 	}
 	/**
@@ -1508,7 +1506,7 @@ public class LATEXReport implements Serializable
 	{
 		this.latexCode = new StringBuffer(code);
 	}
-	
+
 	private String getBeginOfCurrentStyle(boolean alsoSize)
 	{
 		String style = "";
@@ -1531,7 +1529,7 @@ public class LATEXReport implements Serializable
 				break;
 			}
 		}
-		
+
 		switch (this.textStyle)
 		{
 		case PLAIN:
@@ -1591,7 +1589,7 @@ public class LATEXReport implements Serializable
 	}
 	/**
 	 * Sets the color of the text to write.
-	 * @param color Text color in hex format. 
+	 * @param color Text color in hex format.
 	 * Some constants defined in this class.
 	 */
 	public void setTextColor(String color)
@@ -1612,7 +1610,7 @@ public class LATEXReport implements Serializable
 	{
 		this.textSize = size;
 	}
-	
+
 	/**
 	 * Returns the LATEX code for a given text using the current style and color.
 	 * @param text The text.
@@ -1649,7 +1647,7 @@ public class LATEXReport implements Serializable
 		if (path.indexOf(FileIO.getFileSeparator()) >= 0) outputDir = path.substring(0, path.lastIndexOf(FileIO.getFileSeparator()));
 		String od = outputDir;
 		if (!outputDir.equals("")) outputDir = "-output-directory="+outputDir;
-		
+
 		String out = "";
 		try {
 			Process p = ApplicationLauncher.executeCommand("latex "+outputDir+" -interaction=nonstopmode " + path, null, new File(od));
@@ -1685,7 +1683,7 @@ public class LATEXReport implements Serializable
 		} catch (Exception exc) {
 		}
 	}
-	
+
 	/**
 	 * Compile a latex file to create a Postscript file.
 	 * @param path Path to a .tex file.
@@ -1695,9 +1693,9 @@ public class LATEXReport implements Serializable
 	public static String compileLatexToPS(String path)
 	throws JPARSECException {
 		String dviName = path.substring(0, path.lastIndexOf(".")) + ".dvi";
-		LATEXReport.compileLatexToDVI(path);		
+		LATEXReport.compileLatexToDVI(path);
 		String psName = dviName.substring(0, dviName.lastIndexOf(".")) + ".ps";
-		Process p = ApplicationLauncher.executeCommand("dvips -o "+psName+" " + dviName, null, new File(FileIO.getDirectoryFromPath(dviName)));	
+		Process p = ApplicationLauncher.executeCommand("dvips -o "+psName+" " + dviName, null, new File(FileIO.getDirectoryFromPath(dviName)));
 		try {
 			p.waitFor();
 			LATEXReport.deleteTemporalFiles(path);
@@ -1721,7 +1719,7 @@ public class LATEXReport implements Serializable
 		if (path.indexOf(FileIO.getFileSeparator()) >= 0) outputDir = path.substring(0, path.lastIndexOf(FileIO.getFileSeparator()));
 		String od = outputDir;
 		if (!outputDir.equals("")) outputDir = "-output-directory="+outputDir;
-		
+
 		//String out = "";
 		try {
 			Process p = ApplicationLauncher.executeCommand("pdflatex "+outputDir+" -interaction=nonstopmode " + path, null, new File(od));
@@ -1748,18 +1746,18 @@ public class LATEXReport implements Serializable
 	throws JPARSECException {
 		String dviName = path.substring(0, path.lastIndexOf(".")) + ".dvi";
 		LATEXReport.compileLatexToDVI(path);
-		
+
 		String pdfName = dviName.substring(0, dviName.lastIndexOf(".")) + ".pdf";
 		Process p;
 		try {
 			p = ApplicationLauncher.executeCommand("rm "+pdfName);
 			p.waitFor();
-			p = ApplicationLauncher.executeCommand("dvipdf -sOutputFile="+pdfName+" " + dviName, null, new File(FileIO.getDirectoryFromPath(dviName)));	
+			p = ApplicationLauncher.executeCommand("dvipdf -sOutputFile="+pdfName+" " + dviName, null, new File(FileIO.getDirectoryFromPath(dviName)));
 		} catch (Exception exc)
 		{
-			p = ApplicationLauncher.executeCommand("dvipdfm -o "+pdfName+" " + dviName, null, new File(FileIO.getDirectoryFromPath(dviName)));	
+			p = ApplicationLauncher.executeCommand("dvipdfm -o "+pdfName+" " + dviName, null, new File(FileIO.getDirectoryFromPath(dviName)));
 		}
-	
+
 		try {
 			p.waitFor();
 			LATEXReport.deleteTemporalFiles(path);
@@ -1767,7 +1765,7 @@ public class LATEXReport implements Serializable
 			Logger.log(LEVEL.ERROR, "Exception when compiling with dvipdf. Output message was: "+exc.getLocalizedMessage());
 		}
 		return pdfName;
-	}	
+	}
 	/**
 	 * Sets the set of characters to preserve as the user types then without
 	 * reformating. See {@linkplain LATEXReport#formatSymbols(String)} for list
@@ -1791,10 +1789,10 @@ public class LATEXReport implements Serializable
 
 	/**
 	 * Replaces normal symbols by it's Latex representation. Currently only for <, >,
-	 * &aacute;, &eacute;, &iacute;, &ouml;, &uacute;, +/-, {, }, _, ^, ~, \, $, #, %, &, &ordm;, &ntilde;. Any of them can be preserved in the
+	 * &aacute;, &eacute;, &iacute;, &oacute;, &uacute;, +/-, {, }, _, ^, ~, \, $, #, %, &, &deg;, &ntilde;. Any of them can be preserved in the
 	 * input by adding the character to {@linkplain LATEXReport#setAvoidFormatting(String)}.
 	 * Default symbols to avoid formatting are \{}~.
-	 * 
+	 *
 	 * @param text Input text.
 	 * @return Output table.
 	 */
@@ -1856,7 +1854,7 @@ public class LATEXReport implements Serializable
 		if (this.avoidFormatting.indexOf("\u00fa")<0) text = DataSet.replaceAll(text, "\u00fa", "\\'{u}", true);
 		if (this.avoidFormatting.indexOf("\u00f1")<0) text = DataSet.replaceAll(text, "\u00f1", "\\~n", true);
 		if (this.avoidFormatting.indexOf("+/-")<0) text = DataSet.replaceAll(text, "+/-", "$\\pm$", true);
-		if (this.avoidFormatting.indexOf("\u00ba")<0) text = DataSet.replaceAll(text, "\u00ba", "$^\\circ$", true);
+		if (this.avoidFormatting.indexOf("\u00b0")<0) text = DataSet.replaceAll(text, "\u00b0", "$^\\circ$", true);
 		if (this.avoidFormatting.indexOf("\u00c1")<0) text = DataSet.replaceAll(text, "\u00c1", "\\'{A}", true);
 		if (this.avoidFormatting.indexOf("\u00c9")<0) text = DataSet.replaceAll(text, "\u00c9", "\\'{E}", true);
 		if (this.avoidFormatting.indexOf("\u00cd")<0) text = DataSet.replaceAll(text, "\u00cd", "\\'{I}", true);
@@ -1869,9 +1867,9 @@ public class LATEXReport implements Serializable
 
 	/**
 	 * Replaces normal symbols by it's Latex representation. Currently only for <, >,
-	 * &aacute;, &eacute;, &iacute;, &ouml;, &uacute;, +/-, {, }, _, ^, ~, \, $, #, %, &, &ordm;, &ntilde;. Default symbols to avoid
+	 * &aacute;, &eacute;, &iacute;, &oacute;, &uacute;, +/-, {, }, _, ^, ~, \, $, #, %, &, &deg;, &ntilde;. Default symbols to avoid
 	 * formatting are \{}~.
-	 * 
+	 *
 	 * @param text Input text.
 	 * @return Output table.
 	 */
@@ -1935,7 +1933,7 @@ public class LATEXReport implements Serializable
 		if (avoidFormatting.indexOf("\u00fa")<0) text = DataSet.replaceAll(text, "\u00fa", "\\'{u}", true);
 		if (avoidFormatting.indexOf("\u00f1")<0) text = DataSet.replaceAll(text, "\u00f1", "\\~n", true);
 		if (avoidFormatting.indexOf("+/-")<0) text = DataSet.replaceAll(text, "+/-", "$\\pm$", true);
-		if (avoidFormatting.indexOf("\u00ba")<0) text = DataSet.replaceAll(text, "\u00ba", "$^\\circ$", true);
+		if (avoidFormatting.indexOf("\u00b0")<0) text = DataSet.replaceAll(text, "\u00b0", "$^\\circ$", true);
 		if (avoidFormatting.indexOf("\u00c1")<0) text = DataSet.replaceAll(text, "\u00c1", "\\'{A}", true);
 		if (avoidFormatting.indexOf("\u00c9")<0) text = DataSet.replaceAll(text, "\u00c9", "\\'{E}", true);
 		if (avoidFormatting.indexOf("\u00cd")<0) text = DataSet.replaceAll(text, "\u00cd", "\\'{I}", true);
@@ -1944,39 +1942,5 @@ public class LATEXReport implements Serializable
 		if (avoidFormatting.indexOf("\u00d1")<0) text = DataSet.replaceAll(text, "\u00d1", "\\~N", true);
 
 		return text;
-	}
-	
-
-	private static Spectrum calculate(double parameter1, double parameter2, double parameter3)
-	throws JPARSECException	{
-		// Here we apply our model. In this example we simply generate an output spectrum
-		// with 1000 channels, where x is microns (from 1 to 1000), and y the flux in mJy,
-		// a pseudorandom value starting from 100. The error in the measures are parameter1 
-		// microns in the wavelength and parameter2 mJy in the fluxes respectivelly.
-		int size = 1000;
-		FluxElement fluxes[] = new FluxElement[size];
-		double currentFlux = 100;
-		for (int i=0; i<size; i++)
-		{
-			MeasureElement mx = new MeasureElement(i+1, parameter1, null);
-			MeasureElement my = new MeasureElement(currentFlux + (Math.random()-0.5)*parameter3, 
-					parameter2, MeasureElement.UNIT_Y_K);
-			fluxes[i] = new FluxElement(mx, my);
-			currentFlux = my.getValue();
-		}
-		Spectrum spectrum = new Spectrum(fluxes);
-		
-		// Set other properties in my spectrum
-		spectrum.observationNumber = 1;
-		spectrum.offsetX = spectrum.offsetY = 0;
-		spectrum.line = "SO";
-		spectrum.backend = "SYNTHETIC MODEL";
-		spectrum.referenceChannel = size / 2;
-		spectrum.referenceVelocity = 0;
-		spectrum.referenceFrequency = 100 * 1.0E9;
-		spectrum.source = "MY OBJECT";
-		spectrum.velocityResolution = 1.0;
-		
-		return spectrum;
 	}
 }

@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.astronomy;
 
 import jparsec.io.image.ImageSplineTransform;
@@ -28,7 +28,7 @@ import jparsec.util.JPARSECException;
 /**
  * Implements difraction correction to sky images, in order to make them look as
  * through a telescope.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -36,16 +36,16 @@ public class Difraction
 {
 	// private constructor so that this class cannot be instantiated.
 	private Difraction() {}
-	
+
 	/**
 	 * Obtain the difraction pattern of a point star supposing a perfect aligned
 	 * telescope and lenses.
-	 * 
+	 *
 	 * @param diam_obj Diameter of the objective (supposed circular) in cm.
 	 * @param lambda Wave length in cm. Use 0.000056 (5600 angstrom) for visible light.
 	 * @param field Field of view of the pattern in arcseconds. In case is <1 it will
 	 * be set to 1.
-	 * @param obstruc Diameter of the central obstruction of the telescope in cm. For 
+	 * @param obstruc Diameter of the central obstruction of the telescope in cm. For
 	 * 	      Schmidth-Cassegrain or Newton instruments, otherwise set to 0.0.
 	 * @param spider Width of the spiders in cm, for Newton telescopes. Otherwise 0.0.
 	 * @return An array with size (10*field)+1, (10*field)+1, representing the
@@ -54,7 +54,7 @@ public class Difraction
 	public static double[][] pattern(double diam_obj, double lambda, int field, double obstruc, double spider)
 	{
 		if (field < 1) field = 1;
-		
+
 		double R = diam_obj * 0.5;
 		double L = lambda;
 		double RET = 16.0; // Parts in which the reticulus will be divided by. If
@@ -161,7 +161,7 @@ public class Difraction
 	/**
 	 * Obtain the difraction pattern in the visible of a point star supposing a
 	 * perfect aligned telescope and lenses.
-	 * 
+	 *
 	 * @param telescope Telescope object.
 	 * @param field Field of view in arcseconds.
 	 * @return An array with size (10*field)+1, (10*field+1), representing the
@@ -172,7 +172,7 @@ public class Difraction
 		return pattern(telescope.diameter / 10.0, 0.000056, field, telescope.centralObstruction / 10.0,
 				telescope.spidersSize / 10.0);
 	}
-	
+
 	/**
 	 * Resamples a given difraction pattern to a given resolution, using P. Th&eacute;venaz
 	 * 2d interpolation.
@@ -192,7 +192,7 @@ public class Difraction
 		ist.resize(w, w, 3);
 		return ist.getImage();
 	}
-	
+
 	/**
 	 * Convolves a given sky image with a given telescope pattern. This method can be extremely
 	 * slow.
@@ -228,7 +228,7 @@ public class Difraction
 				deltay[i][j] = (int) (difraction_scale_factor * (double) (j - center) / (double) center);
 			}
 		}
-		
+
 		for (int dx = 0; dx < w; dx++)
 		{
 			for (int dy = 0; dy < h; dy++)
@@ -306,7 +306,7 @@ public class Difraction
 
 		return screen_out;
 	}
-	
+
 	private static boolean isInTheScreen(int x, int y, int size, int w, int h)
 	{
 		boolean isVisible = false;

@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.util;
 
 import java.io.Serializable;
@@ -35,7 +35,7 @@ import jparsec.io.image.*;
  */
 public class Module implements Serializable {
 
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Application name.
@@ -77,7 +77,7 @@ public class Module implements Serializable {
 	 * Group name for the application. Constants defined in this class.
 	 */
 	public String group;
-	
+
 	/**
 	 * Full constructor;
 	 * @param nom Name.
@@ -91,7 +91,7 @@ public class Module implements Serializable {
 	 * @param author Author.
 	 * @throws JPARSECException If an error occurs.
 	 */
-	public Module(String nom, String l[], float v[], String link, String launch, String rel[], 
+	public Module(String nom, String l[], float v[], String link, String launch, String rel[],
 			String jre, BufferedImage img, String author)
 	throws JPARSECException {
 		this.name = nom;
@@ -104,7 +104,7 @@ public class Module implements Serializable {
 		this.webLink = link;
 
 		if (img == null) {
-			this.icon = null;			
+			this.icon = null;
 		} else {
 			Picture pic = new Picture(img);
 			Dimension d = pic.getSize();
@@ -133,7 +133,7 @@ public class Module implements Serializable {
 	 * @param group Group name.
 	 * @throws JPARSECException If an error occurs.
 	 */
-	public Module(String nom, String l[], float v[], String link, String launch, String rel[], 
+	public Module(String nom, String l[], float v[], String link, String launch, String rel[],
 			String jre, BufferedImage img, String author, String group)
 	throws JPARSECException {
 		this.name = nom;
@@ -147,7 +147,7 @@ public class Module implements Serializable {
 		this.group = group;
 
 		if (img == null) {
-			this.icon = null;			
+			this.icon = null;
 		} else {
 			Picture pic = new Picture(img);
 			Dimension d = pic.getSize();
@@ -180,7 +180,7 @@ public class Module implements Serializable {
 		}
 		return p.getImage();
 	}
-	
+
 	/**
 	 * Creates a binary file with the current instance.
 	 * @param path The path.
@@ -190,7 +190,7 @@ public class Module implements Serializable {
 	throws JPARSECException {
 		Serialization.writeObject(this, path);
 	}
-	
+
 	/**
 	 * Shared name for a group of applications for the same field.
 	 */
@@ -210,5 +210,5 @@ public class Module implements Serializable {
 	/**
 	 * Shared name for a group of applications for the same field.
 	 */
-	public static final String GROUP_RADIATIVE_TRANSFER = "Radiative transfer";	
+	public static final String GROUP_RADIATIVE_TRANSFER = "Radiative transfer";
 }

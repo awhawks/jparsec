@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.graph.chartRendering.frame;
 
 import java.awt.BorderLayout;
@@ -56,7 +56,7 @@ import jparsec.util.Logger.LEVEL;
 /**
  * Support class to use Swing/AWT graph components for
  * satellite rendering.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -70,7 +70,7 @@ public class SatelliteRendering implements Serializable
 
 	/**
 	 * Sample render program.
-	 * 
+	 *
 	 * @param time Time object.
 	 * @param obs Observer object.
 	 * @param eph Ephemeris object.
@@ -97,7 +97,7 @@ public class SatelliteRendering implements Serializable
 	{
 		this.showRendering(false);
 	}
-	
+
 	/**
 	 * To show the rendering.
 	 * @param undecorated True to show the Frame without decoration.
@@ -159,7 +159,7 @@ public class SatelliteRendering implements Serializable
 
 	// Define ID version of the class.
 	static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * Returns the render panel.
 	 * @return The panel.
@@ -186,7 +186,7 @@ public class SatelliteRendering implements Serializable
 	public boolean addSatellite(String name) throws JPARSECException {
 		return this.renderSatellite.getRenderSatellite().addSatellite(name);
 	}
-	
+
 	/**
 	 * Returns time object.
 	 * @return Time object.
@@ -250,7 +250,7 @@ public class SatelliteRendering implements Serializable
 class RenderSatellite extends JComponent
 {
 	private static final long serialVersionUID = 1L;
-	jparsec.graph.chartRendering.RenderSatellite rp; 
+	jparsec.graph.chartRendering.RenderSatellite rp;
 
 	/**
 	 * The constructor.
@@ -265,7 +265,7 @@ class RenderSatellite extends JComponent
 		super.setDoubleBuffered(false);
 		rp = new jparsec.graph.chartRendering.RenderSatellite(time, obs, eph, render);
 	}
-	
+
 	/**
 	 * Paint the graph.
 	 */
@@ -282,7 +282,7 @@ class RenderSatellite extends JComponent
 
 	/**
 	 * Renderize a planet.
-	 * 
+	 *
 	 * @param g Graphics object.
 	 * @throws JPARSECException Thrown if the calculation fails.
 	 */
@@ -301,16 +301,16 @@ class RenderSatellite extends JComponent
 	public jparsec.graph.chartRendering.RenderSatellite getRenderSatellite() {
 		return rp;
 	}
-	
+
 	/**
 	 * The buffer image
 	 */
-	public Image buffer = null;	
+	public Image buffer = null;
 	private boolean doRedraw = true;
-	
+
 	/**
 	 * Paints the canvas using double buffering.
-	 * 
+	 *
 	 * @see #offscreenPaint
 	 */
 	public final void paintComponent(Graphics g)
@@ -336,7 +336,7 @@ class RenderSatellite extends JComponent
 			offscreenPaint(graphics);
 		}
 		g.drawImage(buffer, insets.left, insets.top, null);
-		
+
 		// Fix component's background in case its size is greater than the rendering
 		Color c = g.getColor();
 		g.setColor(getBackground());
@@ -372,7 +372,7 @@ class RenderSatellite extends JComponent
 
 	/**
 	 * Double buffering is always enabled.
-	 * 
+	 *
 	 * @return true.
 	 */
 	public final boolean isDoubleBuffered()

@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.time.calendar;
 
 import java.io.Serializable;
@@ -29,13 +29,13 @@ import java.io.Serializable;
  * <P>
  * Note that it is not possible to pass from a given date to a Julian day, since
  * no year exists in this calendar.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
 public class MayanHaab implements Serializable
 {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Month
@@ -66,7 +66,7 @@ public class MayanHaab implements Serializable
 
 	/**
 	 * Fixed day constructor.
-	 * 
+	 *
 	 * @param l Fixed day.
 	 */
 	public MayanHaab(long l)
@@ -76,7 +76,7 @@ public class MayanHaab implements Serializable
 
 	/**
 	 * Julian day constructor.
-	 * 
+	 *
 	 * @param jd Julian day.
 	 */
 	public MayanHaab(int jd)
@@ -86,7 +86,7 @@ public class MayanHaab implements Serializable
 
 	/**
 	 * Explicit constructor.
-	 * 
+	 *
 	 * @param m Month.
 	 * @param d Day.
 	 */
@@ -98,7 +98,7 @@ public class MayanHaab implements Serializable
 
 	/**
 	 * Sets the date from fixed day.
-	 * 
+	 *
 	 * @param l Fixed day.
 	 */
 	public void fromFixed(long l)
@@ -110,7 +110,7 @@ public class MayanHaab implements Serializable
 
 	/**
 	 * Sets a Mayan date with a given Julian day
-	 * 
+	 *
 	 * @param jd Julian day.
 	 */
 	public void fromJulianDay(int jd)
@@ -120,7 +120,7 @@ public class MayanHaab implements Serializable
 
 	/**
 	 * Gets elapsed days since last new year.
-	 * 
+	 *
 	 * @param mayanhaab MayanHaab instance.
 	 * @return Ordinal.
 	 */
@@ -131,7 +131,7 @@ public class MayanHaab implements Serializable
 
 	/**
 	 * Gets last new year.
-	 * 
+	 *
 	 * @param mayanhaab MayanHaab instance.
 	 * @param l Fixed day.
 	 * @return Such date.

@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,14 +18,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.graph;
 
 //import javax.vecmath.Point3d;
 import java.awt.Color;
 import java.io.Serializable;
-
 import java.util.Arrays;
+
 import jparsec.io.Serialization;
 import jparsec.io.image.ImageSplineTransform;
 import jparsec.math.DoubleVector;
@@ -33,13 +33,13 @@ import jparsec.util.JPARSECException;
 
 /**
  * Creates a series for later use in JMathPlot.<P>
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
 public class ChartSeriesElement3D implements Serializable
 {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Default empty constructor.
@@ -48,7 +48,7 @@ public class ChartSeriesElement3D implements Serializable
 
 	/**
 	 * Simple constructor for a set of points.
-	 * 
+	 *
 	 * @param x X values.
 	 * @param y Y Values.
 	 * @param z Z Values.
@@ -64,7 +64,7 @@ public class ChartSeriesElement3D implements Serializable
 
 	/**
 	 * Simple constructor for a surface.
-	 * 
+	 *
 	 * @param x X values.
 	 * @param y Y Values.
 	 * @param z Z Values.
@@ -81,7 +81,7 @@ public class ChartSeriesElement3D implements Serializable
 
 	/**
 	 * Simple constructor for a set of points with limits.
-	 * 
+	 *
 	 * @param x X values.
 	 * @param y Y Values.
 	 * @param z Z Values.
@@ -97,7 +97,7 @@ public class ChartSeriesElement3D implements Serializable
 
 	/**
 	 * Constructor adequate for an xyz chart with bar errors.
-	 * 
+	 *
 	 * @param x X values.
 	 * @param y Y Values.
 	 * @param z Z Values.
@@ -145,7 +145,7 @@ public class ChartSeriesElement3D implements Serializable
             for (int j=0; j<y.length; j++)
             {
             	z[i][j] = chart.data[i][j];
-            }        	
+            }
         }
 
 		this.xValues = DataSet.toStringValues(x);
@@ -153,7 +153,7 @@ public class ChartSeriesElement3D implements Serializable
 		this.zValues = z;
 		this.legend = chart.legend;
 		this.color = Color.BLUE;
-		this.isSurface = true;		
+		this.isSurface = true;
 	}
 
 	/**
@@ -164,15 +164,15 @@ public class ChartSeriesElement3D implements Serializable
 	 * @throws JPARSECException If an error occurs.
 	 */
 	public double getIntensityAt(double x, double y)
-	throws JPARSECException 
-	{		
+	throws JPARSECException
+	{
 		GridChartElement gridChart;
 		try {
-			gridChart = new GridChartElement("", "", "", "", 
+			gridChart = new GridChartElement("", "", "", "",
 				GridChartElement.COLOR_MODEL.BLACK_TO_WHITE,
 				GridChartElement.getLimitsFromDataSet(
-						DataSet.getDoubleValuesExcludingLimits(xValues), 
-						DataSet.getDoubleValuesExcludingLimits(yValues)), 
+						DataSet.getDoubleValuesExcludingLimits(xValues),
+						DataSet.getDoubleValuesExcludingLimits(yValues)),
 						(double[][]) zValues,
 				null, 600
 				);
@@ -182,13 +182,13 @@ public class ChartSeriesElement3D implements Serializable
 
 		ImageSplineTransform t = new ImageSplineTransform(GridChartElement.ObjectToDoubleArray(gridChart.data));
 		int pointsX = gridChart.data.length;
-		int pointsY = gridChart.data[0].length;			
+		int pointsY = gridChart.data[0].length;
 		double px = (x - gridChart.limits[0]) * ((double) (pointsX - 1.0)) / (gridChart.limits[1] - gridChart.limits[0]);
 		double py = (y - gridChart.limits[2]) * ((double) (pointsY - 1.0)) / (gridChart.limits[3] - gridChart.limits[2]);
 		double data = t.interpolate(px, py);
 		return data;
 	}
-	
+
 	/**
 	 * Array of x values.
 	 */
@@ -247,10 +247,10 @@ public class ChartSeriesElement3D implements Serializable
 	public boolean isSurface = false;
 
 	/**
-	 * True (default false) to draw segments instead of the points, 
+	 * True (default false) to draw segments instead of the points,
 	 * only when the data is not a surface.
 	 */
-	public boolean drawLines = false;	
+	public boolean drawLines = false;
 
 	/**
 	 * True (default false) to draw segments from each point to the
@@ -283,7 +283,7 @@ public class ChartSeriesElement3D implements Serializable
 	}
 
 	/**
-	 * Returns true if the input object is equal to this chart object.
+	 * Returns true if the input object is equals to this chart object.
 	 * The z array is not checked.
 	 */
 	@Override
@@ -330,6 +330,7 @@ public class ChartSeriesElement3D implements Serializable
 		return result;
 	}
 
+
 	/**
 	 * Returns the characteristic name of this instance.
 	 * @return The characteristic name, currently equals to the legend.
@@ -338,7 +339,7 @@ public class ChartSeriesElement3D implements Serializable
 	{
 		return this.legend;
 	}
-	
+
 	/**
 	 * Transform a dataset from a {@link GridChartElement} to a set of 3d points.
 	 * @param data The data as a regural array.
@@ -397,9 +398,9 @@ public class ChartSeriesElement3D implements Serializable
             	x[index] = px;
             	y[index] = py;
             	z[index] = data[i][j];
-            }        	
+            }
         }
-        
+
         DoubleVector points[] = new DoubleVector[x.length];
         for (int i=0; i<x.length; i++)
         {
@@ -415,7 +416,7 @@ public class ChartSeriesElement3D implements Serializable
 	 * If the points contain no holes and are sampled regularly it is recommended
 	 * to use 2d spline interpolation with class {@linkplain ImageSplineTransform}.
 	 * @param points The array of points.
-	 * @param n The number of points in the x and y axis of the 
+	 * @param n The number of points in the x and y axis of the
 	 * output regular profile.
 	 * @return The series, with empty string for the legend.
 	 * @throws JPARSECException If an error occurs.
@@ -448,13 +449,13 @@ public class ChartSeriesElement3D implements Serializable
 		double outY[] = new double[n];
 		for (int ix=0; ix<n; ix++)
 		{
-			outX[ix] = xmin + scaleX * (double) ix; 
+			outX[ix] = xmin + scaleX * (double) ix;
 			for (int iy=0; iy<n; iy++)
 			{
-				outY[iy] = ymin + scaleY * (double) iy; 
+				outY[iy] = ymin + scaleY * (double) iy;
 				data[ix][iy] = 0.0;
 				factor_sum[ix][iy] = 0.0;
-				
+
 				for (int i=0; i<points.length; i++)
 				{
 					double dx = xs[i] - outX[ix];
@@ -469,7 +470,7 @@ public class ChartSeriesElement3D implements Serializable
 					data[ix][iy] += factor * zs[i];
 					factor_sum[ix][iy] += factor;
 				}
-			}			
+			}
 		}
 
 		// Normalize
@@ -480,11 +481,11 @@ public class ChartSeriesElement3D implements Serializable
 				data[ix][iy] = data[ix][iy] / factor_sum[ix][iy];
 			}
 		}
-		
+
 		ChartSeriesElement3D out = new ChartSeriesElement3D(outX, outY, data, "");
 		return out;
 	}
-	
+
 	/**
 	 * Returns the limits of the dataset in this series.
 	 * @return Minimum x, maximum x, minimum y, maximum y.

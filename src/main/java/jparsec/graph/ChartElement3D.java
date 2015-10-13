@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,26 +18,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.graph;
 
 import java.awt.Color;
 import java.io.Serializable;
-
 import java.util.Arrays;
+
 import jparsec.util.JPARSECException;
 import jparsec.util.Logger;
 import jparsec.util.Logger.LEVEL;
 
 /**
  * Creates a chart element to be later drawn by JMathPlot.<P>
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
 public class ChartElement3D implements Serializable
 {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Default empty constructor.
@@ -46,7 +46,7 @@ public class ChartElement3D implements Serializable
 
 	/**
 	 * Constructor adequate for any chart.
-	 * 
+	 *
 	 * @param series Series to draw.
 	 * @param title Title.
 	 * @param x_label X axis label.
@@ -67,7 +67,7 @@ public class ChartElement3D implements Serializable
 
 	/**
 	 * Constructor adequate for any chart.
-	 * 
+	 *
 	 * @param series Series to draw.
 	 * @param title Title.
 	 * @param x_label X axis label.
@@ -122,7 +122,7 @@ public class ChartElement3D implements Serializable
 	 * Y size of the chart in pixels.
 	 */
 	public int imageHeight;
-	
+
 	/**
 	 * Show x axis in log scale.
 	 */
@@ -142,12 +142,12 @@ public class ChartElement3D implements Serializable
 	 * Select to show error bars or not.
 	 */
 	public boolean showErrorBars = true;
-	
+
 	/**
 	 * Select to show the title or not.
 	 */
 	public boolean showTitle = true;
-	
+
 	/**
 	 * Selects the color of the background.
 	 */
@@ -173,7 +173,7 @@ public class ChartElement3D implements Serializable
 	 * True (default) to show the toolbar.
 	 */
 	public boolean showToolbar = true;
-	
+
 	/**
 	 * To clone the object.
 	 */
@@ -206,7 +206,7 @@ public class ChartElement3D implements Serializable
 	}
 
 	/**
-	 * Returns true if the input object is equal to this chart object. An hypothetical sub-chart
+	 * Returns true if the input object is equals to this chart object. An hypothetical sub-chart
 	 * is not tested for equality.
 	 */
 	@Override
@@ -274,14 +274,14 @@ public class ChartElement3D implements Serializable
 		for (int i = 0; i < this.series.length; i++)
 		{
 			double x[] = DataSet.toDoubleValues(this.series[i].xValues);
-			
+
 			double m = DataSet.getMaximumValue(x);
 			if (m > max || !done)
 			{
 				max = m;
 				done = true;
 			}
-			
+
 		}
 		return max;
 	}
@@ -299,7 +299,7 @@ public class ChartElement3D implements Serializable
 		for (int i = 0; i < this.series.length; i++)
 		{
 			double x[] = DataSet.toDoubleValues(this.series[i].xValues);
-			
+
 			double m = DataSet.getMinimumValue(x);
 			if (m < min || !done)
 			{
@@ -353,7 +353,7 @@ public class ChartElement3D implements Serializable
 		}
 		return min;
 	}
-	
+
 	/**
 	 * Obtains the maximum value of z, supposing they were entered as an
 	 * array of doubles.
@@ -367,14 +367,14 @@ public class ChartElement3D implements Serializable
 		for (int i = 0; i < this.series.length; i++)
 		{
 			double x[] = (double[]) this.series[i].zValues;
-			
+
 			double m = DataSet.getMaximumValue(x);
 			if (m > max || !done)
 			{
 				max = m;
 				done = true;
 			}
-			
+
 		}
 		return max;
 	}
@@ -392,7 +392,7 @@ public class ChartElement3D implements Serializable
 		for (int i = 0; i < this.series.length; i++)
 		{
 			double x[] = (double[]) this.series[i].zValues;
-			
+
 			double m = DataSet.getMinimumValue(x);
 			if (m < min || !done)
 			{

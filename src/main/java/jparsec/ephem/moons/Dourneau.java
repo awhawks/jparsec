@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -41,7 +41,7 @@ import jparsec.util.JPARSECException;
 /**
  * Implementation of Dourneau's Saturn satellites theory. Objects are Mimas,
  * Enceladus, Tethys, Dione, Rhea, Titan, Hyperion, Iapetus.
- * 
+ *
  * @see MoonEphemElement
  * @author T. Alonso Albi - OAN (Spain)
  * @author Kerry Shetline
@@ -51,7 +51,7 @@ public class Dourneau
 {
 	// private constructor so that this class cannot be instantiated.
 	private Dourneau() {}
-	
+
 	/**
 	 * This is an implementation of the method of computing Saturn's moons
 	 * created by G&eacute;rard Dourneau, as presented by Jean Meeus. Adapted from
@@ -69,7 +69,7 @@ public class Dourneau
 	 * For reference see G. Dourneau, <I>Orbital elements of the eight major
 	 * satellites of Saturn determined from a fit of their theories of motion to
 	 * observations from 1886 to 1985</I>, A&A 267, 292 (1993).
-	 * 
+	 *
 	 * @param time Time object.
 	 * @param obs Observer object.
 	 * @param eph Ephemeris object.
@@ -430,7 +430,7 @@ public class Dourneau
 				boolean withinDisc = (Math.sqrt(apparent_pos[0] * apparent_pos[0] + Y1 * Y1) <= (1.0 + satSize));
 				boolean transiting = withinDisc && inferior;
 				boolean withinDiscOcc = withinDisc;
-				if (ed == EVENT_DEFINITION.AUTOMATIC_FOR_DRAWING) withinDiscOcc = (Math.sqrt(apparent_pos[0] * apparent_pos[0] + Y1 * Y1) <= (1.0 + satSizeOccultation)); 
+				if (ed == EVENT_DEFINITION.AUTOMATIC_FOR_DRAWING) withinDiscOcc = (Math.sqrt(apparent_pos[0] * apparent_pos[0] + Y1 * Y1) <= (1.0 + satSizeOccultation));
 				boolean occulted = withinDiscOcc && !inferior;
 
 				// From Sun. Note we are neglecting the difference between light time from the planet
@@ -445,9 +445,9 @@ public class Dourneau
 				if (ed == EVENT_DEFINITION.AUTOMATIC_FOR_DRAWING) {
 					withinDisc_sunOcc = (Math.sqrt(apparent_pos[3] * apparent_pos[3] + Y1 * Y1) < (1.0 + satSizeOccultation));
 					eclipsed = withinDisc_sunOcc && !inferior_sun;
-					
+
 					double satRadius = satSize * TARGET.JUPITER.equatorialRadius;
-					double satPlanDistance = (Math.sqrt(apparent_pos[3] * apparent_pos[3] + apparent_pos[4] * apparent_pos[4] + apparent_pos[5] * apparent_pos[5]) - 1.0) * TARGET.JUPITER.equatorialRadius; 
+					double satPlanDistance = (Math.sqrt(apparent_pos[3] * apparent_pos[3] + apparent_pos[4] * apparent_pos[4] + apparent_pos[5] * apparent_pos[5]) - 1.0) * TARGET.JUPITER.equatorialRadius;
 					double sun_size = FastMath.atan2_accurate(TARGET.SUN.equatorialRadius, ephem.distanceFromSun * Constant.AU);
 					double shadow_cone_dist = satRadius / FastMath.tan(sun_size);
 					double shadow_size = (satSize * (1.0 - 0.5 * satPlanDistance / shadow_cone_dist));

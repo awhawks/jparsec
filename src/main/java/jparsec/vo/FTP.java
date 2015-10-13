@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.vo;
 
 import com.jcraft.jsch.*;
@@ -66,7 +66,7 @@ public class FTP {
 		this.host = host;
 		this.userName = user;
 		this.password = pass;
-		
+
 		try {
 		      JSch jsch=new JSch();
 
@@ -84,7 +84,41 @@ public class FTP {
 			throw new JPARSECException(io);
 		}
 	}
-	
+
+	/**
+	 * Constructor. The connection is automatically started in
+	 * passive mode.
+	 * @param host Host.
+	 * @param user User name.
+	 * @param pass Password.
+	 * @param timeout Connection timeout in milliseconds.
+	 * @throws JPARSECException If an error occurs.
+	 */
+	public FTP(String host, String user, String pass, int timeout)
+	throws JPARSECException {
+		this.host = host;
+		this.userName = user;
+		this.password = pass;
+
+		try {
+		      JSch jsch=new JSch();
+
+		      session=jsch.getSession(user, host, 22);
+
+		      UserInfo ui = new MyUserInfo(password);
+		      session.setUserInfo(ui);
+		      session.setServerAliveInterval(timeout);
+		      session.connect();
+
+		      Channel channel = session.openChannel("sftp");
+		      channel.connect();
+		      ftp=(ChannelSftp)channel;
+		} catch (Exception io)
+		{
+			throw new JPARSECException(io);
+		}
+	}
+
 	/**
 	 * Executes a command on the server.
 	 * @param command The command.
@@ -117,7 +151,7 @@ public class FTP {
 			throw new JPARSECException("Error executing command "+command, exc);
 		}
 	}
-	
+
 	/**
 	 * Returns the list of files/directories in the current path.
 	 * @param raw True to retrieve raw data.
@@ -137,7 +171,7 @@ public class FTP {
 		                  if (raw) {
 		                	  out.add(((com.jcraft.jsch.ChannelSftp.LsEntry)obj).getLongname());
 		                  } else {
-		                	  out.add(((com.jcraft.jsch.ChannelSftp.LsEntry)obj).getFilename());		                	  
+		                	  out.add(((com.jcraft.jsch.ChannelSftp.LsEntry)obj).getFilename());
 		                  }
 		                }
 			      }
@@ -166,7 +200,7 @@ public class FTP {
 
 		                Object obj=vv.elementAt(ii);
 		                if(obj instanceof com.jcraft.jsch.ChannelSftp.LsEntry){
-		                	out.add(new Long(((com.jcraft.jsch.ChannelSftp.LsEntry)obj).getAttrs().getMTime()));		                	  
+		                	out.add(new Long(((com.jcraft.jsch.ChannelSftp.LsEntry)obj).getAttrs().getMTime()));
 		                }
 			      }
 			    }
@@ -177,7 +211,7 @@ public class FTP {
 			throw new JPARSECException(io);
 		}
 	}
-	
+
 	/**
 	 * Changes the directory.
 	 * @param dir New directory.
@@ -231,7 +265,7 @@ public class FTP {
 	public void uppload(String localPath, String remotePath)
 	throws JPARSECException {
 		try {
-	        ftp.put(localPath, remotePath);	
+	        ftp.put(localPath, remotePath);
 		} catch (Exception io)
 		{
 			throw new JPARSECException(io);
@@ -268,7 +302,7 @@ public class FTP {
 	public void download(String localPath, String remotePath)
 	throws JPARSECException {
 		try {
-	        ftp.get(remotePath, localPath);	
+	        ftp.get(remotePath, localPath);
 		} catch (Exception io)
 		{
 			throw new JPARSECException(io);
@@ -328,7 +362,7 @@ public class FTP {
 		{
 			throw new JPARSECException(io);
 		}
-	}	
+	}
 	/**
 	 * Creates a directory.
 	 * @param name Directory name.
@@ -386,8 +420,8 @@ public class FTP {
 			throw new JPARSECException(io);
 		}
 	}
-	
-	
+
+
 	  private static class MyUserInfo implements UserInfo{
 		  public MyUserInfo (String pass) {
 			  passwd = pass;
@@ -396,9 +430,9 @@ public class FTP {
 		  public boolean promptYesNo(String str){
 			  return true;
 		  }
-		  
+
 		  String passwd;
-	
+
 		  public String getPassphrase(){ return null; }
 		  public boolean promptPassphrase(String message){ return true; }
 		  public boolean promptPassword(String message){

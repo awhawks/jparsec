@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,15 +18,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.ephem.planets;
 
 import java.awt.Color;
 import java.awt.geom.GeneralPath;
 import java.awt.image.BufferedImage;
 import java.io.Serializable;
-
 import java.util.Arrays;
+
 import jparsec.ephem.Ephem;
 import jparsec.ephem.EphemerisElement;
 import jparsec.ephem.EphemerisElement.FRAME;
@@ -59,51 +59,51 @@ import jparsec.util.Translate.LANGUAGE;
 
 /**
  * An adequate class for storing orbital elements in the FK5 system.<P>
- * 
+ *
  * This class is suitable for storing orbital elements of planets, comets,
  * asteroids, and space probes. Elements should be referred to mean equinox
  * and ecliptic of Earth, for a given equinox.
- * 
+ *
  * @see Ephem
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
-public class OrbitalElement implements Serializable 
+public class OrbitalElement implements Serializable
 {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * The different magnitude models for comets and asteroids.
 	 */
-	public static enum MAGNITUDE_MODEL {
-		/** The simple g, k model. In this model the absolute magnitude, g, is the visual magnitude of the object 
-		 * if it were one AU from both the Sun and the Earth. The other, the luminosity index, k, characterizes 
-		 * the brightness change of the object as a function of its distance from the Sun. This is generally zero, 
+	public enum MAGNITUDE_MODEL {
+		/** The simple g, k model. In this model the absolute magnitude, g, is the visual magnitude of the object
+		 * if it were one AU from both the Sun and the Earth. The other, the luminosity index, k, characterizes
+		 * the brightness change of the object as a function of its distance from the Sun. This is generally zero,
 		 * or very small, for inactive objects like asteroids. This model is used for comets. */
 		COMET_gk,
-		/** The H, G model involving the calculation of some exp. The first parameter, H, is the magnitude of the 
-		 * object when one AU from the Sun and the Earth. The other, G, attempts to model the reflection 
+		/** The H, G model involving the calculation of some exp. The first parameter, H, is the magnitude of the
+		 * object when one AU from the Sun and the Earth. The other, G, attempts to model the reflection
 		 * characteristics of a passive surface, such as an asteroid. This model is used for asteroid and natural
 		 * satellites. */
 		ASTEROID_HG,
-		/** ID constant to calculate no magnitude for the minor object 
+		/** ID constant to calculate no magnitude for the minor object
 		 * (will be 0). */
 		NONE;
-		
+
 		/** Default value the apparent magnitude will not be computed. */
 		public static final int MAGNITUDE_UNKNOWN = EphemElement.INVALID_MAGNITUDE; // 100
 	};
-	
+
 	/**
 	 * Constructs an empty {@linkplain OrbitalElement} object.
 	 */
-	public OrbitalElement() { 
-			semimajorAxis=0.0; meanLongitude=0.0; eccentricity=0.0; 
+	public OrbitalElement() {
+			semimajorAxis=0.0; meanLongitude=0.0; eccentricity=0.0;
 			perihelionLongitude=0.0; ascendingNodeLongitude=0.0; inclination=0.0;
 		  referenceTime=0.0; meanAnomaly=0.0; argumentOfPerihelion=0.0; meanMotion=0.0;
 		  referenceEquinox=0.0; beginOfApplicableTime=0.0; endOfApplicableTime=0.0;
 		  absoluteMagnitude=0.0f;centralBody=TARGET.SUN;magnitudeSlope=0.0f;perihelionDistance=0.0;
-		  referenceFrame = FRAME.FK5;magnitudeModel = MAGNITUDE_MODEL.NONE;}   
+		  referenceFrame = FRAME.FK5;magnitudeModel = MAGNITUDE_MODEL.NONE;}
 
 	/**
 	 * Constructs an {@linkplain OrbitalElement} object giving the values of the main fields.
@@ -111,10 +111,10 @@ public class OrbitalElement implements Serializable
 	 * longitude. Mean anomaly is set to mean longitude minus perihelion longitude.
 	 * Mean motion is set to Constant.GAUSS / (sma * Math.sqrt(sma), assuming a
 	 * massless object in heliocentric orbit.<P>
-	 * 
-	 * Is is necessary to set also the reference equinox and frame (J2000 and FK5 
+	 *
+	 * Is is necessary to set also the reference equinox and frame (J2000 and FK5
 	 * by default) to get correct ephemeris.
-	 * 
+	 *
 	 * @param sma Semimajor axis in AU.
 	 * @param mean_lon Mean Longitude in radians.
 	 * @param ecc Eccentricity.
@@ -123,13 +123,13 @@ public class OrbitalElement implements Serializable
 	 * @param incl Inclination in radians.
 	 * @param ref_time Reference time (usually perihelion time) as a Julian day.
 	 */
-	public OrbitalElement( double sma, double mean_lon, 
+	public OrbitalElement( double sma, double mean_lon,
 		  double ecc,  double perih_lon, double asc_node_lon,
-		  double incl, double ref_time) { 
-		semimajorAxis=sma; meanLongitude=mean_lon; eccentricity=ecc; 
+		  double incl, double ref_time) {
+		semimajorAxis=sma; meanLongitude=mean_lon; eccentricity=ecc;
 		perihelionLongitude=perih_lon;ascendingNodeLongitude=asc_node_lon; inclination=incl;
 	  referenceTime=ref_time;argumentOfPerihelion=perih_lon-asc_node_lon;
-	  meanAnomaly=mean_lon-perih_lon; 
+	  meanAnomaly=mean_lon-perih_lon;
 	  meanMotion = Constant.EARTH_MEAN_ORBIT_RATE / (sma * Math.sqrt(sma));
 	  perihelionDistance = 0.0;
 	  if (ecc < 1.0) perihelionDistance = sma * (1.0 - ecc);
@@ -142,7 +142,7 @@ public class OrbitalElement implements Serializable
 	 * Constructs an {@linkplain OrbitalElement} object giving the values of most of the fields.
 	 * Argument of perihelion is set to perihelion longitude minus ascending node
 	 * longitude. Mean anomaly is set to mean longitude minus perihelion longitude. Frame is FK5.
-	 * 
+	 *
 	 * @param nom Name of the object
 	 * @param sma Semimajor axis in AU.
 	 * @param mean_lon Mean Longitude in radians.
@@ -157,14 +157,14 @@ public class OrbitalElement implements Serializable
 	 * @param final_time End of applicable time as a Julian day.
 	 * @param mabs Absolute magnitude.
 	 * @param slope Magnitude slope.
-	 * @param magModel The model to apply for the magnitude. 
+	 * @param magModel The model to apply for the magnitude.
 	 */
-	public OrbitalElement( String nom, double sma, double mean_lon, 
+	public OrbitalElement( String nom, double sma, double mean_lon,
 		  double ecc,  double perih_lon, double asc_node_lon,
 		  double incl, double ref_time, double motion, double equinox,
-		  double init_time, double final_time, float mabs, float slope, 
-		  MAGNITUDE_MODEL magModel) { 
-		semimajorAxis=sma; meanLongitude=mean_lon; eccentricity=ecc; 
+		  double init_time, double final_time, float mabs, float slope,
+		  MAGNITUDE_MODEL magModel) {
+		semimajorAxis=sma; meanLongitude=mean_lon; eccentricity=ecc;
 		perihelionLongitude=perih_lon;ascendingNodeLongitude=asc_node_lon; inclination=incl;
 	  referenceTime=ref_time;meanMotion=motion;referenceEquinox=equinox;
 	  beginOfApplicableTime=init_time;endOfApplicableTime=final_time;
@@ -179,7 +179,7 @@ public class OrbitalElement implements Serializable
 	/**
 	 * Constructs an {@linkplain OrbitalElement} object giving the values of most of the fields, but
 	 * in a different way sometimes used. Frame is FK5.
-	 * 
+	 *
 	 * @param nom Name of the object
 	 * @param sma Semimajor axis in AU.
 	 * @param arg_perih Argument of perihelion.
@@ -193,11 +193,11 @@ public class OrbitalElement implements Serializable
 	 * @param init_time Begin of applicable time as a Julian day.
 	 * @param final_time End of applicable time as a Julian day.
 	 */
-	public OrbitalElement( String nom, double sma, double arg_perih, 
+	public OrbitalElement( String nom, double sma, double arg_perih,
 		  double ecc,  double mean_anomaly, double asc_node_lon,
 		  double incl, double ref_time, double motion, double equinox,
-		  double init_time, double final_time) { 
-		semimajorAxis=sma; meanLongitude=mean_anomaly+arg_perih+asc_node_lon; eccentricity=ecc; 
+		  double init_time, double final_time) {
+		semimajorAxis=sma; meanLongitude=mean_anomaly+arg_perih+asc_node_lon; eccentricity=ecc;
 		perihelionLongitude=arg_perih + asc_node_lon;ascendingNodeLongitude=asc_node_lon; inclination=incl;
 	  referenceTime=ref_time;meanMotion=motion;referenceEquinox=equinox;
 	  beginOfApplicableTime=init_time;endOfApplicableTime=final_time;
@@ -210,9 +210,9 @@ public class OrbitalElement implements Serializable
 	  }
 
 	/**
-	 * Constructs an {@linkplain OrbitalElement} object giving the values of all the fields 
+	 * Constructs an {@linkplain OrbitalElement} object giving the values of all the fields
 	 * except the frame, which is FK5.
-	 * 
+	 *
 	 * @param nom Name of the object
 	 * @param sma Semimajor axis in AU.
 	 * @param arg_perih Argument of perihelion.
@@ -230,14 +230,14 @@ public class OrbitalElement implements Serializable
 	 * @param perih_dist Perihelion distance.
 	 * @param abs_mag Absolute magnitude.
 	 * @param mag_slope Magnitude slope.
-	 * @param magModel The model to apply for the magnitude. 
+	 * @param magModel The model to apply for the magnitude.
 	 */
-	public OrbitalElement( String nom, double sma, double arg_perih, 
+	public OrbitalElement( String nom, double sma, double arg_perih,
 		  double ecc,  double mean_anomaly, double asc_node_lon,
 		  double incl, double ref_time, double motion, double equinox,
 		  double init_time, double final_time, double mean_lon, double perih_lon,
-		  double perih_dist, float abs_mag, float mag_slope, MAGNITUDE_MODEL magModel) { 
-		name=nom; semimajorAxis=sma; argumentOfPerihelion=arg_perih; eccentricity=ecc; 
+		  double perih_dist, float abs_mag, float mag_slope, MAGNITUDE_MODEL magModel) {
+		name=nom; semimajorAxis=sma; argumentOfPerihelion=arg_perih; eccentricity=ecc;
 		meanAnomaly=mean_anomaly; ascendingNodeLongitude=asc_node_lon; inclination=incl;
 		referenceTime=ref_time;meanMotion=motion;referenceEquinox=equinox;
 		beginOfApplicableTime=init_time;endOfApplicableTime=final_time;
@@ -252,22 +252,22 @@ public class OrbitalElement implements Serializable
    * Semimajor axis of the orbit in AU.
    */
   public double semimajorAxis;
-  
+
   /**
    * Mean longitude at reference time in radians.
    */
   public double meanLongitude;
-  
+
   /**
    * Eccentricity.
    */
   public double eccentricity;
-  
+
   /**
    * Perihelion longitude in radians.
    */
   public double perihelionLongitude;
-  
+
   /**
    * Ascending node longitude in radians.
    */
@@ -305,7 +305,7 @@ public class OrbitalElement implements Serializable
    * Equinox of the orbital elements as a Julian day.
    */
   public double referenceEquinox;
-  
+
   /**
    * Holds the reference frame for this set of orbital elements.
    */
@@ -347,12 +347,12 @@ public class OrbitalElement implements Serializable
 
   /** The magnitude model for the object. */
   public MAGNITUDE_MODEL magnitudeModel;
-  
+
 	/**
-	 * Transforms a {@linkplain MoonOrbitalElement} object into an {@linkplain OrbitalElement} object, correcting for 
+	 * Transforms a {@linkplain MoonOrbitalElement} object into an {@linkplain OrbitalElement} object, correcting for
 	 * longitude and periapsis precession rates to certain Julian day for subsequent ephemeris
 	 * calculation.
-	 * 
+	 *
 	 * @param moon_orbit Input object.
 	 * @param jd Julian day when the elements should be calculated, i.e. subsequent calculation time.
 	 * @return Output object.
@@ -362,9 +362,9 @@ public class OrbitalElement implements Serializable
         double dt = jd - moon_orbit.referenceTime;
 
 		OrbitalElement orbit = new OrbitalElement(moon_orbit.name, moon_orbit.semimajorAxis,
-				moon_orbit.meanLongitude + dt * moon_orbit.meanMotion, moon_orbit.eccentricity, 
+				moon_orbit.meanLongitude + dt * moon_orbit.meanMotion, moon_orbit.eccentricity,
 				moon_orbit.periapsisLongitude + dt * moon_orbit.argumentOfPeriapsisPrecessionRate,
-				moon_orbit.ascendingNodeLongitude + dt * moon_orbit.ascendingNodePrecessionRate, 
+				moon_orbit.ascendingNodeLongitude + dt * moon_orbit.ascendingNodePrecessionRate,
 				moon_orbit.inclination, jd,
 				moon_orbit.meanMotion, moon_orbit.referenceEquinox, moon_orbit.beginOfApplicableTime,
 				moon_orbit.endOfApplicableTime, 0.0f, 0.0f, MAGNITUDE_MODEL.NONE);
@@ -379,12 +379,12 @@ public class OrbitalElement implements Serializable
 				orbit.magnitudeModel = MAGNITUDE_MODEL.ASTEROID_HG;
 			}
 		} catch (Exception e) {	}
-		
+
 		orbit.centralBody = moon_orbit.centralBody;
-		
+
 		return orbit;
 	}
-	
+
 	/**
 	 * To clone the object.
 	 */
@@ -401,7 +401,7 @@ public class OrbitalElement implements Serializable
 		return orbit;
 	}
 	/**
-	 * Returns true if a given object is equal to this orbital
+	 * Returns if a given object is equal to this orbital
 	 * elements object.
 	 */
 	@Override
@@ -483,22 +483,20 @@ public class OrbitalElement implements Serializable
 	/**
 	 * Returns a string representation of this object.
 	 */
-	@Override
 	public String toString() {
 		StringBuffer out = new StringBuffer("");
 		String sep = FileIO.getLineSeparator();
 		out.append(this.name+sep);
 		out.append("a (AU)   = " + semimajorAxis + sep);
 		out.append("e        = " + eccentricity + sep);
-		out.append("M (\u00ba)    = " + (meanAnomaly * Constant.RAD_TO_DEG) + sep);
-		out.append("n (\u00ba/d)  = " + (meanMotion * Constant.RAD_TO_DEG) + sep);
-		out.append("i (\u00ba)    = " + (inclination * Constant.RAD_TO_DEG) + sep);
-		out.append("o (\u00ba)    = " + (ascendingNodeLongitude * Constant.RAD_TO_DEG) + sep);
-		out.append("w (\u00ba)    = " + (argumentOfPerihelion * Constant.RAD_TO_DEG) + sep);
+		out.append("M (\u00b0)    = " + (meanAnomaly * Constant.RAD_TO_DEG) + sep);
+		out.append("n (\u00b0/d)  = " + (meanMotion * Constant.RAD_TO_DEG) + sep);
+		out.append("i (\u00b0)    = " + (inclination * Constant.RAD_TO_DEG) + sep);
+		out.append("o (\u00b0)    = " + (ascendingNodeLongitude * Constant.RAD_TO_DEG) + sep);
+		out.append("w (\u00b0)    = " + (argumentOfPerihelion * Constant.RAD_TO_DEG) + sep);
 		out.append("time     = " + (referenceTime) + sep);
 		return out.toString();
 	}
-
 	/**
 	 * To obtain the brightest apparent magnitude an asteroid could reach.
 	 * Note the magnitude returned depends on the magnitude model selected for the orbital
@@ -516,7 +514,7 @@ public class OrbitalElement implements Serializable
 			double minDistance = Math.abs(distanceFromSun - 1.0);
 			if (minDistance < distance) distance = minDistance;
 		}
-		
+
 		if (distance == 0.0) distance = 0.1;
 		if (distanceFromSun == 0.0) distanceFromSun = 0.1;
 		return getApparentMagnitude(distance, distanceFromSun, phase_angle);
@@ -554,7 +552,7 @@ public class OrbitalElement implements Serializable
 		pos[0] = p0;
 		pos[1] = p1;
 		pos[2] = p2;
-		
+
 		double phase_angle = 0.0;
 		double sun[] = lastSun;
 		if (lastSun == null || lastJD != JD) {
@@ -571,7 +569,7 @@ public class OrbitalElement implements Serializable
 		}
 		return getApparentMagnitude(bodyEarth, sunBody, phase_angle);
 	}
-	
+
 	/**
 	 * To obtain the brightest apparent magnitude a given comet could reach,
 	 * when it is at perihelion.
@@ -600,7 +598,7 @@ public class OrbitalElement implements Serializable
 	 */
 	public double getApparentMagnitude(double distance, double distanceFromSun, double phaseAngle) {
 		double magnitude = MAGNITUDE_MODEL.MAGNITUDE_UNKNOWN;
-		
+
 		/* The following methods of getting a magnitude are */
 		/* discussed in Meeus' Astronomical Algorithms, */
 		/* pages 216 and 217. See also http://www.mmto.org/obscats/edb.html */
@@ -625,7 +623,7 @@ public class OrbitalElement implements Serializable
 		}
 		return magnitude;
 	}
-	
+
 	/**
 	 * Transforms the set of orbital elements to another equinox following Astronomical Algorithms,
 	 * based on IAU 1977 precession.
@@ -635,25 +633,25 @@ public class OrbitalElement implements Serializable
 	 */
 	public void changeToEquinox(double jd) {
 		if (jd == this.referenceEquinox) return;
-		
+
 		double t = (jd - this.referenceEquinox) / Constant.JULIAN_DAYS_PER_CENTURY;
 		double T = Functions.toCenturies(this.referenceEquinox);
-		
-		double eta = ((47.0029 - 0.06603 * T + 0.000598 * T * T) * t + 
+
+		double eta = ((47.0029 - 0.06603 * T + 0.000598 * T * T) * t +
 			(-0.03302 + 0.000598 * T) * t * t + 0.000060 * t * t * t) * Constant.ARCSEC_TO_RAD;
-		double pi = 174.876384 * Constant.DEG_TO_RAD + (3289.4789 * T + 0.60622 * T * T - 
+		double pi = 174.876384 * Constant.DEG_TO_RAD + (3289.4789 * T + 0.60622 * T * T -
 			(869.8089 + 0.50491 * T) * t + 0.03536 * t * t) * Constant.ARCSEC_TO_RAD;
-		double rho = ((5029.0966 + 2.22226 * T - 0.000042 * T * T) * t + 
+		double rho = ((5029.0966 + 2.22226 * T - 0.000042 * T * T) * t +
 			(1.11113 - 0.000042 * T) * t * t + 0.0000060 * t * t * t) * Constant.ARCSEC_TO_RAD;
 		double psi = pi + rho;
-		
+
 		double sinisdp = Math.sin(this.inclination) * Math.sin(this.ascendingNodeLongitude - pi);
 		double sinicdp = -Math.sin(eta) * Math.cos(this.inclination) + Math.cos(eta) * Math.sin(this.inclination) * Math.cos(this.ascendingNodeLongitude - pi);
-		
+
 		double omegaMinusPsi = Math.atan2(sinisdp, sinicdp);
 		double omega = omegaMinusPsi + psi;
 		double i = Math.asin(Math.sqrt(sinisdp * sinisdp + sinicdp * sinicdp));
-		
+
 		double sinisdw = - Math.sin(eta) * Math.sin(this.ascendingNodeLongitude - pi);
 		double sinicdw = Math.sin(this.inclination) * Math.cos(eta) - Math.cos(this.inclination) * Math.sin(eta) * Math.cos(this.ascendingNodeLongitude - pi);
 		double dw = Math.atan2(sinisdw, sinicdw);
@@ -662,13 +660,13 @@ public class OrbitalElement implements Serializable
 		this.inclination = i;
 		this.ascendingNodeLongitude = omega;
 		this.argumentOfPerihelion = w;
-		this.perihelionLongitude = this.argumentOfPerihelion + this.ascendingNodeLongitude;	
+		this.perihelionLongitude = this.argumentOfPerihelion + this.ascendingNodeLongitude;
 		this.referenceEquinox = jd;
 	}
-	
+
 	/**
-	 * Transforms a set of elements from FK4 B1950 to FK5 J2000, following Meeus, 
-	 * chapter 23. Reference time (epoch) is unchanged, only inclination, argument 
+	 * Transforms a set of elements from FK4 B1950 to FK5 J2000, following Meeus,
+	 * chapter 23. Reference time (epoch) is unchanged, only inclination, argument
 	 * of perihelion (and its longitude), and ascending node longitude are changed.<P>
 	 * To transform elements between Bessel equinoxes
 	 * @throws JPARSECException If the reference frame is not FK4 or the reference time
@@ -677,18 +675,18 @@ public class OrbitalElement implements Serializable
 	public void FK4_to_FK5() throws JPARSECException {
 		if (this.referenceFrame != FRAME.FK4 || this.referenceEquinox != Constant.B1950)
 			throw new JPARSECException("Please check that the reference frame is FK4 and reference equinox is B1950.");
-		
+
 		double psi =- 4.50001688 * Constant.DEG_TO_RAD;
 		double pi = -5.19856209 * Constant.DEG_TO_RAD;
 		double eta = -0.00651966 * Constant.DEG_TO_RAD;
-		
+
 		double sinisdp = Math.sin(this.inclination) * Math.sin(this.ascendingNodeLongitude - pi);
 		double sinicdp = -Math.sin(eta) * Math.cos(this.inclination) + Math.cos(eta) * Math.sin(this.inclination) * Math.cos(this.ascendingNodeLongitude - pi);
-		
+
 		double omegaMinusPsi = Math.atan2(sinisdp, sinicdp);
 		double omega = omegaMinusPsi + psi;
 		double i = Math.asin(Math.sqrt(sinisdp * sinisdp + sinicdp * sinicdp));
-		
+
 		double sinisdw = - Math.sin(eta) * Math.sin(this.ascendingNodeLongitude - pi);
 		double sinicdw = Math.sin(this.inclination) * Math.cos(eta) - Math.cos(this.inclination) * Math.sin(eta) * Math.cos(this.ascendingNodeLongitude - pi);
 		double dw = Math.atan2(sinisdw, sinicdw);
@@ -701,7 +699,7 @@ public class OrbitalElement implements Serializable
 		this.referenceEquinox = Constant.J2000;
 		this.referenceFrame = FRAME.FK5;
 	}
-	
+
 	/**
 	 * Returns the time the body pass through the mean longitude
 	 * of the ascending node (for the equinox of the elements). It
@@ -712,7 +710,7 @@ public class OrbitalElement implements Serializable
 	 * unsupported in this method.
 	 */
 	public double getNextPassThroughMeanAscendingNode() throws JPARSECException {
-		double v = -this.argumentOfPerihelion; 
+		double v = -this.argumentOfPerihelion;
 		if (this.eccentricity < 1.0) {
 			double tane2 = Math.sqrt((1.0 - this.eccentricity) / (1.0 + this.eccentricity)) * Math.tan(v * 0.5);
 			double E = Math.atan(tane2) * 2.0;
@@ -725,7 +723,7 @@ public class OrbitalElement implements Serializable
 		}
 		throw new JPARSECException("the orbit is hyperbolic.");
 	}
-	
+
 	/**
 	 * Returns the time the body pass through the mean longitude
 	 * of the descending node (for the equinox of the elements). It
@@ -763,10 +761,10 @@ public class OrbitalElement implements Serializable
 				DataSet.getSubArray(posV, 0, 2), DataSet.getSubArray(posV, 3, 5), jd, Constant.SUN_MASS/target.relativeMass);
 		return orbit;
 	}
-	
+
 	/**
 	 * Returns a simple sketch of the orbit as an image.
-	 * For double stars (disable to show planets in this case) north (PA = 0) is up 
+	 * For double stars (disable to show planets in this case) north (PA = 0) is up
 	 * and east towards left (PA = 90).
 	 * @param title The title for the chart.
 	 * @param w The image width.
@@ -783,7 +781,7 @@ public class OrbitalElement implements Serializable
 			boolean showPlanets, boolean markOtherYears) throws JPARSECException {
 		return getOrbitImage(title, w, h, scaling, jd, showPlanets, markOtherYears, true);
 	}
-	
+
 	/**
 	 * Returns a simple sketch of the orbits of the planets.
 	 * @param title The title for the chart.
@@ -795,13 +793,13 @@ public class OrbitalElement implements Serializable
 	 * @return The image.
 	 * @throws JPARSECException If an error occurs.
 	 */
-	public static BufferedImage getPlanetsOrbitImage(String title, int w, int h, double scaling, double jd) 
+	public static BufferedImage getPlanetsOrbitImage(String title, int w, int h, double scaling, double jd)
 			throws JPARSECException {
 		OrbitalElement orbit = new OrbitalElement();
 		return orbit.getOrbitImage(title, w, h, scaling, jd, true, false, false);
 	}
 
-	
+
 	private BufferedImage getOrbitImage(String title, int w, int h, double scaling, double jd,
 			boolean showPlanets, boolean markOtherYears, boolean showOrbit) throws JPARSECException {
 		int x0 = w / 2 - 1, y0 = h / 2 - 1;
@@ -836,7 +834,7 @@ public class OrbitalElement implements Serializable
 		}
 
 		int year = time.astroDate.getYear();
-		
+
 		int n = (150 * w) / 500;
 		double step = 5.0;
 		boolean close = true;
@@ -851,11 +849,11 @@ public class OrbitalElement implements Serializable
 				close = false;
 			}
 		}
-						
+
 		Graphics g = new AWTGraphics(w, h, false, false); //img.createGraphics();
 		g.setFont(FONT.getDerivedFont(FONT.DIALOG_PLAIN_15, (15*w)/500));
-		
-		
+
+
 		Object path = null;
 		if (orbit != null) {
 			path = g.generalPathInitialize();
@@ -868,7 +866,7 @@ public class OrbitalElement implements Serializable
 			}
 			if (close) g.generalPathClosePath(path);
 		}
-		
+
 		Object planets[] = new Object[8];
 		String labels[] = new String[8];
 		double labelPos[] = new double[8];
@@ -891,7 +889,7 @@ public class OrbitalElement implements Serializable
 					double py = - pos[0] * scale;
 					g.generalPathLineTo(planets[index], (float) (x0 - pos[1]*scale), (float) (y0 + py));
 					if (py > minY || minY == -1) minY = py;
-				}	
+				}
 				g.generalPathClosePath(planets[index]);
 				labelPos[index] = minY;
 				labels[index] = "";
@@ -969,26 +967,26 @@ public class OrbitalElement implements Serializable
 		int border = 100;
 		g.drawLine(x0, y0-h/2+border, x0, y0+h/2-border, false);
 		g.drawLine(x0-w/2+border, y0, x0+w/2-border, y0, false);
-		String s = "0\u00ba";
+		String s = "0\u00b0";
 		if (!showPlanets) s += " (N)";
 		int size = g.getFont().getSize();
 		g.drawString(s, x0-g.getStringWidth(s)/2, y0-h/2+border-size/2);
-		s = "90\u00ba";
+		s = "90\u00b0";
 		if (!showPlanets) s += " (E)";
 		g.drawString(s, x0-w/2+border-g.getStringWidth(s)-size/2, y0+size/2);
-		s = "180\u00ba";
+		s = "180\u00b0";
 		if (!showPlanets) s += " (S)";
 		g.drawString(s, x0-g.getStringWidth(s)/2, y0+h/2-border+size);
-		s = "270\u00ba";
+		s = "270\u00b0";
 		if (!showPlanets) {
 			if (Translate.getDefaultLanguage() == LANGUAGE.SPANISH) {
-				s += " (O)";				
+				s += " (O)";
 			} else {
 				s += " (W)";
 			}
 		}
 		g.drawString(s, x0+w/2-border+size/2, y0+size/2);
-		
+
 		double pix = scale, factor = 1;
 		while (true) {
 			if (pix*factor < w/8) {
@@ -1006,7 +1004,7 @@ public class OrbitalElement implements Serializable
 			if (Translate.getDefaultLanguage() == LANGUAGE.SPANISH) {
 				s += " UA";
 			} else {
-				s += " AU";				
+				s += " AU";
 			}
 		} else {
 			s += " \"";
@@ -1014,20 +1012,20 @@ public class OrbitalElement implements Serializable
 		int l = (int) (pix * factor);
 		g.drawLine(x0-l/2, y0+h/2-border/2+size, x0+l/2, y0+h/2-border/2+size, false);
 		g.drawString(s, x0-g.getStringWidth(s)/2, y0+h/2-border/2+size/2);
-		
+
 		g.setStroke(JPARSECStroke.STROKE_DEFAULT_LINE);
 		g.setColor(Functions.getColor(255, 0, 0, 255), true);
 		if (path != null) g.draw(path);
 		if (mark && now != null) {
 			n++;
-			g.fillOval((int) now[0] - n, (int) now[1] - n, 2*n, 2*n, false);		
+			g.fillOval((int) now[0] - n, (int) now[1] - n, 2*n, 2*n, false);
 		}
-		
+
 		g.setColor(Functions.getColor(0, 0, 0, 255), true);
-		g.drawString(title, x0 - g.getStringWidth(title)/2, y0*0.05f);
+		g.drawString(title, x0 - g.getStringWidth(title)/2, Math.max(y0*0.05f, g.getFont().getSize()));
 		return (BufferedImage) g.getRendering();
 	}
-	
+
 	/**
 	 * Returns the light curve of this minor object in a given time interval.
 	 * @param init Time object for the beginning of the interval. Its time scale
@@ -1048,7 +1046,7 @@ public class OrbitalElement implements Serializable
 		double x[] = DataSet.getSetOfValues(jd0, jdf, npoints, false);
 		double y[] = new double[x.length];
 		double step = x[1] - x[0];
-		
+
 		OrbitalElement orbit = this.clone();
 		int sp = orbit.name.indexOf("   ");
 		if (sp > 0) orbit.name = orbit.name.substring(0, sp).trim();
@@ -1059,12 +1057,12 @@ public class OrbitalElement implements Serializable
 			double plane_orbit_coords[] = OrbitEphem.orbitPlane(orbit, jd);
 			double coords[] = OrbitEphem.toEclipticPlane(orbit, plane_orbit_coords);
 			double sun[] = PlanetEphem.getGeocentricPosition(jd, TARGET.SUN, 0.0, false, obs);
-			
+
 			double RO = Functions.getNorm(new double[] {sun[0] + coords[0], sun[1] + coords[1], sun[2] + coords[2]});
 			double RP = Functions.getNorm(coords);
 			double RE = Functions.getNorm(sun);
 			double DPH = ((RP * RP + RO * RO - RE * RE) / (2.0 * RP * RO));
-				
+
 			x[i] = TimeScale.getJD(new TimeElement(jd, SCALE.BARYCENTRIC_DYNAMICAL_TIME), obs, eph, init.timeScale);
 			y[i] = orbit.getApparentMagnitude(RO, RP, Math.acos(DPH));
 			if (magMax == -1 || y[i] < magMax) {
@@ -1073,13 +1071,13 @@ public class OrbitalElement implements Serializable
 			}
 			jd += step;
 		}
-		
+
 		String title = Translate.translate(159) + " (" + Functions.formatValue(magMax, 1)+"^{m}- "+(new AstroDate(jdMax).toStringDate(false)+")");
 		// title = Translate.translate(159)+" "+Translate.translate(160)+" "+orbit.name;
-		
+
 		ChartSeriesElement series = new ChartSeriesElement(x, y, null, null, Translate.translate(157)+" "+Translate.translate(160)+" "+orbit.name, true, Color.BLACK, ChartSeriesElement.SHAPE_POINT, null);
 		series.showLines = true;
-		ChartElement chart = new ChartElement(new ChartSeriesElement[] {series}, ChartElement.TYPE.XY_CHART, ChartElement.SUBTYPE.XY_TIME, 
+		ChartElement chart = new ChartElement(new ChartSeriesElement[] {series}, ChartElement.TYPE.XY_CHART, ChartElement.SUBTYPE.XY_TIME,
 				title, Translate.translate(1202), Translate.translate(157), false);
 		CreateChart ch = new CreateChart(chart);
 		return ch;
@@ -1107,7 +1105,7 @@ public class OrbitalElement implements Serializable
 		double y1[] = new double[x.length];
 		double y2[] = new double[x.length];
 		double step = x[1] - x[0];
-		
+
 		OrbitalElement orbit = this.clone();
 		int sp = orbit.name.indexOf("   ");
 		if (sp > 0) orbit.name = orbit.name.substring(0, sp).trim();
@@ -1118,10 +1116,10 @@ public class OrbitalElement implements Serializable
 			double plane_orbit_coords[] = OrbitEphem.orbitPlane(orbit, jd);
 			double coords[] = OrbitEphem.toEclipticPlane(orbit, plane_orbit_coords);
 			double sun[] = PlanetEphem.getGeocentricPosition(jd, TARGET.SUN, 0.0, false, obs);
-			
+
 			double RO = Functions.getNorm(new double[] {sun[0] + coords[0], sun[1] + coords[1], sun[2] + coords[2]});
 			double RP = Functions.getNorm(coords);
-				
+
 			x[i] = TimeScale.getJD(new TimeElement(jd, SCALE.BARYCENTRIC_DYNAMICAL_TIME), obs, eph, init.timeScale);
 			y1[i] = RO;
 			y2[i] = RP;
@@ -1131,19 +1129,19 @@ public class OrbitalElement implements Serializable
 			}
 			jd += step;
 		}
-		
+
 		ChartSeriesElement series1 = new ChartSeriesElement(x, y1, null, null, Translate.translate(299)+" "+Translate.translate(3)+"-"+orbit.name, true, Color.BLUE, ChartSeriesElement.SHAPE_POINT, null);
 		ChartSeriesElement series2 = new ChartSeriesElement(x, y2, null, null, Translate.translate(299)+" "+Translate.translate(0)+"-"+orbit.name, true, Color.RED, ChartSeriesElement.SHAPE_POINT, null);
 		series1.showLines = true;
 		series2.showLines = true;
 		String au = "AU";
 		if (Translate.getDefaultLanguage() == LANGUAGE.SPANISH) au = "UA";
-		
+
 		String title = Translate.translate(1303);
 		title = title.substring(0, title.lastIndexOf(" "));
 		title += " (@BLUE"+Functions.formatValue(minDist, 3)+au+"@BLACK - "+(new AstroDate(jdMin).toStringDate(false))+")";
 		//title = Translate.translate(1303)+" "+orbit.name;
-		ChartElement chart = new ChartElement(new ChartSeriesElement[] {series1, series2}, ChartElement.TYPE.XY_CHART, ChartElement.SUBTYPE.XY_TIME, 
+		ChartElement chart = new ChartElement(new ChartSeriesElement[] {series1, series2}, ChartElement.TYPE.XY_CHART, ChartElement.SUBTYPE.XY_TIME,
 				title, Translate.translate(1202), Translate.translate(299)+" ("+au+")", false);
 		CreateChart ch = new CreateChart(chart);
 		return ch;

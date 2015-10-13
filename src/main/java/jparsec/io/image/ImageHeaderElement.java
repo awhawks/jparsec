@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.io.image;
 
 import jparsec.graph.DataSet;
@@ -33,7 +33,7 @@ import java.io.Serializable;
  * @version 1.0
  */
 public class ImageHeaderElement implements Serializable {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Holds the key.
@@ -48,7 +48,7 @@ public class ImageHeaderElement implements Serializable {
 	 */
 	public String comment;
 	/**
-	 * Holds a format specification, usually not needed 
+	 * Holds a format specification, usually not needed
 	 * (at least in fits files). Possible values are:<P>
 	 * A - String.<BR>
 	 * J - Integer.<BR>
@@ -62,7 +62,7 @@ public class ImageHeaderElement implements Serializable {
 	 * B - Byte.<BR>
 	 */
 	public String format;
-	
+
 	/**
 	 * Constructor.
 	 * @param key The key.
@@ -75,7 +75,7 @@ public class ImageHeaderElement implements Serializable {
 		this.value = value;
 		this.comment = comment;
 	}
-	
+
 	/**
 	 * Parses a given set of columns to produce a header.
 	 * @param columns Columns with key + space + value + space(s) + / + comment.
@@ -98,9 +98,9 @@ public class ImageHeaderElement implements Serializable {
 			header[i] = new ImageHeaderElement(key, value, comment);
 		}
 		return header;
-		
+
 	}
-	
+
 	/**
 	 * Returns the header array for an image.
 	 * @param header The header set of objects.
@@ -120,7 +120,7 @@ public class ImageHeaderElement implements Serializable {
 			value = FileIO.addSpacesAfterAString(value, 25);
 			String comment = header[i].comment;
 			if (comment == null) comment = "";
-			
+
 			k[i] = key + value + " / " + comment;
 		}
 		return k;
@@ -137,13 +137,13 @@ public class ImageHeaderElement implements Serializable {
 	{
 		String keyS = key;
 		if (!considerCase) keyS = key.toLowerCase();
-		
+
 		int out = -1;
 		for (int i=0; i<header.length; i++)
 		{
 			String keySS = header[i].key;
 			if (!considerCase) keySS = keySS.toLowerCase();
-			
+
 			if (keyS.equals(keySS)) {
 				out = i;
 				break;
@@ -151,7 +151,7 @@ public class ImageHeaderElement implements Serializable {
 		}
 		return out;
 	}
-	
+
 	/**
 	 * Searches for a given {@linkplain ImageHeaderElement} by its description.
 	 * @param param The array of {@linkplain ImageHeaderElement}.
@@ -200,9 +200,8 @@ public class ImageHeaderElement implements Serializable {
 		i.format = this.format;
 		return i;
 	}
-
 	/**
-	 * Returns true if this instance is equal to another.
+	 * Returns true if this instance is equals to another.
 	 */
 	@Override
 	public boolean equals(Object o) {
@@ -230,14 +229,13 @@ public class ImageHeaderElement implements Serializable {
 	/**
 	 * Returns a string representation of this header entry.
 	 */
-	@Override
 	public String toString() {
 		String out = this.key+" -> "+this.value;
 		if (format != null && !this.format.equals("")) out += " ("+format+")";
 		if (comment != null && !this.comment.equals("")) out += " // "+comment;
 		return out;
 	}
-	
+
 	/**
 	 * Returns a string representation of an array of headers.
 	 * @param input The input object.
@@ -246,7 +244,7 @@ public class ImageHeaderElement implements Serializable {
 	public static String toString(ImageHeaderElement input[]) {
 		StringBuffer out = new StringBuffer("");
 		String sep = FileIO.getLineSeparator(), fieldSep = " ";
-		
+
 		int l1 = -1, l2 = -1;
 		for (int i=0; i<input.length; i++) {
 			if (input[i].key.length() > l1 || l1 == -1) l1 = input[i].key.length();
@@ -255,7 +253,7 @@ public class ImageHeaderElement implements Serializable {
 		for (int i=0; i<input.length; i++) {
 			out.append(FileIO.addSpacesAfterAString(input[i].key, l1) + fieldSep + FileIO.addSpacesAfterAString(input[i].value, l2) + fieldSep + input[i].comment + sep);
 		}
-		
+
 		return out.toString();
 	}
 
@@ -281,14 +279,14 @@ public class ImageHeaderElement implements Serializable {
 			value = FileIO.addSpacesAfterAString(value, l2);
 			String comment = header[i].comment;
 			if (comment == null) comment = "";
-			
+
 			out.append(key + value + " / " + comment + sep);
 		}
 		return out.toString();
 	}
 
 	/**
-	 * Constructs a simple header for a fits file using the dimensions 
+	 * Constructs a simple header for a fits file using the dimensions
 	 * and type supplied from the input data. Cards inserted are BITPIX,
 	 * NAXIS, NAXIS1, NAXIS2, and EXTEND (set a T = true to allow extensions).
 	 * @param o The data as an array with 2 dimensions, type double, int, float,
@@ -329,9 +327,9 @@ public class ImageHeaderElement implements Serializable {
 							bp = 8;
 						} catch (Exception exc5) {
 							throw new JPARSECException("Cannot recognize the format of the data in the input array, must have 2 dimensions and type int, float, double, short, or byte.");
-						}						
+						}
 					}
-				}				
+				}
 			}
 		}
 		ImageHeaderElement out[] = new ImageHeaderElement[] {
@@ -343,7 +341,7 @@ public class ImageHeaderElement implements Serializable {
 		};
 		return out;
 	}
-	
+
 	/**
 	 * Adds a specific entry to a header defined by a set of {@linkplain ImageHeaderElement}
 	 * objects.
@@ -358,7 +356,7 @@ public class ImageHeaderElement implements Serializable {
 			out[index] = entry;
 			return out;
 		}
-		
+
 		Object o[] = null;
 		try {
 			o = DataSet.addObjectArray(input, new Object[] {entry});
@@ -383,7 +381,7 @@ public class ImageHeaderElement implements Serializable {
 		}
 		return input;
 	}
-	
+
 	/**
 	 * Deletes a specific entry to a header defined by a set of {@linkplain ImageHeaderElement}
 	 * objects.
@@ -421,7 +419,7 @@ public class ImageHeaderElement implements Serializable {
 		}
 		return out;
 	}
-	
+
 	/**
 	 * Checks if a header contains a card or not.
 	 * @param input Input header.

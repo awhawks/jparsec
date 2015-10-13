@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.io;
 
 import java.io.*;
@@ -36,14 +36,14 @@ import jparsec.util.JPARSECException;
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
-public class WriteFile 
+public class WriteFile
 {
 	// private constructor so that this class cannot be instantiated.
 	private WriteFile() {}
 
 	/**
 	 * Writes an external text file.
-	 * 
+	 *
 	 * @param pathToFile Path to the file.
 	 * @param text Text to write.
 	 * @param encoding The encoding.
@@ -81,7 +81,7 @@ public class WriteFile
 
 	/**
 	 * Writes an external text file.
-	 * 
+	 *
 	 * @param pathToFile Path to the file.
 	 * @param text Text to write as an array.
 	 * @param encoding The encoding.
@@ -106,7 +106,7 @@ public class WriteFile
 
 	/**
 	 * Writes an external text file using ISO encoding.
-	 * 
+	 *
 	 * @param pathToFile Path to the file.
 	 * @param text Text to write.
 	 * @throws JPARSECException If the file cannot be written..
@@ -118,7 +118,7 @@ public class WriteFile
 
 	/**
 	 * Writes an external text file using ISO encoding.
-	 * 
+	 *
 	 * @param pathToFile Path to the file.
 	 * @param text Text to write as an array.
 	 * @throws JPARSECException If the file cannot be written..
@@ -127,7 +127,7 @@ public class WriteFile
 	{
 		writeAnyExternalFile(pathToFile, text, ReadFile.ENCODING_ISO_8859);
 	}
-	
+
 	/**
 	 * Writes an image to a file.
 	 * @param path The path.
@@ -156,18 +156,18 @@ public class WriteFile
 	 */
 	public static String getFormattedEntry(Parameter p[], FileFormatElement format[]) throws JPARSECException {
 		String out = "";
-		
+
 		// Sort format by starting position
 		double val[] = new double[format.length];
 		for (int i=0; i<format.length; i++) {
 			val[i] = format[i].startingPosition;
 		}
-		
+
 		Object obj[] = DataSet.sortInCrescent(format, val);
 		for (int i=0; i<format.length; i++) {
 			format[i] = (FileFormatElement) obj[i];
-		}		
-		
+		}
+
 		// Create out string
 		for (int i=0; i<format.length; i++) {
 			int index = -1;
@@ -178,7 +178,7 @@ public class WriteFile
 				}
 			}
 			if (index < 0) continue;
-			
+
 			int l = format[i].endingPosition - format[i].startingPosition + 1;
 			int n = format[i].startingPosition - out.length() - 1;
 			if (n > 0) out += FileIO.addSpacesAfterAString("", n);
@@ -201,7 +201,7 @@ public class WriteFile
 			if (field.length() > l) field = field.substring(0, l);
 			out += field;
 		}
-		
+
 		return out;
 	}
 }

@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,12 +18,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.ephem.planets;
 
 import java.io.Serializable;
-
 import java.util.Arrays;
+
 import jparsec.astronomy.Star;
 import jparsec.ephem.Ephem;
 import jparsec.ephem.EphemerisElement;
@@ -33,32 +33,31 @@ import jparsec.ephem.Target;
 import jparsec.ephem.moons.MoonEphemElement;
 import jparsec.ephem.probes.SatelliteEphemElement;
 import jparsec.ephem.stars.StarEphemElement;
-import jparsec.graph.DataSet;
 import jparsec.math.Constant;
 import jparsec.observer.LocationElement;
 import jparsec.util.JPARSECException;
 
 /**
  * Convenient class for ephem data access.
- * 
+ *
  * @see Ephem
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
 public class EphemElement implements Serializable
 {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Constant that holds the magnitude of a planet or satellite when it is fully eclipsed/occulted.
 	 */
 	public static final int INVALID_MAGNITUDE = 100;
-	
+
 	/**
 	 * Constructs an ephem object providing the values of the fields.
 	 * This sets the values of all the fields except light time, rise, set,
 	 * transit, transit elevation, and constellation.
-	 * 
+	 *
 	 * @param ra Right Ascension in radians.
 	 * @param dec Declination in radians.
 	 * @param r Distance to the observer in AU.
@@ -126,7 +125,7 @@ public class EphemElement implements Serializable
 
 	/**
 	 * Constructs an ephem object providing the values of all fields.
-	 * 
+	 *
 	 * @param ra Right Ascension in radians.
 	 * @param dec Declination in radians.
 	 * @param r Distance to the observer in AU.
@@ -243,7 +242,7 @@ public class EphemElement implements Serializable
 	/**
 	 * Right Ascension in radians. It is measured respect the true or mean equinox of the
 	 * epoch selected in the ephemeris object. For positions calculated for an observer
-	 * located in the surface of a planet different from the Earth, the reference RA = 0 
+	 * located in the surface of a planet different from the Earth, the reference RA = 0
 	 * is taken as the meridian containing the Earth's north pole at J2000. This criteria
 	 * is not the same as the one used by JPL.
 	 */
@@ -257,7 +256,7 @@ public class EphemElement implements Serializable
 
 	/**
 	 * Distance to the observer in Astronomical Units. As a general rule, distance
-	 * is calculated as 'apparent', which means that is referred to the instant light 
+	 * is calculated as 'apparent', which means that is referred to the instant light
 	 * seen by the observer for a given calculation time, and not the true distance
 	 * the body has at that time (that cannot be 'seen' due to its distance).
 	 */
@@ -279,9 +278,9 @@ public class EphemElement implements Serializable
 	 * Distance from the Sun in Astronomical Units. As a general rule, it is the
 	 * distance that the planet had to the Sun when it emitted the light
 	 * that reaches the observer at a given calculation time ('apparent', not the
-	 * true geometric distance), since ephemerides are usually apparent, not geometric. 
-	 * Note that in certain methods (in fact, all of them except JPL ephemerides) 
-	 * the Sun is incorrectly assumed to be at the Solar System Barycenter (SSB), 
+	 * true geometric distance), since ephemerides are usually apparent, not geometric.
+	 * Note that in certain methods (in fact, all of them except JPL ephemerides)
+	 * the Sun is incorrectly assumed to be at the Solar System Barycenter (SSB),
 	 * and this value is the distance to SSB, not to the Sun itsef.
 	 */
 	public double distanceFromSun;
@@ -293,7 +292,7 @@ public class EphemElement implements Serializable
 
 	/**
 	 * Phase angle in radians. It can be negative if the ecliptic longitude
-	 * of the Earth is below that of the planet (before opposition in 
+	 * of the Earth is below that of the planet (before opposition in
 	 * outer planets).
 	 */
 	public float phaseAngle;
@@ -313,9 +312,9 @@ public class EphemElement implements Serializable
 	 * Position angle of pole in radians. Positive values means that the north
 	 * hemisphere of the planet is towards the observer. For the Moon it
 	 * will be the libration in latitude. As a general rule, this value is
-	 * corrected from planetocentric to planetogeodetic, which means that in practice it 
-	 * is a sub-observer latitude that can be compared with topographic maps. 
-	 * {@linkplain Target} class contains methods for transforming between both values. 
+	 * corrected from planetocentric to planetogeodetic, which means that in practice it
+	 * is a sub-observer latitude that can be compared with topographic maps.
+	 * {@linkplain Target} class contains methods for transforming between both values.
 	 */
 	public double positionAngleOfPole;
 
@@ -326,7 +325,7 @@ public class EphemElement implements Serializable
 	 * The longitude is measured towards east for the Moon (positive values
 	 * represents positions towards east or to the right on the Moon), the Sun,
 	 * and the inner planets Mercury and Venus. For Mars and the rest of the
-	 * outer planets this value is measured towards west (west longitudes are 
+	 * outer planets this value is measured towards west (west longitudes are
 	 * positive).
 	 */
 	public double longitudeOfCentralMeridian;
@@ -360,8 +359,8 @@ public class EphemElement implements Serializable
 	 * Subsolar latitude. In case of Saturn, Uranus, and Neptune, can be
 	 * considered the ring plane ilumination angle. It depends on the relative
 	 * position of the Sun. As a general rule, this value is
-	 * corrected from planetocentric to planetogeodetic, which means that in practice it 
-	 * is a sub-observer latitude that can be compared with topographic maps. 
+	 * corrected from planetocentric to planetogeodetic, which means that in practice it
+	 * is a sub-observer latitude that can be compared with topographic maps.
 	 * {@linkplain Target} class contains methods for transforming between both values.
 	 */
 	public double subsolarLatitude;
@@ -384,7 +383,7 @@ public class EphemElement implements Serializable
 	public double azimuth;
 
 	/**
-	 * Geometric/apparent elevation in radians. For apparent ephemerides the 
+	 * Geometric/apparent elevation in radians. For apparent ephemerides the
 	 * apparent elevation will be provided, unless the elevation itself is
 	 * below -2 degrees. In this case the elevation will be geometric.
 	 */
@@ -393,17 +392,17 @@ public class EphemElement implements Serializable
 	/**
 	 * Mean heliocentric ecliptic longitude in radians for the output equinox and frame defined in the
 	 * ephemeris object. For JPL ephemerides the value returned is heliocentric, for the others it is
-	 * in fact barycentric (referred to solar system barycenter). As with other ephemerides values, 
+	 * in fact barycentric (referred to solar system barycenter). As with other ephemerides values,
 	 * this value is referred to the time the source emitted the light that reaches the observer (it is
 	 * corrected for light-time), not to the input time of the ephemerides.
-	 * 
+	 *
 	 */
 	public double heliocentricEclipticLongitude;
 
 	/**
 	 * Mean heliocentric ecliptic latitude in radians for the output equinox and frame defined in the
 	 * ephemeris object. For JPL ephemerides the value returned is heliocentric, for the others it is
-	 * in fact barycentric (referred to solar system barycenter). As with other ephemerides values, 
+	 * in fact barycentric (referred to solar system barycenter). As with other ephemerides values,
 	 * this value is referred to the time the source emitted the light that reaches the observer (it is
 	 * corrected for light-time), not to the input time of the ephemerides.
 	 */
@@ -474,18 +473,18 @@ public class EphemElement implements Serializable
 	 * Name of the body.
 	 */
 	public String name;
-	
+
 	/**
 	 * Holds additional information for this object, for example if it is
 	 * eclipsed in case it represents the ephemerides of a natural or
 	 * artificial satellites, or if is occulted.
 	 */
 	public String status;
-	
+
 	/**
 	 * Transform the corresponding information in an {@linkplain MoonEphemElement} object
 	 * into a ephem object.
-	 * 
+	 *
 	 * @param moon_ephem {@linkplain MoonEphemElement} object.
 	 * @param jdEpoch Epoch as Julian day when the ephemeris were obtained.
 	 * @return Ephem object.
@@ -511,11 +510,11 @@ public class EphemElement implements Serializable
 			String constel = jparsec.astronomy.Constellation.getConstellationName(ephem.rightAscension,
 					ephem.declination, jdEpoch, eph);
 			ephem.constellation = constel;
-		} catch (Exception exc) {}				
+		} catch (Exception exc) {}
 		ephem.lightTime = (float) (ephem.distance * Constant.LIGHT_TIME_DAYS_PER_AU);
 		ephem.surfaceBrightness = 0;
 		if (ephem.magnitude != EphemElement.INVALID_MAGNITUDE &&
-				(ephem.angularRadius * Constant.RAD_TO_ARCSEC > 0.5)) 
+				(ephem.angularRadius * Constant.RAD_TO_ARCSEC > 0.5))
 			ephem.surfaceBrightness = (float) Star.getSurfaceBrightness(ephem.magnitude, ephem.angularRadius * Constant.RAD_TO_ARCSEC);
 		ephem.defectOfIllumination = (float) ((1.0 - ephem.phase) * ephem.angularRadius);
 		ephem.name = moon_ephem.name;
@@ -526,15 +525,15 @@ public class EphemElement implements Serializable
 	/**
 	 * Transform the corresponding information in an {@linkplain StarEphemElement} object
 	 * into a ephem object.
-	 * 
+	 *
 	 * @param star_ephem {@linkplain StarEphemElement} object.
 	 * @return Ephem object.
 	 */
 	public static EphemElement parseStarEphemElement(StarEphemElement star_ephem)
 	{
-		EphemElement ephem = new EphemElement(star_ephem.rightAscension, star_ephem.declination, 
+		EphemElement ephem = new EphemElement(star_ephem.rightAscension, star_ephem.declination,
 				star_ephem.distance * Constant.PARSEC / (Constant.AU * 1000.0),
-				0.0f, star_ephem.magnitude, star_ephem.distance * Constant.PARSEC / (Constant.AU * 1000.0), 
+				0.0f, star_ephem.magnitude, star_ephem.distance * Constant.PARSEC / (Constant.AU * 1000.0),
 				0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
 				0.0f, star_ephem.paralacticAngle, star_ephem.azimuth, star_ephem.elevation, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
 				0.0f);
@@ -546,14 +545,14 @@ public class EphemElement implements Serializable
 		if (star_ephem.transit != 0.0) ephem.transit = new double[] {star_ephem.transit};
 		if (star_ephem.transitElevation != 0.0f) ephem.transitElevation = new float[] {star_ephem.transitElevation};
 		ephem.name = star_ephem.name;
-		
+
 		return ephem;
 	}
 
 	/**
 	 * Transform the corresponding information in an {@linkplain SatelliteEphemElement}
 	 * object into a ephem object. The other fields are set to 0.0.
-	 * 
+	 *
 	 * @param sat_ephem {@linkplain SatelliteEphemElement} object.
 	 * @param jdEpoch Epoch as Julian day when the ephemeris were obtained.
 	 * @return Ephem object.
@@ -562,7 +561,7 @@ public class EphemElement implements Serializable
 	public static EphemElement parseSatelliteEphemElement(SatelliteEphemElement sat_ephem, double jdEpoch)
 	throws JPARSECException {
 		EphemElement ephem = new EphemElement(sat_ephem.rightAscension, sat_ephem.declination,
-				sat_ephem.distance / Constant.AU, sat_ephem.angularRadius, sat_ephem.magnitude, 
+				sat_ephem.distance / Constant.AU, sat_ephem.angularRadius, sat_ephem.magnitude,
 				0.0f, sat_ephem.elongation, sat_ephem.illumination, 0.0f,
 				0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, sat_ephem.azimuth, sat_ephem.elevation, 0.0f, 0.0f,
 				0.0f, 0.0f, 0.0f, 0.0f);
@@ -574,10 +573,10 @@ public class EphemElement implements Serializable
 			String constel = jparsec.astronomy.Constellation.getConstellationName(ephem.rightAscension,
 					ephem.declination, jdEpoch, eph);
 			ephem.constellation = constel;
-		} catch (Exception exc) {}				
+		} catch (Exception exc) {}
 		ephem.lightTime = (float) (ephem.distance * Constant.LIGHT_TIME_DAYS_PER_AU);
 		ephem.surfaceBrightness = 0;
-		if (ephem.angularRadius * Constant.RAD_TO_ARCSEC > 0.5) 
+		if (ephem.angularRadius * Constant.RAD_TO_ARCSEC > 0.5)
 			ephem.surfaceBrightness = (float) Star.getSurfaceBrightness(ephem.magnitude, ephem.angularRadius * Constant.RAD_TO_ARCSEC);
 		ephem.name = sat_ephem.name;
 		ephem.rise = sat_ephem.rise;
@@ -585,7 +584,7 @@ public class EphemElement implements Serializable
 		ephem.transit = sat_ephem.transit;
 		ephem.transitElevation = sat_ephem.transitElevation;
 		ephem.status = "";
-		if (sat_ephem.isEclipsed) ephem.status = "eclipsed"; 
+		if (sat_ephem.isEclipsed) ephem.status = "eclipsed";
 		return ephem;
 	}
 
@@ -614,7 +613,9 @@ public class EphemElement implements Serializable
 		if (this.location != null) ephem.location = this.location.clone();
 		return ephem;
 	}
-
+	/**
+	 * Returns if the given object is equal to this ephemeris object.
+	 */
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -726,10 +727,6 @@ public class EphemElement implements Serializable
 		return result;
 	}
 
-	/**
-	 * Returns if the given object is equal to this ephemeris object.
-	 */
-
 	private LocationElement location;
 
 	/**
@@ -763,7 +760,7 @@ public class EphemElement implements Serializable
 		//if (d == 0.0) d = 1; // This line produce problems when calculating the position of bodies for observers outside Earth
 		return new LocationElement(this.rightAscension, this.declination, d);
 	}
-	
+
 	/**
 	 * Sets the right ascension, declination, and distance for this instance.
 	 * @param loc The equatorial position.
@@ -773,4 +770,5 @@ public class EphemElement implements Serializable
 		this.declination = loc.getLatitude();
 		this.distance = loc.getRadius();
 	}
-}
+
+};

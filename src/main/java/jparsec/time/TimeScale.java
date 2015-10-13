@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.time;
 
 import java.math.BigDecimal;
@@ -50,7 +50,7 @@ import jparsec.util.JPARSECException;
  * updated once a year and whenever a new leap second is introduced. To do that
  * it is necessary to edit the files leapSeconds.txt and TTminusUT1.txt in this
  * package, when necessary.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -67,7 +67,7 @@ public class TimeScale
 	/** The first year when daylight saving time is considered. Currently set to 1970,
 	 * when most countries already applied the rule. Much countries started using DST before. */
 	public static final int DST_START_YEAR = 1970;
-	
+
 	/**
 	 * Obtain Julian day number from a Time object in certain time scale.
 	 * <P>
@@ -79,7 +79,7 @@ public class TimeScale
 	 * 10 microseconds (1E-10 days). Uncertainty when transforming between different time
 	 * scales could be as large as 50 microseconds, depending on the input
 	 * and output time scales.
-	 * 
+	 *
 	 * @param time Time object.
 	 * @param obs Observer object.
 	 * @param eph Ephemeris object.
@@ -93,7 +93,7 @@ public class TimeScale
 		double JD = time.astroDate.jd();
 
 		if (time.timeScale == type && !eph.correctForEOP) return JD;
-		
+
 		// Compute time scale transform values
 		double TT2TDB = 0.0;
 		double LT2UTC = -obs.getTimeZone() / Constant.HOURS_PER_DAY;
@@ -106,7 +106,7 @@ public class TimeScale
 			if (type == SCALE.BARYCENTRIC_DYNAMICAL_TIME || type == SCALE.TERRESTRIAL_TIME)
 				computeTTmUT1 = true;
 		}
-		
+
 		if (computeTTmUT1) TTminusUT1 = TimeScale.getTTminusUT1(time, obs);
 		double UT12TT = TTminusUT1 / Constant.SECONDS_PER_DAY;
 		if (type == SCALE.BARYCENTRIC_DYNAMICAL_TIME)
@@ -131,7 +131,7 @@ public class TimeScale
 			double DST2 = -(double) getDST(JD_UT, obs) / Constant.HOURS_PER_DAY;
 			if (DST2 == 0) {
 				LT2UTC -= DST;
-				JD_UT -= DST;				
+				JD_UT -= DST;
 			}
 		}
 
@@ -210,9 +210,9 @@ public class TimeScale
 	 * the input time scale into the desired output time scale.
 	 * <P>
 	 * The method returns a big decimal object with a very precise representation
-	 * of the requested Julian day. Usual precision is around 2 fs (femptosecond) 
+	 * of the requested Julian day. Usual precision is around 2 fs (femptosecond)
 	 * or better.
-	 * 
+	 *
 	 * @param time Time object.
 	 * @param obs Observer object.
 	 * @param eph Ephemeris object.
@@ -226,10 +226,10 @@ public class TimeScale
 		BigDecimal JD = time.astroDate.exactJD();
 
 		if (time.timeScale == type && !eph.correctForEOP) return JD;
-		
+
 		// Compute time scale transform values
 		BigDecimal TT2TDB = new BigDecimal(0.0);
-		BigDecimal LT2UTC = new BigDecimal(-obs.getTimeZone()).divide(new BigDecimal(Constant.HOURS_PER_DAY), 
+		BigDecimal LT2UTC = new BigDecimal(-obs.getTimeZone()).divide(new BigDecimal(Constant.HOURS_PER_DAY),
 				Configuration.BIG_DECIMAL_PRECISION_DECIMAL_PLACES, Configuration.BIG_DECIMAL_PRECISION_ROUNDING_MODE);
 		double TTminusUT1 = TimeScale.getTTminusUT1(time, obs);
 		BigDecimal UT12TT = new BigDecimal(TTminusUT1).divide(new BigDecimal(Constant.SECONDS_PER_DAY)
@@ -393,7 +393,7 @@ public class TimeScale
 	 * result. This change was not adopted at the same time by all countries,
 	 * but this behavior is established here to simplify and to adopt the same
 	 * rule for every country.
-	 * 
+	 *
 	 * @param JD_UT Julian day in Universal Time.
 	 * @param obs Observer object.
 	 * @return 1 or 0 for Daylight Saving Time in hours.
@@ -401,12 +401,12 @@ public class TimeScale
 	 *         invalid date.
 	 */
 	public static double getDST(double JD_UT, ObserverElement obs) throws JPARSECException
-	{	
+	{
 		if (obs.getDSTCode() == DST_RULE.NONE)
 			return 0;
 
 		if (JD_UT < 2440587.5) return 0;
-		
+
 		ObserverElement DST_last_observer;
 		double DST_last_jd = -1.0;
 		int DST_last_value = 0;
@@ -420,7 +420,7 @@ public class TimeScale
 			if (JD_UT == DST_last_jd && obs.equals(DST_last_observer))
 				return DST_last_value;
 		}
-		
+
 		double dst[] = getDSTStartEnd(JD_UT, obs);
 
 		DST_last_value = 0;
@@ -431,7 +431,7 @@ public class TimeScale
 
 		return DST_last_value;
 	}
-	
+
 	/**
 	 * Returns the start and end times of the DST change in the year. For countries
 	 * belonging to south hemisphere the values corresponding to the previous year
@@ -452,12 +452,12 @@ public class TimeScale
 	 * result. This change was not adopted at the same time by all countries,
 	 * but this behavior is established here to simplify and to adopt the same
 	 * rule for every country.
-	 * 
+	 *
 	 * @param JD_UT The Julian day in UT to return DST start/end times. For north
 	 * hemisphere only the year is considered, for south also the month.
 	 * @param obs Observer object.
-	 * @return Start and end times of DST in UT scale, or null for dates when DST = 0. 
-	 * Returned times have an offset of 1 hr respect to 0h UT since, at least in Spain, 
+	 * @return Start and end times of DST in UT scale, or null for dates when DST = 0.
+	 * Returned times have an offset of 1 hr respect to 0h UT since, at least in Spain,
 	 * time change is done at 1 UT.
 	 * @throws JPARSECException If the method fails, for example because of an
 	 *         invalid date.
@@ -524,13 +524,13 @@ public class TimeScale
 					JD_end = DateTimeOps.getFirstSundayOfNovember(year);
 				}
 			}
-			
+
 			double hoffset = 1;
 			if (obs.getDSTCode() == DST_RULE.CUSTOM)
 			{
 				int dst0 = obs.getDSTCode().start, dst1 = obs.getDSTCode().end;
 				if (dst0 < 0 || dst0 > 9 || dst1 < 0 || dst1 > 9) throw new JPARSECException("Custom dst rule has invalid start/end fields.");
-				
+
 				if (dst0 == 0 || dst1 == 0) return null;
 				hoffset = obs.getDSTCode().timeOffsetHours;
 				switch (dst0) {
@@ -596,17 +596,17 @@ public class TimeScale
 					throw new JPARSECException("Custom dst rule has invalid start/end fields.");
 				}
 			}
-			
+
 			// Set an offset of 1 hour, due to the fact that the time changes at
 			// 01:00 UT, not at 00:00. This is almost true for Europe ...
 			// For USA DST really applies at 2 AM local time in March (-> 3 AM), and at
-			// 2 AM local time in November (-> 1 AM), see 
+			// 2 AM local time in November (-> 1 AM), see
 			// http://www.usno.navy.mil/USNO/astronomical-applications/astronomical-information-center/daylight-time
 			double offset = hoffset / 24.0;
 
 			return new double[] {JD_start + offset, JD_end + offset};
 		}
-		
+
 		return null;
 	}
 
@@ -615,9 +615,9 @@ public class TimeScale
 	 * This method uses Java native method to obtain the DST.
 	 * Historical known changes in particular countries will
 	 * be automatically considered.<P>
-	 * 
+	 *
 	 * @param year The year to obtain DST refered to.
-	 * @param locale A Locale corresponding to certain country 
+	 * @param locale A Locale corresponding to certain country
 	 * to override the current system's one. Can be null to use
 	 * the default.
 	 * @return The DST in hours.
@@ -634,11 +634,11 @@ public class TimeScale
 	    }
 		return dstOffset / 60.0;
 	}
-	
+
 	/**
-	 * Returns calculation time adequate to use it in ephemeris calculations 
+	 * Returns calculation time adequate to use it in ephemeris calculations
 	 * using TT (magnitudes related to Earth).
-	 * 
+	 *
 	 * @param time Time object.
 	 * @param obs Observer object.
 	 * @param eph Ephemeris object.
@@ -656,17 +656,17 @@ public class TimeScale
 
 		return calc_time;
 	}
-	
+
 	/**
-	 * True (default value) to extrapolate results after the last year 
-	 * available. Otherwise, the last value available will be used for 
+	 * True (default value) to extrapolate results after the last year
+	 * available. Otherwise, the last value available will be used for
 	 * any future time. The discontinuity between the tabulated data
 	 * and the approximate extrapolation from formulae is around 1s,
 	 * noticeable one year after the last date available in the tabulated
 	 * data.
 	 */
 	public static boolean allowExtrapolationOfTTminusUT1ForFutureDates = true;
-	
+
 	/**
 	 * Calculate difference between Terrestrial Time and Universal Time UT1 in
 	 * seconds for a given date, using the last available references. For years
@@ -678,9 +678,9 @@ public class TimeScale
 	 * measurements is used. Uncertainty goes from 8 minutes at -500 to 0.3 minutes
 	 * at 1600. See TTminusUT1.txt file.
 	 * <P>
-	 * After 365 days + the last date in the previous tabulated data the formula 
-	 * 62.92 + 0.32217 * (year - 2000.0) + 0.005589 * (year - 2000.0) * (year - 2000.0) is 
-	 * used until 2050, then -20.0 + 32.0 * t * t - 0.5628 * (2150.0 - year), with 
+	 * After 365 days + the last date in the previous tabulated data the formula
+	 * 62.92 + 0.32217 * (year - 2000.0) + 0.005589 * (year - 2000.0) * (year - 2000.0) is
+	 * used until 2050, then -20.0 + 32.0 * t * t - 0.5628 * (2150.0 - year), with
 	 * t = (yr - 1820) / 100, is used until 2150. After 2150 the formula
 	 * -20 + 32 * t * t is used again. This is only applied if extrapolation is allowed.
 	 * <P>
@@ -705,7 +705,7 @@ public class TimeScale
 	 * of the Earth: 700 B.C. to A.D. 1980," Philosophical Transactions of the
 	 * Royal Society of London Series A 313, 47-70 (1984).
 	 * <P>
-	 * 
+	 *
 	 * @param time Time object.
 	 * @param obs Observer object.
 	 * @return TT minus UT1 in seconds.
@@ -715,7 +715,7 @@ public class TimeScale
 	{
 		if (time.timeScale == SCALE.UNIVERSAL_TIME_UT1 || time.timeScale == SCALE.UNIVERSAL_TIME_UTC)
 			return TimeScale.getTTminusUT1(time.astroDate);
-		
+
 		double TT_UT1_last_calc_T = -10000.0;
 		double TTminusUT1 = 0.0;
 		Object o = DataBase.getData("TTminusUT1", true);
@@ -724,7 +724,7 @@ public class TimeScale
 			TT_UT1_last_calc_T = a[0];
 			TTminusUT1 = a[1];
 		}
-					
+
 		double tt, t;
 
 		// Pass to UT
@@ -733,7 +733,7 @@ public class TimeScale
 			double LT2UTC = -obs.getTimeZone() / Constant.HOURS_PER_DAY;
 			JD_UT += LT2UTC;
 		}
-		
+
 		double UT12TT = TimeScale.getTTminusUT1(new AstroDate(JD_UT)) / Constant.SECONDS_PER_DAY;
 		if (time.timeScale == TimeElement.SCALE.TERRESTRIAL_TIME || time.timeScale == TimeElement.SCALE.BARYCENTRIC_DYNAMICAL_TIME)
 			JD_UT -= UT12TT;
@@ -747,7 +747,7 @@ public class TimeScale
 		AstroDate astro = new AstroDate(JD_UT);
 
 		tt = astro.getYear() + (astro.getMonth() - 1 + (astro.getDay() - 1.0) / 30.0) / 12.0;
-		
+
 		if (JD_UT != TT_UT1_last_calc_T)
 		{
 			TT_UT1_last_calc_T = JD_UT;
@@ -795,7 +795,7 @@ public class TimeScale
 			if (JD_UT >= DATA.dt_endJD) {
 				TTminusUT1 = DATA.interp.linearInterpolation(DATA.dt_endJD);
 			}
-			
+
 			boolean approxFuture = false;
 			if (JD_UT > DATA.dt_endJD + 365 && allowExtrapolationOfTTminusUT1ForFutureDates) approxFuture = true;
 			if (approxFuture) {
@@ -828,9 +828,9 @@ public class TimeScale
 				double dT = (FIXED_JD_TT - JD_TT) * Constant.SECONDS_PER_DAY;
 				TTminusUT1 += dT;
 			}
-			
+
 			DataBase.addData("TTminusUT1", new double[] {TT_UT1_last_calc_T, TTminusUT1}, true);
-		}		
+		}
 		return TTminusUT1;
 	}
 
@@ -850,7 +850,7 @@ public class TimeScale
 			TT_UT1_last_calc_T = a[0];
 			TTminusUT1 = a[1];
 		}
-		
+
 		double tt, t;
 
 		tt = astro_ut.getYear() + (astro_ut.getMonth() - 1 + (astro_ut.getDay() - 1.0) / 30.0) / 12.0;
@@ -864,12 +864,12 @@ public class TimeScale
 				t = (tt - 1820.0) / 100.0;
 				TTminusUT1 = -20 + 32.0 * t * t;
 			}
-			
+
 			/*
 			 * Tabulated values from AA.
 			 */
 			if (DATA.interp == null) TimeScale.updateLeapSecondsAndDT(null, null);
-			
+
 			double JD_UT = astro_ut.jd();
 			if (JD_UT >= DATA.dt_initJD && JD_UT < DATA.dt_endJD)
 			{
@@ -877,7 +877,7 @@ public class TimeScale
 			}
 			if (JD_UT >= DATA.dt_endJD)
 				TTminusUT1 = DATA.interp.linearInterpolation(DATA.dt_endJD);
-			
+
 			boolean approxFuture = false;
 			if (JD_UT > DATA.dt_endJD + 365 && allowExtrapolationOfTTminusUT1ForFutureDates) approxFuture = true;
 			if (approxFuture) {
@@ -910,7 +910,7 @@ public class TimeScale
 				double dT = (FIXED_JD_TT - JD_TT) * Constant.SECONDS_PER_DAY;
 				TTminusUT1 += dT;
 			}
-			
+
 			DataBase.addData("TTminusUT1_deprecated", new double[] {TT_UT1_last_calc_T, TTminusUT1}, true);
 		}
 		return TTminusUT1;
@@ -932,7 +932,7 @@ public class TimeScale
 		double LT2UTC = -obs.getTimeZone() / Constant.HOURS_PER_DAY;
 		if (time.timeScale == TimeElement.SCALE.LOCAL_TIME)
 			JD_UT += LT2UTC;
-		
+
 		if (time.timeScale == TimeElement.SCALE.TERRESTRIAL_TIME || time.timeScale == TimeElement.SCALE.BARYCENTRIC_DYNAMICAL_TIME) {
 			double UT12TT = TimeScale.getTTminusUT1(new AstroDate(JD_UT)) / Constant.SECONDS_PER_DAY;
 			JD_UT -= UT12TT;
@@ -946,12 +946,12 @@ public class TimeScale
 
 		DataBase.addData("TTminusUT1", new double[] {JD_UT, TTminusUT1}, true);
 	}
-	
+
 	/**
 	 * Returns the last Julian day when some information about TT-UT1 is available.
 	 * The value can be a true value, or an extrapolated one, depending on the
 	 * last time the package was updated.
-	 * 
+	 *
 	 * @return Last Julian day when TT-UT1 is known (exactly or extrapolated).
 	 * @throws JPARSECException If an error occurs.
 	 */
@@ -981,7 +981,7 @@ public class TimeScale
 	 * Section 2.58.1 (p87) of the 1992 Explanatory Supplement of the
 	 * Astronomical Almanac.
 	 * <P>
-	 * 
+	 *
 	 * @param astro AstroDate object defining the date in UTC.
 	 * @return TAI minus UTC, in seconds.
 	 * @deprecated Class {@linkplain EarthOrientationParameters} is recommended instead.
@@ -1031,7 +1031,7 @@ public class TimeScale
 	 * Return difference between Terrestrial Time and Universal Time Coordinate.
 	 * Should only be used after 1960. Note TT-UT1 is the default operation
 	 * prior to obtaining the dynamical time used for calculations.
-	 * 
+	 *
 	 * @param astro AstroDate object defining the date in UTC.
 	 * @return TT - UTC, in seconds.
 	 * @deprecated Class {@linkplain EarthOrientationParameters} is recommended instead.
@@ -1084,7 +1084,7 @@ public class TimeScale
 	/**
 	 * Obtain difference between Geocentric Coordinate Time and Terrestrial Time.
 	 * From SOFA library.
-	 * 
+	 *
 	 * @param JD Julian day in TT.
 	 * @return Difference TCG - TT, in seconds.
 	 */
@@ -1102,7 +1102,7 @@ public class TimeScale
 	/**
 	 * Obtain difference between Geocentric Coordinate Time and Barycentric
 	 * Coordinate Time. Precision better than 1 ms, see Seidelmann and Kovalevsky 2002.
-	 * 
+	 *
 	 * @param JD Julian day in TCB.
 	 * @return Difference TCG - TCB, in seconds.
 	 */
@@ -1125,10 +1125,10 @@ public class TimeScale
 	/**
 	 * Corrects Julian day of calculations in dynamical time to consider a different value for
 	 * the Moon secular acceleration. The value used by Stephenson and Morrison is
-	 * -26"/centuri^2, and the one considered as correct is slightly different (see 
+	 * -26"/centuri^2, and the one considered as correct is slightly different (see
 	 * {@linkplain Elp2000#MOON_SECULAR_ACCELERATION}). This correction is used
 	 * in JPARSEC although its magnitude is below the uncertainty in TT-UT, you will only
-	 * notice some difference when studying eclipses in ancient times. Correction 
+	 * notice some difference when studying eclipses in ancient times. Correction
 	 * for different years are as follows:<P>
 	 * <pre>
 	 * Year       Correction (seconds)
@@ -1140,7 +1140,7 @@ public class TimeScale
 	 *  2000      -0.026
 	 *  3000      -14
 	 * </pre>
-	 * 
+	 *
 	 * @param jd Julian day in TDB/TT.
 	 * @return Output (corrected) Julian day in the same time scale.
 	 */
@@ -1238,7 +1238,7 @@ public class TimeScale
 	 * This revision: 2005 August 26
 	 * <P>
 	 * Copyright (C) 2005 IAU SOFA Review Board.
-	 * 
+	 *
 	 * @param time Time object.
 	 * @param obs Observer object.
 	 * @param eph Ephemeris object.
@@ -1260,7 +1260,7 @@ public class TimeScale
 		// We use TT instead of TDB, but this has no effect in the prediction
 		TimeElement newt = time.clone();
 		double JD = 0.0;
-		if (newt.timeScale == TimeElement.SCALE.BARYCENTRIC_DYNAMICAL_TIME || 
+		if (newt.timeScale == TimeElement.SCALE.BARYCENTRIC_DYNAMICAL_TIME ||
 				newt.timeScale == TimeElement.SCALE.TERRESTRIAL_TIME) {
 			JD = newt.astroDate.jd();
 			newt.timeScale = SCALE.TERRESTRIAL_TIME;
@@ -1270,7 +1270,7 @@ public class TimeScale
 
 		if (Math.abs(JD - TDB_TT_last_calc_jd) < 1.0 / Constant.SECONDS_PER_DAY)
 			return TDB_TT_last_value;
-		
+
 		TDB_TT_last_calc_jd = JD;
 
 		// Time since J2000.0 in Julian millennia.
@@ -1279,20 +1279,20 @@ public class TimeScale
 		// This is the simple formula used by NOVAS. It is said to be accurate to 10 microseconds,
 		// maybe true in current times, but degrades a lot with time
 		if (!eph.preferPrecisionInEphemerides && Math.abs(T) < 0.1) {
-			// USNO circular 179, eq. 2.6, accurate to 10 microseconds  
-			double secs = 0.001657 * Math.sin(628.3076 * T + 6.2401)                     
-		            + 0.000022 * Math.sin(575.3385 * T + 4.2970)   
-		            + 0.000014 * Math.sin(1256.6152 * T + 6.1969)            
-		            + 0.000005 * Math.sin(606.9777 * T + 4.0212)                                     
-		            + 0.000005 * Math.sin(52.9691 * T + 0.4444)     
-		            + 0.000002 * Math.sin(21.3299 * T + 5.5431) 
+			// USNO circular 179, eq. 2.6, accurate to 10 microseconds
+			double secs = 0.001657 * Math.sin(628.3076 * T + 6.2401)
+		            + 0.000022 * Math.sin(575.3385 * T + 4.2970)
+		            + 0.000014 * Math.sin(1256.6152 * T + 6.1969)
+		            + 0.000005 * Math.sin(606.9777 * T + 4.0212)
+		            + 0.000005 * Math.sin(52.9691 * T + 0.4444)
+		            + 0.000002 * Math.sin(21.3299 * T + 5.5431)
 		            + 0.000010 * T * Math.sin(628.3076 * T + 4.2490);
 
 			TDB_TT_last_value = secs;
 			DataBase.addData("TDBminusTT", new double[] {TDB_TT_last_calc_jd, TDB_TT_last_value}, true);
 			return secs;
 		}
-		
+
 		// Obtain UT in fractions of days.
 		double JD_UT = getJD(newt, obs, eph, SCALE.UNIVERSAL_TIME_UT1);
 		double UT = (JD_UT - Math.floor(JD_UT)) + 0.5;
@@ -1308,7 +1308,7 @@ public class TimeScale
 		 * K5
 		 */
 		double U = 0.0, V = 0.0, WT = 0.0;
-		
+
 		// Distance from Earth spin axis (km)
 		if (obs.getMotherBody() == TARGET.EARTH) U = obs.getGeoRad() * obs.getEllipsoid().getEquatorialRadius() * Math.cos(obs.getGeoLat());
 
@@ -1552,13 +1552,13 @@ public class TimeScale
 			0.000706e-6, 12559.038152982, 2.824848947, 0.000732e-6, 2379.164473572, 2.501813417,
 			0.000764e-6, -6127.655450557, 2.236346329, 0.000908e-6, 131.541961686, 2.521257490,
 			0.000907e-6, 35371.887265976, 3.370195967, 0.000673e-6, 1066.495477190, 3.876512374,
-			// DATA ((FAIRHD(I,J) /I=1,3) /J=231,240) / 
-			0.000814e-6, 17654.780539750, 4.627122566, 0.000630e-6, 36.027866677,0.156368499, 
-			0.000798e-6, 515.463871093, 5.151962502, 0.000798e-6, 148.078724426, 5.909225055, 
-			0.000806e-6, 309.278322656, 6.054064447, 0.000607e-6, -39.617508346, 2.839021623, 
-			0.000601e-6, 412.371096874, 3.984225404, 0.000646e-6, 11403.676995575, 3.852959484, 
-			0.000704e-6, 13521.751441591, 2.300991267, 0.000603e-6, -65147.619767937, 4.140083146, 
-			// DATA ((FAIRHD(I,J) /I=1,3) /J=241,250) / 
+			// DATA ((FAIRHD(I,J) /I=1,3) /J=231,240) /
+			0.000814e-6, 17654.780539750, 4.627122566, 0.000630e-6, 36.027866677,0.156368499,
+			0.000798e-6, 515.463871093, 5.151962502, 0.000798e-6, 148.078724426, 5.909225055,
+			0.000806e-6, 309.278322656, 6.054064447, 0.000607e-6, -39.617508346, 2.839021623,
+			0.000601e-6, 412.371096874, 3.984225404, 0.000646e-6, 11403.676995575, 3.852959484,
+			0.000704e-6, 13521.751441591, 2.300991267, 0.000603e-6, -65147.619767937, 4.140083146,
+			// DATA ((FAIRHD(I,J) /I=1,3) /J=241,250) /
 			0.000609e-6, 10177.257679534, 0.437122327, 0.000631e-6, 5767.611978898, 4.026532329,
 			0.000576e-6, 11087.285125918, 4.760293101, 0.000674e-6, 14945.316173554, 6.270510511,
 			0.000726e-6, 5429.879468239, 6.039606892, 0.000710e-6, 28766.924424484, 5.672617711,
@@ -1853,39 +1853,39 @@ public class TimeScale
 			0.000435e-6, 5643.178563677, 3.324456609, 0.000387e-6, 10977.078804699, 4.052488477,
 			0.000547e-6, 161000.685737473, 2.841633844, 0.000522e-6, 3154.687084896, 2.171979966,
 			// DATA ((FAIRHD(I,J) /I=1,3) /J=731,740) /
-			0.000375e-6, 5486.777843175, 4.983027306, 0.000421e-6, 5863.591206116, 4.546432249, 
+			0.000375e-6, 5486.777843175, 4.983027306, 0.000421e-6, 5863.591206116, 4.546432249,
 			0.000439e-6, 7084.896781115, 0.522967921, 0.000309e-6, 2544.314419883, 3.172606705,
 			0.000347e-6, 4690.479836359, 1.479586566, 0.000317e-6, 801.820931124, 3.553088096,
 			0.000262e-6, 419.484643875, 0.606635550, 0.000248e-6, 6836.645252834, 3.014082064,
 			0.000245e-6, -1592.596013633, 5.519526220, 0.000225e-6, 4292.330832950, 2.877956536,
 			// DATA ((FAIRHD(I,J) /I=1,3) /J=741,750) /
-			0.000214e-6, 7234.794256242, 1.605227587, 0.000205e-6, 5767.611978898, 0.625804796, 
-			0.000180e-6, 10447.387839604, 3.499954526, 0.000229e-6, 199.072001436, 5.632304604, 
+			0.000214e-6, 7234.794256242, 1.605227587, 0.000205e-6, 5767.611978898, 0.625804796,
+			0.000180e-6, 10447.387839604, 3.499954526, 0.000229e-6, 199.072001436, 5.632304604,
 			0.000214e-6, 639.897286314, 5.960227667, 0.000175e-6, -433.711737877, 2.162417992,
 			0.000209e-6, 515.463871093, 2.322150893, 0.000173e-6, 6040.347246017, 2.556183691,
 			0.000184e-6, 6309.374169791, 4.732296790, 0.000227e-6, 149854.400134205, 5.385812217,
 			// DATA ((FAIRHD(I,J) /I=1,3) /J=751,760) /
-			0.000154e-6, 8031.092263058, 5.120720920, 0.000151e-6, 5739.157790895, 4.815000443, 
-			0.000197e-6, 7632.943259650, 0.222827271, 0.000197e-6, 74.781598567, 3.910456770, 
-			0.000138e-6, 6055.549660552, 1.397484253, 0.000149e-6, -6127.655450557, 5.333727496, 
+			0.000154e-6, 8031.092263058, 5.120720920, 0.000151e-6, 5739.157790895, 4.815000443,
+			0.000197e-6, 7632.943259650, 0.222827271, 0.000197e-6, 74.781598567, 3.910456770,
+			0.000138e-6, 6055.549660552, 1.397484253, 0.000149e-6, -6127.655450557, 5.333727496,
 			0.000137e-6, 3894.181829542, 4.281749907, 0.000135e-6, 9437.762934887, 5.979971885,
 			0.000139e-6, -2352.866153772, 4.715630782, 0.000142e-6, 6812.766815086, 0.513330157,
 			// DATA ((FAIRHD(I,J) /I=1,3) /J=761,770) /
 			0.000120e-6, -4705.732307544, 0.194160689, 0.000131e-6, -71430.695617928, 0.000379226,
 			0.000124e-6, 6279.552731642, 2.122264908, 0.000108e-6, -6256.777530192, 0.883445696,
-			0.143388e-6, 6283.075849991, 1.131453581, 0.006671e-6, 12566.151699983, 0.775148887, 
+			0.143388e-6, 6283.075849991, 1.131453581, 0.006671e-6, 12566.151699983, 0.775148887,
 			0.001480e-6, 155.420399434, 0.480016880, 0.000934e-6, 213.299095438, 6.144453084,
 			0.000795e-6, 529.690965095, 2.941595619, 0.000673e-6, 5746.271337896, 0.120415406,
 			// DATA ((FAIRHD(I,J) /I=1,3) /J=771,780) /
-			0.000672e-6, 5760.498431898, 5.317009738, 0.000389e-6, -220.412642439, 3.090323467, 
+			0.000672e-6, 5760.498431898, 5.317009738, 0.000389e-6, -220.412642439, 3.090323467,
 			0.000373e-6, 6062.663207553, 3.003551964, 0.000360e-6, 6076.890301554, 1.918913041,
-			0.000316e-6, -21.340641002, 5.545798121, 0.000315e-6, -242.728603974, 1.884932563, 
-			0.000278e-6, 206.185548437, 1.266254859, 0.000238e-6, -536.804512095, 4.532664830, 
+			0.000316e-6, -21.340641002, 5.545798121, 0.000315e-6, -242.728603974, 1.884932563,
+			0.000278e-6, 206.185548437, 1.266254859, 0.000238e-6, -536.804512095, 4.532664830,
 			0.000185e-6, 522.577418094, 4.578313856, 0.000245e-6, 18849.227549974, 0.587467082,
 			// DATA ((FAIRHD(I,J) /I=1,3) /J=781,787) /
-			0.000180e-6, 426.598190876, 5.151178553, 0.000200e-6, 553.569402842, 5.355983739, 
+			0.000180e-6, 426.598190876, 5.151178553, 0.000200e-6, 553.569402842, 5.355983739,
 			0.000141e-6, 5223.693919802, 1.336556009, 0.000104e-6, 5856.477659115, 4.239842759,
-			0.003826e-6, 6283.075849991, 5.705257275, 0.000303e-6, 12566.151699983, 5.407132842, 
+			0.003826e-6, 6283.075849991, 5.705257275, 0.000303e-6, 12566.151699983, 5.407132842,
 			0.000209e-6, 155.420399434, 1.989815753, };
 
 
@@ -1919,7 +1919,7 @@ public class TimeScale
 			}
 			if (tt_ut1 == null) {
 				String jarpath = "jparsec/time/TTminusUT1.txt";
-				tt_ut1 = DataSet.arrayListToStringArray(ReadFile.readResource(jarpath));				
+				tt_ut1 = DataSet.arrayListToStringArray(ReadFile.readResource(jarpath));
 			}
 			ArrayList<double[]> dt = new ArrayList<double[]>();
 			DATA.dt_initJD = DATA.dt_endJD = -1;
@@ -1939,7 +1939,7 @@ public class TimeScale
 						year = (int) yr;
 						month = day = 1;
 						if (year != yr) month = 1 + (int) ((yr - year) * 12.0 + 0.5);
-						val = DataSet.parseDouble(FileIO.getField(2, tt_ut1[i], " ", true));						
+						val = DataSet.parseDouble(FileIO.getField(2, tt_ut1[i], " ", true));
 					}
 					if (year <= 0) year --;
 					AstroDate astro = new AstroDate(year, month, day);
@@ -1967,30 +1967,30 @@ public class TimeScale
 }
 
 final class DATA
-{	
+{
 	// Reference dates (JD) and drift rates (s/day), pre leap seconds
 	// No update necessary. From SOFA library.
-	static double[][] drift = { 
-		new double[] { 2437300.0, 0.001296 }, new double[] { 2437300.0, 0.001296 }, 
-		new double[] { 2437300.0, 0.001296 }, new double[] { 2437665.0, 0.0011232 }, 
-		new double[] { 2437665.0, 0.0011232 }, new double[] { 2438761.0, 0.001296 }, 
-		new double[] { 2438761.0, 0.001296 }, new double[] { 2438761.0, 0.001296 }, 
-		new double[] { 2438761.0, 0.001296 }, new double[] { 2438761.0, 0.001296 }, 
-		new double[] { 2438761.0, 0.001296 }, new double[] { 2438761.0, 0.001296 }, 
+	static double[][] drift = {
+		new double[] { 2437300.0, 0.001296 }, new double[] { 2437300.0, 0.001296 },
+		new double[] { 2437300.0, 0.001296 }, new double[] { 2437665.0, 0.0011232 },
+		new double[] { 2437665.0, 0.0011232 }, new double[] { 2438761.0, 0.001296 },
+		new double[] { 2438761.0, 0.001296 }, new double[] { 2438761.0, 0.001296 },
+		new double[] { 2438761.0, 0.001296 }, new double[] { 2438761.0, 0.001296 },
+		new double[] { 2438761.0, 0.001296 }, new double[] { 2438761.0, 0.001296 },
 		new double[] { 2439126.0, 0.002592 }, new double[] { 2439126.0, 0.002592 } };
 
 	// Dates of leap seconds (year, month, seconds TAI-UTC)
 	// To be updated whenever a new leap seconds is introduced.
 	// From SOFA library.
-	static double[][] leap_seconds;
+	static double[][] leap_seconds = null;
 
 	/*
 	 * Table of difference TT-UT1 for a given set of dates.
 	 * First value is JD (UT), second one is TT-UT1 in seconds.
-	 * Values contained in TTminusUT1.txt, to be updated 
+	 * Values contained in TTminusUT1.txt, to be updated
 	 * regularly (see Astronomical Almanac, page K8).
 	 */
-	static Interpolation interp; //ArrayList<double[]> dt;
+	static Interpolation interp = null; //ArrayList<double[]> dt = null;
 
 	static double dt_initJD = -1, dt_endJD = -1;
 }

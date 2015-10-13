@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,15 +18,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.astronomy;
 
 import java.awt.geom.Point2D;
 
-import jparsec.ephem.Functions;
 import jparsec.graph.DataSet;
-import jparsec.io.ConsoleReport;
-import jparsec.io.FileIO;
 import jparsec.io.image.WCS;
 import jparsec.math.Constant;
 import jparsec.math.FastMath;
@@ -36,10 +33,10 @@ import jparsec.util.JPARSECException;
 /**
  * A class to process plate photographs/CCD images and perform astrometry.
  * Based on the program appeared in Sky & Telescopy, July 1990, by Jordan D. Marche.<P>
- * It is recommended to use the position (1, 1) for the center of the first pixel 
+ * It is recommended to use the position (1, 1) for the center of the first pixel
  * when giving the location of the stars in the constructor. This (1, 1) is the first
  * pixel for SExtractor, so the positions given by SExtractor can be used directly with
- * no modification. With only the WCS instance you cannot know which is the first 
+ * no modification. With only the WCS instance you cannot know which is the first
  * pixel in the image.
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
@@ -52,7 +49,7 @@ public class Astrometry {
 	/**
 	 * Constructor for a previously computed plate solution. Information about residuals
 	 * will not be available.
-	 * @param loc0 The approximate apparent equatorial coordinates of the plate center, 
+	 * @param loc0 The approximate apparent equatorial coordinates of the plate center,
 	 * (X/2, Y/2) position, being X and Y the width and height in pixels.
 	 * @param cte The plate constants.
 	 * @throws JPARSECException If the invalid set of plate constants are invalid.
@@ -67,7 +64,7 @@ public class Astrometry {
 	/**
 	 * Constructor for a previously computed plate solution. Information about residuals
 	 * are included in the constructor.
-	 * @param loc0 The approximate apparent equatorial coordinates of the plate center, 
+	 * @param loc0 The approximate apparent equatorial coordinates of the plate center,
 	 * (X/2, Y/2) position, being X and Y the width and height in pixels.
 	 * @param cte The plate constants.
 	 * @param res The plate residuals in RA and DEC (2 values), in radians.
@@ -84,7 +81,7 @@ public class Astrometry {
 
 	/**
 	 * Constructor for a given plate.
-	 * @param loc0 The approximate apparent equatorial coordinates of the plate center, 
+	 * @param loc0 The approximate apparent equatorial coordinates of the plate center,
 	 * (X/2, Y/2) position, being X and Y the width and height in pixels.
 	 * @param loc The apparent equatorial coordinates of each reference star.
 	 * @param p The rectangular positions (x, y) in the plate for each reference star.
@@ -97,7 +94,7 @@ public class Astrometry {
 		this.loc0 = loc0.clone();
 		double L = 1;
 		this.L = L;
-		
+
 		double A[] = new double[loc.length], D[] = new double[loc.length];
 		double X1[] = new double[loc.length], Y1[] = new double[loc.length];
 		double X[] = new double[loc.length], Y[] = new double[loc.length];
@@ -105,7 +102,7 @@ public class Astrometry {
 		for (int i=0; i<loc.length; i++) {
 			A[i] = loc[i].getLongitude();
 			D[i] = loc[i].getLatitude();
-			
+
 			double sj = Math.sin(D[i]), cj = Math.cos(D[i]);
 			double h = sj * sd + cj * cd * Math.cos(A[i] - loc0.getLongitude());
 			X1[i] = cj * Math.sin(A[i] - loc0.getLongitude()) / h;
@@ -158,7 +155,7 @@ public class Astrometry {
 		C /= DD;
 
 		plateConstants = new double[] {A_, B, C, D_, E, F};
-		
+
 		double AS = 0, DS = 0;
 		double RA[] = new double[loc.length], RD[] = new double[loc.length];
 		for (int i=0; i<loc.length; i++) {
@@ -172,7 +169,7 @@ public class Astrometry {
 
 		residuals = DataSet.addDoubleArray(RA, RD);
 	}
-	
+
 	/**
 	 * Returns the equatorial position on the plate for a given
 	 * rectangular position. The x position goes from 0 to the
@@ -227,9 +224,9 @@ public class Astrometry {
 							LocationElement.getAngularDistance(l1, loc)) break;
 					l1 = l2;
 					X -= dx;
-				};			
+				};
 			}
-			
+
 			l2 = getPlatePosition(X, Y + dy);
 			if (LocationElement.getAngularDistance(l2, loc) <
 				LocationElement.getAngularDistance(l1, loc)) {
@@ -247,17 +244,17 @@ public class Astrometry {
 							LocationElement.getAngularDistance(l1, loc)) break;
 					l1 = l2;
 					Y -= dy;
-				};			
+				};
 			}
-			
+
 			dx = dx / 4.0;
 			dy = dy / 4.0;
 			if (dx < 1E-4 && dy < 1E-4) break; // better than 0.001 pixel
 		}
-		
+
 		return new Point2D.Double(X, Y);
-		
-		
+
+
 		// The following algorithm does not converge always, specially for loc0
 /*		double A50 = loc.getLongitude() - loc0.getLongitude();
 		double X = 0, Y = 0; // First guess
@@ -275,13 +272,13 @@ public class Astrometry {
 			XX = Math.tan(A5) * BB;
 			double G = Math.sqrt(XX * XX + BB * BB);
 			YY = (tanDec * G - sinLat0) / cosLat0;
-			
-			Y = (YY - D * X - F) / (E + 1.0 / L); 
+
+			Y = (YY - D * X - F) / (E + 1.0 / L);
 			X = (XX - B * Y - C) / (A + 1.0 / L);
 		}
-		
+
 		return new Point2D.Double(X, Y);
-*/		
+*/
 	}
 
 	/**
@@ -332,7 +329,7 @@ public class Astrometry {
 		wcs.setCrpix2(p0.getY());
 		wcs.setCrval1(loc0.getLongitude() * Constant.RAD_TO_DEG);
 		wcs.setCrval2(loc0.getLatitude() * Constant.RAD_TO_DEG);
-		
+
 		LocationElement loc = loc0.clone();
 		loc.move(Constant.DEG_TO_RAD / Math.cos(loc0.getLatitude()), 0, 0);
 		Point2D p1 = this.getPlatePosition(loc);
@@ -344,14 +341,14 @@ public class Astrometry {
 		if (loc.getLatitude() > 0.0) {
 			loc.move(0, -Constant.DEG_TO_RAD, 0);
 		} else {
-			loc.move(0, Constant.DEG_TO_RAD, 0);			
+			loc.move(0, Constant.DEG_TO_RAD, 0);
 		}
 		p1 = this.getPlatePosition(loc);
 		d = FastMath.hypot(p0.getX() - p1.getX(), p0.getY() - p1.getY());
 		if (loc.getLatitude() > 0.0) {
 			if (p1.getY() > p0.getY()) d = -d;
 		} else {
-			if (p1.getY() < p0.getY()) d = -d;			
+			if (p1.getY() < p0.getY()) d = -d;
 		}
 		wcs.setCdelt2(1.0 / d);
 		double ang = -(Math.atan2(p0.getY() - p1.getY(), p0.getX() - p1.getX()) - Constant.PI_OVER_TWO);

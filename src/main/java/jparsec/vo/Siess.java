@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2011 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.vo;
 
 import java.awt.Color;
@@ -70,9 +70,9 @@ public class Siess {
 	/**
 	 * Obtains stellar parameters of a pre-main sequence star using Siess evolutionary tracks.
 	 * <P>
-	 * Output is a Siess record, that contains (in the first 12 elements) the following 
+	 * Output is a Siess record, that contains (in the first 12 elements) the following
 	 * information separated by blank spaces:<P>
-	 * 
+	 *
 	 * Spectral type.<BR>
 	 * Luminosity in solar units.<BR>
 	 * Radius in solar radii.<BR>
@@ -85,10 +85,10 @@ public class Siess {
 	 * V-R color in Cousins system.<BR>
 	 * R-I color in Cousins system.<BR>
 	 * V-I color in Cousins system.<P>
-	 * 
+	 *
 	 * Adequate constants are defined in this class to access the fields of a Siess record.
 	 * For more information visit L. Siess webpage at http://www-astro.ulb.ac.be/~siess/index.html.
-	 * 
+	 *
 	 * @param metallicity Metalliticy, from 0.01 to 0.04. 0.02 = solar metallicity.
 	 * @param effectiveTemperature Effective temperature in K.
 	 * @param luminosity Luminosity in solar units.
@@ -102,7 +102,7 @@ public class Siess {
 		double distanceModulus = 0.0; // No effect on stellar mass / radius
 		String query = jparsec.vo.GeneralQuery.getQueryToSiessModels(metallicity, effectiveTemperature, luminosity, distanceModulus);
 		String out = jparsec.vo.GeneralQuery.query(query);
-		
+
 		String outArray[] = jparsec.graph.DataSet.toStringArray(out, jparsec.io.FileIO.getLineSeparator());
 		boolean nextLine = false;
 		String record = "";
@@ -125,12 +125,12 @@ public class Siess {
 		"0.8", "0.9", "1.0", "1.1", "1.2", "1.3", "1.4", "1.5", "1.6", "1.7", "1.8",
 		"1.9", "2.0", "2.2", "2.5", "2.7", "3.0", "3.5", "4.0", "5.0", "6.0", "7.0"
 	};
-	
+
 	/**
 	 * Holds available metalicities for pre-main sequence tracks.
 	 */
 	public static final String AVAILABLE_Z[] = new String[] {"02"};
-	
+
 	/**
 	 * ID constant for field model number.
 	 */
@@ -175,18 +175,18 @@ public class Siess {
 	 * ID constant for field age, years.
 	 */
 	public static final int FIELD_AGE = 11;
-	
+
 	private static final String FIELD_LABELS[] = new String[] {
 		"", "Model number", "Phase", "Luminosity (L_{@SUN})", "M_{bol}", "R_{eff} (R_{@SUN})",
-		"R (R_{@SUN})", "T_{eff} (K)", "@RHO (g cm^{-3})", "LOG_{10} g (cgs)", 
+		"R (R_{@SUN})", "T_{eff} (K)", "@RHO (g cm^{-3})", "LOG_{10} g (cgs)",
 		"M (M_{@SUN})", "Age (yr)"
 	};
-	
+
 	/**
 	 * ID constant for number of lines to skip from the header.
 	 */
 	public static final int SKIP_LINES = 3;
-	
+
 	/**
 	 * ID constant for phase pre-main sequence.
 	 */
@@ -226,16 +226,16 @@ public class Siess {
 		file = DataSet.eliminateRowFromTable(file, 1);
 		this.data = file;
 	}
-	
+
 	/**
-	 * Returns the set of models. 
+	 * Returns the set of models.
 	 * @return The set of models.
 	 */
 	public String[] getModels()
 	{
 		return this.data;
 	}
-	
+
 	/**
 	 * Returns a chart with the evolutionary tracks. Metalicity is automatically set to 0.02.
 	 * @param minMass Minimum mass for the tracks to be drawn.
@@ -257,7 +257,7 @@ public class Siess {
 		{
 			if (masses[i] >= minMass && masses[i] <= maxMass) n++;
 		}
-		
+
 		Shape shape[] = new Shape[] {
 				ChartSeriesElement.SHAPE_CIRCLE,
 				ChartSeriesElement.SHAPE_DIAMOND,
@@ -288,7 +288,7 @@ public class Siess {
 		{
 			if (masses[i] >= minMass && masses[i] <= maxMass) {
 				n++;
-				
+
 				String name = "m"+Siess.AVAILABLE_MASSES[i]+"z"+Siess.AVAILABLE_Z[0]+".hrd";
 				String file[] = DataSet.arrayListToStringArray(ReadFile.readResource(FileIO.DATA_SIESS_DIRECTORY+name));
 
@@ -309,7 +309,7 @@ public class Siess {
 				if (n < color.length) c = color[n];
 				Shape s = ChartSeriesElement.SHAPE_CIRCLE;
 				if (n < shape.length) s = shape[n];
-				
+
 				series[n] = new ChartSeriesElement(x, y, null, null, Siess.AVAILABLE_MASSES[i], true,
 						c, s, ChartSeriesElement.REGRESSION.NONE);
 				series[n].showLines = true;
@@ -318,7 +318,7 @@ public class Siess {
 				series[n].showShapes = false;
 			}
 		}
-		
+
 		ChartElement chart = new ChartElement(series, ChartElement.TYPE.XY_CHART, ChartElement.SUBTYPE.XY_SCATTER,
 				Translate.translate(Translate.JPARSEC_SIESS_TRACKS), Translate.translate(Siess.FIELD_LABELS[xField]), Translate.translate(Siess.FIELD_LABELS[yField]), false, width, height);
 		chart.showErrorBars = false;
@@ -357,7 +357,7 @@ public class Siess {
 				}
 			}
 		}
-		
+
 		Shape shape[] = new Shape[] {
 				ChartSeriesElement.SHAPE_CIRCLE,
 				ChartSeriesElement.SHAPE_DIAMOND,
@@ -390,10 +390,10 @@ public class Siess {
 			{
 				if (Math.abs(masses[i]-inputMasses[k]) < 0.05) {
 					n++;
-				
+
 					String name = "m"+Siess.AVAILABLE_MASSES[i]+"z"+Siess.AVAILABLE_Z[0]+".hrd";
 					String file[] = DataSet.arrayListToStringArray(ReadFile.readResource(FileIO.DATA_SIESS_DIRECTORY+name));
-	
+
 					ArrayList<String> vx = new ArrayList<String>();
 					ArrayList<String> vy = new ArrayList<String>();
 					for (int j=Siess.SKIP_LINES; j<file.length; j++)
@@ -406,12 +406,12 @@ public class Siess {
 					}
 					String x[] = DataSet.arrayListToStringArray(vx);
 					String y[] = DataSet.arrayListToStringArray(vy);
-	
+
 					Color c = Color.BLACK;
 					if (n < color.length) c = color[n];
 					Shape s = ChartSeriesElement.SHAPE_CIRCLE;
 					if (n < shape.length) s = shape[n];
-					
+
 					series[n] = new ChartSeriesElement(x, y, null, null, Siess.AVAILABLE_MASSES[i], true,
 							c, s, ChartSeriesElement.REGRESSION.NONE);
 					series[n].showLines = true;
@@ -420,12 +420,12 @@ public class Siess {
 					series[n].showShapes = false;
 					series[n].pointersAngle = ChartSeriesElement.POINTER_ANGLE.DOWNWARDS;
 					series[n].pointersLabelOffsetFactor = 1f;
-					
+
 					break;
 				}
 			}
 		}
-		
+
 		ChartElement chart = new ChartElement(series, ChartElement.TYPE.XY_CHART, ChartElement.SUBTYPE.XY_SCATTER,
 				Translate.translate(Translate.JPARSEC_SIESS_TRACKS), Translate.translate(Siess.FIELD_LABELS[xField]), Translate.translate(Siess.FIELD_LABELS[yField]), false, width, height);
 		chart.showErrorBars = false;
@@ -454,7 +454,7 @@ public class Siess {
 		series.showLines = false;
 		series.showErrorBars = true;
 		series.showShapes = true;
-		
+
 		ch.getChartElement().addSeries(series);
 		ch = new CreateChart(ch.getChartElement());
 	}
@@ -469,7 +469,7 @@ public class Siess {
 	 * @return The tracks as given by Siess models, or null if there is none.
 	 * @throws JPARSECException If an error occurs.
 	 */
-	public static String[] getClosestEvolutionaryTracks(double luminosity, double lumTolerance, 
+	public static String[] getClosestEvolutionaryTracks(double luminosity, double lumTolerance,
 			double effectiveTemperature, double tempTolerance)
 	throws JPARSECException {
 		String tracks[] = null;

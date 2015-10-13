@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,13 +18,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.graph.chartRendering;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-
 import java.util.Arrays;
+
 import jparsec.astronomy.Constellation;
 import jparsec.astronomy.CoordinateSystem;
 import jparsec.astronomy.TelescopeElement;
@@ -51,13 +51,13 @@ import jparsec.util.Translate.LANGUAGE;
  * constructor allows to instantiate an object selecting the values of the main
  * fields. There are much more variables (any variable name starting with
  * draw...) that can be set optionally.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
 public class SkyRenderElement implements Serializable
 {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Default constructor. Default color model is normal
@@ -82,7 +82,7 @@ public class SkyRenderElement implements Serializable
 	 * default) like to draw constellations, nebula, and others like colors
 	 * should be set after constructing this object. Default color model is normal
 	 * with white background.
-	 * 
+	 *
 	 * @param coord_system Coordinate system.
 	 * @param proj Projection type.
 	 * @param lon0 Central position in the selected system.
@@ -137,7 +137,7 @@ public class SkyRenderElement implements Serializable
 	public Projection.PROJECTION projection;
 
 	/**
-	 * Holds the direction of the pole in the current projection, angle in radians. Rotation 
+	 * Holds the direction of the pole in the current projection, angle in radians. Rotation
 	 * is towards east if no vertical inversion is applied in the telescope object, which means
 	 * that +PI/2 will show the west region upwards.
 	 */
@@ -177,7 +177,7 @@ public class SkyRenderElement implements Serializable
 	 * Set whether to draw or not constellations and which set of lines. Default
 	 * value is the JPARSEC set of lines (for Western culture).
 	 */
-	public CONSTELLATION_CONTOUR drawConstellationContours = CONSTELLATION_CONTOUR.DEFAULT; 
+	public CONSTELLATION_CONTOUR drawConstellationContours = CONSTELLATION_CONTOUR.DEFAULT;
 
 	/**
 	 * Set whether to draw or not constellations limits.
@@ -199,7 +199,7 @@ public class SkyRenderElement implements Serializable
 	 * when the set of constellation lines is the default JPARSEC one,
 	 * otherwise the names of the constellations for the different
 	 * cultures are available only in Spanish or English.
-	 */ 
+	 */
 	public Constellation.CONSTELLATION_NAME drawConstellationNamesType = Constellation.CONSTELLATION_NAME.LATIN;
 
 	/**
@@ -229,8 +229,8 @@ public class SkyRenderElement implements Serializable
 	public boolean drawCoordinateGridEcliptic = true;
 
 	/**
-	 * Set whether to draw or not the numeric labels for the ecliptic when 
-	 * rendering sky in other coordinate systems, such as equatorial, galactic, 
+	 * Set whether to draw or not the numeric labels for the ecliptic when
+	 * rendering sky in other coordinate systems, such as equatorial, galactic,
 	 * or horizontal.
 	 */
 	public boolean drawCoordinateGridEclipticLabels = true;
@@ -249,15 +249,15 @@ public class SkyRenderElement implements Serializable
 	 * Set whether to draw or not the radians of meteor showers. Default is false.
 	 */
 	public boolean drawMeteorShowers = false;
-	
-	/** 
-	 * Set to false to show all showers, true (default value) for those active currently. 
-	 * In case this flag is flase, current active showers will be rendered without alpha 
-	 * color component, and labels in bold face. In any case most intense showers will be 
+
+	/**
+	 * Set to false to show all showers, true (default value) for those active currently.
+	 * In case this flag is flase, current active showers will be rendered without alpha
+	 * color component, and labels in bold face. In any case most intense showers will be
 	 * rendered using a stroke with greater width.
 	 */
 	public boolean drawMeteorShowersOnlyActive = true;
-	
+
 	/**
 	 * Set whether to draw or not Milky Way.
 	 */
@@ -285,7 +285,7 @@ public class SkyRenderElement implements Serializable
 	public boolean drawDeepSkyObjects = true;
 
 	/**
-	 * Set whether to draw or not the real images of the 
+	 * Set whether to draw or not the real images of the
 	 * deep sky objects on the sky for reduced fields of view.
 	 */
 	public boolean drawDeepSkyObjectsTextures = true;
@@ -314,15 +314,15 @@ public class SkyRenderElement implements Serializable
 	public boolean drawStarsColors = false;
 
 	/**
-	 * Select if stars should be rendered in a realistic way (using textures) or not. 
+	 * Select if stars should be rendered in a realistic way (using textures) or not.
 	 * Symbols for double and variable stars will not be drawn if something different
 	 * from NONE is selected. Default value is NONE.
 	 */
 	public REALISTIC_STARS drawStarsRealistic = REALISTIC_STARS.NONE;
-	
+
 	/**
 	 * Set the color for stars, only when {@linkplain SkyRenderElement#drawStarsColors}
-	 * is false; This will be also the color for the planets in intermediate fields, when 
+	 * is false; This will be also the color for the planets in intermediate fields, when
 	 * they appear as little disks.
 	 */
 	public int drawStarsColor = 156<<24 | 0<<16 | 0<<8 | 0;
@@ -346,7 +346,7 @@ public class SkyRenderElement implements Serializable
 	 * be drawn using USNO-B1 catalog, by calling Vizier database (only if Internet
 	 * connection is available). If the limit is 12.0 or brighter, and fainter than 10,
 	 * Karchenko's catalog will be used instead due to speed considerations. In this
-	 * case, a field limit of 3 degrees will be used. 
+	 * case, a field limit of 3 degrees will be used.
 	 */
 	public float drawStarsLimitingMagnitude = 7.5f;
 
@@ -365,7 +365,7 @@ public class SkyRenderElement implements Serializable
 	public boolean drawSuperNovaAndNovaEvents = true;
 
 	/**
-	 * Set during how many (Julian) years a SN event would still be visible in 
+	 * Set during how many (Julian) years a SN event would still be visible in
 	 * the rendering. Default value is 3 years.
 	 */
 	public int drawSuperNovaEventsNumberOfYears = 3;
@@ -411,7 +411,7 @@ public class SkyRenderElement implements Serializable
 	public int drawDarkNebulaeContoursColor = 128<<24 | 120<<16 | 120<<8 | 255;
 
 	/**
-	 * Color attribute for drawing Milky Way. 
+	 * Color attribute for drawing Milky Way.
 	 */
 	public int drawMilkyWayContoursColor = 128<<24 | 180<<16 | 180<<8 | 255;
 
@@ -421,7 +421,7 @@ public class SkyRenderElement implements Serializable
 	public int fillMilkyWayColor = 128<<24 | 244<<16 | 244<<8 | 255;
 
 	/**
-	 * Color attribute to fill nebulae. Default value is -1 
+	 * Color attribute to fill nebulae. Default value is -1
 	 * to use the same color as the nebulae contours.
 	 */
 	public int fillBrightNebulaeColor = -1;
@@ -468,11 +468,11 @@ public class SkyRenderElement implements Serializable
 	 * True to show Greek symbols only if the star has proper name.
 	 */
 	public boolean drawStarsGreekSymbolsOnlyIfHasProperName = false;
-	
+
 	/**
 	 * Set limiting magnitude for stars labels;
 	 */
-	public float drawStarsLabelsLimitingMagnitude = 4.0f; 
+	public float drawStarsLabelsLimitingMagnitude = 4.0f;
 
 	/**
 	 * Minimum separation in arcseconds of a double star to draw it as a double.
@@ -497,12 +497,12 @@ public class SkyRenderElement implements Serializable
 	 * 20 px. Set to 0 to draw all lines from one star to the other.
 	 */
 	public int drawConstellationContoursMarginBetweenLineAndStar = 20;
-	
+
 	/**
 	 * Selects the texture to draw at horizon, none by default.
 	 */
 	public HORIZON_TEXTURE drawHorizonTexture = HORIZON_TEXTURE.NONE;
-	
+
 	/**
 	 * Set this flag to true to overlay an DSS image in the next rendering. This
 	 * is only allowed when deep sky objects are shown and the field of view is
@@ -516,16 +516,16 @@ public class SkyRenderElement implements Serializable
 	 * Labels are drawn only if limiting magnitude is equal or above 8.5.
 	 */
 	public boolean drawMagnitudeLabels = false;
-	
+
 	/**
 	 * Selects if a central crux should be drawn to mark the screen center.
 	 */
 	public boolean drawCentralCrux = false;
-	
+
 	/**
 	 * The set of options to draw fast lines for better performance.
 	 */
-	public static enum FAST_LINES {
+	public enum FAST_LINES {
 		/** Never use fast mode. */
 		NONE,
 		/** Use fast line rendering for grid. */
@@ -534,9 +534,9 @@ public class SkyRenderElement implements Serializable
 		GRID_AND_CONSTELLATIONS,
 		/** Use fast line rendering for grid and Milky Way outline. */
 		GRID_AND_MILKY_WAY,
-		/** Use fast line rendering for grid, Milky Way outline, and constellations. */ 
+		/** Use fast line rendering for grid, Milky Way outline, and constellations. */
 		GRID_AND_MILKY_WAY_AND_CONSTELLATIONS;
-		
+
 		/** Set to true to allow drawing fast ovals using images. */
 		private boolean fastOvals = false;
 
@@ -566,7 +566,7 @@ public class SkyRenderElement implements Serializable
 			if (this == NONE) return false;
 			return true;
 		}
-		
+
 		/**
 		 * Returns true if fast constellations are enabled.
 		 * @return True or false.
@@ -575,7 +575,7 @@ public class SkyRenderElement implements Serializable
 			if (this == NONE || this == ONLY_GRID || this == GRID_AND_MILKY_WAY) return false;
 			return true;
 		}
-		
+
 		/**
 		 * Returns true if fast Milky Way is enabled.
 		 * @return True or false.
@@ -584,7 +584,7 @@ public class SkyRenderElement implements Serializable
 			if (this == NONE || this == ONLY_GRID || this == GRID_AND_CONSTELLATIONS) return false;
 			return true;
 		}
-		
+
 		/**
 		 * Resets the fast ovals flag to its default value (false).
 		 */
@@ -592,11 +592,11 @@ public class SkyRenderElement implements Serializable
 			fastOvals = false;
 		}
 	};
-	
+
 	/**
 	 * The set of options to draw star labels.
 	 */
-	public static enum STAR_LABELS {
+	public enum STAR_LABELS {
 		/** No labels. */
 		NONE,
 		/** Normal labels, like Alp And. */
@@ -610,7 +610,7 @@ public class SkyRenderElement implements Serializable
 	/**
 	 * The set of options to draw texture at horizon.
 	 */
-	public static enum HORIZON_TEXTURE {
+	public enum HORIZON_TEXTURE {
 		/** No texture. */
 		NONE,
 		/** Veleta 30m telescope site, at Granada (Spain). */
@@ -622,7 +622,7 @@ public class SkyRenderElement implements Serializable
 	/**
 	 * The set of values to select the kind of realistic stars to render.
 	 */
-	public static enum REALISTIC_STARS { // DON'T CHANGE ORDERING
+	public enum REALISTIC_STARS { // DON'T CHANGE ORDERING
 		/** Starred mode. */
 		STARRED,
 		/** Difuse star mode. */
@@ -640,7 +640,7 @@ public class SkyRenderElement implements Serializable
 	/**
 	 * The set of values to select how to draw labels.
 	 */
-	public static enum SUPERIMPOSED_LABELS {
+	public enum SUPERIMPOSED_LABELS {
 		/** Fast labels without calculating positions to avoid superimposing them. */
 		FAST,
 		/** Avoid superimposing in a fasr way. */
@@ -655,7 +655,7 @@ public class SkyRenderElement implements Serializable
 	 * The set of textures for the milky way. All images except the optical
 	 * one were taken from http://lambda.gsfc.nasa.gov/product/map/current/sos/7year/.
 	 */
-	public static enum MILKY_WAY_TEXTURE {
+	public enum MILKY_WAY_TEXTURE {
 		/** Draw without texture. */
 		NO_TEXTURE,
 		/** Use the optical image by Nick Risinger. */
@@ -679,11 +679,11 @@ public class SkyRenderElement implements Serializable
 		null, "milkyway.jpg", "halpha_Finkbeiner_2003.jpg", "21cm_Kalberla_2005.jpg", "co_Dame_2001.jpg",
 		"dust_Schlegel_1998.jpg", "wmap.jpg"
 	};
-	
+
 	/**
 	 * The set of values to select how to draw labels.
 	 */
-	public static enum LEYEND_POSITION {
+	public enum LEYEND_POSITION {
 		/** No leyend. */
 		NO_LEYEND,
 		/** Leyend in horizontal orientation on top. */
@@ -698,16 +698,16 @@ public class SkyRenderElement implements Serializable
 
 	/**
 	 * The set of options to draw constellation contours. All values here except
-	 * the default set of lines are derived from the GPL work by Jason Harris and 
+	 * the default set of lines are derived from the GPL work by Jason Harris and
 	 * Clemens ?, included in KStars. This selection also affects the labels for
 	 * constellation names.
 	 */
-	public static enum CONSTELLATION_CONTOUR {
+	public enum CONSTELLATION_CONTOUR {
 		/** No constellations. */
 		NONE,
 		/** Default JPARSEC lines. */
 		DEFAULT,
-		/** Western set of constellation lines. Similar to JPARSEC default set, 
+		/** Western set of constellation lines. Similar to JPARSEC default set,
 		 * but not the same. */
 		Western,
 		/** Chinese set of constellation lines. */
@@ -828,13 +828,13 @@ public class SkyRenderElement implements Serializable
 	drawDeepSkyObjectsNamesFont = Graphics.FONT.SANS_SERIF_ITALIC_12;
 	drawMinorObjectsNamesFont = Graphics.FONT.SANS_SERIF_PLAIN_12;
 	drawCoordinateGridFont = Graphics.FONT.SANS_SERIF_PLAIN_15;
-*/	
+*/
 
 	/**
 	 * True (default value) to show N, S, E, and W points in the sky.
 	 */
 	public boolean drawCoordinateGridCardinalPoints = true;
-	
+
 	/**
 	 * Sets whether to draw or not the sky below the observer's horizon.
 	 * True as default.
@@ -842,7 +842,7 @@ public class SkyRenderElement implements Serializable
 	public boolean drawSkyBelowHorizon = true;
 
 	/**
-	 * Sets whether to correct for refraction in observer's horizon. This also 
+	 * Sets whether to correct for refraction in observer's horizon. This also
 	 * corrects local horizon for depression. Only considered
 	 * if also {@linkplain SkyRenderElement#drawSkyBelowHorizon} is false.
 	 * False as default.
@@ -859,12 +859,12 @@ public class SkyRenderElement implements Serializable
 	 * Sets background color. Also the color to fill dark nebula.
 	 */
 	public int background = 255<<24 | 255<<16 | 255<<8 | 255;
-	
+
 	/**
 	 * The color for the grid used to show the field of view of a telescope.
 	 */
 	public int drawOcularFieldOfViewColor = 255<<24 | 0<<16 | 0<<8 | 0;
-	
+
 	/**
 	 * Stroke to draw nebula.
 	 */
@@ -911,10 +911,10 @@ public class SkyRenderElement implements Serializable
 	 * True to draw icons for planets, probes, ...
 	 */
 	public boolean drawIcons = true;
-	
+
 	/**
 	 * True to hide objects depending on the field of view, in a clever way. Setting
-	 * this to false will show most objects (but not stars) independently of the field 
+	 * this to false will show most objects (but not stars) independently of the field
 	 * of view, but the disks of planets and satellites will not appear. Note projection is forced
 	 * to cylindrical for fields of view lower than 30 degrees to show correctly the
 	 * relative positions of planets, satellites, and stars in case the clever flag is true.
@@ -926,7 +926,7 @@ public class SkyRenderElement implements Serializable
 	 * True to use antialiasing to increasing rendering quality.
 	 */
 	public boolean drawWithAntialiasing = true;
-	
+
 	/**
 	 * The color to fill a galaxy. Set to -1 as default to avoid the fill.
 	 */
@@ -963,17 +963,17 @@ public class SkyRenderElement implements Serializable
 	 * real-time mode. Default value is 3600s. Will force the update of everything.
 	 */
 	public float updateTimeFullUpdate = 3600;
-	
+
 	/**
 	 * Default value is null, which means that all external catalogs defined will be shown.
 	 * Define the array and set each to true or false to enable/disable each of them.
 	 */
 	public boolean drawExternalCatalogs[] = null;
-	
+
 	private String[] externalCatalogs = new String[0];
 	private String[] externalCatalogNames = new String[0];
 	private static int externalCatalogCounter = 0;
-	
+
 	/** Id constant for a field name to be used in a {@linkplain FileFormatElement} object for an external catalog. */
 	public static final String EXTERNAL_CATALOG_FIELD_NAME1 = "NAME1";
 	/** Id constant for a field name to be used in a {@linkplain FileFormatElement} object for an external catalog. */
@@ -1028,10 +1028,10 @@ public class SkyRenderElement implements Serializable
 	 * @param path The path to the file.
 	 * @param format The format. The identifiers for the fields should be set using the symbolic
 	 * constants in this class. Flux field can be used instead of magnitude to use a logarithmic scale. The angular
-	 * size can be set in degrees or arcsec, using major/minor values (and the position angle) or the same value 
+	 * size can be set in degrees or arcsec, using major/minor values (and the position angle) or the same value
 	 * for both axes. The coordinates type is a field used to include objects with ecliptic/galactic coordinates
 	 * instead of equatorial. Valid values in the files are those starting with 'EQ', 'EC', 'GA'. In this case
-	 * the RA/DEC fields corresponds to ecliptic/galactic longitudes/latitudes. Default equinox is year 2000 if it 
+	 * the RA/DEC fields corresponds to ecliptic/galactic longitudes/latitudes. Default equinox is year 2000 if it
 	 * is not specified. RA/DEC should be mean coordinates referred to a given equinox.
 	 * @throws JPARSECException If an error occurs.
 	 */
@@ -1047,17 +1047,17 @@ public class SkyRenderElement implements Serializable
 	 * @param contents The contents of the file.
 	 * @param format The format. The identifiers for the fields should be set using the symbolic
 	 * constants in this class. Flux field can be used instead of magnitude to use a logarithmic scale. The angular
-	 * size can be set in degrees or arcsec, using major/minor values (and the position angle) or the same value 
+	 * size can be set in degrees or arcsec, using major/minor values (and the position angle) or the same value
 	 * for both axes. The coordinates type is a field used to include objects with ecliptic/galactic coordinates
 	 * instead of equatorial. Valid values in the files are those starting with 'EQ', 'EC', 'GA'. In this case
-	 * the RA/DEC fields corresponds to ecliptic/galactic longitudes/latitudes. Default equinox is year 2000 if it 
+	 * the RA/DEC fields corresponds to ecliptic/galactic longitudes/latitudes. Default equinox is year 2000 if it
 	 * is not specified. RA/DEC should be mean coordinates referred to a given equinox.
 	 * @throws JPARSECException  If an error occurs.
 	 */
 	public void addExternalCatalog(String name, String objType, int rgb, String[] contents, FileFormatElement[] format) throws JPARSECException {
 		addExternalCatalog(name, objType, rgb, contents, format, true);
 	}
-	
+
 	/**
 	 * Adds an external catalog to render certain objects to memory. Since the sky rendering class already takes into account main
 	 * astronomical objects, the catalog is added as a subset of deep sky objects.
@@ -1067,17 +1067,17 @@ public class SkyRenderElement implements Serializable
 	 * @param contents The contents of the file.
 	 * @param format The format. The identifiers for the fields should be set using the symbolic
 	 * constants in this class. Flux field can be used instead of magnitude to use a logarithmic scale. The angular
-	 * size can be set in degrees or arcsec, using major/minor values (and the position angle) or the same value 
+	 * size can be set in degrees or arcsec, using major/minor values (and the position angle) or the same value
 	 * for both axes. The coordinates type is a field used to include objects with ecliptic/galactic coordinates
 	 * instead of equatorial. Valid values in the files are those starting with 'EQ', 'EC', 'GA'. In this case
-	 * the RA/DEC fields corresponds to ecliptic/galactic longitudes/latitudes. Default equinox is year 2000 if it 
+	 * the RA/DEC fields corresponds to ecliptic/galactic longitudes/latitudes. Default equinox is year 2000 if it
 	 * is not specified. RA/DEC should be mean coordinates referred to a given equinox.
 	 * @throws JPARSECException  If an error occurs.
 	 */
 	public void addExternalCatalog(String name, String objType, int rgb, ArrayList<String> contents, FileFormatElement[] format) throws JPARSECException {
 		addExternalCatalog(name, objType, rgb, contents, format, true);
 	}
-	
+
 	/**
 	 * Adds an external catalog to render objects. Since the sky rendering class already takes into account main
 	 * astronomical objects, the catalog is added as a subset of deep sky objects.
@@ -1087,10 +1087,10 @@ public class SkyRenderElement implements Serializable
 	 * @param contents The contents of the file.
 	 * @param format The format. The identifiers for the fields should be set using the symbolic
 	 * constants in this class. Flux field can be used instead of magnitude to use a logarithmic scale. The angular
-	 * size can be set in degrees or arcsec, using major/minor values (and the position angle) or the same value 
+	 * size can be set in degrees or arcsec, using major/minor values (and the position angle) or the same value
 	 * for both axes. The coordinates type is a field used to include objects with ecliptic/galactic coordinates
 	 * instead of equatorial. Valid values in the files are those starting with 'EQ', 'EC', 'GA'. In this case
-	 * the RA/DEC fields corresponds to ecliptic/galactic longitudes/latitudes. Default equinox is year 2000 if it 
+	 * the RA/DEC fields corresponds to ecliptic/galactic longitudes/latitudes. Default equinox is year 2000 if it
 	 * is not specified. RA/DEC should be mean coordinates referred to a given equinox.
 	 * @param inMemory True to hold the catalog in memory, false for disk. True is strongly recommended for better
 	 * performance.
@@ -1099,7 +1099,7 @@ public class SkyRenderElement implements Serializable
 	public synchronized void addExternalCatalog(String name, String objType, int rgb, ArrayList<String> contents, FileFormatElement[] format,
 			boolean inMemory) throws JPARSECException {
 		ArrayList<Object> list = new ArrayList<Object>();
-		
+
 		ReadFormat rf = new ReadFormat(format);
 		boolean fluxMode = false;
 		ArrayList<Double> listFlux = new ArrayList<Double>();
@@ -1143,7 +1143,7 @@ public class SkyRenderElement implements Serializable
 
 				s = getField(line, rf, SkyRenderElement.EXTERNAL_CATALOG_FIELD_SIZE_DEG);
 				if (s != null) {
-					maxSize = (float) Double.parseDouble(s);					
+					maxSize = (float) Double.parseDouble(s);
 					minSize = maxSize;
 				} else {
 					s = getField(line, rf, SkyRenderElement.EXTERNAL_CATALOG_FIELD_SIZE_ARCSEC);
@@ -1160,7 +1160,7 @@ public class SkyRenderElement implements Serializable
 							if (s != null) {
 								maxSize = (float) (Double.parseDouble(s) / 3600.0);
 								tt = 1;
-							}					
+							}
 						}
 
 						s = getField(line, rf, SkyRenderElement.EXTERNAL_CATALOG_FIELD_MINSIZE_DEG);
@@ -1172,7 +1172,7 @@ public class SkyRenderElement implements Serializable
 							if (s != null) {
 								minSize = (float) (Double.parseDouble(s) / 3600.0);
 								tt = 1;
-							}					
+							}
 						}
 
 					}
@@ -1195,7 +1195,7 @@ public class SkyRenderElement implements Serializable
 						} else {
 							continue;
 						}
-					}					
+					}
 				}
 				s = getField(line, rf, SkyRenderElement.EXTERNAL_CATALOG_FIELD_DEC_DEG_WITH_DECIMALS);
 				if (s != null) {
@@ -1229,7 +1229,7 @@ public class SkyRenderElement implements Serializable
 					}
 					if (ctype.startsWith("GA")) {
 						loc = CoordinateSystem.galacticToEquatorial(loc, jd, fast);
-					}					
+					}
 				}
 				if (jd != Constant.J2000) {
 					EphemerisElement eph = new EphemerisElement();
@@ -1238,11 +1238,11 @@ public class SkyRenderElement implements Serializable
 							LocationElement.parseLocationElement(loc), eph));
 				}
 
-				list.add(new Object[] {name1, name2, tt, loc, (float)Double.parseDouble(mag), 
+				list.add(new Object[] {name1, name2, tt, loc, (float)Double.parseDouble(mag),
 						new float[] {maxSize, minSize}, pa, com, rgb});
 			}
 		}
-		
+
 		if (fluxMode) {
 			double flux[] = DataSet.arrayListToDoubleArray(listFlux);
 			double max = DataSet.getMaximumValue(flux), min = DataSet.getMinimumValue(flux);
@@ -1250,16 +1250,16 @@ public class SkyRenderElement implements Serializable
 			for (int i=0; i<list.size(); i++) {
 				Object o[] = (Object[]) list.get(i);
 				double mag = (Float) o[4];
-				
+
 				mag = 1.0 + (mag - min) / (max - min); // 1 to 2. Note log(1) = 0
 				mag = Math.log(mag) / Math.log(2.0); // 0 to 1, in log scale
 				mag = minMag - mag * (minMag - maxMag);
-				
+
 				o[4] = (float)mag;
 				list.set(i, o);
 			}
 		}
-		
+
 		String id = "RenderSkyExternalCatalog"+externalCatalogCounter;
 		DataBase.addData(id, list.toArray(), inMemory);
 		if (!this.externalCatalogAvailable(id)) {
@@ -1278,7 +1278,7 @@ public class SkyRenderElement implements Serializable
 		}
 		//return id;
 	}
-	
+
 	/**
 	 * Adds an external catalog to render objects. Since the sky rendering class already takes into account main
 	 * astronomical objects, the catalog is added as a subset of deep sky objects.
@@ -1288,10 +1288,10 @@ public class SkyRenderElement implements Serializable
 	 * @param contents The contents of the file.
 	 * @param format The format. The identifiers for the fields should be set using the symbolic
 	 * constants in this class. Flux field can be used instead of magnitude to use a logarithmic scale. The angular
-	 * size can be set in degrees or arcsec, using major/minor values (and the position angle) or the same value 
+	 * size can be set in degrees or arcsec, using major/minor values (and the position angle) or the same value
 	 * for both axes. The coordinates type is a field used to include objects with ecliptic/galactic coordinates
 	 * instead of equatorial. Valid values in the files are those starting with 'EQ', 'EC', 'GA'. In this case
-	 * the RA/DEC fields corresponds to ecliptic/galactic longitudes/latitudes. Default equinox is year 2000 if it 
+	 * the RA/DEC fields corresponds to ecliptic/galactic longitudes/latitudes. Default equinox is year 2000 if it
 	 * is not specified. RA/DEC should be mean coordinates referred to a given equinox.
 	 * @param inMemory True to hold the catalog in memory, false for disk. True is strongly recommended for better
 	 * performance.
@@ -1300,7 +1300,7 @@ public class SkyRenderElement implements Serializable
 	public synchronized void addExternalCatalog(String name, String objType, int rgb, String[] contents, FileFormatElement[] format,
 			boolean inMemory) throws JPARSECException {
 		ArrayList<Object> list = new ArrayList<Object>();
-		
+
 		ReadFormat rf = new ReadFormat(format);
 		boolean fluxMode = false;
 		ArrayList<Double> listFlux = new ArrayList<Double>();
@@ -1343,7 +1343,7 @@ public class SkyRenderElement implements Serializable
 
 				s = getField(contents[i], rf, SkyRenderElement.EXTERNAL_CATALOG_FIELD_SIZE_DEG);
 				if (s != null) {
-					maxSize = (float) Double.parseDouble(s);					
+					maxSize = (float) Double.parseDouble(s);
 					minSize = maxSize;
 				} else {
 					s = getField(contents[i], rf, SkyRenderElement.EXTERNAL_CATALOG_FIELD_SIZE_ARCSEC);
@@ -1360,7 +1360,7 @@ public class SkyRenderElement implements Serializable
 							if (s != null) {
 								maxSize = (float) (Double.parseDouble(s) / 3600.0);
 								tt = 1;
-							}					
+							}
 						}
 
 						s = getField(contents[i], rf, SkyRenderElement.EXTERNAL_CATALOG_FIELD_MINSIZE_DEG);
@@ -1372,7 +1372,7 @@ public class SkyRenderElement implements Serializable
 							if (s != null) {
 								minSize = (float) (Double.parseDouble(s) / 3600.0);
 								tt = 1;
-							}					
+							}
 						}
 
 					}
@@ -1395,7 +1395,7 @@ public class SkyRenderElement implements Serializable
 						} else {
 							continue;
 						}
-					}					
+					}
 				}
 				s = getField(contents[i], rf, SkyRenderElement.EXTERNAL_CATALOG_FIELD_DEC_DEG_WITH_DECIMALS);
 				if (s != null) {
@@ -1429,7 +1429,7 @@ public class SkyRenderElement implements Serializable
 					}
 					if (ctype.startsWith("GA")) {
 						loc = CoordinateSystem.galacticToEquatorial(loc, jd, fast);
-					}					
+					}
 				}
 				if (jd != Constant.J2000) {
 					EphemerisElement eph = new EphemerisElement();
@@ -1438,11 +1438,11 @@ public class SkyRenderElement implements Serializable
 							LocationElement.parseLocationElement(loc), eph));
 				}
 
-				list.add(new Object[] {name1, name2, tt, loc, (float)Double.parseDouble(mag), 
+				list.add(new Object[] {name1, name2, tt, loc, (float)Double.parseDouble(mag),
 						new float[] {maxSize, minSize}, pa, com, rgb});
 			}
 		}
-		
+
 		if (fluxMode) {
 			double flux[] = DataSet.arrayListToDoubleArray(listFlux);
 			double max = DataSet.getMaximumValue(flux), min = DataSet.getMinimumValue(flux);
@@ -1450,16 +1450,16 @@ public class SkyRenderElement implements Serializable
 			for (int i=0; i<list.size(); i++) {
 				Object o[] = (Object[]) list.get(i);
 				double mag = (Float) o[4];
-				
+
 				mag = 1.0 + (mag - min) / (max - min); // 1 to 2. Note log(1) = 0
 				mag = Math.log(mag) / Math.log(2.0); // 0 to 1, in log scale
 				mag = minMag - mag * (minMag - maxMag);
-				
+
 				o[4] = (float)mag;
 				list.set(i, o);
 			}
 		}
-		
+
 		String id = "RenderSkyExternalCatalog"+externalCatalogCounter;
 		DataBase.addData(id, list.toArray(), inMemory);
 		if (!this.externalCatalogAvailable(id)) {
@@ -1491,9 +1491,9 @@ public class SkyRenderElement implements Serializable
 			return null;
 		}
 	}
-	
+
 	/**
-	 * Returns the number of external catalogs defined. Note this is a static value that 
+	 * Returns the number of external catalogs defined. Note this is a static value that
 	 * corresponds to the total number of external catalogs defined in all threads, for
 	 * a given thread some of those catalogs could be null.
 	 * @return The number of total external catalogs.
@@ -1509,7 +1509,7 @@ public class SkyRenderElement implements Serializable
 	public int getNumberOfExternalCatalogs() {
 		return externalCatalogs.length;
 	}
-	
+
 	/**
 	 * Returns the number of external catalogs currently enabled to be shown, and defined in this instance.
 	 * @return The number of external catalogs currently enabled for this instance.
@@ -1532,7 +1532,7 @@ public class SkyRenderElement implements Serializable
 		if (externalCatalogNames == null || (index < 0 || index >= externalCatalogNames.length)) return null;
 		return externalCatalogNames[index];
 	}
-	
+
 	/**
 	 * Returns if a given catalog id is available for this instance.
 	 * @param id The id of the external catalog.
@@ -1648,7 +1648,7 @@ public class SkyRenderElement implements Serializable
 		s.externalCatalogNames = this.externalCatalogNames.clone();
 		s.drawExternalCatalogs = null;
 		if (this.drawExternalCatalogs != null) s.drawExternalCatalogs = this.drawExternalCatalogs.clone();
-		
+
 		s.height = this.height;
 		s.hourAngle = this.hourAngle;
 		s.poleAngle = this.poleAngle;
@@ -1662,7 +1662,7 @@ public class SkyRenderElement implements Serializable
 			}
 		}
 		s.width = this.width;
-		
+
 		s.drawFastLinesMode = this.drawFastLinesMode;
 		s.drawHorizonTexture = this.drawHorizonTexture;
 		s.limitOfDifferenceOfMagnitudesForVariableStars = this.limitOfDifferenceOfMagnitudesForVariableStars;
@@ -1684,7 +1684,6 @@ public class SkyRenderElement implements Serializable
 		s.drawCentralCrux = this.drawCentralCrux;
 		return s;
 	}
-
 	/**
 	 * Returns true if the input object is equals to this instance.
 	 */
@@ -1968,7 +1967,7 @@ public class SkyRenderElement implements Serializable
 	 * Each of them will produce a default set of recommended
 	 * colors.
 	 */
-	public static enum COLOR_MODE {
+	public enum COLOR_MODE {
 		/** White background color mode. */
 		WHITE_BACKGROUND,
 		/** Black background color mode. */
@@ -1980,8 +1979,7 @@ public class SkyRenderElement implements Serializable
 		 * should be set to this value for an adequate anaglyph effect. */
 		WHITE_BACKGROUND_SIMPLE_GREEN_RED_OR_RED_CYAN_ANAGLYPH,
 		/** Mode optimized for printing. */
-		PRINT_MODE
-	}
+		PRINT_MODE};
 
 	private COLOR_MODE colorModel;
 
@@ -1992,7 +1990,7 @@ public class SkyRenderElement implements Serializable
 		"White background", "Black background", "Night mode", "White background simple anaglyph",
 		"Print mode"
 	};
-	
+
 	/**
 	 * Returns the current color model.
 	 * @return Color model id constant.
@@ -2026,7 +2024,7 @@ public class SkyRenderElement implements Serializable
 					this.anaglyphMode == ANAGLYPH_COLOR_MODE.DUBOIS_GREEN_MAGENTA ||
 					this.anaglyphMode == ANAGLYPH_COLOR_MODE.DUBOIS_RED_CYAN) {
 				drawMilkyWayContoursColor = 255<<24 | 132<<16 | 132<<8 | 132;
-				fillMilkyWayColor = 255<<24 | 184<<16 | 184<<8 | 170;				
+				fillMilkyWayColor = 255<<24 | 184<<16 | 184<<8 | 170;
 			}
 			drawCoordinateGridColor = 224<<24 | 0<<16 | 0<<8 | 0;
 			drawOcularFieldOfViewColor = 255<<24 | 0<<16 | 0<<8 | 0;
@@ -2035,11 +2033,11 @@ public class SkyRenderElement implements Serializable
 			fillGalaxyColor = 128<<24 | 220<<16 | 0<<8 | 0;
 			fillGlobularColor = 128<<24 | 220<<16 | 220<<8 | 0;
 			fillOpenColor = 128<<24 | 220<<16 | 220<<8 | 0;
-			drawStarsColors = false;			
+			drawStarsColors = false;
 			this.drawMilkyWayContoursWithTextures = MILKY_WAY_TEXTURE.NO_TEXTURE;
 			background = 255<<24 | 255<<16 | 255<<8 | 255;
 			drawSuperNovaEventsColor = 255<<24 | 255<<16 | 0<<8 | 0;
-			
+
 			drawNebulaeStroke =  new JPARSECStroke(JPARSECStroke.STROKE_DEFAULT_LINE_THIN, 1.0f);
 			drawMilkyWayStroke = JPARSECStroke.STROKE_DEFAULT_LINE_THIN;
 			drawConstellationStroke = JPARSECStroke.STROKE_DEFAULT_LINE_THICK;
@@ -2071,7 +2069,7 @@ public class SkyRenderElement implements Serializable
 			fillGalaxyColor = 80<<24 | 0<<16 | 0<<8 | 0;
 			fillGlobularColor = 56<<24 | 255<<16 | 255<<8 | 0;
 			fillOpenColor =56<<24 | 255<<16 | 255<<8 | 0;
-			drawStarsColors = false;			
+			drawStarsColors = false;
 			this.drawMilkyWayContoursWithTextures = MILKY_WAY_TEXTURE.NO_TEXTURE;
 			background = 255<<24 | 255<<16 | 255<<8 | 255;
 			drawSuperNovaEventsColor = 255<<24 | 255<<16 | 0<<8 | 0;
@@ -2080,7 +2078,7 @@ public class SkyRenderElement implements Serializable
 			drawMilkyWayStroke = JPARSECStroke.STROKE_DEFAULT_LINE_THIN;
 			drawConstellationStroke = JPARSECStroke.STROKE_DEFAULT_LINE;
 			drawConstellationLimitsStroke = new JPARSECStroke(JPARSECStroke.STROKE_LINES_LARGE, new float[] {8, 3}, 0);
-			drawCoordinateGridStroke = JPARSECStroke.STROKE_DEFAULT_LINE_THIN; 
+			drawCoordinateGridStroke = JPARSECStroke.STROKE_DEFAULT_LINE_THIN;
 			break;
 		case BLACK_BACKGROUND:
 			this.colorModel = id;
@@ -2112,7 +2110,7 @@ public class SkyRenderElement implements Serializable
 			drawConstellationStroke = JPARSECStroke.STROKE_DEFAULT_LINE;
 			drawConstellationLimitsStroke = new JPARSECStroke(JPARSECStroke.STROKE_LINES_LARGE, new float[] {8, 3}, 0);
 			drawCoordinateGridStroke = JPARSECStroke.STROKE_DEFAULT_LINE_THIN;
-			
+
 			break;
 		case NIGHT_MODE:
 			this.colorModel = id;
@@ -2131,7 +2129,7 @@ public class SkyRenderElement implements Serializable
 					this.anaglyphMode == ANAGLYPH_COLOR_MODE.DUBOIS_GREEN_MAGENTA ||
 					this.anaglyphMode == ANAGLYPH_COLOR_MODE.DUBOIS_RED_CYAN) {
 				drawMilkyWayContoursColor = 128<<24 | 188<<16 | 0<<8 | 0;
-				fillMilkyWayColor = 128<<24 | 124<<16 | 0<<8 | 0;				
+				fillMilkyWayColor = 128<<24 | 124<<16 | 0<<8 | 0;
 			}
 			drawCoordinateGridColor = 112<<24 | 164<<16 | 0<<8 | 0;
 			drawCoordinateGridEclipticColor = 128<<24 | 255<<16 | 0<<8 | 0;
@@ -2169,7 +2167,7 @@ public class SkyRenderElement implements Serializable
 			fillGalaxyColor = 80<<24 | 0<<16 | 0<<8 | 0;
 			fillGlobularColor = -1; //56<<24 | 255<<16 | 255<<8 | 0;
 			fillOpenColor = -1; //56<<24 | 255<<16 | 255<<8 | 0;
-			drawStarsColors = false;			
+			drawStarsColors = false;
 			background = 255<<24 | 222<<16 | 222<<8 | 222;
 			drawOcularFieldOfViewColor = 255<<24 | 0<<16 | 0<<8 | 0;
 			drawSuperNovaEventsColor = 255<<24 | 255<<16 | 0<<8 | 0;

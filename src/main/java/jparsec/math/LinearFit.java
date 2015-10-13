@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.math;
 
 import java.awt.Color;
@@ -32,16 +32,16 @@ import jparsec.util.JPARSECException;
 
 /**
  * A class for fitting data to a straight line in a very rigorous way.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
 public class LinearFit implements Serializable
 {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	private double x[], y[], dx[], dy[];
-	
+
 	/**
 	 * Default constructor.
 	 * @param x X values.
@@ -133,7 +133,7 @@ public class LinearFit implements Serializable
 	/**
 	 * Linear fit of data. Results set to static constants and arrays. Number of
 	 * points should be 2 or more, or 2 with a forced value of the slope parameter.
-	 * 
+	 *
 	 * @return The series representing the linear fit.
 	 * @throws JPARSECException If the number of points is lower than 2 and the slope
 	 * is not forced.
@@ -288,7 +288,7 @@ public class LinearFit implements Serializable
 			if (!(sum2 == 0.0))
 				correlation = Math.abs(slope * Math.sqrt(sum1 / sum2));
 		}
-		
+
 		ChartSeriesElement series = new ChartSeriesElement(
 				x, y, dx, dy,
 				"", true, Color.BLACK, ChartSeriesElement.SHAPE_CIRCLE,
@@ -301,7 +301,7 @@ public class LinearFit implements Serializable
 
 	/**
 	 * Evaluate fitting line in some point. A fit should previously be done.
-	 * 
+	 *
 	 * @param x Point to evaluate.
 	 * @return Result of evaluation. 0.0 if fit is invalid.
 	 */
@@ -317,7 +317,7 @@ public class LinearFit implements Serializable
 
 	/**
 	 * Evaluate abscissa in some point. A fit should previously be done.
-	 * 
+	 *
 	 * @param y Y point.
 	 * @return x for f(x) = y. 0.0 if fit is invalid.
 	 */
@@ -333,7 +333,7 @@ public class LinearFit implements Serializable
 
 	/**
 	 * Evaluate fitting error in some point. A fit should previously be done.
-	 * 
+	 *
 	 * @param x Point to evaluate.
 	 * @return Result of evaluation. 0.0 if fit is invalid.
 	 */
@@ -349,7 +349,7 @@ public class LinearFit implements Serializable
 
 	/**
 	 * Checks if the fit is invalid.
-	 * 
+	 *
 	 * @return True if it is invalid.
 	 */
 	public boolean isInvalid()
@@ -373,16 +373,16 @@ public class LinearFit implements Serializable
 	 * Obtains error points, defined as those points in the fit that lies
 	 * outside the fitting line, taking into account the errors in the
 	 * slope and y value in x equal to 0.
-	 * 
+	 *
 	 * @param useDiagonal True to use the diagonal to check for errors in the
-	 * rectangle error region of each point, false to use individual lengths 
+	 * rectangle error region of each point, false to use individual lengths
 	 * of x and y errors.
 	 * @param useFittingErrors True to use fitting errors for y axis, false to
 	 *        use original y errors. False is commonly used here.
 	 * @return An array of integer values representing the point indexes that
 	 *         lies outside the fitting line. Array is ordered by descent order
-	 *         of error, so the first point will be the worst fitted one. You can then 
-	 *         eliminate it, repeat the fit, and check for more points outside the new 
+	 *         of error, so the first point will be the worst fitted one. You can then
+	 *         eliminate it, repeat the fit, and check for more points outside the new
 	 *         fit. Null is returned if no point lies outside the fit.
 	 */
 	public int[] getInvalidPoints(boolean useDiagonal, boolean useFittingErrors)
@@ -391,7 +391,7 @@ public class LinearFit implements Serializable
 		double dy[] = DataSet.getSetOfValues(0.0, 0.0, x.length, false);
 		if (this.dx != null) dx = this.dx;
 		if (this.dy != null) dy = this.dy;
-		
+
 		int np = x.length;
 		double erx[] = new double[np];
 		double ery[] = new double[np];
@@ -476,16 +476,16 @@ public class LinearFit implements Serializable
 
 		return errorp;
 	}
-	
+
 	/**
 	 * Obtains error points, defined as those points in the fit that lies
 	 * outside the fitting line, taking into account the errors in the
 	 * slope and y value in x equal to 0. This method returns a value
 	 * proportional to the discrepancies between the fitting line and the point
 	 * location.
-	 * 
+	 *
 	 * @param useDiagonal True to use the diagonal to check for errors in the
-	 * rectangle error region of each point, false to use individual lengths 
+	 * rectangle error region of each point, false to use individual lengths
 	 * of x and y errors.
 	 * @param useFittingErrors True to use fitting errors for y axis, false to
 	 *        use original y errors. False is commonly used here.
@@ -499,7 +499,7 @@ public class LinearFit implements Serializable
 		double dy[] = DataSet.getSetOfValues(0.0, 0.0, x.length, false);
 		if (this.dx != null) dx = this.dx;
 		if (this.dy != null) dy = this.dy;
-		
+
 		int np = x.length;
 		double erx[] = new double[np];
 		double ery[] = new double[np];
@@ -584,12 +584,12 @@ public class LinearFit implements Serializable
 
 		return errorp;
 	}
-	
+
 	/**
 	 * The set of possible variable to modify during the search
 	 * for maximum correlation.
 	 */
-	public static enum MAX_CORRELATION {
+	public enum MAX_CORRELATION {
 		/** Take x values greater than a given value provided to the maximum correlation search method . */
 		TAKE_POINTS_WITH_X_GREATER,
 		/** Take x values lower than a given value provided to the maximum correlation search method . */
@@ -599,14 +599,14 @@ public class LinearFit implements Serializable
 		/** Take y values lower than a given value provided to the maximum correlation search method . */
 		TAKE_POINTS_WITH_Y_LOWER
 	};
-	
+
 	/**
-	 * Searches for the maximum correlation in the input data by modifying the range of that data 
+	 * Searches for the maximum correlation in the input data by modifying the range of that data
 	 * (x or y values) and considering only points with x or y greater or lower than a given range of values.
 	 * @param mc A value indication which variable will be used to modify the range of the input
 	 * data contained in this instance. In case of using, for instance, to take points with y greater than
 	 * a given value, the search for maximum correlation will take all points which y coordinate greater
-	 * than the value specified in the next input values, for which an interation will be made. 
+	 * than the value specified in the next input values, for which an interation will be made.
 	 * @param minV The minimum value for the variable to be modified. In the previous example, the first
 	 * y value to be used to take, in the first iteration, all points with y greater than this value.
 	 * @param maxV The maximum value for the variable to be modified. In the previous example, the last
@@ -616,7 +616,7 @@ public class LinearFit implements Serializable
 	 * y axis.
 	 * @throws JPARSECException If an error occurs.
 	 */
-	public MeasureElement[] getMaximumCorrelation(MAX_CORRELATION mc, double minV, double maxV, double step) 
+	public MeasureElement[] getMaximumCorrelation(MAX_CORRELATION mc, double minV, double maxV, double step)
 			throws JPARSECException {
 		double maxC = -1, m1Error = step * 0.5;
 		MeasureElement m1 = null, m2 = null;
@@ -655,7 +655,7 @@ public class LinearFit implements Serializable
 					m2 = null;
 					if (data.get(1) != null && data.get(1).length > 0) {
 						MeanValue mean = new MeanValue(data.get(1), null);
-						m2 = mean.getMeasuredAverageValue();					
+						m2 = mean.getMeasuredAverageValue();
 					}
 				}
 			}
@@ -663,7 +663,7 @@ public class LinearFit implements Serializable
 		if (mc == MAX_CORRELATION.TAKE_POINTS_WITH_Y_GREATER || mc == MAX_CORRELATION.TAKE_POINTS_WITH_Y_LOWER) {
 			return new MeasureElement[] {m2, m1};
 		} else {
-			return new MeasureElement[] {m1, m2};			
+			return new MeasureElement[] {m1, m2};
 		}
 	}
 }

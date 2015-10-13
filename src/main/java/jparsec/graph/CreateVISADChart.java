@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.graph;
 
 import java.awt.BorderLayout;
@@ -88,8 +88,8 @@ import visad.util.VisADSlider;
  */
 public class CreateVISADChart implements DisplayListener, Serializable {
 
-	static final long serialVersionUID = 1;
-	
+	private static final long serialVersionUID = 1;
+
   // Declare variables
 
   // The quantities to be displayed in x- and y-axes
@@ -155,7 +155,7 @@ public class CreateVISADChart implements DisplayListener, Serializable {
    * declination, and velocity.
    * @param initVelocity Initial velocity to show.
    * @param cube The cube to show.
-   * @param showVPlane True to show a second panel with the flux 
+   * @param showVPlane True to show a second panel with the flux
    * in a given velocity plain.
    * @throws JPARSECException If an exception occurs.
    */
@@ -216,10 +216,10 @@ public class CreateVISADChart implements DisplayListener, Serializable {
 		  throw new JPARSECException("remote exception.", exc);
 	  } catch (Exception ex)
 	  {
-		  throw new JPARSECException("VisAD exception.", ex);		  
+		  throw new JPARSECException("VisAD exception.", ex);
 	  }
   }
-  
+
   private void start(VISADCubeElement cube, double initVelocity, boolean showVPlane)
   throws JPARSECException{
 	  try {
@@ -234,7 +234,7 @@ public class CreateVISADChart implements DisplayListener, Serializable {
 		    if (showVPlane) {
 		    	init();
 		    } else {
-		    	init2();    	
+		    	init2();
 		    }
 		  } catch (RemoteException exc)
 		  {
@@ -242,10 +242,10 @@ public class CreateVISADChart implements DisplayListener, Serializable {
 		  }
 		  catch (VisADException ex)
 		  {
-			  throw new JPARSECException("VisAD exception.", ex);		  
+			  throw new JPARSECException("VisAD exception.", ex);
 		  }
   }
-  
+
     private void init()
     throws RemoteException, VisADException {
     //...the domain2D
@@ -355,7 +355,7 @@ public class CreateVISADChart implements DisplayListener, Serializable {
     int max = (int) Functions.roundUpToPlace(Math.max(cube.initZ, cube.finalZ)/scale, 0);
     latSlider = new VisADSlider(velocity.getName(), min, max, 1, scale, cursorDataRef, declination, false);
     this.setVelSliderValue((float) this.initVelocity);
- 
+
      // this slider will control the number of points
     VisADSlider pointsSlider = new VisADSlider(nPointsRef, 1000, 50000, 10000, RealType.Generic, Translate.translate(945)); //"Points in plane");
 
@@ -591,10 +591,10 @@ public class CreateVISADChart implements DisplayListener, Serializable {
 	    myColorTable[1][i]= chart.green[i];
 	    myColorTable[2][i]= chart.blue[i];
 	  }
-	
+
 	  // Get the ColorControl from the altitude RGB map
 	  ColorControl colCont = (ColorControl) rgbMap.getControl();
-	
+
 	  // Set the table
 	  try {
 		colCont.setTable(myColorTable );
@@ -602,7 +602,7 @@ public class CreateVISADChart implements DisplayListener, Serializable {
 			Logger.log(LEVEL.ERROR, "Error setting the table. Message was: "+exc.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(exc.getStackTrace()));
 	  }
   }
-  
+
   /**
    * Constructor for a 3d surface. The labels for x, y, and z axis (legend) should
    * not contain any strange characters (spaces, point, comma, ...).
@@ -610,26 +610,26 @@ public class CreateVISADChart implements DisplayListener, Serializable {
    * @throws JPARSECException If an error occurs.
    */
 	  public CreateVISADChart (GridChartElement chart)
-	  throws JPARSECException 
+	  throws JPARSECException
 	  {
 		  surfaceMode = true;
 		  gridChart = chart.clone();
 		  init(gridChart);
 	  }
-	  private void init(GridChartElement chart) throws JPARSECException 
-	  { 
-		  try {	
+	  private void init(GridChartElement chart) throws JPARSECException
+	  {
+		  try {
 			  // Create the quantities
 			  // Use RealType(String name, Unit unit, Set set);
 			  declination = RealType.getRealType(chart.yLabel, SI.meter, null);
 			  rightAscension = RealType.getRealType(chart.xLabel, SI.meter, null);
 			  domain2D = new RealTupleType(declination, rightAscension);
 			  velocity = RealType.getRealType(chart.legend, null, null);
-			
+
 			  // Create a FunctionType (domain_tuple -> range_tuple )
 			  // Use FunctionType(MathType domain, MathType range)
 			  FunctionType func_domain_alt = new FunctionType( domain2D, velocity);
-			
+
 			  // Create the domain Set using an
 			  // LinearDSet(MathType type, double first1, double last1, int lengthX,
 			  //				 double first2, double last2, int lengthY)
@@ -638,67 +638,67 @@ public class CreateVISADChart implements DisplayListener, Serializable {
 			  int NROWS = chart.data.length;
 			  greyPlane = new Linear2DSet(domain2D, chart.limits[2], chart.limits[3], NROWS,
 			  					          chart.limits[0],  chart.limits[1], NCOLS);
-			
+
 			  // Our 'flat' array
 			  double[][] flat_samples = new double[1][NCOLS * NROWS];
-			
+
 			  // Fill our 'flat' array with the altitude values
 			  // by looping over NCOLS and NROWS
-			
+
 			  // Note the use of an index variable, indicating the order of the samples
 			  int index = 0;
 			  for(int c = 0; c < NCOLS; c++)
 			    for(int r = 0; r < NROWS; r++){
-			
+
 				      // set altitude altitude
 				      flat_samples[0][ index ] = chart.data[r][c];
-			
+
 				      // increment index
 				      index++;
 			    }
-			
+
 			  // Create a FlatField
 			  // Use FlatField(FunctionType type, Set domain_set)
 			  temperPlane = new FlatField( func_domain_alt, greyPlane);
-			
+
 			  // ...and put the altitude values above into it
 			  // Note the argument false, meaning that the array won't be copied
 			  temperPlane.setSamples( flat_samples , false );
-			
+
 			  // Create Display and its maps
 			  displays = new DisplayImpl[1];
 			  displays[0] = new DisplayImplJ3D("display1");
-			
+
 			  // Get display's graphics mode control and draw scales
 			  GraphicsModeControl dispGMC = (GraphicsModeControl)  displays[0].getGraphicsModeControl();
 			  dispGMC.setScaleEnable(true);
-			
+
 			  // Also enable Texture
 			  dispGMC.setTextureEnable(false);
-			
+
 			  // Create the ScalarMaps: latitude to XAxis, longitude to YAxis and
 			  // altitude to ZAxis and to RGB
 			  // Use ScalarMap(ScalarType scalar, DisplayRealType display_scalar)
 			  northMap = new ScalarMap( declination,    Display.YAxis );
 			  eastMap = new ScalarMap( rightAscension, Display.XAxis );
-			
+
 			  rgbMap = new ScalarMap( velocity,  Display.RGB );
 			  altMap = new ScalarMap( velocity,  Display.ZAxis );
-			
+
 			  // Add maps to display
 			  displays[0].addMap( northMap );
 			  displays[0].addMap( eastMap );
-			
+
 			  displays[0].addMap( altMap );
 			  displays[0].addMap( rgbMap );
-			
+
 			  // Create a different color table
 			  setColorTable(chart);
-			
+
 			  // Create a data reference and set the FlatField as our data
 			  greyPlaneRef = new DataReferenceImpl("greyPlaneRef");
 			  greyPlaneRef.setData( temperPlane );
-			
+
 			  if (chart.opacity == GridChartElement.OPACITY.VARIABLE_WITH_Z) {
 				  ScalarMap altAlphaMap = new ScalarMap( velocity,  Display.Alpha );
 					displays[0].addMap( altAlphaMap );
@@ -708,16 +708,16 @@ public class CreateVISADChart implements DisplayListener, Serializable {
 				  if (chart.opacity == GridChartElement.OPACITY.OPAQUE) opacity = 1f;
 				  if (chart.opacity == GridChartElement.OPACITY.SEMI_TRANSPARENT) opacity = 0.5f;
 				  ConstantMap[] constAlpha_CMap = { new ConstantMap( opacity, Display.Alpha) };
-				  displays[0].addReference( greyPlaneRef, constAlpha_CMap);		  
+				  displays[0].addReference( greyPlaneRef, constAlpha_CMap);
 			  }
-			
+
 			  displays[0].addDisplayListener(this);
 
 			  // Set maps ranges
 			  eastMap.setRange(chart.limits[0], chart.limits[1]);
 			  northMap.setRange(chart.limits[2], chart.limits[3]);
 			  altMap.setRange(chart.getMinimum(), chart.getMaximum());
-			
+
 			  // Create application window and add display to window
 			  panel = new JPanel();
 			  panel.setLayout(new BorderLayout());
@@ -728,7 +728,7 @@ public class CreateVISADChart implements DisplayListener, Serializable {
 		  }
 		  catch (VisADException ex)
 		  {
-			  throw new JPARSECException("VisAD exception.", ex);		  
+			  throw new JPARSECException("VisAD exception.", ex);
 		  }
 	}
 
@@ -740,7 +740,6 @@ public class CreateVISADChart implements DisplayListener, Serializable {
 	  {
 		  return this.cube;
 	  }
-
   private void init2()
   throws RemoteException, VisADException {
   //...the domain2D
@@ -850,13 +849,13 @@ public class CreateVISADChart implements DisplayListener, Serializable {
   int max = (int) Functions.roundUpToPlace(Math.max(cube.initZ, cube.finalZ)/scale, 0);
   latSlider = new VisADSlider(velocity.getName(), min, max, 1, scale, cursorDataRef, declination, false);
   this.setVelSliderValue((float) this.initVelocity);
- 
+
   // Create the Displays and their maps
 
   // One 2D display
   displays = new DisplayImpl[1];
   displaysAreLinked = false;
-  
+
   for( int i = 0; i<displays.length;i++){
     displays[i] = new DisplayImplJ3D("display" + i);
   }
@@ -929,9 +928,9 @@ public class CreateVISADChart implements DisplayListener, Serializable {
   guiPanel.add(createSyncCheck());
   guiPanel.add(createResetButton());
 
-  panel.add(guiPanel, BorderLayout.SOUTH);  
+  panel.add(guiPanel, BorderLayout.SOUTH);
 }
-  
+
   /**
    * Returns the velocity slider.
    * @return Velocity slider.
@@ -992,14 +991,14 @@ public class CreateVISADChart implements DisplayListener, Serializable {
   {
 	  return this.rangeZ;
   }
-  
+
  	private void writeObject(ObjectOutputStream out)
 	throws IOException {
  		boolean grid3d = false;
  		if (gridChart != null) grid3d = true;
 		out.writeBoolean(grid3d);
 		if (grid3d) {
-			out.writeObject(this.gridChart);			
+			out.writeObject(this.gridChart);
 		} else {
 			out.writeFloat(this.getVelSliderValue());
 			out.writeObject(this.cube);

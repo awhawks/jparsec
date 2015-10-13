@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.math;
 
 import java.awt.Color;
@@ -33,16 +33,16 @@ import jparsec.util.JPARSECException;
 
 /**
  * Performs numerical derivation.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
 public class Derivation implements Serializable
 {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	private double x[], y[];
-	
+
 	/**
 	 * Constructor for a derivation. Points are sorted
 	 * in x crescent order, and repeated points are eliminated.
@@ -56,7 +56,7 @@ public class Derivation implements Serializable
 			this.y = l.get(1);
 		}
 	}
-	
+
 	private int geti(double px)
 	{
 		int i = -1;
@@ -72,7 +72,7 @@ public class Derivation implements Serializable
 	 * Computes derivative by Lagrange's method.
 	 * <P>
 	 * From Basic Scientific Subroutines, F. R. Ruckdeschel.
-	 * 
+	 *
 	 * @param px Point to compute derivative. Must be between the first and the
 	 *        (last-n) point.
 	 * @param n Degree of the polynomial.
@@ -137,7 +137,7 @@ public class Derivation implements Serializable
     	double p = 0.0, qn = 0.0, sig = 0.0, un = 0.0;
     	double[] u = new double[x.length];
     	d2ydx2 = new double[x.length];
-    	
+
         d2ydx2[0] = u[0] = 0.0;
     	for (int i=1; i<=x.length-2; i++){
 	    	sig = (x[i] - x[i-1]) / (x[i+1] - x[i-1]);
@@ -158,18 +158,18 @@ public class Derivation implements Serializable
 	 * Spline derivative method, up to third order of accuracy. This method
 	 * requires that the points are sorted in abscissa crescent order. Method adapted
 	 * from the math library by Michael Thomas Flanagan.
-	 * 
+	 *
 	 * @param xx Interpolation point. Must be between minimum and maximum value
 	 *        of x array, or equal to one of them (extrapolation cannot be done).
 	 * @return The interpolated value.
-	 * @throws JPARSECException In case the input point is outside the valid range and 
+	 * @throws JPARSECException In case the input point is outside the valid range and
 	 * extrapolation is not allowed.
 	 */
 	public double splineDerivative(double xx) throws JPARSECException {
 		if (xx < x[0] || xx > x[x.length - 1])
 			throw new JPARSECException("Input x is outside range.");
 		if (d2ydx2 == null) calcDeriv();
-		
+
         double h = 0.0, b = 0.0, a = 0.0; //, yy = 0.0;
     	int k = 0;
     	int klo = 0;
@@ -191,7 +191,7 @@ public class Derivation implements Serializable
     	double dydx = (y[khi] - y[klo]) / h - ((3 * a * a - 1.0) * d2ydx2[klo] - (3 * b * b - 1.0) * d2ydx2[khi]) * h / 6.0;
     	return dydx;
 	}
-	
+
 	/**
 	 * Returns a chart showing the input data and the derived data.
 	 * @param useSpline True to use spline for derivation, false for Lagrange of order 3.
@@ -209,7 +209,7 @@ public class Derivation implements Serializable
 		for (int i=0; i<dy.length; i++) {
 			dx[i] = min + (max - min) * i / (dy.length - 1.0);
 			if (useSpline) {
-				dy[i] = this.splineDerivative(dx[i]);				
+				dy[i] = this.splineDerivative(dx[i]);
 			} else {
 				try { dy[i] = this.Lagrange(dx[i], 3); } catch (Exception exc) { dy[i] = 0.0; }
 			}
@@ -219,9 +219,9 @@ public class Derivation implements Serializable
 				ChartSeriesElement.REGRESSION.SPLINE_INTERPOLATION);
 
 		ChartSeriesElement series[] = new ChartSeriesElement[] {chartSeries1, chartSeries2};
-		ChartElement chart = new ChartElement(series, ChartElement.TYPE.XY_CHART, 
+		ChartElement chart = new ChartElement(series, ChartElement.TYPE.XY_CHART,
 				ChartElement.SUBTYPE.XY_SCATTER,
-				"X, Y, dY", 
+				"X, Y, dY",
 				"X", "Y, dY", false, 800, 600);
 		CreateChart ch = new CreateChart(chart);
 		return ch;

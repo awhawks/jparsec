@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.astrophysics.photometry;
 
 import jparsec.astronomy.Colors;
@@ -35,14 +35,14 @@ import jparsec.util.JPARSECException;
 
 /**
  * A class to perform photometric calculations.<P>
- * 
- * 2MASS information based on M. Cohen et al, "Spectral 
- * Irradiance Calibration in the Infrared. XIV. The 
+ *
+ * 2MASS information based on M. Cohen et al, "Spectral
+ * Irradiance Calibration in the Infrared. XIV. The
  * Absolute Calibration of 2MASS", AJ 126, 1090 (2003).<P>
- * 
- * Johnson and Morgan based on Johnson, H. L., ApJ 141, 
+ *
+ * Johnson and Morgan based on Johnson, H. L., ApJ 141,
  * 923 (1953).
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -50,12 +50,12 @@ public class Photometry
 {
 	// private constructor so that this class cannot be instantiated.
 	private Photometry() {}
-	
+
 	/**
 	 * Obtains the flux from a photometric measurement. If the flux is given in
 	 * Jy, not in magnitudes, then the flux in Jy will be returned, but only if
-	 * the corresponding field {@linkplain PhotometricBandElement#fluxGivenAsMagnitude} 
-	 * is set to false.  
+	 * the corresponding field {@linkplain PhotometricBandElement#fluxGivenAsMagnitude}
+	 * is set to false.
 	 * @param mag Absolute magnitude.
 	 * @param dmag Magnitude error.
 	 * @param band Data for the photometric band.
@@ -64,9 +64,9 @@ public class Photometry
 	public static MeasureElement getFluxFromMagnitude(double mag, double dmag, PhotometricBandElement band)
 	{
 		if (!band.fluxGivenAsMagnitude) return new MeasureElement(mag, dmag, MeasureElement.UNIT_Y_JY);
-		
+
 		double flux = 0.0;
-		
+
 		double luminosityRatio = Math.pow(10.0, (band.magnitude0ForFlux - mag) / 2.5);
 		flux = luminosityRatio * band.fluxAt0Magnitude;
 
@@ -75,15 +75,15 @@ public class Photometry
 		// when reversing back the conversion, otherwise it increases continuously.
 		double dFlux = Math.sqrt(Math.pow(band.fluxAt0Magnitude * dLumRatio, 2.0) +
 			Math.pow(luminosityRatio * band.fluxAt0MagnitudeError*0, 2.0));
-		
+
 		return new MeasureElement(flux, dFlux, MeasureElement.UNIT_Y_JY);
 	}
 
 	/**
 	 * Obtains the flux from a photometric measurement. If the flux is given in
 	 * Jy, not in magnitudes, then the flux in Jy will be returned, but only if
-	 * the corresponding field {@linkplain PhotometricBandElement#fluxGivenAsMagnitude} 
-	 * is set to false.  
+	 * the corresponding field {@linkplain PhotometricBandElement#fluxGivenAsMagnitude}
+	 * is set to false.
 	 * @param flux Flux in Jy.
 	 * @param dflux Flux error.
 	 * @param band Data for the photometric band.
@@ -103,9 +103,9 @@ public class Photometry
 		if (band.equals(PhotometricBandElement.BAND_J_2MASS)) yUnit = MeasureElement.UNIT_Y_MAG_2MASS_J;
 		if (band.equals(PhotometricBandElement.BAND_H_2MASS)) yUnit = MeasureElement.UNIT_Y_MAG_2MASS_H;
 		if (band.equals(PhotometricBandElement.BAND_Ks_2MASS)) yUnit = MeasureElement.UNIT_Y_MAG_2MASS_Ks;
-		
+
 		if (!band.fluxGivenAsMagnitude) return new MeasureElement(0.0, 0.0, yUnit);
-		
+
 		double lumR = flux / band.fluxAt0Magnitude;
 		double mag = band.magnitude0ForFlux - 2.5 * Math.log10(lumR);
 
@@ -113,22 +113,22 @@ public class Photometry
 		// when reversing back the conversion, otherwise it increases continuously.
 		double dlumR = Math.sqrt(Math.pow(lumR * dflux / flux, 2.0) + Math.pow(lumR * band.fluxAt0MagnitudeError*0 / band.fluxAt0Magnitude, 2.0));
 		double dmag = dlumR * 2.5 / (lumR * Math.log(10.0));
-		
+
 		return new MeasureElement(mag, dmag, yUnit);
 	}
-	
+
 	/**
 	 * Obtains approximate B and V magnitudes from Tycho BT and VT
 	 * magnitudes.<P>
-	 * 
+	 *
 	 * @param Bt Tycho-2 BT magnitude.
 	 * @param Vt Tycho-2 VT magnitude.
 	 * @param ESA_method Method to apply, ESA official one (true) or the one developed by M. Kidger
-	 * and F. Martin-Luis (false). The one by Kidger seems to be better. For explanations and request 
+	 * and F. Martin-Luis (false). The one by Kidger seems to be better. For explanations and request
 	 * see http://homepage.ntlworld.com/roger.dymock/Tycho Photometry.htm.
 	 * @return B and V magnitudes.
 	 * @throws JPARSECException If an error occurs.
-	 * @see Colors#bvTychoTobvJohnson(double) bvTychoTobvJohnson(double) method at 
+	 * @see Colors#bvTychoTobvJohnson(double) bvTychoTobvJohnson(double) method at
 	 * Colors class for a possibly better algorithm.
 	 */
 	public static double[] getApproximateJohnsonBVFromTycho(double Bt, double Vt,
@@ -141,10 +141,10 @@ public class Photometry
 		} else {
 			v = Vt - 0.016 - 0.0741 * (Bt - Vt);
 			b = Bt + 0.064 - 0.2983 * (Bt - Vt);
-		}		
+		}
 		return new double[] {b, v};
 	}
-	
+
 	/**
 	 * Obtains V-R color in Johnson system from Cousins system.
 	 * Reference: Fernie, J. D., 1983PASP...95..782F.
@@ -181,7 +181,7 @@ public class Photometry
 		if (ri > 0.7) riJ = 0.205 + 0.733 * ri + 0.171 * ri * ri;
 		return riJ;
 	}
-	
+
 	private static final String[] JOHNSON_U = new String[] {
 		   "3000    0.000",
 		   "3050    0.040",
@@ -501,7 +501,7 @@ public class Photometry
 		  "11800    0.010",
 		  "11850    0.000"
 	};
-	
+
 	private static final String[] MASS2_H = new String[] {
 		"1.289   0.",
 		"1.315   5.91635E-08",
@@ -749,11 +749,11 @@ public class Photometry
 		"2.384   4.06306E-04",
 		"2.399   0."
 	};
-	
+
 	/**
 	 * The set of filters.
 	 */
-	public static enum FILTER {
+	public enum FILTER {
 		/** ID constant for Johnson's U filter. */
 		U_JOHNSON,
 		/** ID constant for Johnson's V filter. */
@@ -771,12 +771,12 @@ public class Photometry
 		/** ID constant for 2MASS Ks filter. */
 		Ks_2MASS
 	};
-	
+
 	// From Simbad, Jan 2008
 	private static final double VEGA_MAGNITUDES[] = new double[] {
 		0.02, 0.03, 0.03, 0.1, 0.2, -0.18, -0.03, 0.13
 	};
-	
+
 	/**
 	 * Returns the filter set of wavelengths in microns.
 	 * @param filterID The filter ID constant.
@@ -815,7 +815,7 @@ public class Photometry
 		default:
 			throw new JPARSECException("invalid filter.");
 		}
-		
+
 		double out[] = new double[data.length];
 		for (int i=0; i<data.length; i++)
 		{
@@ -824,7 +824,7 @@ public class Photometry
 					|| filterID == FILTER.Ks_2MASS) {
 				out[i] = out[i];
 			} else {
-				out[i] = out[i] / 1.0E4;				
+				out[i] = out[i] / 1.0E4;
 			}
 		}
 		return out;
@@ -834,7 +834,7 @@ public class Photometry
 	 * Returns the filter set of transmitancies, each of them for
 	 * the corresponding filter wavelength. The values are
 	 * normalized to unity.<P>
-	 * 
+	 *
 	 * The transmitancies are based on Johnson, ApJ 141, 923 (1965), and
 	 * Cohen et al, AJ 126, 1090 (2003).
 	 * @param filterID The filter ID constant.
@@ -873,7 +873,7 @@ public class Photometry
 		default:
 			throw new JPARSECException("invalid filter.");
 		}
-		
+
 		double out[] = new double[data.length];
 		for (int i=0; i<data.length; i++)
 		{
@@ -916,7 +916,7 @@ public class Photometry
 		sp.line = filterID.name();
 		return sp;
 	}
-	
+
 	/**
 	 * Returns the flux of a star for a given effective temperature and integrated over a given filter.
 	 * @param Tef The effective temperature of the star in K.
@@ -928,7 +928,7 @@ public class Photometry
 	throws JPARSECException {
 		double waves[] = Photometry.getFilterWavelengths(filterID);
 		double trans[] = Photometry.getFilterTransmitancy(filterID);
-		
+
 		for (int i=0; i<waves.length; i++)
 		{
 			trans[i] *= Star.blackBody(Tef, waves[i] * 1.0E-6);
@@ -956,7 +956,7 @@ public class Photometry
 	throws JPARSECException {
 		double waves[] = Photometry.getFilterWavelengths(filterID);
 		double trans[] = Photometry.getFilterTransmitancy(filterID);
-		
+
 		Kurucz kur = new Kurucz(m, r, Tef);
 		for (int i=0; i<waves.length; i++)
 		{
@@ -974,17 +974,17 @@ public class Photometry
 
 
 	/**
-	 * Returns the color index of a star (considered as a black body) 
+	 * Returns the color index of a star (considered as a black body)
 	 * between two filters.
-	 * 
-	 * @param Tef Effective temperature. 
+	 *
+	 * @param Tef Effective temperature.
 	 * @param filterID1 The first filter.
 	 * @param filterID2 The second filter.
 	 * @param vega True to use Vega as reference for 0 magnitude, false for a synthetic star.
 	 * @return The approximate color index M (filter1) - M (filter2).
 	 * @throws JPARSECException If the filters are invalid.
-	 * @deprecated This method is not accurate, use 
-	 * {@linkplain Photometry#getColorIndexUsingKuruczModels(double, double, double, FILTER, FILTER, boolean)} 
+	 * @deprecated This method is not accurate, use
+	 * {@linkplain Photometry#getColorIndexUsingKuruczModels(double, double, double, FILTER, FILTER, boolean)}
 	 * instead.
 	 */
 	public static double getBlackBodyColorIndex(double Tef, FILTER filterID1, FILTER filterID2, boolean vega)
@@ -994,7 +994,7 @@ public class Photometry
 
 		// 9700 K is the effective temperature of Vega, used as reference for a color index of 0
 		double fr1 = Photometry.getStarFlux(9700, filterID1);
-		double fr2 = Photometry.getStarFlux(9700, filterID2);			
+		double fr2 = Photometry.getStarFlux(9700, filterID2);
 
 		double color = -2.5 * Math.log10(f1 / f2) + 2.5 * Math.log10(fr1 / fr2);
 		// Now correct for the 'true' color index of Vega, which now is not exactly zero due to evolution of instruments
@@ -1006,10 +1006,10 @@ public class Photometry
 	/**
 	 * Returns the color index between two filters using Kurucz models.<P>
 	 * Calculations can be performed using  Vega as reference.
-	 * 
+	 *
 	 * @param m Star mass in solar units.
 	 * @param r Star radius in solar units.
-	 * @param Tef Effective temperature. 
+	 * @param Tef Effective temperature.
 	 * @param filterID1 The first filter.
 	 * @param filterID2 The second filter.
 	 * @param vega True to use Vega as reference for 0 magnitude, false for a synthetic star.
@@ -1024,7 +1024,7 @@ public class Photometry
 		// 9700 K is the effective temperature of Vega, used as reference for a color index of 0
 		// Vega has a mass of 2.2 and radius of 2.5 in solar units, but here we consider only Teff.
 		double fr1 = Photometry.getStarFluxUsingKuruczModels(m, r, 9700, filterID1);
-		double fr2 = Photometry.getStarFluxUsingKuruczModels(m, r, 9700, filterID2);			
+		double fr2 = Photometry.getStarFluxUsingKuruczModels(m, r, 9700, filterID2);
 
 		double color = -2.5 * Math.log10(f1 / f2) + 2.5 * Math.log10(fr1 / fr2);
 		// Now correct for the 'true' color index of Vega, which now is not exactly zero due to evolution of instruments

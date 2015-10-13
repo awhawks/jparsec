@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.vo;
 
 import java.awt.image.BufferedImage;
@@ -50,8 +50,8 @@ import jparsec.util.JPARSECException;
  * @version 1.0
  */
 public class GeneralQuery implements Serializable {
-	static final long serialVersionUID = 1L;
-	
+	private static final long serialVersionUID = 1L;
+
 	private String query;
 	/**
 	 * Constructor for a given query.
@@ -73,7 +73,7 @@ public class GeneralQuery implements Serializable {
 	}
 	/**
 	 * Perform the query for a binary file. An attempt to read the whole file is
-	 * done (whatever its size). If the size of the file cannot be known, then 
+	 * done (whatever its size). If the size of the file cannot be known, then
 	 * only the first 10 MB are read.
 	 * @param path Path of the file to create. If null no file will be created.
 	 * @return The content type header of the file.
@@ -86,7 +86,7 @@ public class GeneralQuery implements Serializable {
 	}
 	/**
 	 * Perform the query for a binary file. An attempt to read the whole file is
-	 * done (whatever its size). If the size of the file cannot be known, then 
+	 * done (whatever its size). If the size of the file cannot be known, then
 	 * only the first 10 MB are read.
 	 * @return The contents of the file.
 	 * @throws JPARSECException If an error occurs.
@@ -97,7 +97,7 @@ public class GeneralQuery implements Serializable {
 	}
 	/**
 	 * Perform the query for an image. Only certain image types as supported, like
-	 * .jpg, .png, or .gif. For .fits or other types use 
+	 * .jpg, .png, or .gif. For .fits or other types use
 	 * {@linkplain GeneralQuery#queryFile(String, String)}.
 	 * @return Image from server.
 	 * @throws JPARSECException If an error occurs.
@@ -105,9 +105,9 @@ public class GeneralQuery implements Serializable {
 	public BufferedImage queryImage()
 	throws JPARSECException {
 		BufferedImage q = queryImage(this.query);
-		return q;		
+		return q;
 	}
-	
+
 	/**
 	 * ID constant for Moon shaded relief map.
 	 */
@@ -179,11 +179,11 @@ public class GeneralQuery implements Serializable {
 
 	/**
 	 * Creates a query to the USGS planetary map server.
-	 * @param targetBody Target body, constants defined in class {@linkplain TARGET}, currently only Mars, 
+	 * @param targetBody Target body, constants defined in class {@linkplain TARGET}, currently only Mars,
 	 * the Moon, and Io are supported.
 	 * @param width Image width.
 	 * @param height image height.
-	 * @param box Box of bounding coordinates to display, in the form (west limit, 
+	 * @param box Box of bounding coordinates to display, in the form (west limit,
 	 * south limit, east limit, north limit).
 	 * @param dataset Dataset id constant. Constants defined in this class. Set to
 	 * null to use a default dataset.
@@ -232,14 +232,14 @@ public class GeneralQuery implements Serializable {
 		query += "map="+targetBody.getName()+"&BBOX="+box[0]+","+box[1]+","+box[2]+","+box[3]+"&WIDTH="+width+"&HEIGHT="+height+"&"+layer;
 		return query;
 	}
-	
+
 	/**
 	 * Returns a query suitable for obtaining pre-main sequence star properties using Siess models.<P>
 	 * Reference:<P>
 	 * Siess et al. 1997, A&A 324, 556.
 	 * Siess L., Dufour E., Forestini M. 2000, A&A, 358, 593.
-	 * 
-	 * @param metallicity Star metallicity. Valid values are 0.01, 0.02, 0.03, and 0.04, 
+	 *
+	 * @param metallicity Star metallicity. Valid values are 0.01, 0.02, 0.03, and 0.04,
 	 * being 0.02 the solar metallicity.
 	 * @param Teff Effective temperature in K.
 	 * @param lum Luminosity in solar units.
@@ -256,11 +256,11 @@ public class GeneralQuery implements Serializable {
 		query += "&ycoor="+lum;
 		return query;
 	}
-	
+
 	/**
 	 * The set of SDSS plates for the query.
 	 */
-	public static enum SDSS_PLATE {
+	public enum SDSS_PLATE {
 		/** Visible light. HST Phase 2, 1.7" resolution. */
 		VISIBLE ("phase2_gsc2"),
 		/** Blue light. POSS2/UKSTU Blue, 1.0" resolution in North, 1.7" in South.  */
@@ -269,13 +269,13 @@ public class GeneralQuery implements Serializable {
 		RED ("poss2ukstu_red"),
 		/** Infrared light. POSS2/UKSTU IR, 1.0" resolution. */
 		INFRARED ("poss2ukstu_ir");
-		
+
 		private String type;
-		
+
 		private SDSS_PLATE(String t) {
 			this.type = t;
 		}
-		
+
 		/**
 		 * Returns the type.
 		 * @return The type to use in the query.
@@ -299,10 +299,10 @@ public class GeneralQuery implements Serializable {
 	throws JPARSECException{
 		String format = "gif";
 		if (fitsFormat) format = "fits";
-		
+
 		if (!format.toLowerCase().startsWith("g") && !format.equals("f"))
 			throw new JPARSECException("invalid format "+format+".");
-		
+
 		String ra = Functions.formatRA(loc.getLongitude());
 		String dec = Functions.formatDEC(loc.getLatitude());
 		String queryRa = Functions.getHoursFromFormattedRA(ra);
@@ -312,7 +312,7 @@ public class GeneralQuery implements Serializable {
 		queryDec += "+" + Functions.getMinutesFromFormattedDEC(dec);
 		queryDec += "+" + Functions.getSecondsFromFormattedDEC(dec);
 		if (queryDec.startsWith("-")) {
-			queryDec = DataSet.replaceAll(queryDec, "-", "%", true);			
+			queryDec = DataSet.replaceAll(queryDec, "-", "%", true);
 		} else {
 			if (queryDec.startsWith("+")) {
 				queryDec = DataSet.replaceAll(queryDec, "+", "%2B", true);
@@ -327,16 +327,16 @@ public class GeneralQuery implements Serializable {
 		query += "&c=none&fov=NONE&v3=";
 		return query;
 	}
-	
+
 	/**
 	 * Perform the query with a default timeout of 30s.
 	 * @param query Query to call.
 	 * @return Response from server.
 	 * @throws JPARSECException If an error occurs.
 	 */
-    public static String query(String query) 
-    throws JPARSECException 
-    {	 
+    public static String query(String query)
+    throws JPARSECException
+    {
     	return GeneralQuery.query(query, 30000);
     }
 
@@ -348,9 +348,9 @@ public class GeneralQuery implements Serializable {
 	 * @return Response from server.
 	 * @throws JPARSECException If an error occurs.
 	 */
-    public static String query(String query, int timeout) 
-    throws JPARSECException 
-    {	 
+    public static String query(String query, int timeout)
+    throws JPARSECException
+    {
     	return GeneralQuery.query(query, "UTF-8", timeout);
     }
 
@@ -364,17 +364,17 @@ public class GeneralQuery implements Serializable {
 	 * @return Response from server.
 	 * @throws JPARSECException If an error occurs.
 	 */
-    public static String query(String query, String charset, int timeout) 
-    throws JPARSECException 
-    {	 
+    public static String query(String query, String charset, int timeout)
+    throws JPARSECException
+    {
     	try {
     		if (timeout <= 0) throw new JPARSECException("Cannot download with timeout <= 0");
-    		
+
 			URL urlObject = new URL(query);
 			URLConnection con = urlObject.openConnection();
 			con.setRequestProperty
 			  ( "User-Agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0)" );
-						 
+
 			con.setConnectTimeout(timeout);
 			con.setReadTimeout(timeout);
 			// Get the response
@@ -382,14 +382,14 @@ public class GeneralQuery implements Serializable {
 	                      new InputStreamReader(
 	                      con.getInputStream(), charset));
 			String inputLine;
-					
+
 			StringBuffer output = new StringBuffer(1000);
 			while ((inputLine = in.readLine()) != null)
 			{
 				output.append(inputLine + FileIO.getLineSeparator());
 			}
 			in.close();
-			
+
 			return output.toString();
     	} catch (Exception e)
     	{
@@ -399,22 +399,22 @@ public class GeneralQuery implements Serializable {
 
 	/**
 	 * Perform the query for a remote file. An attempt to read the whole file is
-	 * done (whatever its size). If the size of the file cannot be known, then 
+	 * done (whatever its size). If the size of the file cannot be known, then
 	 * only the first 10 MB are read. The default timeout is 30s.
 	 * @param query Query to call.
 	 * @param fileName Path of the file to create. If null no file will be created.
 	 * @return The content type header of the file.
 	 * @throws JPARSECException If an error occurs.
 	 */
-    public static String queryFile(String query, String fileName) 
-    throws JPARSECException 
-    {	 
+    public static String queryFile(String query, String fileName)
+    throws JPARSECException
+    {
     	return GeneralQuery.queryFile(query, fileName, 30000);
     }
 
 	/**
 	 * Perform the query for a remote file. An attempt to read the whole file is
-	 * done (whatever its size). If the size of the file cannot be known, then 
+	 * done (whatever its size). If the size of the file cannot be known, then
 	 * only the first 10 MB are read. The default timeout is 30s.
 	 * @param query Query to call.
 	 * @param fileName Path of the file to create. If null no file will be created.
@@ -424,17 +424,17 @@ public class GeneralQuery implements Serializable {
 	 * the path provided.
 	 * @throws JPARSECException If an error occurs.
 	 */
-    public static String queryFileIfDoesNotExist(String query, String fileName, int timeout) 
-    throws JPARSECException 
-    {	 
+    public static String queryFileIfDoesNotExist(String query, String fileName, int timeout)
+    throws JPARSECException
+    {
     	if (!FileIO.exists(fileName))
     		return GeneralQuery.queryFile(query, fileName, timeout);
     	return null;
     }
-    
+
 	/**
 	 * Perform the query for a binary file. An attempt to read the whole file is
-	 * done (whatever its size). If the size of the file cannot be known, then 
+	 * done (whatever its size). If the size of the file cannot be known, then
 	 * only the first 10 MB are read.
 	 * @param query Query to call.
 	 * @param fileName Path of the file to create. If null no file will be created.
@@ -444,9 +444,9 @@ public class GeneralQuery implements Serializable {
 	 * @return The content type header of the file.
 	 * @throws JPARSECException If an error occurs.
 	 */
-    public static String queryFile(String query, String fileName, int timeout) 
-    throws JPARSECException 
-    {	 
+    public static String queryFile(String query, String fileName, int timeout)
+    throws JPARSECException
+    {
     	try {
     		if (timeout <= 0) throw new JPARSECException("Cannot download with timeout <= 0");
 
@@ -456,11 +456,11 @@ public class GeneralQuery implements Serializable {
 			  ( "User-Agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0)" );
 			con.setConnectTimeout(timeout);
 			con.setReadTimeout(timeout);
-						 
+
 		    if (fileName == null) return con.getContentType();
-	
+
 			// Get the response
-			InputStream in = new BufferedInputStream( con.getInputStream());			
+			InputStream in = new BufferedInputStream( con.getInputStream());
 			int contentLength = con.getContentLength();
 			if (contentLength < 1) contentLength = 1024 * 1024 * 10;
 		    byte[] data = new byte[contentLength];
@@ -475,14 +475,14 @@ public class GeneralQuery implements Serializable {
 		      totalBytesRead += bytesRead;
 		    }
 		    in.close();
-	
+
 		    if (totalBytesRead < 1) return con.getContentType();
-		    
+
 		    FileOutputStream out = new FileOutputStream(new File(fileName));
 		    out.write(data, 0, totalBytesRead);
 		    out.flush();
 		    out.close();
-		    
+
 		    return con.getContentType();
     	} catch (Exception e)
     	{
@@ -492,7 +492,7 @@ public class GeneralQuery implements Serializable {
 
 	/**
 	 * Perform the query for a binary file. An attempt to read the whole file is
-	 * done (whatever its size). If the size of the file cannot be known, then 
+	 * done (whatever its size). If the size of the file cannot be known, then
 	 * only the first 10 MB are read.
 	 * @param query Query to call.
 	 * @param timeout Timeout in milliseconds. If the connection waits
@@ -501,21 +501,21 @@ public class GeneralQuery implements Serializable {
 	 * @return The content of the file.
 	 * @throws JPARSECException If an error occurs.
 	 */
-    public static byte[] queryFileContents(String query, int timeout) 
-    throws JPARSECException 
-    {	 
+    public static byte[] queryFileContents(String query, int timeout)
+    throws JPARSECException
+    {
     	try {
     		if (timeout <= 0) throw new JPARSECException("Cannot download with timeout <= 0");
-    		
+
 			URL urlObject = new URL(query);
 			URLConnection con = urlObject.openConnection();
 			con.setRequestProperty
 			  ( "User-Agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0)" );
 			con.setConnectTimeout(timeout);
 			con.setReadTimeout(timeout);
-						 
+
 			// Get the response
-			InputStream in = new BufferedInputStream( con.getInputStream());			
+			InputStream in = new BufferedInputStream( con.getInputStream());
 			int contentLength = con.getContentLength();
 			if (contentLength < 1) contentLength = 1024 * 1024 * 10;
 		    byte[] data = new byte[contentLength];
@@ -530,7 +530,7 @@ public class GeneralQuery implements Serializable {
 		      // totalBytesRead += bytesRead;
 		    }
 		    in.close();
-	
+
 		    return data;
     	} catch (Exception e)
     	{
@@ -540,7 +540,7 @@ public class GeneralQuery implements Serializable {
 
 	/**
 	 * Perform the query for a text file. An attempt to read the whole file is
-	 * done (whatever its size). If the size of the file cannot be known, then 
+	 * done (whatever its size). If the size of the file cannot be known, then
 	 * only the first 10 MB are read.
 	 * @param query Query to call.
 	 * @param encoding The charset.
@@ -550,21 +550,21 @@ public class GeneralQuery implements Serializable {
 	 * @return The text file, or null if nothing is read.
 	 * @throws JPARSECException If an error occurs.
 	 */
-    public static String queryTextFile(String query, String encoding, int timeout) 
-    throws JPARSECException 
-    {	 
+    public static String queryTextFile(String query, String encoding, int timeout)
+    throws JPARSECException
+    {
     	try {
     		if (timeout <= 0) throw new JPARSECException("Cannot download with timeout <= 0");
-    		
+
 			URL urlObject = new URL(query);
 			URLConnection con = urlObject.openConnection();
 			con.setRequestProperty
 			  ( "User-Agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0)" );
 			con.setConnectTimeout(timeout);
 			con.setReadTimeout(timeout);
-						 
+
 			// Get the response
-			InputStream in = new BufferedInputStream( con.getInputStream());			
+			InputStream in = new BufferedInputStream( con.getInputStream());
 			int contentLength = con.getContentLength();
 			if (contentLength < 1) contentLength = 1024 * 1024 * 10;
 		    byte[] data = new byte[contentLength];
@@ -579,11 +579,11 @@ public class GeneralQuery implements Serializable {
 		      totalBytesRead += bytesRead;
 		    }
 		    in.close();
-	
+
 		    if (totalBytesRead < 1) return null;
-		    
+
 		    String out = new String(data, encoding);
-		    
+
 		    return out;
     	} catch (Exception e)
     	{
@@ -593,21 +593,21 @@ public class GeneralQuery implements Serializable {
 
 	/**
 	 * Perform the query for an object. An attempt to read the whole file is
-	 * done (whatever its size). If the size of the file cannot be known, then 
+	 * done (whatever its size). If the size of the file cannot be known, then
 	 * only the first 10 MB are read. The default timeout is 30s.
 	 * @param query Query to call.
 	 * @return The object
 	 * @throws JPARSECException If an error occurs.
 	 */
-    public static Object queryObject(String query) 
-    throws JPARSECException 
-    {	 
+    public static Object queryObject(String query)
+    throws JPARSECException
+    {
     	return GeneralQuery.queryObject(query, 30000);
     }
 
 	/**
 	 * Perform the query for an object. An attemp to read the whole file is
-	 * done (whatever its size). If the size of the file cannot be known, then 
+	 * done (whatever its size). If the size of the file cannot be known, then
 	 * only the first 10 MB are read.
 	 * @param query Query to call.
 	 * @param timeout Timeout in milliseconds. If the connection waits
@@ -616,22 +616,22 @@ public class GeneralQuery implements Serializable {
 	 * @return The object
 	 * @throws JPARSECException If an error occurs.
 	 */
-    public static Object queryObject(String query, int timeout) 
-    throws JPARSECException 
-    {	 
+    public static Object queryObject(String query, int timeout)
+    throws JPARSECException
+    {
     	try {
        		if (timeout <= 0) throw new JPARSECException("Cannot download with timeout <= 0");
-       		
+
        	 	URL urlObject = new URL(query);
 			URLConnection con = urlObject.openConnection();
 			con.setRequestProperty
 			  ( "User-Agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0)" );
 			con.setConnectTimeout(timeout);
 			con.setReadTimeout(timeout);
-						 
+
 			// Get the response
 			InputStream in = new BufferedInputStream( con.getInputStream());
-			
+
 			int contentLength = con.getContentLength();
 			if (contentLength < 1) contentLength = 1024 * 1024 * 10;
 		    byte[] data = new byte[contentLength];
@@ -646,13 +646,13 @@ public class GeneralQuery implements Serializable {
 		      totalBytesRead += bytesRead;
 		    }
 		    in.close();
-	
+
 		    if (totalBytesRead < 1) return con.getContentType();
 
 		      ObjectInputStream inStream = new ObjectInputStream(new ByteArrayInputStream(data, 0, totalBytesRead));
 		      Object obj = inStream.readObject();
 		      inStream.close();
-		    
+
 		    return obj;
     	} catch (Exception e)
     	{
@@ -662,21 +662,21 @@ public class GeneralQuery implements Serializable {
 
 	/**
 	 * Perform the query for an image. Only certain image types as supported, like
-	 * .jpg, .png, or .gif. For .fits or other types use 
+	 * .jpg, .png, or .gif. For .fits or other types use
 	 * {@linkplain GeneralQuery#queryFile(String, String)}. The default timeout is 30s.
 	 * @param query Query to call.
 	 * @return Image from server.
 	 * @throws JPARSECException If an error occurs.
 	 */
-    public static BufferedImage queryImage(String query) 
-    throws JPARSECException 
-    {	 
+    public static BufferedImage queryImage(String query)
+    throws JPARSECException
+    {
     	return GeneralQuery.queryImage(query, 30000);
     }
 
 	/**
 	 * Perform the query for an image. Only certain image types as supported, like
-	 * .jpg, .png, or .gif. For .fits or other types use 
+	 * .jpg, .png, or .gif. For .fits or other types use
 	 * {@linkplain GeneralQuery#queryFile(String, String)}.
 	 * @param query Query to call.
 	 * @param timeout Timeout in milliseconds. If the connection waits
@@ -685,24 +685,24 @@ public class GeneralQuery implements Serializable {
 	 * @return Image from server.
 	 * @throws JPARSECException If an error occurs.
 	 */
-    public static BufferedImage queryImage(String query, int timeout) 
-    throws JPARSECException 
-    {	 
+    public static BufferedImage queryImage(String query, int timeout)
+    throws JPARSECException
+    {
     	try {
        		if (timeout <= 0) throw new JPARSECException("Cannot download with timeout <= 0");
-       		
+
        	 	URL urlObject = new URL(query);
 			URLConnection con = urlObject.openConnection();
 			con.setRequestProperty
 			  ( "User-Agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0)" );
 			con.setConnectTimeout(timeout);
 			con.setReadTimeout(timeout);
-						 
+
 			// Get the response
 			InputStream is = new BufferedInputStream( con.getInputStream());
 			BufferedImage image = ImageIO.read(is);
 			is.close();
-			
+
 			return image;
     	} catch (Exception e)
     	{
@@ -713,7 +713,7 @@ public class GeneralQuery implements Serializable {
     /**
      * The set of projections for Skyview queries.
      */
-    public static enum SKYVIEW_PROJECTION {
+    public enum SKYVIEW_PROJECTION {
 	    /** Cartesian projection for SkyView. */
 	    CARTESIAN,
 	    /** Global sinusoidal projection for SkyView. */
@@ -729,17 +729,17 @@ public class GeneralQuery implements Serializable {
 	    /** Zenithal equal area projection for SkyView. */
 	    ZENITHAL_EQUAL_AREA
     };
-    
+
     /**
      * Projections for SkyView.
      */
-    public static final String[] SKYVIEW_PROJECTIONS = new String[] {"Car (Cartesian)", "Sfl (Global sinusoidal)", "Tan (Gnomonic)", 
+    public static final String[] SKYVIEW_PROJECTIONS = new String[] {"Car (Cartesian)", "Sfl (Global sinusoidal)", "Tan (Gnomonic)",
     	"Stg (Stereographic)", "Sin (Orthographic)", "Ait (Aitoff)", "Zea (Zenithal equal area)"};
 
     /**
      * The set of coordinate types for Skyview queries.
      */
-    public static enum SKYVIEW_COORDINATE {
+    public enum SKYVIEW_COORDINATE {
 	    /** J2000 coordinates for SkyView. */
 	    EQUATORIAL_J2000 ,
 	    /** Ecliptic 2000 coordinates for SkyView. */
@@ -747,7 +747,7 @@ public class GeneralQuery implements Serializable {
 	    /** Galactic coordinates for SkyView. */
 	    GALACTIC
     };
-    
+
     /**
      * Coordinate types for SkyView.
      */
@@ -756,7 +756,7 @@ public class GeneralQuery implements Serializable {
     /**
      * The set of color tables for Skyview queries.
      */
-    public static enum SKYVIEW_LUT_TABLE {
+    public enum SKYVIEW_LUT_TABLE {
 	    /** Fire color table for SkyView. */
 	    FIRE,
 	    /** Ice color table for SkyView. */
@@ -770,7 +770,7 @@ public class GeneralQuery implements Serializable {
 	    /** Gray color table for SkyView. */
 	    GRAY
     };
-    
+
     /**
      * Color tables for SkyView.
      */
@@ -779,7 +779,7 @@ public class GeneralQuery implements Serializable {
     /**
      * The set of intensity scales for Skyview queries.
      */
-    public static enum SKYVIEW_INTENSITY_SCALE {
+    public enum SKYVIEW_INTENSITY_SCALE {
 	    /** Linear scaling for the levels in SkyView images. */
 	    LINEAR,
 	    /** Log scaling for the levels in SkyView images. */
@@ -787,7 +787,7 @@ public class GeneralQuery implements Serializable {
 	    /** Square root scaling for the levels in SkyView images.*/
 	    SQRT
     };
-    
+
     /**
      * Scaling types for the levels in SkyView images.
      */
@@ -796,7 +796,7 @@ public class GeneralQuery implements Serializable {
     /**
      * The set of surveys for Skyview queries.
      */
-     public static enum SKYVIEW_SURVEY {
+     public enum SKYVIEW_SURVEY {
     	/** Bonn 1420 MHz Survey survey for SkyView. */
     	BONN_1420MHZ,
     	/** HI All-Sky Continuum Survey survey for SkyView. */
@@ -1174,11 +1174,11 @@ public class GeneralQuery implements Serializable {
      /**
       * Main suggested surveys for SkyView as an array of length 6: Gamma rays, X Rays, UV, optical, IR, Radio.
       */
-     public static final String[] SKYVIEW_SUGGESTED_SURVEYS = new String[] {SKYVIEW_SURVEYS[SKYVIEW_SURVEY.EGRETHARD.ordinal()], SKYVIEW_SURVEYS[SKYVIEW_SURVEY.PSPC1CNT.ordinal()], 
-    	 SKYVIEW_SURVEYS[SKYVIEW_SURVEY.EUVE83.ordinal()], SKYVIEW_SURVEYS[SKYVIEW_SURVEY.DSSOLD.ordinal()], SKYVIEW_SURVEYS[SKYVIEW_SURVEY.K_2MASS.ordinal()], 
+     public static final String[] SKYVIEW_SUGGESTED_SURVEYS = new String[] {SKYVIEW_SURVEYS[SKYVIEW_SURVEY.EGRETHARD.ordinal()], SKYVIEW_SURVEYS[SKYVIEW_SURVEY.PSPC1CNT.ordinal()],
+    	 SKYVIEW_SURVEYS[SKYVIEW_SURVEY.EUVE83.ordinal()], SKYVIEW_SURVEYS[SKYVIEW_SURVEY.DSSOLD.ordinal()], SKYVIEW_SURVEYS[SKYVIEW_SURVEY.K_2MASS.ordinal()],
     	 SKYVIEW_SURVEYS[SKYVIEW_SURVEY.BONN_1420MHZ.ordinal()]};
      // Last 2 could also be IRIS100 and FIRST
-     
+
     /**
      * Returns the query string for SkyView.
      * @param name Object name to be solved by Simbad or NED. You can also set as source the RA and
@@ -1192,28 +1192,28 @@ public class GeneralQuery implements Serializable {
      * @param sproj Projection type. May be null (TAN).
      * @param slut LUT color table. May be null (Gray image).
      * @param sscale Scale for the levels. May be null (Log).
-     * @param catalog Name of one or several Vizier catalogs (separated by comma) to request 
+     * @param catalog Name of one or several Vizier catalogs (separated by comma) to request
      * and draw sources. Can be null.
-     * @param contours Draw image contours from one survey on top of another. A value of the 
-     * contour setting may comprise up to 5 colon separated fields. The first is the survey 
-     * from which the contours are to be drawn. The second is the scaling of the contours, 
-     * either 'Log', 'Sqrt' or 'Linear' (default Linear). The third value is the number of 
-     * contours (default 4) which is followed by values for the first and last contours. One, 
-     * two, three or all five values may be specified. More than one survey can be contoured 
+     * @param contours Draw image contours from one survey on top of another. A value of the
+     * contour setting may comprise up to 5 colon separated fields. The first is the survey
+     * from which the contours are to be drawn. The second is the scaling of the contours,
+     * either 'Log', 'Sqrt' or 'Linear' (default Linear). The third value is the number of
+     * contours (default 4) which is followed by values for the first and last contours. One,
+     * two, three or all five values may be specified. More than one survey can be contoured
      * by using comma as a separator. Example: 408mhz:Log:6:1:1000. Can be null.
      * @return The query for a PNG image.
      * @throws JPARSECException if the name or the survey is null.
      */
-    public static String getQueryToSkyView(String name, SKYVIEW_SURVEY survey, double field, int width, boolean invert, boolean grid, 
+    public static String getQueryToSkyView(String name, SKYVIEW_SURVEY survey, double field, int width, boolean invert, boolean grid,
     		SKYVIEW_COORDINATE scoord, SKYVIEW_PROJECTION sproj, SKYVIEW_LUT_TABLE slut, SKYVIEW_INTENSITY_SCALE sscale,
     		String catalog, String contours)
-    throws JPARSECException {   	
+    throws JPARSECException {
     	if (name == null || survey == null) throw new JPARSECException("invalid input.");
 		name = DataSet.replaceAll(name, " ", "+", true);
     	String position = "Position="+name;
     	String s = "Survey="+SKYVIEW_SURVEYS[survey.ordinal()];
     	String coordinates = "", projection = "", inver = "", lu = "", rgb = "", scaling = "";
-    	
+
     	String coord = null, proj = null, lut = null, scale = null;
     	if (scoord != null) coord = SKYVIEW_COORDINATES[scoord.ordinal()];
     	if (sproj != null) proj = SKYVIEW_PROJECTIONS[sproj.ordinal()];
@@ -1241,9 +1241,9 @@ public class GeneralQuery implements Serializable {
     	if (catalog != null && !catalog.equals("")) cat = "catalog="+catalog+"&catalogIDs&";
     	String con = "";
     	if (contours != null && !contours.equals("")) con = "contour="+contours+"&";
-    	
+
 		String query = "http://skyview.gsfc.nasa.gov/cgi-bin/images?";
 		query += position+"&"+s+"&"+coordinates+projection+retur+scaling+rgb+inver+lu+gri+cat+con+fieldView+size;
-		return query;	
+		return query;
     }
 }

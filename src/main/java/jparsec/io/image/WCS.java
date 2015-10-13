@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.io.image;
 
 import static java.lang.Double.NaN;
@@ -39,23 +39,21 @@ import jparsec.graph.DataSet;
 import jparsec.math.Constant;
 import jparsec.observer.LocationElement;
 import jparsec.util.JPARSECException;
-
 import jsky.coords.WCSTransform;
-
 import skyview.geometry.CoordinateSystem;
 import skyview.geometry.Projection;
 import skyview.geometry.Rotater;
 import skyview.geometry.Scaler;
 import skyview.geometry.TransformationException;
 
-/** 
+/**
 * The World Coordinates System (WCS) describes the coordinates of the
 * image. It makes it possible to convert image coordinates to sky coordinates
 * and vice versa. This class provides methods for such transformations using
 * the SkyView and JSky implementations. SkyView is the default method, with
 * the advantage of supporting image distortion poynomials. The JSky implementation
 * supports a wider variety of projections, but not distortions, and is used
-* instead of SkyView in case the projection is not supported there. The WCS 
+* instead of SkyView in case the projection is not supported there. The WCS
 * consists of the following parameters:
 * <ul>
 *  <li>crval1 : Right ascension of the center in degrees.</li>
@@ -109,18 +107,18 @@ import skyview.geometry.TransformationException;
 * Units for the parameters are degrees and pixels, measured from top-left corner (0, 0)
 * as usual. In addition, it is necessary to know the width and height of the image.
 * Some projections only works correctly (direct transformations giving the same
-* unique results as the input for the inverse one) if the field of view is little enough, 
-* specially in the x axis, since the parameters used by WCS, provided in the .fits 
+* unique results as the input for the inverse one) if the field of view is little enough,
+* specially in the x axis, since the parameters used by WCS, provided in the .fits
 * files and described above, can only be strictly applied to linear transformations.
-* 
-* In case your image has a wide field of view and this is a limitation you can consider 
+*
+* In case your image has a wide field of view and this is a limitation you can consider
 * using {@linkplain Astrometry} class instead.
-* 
+*
 * @author T. Alonso Albi - OAN (Spain)
 * @version 1.0
 * @see Astrometry
 */
-public class WCS implements Serializable 
+public class WCS implements Serializable
 {
 	/**
 	 * This flags selects if SkyView implementation of WCS should be used (true), or if
@@ -128,7 +126,7 @@ public class WCS implements Serializable
 	 * will be changed to false in case a given projection is not supported in SkyView.
 	 */
 	public transient boolean useSkyViewImplementation = true;
-	
+
 	  private double crval1;
 	  private double crval2;
 	  private double crpix1;
@@ -148,12 +146,12 @@ public class WCS implements Serializable
 	  private transient double lonpole = NaN;
 
 	  /** Version id for serialization.  */
-	  static final long serialVersionUID = 1L;
+	  private static final long serialVersionUID = 1L;
 
 	  /**
 	   * The set of possible projections.
 	   */
-	  public static enum PROJECTION {
+	  public enum PROJECTION {
 		  /** ID code for Zenithal (Azimuthal) Perspective. */
 		  AZP,
 		  /** Slant Zenithal Perspective. */
@@ -212,7 +210,7 @@ public class WCS implements Serializable
 		  GLS
 	  };
 
-	  /** 
+	  /**
 	   * The default constructor for the World Coordinate System sets the
 	   * following standard values:
 	   * <ul>
@@ -255,11 +253,11 @@ public class WCS implements Serializable
 	   * @param height Height of the image in pixels.
 	   * @param field Field of the image in radians.
 	   * @param eastLeft True to show East direction towards left, false to show East
-	   * rightwards. 
+	   * rightwards.
 	   * @param northUp True to show North upwards, false to show it downwards.
 	   * @param epoch Epoch for the coordinates as a year with decimals, for instance 2000.0.
 	   */
-	  public WCS(LocationElement loc, int width, int height, double field, boolean eastLeft, boolean northUp, 
+	  public WCS(LocationElement loc, int width, int height, double field, boolean eastLeft, boolean northUp,
 			  double epoch) {
 		    crval1 = loc.getLongitude() * Constant.RAD_TO_DEG;
 		    crval2 = loc.getLatitude() * Constant.RAD_TO_DEG;
@@ -279,10 +277,11 @@ public class WCS implements Serializable
 		    this.height = height;
 	  }
 
-	  /** 
+	  /**
 	   * Copies this instance.
 	   * @return The copy.
 	   */
+	  @Override
 	  public WCS clone()
 	  {
 		  WCS w = new WCS();
@@ -302,7 +301,7 @@ public class WCS implements Serializable
 		  return w;
 	  }
 
-	  /** 
+	  /**
 	   * Imports a fits file from the given filename.
 	   * Key values that should be available in the header include
 	   * NAXIS1, NAXIS2, CRVAL1, CRVAL2, CRPIX1, CRPIX2, CDELT1, CDELT2,
@@ -321,7 +320,7 @@ public class WCS implements Serializable
 		    init(header);
 	  }
 
-	  /** 
+	  /**
 	   * Imports a fits file from the given fits header.
 	   * Key values that should be available in the header include
 	   * NAXIS1, NAXIS2, CRVAL1, CRVAL2, CRPIX1, CRPIX2, CDELT1, CDELT2,
@@ -356,7 +355,7 @@ public class WCS implements Serializable
 		    } else {
 		    	this.setCrota2(this.getKeywordValue(header, "CROTA1", 0.0));
 		    }
-		    
+
 		    if (ImageHeaderElement.getByKey(header, "PC1_1") != null) {
 		    	pc = new double[] {
 		    			getKeywordValue(header, "PC1_1", NaN),
@@ -375,7 +374,7 @@ public class WCS implements Serializable
 		    }
 		    if (ImageHeaderElement.getByKey(header, "LONPOLE") != null) lonpole = getKeywordValue(header, "LONPOLE", NaN);
 	  }
-	  
+
 	  /**
 	   * Returns the WCS instance as a header for a fits file.
 	   * @return The header object with the required fields for the WCS.
@@ -416,7 +415,7 @@ public class WCS implements Serializable
 			if (lonpole != NaN) out = ImageHeaderElement.addHeaderEntry(out, new ImageHeaderElement("LONPOLE", ""+lonpole, ""));
 			return out;
 	  }
-	  
+
 	  private double getKeywordValue(ImageHeaderElement header[], String key, double value)
 	  {
 		  ImageHeaderElement h = ImageHeaderElement.getByKey(header, key);
@@ -436,12 +435,12 @@ public class WCS implements Serializable
 		  return h.value;
 	  }
 
-	  /** 
+	  /**
 	   * Sets the projection type name of the x coordinate.
 	   *
 	   * @param ctype1 The projection type name of the x coordinate (RA--, GLON
 	   * 					or ELON).
-	   * @return True if the value of the keyword is changed, otherwise false 
+	   * @return True if the value of the keyword is changed, otherwise false
 	   * (if the length of the provided string is not 8).
 	   */
 	  private boolean setCtype1(String ctype1)
@@ -459,12 +458,12 @@ public class WCS implements Serializable
 	  }
 
 
-	  /** 
+	  /**
 	   * Sets the projection type name of the y coordinate.
 	   *
 	   * @param ctype2 The projection type name of the y coordinate (DEC-, GLAT
 	   * 					or ELAT).
-	   * @return True if the value of the keyword is changed, otherwise false 
+	   * @return True if the value of the keyword is changed, otherwise false
 	   * (if the length of the provided string is not 8).
 	   */
 	  private boolean setCtype2(String ctype2)
@@ -482,7 +481,7 @@ public class WCS implements Serializable
 	  }
 
 
-	  /** 
+	  /**
 	   * Returns the projection type name of the x coordinate.
 	   *
 	   * @return A String describing the projection type name of the x coordinate.
@@ -493,7 +492,7 @@ public class WCS implements Serializable
 	  }
 
 
-	  /** 
+	  /**
 	   * Returns the projection type name of the y coordinate.
 	   *
 	   * @return A String describing the projection type name of the y coordinate.
@@ -504,7 +503,7 @@ public class WCS implements Serializable
 	  }
 
 
-	  /** 
+	  /**
 	   * Sets the center coordinate as right ascension or longitude.
 	   *
 	   * @param crval1 The center right ascension or longitude (in degrees).
@@ -516,7 +515,7 @@ public class WCS implements Serializable
 	  }
 
 
-	  /** 
+	  /**
 	   * Returns the center right ascension.
 	   *
 	   * @return The center right ascension (in degrees).
@@ -527,7 +526,7 @@ public class WCS implements Serializable
 	  }
 
 
-	  /** 
+	  /**
 	   * Sets the center coordinate as declination or latitude.
 	   *
 	   * @param crval2 The center declination or latitude (in degrees).
@@ -539,7 +538,7 @@ public class WCS implements Serializable
 	  }
 
 
-	  /** 
+	  /**
 	   * Returns the center coordinate as declination or latitude.
 	   *
 	   * @return The center declination or latitude (in degrees).
@@ -550,7 +549,7 @@ public class WCS implements Serializable
 	  }
 
 
-	  /** 
+	  /**
 	   * Sets the center coordinate in pixel coordinates.
 	   *
 	   * @param crpix1 The center coordinate (X) in pixel coordinates.
@@ -562,7 +561,7 @@ public class WCS implements Serializable
 	  }
 
 
-	  /** 
+	  /**
 	   * Returns the pixel coordinates of the reference point (X) to
 	   * which the projection and the rotation refer.
 	   *
@@ -575,7 +574,7 @@ public class WCS implements Serializable
 	  }
 
 
-	  /** 
+	  /**
 	   * Sets the center coordinate in pixel coordinates.
 	   *
 	   * @param crpix2 The center coordinate (Y) in pixel coordinates.
@@ -587,7 +586,7 @@ public class WCS implements Serializable
 	  }
 
 
-	  /** 
+	  /**
 	   * Returns the pixel coordinates of the reference point (Y) to
 	   * which the projection and the rotation refer.
 	   *
@@ -600,7 +599,7 @@ public class WCS implements Serializable
 	  }
 
 
-	  /** 
+	  /**
 	   * Sets the plate scale in degrees per pixel along the x-axis.
 	   *
 	   * @param cdelt1 The plate scale in degrees per pixel along the x-axis.
@@ -612,7 +611,7 @@ public class WCS implements Serializable
 	  }
 
 
-	  /** 
+	  /**
 	   * Returns the plate scale in degrees per pixel along the x-axis.
 	   *
 	   * @return The plate scale in degrees per pixel along the x-axis.
@@ -623,7 +622,7 @@ public class WCS implements Serializable
 	  }
 
 
-	  /** 
+	  /**
 	   * Sets the plate scale in degrees per pixel along the y-axis.
 	   *
 	   * @param cdelt2 The plate scale in degrees per pixel along the y-axis.
@@ -635,7 +634,7 @@ public class WCS implements Serializable
 	  }
 
 
-	  /** 
+	  /**
 	   * Returns the plate scale in degrees per pixel along the y-axis.
 	   *
 	   * @return The plate scale in degrees per pixel along the y-axis.
@@ -646,7 +645,7 @@ public class WCS implements Serializable
 	  }
 
 
-	  /** 
+	  /**
 	   * Sets the rotation of the horizontal and vertical axes in
 	   * degrees.
 	   *
@@ -659,7 +658,7 @@ public class WCS implements Serializable
 	  }
 
 
-	  /** 
+	  /**
 	   * Returns the rotation of the horizontal and vertical axes in
 	   * degrees.
 	   *
@@ -671,7 +670,7 @@ public class WCS implements Serializable
 	  }
 
 
-	  /** 
+	  /**
 	   * Sets the equinox (1950 and 2000 are supported).
 	   *
 	   * @param equinox The equinox.
@@ -683,7 +682,7 @@ public class WCS implements Serializable
 	  }
 
 
-	  /** 
+	  /**
 	   * Returns the equinox (1950 and 2000 are supported).
 	   *
 	   * @return The equinox.
@@ -694,7 +693,7 @@ public class WCS implements Serializable
 	  }
 
 
-	  /** 
+	  /**
 	   * Sets the epoch.
 	   *
 	   * @param epoch The epoch.
@@ -706,7 +705,7 @@ public class WCS implements Serializable
 	  }
 
 
-	  /** 
+	  /**
 	   * Returns the epoch.
 	   *
 	   * @return The epoch.
@@ -748,7 +747,7 @@ public class WCS implements Serializable
 	  {
 		  this.height = h;
 	  }
-	  
+
 	  /**
 	   * Returns the CD polynomial with the distortion.
 	   * @return CD1_1, CD1_2, CD2_1, and CD2_2 values.
@@ -765,7 +764,7 @@ public class WCS implements Serializable
 	   * Sets the values of the CD polynomial with the distortions.
 	   * @param c CD1_1, CD1_2, CD2_1, and CD2_2 values (or null).
 	   */
-	  public void setCD(double c[]) { 
+	  public void setCD(double c[]) {
 		  cd = c;
 		  wcs = null;
 	  }
@@ -773,12 +772,12 @@ public class WCS implements Serializable
 	   * Sets the values of the PC polynomial with the distortions.
 	   * @param c PC1_1, PC1_2, PC2_1, and PC2_2 values (or null).
 	   */
-	  public void setPC(double c[]) { 
-		  pc = c; 		  
+	  public void setPC(double c[]) {
+		  pc = c;
 		  wcs = null;
 	  }
-	  
-	  /** 
+
+	  /**
 	   * Sets the projection type. The last 4 characters of ctype1 and ctype2
 	   * will be adapted to reflect the new projection.
 	   *
@@ -792,7 +791,7 @@ public class WCS implements Serializable
 	      wcs = null;
 	  }
 
-	  /** 
+	  /**
 	   * Returns a string representing the projection type (the four last
 	   * characters of ctype1).
 	   *
@@ -804,11 +803,11 @@ public class WCS implements Serializable
 	    return PROJECTION.valueOf(p);
 	  }
 
-	  /** 
+	  /**
 	   * Sets the coordinate system.
 	   * @param cs The coordinate system. Note horizontal is not supported.
 	   * @throws JPARSECException In case the ctype1 or ctype2 fields
-	   * are set to an inconsistent value. 
+	   * are set to an inconsistent value.
 	   */
 	  public void setCoordinateSystem(COORDINATE_SYSTEM cs) throws JPARSECException
 	  {
@@ -834,11 +833,11 @@ public class WCS implements Serializable
 	    	  throw new JPARSECException("Inconsistent values for ctype1 and/or ctype2: "+ctype1+", "+ctype2);
 	  }
 
-	  /** 
+	  /**
 	   * Returns the coordinate system.
 	   * @return The coordinate system.
 	   * @throws JPARSECException In case the ctype1 or ctype2 fields
-	   * are set to an inconsistent value. 
+	   * are set to an inconsistent value.
 	   */
 	  public COORDINATE_SYSTEM getCoordinateSystem() throws JPARSECException
 	  {
@@ -852,7 +851,7 @@ public class WCS implements Serializable
 		  return out;
 	  }
 
-	  /** 
+	  /**
 	   * Returns a string representing the projection type (the four last
 	   * characters of ctype1).
 	   *
@@ -864,12 +863,13 @@ public class WCS implements Serializable
 	  }
 
 
-	  /** 
+	  /**
 	   * Returns a string representation of the values of the WCS object.
 	   * The format of this string is undefined and subject to change.
 	   *
 	   * @return A string representation of the values of the WCS object.
 	   */
+	  @Override
 	  public String toString()
 	  {
 	    StringBuffer toReturn = new StringBuffer(400);
@@ -917,7 +917,7 @@ public class WCS implements Serializable
 		   os.writeDouble(this.epoch);
 		   os.writeDouble(this.crota2);
 		   os.writeInt(this.width);
-		   os.writeInt(this.height);		   
+		   os.writeInt(this.height);
 	   } else {
 		   os.writeObject(new String[] {this.ctype1, ctype2});
 		   os.writeObject(new Object[] {pc, cd, lonpole});
@@ -956,7 +956,7 @@ public class WCS implements Serializable
 		   this.setEpoch(is.readDouble());
 		   this.setCrota2(is.readDouble());
 		   this.setWidth(is.readInt());
-		   this.setHeight(is.readInt());		   
+		   this.setHeight(is.readInt());
 		   this.setPC((double[])obj1[0]);
 		   this.setCD((double[])obj1[1]);
 		   this.lonpole = ((Double)obj1[2]);
@@ -984,7 +984,7 @@ public class WCS implements Serializable
         }
 
         coords = CoordinateSystem.factory(coordSym);
-        
+
         Projection proj = null;
         Scaler ncpScale = null;
 
@@ -1042,7 +1042,7 @@ public class WCS implements Serializable
                 // ----- this is the default for all zenithal images.
                 // ----- Previously we assumed that we were using lonPole=0 at
                 // ----- at the poles, but we weren't....
-                // 
+                //
 
                 if (!isNaN(lonpole)) {
                     double lonDefault = 180;
@@ -1083,8 +1083,8 @@ public class WCS implements Serializable
                 throw new TransformationException("Unsupported projection type:" + lonType);
             }
         }
-        
-        
+
+
         // There are three ways that scaling information may be provided:
         //    CDELTn, CRPIXn, and CROTAn
         //    CDm_n, CRPIXn
@@ -1108,14 +1108,14 @@ public class WCS implements Serializable
         // No scaling information found.
         throw new JPARSECException("No scaling information found in FITS header");
 	 }
-	 
+
 	    /**
 	     * Get the scaling when CDELT is specified
 	     */
 	    private Scaler extractScaler1(double crpix1, double crpix2) throws TransformationException {
 
 	    	boolean matrix = false;
-	    	
+
 	        // We use 1 indexing to match better with the FITS files.
 	        double m11, m12, m21, m22;
 
@@ -1145,7 +1145,7 @@ public class WCS implements Serializable
 
 
 	        // Note that Scaler is defined with parameters t = x0 + a00 x + a01 y; u = y0 + a10 x + a11 y
-	        // which is different from what we have here...  
+	        // which is different from what we have here...
 	        //    t = scalex (x-x0),  u = scaley (y-y0)
 	        //    t = scalex x - scalex x0; u = scaley y - scaley y0
 	        // or
@@ -1177,7 +1177,7 @@ public class WCS implements Serializable
 	    private Scaler extractScaler2(double crpix1, double crpix2) throws TransformationException {
 
 	        // Look for the CD matrix...
-	        // 
+	        //
         	double m11 = NaN, m12 = NaN, m21 = NaN, m22 = NaN;
         	if (cd != null) {
 	            m11 = cd[0];
@@ -1199,7 +1199,7 @@ public class WCS implements Serializable
 	        // we have
 	        //   t = a11 (x-x0) + a12 (y-y0); u = a21(x-x0) + a22(y-y0)
 	        //       t = a11x + a12y - a11 x0 - a12 y0;
-	        // 
+	        //
 	        Scaler s = new Scaler(-m11 * crpix1 - m12 * crpix2, -m21 * crpix1 - m22 * crpix2,
 	                m11, m12, m21, m22);
 
@@ -1207,19 +1207,19 @@ public class WCS implements Serializable
 
 	        return s;
 	    }
-	    
-	  /** 
+
+	  /**
 	   * Returns the right ascension and the declination of the given pixel. The
 	   * row and column should be given as arguments. These values are typically
 	   * measured from the top-left corner of the image, being usually 1 the center of
-	   * the first pixel in the image (with index 0 in the Java array). Note the WCS 
+	   * the first pixel in the image (with index 0 in the Java array). Note the WCS
 	   * instance alone cannot know which pixel is the first.
 	   *
-	   * @param p A 2d-point with the column and row of the pixel for which the 
+	   * @param p A 2d-point with the column and row of the pixel for which the
 	   * sky coordinates should be calculated.
 	   * @return A location object describing the right
 	   * ascension and the declination of the given pixel.
-	   * @throws JPARSECException If an error occurs. 
+	   * @throws JPARSECException If an error occurs.
 	   */
 	  public LocationElement getSkyCoordinates(Point2D p) throws JPARSECException
 	  {
@@ -1232,7 +1232,7 @@ public class WCS implements Serializable
 			  }
 		  }
 		  if (wcs != null) return wcs.getSkyCoordinates(p);
-		  
+
 		  // Use JSky without considering distortions
 		  WCSTransform wcstrans = new WCSTransform(
 				  this.getCrval1(), this.getCrval2(),
@@ -1249,11 +1249,11 @@ public class WCS implements Serializable
 		  return new LocationElement(pd.getX() * Constant.DEG_TO_RAD, pd.getY() * Constant.DEG_TO_RAD, 1.0);
 	  }
 
-	  /** 
+	  /**
 	   * Returns the pixel coordinates of the given sky coordinates. The pixel
 	   * coordinates are the row and the column of the image. These values are typically
 	   * measured from the top-left corner of the image, being usually 1 the center of
-	   * the first pixel in the image (with index 0 in the Java array). Note the WCS 
+	   * the first pixel in the image (with index 0 in the Java array). Note the WCS
 	   * instance alone cannot know which pixel is the first.
 	   *
 	   * @param loc The right ascension and declination.
@@ -1268,7 +1268,7 @@ public class WCS implements Serializable
 	  {
 		  if (wcs == null && useSkyViewImplementation) {
 			  try {
-				  wcs = getSkyViewWCS(); 
+				  wcs = getSkyViewWCS();
 			  } catch (Exception exc) {
 				  useSkyViewImplementation = false;
 				  JPARSECException.addWarning("Using JSky implementation instead of SkyView's one for WCS, since SkyView does not support this projection. Image distortions will not be considered.");
@@ -1288,12 +1288,12 @@ public class WCS implements Serializable
 				  this.getProjectionAsString());
 
 		  Point2D.Double p;
-		  
+
 		  // image coords
 		  p = new Point2D.Double(loc.getLongitude()*Constant.RAD_TO_DEG,
 				  loc.getLatitude()*Constant.RAD_TO_DEG);
 		  wcstrans.worldToImageCoords(p, false);
-		  
+
 		  return p;
 	  }
 
@@ -1303,6 +1303,6 @@ public class WCS implements Serializable
 	   * @return Same input but with all WCS entries removed.
 	   */
 	  public static ImageHeaderElement[] removeWCSentries(ImageHeaderElement header[]) {
-			return ImageHeaderElement.deleteHeaderEntries(header, DataSet.toStringArray("CRVAL1,CRVAL2,CRPIX1,CRPIX2,CDELT1,CDELT2,CTYPE1,CTYPE2,EQUINOX,EPOCH,CROTA1,CROTA2,PC1_1,PC1_2,PC2_1,PC2_2,CD1_1,CD1_2,CD2_1,CD2_2,LONPOLE", ",", false));			
+			return ImageHeaderElement.deleteHeaderEntries(header, DataSet.toStringArray("CRVAL1,CRVAL2,CRPIX1,CRPIX2,CDELT1,CDELT2,CTYPE1,CTYPE2,EQUINOX,EPOCH,CROTA1,CROTA2,PC1_1,PC1_2,PC2_1,PC2_2,CD1_1,CD1_2,CD2_1,CD2_2,LONPOLE", ",", false));
 	  }
 }

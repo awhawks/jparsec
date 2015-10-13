@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.astrophysics.gildas;
 
 /**
@@ -32,11 +32,11 @@ package jparsec.astrophysics.gildas;
  *
  * @author Mark MacBeth
  */
-public class ByteArrayConverter 
+public class ByteArrayConverter
 {
 	// private constructor so that this class cannot be instantiated.
 	private ByteArrayConverter() {}
-	
+
   /**
    * Reads a short value.
    * @param array The array containing the value.
@@ -46,13 +46,13 @@ public class ByteArrayConverter
   public static short readShort(byte[] array, int offset) {
       /*
 	every byte being recombined needs to have all high-end bits masked out.
-	This is because of the implicit conversion to an integer when it is 
+	This is because of the implicit conversion to an integer when it is
 	loaded from an array which causes a sign extension.  For instance, if
 	the byte being extacted is 0x80, it gets converted into an integer with
 	the value 0xffffff80.  If that bare integer value gets | (ORed) with
 	the high byte, an unwanted negative sign extension can be introduced.
       */
-      return (short)((array[offset] << 8) | 
+      return (short)((array[offset] << 8) |
 		   (array[offset + 1] & 0xff));
   }
 
@@ -79,7 +79,7 @@ public class ByteArrayConverter
 		((array[offset + 2] & 0xff) << 8)  |
 		(array[offset + 3] & 0xff));
     }
-    
+
     /**
      * Writes an integer value.
      * @param array The array where the value will be written.
@@ -92,7 +92,7 @@ public class ByteArrayConverter
 		array[offset + 2] = (byte)(value >> 8);
 		array[offset + 3] = (byte)value;
     }
-    
+
 
     /**
      * Reads a float value.
@@ -103,7 +103,7 @@ public class ByteArrayConverter
     public static float readFloat(byte[] array, int offset) {
     	return Float.intBitsToFloat(readInt(array, offset));
     }
-    
+
     /**
      * Writes a float value.
      * @param array The array where the value will be written.
@@ -112,8 +112,8 @@ public class ByteArrayConverter
      */
     public static void writeFloat(byte[] array, int offset, float value) {
     	writeInt(array, offset, Float.floatToIntBits(value));
-    }	
-    
+    }
+
     /**
      * Reads a double value.
      * @param array The array containing the value.
@@ -122,8 +122,8 @@ public class ByteArrayConverter
      */
     public static double readDouble(byte[] array, int offset) {
     	return Double.longBitsToDouble(readLong(array, offset));
-    }	
-    
+    }
+
     /**
      * Writes a double value.
      * @param array The array where the value will be written.
@@ -133,7 +133,7 @@ public class ByteArrayConverter
     public static void writeDouble(byte[] array, int offset, double value) {
     	writeLong(array, offset, Double.doubleToLongBits(value));
     }
-    
+
     /**
      * Reads a long value.
      * @param array The array containing the value.
@@ -141,7 +141,7 @@ public class ByteArrayConverter
      * @return The value.
      */
     public static long readLong(byte[] array, int offset) {
-    	return (((long)array[offset] << 56)              | 
+    	return (((long)array[offset] << 56)              |
     			((long)(array[offset + 1] & 0xff) << 48) |
     			((long)(array[offset + 2] & 0xff) << 40) |
     			((long)(array[offset + 3] & 0xff) << 32) |
@@ -150,7 +150,7 @@ public class ByteArrayConverter
     			((long)(array[offset + 6] & 0xff) << 8)  |
     			((long)array[offset + 7] & 0xff));
     }
-    
+
     /**
      * Writes a long value.
      * @param array The array where the value will be written.

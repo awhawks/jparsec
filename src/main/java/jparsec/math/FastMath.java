@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -28,22 +28,21 @@ import jparsec.ephem.Functions;
  * Memory consumption is low, about 7 kB per trigonometric table, and speed is
  * several times better. Some methods comes from the FastMath library by Bill Rossi,
  * integrated in Apache Commons Math.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
-public class FastMath 
+public class FastMath
 {
 	// private constructor so that this class cannot be instantiated.
 	private FastMath() {}
-	
+
 	// The value of N cannot be too high in old computers due to memory limitations
 	private static int N = 3600; // 0.1 degree precision
-	private static float[] sin;
-	private static float[] tan;
-	private static float[] asin;
-	private static final double PI2 = Constant.TWO_PI;
-	private static double STEP = PI2 / N, STEP_INVERSE = 1.0 / STEP;
+	private static float[] sin = null;
+	private static float[] tan = null;
+	private static float[] asin = null;
+	private static double STEP = Constant.TWO_PI / N, STEP_INVERSE = 1.0 / STEP;
 	private static int A_N = N * 10; // 0.01 degree precision
 	protected static double A_STEP = 1.0 / A_N;
 	private static double PI3_OVER_2 = 3.0 * Constant.PI_OVER_TWO;
@@ -61,7 +60,7 @@ public class FastMath
 	 * Set to true to use exact mode, with no speed optimization. Default is false.
 	 */
 	public static boolean EXACT_MODE = false;
-	
+
 	/** Exponential evaluated at integer values,
      * exp(x) =  expIntTableA[x + 750] + expIntTableB[x+750].
      */
@@ -91,14 +90,6 @@ public class FastMath
     /** Factorial table, for Taylor series expansions. */
     private static final double FACT[] = new double[20];
 
-	public static double getPI2() {
-		return PI2;
-	}
-
-	public static double getSTEP() {
-		return STEP;
-	}
-
 	/**
 	 * Initializes the cache for sin and cos and the rest.
 	 */
@@ -119,7 +110,7 @@ public class FastMath
 			double aval = (double) i * A_STEP;
 			asin[i] = (float) Math.asin(aval);
 		}
-	
+
 		pow10 = new double[634];
 		for (int i=0; i<pow10.length;i++)
 		{
@@ -132,7 +123,7 @@ public class FastMath
         for (i = 1; i < FACT.length; i++) {
             FACT[i] = FACT[i-1] * i;
         }
-        
+
         double tmp[] = new double[2];
         double recip[] = new double[2];
 
@@ -149,7 +140,7 @@ public class FastMath
                 EXP_INT_TABLE_B[750-i] = recip[1];
             }
         }
-        
+
         // Populate expFracTable
         for (i = 0; i < EXP_FRAC_TABLE_A.length; i++) {
             slowexp(i/1024.0, tmp);
@@ -157,20 +148,20 @@ public class FastMath
             EXP_FRAC_TABLE_B[i] = tmp[1];
         }
 	}
-	
+
 	/**
 	 * Sets the maximum number of angles to calculate.
 	 * Default value is 3600, producing errors in the sin/cos
-	 * values of around 4E-7 if {@linkplain #ACCURATE_MODE} is true. 
+	 * values of around 4E-7 if {@linkplain #ACCURATE_MODE} is true.
 	 * The initialization of the
-	 * variables sin and cos is also done when calling this 
+	 * variables sin and cos is also done when calling this
 	 * method.
 	 * @param n The number of angles.
 	 */
 	public static void setMaximumNumberOfAngles(int n) {
 		N = n;
 		A_N = N * 10;
-		STEP = PI2 / N;
+		STEP = Constant.TWO_PI / N;
 		A_STEP = 1.0 / A_N;
 		STEP_INVERSE = 1.0 / STEP;
 		initialize();
@@ -183,7 +174,7 @@ public class FastMath
 	public static int getMaximumNumberOfAngles() {
 		return N;
 	}
-	
+
 	/**
 	 * Returns the resolution of the calculations,
 	 * defined as the number of calculation angles
@@ -193,7 +184,7 @@ public class FastMath
 	public static double getResolution() {
 		return STEP;
 	}
-	
+
 	/**
 	 * Calculates the sine of the argument.
 	 * @param x Argument.
@@ -202,18 +193,18 @@ public class FastMath
 	public static double sin(double x)
 	{
 		if (EXACT_MODE) return Math.sin(x);
-		
+
 		if (sin == null) FastMath.initialize();
-		if (x < 0 || x > PI2)
+		if (x < 0 || x > Constant.TWO_PI)
 			x = Functions.normalizeRadians(x);
-		
+
 		if (!ACCURATE_MODE) return sin[(int) (0.5 + x * STEP_INVERSE)];
 		double di = x * STEP_INVERSE;
 		int i = (int) di;
 		if (i == di) return sin[i];
 		return sin[i] + (sin[1 + i] - sin[i]) * (di - i);
 	}
-	
+
 	/**
 	 * Calculates the cosine of the argument.
 	 * @param x Argument.
@@ -222,11 +213,11 @@ public class FastMath
 	public static double cos(double x)
 	{
 		if (EXACT_MODE) return Math.cos(x);
-		
+
 		if (sin == null) FastMath.initialize();
-		if (x < 0 || x > PI2)
+		if (x < 0 || x > Constant.TWO_PI)
 			x = Functions.normalizeRadians(x);
-		
+
 		double di = N_4 - x * STEP_INVERSE;
 		if (di > N) di -= N;
 		if (!ACCURATE_MODE) return sin[(int) (0.5 + di)];
@@ -234,7 +225,7 @@ public class FastMath
 		if (i == di) return sin[i];
 		return sin[i] + (sin[1 + i] - sin[i]) * (di - i);
 	}
-	
+
 	/**
 	 * Computes the sine and cosine of the argument in one call.
 	 * @param x The argument.
@@ -249,11 +240,11 @@ public class FastMath
 			sincos[1] = Math.cos(x);
 			return;
 		}
-		
+
 		if (sin == null) FastMath.initialize();
-		if (x < 0 || x > PI2)
+		if (x < 0 || x > Constant.TWO_PI)
 			x = Functions.normalizeRadians(x);
-		
+
 		double di = x * STEP_INVERSE;
 		if (fast || !ACCURATE_MODE) {
 			sincos[0] = sin[(int) (0.5 + di)];
@@ -290,20 +281,20 @@ public class FastMath
 	public static double tan(double x)
 	{
 		if (EXACT_MODE) return Math.tan(x);
-		
+
 		if (tan == null) FastMath.initialize();
-		if (x < 0 || x > PI2)
+		if (x < 0 || x > Constant.TWO_PI)
 			x = Functions.normalizeRadians(x);
 		if (Math.abs(Constant.PI_OVER_TWO-x) < 0.01 || Math.abs(PI3_OVER_2-x) < 0.01) return Math.tan(x);
-		
+
 		if (!ACCURATE_MODE) return tan[(int) (0.5 + x * STEP_INVERSE)];
-		
+
 		double di = x * STEP_INVERSE;
 		int i = (int) di;
 		if (i == N) return tan[i];
 		return tan[i] + (tan[1 + i] - tan[i]) * (di - i);
 	}
-	
+
 	/**
 	 * Calculates the sine of the argument.
 	 * @param x Argument.
@@ -332,12 +323,12 @@ public class FastMath
 	{
 		return (float) tan(x);
 	}
-	
+
 	/**
 	 * Calculates the arc-sine of the argument.
 	 * Accuracy similar or better compared to sin and cos
 	 * functions except for arguments very close to 1 or -1, where
-	 * errors up to 0.1 &ordm; can be reached. 33x faster than intrinsic.
+	 * errors up to 0.1&deg; can be reached. 33x faster than intrinsic.
 	 * @param x Argument.
 	 * @return Its arc-sine.
 	 */
@@ -345,13 +336,13 @@ public class FastMath
 	{
 		if (EXACT_MODE) return Math.asin(x);
 		if (x == 0) return x;
-		
+
 		double s = 1;
 		if (x < 0) {
 			x = Math.abs(x);
 			s = -1;
 		}
-		
+
 		if (asin == null) FastMath.initialize();
 		if (!ACCURATE_MODE) return s*asin[(int) (0.5 + x * A_N)];
 
@@ -365,7 +356,7 @@ public class FastMath
 	 * Calculates the arc-cosine of the argument.
 	 * Accuracy similar or better compared to sin and cos
 	 * functions except for arguments very close to 1 or -1, where
-	 * errors up to 0.1 &ordm; can be reached. 33x faster than intrinsic.
+	 * errors up to 0.1&deg; can be reached. 33x faster than intrinsic.
 	 * @param x Argument.
 	 * @return Its arc-cosine.
 	 */
@@ -397,7 +388,7 @@ public class FastMath
 		if (x < 20) {
 			return val >> x;
 		} else {
-			return (int) (val / Math.pow(2.0, x));			
+			return (int) (val / Math.pow(2.0, x));
 		}
 	}
 
@@ -424,13 +415,13 @@ public class FastMath
 	 * For angles between +/- 45 deg this function uses
 	 * {@linkplain #atan(double)}, with an accuracy 3 times
 	 * better and only slightly worse performance.
-	 * @param y Y value. 
+	 * @param y Y value.
 	 * @param x X value.
 	 * @return The atan2.
 	 */
 	public static double atan2(double y, double x) {
 		if (EXACT_MODE) return Math.atan2(y, x);
-		
+
 		if (Math.abs(y) <= Math.abs(x)) {
 			if (y >= 0.0 && x <= 0.0) {
 				if (x == 0.0 && y == 0.0) return 0;
@@ -440,10 +431,10 @@ public class FastMath
 			if (y < 0.0 && x <= 0.0) {
 				if (x == 0) return -Constant.PI_OVER_TWO;
 				return -Math.PI + FastMath.atan(y/x);
-			}		
+			}
 			return FastMath.atan(y/x);
 		}
-		
+
         if ( x == 0.0 )
         {
     		if (x == 0.0 && y == 0.0) return 0;
@@ -475,7 +466,7 @@ public class FastMath
 	 * Function created by Simon Hosie, see http://www.dsprelated.com/showmessage/10922/1.php.
 	 * <P>
 	 * In case {@linkplain #ACCURATE_MODE} is true more terms will be used, with a precision
-	 * up to 8E-5 radians (0.005 deg), but calculations will be slightly slower. This mode is 
+	 * up to 8E-5 radians (0.005 deg), but calculations will be slightly slower. This mode is
 	 * still 4.5 times faster than intrinsic Math.atan2.
 	 * @param y Y value.
 	 * @param x X value.
@@ -483,7 +474,7 @@ public class FastMath
 	 */
 	public static double atan2_accurate(double y, double x) {
 		if (EXACT_MODE) return Math.atan2(y, x);
-		
+
         if ( x == 0.0 )
         {
                 if ( y > 0.0 ) return Constant.PI_OVER_TWO;
@@ -495,7 +486,7 @@ public class FastMath
                 if ( x >= 0.0 ) return 0;
                 if ( x < 0.0 ) return Math.PI;
         }
-        
+
 		double result = 0;
 		double y2;
 
@@ -563,7 +554,7 @@ public class FastMath
 				x = 64 * x + y2;
 			}
 		}
-		
+
 		/* linear interpolation of the remaining 64-ant */
 		return result + 0.99483995637409152 * y / x;
 	}
@@ -578,10 +569,10 @@ public class FastMath
 		if (n > 0) return 1;
 		return -1;
 	}
-	
+
 
 	// http://martin.ankerl.com/2007/10/04/optimized-pow-approximation-for-java-and-c-c/
-	
+
 	/**
 	 * Returns the approximate arctan of the argument. Maximum error is 0.09 deg.
 	 * 20 times faster than intrinsic function. For x outside -1 to 1 the
@@ -592,24 +583,24 @@ public class FastMath
 	public static double atan(double x)
 	{
 		if (EXACT_MODE || x < -1.0 || x > 1.0) return Math.atan(x);
-		
+
 		if (x < 0.0) return Constant.PI_OVER_FOUR * x + x*(x + 1.0)*(0.2447 - 0.0663*x);
 	    return Constant.PI_OVER_FOUR * x - x*(x - 1.0)*(0.2447 + 0.0663*x);
 	}
 
 	/**
 	 * Performs fast approximate exponential function, with a maximum error
-	 * of 4%, and usually around 2%. 10 times faster than intrinsic function, 
+	 * of 4%, and usually around 2%. 10 times faster than intrinsic function,
 	 * and 3 times faster than {@linkplain #exp(double)}.
 	 * @param val The argument.
 	 * @return The exponential.
 	 */
 	public static double exp_approx(double val) {
 		if (EXACT_MODE) return Math.exp(val);
-		
+
 	    return Double.longBitsToDouble(((long) (1512775 * val + 1072632447)) << 32);
 	}
-	
+
 	// ****** METHODS FROM APACHE COMMONS MATH ******
 
     /**
@@ -670,7 +661,7 @@ public class FastMath
         /* Resplit */
         resplit(ans);
     }
-    
+
     /** Compute the reciprocal of in.  Use the following algorithm.
      *  in = c + d.
      *  want to find x + y such that x+y = 1/(c+d) and x is much
@@ -772,7 +763,7 @@ public class FastMath
         result[1] = result[1] - (tmp - result[0] - zs[1]);
         result[0] = tmp;
     }
-    
+
     /** Compute exp(x) - 1
      * @param x number to compute shifted exponential
      * @return exp(x) - 1
@@ -791,6 +782,8 @@ public class FastMath
             return x;
         }
 
+        if (sin == null) initialize();
+        
         if (x <= -1.0 || x >= 1.0) {
             // If not between +/- 1.0
             //return exp(x) - 1.0;
@@ -972,7 +965,7 @@ public class FastMath
 
         return ys[0] + ys[1];
     }
-	
+
 	/**
      * Exponential function. Just slightly faster than intrinsic exp.
      *
@@ -997,7 +990,7 @@ public class FastMath
 		//if (EXACT_MODE) return Math.exp(val);
         return exp(val, 0.0, null);
 	}
-	
+
     /**
      * Internal helper method for exponential function.
      * @param x original argument of the exponential function
@@ -1006,6 +999,8 @@ public class FastMath
      * @return exp(x)
      */
     private static double exp(double x, double extra, double[] hiPrec) {
+    	if (sin == null) initialize();
+    	
         double intPartA;
         double intPartB;
         int intVal;
@@ -1157,7 +1152,7 @@ public class FastMath
 
         return ys[0] + ys[1];
     }
-    
+
     /** Add two numbers in split form.
      * @param a first term of addition
      * @param b second term of addition
@@ -1169,10 +1164,10 @@ public class FastMath
 
         resplit(ans);
     }
-    
+
 	/**
-	 * Performs fast pow function. When y is integer and below +/- 6 output is exact 
-	 * and 6 times faster than Math.pow. When y is integer and x = 10 the function 
+	 * Performs fast pow function. When y is integer and below +/- 6 output is exact
+	 * and 6 times faster than Math.pow. When y is integer and x = 10 the function
 	 * {@linkplain #multiplyBy10ToTheX(double, int)} is called, otherwise Math.pow is called.
 	 * @param x Base.
 	 * @param y Exponent.
@@ -1194,8 +1189,8 @@ public class FastMath
 			if (y == -4) return 1.0/(z*z);
 			if (y == -5) return 1.0/(z*z*x);
 		}
-		
-		//if (EXACT_MODE) 
+
+		//if (EXACT_MODE)
 			return Math.pow(x, y);
 
 	}
@@ -1562,16 +1557,16 @@ public class FastMath
 	 */
 	public static double sqrt(double a) {
 		if (ACCURATE_MODE || EXACT_MODE) return Math.sqrt(a);
-		
+
 	    long x = Double.doubleToLongBits(a) >> 32;
 	    double y = Double.longBitsToDouble((x + 1072632448) << 31);
-	 
+
 	    // repeat the following line for more precision, but uncommenting
 	    // will be as fast as intrinsic ...
 	    // y = (y + a / y) * 0.5;
 	    return y;
 	}
-	
+
 	   /**
      * Return the exponent of a double number, removing the bias.
      * <p>
@@ -1765,7 +1760,7 @@ public class FastMath
         }
 
     }
-    
+
     /**
      * Absolute value.
      * @param x number from which absolute value is requested
@@ -1855,6 +1850,9 @@ public class FastMath
 			if (ss.startsWith("+")) ss = ss.substring(1);
 			exp = Short.parseShort(ss);
 			s = s.substring(0, e);
+		} else {
+			if (s.lastIndexOf("+") > 0 || s.lastIndexOf("-") > 0)
+			throw new RuntimeException("Not a number");
 		}
 		int p = s.indexOf(".");
 		int n = s.length();

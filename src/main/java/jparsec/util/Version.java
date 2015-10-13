@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -31,7 +31,7 @@ import jparsec.io.FileIO;
  * a {@linkplain Module} object with the dependencies and their versions. This information
  * is used by the JPARSEC Manager tool to automatically update the library and dependencies
  * when the version of a given dependency changes.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -39,12 +39,12 @@ public class Version
 {
 	// private constructor so that this class cannot be instantiated.
 	private Version() {}
-	
+
 	/**
 	 * Name of the package.
 	 */
 	public static final String PACKAGE_NAME = "JPARSEC";
-	
+
 	/**
 	 * Current version of the library.
 	 */
@@ -284,7 +284,18 @@ public class Version
 						"Integration of orbits of visual binary stars in the details of stars in SkyChart.\n"+
 						"Integration of orbits of comets/asteroids and light curves in the details of the objects in SkyChart.\n"+
 						"SkyChart shows the Carring rotation number and Brown lunation number in the details of the Sun and Moon.\n"+
-						"SkyChart can show trajectories of artificial satellites and the current Iridium flares."
+						"SkyChart can show trajectories of artificial satellites and the current Iridium flares.",
+				"      1.108: Code cleanup, bug fixes, and first useful version of ClearSky for desktop (Oct xx, 2015):\n"+
+						"Optimization to RenderSky to avoid creating too much arrays when projecting coordinates.\n"+
+						"StarEphem can optionally search and return ephemerides for stars up to magnitude 9.5, instead of the previous limit of 6.5.\n"+
+						"GPhotoCamera can now store photos in the SD card and correctly controls the camera in live view and bulb modes.\n"+
+						"RiseSetTransit class had a bug that produced wrong rise/set values for objects always below the horizon.\n"+
+						"Precession.getAngles had a bug (EPS0 returned in arcsecs instead of radians) producing different errors in ephemerides optimized for accuracy.\n"+
+						"PlanetEphem, JPLEphemeris, and Vsop classes did not correctly manipulate offset positions for satellites.\n"+
+						"Observatory 'Pico Veleta' was 'Pico Veleto' before, name fixed.\n"+
+						"Gildas30m now supports the factor DOPPLER.\n"+
+						"Method modifyRestFrequency in Spectrum30m fixed, with support for doppler factor. Added also modifyVelocityLSR.\n"+
+						"Code cleanup: UTF-8 conversion, hashCode implemented next to equals, mains removed, special characters in encoding-independent way, ..."
 
 				+FileIO.getLineSeparator(),
 		};
@@ -293,13 +304,13 @@ public class Version
 		// Dependencies for JPARSEC programs and models
 		String library[] = new String[] {
 			// Dependency name                             Version
-			"jparsec.jar                                   1.107",
-			
+			"jparsec.jar                                   1.108",
+
 			"sky.jar                                       1.36",
 			"orbital_elements.jar                          1.23",
 			"sunspot.jar                                   1.14",
 			"eop.jar                                       1.13",
-			
+
 			"sgt_v30.jar                                   1.06",
 			"jcommon-1.0.16.jar                            1.03",
 			"sky2000.jar                                   1.06",
@@ -335,10 +346,10 @@ public class Version
 			"cds/kxml2-min.jar                             1.01",
 			"cds/cds.savot.sax.jar                         1.01",
 			"cds/cds.astro.jar                             1.02",
-			
+
 			"cologne.jar                                   1.01",
 			"jpl.jar                                       1.01",
-			
+
 //			"elp2000.jar                                   1.01",
 //			"jsch-0.1.41.jar                               1.00",
 //			"dsn.jar                                       1.00",
@@ -363,7 +374,7 @@ public class Version
 
 //			"jpl_ephem.jar                                 1.02",
 		};
-		
+
 		Module module = null;
         try {
 			module = new Module(

@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,14 +18,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */	
+ */
 package jparsec.graph;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.awt.image.RenderedImage;
 import java.io.UnsupportedEncodingException;
 
 import jparsec.graph.DataSet;
@@ -47,12 +45,12 @@ public class CreateDitaaChart {
 
 	/** The diagram. */
 	public String diagram;
-	
+
 	private boolean antialiasing = true, shadows = true, round = true, separateCommonEdges = true, transparent = true;
 	private String encoding = ReadFile.ENCODING_UTF_8;
 	private Color background = Color.WHITE;
 	private float scale = 1f;
-	
+
 	/**
 	 * Constructor for a quick diagram.
 	 * @param d The diagram data.
@@ -60,27 +58,27 @@ public class CreateDitaaChart {
 	public CreateDitaaChart(String d) {
 		diagram = d;
 	}
-	
+
 	/**
 	 * Constructor for a quick diagram from a set of boxes. The method
 	 * requires a basic layout for the chart, including the set of boxes
 	 * and the connection lines between them. These connection lines
-	 * should also be defined (from where they start respect the box, N 
+	 * should also be defined (from where they start respect the box, N
 	 * for north, S for South, E for left, and so on) in the corresponding
 	 * {@linkplain DitaaBoxElement} object. A layout example is given next:<P>
 	 * <pre>
-	 *     0-------|  
-	 *   |-----v   1- 
+	 *     0-------|
+	 *   |-----v   1-
 	 *   2-3-4-5-6-||7
-	 *     |-=-<--=-- 
-	 *             89 
+	 *     |-=-<--=--
+	 *             89
 	 * </pre>
-	 * The numbers represents the box locations. The lines represents the 
+	 * The numbers represents the box locations. The lines represents the
 	 * connections between the boxes. The symbols < > ^ v can be used to force
-	 * the position of an arrow mark. The symbol = can be used to show a dashed 
+	 * the position of an arrow mark. The symbol = can be used to show a dashed
 	 * line in horizontal orientation, in vertical it would be :.<P>
-	 * A box can also be a single text message without a box around. In this 
-	 * case the N S E and W attributes for the connection lines starting from 
+	 * A box can also be a single text message without a box around. In this
+	 * case the N S E and W attributes for the connection lines starting from
 	 * that box will be interpreted as the desired alignment for the text.
 	 * @param diagram The simplified layout of the diagram. Integer values
 	 * like 0, 1 represents the box index. After 9 you can use
@@ -102,7 +100,7 @@ public class CreateDitaaChart {
 		for (int i=0; i<diagram.length; i++) {
 			if (diagram[i].length() > max) max = diagram[i].length();
 		}
-		String line = DataSet.repeatString(" ", max * w);		
+		String line = DataSet.repeatString(" ", max * w);
 		for (int i=0; i<out.length; i++) {
 			out[i] = line;
 		}
@@ -127,13 +125,13 @@ public class CreateDitaaChart {
 						if (s.equals("=")) myarrow =  myarrow.substring(0, myarrow.length() / 2) + "=" + myarrow.substring(myarrow.length()/2 + 1);
 						String valid = "-=<>|^v";
 						boolean nextValid = false, previousValid = false;
-						if (j > 0 && (isVal(diagram[i].substring(j - 1, j)) || valid.indexOf(diagram[i].substring(j - 1, j)) >= 0)) previousValid = true;						
-						if (j < diagram[i].length() - 1 && (isVal(diagram[i].substring(j + 1, j + 2)) || valid.indexOf(diagram[i].substring(j + 1, j + 2)) >= 0)) nextValid = true;						
+						if (j > 0 && (isVal(diagram[i].substring(j - 1, j)) || valid.indexOf(diagram[i].substring(j - 1, j)) >= 0)) previousValid = true;
+						if (j < diagram[i].length() - 1 && (isVal(diagram[i].substring(j + 1, j + 2)) || valid.indexOf(diagram[i].substring(j + 1, j + 2)) >= 0)) nextValid = true;
 						if (nextValid && !previousValid) {
 							out[index + h / 2] = out[index + h / 2].substring(0, j * w) + space.substring(0, w/2) + myarrow.substring(w/2) + out[index + h / 2].substring(j * w + w);
 						} else {
 							if (previousValid && !nextValid) {
-								out[index + h / 2] = out[index + h / 2].substring(0, j * w) + myarrow.substring(0, w/2+1) + space.substring(0, w/2) + out[index + h / 2].substring(j * w + w);								
+								out[index + h / 2] = out[index + h / 2].substring(0, j * w) + myarrow.substring(0, w/2+1) + space.substring(0, w/2) + out[index + h / 2].substring(j * w + w);
 							} else {
 								out[index + h / 2] = out[index + h / 2].substring(0, j * w) + myarrow + out[index + h / 2].substring(j * w + w);
 							}
@@ -146,7 +144,7 @@ public class CreateDitaaChart {
 									if (i > 0) {
 										ns = diagram[i-1].substring(j, j + 1);
 										if (isVal(ns) || ns.equals("|") || ns.equals("^") || ns.equals("v") || ns.equals(":")) {
-											out[index + h / 2] = out[index + h / 2].substring(0, j * w) + arrow2ru + out[index + h / 2].substring(j * w + w);											
+											out[index + h / 2] = out[index + h / 2].substring(0, j * w) + arrow2ru + out[index + h / 2].substring(j * w + w);
 											out = completeVerticalLine(out, j * w + w / 2, i * h, index + h / 2 - 1, s.equals("^"), s.equals("v"));
 											continue;
 										}
@@ -154,14 +152,14 @@ public class CreateDitaaChart {
 									if (i < diagram.length - 1) {
 										ns = diagram[i+1].substring(j, j + 1);
 										if (isVal(ns) || ns.equals("|") || ns.equals("^") || ns.equals("v") || ns.equals(":")) {
-											out[index + h / 2] = out[index + h / 2].substring(0, j * w) + arrow2rd + out[index + h / 2].substring(j * w + w);											
+											out[index + h / 2] = out[index + h / 2].substring(0, j * w) + arrow2rd + out[index + h / 2].substring(j * w + w);
 											out = completeVerticalLine(out, j * w + w / 2, index + h / 2 + 1, (i + 1) * h - 1, s.equals("^"), s.equals("v"));
 											continue;
 										}
 									}
 								}
 							}
-							
+
 /*							String arrow2lu2 = arrow2lu, arrow2ld2 = arrow2ld, arrow2rd2 = arrow2rd, arrow2ru2 = arrow2ru;
 							if (s.equals("^")) {
 								arrow2lu2 =  arrow2lu2.substring(0, arrow2lu2.length() / 2) + "^" + arrow2lu2.substring(arrow2lu2.length()/2 + 1);
@@ -181,14 +179,14 @@ public class CreateDitaaChart {
 								arrow2rd2 =  arrow2rd2.substring(0, arrow2rd2.length() / 2) + ":" + arrow2rd2.substring(arrow2rd2.length()/2 + 1);
 								arrow2ru2 =  arrow2ru2.substring(0, arrow2ru2.length() / 2) + ":" + arrow2ru2.substring(arrow2ru2.length()/2 + 1);
 							}
-*/							
+*/
 							if (j > 0) {
 								String ns = diagram[i].substring(j - 1, j);
 								if (ns.equals("-")) {
 									if (i > 0) {
 										ns = diagram[i-1].substring(j, j + 1);
 										if (isVal(ns) || ns.equals("|") || ns.equals("^") || ns.equals("v") || ns.equals(":")) {
-											out[index + h / 2] = out[index + h / 2].substring(0, j * w) + arrow2lu + out[index + h / 2].substring(j * w + w);											
+											out[index + h / 2] = out[index + h / 2].substring(0, j * w) + arrow2lu + out[index + h / 2].substring(j * w + w);
 											out = completeVerticalLine(out, j * w + w / 2, i * h, index + h / 2 - 1, s.equals("^"), s.equals("v"));
 											continue;
 										}
@@ -209,7 +207,7 @@ public class CreateDitaaChart {
 									out = completeVerticalLine(out, j * w + w / 2, i * h - h / 2, index + h / 2, false, false);
 									if (ns.equals("-")) {
 										if (j == 0 || (j < diagram[i-1].length()-1 && diagram[i-1].substring(j+1, j+2).equals("-")))
-											out[i * h - h / 2 - 1] = out[i * h - h / 2 - 1].substring(0, j * w) + arrow2rd + out[i * h - h / 2 - 1].substring(j * w + w);									
+											out[i * h - h / 2 - 1] = out[i * h - h / 2 - 1].substring(0, j * w) + arrow2rd + out[i * h - h / 2 - 1].substring(j * w + w);
 										if (j == diagram[i-1].length()-1 || (j > 0 && diagram[i-1].substring(j-1, j).equals("-")))
 											out[i * h - h / 2 - 1] = out[i * h - h / 2 - 1].substring(0, j * w) + arrow2ld + out[i * h - h / 2 - 1].substring(j * w + w);
 									}
@@ -221,7 +219,7 @@ public class CreateDitaaChart {
 									if (ns.equals("-")) {
 										out = completeVerticalLine(out, j * w + w / 2, index + h / 2, (i + 1) * h + h / 2 - 1, false, false);
 										if (j == 0 || (j < diagram[i+1].length()-1 && diagram[i+1].substring(j+1, j+2).equals("-")))
-											out[(i + 1) * h + h / 2] = out[(i + 1) * h + h / 2].substring(0, j * w) + arrow2ru + out[(i + 1) * h + h / 2].substring(j * w + w);										
+											out[(i + 1) * h + h / 2] = out[(i + 1) * h + h / 2].substring(0, j * w) + arrow2ru + out[(i + 1) * h + h / 2].substring(j * w + w);
 										if (j == diagram[i+1].length()-1 || (j > 0 && diagram[i+1].substring(j-1, j).equals("-")))
 											out[(i + 1) * h + h / 2] = out[(i + 1) * h + h / 2].substring(0, j * w) + arrow2lu + out[(i + 1) * h + h / 2].substring(j * w + w);
 									} else {
@@ -240,7 +238,7 @@ public class CreateDitaaChart {
 				}
 			}
 		}
-		
+
 		// Eliminate excesive white spaces and blank lines
 		max = 0;
 		for (int i=0; i<out.length; i++) {
@@ -256,20 +254,20 @@ public class CreateDitaaChart {
 			}
 			out[i] = out[i].substring(0, max);
 		}
-		
+
 		this.diagram = DataSet.toString(out, FileIO.getLineSeparator());
 	}
-	
+
 	private static boolean isVal(String ns) {
 		if (!ns.equals("|") && !ns.equals(" ") && !ns.equals("-") && DataSet.isDoubleFastCheck(ns)) return true;
 		return false;
 	}
-	
+
 	private static String[] completeVerticalLine(String out[], int px, int py0, int py1, boolean arrowUp, boolean arrowDown) {
 		for (int i=py0; i<= py1; i++) {
 			String s = out[i].substring(0, px) + "|";
-			if (arrowUp && i == py0) s = out[i].substring(0, px) + "^"; 
-			if (arrowDown && i == py1) s = out[i].substring(0, px) + "v"; 
+			if (arrowUp && i == py0) s = out[i].substring(0, px) + "^";
+			if (arrowDown && i == py1) s = out[i].substring(0, px) + "v";
 			if (out[i].length() > px) s += out[i].substring(px + 1);
 			out[i] = s;
 		}
@@ -291,31 +289,38 @@ public class CreateDitaaChart {
 			System.err.println("Error: "+e1.getMessage());
 			System.exit(1);
 		}
-		
+
 		ConversionOptions co = new ConversionOptions();
 		co.setDebug(false);
 
 		co.renderingOptions.setDropShadows(this.shadows);
 		co.renderingOptions.setAntialias(this.antialiasing);
 		co.renderingOptions.setScale(this.scale);
-		ProcessingOptions po = new ProcessingOptions();
-		po.setAllCornersAreRound(this.round);
-		po.setPerformSeparationOfCommonEdges(this.separateCommonEdges);
-		po.setCharacterEncoding(encoding);
-		// FIXME where to set the background color ??
-		//Color col = new Color(background.getRed(), background.getGreen(), background.getBlue(), background.getAlpha());
-		//if (transparent) col = new Color(background.getRed(), background.getGreen(), background.getBlue(), 0);
+		Color col = new Color(background.getRed(), background.getGreen(), background.getBlue(), background.getAlpha());
+		if (transparent) col = new Color(background.getRed(), background.getGreen(), background.getBlue(), 0);
 		//co.renderingOptions.setBackgroundColor(col);
-		Diagram diagram = new Diagram(grid, co, po);
-		RenderedImage image = new BitmapRenderer().renderToImage(diagram, co.renderingOptions);
-		return (BufferedImage) image;
+		
+		ProcessingOptions pr = new ProcessingOptions();
+		pr.setAllCornersAreRound(this.round);
+		pr.setPerformSeparationOfCommonEdges(this.separateCommonEdges);
+		pr.setCharacterEncoding(encoding);
+		
+		Diagram diagram = new Diagram(grid, co, pr);
+		
+		BufferedImage image = new BufferedImage(diagram.getWidth(), diagram.getHeight(), 
+				transparent ? BufferedImage.TYPE_INT_ARGB : BufferedImage.TYPE_INT_RGB);
+		Graphics2D g = image.createGraphics();
+		g.setColor(col);
+		g.fillRect(0, 0, image.getWidth(), image.getHeight());
+		g.dispose();
+		return (BufferedImage) new BitmapRenderer().render(diagram, image, co.renderingOptions);
 	}
 
 	/**
 	 * Renders a diagram to an external Graphics object.
 	 * @param g2 The graphics object.
 	 */
-	public void draw(Graphics2D g2) {
+/*	public void draw(Graphics2D g2) {
 		TextGrid grid = new TextGrid();
 
 		try {
@@ -326,23 +331,27 @@ public class CreateDitaaChart {
 			System.err.println("Error: "+e1.getMessage());
 			System.exit(1);
 		}
-		
+
 		ConversionOptions co = new ConversionOptions();
 		co.setDebug(false);
+
 		co.renderingOptions.setDropShadows(this.shadows);
 		co.renderingOptions.setAntialias(this.antialiasing);
 		co.renderingOptions.setScale(this.scale);
-		ProcessingOptions po = new ProcessingOptions();
-		po.setAllCornersAreRound(this.round);
-		po.setPerformSeparationOfCommonEdges(this.separateCommonEdges);
-		po.setCharacterEncoding(encoding);
 		Color col = new Color(background.getRed(), background.getGreen(), background.getBlue(), background.getAlpha());
 		if (transparent) col = new Color(background.getRed(), background.getGreen(), background.getBlue(), 0);
-		g2.setBackground(col);
-		Diagram diagram = new Diagram(grid, co, po);
-		RenderedImage image = new BitmapRenderer().renderToImage(diagram, co.renderingOptions);
-		g2.drawRenderedImage(image, new AffineTransform());
-	}
+		//co.renderingOptions.setBackgroundColor(col);
+		
+		ProcessingOptions pr = new ProcessingOptions();
+		pr.setAllCornersAreRound(this.round);
+		pr.setPerformSeparationOfCommonEdges(this.separateCommonEdges);
+		pr.setCharacterEncoding(encoding);
+		
+		Diagram diagram = new Diagram(grid, co, pr);
+		g2.setColor(col);
+		g2.fillRect(0, 0, diagram.getWidth(), diagram.getHeight());
+		new BitmapRenderer().render(diagram, g2, co.renderingOptions);
+	} */
 
 	/**
 	 * Sets if antialiasing should be used. Default is true.
@@ -375,7 +384,7 @@ public class CreateDitaaChart {
 	public void setRoundCorners(boolean a) {
 		this.round = a;
 	}
-	
+
 	/**
 	 * Sets if common edges should be separated. Default is true.
 	 * @param a True or false.
@@ -386,7 +395,7 @@ public class CreateDitaaChart {
 
 	/**
 	 * Sets the scaling for the chart, greater values would produce
-	 * bigger images. Default value is 1.0f. Any value lower than 1 
+	 * bigger images. Default value is 1.0f. Any value lower than 1
 	 * used here will produce bad quality images compared to the
 	 * result of getting the image with scale = 1 and resizing it
 	 * using the methods provided in class {@linkplain Picture}.

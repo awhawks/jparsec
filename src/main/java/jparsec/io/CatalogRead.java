@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.io;
 
 import java.io.BufferedReader;
@@ -40,7 +40,7 @@ import jparsec.util.Translate;
 /**
  * Performs file and parameter reading operations. This class supports JPL and
  * COLOGNE database of molecular spectroscopy.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -48,15 +48,15 @@ public class CatalogRead
 {
 	// private constructor so that this class cannot be instantiated.
 	private CatalogRead() {}
-	
+
 	/**
 	 * Maximum number of transitions to read. 30000 is the default value.
 	 */
 	public static int maxTransitions = 30000;
-	
+
 	/**
 	 * Read JPL Catalog main file.
-	 * 
+	 *
 	 * @return Strings with the list of molecules.
 	 * @throws JPARSECException Thrown if the method fails.
 	 */
@@ -103,7 +103,7 @@ public class CatalogRead
 				}
 
 				/* If there is no errors then the molecule transitions file is
-				 * in the program directory and we can access it. So, we can 
+				 * in the program directory and we can access it. So, we can
 				 * add this molecule to the menu later
 				 */
 				if (read_err == 0)
@@ -127,7 +127,7 @@ public class CatalogRead
 
 	/**
 	 * Read JPL molecule transitions file.
-	 * 
+	 *
 	 * @param mol Molecule file name.
 	 * @param limit_temp Temperature limit to search for transitions. Only
 	 *        transitions with upper level energy below this value will be
@@ -139,10 +139,10 @@ public class CatalogRead
 	{
 		return readJPLtransitions(mol, limit_temp, 0);
 	}
-	
+
 	/**
 	 * Read JPL molecule transitions file.
-	 * 
+	 *
 	 * @param mol Molecule file name.
 	 * @param limit_temp Temperature limit to search for transitions. Only
 	 *        transitions with upper level energy below this value will be
@@ -210,7 +210,7 @@ public class CatalogRead
 
 	/**
 	 * Read COLOGNE Catalog main catalog.
-	 * 
+	 *
 	 * @return Strings with the list of molecules.
 	 * @throws JPARSECException Thrown if the method fails.
 	 */
@@ -284,7 +284,7 @@ public class CatalogRead
 
 	/**
 	 * Read COLOGNE molecule transitions file.
-	 * 
+	 *
 	 * @param mol Molecule file name.
 	 * @param limit_temp Temperature limit to search for transitions. Only
 	 *        transitions with upper level energy below this value will be
@@ -296,10 +296,10 @@ public class CatalogRead
 	{
 		return readCOLOGNEtransitions(mol, limit_temp, 0);
 	}
-	
+
 	/**
 	 * Read COLOGNE molecule transitions file.
-	 * 
+	 *
 	 * @param mol Molecule file name.
 	 * @param limit_temp Temperature limit to search for transitions. Only
 	 *        transitions with upper level energy below this value will be
@@ -367,10 +367,10 @@ public class CatalogRead
 	}
 
 	private static ArrayList<String> v_JPL = null, v_COLOGNE = null;
-	
+
 	/**
 	 * Gets a string with the data of certain molecule.
-	 * 
+	 *
 	 * @param name Name of the molecule as given in the catalog.
 	 * @param jpl_cat True for JPL catalog, false for COLOGNE.
 	 * @return Line of the catalog with the molecule information.
@@ -410,7 +410,7 @@ public class CatalogRead
 	 * Gets a string with the data of certain transition. If the molecule has
 	 * more than {@linkplain #maxTransitions} transitions, and the required one is after that number,
 	 * returning string will be an empty string.
-	 * 
+	 *
 	 * @param transition Transition name or frequency as given in the catalog.
 	 * @param name Name of the molecule as given in the catalog.
 	 * @param jpl_cat True for JPL catalog, false for COLOGNE.
@@ -421,12 +421,12 @@ public class CatalogRead
 	{
 		return CatalogRead.getTransition(transition, name, jpl_cat, 0, 0);
 	}
-	
+
 	/**
 	 * Gets a string with the data of certain transition. If the molecule has
 	 * more than {@linkplain #maxTransitions} transitions, and the required one is after that number,
 	 * returning string will be an empty string.
-	 * 
+	 *
 	 * @param transition Transition name or frequency as given in the catalog.
 	 * @param name Name of the molecule as given in the catalog.
 	 * @param jpl_cat True for JPL catalog, false for COLOGNE.
@@ -490,7 +490,7 @@ public class CatalogRead
 	 * Gets a string with the data of certain transitions. If the molecule has
 	 * more than {@linkplain #maxTransitions} transitions, and the required one is after that number,
 	 * returning string will be an empty string.
-	 * 
+	 *
 	 * @param transition Transition name or frequency as given in the catalog.
 	 * @param name Name of the molecule as given in the catalog.
 	 * @param jpl_cat True for JPL catalog, false for COLOGNE.
@@ -502,12 +502,12 @@ public class CatalogRead
 	{
 		return CatalogRead.getTransitions(transition, name, jpl_cat, width, 0, 0);
 	}
-	
+
 	/**
 	 * Gets a string with the data of certain transitions. If the molecule has
 	 * more than {@linkplain #maxTransitions} transitions, and the required one is after that number,
 	 * returning string will be an empty string.
-	 * 
+	 *
 	 * @param transition Transition name or frequency as given in the catalog.
 	 * @param name Name of the molecule as given in the catalog.
 	 * @param jpl_cat True for JPL catalog, false for COLOGNE.
@@ -557,9 +557,9 @@ public class CatalogRead
 		for (int i = 0; i < v.size(); i++)
 		{
 			String tran = v.get(i);
-			
+
 			double frec = 1.0E+6 * DataSet.parseDouble(tran.substring(0, 13).trim());
-			
+
 			if ( Math.abs(frec-frec0) <= (width*0.5*1.0E6) && !tran.equals(tran0))
 			{
 				out = DataSet.addStringArray(out, new String[] {tran});
@@ -568,12 +568,12 @@ public class CatalogRead
 
 		return out;
 	}
-	
+
 	/**
 	 * Gets a string with the data of certain transitions. If the molecule has
 	 * more than {@linkplain #maxTransitions} transitions, and the required one is after that number,
 	 * returning string will be an empty string.
-	 * 
+	 *
 	 * @param frec0 Transition frequency in MHz.
 	 * @param name Name of the molecule as given in the catalog.
 	 * @param jpl_cat True for JPL catalog, false for COLOGNE.
@@ -618,14 +618,14 @@ public class CatalogRead
 
 		if (frec0 == 0.0)
 			return DataSet.arrayListToStringArray(v);
-		
+
 		String out[] = new String[] {};
 		for (int i = 0; i < v.size(); i++)
 		{
 			String tran = v.get(i);
 
 			double frec = DataSet.parseDouble(tran.substring(0, 13).trim());
-			
+
 			if ( Math.abs(frec-frec0) < width*0.5)
 			{
 				out = DataSet.addStringArray(out, new String[] {tran});
@@ -634,11 +634,11 @@ public class CatalogRead
 
 		return out;
 	}
-	
+
 	/**
 	 * Obtains the name of the molecule file in the catalog list of files,
 	 * for JPL and COLOGNE catalogs.
-	 * 
+	 *
 	 * @param mol Name of the molecule.
 	 * @return Name of the file containing information about this molecule.
 	 */
@@ -655,7 +655,7 @@ public class CatalogRead
 			mol = "0" + mol;
 		}
 		mol = "c" + mol + ".cat";
- 
+
 		return mol;
 	}
 
@@ -665,15 +665,15 @@ public class CatalogRead
 					JPL_COLOGNE_FORMAT_LOWER_STATE_ENERGY_INDEX = 4, JPL_COLOGNE_FORMAT_GU_INDEX = 5,
 							JPL_COLOGNE_FORMAT_TAG_INDEX = 6, JPL_COLOGNE_FORMAT_QN_CODING_INDEX = 7,
 									JPL_COLOGNE_FORMAT_QN_INDEX = 8;
-	
-	/** The identifiers for the different fields of a given transition record 
+
+	/** The identifiers for the different fields of a given transition record
 	 * in both JPL and COLOGNE catalogs. */
 	public static final String[] JPL_COLOGNE_FORMAT_FIELDS = new String[] {
 		"FREQUENCY", "FREQUENCY_ERROR", "INTENSITY", "DEGREE_FREEDOM",
 		"LOWER_STATE_ENERGY", "GU", "TAG", "QN_CODING", "QN"
 	};
-	
-	/** The object the describes the different fields of a given transition record. 
+
+	/** The object the describes the different fields of a given transition record.
 	 * The identifiers for each field are those from {@linkplain #JPL_COLOGNE_FORMAT_FIELDS}. */
 	public static final FileFormatElement JPL_COLOGNE_FORMAT[] = new FileFormatElement[] {
 			new FileFormatElement(1, 13, JPL_COLOGNE_FORMAT_FIELDS[0]),

@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */	
+ */
 package jparsec.io.device.implementation;
 
 import javax.swing.JOptionPane;
@@ -54,30 +54,30 @@ public class CelestronTelescope implements GenericTelescope {
 
     /** Constant for 2 raised to 16th power */
     private static final double TWO_EXP_16 = 65536.0; // 2 ^ 16
-   
+
     /** Constant for 2 raised to 24th power */
     private static final double TWO_EXP_24 = 16777216.0;  // 2 ^ 24;
-    
+
     /** 16 bit constant to convert degrees to step count required for goto */
     private static final double DEGREES_TO_COUNT_16 = TWO_EXP_16 / 360.0;
-    
+
     /** 24 bit constant to convert degrees to step count required for goto */
     private static final double DEGREES_TO_COUNT_24 = TWO_EXP_24 / 360.0;
 
     /** 16 bit constant to convert count to degrees */
     private static final double COUNT_TO_DEGREES_16 = 360.0 / TWO_EXP_16;
-    
+
     /** 24 bit constant to convert count to degrees */
     private static final double COUNT_TO_DEGREES_24 = 360.0 / TWO_EXP_24;
-    
+
     /** String containing zeros, used for padding */
-    private static final String STR0 = "00000000";  
+    private static final String STR0 = "00000000";
 
     /** Define null char */
     private static final char NULL_CHAR = Character.MIN_VALUE;
-    
+
 	private SerialConnection sc;
-    
+
 	private TELESCOPE_MODEL telescopeModel = null;
 	private boolean isMoving = false, isMovingS = false, isMovingN = false, isMovingE = false, isMovingW = false;
 	private FOCUS_SPEED fs = FOCUS_SPEED.SLOW;
@@ -93,10 +93,10 @@ public class CelestronTelescope implements GenericTelescope {
 	private double timeOffset = 0;
 	private long updateTime = 5000, lastRADEC = -1, lastAZEL = -1;
 	private LocationElement lastEq = new LocationElement(), lastHz = new LocationElement();
-	private boolean noGW = false;
+	//private boolean noGW = false;
 	private String object;
 	private static final double MOVE_TOLERANCE_1s = 30 * Constant.ARCSEC_TO_RAD;
-	
+
 	@Override
 	public boolean hasGPS() {
 		if (telescopeModel == TELESCOPE_MODEL.CELESTRON_NEXSTAR_GPS) return true;
@@ -145,16 +145,16 @@ public class CelestronTelescope implements GenericTelescope {
 		int sp[] = new int[] {1, 3, 6, 9};
 		int speed = sp[ms.ordinal()];
 		switch(direction) {
-		case NORTH_UP: 
+		case NORTH_UP:
 			cmd = "P" + (char) 2 + (char) 17 + (char) 36 + (char) speed + (char) 0 + (char) 0 + (char) 0;
 			break;
-		case EAST_LEFT: 
+		case EAST_LEFT:
 			cmd = "P" + (char) 2 + (char) 16 + (char) 36 + (char) speed + (char) 0 + (char) 0 + (char) 0;
 			break;
-		case SOUTH_DOWN: 
+		case SOUTH_DOWN:
 			cmd = "P" + (char) 2 + (char) 17 + (char) 37 + (char) speed + (char) 0 + (char) 0 + (char) 0;
 			break;
-		case WEST_RIGHT: 
+		case WEST_RIGHT:
 			cmd = "P" + (char) 2 + (char) 16 + (char) 37 + (char) speed + (char) 0 + (char) 0 + (char) 0;
 			break;
 		}
@@ -181,16 +181,16 @@ public class CelestronTelescope implements GenericTelescope {
 		boolean out = false;
 		int speed = 0;
 		switch(direction) {
-		case NORTH_UP: 
+		case NORTH_UP:
 			cmd = "P" + (char) 2 + (char) 17 + (char) 36 + (char) speed + (char) 0 + (char) 0 + (char) 0;
 			break;
-		case EAST_LEFT: 
+		case EAST_LEFT:
 			cmd = "P" + (char) 2 + (char) 16 + (char) 36 + (char) speed + (char) 0 + (char) 0 + (char) 0;
 			break;
-		case SOUTH_DOWN: 
+		case SOUTH_DOWN:
 			cmd = "P" + (char) 2 + (char) 17 + (char) 37 + (char) speed + (char) 0 + (char) 0 + (char) 0;
 			break;
-		case WEST_RIGHT: 
+		case WEST_RIGHT:
 			cmd = "P" + (char) 2 + (char) 16 + (char) 37 + (char) speed + (char) 0 + (char) 0 + (char) 0;
 			break;
 		}
@@ -204,7 +204,7 @@ public class CelestronTelescope implements GenericTelescope {
 			isMoving = checkMove();
 		}
 		return out;
-    }	
+    }
 	@Override
 	public MOVE_DIRECTION getLastMoveDirection() {return md;}
 	@Override
@@ -212,10 +212,10 @@ public class CelestronTelescope implements GenericTelescope {
 		long t = System.currentTimeMillis();
 		if (lastRADEC == -1 || t - lastRADEC > updateTime) {
 			lastRADEC = t;
-            
+
     		String cmd = "e";
     		if (!highPrecision) cmd = "E";
-    		
+
     		String radec = sendCmdAndReceiveResponse(cmd);
 			if (radec == null || radec.equals("")) return lastEq;
     		LocationElement lastEq = decodeHexadecimal(radec);
@@ -273,10 +273,10 @@ public class CelestronTelescope implements GenericTelescope {
 		long t = System.currentTimeMillis();
 		if (lastAZEL == -1 || t - lastAZEL > updateTime) {
 			lastAZEL = t;
-            
+
     		String cmd = "z";
     		if (!highPrecision) cmd = "Z";
-    		
+
     		String azel = sendCmdAndReceiveResponse(cmd);
 			if (azel == null || azel.equals("")) return lastHz;
     		LocationElement lastHz = decodeHexadecimal(azel);
@@ -326,9 +326,9 @@ public class CelestronTelescope implements GenericTelescope {
 
         String raStr = encodeHexadecimal(loc.getLongitude());
         String decStr = encodeHexadecimal(loc.getLatitude());
-    
+
         String cmdStr = "";
-        if (telescopeModel == TELESCOPE_MODEL.CELESTRON_NEXSTAR_5_8) { 
+        if (telescopeModel == TELESCOPE_MODEL.CELESTRON_NEXSTAR_5_8) {
                 cmdStr = "R" + raStr + decStr;
         } else if (telescopeModel == TELESCOPE_MODEL.CELESTRON_NEXSTAR_GT_ORIGINAL) {
                 cmdStr = "R" + raStr + "X" + decStr + "X";
@@ -342,7 +342,7 @@ public class CelestronTelescope implements GenericTelescope {
                 cmdStr = "R" + raStr + "," + decStr;
             }
         }
-        
+
 /*        final int raBytes = raToInt(Functions.getHMS(loc.getLongitude()));
         final int decBytes = decToInt(Functions.getDMSs(loc.getLatitude()));
 		String c = "R";
@@ -351,7 +351,7 @@ public class CelestronTelescope implements GenericTelescope {
 		c += ",";
 		c += (byte)(decBytes>>8);
 		c += (byte)(decBytes);
-*/		
+*/
 		boolean out = sendCmd(cmdStr);
 		if (out) readString();
 		return out;
@@ -361,7 +361,7 @@ public class CelestronTelescope implements GenericTelescope {
     	if (isEquatorial) {
     		return LocationElement.getAngularDistance(loc, getEquatorialPosition());
     	} else {
-    		return LocationElement.getAngularDistance(loc, getHorizontalPosition());    		
+    		return LocationElement.getAngularDistance(loc, getHorizontalPosition());
     	}
     }
 	@Override
@@ -370,7 +370,7 @@ public class CelestronTelescope implements GenericTelescope {
     	if (!o.equals("")) {
     		return readString().equals("1");
     	}
-    	
+
     	LocationElement pos = this.getEquatorialPosition();
         try {
         	Thread.sleep((int) (seconds*1000));
@@ -393,15 +393,15 @@ public class CelestronTelescope implements GenericTelescope {
         char hr = (char) ((int)hms[0]);
         char mi = (char) ((int)hms[1]);
         char se = (char) ((int)hms[2]);
-        
+
         TimeElement time = this.getTime();
         char m = (char) (time.astroDate.getMonth());
         char d = (char) (time.astroDate.getDay());
         char y = (char) (time.astroDate.getYear() - 2000);
-        
+
         ObserverElement obs = this.getObserver();
         int tz = (int)obs.getTimeZone(), dst = 0;
-        
+
         try {
 			EphemerisElement eph = new EphemerisElement(TARGET.NOT_A_PLANET, EphemerisElement.COORDINATES_TYPE.APPARENT,
 					EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.TOPOCENTRIC, EphemerisElement.REDUCTION_METHOD.IAU_2006,
@@ -415,7 +415,7 @@ public class CelestronTelescope implements GenericTelescope {
         } catch (Exception exc) {
         	exc.printStackTrace();
         }
-        
+
         String cmd = "H"+hr+mi+se+m+d+y+(char)tz+(char)dst;
     	boolean out = sendCmd(cmd);
     	if (out) readString();
@@ -424,7 +424,7 @@ public class CelestronTelescope implements GenericTelescope {
 	@Override
     public synchronized boolean sync() {
 		if (objLoc == null) return false;
-		
+
 		LocationElement loc = objLoc.clone();
 		if (this.telescopeModel.isJ2000()) {
 			try {
@@ -448,7 +448,7 @@ public class CelestronTelescope implements GenericTelescope {
 		if (!highPrecision) cmd = "S";
 
         String cmdStr = cmd;
-        if (telescopeModel == TELESCOPE_MODEL.CELESTRON_NEXSTAR_5_8) { 
+        if (telescopeModel == TELESCOPE_MODEL.CELESTRON_NEXSTAR_5_8) {
         	cmdStr += raStr + decStr;
         } else if (telescopeModel == TELESCOPE_MODEL.CELESTRON_NEXSTAR_GT_ORIGINAL) {
         	cmdStr += raStr + "X" + decStr + "X";
@@ -457,9 +457,9 @@ public class CelestronTelescope implements GenericTelescope {
         		telescopeModel == TELESCOPE_MODEL.CELESTRON_NEXSTAR_GT || telescopeModel == TELESCOPE_MODEL.CELESTRON_ASC ||
         		telescopeModel == TELESCOPE_MODEL.CELESTRON_CGE) {
         	cmdStr += raStr + "," + decStr;
-        }		
-		
-		String o = this.sendCmdAndReceiveResponse(cmdStr);
+        }
+
+		this.sendCmdAndReceiveResponse(cmdStr);
 		return true;
     }
 	@Override
@@ -494,7 +494,7 @@ public class CelestronTelescope implements GenericTelescope {
 			}
 			this.setObjectCoordinates(loc, "Park position");
 			this.gotoObject();
-			objLoc = loc0; 
+			objLoc = loc0;
 			disconnect();
 			// TODO: disable tracking
 			return true;
@@ -522,7 +522,7 @@ public class CelestronTelescope implements GenericTelescope {
     public synchronized String getTelescopeName() {
 		String n = this.sendCmdAndReceiveResponse("m");
 		int r = n.charAt(0);
-		String models[] = new String[] { "Unknown", 
+		String models[] = new String[] { "Unknown",
 				"GPS Series", "Unknown", "i-Series", "i-Series SE", "CGE",
 				"Advanced GT", "SLT", "Unknown", "CPC", "GT", "4/5 SE", "6/8 SE"
 		};
@@ -530,9 +530,13 @@ public class CelestronTelescope implements GenericTelescope {
 		return "Celestron " + models[r];
     }
 	@Override
+    public synchronized String getTelescopePort() {
+    	return sc.getPortName();
+    }
+	@Override
     public synchronized ObserverElement getObserver() {
 		if (obs != null) return obs;
-		
+
 		String o = this.sendCmdAndReceiveResponse("w");
 		if (o == null || o.equals("")) return new ObserverElement();
     		int latd = o.charAt(0), latm = o.charAt(1), lats = o.charAt(2), lath = o.charAt(3);
@@ -541,11 +545,11 @@ public class CelestronTelescope implements GenericTelescope {
     		if (lonh == 1) lon = -lon;
     		double lat = latd + latm / 60.0 +lats / 3600.0;
     		if (lath == 1) lat = -lat;
-    		
+
     		String time = this.sendCmdAndReceiveResponse("h");
     		if (time.equals("")) return new ObserverElement();
         		int localToUTC = time.charAt(6);
-        		if (localToUTC > 128) localToUTC = 256 - localToUTC; 
+        		if (localToUTC > 128) localToUTC = 256 - localToUTC;
         		// FIXME: localToUTC only integer, not sure about the sign when setting observer
            		ObserverElement observer = new ObserverElement(getTelescopeName(), lon * Constant.DEG_TO_RAD, lat * Constant.DEG_TO_RAD, 0, localToUTC);
         		obs = observer;
@@ -562,7 +566,7 @@ public class CelestronTelescope implements GenericTelescope {
     	    		double hours = hr + mi / 60.0 + se / 3600.0;
     	       		AstroDate astro = new AstroDate(y, m, d + hours / 24.0);
     	       		TimeElement t = new TimeElement(astro, SCALE.LOCAL_TIME);
-    	       		
+
     	    		time0 = new TimeElement();
     	    		timeOffset = astro.jd() - time0.astroDate.jd();
     	       		return t;
@@ -579,7 +583,7 @@ public class CelestronTelescope implements GenericTelescope {
 		//if (noGW || this.telescopeModel == TELESCOPE_MODEL.CELESTRON_NEXSTAR_5_8) return true;
     	if (sendCmd("t")) {
     		String o = this.readString();
-    		if (o.equals("")) noGW = true;
+    		//if (o.equals("")) noGW = true;
     		if (o.length() > 0 && o.charAt(0) == '0') return false;
     		return true;
     	}
@@ -588,14 +592,14 @@ public class CelestronTelescope implements GenericTelescope {
 	@Override
     public synchronized boolean isAligned() {
 		//if (noGW || this.telescopeModel == TELESCOPE_MODEL.CELESTRON_NEXSTAR_5_8) return true;
-		
+
     	if (sendCmd("J")) {
     		String o = this.readString();
-    		if (o.equals("")) noGW = true;
+    		//if (o.equals("")) noGW = true;
     		if (o.length() > 0 && o.charAt(0) != '1') return true;
     	}
     	return false;
-    }  
+    }
 	@Override
     public synchronized MOUNT getMount() {
 		if (trackingMode > 0) {
@@ -603,22 +607,22 @@ public class CelestronTelescope implements GenericTelescope {
 			return MOUNT.EQUATORIAL;
 		}
 		return null;
-    }  
+    }
 	@Override
     public synchronized boolean disconnect() {
 		sc.closeConnection();
     	return true;
-    }  
+    }
 	@Override
     public synchronized boolean connect() throws JPARSECException {
 		sc.openConnection();
     	return true;
-    }  
+    }
 	@Override
     public synchronized boolean isConnected() {
 		return sc.isOpen();
-    }  
-    
+    }
+
 	/**    // Convert RA from a string to a number.
 	private static int raToInt(double hms[]) {
 		return (int)hms[0]*600+(int)hms[1]*10+(int)hms[2];
@@ -627,7 +631,7 @@ public class CelestronTelescope implements GenericTelescope {
     private static int decToInt(double dms[]) {
     	return (int) (dms[3]*((int)dms[0]*600+(int)dms[1]*10+(int)dms[2]));
     }
-*/    
+*/
     /**
      * Encode angle as hexadecimal value
      * @param val Angle to be encoded
@@ -635,17 +639,17 @@ public class CelestronTelescope implements GenericTelescope {
      */
     private String encodeHexadecimal(double val) {
         String str = "";
-        
+
         if (highPrecision) {
             str = encodeHexadecimal24(val);
         } else {
             str = encodeHexadecimal16(val);
         }
-        
+
         return str;
     }
-    
-    
+
+
     /** Encode as 16 bit hexadecimal value
      * @param val Value to be converted
      * @return String containing coordinate encoded as a hexadecimal
@@ -654,12 +658,12 @@ public class CelestronTelescope implements GenericTelescope {
         String str = "";
 
         if (!Double.isNaN(val)) {
-          
+
             long val1 = Math.round(Functions.normalizeDegrees(val * Constant.RAD_TO_DEG) * DEGREES_TO_COUNT_16);
 
             // Convert val1 to hex
             str = Long.toHexString(val1);
-            
+
             // Pad str with zeros
             if (str.length() < 4) {
                 str = STR0.substring(0, 4 - str.length()) + str;
@@ -674,13 +678,13 @@ public class CelestronTelescope implements GenericTelescope {
      */
     private String encodeHexadecimal24(double val) {
         String str = "";
-        
+
         if (!Double.isNaN(val)) {
             long val1 = Math.round(Functions.normalizeDegrees(val * Constant.RAD_TO_DEG) * DEGREES_TO_COUNT_24);
-            
+
             // Convert val1 to hex
             str = Long.toHexString(val1);
-            
+
             // Pad str1 with zeros
             if (str.length() < 6) {
                 str = STR0.substring(0, 6 - str.length()) + str;
@@ -690,7 +694,7 @@ public class CelestronTelescope implements GenericTelescope {
 
         return str.toUpperCase();
     }
-    
+
     /**
      * Decode hexadecimal format which does not contain comma or null separator
      * @param str String containing the coordinate
@@ -703,7 +707,7 @@ public class CelestronTelescope implements GenericTelescope {
         return new LocationElement((double) val1 * COUNT_TO_DEGREES_16 * Constant.DEG_TO_RAD,
         		(double) val2 * COUNT_TO_DEGREES_16 * Constant.DEG_TO_RAD, 1.0);
     }
-    
+
     /**
      * Decode hexadecimal format which contains comma or null separator
      * @param str String containing the coordinate
@@ -713,10 +717,10 @@ public class CelestronTelescope implements GenericTelescope {
         String str2 = "";
         long val1 = 0L;
         long val2 = 0L;
-        
+
         if (highPrecision) {
             str1 = str.substring(0, 6);
-            str2 = str.substring(9, 15);            
+            str2 = str.substring(9, 15);
             val1 = Long.parseLong(str1, 16);
             val2 = Long.parseLong(str2, 16);
             return new LocationElement((double) val1 * COUNT_TO_DEGREES_24 * Constant.DEG_TO_RAD,
@@ -730,8 +734,8 @@ public class CelestronTelescope implements GenericTelescope {
             		(double) val2 * COUNT_TO_DEGREES_16 * Constant.DEG_TO_RAD, 1.0);
         }
     }
-    
-    /** 
+
+    /**
      * Decode hexadecimal string
      * @param str String containing coordinate from telescope
      * @param coord Point2D coordinate to be set
@@ -753,9 +757,9 @@ public class CelestronTelescope implements GenericTelescope {
     * Sets high precision.
     */
 	private synchronized void setHighPrecision() {
-        if (telescopeModel == TELESCOPE_MODEL.CELESTRON_NEXSTAR_5_8 || 
-        		telescopeModel == TELESCOPE_MODEL.CELESTRON_NEXSTAR_GT_ORIGINAL || 
-        		telescopeModel == TELESCOPE_MODEL.CELESTRON_NEXSTAR_GT) {	
+        if (telescopeModel == TELESCOPE_MODEL.CELESTRON_NEXSTAR_5_8 ||
+        		telescopeModel == TELESCOPE_MODEL.CELESTRON_NEXSTAR_GT_ORIGINAL ||
+        		telescopeModel == TELESCOPE_MODEL.CELESTRON_NEXSTAR_GT) {
         	highPrecision = false;
         } else {
         	highPrecision = true;
@@ -769,8 +773,8 @@ public class CelestronTelescope implements GenericTelescope {
 		}
 		// To set tracking, T + (char) mode, returning # (0=off,1=altaz,2=eq-n,3=eq-s)
 	}
-    
-    
+
+
     /**
     * Sends a command to the scope.
     */
@@ -792,7 +796,7 @@ public class CelestronTelescope implements GenericTelescope {
     		if (!sc.isOpen()) return null;
 
     		sc.sendString(cmd);
-            
+
             return this.readString();
     	} catch (Exception exc) {
     		exc.printStackTrace();
@@ -805,7 +809,7 @@ public class CelestronTelescope implements GenericTelescope {
     */
     private synchronized String readString() {
 		if (!sc.isOpen()) return "";
-		
+
 		String s = sc.receiveString();
     	if (s == null) return "";
     	if (s.endsWith("#")) s = s.substring(0, s.length()-1);
@@ -826,7 +830,7 @@ public class CelestronTelescope implements GenericTelescope {
     public double getFieldOfView(int camera) {
     	return field[camera];
     }
-    
+
     @Override
     public void setFieldOfView(double field, int camera) {
     	this.field[camera] = field;
@@ -852,7 +856,7 @@ public class CelestronTelescope implements GenericTelescope {
 	public boolean invertVertically() {
 		return type.invertV();
 	}
-	
+
 	private TELESCOPE_TYPE type = TELESCOPE_TYPE.SCHMIDT_CASSEGRAIN;
 	@Override
 	public void setTelescopeType(TELESCOPE_TYPE type) {
@@ -909,7 +913,7 @@ public class CelestronTelescope implements GenericTelescope {
 					new ImageHeaderElement("AZ", ""+hz.getLongitude(), "Telescope AZ"),
 					new ImageHeaderElement("EL", ""+hz.getLatitude(), "Telescope EL")
 			};
-			
+
 			if (cameraIndex < 0) return header0;
 
 			GenericCamera camera = this.getCameras()[cameraIndex];
@@ -930,7 +934,7 @@ public class CelestronTelescope implements GenericTelescope {
 					hz0 = CoordinateSystem.equatorialToHorizontal(eq, time, obs, eph);
 					header0 = ImageHeaderElement.addHeaderEntry(header0, new ImageHeaderElement("DATE-EFF", time.toString(), "Date and time for the middle of the observation"));
 					header0 = ImageHeaderElement.addHeaderEntry(header0, new ImageHeaderElement("AZ-EFF", ""+hz0.getLongitude(), "Telescope AZ for the middle of the observation"));
-					header0 = ImageHeaderElement.addHeaderEntry(header0, new ImageHeaderElement("EL-EFF", ""+hz0.getLatitude(), "Telescope EL for the middle of the observation"));					
+					header0 = ImageHeaderElement.addHeaderEntry(header0, new ImageHeaderElement("EL-EFF", ""+hz0.getLatitude(), "Telescope EL for the middle of the observation"));
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -939,7 +943,7 @@ public class CelestronTelescope implements GenericTelescope {
 			ImageHeaderElement cameraHeader[] = camera.getFitsHeaderOfLastImage();
 			cameraHeader = ImageHeaderElement.addHeaderEntry(cameraHeader, new ImageHeaderElement("FIELD", Functions.formatAngleAsDegrees(this.getFieldOfView(cameraIndex), 3), "Camera field of view (deg)"));
 			cameraHeader = ImageHeaderElement.addHeaderEntry(cameraHeader, new ImageHeaderElement("CAM_INDEX", ""+cameraIndex, "Camera index id value"));
-	
+
 			return ImageHeaderElement.addHeaderEntry(header0, cameraHeader);
 		} catch (Exception exc) {
 			exc.printStackTrace();
@@ -968,7 +972,7 @@ public class CelestronTelescope implements GenericTelescope {
 			        sc = new SerialConnection();
 			        sc.setPortName(ports[i]);
 			        sc.openConnection();
-			        
+
 			        String name = this.getTelescopeName();
 			        if (name != null && !name.equals("")) {
 			        	port = ports[i];
@@ -978,15 +982,15 @@ public class CelestronTelescope implements GenericTelescope {
 			        sc.closeConnection();
 				}
 				if (port == null) {
-					int s = JOptionPane.showOptionDialog(null, 
-							Translate.translate(1126), 
+					int s = JOptionPane.showOptionDialog(null,
+							Translate.translate(1126),
 							Translate.translate(1125), JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, ports, ports[0]);
 					if (s >= 0) port = ports[s];
 				}
 			}
 		}
 		if (port == null) throw new JPARSECException("No serial ports selected/available!");
-		
+
         sc = new SerialConnection();
         sc.setPortName(port);
         sc.openConnection();

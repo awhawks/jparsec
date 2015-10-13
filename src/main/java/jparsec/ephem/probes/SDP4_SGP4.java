@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -169,6 +169,14 @@ public class SDP4_SGP4
     DPSEC_XINC,DPSEC_XN,DPSEC_T;
 
   /**
+   * Returns the orbital elements for the artificial satellite
+   * computed by this instance.
+   * @return The {@linkplain SatelliteOrbitalElement} object.
+   */
+  public SatelliteOrbitalElement getSat() {
+	  return this.sat;
+  }
+  /**
    * The constructor to apply SDP4/SGP4 model.
    * @param sat The orbital elements.
    * @throws JPARSECException If the orbital elements cannot be
@@ -176,13 +184,9 @@ public class SDP4_SGP4
    */
   public SDP4_SGP4(SatelliteOrbitalElement sat) throws JPARSECException {
 	    Init();
-	     
+
 	    this.sat = sat;
 	    ReadNorad12(sat);
-  }
-
-  public SatelliteOrbitalElement getSat() {
-    return this.sat;
   }
 
   /**
@@ -612,7 +616,7 @@ public class SDP4_SGP4
   /**
    * Calculate ephemeris for the satellite.
    * The ephemerisElement object is used when transforming to apparent
-   * coordinates. In any other case output position is the same 
+   * coordinates. In any other case output position is the same
    * (geometric = astrometric).
    *
    * @param time Time object.
@@ -624,11 +628,11 @@ public class SDP4_SGP4
   {
 	  return calcSatellite(time, obs, eph, true);
   }
-	  
+
   /**
    * Calculate ephemeris for the satellite.
    * The ephemerisElement object is used when transforming to apparent
-   * coordinates. In any other case output position is the same 
+   * coordinates. In any other case output position is the same
    * (geometric = astrometric).
    *
    * @param time Time object.
@@ -655,7 +659,7 @@ public class SDP4_SGP4
     if (!isDeep) {RunSGP4(IFLAG, TS);}
     else                {RunSDP4(IFLAG, TS);}
 
-    
+
     // Rest of calculations for topocentric results
 	double LAT = obs.getLatitudeRad();
 	double LON = obs.getLongitudeRad();
@@ -708,10 +712,10 @@ public class SDP4_SGP4
     double VELx = itsV[0];
     double VELy = itsV[1];
     double VELz = itsV[2];
-    
+
 	double GHAA = jparsec.time.SiderealTime.greenwichMeanSiderealTime(time, obs, eph);
 	if (!FAST_MODE) GHAA += jparsec.time.SiderealTime.equationOfEquinoxes(time, obs, eph);
-	
+
 	double C = FastMath.cos(GHAA);
 	double S = -FastMath.sin(GHAA);
 	double Sx = (SATx * C - SATy * S);
@@ -756,7 +760,7 @@ public class SDP4_SGP4
 	double MASD = 0.98560028; // MA Sun and rate, deg, deg/day
 	double EQC1 = 0.03342;
 	double EQC2 = 0.00035; // Sun's Equation of centre terms
-	double EQC3 = 5.0E-6;		
+	double EQC3 = 5.0E-6;
 	double year = sat.year;
 	double days = sat.day;
 	// Convert satellite Epoch to Day No. and Fraction of day
@@ -780,13 +784,13 @@ public class SDP4_SGP4
 
 	double sunMeanRA = Constant.DEG_TO_RAD * G0 + TEG * earthTraslationRate + Math.PI; // Mean RA Sun at Sat epoch
 	double sunMeanAnomaly = Constant.DEG_TO_RAD * (MAS0 + MASD * TEG); // Mean MA Sun ..
-	
+
 	// Note other programs (XEphem among them) uses the following lines, which seems to be wrong
-	// by 0.004 deg around year 2011. Algorithm at Saros class from Calendrical Calculations agree 
+	// by 0.004 deg around year 2011. Algorithm at Saros class from Calendrical Calculations agree
 	// with previous code up to 0.00001 deg.
 	//double Tp = (itsEpochJD - 2415020.0) / 36525.0;
     //double sunMeanAnomaly2 = (358.475845 + 35999.04975 * Tp - 0.00015 * Tp * Tp - 0.00000333333 * Tp * Tp * Tp) * Constant.DEG_TO_RAD;
-    
+
 	double MAS = sunMeanAnomaly + Constant.DEG_TO_RAD * MASD * T; // MA of Sun round its orbit
 	MAS = Functions.normalizeRadians(MAS);
 	double TAS = sunMeanRA + earthTraslationRate * T + EQC1 * FastMath.sin(MAS) + EQC2 * FastMath.sin(2 * MAS) + EQC3 * FastMath.sin(3 * MAS);
@@ -877,7 +881,7 @@ public class SDP4_SGP4
 	if ((SEL * Constant.RAD_TO_DEG < -10.0) && !(ECL.equals("Eclipsed")))
 		ECL = "Possibly visible";
 
-	double iridiumAngle = SatelliteEphem.iridiumAngle(new double[] {Sx, Sy, Sz}, new double[] {Vx, Vy, Vz}, 
+	double iridiumAngle = SatelliteEphem.iridiumAngle(new double[] {Sx, Sy, Sz}, new double[] {Vx, Vy, Vz},
 			new double[] {Sx - Ox, Sy - Oy, Sz - Oz}, new double[] {Hx, Hy, Hz});
 
 	// Obtain Moon iridium angle
@@ -893,11 +897,11 @@ public class SDP4_SGP4
 
 		double Mx = MOONx * C - MOONy * S;
 		double My = MOONx * S + MOONy * C;
-		double Mz = MOONz; 
-		iridiumAngleMoon = SatelliteEphem.iridiumAngle(new double[] {Sx, Sy, Sz}, new double[] {Vx, Vy, Vz}, 
+		double Mz = MOONz;
+		iridiumAngleMoon = SatelliteEphem.iridiumAngle(new double[] {Sx, Sy, Sz}, new double[] {Vx, Vy, Vz},
 				new double[] {Sx - Ox, Sy - Oy, Sz - Oz}, new double[] {Mx, My, Mz});
 	}
-	
+
 	// Obtain Sun unit vector in EQ coordinates
 //	Hx =  SUNx*CXx + SUNy*CYx + SUNz*CZx;
 //	Hy =  SUNx*CXy + SUNy*CYy + SUNz*CZy;
@@ -907,20 +911,20 @@ public class SDP4_SGP4
 	if (ECL.equals("Eclipsed")) isEclipsed = true;
 
 	FastMath.EXACT_MODE = exactMode;
-	
+
 	double ELO = 0;
 	if (FAST_MODE) {
-		ELO = LocationElement.getApproximateAngularDistance(new LocationElement(SAZ, SEL, 1.0), new LocationElement(AZI, EL, 1.0));		
+		ELO = LocationElement.getApproximateAngularDistance(new LocationElement(SAZ, SEL, 1.0), new LocationElement(AZI, EL, 1.0));
 	} else {
 		ELO = LocationElement.getAngularDistance(new LocationElement(SAZ, SEL, 1.0), new LocationElement(AZI, EL, 1.0));
 	}
-	
+
 	LocationElement loc_horiz = new LocationElement(AZI, EL, R);
 	double ast = FAST_MODE ? GHAA + obs.getLongitudeRad() : SiderealTime.apparentSiderealTime(time, obs, eph);
 	LocationElement loc_eq = CoordinateSystem.horizontalToEquatorial(loc_horiz, ast, obs.getLatitudeRad(), true);
-	
+
 	if (FAST_MODE) {
-		SatelliteEphemElement ephem = new SatelliteEphemElement(sat.getName(), loc_eq.getLongitude(), loc_eq.getLatitude(), R, AZI, EL, 
+		SatelliteEphemElement ephem = new SatelliteEphemElement(sat.getName(), loc_eq.getLongitude(), loc_eq.getLatitude(), R, AZI, EL,
 				(float) SLON, (float) SLAT, (float) HGT, (float) RR, (float) ELO, (float) ILL,
 				isEclipsed, (int) RN);
 
@@ -964,14 +968,14 @@ public class SDP4_SGP4
 	 * Calculate the ephemeris of a satellite.
 	 * <P>
 	 * The ephemerisElement object is used when transforming to apparent
-	 * coordinates. In any other case output position is the same 
+	 * coordinates. In any other case output position is the same
 	 * (geometric = astrometric). Results are referred to mean equinox
 	 * of date.
 	 * <P>
 	 * A pass is defined as the instant when the satellite is more then 15
 	 * degrees above the horizon of the observer. A search for the next pass up
 	 * to 7 days after calculation time will be done.
-	 * 
+	 *
 	 * @param time Time object.
 	 * @param obs Observer object.
 	 * @param eph Ephemeris object. The index of the satellite must be added to the index property.
@@ -1013,14 +1017,14 @@ public class SDP4_SGP4
 	 * Calculate the ephemeris of a satellite.
 	 * <P>
 	 * The ephemerisElement object is used when transforming to apparent
-	 * coordinates. In any other case output position is the same 
+	 * coordinates. In any other case output position is the same
 	 * (geometric = astrometric). Results are referred to mean equinox
 	 * of date.
 	 * <P>
 	 * A pass is defined as the instant when the satellite is more then 15
 	 * degrees above the horizon of the observer. A search for the next pass up
 	 * to 7 days after calculation time will be done.
-	 * 
+	 *
 	 * @param time Time object.
 	 * @param obs Observer object.
 	 * @param eph Ephemeris object. The index of the satellite must be added to the index property.
@@ -1059,7 +1063,7 @@ public class SDP4_SGP4
 
 		return ephem;
 	}
-	
+
 	// Returns the approximate time in days required for a given satellite to move from
 	// one side to the other side of the sky from a given observer.
 	private static double getBestQuickSearch(SatelliteOrbitalElement sat, double minElev) {
@@ -1068,7 +1072,7 @@ public class SDP4_SGP4
 		double a = Math.pow((GM / (n * n)), 1.0 / 3.0); // Semi major axis km
 		double ecc = sat.eccentricity;
 		double b = a * Math.sqrt(1.0 - ecc * ecc); // Semi minor axis km
-		
+
 		double r = (a + b) / 2.0 - Constant.EARTH_RADIUS;
 		double ang = Constant.PI_OVER_TWO - 2.0 * minElev;
 		double dr = ang * r;
@@ -1076,7 +1080,7 @@ public class SDP4_SGP4
 		double dt = dr * Constant.SECONDS_PER_DAY / drDay;
 		return dt / Constant.SECONDS_PER_DAY; // days
 	}
-	
+
 	/**
 	 * Obtain the time of the next pass of the satellite above observer. It can be used
 	 * as an starting point prior to obtain rise, set, transit times.
@@ -1088,12 +1092,12 @@ public class SDP4_SGP4
 	 * <P>
 	 * The pass is a search iteration with a precision of 1 minute of time. If
 	 * the satellite appears too quickly or just below minimum elevation only
-	 * for a few seconds, then the search could fail. Another possible cause 
+	 * for a few seconds, then the search could fail. Another possible cause
 	 * of fail is for geostationary satellites.
 	 * <P>
 	 * The execution of this method is a low computer could last for quite a long
 	 * time.
-	 * 
+	 *
 	 * @param time Time object.
 	 * @param obs Observer object.
 	 * @param eph Ephemeris object.
@@ -1102,7 +1106,7 @@ public class SDP4_SGP4
 	 * @param maxDays Maximum number of days to search for a next pass.
 	 * @param current True to return the input time if the satellite is above the minimum
 	 * elevation, false to return next pass without considering the actual position of the satellite.
-	 * @return Julian day of the next pass in local time, or 0.0 if the satellite 
+	 * @return Julian day of the next pass in local time, or 0.0 if the satellite
 	 * has no next transit. If the day is negative that means that the satellite is
 	 * eclipsed during the next pass.
 	 * @throws JPARSECException If the method fails, for example because of an
@@ -1116,7 +1120,7 @@ public class SDP4_SGP4
 			throw new JPARSECException("invalid ephemeris object.");
 
 		if (min_elevation < 0.0 || min_elevation >= Math.PI*0.5) throw new JPARSECException("invalid minimum elevation.");
-		
+
 		// Obtain ephemeris
 		SDP4_SGP4 s = new SDP4_SGP4(sat);
 		s.FAST_MODE = true;
@@ -1135,10 +1139,10 @@ public class SDP4_SGP4
 		int quickSearch = (int) (0.5 + qs / 2.0);
 		if (quickSearch < 1) quickSearch = 1;
 		if (quickSearch > 8) quickSearch = 8;
-		
+
 		// Obtain next pass. First we obtain the time when the satellite is
 		// below the minimum elevation (necessary if it is currently above). Then, we
-		// obtain the next pass		
+		// obtain the next pass
 		while (ephem.elevation > min_elevation && nstep < max_step && !current)
 		{
 			nstep++;
@@ -1149,7 +1153,7 @@ public class SDP4_SGP4
 
 			ephem = s.calcSatellite(new_time, obs, eph, false);
 		}
-				
+
 		if (nstep >= max_step) {
 //			JPARSECException.addWarning("this satellite is permanently above the horizon and the minimum elevation.");
 			return 0.0;
@@ -1163,11 +1167,11 @@ public class SDP4_SGP4
 				if (ephem.elevation < -15.0 * Constant.DEG_TO_RAD) {
 					int bqs = quickSearch / 2;
 					if (bqs < 1) bqs = 1;
-					nstep = nstep + bqs;				
+					nstep = nstep + bqs;
 				} else {
 					int bqs = quickSearch / 4;
 					if (bqs < 1) bqs = 1;
-					nstep = nstep + bqs;									
+					nstep = nstep + bqs;
 				}
 			}
 			double new_JD = JD + (double) nstep * time_step;
@@ -1190,7 +1194,7 @@ public class SDP4_SGP4
 		}
 
 		double next_pass = TimeScale.getJD(time, obs, eph, SCALE.LOCAL_TIME) + nstep * time_step;
-		
+
 		if (next_pass >= JD_LT + maxDays) {
 //			JPARSECException.addWarning("could not find next pass time during next "+maxDays+" days.");
 			next_pass = 0.0;
@@ -1208,10 +1212,10 @@ public class SDP4_SGP4
 	 * three latest objects the ephemerides for the satellite when the flare starts, ends, and
 	 * reaches its maximum. In these objects the apparent magnitude expected for the flare is
 	 * set to the magnitude field, and it is corrected for extinction.
-	 * 
+	 *
 	 * The field {@linkplain SatelliteEphem#MAXIMUM_IRIDIUM_ANGLE_FOR_FLARES} sets the sensitivty when
 	 * searching for more or less bright flares.
-	 * 
+	 *
 	 * @param time Time object.
 	 * @param obs Observer object.
 	 * @param ephIn Ephemeris object.
@@ -1219,7 +1223,7 @@ public class SDP4_SGP4
 	 * @param min_elevation Minimum elevation of the satellite in radians.
 	 * @param maxDays Maximum number of days to search for a next flare.
 	 * @param current True to return the input time if the satellite is above the minimum
-	 * elevation and flaring, false to return next flare without considering the actual 
+	 * elevation and flaring, false to return next flare without considering the actual
 	 * position of the satellite.
 	 * @param precision Precision in the search for events in seconds. The more the value you enter here,
 	 * the faster the calculations will be, but some of the events could be skipped. A good value is
@@ -1227,15 +1231,15 @@ public class SDP4_SGP4
 	 * 1 and 10. The output precision of the found flares will be always 1s.
 	 * @return An array list with all the events for this satellite. The list will be null
 	 * if the satellite has no next flare during the number of days given. Otherwise, it will
-	 * contains arrays of double values with the Julian day of the beggining of the next flare 
+	 * contains arrays of double values with the Julian day of the beggining of the next flare
 	 * in local time, the Julian day of the ending time of the flare, the Julian day of the
 	 * maximum of the flare, and the minimum iridium angle as fourth value. The fifth, sixth,
 	 * and seventh values will be respectivelly the {@linkplain SatelliteEphemElement} object
-	 * for the start, end, and maximum times. No check is done 
-	 * for flares during day or night, although it is easy to provide a time object for sunset 
-	 * and a maximum number of days of 0.5 or the required value for sunrise. Precision in 
-	 * returned times is 1 second, and they consider the minimum elevation so that the start/end 
-	 * times could reflect the instants when the satellite reaches the minimum elevation (or 
+	 * for the start, end, and maximum times. No check is done
+	 * for flares during day or night, although it is easy to provide a time object for sunset
+	 * and a maximum number of days of 0.5 or the required value for sunrise. Precision in
+	 * returned times is 1 second, and they consider the minimum elevation so that the start/end
+	 * times could reflect the instants when the satellite reaches the minimum elevation (or
 	 * is eclipsed) and not the start/end times of the flare.
 	 * @throws JPARSECException If the method fails, for example because of an
 	 *         invalid date.
@@ -1257,14 +1261,14 @@ public class SDP4_SGP4
 		double jd = inputJD, jdOut = 0.0;
 		while (jd < limitJD && jd != 0.0) {
 			TimeElement newTime = new TimeElement(jd, refScale);
-			maxDays = limitJD - jd; 
+			maxDays = limitJD - jd;
 			jd = SDP4_SGP4.getNextPass(newTime, obs, eph, sat, min_elevation, maxDays, current);
 			jd = Math.abs(jd); // <0 => eclipsed, but this limitation should be set at the end only if the sat is eclipsed
 			if (jd > 0.0 && jd < limitJD_LT) {
 	 			jd = TimeScale.getJD(new TimeElement(Math.abs(jd), SCALE.LOCAL_TIME), obs, eph, refScale);
 				current = false;
 
-				jdOut = jd;				
+				jdOut = jd;
 				SDP4_SGP4 s = new SDP4_SGP4(sat);
 				s.FAST_MODE = true;
 				newTime = new TimeElement(jdOut, refScale);
@@ -1307,7 +1311,7 @@ public class SDP4_SGP4
 							ephem = s.calcSatellite(newTime, obs, eph);
 							ephem.magnitude = (float) SatelliteEphem.getIridiumFlareMagnitude(ephem, obs);
 							if (ephem.elevation > min_elevation) above = true;
-							
+
 							if (ephem.iridiumAngle <= SatelliteEphem.MAXIMUM_IRIDIUM_ANGLE_FOR_FLARES && startTime == 0.0) {
 					 			if (ephem.elevation < min_elevation || ephem.isEclipsed) {
 									startTime = 0.0;
@@ -1335,9 +1339,9 @@ public class SDP4_SGP4
 								startTime = 0.0;
 								break;
 							}
-						} while (true);					
+						} while (true);
 					}
-					
+
 					jd = jdOut;
 					if (startTime != 0.0) {
 						if (!max.isEclipsed) {
@@ -1352,7 +1356,7 @@ public class SDP4_SGP4
 		}
 		return events;
 	}
-	
+
 	/**
 	 * Obtain the time of the next lunar flares of the satellite above observer. This
 	 * method calls {@linkplain SDP4_SGP4#getNextPass(TimeElement, ObserverElement, EphemerisElement, SatelliteOrbitalElement, double, double, boolean)}
@@ -1360,10 +1364,10 @@ public class SDP4_SGP4
 	 * three latest objects the ephemerides for the satellite when the flare starts, ends, and
 	 * reaches its maximum. In these objects the apparent magnitude expected for the flare is
 	 * set to the magnitude field, and it is corrected for extinction.
-	 * 
+	 *
 	 * The field {@linkplain SatelliteEphem#MAXIMUM_IRIDIUM_ANGLE_FOR_LUNAR_FLARES} sets the sensitivty when
 	 * searching for more or less bright lunar flares.
-	 * 
+	 *
 	 * @param time Time object.
 	 * @param obs Observer object.
 	 * @param ephIn Ephemeris object.
@@ -1371,7 +1375,7 @@ public class SDP4_SGP4
 	 * @param min_elevation Minimum elevation of the satellite in radians.
 	 * @param maxDays Maximum number of days to search for a next flare.
 	 * @param current True to return the input time if the satellite is above the minimum
-	 * elevation and flaring, false to return next flare without considering the actual 
+	 * elevation and flaring, false to return next flare without considering the actual
 	 * position of the satellite.
 	 * @param precision Precision in the search for events in seconds. The more the value you enter here,
 	 * the faster the calculations will be, but some of the events could be skipped. A good value is
@@ -1379,15 +1383,15 @@ public class SDP4_SGP4
 	 * 1 and 10. The output precision of the found flares will be always 1s.
 	 * @return An array list with all the events for this satellite. The list will be null
 	 * if the satellite has no next flare during the number of days given. Otherwise, it will
-	 * contains arrays of double values with the Julian day of the beggining of the next flare 
+	 * contains arrays of double values with the Julian day of the beggining of the next flare
 	 * in local time, the Julian day of the ending time of the flare, the Julian day of the
 	 * maximum of the flare, and the minimum iridium angle as fourth value. The fifth, sixth,
 	 * and seventh values will be respectivelly the {@linkplain SatelliteEphemElement} object
-	 * for the start, end, and maximum times. No check is done 
-	 * for flares during day or night, although it is easy to provide a time object for sunset 
-	 * and a maximum number of days of 0.5 or the required value for sunrise. Precision in 
-	 * returned times is 1 second, and they consider the minimum elevation so that the start/end 
-	 * times could reflect the instants when the satellite reaches the minimum elevation (or 
+	 * for the start, end, and maximum times. No check is done
+	 * for flares during day or night, although it is easy to provide a time object for sunset
+	 * and a maximum number of days of 0.5 or the required value for sunrise. Precision in
+	 * returned times is 1 second, and they consider the minimum elevation so that the start/end
+	 * times could reflect the instants when the satellite reaches the minimum elevation (or
 	 * is eclipsed) and not the start/end times of the flare.
 	 * @throws JPARSECException If the method fails, for example because of an
 	 *         invalid date.
@@ -1409,14 +1413,14 @@ public class SDP4_SGP4
 		double jd = inputJD, jdOut = 0.0;
 		while (jd < limitJD && jd != 0.0) {
 			TimeElement newTime = new TimeElement(jd, refScale);
-			maxDays = limitJD - jd; 
+			maxDays = limitJD - jd;
 			jd = SDP4_SGP4.getNextPass(newTime, obs, eph, sat, min_elevation, maxDays, current);
 			jd = Math.abs(jd); // <0 => eclipsed, but this limitation should be set at the end only if the sat is eclipsed
 			if (jd > 0.0 && jd < limitJD_LT) {
 	 			jd = TimeScale.getJD(new TimeElement(Math.abs(jd), SCALE.LOCAL_TIME), obs, eph, refScale);
 				current = false;
 
-				jdOut = jd;				
+				jdOut = jd;
 				SDP4_SGP4 s = new SDP4_SGP4(sat);
 				s.FAST_MODE = true;
 				newTime = new TimeElement(jdOut, refScale);
@@ -1459,7 +1463,7 @@ public class SDP4_SGP4
 							ephem = s.calcSatellite(newTime, obs, eph);
 							ephem.magnitude = (float) SatelliteEphem.getIridiumLunarFlareMagnitude(newTime, obs, eph, ephem);
 							if (ephem.elevation > min_elevation) above = true;
-							
+
 							if (ephem.iridiumAngleForMoon <= SatelliteEphem.MAXIMUM_IRIDIUM_ANGLE_FOR_LUNAR_FLARES && startTime == 0.0) {
 					 			if (ephem.elevation < min_elevation || ephem.isEclipsed) {
 									startTime = 0.0;
@@ -1487,9 +1491,9 @@ public class SDP4_SGP4
 								startTime = 0.0;
 								break;
 							}
-						} while (true);					
+						} while (true);
 					}
-					
+
 					jd = jdOut;
 					if (startTime != 0.0) {
 						if (!max.isEclipsed) {
@@ -1504,7 +1508,7 @@ public class SDP4_SGP4
 		}
 		return events;
 	}
-	
+
 	/**
 	 * Calculates current or next rise, set, transit for a satellite. It is recommended that the
 	 * input ephem objects corresponds to a time when the satellite is above the horizon,
@@ -1536,7 +1540,7 @@ public class SDP4_SGP4
 			sat.transit = DataSet.addDoubleArray(sat.transit, new double[] {0.0});
 			sat.transitElevation = DataSet.addFloatArray(sat.transitElevation, new float[] {0.0f});
 		}
-		SatelliteEphemElement satOut = sat.clone();		
+		SatelliteEphemElement satOut = sat.clone();
 
 		// Obtain next pass time, when the satellite is at least 15 degrees
 		// above horizon
@@ -1544,10 +1548,10 @@ public class SDP4_SGP4
 			// Check Ephemeris object
 			if (!EphemerisElement.checkEphemeris(eph))
 				throw new JPARSECException("invalid ephemeris object.");
-	
+
 			if (eph.targetBody.getIndex() < 0)
 				throw new JPARSECException("invalid target body in ephemeris object.");
-	
+
 			// Obtain object
 			SatelliteOrbitalElement satOrb = SatelliteEphem.getArtificialSatelliteOrbitalElement(eph.targetBody.getIndex());
 			double min_elevation = 15.0 * Constant.DEG_TO_RAD;
@@ -1581,7 +1585,7 @@ public class SDP4_SGP4
 		double rise = jd;
 		if (iter == maxIter) rise = 0.0;
 		iter = 0;
-		
+
 		jd = jdref;
 		do {
 			iter ++;
@@ -1607,7 +1611,7 @@ public class SDP4_SGP4
 		satOut.transitElevation[index] = traE;
 		return satOut;
 	}
-	
+
   /**
    * A helper routine to calculate the two-dimensional inverse tangens. */
   private final double ACTAN(double SINX, double COSX)
@@ -1650,7 +1654,7 @@ public class SDP4_SGP4
 
 
   /**
-   * Deep space initialization. 
+   * Deep space initialization.
  * @throws JPARSECException */
 
   private final void DEEP1() throws JPARSECException
@@ -2253,7 +2257,7 @@ public class SDP4_SGP4
 
 
   /**
-   * Wrapper for deep space initialization. 
+   * Wrapper for deep space initialization.
  * @throws JPARSECException */
 
   private final void DPINIT(double EOSQ, double SINIO, double COSIO,
@@ -2352,7 +2356,7 @@ public class SDP4_SGP4
    *   It is then returned as 0 and can be given as 0 for further calls.
    * @param TSINCE
    *   TSINCE[0] is the time difference between the time of interest and the
-   *   epoch of the TLE.  It must be given in minutes. 
+   *   epoch of the TLE.  It must be given in minutes.
  * @throws JPARSECException */
 
   private final void RunSDP4(int[] IFLAG, double[] TSINCE) throws JPARSECException
@@ -2664,7 +2668,7 @@ public class SDP4_SGP4
 	/ (SGP4_AO * SGP4_AO * SGP4_BETAO * SGP4_BETAO2);
       SGP4_XNODP = E1_XNO / (1. + SGP4_DELO);
       SGP4_AODP = SGP4_AO / (1. - SGP4_DELO);
-      
+
       /* INITIALIZATION
        *
        * FOR PERIGEE LESS THAN 220 KILOMETERS, THE SGP4_ISIMP FLAG IS SET AND
@@ -2735,7 +2739,7 @@ public class SDP4_SGP4
       SGP4_XMCOF = -C1_TOTHRD * SGP4_COEF * E1_BSTAR * C1_AE / SGP4_EETA;
       SGP4_XNODCF = 3.5 * SGP4_BETAO2 * SGP4_XHDOT1 * SGP4_C1;
       SGP4_T2COF = 1.5 * SGP4_C1;
-      SGP4_XLCOF = .125 * SGP4_A3OVK2 * SGP4_SINIO 
+      SGP4_XLCOF = .125 * SGP4_A3OVK2 * SGP4_SINIO
 	  * (3. + 5. * SGP4_COSIO) / (1. + SGP4_COSIO);
       SGP4_AYCOF = .25 * SGP4_A3OVK2 * SGP4_SINIO;
       SGP4_DELMO = (1. + SGP4_ETA * Math.cos(E1_XMO));
@@ -2811,7 +2815,7 @@ public class SDP4_SGP4
       TEMP4 = AYN * COSEPW;
       TEMP5 = AXN * COSEPW;
       TEMP6 = AYN * SINEPW;
-      EPW = (CAPU - TEMP4 + SGP4_TEMP3 - SGP4_TEMP2) 
+      EPW = (CAPU - TEMP4 + SGP4_TEMP3 - SGP4_TEMP2)
 	/ (1. - TEMP5 - TEMP6) + SGP4_TEMP2;
       if (Math.abs(EPW - SGP4_TEMP2) <= C1_E6A) break;
       SGP4_TEMP2 = EPW;
@@ -2893,12 +2897,12 @@ public class SDP4_SGP4
   private final double THETAG(double EP) throws JPARSECException
   {
 /*
-   	// Original algorithm. Difference with JPARSEC is currently negligible, but this is 
+   	// Original algorithm. Difference with JPARSEC is currently negligible, but this is
    	// only valid in a limited range of dates. Note here EP is not a JD
     double YR = (EP + 2.E-7) * 1.E-3;
     int JY = (int)YR;
     double D = EP - JY * 1.E3;
-    //if (JY < 57) 
+    //if (JY < 57)
     	JY = JY + 100; // INCORRECT: Only valid if reference year is 2100>y>=2000 (orbital elements prior to 2000 will be wrong)
 
 		double N = (JY - 69) / 4;
@@ -2906,7 +2910,7 @@ public class SDP4_SGP4
 	    E1_DS50 = 7305. + 365. * (JY - 70) + N + D;
 	    double gst = Functions.normalizeRadians(1.72944494 + 6.3003880987 * E1_DS50);
 	    return gst;
-*/	    
+*/
 	  try {
 			AstroDate astro = new AstroDate(EP);
 			TimeElement time = new TimeElement(astro, SCALE.UNIVERSAL_TIME_UTC);
@@ -2920,9 +2924,9 @@ public class SDP4_SGP4
 			return SiderealTime.greenwichMeanSiderealTime(time, observer, eph);
 	  } catch (Exception exc) {
 		  throw new JPARSECException("Invalid epoch");
-	  }		  
+	  }
   }
-  
+
   /**
    * Reads the orbital elements into internal variables.
    * @param sat The orbital elements for the satellite.

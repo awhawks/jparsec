@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,8 +18,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.ephem.stars;
+
+import java.io.Serializable;
 
 import jparsec.ephem.EphemerisElement;
 import jparsec.ephem.Target.TARGET;
@@ -41,28 +43,28 @@ import jparsec.util.JPARSECException;
  * 		System.out.println(re.getNumberOfObjects());
  * 		int index = re.searchByName("alpha centauri");
  * 		DoubleStarElement dstar = re.getDoubleStarElement(index);
- * 
+ *
  * 		AstroDate astro = new AstroDate(2010, 1, 1);
  * 		TimeElement time = new TimeElement(astro.jd(), SCALE.UNIVERSAL_TIME_UTC);
  * 		CityElement city = City.findCity("Madrid");
  * 		ObserverElement observer = ObserverElement.parseCity(city);
- * 
+ *
  * 		dstar.calcEphemeris(time, observer);
  * } catch (Exception e)
  * {
  *		e.printStackTrace();
- * } 
- * </pre> 
+ * }
+ * </pre>
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
-public class DoubleStarElement {
+public class DoubleStarElement implements Serializable {
 
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Constructs an star object providing the values of the fields.
-	 * 
+	 *
 	 * @param nom Name.
 	 * @param ra Right Ascension in radians.
 	 * @param dec Declination in radians.
@@ -78,7 +80,7 @@ public class DoubleStarElement {
 	 * @param ref Contain a link to a file of references.
 	 * @param png Contain a link to a png file showing the orbit.
 	 */
-	public DoubleStarElement(String nom, double ra, double dec, String wds, String ads, String hd, String hipp, 
+	public DoubleStarElement(String nom, double ra, double dec, String wds, String ads, String hd, String hipp,
 			String magP, String magS, OrbitalElement orbit, int orbitG, String notes, String ref, String png)
 	{
 		rightAscension = ra;
@@ -166,7 +168,7 @@ public class DoubleStarElement {
 	 * Link to online png file showing the orbit.
 	 */
 	public String orbitPNG;
-	
+
 	/**
 	 * Right Ascension in radians from the catalogue.
 	 */
@@ -189,7 +191,10 @@ public class DoubleStarElement {
 		out.rho = this.rho;
 		return out;
 	}
-
+	/**
+	 * Returns true if the input object is equals to this
+	 * instance.
+	 */
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -243,11 +248,6 @@ public class DoubleStarElement {
 		return result;
 	}
 
-	/**
-	 * Returns true if the input object is equal to this
-	 * instance.
-	 */
-
 	private double pa, rho;
 	/**
 	 * Return position angle.
@@ -288,11 +288,11 @@ public class DoubleStarElement {
 				EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.TOPOCENTRIC, EphemerisElement.REDUCTION_METHOD.IAU_2006,
 				EphemerisElement.FRAME.ICRF, EphemerisElement.ALGORITHM.ORBIT, this.orbit);
 		double pos[] = OrbitEphem.obtainPosition(time, observer, eph);
-		
+
 		rho = Math.sqrt(pos[0]*pos[0]+pos[1]*pos[1]);
-		pa = Math.atan2(pos[1], pos[0]);		
+		pa = Math.atan2(pos[1], pos[0]);
 	}
-	
+
 	/**
 	 * Returns the equatorial position of this star.
 	 * @return Equatorial position.

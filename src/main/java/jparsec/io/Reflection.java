@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */	
+ */
 package jparsec.io;
 
 import java.lang.reflect.Constructor;
@@ -71,7 +71,7 @@ public class Reflection {
 	 * Calls an static method with one parameter (a double) and that returns also a double,
 	 * for all values in a given array.
 	 * @param c The Class.
-	 * @param method Method name. It must be a static method of the Class c requiring one 
+	 * @param method Method name. It must be a static method of the Class c requiring one
 	 * double parameter.
 	 * @param v The array of values.
 	 * @return The array of output values, out[i] = class.method(v[i]).
@@ -163,11 +163,11 @@ public class Reflection {
 			if (!srcC.getName().equals(destC.getName())) throw new JPARSECException("Source and destination objects must be instances of the same class.");
 			if (!srcC.getCanonicalName().equals(destC.getCanonicalName())) throw new JPARSECException("Source and destination objects must be instances of the same class.");
 			if (!srcC.getPackage().equals(destC.getPackage())) throw new JPARSECException("Source and destination objects must be instances of the same class.");
-			
+
 			Field srcF[] = srcC.getDeclaredFields();
 			Field destF[] = destC.getDeclaredFields();
 			if (srcF.length != destF.length) throw new JPARSECException("Source and destination objects must be instances of the same class.");
-			
+
 			for (int i=0; i<srcF.length; i++) {
 				int index = i;
 				String srcFi = srcF[i].getName();
@@ -178,10 +178,10 @@ public class Reflection {
 							index = j;
 							break;
 						}
-					}				
+					}
 					if (index < 0) throw new JPARSECException("Source and destination objects must be instances of the same class.");
 				}
-				
+
 				int mod = destF[index].getModifiers();
 				if (Modifier.isPrivate(mod)) {
 					destF[index].setAccessible(true);

@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.math;
 
 import java.math.BigDecimal;
@@ -26,10 +26,10 @@ import java.math.BigDecimal;
 /**
  * Some useful physical constants, preferently in International System of Units.
  * <P>
- * Values taken from CODATA 2010, 2006, CODATA 2002, and E.R. Cohen, B. N. Taylor, 
- * "The Fundamental Physical Constants", Phys. Today, August 1997. 
+ * Values taken from CODATA 2010, 2006, CODATA 2002, and E.R. Cohen, B. N. Taylor,
+ * "The Fundamental Physical Constants", Phys. Today, August 1997.
  * AU definition following JPL Ephemeris.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @author M. Huss
  * @version 1.0
@@ -38,7 +38,7 @@ public class Constant
 {
 	// private constructor so that this class cannot be instantiated.
 	private Constant() {}
-	
+
 	/** Diference between Julian day and Modified Julian day, that starts on
 	 * Nov, 17, 1858. */
 	public static double JD_MINUS_MJD = 2400000.5;
@@ -48,7 +48,7 @@ public class Constant
 
 	/** 2 PI number as a big decimal with 100 decimal places */
 	public static final BigDecimal BIG_TWO_PI = BIG_PI.multiply(new BigDecimal(2.0));
-	
+
 	/** Two times Pi. */
 	public static final double TWO_PI = 2.0 * Math.PI;
 
@@ -195,7 +195,7 @@ public class Constant
 
 	/** Planck constant in J*s. Value from CODATA 2010. */
 	public static final double PLANCK_CONSTANT = 6.62606957E-34;
-	
+
 	/** Constant to transform erg to Jules. */
 	public static final double ERGIO_TO_JULE = 1.0E-7;
 

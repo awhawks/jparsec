@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.graph.chartRendering.frame;
 
 import java.awt.BorderLayout;
@@ -58,16 +58,16 @@ import jparsec.util.Logger.LEVEL;
 /**
  * Support class to use Swing/AWT graph components for
  * eclipse rendering.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  * @see SkyChart
  */
-public class EclipseRendering implements Serializable
+public class EclipseRendering  implements Serializable
 {
 	private Frame frame;
 	private RenderEclipseMap renderEclipse;
-	
+
 	TimeElement time;
 	ObserverElement obs;
 	EphemerisElement eph;
@@ -75,10 +75,9 @@ public class EclipseRendering implements Serializable
 	int width, height;
 	ANAGLYPH_COLOR_MODE colorMode = ANAGLYPH_COLOR_MODE.NO_ANAGLYPH;
 	PLANET_MAP map = PLANET_MAP.NO_MAP;
-
 	/**
 	 * Sample render constructor.
-	 * 
+	 *
 	 * @param time Time object.
 	 * @param obs Observer object.
 	 * @param eph Ephemeris object.
@@ -115,7 +114,7 @@ public class EclipseRendering implements Serializable
 	{
 		this.showRendering(false);
 	}
-	
+
 	/**
 	 * To show the rendering.
 	 * @param undecorated True to show the Frame without decoration.
@@ -127,7 +126,7 @@ public class EclipseRendering implements Serializable
 			frame = new Frame(t);
 		}
 		frame.setUndecorated(undecorated);
-		
+
 		frame.addWindowListener(new WindowAdapter()
 		{
 			public void windowClosing(WindowEvent evt)
@@ -146,7 +145,7 @@ public class EclipseRendering implements Serializable
 
 		frame.setVisible(true);
 	}
-	
+
 	/**
 	 * Draws the current chart to a Graphics device.
 	 * @param g Graphics object.
@@ -182,7 +181,7 @@ public class EclipseRendering implements Serializable
 	// Define ID version of the class.
 	static final long serialVersionUID = 1L;
 
-	
+
 	/**
 	 * Returns the render panel.
 	 * @return The panel.
@@ -190,7 +189,7 @@ public class EclipseRendering implements Serializable
 	public JComponent getPanel() {
 		return this.renderEclipse;
 	}
-	
+
 	/**
 	 * Returns render object.s
 	 * @return Render object.
@@ -199,7 +198,7 @@ public class EclipseRendering implements Serializable
 	{
 		return this.renderEclipse.getRenderEclipse();
 	}
-	
+
 	/**
 	 * Returns time object.
 	 * @return Time object.
@@ -271,9 +270,9 @@ public class EclipseRendering implements Serializable
 class RenderEclipseMap extends JComponent
 {
 	private static final long serialVersionUID = 1L;
-	jparsec.graph.chartRendering.RenderEclipse rp; 
+	jparsec.graph.chartRendering.RenderEclipse rp;
 	private EclipseRendering render;
-	
+
 	/**
 	 * The constructor.
 	 * @param time Time object.
@@ -289,7 +288,7 @@ class RenderEclipseMap extends JComponent
 		if (render.solar) rp = new jparsec.graph.chartRendering.RenderEclipse(time.astroDate);
 		this.render = render;
 	}
-	
+
 	/**
 	 * Paint the graph.
 	 */
@@ -306,7 +305,7 @@ class RenderEclipseMap extends JComponent
 
 	/**
 	 * Renderize an eclipse.
-	 * 
+	 *
 	 * @param g Graphics object.
 	 * @throws JPARSECException Thrown if the calculation fails.
 	 */
@@ -318,7 +317,7 @@ class RenderEclipseMap extends JComponent
 			if (render.solar) {
 				rp.renderSolarEclipse(render.time.timeScale, render.obs, render.eph, gj, true, render.map);
 			} else {
-				RenderEclipse.renderLunarEclipse(render.time, render.obs, render.eph, gj, true, render.map);				
+				RenderEclipse.renderLunarEclipse(render.time, render.obs, render.eph, gj, true, render.map);
 			}
 			g.drawImage((BufferedImage) gj.getRendering(), 0, 0, this);
 		} catch (Exception exc) {
@@ -335,16 +334,16 @@ class RenderEclipseMap extends JComponent
 	public jparsec.graph.chartRendering.RenderEclipse getRenderEclipse() {
 		return rp;
 	}
-	
+
 	/**
 	 * The buffer image
 	 */
-	public Image buffer = null;	
+	public Image buffer = null;
 	private boolean doRedraw = true;
-	
+
 	/**
 	 * Paints the canvas using double buffering.
-	 * 
+	 *
 	 * @see #offscreenPaint
 	 */
 	public final void paintComponent(Graphics g)
@@ -370,7 +369,7 @@ class RenderEclipseMap extends JComponent
 			offscreenPaint(graphics);
 		}
 		g.drawImage(buffer, insets.left, insets.top, null);
-		
+
 		// Fix component's background in case its size is greater than the rendering
 		Color c = g.getColor();
 		g.setColor(Color.BLACK); //new Color(render.background));
@@ -406,7 +405,7 @@ class RenderEclipseMap extends JComponent
 
 	/**
 	 * Double buffering is always enabled.
-	 * 
+	 *
 	 * @return true.
 	 */
 	public final boolean isDoubleBuffered()

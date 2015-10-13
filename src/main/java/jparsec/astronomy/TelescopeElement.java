@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.astronomy;
 
 import java.io.Serializable;
@@ -40,15 +40,15 @@ import jparsec.util.Translate;
  * but this should be done only with a null ocular ({@linkplain OcularElement}).
  * The method {@linkplain #attachCCDCamera(CCDElement)} is recommended to change
  * between visual and CCD modes. You can also use {@linkplain CCDElement} directly
- * for quick calculations, including those unsupported here like having an ocular 
+ * for quick calculations, including those unsupported here like having an ocular
  * between the telescope and the CCD camera.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
 public class TelescopeElement implements Serializable
 {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Creates a default TelescopeElement with no information.
@@ -61,7 +61,7 @@ public class TelescopeElement implements Serializable
 	 * {@linkplain #invertHorizontal} is set to true, supposing you are looking using the diagonal
 	 * mirror. For Newtonians and refractors both {@linkplain #invertHorizontal} and
 	 * {@linkplain #invertVertical} are set to true, supposing you are not using an erecting prism.
-	 * 
+	 *
 	 * @param n Name of the telescope.
 	 * @param focal Focal length of the telescope in mm.
 	 * @param diam Diameter in mm.
@@ -101,13 +101,13 @@ public class TelescopeElement implements Serializable
 				newton = true;
 			}
 		}
-			
+
 		if (sct && !newton && !refractor) {
 			this.invertHorizontal = true; // Only horizontal flip, assuming the diagonal mirror is used. Otherwise it would be like a refractor
 		}
 		if (!sct && newton && !refractor) { // Classic inverted view of the Newtonians
 			this.invertHorizontal = true;
-			this.invertVertical = true;			
+			this.invertVertical = true;
 		}
 		if (!sct && !newton && refractor) { // Without erecting prism we have an inverted image
 			this.invertHorizontal = true;
@@ -146,7 +146,7 @@ public class TelescopeElement implements Serializable
 	 */
 	public OcularElement ocular;
 	private OcularElement lastOcular;
-	
+
 	/**
 	 * CCD camera attached to the telescope instead of an ocular. To be used
 	 * this value must be non null and ocular must be null;
@@ -164,19 +164,19 @@ public class TelescopeElement implements Serializable
 	 * True if the telescope inverts the image from East-West.
 	 */
 	public boolean invertHorizontal;
-	
+
 	/**
 	 * True if the telescope inverts the vision from North-South.
 	 */
 	public boolean invertVertical;
-	
+
 	/**
 	 * Returns an adequate object for a typical 20 cm f/10 Schmidt-Cassegrain
 	 * reflector telescope with the default ocular.
 	 */
 	public static final TelescopeElement SCHMIDT_CASSEGRAIN_20cm =
 		new TelescopeElement("Schmidt-Cassegrain 20cm f/10", 2003, 200, 80, 0, 0.75f, new OcularElement());
-	
+
 
 	/**
 	 * Returns an adequate object for a typical 40 cm f/10 Schmidt-Cassegrain
@@ -224,7 +224,7 @@ public class TelescopeElement implements Serializable
 	 * is set to output pupil size.
 	 */
 	public static final TelescopeElement BINOCULARS_11x80 =
-		new TelescopeElement("Binoculars 11x80", 220, 80, 0, 0, 0, 
+		new TelescopeElement("Binoculars 11x80", 220, 80, 0, 0, 0,
 				new OcularElement("Binoculars", 17, 65 * Constant.DEG_TO_RAD, 7));
 
 	/**
@@ -232,7 +232,7 @@ public class TelescopeElement implements Serializable
 	 * set to output pupil size.
 	 */
 	public static final TelescopeElement BINOCULARS_7x50 =
-		new TelescopeElement("Binoculars 7x50", 140, 50, 0, 0, 0, 
+		new TelescopeElement("Binoculars 7x50", 140, 50, 0, 0, 0,
 				new OcularElement("Binoculars", 17, 65 * Constant.DEG_TO_RAD, 7));
 
 	/**
@@ -240,7 +240,7 @@ public class TelescopeElement implements Serializable
 	 * objective. Reticle size is set to 43mm.
 	 */
 	public static final TelescopeElement OBJECTIVE_300mm_f2_8 =
-		new TelescopeElement("Objective 300mm f/2.8", 300, 107, 0, 0, 0, 
+		new TelescopeElement("Objective 300mm f/2.8", 300, 107, 0, 0, 0,
 				new OcularElement("Human eye", 38, 65 * Constant.DEG_TO_RAD, 43));
 
 	/**
@@ -248,13 +248,13 @@ public class TelescopeElement implements Serializable
 	 * objective. Reticle size is set to 46mm.
 	 */
 	public static final TelescopeElement OBJECTIVE_50mm_f1_4 =
-		new TelescopeElement("Objective 50mm f/1.4", 50, 36, 0, 0, 0, 
+		new TelescopeElement("Objective 50mm f/1.4", 50, 36, 0, 0, 0,
 				new OcularElement("Human eye", 38, 65 * Constant.DEG_TO_RAD, 46));
 
 	/**
-	 * Return all intrinsic telescopes. This methods also updates the names of the 
+	 * Return all intrinsic telescopes. This methods also updates the names of the
 	 * static list of telescopes, in case the default language has changed.
-	 * 
+	 *
 	 * @return Array of Telescope objects.
 	 */
 	public static TelescopeElement[] getTelescopes()
@@ -267,11 +267,11 @@ public class TelescopeElement implements Serializable
 				TelescopeElement.OBJECTIVE_50mm_f1_4, TelescopeElement.HUMAN_EYE };
 		if (Translate.getDefaultLanguage() != Translate.LANGUAGE.ENGLISH)  {
 			for (int i=6; i<tel.length-1; i++) {
-				tel[i].name = Translate.translate(FileIO.getField(1, tel[i].name, " ", true)) + " " + FileIO.getRestAfterField(1, tel[i].name, " ", true);				
+				tel[i].name = Translate.translate(FileIO.getField(1, tel[i].name, " ", true)) + " " + FileIO.getRestAfterField(1, tel[i].name, " ", true);
 			}
 			tel[tel.length-1].name = Translate.translate(tel[tel.length-1].name);
 		}
-		
+
 		for (int i=0; i<tel.length; i++) {
 			if (tel[i].ocular != null) {
 				tel[i].ocular.name = Translate.translate(tel[i].ocular.name);
@@ -282,7 +282,7 @@ public class TelescopeElement implements Serializable
 
 	/**
 	 * Return all telescopes, intrinsic plus from external file.
-	 * 
+	 *
 	 * @return Array of Telescope objects.
 	 * @throws JPARSECException Thrown if the method fails.
 	 */
@@ -311,7 +311,7 @@ public class TelescopeElement implements Serializable
 	}
 	/**
 	 * Return all telescopes, intrinsic plus from external file.
-	 * 
+	 *
 	 * @return Array of telescope names.
 	 * @throws JPARSECException Thrown if the method fails.
 	 */
@@ -325,11 +325,11 @@ public class TelescopeElement implements Serializable
 		}
 		return n;
 	}
-	
+
 	/**
 	 * Return all telescopes from an external file. Designed specially for input
 	 * file scope.txt in sky.jar.
-	 * 
+	 *
 	 * @param jarfile Name of the jarfile.
 	 * @param jarpath Path to the file.
 	 * @param fmt File format array with telescope name as NAME, diameter in mm
@@ -351,7 +351,7 @@ public class TelescopeElement implements Serializable
 
 		OcularElement ocular = new OcularElement();
 		ReadFormat rf = new ReadFormat();
-		
+
 		rf.setFormatToRead(fmt);
 		for (int i = 0; i < v.size(); i++)
 		{
@@ -390,7 +390,7 @@ public class TelescopeElement implements Serializable
 
 	/**
 	 * Return certain telescope.
-	 * 
+	 *
 	 * @param telescope_name Name of the telescope;
 	 * @return The required Telescope object, or null if none is found.
 	 * @throws JPARSECException Thrown if the method fails.
@@ -414,7 +414,7 @@ public class TelescopeElement implements Serializable
 
 	/**
 	 * Returns the angular field of view diameter at prime focus.
-	 * 
+	 *
 	 * @return The angular field in radians.
 	 */
 	public double getPrimaryFocusField()
@@ -429,7 +429,7 @@ public class TelescopeElement implements Serializable
 	 * In case a camera is attached (and ocular is null) the returned
 	 * value will be the field of view of the camera in the x axis.
 	 * For both null camera and ocular the primary focus field is returned.
-	 * 
+	 *
 	 * @return The angular field in radians.
 	 * @throws JPARSECException If an error occurs.
 	 */
@@ -444,7 +444,7 @@ public class TelescopeElement implements Serializable
 	/**
 	 * Returns the ocular focal length to obtain certain field of view in a
 	 * given telescope. The ocular object is required
-	 * 
+	 *
 	 * @param field Desired field of view in radians.
 	 * @param telescope Telescope.
 	 * @return The adequate ocular focal length in mm, or 0 if the telescope
@@ -454,7 +454,7 @@ public class TelescopeElement implements Serializable
 			TelescopeElement telescope)
 	{
 		if (telescope.ocular == null) return 0;
-		
+
 		double mag = telescope.ocular.fieldOfView / field;
 
 		float fl = (float) (telescope.focalLength / mag);
@@ -464,7 +464,7 @@ public class TelescopeElement implements Serializable
 
 	/**
 	 * Obtains the magnification of the telescope using the current ocular.
-	 * 
+	 *
 	 * @return Magnification factor.
 	 * @throws JPARSECException If an error occurs, for instance for a null ocular.
 	 */
@@ -475,7 +475,7 @@ public class TelescopeElement implements Serializable
 
 	/**
 	 * Obtains the output size of the pupil using the current ocular.
-	 * 
+	 *
 	 * @return Magnification factor.
 	 * @throws JPARSECException If an error occurs, for instance for a null ocular.
 	 */
@@ -487,7 +487,7 @@ public class TelescopeElement implements Serializable
 
 	/**
 	 * Obtains the focal ratio of the telescope.
-	 * 
+	 *
 	 * @return Focal ratio.
 	 */
 	public double getFocalRatio()
@@ -498,9 +498,9 @@ public class TelescopeElement implements Serializable
 	/**
 	 * To clone the object.
 	 */
+	@Override
 	public TelescopeElement clone()
 	{
-		if (this == null) return null;
 		TelescopeElement tel = null;
 		if (ocular == null) {
 			tel = new TelescopeElement(this.name, this.focalLength, this.diameter,
@@ -510,6 +510,8 @@ public class TelescopeElement implements Serializable
 				this.centralObstruction, this.spidersSize, this.cromatismLevel, this.ocular.clone());
 		}
 		if (ccd != null) tel.ccd = this.ccd.clone();
+		tel.lastOcular = null;
+		if (this.lastOcular != null) tel.lastOcular = this.lastOcular.clone();
 		tel.invertHorizontal = this.invertHorizontal;
 		tel.invertVertical = this.invertVertical;
 		return tel;
@@ -602,11 +604,11 @@ public class TelescopeElement implements Serializable
 	}
 	/**
 	 * Returns the approximate limiting magnitude of the telescope with a CCD
-	 * camera attached. Based on the original program in BASIC by Bradley E. 
-	 * Schaefer in "Limiting Magnitudes for CCDs", Sky and Telescope page 117 
+	 * camera attached. Based on the original program in BASIC by Bradley E.
+	 * Schaefer in "Limiting Magnitudes for CCDs", Sky and Telescope page 117
 	 * of the May 1998 issue.
 	 * @param s Exposure time in seconds.
-	 * @param sb Sky brightness in mag/s^2. A good value is 19. Typical values are 
+	 * @param sb Sky brightness in mag/s^2. A good value is 19. Typical values are
 	 * between 16 and 24.
 	 * @param rn Readout noise in e- per pixel. Typical values for good CCDs and DLSR
 	 * cameras are around 7.
@@ -647,7 +649,7 @@ public class TelescopeElement implements Serializable
 					}
 				}
 			}
-			
+
 			double l = 1.0 / Math.pow(10.0, m / 2.5);
 			double sg = l * s * so * en * ap * ap;
 			double sk = s * so * ar * ap * ap / Math.pow(10.0, sb / 2.5);
@@ -672,23 +674,23 @@ public class TelescopeElement implements Serializable
 
 	/**
 	 * Returns the theoretical resolution of the telescope for a given wavelength,
-	 * using the Dawes limit. Returned value is for visual observations, not 
+	 * using the Dawes limit. Returned value is for visual observations, not
 	 * affected in case a camera is attached.
 	 * @param lambda wavelength in microns. For optical wavelengths you can use
-	 * 0.55 microns, resulting in slightly lower resolution compared to 
+	 * 0.55 microns, resulting in slightly lower resolution compared to
 	 * {@linkplain #getResolution()}.
 	 * @return Resolution in radians, set as 1.22 * wavelength / diameter.
 	 */
 	public double getResolution(double lambda) {
 		return 1.22 * lambda * 1.0E-3 / (double) this.diameter;
 	}
-	
+
 	/**
 	 * Returns the theoretical resolution of the telescope for a given wavelength,
-	 * using the Dawes limit. Returned value is for visual observations, not 
+	 * using the Dawes limit. Returned value is for visual observations, not
 	 * affected in case a camera is attached.
 	 * @param lambda wavelength in microns. For optical wavelengths you can use
-	 * 0.55 microns, resulting in slightly lower resolution compared to 
+	 * 0.55 microns, resulting in slightly lower resolution compared to
 	 * {@linkplain #getResolution()}.
 	 * @param diameter Diameter of the telescope in mm.
 	 * @return Resolution in radians, set as 1.22 * wavelength / diameter.

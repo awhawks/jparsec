@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,25 +18,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.ephem.probes;
 
 import java.io.Serializable;
 
 /**
  * An adequate class for storing orbital elements of artificial satellites.
- * 
+ *
  * @see SatelliteEphem
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
 public class SatelliteOrbitalElement implements Serializable
 {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Explicit constructor of a satellite orbit object.
-	 * 
+	 *
 	 * @param nom Name of the satellite.
 	 * @param sat_n Satellite number.
 	 * @param y Reference year of the elements.
@@ -171,9 +171,8 @@ public class SatelliteOrbitalElement implements Serializable
 				this.argumentOfPerigee, this.meanMotion, this.revolutionNumber, this.secondDerivative, this.drag);
 		return s;
 	}
-
 	/**
-	 * Returns true if a given object is equal to this satellite
+	 * Returns if a given object is equals to this satellite
 	 * ephemeris object.
 	 */
 	@Override
@@ -234,7 +233,7 @@ public class SatelliteOrbitalElement implements Serializable
 	/**
 	 * Holds the different status an Iridium satellite can have.
 	 */
-	public static enum STATUS {
+	public enum STATUS {
 		/** Unknown status. */
 		UNKNOWN,
 		/** In service, the Iridium satellite can flare. */
@@ -243,7 +242,7 @@ public class SatelliteOrbitalElement implements Serializable
 		SPARE,
 		/** Failed, the Iridium satellite cannot flare. */
 		FAILED
-	}
+	};
 
 	/**
 	 * Returns the status of an Iridium satellite.
@@ -259,7 +258,7 @@ public class SatelliteOrbitalElement implements Serializable
 		}
 		return STATUS.UNKNOWN;
 	}
-	
+
 	/**
 	 * Returns the name of this satellite.
 	 * @return Satellite's name.

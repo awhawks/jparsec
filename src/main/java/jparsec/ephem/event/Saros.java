@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.ephem.event;
 
 import java.util.ArrayList;
@@ -50,7 +50,7 @@ import jparsec.util.Translate.LANGUAGE;
  * data. Here is a possible output data from results taken exclusively from this
  * class.
  * <P>
- * 
+ *
  * <pre>
  * SAROS CYCLE EXAMPLE, from date  01-jan-2007
  * Eclipse      type    Civil date  Julian day   Saros   Inex   Eclipse number/Total
@@ -139,12 +139,12 @@ import jparsec.util.Translate.LANGUAGE;
  * Moon    penumbral   18-sep-2024   2460571.6    118      59   52/73
  * Sun       annular   02-oct-2024   2460586.3    144      41   17/70
  * </pre>
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
 public class Saros
-{	
+{
 	/**
 	 * Returns a fast an approximate location of the Sun.
 	 * Error below 0.003 deg during several centuries around year 2000.
@@ -173,10 +173,10 @@ public class Saros
 		double ecc = .016708617 - 4.2037E-05 * t - 1.236E-07 * t * t; // Eccentricity
 		double v = sanomaly + c * Constant.DEG_TO_RAD; // True anomaly
 		double sdistance = 1.000001018 * (1.0 - ecc * ecc) / (1.0 + ecc * Math.cos(v)); // In UA
-		
+
 		return new double[] {slongitude * Constant.DEG_TO_RAD, slatitude * Constant.DEG_TO_RAD, sdistance};
 	}
-	
+
 	/**
 	 * Returns a fast an approximate location of the Moon.
 	 * Error below 0.01 deg during several centuries around year 2000.
@@ -197,7 +197,7 @@ public class Saros
 		// Now, let calculate nutation and aberration
 		double M1 = Functions.normalizeDegrees(124.90 - 1934.134 * t + 0.002063 * t * t) * Constant.RAD_TO_DEG;
 		double M2 = Functions.normalizeDegrees(201.11 + 72001.5377 * t + 0.00057 * t * t) * Constant.RAD_TO_DEG;
-		
+
 		// MOON PARAMETERS (Formulae from "Calendrical Calculations")
 		double phase = Functions.normalizeRadians((297.8502042 + 445267.1115168 * t - 0.00163 * t * t + t * t * t / 538841 - t * t * t * t / 65194000) * Constant.DEG_TO_RAD);
 		double age = Psin * phase / Constant.TWO_PI;
@@ -213,7 +213,7 @@ public class Saros
 		node = node * Constant.DEG_TO_RAD;
 
 		double E = 1.0 - (.002495 + 7.52E-06 * (t + 1.0)) * (t + 1.0);
-		
+
 		// Now longitude, with the three main correcting terms of evection,
 		// variation, and equation of year, plus other terms (error<0.01 deg)
 		double l = (218.31664563 + 481267.8811958 * t - .00146639 * t * t + t * t * t / 540135.03 - t * t * t * t / 65193770.4);
@@ -229,14 +229,14 @@ public class Saros
 
 		// Let's add nutation here also
 		longitude += - .0047785 * Math.sin(M1) - .0003667 * Math.sin(M2);
-		
+
 		// Now Moon parallax
 		double parallax = .950724 + .051818 * Math.cos(anomaly) + .009531 * Math.cos(2 * phase - anomaly);
 		parallax += .007843 * Math.cos(2 * phase) + .002824 * Math.cos(2 * anomaly);
 		parallax += 0.000857 * Math.cos(2 * phase + anomaly) + E * .000533 * Math.cos(2 * phase - sanomaly);
 		parallax += E * .000401 * Math.cos(2 * phase - anomaly - sanomaly) + E * .00032 * Math.cos(anomaly - sanomaly) - .000271 * Math.cos(phase);
 		parallax += -E * .000264 * Math.cos(sanomaly + anomaly) - .000198 * Math.cos(2 * node - anomaly);
-		
+
 		// Ecliptic latitude with nodal phase (error<0.01 deg)
 		l = 5.128189 * Math.sin(node) + 0.280606 * Math.sin(node + anomaly) + 0.277693 * Math.sin(anomaly - node);
 		l += .173238 * Math.sin(2 * phase - node) + .055413 * Math.sin(2 * phase + node - anomaly);
@@ -251,19 +251,19 @@ public class Saros
 
 		return new double[] {longitude * Constant.DEG_TO_RAD, latitude * Constant.DEG_TO_RAD, distance, age};
 	}
-	
+
 	/**
 	 * Find all eclipses between two dates, including all saros information.
 	 * Algorithm is approximate, and only valid in current epoch.
-	 * 
+	 *
 	 * @param jd_initial Initial jd to search in TT.
 	 * @param jd_final Final jd to search in TT.
 	 * @return A set of double precission arrays, with the following
 	 *         information ordered:
 	 *         <P> - Julian day of the eclipse in TT (maximum, with an accuracy up to
 	 *         one or two minutes).
-	 *         <P> - Eclipse type, solar or lunar. The value is the ordinal of the 
-	 *         eclipse type enumeration defined in SimpleEventElement class. 
+	 *         <P> - Eclipse type, solar or lunar. The value is the ordinal of the
+	 *         eclipse type enumeration defined in SimpleEventElement class.
 	 *         <P> - Eclipse subtype, ID constants defined in
 	 *         SolarEclipse class (even for lunar eclipses). For penumbral lunar
 	 *         eclipses, the constant type_no_eclipse is used.
@@ -324,7 +324,7 @@ public class Saros
 			node = node * Constant.DEG_TO_RAD;
 
 			double E = 1.0 - (.002495 + 7.52E-06 * (t + 1.0)) * (t + 1.0);
-			
+
 			// Now longitude, with the three main correcting terms of evection,
 			// variation, and equation of year, plus other terms (error<0.01 deg)
 			double l = (218.31664563 + 481267.8811958 * t - .00146639 * t * t + t * t * t / 540135.03 - t * t * t * t / 65193770.4);
@@ -340,14 +340,14 @@ public class Saros
 
 			// Let's add nutation here also
 			longitude += - .0047785 * Math.sin(M1) - .0003667 * Math.sin(M2);
-			
+
 			// Now Moon parallax
 			double parallax = .950724 + .051818 * Math.cos(anomaly) + .009531 * Math.cos(2 * phase - anomaly);
 			parallax += .007843 * Math.cos(2 * phase) + .002824 * Math.cos(2 * anomaly);
 			parallax += 0.000857 * Math.cos(2 * phase + anomaly) + E * .000533 * Math.cos(2 * phase - sanomaly);
 			parallax += E * .000401 * Math.cos(2 * phase - anomaly - sanomaly) + E * .00032 * Math.cos(anomaly - sanomaly) - .000271 * Math.cos(phase);
 			parallax += -E * .000264 * Math.cos(sanomaly + anomaly) - .000198 * Math.cos(2 * node - anomaly);
-			
+
 			// Ecliptic latitude with nodal phase (error<0.01 deg)
 			l = 5.128189 * Math.sin(node) + 0.280606 * Math.sin(node + anomaly) + 0.277693 * Math.sin(anomaly - node);
 			l += .173238 * Math.sin(2 * phase - node) + .055413 * Math.sin(2 * phase + node - anomaly);
@@ -356,7 +356,7 @@ public class Saros
 			l += .008823 * Math.sin(2 * anomaly - node) + E * .008247 * Math.sin(2 * phase - sanomaly - node) + .004323 * Math.sin(2 * (phase - anomaly) - node);
 			l += .0042 * Math.sin(2 * phase + node + anomaly) + E * .003372 * Math.sin(node - sanomaly - 2 * phase);
 			double latitude = l;
-			
+
 			// LET SEE NOW IF THE ECLIPSE CONDITIONS ARE SATISFIED
 			if (longitude > 350 && slongitude < 10)
 				slongitude = slongitude + 360;
@@ -391,7 +391,7 @@ public class Saros
 
 				Saros saros = new Saros(jd, ecl_type);
 				double eclipse_element[] = new double[]
-						{ saros.eclipseDate, ecl_type.ordinal(), type.ordinal(), saros.sarosSeries, saros.inexCycle, 
+						{ saros.eclipseDate, ecl_type.ordinal(), type.ordinal(), saros.sarosSeries, saros.inexCycle,
 						saros.sarosEclipseNumber, saros.sarosEclipseMaxNumber };
 				if (saros.sarosEclipseNumber > 0 && saros.sarosEclipseNumber <= saros.sarosEclipseMaxNumber)
 					out.add(eclipse_element);
@@ -412,7 +412,7 @@ public class Saros
 
 	/**
 	 * Gets the integer ID of the eclipsed body.
-	 * 
+	 *
 	 * @param type Eclipse type, constants defined in SimpleEventElement class.
 	 * @return {@linkplain TARGET#Moon} or {@linkplain TARGET#SUN} constants.
 	 * @throws JPARSECException If input type is invalid.
@@ -428,7 +428,7 @@ public class Saros
 
 	/**
 	 * Transform an eclipse subtype into a string representation.
-	 * 
+	 *
 	 * @param type Eclipse type.
 	 * @return total, annular, partial, or penumbral.
 	 */
@@ -450,7 +450,7 @@ public class Saros
 	 * day. Eclipse date and type are
 	 * obtained from approximate assumptions, and it is not recommended for far
 	 * away epochs.
-	 * 
+	 *
 	 * @param jd Julian day of eclipse.
 	 * @throws JPARSECException If an error occurs.
 	 */
@@ -463,7 +463,7 @@ public class Saros
 	 * Obtain saros information for an eclipse that occurs around certain Julian
 	 * day. Results are set to static variables. Eclipse date and type are
 	 * supposed to be input date and type.
-	 * 
+	 *
 	 * @param jd Julian day of eclipse.
 	 * @param type The eclipse type.
 	 * @throws JPARSECException If an error occurs.
@@ -481,7 +481,7 @@ public class Saros
 			type = SimpleEventElement.EVENT.MOON_SOLAR_ECLIPSE;
 			if (Math.abs(dec - 0.5) < 0.25) type = SimpleEventElement.EVENT.MOON_LUNAR_ECLIPSE;
 		}
-		
+
 		if (type != SimpleEventElement.EVENT.MOON_LUNAR_ECLIPSE && type != SimpleEventElement.EVENT.MOON_SOLAR_ECLIPSE)
 			throw new JPARSECException("invalid eclipse type or eclipse not found.");
 
@@ -580,7 +580,7 @@ public class Saros
 	 * the value obtained with other methods in this class, or a value within 6 hours
 	 * around it for a given phase of the eclipse. Otherwise, the maximum will be
 	 * computed and used instead for the closest eclipse to the given date (within 1 day).
-	 * @return Two strings at most containing a list of cities where the solar eclipse 
+	 * @return Two strings at most containing a list of cities where the solar eclipse
 	 * is partial (first string) and total (second string). The list of countries with a
 	 * partial eclipse will contain, for each contry, a values with the approximate magnitude
 	 * of the eclipse. For lunar eclipses only one string is returned.
@@ -590,24 +590,24 @@ public class Saros
 	public static String[] getEclipseVisibility(double jdMax) throws JPARSECException {
 		ArrayList<double[]> v = Saros.getAllEclipses(jdMax-1, jdMax+1);
 		if (v.size() != 1) throw new JPARSECException("No eclipse on "+jdMax);
-		
+
 		double values[] = v.get(0);
 		SimpleEventElement.EVENT type = SimpleEventElement.EVENT.values()[(int) values[1]];
 		double max = values[0];
 		if (Math.abs(jdMax - max) < 0.25) max = jdMax;
-		
+
 		TimeElement time = new TimeElement(max, SCALE.TERRESTRIAL_TIME);
 		EphemerisElement eph = new EphemerisElement(TARGET.Moon, EphemerisElement.COORDINATES_TYPE.APPARENT,
 				EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.GEOCENTRIC, EphemerisElement.REDUCTION_METHOD.IAU_2006,
 				EphemerisElement.FRAME.DYNAMICAL_EQUINOX_J2000, EphemerisElement.ALGORITHM.MOSHIER);
 		CityElement city = City.findCity("Madrid");
 		ObserverElement observer = ObserverElement.parseCity(city);
-		
+
 		EphemElement ephemMoon = Ephem.getEphemeris(time, observer, eph, false);
 		double gmt = SiderealTime.greenwichApparentSiderealTime(time, observer, eph);
 		LocationElement locMoon = new LocationElement(ephemMoon.rightAscension - gmt,
 				ephemMoon.declination, 1.0);
-		
+
 		LocationElement locEcl = locMoon.clone(), locSun = null;
 		if (type == EVENT.MOON_SOLAR_ECLIPSE) {
 			eph.targetBody = TARGET.SUN;
@@ -627,7 +627,7 @@ public class Saros
 			try {
 				re = new RenderEclipse(new AstroDate(max - 0.25));
 			} catch (Exception exc) {
-				re = new RenderEclipse(new AstroDate(max + 0.25));			
+				re = new RenderEclipse(new AstroDate(max + 0.25));
 			}
 			outTotal = "";
 		}
@@ -637,13 +637,13 @@ public class Saros
 			for (double lat=-Constant.PI_OVER_TWO+step; lat<=Constant.PI_OVER_TWO-step;lat=lat+step) {
 				LocationElement loc = new LocationElement(lon, lat, 1.0);
 				if (type == EVENT.MOON_SOLAR_ECLIPSE) {
-					double d = LocationElement.getApproximateAngularDistance(locSun, loc);					
+					double d = LocationElement.getApproximateAngularDistance(locSun, loc);
 					if (d > Constant.PI_OVER_TWO) continue;
 				} else {
 					double d = LocationElement.getApproximateAngularDistance(locEcl, loc);
 					if (d > Constant.PI_OVER_TWO) continue;
-				}				
-				
+				}
+
 				CityElement c = null;
 				double minDist = -1;
 				for (int i=0; i<cities.length; i++) {
@@ -674,22 +674,22 @@ public class Saros
 					if (total) {
 						if (outTotal.indexOf(c.country) < 0 || (!add.equals("") && outTotal.indexOf(add.substring(0, add.indexOf(","))) < 0)) {
 							if (add.equals("")) {
-								outTotal += c.country+", ";						
+								outTotal += c.country+", ";
 							} else {
-								outTotal += c.country+" ("+add.substring(0, add.indexOf(","))+"), ";								
+								outTotal += c.country+" ("+add.substring(0, add.indexOf(","))+"), ";
 							}
 						}
 					} else {
-						if (out.indexOf(c.country) < 0 || (!add.equals("") && out.indexOf(add) < 0)) 
+						if (out.indexOf(c.country) < 0 || (!add.equals("") && out.indexOf(add) < 0))
 							out += c.country+" ("+add+Functions.formatValue(maxMag, 2)+"), ";
 					}
 				} else {
 					if (magLunar < 0) magLunar = RenderEclipse.lunarEclipseMagnitude(new TimeElement(jdMax, SCALE.TERRESTRIAL_TIME), observer, eph);
 					if (magLunar < 0) continue;
-					if (out.indexOf(c.country) < 0 || (!add.equals("") && out.indexOf(add) < 0)) 
+					if (out.indexOf(c.country) < 0 || (!add.equals("") && out.indexOf(add) < 0))
 						out += c.country+" ("+add+Functions.formatValue(magLunar, 2)+"), ";
 				}
-			}			
+			}
 		}
 		out = out.substring(0, out.length()-2);
 		if (outTotal != null && outTotal.length() > 0) {
@@ -698,7 +698,7 @@ public class Saros
 		}
 		return new String[] {out};
 	}
-	
+
 	/**
 	 * Holds saros series.
 	 */
@@ -723,7 +723,7 @@ public class Saros
 	 * Holds the instant of the maximum of the eclipse in TDB (approximate).
 	 */
 	public double eclipseDate;
-	
+
 	/**
 	 * ID constant for an invalid result (not available).
 	 */
@@ -919,7 +919,7 @@ public class Saros
 		179,2749852.5,3223996.5,1,
 		180,2753839.5,3214812.5,1,
 		0,0,0,0,
-		
+
 		// SUN: saros series, initial jd, final jd, status (0 => bad begining, 1 => OK, 2 => bad ending)
 		// Data from F. Spenak, see http://eclipse.gsfc.nasa.gov/SEsaros/SEsaros0-180.html
 		0,641886.5,1109443.5,1,

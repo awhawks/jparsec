@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,12 +18,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.graph.chartRendering;
 
 import java.io.Serializable;
-
 import java.util.Arrays;
+
 import jparsec.astronomy.TelescopeElement;
 import jparsec.ephem.Target.TARGET;
 import jparsec.ephem.moons.MoonEphemElement;
@@ -32,13 +32,13 @@ import jparsec.graph.chartRendering.Graphics.ANAGLYPH_COLOR_MODE;
 
 /**
  * A class to instantiate an adequate object for rendering operations.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
 public class PlanetRenderElement implements Serializable
 {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Empty constructor.
@@ -47,7 +47,7 @@ public class PlanetRenderElement implements Serializable
 
 	/**
 	 * Explicit full constructor.
-	 * 
+	 *
 	 * @param w Width of the window in pixels.
 	 * @param h Height of the window in pixels.
 	 * @param a True for viewing rotation axis.
@@ -75,7 +75,7 @@ public class PlanetRenderElement implements Serializable
 
 	/**
 	 * Explicit constructor.
-	 * 
+	 *
 	 * @param w Width of the window in pixels.
 	 * @param h Height of the window in pixels.
 	 * @param a True for viewing axes.
@@ -102,7 +102,7 @@ public class PlanetRenderElement implements Serializable
 
 	/**
 	 * Explicit constructor.
-	 * 
+	 *
 	 * @param w Width of the window in pixels.
 	 * @param h Height of the window in pixels.
 	 * @param a True for viewing axes.
@@ -127,7 +127,7 @@ public class PlanetRenderElement implements Serializable
 
 	/**
 	 * Constructor to be used with an sky render object.
-	 * 
+	 *
 	 * @param a True for viewing axes.
 	 * @param t True for viewing textures.
 	 * @param s True for viewing main natural satellites.
@@ -145,7 +145,7 @@ public class PlanetRenderElement implements Serializable
 
 	/**
 	 * Constructor to be used with an sky render object.
-	 * 
+	 *
 	 * @param a True for viewing axes.
 	 * @param t True for viewing textures.
 	 * @param s True for viewing main natural satellites.
@@ -166,7 +166,7 @@ public class PlanetRenderElement implements Serializable
 
 	/**
 	 * Constructor only for the size of the window.
-	 * 
+	 *
 	 * @param w Width of the window in pixels.
 	 * @param h Height of the window in pixels.
 	 */
@@ -240,7 +240,7 @@ public class PlanetRenderElement implements Serializable
 	 * but requires much more time. Default value is false.
 	 */
 	public boolean highQuality = false;
-	
+
 	/**
 	 * Sets whether to render also all available satellites or not (instead of
 	 * only main ones). Only when both main satellites and all ones are enabled,
@@ -264,9 +264,9 @@ public class PlanetRenderElement implements Serializable
 	 * Sets the target body.
 	 */
 	public TARGET target = TARGET.SUN;
-	
+
 	/**
-	 * Set to true as default value to show labels below the satellites. 
+	 * Set to true as default value to show labels below the satellites.
 	 */
 	public boolean showLabels = true;
 
@@ -278,7 +278,7 @@ public class PlanetRenderElement implements Serializable
 	 * Holds foreground color (satellites), white as default.
 	 */
 	public int foreground = 255<<24 | 255<<16 | 255<<8 | 255;
-	
+
 	/**
 	 * The anaglyph mode, disabled by default.
 	 */
@@ -311,7 +311,6 @@ public class PlanetRenderElement implements Serializable
 		out.highQuality = this.highQuality;
 		return out;
 	}
-
 	/**
 	 * Returns true if the input object is equal to this instance.
 	 */

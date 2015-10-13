@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,13 +18,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.vo;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-
 import java.util.Arrays;
+
 import jparsec.ephem.Functions;
 import jparsec.ephem.stars.StarElement;
 import jparsec.graph.DataSet;
@@ -41,9 +41,9 @@ import jparsec.util.Translate;
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
-public class SimbadElement implements Serializable 
+public class SimbadElement implements Serializable
 {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Name.
@@ -174,9 +174,8 @@ public class SimbadElement implements Serializable
 		s.bMinusV = this.bMinusV;
 		return s;
 	}
-
 	/**
-	 * Returns true if the input object is equal to this instance.
+	 * Returns true if the input object is equals to this instance.
 	 */
 	@Override
 	public boolean equals(Object o) {
@@ -222,7 +221,6 @@ public class SimbadElement implements Serializable
 	/**
 	 * Returns a string representation of this Simbad object.
 	 */
-	@Override
 	public String toString() {
 		StringBuffer out = new StringBuffer("");
 		String sep = FileIO.getLineSeparator(), plus = "";
@@ -251,7 +249,7 @@ public class SimbadElement implements Serializable
 
 	/**
 	 * Searches for a deep sky object given it's name.
-	 * 
+	 *
 	 * @param obj_name Name of the object as given in the catalog of deep
 	 * sky objects.
 	 * @return The Simbad object with the data for J2000, or null if it is
@@ -285,7 +283,7 @@ public class SimbadElement implements Serializable
 
 			LocationElement loc = (LocationElement) obj[3];
 			if (obj_name2.equals(name.toLowerCase()) || obj_name.equals(messier.trim()) || obj_name.equals(name+messier) ||
-					obj_name.equals(name+messier+" - "+com) || 
+					obj_name.equals(name+messier+" - "+com) ||
 					(name.indexOf(" ") > 0 && (name.substring(name.indexOf(" ")).trim()+messier+" - "+com).indexOf(obj_name) == 0)) {
 //			if (name.indexOf(obj_name) >= 0 || messier.indexOf(obj_name) >= 0 || com.indexOf(obj_name) >= 0 ||
 //					(s == null && obj_name.indexOf(name) >= 0)) {
@@ -301,7 +299,7 @@ public class SimbadElement implements Serializable
 		if (s == null) {
 			for (int i = 0; i < objs.length; i++)
 			{
-				Object[] obj = (Object[]) objs[i]; 
+				Object[] obj = (Object[]) objs[i];
 
 				String name = (String) obj[0];
 				String messier = (String) obj[1];
@@ -317,9 +315,9 @@ public class SimbadElement implements Serializable
 					s.type = types[(Integer) obj[2]];
 					break;
 				}
-			}			
+			}
 		}
-		
+
 		if (s == null) {
 			try { s = SimbadQuery.query(obj_name); } catch (Exception exc) {}
 		}
@@ -337,6 +335,9 @@ public class SimbadElement implements Serializable
 				String line = objs.get(i);
 				String name = FileIO.getField(1, line, " ", true);
 				String type = FileIO.getField(2, line, " ", true);
+				int tt = DataSet.getIndex(types, type);
+				// Don't want to see duplicate objects, stars, inexistents, ...
+				if (tt > 7) continue;
 				String ra = FileIO.getField(3, line, " ", true);
 				String dec = FileIO.getField(4, line, " ", true);
 				String mag = FileIO.getField(5, line, " ", true);
@@ -344,13 +345,12 @@ public class SimbadElement implements Serializable
 				String min = FileIO.getField(7, line, " ", true);
 				String pa = FileIO.getField(8, line, " ", true);
 				String com = FileIO.getRestAfterField(8, line, " ", true);
-				
+
 				LocationElement loc = new LocationElement(Double.parseDouble(ra)/Constant.RAD_TO_HOUR, Double.parseDouble(dec)*Constant.DEG_TO_RAD, 1.0);
 //				if (jd != Constant.J2000)
 //					loc = LocationElement.parseRectangularCoordinates(Precession.precess(Constant.J2000, jd,
 //							LocationElement.parseLocationElement(loc), EphemerisElement.REDUCTION_METHOD.IAU_2006));
 				if (loc != null) {
-					int tt = DataSet.getIndex(types, type);
 					int mes1 = com.indexOf(" M ");
 					int mes2 = com.indexOf(" part of M ");
 					int mes3 = com.indexOf(" in M ");
@@ -365,12 +365,29 @@ public class SimbadElement implements Serializable
 						if (c < 0) c = messier.indexOf(";");
 						messier = DataSet.replaceAll(messier.substring(0, c), " ", "", false);
 					}
-					double maxSize = Double.parseDouble(max), minSize = Double.parseDouble(min);
-					if (tt == 6 && maxSize == 0.0) maxSize = minSize = 0.5/60.0;
-					outObj.add(new Object[] {name, messier, tt, loc, Double.parseDouble(mag), 
-							new double[] {maxSize, minSize}, pa, com});
+					if (messier.equals("")) {
+						int cal = com.indexOf("CALDWELL");
+						if (cal >= 0) {
+							messier = com.substring(cal);
+							int end = messier.indexOf(";");
+							int end2 = messier.indexOf(",");
+							if (end > 0) messier = messier.substring(0, end);
+							end = messier.length();
+							if (end2 > 0 && end2 < end) messier = messier.substring(0, end2);
+						}
+					}
+
+					float maxSize = Float.parseFloat(max), minSize = Float.parseFloat(min);
+					if (tt == 6 && maxSize == 0.0) maxSize = minSize = 0.5f/60.0f;
+					float paf = -1;
+					try {
+						if (!pa.equals("-") && !pa.equals(""))
+							paf = (float) (Float.parseFloat(pa) * Constant.DEG_TO_RAD);
+					} catch (Exception exc) {}
+					outObj.add(new Object[] {name, messier, tt, loc, (float) Double.parseDouble(mag),
+							new float[] {maxSize, minSize}, paf, com});
 				}
-			}			
+			}
 			Object outO[] = new Object[outObj.size()];
 			for (int i=0; i<outO.length; i++) {
 				outO[i] = outObj.get(i);

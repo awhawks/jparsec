@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.util;
 
 import java.io.File;
@@ -40,7 +40,7 @@ import jparsec.io.Serialization;
  * is used, as returned by {@linkplain ApplicationLauncher#getProcessID()}.
  * <BR><BR>
  * In JPARSEC all information is kept in memory for better performance.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -55,7 +55,7 @@ public class DataBase
 	private static ArrayList<Object> data = new ArrayList<Object>(); // Memory
 	private static HashMap<String, Object> data_lifeTime = new HashMap<String, Object>(); // Memory
 	private static String cacheDir = null;
-	
+
 	/**
 	 * Adds data to the database. Process id is determined using
 	 * {@linkplain ApplicationLauncher#getProcessID()}.
@@ -86,7 +86,7 @@ public class DataBase
 	public static String addData(String id, String pid, Object o, boolean forceMemory) {
 		return DataBase.addData(id, pid, o, forceMemory, 0);
 	}
-	
+
 	/**
 	 * Adds data to database. In case the data already exists, it is
 	 * replaced with the new data.
@@ -109,9 +109,9 @@ public class DataBase
 
 		int index = threads.indexOf(pid);
 		if (index == -1) threads.add(pid);
-		
+
 		String dataid = id+"_"+pid;
-		
+
 		if (lifeTimeSeconds > 0) {
 			data_lifeTime.put(dataid, new long[] {lifeTimeSeconds, System.currentTimeMillis()});
 			if (gc == null || !gc.isAlive()) {
@@ -119,7 +119,7 @@ public class DataBase
 				gc.start();
 			}
 		}
-		
+
 		if (forceMemory) {
 			index = dataID.indexOf(dataid);
 			boolean newData = false;
@@ -137,7 +137,7 @@ public class DataBase
 			}
 			return pid;
 		}
-		
+
 		try {
 			if (cacheDir == null) cacheDir = FileIO.getTemporalDirectory();
 			String of = cacheDir + dataid;
@@ -148,12 +148,12 @@ public class DataBase
 			Serialization.writeObject(o, of);
 			File file = new File(of);
 			file.deleteOnExit();
-		} catch (Exception exc) { 
+		} catch (Exception exc) {
 			exc.printStackTrace();
 		}
-		return pid; 
+		return pid;
 	}
-	
+
 	/**
 	 * Returns data from the database. Process id is determined using
 	 * {@linkplain ApplicationLauncher#getProcessID()}.
@@ -200,7 +200,7 @@ public class DataBase
 		} else {
 			Object o = getData(id, true);
 			if (o == null) o = getData(id, false);
-			if (o != null) return true;			
+			if (o != null) return true;
 		}
 		return false;
 	}
@@ -214,7 +214,7 @@ public class DataBase
 	 */
 	public static boolean dataExists(String id, String threadName, boolean inMemory) {
 		Object o = getData(id, threadName, inMemory);
-		if (o != null) return true;			
+		if (o != null) return true;
 		return false;
 	}
 	/**
@@ -259,7 +259,7 @@ public class DataBase
 				data.set(index, null);
 				return null;
 			}
-			
+
 /*			if (data.get(index) != null) {
 				try {
 					int n = ((Object[]) data.get(index)).length;
@@ -279,9 +279,9 @@ public class DataBase
 
 		try {
 			return Serialization.readObject(of);
-		} catch (Exception exc) { 
+		} catch (Exception exc) {
 			return null;
-		}		
+		}
 	}
 
 	/**
@@ -291,7 +291,7 @@ public class DataBase
 	 * @return The data.
 	 */
 	public static Object getData(int index) {
-		return data.get(index);		
+		return data.get(index);
 	}
 
 	/**
@@ -316,17 +316,17 @@ public class DataBase
 	 * @param path The path, including the latest file separator.
 	 */
 	public static void setCacheDirectory(String path) {
-		cacheDir = path;		
+		cacheDir = path;
 	}
-	
+
 	/**
 	 * Returns the path of the cache directory.
 	 * @return The path.
 	 */
 	public static String getCacheDirectory() {
-		return cacheDir;		
+		return cacheDir;
 	}
-	
+
 	/**
 	 * Returns the identifiers of the threads currently
 	 * using data.
@@ -335,7 +335,7 @@ public class DataBase
 	public static String[] getThreads() {
 		return DataSet.arrayListToStringArray(threads);
 	}
-	
+
 	/**
 	 * Removes all the data corresponding to certain thread.
 	 * @param pid The thread id.
@@ -343,7 +343,7 @@ public class DataBase
 	public static synchronized void deleteThreadData(String pid) {
 		int index = threads.indexOf(pid);
 		if (index < 0) return;
-		
+
 		for (int i=0; i<dataID.size(); i++) {
 			String d = dataID.get(i);
 			if (d.endsWith("_"+pid)) {
@@ -351,7 +351,7 @@ public class DataBase
 				data.remove(i);
 			}
 		}
-		
+
 		for (int i=0; i<dataID_disk.size(); i++) {
 			String d = dataID_disk.get(i);
 			if (d.endsWith("_"+pid)) {
@@ -360,10 +360,10 @@ public class DataBase
 				if (file.exists()) file.delete();
 			}
 		}
-		
+
 		threads.remove(index);
 	}
-	
+
 	/**
 	 * Clears the Database entirely.
 	 */
@@ -373,7 +373,7 @@ public class DataBase
 		String notNull = "";
 		for (int i=0; i<data.size(); i++) {
 			if (data.get(i) == null) {
-				nnull ++; 
+				nnull ++;
 			} else {
 				notNull += dataID.get(i)+",";
 			}
@@ -387,9 +387,9 @@ public class DataBase
 		data = new ArrayList<Object>(); // Memory
 		data_lifeTime = new HashMap<String, Object>(); // Memory
 		cacheDir = null;
-		
+
 	}
-	
+
 	private static Thread gc = null;
 	private static class gcThread implements Runnable {
 		public gcThread() { }
@@ -408,7 +408,7 @@ public class DataBase
 							long t1 = data[1] + lifetime;
 							if (t0 > t1) {
 								data_lifeTime.remove(keys[i]);
-								
+
 								int index = dataID.indexOf(keys[i]);
 								if (index >= 0) {
 									DataBase.data.set(index, null);
@@ -430,6 +430,6 @@ public class DataBase
 					}
 				}
 			} catch (Exception exc) {}
-		}		
+		}
 	}
 }

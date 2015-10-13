@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -22,25 +22,24 @@
 package jparsec.ephem.probes;
 
 import java.io.Serializable;
-
 import java.util.Arrays;
-import jparsec.graph.DataSet;
+
 import jparsec.observer.LocationElement;
 
 /**
  * Convenient class to store results of ephemeris of artificial satellites.
- * 
+ *
  * @see SatelliteEphem
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
 public class SatelliteEphemElement implements Serializable
 {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Constructs a satellite ephem object giving all the data.
-	 * 
+	 *
 	 * @param nom Name of the satellite.
 	 * @param ra Right ascension.
 	 * @param dec Declination.
@@ -168,20 +167,20 @@ public class SatelliteEphemElement implements Serializable
 	 * If zero then the event could not be calculated.
 	 */
 	public double nextPass;
-	
+
 	/**
 	 * The smallest iridium angle in degrees. A given Iridium satellite will
 	 * be flaring if it is not eclipsed, above the horizon, and this
-	 * value is lower enough.  An empirical relationship between this angle 
-	 * and the brightness of the reflection has been determined (Randy John, 
-	 * 2002, SKYSAT v0.64, see http://home.comcast.net/~skysat). 2 &deg;
-	 * corresponds to about 0 mag, 0.5 &deg; to -3 mag. The brightest flares are
+	 * value is lower enough.  An empirical relationship between this angle
+	 * and the brightness of the reflection has been determined (Randy John,
+	 * 2002, SKYSAT v0.64, see http://home.comcast.net/~skysat). 2 deg
+	 * corresponds to about 0 mag, 0.5&deg; to -3 mag. The brightest flares are
 	 * -8 or -9 mag (visible during day), and can last from 10 to 30s.
 	 */
 	public float iridiumAngle;
 
 	/**
-	 * The smallest iridium angle in degrees in case the reflected body is 
+	 * The smallest iridium angle in degrees in case the reflected body is
 	 * the Moon.
 	 */
 	public float iridiumAngleForMoon;
@@ -215,7 +214,7 @@ public class SatelliteEphemElement implements Serializable
 	 * Transit geometric elevation/s from horizon in radians.
 	 */
 	public float transitElevation[];
-	
+
 	/**
 	 * Relative topocentric speed in km/s.
 	 */
@@ -258,7 +257,10 @@ public class SatelliteEphemElement implements Serializable
 		if (transitElevation != null) s.transitElevation = this.transitElevation.clone();
 		return s;
 	}
-
+	/**
+	 * Returns if a given object is equals to this satellite
+	 * ephemeris object.
+	 */
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -332,11 +334,6 @@ public class SatelliteEphemElement implements Serializable
 		return result;
 	}
 
-	/**
-	 * Returns true if a given object is equal to this satellite
-	 * ephemeris object.
-	 */
-
 	private LocationElement location;
 	/**
 	 * Sets the location of this body in a custom coordinate system,
@@ -355,7 +352,7 @@ public class SatelliteEphemElement implements Serializable
 	public LocationElement getLocation() {
 		return this.location;
 	}
-	
+
 	/**
 	 * Returns the equatorial location of this object.
 	 * Radius vector is in km, but it is set to unity in case distance is 0.

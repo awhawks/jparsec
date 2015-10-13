@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.io.image;
 
 import java.net.*;
@@ -44,17 +44,17 @@ import jparsec.util.Logger;
 import jparsec.util.Logger.LEVEL;
 
 /**
-*  Draw provides a basic capability for 
+*  Draw provides a basic capability for
 *  creating drawings. It uses a simple graphics model that
 *  allows the creation of drawings consisting of points, lines, and curves
 *  in a window. A JPanel can be obtained (see {@linkplain Draw#getComponent(BufferedImage)})
 *  that allows to draw by hand using the mouse.
 *  <P>
-*  This class is based on <i>Introduction to Programming in Java: An 
-*  Interdisciplinary Approach, Spring 2007 preliminary version</i>, 
+*  This class is based on <i>Introduction to Programming in Java: An
+*  Interdisciplinary Approach, Spring 2007 preliminary version</i>,
 *  section 1.5, and <a href="http://www.cs.princeton.edu/introcs/15inout">
 *  http://www.cs.princeton.edu/introcs/15inout</a>.
-*  
+*
 *  @author T. Alonso Albi - OAN (Spain)
 *  @version 1.0
 */
@@ -99,7 +99,7 @@ public class Draw {
    /**
     * Constructor for a draw.
     */
-   public Draw() { 
+   public Draw() {
 	   init(null);
    }
 
@@ -111,18 +111,18 @@ public class Draw {
     * @param width Width.
     * @param height Height.
     */
-   public Draw(Graphics2D g, int width, int height) { 
+   public Draw(Graphics2D g, int width, int height) {
 	   this.width = width;
 	   this.height = height;
 	   init(g);
    }
-   
+
    /**
     * Constructor for a draw.
     * @param width Width.
     * @param height Height.
     */
-   public Draw(int width, int height) { 
+   public Draw(int width, int height) {
 	   this.width = width;
 	   this.height = height;
 	   init(null);
@@ -133,7 +133,7 @@ public class Draw {
     * @param width Width.
     * @param height Height.
     */
-   public Draw(String title, int width, int height) { 
+   public Draw(String title, int width, int height) {
 	   this.width = width;
 	   this.height = height;
 	   this.title = title;
@@ -193,7 +193,7 @@ public class Draw {
    public Graphics2D getOffScreenGraphics() {
 	   return screenGraphics;
    }
-   
+
    /**
     * Returns the image. Null is returned in case the draw is done to
     * an external graphics.
@@ -202,7 +202,7 @@ public class Draw {
    public BufferedImage getOffScreenImage() {
 	   return screenImage;
    }
-   
+
   /*************************************************************************
    *  User and screen coordinate systems
    *************************************************************************/
@@ -261,7 +261,7 @@ public class Draw {
    }
 
    /**
-    * Set the pen size to the given size. 
+    * Set the pen size to the given size.
     * @param r the radius of the pen.
     * @throws JPARSECException if r is negative.
     */
@@ -273,8 +273,8 @@ public class Draw {
    }
 
    /**
-    * Set the pen color to the given color. The available pen colors are 
-      BLACK, BLUE, CYAN, DARK_GRAY, GRAY, GREEN, LIGHT_GRAY, MAGENTA, 
+    * Set the pen color to the given color. The available pen colors are
+      BLACK, BLUE, CYAN, DARK_GRAY, GRAY, GREEN, LIGHT_GRAY, MAGENTA,
       ORANGE, PINK, RED, WHITE, and YELLOW.
     * @param color the Color to make the pen.
     */
@@ -367,12 +367,12 @@ public class Draw {
    }
 
    /**
-    * Draw an arc of radius r, centered on (x, y), from angle1 to angle2 (in degrees). 
+    * Draw an arc of radius r, centered on (x, y), from angle1 to angle2 (in degrees).
     * @param x the x-coordinate of the center of the circle.
     * @param y the y-coordinate of the center of the circle.
     * @param r the radius of the circle.
     * @param angle1 the starting angle. 0 would mean an arc beginning at 3 o'clock..
-    * @param angle2 the angle at the end of the arc. For example, if 
+    * @param angle2 the angle at the end of the arc. For example, if
     *        you want a 90 degree arc, then angle2 should be angle1 + 90.
     * @throws JPARSECException if the radius of the circle is negative.
     */
@@ -474,7 +474,7 @@ public class Draw {
     * @param x X position.
     * @param y Y position.
     * @param fillColour The color to fill the area.
-    * @return True if successful, false in case starting point already had the 
+    * @return True if successful, false in case starting point already had the
     * filling color.
     */
 	public boolean floodFill(int x, int y, Color fillColour)
@@ -484,13 +484,13 @@ public class Draw {
 
 		//***Get starting color.
 		int startPixel = screenImage.getRGB(x, y);
-		
+
 		if (startPixel == fillColour.getRGB()) return false;
 		screenGraphics.setColor(fillColour);
-		
+
 		BitSet pixelsChecked = new BitSet(width*height);
-		Queue<FloodFillRange> ranges = new LinkedList<FloodFillRange>();		
-		
+		Queue<FloodFillRange> ranges = new LinkedList<FloodFillRange>();
+
 		//***Do first call to floodfill.
 		LinearFill(x,  y, width, minX, maxX, startPixel, pixelsChecked, ranges); //, col0, y);
 
@@ -513,7 +513,7 @@ public class Draw {
 					//if we're not above the top of the bitmap and the pixel above this one is within the color tolerance
 					if (range.Y > minY+2 && !pixelsChecked.get(offU+i) && CheckPixel(i, upY, startPixel))
 						LinearFill( i,  upY, width, minX, maxX, startPixel, pixelsChecked, ranges);
-					
+
 					//*Start Fill Downwards
 					//if we're not below the bottom of the bitmap and the pixel below this one is within the color tolerance
 					if (range.Y < maxY-2 && !pixelsChecked.get(offD+i) && CheckPixel(i, downY, startPixel))
@@ -529,10 +529,10 @@ public class Draw {
 	// to be processed in the main loop.
 	//
 	// int x, int y: The starting coords
-	protected void LinearFill(int x, int y, int width, 
+	protected void LinearFill(int x, int y, int width,
 			int minX, int maxX,
 			int startPixel, BitSet pixelsChecked, Queue<FloodFillRange> ranges)
-	{		
+	{
 		//***Find Left Edge of Color Area
 		int lFillLoc = x; //the location to check/fill on the left
 		int off = width*y;
@@ -570,7 +570,7 @@ public class Draw {
 		rFillLoc--;
 		if (lFillLoc < rFillLoc) {
 			screenGraphics.drawLine(lFillLoc, y, rFillLoc, y);
-			
+
 			//add range to queue
 			FloodFillRange r = new FloodFillRange(lFillLoc, rFillLoc, y);
 			ranges.offer(r);
@@ -594,11 +594,11 @@ public class Draw {
 		    this.endX = endX;
 		    this.Y = y;
 		}
-	}    
+	}
 
   /*************************************************************************
    *  Drawing images.
-   * @throws JPARSECException 
+   * @throws JPARSECException
    *************************************************************************/
 
    // get an image from the given filename
@@ -612,7 +612,7 @@ public class Draw {
            try {
                URL url = new URL(filename);
                icon = new ImageIcon(url);
-           } catch (Exception e) { 
+           } catch (Exception e) {
         	   Logger.log(LEVEL.ERROR, "Cannot read image from url "+filename);
            }
        }
@@ -683,7 +683,7 @@ public class Draw {
    }
 
    /**
-    * Draw picture (gif, jpg, or png) centered on (x, y). 
+    * Draw picture (gif, jpg, or png) centered on (x, y).
     * Rescaled to w-by-h.
     * @param x the center x coordinate of the image.
     * @param y the center y coordinate of the image.
@@ -773,7 +773,7 @@ public class Draw {
        if (!center) ws = hs = 0;
        tl.draw(screenGraphics, (int) (0.5 + xs - ws/2.0), (int) (ys + hs));
    }
-   
+
    /**
     * Write the given text string in the current font, starting on (x, y).
     * @param x the center x coordinate of the text.
@@ -803,7 +803,7 @@ public class Draw {
        try {
     	   if (title == null) title = "";
     	   pio.show(title);
-       } catch (Exception e) { 
+       } catch (Exception e) {
     	   Logger.log(LEVEL.ERROR, "Cannot show the image. Details: "+e.getLocalizedMessage());
        }
    }
@@ -839,7 +839,7 @@ public class Draw {
     * Text can be drawn with key t followed by the text and the enter key.
     * Mouse dragging will draw points/lines.<P>
     * Other options are to save the draw into memory (S), to load from memory (L),
-    * and to delete the draw (X), and to hide the panel (W or Q). Font size 
+    * and to delete the draw (X), and to hide the panel (W or Q). Font size
     * can also be changed with M.<P>
     * This method cannot
     * be called in case the draw is done to an external graphics.
@@ -865,16 +865,16 @@ public class Draw {
 		   @Override
 		   public void mousePressed(MouseEvent e) {
 				point((double)e.getX()/(double)width, 1.0-(double)e.getY()/(double)height);
-				label.repaint();	
+				label.repaint();
 				lastX = e.getX();
 				lastY = e.getY();
-		   }		   
+		   }
 	   });
 	   panel.addMouseMotionListener(new MouseAdapter() {
 		   @Override
 			public void mouseDragged(MouseEvent e) {
 				if (lastX >= 0 && lastY >= 0) {
-					line((double)lastX/(double)width, 1.0-(double)lastY/(double)height, (double)e.getX()/(double)width, 1.0-(double)e.getY()/(double)height);					
+					line((double)lastX/(double)width, 1.0-(double)lastY/(double)height, (double)e.getX()/(double)width, 1.0-(double)e.getY()/(double)height);
 				} else {
 					point((double)e.getX()/(double)width, 1.0-(double)e.getY()/(double)height);
 				}
@@ -922,7 +922,7 @@ public class Draw {
 				   setColor = false;
 				   setRadius = false;
 				   setFontSize = false;
-			   } catch (Exception exc) {}	   
+			   } catch (Exception exc) {}
 		   }
 
 		   @Override
@@ -948,10 +948,10 @@ public class Draw {
 									   text += "^";
 								   } else {
 									   if (e.getKeyCode() == KeyEvent.VK_UP) {
-										   text += "^{";							   
+										   text += "^{";
 									   } else {
 										   if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-											   text += "_{";							   
+											   text += "_{";
 										   } else {
 											   if (e.getKeyCode() == KeyEvent.VK_AT) {
 												   text += "@";
@@ -966,7 +966,7 @@ public class Draw {
 															   text += e.getKeyChar();
 													   }
 												   }
-											   }						   
+											   }
 										   }
 									   }
 								   }
@@ -978,12 +978,12 @@ public class Draw {
 				   return;
 			   }
 			   if (e.getKeyCode() == KeyEvent.VK_L) {
-				   clear(); 
+				   clear();
 				   loadBackUp();
 				   panel.repaint();
 			   }
 			   if (e.getKeyCode() == KeyEvent.VK_X) {
-				   clear(); 
+				   clear();
 				   panel.repaint();
 			   }
 			   if (e.getKeyCode() == KeyEvent.VK_Q || e.getKeyCode() == KeyEvent.VK_W || e.getKeyCode() == KeyEvent.VK_B) {
@@ -995,14 +995,14 @@ public class Draw {
 			   if (e.getKeyCode() == KeyEvent.VK_R) processKey("r");
 			   if (e.getKeyCode() == KeyEvent.VK_F || e.getKeyCode() == KeyEvent.VK_M) processKey("m");
 			   if (e.getKeyCode() == KeyEvent.VK_T) processKey("t");
-			   processKey(""+e.getKeyChar());			   
+			   processKey(""+e.getKeyChar());
 		   }
 		   @Override
 		   public void keyReleased(KeyEvent e) {
 			   if (e.getKeyCode() == 0) {
 				   panel.getParent().requestFocusInWindow();
 				   e.setSource(panel.getParent());
-			   }			   
+			   }
 		   }
 	   });
 	   return panel;

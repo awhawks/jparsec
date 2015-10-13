@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,21 +18,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.util;
 
-
-//Jupiter GRS - Sky & Telescope, or directly at http://jupos.privat.t-online.de/rGrs.htm
-//TT-UT1: http://maia.usno.navy.mil/
-//bulletins with predictions for variable stars: 
-// Mira: http://www.aavso.org/sites/default/files/bulletin/, http://www.aavso.org/aavso-bulletin, fichero csv
-// E: http://www.as.up.krakow.pl/ephem/allstars-cat.txt
-//IRAM catalog: http://www.iram.es/IRAMES/documents/ncs30mPako/Current/Demo/iram-J2000.sou
-//IPs Canarias, skyview surveys, planetary features
-//Query for extrasolar planets file:
-// http://exoplanetarchive.ipac.caltech.edu/cgi-bin/nstedAPI/nph-nstedAPI?table=exoplanets&select=pl_hostname,ra,dec,st_dist,st_mass,pl_masse,pl_rade,pl_trandur,pl_trandep,pl_orbeccen,pl_orbincl,pl_orblper,pl_orbsmax,pl_orbtper,pl_pelink,pl_name,st_vj&order=pl_masse&format=ascii
-//Space probes
-//Other: Planetary features, SkyViewData
+// Jupiter GRS - Sky & Telescope, or directly at http://jupos.privat.t-online.de/rGrs.htm
+// TT-UT1: http://maia.usno.navy.mil/
+// bulletins with predictions for variable stars:
+//    Mira: http://www.aavso.org/sites/default/files/bulletin/, http://www.aavso.org/aavso-bulletin, fichero csv
+//    E: http://www.as.up.krakow.pl/ephem/allstars-cat.txt
+// IRAM catalog: http://www.iram.es/IRAMES/documents/ncs30mPako/Current/Demo/iram-J2000.sou
+// IPs Canarias, skyview surveys, planetary features
+// Query for extrasolar planets file:
+//    http://exoplanetarchive.ipac.caltech.edu/cgi-bin/nstedAPI/nph-nstedAPI?table=exoplanets&select=pl_hostname,ra,dec,st_dist,st_mass,pl_masse,pl_rade,pl_trandur,pl_trandep,pl_orbeccen,pl_orbincl,pl_orblper,pl_orbsmax,pl_orbtper,pl_pelink,pl_name,st_vj&order=pl_masse&format=ascii
+// Space probes
+// Other: Planetary features, SkyViewData
 
 import jparsec.ephem.Target.TARGET;
 import jparsec.ephem.moons.MoonEphem;
@@ -52,33 +51,33 @@ import jparsec.vo.GeneralQuery;
 
 /**
  * A class to automatically update JPARSEC package through Internet.<BR><BR>
- * 
+ *
  * Updates depends on the availability of data, that could change from time
  * to time. The format could also change, so both the url constants and the
  * methods are subject to change.<BR><BR>
- * 
+ *
  * All the information that is subject to change can be automatically updated
  * through Internet, with some minor exceptions where data is not available in
  * a standard form. The exceptions are as follows:<BR><BR>
- * 
+ *
  * 1. Leap seconds and TT-UT1 values in file time.jar. Can be updated by hand.<BR>
  * 2. Orbital elements of space probes in orbital_elements.jar, taken from Horizons.
  * Last full update in October, 2011.<BR>
- * 3. Values of the Great Red Spot longitudes, in orbital_elements.jar, to be updated 
+ * 3. Values of the Great Red Spot longitudes, in orbital_elements.jar, to be updated
  * each three months from the ALPO website or Sky&Telescope.
  * This file is the same as that used by Kerry Shetline in Sky View Cafe.<P>
- * 
+ *
  * Some processing is needed to update the list of observatories and
- * the COLOGNE database, due to the usage of HTML format instead of a more 
- * simple and desirable raw text. Anyway, this is done automatically. 
+ * the COLOGNE database, due to the usage of HTML format instead of a more
+ * simple and desirable raw text. Anyway, this is done automatically.
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
-public class Update 
+public class Update
 {
 	// private constructor so that this class cannot be instantiated.
 	private Update() {}
-	
+
 	/**
 	 * The url used to update the Padova-Asiago SN catalogue.
 	 */
@@ -132,7 +131,7 @@ public class Update
 	 * The url used to update IAU2000 Earth Orientation Parameters.
 	 */
 	public static final String UPDATE_URL_EOP_IAU2000 = "http://hpiers.obspm.fr/iers/eop/eopc04/eopc04_IAU2000.62-now";
-	
+
 	/**
 	 * The url used to update Sun spots database.
 	 */
@@ -161,11 +160,11 @@ public class Update
 		Logger.log(LEVEL.TRACE_LEVEL2, "Updating orbital elements from MPC");
 
 		// Query the files
-		String query1 = Update.UPDATE_URL_COMETS; 
+		String query1 = Update.UPDATE_URL_COMETS;
 		String file1 = GeneralQuery.query(query1);
 		String query2 = Update.UPDATE_URL_DISTANT_BODIES;
 		String file2 = GeneralQuery.query(query2);
-		
+
 		String query3 = Update.UPDATE_URL_BRIGHT_ASTEROIDS;
 		AstroDate astro = new AstroDate();
 		query3 = DataSet.replaceAll(query3, "2007", ""+astro.getYear(), false);
@@ -177,7 +176,7 @@ public class Update
 				query3 = Update.UPDATE_URL_BRIGHT_ASTEROIDS;
 				query3 = DataSet.replaceAll(query3, "2007", ""+(astro.getYear()-1), false);
 				String file3b = GeneralQuery.query(query3);
-				
+
 				file3 = addAsteroids(file3, file3b);
 			} catch (Exception exc) {}
 		} catch (Exception exc) {
@@ -185,20 +184,20 @@ public class Update
 				query3 = Update.UPDATE_URL_BRIGHT_ASTEROIDS;
 				query3 = DataSet.replaceAll(query3, "2007", ""+(astro.getYear()-1), false);
 				file3 = GeneralQuery.query(query3);
-				
+
 				try {
 					query3 = Update.UPDATE_URL_BRIGHT_ASTEROIDS;
 					query3 = DataSet.replaceAll(query3, "2007", ""+(astro.getYear()-2), false);
 					String file3b = GeneralQuery.query(query3);
-					
+
 					file3 = addAsteroids(file3, file3b);
 				} catch (Exception exc2) {}
 			} else {
 				throw new JPARSECException(exc);
 			}
 		}
-		
-		
+
+
 		String query4a = Update.UPDATE_URL_VISUAL_ARTIFICIAL_SATELLITES;
 		//String query4b = Update.UPDATE_URL_VISUAL_ARTIFICIAL_SATELLITES_2;
 		String file4 = GeneralQuery.query(query4a);
@@ -209,13 +208,13 @@ public class Update
 //		String query6 = "http://www.tle.info/data/science.txt";
 //		String file6 = GeneralQuery.query(query6);
 //		file4 += file6; // Not a good idea since some satellites will be twice
-		String query7 = Update.UPDATE_URL_COMETS; 
+		String query7 = Update.UPDATE_URL_COMETS;
 		query7 = DataSet.replaceAll(query7, "Soft00", "Soft01", false);
 		//String file7 = GeneralQuery.query(query1);
 		String query8 = Update.UPDATE_URL_DISTANT_BODIES;
 		query8 = DataSet.replaceAll(query8, "Soft00", "Soft01", false);
 		//String file8 = GeneralQuery.query(query2);
-		
+
 		// Continue only if the files seems to be correctly retrieved
 		if (file1 == null) throw new JPARSECException("no response from url "+query1+".");
 		if (file2 == null) throw new JPARSECException("no response from url "+query2+".");
@@ -264,7 +263,7 @@ public class Update
 				init = i + 2;
 			}
 		}
-		
+
 		// Replace old files with downloaded ones
 		String fileName = OrbitEphem.PATH_TO_MPC_COMETS_FILE.substring(OrbitEphem.PATH_TO_MPC_COMETS_FILE.lastIndexOf(Zip.ZIP_SEPARATOR) + 1);
 		WriteFile.writeAnyExternalFile(path+FileIO.getFileSeparator()+fileName, file1);
@@ -296,12 +295,12 @@ public class Update
 		pathToJar = FileIO.getPath(true) + FileIO.DATA_ORBITAL_ELEMENTS_JARFILE+".jar";
 		Logger.log(LEVEL.TRACE_LEVEL1, "   Zipping new file: "+pathToJar);
 		Zip.zipDirectory(pathToJar, Update.JPARSEC_TEMP_DIRECTORY+FileIO.getFileSeparator()+Version.PACKAGE_NAME.toLowerCase());
-		
+
 		// Delete temp folder. Note that compressed files/directories are automatically
 		// deleted during the compression process.
 		Logger.log(LEVEL.TRACE_LEVEL1, "   Deleting temp dir");
 		FileIO.deleteFile(Update.JPARSEC_TEMP_DIRECTORY);
-		
+
 	}
 
 	private static String addAsteroids(String f1, String f2) throws JPARSECException {
@@ -321,11 +320,11 @@ public class Update
 				d2 = DataSet.eliminateRowFromTable(d2, i + 1);
 			}
 		}
-		
+
 		if (d2.length > 0) return f1 + DataSet.toString(d2, FileIO.getLineSeparator());
 		return f1;
 	}
-	
+
 	/**
 	 * Updates the EOP parameters from Internet.
 	 * @throws JPARSECException If an error occurs.
@@ -357,12 +356,12 @@ public class Update
 		fileName = EarthOrientationParameters.PATH_TO_FILE_IAU2000.substring(EarthOrientationParameters.PATH_TO_FILE_IAU2000.lastIndexOf(Zip.ZIP_SEPARATOR) + 1);
 		GeneralQuery.queryFile(query2, path+FileIO.getFileSeparator()+fileName);
 		Logger.log(LEVEL.TRACE_LEVEL1, "   New IAU2000 file: "+FileIO.getLineSeparator() + DataSet.arrayListToString(ReadFile.readAnyExternalFile(path+FileIO.getFileSeparator()+fileName)));
-		
+
 		// Zip new folder
 		pathToJar = FileIO.getPath(true) + FileIO.DATA_EOP_JARFILE+".jar";
 		Logger.log(LEVEL.TRACE_LEVEL1, "   Zipping new file: "+pathToJar);
 		Zip.zipDirectory(pathToJar, Update.JPARSEC_TEMP_DIRECTORY+FileIO.getFileSeparator()+Version.PACKAGE_NAME.toLowerCase());
-		
+
 		// Delete temp folder. Note that compressed files/directories are automatically
 		// deleted during the compression process.
 		Logger.log(LEVEL.TRACE_LEVEL1, "   Deleting temp dir");
@@ -378,7 +377,7 @@ public class Update
 	throws JPARSECException {
 		Logger.log(LEVEL.TRACE_LEVEL2, "Updating Sun spots for year "+year);
 		String fileName = "g"+year+".txt";
-		
+
 		// Query the files
 		String query1 = Update.UPDATE_URL_SUN_SPOTS+fileName, file1 = "";
 		try {
@@ -386,7 +385,7 @@ public class Update
 		} catch (Exception exc) {
 			fileName = "g"+year+".TXT";
 			query1 = Update.UPDATE_URL_SUN_SPOTS+fileName;
-			file1 = GeneralQuery.query(query1);			
+			file1 = GeneralQuery.query(query1);
 		}
 		fileName = fileName.toLowerCase();
 
@@ -409,12 +408,12 @@ public class Update
 		// Replace old file / add file  with downloaded one
 		WriteFile.writeAnyExternalFile(path+fileName, file1);
 		Logger.log(LEVEL.TRACE_LEVEL1, "   New file: "+path+fileName+FileIO.getLineSeparator() + file1);
-		
+
 		// Zip new folder
 		pathToJar = FileIO.getPath(true) + FileIO.DATA_SUNSPOT_JARFILE+".jar";
 		Logger.log(LEVEL.TRACE_LEVEL1, "   Zipping new file: "+pathToJar);
 		Zip.zipDirectory(pathToJar, Update.JPARSEC_TEMP_DIRECTORY+FileIO.getFileSeparator()+Version.PACKAGE_NAME.toLowerCase());
-		
+
 		// Delete temp folder. Note that compressed files/directories are automatically
 		// deleted during the compression process.
 		Logger.log(LEVEL.TRACE_LEVEL1, "   Deleting temp dir");
@@ -455,7 +454,7 @@ public class Update
 		String pathToJar = FileIO.getPath(true) + "jpl.jar";
 		Logger.log(LEVEL.TRACE_LEVEL1, "   Zipping new file: "+pathToJar);
 		Zip.zipDirectory(pathToJar, Update.JPARSEC_TEMP_DIRECTORY+FileIO.getFileSeparator()+"JPL");
-		
+
 		// Delete temp folder. Note that compressed files/directories are automatically
 		// deleted during the compression process.
 		Logger.log(LEVEL.TRACE_LEVEL1, "   Deleting temp dir");
@@ -498,7 +497,7 @@ public class Update
 			if (start && ! end && i >= (init+2)) {
 				String file = CatalogRead.getMoleculeFileName(array[i]);
 				query = Update.UPDATE_URL_COLOGNE_CATALOGUE + file;
-				GeneralQuery.queryFile(query, path+file);	
+				GeneralQuery.queryFile(query, path+file);
 				Logger.log(LEVEL.TRACE_LEVEL1, "   New file: "+path+file+FileIO.getLineSeparator() + DataSet.arrayListToString(ReadFile.readAnyExternalFile(path+file)));
 			}
 			if (array[i].indexOf("<pre>") >= 0) {
@@ -511,7 +510,7 @@ public class Update
 		String pathToJar = FileIO.getPath(true) + "cologne.jar";
 		Logger.log(LEVEL.TRACE_LEVEL1, "   Zipping new file: "+pathToJar);
 		Zip.zipDirectory(pathToJar, Update.JPARSEC_TEMP_DIRECTORY+FileIO.getFileSeparator()+"COLOGNE");
-		
+
 		// Delete temp folder. Note that compressed files/directories are automatically
 		// deleted during the compression process.
 		Logger.log(LEVEL.TRACE_LEVEL1, "   Deleting temp dir");
@@ -528,13 +527,13 @@ public class Update
 	public static void updateOrbitalElementsOfNaturalSatellites()
 	throws JPARSECException {
 		Logger.log(LEVEL.TRACE_LEVEL2, "Updating natural satellites");
-		
+
 		// Query the files
-		String query = Update.UPDATE_URL_NATURAL_SATELLITES; 
+		String query = Update.UPDATE_URL_NATURAL_SATELLITES;
 		String file = GeneralQuery.query(query);
-		
+
 		String satElems = "";
-		
+
 		String refLaplace = "Mean orbital elements referred to the local Laplace planes";
 		String refEcliptic = "Mean ecliptic orbital elements";
 		String refPlanetEquator = "Mean orbital elements referred to the planet equator";
@@ -542,7 +541,7 @@ public class Update
 		String sep = FileIO.getLineSeparator();
 		TARGET lastPlanet = TARGET.NOT_A_PLANET;
 		boolean newTable;
-		
+
 		String subFile = file;
 		int beginTable = subFile.indexOf("<TABLE");
 		do {
@@ -573,25 +572,25 @@ public class Update
 				if (preTable.indexOf("</b>") < 0) sol = "";
 				pre += "Solution "+sol.toUpperCase() + sep;
 			}
-			
+
 			int endTable = subFile.indexOf("</TABLE>");
 			int endBeginTable = beginTable + subFile.substring(beginTable).indexOf(">") + 1;
 			String table = subFile.substring(endBeginTable, endTable);
 			newTable = true;
-			
-			int beginTR = table.indexOf("<TR");			
+
+			int beginTR = table.indexOf("<TR");
 			do {
 				int endBeginTR = beginTR + table.substring(beginTR).indexOf(">") + 1;
 				int endTR = table.indexOf("</TR>");
 				String tr = table.substring(endBeginTR, endTR);
-				
+
 				String line = "";
-				int beginTD = tr.indexOf("<TD");			
+				int beginTD = tr.indexOf("<TD");
 				do {
 					int endBeginTD = beginTD + tr.substring(beginTD).indexOf(">") + 1;
 					int endTD = tr.indexOf("</TD>");
 					String td = tr.substring(endBeginTD, endTD);
-	
+
 					int beginTag = td.indexOf("<");
 					do {
 						int endTag = td.indexOf(">");
@@ -601,11 +600,11 @@ public class Update
 						td = newtd;
 						beginTag = td.indexOf("<");
 					} while (beginTag >= 0);
-					
+
 					line += td + "   ";
-					
+
 					tr = tr.substring(endTD+5);
-					beginTD = tr.indexOf("<TD");							
+					beginTD = tr.indexOf("<TD");
 				} while (beginTD >= 0);
 
 				if (!line.startsWith(" ") && !line.startsWith("&") && !line.startsWith("a ")
@@ -622,15 +621,15 @@ public class Update
 					}
 					satElems += line + sep;
 				}
-				
+
 				table = table.substring(endTR+5);
-				beginTR = table.indexOf("<TR");							
+				beginTR = table.indexOf("<TR");
 			} while (beginTR >= 0);
-						
+
 			// Update the position in the html file to go to the next table
 			// if there is any
 			subFile = subFile.substring(endTable+8);
-			beginTable = subFile.indexOf("<TABLE");			
+			beginTable = subFile.indexOf("<TABLE");
 		} while (beginTable >= 0);
 
 
@@ -656,18 +655,18 @@ public class Update
 		}
 		WriteFile.writeAnyExternalFile(filePath, satElems);
 		Logger.log(LEVEL.TRACE_LEVEL1, "   New file: "+filePath+FileIO.getLineSeparator() + satElems);
-		
+
 		// Zip new folder
 		pathToJar = FileIO.getPath(true) + FileIO.DATA_ORBITAL_ELEMENTS_JARFILE+".jar";
 		Logger.log(LEVEL.TRACE_LEVEL1, "   Zipping new file: "+pathToJar);
 		Zip.zipDirectory(pathToJar, Update.JPARSEC_TEMP_DIRECTORY+FileIO.getFileSeparator()+Version.PACKAGE_NAME.toLowerCase());
-		
+
 		// Delete temp folder. Note that compressed files/directories are automatically
 		// deleted during the compression process.
 		Logger.log(LEVEL.TRACE_LEVEL1, "   Deleting temp dir");
 		FileIO.deleteFile(Update.JPARSEC_TEMP_DIRECTORY);
 	}
-	
+
 	/**
 	 * Updates the information about sizes and magnitudes of artificial
 	 * satellites.
@@ -687,7 +686,7 @@ public class Update
 		// Query the file
 		String query = Update.UPDATE_URL_ARTIFICIAL_SATELLITES_SIZE_AND_MAGNITUDE;
 		String fileName = path+"sat.zip";
-		GeneralQuery.queryFile(query, fileName);		
+		GeneralQuery.queryFile(query, fileName);
 
 		// Unzip old files from orbital_elements.jar to a temp folder
 		Logger.log(LEVEL.TRACE_LEVEL1, "   Unzipping file "+fileName);
@@ -698,7 +697,7 @@ public class Update
 		String files[] = FileIO.getFiles(path);
 		if (files.length > 1) throw new JPARSECException("query returned more than one file. Please check what has been retrieved.");
 		String text[] = DataSet.arrayListToStringArray(ReadFile.readAnyExternalFile(files[0]));
-		FileIO.deleteFile(files[0]);		
+		FileIO.deleteFile(files[0]);
 		FileIO.deleteFile(Update.JPARSEC_TEMP_DIRECTORY);
 
 		// Create temporal directory
@@ -714,16 +713,16 @@ public class Update
 		Zip.unZipFile(pathToJar, Update.JPARSEC_TEMP_DIRECTORY, false);
 
 		// Replace old files with downloaded and processed data
-		fileName = "sat_mag.txt"; 
+		fileName = "sat_mag.txt";
 		String filePath = path+FileIO.getFileSeparator()+fileName;
 		WriteFile.writeAnyExternalFile(filePath, text);
 		Logger.log(LEVEL.TRACE_LEVEL1, "   New file: "+filePath+FileIO.getLineSeparator() + DataSet.toString(text, FileIO.getLineSeparator()));
-		
+
 		// Zip new folder
 		pathToJar = FileIO.getPath(true) + FileIO.DATA_ORBITAL_ELEMENTS_JARFILE+".jar";
 		Logger.log(LEVEL.TRACE_LEVEL1, "   Zipping new file: "+pathToJar);
 		Zip.zipDirectory(pathToJar, Update.JPARSEC_TEMP_DIRECTORY+FileIO.getFileSeparator()+Version.PACKAGE_NAME.toLowerCase());
-		
+
 		// Delete temp folder. Note that compressed files/directories are automatically
 		// deleted during the compression process.
 		Logger.log(LEVEL.TRACE_LEVEL1, "   Deleting temp dir");
@@ -740,7 +739,7 @@ public class Update
 
 		// Query the file
 		String query = Update.UPDATE_URL_PADOVA_ASIAGO_SN_CAT;
-		String text = GeneralQuery.query(query);		
+		String text = GeneralQuery.query(query);
 
 		// Create temporal directory
 		String path = Update.JPARSEC_TEMP_DIRECTORY+Zip.ZIP_SEPARATOR+FileIO.DATA_SKY_DIRECTORY;
@@ -755,7 +754,7 @@ public class Update
 		Zip.unZipFile(pathToJar, Update.JPARSEC_TEMP_DIRECTORY, true);
 
 		// Replace old files with downloaded data
-		String fileName = "Padova-Asiago sn cat.txt"; 
+		String fileName = "Padova-Asiago sn cat.txt";
 		String filePath = path+FileIO.getFileSeparator()+fileName;
 		String old[] = DataSet.arrayListToStringArray(ReadFile.readAnyExternalFile(filePath));
 		text = text.substring(text.indexOf(FileIO.getLineSeparator()));
@@ -768,17 +767,17 @@ public class Update
 		text = text2+text;
 		WriteFile.writeAnyExternalFile(filePath, text);
 		Logger.log(LEVEL.TRACE_LEVEL1, "   New file: "+filePath+FileIO.getLineSeparator() + text);
-		
+
 		// Zip new folder
 		pathToJar = FileIO.getPath(true) + FileIO.DATA_SKY_JARFILE+".jar";
 		Logger.log(LEVEL.TRACE_LEVEL1, "   Zipping new file: "+pathToJar);
 		Zip.zipDirectory(pathToJar, Update.JPARSEC_TEMP_DIRECTORY+FileIO.getFileSeparator()+Version.PACKAGE_NAME.toLowerCase());
-		
+
 		// Delete temp folder. Note that compressed files/directories are automatically
 		// deleted during the compression process.
 		Logger.log(LEVEL.TRACE_LEVEL1, "   Deleting temp dir");
 		FileIO.deleteFile(Update.JPARSEC_TEMP_DIRECTORY);
-		
+
 	}
 
 	/**
@@ -791,7 +790,7 @@ public class Update
 
 		// Query the file
 		String query = Update.UPDATE_URL_NOVAE;
-		String text = GeneralQuery.query(query);		
+		String text = GeneralQuery.query(query);
 
 		// Create temporal directory
 		String path = Update.JPARSEC_TEMP_DIRECTORY+Zip.ZIP_SEPARATOR+FileIO.DATA_SKY_DIRECTORY;
@@ -806,23 +805,23 @@ public class Update
 		Zip.unZipFile(pathToJar, Update.JPARSEC_TEMP_DIRECTORY, true);
 
 		// Replace old files with downloaded data
-		String fileName = "galnovae.txt"; 
+		String fileName = "galnovae.txt";
 		String filePath = path+FileIO.getFileSeparator()+fileName;
 		WriteFile.writeAnyExternalFile(filePath, text);
 		Logger.log(LEVEL.TRACE_LEVEL1, "   New file: "+filePath+FileIO.getLineSeparator() + text);
-		
+
 		// Zip new folder
 		pathToJar = FileIO.getPath(true) + FileIO.DATA_SKY_JARFILE+".jar";
 		Logger.log(LEVEL.TRACE_LEVEL1, "   Zipping new file: "+pathToJar);
 		Zip.zipDirectory(pathToJar, Update.JPARSEC_TEMP_DIRECTORY+FileIO.getFileSeparator()+Version.PACKAGE_NAME.toLowerCase());
-		
+
 		// Delete temp folder. Note that compressed files/directories are automatically
 		// deleted during the compression process.
 		Logger.log(LEVEL.TRACE_LEVEL1, "   Deleting temp dir");
 		FileIO.deleteFile(Update.JPARSEC_TEMP_DIRECTORY);
-		
+
 	}
-	
+
 	/**
 	 * Updates the orbital elements of visual binary stars.
 	 * @throws JPARSECException If an error occurs.
@@ -833,7 +832,7 @@ public class Update
 
 		// Query the file
 		String query = Update.UPDATE_URL_ORBITS_VISUAL_BINARY_STARS;
-		String text[] = DataSet.toStringArray(GeneralQuery.query(query), FileIO.getLineSeparator());		
+		String text[] = DataSet.toStringArray(GeneralQuery.query(query), FileIO.getLineSeparator());
 
 		// Create temporal directory
 		String path = Update.JPARSEC_TEMP_DIRECTORY+Zip.ZIP_SEPARATOR+FileIO.DATA_ORBITAL_ELEMENTS_DIRECTORY;
@@ -848,22 +847,21 @@ public class Update
 		Zip.unZipFile(pathToJar, Update.JPARSEC_TEMP_DIRECTORY, false);
 
 		// Replace old files with downloaded and processed data
-		String fileName = "orb6orbits.txt"; 
+		String fileName = "orb6orbits.txt";
 		String filePath = path+FileIO.getFileSeparator()+fileName;
 		WriteFile.writeAnyExternalFile(filePath, text);
 		Logger.log(LEVEL.TRACE_LEVEL1, "   New file: "+filePath+FileIO.getLineSeparator() + DataSet.toString(text, FileIO.getLineSeparator()));
-		
+
 		// Zip new folder
 		pathToJar = FileIO.getPath(true) + FileIO.DATA_ORBITAL_ELEMENTS_JARFILE+".jar";
 		Logger.log(LEVEL.TRACE_LEVEL1, "   Zipping new file: "+pathToJar);
 		Zip.zipDirectory(pathToJar, Update.JPARSEC_TEMP_DIRECTORY+FileIO.getFileSeparator()+Version.PACKAGE_NAME.toLowerCase());
-		
+
 		// Delete temp folder. Note that compressed files/directories are automatically
 		// deleted during the compression process.
 		Logger.log(LEVEL.TRACE_LEVEL1, "   Deleting temp dir");
 		FileIO.deleteFile(Update.JPARSEC_TEMP_DIRECTORY);
 	}
-
 	/**
 	 * Name for temporal file.
 	 */

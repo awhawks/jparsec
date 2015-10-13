@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,12 +18,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */		
+ */
 package jparsec.ephem.planets;
 
 /**
  * A class to hold static data by Moshier to obtain planetary ephemeris.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @since version 1.0
  */
@@ -50,15 +50,15 @@ Julian Years               Phi               Theta            Phi + Psi
                       I sigma              rho                tau
 
                    Peak  RMS   Ave    Peak  RMS   Ave    Peak  RMS   Ave
--1369.0 to -1000.0:   0.03  0.01 -0.00   0.02  0.01  0.00   0.04  0.01  0.00 
--1000.0 to  -500.0:   0.02  0.00  0.00   0.02  0.00  0.00   0.03  0.01  0.00 
--500.0 to     0.0:   0.02  0.01  0.00   0.02  0.00  0.00   0.03  0.01 -0.00 
- 0.0 to   500.0:   0.02  0.00 -0.00   0.02  0.00  0.00   0.03  0.01  0.00 
-500.0 to  1000.0:   0.02  0.00  0.00   0.02  0.00  0.00   0.03  0.01 -0.00 
-1000.0 to  1500.0:   0.02  0.00  0.00   0.02  0.00  0.00   0.03  0.01  0.00 
-1500.0 to  2000.0:   0.02  0.00 -0.00   0.02  0.00 -0.00   0.03  0.01  0.00 
-2000.0 to  2500.0:   0.02  0.00 -0.00   0.02  0.00  0.00   0.03  0.01  0.00 
-2500.0 to  3000.0:   0.03  0.01 -0.00   0.02  0.01  0.00   0.04  0.01 -0.00 
+-1369.0 to -1000.0:   0.03  0.01 -0.00   0.02  0.01  0.00   0.04  0.01  0.00
+-1000.0 to  -500.0:   0.02  0.00  0.00   0.02  0.00  0.00   0.03  0.01  0.00
+-500.0 to     0.0:   0.02  0.01  0.00   0.02  0.00  0.00   0.03  0.01 -0.00
+ 0.0 to   500.0:   0.02  0.00 -0.00   0.02  0.00  0.00   0.03  0.01  0.00
+500.0 to  1000.0:   0.02  0.00  0.00   0.02  0.00  0.00   0.03  0.01 -0.00
+1000.0 to  1500.0:   0.02  0.00  0.00   0.02  0.00  0.00   0.03  0.01  0.00
+1500.0 to  2000.0:   0.02  0.00 -0.00   0.02  0.00 -0.00   0.03  0.01  0.00
+2000.0 to  2500.0:   0.02  0.00 -0.00   0.02  0.00  0.00   0.03  0.01  0.00
+2500.0 to  3000.0:   0.03  0.01 -0.00   0.02  0.01  0.00   0.04  0.01 -0.00
 */
 
 static final double tabl[] = {

@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.observer;
 
 import java.util.ArrayList;
@@ -48,7 +48,7 @@ import jparsec.vo.GeneralQuery;
 /**
  * A class to obtain the current Earth Orientation Parameters as defined by the
  * IERS.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  * @see Nutation
@@ -57,7 +57,7 @@ public class EarthOrientationParameters
 {
 	// private constructor so that this class cannot be instantiated.
 	private EarthOrientationParameters() {}
-	
+
 	/**
 	 * Path to the file of Earth Rotation Parameters, iau1980 version.
 	 */
@@ -75,7 +75,7 @@ public class EarthOrientationParameters
 
 	/**
 	 * Sets the path to the file of Earth rotation parameters.
-	 * 
+	 *
 	 * @param path Full path including extension.
 	 */
 	public static void setPath(String path)
@@ -89,17 +89,17 @@ public class EarthOrientationParameters
 	 * <P>
 	 * An example of IERS format is:
 	 * <P>
-	 * 
+	 *
 	 * <pre>
-     * Date      MJD      x          y        UT1-UTC       LOD         dX        dY        x Err     y Err   UT1-UTC Err  Lod Err     dY Err       dY Err  
+     * Date      MJD      x          y        UT1-UTC       LOD         dX        dY        x Err     y Err   UT1-UTC Err  Lod Err     dY Err       dY Err
      *                    &quot;          &quot;           s           s          &quot;         &quot;           &quot;          &quot;          s         s            &quot;           &quot;
      * (0h UTC)
 	 * 1962   1   1  37665  -0.012700   0.213000   0.0326338   0.0017230   0.000000   0.000000   0.030000   0.030000  0.0020000  0.0014000    0.012000    0.002000
 	 * 1962  JAN   1  37665-0.012700 0.213000 0.0326338   0.0017230   0.065037 0.000436
 	 * </pre>
-	 * 
+	 *
 	 * @param JD Julian day in UTC.
-	 * @return String with the values corresponding to the previous midnight, 
+	 * @return String with the values corresponding to the previous midnight,
 	 * 			in IERS format, or empty string if input time is not applicable.
 	 * @throws JPARSECException Thrown if the method fails.
 	 */
@@ -107,7 +107,7 @@ public class EarthOrientationParameters
 	{
 		// Obtain previous midnight
 		AstroDate astro = new AstroDate(0.5 + (int) (JD - 0.5));
-		
+
 		// Calculate record ID
 		int month = astro.getMonth();
 		int day = astro.getDay();
@@ -152,16 +152,16 @@ public class EarthOrientationParameters
 	 * @throws JPARSECException If an error occurs.
 	 */
 	public static AstroDate lastEOPRecordDate(EphemerisElement eph) throws JPARSECException
-	{		
+	{
 		EphemerisElement.REDUCTION_METHOD method = eph.ephemMethod;
-		
+
 		boolean iau2000 = false;
 		setPath(PATH_TO_FILE_IAU1980);
-		if (method == EphemerisElement.REDUCTION_METHOD.IAU_2000 || 
+		if (method == EphemerisElement.REDUCTION_METHOD.IAU_2000 ||
 				method == EphemerisElement.REDUCTION_METHOD.IAU_2006
 				|| method == EphemerisElement.REDUCTION_METHOD.IAU_2009) iau2000 = true;
 		if (iau2000) setPath(PATH_TO_FILE_IAU2000);
-		
+
 		// Connect to the file
 		ArrayList<String> v = ReadFile.readResourceLastNlines(pathToFile, ReadFile.ENCODING_ISO_8859, 100);
 		String file_line = v.get(v.size()-1);
@@ -169,7 +169,7 @@ public class EarthOrientationParameters
 		int y = Integer.parseInt(FileIO.getField(1, file_line, " ", true));
 		int m = Integer.parseInt(FileIO.getField(2, file_line, " ", true));
 		int d = Integer.parseInt(FileIO.getField(3, file_line, " ", true));
-		
+
 		AstroDate astro = new AstroDate(y, m, d);
 
 		return astro;
@@ -182,16 +182,16 @@ public class EarthOrientationParameters
 	 * @throws JPARSECException If an error occurs.
 	 */
 	public static AstroDate firstEOPRecordDate(EphemerisElement eph) throws JPARSECException
-	{		
+	{
 		EphemerisElement.REDUCTION_METHOD method = eph.ephemMethod;
-		
+
 		boolean iau2000 = false;
 		setPath(PATH_TO_FILE_IAU1980);
-		if (method == EphemerisElement.REDUCTION_METHOD.IAU_2000 || 
+		if (method == EphemerisElement.REDUCTION_METHOD.IAU_2000 ||
 				method == EphemerisElement.REDUCTION_METHOD.IAU_2006
 				|| method == EphemerisElement.REDUCTION_METHOD.IAU_2009) iau2000 = true;
 		if (iau2000) setPath(PATH_TO_FILE_IAU2000);
-		
+
 		// Connect to the file
 		ArrayList<String> v = ReadFile.readResourceFirstNlines(pathToFile, ReadFile.ENCODING_ISO_8859, 100);
 		String file_line = "";
@@ -205,7 +205,7 @@ public class EarthOrientationParameters
 		int y = Integer.parseInt(FileIO.getField(1, file_line, " ", true));
 		int m = Integer.parseInt(FileIO.getField(2, file_line, " ", true));
 		int d = Integer.parseInt(FileIO.getField(3, file_line, " ", true));
-		
+
 		AstroDate astro = new AstroDate(y, m, d);
 
 		return astro;
@@ -223,19 +223,19 @@ public class EarthOrientationParameters
 	 * corresponding to the mean angular rotation speed on year 1820.
 	 * @param jd_UTC Julian day in UTC.
 	 * @param eph Ephemeris object.
-	 * @return LOD in s for the closest midnight to the input date. 0 is 
+	 * @return LOD in s for the closest midnight to the input date. 0 is
 	 * returned in case of being unavailable.
 	 */
 	public static double getLOD(double jd_UTC, EphemerisElement eph) {
 		EphemerisElement.REDUCTION_METHOD method = eph.ephemMethod;
-		
+
 		boolean iau2000 = false;
 		setPath(PATH_TO_FILE_IAU1980);
-		if (method == EphemerisElement.REDUCTION_METHOD.IAU_2000 || 
+		if (method == EphemerisElement.REDUCTION_METHOD.IAU_2000 ||
 				method == EphemerisElement.REDUCTION_METHOD.IAU_2006
 				|| method == EphemerisElement.REDUCTION_METHOD.IAU_2009) iau2000 = true;
 		if (iau2000) setPath(PATH_TO_FILE_IAU2000);
-		
+
 		String record = "";
 		try {
 			record = EarthOrientationParameters.obtainEOPRecord(0.5 + (int) jd_UTC); // closest midnight
@@ -243,15 +243,15 @@ public class EarthOrientationParameters
 			Logger.log(LEVEL.ERROR, "Could not read the LOD record. Returning 0 as LOD.");
 			return 0;
 		}
-		
+
 		if (record == null || record.equals("")) {
 			Logger.log(LEVEL.ERROR, "Could not read the LOD record. Returning 0 as LOD.");
 			return 0;
 		}
-		
+
 		return DataSet.parseDouble(FileIO.getField(8, record, " ", true));
 	}
-	
+
 	/**
 	 * Obtains Earth Orientation Parameters.
 	 * The results are set to 0 in case of unacceptable input date (prior to
@@ -272,7 +272,7 @@ public class EarthOrientationParameters
 	 * correction and IAU2000 model is about 10 milliarcseconds for current
 	 * dates. Without this correction, errors amount to about 50 milliarcseconds
 	 * for Laskar method.
-	 * 
+	 *
 	 * @param jd_UTC Julian day in UTC.
 	 * @param eph Ephemeris object.
 	 * @throws JPARSECException Thrown if the method fails.
@@ -282,7 +282,7 @@ public class EarthOrientationParameters
 	public static double[] obtainEOP(double jd_UTC, EphemerisElement eph) throws JPARSECException
 	{
 		EphemerisElement.REDUCTION_METHOD method = eph.ephemMethod;
-		
+
 		Object o = DataBase.getData("EOP", true);
 		double eop[] = new double[] {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0}; // dPsi, dEpsilon, x, y, UT1-UTC, lastJD, lastMethod
 		if (o != null) eop = (double[]) o;
@@ -299,11 +299,11 @@ public class EarthOrientationParameters
 
 		boolean iau2000 = false;
 		setPath(PATH_TO_FILE_IAU1980);
-		if (method == EphemerisElement.REDUCTION_METHOD.IAU_2000 || 
+		if (method == EphemerisElement.REDUCTION_METHOD.IAU_2000 ||
 				method == EphemerisElement.REDUCTION_METHOD.IAU_2006
 				|| method == EphemerisElement.REDUCTION_METHOD.IAU_2009) iau2000 = true;
 		if (iau2000) setPath(PATH_TO_FILE_IAU2000);
-		
+
 		String record = "", nextRecord1 = "", nextRecord2 = "", previousRecord1 = "", previousRecord2;
 		try {
 			record = EarthOrientationParameters.obtainEOPRecord(jd_UTC);
@@ -316,7 +316,7 @@ public class EarthOrientationParameters
 			return new double[] {0.0, 0.0, 0.0, 0.0, 0.0}; // If EOP are not available just don't apply correction
 		}
 
-		
+
 		double EOP[] = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0 };
 		boolean calcPM = true;
 		if (method == EphemerisElement.REDUCTION_METHOD.JPL_DE4xx || method == EphemerisElement.REDUCTION_METHOD.WILLIAMS_1994 || method == EphemerisElement.REDUCTION_METHOD.SIMON_1994)
@@ -324,13 +324,13 @@ public class EarthOrientationParameters
 		if (record != null && !record.equals(""))
 		{
 			double jd0 = (int) (jd_UTC - 0.5) + 0.5;
-			try { 
-				EOP = interpolateEOP(new String[] {previousRecord2, previousRecord1, record, nextRecord1, nextRecord2}, 
+			try {
+				EOP = interpolateEOP(new String[] {previousRecord2, previousRecord1, record, nextRecord1, nextRecord2},
 					new double[] {jd0 - 2.0, jd0 - 1.0, jd0, jd0 + 1.0, jd0 + 2.0}, new int[] {7, 9, 10, 5, 6}, jd_UTC);
 			} catch (JPARSECException exc) {
 				// Thrown when interpolating in the future (interpolation out of range)
 				JPARSECException.addWarning(Translate.translate(Translate.JPARSEC_UT1_UTC_NOT_AVAILABLE));
-				calcPM = false;				
+				calcPM = false;
 			}
 		} else
 		{
@@ -355,14 +355,14 @@ public class EarthOrientationParameters
 		y = EOP[4];
 		double TTminusUT1 = TimeScale.getTTminusUT1(new AstroDate(jd_UTC));
 		double jd_TT = jd_UTC + UT1minusUTC + TTminusUT1;
-		
+
 		if (eph.correctEOPForDiurnalSubdiurnalTides) {
 			double c[] = RAYmodelForDiurnalSubdiurnalTides(jd_TT);
 			x += c[0];
 			y += c[1];
 			UT1minusUTC += c[2];
 		}
-		
+
 		if (iau2000)
 		{
 			double EOP_2000[] = dxdyTOdpsideps(EOP[1], EOP[2], jd_TT, eph.frame);
@@ -379,7 +379,7 @@ public class EarthOrientationParameters
 		return new double[] {dPsi, dEpsilon, x, y, UT1minusUTC};
 	}
 
-	private static  double[] interpolateEOP(String records[], double dates[], int fields[], double jd) throws JPARSECException { 
+	private static  double[] interpolateEOP(String records[], double dates[], int fields[], double jd) throws JPARSECException {
 		// fields: 7, 9, 10, 5, 6 for UT1-UTC, dx/dPsi, dy/dEps, x, y
 		double out[] = new double[fields.length];
 		for (int f=0; f<fields.length; f++) {
@@ -397,9 +397,9 @@ public class EarthOrientationParameters
 		}
 		return out;
 	}
-	
+
 	/**
-	 * Forces the EOP parameters for a given date. Note in case EOPs are 
+	 * Forces the EOP parameters for a given date. Note in case EOPs are
 	 * requested for another date, the values forced here for the old date will be lost.
 	 * @param jd_UTC The UTC date.
 	 * @param eph Ephemeris object.
@@ -409,11 +409,11 @@ public class EarthOrientationParameters
 	 * @param dx dX pole offset (").
 	 * @param dy dY pole offset (").
 	 * @param dxdyAredPsidEpsilon True in case the input values of dx and dy
-	 * are dPsi and dEpsilon (nutation components). Should be true for IAU1980 
+	 * are dPsi and dEpsilon (nutation components). Should be true for IAU1980
 	 * reduction method.
 	 * @throws JPARSECException  If an error occurs.
 	 */
-	public static void forceEOP(double jd_UTC, EphemerisElement eph, 
+	public static void forceEOP(double jd_UTC, EphemerisElement eph,
 			double UT1minusUTC, double x, double y, double dx, double dy,
 			boolean dxdyAredPsidEpsilon) throws JPARSECException {
 		double dPsi = dx, dEpsilon = dy;
@@ -422,29 +422,29 @@ public class EarthOrientationParameters
 			double jd_TT = jd_UTC + UT1minusUTC + TTminusUT1;
 			double EOP_2000[] = dxdyTOdpsideps(dx, dy, jd_TT, eph.frame);
 			dPsi = EOP_2000[0];
-			dEpsilon = EOP_2000[1];			
+			dEpsilon = EOP_2000[1];
 		}
-		
+
 		DataBase.addData("EOP", new double[] {
 				dPsi, dEpsilon, x, y, UT1minusUTC, jd_UTC, eph.ephemMethod.ordinal()
-		}, true);		
+		}, true);
 	}
 
 	/**
-	 * Forces the EOP parameters for a given date. Note in case EOPs are 
+	 * Forces the EOP parameters for a given date. Note in case EOPs are
 	 * requested for another date, the values forced here for the old date will be lost.
 	 * @param jd_UTC The UTC date.
 	 * @param eph Ephemeris object.
 	 * @param eop The EOP parameters.
 	 * @throws JPARSECException  If an error occurs.
 	 */
-	public static void forceEOP(double jd_UTC, EphemerisElement eph, 
+	public static void forceEOP(double jd_UTC, EphemerisElement eph,
 			double eop[]) throws JPARSECException {
 		DataBase.addData("EOP", new double[] {
 				eop[0], eop[1], eop[2], eop[3], eop[4], jd_UTC, eph.ephemMethod.ordinal()
-		}, true);		
+		}, true);
 	}
-	
+
 	   /** HS parameter. */
     private static final double[] HS = {
         -001.94, -001.25, -006.64, -001.51, -008.02,
@@ -559,7 +559,7 @@ public class EarthOrientationParameters
         +0.08955 *  1.0E-6,
         +0.04726 *  1.0E-6
     };
-    
+
 	/**
 	 * Implementation of the RAY model for diurnal/subdiurnal tides.
 	 * <P>References:
@@ -641,9 +641,9 @@ public class EarthOrientationParameters
           double bm1 = bnm12 - bnm10;
 
           // Fill partials vector
-          double partials[] = new double[] {SP[0] * anm01, SP[0] * bnm01, SP[1] * anm01 - SP[2] * ap0, 
-        		  SP[1] * bnm01 - SP[2] * bp0, SP[3] * anm01 - SP[4] * ap0 + SP[5] * bm0, 
-        		  SP[3] * bnm01 - SP[4] * bp0 - SP[5] * am0, SP[6] * anm11, SP[6] * bnm11, 
+          double partials[] = new double[] {SP[0] * anm01, SP[0] * bnm01, SP[1] * anm01 - SP[2] * ap0,
+        		  SP[1] * bnm01 - SP[2] * bp0, SP[3] * anm01 - SP[4] * ap0 + SP[5] * bm0,
+        		  SP[3] * bnm01 - SP[4] * bp0 - SP[5] * am0, SP[6] * anm11, SP[6] * bnm11,
         		  SP[7] * anm11 - SP[8] * ap1, SP[7] * bnm11 - SP[8] * bp1, SP[9] * anm11 - SP[10] * ap1 + SP[11] * bm1,
         		  SP[9] * bnm11 - SP[10] * bp1 - SP[11] * am1};
 
@@ -657,11 +657,11 @@ public class EarthOrientationParameters
           return new double[] {dx*Constant.RAD_TO_ARCSEC, dy*Constant.RAD_TO_ARCSEC, dt};
 	}
 
-          
+
 	/**
 	 * Transforms dx and dy values into dpsi and deps. Vondr&aacute;k et al. formulae
 	 * for obliquity and precession is used.
-	 * 
+	 *
 	 * @param dX Celestial pole x offset in arcseconds.
 	 * @param dY Celestial pole y offset in arcseconds.
 	 * @param TJD Julian day in TT.
@@ -670,8 +670,8 @@ public class EarthOrientationParameters
 	 * @return dpsi and deps celestial pole offsets in arcseconds.
 	 * @throws JPARSECException If an error occurs.
 	 */
-	public static double[] dxdyTOdpsideps(double dX, double dY, double TJD, 
-			EphemerisElement.FRAME frame) throws JPARSECException
+	public static double[] dxdyTOdpsideps(double dX, double dY, double TJD,
+			FRAME frame) throws JPARSECException
 	{
 		double T = Functions.toCenturies(TJD);
 
@@ -699,10 +699,10 @@ public class EarthOrientationParameters
 		// COMPUTE DELTA-DELTA-PSI AND DELTA-DELTA-EPSILON IN ARCSECONDS
 		double PSICOR = (DP3[0] / SINE) * Constant.RAD_TO_ARCSEC;
 		double EPSCOR = (DP3[1]) * Constant.RAD_TO_ARCSEC;
-		
+
 		return new double[] { PSICOR, EPSCOR };
 
-	
+
 		// Newer algorithm by Ch. Bizouard - December 2006, see SUBROUTINE DPSIDEPS2000_DXDY2000(dmjd,dX,dY,dpsi,deps)
 		// at ftp://hpiers.obspm.fr/iers/models/uai2000.package
 		// Difference with Kaplan is 0.02 muas. I still prefer the old one
@@ -710,22 +710,22 @@ public class EarthOrientationParameters
 
 		// Luni-solar precession
 		double Psi_A = (5038.47875*dt - 1.07259*dt*dt -0.001147*dt*dt*dt)*Constant.ARCSEC_TO_RAD;
-	
+
 		// Planetary precession
-		double Chi_A = (10.5526*dt - 2.38064 * dt*dt -0.001125*dt*dt*dt)*Constant.ARCSEC_TO_RAD; 
-	
+		double Chi_A = (10.5526*dt - 2.38064 * dt*dt -0.001125*dt*dt*dt)*Constant.ARCSEC_TO_RAD;
+
 		double sineps0 = 0.3977771559319137, coseps0 = 0.9174820620691818;
-	  			   
+
 		double dpsi = (-dX  + (Psi_A * coseps0 - Chi_A) *dY)/(-FastMath.pow((Psi_A * coseps0 - Chi_A), 2.0) * sineps0 - sineps0);
-		double deps = (-(Psi_A * coseps0 - Chi_A)*sineps0*dX - sineps0*dY)/(-FastMath.pow((Psi_A * coseps0 - Chi_A), 2.0) * sineps0 - sineps0);  
-			
+		double deps = (-(Psi_A * coseps0 - Chi_A)*sineps0*dX - sineps0*dY)/(-FastMath.pow((Psi_A * coseps0 - Chi_A), 2.0) * sineps0 - sineps0);
+
 		return new double[] { dpsi, deps};
-*/		
+*/
 	}
 
 	/**
 	 * Resets all EOP parameters to 0. It is not necessary to call this method
-	 * even when changing between reduction methods, is automatically done in 
+	 * even when changing between reduction methods, is automatically done in
 	 * ephemerides computation when needed.
 	 */
 	public static void clearEOP()
@@ -736,13 +736,13 @@ public class EarthOrientationParameters
 	/**
 	 * Returns the prediction of the Earth Orientation Parameters for a given date
 	 * that should be between current date and the next three months, approximately.
-	 * Predictions are obtained by accessing the file ftp://hpiers.obspm.fr/prediction/eop_pred_ncep.final 
+	 * Predictions are obtained by accessing the file ftp://hpiers.obspm.fr/prediction/eop_pred_ncep.final
 	 * for IAU1980 algorithms or http://maia.usno.navy.mil/ser7/finals2000A.daily for IAU2000 algorithms.
-	 * This method is not used internally in JPARSEC (EOP are never predicted), you should use it 
+	 * This method is not used internally in JPARSEC (EOP are never predicted), you should use it
 	 * manually if you wish. Note this method can require a few seconds to complete the file transfer.
 	 * @param JD_UTC The Julian date in UTC.
 	 * @param set True to set the values predicted as the EOP parameters. Note that values will be overwritten
-	 * when computing ephemerides unless the input UTC date is the exact output from 
+	 * when computing ephemerides unless the input UTC date is the exact output from
 	 * {@linkplain TimeScale#getJD(jparsec.time.TimeElement, ObserverElement, EphemerisElement, jparsec.time.TimeElement.SCALE)}.
 	 * @param IAU2000 True for IAU2000 predictions, false for IAU1980 predictions.
 	 * @param frame The frame to be used when calling {@linkplain #dxdyTOdpsideps(double, double, double, FRAME)}
@@ -782,7 +782,7 @@ public class EarthOrientationParameters
 					break;
 				}
 			}
-	
+
 			// Simple linear interpolation between current and next record
 			if (nextRecord != null && !nextRecord.equals(""))
 			{
@@ -800,8 +800,8 @@ public class EarthOrientationParameters
 				eop[3] = eop[3] + (eop3 - eop[3]) * factor;
 				eop[4] = eop[4] + (eop4 - eop[4]) * factor;
 				eop[5] = eop[5] + (eop5 - eop[5]) * factor;
-			}			
-	
+			}
+
 			if (set && eop != null) {
 				DataBase.addData("EOP", new double[] {
 						// dPsi, dEpsilon, x, y, UT1minusUTC, lastJD, lastMethod
@@ -839,7 +839,7 @@ public class EarthOrientationParameters
 					break;
 				}
 			}
-	
+
 			// Simple linear interpolation between current and next record
 			if (nextRecord != null && !nextRecord.equals(""))
 			{
@@ -863,8 +863,8 @@ public class EarthOrientationParameters
 				} else {
 					eop[5] = 0;
 				}
-			}			
-	
+			}
+
 			double TTminusUT1 = TimeScale.getTTminusUT1(new AstroDate(JD_UTC));
 			double jd_TT = JD_UTC + eop[4] + TTminusUT1;
 			double EOP_2000[] = dxdyTOdpsideps(eop[0], eop[1], jd_TT, frame);

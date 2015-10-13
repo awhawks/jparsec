@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.ephem.event;
 
 import jparsec.time.*;
@@ -36,7 +36,7 @@ import java.io.*;
  * @version 1.0
  */
 public class MoonEventElement implements Serializable {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Holds the start time of the events as a Julian day in TDB.
@@ -59,7 +59,7 @@ public class MoonEventElement implements Serializable {
 	 */
 	public MoonEventElement.EVENT eventType;
 	/**
-	 * Holds details on the event. For mutual events it contains a number 
+	 * Holds details on the event. For mutual events it contains a number
 	 * with the percentage of eclipse/occultation, the date of that maximum,
 	 * and the distance between both bodies in degrees.
 	 */
@@ -86,16 +86,16 @@ public class MoonEventElement implements Serializable {
 	 * This flag is false always except when calculating natural satellites events
 	 * (mutual and non-mutual). In this case this flag will be true for those
 	 * events that are simultaneous (several events going on at the same time).
-	 * In practice, this flag is true always for non-mutual events involving two or 
+	 * In practice, this flag is true always for non-mutual events involving two or
 	 * more satellites, and also true always for mutual events (since they involve
 	 * two satellites).
 	 */
 	public boolean severalSimultaneousEvents = false;
-	
+
 	/**
 	 * The set of moon events.
 	 */
-	public static enum EVENT {
+	public enum EVENT {
 		/** ID code for an eclipse event. */
 		ECLIPSED,
 		/** Id code for an occultation event. */
@@ -109,7 +109,7 @@ public class MoonEventElement implements Serializable {
 	/**
 	 * The set of moon subevents (start and end times).
 	 */
-	public static enum SUBEVENT {
+	public enum SUBEVENT {
 		/** ID code for an event that begins. */
 		START,
 		/** Id code for an event that ends. */
@@ -117,18 +117,18 @@ public class MoonEventElement implements Serializable {
 		/** Id code for an event that begins and ends. */
 		TIME
 	};
-	
+
 	/**
 	 * Holds a description of the events.
 	 */
 	public static final String[] EVENTS = new String[] {"Eclipsed", "Occulted", "Transiting",
 		"Shadow transiting"};
-	
+
 	/**
 	 * Empty constructor.
 	 */
 	public MoonEventElement() {}
-	
+
 	/**
 	 * Constructor for a simple event.
 	 * @param jd Event time.
@@ -167,7 +167,7 @@ public class MoonEventElement implements Serializable {
 		this.visibleFromEarth = true;
 		this.subType = MoonEventElement.SUBEVENT.TIME;
 	}
-	
+
 	/**
 	 * Transforms the event time into another time scale.
 	 * @param obs Observer object.
@@ -181,11 +181,11 @@ public class MoonEventElement implements Serializable {
 	throws JPARSECException {
 		TimeElement time = new TimeElement(this.startTime, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
 		if (!start) time = new TimeElement(this.endTime, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
-		
+
 		double out = TimeScale.getJD(time, obs, eph, timeScale);
 		return out;
 	}
-	
+
 	/**
 	 * Reports the current event to the console.
 	 * @throws JPARSECException If an error occurs.
@@ -208,9 +208,8 @@ public class MoonEventElement implements Serializable {
 		e.severalSimultaneousEvents = this.severalSimultaneousEvents;
 		return e;
 	}
-
 	/**
-	 * Returns whether the argument contains the same information
+	 * Returns wether the input Object contains the same information
 	 * as this instance.
 	 */
 	@Override

@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.io;
 
 import java.awt.Component;
@@ -35,7 +35,7 @@ import jparsec.util.JPARSECException;
 
 /**
  * Basic support for printing to a file or printer.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -54,10 +54,10 @@ public class Printer implements Printable
 	{
 		componentToBePrinted = componentToPrint;
 	}
-	
+
 	/**
 	 * Print to the printer, portrait by default.
-	 * 
+	 *
 	 * @throws JPARSECException Thrown if the process fails.
 	 */
 	public void print() throws JPARSECException
@@ -92,7 +92,7 @@ public class Printer implements Printable
 			return (NO_SUCH_PAGE);
 		} else
 		{
-		      
+
 			Graphics2D g2d = (Graphics2D) g;
 			g2d.translate(pageFormat.getImageableX(), pageFormat.getImageableY());
 
@@ -116,7 +116,7 @@ public class Printer implements Printable
 				scale = scaley;
 			g2d.scale(scale, scale);
 			// End of scaling
-			
+
 			boolean visible = componentToBePrinted.isVisible();
 			componentToBePrinted.setVisible(true);
 			disableDoubleBuffering(componentToBePrinted);

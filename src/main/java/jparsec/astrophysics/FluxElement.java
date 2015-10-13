@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.astrophysics;
 
 import java.io.Serializable;
@@ -35,7 +35,7 @@ import jparsec.util.*;
  */
 public class FluxElement implements Serializable
 {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Wavelength/velocity value.
@@ -74,10 +74,11 @@ public class FluxElement implements Serializable
 		this.y = y;
 		if (b != null) this.photometricBand = b.clone();
 	}
-	
+
 	/**
 	 * Clones this instance.
 	 */
+	@Override
 	public FluxElement clone()
 	{
 		if (photometricBand == null) return new FluxElement(this.x.clone(), this.y.clone(), null);
@@ -85,6 +86,9 @@ public class FluxElement implements Serializable
 		return p;
 	}
 
+	/**
+	 * Returns if this instance is equals to another.
+	 */
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -107,10 +111,6 @@ public class FluxElement implements Serializable
 		return result;
 	}
 
-	/**
-	 * Returns true if this instance is equal to another.
-	 */
-
 	private MeasureElement transformX(String newUnit)
 	throws JPARSECException {
 		if (newUnit == null || this.x.unit == null || this.x.unit.equals(newUnit)) return this.x;
@@ -120,7 +120,7 @@ public class FluxElement implements Serializable
 	private MeasureElement transformY(String newUnit)
 	throws JPARSECException {
 		if (newUnit == null || this.y.unit == null || this.y.unit.equals(newUnit)) return this.y;
-		
+
 		if (this.y.unit.equals(MeasureElement.UNIT_Y_MAG))
 		{
 			MeasureElement out = Photometry.getFluxFromMagnitude(DataSet.getDoubleValueWithoutLimit(this.y.value), this.y.error, this.photometricBand);
@@ -149,7 +149,7 @@ public class FluxElement implements Serializable
 	throws JPARSECException {
 		this.x = this.transformX(newUnit);
 	}
-	
+
 	/**
 	 * Obtains the current x value in a new unit.
 	 * @param newUnit The new unit.
@@ -170,7 +170,7 @@ public class FluxElement implements Serializable
 	throws JPARSECException {
 		this.y = this.transformY(newUnit);
 	}
-	
+
 	/**
 	 * Obtains the current y value in a new unit.
 	 * @param newUnit The new unit.
@@ -181,7 +181,7 @@ public class FluxElement implements Serializable
 	throws JPARSECException {
 		return this.transformY(newUnit);
 	}
-	
+
 	/**
 	 * Returns a String representation of this object.
 	 */

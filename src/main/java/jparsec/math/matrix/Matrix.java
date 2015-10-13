@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 /*
  * This software is a cooperative product of The MathWorks and the National
  * Institute of Standards and Technology (NIST) which has been released to the
@@ -95,34 +95,34 @@ import jparsec.util.JPARSECException;
 * </PRE></DD>
 * </DL>
  * <p/>
- * Adapted from the <a href="http://math.nist.gov/javanumerics/jama/" target="_blank">JAMA</a> package. Additional methods are tagged with the 
+ * Adapted from the <a href="http://math.nist.gov/javanumerics/jama/" target="_blank">JAMA</a> package. Additional methods are tagged with the
  * <code>@author</code> tag.
  *
- * @author The Mathworks and NIST 
+ * @author The Mathworks and NIST
  * @author Fracpete (fracpete at waikato dot ac dot nz)
  * @version $Revision: 1.6 $
 */
 
-public class Matrix 
+public class Matrix
   implements Cloneable, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-/** 
+/**
    * Array for internal storage of elements.
    * @serial internal array storage.
    */
   protected double[][] data;
 
-  /** 
+  /**
    * Row and column dimensions.
    * @serial row dimension.
    * @serial column dimension.
    */
   protected int m, n;
 
-  /** 
-   * Construct an m-by-n matrix of zeros. 
+  /**
+   * Construct an m-by-n matrix of zeros.
    * @param m    Number of rows.
    * @param n    Number of colums.
    */
@@ -132,7 +132,7 @@ public class Matrix
     data = new double[m][n];
   }
 
-  /** 
+  /**
    * Construct an m-by-n constant matrix.
    * @param m    Number of rows.
    * @param n    Number of colums.
@@ -149,7 +149,7 @@ public class Matrix
     }
   }
 
-  /** 
+  /**
    * Construct a matrix from a 2-D array.
    * @param A    Two-dimensional array of doubles.
    * @throws  JPARSECException All rows must have the same length
@@ -166,7 +166,7 @@ public class Matrix
     this.data = A;
   }
 
-  /** 
+  /**
    * Construct a matrix quickly without checking arguments.
    * @param A    Two-dimensional array of doubles.
    * @param m    Number of rows.
@@ -178,7 +178,7 @@ public class Matrix
     this.n = n;
   }
 
-  /** 
+  /**
    * Construct a matrix from a one-dimensional packed array
    * @param vals One-dimensional array of doubles, packed by columns (ala
    * Fortran).
@@ -215,7 +215,7 @@ public class Matrix
           }
       }
   }
-  
+
   /**
    * Reads a matrix from a reader. The first line in the file should
    * contain the number of rows and columns. Subsequent lines
@@ -234,18 +234,18 @@ public class Matrix
     while ((line = lnr.readLine()) != null) {
 
       // Comments
-      if (line.startsWith("%"))  
+      if (line.startsWith("%"))
         continue;
-      
+
       StringTokenizer st = new StringTokenizer(line);
       // Ignore blank lines
-      if (!st.hasMoreTokens())  
+      if (!st.hasMoreTokens())
         continue;
 
       if (currentRow < 0) {
         int rows = Integer.parseInt(st.nextToken());
         if (!st.hasMoreTokens())
-          throw new JPARSECException("Line " + lnr.getLineNumber() 
+          throw new JPARSECException("Line " + lnr.getLineNumber()
               + ": expected number of columns");
 
         int cols = Integer.parseInt(st.nextToken());
@@ -255,15 +255,15 @@ public class Matrix
         currentRow++;
         continue;
 
-      } 
+      }
       else {
         if (currentRow == getRowDimension())
-          throw new JPARSECException("Line " + lnr.getLineNumber() 
+          throw new JPARSECException("Line " + lnr.getLineNumber()
               + ": too many rows provided");
 
         for (int i = 0; i < getColumnDimension(); i++) {
           if (!st.hasMoreTokens())
-            throw new JPARSECException("Line " + lnr.getLineNumber() 
+            throw new JPARSECException("Line " + lnr.getLineNumber()
                 + ": too few matrix elements provided");
 
           set(currentRow, i, Double.valueOf(st.nextToken()).doubleValue());
@@ -273,14 +273,14 @@ public class Matrix
     }
 
     if (currentRow == -1)
-      throw new JPARSECException("Line " + lnr.getLineNumber() 
+      throw new JPARSECException("Line " + lnr.getLineNumber()
           + ": expected number of rows");
     else if (currentRow != getRowDimension())
-      throw new JPARSECException("Line " + lnr.getLineNumber() 
+      throw new JPARSECException("Line " + lnr.getLineNumber()
           + ": too few rows provided");
   }
 
-  /** 
+  /**
    * Construct a matrix from a copy of a 2-D array.
    * @param A    Two-dimensional array of doubles.
    * @return The matrix.
@@ -303,7 +303,7 @@ public class Matrix
     return X;
   }
 
-  /** 
+  /**
    * Make a deep copy of a matrix
    * @return The copy.
    */
@@ -318,7 +318,7 @@ public class Matrix
     return X;
   }
 
-  /** 
+  /**
    * Clone the Matrix object.
    * @return The copy.
    */
@@ -326,7 +326,7 @@ public class Matrix
     return this.copy();
   }
 
-  /** 
+  /**
    * Access the internal two-dimensional array.
    * @return     Pointer to the two-dimensional array of matrix elements.
    */
@@ -334,7 +334,7 @@ public class Matrix
     return data;
   }
 
-  /** 
+  /**
    * Copy the internal two-dimensional array.
    * @return     Two-dimensional array copy of matrix elements.
    */
@@ -348,7 +348,7 @@ public class Matrix
     return C;
   }
 
-  /** 
+  /**
    * Make a one-dimensional column packed copy of the internal array.
    * @return     Matrix elements packed in a one-dimensional array by columns.
    */
@@ -362,7 +362,7 @@ public class Matrix
     return vals;
   }
 
-  /** 
+  /**
    * Make a one-dimensional row packed copy of the internal array.
    * @return     Matrix elements packed in a one-dimensional array by rows.
    */
@@ -376,7 +376,7 @@ public class Matrix
     return vals;
   }
 
-  /** 
+  /**
    * Get row dimension.
    * @return     m, the number of rows.
    */
@@ -384,7 +384,7 @@ public class Matrix
     return m;
   }
 
-  /** 
+  /**
    * Get column dimension.
    * @return     n, the number of columns.
    */
@@ -392,7 +392,7 @@ public class Matrix
     return n;
   }
 
-  /** 
+  /**
    * Get a single element.
    * @param i    Row index.
    * @param j    Column index.
@@ -402,7 +402,7 @@ public class Matrix
     return data[i][j];
   }
 
-  /** 
+  /**
    * Get a submatrix.
    * @param i0   Initial row index
    * @param i1   Final row index
@@ -426,7 +426,7 @@ public class Matrix
     return X;
   }
 
-  /** 
+  /**
    * Get a submatrix.
    * @param r    Array of row indices.
    * @param c    Array of column indices.
@@ -448,7 +448,7 @@ public class Matrix
     return X;
   }
 
-  /** 
+  /**
    * Get a submatrix.
    * @param i0   Initial row index
    * @param i1   Final row index
@@ -471,7 +471,7 @@ public class Matrix
     return X;
   }
 
-  /** 
+  /**
    * Get a submatrix.
    * @param r    Array of row indices.
    * @param j0   Initial column index
@@ -494,14 +494,14 @@ public class Matrix
     return X;
   }
 
-  /** 
+  /**
    * Get a column submatrix.
    * @param j    Column index
    * @return     A(r(:),j:j)
    * @throws  JPARSECException Submatrix indices
    */
   public Matrix getColumnMatrix(int j) throws JPARSECException {
-	  
+
     Matrix X = new Matrix(data.length,1);
     double[][] B = X.getArray();
     try {
@@ -514,7 +514,7 @@ public class Matrix
     return X;
   }
 
-  /** 
+  /**
    * Get a column submatrix.
    * @param j    Column index
    * @return     A(r(:),j:j)
@@ -528,7 +528,7 @@ public class Matrix
     return out;
   }
 
-  /** 
+  /**
    * Get a row submatrix.
    * @param i    Row index
    * @return     A(i:i, r(:))
@@ -537,7 +537,7 @@ public class Matrix
   public double[] getRow(int i) {
 	  return data[i];
   }
-  /** 
+  /**
    * Set a single element.
    * @param i    Row index.
    * @param j    Column index.
@@ -547,7 +547,7 @@ public class Matrix
     data[i][j] = s;
   }
 
-  /** 
+  /**
    * Set a submatrix.
    * @param i0   Initial row index
    * @param i1   Final row index
@@ -568,7 +568,7 @@ public class Matrix
     }
   }
 
-  /** 
+  /**
    * Set a submatrix.
    * @param r    Array of row indices.
    * @param c    Array of column indices.
@@ -587,7 +587,7 @@ public class Matrix
     }
   }
 
-  /** 
+  /**
    * Set a submatrix.
    * @param r    Array of row indices.
    * @param j0   Initial column index
@@ -607,7 +607,7 @@ public class Matrix
     }
   }
 
-  /** 
+  /**
    * Set a submatrix.
    * @param i0   Initial row index
    * @param i1   Final row index
@@ -626,7 +626,7 @@ public class Matrix
       throw new JPARSECException("Submatrix indices");
     }
   }
-  
+
   /**
    * Returns true if the matrix is symmetric.
    * (FracPete: taken from old weka.core.Matrix class)
@@ -656,7 +656,7 @@ public class Matrix
     return (getRowDimension() == getColumnDimension());
   }
 
-  /** 
+  /**
    * Matrix transpose.
    * @return    A'
    */
@@ -671,7 +671,7 @@ public class Matrix
     return X;
   }
 
-  /** 
+  /**
    * One norm.
    * @return    maximum column sum.
    */
@@ -687,7 +687,7 @@ public class Matrix
     return f;
   }
 
-  /** 
+  /**
    * Two norm.
    * @return    maximum singular value.
    */
@@ -695,7 +695,7 @@ public class Matrix
     return (new SingularValueDecomposition(this).norm2());
   }
 
-  /** 
+  /**
    * Infinity norm
    * @return    maximum row sum.
    */
@@ -711,7 +711,7 @@ public class Matrix
     return f;
   }
 
-  /** 
+  /**
    * Frobenius norm
    * @return    sqrt of sum of squares of all elements.
    */
@@ -725,7 +725,7 @@ public class Matrix
     return f;
   }
 
-  /**  
+  /**
    * Unary minus
    * @return    -A
    */
@@ -740,7 +740,7 @@ public class Matrix
     return X;
   }
 
-  /** 
+  /**
    * C = A + B
    * @param B    another matrix
    * @return     A + B
@@ -758,7 +758,7 @@ public class Matrix
     return X;
   }
 
-  /** 
+  /**
    * A = A + B
    * @param B    another matrix
    * @return     A + B
@@ -774,7 +774,7 @@ public class Matrix
     return this;
   }
 
-  /** 
+  /**
    * C = A - B
    * @param B    another matrix
    * @return     A - B
@@ -792,7 +792,7 @@ public class Matrix
     return X;
   }
 
-  /** 
+  /**
    * A = A - B
    * @param B    another matrix
    * @return     A - B
@@ -808,7 +808,7 @@ public class Matrix
     return this;
   }
 
-  /** 
+  /**
    * Element-by-element multiplication, C = A.*B
    * @param B    another matrix
    * @return     A.*B
@@ -826,7 +826,7 @@ public class Matrix
     return X;
   }
 
-  /** 
+  /**
    * Element-by-element multiplication in place, A = A.*B
    * @param B    another matrix
    * @return     A.*B
@@ -842,7 +842,7 @@ public class Matrix
     return this;
   }
 
-  /** 
+  /**
    * Element-by-element right division, C = A./B
    * @param B    another matrix
    * @return     A./B
@@ -860,7 +860,7 @@ public class Matrix
     return X;
   }
 
-  /** 
+  /**
    * Element-by-element right division in place, A = A./B
    * @param B    another matrix
    * @return     A./B
@@ -876,7 +876,7 @@ public class Matrix
     return this;
   }
 
-  /** 
+  /**
    * Element-by-element left division, C = A.\B
    * @param B    another matrix
    * @return     A.\B
@@ -894,7 +894,7 @@ public class Matrix
     return X;
   }
 
-  /** 
+  /**
    * Element-by-element left division in place, A = A.\B
    * @param B    another matrix
    * @return     A.\B
@@ -910,7 +910,7 @@ public class Matrix
     return this;
   }
 
-  /** 
+  /**
    * Multiply a matrix by a scalar, C = s*A
    * @param s    scalar
    * @return     s*A
@@ -926,7 +926,7 @@ public class Matrix
     return X;
   }
 
-  /** 
+  /**
    * Multiply a matrix by a scalar in place, A = s*A
    * @param s    scalar
    * @return     replace A by s*A
@@ -940,7 +940,7 @@ public class Matrix
     return this;
   }
 
-  /** 
+  /**
    * Linear algebraic matrix multiplication, A * B
    * @param B    another matrix
    * @return     Matrix product, A * B
@@ -969,7 +969,7 @@ public class Matrix
     return X;
   }
 
-  /** 
+  /**
    * LU Decomposition
    * @return     LUDecomposition
    * @throws JPARSECException If m is lower than n in the m.n matrix.
@@ -979,7 +979,7 @@ public class Matrix
     return new LUDecomposition(this);
   }
 
-  /** 
+  /**
    * QR Decomposition
    * @return     QRDecomposition
    * @see QRDecomposition
@@ -988,7 +988,7 @@ public class Matrix
     return new QRDecomposition(this);
   }
 
-  /** 
+  /**
    * Cholesky Decomposition
    * @return     CholeskyDecomposition
    * @see CholeskyDecomposition
@@ -997,7 +997,7 @@ public class Matrix
     return new CholeskyDecomposition(this);
   }
 
-  /** 
+  /**
    * Singular Value Decomposition
    * @return     SingularValueDecomposition
    * @see SingularValueDecomposition
@@ -1006,7 +1006,7 @@ public class Matrix
     return new SingularValueDecomposition(this);
   }
 
-  /** 
+  /**
    * Eigenvalue Decomposition
    * @return     EigenvalueDecomposition
    * @see EigenvalueDecomposition
@@ -1014,8 +1014,8 @@ public class Matrix
   public EigenvalueDecomposition eig() {
     return new EigenvalueDecomposition(this);
   }
-  
-  /** 
+
+  /**
    * Solve A*X = B
    * @param B    right hand side
    * @return     solution if A is square, least squares solution otherwise
@@ -1026,7 +1026,7 @@ public class Matrix
         (new QRDecomposition(this)).solve(B));
   }
 
-  /** 
+  /**
    * Solve X*A = B, which is also A'*X' = B'
    * @param B    right hand side
    * @return     solution if A is square, least squares solution otherwise.
@@ -1036,7 +1036,7 @@ public class Matrix
     return transpose().solve(B.transpose());
   }
 
-  /** 
+  /**
    * Matrix inverse or pseudoinverse
    * @return     inverse(A) if A is square, pseudoinverse otherwise.
    * @throws JPARSECException If matrix row dimensions do not agree or rank is deficient.
@@ -1051,7 +1051,7 @@ public class Matrix
    * Steps in the Calculation (see <a href="http://www.mathworks.com/access/helpdesk/help/techdoc/ref/sqrtm.html" target="blank"><code>sqrtm</code></a> in Matlab):<br/>
    * <ol>
    *   <li>perform eigenvalue decomposition<br/>[V,D]=eig(A)</li>
-   *   <li>take the square root of all elements in D (only the ones with 
+   *   <li>take the square root of all elements in D (only the ones with
    *       positive sign are considered for further computation)<br/>
    *       S=sqrt(D)</li>
    *   <li>calculate the root<br/>
@@ -1072,14 +1072,14 @@ public class Matrix
    *   1   -4    6   -4    1
    *   0    1   -4    6   -4
    *   0    0    1   -4    5
-   * 
+   *
    *  sqrt(X) =
-   *   2   -1   -0   -0   -0 
-   *  -1    2   -1    0   -0 
-   *   0   -1    2   -1    0 
-   *  -0    0   -1    2   -1 
-   *  -0   -0   -0   -1    2 
-   *  
+   *   2   -1   -0   -0   -0
+   *  -1    2   -1    0   -0
+   *   0   -1    2   -1    0
+   *  -0    0   -1    2   -1
+   *  -0   -0   -0   -1    2
+   *
    *  Matrix m = new Matrix(new double[][]{{5,-4,1,0,0},{-4,6,-4,1,0},{1,-4,6,-4,1},{0,1,-4,6,-4},{0,0,1,-4,5}});
    *   </pre>
    *   </li>
@@ -1088,18 +1088,18 @@ public class Matrix
    *  X =
    *   7   10
    *  15   22
-   *  
+   *
    *  sqrt(X) =
    *  1.5667    1.7408
    *  2.6112    4.1779
-   * 
+   *
    *  Matrix m = new Matrix(new double[][]{{7, 10},{15, 22}});
    *   </pre>
    *   </li>
    * </ol>
    *
    * @return    sqrt(A)
-   * @throws JPARSECException If an error occurs. 
+   * @throws JPARSECException If an error occurs.
    */
   public Matrix sqrt() throws JPARSECException {
     EigenvalueDecomposition   evd;
@@ -1113,7 +1113,7 @@ public class Matrix
     int                       n;
 
     result = null;
-    
+
     // eigenvalue decomp.
     // [V, D] = eig(A) with A = this
     evd = this.eig();
@@ -1132,15 +1132,15 @@ public class Matrix
     //    with   X = B/A
     //    and  B/A = (A'\B')'
     //    and V=A and V*S=B
-    // we get 
+    // we get
     //      result = (V'\(V*S)')'
-    //      
+    //
     //         A*X = B
     //           X = A\B
-    // which is 
+    // which is
     //           X = A.solve(B)
-    //           
-    // with A=V' and B=(V*S)' 
+    //
+    // with A=V' and B=(V*S)'
     // we get
     //           X = V'.solve((V*S)')
     // or
@@ -1159,7 +1159,7 @@ public class Matrix
     return result;
   }
 
-  /** 
+  /**
    * Matrix determinant
    * @return     determinant
    * @throws JPARSECException If matrix is not square.
@@ -1168,7 +1168,7 @@ public class Matrix
     return new LUDecomposition(this).det();
   }
 
-  /** 
+  /**
    * Matrix rank
    * @return     effective numerical rank, obtained from SVD.
    */
@@ -1176,15 +1176,15 @@ public class Matrix
     return new SingularValueDecomposition(this).rank();
   }
 
-  /** 
+  /**
    * Matrix condition (2 norm)
    * @return     ratio of largest to smallest singular value.
    */
   public double cond() {
     return new SingularValueDecomposition(this).cond();
   }
-  
-  /** 
+
+  /**
    * Matrix trace.
    * @return     sum of the diagonal elements.
    */
@@ -1196,7 +1196,7 @@ public class Matrix
     return t;
   }
 
-  /** 
+  /**
    * Generate matrix with random elements
    * @param m    Number of rows.
    * @param n    Number of colums.
@@ -1213,7 +1213,7 @@ public class Matrix
     return A;
   }
 
-  /** 
+  /**
    * Generate identity matrix
    * @param m    Number of rows.
    * @param n    Number of colums.
@@ -1230,17 +1230,17 @@ public class Matrix
     return A;
   }
 
-  /** 
+  /**
    * Print the matrix to stdout.   Line the elements up in columns
    * with a Fortran-like 'Fw.d' style format.
    * @param w    Column width.
    * @param d    Number of digits after the decimal.
    */
   public void print(int w, int d) {
-    print(new PrintWriter(System.out,true),w,d); 
+    print(new PrintWriter(System.out,true),w,d);
   }
 
-  /** 
+  /**
    * Print the matrix to the output stream.   Line the elements up in
    * columns with a Fortran-like 'Fw.d' style format.
    * @param output Output stream.
@@ -1257,7 +1257,7 @@ public class Matrix
     print(output,format,w+2);
   }
 
-  /** 
+  /**
    * Print the matrix to stdout.  Line the elements up in columns.
    * Use the format object, and right justify within columns of width
    * characters.
@@ -1268,7 +1268,7 @@ public class Matrix
    * @see java.text.DecimalFormat#setDecimalFormatSymbols
    */
   public void print(NumberFormat format, int width) {
-    print(new PrintWriter(System.out,true),format,width); 
+    print(new PrintWriter(System.out,true),format,width);
   }
 
   // DecimalFormat is a little disappointing coming from Fortran or C's printf.
@@ -1276,14 +1276,14 @@ public class Matrix
   // widths.  Consequently, we'll pass the desired column width in as an
   // argument and do the extra padding ourselves.
 
-  /** 
+  /**
    * Print the matrix to the output stream.  Line the elements up in columns.
    * Use the format object, and right justify within columns of width
    * characters.
    * Note that is the matrix is to be read back in, you probably will want
    * to use a NumberFormat that is set to US Locale.
    * @param output the output stream.
-   * @param format A formatting object to format the matrix elements 
+   * @param format A formatting object to format the matrix elements
    * @param width  Column width.
    * @see java.text.DecimalFormat#setDecimalFormatSymbols
    */
@@ -1302,7 +1302,7 @@ public class Matrix
     output.println();   // end with blank line.
   }
 
-  /** 
+  /**
    * Read a matrix from a stream.  The format is the same the print method,
    * so printed matrices can be read back in (provided they were printed using
    * US Locale).  Elements are separated by
@@ -1333,7 +1333,7 @@ public class Matrix
     tokenizer.wordChars(0,255);
     tokenizer.whitespaceChars(0, ' ');
     tokenizer.eolIsSignificant(true);
-    Vector v = new Vector();
+    java.util.Vector v = new java.util.Vector();
 
     // Ignore initial empty lines
     while (tokenizer.nextToken() == StreamTokenizer.TT_EOL);
@@ -1354,10 +1354,12 @@ public class Matrix
       v.addElement(row = new double[n]);
       int j = 0;
       do {
-        if (j >= n) throw new IOException("Row " + v.size() + " is too long.");
+        if (j >= n) throw new java.io.IOException
+          ("Row " + v.size() + " is too long.");
         row[j++] = Double.valueOf(tokenizer.sval).doubleValue();
       } while (tokenizer.nextToken() == StreamTokenizer.TT_WORD);
-      if (j < n) throw new IOException("Row " + v.size() + " is too short.");
+      if (j < n) throw new java.io.IOException
+        ("Row " + v.size() + " is too short.");
     }
     int m = v.size();  // Now we've got the number of rows.
     double[][] A = new double[m][];
@@ -1365,8 +1367,9 @@ public class Matrix
     return new Matrix(A);
   }
 
-  /** 
-   * Check if size(A) == size(B) 
+
+  /**
+   * Check if size(A) == size(B)
    * @throws JPARSECException Matrix dimensions must agree.
    */
   private void checkMatrixDimensions(Matrix B) throws JPARSECException {
@@ -1396,7 +1399,7 @@ public class Matrix
     w.flush();
   }
 
-  /** 
+  /**
    * Converts a matrix to a string.
    * (FracPete: taken from old weka.core.Matrix class)
    *
@@ -1421,10 +1424,10 @@ public class Matrix
         }
       }
     }
-    int width = (int)(Math.log(maxval) / Math.log(10) 
+    int width = (int)(Math.log(maxval) / Math.log(10)
         + (fractional ? 4 : 1));
 
-    StringBuffer text = new StringBuffer();   
+    StringBuffer text = new StringBuffer();
     for (int i = 0; i < getRowDimension(); i++) {
       for (int j = 0; j < getColumnDimension(); j++)
         text.append(" ").append(Functions.doubleToString(get(i, j),
@@ -1433,10 +1436,10 @@ public class Matrix
     }
 
     return text.toString();
-  } 
+  }
 
   /**
-   * converts the Matrix into a single line Matlab string: matrix is enclosed 
+   * converts the Matrix into a single line Matlab string: matrix is enclosed
    * by parentheses, rows are separated by semicolon and single cells by
    * blanks, e.g., [1 2; 3 4].
    * @return      the matrix in Matlab single line format
@@ -1453,14 +1456,14 @@ public class Matrix
     for (i = 0; i < getRowDimension(); i++) {
       if (i > 0)
         result.append("; ");
-      
+
       for (n = 0; n < getColumnDimension(); n++) {
         if (n > 0)
           result.append(" ");
         result.append(Double.toString(get(i, n)));
       }
     }
-    
+
     result.append("]");
 
     return result.toString();
@@ -1479,17 +1482,17 @@ public class Matrix
     int               cols;
     Matrix            result;
     String            cells;
-    
+
     // get content
     cells = matlab.substring(
               matlab.indexOf("[") + 1, matlab.indexOf("]")).trim();
-    
+
     // determine dimensions
     tokRow = new StringTokenizer(cells, ";");
     rows   = tokRow.countTokens();
     tokCol = new StringTokenizer(tokRow.nextToken(), " ");
     cols   = tokCol.countTokens();
-    
+
     // fill matrix
     result = new Matrix(rows, cols);
     tokRow = new StringTokenizer(cells, ";");
@@ -1503,10 +1506,10 @@ public class Matrix
       }
       rows++;
     }
-    
+
     return result;
   }
-  
+
   /**
    * Deletes a column from the current matrix.
    * @param column The column to eliminate.
@@ -1514,10 +1517,10 @@ public class Matrix
    */
   public void deleteColumn(int column)
   throws JPARSECException {
-  	if (column >= n || column < 0) 
+  	if (column >= n || column < 0)
   		throw new JPARSECException("invalid column.");
       double newData[][] = new double[m][n-1];
-	
+
       for (int i=0; i<m; i++)
       {
       	int jindex = -1;
@@ -1527,7 +1530,7 @@ public class Matrix
           		jindex ++;
               	newData[i][jindex] = this.data[i][j];
           	}
-          }        	
+          }
       }
       Matrix m = new Matrix(newData);
       this.n = m.n;
@@ -1540,10 +1543,10 @@ public class Matrix
    */
   public void deleteRow(int row)
   throws JPARSECException {
-  	if (row >= m || row < 0) 
+  	if (row >= m || row < 0)
   		throw new JPARSECException("invalid row.");
       double newData[][] = new double[m-1][n];
-	
+
   	int iindex = -1;
       for (int i=0; i<m; i++)
       {
@@ -1559,12 +1562,12 @@ public class Matrix
       this.m = m.m;
       this.data = m.data;
   }
-  
+
   /**
    * Returns if a matrix is equal to the current one.
    * @param o The matrix to be compared.
    */
-  @Override
+	@Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (!(o instanceof Matrix)) return false;
@@ -1577,7 +1580,7 @@ public class Matrix
     return Arrays.deepEquals(data, matrix.data);
   }
 
-  @Override
+	@Override
   public int hashCode() {
     int result = data != null ? Arrays.deepHashCode(data) : 0;
     result = 31 * result + m;

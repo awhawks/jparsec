@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,10 +18,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.graph;
 
 import java.util.Arrays;
+
 import jparsec.util.*;
 import jparsec.math.*;
 import jparsec.io.image.ImageSplineTransform;
@@ -31,18 +32,18 @@ import java.io.Serializable;
 
 /**
  * Creates a grid chart element to be later drawn by NOAA SGT graphic library, or SurfacePlotter.<P>
- * 
+ *
  * In this object the labels for x, y and z axes, as well as the title can be
  * encoded following the instructions given in {@linkplain TextLabel} class. This
  * provides some possibilities like to change color/size, include superscript
  * or subscript text, or greek letters.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
 public class GridChartElement implements Serializable
 {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Default empty constructor.
@@ -51,7 +52,7 @@ public class GridChartElement implements Serializable
 
 	/**
 	 * Simple constructor for a raster contour chart.
-	 * 
+	 *
 	 * @param title Title.
 	 * @param x_label X axis label.
 	 * @param y_label Y axis label
@@ -89,7 +90,7 @@ public class GridChartElement implements Serializable
 
 	/**
 	 * Full constructor.
-	 * 
+	 *
 	 * @param title Title.
 	 * @param x_label X axis label.
 	 * @param y_label Y axis label
@@ -130,7 +131,7 @@ public class GridChartElement implements Serializable
 
 	/**
 	 * Simple constructor for a raster contour chart.
-	 * 
+	 *
 	 * @param title Title.
 	 * @param x_label X axis label.
 	 * @param y_label Y axis label
@@ -168,7 +169,7 @@ public class GridChartElement implements Serializable
 
 	/**
 	 * Full constructor.
-	 * 
+	 *
 	 * @param title Title.
 	 * @param x_label X axis label.
 	 * @param y_label Y axis label
@@ -220,7 +221,7 @@ public class GridChartElement implements Serializable
 	 * Data to be drawn in blue. Valid values range from 0 to 255.
 	 */
 	int[] blue;
-	
+
 	/**
 	 * Selects the color model to apply.
 	 */
@@ -254,7 +255,7 @@ public class GridChartElement implements Serializable
 	 * Chart type
 	 */
 	public TYPE type;
-	
+
 	/**
 	 * X size of the chart in pixels.
 	 */
@@ -266,16 +267,16 @@ public class GridChartElement implements Serializable
 	public int imageHeight;
 
 	/**
-	 * Holds limits as (physical) minimum/initial x, maximum/final x, 
+	 * Holds limits as (physical) minimum/initial x, maximum/final x,
 	 * minimum/initial y, maximum/final y.
 	 */
 	public double[] limits;
-	
+
 	/**
 	 * The levels to show as contours.
 	 */
 	public double[] levels;
-	
+
 	/**
 	 * The data to be displayed, ordered as [x][y] from bottom-left corner.
 	 */
@@ -284,7 +285,7 @@ public class GridChartElement implements Serializable
 	 * Sets the number of levels, 64 by default.
 	 */
 	public int colorModelResolution = 64;
-	
+
 	/**
 	 * True (default false) to invert x axis.
 	 */
@@ -293,7 +294,7 @@ public class GridChartElement implements Serializable
 	 * True (default false) to invert y axis.
 	 */
 	public boolean invertYaxis = false;
-	
+
 	/**
 	 * Holds the opacity of the surface, only taken into account
 	 * when creating the chart with VISAD.
@@ -304,8 +305,8 @@ public class GridChartElement implements Serializable
 	 * Sets the text of pointers in a grid chart. There are two possible
 	 * formats:<BR>
 	 * 1. Physical position
-	 * of the origin point of the arrow (x and y), physical position of 
-	 * the destination point, and the text. 
+	 * of the origin point of the arrow (x and y), physical position of
+	 * the destination point, and the text.
 	 * For example 0 0 1 1 Arrow from (0, 0) to (1, 1).<BR>
 	 * 2. Physical position
 	 * of the point (x and y), type of mark, size of mark in physical units,
@@ -317,7 +318,7 @@ public class GridChartElement implements Serializable
 	/**
 	 * The set of possible opacities, if this chart is rendered using VISAD.
 	 */
-	public static enum OPACITY {
+	public enum OPACITY {
 		/** ID constant for a transparent surface. */
 		TRANSPARENT,
 		/** ID constant for an opaque surface. */
@@ -326,8 +327,8 @@ public class GridChartElement implements Serializable
 		SEMI_TRANSPARENT,
 		/** ID constant for an increasing opacity with the independent variable. */
 		VARIABLE_WITH_Z
-	}
-	
+	};
+
 	/**
 	 * To clone the object.
 	 */
@@ -342,7 +343,7 @@ public class GridChartElement implements Serializable
 			if (levels != null) le = levels.clone();
 			Double da[][] = data;
 			if (data != null) da = data.clone();
-			
+
 		c = new GridChartElement(this.title, this.xLabel,
 			this.yLabel, this.legend, this.colorModel, this.colorModelResolution,
 			this.type, li, da, le, this.imageWidth);
@@ -361,7 +362,7 @@ public class GridChartElement implements Serializable
 	}
 
 	/**
-	 * Returns true if the input object is equal to this chart object.
+	 * Returns true if the input object is equals to this chart object.
 	 */
 	@Override
 	public boolean equals(Object o) {
@@ -430,7 +431,7 @@ public class GridChartElement implements Serializable
 	/**
 	 * The different chart types for SGT library.
 	 */
-	public static enum TYPE {
+	public enum TYPE {
 		/** ID constant for a raster chart. */
 		RASTER,
 		/** ID constant for an area fill chart. */
@@ -441,12 +442,12 @@ public class GridChartElement implements Serializable
 		RASTER_CONTOUR,
 		/** ID constant for an area fill contour chart. */
 		AREA_FILL_CONTOUR
-	}
+	};
 
 	/**
 	 * The different color models for SGT library.
 	 */
-	public static enum COLOR_MODEL {
+	public enum COLOR_MODEL {
 		/** ID constant for black to white color model. */
 		BLACK_TO_WHITE,
 		/** ID constant for white to black color model. */
@@ -455,7 +456,7 @@ public class GridChartElement implements Serializable
 		RED_TO_BLUE,
 		/** ID constant for blue to red color model. */
 		BLUE_TO_RED
-	}
+	};
 
     private static final int[] DEFAULT_RED =
     {  0,  0,  0,  0,  0,  0,  0,  0,
@@ -490,7 +491,7 @@ public class GridChartElement implements Serializable
 		this.red = new int[colorModelResolution];
 		this.green = new int[colorModelResolution];
 		this.blue = new int[colorModelResolution];
-		
+
 		switch (this.colorModel)
 		{
 		case BLACK_TO_WHITE:
@@ -541,9 +542,9 @@ public class GridChartElement implements Serializable
 			break;
 		default:
 			throw new JPARSECException("invalid color model.");
-		}	
+		}
 	}
-	
+
 	/**
 	 * Inverts the color model.
 	 * @throws JPARSECException If an error occurs.
@@ -588,7 +589,7 @@ public class GridChartElement implements Serializable
 			}
 		}
 	}
-	
+
 	/**
 	 * Returns the maximum value of the data array.
 	 * @return Maximum value.
@@ -609,7 +610,7 @@ public class GridChartElement implements Serializable
 						max = val;
 					}
 				}
-			}			
+			}
 		}
 		return max;
 	}
@@ -633,11 +634,11 @@ public class GridChartElement implements Serializable
 						min = val;
 					}
 				}
-			}			
+			}
 		}
 		return min;
 	}
-	
+
 	/**
 	 * Returns the index of a given color.
 	 * @param c The color.
@@ -663,7 +664,7 @@ public class GridChartElement implements Serializable
 	 * @param h New height.
 	 * @throws JPARSECException If an error occurs.
 	 */
-	public void resample(int w, int h) throws JPARSECException 
+	public void resample(int w, int h) throws JPARSECException
 	{
 		ImageSplineTransform t = new ImageSplineTransform(GridChartElement.ObjectToDoubleArray(this.data));
 		t.resize(w, h);
@@ -690,7 +691,7 @@ public class GridChartElement implements Serializable
 				double py = y0 * (data[0].length - 1.0) + ((yf - y0) * j);
 				newData[i][j] = Double.NaN;
 				try { newData[i][j] = t.interpolate(px, py); } catch (Exception exc) {}
-			}			
+			}
 		}
 		data = newData;
 		this.limits = newLimits.clone();
@@ -698,7 +699,7 @@ public class GridChartElement implements Serializable
 
 	/**
 	 * Returns the intensity at certain position using 2d spline interpolation.
-	 * Note the returned value will not agree 
+	 * Note the returned value will not agree
 	 * exactly with the contour lines generated by SGT, but the difference
 	 * should be always small and inside the level of uncertainty expected.
 	 * @param x X position in physical units.
@@ -709,7 +710,7 @@ public class GridChartElement implements Serializable
 	{
 		ImageSplineTransform t = new ImageSplineTransform(GridChartElement.ObjectToDoubleArray(data));
 		int pointsX = this.data.length;
-		int pointsY = this.data[0].length;			
+		int pointsY = this.data[0].length;
 		double px = (x - this.limits[0]) * ((double) (pointsX - 1.0)) / (this.limits[1] - this.limits[0]);
 		double py = (y - this.limits[2]) * ((double) (pointsY - 1.0)) / (this.limits[3] - this.limits[2]);
 		double data = 0.0;
@@ -718,9 +719,9 @@ public class GridChartElement implements Serializable
 		} catch (Exception exc) {}
 		return data;
 	}
-	
+
 	/**
-	 * Returns an array of data from a given dataset. The dataset must define a 
+	 * Returns an array of data from a given dataset. The dataset must define a
 	 * rectangular surface.
 	 * @param x The x values.
 	 * @param y The y values.
@@ -754,16 +755,16 @@ public class GridChartElement implements Serializable
 			{
 				double minY = limits[2] + (j-0.5) * stepY;
 				double maxY = limits[2] + (j+0.5) * stepY;
-				
+
 				for (int k=0; k<x.length; k++)
 				{
 					if (x[k] > minX && x[k] < maxX && y[k] > minY && y[k] < maxY) data[i][ny-1-j] = new Double(z[k]);
-				}				
-			}			
+				}
+			}
 		}
 		return data;
 	}
-	
+
 	/**
 	 * Returns the set of limits from a given dataset.
 	 * @param x The x values.
@@ -780,7 +781,7 @@ public class GridChartElement implements Serializable
 		limits[3] = DataSet.getMaximumValue(y);
 		return limits;
 	}
-	
+
 	/**
 	 * Creates sample data from a given function.
 	 * @param f The function in Java format, f(x, y).
@@ -800,7 +801,7 @@ public class GridChartElement implements Serializable
 				double px = x[i];
 				Evaluation eval = new Evaluation(f, new String[] {"x "+px, "y "+py});
 				out[i][j] = eval.evaluate();
-			}			
+			}
 		}
 		return out;
 	}
@@ -818,7 +819,7 @@ public class GridChartElement implements Serializable
 			for (int j=0; j<data[0].length; j++)
 			{
 				out[i][j] = data[i][j].doubleValue();
-			}			
+			}
 		}
 		return out;
 	}
@@ -839,7 +840,7 @@ public class GridChartElement implements Serializable
 			{
 				out[i][j] = data[i][j].doubleValue();
 				if (Double.isNaN(out[i][j]) || Double.isInfinite(out[i][j])) out[i][j] = blanking;
-			}			
+			}
 		}
 		return out;
 	}
@@ -857,7 +858,7 @@ public class GridChartElement implements Serializable
 			for (int j=0; j<data[0].length; j++)
 			{
 				out[i][j] = new Double(data[i][j]);
-			}			
+			}
 		}
 		return out;
 	}
@@ -879,7 +880,7 @@ public class GridChartElement implements Serializable
 		}
 		return out;
 	}
-	
+
 	/**
 	 * Creates a grid series given an irregular set of points that lies on it.
 	 * This method uses an interpolation algorithm similar to a discrete
@@ -887,7 +888,7 @@ public class GridChartElement implements Serializable
 	 * If the points contain no holes and are sampled regularly it is recommended
 	 * to use 2d spline interpolation with class {@linkplain ImageSplineTransform}.
 	 * @param points The array of points (x, y, z).
-	 * @param n The number of points in the x and y axis of the 
+	 * @param n The number of points in the x and y axis of the
 	 * output regular profile.
 	 * @return The series.
 	 * @throws JPARSECException If an error occurs.
@@ -920,13 +921,13 @@ public class GridChartElement implements Serializable
 		double outY[] = new double[n];
 		for (int ix=0; ix<n; ix++)
 		{
-			outX[ix] = xmin + scaleX * (double) ix; 
+			outX[ix] = xmin + scaleX * (double) ix;
 			for (int iy=0; iy<n; iy++)
 			{
-				outY[iy] = ymin + scaleY * (double) iy; 
+				outY[iy] = ymin + scaleY * (double) iy;
 				data[ix][iy] = 0.0;
 				factor_sum[ix][iy] = 0.0;
-				
+
 				for (int i=0; i<points.length; i++)
 				{
 					double dx = xs[i] - outX[ix];
@@ -941,7 +942,7 @@ public class GridChartElement implements Serializable
 					data[ix][iy] += factor * zs[i];
 					factor_sum[ix][iy] += factor;
 				}
-			}			
+			}
 		}
 
 		// Normalize
@@ -952,8 +953,8 @@ public class GridChartElement implements Serializable
 				data[ix][iy] = data[ix][iy] / factor_sum[ix][iy];
 			}
 		}
-		
-		GridChartElement out = new GridChartElement("", "", "", "", 
+
+		GridChartElement out = new GridChartElement("", "", "", "",
 				GridChartElement.COLOR_MODEL.BLACK_TO_WHITE,
 				GridChartElement.getLimitsFromDataSet(outX, outY),
 				data, null, 600
@@ -981,7 +982,7 @@ public class GridChartElement implements Serializable
 	/**
 	 * The possible orientations for the wedge.
 	 */
-	public static enum WEDGE_ORIENTATION {
+	public enum WEDGE_ORIENTATION {
 		/** ID constant for horizontal orientation of levels, with position down. */
 		HORIZONTAL_BOTTOM,
 		/** ID constant for horizontal orientation of levels, with position up. */
@@ -993,7 +994,7 @@ public class GridChartElement implements Serializable
 	/**
 	 * The possible borders for the wedge.
 	 */
-	public static enum WEDGE_BORDER {
+	public enum WEDGE_BORDER {
 		/** ID constant for plain borders in levels. */
 		PLAIN,
 		/** ID constant for no borders in levels. */

@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,8 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.graph;
+
 
 import java.awt.Color;
 import java.awt.Component;
@@ -112,15 +113,15 @@ public class SpectraChart implements ActionListener, ListSelectionListener, Comp
 	 * Map mode flag.
 	 */
 	public boolean mapMode = false;
-	
+
 	/**
 	 * Horizontal orientation flag.
 	 */
 	public boolean horizontal = false;
-	
-	private TreeMap<String,Spectrum30m[]> spectra = null; 
+
+	private TreeMap<String,Spectrum30m[]> spectra = null;
 	private static final int CONTROL_WIDTH = 165;
-	
+
 	/**
 	 * Basic constructor with 10 km/s of vel width, 10 arcsec of
 	 * separation, first source and molecule found, and no map
@@ -148,13 +149,13 @@ public class SpectraChart implements ActionListener, ListSelectionListener, Comp
 	 * @param map True to show a map at startup instead of a spectrum.
 	 * @param horiz True to show controls in horizontal, false for vertical.
 	 */
-	public SpectraChart(String files[], int w, int h, double sep, int vw, 
+	public SpectraChart(String files[], int w, int h, double sep, int vw,
 			String s, String m, boolean map, boolean horiz) {
 		this.f = files;
 		this.w = w;
 		this.h = h;
 		this.horizontal = horiz;
-		
+
 		this.source = s;
 		this.mapSep = sep;
 		this.molecule = m;
@@ -176,15 +177,15 @@ public class SpectraChart implements ActionListener, ListSelectionListener, Comp
 		for (int i=0; i<f.length; i++) {
         	try {
 				Gildas30m g30m = new Gildas30m(f[i]);
-				out.writeObject(this.f[i]);			
-				int list[] = g30m.getListOfSpectrums(true); 
+				out.writeObject(this.f[i]);
+				int list[] = g30m.getListOfSpectrums(true);
 				out.writeInt(list.length);
 				for (int j=0; j<list.length; j++) {
 					Spectrum30m s = g30m.getSpectrum(list[j]);
-					out.writeObject(s);			
+					out.writeObject(s);
 				}
 			} catch (Exception e) {
-				out.writeObject(this.f[i]);			
+				out.writeObject(this.f[i]);
 			}
 		}
 		out.writeInt(this.w);
@@ -254,15 +255,15 @@ public class SpectraChart implements ActionListener, ListSelectionListener, Comp
 	boolean areaChart = false;
 	private void create() {
 		readFiles();
-		
+
 		panel = new JPanel();
 		panel.setLayout(null);
 		panel.setBounds(0, 0, w, h);
 		panel.setBackground(new Color(214, 217, 223, 255));
 		panel.setOpaque(true);
-		
+
 		cli = new CombinedListItemElement2(
-				Translate.translate(928), // "Source", 
+				Translate.translate(928), // "Source",
 				Translate.translate(929), // "Line (backend)",
 				sources, molecules, panel.getBackground());
 		cli.setPositionAndSize(0, 0, w, h, w/2);
@@ -295,8 +296,8 @@ public class SpectraChart implements ActionListener, ListSelectionListener, Comp
 
 		JLabel label2 = new JLabel(Translate.translate(932)); // "Select x axis unit");
 		xUnit = new JComboBox(new String[] {
-				Translate.translate(292), // "Velocity", 
-				Translate.translate(293), // "Channel number", 
+				Translate.translate(292), // "Velocity",
+				Translate.translate(293), // "Channel number",
 				Translate.translate(294) // "Frequency"
 		});
 		xUnit.addActionListener(this);
@@ -307,19 +308,19 @@ public class SpectraChart implements ActionListener, ListSelectionListener, Comp
 		mapM.setSelected(mapMode);
 		mapM.addActionListener(this);
 		control.add(mapM);
-		
+
 		area = new JCheckBox(Translate.translate(934)); // "Area chart");
 		area.setSelected(false);
 		area.addActionListener(this);
 		control.add(area);
-		
+
 		update = new JButton(Translate.translate(935)); // "Update");
 		update.addActionListener(this);
 		control.add(update);
 
 		this.label = new JLabel();
 		control.add(this.label);
-		
+
 		chart = new JPanel();
 		chart.setLayout(new FlowLayout());
 		if (horizontal) {
@@ -331,7 +332,7 @@ public class SpectraChart implements ActionListener, ListSelectionListener, Comp
 		} else {
 			int cw = CONTROL_WIDTH;
 			control.setBounds(w - cw, 0, cw, h);
-			chart.setBounds(0, 0, w-cw, h);	
+			chart.setBounds(0, 0, w-cw, h);
 		}
 		panel.add(chart);
 		panel.add(control);
@@ -339,19 +340,19 @@ public class SpectraChart implements ActionListener, ListSelectionListener, Comp
 		source = cli.getSelectedIndexText1();
 		molecule = cli.getSelectedIndexText2()[0];
 		generateChart(true);
-		
+
 		panel.validate();
 		panel.addComponentListener(this);
-        panel.addKeyListener(new KeyAdapter() {  
+        panel.addKeyListener(new KeyAdapter() {
             public void keyReleased(KeyEvent e) {
             	if (e.getSource() != panel) return;
-     		   
+
           	   if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-         		   try { 
+         		   try {
          			   CreateChart.increaseFontSize(-1);
          		   } catch (Exception e1) {
          				Logger.log(LEVEL.ERROR, "Error increasing font size. Message was: "+e1.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e1.getStackTrace()));
-         		   }  
+         		   }
 	   				SwingUtilities.invokeLater(new Runnable() {
 				        public void run() {
 				        	generateChart(true);
@@ -359,7 +360,7 @@ public class SpectraChart implements ActionListener, ListSelectionListener, Comp
 	   				});
          	   }
          	   if (e.getKeyCode() == KeyEvent.VK_UP) {
-     			   try { 
+     			   try {
         			   CreateChart.increaseFontSize(1);
          		   } catch (Exception e1) { }
 	   				SwingUtilities.invokeLater(new Runnable() {
@@ -368,21 +369,21 @@ public class SpectraChart implements ActionListener, ListSelectionListener, Comp
 				        }
 	   				});
          	   }
-            }  
-          });  
+            }
+          });
 	}
 
 	private void create2() {
 		readFiles2();
-		
+
 		panel = new JPanel();
 		panel.setLayout(null);
 		panel.setBounds(0, 0, w, h);
 		panel.setBackground(new Color(214, 217, 223, 255));
 		panel.setOpaque(true);
-		
+
 		cli = new CombinedListItemElement2(
-				Translate.translate(928), // "Source", 
+				Translate.translate(928), // "Source",
 				Translate.translate(929), // "Molecule",
 				sources, molecules, panel.getBackground());
 		cli.setPositionAndSize(0, 0, w, h, w/2);
@@ -417,29 +418,29 @@ public class SpectraChart implements ActionListener, ListSelectionListener, Comp
 		mapM.setSelected(mapMode);
 		mapM.addActionListener(this);
 		control.add(mapM);
-		
+
 		JLabel label2 = new JLabel(Translate.translate(932)); // "Select x unit");
 		xUnit = new JComboBox(new String[] {
-				Translate.translate(292), // "Velocity", 
-				Translate.translate(293), // "Channel number", 
+				Translate.translate(292), // "Velocity",
+				Translate.translate(293), // "Channel number",
 				Translate.translate(294) // "Frequency"
 		});
 		xUnit.addActionListener(this);
 		control.add(label2);
 		control.add(xUnit);
-		
+
 		area = new JCheckBox(Translate.translate(934)); // "Area chart");
 		area.setSelected(false);
 		area.addActionListener(this);
 		control.add(area);
-		
+
 		update = new JButton(Translate.translate(935)); // "Update");
 		update.addActionListener(this);
 		control.add(update);
 
 		this.label = new JLabel();
 		control.add(this.label);
-		
+
 		chart = new JPanel();
 		chart.setLayout(new FlowLayout());
 		if (horizontal) {
@@ -451,7 +452,7 @@ public class SpectraChart implements ActionListener, ListSelectionListener, Comp
 		} else {
 			int cw = CONTROL_WIDTH;
 			control.setBounds(w - cw, 0, cw, h);
-			chart.setBounds(0, 0, w-cw, h);	
+			chart.setBounds(0, 0, w-cw, h);
 		}
 		panel.add(chart);
 		panel.add(control);
@@ -459,19 +460,19 @@ public class SpectraChart implements ActionListener, ListSelectionListener, Comp
 		source = cli.getSelectedIndexText1();
 		molecule = cli.getSelectedIndexText2()[0];
 		generateChart(true);
-		
+
 		panel.validate();
 		panel.addComponentListener(this);
-        panel.addKeyListener(new KeyAdapter() {  
+        panel.addKeyListener(new KeyAdapter() {
             public void keyReleased(KeyEvent e) {
             	if (e.getSource() != panel) return;
-				
+
      		   if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-         		   try { 
+         		   try {
          			   CreateChart.increaseFontSize(-1);
-         		   } catch (Exception e1) { 
+         		   } catch (Exception e1) {
         				Logger.log(LEVEL.ERROR, "Error increasing font size. Message was: "+e1.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e1.getStackTrace()));
-         		   }  
+         		   }
 	   				SwingUtilities.invokeLater(new Runnable() {
 				        public void run() {
 				        	generateChart(true);
@@ -479,7 +480,7 @@ public class SpectraChart implements ActionListener, ListSelectionListener, Comp
 	   				});
          	   }
          	   if (e.getKeyCode() == KeyEvent.VK_UP) {
-     			   try { 
+     			   try {
         			   CreateChart.increaseFontSize(1);
          		   } catch (Exception e1) { }
 	   				SwingUtilities.invokeLater(new Runnable() {
@@ -488,8 +489,8 @@ public class SpectraChart implements ActionListener, ListSelectionListener, Comp
 				        }
 	   				});
          	   }
-            }  
-          });  
+            }
+          });
 	}
 
 	private void readFiles() {
@@ -499,13 +500,13 @@ public class SpectraChart implements ActionListener, ListSelectionListener, Comp
 			try {
 	        	Gildas30m g30m = new Gildas30m(f[i]);
 	        	int list[] = g30m.getListOfSpectrums(true);
-	
+
 	        	for (int index=0; index<list.length; index++) {
-	            	Spectrum30m s30m = g30m.getSpectrum(list[index]);        		        
+	            	Spectrum30m s30m = g30m.getSpectrum(list[index]);
 	            	// Header
 	            	SpectrumHeader30m sh = s30m.getHeader();
 	            	Parameter header[] = (Parameter[]) sh.getHeaderParameters();
-	            	
+
 	            	String line = header[SpectrumHeader30m.HEADER.LINE.ordinal()].value.trim();
 	            	String source = header[SpectrumHeader30m.HEADER.SOURCE.ordinal()].value.trim();
 	            	String teles = header[SpectrumHeader30m.HEADER.TELES.ordinal()].value.trim().toUpperCase();
@@ -524,7 +525,7 @@ public class SpectraChart implements ActionListener, ListSelectionListener, Comp
 	            		}
 	            	}
 	        	}
-			} catch (Exception e) { 
+			} catch (Exception e) {
 				try {
 					LMVCube lmv = new LMVCube(f[i]);
 
@@ -547,7 +548,7 @@ public class SpectraChart implements ActionListener, ListSelectionListener, Comp
 				} catch (Exception e2) {}
 			}
 		}
-		
+
 		sources = new String[s.size()];
 		molecules = new String[s.size()][];
 		for (int i=0; i<s.size(); i++) {
@@ -564,13 +565,13 @@ public class SpectraChart implements ActionListener, ListSelectionListener, Comp
 		for (int i=0; i<f.length; i++) {
 			try {
 				Spectrum30m ss[] = spectra.get(f[i]);
-	
+
 	        	for (int index=0; index<ss.length; index++) {
-	            	Spectrum30m s30m = ss[index];        		        
+	            	Spectrum30m s30m = ss[index];
 	            	// Header
 	            	SpectrumHeader30m sh = s30m.getHeader();
 	            	Parameter header[] = (Parameter[]) sh.getHeaderParameters();
-	            	
+
 	            	String line = header[SpectrumHeader30m.HEADER.LINE.ordinal()].value.trim();
 	            	String source = header[SpectrumHeader30m.HEADER.SOURCE.ordinal()].value.trim();
 	            	String teles = header[SpectrumHeader30m.HEADER.TELES.ordinal()].value.trim().toUpperCase();
@@ -593,7 +594,7 @@ public class SpectraChart implements ActionListener, ListSelectionListener, Comp
  				Logger.log(LEVEL.ERROR, "Error reading file "+f[i]+". Message was: "+e.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e.getStackTrace()));
 			}
 		}
-		
+
 		sources = new String[s.size()];
 		molecules = new String[s.size()][];
 		for (int i=0; i<s.size(); i++) {
@@ -677,7 +678,7 @@ public class SpectraChart implements ActionListener, ListSelectionListener, Comp
 	         				Logger.log(LEVEL.ERROR, "Error adding chart "+nx+", "+ny+" to panel. Message was: "+e.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e.getStackTrace()));
 						}
 					}
-				}				
+				}
 			}
 		}
 
@@ -696,7 +697,7 @@ public class SpectraChart implements ActionListener, ListSelectionListener, Comp
 			label.setSize(d.width, d.height);
 			label.setIcon(new ImageIcon(p.getImage()));
 			if (label.getMouseListeners().length == 0) {
-		        label.addMouseListener(new MouseAdapter() {  
+		        label.addMouseListener(new MouseAdapter() {
 		        	private int lastN = 0;
 		        	@Override
 		        	public void mouseClicked(MouseEvent e) {
@@ -712,7 +713,7 @@ public class SpectraChart implements ActionListener, ListSelectionListener, Comp
 		        			searchOffset2 = n - (double) y * (double) n / (double) h;
 		        			if (searchOffset2 >= n) searchOffset2 = n-1;
 		        			if (searchOffset2 < 0) searchOffset2 = 0;
-		        			
+
 		        			int p0 = n / 2;
 		        			searchOffset1 = ((int)searchOffset1 - p0) * mapSep;
 		        			searchOffset2 = ((int)searchOffset2 - p0) * mapSep;
@@ -747,7 +748,7 @@ public class SpectraChart implements ActionListener, ListSelectionListener, Comp
 		boolean somelmv = false;
 		for (int i=0; i<m.length; i++) {
 			if (m[i].startsWith("LMV")) somelmv = true;
-		}		
+		}
 		for (int i=0; i<f.length; i++) {
 			try {
 				if (m.length == 1 && somelmv && lastLMV != null) {
@@ -771,36 +772,36 @@ public class SpectraChart implements ActionListener, ListSelectionListener, Comp
     			boolean hasData = false;
     			if (m.length > 1) {
 		        	for (int index=0; index < list.length; index++) {
-		            	Spectrum30m s30m = g30m.getSpectrum(list[index]);        		        
+		            	Spectrum30m s30m = g30m.getSpectrum(list[index]);
 		            	Parameter header[] = s30m.getHeader().getHeaderParameters();
-		            	
+
 		            	double off1 = header[SpectrumHeader30m.HEADER.OFFSET1.ordinal()].toDouble() * Constant.RAD_TO_ARCSEC;
-		            	double off2 = header[SpectrumHeader30m.HEADER.OFFSET2.ordinal()].toDouble() * Constant.RAD_TO_ARCSEC;	            		
+		            	double off2 = header[SpectrumHeader30m.HEADER.OFFSET2.ordinal()].toDouble() * Constant.RAD_TO_ARCSEC;
 		            	String line = header[SpectrumHeader30m.HEADER.LINE.ordinal()].value.trim();
 		            	String source = header[SpectrumHeader30m.HEADER.SOURCE.ordinal()].value.trim();
 		            	String teles = header[SpectrumHeader30m.HEADER.TELES.ordinal()].value.trim().toUpperCase();
 		            	line += " ("+teles+")";
-	
+
 		            	for (int j=0; j<m.length; j++) {
 			            	if (s.equals(source) && m[j].equals(line) && areSimilar(off1, searchOffset1) && areSimilar(off2, searchOffset2)) {
 			            		lastID[j] = index;
-			            	}	        		
+			            	}
 		            	}
 		            	if (s.equals(source)) sourceFound = true;
 		            	if (!sourceFound) break;
-	
+
 		            	if (s.equals(source) && areSimilar(off1, searchOffset1) && areSimilar(off2, searchOffset2))
 		            		hasData = true;
 		        	}
 	    			if (!hasData) continue;
     			}
-	        	
+
 	        	for (int index=0; index<list.length; index++) {
-	            	Spectrum30m s30m = g30m.getSpectrum(list[index]);        		        
+	            	Spectrum30m s30m = g30m.getSpectrum(list[index]);
 	            	Parameter header[] = s30m.getHeader().getHeaderParameters();
-	            	
+
 	            	double off1 = header[SpectrumHeader30m.HEADER.OFFSET1.ordinal()].toDouble() * Constant.RAD_TO_ARCSEC;
-	            	double off2 = header[SpectrumHeader30m.HEADER.OFFSET2.ordinal()].toDouble() * Constant.RAD_TO_ARCSEC;	            		
+	            	double off2 = header[SpectrumHeader30m.HEADER.OFFSET2.ordinal()].toDouble() * Constant.RAD_TO_ARCSEC;
 	            	String line = header[SpectrumHeader30m.HEADER.LINE.ordinal()].value.trim();
 	            	String source = header[SpectrumHeader30m.HEADER.SOURCE.ordinal()].value.trim();
 	            	String teles = header[SpectrumHeader30m.HEADER.TELES.ordinal()].value.trim().toUpperCase();
@@ -813,7 +814,7 @@ public class SpectraChart implements ActionListener, ListSelectionListener, Comp
 			            		if (spectrumFound) {
 				            		CreateChart ch2 = s30m.getChart(width, height-5, xUnitID);
 				            		String leyend2 = ch2.getChartElement().series[0].legend;
-				            		
+
 				            		ChartElement chart = ch.getChartElement();
 				            		int n = -1;
 				            		for (int j=0; j<chart.series.length; j++) {
@@ -842,7 +843,7 @@ public class SpectraChart implements ActionListener, ListSelectionListener, Comp
 				            			ChartSeriesElement cs = ch2.getChartElement().series[0];
 				            			int p = chart.series.length % col.length;
 				            			cs.color = col[p];
-					            		chart.addSeries(cs);		            			
+					            		chart.addSeries(cs);
 				            		}
 			            			ch = new CreateChart(chart);
 			            		} else {
@@ -851,7 +852,7 @@ public class SpectraChart implements ActionListener, ListSelectionListener, Comp
 			            		}
 		            		}
 		            	}
-	        		}		      
+	        		}
 	            	if (s.equals(source)) sourceFound = true;
 	            	if (!sourceFound) break;
 	        	}
@@ -865,7 +866,7 @@ public class SpectraChart implements ActionListener, ListSelectionListener, Comp
 					}
 	            	String line = "LMV: "+lmv.line.trim();
 	            	String source = lmv.sourceName.trim();
-	            	
+
 	            	double x0 = lmv.getx0() * Constant.RAD_TO_ARCSEC, dx = lmv.conversionFormula[2] * Constant.RAD_TO_ARCSEC; // xf = lmv.getxf() * Constant.RAD_TO_ARCSEC
 	            	double y0 = lmv.gety0() * Constant.RAD_TO_ARCSEC, dy = lmv.conversionFormula[5] * Constant.RAD_TO_ARCSEC; // yf = lmv.getyf() * Constant.RAD_TO_ARCSEC
 	            	double ix = (searchOffset1 - x0) / dx;
@@ -882,8 +883,8 @@ public class SpectraChart implements ActionListener, ListSelectionListener, Comp
 		            		ChartElement chart = ch.getChartElement();
 	            			int p = chart.series.length % col.length;
 	            			cs.color = col[p];
-		            		chart.addSeries(cs);		            			
-	            			ch = new CreateChart(chart);	         			
+		            		chart.addSeries(cs);
+	            			ch = new CreateChart(chart);
 	            		} else {
 		            		spectrumFound = true;
 		            		ch = lmv.getChart(px, py, width, height-5, xUnitID);
@@ -893,7 +894,7 @@ public class SpectraChart implements ActionListener, ListSelectionListener, Comp
 			}
         	if (sourceFound) break;
 		}
-		
+
 		if (ch == null) return ch;
 
 		ChartElement chart = ch.getChartElement();
@@ -910,7 +911,7 @@ public class SpectraChart implements ActionListener, ListSelectionListener, Comp
 		if (mapMode) chart.title = null;
 		if ((searchOffset1 != 0.0 || searchOffset2 != 0.0) || mapMode) {
 			if (chart.title == null) {
-				chart.title = Translate.translate(936) + " "+Functions.formatValue(searchOffset1, 2)+" "+Functions.formatValue(searchOffset2, 2);				
+				chart.title = Translate.translate(936) + " "+Functions.formatValue(searchOffset1, 2)+" "+Functions.formatValue(searchOffset2, 2);
 			} else {
 				chart.title += " ("+Translate.translate(936)+" "+Functions.formatValue(searchOffset1, 2)+" "+Functions.formatValue(searchOffset2, 2)+")";
 			}
@@ -974,8 +975,8 @@ public class SpectraChart implements ActionListener, ListSelectionListener, Comp
 		molecule = cli.getSelectedIndexText2()[0];
 		generateChart(true);
 		panel.requestFocusInWindow();
-	}	
-	
+	}
+
 	/**
 	 * Updates the panel after a new item is selected.
 	 */
@@ -1011,14 +1012,13 @@ public class SpectraChart implements ActionListener, ListSelectionListener, Comp
 		} else {
 			int cw = CONTROL_WIDTH;
 			control.setBounds(w - cw, 0, cw, h);
-			chart.setBounds(0, 0, w-cw, h);	
+			chart.setBounds(0, 0, w-cw, h);
 		}
-		
+
 		generateChart(false);
 		panel.revalidate();
 		panel.repaint();
 	}
-
 	/**
 	 * Nothing.
 	 */
@@ -1136,7 +1136,7 @@ class CombinedListItemElement2 implements Serializable, ActionListener, ListSele
 		this.label2 = label2;
 		this.values1 = values1;
 		this.values2 = values2;
-		if (backGround != null) this.backGround = backGround;		
+		if (backGround != null) this.backGround = backGround;
 		this.toolTip = "";
 		this.itemID = "";
 	}
@@ -1156,11 +1156,11 @@ class CombinedListItemElement2 implements Serializable, ActionListener, ListSele
 		this.label2 = label2;
 		this.values1 = values1;
 		this.values2 = values2;
-		if (backGround != null) this.backGround = backGround;		
+		if (backGround != null) this.backGround = backGround;
 		this.toolTip = toolTip;
 		this.itemID = ID;
 	}
-	
+
 	/**
 	 * Sets the position and size.
 	 * @param x X position.
@@ -1177,7 +1177,7 @@ class CombinedListItemElement2 implements Serializable, ActionListener, ListSele
 		this.height = h;
 		this.width2 = w2;
 	}
-	
+
 	/**
 	 * Adds the item to a panel.
 	 * @param panel Panel.
@@ -1187,7 +1187,7 @@ class CombinedListItemElement2 implements Serializable, ActionListener, ListSele
 	throws JPARSECException {
 		JLabel label = new JLabel(this.label1);
 		if (!this.toolTip.equals("")) label.setToolTipText(this.toolTip);
-		
+
 		panel.add(label);
 
 		JComboBox list = new JComboBox(this.values1);
@@ -1198,7 +1198,7 @@ class CombinedListItemElement2 implements Serializable, ActionListener, ListSele
 		}
 		panel.add(list);
 		ta1 = list;
-		
+
 		JLabel label2 = new JLabel(this.label2);
 		if (!this.toolTip.equals("")) label2.setToolTipText(this.toolTip);
 		panel.add(label2);
@@ -1215,12 +1215,12 @@ class CombinedListItemElement2 implements Serializable, ActionListener, ListSele
 		JScrollPane scrollPane = new JScrollPane(list2);
 		panel.add(scrollPane);
 		ta2 = list2;
-		
+
 		ta1.addActionListener(this);
 		ta2.addListSelectionListener(this);
 		this.panel = panel;
 		this.panelC = panel.getComponentCount();
-	}	
+	}
 
 	/**
 	 * Returns the selected index of list 1.
@@ -1238,7 +1238,7 @@ class CombinedListItemElement2 implements Serializable, ActionListener, ListSele
 	{
 		return ta2.getSelectedIndices();
 	}
-	
+
 	/**
 	 * Gets the text of the currently selected index of list 1.
 	 * @return The text of the selected index.
@@ -1258,9 +1258,9 @@ class CombinedListItemElement2 implements Serializable, ActionListener, ListSele
 		int index[] = ta2.getSelectedIndices();
 		if (index.length < 1) return null;
 		String out[] = new String[index.length];
-		
+
 		if (getSelectedIndex1() > values2.length) return null;
-		
+
 		for (int i=0; i<out.length; i++) {
 			if (index[i] > values2[getSelectedIndex1()].length) return null;
 			out[i] = values2[getSelectedIndex1()][index[i]];;
@@ -1275,7 +1275,7 @@ class CombinedListItemElement2 implements Serializable, ActionListener, ListSele
 	public void setSelectedIndex1(int index)
 	{
 		selectedIndex1 = index;
-	}	
+	}
 	/**
 	 * Sets the selected index of list 2.
 	 * @param index Index to set.
@@ -1283,7 +1283,7 @@ class CombinedListItemElement2 implements Serializable, ActionListener, ListSele
 	public void setSelectedIndex2(int index)
 	{
 		selectedIndex2 = new int[] {index};
-	}	
+	}
 	/**
 	 * Returns the index of a given item from its name, for list 1.
 	 * @param name Item name.
@@ -1300,7 +1300,7 @@ class CombinedListItemElement2 implements Serializable, ActionListener, ListSele
 	    		break;
 	    	}
 	    }
-		return index;		
+		return index;
 	}
 	/**
 	 * Returns the index of a given item from its name, for list 2.
@@ -1320,7 +1320,7 @@ class CombinedListItemElement2 implements Serializable, ActionListener, ListSele
 	    		break;
 	    	}
 	    }
-		return index;		
+		return index;
 	}
 
 	private String[] eliminateNulls(String[] list)
@@ -1359,13 +1359,13 @@ class CombinedListItemElement2 implements Serializable, ActionListener, ListSele
 			}
 		}
 		if (e.getSource() == ta2) {
-			selectedIndex2 = ta2.getSelectedIndices();		
+			selectedIndex2 = ta2.getSelectedIndices();
 		}
 	}
 
 	@Override
 	public void valueChanged(ListSelectionEvent arg0) {
-		selectedIndex2 = ta2.getSelectedIndices();		
+		selectedIndex2 = ta2.getSelectedIndices();
 	}
 
 	/**
@@ -1384,7 +1384,7 @@ class CombinedListItemElement2 implements Serializable, ActionListener, ListSele
 		JFrame frame = new JFrame("nothing");
 		frame.add(panel);
 		frame.pack();
-		
+
         FontRenderContext frc = ((Graphics2D) frame.getGraphics()).getFontRenderContext();
         TextLayout tl = new TextLayout(text, font, frc);
         int twidth = (int) tl.getBounds().getWidth();
@@ -1400,9 +1400,9 @@ class CombinedListItemElement2 implements Serializable, ActionListener, ListSele
 }
 
 class MyCellRenderer extends JLabel implements ListCellRenderer {
-  private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-  public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+	public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
 	 // Get text to display.
 	 String s = value.toString();
 	 // Set the text.
@@ -1412,7 +1412,7 @@ class MyCellRenderer extends JLabel implements ListCellRenderer {
 	 if (isSelected) f = new Font(Font.DIALOG, Font.BOLD, 9);
 	 // Set the font.
 	 setFont(f);
-	 
+
 	 return this;
 	 }
 }

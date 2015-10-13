@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.astrophysics.photometry;
 
 import jparsec.astronomy.*;
@@ -33,33 +33,33 @@ import jparsec.util.*;
 /**
  * A class to manipulate Kurucz models of star atmospheres. Only those
  * models with solar metallicity are supported. <P>
- * 
+ *
  * Reference: Buser, R., Kurucz, R. L., A&A 264, 557-591 (1992).
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
 public class Kurucz {
-	
+
 	//private double temperature;
 	private String fileName = "";
 	private String fileContents[] = null;
-	
+
 	/**
 	 * ID constant for twice the solar metallicity.
 	 */
-	//private static final String METALLICITY_TWICE_SOLAR = "p03"; 
+	//private static final String METALLICITY_TWICE_SOLAR = "p03";
 	/**
 	 * ID constant for solar metallicity.
 	 */
-	private static final String METALLICITY_SOLAR = "p00"; 
+	private static final String METALLICITY_SOLAR = "p00";
 	/**
 	 * ID constant for a quarter of solar metallicity.
 	 */
-	//private static final String METALLICITY_QUARTER_SOLAR = "m06"; 
+	//private static final String METALLICITY_QUARTER_SOLAR = "m06";
 	/**
 	 * ID constant for one tenth of solar metallicity.
 	 */
-	//private static final String METALLICITY_TENTH_SOLAR = "m10"; 
+	//private static final String METALLICITY_TENTH_SOLAR = "m10";
 
 	/**
 	 * Constructor of a Kurucz model with solar metallicity.
@@ -73,7 +73,7 @@ public class Kurucz {
 	throws JPARSECException{
 		this(starMass, starRadius, starTemperature, METALLICITY_SOLAR);
 	}
-	
+
 	/**
 	 * Constructor of a Kurucz model.
 	 * @param starMass Mass of the star, solar masses.
@@ -87,7 +87,7 @@ public class Kurucz {
 	private Kurucz(double starMass, double starRadius, double starTemperature, String metallicity)
 	throws JPARSECException{
 		if (!metallicity.equals(METALLICITY_SOLAR)) throw new JPARSECException("Only solar metallicity is supported.");
-		
+
 		double gravity = 10.0 * Math.log10(Star.getSurfaceGravity(starMass, starRadius) * 100.0);
 
 		int grav = (int) (gravity + 0.5);
@@ -104,7 +104,7 @@ public class Kurucz {
 				}
 			}
 		}
-		
+
 		if (starTemperature < 4000 || starTemperature > 60000)
 			throw new JPARSECException("temperature value "+starTemperature+" outside acceptable range 4000 to 60000.");
 		int temp = 500 * ((int) (starTemperature / 500.0 + 0.5));
@@ -113,9 +113,9 @@ public class Kurucz {
 		if (temp > 50000) temp = 10000 * ((int) (starTemperature / 10000.0 + 0.5));
 
 		if (temp > 40000) grav = 50;
-		
+
 		fileName = "t"+temp+"g"+grav+metallicity+".dat";
-		
+
 		//this.temperature = starTemperature;
 	}
 
@@ -127,14 +127,14 @@ public class Kurucz {
 			throw new JPARSECException("Cannot read kurucz model: "+fileName);
 		}
 	}
-	
+
 	/**
 	 * Obtains star emission for the current instance.
 	 * The flux is given as in the Kurucz model, which is already multiplied
 	 * by PI. To account for the solid angle it is enough to multiply the flux
 	 * by (r/d)^2, where r is the star radius and d its distance.
 	 * @param lambda Wavelength in m. Between 47E-10 and 91000E-10 m.
-	 * @return Emission in Jy. 0.0 will be returned if 
+	 * @return Emission in Jy. 0.0 will be returned if
 	 * wavelength is out of range.
 	 * @throws JPARSECException If an error occurs.
 	 */
@@ -149,7 +149,7 @@ public class Kurucz {
 			{
 				x[i] = DataSet.parseDouble(jparsec.io.FileIO.getField(1, fileContents[i], " ", true));
 				y[i] = DataSet.parseDouble(jparsec.io.FileIO.getField(2, fileContents[i], " ", true));
-				
+
 				y[i] = y[i] * x[i] * x[i] / (Constant.SPEED_OF_LIGHT * 1.0E10);
 				y[i] = y[i] * Constant.ERG_S_CM2_HZ_TO_JY;
 				x[i] = x[i] * 1.0E-10;
@@ -158,10 +158,10 @@ public class Kurucz {
 			double f = interp.linearInterpolationInLogScale(lambda);
 
 			return f;
-			
+
 		} catch (JPARSECException e) {	return 0.0; }
-	}	
-	
+	}
+
 	/**
 	 * Returns the Kurucz spectrum for the star.
 	 * @param np Number of points in the spectrum. You may need a very high value
@@ -178,13 +178,13 @@ public class Kurucz {
 		{
 			x[i] = DataSet.parseDouble(jparsec.io.FileIO.getField(1, fileContents[i], " ", true));
 			y[i] = DataSet.parseDouble(jparsec.io.FileIO.getField(2, fileContents[i], " ", true));
-			
+
 			y[i] = y[i] * x[i] * x[i] / (Constant.SPEED_OF_LIGHT * 1.0E10);
 			y[i] = y[i] * Constant.ERG_S_CM2_HZ_TO_JY;
 			x[i] = x[i] * 1.0E-4;
 		}
-		
-		
+
+
 		FluxElement f[] = new FluxElement[np];
 		double maxNu = Constant.SPEED_OF_LIGHT / 47.0E-4; // MHz
 		double minNu = Constant.SPEED_OF_LIGHT / 91100.0E-4; // MHz

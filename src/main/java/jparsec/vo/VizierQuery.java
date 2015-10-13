@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.vo;
 
 import java.io.*;
@@ -51,12 +51,12 @@ import jparsec.vo.VizierElement;
  * @version 1.0
  */
 public class VizierQuery implements Serializable {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	private String catalogName, objectName;
 	private double radius;
 	private boolean coneSearch = true;
-	
+
 	/**
 	 * Constructor for a given cone search query.
 	 * @param object The object.
@@ -70,7 +70,7 @@ public class VizierQuery implements Serializable {
 		this.radius = radius;
 		coneSearch = true;
 	}
-	
+
 	/**
 	 * Constructor for a given query.
 	 * @param object The object.
@@ -103,20 +103,20 @@ public class VizierQuery implements Serializable {
 	 */
 	public static String toString(Document doc) throws JPARSECException{
 		try {
-	        TransformerFactory tFactory = TransformerFactory.newInstance(); 
-	        Transformer transformer = tFactory.newTransformer(); 
-	        DOMSource source = new DOMSource(doc); 
-	        StringWriter sw=new StringWriter(); 
-	        StreamResult result = new StreamResult(sw); 
-	        transformer.transform(source, result); 
-	        String xmlString=sw.toString(); 
-	        return xmlString; 
+	        TransformerFactory tFactory = TransformerFactory.newInstance();
+	        Transformer transformer = tFactory.newTransformer();
+	        DOMSource source = new DOMSource(doc);
+	        StringWriter sw=new StringWriter();
+	        StreamResult result = new StreamResult(sw);
+	        transformer.transform(source, result);
+	        String xmlString=sw.toString();
+	        return xmlString;
 		} catch (Exception e)
 		{
 			throw new JPARSECException(e);
-		} 
-    }  
-	
+		}
+    }
+
 	/**
 	 * Transforms the results of a query into a Document.
 	 * @param votable Query results.
@@ -134,7 +134,7 @@ public class VizierQuery implements Serializable {
 	    }
 	    catch (javax.xml.parsers.ParserConfigurationException ex) {
 	    	throw new JPARSECException("Cannot create a document builder.", ex);
-	    }  
+	    }
 	    try {
 		    InputStream is = new java.io.ByteArrayInputStream(votable.getBytes());
 		    org.w3c.dom.Document doc = builder.parse(is);
@@ -146,7 +146,7 @@ public class VizierQuery implements Serializable {
 	}
 
 	private String results;
-	
+
 	/**
 	 * Transforms the results of a query into a VO Table.
 	 * @return The VO Table.
@@ -156,9 +156,9 @@ public class VizierQuery implements Serializable {
 		SavotVOTable votable = toVOTable(results);
 		return votable;
 	}
-	
+
 	/**
-	 * Reads an external VO Table, useful if no Internet 
+	 * Reads an external VO Table, useful if no Internet
 	 * Connection is available.
 	 * @param is The stream.
 	 * @throws JPARSECException If an error occurs.
@@ -168,9 +168,9 @@ public class VizierQuery implements Serializable {
 		VOTable vo = new VOTable(is);
 		results = vo.getVOTableAsString();
 	}
-	
+
 	/**
-	 * Reads an external VO Table, useful if no Internet 
+	 * Reads an external VO Table, useful if no Internet
 	 * Connection is available.
 	 * @param votable The VO table.
 	 */
@@ -187,7 +187,7 @@ public class VizierQuery implements Serializable {
 	{
 		return results;
 	}
-	
+
 	/**
 	 * Transforms the results of a query into a VO Table.
 	 * @param votable Query results.
@@ -207,12 +207,12 @@ public class VizierQuery implements Serializable {
 		String queryDescription = "";
 		if (!sourceName.equals("")) queryDescription = sourceName + FileIO.getLineSeparator();
 		if (!sourceRadius.equals("")) queryDescription += sourceRadius + FileIO.getLineSeparator();
-		if (!queryDescription.equals("")) queryDescription = FileIO.getLineSeparator() + JPARSEC_QUERY_DATA_ID + 
-			FileIO.getLineSeparator() + queryDescription; 
+		if (!queryDescription.equals("")) queryDescription = FileIO.getLineSeparator() + JPARSEC_QUERY_DATA_ID +
+			FileIO.getLineSeparator() + queryDescription;
 		sv.setDescription(description + queryDescription);
 		return sv;
 	}
-	
+
 	private static final String JPARSEC_QUERY_DATA_ID = "JPARSEC-QUERY-DATA";
 
 	/**
@@ -227,7 +227,7 @@ public class VizierQuery implements Serializable {
 		SavotVOTable votable = toVOTable(results);
 		return readVOTable(votable, sourcePos);
 	}
-	
+
 	/**
 	 * Reads an VO Table.
 	 * @param sv Input VO Table.
@@ -241,22 +241,22 @@ public class VizierQuery implements Serializable {
 		ArrayList<VizierElement> out = new ArrayList<VizierElement>();
 
 		// For each resource
-        for (int l = 0; l < sv.getResources().getItemCount(); l++) 
-        { 
+        for (int l = 0; l < sv.getResources().getItemCount(); l++)
+        {
           SavotResource currentResource = (SavotResource)(sv.getResources().getItemAt(l));
           String catalog = currentResource.getName().trim();
 
           VizierElement vizier = VizierElement.getVizierElement(catalog);
-          if (!catalog.equals("") && vizier != null) 
+          if (!catalog.equals("") && vizier != null)
           {
 	          // For each table of the current resource
-	          for (int m = 0; m < currentResource.getTableCount(); m++) 
+	          for (int m = 0; m < currentResource.getTableCount(); m++)
 	          {
 	        	  SavotTable table = (SavotTable) currentResource.getTables().getItemAt(m);
-	        	  
+
 	        	  //vizier.catalogName = table.getName();
 	        	  vizier.catalogDescription = table.getDescription();
-	        	  if (vizier.catalogDescription.indexOf(FileIO.getLineSeparator()) > 0) vizier.catalogDescription = 
+	        	  if (vizier.catalogDescription.indexOf(FileIO.getLineSeparator()) > 0) vizier.catalogDescription =
 	        			  vizier.catalogDescription.substring(0, vizier.catalogDescription.indexOf(FileIO.getLineSeparator()));
 	        	  vizier.data = new ArrayList<String[]>();
 	        	  vizier.dataFields = new String[table.getFields().getItemCount()];
@@ -275,14 +275,14 @@ public class VizierQuery implements Serializable {
 		        		  // JPARSECException.addWarning("Could not read TRSet, table "+(m+1)+" in catalog "+vizier.catalogName);
 		        		  continue;
 		        	  }
-		        	  
+
 		        	  if (tr != null) {
 			            // For each row
 			            for (int i = 0; i < tr.getItemCount(); i++) {
-				
+
 			              // Get all the data of the row
 			              TDSet theTDs = ((SavotTR) tr.getItemAt(i)).getTDs();
-			              
+
 			              // Check coordinates
 				          double dist = 0.0;
 				          if (sourcePos != null) {
@@ -302,23 +302,23 @@ public class VizierQuery implements Serializable {
 							      }
 					          }
 				          }
-		
+
 				          if (sourcePos == null || dist < 0.5 * vizier.beam || dist == 0.0)
-				          {		            
+				          {
 				              String[] record = new String[vizier.dataFields.length];
-					
+
 				              // For each data of the row
 				              for (int j = 0; j < vizier.dataFields.length; j++) {
 			            		  record[j] = ((SavotTD) theTDs.getItemAt(j)).getContent();
 				              }
-					            
+
 				              vizier.data.add(record);
 				          }
 			            }
 		        	  }
 	  	        if (vizier.data.size() > 0) out.add(vizier.clone());
 	        }
-	        
+
           }
         }
         VizierElement[] vout = new VizierElement[out.size()];
@@ -357,7 +357,7 @@ public class VizierQuery implements Serializable {
 		SavotVOTable votable = toVOTable(results);
 		return createLATEXFromVOTable(votable, sourcePos, allCatalogs);
 	}
-	
+
 	/**
 	 * Reads an VO Table and creates an HTML file.
 	 * @param sv Input VO Table.
@@ -378,7 +378,7 @@ public class VizierQuery implements Serializable {
 			String[] data = jparsec.graph.DataSet.toStringArray(description.substring(queryData), FileIO.getLineSeparator());
 			query = " for "+data[2]+" arcseconds around object "+data[1];
 		}
-		
+
 		HTMLReport html = new HTMLReport();
 		html.writeHeader("Vizier Query Results");
 		html.beginBody();
@@ -390,7 +390,7 @@ public class VizierQuery implements Serializable {
 		html.writeBigSkip();
 
 		// For each resource
-        for (int l = 0; l < sv.getResources().getItemCount(); l++) 
+        for (int l = 0; l < sv.getResources().getItemCount(); l++)
         {
           SavotResource currentResource = (SavotResource)(sv.getResources().getItemAt(l));
           String catalog = currentResource.getName().trim();
@@ -398,18 +398,18 @@ public class VizierQuery implements Serializable {
           VizierElement vizier = VizierElement.getVizierElement(catalog);
           boolean nullVizier = false;
           if (vizier == null) nullVizier = true;
-          if (!catalog.equals("") && vizier != null || allCatalogs) 
+          if (!catalog.equals("") && vizier != null || allCatalogs)
           {
               if (vizier == null) vizier = new VizierElement(catalog, catalog, currentResource.getDescription().trim(), 0, null, null);
-              
+
 	          // For each table of the current resource
-	          for (int m = 0; m < currentResource.getTableCount(); m++) 
+	          for (int m = 0; m < currentResource.getTableCount(); m++)
 	          {
 	        	  SavotTable table = (SavotTable) currentResource.getTables().getItemAt(m);
-	        	  
+
 	        	  //vizier.catalogName = table.getName();
 	        	  vizier.catalogDescription = table.getDescription();
-	        	  if (vizier.catalogDescription.indexOf(FileIO.getLineSeparator()) > 0) vizier.catalogDescription = 
+	        	  if (vizier.catalogDescription.indexOf(FileIO.getLineSeparator()) > 0) vizier.catalogDescription =
 	        			  vizier.catalogDescription.substring(0, vizier.catalogDescription.indexOf(FileIO.getLineSeparator()));
 	        	  vizier.data = new ArrayList<String[]>();
 	        	  vizier.dataFields = new String[table.getFields().getItemCount()];
@@ -427,14 +427,14 @@ public class VizierQuery implements Serializable {
 	        		  // JPARSECException.addWarning("Could not read TRSet, table "+(m+1)+" in catalog "+vizier.catalogName);
 	        		  continue;
 	        	  }
-	            
+
 	            if (tr != null) {
 		            // For each row
 		            for (int i = 0; i < tr.getItemCount(); i++) {
-			
+
 		              // Get all the data of the row
 		              TDSet theTDs = ((SavotTR) tr.getItemAt(i)).getTDs();
-		
+
 		              // Check coordinates
 			          double dist = 0.0;
 		              if (!nullVizier)
@@ -457,16 +457,16 @@ public class VizierQuery implements Serializable {
 					          }
 				          }
 		              }
-	
+
 			          if (sourcePos == null || dist < 0.5 * vizier.beam || dist == 0.0)
 			          {
 			              String[] record = new String[vizier.dataFields.length];
-							
+
 			              // For each data of the row
 			              for (int j = 0; j < vizier.dataFields.length; j++) {
 		            		  record[j] = ((SavotTD) theTDs.getItemAt(j)).getContent();
 			              }
-				            
+
 			              vizier.data.add(record);
 			          }
 		            }
@@ -479,20 +479,20 @@ public class VizierQuery implements Serializable {
 	        		html.writeTableHeader(1, 3, 0, width);
 	        		html.writeRowInTable(new String[] {vizier.catalogName}, bgcolor, align, colspan);
 	        		html.writeRowInTable(new String[] {vizier.catalogDescription}, bgcolor, align, colspan);
-	        		
+
 	        		String columns[] = new String[n];
 	        		String alt[] = new String[n];
 	        		for (int j = 0; j < n; j++)
 	        		{
 	        			String meaning = "";
 	        			alt[j] = VOTableUtils.getFieldDescriptionInVOTable(sv, vizier.catalogName, j, m);
-	        			if (!meaning.equals("")) alt[j] += " ["+meaning+"]";        			
+	        			if (!meaning.equals("")) alt[j] += " ["+meaning+"]";
 	        			columns[j] = VOTableUtils.getFieldNameInVOTable(sv, vizier.catalogName, j, m);
 	        		}
 	        		html.setTextStyle(STYLE.BOLD);
 	        		html.writeRowInTable(columns, alt, null, align + " NOWRAP", null);
 	        		html.setTextStyle(STYLE.PLAIN);
-	        		
+
 		        	for (int i=0; i<vizier.data.size(); i++)
 		        	{
 		        		String[] record = vizier.data.get(i);
@@ -514,7 +514,7 @@ public class VizierQuery implements Serializable {
 			        						String r = record[kk];
 			        						if (f.equals("<SOURCE>")) r = r.replaceAll(" ", "");
 			        						link = link.replaceAll(f, r);
-			        					}				
+			        					}
 			        				}
 			        				if (p == j) {
 			        					link = link.replaceAll(" ", "%20");
@@ -573,7 +573,7 @@ public class VizierQuery implements Serializable {
 			String[] data = jparsec.graph.DataSet.toStringArray(description.substring(queryData), FileIO.getLineSeparator());
 			query = " for "+data[2]+" arcseconds around object "+data[1];
 		}
-		
+
 		LATEXReport latex = new LATEXReport();
 		latex.writeHeader("Vizier Query Results");
 		latex.beginBody();
@@ -585,27 +585,27 @@ public class VizierQuery implements Serializable {
 		latex.writeBigSkip();
 
 		// For each resource
-        for (int l = 0; l < sv.getResources().getItemCount(); l++) 
+        for (int l = 0; l < sv.getResources().getItemCount(); l++)
         {
- 
+
           SavotResource currentResource = (SavotResource)(sv.getResources().getItemAt(l));
           String catalog = currentResource.getName().trim();
 
           VizierElement vizier = VizierElement.getVizierElement(catalog);
           boolean nullVizier = false;
           if (vizier == null) nullVizier = true;
-          if (!catalog.equals("") && vizier != null || allCatalogs) 
+          if (!catalog.equals("") && vizier != null || allCatalogs)
           {
               if (vizier == null) vizier = new VizierElement(catalog, catalog, currentResource.getDescription().trim(), 0, null, null);
 
               // For each table of the current resource
-	          for (int m = 0; m < currentResource.getTableCount(); m++) 
+	          for (int m = 0; m < currentResource.getTableCount(); m++)
 	          {
 	        	  SavotTable table = (SavotTable) currentResource.getTables().getItemAt(m);
-	        	  
+
 	        	  //vizier.catalogName = table.getName();
 	        	  vizier.catalogDescription = table.getDescription();
-	        	  if (vizier.catalogDescription.indexOf(FileIO.getLineSeparator()) > 0) vizier.catalogDescription = 
+	        	  if (vizier.catalogDescription.indexOf(FileIO.getLineSeparator()) > 0) vizier.catalogDescription =
 	        			  vizier.catalogDescription.substring(0, vizier.catalogDescription.indexOf(FileIO.getLineSeparator()));
 	        	  vizier.data = new ArrayList<String[]>();
 	        	  vizier.dataFields = new String[table.getFields().getItemCount()];
@@ -623,14 +623,14 @@ public class VizierQuery implements Serializable {
 	        		  // JPARSECException.addWarning("Could not read TRSet, table "+(m+1)+" in catalog "+vizier.catalogName);
 	        		  continue;
 	        	  }
-	            
+
 	            // For each row
 	            if (tr != null) {
 		            for (int i = 0; i < tr.getItemCount(); i++) {
-			
+
 		              // Get all the data of the row
 		              TDSet theTDs = ((SavotTR) tr.getItemAt(i)).getTDs();
-		
+
 		              // Check coordinates
 			          double dist = 0.0;
 		              if (!nullVizier)
@@ -653,16 +653,16 @@ public class VizierQuery implements Serializable {
 					          }
 				          }
 		              }
-	
+
 			          if (sourcePos == null || dist < 0.5 * vizier.beam || dist == 0.0)
-			          {		            
+			          {
 			              String[] record = new String[vizier.dataFields.length];
-							
+
 			              // For each data of the row
 			              for (int j = 0; j < vizier.dataFields.length; j++) {
 		            		  record[j] = ((SavotTD) theTDs.getItemAt(j)).getContent();
 			              }
-				            
+
 			              vizier.data.add(record);
 			          }
 		            }
@@ -675,20 +675,20 @@ public class VizierQuery implements Serializable {
 	        		latex.writeTableHeader(1, 3, 0, width);
 	        		latex.writeRowInTable(new String[] {vizier.catalogName}, bgcolor, align, colspan);
 	        		latex.writeRowInTable(new String[] {vizier.catalogDescription}, bgcolor, align, colspan);
-	        		
+
 	        		String columns[] = new String[n];
 	        		String alt[] = new String[n];
 	        		for (int j = 0; j < n; j++)
 	        		{
 	        			String meaning = "";
 	        			alt[j] = VOTableUtils.getFieldDescriptionInVOTable(sv, vizier.catalogName, j, m);
-	        			if (!meaning.equals("")) alt[j] += " ["+meaning+"]";        			
+	        			if (!meaning.equals("")) alt[j] += " ["+meaning+"]";
 	        			columns[j] = VOTableUtils.getFieldNameInVOTable(sv, vizier.catalogName, j, m);
 	        		}
 	        		latex.setTextStyle(STYLE.BOLD);
 	        		latex.writeRowInTable(columns, alt, null, align + " NOWRAP", null);
 	        		latex.setTextStyle(STYLE.PLAIN);
-	        		
+
 		        	for (int i=0; i<vizier.data.size(); i++)
 		        	{
 		        		String[] record = vizier.data.get(i);
@@ -710,7 +710,7 @@ public class VizierQuery implements Serializable {
 			        						String r = record[kk];
 			        						if (f.equals("<SOURCE>")) r = r.replaceAll(" ", "");
 			        						link = link.replaceAll(f, r);
-			        					}				
+			        					}
 			        				}
 			        				if (p == j) {
 			        					link = link.replaceAll(" ", "%20");
@@ -760,7 +760,7 @@ public class VizierQuery implements Serializable {
 	throws JPARSECException {
 		return query(targetName, catalogName, radius, false);
 	}
-	
+
 	/**
 	 * Performs a query to Vizier.
 	 * @param targetName Target name, to be resolved by Simbad.
@@ -772,7 +772,7 @@ public class VizierQuery implements Serializable {
 	 */
 	public static String query(String targetName, String catalogName, double radius, boolean coneSearch)
 	throws JPARSECException {
-		
+
 		try {
 			if (catalogName == null) catalogName = "";
 			String table = "";
@@ -791,7 +791,7 @@ public class VizierQuery implements Serializable {
 			int mode = 1;
 			vq.submit(targetName, ""+radius, unit, tauthor, extra, mode, list);
 //			}
-		      
+
 			return DataSet.vectorToString(list);
 */		} catch (Exception e)
 		{

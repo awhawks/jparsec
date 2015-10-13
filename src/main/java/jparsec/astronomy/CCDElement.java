@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.astronomy;
 
 import java.io.Serializable;
@@ -36,12 +36,12 @@ import jparsec.util.JPARSECException;
  * with the possible presence of an ocular between the telescope and the camera. If
  * you want to make calculations for direct focus photography, just set the ocular to null
  * in the telescope instance.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
 public class CCDElement implements Serializable {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Creates a default CCD with the TouCam webcam.
@@ -70,7 +70,7 @@ public class CCDElement implements Serializable {
 
 	/**
 	 * Creates a CCD object by giving the values of the fields.
-	 * 
+	 *
 	 * @param n Name of the camera.
 	 * @param csx Number of pixels in x.
 	 * @param csy Number of pixels in y.
@@ -119,7 +119,7 @@ public class CCDElement implements Serializable {
 	 * Position angle (orientation) of the camera in radians, 0 by default.
 	 */
 	public float cameraPA = 0;
-	
+
 	/**
 	 * Binning factor, for example 2 for a 2x2 binning. Default is 1.
 	 */
@@ -128,13 +128,13 @@ public class CCDElement implements Serializable {
 	 * Zoom factor, for example 2 (more zoom, less field) or 0.5. Default if 1.
 	 */
 	private float zoomFactor;
-		
+
 	/**
 	 * To clone the object.
 	 */
+	@Override
 	public CCDElement clone()
 	{
-		if (this == null) return null;
 		CCDElement ccd = new CCDElement(this.name, this.chipSizeX, this.chipSizeY, this.pixelSizeX,
 				this.pixelSizeY, this.binningFactor);
 		ccd.cameraPA = this.cameraPA;
@@ -165,6 +165,7 @@ public class CCDElement implements Serializable {
 		return !(name != null ? !name.equals(that.name) : that.name != null);
 	}
 
+
 	/**
 	 * Return all available intrinsic CCD cameras.
 	 * @return The cameras.
@@ -181,12 +182,12 @@ public class CCDElement implements Serializable {
 			String data[] = DataSet.toStringArray(v.get(i), " ", true);
 			int n = data.length;
 			String name = DataSet.toString(DataSet.getSubArray(data, 0, n-5), " ");
-			ccd[i] = new CCDElement(name, Integer.parseInt(data[n-4].trim()), Integer.parseInt(data[n-3].trim()), 
+			ccd[i] = new CCDElement(name, Integer.parseInt(data[n-4].trim()), Integer.parseInt(data[n-3].trim()),
 					Float.parseFloat(data[n-2].trim()), Float.parseFloat(data[n-1].trim()), 1);
 		}
 		return ccd;
 	}
-	
+
 	/**
 	 * Return the names of all available intrinsic CCD cameras.
 	 * @return The list of cameras.
@@ -207,7 +208,7 @@ public class CCDElement implements Serializable {
 		}
 		return ccd;
 	}
-	
+
 	/**
 	 * Return all available intrinsic CCD cameras.
 	 * @return The cameras.
@@ -226,7 +227,7 @@ public class CCDElement implements Serializable {
 			if (caseSensitive) {
 				if (partialName && ccd.indexOf(name) >= 0)
 					return true;
-				if (ccd.equals(name)) return true;				
+				if (ccd.equals(name)) return true;
 				continue;
 			}
 			if (partialName && ccd.toLowerCase().indexOf(name.toLowerCase()) >= 0)
@@ -237,7 +238,7 @@ public class CCDElement implements Serializable {
 	}
 	/**
 	 * Return certain CCD.
-	 * 
+	 *
 	 * @param ccd Name of the CCD;
 	 * @return The required CCD object, or null if none is found.
 	 * @throws JPARSECException Thrown if the method fails.
@@ -262,7 +263,7 @@ public class CCDElement implements Serializable {
 
 	/**
 	 * Returns the scale of the CCD image in x.
-	 * @param telescope The telescope where the camera is attached to, including 
+	 * @param telescope The telescope where the camera is attached to, including
 	 * the ocular (or with a null ocular for direct focus photography).
 	 * @return The scale in radians per pixel.
 	 * @throws JPARSECException If an error occurs.
@@ -270,14 +271,14 @@ public class CCDElement implements Serializable {
 	public double getScaleX(TelescopeElement telescope)
 	throws JPARSECException {
 		 double fovWidth  = fovSingleDimension(this.pixelSizeX * this.binningFactor, this.chipSizeX, telescope);
-		  
+
 		 double arcWidth  = fovWidth / this.chipSizeX;
 		 return arcWidth;
 	}
 
 	/**
 	 * Returns the scale of the CCD image in y.
-	 * @param telescope The telescope where the camera is attached to, including 
+	 * @param telescope The telescope where the camera is attached to, including
 	 * the ocular (or with a null ocular for direct focus photography).
 	 * @return The scale in radians per pixel.
 	 * @throws JPARSECException If an error occurs.
@@ -285,14 +286,14 @@ public class CCDElement implements Serializable {
 	public double getScaleY(TelescopeElement telescope)
 	throws JPARSECException {
 		 double fovHeight = fovSingleDimension(this.pixelSizeY * this.binningFactor, this.chipSizeY, telescope);
-		  
+
 		 double arcHeight = fovHeight / this.chipSizeY;
 		 return arcHeight;
 	}
 
 	/**
 	 * Returns the scale of the CCD image as a mean average of scale in x and y.
-	 * @param telescope The telescope where the camera is attached to, including 
+	 * @param telescope The telescope where the camera is attached to, including
 	 * the ocular (or with a null ocular for direct focus photography).
 	 * @return The scale in radians per pixel.
 	 * @throws JPARSECException If an error occurs.
@@ -304,7 +305,7 @@ public class CCDElement implements Serializable {
 
 	/**
 	 * Returns the field of view in x direction.
-	 * @param telescope The telescope where the camera is attached to, including 
+	 * @param telescope The telescope where the camera is attached to, including
 	 * the ocular (or with a null ocular for direct focus photography).
 	 * @return Field of view in radians.
 	 * @throws JPARSECException If an error occurs.
@@ -317,7 +318,7 @@ public class CCDElement implements Serializable {
 
 	/**
 	 * Returns the field of view in y direction.
-	 * @param telescope The telescope where the camera is attached to, including 
+	 * @param telescope The telescope where the camera is attached to, including
 	 * the ocular (or with a null ocular for direct focus photography).
 	 * @return Field of view in radians.
 	 * @throws JPARSECException If an error occurs.

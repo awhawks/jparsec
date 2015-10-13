@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.io.image;
 
 import java.awt.Color;
@@ -45,24 +45,24 @@ import jparsec.vo.SExtractor;
 
 /**
  * A class to read and write .fits files.<P>
- * 
+ *
  * The data array used for input and output is modified
  * respect to the original .fits format. The new format
  * is the standard (x, y) coordinate system for the first
  * [...][] and second [][...] dimensions in the array.
  * Position (0, 0) of the array is the top left corner
- * of the image (the center of the first pixel), while 
+ * of the image (the center of the first pixel), while
  * the (width-1, height-1) is the bottom right corner.
  * For the position of the sources solved by SExtractor
  * the center of the first pixel is at (1, 1).
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
 public class FitsIO {
 
 	private BasicHDU[] hdus;
-	
+
 	/**
 	 * Constructor for a fits image.
 	 * @param path The path to a .fits file.
@@ -112,7 +112,7 @@ public class FitsIO {
 		hdus = new BasicHDU[1];
 		hdus[0] = hdu;
 	}
-	
+
 	/**
 	 * Constructor for a given data and 1 plain.
 	 * @param data The data for the image.
@@ -124,7 +124,7 @@ public class FitsIO {
 		try {
 			hdus[0] = FitsIO.createHDU(data, null);
 		} catch (Exception exc) {
-			throw new JPARSECException("Cannot create the HDU", exc);			
+			throw new JPARSECException("Cannot create the HDU", exc);
 		}
 	}
 
@@ -144,7 +144,7 @@ public class FitsIO {
 	{
 		return hdus.length;
 	}
-	
+
 	/**
 	 * Writes the image.
 	 * @param n The index of the plain to write.
@@ -155,7 +155,7 @@ public class FitsIO {
 	throws JPARSECException {
 		FitsIO.writeEntireFits(path, new BasicHDU[] {hdus[n]});
 	}
-	
+
 	/**
 	 * Writes the entire fits with all images.
 	 * @param path The path.
@@ -165,7 +165,7 @@ public class FitsIO {
 	throws JPARSECException {
 		FitsIO.writeEntireFits(path, hdus);
 	}
-	
+
 	/**
 	 * Sets the header.
 	 * @param n The index of the plain.
@@ -176,7 +176,7 @@ public class FitsIO {
 	throws JPARSECException {
 		FitsIO.setHeader(hdus[n], header);
 	}
-	
+
 	/**
 	 * Returns the header.
 	 * @param n The plain index.
@@ -187,11 +187,11 @@ public class FitsIO {
 	{
 		return FitsIO.getHeader(hdus[n]);
 	}
-	
+
 	/**
 	 * The set of options to obtain the picture of a fits file.
 	 */
-	public static enum PICTURE_LEVEL {
+	public enum PICTURE_LEVEL {
 		/** Shows the original levels in the image, after
 		 * rounding them to integers.
 		 * Note this could launch an error for levels outside range 0-255. */
@@ -205,19 +205,19 @@ public class FitsIO {
 		EXP_SCALE,
 		/** Custom formulae, to be set in the instance. */
 		CUSTOM;
-		
+
 		/** The value in the picture for an intensity equal to NaN.
 		 * Set it between 0 and 255. Default value is -1 to avoid checking
 		 * the image for a NaN value, which will set all them to 0. */
 		public int NaN = 0;
 		/** The formula to be used to transform intensities to integers
-		 * in the range 0-255, using 'x' to reference the intensity. 
+		 * in the range 0-255, using 'x' to reference the intensity.
 		 * For instance '5*x'. Java operations like 'Math.sin()' and all
 		 * others are allowed. Other special values are 'max' for the
 		 * maximum intensity in the image, and 'min' for the minimum one.*/
 		public String formula = "x";
 	};
-	
+
 	/**
 	 * Returns the picture.
 	 * @param n The plain.
@@ -232,7 +232,7 @@ public class FitsIO {
 	throws JPARSECException {
 		return FitsIO.getPicture(hdus[n], level, grid);
 	}
-	
+
 	/**
 	 * Returns the picture for a given image.
 	 * @param hdu The image.
@@ -246,7 +246,7 @@ public class FitsIO {
 	public static Picture getPicture(BasicHDU hdu, PICTURE_LEVEL level, boolean grid)
 	throws JPARSECException {
 		double data[][] = (double[][]) FitsIO.getData(hdu, true, -1);
-		
+
 		// Prepare interpolation between min and max values
 		Evaluation eval = null;
 		double max = -1, min = -1;
@@ -260,19 +260,19 @@ public class FitsIO {
 						if (level == PICTURE_LEVEL.LOG_SCALE) {
 							data[i][j] = FastMath.log(data[i][j]);
 						} else {
-							data[i][j] = FastMath.exp(data[i][j]);							
+							data[i][j] = FastMath.exp(data[i][j]);
 						}
 					}
 				}
 			}
-			
+
 			max = DataSet.getMaximumValue(data);
 			min = DataSet.getMinimumValue(data);
 
 			if (level == PICTURE_LEVEL.CUSTOM)
 				eval = new Evaluation(level.formula, new String[] {"x "+0, "max "+max, "min "+min});
 		}
-		
+
 		Picture pic = new Picture(data.length+1, data[0].length+1);
 		int val = 0;
 		for (int i=0; i<data.length; i++)
@@ -296,7 +296,7 @@ public class FitsIO {
 					}
 				}
 				if (val >= 0) pic.setColor(i, j, Functions.getColor(val, val, val, 255));
-			}			
+			}
 		}
 
 		if (grid) {
@@ -323,7 +323,7 @@ public class FitsIO {
 					if (Math.abs(dlon) < 1.0 / 360.0) step = 1.0 / 1800.0;
 					if (Math.abs(dlon) < 1.0 / 1800.0) step = 1.0 / 3600.0;
 					step *= Constant.DEG_TO_RAD;
-					
+
 					double ra0 = loc00.getLongitude(), dec0 = loc00.getLatitude();
 					double ra1 = locwh.getLongitude(), dec1 = locwh.getLatitude();
 					if (ra1 < ra0) {
@@ -368,7 +368,7 @@ public class FitsIO {
 		}
 		return pic;
 	}
-	
+
 	/**
 	 * Returns the image data as an array.
 	 * @param n The plain.
@@ -432,7 +432,7 @@ public class FitsIO {
 	}
 
 	/**
-	 * Returns the image data as an array of type double, for a given 
+	 * Returns the image data as an array of type double, for a given
 	 * rectangle.
 	 * @param n The plain.
 	 * @param x0 The x index (horizontal position) of the first pixel, 0 is first.
@@ -511,7 +511,7 @@ public class FitsIO {
 	public int getBitPix(int n) throws FitsException {
 		return hdus[n].getBitPix();
 	}
-	
+
 	/**
 	 * Writes a fits file.
 	 * @param name The file name.
@@ -521,12 +521,12 @@ public class FitsIO {
 	private static void writeEntireFits(String name, BasicHDU hdus[])
 	throws JPARSECException {
 		Fits f = new Fits();
-		
+
 		try {
 			for (int i=0; i< hdus.length; i++) {
 				f.addHDU(hdus[i]);
 			}
-				
+
 			// Write a FITS file.
 			BufferedFile bf = new BufferedFile(name, "rw");
 			f.write(bf);
@@ -563,7 +563,7 @@ public class FitsIO {
 			} catch (NullPointerException e) {
 				h = ImageHDU.manufactureHeader(hdu.getData());
 			}
-			
+
 			for (i=0; i<header.length; i++)
 			{
 				key = header[i].key;
@@ -587,7 +587,7 @@ public class FitsIO {
 				JPARSECException.addWarning("Could not write value of card "+key+", value is too long ("+header[i].value+")");
 			} else {
 				if (key == null) {
-					throw new JPARSECException(e);				
+					throw new JPARSECException(e);
 				} else {
 					throw new JPARSECException("("+key+")", e);
 				}
@@ -611,7 +611,7 @@ public class FitsIO {
 			throw new JPARSECException("Cannot read the fits image "+name+".", e);
 		}
 	}
-	
+
 	/**
 	 * Returns the header in a two/three column dataset, with
 	 * each key and the value, and some times a comment.
@@ -669,7 +669,7 @@ public class FitsIO {
 		}
 		return head;
 	}
-	
+
 	/**
 	 * Returns the data in an image.
 	 * @param hdu The HDU.
@@ -695,7 +695,7 @@ public class FitsIO {
 			}
 		}
 	}
-	
+
 	/**
 	 * Returns the data in an image.
 	 * @param hdu The HDU.
@@ -715,7 +715,7 @@ public class FitsIO {
 		} catch (FitsException e) {
 			e.printStackTrace();
 		}
-		
+
 		try {
 			ImageTiler tiler = ((ImageHDU) hdu).getTiler();
 			int dx = xf-x0+1, dy = yf-y0+1;
@@ -748,7 +748,7 @@ public class FitsIO {
 								System.arraycopy(oo0, offset, oo[y], 0, oo[0].length);
 /*								for (int x=0; x < oo[0].length; x++) {
 									oo[y][x] = oo0[x + offset];
-								}						
+								}
 */							}
 							o = oo;
 						} else {
@@ -769,10 +769,10 @@ public class FitsIO {
 										System.arraycopy(oo0, offset, oo[y], 0, oo[0].length);
 									}
 									o = oo;
-								}	
-							}								
-						}											
-					}					
+								}
+							}
+						}
+					}
 				}
 			}
 			return getData(hdu, o, asDouble, -1);
@@ -781,7 +781,7 @@ public class FitsIO {
 			return null;
 		}
 	}
-	
+
 	private static Object getData(BasicHDU hdu, Object o, boolean asDouble, int max)
 	throws JPARSECException {
 		try {
@@ -793,7 +793,7 @@ public class FitsIO {
 			double bZero = ((ImageHDU) hdu).getBZero();
 			double bScale = ((ImageHDU) hdu).getBScale();
 			//Object dataR = ((ImageHDU) hdu).getData().getData();
-			
+
 			int ndim = DataSet.getNumberOfDimensions(o);
 			if (ndim > 2) {
 				if (ndim > 4) throw new JPARSECException("Input data has more than 4 dimensions.");
@@ -824,7 +824,7 @@ public class FitsIO {
 								}
 							}
 						}
-					}					
+					}
 				} else {
 					if (bp == 8) {
 						byte data[][][] = (byte[][][]) o;
@@ -852,7 +852,7 @@ public class FitsIO {
 								}
 							}
 						}
-					}	
+					}
 				}
 				JPARSECException.addWarning("Input data has more than 2 dimensions. Only the last two dimensions will be considered.");
 			}
@@ -866,14 +866,14 @@ public class FitsIO {
 					out = new double[data[0].length][data.length];
 					for (int j=0; j<data[0].length; j++) {
 						out[j] = FitsIO.getOriginalValue(data, bZero - max, bScale, j);
-					}					
+					}
 				} else {
 					if (bp == 16) {
 						short data[][] = (short[][]) o;
 						out = new double[data[0].length][data.length];
 						for (int j=0; j<data[0].length; j++) {
 							out[j] = FitsIO.getOriginalValue(data, bZero - max, bScale, j);
-						}											
+						}
 					} else {
 						if (bp == 32) {
 							int data[][] = (int[][]) o;
@@ -887,14 +887,14 @@ public class FitsIO {
 								out = new double[data[0].length][data.length];
 								for (int j=0; j<data[0].length; j++) {
 									out[j] = FitsIO.getOriginalValue(data, bZero - max, bScale, j);
-								}																										
+								}
 							} else {
 								if (bp == 64) {
 									double data[][] = (double[][]) o;
 									out = new double[data[0].length][data.length];
 									for (int j=0; j<data[0].length; j++) {
 										out[j] = FitsIO.getOriginalValue(data, bZero - max, bScale, j);
-									}																																			
+									}
 								} else {
 									double[][] data = (double[][]) ArrayFuncs.convertArray(o, double.class);
 									out = new double[data[0].length][data.length];
@@ -915,7 +915,7 @@ public class FitsIO {
 					out[j] = FitsIO.getOriginalValue4d(data, bZero - max, bScale, bp, j);
 				}
 			}
-			
+
 			if (!asDouble) {
 				if (bp == 32) return DataSet.toIntArray(out);
 				if (bp == -32) return DataSet.toFloatArray(out);
@@ -935,7 +935,7 @@ public class FitsIO {
 			}
 		}
 	}
-    
+
 	/**
 	 * Sets the image data.
 	 * @param data The data.
@@ -973,7 +973,7 @@ public class FitsIO {
 			ImageHeaderElement[] header = this.getHeader(n);
 			header = ImageHeaderElement.addHeaderEntry(header, new ImageHeaderElement("BZERO", ""+bzero, ""));
 			header = ImageHeaderElement.addHeaderEntry(header, new ImageHeaderElement("BSCALE", ""+bscale, ""));
-			
+
 			BasicHDU hdu = null;
 			if (data == null) {
 				hdu = Fits.makeHDU(FitsBinaryTable.createHeader(header));
@@ -999,7 +999,7 @@ public class FitsIO {
 	 */
 	public double[][] getScaledData(int hdu, PICTURE_LEVEL level) throws JPARSECException {
 		double data[][] = (double[][]) FitsIO.getData(this.getHDU(hdu), true, -1);
-		
+
 		// Prepare interpolation between min and max values
 		Evaluation eval = null;
 		double max = -1, min = -1;
@@ -1013,19 +1013,19 @@ public class FitsIO {
 						if (level == PICTURE_LEVEL.LOG_SCALE) {
 							data[i][j] = FastMath.log(data[i][j]);
 						} else {
-							data[i][j] = FastMath.exp(data[i][j]);							
+							data[i][j] = FastMath.exp(data[i][j]);
 						}
 					}
 				}
 			}
-			
+
 			max = DataSet.getMaximumValue(data);
 			min = DataSet.getMinimumValue(data);
 
 			if (level == PICTURE_LEVEL.CUSTOM)
 				eval = new Evaluation(level.formula, new String[] {"x "+0, "max "+max, "min "+min});
 		}
-		
+
 		double val = 0;
 		for (int i=0; i<data.length; i++)
 		{
@@ -1046,12 +1046,12 @@ public class FitsIO {
 					}
 				}
 				data[i][j] = val;
-			}			
+			}
 		}
-	
+
 		return data;
 	}
-	
+
   /**
    * Returns the intensity at a given point row.
    * @return The actual data values at position (..., y), with bZero and bScale
@@ -1167,7 +1167,7 @@ public class FitsIO {
 		   return rb;
 		}
 
-		
+
 	  /**
 	   * Returns the intensity at a given point.
 	   * @return The actual data value at position (x, y), with bZero and bScale
@@ -1176,7 +1176,7 @@ public class FitsIO {
 /*		private static double getOriginalValue(double[][] data, double bZero, double bScale, int bp, int x, int y) throws FitsException
 		{
 		   double result = Double.NaN;
-		
+
 		   switch(bp)
 		   {
 		   case 8:
@@ -1256,7 +1256,7 @@ public class FitsIO {
 /*		private static double getOriginalValue4d(double[][][][] data, double bZero, double bScale, int bp, int x, int y) throws FitsException
 		{
 		   double result = Double.NaN;
-		
+
 		   switch(bp)
 		   {
 		   case 8:
@@ -1282,7 +1282,7 @@ public class FitsIO {
 		   return result;
 		}
 */
-		
+
 	/**
 	 * Creates a simple fits HDU.
 	 * @param data The data. The raw values are modified considering the BZERO and BSCALE
@@ -1308,7 +1308,7 @@ public class FitsIO {
 			throw new JPARSECException("Cannot create the HDU", exc);
 		}
 	}
-	
+
 	/**
 	 * Returns the HDU image for a given index.
 	 * @param n The index of the image.
@@ -1376,7 +1376,7 @@ public class FitsIO {
 	public boolean isAsciiTable(int n) {
 		return isAsciiTable(getHDU(n));
 	}
-	
+
 	/**
 	 * Returns if a given HDU is a binary table.
 	 * @param hdu The HDU.
@@ -1385,7 +1385,7 @@ public class FitsIO {
 	public static boolean isBinaryTable(BasicHDU hdu) {
 		return hdu.getClass().getSimpleName().equals("BinaryTableHDU");
 	}
-	
+
 	/**
 	 * Returns if a given HDU is an Ascii table.
 	 * @param hdu The HDU.
@@ -1394,7 +1394,7 @@ public class FitsIO {
 	public static boolean isAsciiTable(BasicHDU hdu) {
 		return hdu.getClass().getSimpleName().equals("AsciiTableHDU");
 	}
-	
+
 	/**
 	 * Returns a String representation of this object.
 	 * In case of error getting the information from the
@@ -1435,7 +1435,7 @@ public class FitsIO {
 				p[2] = new Parameter(type, format[2].fieldName);
 				p[3] = new Parameter(""+hdus[i].getHeader().getNumberOfCards(), format[3].fieldName);
 				if (axes == null) {
-					p[4] = new Parameter("-", format[4].fieldName);					
+					p[4] = new Parameter("-", format[4].fieldName);
 				} else {
 					p[4] = new Parameter(""+DataSet.toString(DataSet.reverse(DataSet.toStringValues(axes)), "x"), format[4].fieldName);
 				}
@@ -1448,7 +1448,7 @@ public class FitsIO {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Returns the WCS instance for a given HDU.
 	 * @param n The index, from 0 to number of HDUs-1.
@@ -1470,7 +1470,7 @@ public class FitsIO {
 		newHeader = ImageHeaderElement.addHeaderEntry(newHeader, wcs.getAsHeader());
 		this.setHeader(n, newHeader);
 	}
-	
+
 	/**
 	 * Launches SExtractor tool and retrieve the results of solving the sources
 	 * in the current image. SExtractor is launched using the settings contained in

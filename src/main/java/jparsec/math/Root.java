@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.math;
 
 import java.io.Serializable;
@@ -29,26 +29,26 @@ import jparsec.util.JPARSECException;
 
 /**
  * A class to find roots using Newton-Raphson and midpoint methods.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
 public class Root implements Serializable
 {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Empty constructor.
 	 */
 	public Root()
 	{
-		this.functionImaginaryTermDerivative = this.functionImaginaryTerm = 
+		this.functionImaginaryTermDerivative = this.functionImaginaryTerm =
 			this.functionRealTermDerivative = this.functionRealTerm = "";
 	}
 
 	/**
 	 * Constructor for a real function.
-	 * 
+	 *
 	 * @param realf Real function.
 	 */
 	public Root(String realf)
@@ -58,7 +58,7 @@ public class Root implements Serializable
 
 	/**
 	 * Constructor for a real function.
-	 * 
+	 *
 	 * @param realf Real function.
 	 * @param drealf Real function derivative.
 	 */
@@ -70,7 +70,7 @@ public class Root implements Serializable
 
 	/**
 	 * Constructor for a complex function.
-	 * 
+	 *
 	 * @param realf Real part.
 	 * @param drealf Real part derivative.
 	 * @param imgf Imaginary part.
@@ -106,7 +106,7 @@ public class Root implements Serializable
 
 	/**
 	 * Evaluates a function of two variables, x and y.
-	 * 
+	 *
 	 * @param f Function expression.
 	 * @param x Value of x.
 	 * @param y Value of y.
@@ -116,14 +116,14 @@ public class Root implements Serializable
 	public double evaluateFunction(String f, double x, double y)
 	throws JPARSECException {
 		if (f == null) return 0; // For the imaginary term when working only with real functions
-		if (f.equals("")) throw new JPARSECException("undefined function."); 
+		if (f.equals("")) throw new JPARSECException("undefined function.");
 		return Evaluation.evaluate(f, new String[] {"x "+x, "y "+y});
 	}
 
 	/**
 	 * Obtains a root by applying Newton Raphson. From Basic Scientific
 	 * Subroutines, F. R. Ruckdeschel.
-	 * 
+	 *
 	 * @param E Tolerance (max. error desired). Must be slightly greater than
 	 *        0.0.
 	 * @param x0 Real part of initial search point.
@@ -173,7 +173,7 @@ public class Root implements Serializable
 	/**
 	 * Obtain the roots of a real function, using a bisection like algorithm. No
 	 * derivative is necessary.
-	 * 
+	 *
 	 * @param E Precision in the roots.
 	 * @param xi Initial search point.
 	 * @param xf End search point.
@@ -249,7 +249,7 @@ public class Root implements Serializable
 	 * reached precision. Usually the original root double precision value
 	 * will be much better than the rounded value, so this method in not very
 	 * useful.
-	 * 
+	 *
 	 * @param root Root value.
 	 * @param error Maximum error.
 	 * @return Root value properly rounded.

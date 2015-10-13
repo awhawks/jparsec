@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.astrophysics.gildas;
 
 import java.io.*;
@@ -33,7 +33,7 @@ import jparsec.io.image.*;
  * @version 1.0
  */
 public class Parameter implements Serializable {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Value.
@@ -51,7 +51,7 @@ public class Parameter implements Serializable {
 	/**
 	 * The set of data types for the parameters.
 	 */
-	public static enum DATA_TYPE {
+	public enum DATA_TYPE {
 		/** ID constant for a double datatype. */
 		DOUBLE,
 		/** ID constant for an integer datatype. */
@@ -59,7 +59,7 @@ public class Parameter implements Serializable {
 		/** ID constant for a string datatype. */
 		STRING
 	};
-	
+
 	/**
 	 * Constructor for a float parameter.
 	 * @param f Value.
@@ -104,7 +104,7 @@ public class Parameter implements Serializable {
 		description = d;
 		dataType = DATA_TYPE.INT;
 	}
-	
+
 	/**
 	 * Checks if two parameters are the same.
 	 */
@@ -289,7 +289,7 @@ public class Parameter implements Serializable {
 		}
 		return img;
 	}
-	
+
 	/**
 	 * Transforms a given set of parameters into an image header instance.
 	 * @return The image header.
@@ -301,7 +301,7 @@ public class Parameter implements Serializable {
 		ImageHeaderElement img = new ImageHeaderElement(key, this.value, this.description);
 		return img;
 	}
-	
+
 	/**
 	 * Returns the value as an integer.
 	 * 0 is returned if the value is null or empty.

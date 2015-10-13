@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.ephem.planets;
 
 import jparsec.ephem.Ephem;
@@ -42,7 +42,7 @@ import jparsec.util.JPARSECException;
 
 /**
  * Applies Newcomb's solar theory, published in 1898.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -57,11 +57,11 @@ public class Newcomb
 	 * Terms smaller than 0.1" or 0.0000001 AU are neglected here. The greatest
 	 * possible error amounts to 2" in longitude, 0.5" in latitude, and 0.000005
 	 * AU in distance.<P>
-	 * 
+	 *
 	 * Reference:
-	 * 
+	 *
 	 * <I>Practical Ephemeris Calculations</I>, Oliver Montenbruck. 1989.
-	 * 
+	 *
 	 * @param JD Julian day in dynamical time.
 	 * @return Array with (x, y, z) coordinates.
 	 */
@@ -289,7 +289,7 @@ public class Newcomb
 	 * solar theory. Typical error is 0.3 arcseconds, but it could be as high as
 	 * 2 arcseconds for certain dates.
 	 * <P>
-	 * 
+	 *
 	 * @param time Time object containing the date.
 	 * @param obs Observer object containing the observer position.
 	 * @param eph Ephemeris object with the target and ephemeris
@@ -361,7 +361,7 @@ public class Newcomb
 			// is slightly better.
 			// Here we prefer to use only Newcomb's theory independently
 			geo_eq = Ephem.aberration(geo_eq, earth_pos, light_time);
-			
+
 			DataBase.addData("GCRS", geo_eq, true);
 		} else {
 			DataBase.addData("GCRS", null, true);
@@ -379,7 +379,7 @@ public class Newcomb
 
 			if (eph.frame == FRAME.FK4) {
 				// Transform from B1950 to mean equinox of date
-				 geo_date = Precession.precess(Constant.B1950, JD_TDB, geo_date, eph);	
+				 geo_date = Precession.precess(Constant.B1950, JD_TDB, geo_date, eph);
 			} else {
 				// Transform from J2000 to mean equinox of date
 				geo_date = Precession.precessFromJ2000(JD_TDB, geo_date, eph);
@@ -394,7 +394,7 @@ public class Newcomb
 				/* Correct nutation */
 				true_eq = Nutation.nutateInEquatorialCoordinates(JD_TDB, eph, geo_date, true);
 			}
-	
+
 			// Correct for polar motion
 			if (eph.ephemType == EphemerisElement.COORDINATES_TYPE.APPARENT &&
 					eph.correctForPolarMotion)
@@ -403,7 +403,7 @@ public class Newcomb
 				true_eq = mat.times(new Matrix(true_eq)).getColumn(0);
 			}
 		}
-		
+
 		// Pass to coordinates as seen from another body, if necessary
 		if (obs.getMotherBody() != TARGET.NOT_A_PLANET && obs.getMotherBody() != TARGET.EARTH)
 			true_eq = Ephem.getPositionFromBody(LocationElement.parseRectangularCoordinates(true_eq), time, obs, eph).getRectangularCoordinates();

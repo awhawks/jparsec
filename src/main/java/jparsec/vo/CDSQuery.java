@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -44,7 +44,7 @@ import jparsec.util.JPARSECException;
  * @version 1.0
  */
 public class CDSQuery implements Serializable {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	private FRAME frame1, frame2;
 	private PRECISION precision;
@@ -84,7 +84,7 @@ public class CDSQuery implements Serializable {
 	/**
 	 * The set of frames for the query.
 	 */
-	public static enum FRAME {
+	public enum FRAME {
 		/** FK4 frame. */
 		FK4 (0),
 		/** Galactic frame. */
@@ -97,13 +97,13 @@ public class CDSQuery implements Serializable {
 		FK5 (4),
 		/** ICRF frame. */
 		ICRS (5);
-		
+
 		private int index;
-		
+
 		private FRAME(int index) {
 			this.index = index;
 		}
-		
+
 		/**
 		 * Returns the index value for this frame. Used
 		 * internally.
@@ -117,7 +117,7 @@ public class CDSQuery implements Serializable {
 	/**
 	 * The set of precision values for the query.
 	 */
-	public static enum PRECISION {
+	public enum PRECISION {
 		/** None precision. */
 		NONE (0),
 		/** Degree precision. */
@@ -128,13 +128,13 @@ public class CDSQuery implements Serializable {
 		ARCSEC (5),
 		/** Milliarcsecond precision. */
 		MAS (8);
-		
+
 		private int index;
-		
+
 		private PRECISION(int index) {
 			this.index = index;
 		}
-		
+
 		/**
 		 * Returns the index value for this precision. Used
 		 * internally.
@@ -160,7 +160,7 @@ public class CDSQuery implements Serializable {
 			LocationElement loc, PRECISION precision, double equinox1,
 			double equinox2)
 	throws JPARSECException {
-		
+
 		try {
 			Astroframe aframe1 = null, aframe2 = null;
 			switch (frame1) {
@@ -206,16 +206,16 @@ public class CDSQuery implements Serializable {
 
 			Astrocoo source = new Astrocoo(aframe1, loc.getLongitude() * Constant.RAD_TO_DEG, loc.getLatitude() * Constant.RAD_TO_DEG, equinox1);
 			source.setPrecision(precision.getIndex());
-		    source.convertTo(aframe2);  
+		    source.convertTo(aframe2);
 
 		    LocationElement loc_out = new LocationElement(source.getLon() * Constant.DEG_TO_RAD, source.getLat() * Constant.DEG_TO_RAD, loc.getRadius());
-	      
+
 	      return loc_out;
 
 		} catch (Exception e)
 		{
 			throw new JPARSECException(e);
-		}		
+		}
 	}
 
 	/**
@@ -228,7 +228,7 @@ public class CDSQuery implements Serializable {
 		String ra = FileIO.getField(1, coordinate, " ", true)+"h ";
 		ra += FileIO.getField(2, coordinate, " ", true)+"m ";
 		ra += FileIO.getField(3, coordinate, " ", true)+"s";
-		
+
 		return Functions.parseRightAscension(ra);
 	}
 
@@ -242,7 +242,7 @@ public class CDSQuery implements Serializable {
 		String dec = FileIO.getField(1, coordinate, " ", true)+"d ";
 		dec += FileIO.getField(2, coordinate, " ", true)+"' ";
 		dec += FileIO.getField(3, coordinate, " ", true)+"''";
-		
+
 		return Functions.parseDeclination(dec);
 	}
 
@@ -256,20 +256,20 @@ public class CDSQuery implements Serializable {
 	public static LocationElement transformVizierCoordinatesToJ2000(VizierElement viz, TDSet td)
 	throws JPARSECException {
 		String ra = "", dec = "";
-		
+
 		int p = viz.getVizierFieldIndex("RAJ2000");
 		if (p >= 0) {
 			ra = td.getContent(p);
 			dec = td.getContent(p+1);
 		} else {
 			p = viz.getVizierFieldIndex("RA_ICRS");
-			if (p >= 0) 
+			if (p >= 0)
 			{
 				ra = td.getContent(p);
 				dec = td.getContent(p+1);
 			} else {
 				p = viz.getVizierFieldIndex("RA1950");
-				if (p >= 0) 
+				if (p >= 0)
 				{
 					ra = td.getContent(p);
 					dec = td.getContent(p+1);
@@ -280,7 +280,7 @@ public class CDSQuery implements Serializable {
 		}
 		return transformVizierCoordinatesToJ2000(viz, ra, dec);
 	}
-	
+
 	/**
 	 * Transform Vizier coordinates into J2000 using CDS. In case of error,
 	 * transformation will be performed using JPARSEC.
@@ -293,7 +293,7 @@ public class CDSQuery implements Serializable {
 	public static LocationElement transformVizierCoordinatesToJ2000(VizierElement viz, String ra, String dec)
 	throws JPARSECException {
 		double lon = 0.0, lat = 0.0, rad = 1.0;
-		
+
 		// Parse from degrees or vizier format
 		int r = ra.indexOf(" ");
 		if (r > 0) {
@@ -324,7 +324,7 @@ public class CDSQuery implements Serializable {
 				lat = Double.parseDouble(dec) * Constant.DEG_TO_RAD;
 			}
 		}
-		
+
 		LocationElement in = new LocationElement(lon, lat, rad);
 
 		FRAME frame1 = FRAME.FK4, frame2 = FRAME.FK4;
@@ -335,13 +335,13 @@ public class CDSQuery implements Serializable {
 			return in;
 		} else {
 			p = viz.getFieldPosition("RA_ICRS");
-			if (p >= 0) 
+			if (p >= 0)
 			{
 				frame1 = CDSQuery.FRAME.ICRS;
 				frame2 = CDSQuery.FRAME.FK5;
 			} else {
 				p = viz.getFieldPosition("RA1950");
-				if (p >= 0) 
+				if (p >= 0)
 				{
 					frame1 = CDSQuery.FRAME.FK4; // Not sure, are B1950 ?
 					frame2 = CDSQuery.FRAME.FK5;
@@ -351,7 +351,7 @@ public class CDSQuery implements Serializable {
 				}
 			}
 		}
-		
+
 		LocationElement out = new LocationElement();
 		try {
 			out = CDSQuery.query(frame1, frame2, in, precision, equinox1, equinox2);
@@ -363,7 +363,7 @@ public class CDSQuery implements Serializable {
 				out = LocationElement.parseRectangularCoordinates(J2000);
 			} else {
 				double J2000[] = jparsec.ephem.Precession.FK4_B1950ToFK5_J2000(vec);
-				out = LocationElement.parseRectangularCoordinates(J2000);				
+				out = LocationElement.parseRectangularCoordinates(J2000);
 			}
 		}
 		return out;

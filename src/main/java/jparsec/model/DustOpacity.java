@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,15 +18,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.model;
 
 import java.awt.Color;
 import java.awt.Shape;
 import java.io.Serializable;
 import java.util.ArrayList;
-
 import java.util.Arrays;
+
 import jparsec.graph.ChartElement;
 import jparsec.graph.ChartSeriesElement;
 import jparsec.graph.CreateChart;
@@ -37,7 +37,6 @@ import jparsec.io.ReadFile;
 import jparsec.io.Zip;
 import jparsec.math.Constant;
 import jparsec.math.Derivation;
-import jparsec.math.DoubleVector;
 import jparsec.math.Interpolation;
 import jparsec.util.JPARSECException;
 import jparsec.util.Translate;
@@ -45,13 +44,13 @@ import jparsec.util.Translate;
 /**
  * A model of dust absorption based on the work by B. T. Draine. For reference see
  * Draine, ApJ 636, 1114-1120 (2006).
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
 public class DustOpacity implements Serializable
 {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * The power law slope of the size distribution, coefficient p of Draine.
@@ -89,7 +88,7 @@ public class DustOpacity implements Serializable
 	 * The set of opacities as a result of solving the model.
 	 */
 	private double dustModel[];
-		
+
 	/**
 	 * Default constructor;
 	 */
@@ -99,9 +98,9 @@ public class DustOpacity implements Serializable
 	}
 
 	/**
-	 * Explicit constructor without density. Density is set to a 
+	 * Explicit constructor without density. Density is set to a
 	 * default value.
-	 * 
+	 *
 	 * @param type Grain ID constant.
 	 * @param p Size distribution, 2.5, 3, or 3.5.
 	 * @param max Maximum size, 0.1, 1, ... 10000.
@@ -119,7 +118,7 @@ public class DustOpacity implements Serializable
 
 	/**
 	 * Explicit constructor.
-	 * 
+	 *
 	 * @param type Grain ID constant.
 	 * @param p Size distribution, 2.5, 3, or 3.5.
 	 * @param max Maximum size, 0.1, 1, ... 10000.
@@ -178,7 +177,7 @@ public class DustOpacity implements Serializable
 	 * ID constant for a mixture of other grains.
 	 */
 	public static final int GRAIN_MIXTURE = 7;
-	
+
 	/**
 	 * The different grains.
 	 */
@@ -192,11 +191,11 @@ public class DustOpacity implements Serializable
 	 * Available grain maximum sizes in microns.
 	 */
 	public static final String AVAILABLE_SIZES[] = new String[] {"0.1", "1", "10" ,"100", "1000", "10000"};
-	
+
 	/**
 	 * Gets the refractive index from certain file name. This method is intended to be
 	 * used with the files contained in the dust jar file.
-	 * 
+	 *
 	 * @param wavelength Wavelenth in microns, between 0.001 and 1000.
 	 * @param fileName Name of the file to read, with extension but without path.
 	 * @return The real and imaginary parts of the function, in microns.
@@ -207,7 +206,7 @@ public class DustOpacity implements Serializable
 		String filePath = FileIO.DATA_DUST_DRAINE_DIRECTORY;
 		if (fileName.equals("")) return new double[] {0.0, 0.0};
 		filePath += fileName;
-		
+
 		ArrayList<String> v = ReadFile.readResource(filePath);
 		ArrayList<Double> sizes = new ArrayList<Double>();
 		ArrayList<Double> wavelengths = new ArrayList<Double>();
@@ -276,7 +275,7 @@ public class DustOpacity implements Serializable
 	/**
 	 * Gets the refractive index for certain grain. Currently unavailable for
 	 * PAH and graphite.
-	 * 
+	 *
 	 * @param wavelength Wavelenth in microns, between 0.001 and 1000.
 	 * @return The real and imaginary parts of the function, in microns.
 	 * @throws JPARSECException If an error occurs.
@@ -287,7 +286,7 @@ public class DustOpacity implements Serializable
 		String fileName = this.getRefractiveIndexFileName();
 		if (fileName.equals("")) return new double[] {0.0, 0.0};
 		filePath += fileName;
-		
+
 		ArrayList<String> v = ReadFile.readResource(filePath);
 		ArrayList<Double> sizes = new ArrayList<Double>();
 		ArrayList<Double> wavelengths = new ArrayList<Double>();
@@ -420,7 +419,7 @@ public class DustOpacity implements Serializable
 	/**
 	 * Obtains the default density for a given grain. For reference see for
 	 * example Weingartner & Draine 2000.
-	 * 
+	 *
 	 * @return Density in g/cm^3.
 	 * @throws JPARSECException If the grain does not exist.
 	 */
@@ -460,7 +459,7 @@ public class DustOpacity implements Serializable
 
 	/**
 	 * Obtains the default sublimation temperature for a given grain.
-	 * 
+	 *
 	 * @return Sublimation temperature in K.
 	 * @throws JPARSECException If the grain does not exist.
 	 */
@@ -497,7 +496,7 @@ public class DustOpacity implements Serializable
 
 		return Tsub;
 	}
-	
+
 	/**
 	 * Solves a dust model returning the set of opacities. This method is not
 	 * recommended due to the high computer time that requires.
@@ -516,7 +515,7 @@ public class DustOpacity implements Serializable
 		if (dust.length == 1 && dust[0].grainType == DustOpacity.GRAIN_MIXTURE && dust[0].dustModel.length == waves.length) {
 			return dust;
 		}
-		
+
 		DustOpacity newModel[] = new DustOpacity[dust.length];
 		for (int j=0; j<dust.length; j++)
 		{
@@ -531,20 +530,20 @@ public class DustOpacity implements Serializable
 				double k[] = newModel[j].getMieCoefficients(waves[i], np);
 				newModel[j].dustModel[i] = k[MieTheory.INDEX_OF_ABSORPTION_COEFFICIENT];
 				if (newModel[j].dustModel[i] < 0.0) newModel[j].dustModel[i] = 0.0;
-			}			
+			}
 		}
-		
+
 		return newModel;
 	}
 
 	/**
-	 * Obtains the cross sections for absorption, scattering, and extinction of dust 
+	 * Obtains the cross sections for absorption, scattering, and extinction of dust
 	 * for a given size distribution. An integration
 	 * is performed from 5E-3 microns up to the given maximum dust radius. This
 	 * method ussually requires a a lot of computing time.<P>
-	 * 
+	 *
 	 * For graphite the 1/3-2/3 approximation is used. See Draine and Malhotra 1993.
-	 * 
+	 *
 	 * @param wavelength Wavelenth in microns, between 0.001 and 1000.
 	 * @param np Number of points to use when integrating in size. Recommended
 	 * values are from 500 to 5000 to get an accurate result.
@@ -558,7 +557,7 @@ public class DustOpacity implements Serializable
 		if (this.grainType == DustOpacity.GRAIN_PAH_CARBONACEOUS_ION ||
 				this.grainType == DustOpacity.GRAIN_PAH_CARBONACEOUS_NEUTRAL)
 			throw new JPARSECException("cannot apply Mie theory to this grain.");
-		
+
 		if (this.grainType == DustOpacity.GRAIN_GRAPHITE)
 		{
 			String fileName = "callindex.out_CpaD03_0.01.txt";
@@ -617,9 +616,9 @@ public class DustOpacity implements Serializable
 			for (int j=0; j<dust.length; j++)
 			{
 				newModel[j].dustModel[i] += newModel[j].getAbsorptionCoefficientUsingTabulatedValues(waves[i], interpolate);
-			}			
+			}
 		}
-		
+
 		return newModel;
 	}
 
@@ -658,9 +657,9 @@ public class DustOpacity implements Serializable
 			this.dustModel[i] = this.getAbsorptionCoefficientUsingTabulatedValues(waves[i], interpolate);
 		}
 	}
-	
+
 	/**
-	 * Returns the absorption coefficient for the current instance for a 
+	 * Returns the absorption coefficient for the current instance for a
 	 * given wavelength index. A previous model should be defined and solved
 	 * before calling this method.
 	 * @param index Index of the array of wavelengths.
@@ -672,7 +671,7 @@ public class DustOpacity implements Serializable
 	}
 
 	/**
-	 * Returns the absorption coefficient for the current instance for all 
+	 * Returns the absorption coefficient for the current instance for all
 	 * wavelength indexes. A previous model should be defined and solved
 	 * before calling this method.
 	 * @return Dust opacities.
@@ -691,7 +690,7 @@ public class DustOpacity implements Serializable
 	{
 		this.dustModel = opacities;
 	}
-	
+
 	/**
 	 * Obtains the set of wavelengths used to create the tables of opacities and
 	 * other tabulated values. 100 points in log scale between 0.1 and 1000 microns.
@@ -702,19 +701,19 @@ public class DustOpacity implements Serializable
 		double minWave = 0.1, maxWave = 1000;
 		int npLambda = 100;
 		double wavelengths[] = DataSet.getSetOfValues(minWave, maxWave, npLambda, true);
-		
+
 		return wavelengths;
 	}
-	
+
 	/**
 	 * Gets the absorption coefficient from tabulated tables. The opacity
 	 * is only available for {@linkplain DustOpacity#sizeMax} = 0.1, 1, 10, 100,
 	 * 1000, and 10000 microns. Available values of {@linkplain DustOpacity#sizeDistributionCoefficient}
 	 * are 2.5, 3.0, and 3.5. Wavelength should be between 1 and 1000 microns.<P>
-	 * 
+	 *
 	 * Exceptions: for astronomical silicate the grain maximum size 100000 microns is
 	 * also available.
-	 * 
+	 *
 	 * @param wave Wavelength in microns.
 	 * @param interpolate True to interpolate in 3d between the maximum grain size and the
 	 * grain size distribution slope along all available range of values. If false and the input
@@ -726,7 +725,7 @@ public class DustOpacity implements Serializable
 	throws JPARSECException {
 		double availableSizes[] = new double[] {0.1, 1, 10, 100, 1000, 10000};
 		double availableSizeDistributions[] = new double[] {3.5, 3.0, 2.5};
-		
+
 		String availableS = "", availableSD = "";
 		boolean ok1 = false;
 		for (int i=0; i<availableSizes.length; i++)
@@ -738,12 +737,12 @@ public class DustOpacity implements Serializable
 		if (!ok1 && this.sizeMax == 100000 && this.grainType == DustOpacity.GRAIN_ASTRONOMICAL_SILICATE)
 			ok1 = true;
 
-		
+
 		if (!ok1 && !interpolate) throw new JPARSECException("grain maximum size not available. " +
 				"Size max ("+this.sizeMax+") should be one of "+availableS+".");
 
 		if (interpolate && (this.sizeMax < DataSet.getMinimumValue(availableSizes) ||
-				this.sizeMax > DataSet.getMaximumValue(availableSizes))) 
+				this.sizeMax > DataSet.getMaximumValue(availableSizes)))
 			throw new JPARSECException("grain maximum size not available. " +
 				"Size max ("+this.sizeMax+") should be between "+DataSet.getMinimumValue(availableSizes)+
 				" and "+DataSet.getMaximumValue(availableSizes)+".");
@@ -755,18 +754,18 @@ public class DustOpacity implements Serializable
 			availableSD += availableSizeDistributions[i];
 			if (i<(availableSizeDistributions.length-1)) availableSD += ", ";
 		}
-		
+
 		if (!ok2 && !interpolate) throw new JPARSECException("grain size distribution coefficient not available. " +
 				"Size distribution coefficient " +
 						"(" + this.sizeDistributionCoefficient+ ") should be one of "+availableSD+".");
-		
+
 		if (interpolate && (this.sizeDistributionCoefficient < DataSet.getMinimumValue(availableSizeDistributions) ||
 				this.sizeDistributionCoefficient > DataSet.getMaximumValue(availableSizeDistributions)))
 			throw new JPARSECException("grain size distribution coefficient not available. " +
 					"Size distribution coefficient " +
 							"(" + this.sizeDistributionCoefficient+ ") should be between "+DataSet.getMinimumValue(availableSizeDistributions)+"" +
 									" and "+DataSet.getMaximumValue(availableSizeDistributions)+".");
-		
+
 
 		double k = 0.0;
 		if (ok2)
@@ -819,7 +818,7 @@ public class DustOpacity implements Serializable
 				}
 				double w[] = DataSet.arrayListToDoubleArray(waves);
 				double c[] = DataSet.arrayListToDoubleArray(coefs);
-				
+
 				Interpolation i = new Interpolation(w, c, true);
 				k = i.linearInterpolationInLogScale(wave);
 			}
@@ -842,7 +841,7 @@ public class DustOpacity implements Serializable
 					coefs.add(new Double(Double.parseDouble(FileIO.getField(field, line, " ", true))));
 					coefs2.add(new Double(dust.sizeDistributionCoefficient));
 				}
-			}				
+			}
 
 			if (this.sizeDistributionCoefficient < 3.0) {
 				dust.sizeDistributionCoefficient = 2.5;
@@ -859,16 +858,16 @@ public class DustOpacity implements Serializable
 					coefs.add(new Double(Double.parseDouble(FileIO.getField(field, line, " ", true))));
 					coefs2.add(new Double(dust.sizeDistributionCoefficient));
 				}
-			}				
+			}
 			double w[] = DataSet.arrayListToDoubleArray(waves);
 			double c[] = DataSet.arrayListToDoubleArray(coefs);
 			double c2[] = DataSet.arrayListToDoubleArray(coefs2);
-				
+
 			Interpolation i = new Interpolation(w, c, c2, true);
 			k = i.linearInterpolation3d(wave, this.sizeDistributionCoefficient);
 		}
 
-		return k;		
+		return k;
 	}
 
 	/**
@@ -876,10 +875,10 @@ public class DustOpacity implements Serializable
 	 * is only available for {@linkplain DustOpacity#sizeMax} = 0.1, 1, 10, 100,
 	 * 1000, and 10000 microns. Available values of {@linkplain DustOpacity#sizeDistributionCoefficient}
 	 * are 2.5, 3.0, and 3.5. Wavelength should be between 1 and 1000 microns.<P>
-	 * 
+	 *
 	 * Exceptions: for astronomical silicate the grain maximum size 100000 microns is
 	 * also available.
-	 * 
+	 *
 	 * @param wave Wavelength in microns.
 	 * @param interpolate True to interpolate in 3d between the maximum grain size and the
 	 * grain size distribution slope along all available range of values. If false and the input
@@ -891,7 +890,7 @@ public class DustOpacity implements Serializable
 	throws JPARSECException {
 		double availableSizes[] = new double[] {0.1, 1, 10, 100, 1000, 10000};
 		double availableSizeDistributions[] = new double[] {3.5, 3.0, 2.5};
-		
+
 		String availableS = "", availableSD = "";
 		boolean ok = false;
 		for (int i=0; i<availableSizes.length; i++)
@@ -903,12 +902,12 @@ public class DustOpacity implements Serializable
 		if (!ok && this.sizeMax == 100000 && this.grainType == DustOpacity.GRAIN_ASTRONOMICAL_SILICATE)
 			ok = true;
 
-		
+
 		if (!ok && !interpolate) throw new JPARSECException("grain maximum size not available. " +
 				"Size max ("+this.sizeMax+") should be one of "+availableS+".");
 
 		if (interpolate && (this.sizeMax < DataSet.getMinimumValue(availableSizes) ||
-				this.sizeMax > DataSet.getMaximumValue(availableSizes))) 
+				this.sizeMax > DataSet.getMaximumValue(availableSizes)))
 			throw new JPARSECException("grain maximum size not available. " +
 				"Size max ("+this.sizeMax+") should be between "+DataSet.getMinimumValue(availableSizes)+
 				" and "+DataSet.getMaximumValue(availableSizes)+".");
@@ -920,18 +919,18 @@ public class DustOpacity implements Serializable
 			availableSD += availableSizeDistributions[i];
 			if (i<(availableSizeDistributions.length-1)) availableSD += ", ";
 		}
-		
+
 		if (!ok && !interpolate) throw new JPARSECException("grain size distribution coefficient not available. " +
 				"Size distribution coefficient " +
 						"(" + this.sizeDistributionCoefficient+ ") should be one of "+availableSD+".");
-		
+
 		if (interpolate && (this.sizeDistributionCoefficient < DataSet.getMinimumValue(availableSizeDistributions) ||
 				this.sizeDistributionCoefficient > DataSet.getMaximumValue(availableSizeDistributions)))
 			throw new JPARSECException("grain size distribution coefficient not available. " +
 					"Size distribution coefficient " +
 							"(" + this.sizeDistributionCoefficient+ ") should be between "+DataSet.getMinimumValue(availableSizeDistributions)+"" +
 									" and "+DataSet.getMaximumValue(availableSizeDistributions)+".");
-		
+
 
 		String fn = DataSet.replaceAll(this.getTabulatedFileName(), "abs.txt", "ext.txt", false);
 		String jarpath = FileIO.DATA_DUST_DIRECTORY + fn;
@@ -949,11 +948,11 @@ public class DustOpacity implements Serializable
 		}
 		double w[] = DataSet.arrayListToDoubleArray(waves);
 		double c[] = DataSet.arrayListToDoubleArray(coefs);
-		
+
 		Interpolation i = new Interpolation(w, c, true);
 		double k = i.linearInterpolationInLogScale(wave);
 		return k;
-		
+
 	}
 
 	public String getTabulatedFileName() throws JPARSECException
@@ -989,10 +988,10 @@ public class DustOpacity implements Serializable
 	 * is only available for {@linkplain DustOpacity#sizeMax} = 1, 10, 100,
 	 * 1000, and 10000 microns. Available values of {@linkplain DustOpacity#sizeDistributionCoefficient}
 	 * are 2.5, 3.0, and 3.5. Wavelength should be between 1 and 1000 microns.<P>
-	 * 
+	 *
 	 * Exceptions: for astronomical silicate the grain maximum size 100000 microns is
 	 * also available.
-	 * 
+	 *
 	 * @param wave Wavelength in microns.
 	 * @param interpolate True to interpolate in 3d between the maximum grain size and the
 	 * grain size distribution slope along all available range of values. If false and the input
@@ -1012,10 +1011,10 @@ public class DustOpacity implements Serializable
 			wmin = 999.9;
 			wmax = 1000;
 		}
-		
+
 		double kmin = this.getAbsorptionCoefficientUsingTabulatedValues(wmin, interpolate);
 		double kmax = this.getAbsorptionCoefficientUsingTabulatedValues(wmax, interpolate);
-		
+
 		double nulogMin = Math.log(Constant.SPEED_OF_LIGHT * 1E6 / wmin);
 		double nulogMax = Math.log(Constant.SPEED_OF_LIGHT * 1E6 / wmax);
 
@@ -1025,24 +1024,24 @@ public class DustOpacity implements Serializable
 	/**
 	 * Gets the dust opacity and spectral index. Opacity is calculated for
 	 * both wavelengths provided, while the beta between both wavelengths.
-	 * 
+	 *
 	 * @param wmin Wavelength in microns.
 	 * @param wmax Wavelength in microns.
 	 * @param np Number of sizes in the integration. From 500 to 5000
 	 * recommended.
-	 * @return Dust opacity for the first and second wavelengths, and 
+	 * @return Dust opacity for the first and second wavelengths, and
 	 * spectral index in the third component.
 	 * @throws JPARSECException If an error occurs.
 	 */
 	public double[] getOpacityAndSpectralIndex(double wmin, double wmax, int np)
 	throws JPARSECException {
-		
-		DustOpacity d[] = DustOpacity.solveDustModel(new DustOpacity[] {(DustOpacity) this.clone()}, new double[] {wmin, 
+
+		DustOpacity d[] = DustOpacity.solveDustModel(new DustOpacity[] {(DustOpacity) this.clone()}, new double[] {wmin,
 				wmax}, np);
-		
+
 		double kmin = d[0].getDustModelAtIndex(0); // .getAbsoptionCoefficientUsingTabulatedValues(wmin);
 		double kmax = d[0].getDustModelAtIndex(1); //this.getAbsoptionCoefficientUsingTabulatedValues(wmax);
-		
+
 		double nulogMin = Math.log(Constant.SPEED_OF_LIGHT * 1E6 / wmin);
 		double nulogMax = Math.log(Constant.SPEED_OF_LIGHT * 1E6 / wmax);
 
@@ -1054,11 +1053,11 @@ public class DustOpacity implements Serializable
 	}
 
 	/**
-	 * Returns a chart with the opacity as function of wavelength. Also 
+	 * Returns a chart with the opacity as function of wavelength. Also
 	 * creates a chart with beta as function of wavelength. Opacities are
 	 * taken from tabulated tables, so they are only available for certain
 	 * set of input parameters.
-	 * 
+	 *
 	 * @param minWave Minimum wavelength for the chart in microns. Equal or
 	 *        greater than 1 microns.
 	 * @param maxWave Maximum wavelength for the chart in microns. Equal or
@@ -1069,7 +1068,7 @@ public class DustOpacity implements Serializable
 	 * @return The opacity and beta charts.
 	 * @throws JPARSECException If an error occurs.
 	 */
-	public CreateChart[] getOpacityAndBetaCharts(double minWave, double maxWave, 
+	public CreateChart[] getOpacityAndBetaCharts(double minWave, double maxWave,
 			boolean interpolate) throws JPARSECException
 	{
 		double waves[] = DataSet.getSetOfValues(minWave, maxWave, 100, true);
@@ -1111,13 +1110,13 @@ public class DustOpacity implements Serializable
 				Translate.translate(Translate.JPARSEC_SPECTRAL_INDEX_OF)+" " + name + " ("+Translate.translate(Translate.JPARSEC_MAXIMUM_SIZE_OF)+" "+this.sizeMax+" @mum)", Translate.translate(Translate.JPARSEC_WAVELENGTH)+" (@mum)", Translate.translate(Translate.JPARSEC_SPECTRAL_INDEX), name + " "+Translate.translate(Translate.JPARSEC_SPECTRAL_INDEX).toLowerCase(), true);
 		return new CreateChart[] {ch, ch2};
 	}
-	
+
 	/**
-	 * Returns a chart with the opacity as function of wavelength for 2 grains. Also 
+	 * Returns a chart with the opacity as function of wavelength for 2 grains. Also
 	 * creates a chart with beta as function of wavelength. Opacities are
 	 * taken from tabulated tables, so they are only available for certain
 	 * set of input parameters.
-	 * 
+	 *
 	 * @param dust1 First dust model.
 	 * @param dust2 Second dust model.
 	 * @param minWave Minimum wavelength for the chart in microns. Equal or
@@ -1152,20 +1151,20 @@ public class DustOpacity implements Serializable
 		{
 			total[i] = DustOpacity.getTotalOpacity(new DustOpacity[] {dust1, dust2}, i, 0.0);
 		}
-		
+
 		String name1 = dust1.getDustName();
 		String name2 = dust2.getDustName();
 
-		
+
 		CreateChart ch = null;
 		if (showMixture) {
-			ch = DustOpacity.getChartWithThreeDataSets(waves, opacities1, waves, 
-				opacities2, waves, total, name1, name2, Translate.translate(Translate.JPARSEC_TOTAL), Translate.translate(Translate.JPARSEC_OPACITY_FOR_MAXIMUM_SIZE_OF)+" "+dust1.sizeMax+" @mum", 
+			ch = DustOpacity.getChartWithThreeDataSets(waves, opacities1, waves,
+				opacities2, waves, total, name1, name2, Translate.translate(Translate.JPARSEC_TOTAL), Translate.translate(Translate.JPARSEC_OPACITY_FOR_MAXIMUM_SIZE_OF)+" "+dust1.sizeMax+" @mum",
 				Translate.translate(Translate.JPARSEC_WAVELENGTH)+" (@mum)", Translate.translate(Translate.JPARSEC_OPACITY)+" (cm^{2} g^{-1})", true, true, 600, 600);
 		} else {
-			ch = DustOpacity.getChartWithTwoDataSets(waves, opacities1, waves, 
-					opacities2, name1, name2, Translate.translate(Translate.JPARSEC_OPACITY_FOR_MAXIMUM_SIZE_OF)+" "+dust1.sizeMax+" @mum", 
-					Translate.translate(Translate.JPARSEC_WAVELENGTH)+" (@mum)", Translate.translate(Translate.JPARSEC_OPACITY)+" (cm^{2} g^{-1})", true, true, 600, 600);			
+			ch = DustOpacity.getChartWithTwoDataSets(waves, opacities1, waves,
+					opacities2, name1, name2, Translate.translate(Translate.JPARSEC_OPACITY_FOR_MAXIMUM_SIZE_OF)+" "+dust1.sizeMax+" @mum",
+					Translate.translate(Translate.JPARSEC_WAVELENGTH)+" (@mum)", Translate.translate(Translate.JPARSEC_OPACITY)+" (cm^{2} g^{-1})", true, true, 600, 600);
 		}
 
 		// Beta chart
@@ -1205,18 +1204,18 @@ public class DustOpacity implements Serializable
 
 		CreateChart ch2 = null;
 		if (showMixture) {
-			ch2 = DustOpacity.getChartWithThreeDataSets(betawaves, betas1, betawaves, 
-				betas2, betawaves, betasT, name1, name2, Translate.translate(Translate.JPARSEC_TOTAL), Translate.translate(Translate.JPARSEC_SPECTRAL_INDEX_FOR_MAXIMUM_SIZE_OF)+" "+dust1.sizeMax+" @mum", 
+			ch2 = DustOpacity.getChartWithThreeDataSets(betawaves, betas1, betawaves,
+				betas2, betawaves, betasT, name1, name2, Translate.translate(Translate.JPARSEC_TOTAL), Translate.translate(Translate.JPARSEC_SPECTRAL_INDEX_FOR_MAXIMUM_SIZE_OF)+" "+dust1.sizeMax+" @mum",
 				Translate.translate(Translate.JPARSEC_WAVELENGTH)+" (@mum)", Translate.translate(Translate.JPARSEC_SPECTRAL_INDEX), true, true, 600, 600);
 		} else {
-			ch2 = DustOpacity.getChartWithTwoDataSets(betawaves, betas1, betawaves, 
-					betas2, name1, name2, Translate.translate(Translate.JPARSEC_SPECTRAL_INDEX_FOR_MAXIMUM_SIZE_OF)+" "+dust1.sizeMax+" @mum", 
-					Translate.translate(Translate.JPARSEC_WAVELENGTH)+" (@mum)", Translate.translate(Translate.JPARSEC_SPECTRAL_INDEX), true, true, 600, 600);			
+			ch2 = DustOpacity.getChartWithTwoDataSets(betawaves, betas1, betawaves,
+					betas2, name1, name2, Translate.translate(Translate.JPARSEC_SPECTRAL_INDEX_FOR_MAXIMUM_SIZE_OF)+" "+dust1.sizeMax+" @mum",
+					Translate.translate(Translate.JPARSEC_WAVELENGTH)+" (@mum)", Translate.translate(Translate.JPARSEC_SPECTRAL_INDEX), true, true, 600, 600);
 		}
 
 		return new CreateChart[] {ch, ch2};
 	}
-	
+
 	private static CreateChart getChartWithTwoDataSets(double x1[], double y1[], double x2[], double y2[],
 			String label1, String label2, String title, String xlabel, String ylabel, boolean
 			logScaleX, boolean logScaleY, int width, int height)
@@ -1239,7 +1238,7 @@ public class DustOpacity implements Serializable
 		chart.showErrorBars = false;
 		chart.xTickLabels = ChartElement.TICK_LABELS.LOGARITHM_VALUES;
 		chart.yTickLabels = ChartElement.TICK_LABELS.LOGARITHM_VALUES;
-	
+
 		chart.xAxisInLogScale = logScaleX;
 		chart.yAxisInLogScale = logScaleY;
 
@@ -1275,7 +1274,7 @@ public class DustOpacity implements Serializable
 		chart.showErrorBars = false;
 		chart.xTickLabels = ChartElement.TICK_LABELS.LOGARITHM_VALUES;
 		chart.yTickLabels = ChartElement.TICK_LABELS.LOGARITHM_VALUES;
-	
+
 		chart.xAxisInLogScale = logScaleX;
 		chart.yAxisInLogScale = logScaleY;
 
@@ -1306,10 +1305,10 @@ public class DustOpacity implements Serializable
 		k = k / sum;
 		return k;
 	}
-	
+
 	/**
 	 * Transforms Hz to microns.
-	 * 
+	 *
 	 * @param nu Frequency in Hz.
 	 * @return Wavelength in microns.
 	 */
@@ -1335,9 +1334,8 @@ public class DustOpacity implements Serializable
 		d.sizeMax = this.sizeMax;
 		return d;
 	}
-
 	/**
-	 * Checks if two instances contain the same data.
+	 * Checks if two instances contains the same data.
 	 */
 	@Override
 	public boolean equals(Object o) {
@@ -1375,13 +1373,13 @@ public class DustOpacity implements Serializable
 	/**
 	 * Transforms a set of {@linkplain DustOpacity} objects into a sole
 	 * object, equivalent to the corresponding mixture of grains.<P>
-	 * 
+	 *
 	 * Grain maximum size and size distribution, as well as the size of the
 	 * array of opacities, are taken from the first element in the mixture.
 	 * All the elements should have the same grain maximum size, size
 	 * distribution, and opacities for the same array of wavelengths. Otherwise
 	 * the mixture will not be suitable for calculations.
-	 * 
+	 *
 	 * @param dustModel A set of models for a given dust mixture.
 	 * @return An unique model for the mixture.
 	 * @throws JPARSECException If an error occurs.
@@ -1390,7 +1388,7 @@ public class DustOpacity implements Serializable
 	throws JPARSECException {
 		DustOpacity dust = new DustOpacity();
 		dust.grainType = DustOpacity.GRAIN_MIXTURE;
-		
+
 		int l = dustModel.length;
 		double density = 0.0, abundance = 0.0;
 		for (int i=0; i<l; i++)
@@ -1402,17 +1400,17 @@ public class DustOpacity implements Serializable
 		dust.abundanceFraction = 1.0;
 		dust.sizeMax = dustModel[0].sizeMax;
 		dust.sizeDistributionCoefficient = dustModel[0].sizeDistributionCoefficient;
-		
+
 		dust.dustModel = new double[dustModel[0].dustModel.length];
 		l = dust.dustModel.length;
 		for (int i=0; i<l; i++)
 		{
 			dust.dustModel[i] = DustOpacity.getTotalOpacity(dustModel, i, 0.0);
-		}		
-		
+		}
+
 		return dust;
 	}
-	
+
 	/**
 	 * Obtains the opacity and spectral index charts for a given grain and
 	 * wavelength. The charts are created for different grain size
@@ -1420,13 +1418,13 @@ public class DustOpacity implements Serializable
 	 * grain size. This method should be used with caution since it
 	 * could spend a lot of computing time.
 	 * <P>
-	 * The maximum wavelength is used for the opacity chart (unless false is given 
+	 * The maximum wavelength is used for the opacity chart (unless false is given
 	 * in the max param), while the
 	 * spectral index is calculated between the minimum and the maximum
 	 * provided wavelengths.
-	 * 
+	 *
 	 * @param grain The grain ID constant.
-	 * @param npoints The number of points between 1 and 1000 microns to 
+	 * @param npoints The number of points between 1 and 1000 microns to
 	 * use in the chart.
 	 * @param np The number of sizes to integrate.
 	 * @param wmin The minimum wavelength for the charts.
@@ -1454,7 +1452,7 @@ public class DustOpacity implements Serializable
 		double x[] = new double[npoints];
 		double y_k[] = new double[npoints];
 		double y_beta[] = new double[npoints];
-		
+
 		for (double p=2.5; p<=3.5; p = p + 0.5)
 		{
 			for (int size = 0; size < sizes.length; size ++)
@@ -1466,7 +1464,7 @@ public class DustOpacity implements Serializable
 				if (!max) y_k[size] = val[0];
 				y_beta[size] = val[2];
 			}
-			
+
 			serie ++;
 			ChartSeriesElement chartSeries_k = new ChartSeriesElement(
 					(double[]) x.clone(),
@@ -1489,11 +1487,11 @@ public class DustOpacity implements Serializable
 		}
 
 		ChartElement chart_k = new ChartElement(series_k, ChartElement.TYPE.XY_CHART, ChartElement.SUBTYPE.XY_SCATTER,
-				Translate.translate(Translate.JPARSEC_OPACITY_OF)+" "+grainName.toLowerCase(), "a_{max} (@mum)", 
+				Translate.translate(Translate.JPARSEC_OPACITY_OF)+" "+grainName.toLowerCase(), "a_{max} (@mum)",
 				"k_{@nu} (cm^{2} g^{-1})", false, 500, 550);
 		chart_k.xAxisInLogScale = true;
 		ChartElement chart_beta = new ChartElement(series_beta, ChartElement.TYPE.XY_CHART, ChartElement.SUBTYPE.XY_SCATTER,
-				Translate.translate(Translate.JPARSEC_SPECTRAL_INDEX_OF)+" "+grainName.toLowerCase(), "a_{max} (@mum)", 
+				Translate.translate(Translate.JPARSEC_SPECTRAL_INDEX_OF)+" "+grainName.toLowerCase(), "a_{max} (@mum)",
 				"@beta", false, 500, 550);
 		chart_beta.xAxisInLogScale = true;
 		CreateChart ch[] = new CreateChart[] {new CreateChart(chart_k), new CreateChart(chart_beta)};
@@ -1507,13 +1505,13 @@ public class DustOpacity implements Serializable
 	 * grain size. This method should be used with caution since it
 	 * could spend a lot of computing time.
 	 * <P>
-	 * The maximum wavelength is used for the opacity chart (unless false is given 
+	 * The maximum wavelength is used for the opacity chart (unless false is given
 	 * in the max param, in that case the minimum wavelength), while the
 	 * spectral index is calculated between the minimum and the maximum
 	 * provided wavelengths.
-	 * 
+	 *
 	 * @param mixture The grain mixture.
-	 * @param npoints The number of points between 1 and 10000 microns to 
+	 * @param npoints The number of points between 1 and 10000 microns to
 	 * use for the grain maximum size.
 	 * @param np The number of sizes to integrate.
 	 * @param wmin The minimum wavelength for the charts.
@@ -1562,7 +1560,7 @@ public class DustOpacity implements Serializable
 				if (!max) y_k[size] = val[0];
 				y_beta[size] = val[2];
 			}
-			
+
 			serie ++;
 			ChartSeriesElement chartSeries_k = new ChartSeriesElement(
 					(double[]) x.clone(),
@@ -1585,11 +1583,11 @@ public class DustOpacity implements Serializable
 		}
 
 		ChartElement chart_k = new ChartElement(series_k, ChartElement.TYPE.XY_CHART, ChartElement.SUBTYPE.XY_SCATTER,
-				Translate.translate(Translate.JPARSEC_OPACITY_OF)+" "+grainName, "a_{max} (@mum)", 
+				Translate.translate(Translate.JPARSEC_OPACITY_OF)+" "+grainName, "a_{max} (@mum)",
 				"k_{@nu} (cm^{2} g^{-1})", false, 500, 550);
 		chart_k.xAxisInLogScale = true;
 		ChartElement chart_beta = new ChartElement(series_beta, ChartElement.TYPE.XY_CHART, ChartElement.SUBTYPE.XY_SCATTER,
-				Translate.translate(Translate.JPARSEC_SPECTRAL_INDEX_OF)+" "+grainName, "a_{max} (@mum)", 
+				Translate.translate(Translate.JPARSEC_SPECTRAL_INDEX_OF)+" "+grainName, "a_{max} (@mum)",
 				"@beta", false, 500, 550);
 		chart_beta.xAxisInLogScale = true;
 		CreateChart ch[] = new CreateChart[] {new CreateChart(chart_k), new CreateChart(chart_beta)};

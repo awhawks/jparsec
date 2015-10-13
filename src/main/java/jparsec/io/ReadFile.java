@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,13 +18,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.io;
 
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -68,7 +67,7 @@ import jparsec.graph.DataSet;
 
 /**
  * A suitable class for reading files in the hard disk or located inside
- * any of the .jar files of the dependencies, for instance orbital elements 
+ * any of the .jar files of the dependencies, for instance orbital elements
  * of comets and asteroids. Available formats are SkyMap and Minor Planet Center.
  * When reading files with an instance of this class be aware that there's an
  * internal restriction about the number of times a given file can be read and
@@ -76,15 +75,15 @@ import jparsec.graph.DataSet;
  * is internally set to 3, which means, for instance, that 3 is the maximum allowed
  * number of different sky renderings that can be hold in memory per thread. This
  * is obviously done to save memory. When changing the time in sky rendering many times,
- * only the set of objects (orbital elements for comets and asteroids, list of stars, 
- * ...) corrsponding to the 3 most recent renderings are in memory using the 
+ * only the set of objects (orbital elements for comets and asteroids, list of stars,
+ * ...) corrsponding to the 3 most recent renderings are in memory using the
  * {@linkplain DataBase} class. This value (3) is the value of {@linkplain Configuration#MAX_CACHE_SIZE},
  * and can be changed, but it is not recommended to increase it.
  * <P>
  * NOTE: The availability of the SkyMap format is only for our practical
  * purposes, since it is a popular commercial program used by astronomers. This
  * does not mean any particular interest at all.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  * @see FileFormatElement
@@ -95,7 +94,7 @@ import jparsec.graph.DataSet;
  */
 public class ReadFile implements Serializable
 {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Empty constructor. Note the path must be provided
@@ -105,13 +104,13 @@ public class ReadFile implements Serializable
 	public ReadFile() {
 		//setID();
 	}
-	
+
 	/**
 	 * Constructor for a given format and path.
 	 * @param format Format to read.
 	 * @param path Path of the .jar file to read. Constants defined
 	 * in other classes depending of what is going to be read: for example,
-	 * {@linkplain Spacecraft}, {@linkplain OrbitEphem}, {@linkplain StarEphem}, 
+	 * {@linkplain Spacecraft}, {@linkplain OrbitEphem}, {@linkplain StarEphem},
 	 * and so on.
 	 * @throws JPARSECException In case the path is null.
 	 */
@@ -125,7 +124,7 @@ public class ReadFile implements Serializable
 	 * Constructor for a given format and path.
 	 * @param path Path of the .jar file to read. Constants defined
 	 * in other classes depending of what is going to be read: for example,
-	 * {@linkplain Spacecraft}, {@linkplain OrbitEphem}, {@linkplain StarEphem}, 
+	 * {@linkplain Spacecraft}, {@linkplain OrbitEphem}, {@linkplain StarEphem},
 	 * and so on.
 	 * @param encoding The encoding. Constants defined in this class.
 	 * @throws JPARSECException In case the path is null.
@@ -159,12 +158,12 @@ public class ReadFile implements Serializable
 	private String consName = null;
 	private LocationElement consLoc = null;
 	private double consRadius = 0;
-	
+
 	private static String ids[] = new String[0];
 	private String id = null;
 	private void setID() throws JPARSECException {
 		if (pathToFile == null || pathToFile.equals("null")) throw new JPARSECException("Path cannot be null!");
-		
+
 		if (id != null) {
 			DataBase.addData(this.getDataBaseID(), threadName, null, inMemory);
 			try {
@@ -172,7 +171,7 @@ public class ReadFile implements Serializable
 			} catch (Exception e) { e.printStackTrace(); }
 			// System.out.println("*** Re-eliminated "+id);
 		}
-		
+
 		int index = 0;
 		while(true) {
 			String id = pathToFile+"_"+encoding+"_"+index;
@@ -183,7 +182,7 @@ public class ReadFile implements Serializable
 		if (index >= Configuration.MAX_CACHE_SIZE) {
 			index = 0;
 			if (threadName == null) threadName = ApplicationLauncher.getProcessID();
-			
+
 			id = pathToFile+"_"+encoding+"_0";
 			DataBase.addData(this.getDataBaseID(), threadName, null, inMemory);
 			try {
@@ -191,7 +190,7 @@ public class ReadFile implements Serializable
 			} catch (Exception e) { e.printStackTrace(); }
 			// System.out.println("*** Eliminated "+id);
 		}
-		
+
 		if (index < Configuration.MAX_CACHE_SIZE-1) {
 			id = pathToFile+"_"+encoding+"_"+(index+1);
 			if (DataSet.getIndex(ids, id) >= 0) {
@@ -206,8 +205,8 @@ public class ReadFile implements Serializable
 		id = pathToFile+"_"+encoding+"_"+index;
 		ids = DataSet.addStringArray(ids, new String[] {id});
 		// System.out.println("*** Loaded "+id);
-		
-/*		
+
+/*
 		do {
 			double n = Math.random();
 			id = ""+n;
@@ -215,13 +214,13 @@ public class ReadFile implements Serializable
 		} while (index >= 0);
 		this.id = id;
 		ids = DataSet.addStringArray(ids, new String[] {id});
-*/		
+*/
 	}
-	
+
 	/**
 	 * Obtain an {@linkplain OrbitalElement} object from a line of a file of orbital elements
 	 * of asteroids.
-	 * 
+	 *
 	 * @param asteroid A full line of the file.
 	 * @return {@linkplain OrbitalElement} object full of data.
 	 * @throws JPARSECException If the reference time is invalid.
@@ -232,14 +231,14 @@ public class ReadFile implements Serializable
 		OrbitalElement orbit = new OrbitalElement();
 
 		ReadFormat rf = new ReadFormat();
-		
+
 		switch (formatOfFile)
 		{
 		case SKYMAP:
 
 			try {
 				rf.setFormatToRead(FileFormatElement.SKYMAP_ASTEROIDS_FORMAT);
-	
+
 				orbit.name = rf.readString(asteroid, "NAME");
 				orbit.absoluteMagnitude = (float) rf.readDouble(asteroid, "ABSOLUTE_MAGNITUDE");
 				orbit.meanAnomaly = rf.readDoubleToRadians(asteroid, "MEAN_ANOMALY");
@@ -253,7 +252,7 @@ public class ReadFile implements Serializable
 				orbit.meanMotion = Constant.EARTH_MEAN_ORBIT_RATE / (Math.abs(orbit.semimajorAxis) * Math.sqrt(Math
 						.abs(orbit.semimajorAxis)));
 				orbit.magnitudeModel = MAGNITUDE_MODEL.ASTEROID_HG;
-	
+
 				// Read perihelion time
 				AstroDate astro = new AstroDate(rf.readInteger(asteroid, "PERIHELION_YEAR"), rf.readInteger(
 						asteroid, "PERIHELION_MONTH"), rf.readDouble(asteroid, "PERIHELION_DAY"));
@@ -268,8 +267,8 @@ public class ReadFile implements Serializable
 		case MPC:
 
 			try {
-				rf.setFormatToRead(FileFormatElement.MPC_ASTEROIDS_FORMAT); 
-	
+				rf.setFormatToRead(FileFormatElement.MPC_ASTEROIDS_FORMAT);
+
 				orbit.name = rf.readString(asteroid, "NAME");
 				orbit.meanAnomaly = rf.readDoubleToRadians(asteroid, "MEAN_ANOMALY");
 				orbit.argumentOfPerihelion = rf.readDoubleToRadians(asteroid, "ARGUMENT_OF_PERIHELION");
@@ -306,7 +305,7 @@ public class ReadFile implements Serializable
 	 * {@linkplain FileFormatElement} array object will be set to zero. Also note that the library uses
 	 * argument of perihelion and mean anomaly as input, instead of longitude of
 	 * perihelion and mean longitude.
-	 * 
+	 *
 	 * @param asteroid A full line of the file.
 	 * @param fmt Format of file.
 	 * @return {@linkplain OrbitalElement} object full of data.
@@ -315,7 +314,7 @@ public class ReadFile implements Serializable
 	public static OrbitalElement parseCustomAsteroidFile(String asteroid, FileFormatElement[] fmt) throws JPARSECException
 	{
 		OrbitalElement orbit = new OrbitalElement();
-		
+
 		ReadFormat rf = new ReadFormat();
 		rf.setFormatToRead(fmt);
 
@@ -341,7 +340,7 @@ public class ReadFile implements Serializable
 
 	/**
 	 * Obtains orbital elements for certain probe.
-	 * 
+	 *
 	 * @param data The probe data as given by the JPARSEC database.
 	 * @return The {@linkplain OrbitalElement} object.
 	 * @throws JPARSECException If the reference or applicable times are
@@ -402,7 +401,7 @@ public class ReadFile implements Serializable
 
 	/**
 	 * Reads a star in the original BSC5 format
-	 * 
+	 *
 	 * @param line A full line of the file.
 	 * @return {@linkplain StarElement} object full of data.
 	 * @throws JPARSECException Thrown if the method fails.
@@ -460,7 +459,7 @@ public class ReadFile implements Serializable
 	 * Reads star information in the JPARSEC format, derived from Sky 2000
 	 * Master Catalog, version 5. See
 	 * https://wakata.nascom.nasa.gov/dist/generalProducts/attitude/ATT_SKYMAP.html.
-	 * 
+	 *
 	 * @param line A full line of the file.
 	 * @return {@linkplain StarElement} object full of data.
 	 * @throws JPARSECException Thrown if the method fails.
@@ -486,13 +485,13 @@ public class ReadFile implements Serializable
 			star.properMotionRadialV = 0.0f;
 			star.properMotionRA = (float) (rf.readDouble(line, "RA_PM") * 15.0 * Constant.ARCSEC_TO_RAD);
 			star.properMotionDEC = (float) (rf.readDouble(line, "DEC_PM") * Constant.ARCSEC_TO_RAD);
-			if (!rf.readString(line, "RADIAL_VELOCITY").equals("")) 
+			if (!rf.readString(line, "RADIAL_VELOCITY").equals(""))
 				star.properMotionRadialV = (float) rf.readDouble(line, "RADIAL_VELOCITY");
 			double parallax = rf.readDouble(line, "PARALLAX");
 			star.parallax = parallax;
 			star.equinox = Constant.J2000;
 			star.frame = EphemerisElement.FRAME.ICRF;
-	
+
 			// Add classical name
 			String greek = "AlpBetGamDelEpsZetEtaTheIotKapLamMu Nu Xi OmiPi RhoSigTauUpsPhiChiPsiOme";
 			String id = rf.readString(line, "ID");
@@ -503,7 +502,7 @@ public class ReadFile implements Serializable
 				String idd = "";
 				if (index >= 0) {
 					idd = id.substring(index + 1);
-					index = Integer.parseInt(id.substring(0, index));					
+					index = Integer.parseInt(id.substring(0, index));
 				} else {
 					index = Integer.parseInt(id);
 				}
@@ -534,7 +533,7 @@ public class ReadFile implements Serializable
 
 	/**
 	 * Reads a star in the original FK6 format
-	 * 
+	 *
 	 * @param line A full line of the file.
 	 * @return {@linkplain StarElement} object full of data.
 	 * @throws JPARSECException Thrown if the method fails.
@@ -574,7 +573,7 @@ public class ReadFile implements Serializable
 	/**
 	 * Obtain an {@linkplain OrbitalElement} object from a line of a file of orbital elements
 	 * of comets.
-	 * 
+	 *
 	 * @param comet A full line of the file.
 	 * @return {@linkplain OrbitalElement} object full of data.
 	 * @throws JPARSECException If the reference time is invalid.
@@ -621,7 +620,7 @@ public class ReadFile implements Serializable
 			AstroDate astro = new AstroDate(rf.readInteger(comet, "PERIHELION_YEAR"), rf.readInteger(comet,
 					"PERIHELION_MONTH"), rf.readDouble(comet, "PERIHELION_DAY"));
 			orbit.referenceTime = astro.jd();
-	
+
 			// Set data for elliptic motion
 			if (orbit.eccentricity != 1.0)
 			{
@@ -639,7 +638,7 @@ public class ReadFile implements Serializable
 	/**
 	 * Obtain an {@linkplain DoubleStarElement} object from a line of a file of orbital elements
 	 * of double stars (Hartkopf 2010).
-	 * 
+	 *
 	 * @param dstar A full line of the file.
 	 * @return {@linkplain DoubleStarElement} object full of data.
 	 * @throws JPARSECException Thrown if the method fails.
@@ -666,7 +665,7 @@ public class ReadFile implements Serializable
 			if (!orbit.reference.trim().equals("")) orbit.reference = "http://ad.usno.navy.mil/wds/orb6/wdsref.html#"+orbit.reference;
 			orbit.orbitPNG = rf.readString(dstar, "PNG");
 			if (!orbit.orbitPNG.trim().equals("")) orbit.orbitPNG = "http://ad.usno.navy.mil/wds/orb6/PNG/"+orbit.orbitPNG;
-			
+
 			String ra = rf.readString(dstar, "RA");
 			String dec = rf.readString(dstar, "DEC");
 			int rah = Integer.parseInt(ra.substring(0, 2));
@@ -678,7 +677,7 @@ public class ReadFile implements Serializable
 			double rap = (rah + (ram / 60.0 + ras / 3600.0)) / Constant.RAD_TO_HOUR;
 			double decp = (deg + (dem / 60.0 + decs / 3600.0)) * Constant.DEG_TO_RAD;
 			if (dec.startsWith("-")) decp = -decp;
-			
+
 			orbit.rightAscension = rap;
 			orbit.declination = decp;
 
@@ -712,7 +711,7 @@ public class ReadFile implements Serializable
 			}
 			double init_time = 0, final_time = Constant.J2000 + 10000 * 365.25;
 			orbit.orbit = new OrbitalElement(nom, sma, arg_perih, ecc, anomaly, asc_node_lon, incl, ref_time, motion, equinox, init_time, final_time);
-			
+
 		} catch (Exception exc) {
 			JPARSECException.addWarning("Could not parse this double star, returning null. Details: "+exc.getLocalizedMessage()+". Line to parse was: \n"+dstar);
 			return null;
@@ -723,7 +722,7 @@ public class ReadFile implements Serializable
 	/**
 	 * Obtain an {@linkplain DoubleStarElement} object from a line of a file of orbital elements
 	 * of double stars (Worley 1983).
-	 * 
+	 *
 	 * @param dstar A full line of the file.
 	 * @return {@linkplain DoubleStarElement} object full of data.
 	 * @throws JPARSECException Thrown if the method fails.
@@ -745,7 +744,7 @@ public class ReadFile implements Serializable
 			orbit.orbitGrade = Integer.parseInt(grade);
 			orbit.notes = rf.readString(dstar, "NOTES");
 			orbit.reference = rf.readString(dstar, "REF");
-			
+
 			String srah = rf.readString(dstar, "RAH");
 			String sdecd = rf.readString(dstar, "DECD");
 			String sram = rf.readString(dstar, "RAM");
@@ -758,7 +757,7 @@ public class ReadFile implements Serializable
 			double rap = (rah + (ram / 60.0)) / Constant.RAD_TO_HOUR;
 			double decp = (deg + (dem / 60.0)) * Constant.DEG_TO_RAD;
 			if (sdecs.startsWith("-")) decp = -decp;
-			
+
 			orbit.rightAscension = rap;
 			orbit.declination = decp;
 
@@ -781,7 +780,7 @@ public class ReadFile implements Serializable
 			}
 			double init_time = 0, final_time = Constant.J2000 + 10000 * 365.25;
 			orbit.orbit = new OrbitalElement(nom, sma, arg_perih, ecc, anomaly, asc_node_lon, incl, ref_time, motion, equinox, init_time, final_time);
-			
+
 		} catch (Exception exc) {
 			JPARSECException.addWarning("Could not parse this double star, returning null. Details: "+exc.getLocalizedMessage()+". Line to parse was: \n"+dstar);
 			return null;
@@ -792,7 +791,7 @@ public class ReadFile implements Serializable
 	/**
 	 * Obtain a {@linkplain VariableStarElement} object from a line of one of the
 	 * two catalogs supported.
-	 * 
+	 *
 	 * @param line A full line of the file.
 	 * @param line2 The next line to complete the record for the AAVSO bulletin, or null
 	 * for the catalog by Kreiner.
@@ -805,9 +804,9 @@ public class ReadFile implements Serializable
 	{
 		boolean aavso = true;
 		if (line2 != null) aavso = false;
-		
+
 		VariableStarElement var = new VariableStarElement();
-		
+
 		try {
 			if (aavso) {
 				String values[] = DataSet.toStringArray(line, ",");
@@ -840,20 +839,20 @@ public class ReadFile implements Serializable
 							var.maximaDates += ""+jd;
 						} else {
 							if (!var.minimaDates.equals("")) var.minimaDates += ",";
-							var.minimaDates += ""+jd;							
+							var.minimaDates += ""+jd;
 						}
 					}
 				}
 			} else {
 /*				FileFormatElement fmt_Kreiner_1[] = new FileFormatElement[] {
-						new FileFormatElement(1, 4, "NAME"), new FileFormatElement(5, 8, "CONSTEL"), 
-						new FileFormatElement(14, 18, "MAG1"), new FileFormatElement(27, 31, "MAG2"), 
-						new FileFormatElement(34, 41, "SPECTRAL_TYPE"), new FileFormatElement(43, 48, "ECL_TYPE"), 
+						new FileFormatElement(1, 4, "NAME"), new FileFormatElement(5, 8, "CONSTEL"),
+						new FileFormatElement(14, 18, "MAG1"), new FileFormatElement(27, 31, "MAG2"),
+						new FileFormatElement(34, 41, "SPECTRAL_TYPE"), new FileFormatElement(43, 48, "ECL_TYPE"),
 						new FileFormatElement(50, 57, "TYPE")
 				};
 				FileFormatElement fmt_Kreiner_2[] = new FileFormatElement[] {
-						new FileFormatElement(1, 8, "RA"), new FileFormatElement(11, 18, "DEC"), 
-						new FileFormatElement(28, 31, "DURATION"), new FileFormatElement(39, 47, "PERIOD"), 
+						new FileFormatElement(1, 8, "RA"), new FileFormatElement(11, 18, "DEC"),
+						new FileFormatElement(28, 31, "DURATION"), new FileFormatElement(39, 47, "PERIOD"),
 						new FileFormatElement(49, 60, "T0")
 				};
 
@@ -861,7 +860,7 @@ public class ReadFile implements Serializable
 				rf1.setFormatToRead(fmt_Kreiner_1);
 				ReadFormat rf2 = new ReadFormat();
 				rf2.setFormatToRead(fmt_Kreiner_2);
-	
+
 				var.name = rf1.readString(line, "NAME").trim() + " " + rf1.readString(line, "CONSTEL").trim();
 				var.magRange = rf1.readString(line, "MAG1").trim() + "-" + rf1.readString(line, "MAG2").trim();
 				var.spectralType = rf1.readString(line, "SPECTRAL_TYPE").trim();
@@ -870,7 +869,7 @@ public class ReadFile implements Serializable
 
 				// Only main minima supported, to also avoid repeated objects
 				if (var.type.toLowerCase().indexOf("sec") >= 0) return null;
-								
+
 				var.period = DataSet.parseDouble(rf2.readString(line2, "PERIOD").trim());
 				var.minimaTime = DataSet.parseDouble(rf2.readString(line2, "T0").trim());
 				var.rightAscension = Functions.parseRightAscension(rf2.readString(line2, "RA").trim());
@@ -909,12 +908,12 @@ public class ReadFile implements Serializable
 	/**
 	 * Sets the path to the file of objects elements. Full path required in case
 	 * of external files.
-	 * 
+	 *
 	 * @param path Full path including extension.
 	 * @throws JPARSECException In case the path is null.
 	 */
 	public void setPath(String path) throws JPARSECException
-	{ 
+	{
 		pathToFile = path;
 		setID();
 	}
@@ -936,10 +935,10 @@ public class ReadFile implements Serializable
 	{
 		return encoding;
 	}
-	
+
 	/**
 	 * Sets the format of the file of objects elements.
-	 * 
+	 *
 	 * @param format ID value for the format.
 	 */
 	public void setFormat(FORMAT format)
@@ -948,10 +947,10 @@ public class ReadFile implements Serializable
 	}
 
 	/**
-	 * The different format supported when reading stars, orbital 
+	 * The different format supported when reading stars, orbital
 	 * elements and other files.
 	 */
-	public static enum FORMAT {
+	public enum FORMAT {
 		/** ID constant for reading the file as an Sky Map (comets, asteroids) input file. */
 		SKYMAP,
 		/** ID constant for reading the file as a MPC (comets, asteroids) formatted file. */
@@ -963,7 +962,7 @@ public class ReadFile implements Serializable
 		/** ID constant for reading the file as a BSC5 stars input file. */
 		BSC5
 	};
-	
+
 	/**
 	 * Constant for ISO-8859-1 encoding.
 	 */
@@ -976,12 +975,12 @@ public class ReadFile implements Serializable
 	 * Constant for IBM 850 encoding.
 	 */
 	public static final String ENCODING_IBM850 = "IBM850";
-	
+
 	/**
 	 * Path to the file of objects, including extension.
 	 */
 	public String pathToFile;
-	
+
 	/**
 	 * The encoding of the file to be read. ISO-8859-1 set by default.
 	 */
@@ -994,7 +993,7 @@ public class ReadFile implements Serializable
 
 	private boolean inMemory = true;
 	private String threadName = null;
-	
+
 	/**
 	 * Overwrites the name of the thread identifier for the
 	 * elements read in this object and stored in Database.
@@ -1004,7 +1003,7 @@ public class ReadFile implements Serializable
 	public void setThreadName(String threadID) {
 		threadName = threadID;
 	}
-	
+
 	/**
 	 * Sets the array of objects read by this instance to
 	 * a given list of objects.
@@ -1012,15 +1011,15 @@ public class ReadFile implements Serializable
 	 */
 	public void setReadElements(ArrayList a) {
 		if (threadName == null) threadName = ApplicationLauncher.getProcessID();
-		
+
 		if (a == null) {
 			DataBase.addData(getDataBaseID(), threadName, null, inMemory);
 			return;
 		}
-		
+
 		DataBase.addData(getDataBaseID(), threadName, DataSet.toObjectArray(a), inMemory);
 	}
-	
+
 	/**
 	 * Sets the array of objects read by this instance to
 	 * a given array of objects.
@@ -1028,21 +1027,21 @@ public class ReadFile implements Serializable
 	 */
 	public void setReadElementsFromArray(Object o[]) {
 		if (threadName == null) threadName = ApplicationLauncher.getProcessID();
-		
+
 		if (o == null) {
 			DataBase.addData(getDataBaseID(), threadName, null, inMemory);
 			return;
 		}
-		
+
 		DataBase.addData(getDataBaseID(), threadName, o, inMemory);
 	}
-	
+
 	/**
 	 * Sets the array of objects read by this instance to
 	 * a given list of objects.
 	 * @param a The list of objects.
 	 * @throws JPARSECException In case the class of the objects
-	 * in the input array and the class of the ones currently read 
+	 * in the input array and the class of the ones currently read
 	 * differ.
 	 */
 	public void addReadElements(ArrayList a) throws JPARSECException {
@@ -1068,7 +1067,7 @@ public class ReadFile implements Serializable
 	public String getDataBaseID() {
 		return "readElements_"+id;
 	}
-	
+
 	/**
 	 * Reads an example file with orbital elements of asteroids formatted in the
 	 * standard way, established by the Minor Planet Center or either the
@@ -1077,24 +1076,24 @@ public class ReadFile implements Serializable
 	 * <P>
 	 * An example of MPC format is:
 	 * <P>
-	 * 
+	 *
 	 * <pre>
 	 * 00001    3.34  0.12 K0636 129.98342   73.23162   80.40970   10.58687  0.0800102  0.21432279   2.7653949    MPC 24219  4676  62 1839-1994 0.54 M-v 30  Bowell     0000             (1) Ceres
 	 * </pre>
-	 * 
+	 *
 	 * <P>
 	 * An example of SkyMap format is:
 	 * <P>
-	 * 
+	 *
 	 * <pre>
 	 *       1 Ceres                                  2005 08 18.0  86.9545  2.765979 0.080014  73.3924  80.4097  10.5860   3.34  0.12
 	 * </pre>
-	 * 
+	 *
 	 * <P>
 	 * After the file is successfully read, the objects are stored using
 	 * {@linkplain DataBase} with the identifier returned by
 	 * {@linkplain #getDataBaseID()}.
-	 * 
+	 *
 	 * @throws JPARSECException If the reference time is invalid.
 	 */
 	public void readFileOfAsteroids() throws JPARSECException
@@ -1139,24 +1138,24 @@ public class ReadFile implements Serializable
 	 * <P>
 	 * An example of MPC format is:
 	 * <P>
-	 * 
+	 *
 	 * <pre>
 	 * 0002P         2007 04 19.3070  0.339201  0.847059  186.5211  334.5780   11.7556  20060922  11.5  6.0  2P/Encke
 	 * </pre>
-	 * 
+	 *
 	 * <P>
 	 * An example of SkyMap format is:
 	 * <P>
-	 * 
+	 *
 	 * <pre>
 	 * 2P Encke                                       2003 12 29.8945  0.338844       0.847212 186.5134 334.5891  11.7634  11.5   6.0
 	 * </pre>
-	 * 
+	 *
 	 * <P>
 	 * After the file is successfully read, the objects are stored using
 	 * {@linkplain DataBase} with the identifier returned by
 	 * {@linkplain #getDataBaseID()}.
-	 * 
+	 *
 	 * @throws JPARSECException If the reference time is invalid.
 	 */
 	public void readFileOfComets() throws JPARSECException
@@ -1202,10 +1201,10 @@ public class ReadFile implements Serializable
 	 * After the file is successfully read, the objects are stored using
 	 * {@linkplain DataBase} with the identifier returned by
 	 * {@linkplain #getDataBaseID()}.
-	 * 
+	 *
 	 * @param jd The date for the ephemerides calculations. Set to -1
 	 * to get all NEOS without limiting the date.
-	 * @param maxDays The maximum number of days for the elements validity. 
+	 * @param maxDays The maximum number of days for the elements validity.
 	 * In case perihelion time is outside limit jd +/- maxDays, the NEO
 	 * will not be returned. Recommended value is 365 days or lower.
 	 * @throws JPARSECException If the reference time is invalid.
@@ -1217,7 +1216,7 @@ public class ReadFile implements Serializable
 		String file_line = "";
 
 		this.formatOfFile = FORMAT.MPC;
-		
+
 		// Connect to the file
 		try
 		{
@@ -1236,9 +1235,9 @@ public class ReadFile implements Serializable
 					orbit = parseAsteroid(file_line);
 				}
 
-				if (orbit != null && jd > 0 && (orbit.referenceTime < jd - maxDays || orbit.referenceTime > jd + maxDays)) 
+				if (orbit != null && jd > 0 && (orbit.referenceTime < jd - maxDays || orbit.referenceTime > jd + maxDays))
 					orbit = null;
-				
+
 				// Store object in ArrayList
 				if (orbit != null && satisfyConstraints(orbit.name, null)) vec.add(orbit);
 			}
@@ -1259,7 +1258,7 @@ public class ReadFile implements Serializable
 
 	/**
 	 * Reads a file with orbital elements of old comets.
-	 * 
+	 *
 	 * @param astro Optional date to retrieve only some of the comets around it. Can be null.
 	 * @param years Maximum number of years around the date to retrieve a given comet.
 	 * Set to 10 to retrieve all comets with elements referred to a date within +/- 10 years
@@ -1273,7 +1272,7 @@ public class ReadFile implements Serializable
 		String file_line = "";
 		double jd = 0;
 		if (astro != null) jd = astro.jd();
-		
+
 		// Connect to the file
 		try
 		{
@@ -1317,7 +1316,7 @@ public class ReadFile implements Serializable
 						magOK = false;
 					}
 					if (g == 0.0 && mabs == 0.0) magOK = false; // Sometimes both are 0, unrealistic
-	
+
 					// Obtain fields
 					OrbitalElement orbit = new OrbitalElement();
 					orbit.name = name;
@@ -1341,7 +1340,7 @@ public class ReadFile implements Serializable
 						orbit.meanMotion = Constant.EARTH_MEAN_ORBIT_RATE / (Math.abs(orbit.semimajorAxis) * Math.sqrt(Math
 								.abs(orbit.semimajorAxis)));
 					}
-	
+
 					// Store object in ArrayList
 					out.add(orbit);
 				}
@@ -1351,7 +1350,7 @@ public class ReadFile implements Serializable
 			dis.close();
 
 			if (out.size() == 0) return null;
-			
+
 			return out;
 		} catch (FileNotFoundException e1)
 		{
@@ -1362,22 +1361,22 @@ public class ReadFile implements Serializable
 					"error while reading old comets file.", e2);
 		}
 	}
-	
+
 	/**
 	 * Reads a file with orbital elements of probes in the JPARSEC format.
 	 * <P>
 	 * An example of such format is:
 	 * <P>
-	 * 
+	 *
 	 * <pre>
 	 * Galileo-1       e 4.3224100 24.682800 -175.312000 0.8323240 1.2979700 0.19785000 -158.241000 11/09.0/1989   1950    0 0 1989 11 9.690 1990 02 10.26
 	 * </pre>
-	 * 
+	 *
 	 * <P>
 	 * After the file is successfully read, the objects are stored using
 	 * {@linkplain DataBase} with the identifier returned by
 	 * {@linkplain #getDataBaseID()}.
-	 * 
+	 *
 	 * @throws JPARSECException If the reference time is invalid.
 	 */
 	public void readFileOfProbes() throws JPARSECException
@@ -1421,7 +1420,7 @@ public class ReadFile implements Serializable
 	 * After the file is successfully read, the objects are stored using
 	 * {@linkplain DataBase} with the identifier returned by
 	 * {@linkplain #getDataBaseID()}.
-	 * 
+	 *
 	 * @throws JPARSECException Thrown if the format is invalid.
 	 */
 	public void readFileOfStars() throws JPARSECException
@@ -1482,24 +1481,24 @@ public class ReadFile implements Serializable
 	 * <P>
 	 * An example of MPC format is:
 	 * <P>
-	 * 
+	 *
 	 * <pre>
 	 * 00001    3.34  0.12 K0636 129.98342   73.23162   80.40970   10.58687  0.0800102  0.21432279   2.7653949    MPC 24219  4676  62 1839-1994 0.54 M-v 30  Bowell     0000             (1) Ceres
 	 * </pre>
-	 * 
+	 *
 	 * <P>
 	 * An example of SkyMap format is:
 	 * <P>
-	 * 
+	 *
 	 * <pre>
 	 *       1 Ceres                                  2005 08 18.0  86.9545  2.765979 0.080014  73.3924  80.4097  10.5860   3.34  0.12
 	 * </pre>
-	 * 
+	 *
 	 * <P>
 	 * After the file is successfully read, the objects are stored using
 	 * {@linkplain DataBase} with the identifier returned by
 	 * {@linkplain #getDataBaseID()}.
-	 * 
+	 *
 	 * @param file The read file. If null the file will be read from {@linkplain ReadFile#pathToFile}.
 	 * @throws JPARSECException If the reference time is invalid.
 	 */
@@ -1536,24 +1535,24 @@ public class ReadFile implements Serializable
 	 * <P>
 	 * An example of MPC format is:
 	 * <P>
-	 * 
+	 *
 	 * <pre>
 	 * 0002P         2007 04 19.3070  0.339201  0.847059  186.5211  334.5780   11.7556  20060922  11.5  6.0  2P/Encke
 	 * </pre>
-	 * 
+	 *
 	 * <P>
 	 * An example of SkyMap format is:
 	 * <P>
-	 * 
+	 *
 	 * <pre>
 	 * 2P Encke                                       2003 12 29.8945  0.338844       0.847212 186.5134 334.5891  11.7634  11.5   6.0
 	 * </pre>
-	 * 
+	 *
 	 * <P>
 	 * After the file is successfully read, the objects are stored using
 	 * {@linkplain DataBase} with the identifier returned by
 	 * {@linkplain #getDataBaseID()}.
-	 * 
+	 *
 	 * @param file The read file. If null the file will be read from {@linkplain ReadFile#pathToFile}.
 	 * @throws JPARSECException If the reference time is invalid.
 	 */
@@ -1589,7 +1588,7 @@ public class ReadFile implements Serializable
 	 * <P>
 	 * An example of such format is:
 	 * <P>
-	 * 
+	 *
 	 * <pre>
 	 * HST
 	 * <BR>
@@ -1598,7 +1597,7 @@ public class ReadFile implements Serializable
 	 * 2 20580  28.4690 300.5069 0003775  90.9393 269.1626 14.99794238637817
 	 * <BR>
 	 * </pre>
-	 * 
+	 *
 	 * @param file The read file. If null the file will be read from {@linkplain ReadFile#pathToFile}.
 	 * @throws JPARSECException Thrown if the method fails.
 	 */
@@ -1618,7 +1617,7 @@ public class ReadFile implements Serializable
 		ReadFormat rf2 = new ReadFormat();
 		rf1.setFormatToRead(FileFormatElement.TLE_LINE1_FORMAT);
 		rf2.setFormatToRead(FileFormatElement.TLE_LINE2_FORMAT);
-		
+
 		ArrayList<String> names = new ArrayList<String>();
 
 		// Connect to the file
@@ -1639,11 +1638,11 @@ public class ReadFile implements Serializable
 				m2 = rf1.readDouble(line1, "FIRST_DERIVATIVE");
 				String sd = rf1.readString(line1, "SECOND_DERIVATIVE");
 				m3 = DataSet.parseDouble(sd.substring(0, sd.length()-2).trim()) / 1.0E5;
-				m3 *= Math.pow(10.0, DataSet.parseDouble(sd.substring(sd.length()-2).trim()));				
+				m3 *= Math.pow(10.0, DataSet.parseDouble(sd.substring(sd.length()-2).trim()));
 				sat_n = rf1.readInteger(line1, "SAT_NUMBER");
 				sd = rf1.readString(line1, "DRAG");
 				drag = DataSet.parseDouble(sd.substring(0, sd.length()-2).trim()) / 1.0E5;
-				drag *= Math.pow(10.0, DataSet.parseDouble(sd.substring(sd.length()-2).trim()));				
+				drag *= Math.pow(10.0, DataSet.parseDouble(sd.substring(sd.length()-2).trim()));
 
 				inc = rf2.readDoubleToRadians(line2, "INCLINATION");
 				ra = rf2.readDoubleToRadians(line2, "ASCENDING_NODE_RA");
@@ -1693,7 +1692,7 @@ public class ReadFile implements Serializable
 	 * <P>
 	 * An example of such format is:
 	 * <P>
-	 * 
+	 *
 	 * <pre>
 	 * HST
 	 * <BR>
@@ -1702,7 +1701,7 @@ public class ReadFile implements Serializable
 	 * 2 20580  28.4690 300.5069 0003775  90.9393 269.1626 14.99794238637817
 	 * <BR>
 	 * </pre>
-	 * 
+	 *
 	 * @throws JPARSECException Thrown if the method fails.
 	 */
 	public void readFileOfArtificialSatellites() throws JPARSECException
@@ -1723,7 +1722,7 @@ public class ReadFile implements Serializable
 		rf2.setFormatToRead(FileFormatElement.TLE_LINE2_FORMAT);
 
 		ArrayList<String> names = new ArrayList<String>();
-		
+
 		// Connect to the file
 		try
 		{
@@ -1743,11 +1742,11 @@ public class ReadFile implements Serializable
 				m2 = rf1.readDouble(line1, "FIRST_DERIVATIVE");
 				String sd = rf1.readString(line1, "SECOND_DERIVATIVE");
 				m3 = DataSet.parseDouble(sd.substring(0, sd.length()-2).trim()) / 1.0E5;
-				m3 *= Math.pow(10.0, DataSet.parseDouble(sd.substring(sd.length()-2).trim()));				
+				m3 *= Math.pow(10.0, DataSet.parseDouble(sd.substring(sd.length()-2).trim()));
 				sat_n = rf1.readInteger(line1, "SAT_NUMBER");
 				sd = rf1.readString(line1, "DRAG");
 				drag = DataSet.parseDouble(sd.substring(0, sd.length()-2).trim()) / 1.0E5;
-				drag *= Math.pow(10.0, DataSet.parseDouble(sd.substring(sd.length()-2).trim()));				
+				drag *= Math.pow(10.0, DataSet.parseDouble(sd.substring(sd.length()-2).trim()));
 
 				inc = rf2.readDoubleToRadians(line2, "INCLINATION");
 				ra = rf2.readDoubleToRadians(line2, "ASCENDING_NODE_RA");
@@ -1803,7 +1802,7 @@ public class ReadFile implements Serializable
 
 	/**
 	 * Obtain number of objects read.
-	 * 
+	 *
 	 * @return Number of objects.
 	 */
 	public int getNumberOfObjects()
@@ -1816,7 +1815,7 @@ public class ReadFile implements Serializable
 	/**
 	 * Obtains one set of orbital elements. Don't use this method in a loop,
 	 * since it is very slow, use it only to retrieve one record.
-	 * 
+	 *
 	 * @param index ID value for the object. From 0 to {@linkplain ReadFile#getNumberOfObjects()}-1.
 	 * @return The {@linkplain OrbitalElement} object.
 	 * @throws JPARSECException Thrown if the index is not valid.
@@ -1824,7 +1823,7 @@ public class ReadFile implements Serializable
 	public OrbitalElement getOrbitalElement(int index) throws JPARSECException
 	{
 		Object o[] = this.getReadElements();
-		
+
 		if (index < 0 || index >= o.length)
 			throw new JPARSECException("invalid object " + index + ".");
 
@@ -1836,7 +1835,7 @@ public class ReadFile implements Serializable
 	/**
 	 * Obtains one set of orbital elements of artificial satellites. Don't use this method in a loop,
 	 * since it is very slow, use it only to retrieve one record.
-	 * 
+	 *
 	 * @param index ID value for the object. From 0 to {@linkplain ReadFile#getNumberOfObjects()}-1.
 	 * @return The {@linkplain SatelliteOrbitalElement} object.
 	 * @throws JPARSECException Thrown if the index is not valid.
@@ -1844,7 +1843,7 @@ public class ReadFile implements Serializable
 	public SatelliteOrbitalElement getSatelliteOrbitalElement(int index) throws JPARSECException
 	{
 		Object o[] = this.getReadElements();
-		
+
 		if (index < 0 || index >= o.length)
 			throw new JPARSECException("invalid object " + index + ".");
 
@@ -1856,7 +1855,7 @@ public class ReadFile implements Serializable
 	/**
 	 * Obtains one set of orbital elements of natural satellites. Don't use this method in a loop,
 	 * since it is very slow, use it only to retrieve one record.
-	 * 
+	 *
 	 * @param index ID value for the object. From 0 to {@linkplain ReadFile#getNumberOfObjects()}-1.
 	 * @return The Moon orbit object.
 	 * @throws JPARSECException Thrown if the index is not valid.
@@ -1876,7 +1875,7 @@ public class ReadFile implements Serializable
 	/**
 	 * Obtains one set of elements for stars. Don't use this method in a loop,
 	 * since it is very slow, use it only to retrieve one record.
-	 * 
+	 *
 	 * @param index ID value for the object. From 0 to {@linkplain ReadFile#getNumberOfObjects()}-1.
 	 * @return The {@linkplain StarElement} object.
 	 * @throws JPARSECException Thrown if the index is not valid.
@@ -1896,7 +1895,7 @@ public class ReadFile implements Serializable
 	/**
 	 * Obtains one set of elements for double stars. Don't use this method in a loop,
 	 * since it is very slow, use it only to retrieve one record.
-	 * 
+	 *
 	 * @param index ID value for the object. From 0 to {@linkplain ReadFile#getNumberOfObjects()}-1.
 	 * @return The {@linkplain DoubleStarElement} object.
 	 * @throws JPARSECException Thrown if the index is not valid.
@@ -1904,7 +1903,7 @@ public class ReadFile implements Serializable
 	public DoubleStarElement getDoubleStarElement(int index) throws JPARSECException
 	{
 		Object o[] = this.getReadElements();
-		
+
 		if (index < 0 || index >= o.length)
 			throw new JPARSECException("invalid object " + index + ".");
 
@@ -1916,7 +1915,7 @@ public class ReadFile implements Serializable
 	/**
 	 * Obtains one set of data for variable stars. Don't use this method in a loop,
 	 * since it is very slow, use it only to retrieve one record.
-	 * 
+	 *
 	 * @param index ID value for the object. From 0 to {@linkplain ReadFile#getNumberOfObjects()}-1.
 	 * @return The {@linkplain VariableStarElement} object.
 	 * @throws JPARSECException Thrown if the index is not valid.
@@ -1924,7 +1923,7 @@ public class ReadFile implements Serializable
 	public VariableStarElement getVariableStarElement(int index) throws JPARSECException
 	{
 		Object o[] = this.getReadElements();
-		
+
 		if (index < 0 || index >= o.length)
 			throw new JPARSECException("invalid object " + index + ".");
 
@@ -1935,7 +1934,7 @@ public class ReadFile implements Serializable
 
 	/**
 	 * Search for an object by it's name.
-	 * 
+	 *
 	 * @param object Name of the object to seach for.
 	 * @return index value of the object. -1 is returned if no match is found.
 	 * @throws JPARSECException Thrown if the index is not valid.
@@ -1963,11 +1962,11 @@ public class ReadFile implements Serializable
 
 		return index;
 	}
-	
+
 	/**
 	 * Search for an object by it's position. This method is not supported for orbital elements
 	 * (comets, asteroids, transneptunians, artificial satellites). It is only supported for stars.
-	 * 
+	 *
 	 * @param loc Location of the object to search for. Note this location should be usually
 	 * mean J2000 equatorial coordinates.
 	 * @param radius Radius in radians around the given position to search for an object.
@@ -1988,7 +1987,7 @@ public class ReadFile implements Serializable
 			double d = LocationElement.getApproximateAngularDistance(loc, l);
 			if (d < radius) {
 				if (d < minDist || minDist == -1) {
-					index = i;				
+					index = i;
 					minDist = d;
 				}
 			}
@@ -2013,7 +2012,7 @@ public class ReadFile implements Serializable
 		if (o instanceof VariableStarElement) return ((VariableStarElement) o).name;
 		throw new JPARSECException("invalid object " + index + ".");
 	}
-	
+
 	private LocationElement obtainPos(int index, Object obj[]) throws JPARSECException
 	{
 		if (index < 0 || index >= obj.length)
@@ -2030,7 +2029,7 @@ public class ReadFile implements Serializable
 
 	/**
 	 * Gets the name of an object.
-	 * 
+	 *
 	 * @param index Index value for the object.
 	 * @return Name of the object.
 	 * @throws JPARSECException Thrown if the index is not valid.
@@ -2049,7 +2048,7 @@ public class ReadFile implements Serializable
 	 * (Character.MAX_RADIX must be greater than 21 in the system to support the
 	 * days in a month, and this is ensured due to the fact that exist 26
 	 * characters in the alphabet).
-	 * 
+	 *
 	 * @param epoch String representing a packed date.
 	 * @return Julian day.
 	 * @throws JPARSECException If the packed date is invalid.
@@ -2079,7 +2078,7 @@ public class ReadFile implements Serializable
 	 * not taken into account, only the order where the elements are given and
 	 * the overall format. See example files, named like JPL_natural_satellites.txt.
 	 * <P>
-	 * 
+	 *
 	 * <pre>
 	 * Mars
 	 * Mean orbital elements referred to the local Laplace planes
@@ -2088,7 +2087,7 @@ public class ReadFile implements Serializable
 	 * Phobos 9380.  0.0151 150.247  92.474 1.075 164.931 1128.8444155  0.319  1.131  2.262 317.724 52.924 0.046 5
 	 * Deimos 23460. 0.0002 290.496 296.230 1.793 339.600  285.1618919  1.262 26.892 54.536 316.700 53.564 0.897 5
 	 * </pre>
-	 * 
+	 *
 	 * @param planet Planet whose satellites should be obtained.
 	 * @throws JPARSECException If the read fails.
 	 */
@@ -2174,8 +2173,8 @@ public class ReadFile implements Serializable
 									Constant.J2000 + Constant.JULIAN_DAYS_PER_CENTURY,
 									typesat,
 									LaplaceRA, LaplaceDEC,
-									prec_peri, 
-									prec_node, 
+									prec_peri,
+									prec_node,
 									solutionsat);
 							orbit.centralBody = planet;
 							if (satisfyConstraints(orbit.name, null)) v.add(orbit);
@@ -2247,7 +2246,7 @@ public class ReadFile implements Serializable
 			throw new JPARSECException("could not read the image "+path, e);
 		}
 	}
-	
+
 	/**
 	 * Reads an image in the classpath.
 	 * @param jarpath Path of an image in the classpath.
@@ -2262,7 +2261,7 @@ public class ReadFile implements Serializable
 			throw new JPARSECException("could not read the image "+jarpath, e);
 		}
 	}
-	
+
 	/**
 	 * Reads a file inside a .jar located in the classpath and returns it contents as an array of strings.
 	 * @param jarpath Path inside .jar file of the file to read.
@@ -2334,7 +2333,7 @@ public class ReadFile implements Serializable
 	 * @throws JPARSECException If an error occurs accessing the resource.
 	 */
 	public static ArrayList<String> readResourceSomeLines(String jarpath, String charset, int i0, int i1) throws JPARSECException
-	{ 
+	{
 		ReadFile rfile = new ReadFile(jarpath, charset, false);
 		return rfile.readResourceSomeLines(i0, i1);
 	}
@@ -2364,7 +2363,7 @@ public class ReadFile implements Serializable
 	{
 		return readAnyExternalFile(pathToFile, ReadFile.ENCODING_ISO_8859);
 	}
-	
+
 	/**
 	 * Reads an external file and returns it contents as an array of strings.
 	 * @param pathToFile Path to the file.
@@ -2431,10 +2430,10 @@ public class ReadFile implements Serializable
 			throw new JPARSECException("error while reading file " + pathToFile + ".", e2);
 		}
 	}
-	
+
 	/**
 	 * Counts the number of lines in an external file.
-	 * 
+	 *
 	 * @param path The path to the file.
 	 * @return number of lines.
 	 * @throws JPARSECException If an error occurs accessing the file.
@@ -2443,7 +2442,7 @@ public class ReadFile implements Serializable
 	{
 		// Define necessary variables
 		int n = 0;
-		
+
 		// Connect to the file
 		try
 		{
@@ -2474,7 +2473,7 @@ public class ReadFile implements Serializable
 	/**
 	 * Reads an external file and returns it contents as an array of strings, including
 	 * only a given number of lines from the begining of the file.
-	 * 
+	 *
 	 * @param path The path to the file.
 	 * @param n Numer of lines to read from the beginning of the file.
 	 * @param encoding The encoding.
@@ -2519,7 +2518,7 @@ public class ReadFile implements Serializable
 	/**
 	 * Reads a file and returns it contents as an array of strings, but only the last n
 	 * lines of the file
-	 * 
+	 *
 	 * @param path The path to the file.
 	 * @param n Numer of lines to read from the end of the file.
 	 * @param encoding The encoding.
@@ -2564,7 +2563,7 @@ public class ReadFile implements Serializable
 	/**
 	 * Reads a file and returns it contents as an array of strings, returning only
 	 * the lines in a given range within the file.
-	 * 
+	 *
 	 * @param path The path to the file.
 	 * @param i0 First line to read (index, starting from 0).
 	 * @param i1 Last line to read (index, starting from 0).
@@ -2612,9 +2611,9 @@ public class ReadFile implements Serializable
 	}
 
 	/**
-	 * Reads a file and returns it contents as an array of strings. Only lines 
+	 * Reads a file and returns it contents as an array of strings. Only lines
 	 * containing a given record are returned.
-	 * 
+	 *
 	 * @param path The path to the file.
 	 * @param record Something to search for in each line of the file.
 	 * @param encoding The encoding.
@@ -2654,7 +2653,7 @@ public class ReadFile implements Serializable
 					"error while reading file " + path + ".", e2);
 		}
 	}
-	
+
 	/**
 	 * Reads an external file and returns it contents as an array of strings.
 	 * @param pathToFile URL path to the file.
@@ -2700,7 +2699,7 @@ public class ReadFile implements Serializable
 
 	/**
 	 * Returns the input stream of a resource.
-	 * 
+	 *
 	 * @return The input stream of the resource, or null if it is unavailable.
 	 */
 	public InputStream getResourceAsStream()
@@ -2711,7 +2710,7 @@ public class ReadFile implements Serializable
 
 	/**
 	 * Returns the URL of a resource.
-	 * 
+	 *
 	 * @return The URL of the resource, or null if it is unavalilable.
 	 */
 	public URL getResourceAsURL()
@@ -2724,7 +2723,7 @@ public class ReadFile implements Serializable
 	 * Reads a resource and returns it contents as an array of strings. Path is taken from
 	 * the current established path in this instance, and this path should be a local resource
 	 * available.
-	 * 
+	 *
 	 * @return Array of strings.
 	 * @throws JPARSECException If an error occurs accessing the resource.
 	 */
@@ -2763,7 +2762,7 @@ public class ReadFile implements Serializable
 
 	/**
 	 * Counts the number of lines in a resource.
-	 * 
+	 *
 	 * @return number of lines.
 	 * @throws JPARSECException If an error occurs accessing the resource.
 	 */
@@ -2778,16 +2777,16 @@ public class ReadFile implements Serializable
 		    byte[] buffer = new byte[8 * 1024]; // BUFFER_SIZE = 8 * 1024
 		    int read;
 		    char sep = FileIO.getLineSeparator().charAt(0);
-	
+
 		    while ((read = is.read(buffer)) != -1) {
 		        for (int i = 0; i < read; i++) {
 		            if (buffer[i] == sep) n++;
 		        }
 		    }
-	
+
 		    is.close();
 
-/*	    		
+/*
 			// Connect to the file
 			InputStream is = getClass().getClassLoader().getResourceAsStream(pathToFile);
 			BufferedReader dis = new BufferedReader(new InputStreamReader(is, encoding));
@@ -2802,7 +2801,7 @@ public class ReadFile implements Serializable
 			is.close();
 */
 			return n;
-			
+
 		} catch (FileNotFoundException e1)
 		{
 			throw new JPARSECException("file not found in path " + pathToFile+".", e1);
@@ -2810,14 +2809,14 @@ public class ReadFile implements Serializable
 		{
 			throw new JPARSECException(
 					"error while reading file " + pathToFile + ".", e2);
-		}		
+		}
 	}
 
 	/**
 	 * Reads a resource and returns it contents as an array of strings. Path is taken from
 	 * the current established path in this instance, and this path should be a local resource
 	 * available.
-	 * 
+	 *
 	 * @param n Numer of lines to read from the beginning of the resource.
 	 * @return Array of strings.
 	 * @throws JPARSECException If an error occurs accessing the resource.
@@ -2860,7 +2859,7 @@ public class ReadFile implements Serializable
 	 * Reads a resource and returns it contents as an array of strings. Path is taken from
 	 * the current established path in this instance, and this path should be a local resource
 	 * available.
-	 * 
+	 *
 	 * @param n Numer of lines to read from the end of the resource.
 	 * @return Array of strings.
 	 * @throws JPARSECException If an error occurs accessing the resource.
@@ -2875,7 +2874,7 @@ public class ReadFile implements Serializable
 	 * Reads a resource and returns it contents as an array of strings. Path is taken from
 	 * the current established path in this instance, and this path should be a local resource
 	 * available.
-	 * 
+	 *
 	 * @param i0 First line to read (index, starting from 0).
 	 * @param i1 Last line to read (index, starting from 0).
 	 * @return Array of strings. Empty in case the range is out from the file contents.
@@ -2926,7 +2925,7 @@ public class ReadFile implements Serializable
 	 * Reads a resource and returns it contents as an array of strings. Path is taken from
 	 * the current established path in this instance, and this path should be a local resource
 	 * available. Only lines containing a given record are returned.
-	 * 
+	 *
 	 * @param record Something to search for in each line of the file.
 	 * @return Array of strings.
 	 * @throws JPARSECException If an error occurs accessing the resource.
@@ -2967,13 +2966,28 @@ public class ReadFile implements Serializable
 	private static String lastNOAAdata = null;
 	private static double lastNOAAdate = -1;
 	private static EphemElement lastSun = null;
-	
+	/**
+	 * Resets the data already read for current solar spots from NOAA. This allows
+	 * them to be updated again anytime.
+	 */
+	public static void resetNOAAcurrentSolarSpots() {
+		lastNOAAdata = null;
+		lastNOAAdate = -1;
+		lastSun = null;
+	}
+
 	/**
 	 * Reads GREENWICH - NOAA solar spots database. A ArrayList with string arrays
 	 * is returned, with the following fields: group number, group type,
 	 * heliographic longitude, latitude, and area in solar disk units. Position
-	 * is in radians.
-	 * 
+	 * is in radians.<P>
+	 * In case no data is found in the database the method will attempt to download
+	 * updated data for the spots currently visible from the URL
+	 * http://services.swpc.noaa.gov/text/solar-regions.txt. In case this fails it will
+	 * attempt again only three days later. If success they will be updated again three
+	 * days after. Use the method {@linkplain #resetNOAAcurrentSolarSpots} to updated
+	 * them again anytime.
+	 *
 	 * @param jd Julian day of interest.
 	 * @return Array of string with the fields.
 	 * @throws JPARSECException If an error occurs.
@@ -2988,7 +3002,7 @@ public class ReadFile implements Serializable
 
 		ReadFormat rf = new ReadFormat();
 		boolean error = false;
-		
+
 		try
 		{
 			ReadFile rfile = new ReadFile(FileIO.DATA_SUNSPOT_DIRECTORY + fileName, ReadFile.ENCODING_ISO_8859);
@@ -3046,14 +3060,14 @@ public class ReadFile implements Serializable
 					int myyear = Integer.parseInt(FileIO.getField(1, date, " ", true));
 					int myday = Integer.parseInt(FileIO.getField(3, date, " ", true));
 					int mymonth = 1 + DataSet.getIndexStartingWith(AstroDate.MONTH_NAMES, FileIO.getField(2, date, " ", true));
-					
+
 					AstroDate astrodate = new AstroDate(myyear, mymonth, myday);
-					
+
 					double dif = Math.abs(astrodate.jd()-jd);
 					if (dif < 3) {
 						lastNOAAdate = astrodate.jd();
 						lastNOAAdata = data;
-						
+
 						int inum = DataSet.getIndexStartingWith(lines, "# Num");
 						if (lastSun == null) {
 							EphemerisElement eph = new EphemerisElement(TARGET.SUN, EphemerisElement.COORDINATES_TYPE.APPARENT,
@@ -3063,14 +3077,14 @@ public class ReadFile implements Serializable
 							ObserverElement obs = new ObserverElement();
 							lastSun = Ephem.getEphemeris(time, obs, eph, false);
 						}
-						
+
 						for (int i=inum+1; i<lines.length; i++) {
 							String fields[] = DataSet.toStringArray(lines[i], " ", true);
-							
+
 							String group = "NOAA" + fields[0];
 							String type = fields[7];
 							double area = Double.parseDouble(fields[3]) / 1000000.0;
-							
+
 							fields[1] = DataSet.replaceAll(fields[1], "*", "", true);
 							double lon = -Double.parseDouble(fields[1].substring(4));
 							double lat = Double.parseDouble(fields[1].substring(1, 3));
@@ -3079,18 +3093,18 @@ public class ReadFile implements Serializable
 							lon *= Constant.DEG_TO_RAD;
 							lat *= Constant.DEG_TO_RAD;
 							lon += lastSun.longitudeOfCentralMeridian;
-							
+
 							String record[] = new String[] { group, type, "" + lon, "" + lat, "" + area };
 							out.add(record);
 						}
 					}
 				}
-			} catch (Exception exc) { 
-				exc.printStackTrace(); 
+			} catch (Exception exc) {
+				exc.printStackTrace();
 				lastNOAAdate = jd;
-				lastNOAAdata = "";			
-			}			
-			
+				lastNOAAdata = "";
+			}
+
 			if (error && out.size() == 0)
 				throw new JPARSECException("could not read sun spots file.");
 		}
@@ -3103,7 +3117,7 @@ public class ReadFile implements Serializable
 	 * After the file is successfully read, the objects are stored using
 	 * {@linkplain DataBase} with the identifier returned by
 	 * {@linkplain #getDataBaseID()}.
-	 * 
+	 *
 	 * @throws JPARSECException If an error occurs..
 	 */
 	public void readFileOfDoubleStars() throws JPARSECException
@@ -3150,7 +3164,7 @@ public class ReadFile implements Serializable
 	 * After the file is successfully read, the elements are stored using
 	 * {@linkplain DataBase} with the identifier returned by
 	 * {@linkplain #getDataBaseID()}.
-	 * 
+	 *
 	 * @throws JPARSECException If an error occurs..
 	 */
 	public void readOldFileOfDoubleStars() throws JPARSECException
@@ -3194,7 +3208,7 @@ public class ReadFile implements Serializable
 	 * After the file is successfully read, the elements are stored using
 	 * {@linkplain DataBase} with the identifier returned by
 	 * {@linkplain #getDataBaseID()}.
-	 * 
+	 *
 	 * @throws JPARSECException If an error occurs..
 	 */
 	public void readFileOfVariableStars() throws JPARSECException
@@ -3212,7 +3226,7 @@ public class ReadFile implements Serializable
 			int i1 = pathToFile.lastIndexOf(".csv");
 			year = Integer.parseInt(pathToFile.substring(i0 + 8, i1));
 		}
-		
+
 		try
 		{
 			InputStream is = getClass().getClassLoader().getResourceAsStream(pathToFile);
@@ -3248,7 +3262,7 @@ public class ReadFile implements Serializable
 					"error while reading file " + pathToFile + ".", e2);
 		}
 	}
-	
+
 	private boolean satisfyConstraints(String name, LocationElement loc) {
 		if (consName == null && consLoc == null) return true;
 		if (name != null && consName != null) {

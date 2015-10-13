@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.observer;
 
 import java.io.Serializable;
@@ -33,7 +33,7 @@ import jparsec.util.JPARSECException;
  * is necessary to avoid local time in ephemerides calculations if you set an
  * observatory as the observer's location, or to set that value after parsing
  * this object to an {@linkplain ObserverElement}.
- * 
+ *
  * @see Observatory
  * @see ObserverElement
  * @author T. Alonso Albi - OAN (Spain)
@@ -41,7 +41,7 @@ import jparsec.util.JPARSECException;
  */
 public class ObservatoryElement implements Serializable
 {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Constructs an empty observatory, with numerical fields equal to
@@ -61,7 +61,7 @@ public class ObservatoryElement implements Serializable
 
 	/**
 	 * Constructs an observatory object giving the values of the fields.
-	 * 
+	 *
 	 * @param obs_num Number of this observatory in the Marsden official list.
 	 * @param obs_loc Place where the observatory is located.
 	 * @param obs_name Name of the observatory.
@@ -103,7 +103,7 @@ public class ObservatoryElement implements Serializable
 	 * The country the observatory belongs to.
 	 */
 	public String country;
-	
+
 	/**
 	 * Longitude in degrees measured to the east of the observatory.
 	 */
@@ -125,7 +125,7 @@ public class ObservatoryElement implements Serializable
 	 * the observatory.
 	 */
 	public String reference;
-	
+
 	/**
 	 * Creates an observatory object by searching the database for
 	 * a certain observatory by name.
@@ -156,7 +156,7 @@ public class ObservatoryElement implements Serializable
 			country = obs.country;
 		}
 	}
-	
+
 	/**
 	 * Transforms the string code of an observatory to an integer to be saved
 	 * in an instance of {@linkplain ObservatoryElement}.
@@ -168,9 +168,9 @@ public class ObservatoryElement implements Serializable
 		int obs_code = cent * 100 + Integer.parseInt(code.substring(1));
 		return obs_code;
 	}
-	
+
 	/**
-	 * Transforms the integer code of an observatory saved in an instance of 
+	 * Transforms the integer code of an observatory saved in an instance of
 	 * {@linkplain ObservatoryElement} to its string equivalent.
 	 * @param code The observatory code as an integer.
 	 * @return The string equivalent.

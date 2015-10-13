@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.io;
 
 import java.io.*;
@@ -32,7 +32,7 @@ import jparsec.util.Logger.LEVEL;
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
-public class Serialization 
+public class Serialization
 {
 	// private constructor so that this class cannot be instantiated.
 	private Serialization() {}
@@ -41,7 +41,7 @@ public class Serialization
 	 * ID for an invalid serial version.
 	 */
 	public static final long INVALID_SUID = -1;
-	
+
 	/**
 	 * Obtain the serial version of a class.
 	 * @param classPath Path for the class.
@@ -59,7 +59,7 @@ public class Serialization
 		{
 			throw new JPARSECException ("error obtaining serial version.", e);
 		}
-		
+
 		return theSUID;
 	}
 
@@ -68,7 +68,7 @@ public class Serialization
 	 * @param is Input stream to a given serialized object. The
 	 * next object in the stream is read and the UID returned. In
 	 * case mark is supported the read position in the stream is
-	 * reset so that the same object can be read later. 
+	 * reset so that the same object can be read later.
 	 * @return Its serial version.
 	 * @throws JPARSECException If an error occurs.
 	 */
@@ -86,7 +86,7 @@ public class Serialization
 		} catch (Exception e) {
 			throw new JPARSECException ("error obtaining serial version.", e);
 		}
-		
+
 		return theSUID;
 	}
 
@@ -102,18 +102,18 @@ public class Serialization
 			WriteFile.writeAnyExternalFile(filePath, (String) serialObject);
 			return;
 		}
-		
+
 		try {
 			//	  Create a stream for writing.
 		    FileOutputStream fos = new FileOutputStream( filePath );
-		      
-		    ObjectOutputStream outStream = 
+
+		    ObjectOutputStream outStream =
 		        new ObjectOutputStream( fos );
-	
+
 		    //  Save each object.
 		    outStream.writeObject( serialObject );
-	
-		    //  Finally, we call the flush() method for our object, which forces the data to 
+
+		    //  Finally, we call the flush() method for our object, which forces the data to
 		    //  get written to the stream:
 		    outStream.flush();
 		    outStream.close();
@@ -123,7 +123,7 @@ public class Serialization
 			throw new JPARSECException ("error writting serial object.", e);
 		}
 	}
-	
+
 	/**
 	 * Reads an object using serialization.
 	 * @param filePath Path for the file.
@@ -135,10 +135,10 @@ public class Serialization
 		try {
 			 //  Create a stream for reading.
 		      FileInputStream fis = new FileInputStream( filePath );
-	
+
 		      //  Next, create an object that can read from that file.
 		      ObjectInputStream inStream = new ObjectInputStream( fis );
-	
+
 		      // Retrieve the Serializable object.
 		      Object serialObject = inStream.readObject();
 
@@ -150,7 +150,7 @@ public class Serialization
 			throw new JPARSECException ("error reading serial object.", e);
 		}
 	}
-	
+
 	/**
 	 * Writes several objects using serialization.
 	 * @param serialObject A serializable object array.
@@ -162,18 +162,18 @@ public class Serialization
 		try {
 			//	  Create a stream for writing.
 		    FileOutputStream fos = new FileOutputStream( filePath );
-		      
-		    ObjectOutputStream outStream = 
+
+		    ObjectOutputStream outStream =
 		        new ObjectOutputStream( fos );
-	
+
 		    //  Save each object.
 		    for (int i=0; i<serialObject.length; i++)
 		    {
 		    	outStream.writeObject( serialObject[i] );
 		    }
 		    outStream.writeObject("NO_MORE_OBJECTS");
-		    
-		    //  Finally, we call the flush() method for our object, which forces the data to 
+
+		    //  Finally, we call the flush() method for our object, which forces the data to
 		    //  get written to the stream:
 		    outStream.flush();
 		    outStream.close();
@@ -195,18 +195,18 @@ public class Serialization
 		try {
 			//	  Create a stream for writing.
 		    FileOutputStream fos = new FileOutputStream( filePath );
-		      
-		    ObjectOutputStream outStream = 
+
+		    ObjectOutputStream outStream =
 		        new ObjectOutputStream( fos );
-	
+
 		    //  Save each object.
 		    for (int i=0; i<serialObject.size(); i++)
 		    {
 		    	outStream.writeObject( serialObject.get(i) );
 		    }
 		    outStream.writeObject("NO_MORE_OBJECTS");
-		    
-		    //  Finally, we call the flush() method for our object, which forces the data to 
+
+		    //  Finally, we call the flush() method for our object, which forces the data to
 		    //  get written to the stream:
 		    outStream.flush();
 		    outStream.close();
@@ -229,7 +229,7 @@ public class Serialization
 		try {
 			 //  Create a stream for reading.
 		      FileInputStream fis = new FileInputStream( filePath );
-	
+
 		      //  Next, create an object that can read from that file.
 		      ObjectInputStream inStream = new ObjectInputStream( fis );
 
@@ -250,7 +250,7 @@ public class Serialization
 		{
 			throw new JPARSECException ("error reading serial object "+(v.size()+1)+".", e);
 		}
-		
+
 		return v.toArray();
 	}
 
@@ -271,7 +271,7 @@ public class Serialization
 		try {
 			 //  Create a stream for reading.
 		      FileInputStream fis = new FileInputStream( filePath );
-	
+
 		      //  Next, create an object that can read from that file.
 		      ObjectInputStream inStream = new ObjectInputStream( fis );
 
@@ -289,7 +289,7 @@ public class Serialization
 		    	  if (skip) {
 		    		  try { serialObject = inStream.readObject(); } catch (Exception exc) { serialObject = null; }
 		    	  } else {
-			    	  serialObject = inStream.readObject();		    		  
+			    	  serialObject = inStream.readObject();
 		    	  }
 		    	  if (serialObject != null && serialObject instanceof String && "NO_MORE_OBJECTS".equals(serialObject)) {
 		    		  moreObjects = false;
@@ -305,7 +305,7 @@ public class Serialization
 		{
 			throw new JPARSECException ("error reading serial object "+(n+1)+".", e);
 		}
-		
+
 		return v.toArray();
 	}
 
@@ -323,7 +323,7 @@ public class Serialization
 		try {
 			 //  Create a stream for reading.
 		      FileInputStream fis = new FileInputStream( filePath );
-	
+
 		      //  Next, create an object that can read from that file.
 		      ObjectInputStream inStream = new ObjectInputStream( fis );
 
@@ -345,7 +345,7 @@ public class Serialization
 		{
 			throw new JPARSECException ("error reading serial object "+(n+1)+".", e);
 		}
-		
+
 		return v.toArray();
 	}
 
@@ -389,7 +389,7 @@ class getUID extends ObjectInputStream {
 	public String name;
 	/** Serial version. */
 	public long serialVersion;
-	
+
 	/**
 	 * Constructor for an input stream.
 	 * @param in The stream.

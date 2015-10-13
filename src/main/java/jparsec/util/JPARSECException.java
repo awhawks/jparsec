@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.util;
 
 import java.io.ByteArrayOutputStream;
@@ -38,13 +38,13 @@ import jparsec.util.Logger.LEVEL;
 /**
  * An exception is thrown if the caller attempts to pass an invalid value,
  * or the results of a calculation generate an invalid operation.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
 public class JPARSECException extends Exception implements Serializable
 {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	// Exception fields
 	private String header;
@@ -55,23 +55,23 @@ public class JPARSECException extends Exception implements Serializable
 	private static String warnings = "";
 	private static boolean treatWarningsAsErrors = false;
 	private static ArrayList<String> warningCodes = new ArrayList<String>();
-	
+
 	/** Set to true to disable the processing of warning messages. Default value is false. */
 	public static boolean DISABLE_WARNINGS = false;
 
 	/**
 	 * Returns warnings.
-	 * 
+	 *
 	 * @return Description.
 	 */
 	public static String getWarnings()
 	{
 		return warnings;
 	}
-	
+
 	/**
 	 * Set the value of the warnings string.
-	 * 
+	 *
 	 * @param warns Warnings, set to empty string to reset.
 	 */
 	public static void setWarnings(String warns)
@@ -83,14 +83,14 @@ public class JPARSECException extends Exception implements Serializable
 	/**
 	 * Adds a warning. Care should be taken in order to avoid sending too much
 	 * warnings, that could freeze the execution.
-	 * 
+	 *
 	 * @param warning Warning to add.
 	 * @throws JPARSECException Thrown if {@linkplain JPARSECException#treatWarningsAsErrors} is set to true.
 	 */
 	public static void addWarning(String warning) throws JPARSECException
 	{
 		if (DISABLE_WARNINGS) return;
-		
+
 		String date = "(" + (new AstroDate()).toString() + ") ";
 		String header = JPARSECException.getLastMethodName() + ": ";
 		String w = header + warning;
@@ -98,7 +98,7 @@ public class JPARSECException extends Exception implements Serializable
 		int code = JPARSECException.getCode(w);
 		String c = ""+code;
 		if (!warningCodes.contains(c) && warnings.indexOf(w) < 0)
-		{		
+		{
 			warnings += date + w + FileIO.getLineSeparator();
 			warningCodes.add(c);
 			Logger.log(LEVEL.WARNING, warning, JPARSECException.getLastMethodName());
@@ -115,14 +115,14 @@ public class JPARSECException extends Exception implements Serializable
 
 	/**
 	 * Sets whether to treat warning as errors or not.
-	 * 
+	 *
 	 * @param warningsAsErrors True for treating warnings as errors.
 	 */
 	public static void treatWarningsAsErrors(boolean warningsAsErrors)
 	{
 		treatWarningsAsErrors = warningsAsErrors;
 	}
-	
+
 	/**
 	 * Returns whether warnings are considered as errors or not.
 	 */
@@ -141,7 +141,7 @@ public class JPARSECException extends Exception implements Serializable
 
 	/**
 	 * Returns error description.
-	 * 
+	 *
 	 * @return Description.
 	 */
 	public String getMessage()
@@ -160,7 +160,7 @@ public class JPARSECException extends Exception implements Serializable
 
 	/**
 	 * Returns header.
-	 * 
+	 *
 	 * @return Header.
 	 */
 	public String getHeader()
@@ -170,7 +170,7 @@ public class JPARSECException extends Exception implements Serializable
 
 	/**
 	 * Sets the header.
-	 * 
+	 *
 	 * @param newHeader The new header.
 	 */
 	public void setHeader(String newHeader)
@@ -186,7 +186,7 @@ public class JPARSECException extends Exception implements Serializable
 	{
 		return JPARSECException.getTrace(this.getStackTrace());
 	}
-	
+
 	/**
 	 * Returns the stack trace message.
 	 * @param trace The stack trace.
@@ -201,7 +201,7 @@ public class JPARSECException extends Exception implements Serializable
 		}
 		return out;
 	}
-	
+
 	/**
 	 * Returns the throwable.
 	 */
@@ -216,7 +216,7 @@ public class JPARSECException extends Exception implements Serializable
 	 */
 	public String getStackTraceDetails() {
 		if (exception == null) return null;
-		
+
 		Writer sw = new StringWriter();
 		PrintWriter pr = new PrintWriter(sw);
 		exception.printStackTrace(pr);
@@ -224,7 +224,7 @@ public class JPARSECException extends Exception implements Serializable
 	}
 	/**
 	 * Constructs the appropriate exception with the specified string.
-	 * 
+	 *
 	 * @param message String exception message.
 	 */
 	public JPARSECException(String message)
@@ -236,7 +236,7 @@ public class JPARSECException extends Exception implements Serializable
 
 	/**
 	 * Constructs the appropriate exception with the specified options.
-	 * 
+	 *
 	 * @param exc Exception thrown.
 	 */
 	public JPARSECException(Throwable exc)
@@ -246,7 +246,7 @@ public class JPARSECException extends Exception implements Serializable
 
 	/**
 	 * Constructs the appropriate exception with the specified options.
-	 * 
+	 *
 	 * @param message String exception message.
 	 * @param exc Exception thrown.
 	 */
@@ -254,12 +254,12 @@ public class JPARSECException extends Exception implements Serializable
 	{
 		Exception jpe;
 		if (message == null) {
-			jpe = new Exception(exc);			
+			jpe = new Exception(exc);
 		} else {
 			jpe = new Exception(message, exc);
 		}
 		exception = jpe.getCause();
-		
+
 		String header = JPARSECException.getLastMethodName() + ": ";
 		setHeader(header);
 		setDescription(jpe.getLocalizedMessage());
@@ -268,7 +268,7 @@ public class JPARSECException extends Exception implements Serializable
 
 	/**
 	 * Shows the exception message.
-	 * 
+	 *
 	 * @param ve Exception object.
 	 */
 	public static void showException(JPARSECException ve)
@@ -296,7 +296,7 @@ public class JPARSECException extends Exception implements Serializable
 	 * warnings and exceptions by giving only a message description, since such
 	 * code can be cached with this method before launching certain exception
 	 * with a given message. Also it allows to avoid duplication of warnings.
-	 * 
+	 *
 	 * @param error_or_warning Description message.
 	 * @return Code for the error/warning.
 	 */
@@ -315,7 +315,7 @@ public class JPARSECException extends Exception implements Serializable
 
 	/**
 	 * Returns the name of the method which is being executed.
-	 * 
+	 *
 	 * @return Method name.
 	 */
 	public static String getCurrentMethodName()
@@ -347,10 +347,10 @@ public class JPARSECException extends Exception implements Serializable
 		pw.close();
 		return stackTrace;
 	}
-	
+
 	/**
 	 * Returns the name of the method that called the one in execution.
-	 * 
+	 *
 	 * @return Method name.
 	 */
 	public static String getLastMethodName()

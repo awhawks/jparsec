@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.io.image;
 
 import java.io.ByteArrayInputStream;
@@ -41,7 +41,7 @@ public class Base64Coder {
 
 	//The line separator string of the operating system.
 	private static final String systemLineSeparator = System.getProperty("line.separator");
-	
+
 	//Mapping table from 6-bit nibbles to Base64 characters.
 	private static char[]    map1 = new char[64];
 	static {
@@ -50,13 +50,13 @@ public class Base64Coder {
 	   for (char c='a'; c<='z'; c++) map1[i++] = c;
 	   for (char c='0'; c<='9'; c++) map1[i++] = c;
 	   map1[i++] = '+'; map1[i++] = '/'; }
-	
+
 	//Mapping table from Base64 characters to 6-bit nibbles.
 	private static byte[]    map2 = new byte[128];
 	static {
 	   for (int i=0; i<map2.length; i++) map2[i] = -1;
 	   for (int i=0; i<64; i++) map2[map1[i]] = (byte)i; }
-	
+
 	/**
 	 * Encodes an object to base 64.
 	 * @param obj The object.
@@ -67,7 +67,7 @@ public class Base64Coder {
 	 */
 	public static String encodeObject(Object obj, boolean getHTMLCode) throws JPARSECException {
 		try {
-			String s = "";	
+			String s = "";
 		    ByteArrayOutputStream fos = new ByteArrayOutputStream();
 		    ObjectOutputStream outStream = new ObjectOutputStream( fos );
 		    outStream.writeObject(obj);
@@ -98,7 +98,7 @@ public class Base64Coder {
 			throw new JPARSECException("Cannot decode this object. Details: "+exc.getLocalizedMessage(), exc);
 		}
 	}
-	
+
 	/**
 	* Encodes a string into Base64 format.
 	* No blanks or line breaks are inserted.
@@ -106,9 +106,9 @@ public class Base64Coder {
 	* @return   A String containing the Base64 encoded data.
 	*/
 	public static String encodeString (String s) {
-		return new String(encode(s.getBytes())); 
+		return new String(encode(s.getBytes()));
 	}
-	
+
 	/**
 	* Encodes a byte array into Base 64 format and breaks the output into lines of 76 characters.
 	* This method is compatible with <code>sun.misc.BASE64Encoder.encodeBuffer(byte[])</code>.
@@ -117,9 +117,9 @@ public class Base64Coder {
 	* @throws  JPARSECException lineLen is set to 76, so this should never happen.
 	*/
 	public static String encodeLines (byte[] in) throws JPARSECException {
-		return encodeLines(in, 0, in.length, 76, systemLineSeparator); 
+		return encodeLines(in, 0, in.length, 76, systemLineSeparator);
 	}
-	
+
 	/**
 	* Encodes a byte array into Base 64 format and breaks the output into lines.
 	* @param in            An array containing the data bytes to be encoded.
@@ -142,9 +142,9 @@ public class Base64Coder {
 		   buf.append (encode(in, iOff+ip, l));
 		   buf.append (lineSeparator);
 		   ip += l; }
-		return buf.toString(); 
+		return buf.toString();
 	}
-	
+
 	/**
 	* Encodes a byte array into Base64 format.
 	* No blanks or line breaks are inserted in the output.
@@ -152,9 +152,9 @@ public class Base64Coder {
 	* @return    A character array containing the Base64 encoded data.
 	*/
 	public static char[] encode (byte[] in) {
-		return encode(in, 0, in.length); 
+		return encode(in, 0, in.length);
 	}
-	
+
 	/**
 	* Encodes a byte array into Base64 format.
 	* No blanks or line breaks are inserted in the output.
@@ -163,9 +163,9 @@ public class Base64Coder {
 	* @return      A character array containing the Base64 encoded data.
 	*/
 	public static char[] encode (byte[] in, int iLen) {
-		return encode(in, 0, iLen); 
+		return encode(in, 0, iLen);
 	}
-	
+
 	/**
 	* Encodes a byte array into Base64 format.
 	* No blanks or line breaks are inserted in the output.
@@ -192,11 +192,11 @@ public class Base64Coder {
 		   out[op++] = map1[o0];
 		   out[op++] = map1[o1];
 		   out[op] = op < oDataLen ? map1[o2] : '='; op++;
-		   out[op] = op < oDataLen ? map1[o3] : '='; op++; 
+		   out[op] = op < oDataLen ? map1[o3] : '='; op++;
 		}
-		return out; 
+		return out;
 	}
-	
+
 	/**
 	* Decodes a string from Base64 format.
 	* No blanks or line breaks are allowed within the Base64 encoded input data.
@@ -205,9 +205,9 @@ public class Base64Coder {
 	* @throws   JPARSECException If the input is not valid Base64 encoded data.
 	*/
 	public static String decodeString (String s) throws JPARSECException {
-		return new String(decode(s)); 
+		return new String(decode(s));
 	}
-	
+
 	/**
 	* Decodes a byte array from Base64 format and ignores line separators, tabs and blanks.
 	* CR, LF, Tab and Space characters are ignored in the input data.
@@ -222,11 +222,11 @@ public class Base64Coder {
 		for (int ip = 0; ip < s.length(); ip++) {
 		   char c = s.charAt(ip);
 		   if (c != ' ' && c != '\r' && c != '\n' && c != '\t')
-		      buf[p++] = c; 
+		      buf[p++] = c;
 		}
-		return decode(buf, 0, p); 
+		return decode(buf, 0, p);
 	}
-	
+
 	/**
 	* Decodes a byte array from Base64 format.
 	* No blanks or line breaks are allowed within the Base64 encoded input data.
@@ -235,9 +235,9 @@ public class Base64Coder {
 	* @throws   JPARSECException If the input is not valid Base64 encoded data.
 	*/
 	public static byte[] decode (String s) throws JPARSECException {
-		return decode(s.toCharArray()); 
+		return decode(s.toCharArray());
 	}
-	
+
 	/**
 	* Decodes a byte array from Base64 format.
 	* No blanks or line breaks are allowed within the Base64 encoded input data.
@@ -246,9 +246,9 @@ public class Base64Coder {
 	* @throws    JPARSECException If the input is not valid Base64 encoded data.
 	*/
 	public static byte[] decode (char[] in) throws JPARSECException {
-		return decode(in, 0, in.length); 
+		return decode(in, 0, in.length);
 	}
-	
+
 	/**
 	* Decodes a byte array from Base64 format.
 	* No blanks or line breaks are allowed within the Base64 encoded input data.
@@ -284,11 +284,11 @@ public class Base64Coder {
 		   int o2 = ((b2 &   3)<<6) |  b3;
 		   out[op++] = (byte)o0;
 		   if (op<oLen) out[op++] = (byte)o1;
-		   if (op<oLen) out[op++] = (byte)o2; 
+		   if (op<oLen) out[op++] = (byte)o2;
 		}
-		return out; 
+		return out;
 	}
-	
+
 	//Dummy constructor.
 	private Base64Coder() {}
 }

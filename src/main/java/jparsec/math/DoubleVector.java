@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 
 /*
  *    DoubleVector.java
@@ -36,7 +36,7 @@ import jparsec.util.JPARSECException;
 
 /**
  * A vector specialized on doubles.
- * 
+ *
  * @author Yong Wang
  * @version $Revision: 1.2 $
  */
@@ -45,21 +45,21 @@ public class  DoubleVector implements Cloneable {
   double[] V; // array for internal storage of elements.
 
   private int  sizeOfVector;      // size of the vector
-  
+
   /** Constructs a null vector.
    */
   public DoubleVector() {
     this( 0 );
   }
-    
-  /** Constructs an n-vector of zeros. 
+
+  /** Constructs an n-vector of zeros.
       @param n    length.
   */
   public DoubleVector( int n ){
     V = new double[ n ];
     sizeOfVector = V.length;
   }
-    
+
   /** Constructs a constant n-vector.
       @param n    length.
       @param s    the scalar value used to fill the vector
@@ -68,7 +68,7 @@ public class  DoubleVector implements Cloneable {
     this( n );
     set( s );
   }
-    
+
   /** Constructs a vector directly from a double array
    *  @param v   the array
    */
@@ -93,16 +93,16 @@ public class  DoubleVector implements Cloneable {
        sizeOfVector = V.length;
   }
 
-    
+
   /** Set a single element.
    *  @param i    Index.
    *  @param s    a[i].
    */
   public void  set( int i, double s ) {
-    
+
     V[i] = s;
   }
-    
+
   /** Set all elements to a value
    *  @param s    the value
    */
@@ -113,7 +113,7 @@ public class  DoubleVector implements Cloneable {
   /** Set some elements to a value
    *  @param i0 the index of the first element
    *  @param i1 the index of the second element
-   *  @param s the value 
+   *  @param s the value
    */
   public void set( int i0, int i1, double s ) {
 
@@ -131,14 +131,14 @@ public class  DoubleVector implements Cloneable {
     for(int i = i0; i<= i1; i++)
       V[i] = v[j0 + i - i0];
   }
-    
+
   /** Set the elements using a DoubleVector
    *  @param v the DoubleVector
    */
   public void  set( DoubleVector v ){
     set( 0, v.size() - 1, v, 0);
   }
-  
+
   /** Set some elements using a DoubleVector.
    *  @param i0 the index of the first element
    *  @param i1 the index of the second element
@@ -149,14 +149,14 @@ public class  DoubleVector implements Cloneable {
     for(int i = i0; i<= i1; i++)
       V[i] = v.V[j0 + i - i0];
   }
-  
+
   /** Access the internal one-dimensional array.
       @return     Pointer to the one-dimensional array of vector elements.
   */
   public double []  getArray() {
     return V;
   }
-    
+
   void  setArray( double [] a ) {
     V = a;
   }
@@ -165,46 +165,46 @@ public class  DoubleVector implements Cloneable {
       @return the one-dimensional array.  */
   public double[] getArrayCopy() {
     double v[] = new double[size()];
-    
-    for(int i= 0; i < size(); i++ ) 
+
+    for(int i= 0; i < size(); i++ )
       v[i] = V[i];
-    
+
     return v;
   }
-    
+
   /** Sorts the array in place */
   public void  sort() {
     Arrays.sort( V, 0, size() );
   }
-  
+
   /** Gets the size of the vector.
       @return     the size
   */
   public int  size(){
     return sizeOfVector;
   }
-    
-  /** 
+
+  /**
    *  Sets the size of the vector
    *  @param m the size
    * @throws JPARSECException If the size is greater than the capacity.
-   */ 
+   */
   public void  setSize( int m ) throws JPARSECException{
-    if( m > capacity() ) 
+    if( m > capacity() )
       throw new JPARSECException("insufficient capacity");
     sizeOfVector = m;
   }
-    
+
   /** Gets the capacity of the vector.
    *  @return     the capacity.
    */
   public int  capacity() {
     if( V == null ) return 0;
     return V.length;
-  } 
+  }
 
   /** Sets the capacity of the vector
-   *  @param n the capacity.  
+   *  @param n the capacity.
    * @throws JPARSECException If an error occurs.
    */
   public void  setCapacity ( int n ) throws JPARSECException {
@@ -223,29 +223,29 @@ public class  DoubleVector implements Cloneable {
   public double  get( int i ) {
     return V[i];
   }
-    
-  /** 
-   *  Adds a value to an element 
-   *  @param i  the index of the element 
+
+  /**
+   *  Adds a value to an element
+   *  @param i  the index of the element
    *  @param s the value
    */
   public void  setPlus( int i, double s ) {
     V[i] += s;
   }
-    
-  /** 
-   *  Multiplies a value to an element 
-   *  @param i  the index of the element 
+
+  /**
+   *  Multiplies a value to an element
+   *  @param i  the index of the element
    *  @param s the value
    */
   public void  setTimes( int i, double s ) {
     V[i] *= s;
   }
-    
+
   /**
    *  Adds an element into the vector.
    *  @param x  the value of the new element.
-   * @throws JPARSECException If the size (incremented by 1 with this call) 
+   * @throws JPARSECException If the size (incremented by 1 with this call)
    * is greater than the capacity.
    */
   public void addElement( double x ) throws JPARSECException {
@@ -254,23 +254,23 @@ public class  DoubleVector implements Cloneable {
     V[size()] = x;
     setSize( size() + 1 );
   }
-  
+
   /**
    *  Returns the squared vector.
    *  @return The result as a new vector, without modifying the current instance.
    */
   public DoubleVector square() {
-    DoubleVector v = new DoubleVector( size() ); 
+    DoubleVector v = new DoubleVector( size() );
     for(int i = 0; i < size(); i++ ) v.V[i] = V[i] * V[i];
     return v;
   }
 
   /**
-   *  Returns the inverted vector 
+   *  Returns the inverted vector
    *  @return The result as a new vector, without modifying the current instance.
    */
   public DoubleVector invert() {
-    DoubleVector v = new DoubleVector( size() ); 
+    DoubleVector v = new DoubleVector( size() );
     for(int i = 0; i < size(); i++ ) v.V[i] = 1.0 / V[i];
     return v;
   }
@@ -280,7 +280,7 @@ public class  DoubleVector implements Cloneable {
    *  @return The result as a new vector, without modifying the current instance.
    */
   public DoubleVector sqrt() {
-    DoubleVector v = new DoubleVector( size() ); 
+    DoubleVector v = new DoubleVector( size() );
     for(int i = 0; i < size(); i++ ) v.V[i] = Math.sqrt(V[i]);
     return v;
   }
@@ -288,21 +288,21 @@ public class  DoubleVector implements Cloneable {
   /** Makes a deep copy of the vector.
    *  @return The result as a new vector, without modifying the current instance.
    */
-  public DoubleVector  copy() { 
+  public DoubleVector  copy() {
     return clone();
   }
-    
+
   /** Clones the DoubleVector object.
    */
-  public DoubleVector  clone() { 
+  public DoubleVector  clone() {
     int n = size();
     DoubleVector u = new DoubleVector( n );
-    for( int i = 0; i < n; i++) 
+    for( int i = 0; i < n; i++)
       u.V[i] = V[i];
     return u;
   }
-    
-  /** 
+
+  /**
    * Returns the inner product of two DoubleVectors
    * @param v the second DoubleVector
    * @return the product
@@ -310,7 +310,7 @@ public class  DoubleVector implements Cloneable {
    * is different from this one.
    */
   public double  innerProduct(DoubleVector v) throws JPARSECException {
-    if(size() != v.size()) 
+    if(size() != v.size())
       throw new JPARSECException("sizes unmatch");
     double p = 0;
     for (int i = 0; i < size(); i++) {
@@ -318,12 +318,12 @@ public class  DoubleVector implements Cloneable {
     }
     return p;
   }
-    
-  /** 
+
+  /**
    * Returns the signs of all elements in terms of -1, 0 and +1.
    * @return The sign.
    */
-  public DoubleVector sign() 
+  public DoubleVector sign()
   {
     DoubleVector s = new DoubleVector( size() );
     for( int i = 0; i < size(); i++ ) {
@@ -332,18 +332,18 @@ public class  DoubleVector implements Cloneable {
       else s.V[i] = 0;
     }
     return s;
-  } 
+  }
 
   /** Returns the sum of all elements in the vector.
    *  @return The result.
    */
-  public double  sum() 
+  public double  sum()
   {
     double s = 0;
     for( int i=0; i< size(); i++) s += V[i];
     return s;
   }
-    
+
   /** Returns the squared sum of all elements in the vector.
    *  @return The result.
    */
@@ -353,7 +353,7 @@ public class  DoubleVector implements Cloneable {
     for( int i=0; i< size(); i++) s2 += V[i] * V[i];
     return s2;
   }
-  
+
   /** Returns the L1-norm of the vector
    *  @return The L1 norm.
    */
@@ -363,44 +363,44 @@ public class  DoubleVector implements Cloneable {
     for( int i=0; i< size(); i++) s += Math.abs(V[i]);
     return s;
   }
-  
+
   /** Returns the L2-norm of the vector.
    * @return The norm, sqrt(x^2+...).
    */
   public double norm2()
   {
-    return Math.sqrt(sum2());
+    return Math.sqrt( sum2() );
   }
 
   /** Returns ||u-v||^2.
    *  @param v the second vector.
    *  @return The result as a new vector, without modifying the current instance.
    */
-  public double sum2( DoubleVector v ) 
+  public double sum2( DoubleVector v )
   {
     return minus( v ).sum2();
   }
-  
+
   /** Returns a subvector.
    *  @param i0   the index of the first element.
    *  @param i1   the index of the last element.
    *  @return     v[i0:i1].
    */
-  public DoubleVector  subvector( int i0, int i1 ) 
+  public DoubleVector  subvector( int i0, int i1 )
   {
     DoubleVector v = new DoubleVector( i1-i0+1 );
     v.set(0, i1 - i0, this, i0);
     return v;
   }
-    
-  /** Adds a value to all the elements 
+
+  /** Adds a value to all the elements
    *  @param x the value
    *  @return The result as a new vector, without modifying the current instance.
    */
   public DoubleVector  plus ( double x ) {
-    return copy().plusEquals( x );	
+    return copy().plusEquals( x );
   }
-  
+
   /** Adds a value to all the elements in place
    *  @param x the value.
    *  @return The same vector of the instance.
@@ -410,18 +410,18 @@ public class  DoubleVector implements Cloneable {
       V[i] += x;
     return this;
   }
-  
-  /** 
-   *  Adds another vector element by element 
+
+  /**
+   *  Adds another vector element by element
    *  @param v the second vector
    *  @return The result as a new vector, without modifying the current instance.
    */
   public DoubleVector  plus( DoubleVector v ) {
     return copy().plusEquals( v );
   }
-  
-  /** 
-   *  Adds another vector in place element by element 
+
+  /**
+   *  Adds another vector in place element by element
    *  @param v the second vector
    *  @return The same vector of the instance.
    */
@@ -430,8 +430,8 @@ public class  DoubleVector implements Cloneable {
       V[i] += v.V[i];
     return this;
   }
-  
-  /** 
+
+  /**
    *  Subtracts a value
    *  @param x the value
    *  @return The result as a new vector, without modifying the current instance.
@@ -439,8 +439,8 @@ public class  DoubleVector implements Cloneable {
   public DoubleVector  minus( double x ) {
     return plus( -x );
   }
-  
-  /** 
+
+  /**
    *  Subtracts a value in place
    *  @param x the value
    *  @return The same vector of the instance.
@@ -449,8 +449,8 @@ public class  DoubleVector implements Cloneable {
     plusEquals( -x );
     return this;
   }
-  
-  /** 
+
+  /**
    *  Subtracts another DoubleVector element by element .
    *  @param v the second DoubleVector.
    *  @return The result as a new vector, without modifying the current instance.
@@ -458,8 +458,8 @@ public class  DoubleVector implements Cloneable {
   public DoubleVector  minus( DoubleVector v ) {
     return copy().minusEquals( v );
   }
-  
-  /** 
+
+  /**
    *  Subtracts another DoubleVector element by element in place.
    *  @param v the second DoubleVector.
    *  @return The same vector of the instance.
@@ -469,7 +469,7 @@ public class  DoubleVector implements Cloneable {
       V[i] -=  v.V[i];
     return this;
   }
-    
+
   /** Multiplies by a scalar
       @param s    scalar
       @return     s * v
@@ -477,7 +477,7 @@ public class  DoubleVector implements Cloneable {
   public DoubleVector  times( double s ) {
     return copy().timesEquals( s );
   }
-    
+
   /** Multiply a vector by a scalar in place, u = s * u
    *  @param s    scalar
    *  @return     replace u by s * u
@@ -489,19 +489,19 @@ public class  DoubleVector implements Cloneable {
     }
     return this;
   }
-    
-  /** 
+
+  /**
    *  Multiplies another DoubleVector element by element
    *  @param v the second DoubleVector
    *  @return The result as a new vector, without modifying the current instance.
    */
   public DoubleVector  times( DoubleVector v ) {
-    return copy().timesEquals( v ); 
-    
+    return copy().timesEquals( v );
+
   }
-    
-  /** 
-   *  Multiplies another DoubleVector element by element in place 
+
+  /**
+   *  Multiplies another DoubleVector element by element in place
    *  @param v the second DoubleVector
    *  @return The same vector of the instance.
    */
@@ -510,8 +510,8 @@ public class  DoubleVector implements Cloneable {
       V[i] *= v.V[i];
     return this;
   }
-  
-  /** 
+
+  /**
    *  Divided by another DoubleVector element by element
    *  @param v the second DoubleVector
    *  @return The result as a new vector, without modifying the current instance.
@@ -519,9 +519,9 @@ public class  DoubleVector implements Cloneable {
   public DoubleVector  dividedBy ( DoubleVector v ) {
     return copy().dividedByEquals( v );
   }
-  
-  /** 
-   *  Divided by another DoubleVector element by element in place 
+
+  /**
+   *  Divided by another DoubleVector element by element in place
    *  @param v the second DoubleVector
    *  @return The same vector of the instance.
    */
@@ -531,8 +531,8 @@ public class  DoubleVector implements Cloneable {
     }
     return this;
   }
-  
-  /** 
+
+  /**
    *  Checks if it is an empty vector.
    *  @return True if size() == 0, or false.
    */
@@ -540,30 +540,30 @@ public class  DoubleVector implements Cloneable {
     if( size() == 0 ) return true;
     return false;
   }
-  
-  /** 
+
+  /**
    * Returns a vector that stores the cumulated values of the original
    * vector.
    *  @return The result as a new vector, without modifying the current instance.
    */
-  public DoubleVector cumulate() 
+  public DoubleVector cumulate()
   {
     return copy().cumulateInPlace();
   }
-	
-  /** 
-   * Cumulates the original vector in place 
+
+  /**
+   * Cumulates the original vector in place
    *  @return The result as a new vector, without modifying the current instance.
    */
-  public DoubleVector cumulateInPlace() 
+  public DoubleVector cumulateInPlace()
   {
     for (int i = 1; i < size(); i++) {
       V[i] += V[i-1];
     }
     return this;
   }
-	
-  /** 
+
+  /**
    * Returns the index of the maximum. <p>
    * If multiple maximums exist, the index of the first is returned.
    * @return Index of maximum.
@@ -581,9 +581,9 @@ public class  DoubleVector implements Cloneable {
     }
     return index;
   }
-  
 
-  /** 
+
+  /**
    * Returns true if vector not sorted.
    * @return True or false.
    */
@@ -595,7 +595,7 @@ public class  DoubleVector implements Cloneable {
     }
     return false;
   }
-  
+
   /**
    *  Combine two vectors together.
    *  @param v the second vector.
@@ -607,7 +607,7 @@ public class  DoubleVector implements Cloneable {
     w.set(size(), size() + v.size()-1, v, 0);
     return w;
   }
-    
+
   /**
    *  Swaps the values stored at i and j.
    *  @param i the index i.
@@ -634,7 +634,7 @@ public class  DoubleVector implements Cloneable {
     }
     return ma;
   }
-  
+
 
   /**
    *  Applies a method to the vector
@@ -646,15 +646,15 @@ public class  DoubleVector implements Cloneable {
   public DoubleVector map( String className, String method ) throws JPARSECException {
     try {
       Class c = Class.forName( className );
-      Class [] cs = new Class[1]; 
+      Class [] cs = new Class[1];
       cs[ 0 ] = Double.TYPE;
       Method m = c.getMethod( method, cs );
-      
+
       DoubleVector w = new DoubleVector( size() );
       Object [] obj = new Object[1];
       for( int i = 0; i < size(); i++ ) {
 		obj[0] = new Double( V[i] );
-		w.set( i, DataSet.parseDouble(m.invoke( null, obj ).toString()) ); 
+		w.set( i, DataSet.parseDouble(m.invoke( null, obj ).toString()) );
       }
       return w;
     }
@@ -666,20 +666,20 @@ public class  DoubleVector implements Cloneable {
   /**
    * Returns the reverse vector.
    * @return Reverse vector.
-   */ 
-  public DoubleVector rev() {
+   */
+  public DoubleVector  rev() {
     int n = size();
     DoubleVector w = new DoubleVector( n );
     for(int i = 0; i < n; i++ )
       w.V[i] = V[n-i-1];
     return w;
   }
-  
+
   /**
    * Returns a random vector of uniform distribution
    * @param n the size of the vector
    * @return A random vector.
-   */ 
+   */
   public static DoubleVector  random( int n ) {
     DoubleVector v = new DoubleVector( n );
     for (int i = 0; i < n; i++) {
@@ -689,12 +689,12 @@ public class  DoubleVector implements Cloneable {
   }
 
   /**
-   * Checks if this vector is equal to another.
+   * Checks if this vector is equals to another.
    * @param v The other vector.
-   * @return True is they have the same components, 
+   * @return True is they have the same components,
    * false otherwise.
    */
-  @Override
+	@Override
   public boolean equals(Object v) {
     if (this == v) return true;
     if (!(v instanceof DoubleVector)) return false;
@@ -705,7 +705,7 @@ public class  DoubleVector implements Cloneable {
     return Arrays.equals(V, that.V);
   }
 
-  @Override
+	@Override
   public int hashCode() {
     int result = V != null ? Arrays.hashCode(V) : 0;
     result = 31 * result + sizeOfVector;
@@ -737,7 +737,7 @@ public class  DoubleVector implements Cloneable {
   public String toString() {
 	  return DataSet.toString(DataSet.toStringValues(V), ", ");
   }
-  
+
   /**
    * Returns an array with a given component of a set of double vectors.
    * @param v The set of vectors.

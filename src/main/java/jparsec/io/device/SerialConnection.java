@@ -1,42 +1,42 @@
 /*
- * SerialConnection.java 
+ * SerialConnection.java
  *
  * Copyright (c) 2003, Raben Systems, Inc.
  * All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without 
+ * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
- *    Redistributions of source code must retain the above copyright notice, 
- *    this list of conditions and the following disclaimer. 
- *    
- *    Redistributions in binary form must reproduce the above copyright notice, 
- *    this list of conditions and the following disclaimer in the documentation 
+ *    Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ *    Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
- *    Neither the name of Raben Systems, Inc. nor the names of its contributors 
- *    may be used to endorse or promote products derived from this software 
+ *
+ *    Neither the name of Raben Systems, Inc. nor the names of its contributors
+ *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE 
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * 
+ *
+ *
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -60,51 +60,51 @@ import jparsec.util.JPARSECException;
  * @author T. Alonso Albi - OAN (Spain)
  * @version $Revision: 1.1.1.1 $ $Date: 2003/06/13 04:51:09 $
 */
-public class SerialConnection implements SerialPortEventListener, 
+public class SerialConnection implements SerialPortEventListener,
         CommPortOwnershipListener {
     /** Output stream for communications */
     private OutputStream os;
-    
+
     /** Input stream for communications */
     private InputStream is;
-    
+
     /** Communications port id */
     private CommPortIdentifier portId;
-    
+
     /** Serial port */
     private SerialPort serialPort;
-    
+
     /** flag to indicate whehter comm port is open */
     private boolean open = false;
-    
+
     /** Name of the communications port */
     private String portName = "COM1";
-    
+
     /** Baud rate of connection */
     private int baudRate = 9600;
-    
+
     /** Number of data bits */
     private int databits = SerialPort.DATABITS_8;
-    
+
     /** Number of stop bits */
     private int stopbits = SerialPort.STOPBITS_1;
-    
+
     /** Parity */
-    private int parity = SerialPort.PARITY_NONE; 
-    
+    private int parity = SerialPort.PARITY_NONE;
+
     /** Flow control */
-    private int flowControl = SerialPort.FLOWCONTROL_NONE 
+    private int flowControl = SerialPort.FLOWCONTROL_NONE
         | SerialPort.FLOWCONTROL_NONE;
-    
+
     /** Queue for receiving characters from comm port */
     private MessageQueue messageQueue = new MessageQueue();
-    
+
     /** Buffer for receiving chars from comm port */
     private StringBuffer inputBuffer = new StringBuffer();
-    
+
     /** Debug flag */
     private boolean debug = false;
-    
+
     /**
      * Create a SerialConnection using default settings of
      * 8 bits, 9600 baud, no parity, no flow control, and 1 stop bit on
@@ -120,7 +120,7 @@ public class SerialConnection implements SerialPortEventListener,
 
     // Obtain a port identifier
     try {
-        portId = 
+        portId =
                 CommPortIdentifier.getPortIdentifier(getPortName());
         } catch (NoSuchPortException e) {
         	e.printStackTrace();
@@ -129,7 +129,7 @@ public class SerialConnection implements SerialPortEventListener,
 
         // Open the port
     try {
-        serialPort = (SerialPort) portId.open("Telescope Connection", 
+        serialPort = (SerialPort) portId.open("Telescope Connection",
                 30000);
     } catch (PortInUseException e) {
         throw new JPARSECException(e.getMessage());
@@ -137,11 +137,11 @@ public class SerialConnection implements SerialPortEventListener,
 
         // Set serial port connection parameters
     try {
-        setSerialPortConnectionParameters(); 
+        setSerialPortConnectionParameters();
         os = serialPort.getOutputStream();
-        is = serialPort.getInputStream(); 
+        is = serialPort.getInputStream();
         os.flush();
-    } catch (IOException e) {    
+    } catch (IOException e) {
         serialPort.close();
         throw new JPARSECException(e);
     }
@@ -157,13 +157,13 @@ public class SerialConnection implements SerialPortEventListener,
     // Notify when data is available
     serialPort.notifyOnDataAvailable(true);
 
-    // Enable receive timeout 
+    // Enable receive timeout
     try {
         serialPort.enableReceiveTimeout(30);
     } catch (UnsupportedCommOperationException e) {
         // Ignore
     }
-    // Add ownership listener to close connection (to prevent lockout 
+    // Add ownership listener to close connection (to prevent lockout
     // if program hangs)
     portId.addPortOwnershipListener(this);
     open = true;
@@ -189,7 +189,7 @@ public class SerialConnection implements SerialPortEventListener,
     try {
         serialPort.setFlowControlMode(getFlowControl());
     } catch (UnsupportedCommOperationException e) {
-        throw new JPARSECException("Unsupported flow control mode:" 
+        throw new JPARSECException("Unsupported flow control mode:"
                 + e.getMessage());
     }
     }
@@ -235,7 +235,7 @@ public class SerialConnection implements SerialPortEventListener,
 
    /**
     * Handle Serial Port Events.
-    * @param evt SerialPortEvent 
+    * @param evt SerialPortEvent
     */
     public void serialEvent(SerialPortEvent evt) {
         int newData = 0;
@@ -251,28 +251,28 @@ public class SerialConnection implements SerialPortEventListener,
                 if (newData == -1) {
                 break;
                 }
-                            
+
                             inputBuffer.append((char) newData);
-                            
+
                             if (newData == '#') {
                                 char[] chars = new char[inputBuffer.length()];
-                                inputBuffer.getChars(0, inputBuffer.length(), 
+                                inputBuffer.getChars(0, inputBuffer.length(),
                                     chars, 0);
                                 messageQueue.addChars(chars);
                                 inputBuffer.delete(0, inputBuffer.length());
                             }
-                            
-                            
+
+
                 } catch (IOException e) {
                     System.err.println(e);
                     return;
                   }
                }
-                    
+
         break;
     }
 
-    }   
+    }
 
     /**
      * Handle ownership change event.
@@ -285,7 +285,7 @@ public class SerialConnection implements SerialPortEventListener,
             closeConnection();
     }
     }
-    
+
     /**
      * Send string to the serial connection
      * @param str The string to send
@@ -296,18 +296,18 @@ public class SerialConnection implements SerialPortEventListener,
             if (isDebug()) {
                 System.out.println("SerialConnection.sendString=" + str);
             }
-            
+
             os.write(str.getBytes());
             os.flush();
         }
     }
-    
+
     /**
      * Receive String from serial connection
      * @return String
      */
     public synchronized String receiveString() {
-        
+
         if (isOpen()) {
             try {
                 Thread.sleep(100L);
@@ -317,21 +317,21 @@ public class SerialConnection implements SerialPortEventListener,
         		c ++;
 	            try {
 	                Thread.sleep(100L);
-	            } catch (InterruptedException e) { 
-	                // Ignore 
+	            } catch (InterruptedException e) {
+	                // Ignore
 	            }
         	}
         }
-        
+
         if (isDebug()) {
             String response = messageQueue.getMessage();
             System.out.println("SerialConnection.receiveString=" + response);
             return response;
         }
-        
+
         return messageQueue.getMessage();
     }
-    
+
     /**
      * Set name of port to open
      * @param portName (example for MS Windows COM1 or COM2)
@@ -339,7 +339,7 @@ public class SerialConnection implements SerialPortEventListener,
     public void setPortName(String portName) {
         this.portName = portName;
     }
-    
+
     /**
      * Get the port name being used by this connection
      * @return Current name of the port
@@ -347,7 +347,7 @@ public class SerialConnection implements SerialPortEventListener,
     public String getPortName() {
         return this.portName;
     }
-    
+
 
     /**
      * Set stop bits.
@@ -356,7 +356,7 @@ public class SerialConnection implements SerialPortEventListener,
     public void setStopbits(int stopbits) {
         this.stopbits = stopbits;
     }
-    
+
     /**
      * Get stop bits
      * @return Current stop bits.
@@ -364,15 +364,15 @@ public class SerialConnection implements SerialPortEventListener,
     public int getStopbits() {
         return this.stopbits;
     }
-    
-    /**     
+
+    /**
      * Set parity
      * @param parity New parity setting.
      */
     public void setParity(int parity) {
         this.parity = parity;
     }
-    
+
     /**
      * Get current parity setting
      * @return parity settting
@@ -380,7 +380,7 @@ public class SerialConnection implements SerialPortEventListener,
     public int getParity() {
         return this.parity;
     }
-    
+
     /**
      * Get baud rate
      * @return Current baud rate.
@@ -388,15 +388,15 @@ public class SerialConnection implements SerialPortEventListener,
     public int getBaudRate() {
         return this.baudRate;
     }
-    
-    /** 
+
+    /**
      * Set baud rate.
      * @param baudRate New baud rate (9600 is default)
      */
     public void setBaudRate(int baudRate) {
         this.baudRate = baudRate;
     }
-    
+
     /**
      * Get data bits
      * @return Current data bits setting.
@@ -404,7 +404,7 @@ public class SerialConnection implements SerialPortEventListener,
     public int getDatabits() {
         return this.databits;
     }
-    
+
     /**
      * Set new data bits.
      * @param databits New data bits setting.
@@ -412,35 +412,35 @@ public class SerialConnection implements SerialPortEventListener,
     public void setDatabits(int databits) {
         this.databits = databits;
     }
-    
+
     /**
-     * Set flow control 
+     * Set flow control
 
      * Formed by "or-ing" both "in" and "out" flow control settings.
      * The default is SerialPort.FLOWCONTROL_NONE | SerialPort.FLOWCONTROL_NONE.
      * javax.comm.SerialPort includes the flow control definitions.
-     * @param flowControl Flow control settings setting 
+     * @param flowControl Flow control settings setting
      */
     public void setFlowControl(int flowControl) {
         this.flowControl = flowControl;
     }
-    
+
     /**
      * Get flow control
      * @return Current flow control setting.
-     */ 
+     */
     public int getFlowControl() {
         return this.flowControl;
     }
-   
+
     /**
      * Set debug flag
-     * @param debug Set to true to list cmds sent, responses received 
+     * @param debug Set to true to list cmds sent, responses received
      */
     public void setDebug(boolean debug) {
         this.debug = debug;
-    } 
-    
+    }
+
     /**
      * Check debug flag
      * return true if set
@@ -449,45 +449,45 @@ public class SerialConnection implements SerialPortEventListener,
     public boolean isDebug() {
         return this.debug;
     }
-   
+
     /**
-     * Get serial ports 
+     * Get serial ports
      * @return String array of ports on workstation (may return null)
      */
     public static String[] getAvailablePorts() {
         Enumeration<CommPortIdentifier> enume = CommPortIdentifier.getPortIdentifiers();
-        String[] retStr = null;        
+        String[] retStr = null;
         ArrayList<String> list = new ArrayList<String>();
-        
+
         while (enume.hasMoreElements()) {
             CommPortIdentifier comId = (CommPortIdentifier) enume.nextElement();
-            
+
             if (comId.getPortType() == CommPortIdentifier.PORT_SERIAL) {
                 list.add(comId.getName());
             }
         }
-        
-         
+
+
         Object[] ports = list.toArray();
 
         if (ports != null) {
             retStr = new String[ports.length];
-            
+
             for (int i = 0; i < ports.length; i++) {
                 retStr[i] = (String) ports[i];
             }
         }
-        
+
         return retStr;
-    }    
-    
+    }
+
     /**
      * Class to synchronize values received from serial connection
      */
     class MessageQueue {
         /** Queue containing responses */
         private LinkedList queue = new LinkedList();
-        
+
         /**
          * Add message to queue
          * @param txt The message to add
@@ -497,9 +497,9 @@ public class SerialConnection implements SerialPortEventListener,
             synchronized (queue) {
                 queue.addLast(txt);
             }
-            
+
         }
-        
+
         /**
          * Add characters to queue
          * @param chars Array of char to add
@@ -509,7 +509,7 @@ public class SerialConnection implements SerialPortEventListener,
                 queue.addLast(chars);
             }
         }
-        
+
         /**
          * Get message from queue as a char array
          * @return char[]
@@ -517,21 +517,21 @@ public class SerialConnection implements SerialPortEventListener,
         public char[] getChars() {
             boolean empty = true;
             char[] chars = null;
-            
+
             synchronized (queue) {
                 empty = queue.isEmpty();
             }
 
             if (!empty) {
-                    
+
                 synchronized (queue) {
                     chars = (char[]) queue.removeFirst();
                 }
             }
-            
+
             return chars;
         }
-        
+
         /**
          * Size of the queue
          * @return Number of messages in queue
@@ -541,7 +541,7 @@ public class SerialConnection implements SerialPortEventListener,
                 return queue.size();
             }
         }
-        
+
         /**
          * Check if queue is empty
          * @return True if empty, false otherwise
@@ -551,7 +551,7 @@ public class SerialConnection implements SerialPortEventListener,
                 return queue.isEmpty();
             }
         }
-        
+
         /**
          * Get String message from queue
          * @return The message as a string
@@ -563,12 +563,12 @@ public class SerialConnection implements SerialPortEventListener,
                 if (!empty) {
                     synchronized (queue) {
                         char[] chars = (char[]) queue.removeFirst();
-                        if (chars != null) {                            
+                        if (chars != null) {
                             msg = new String(chars);
                         }
                     }
                 }
-            
+
             return msg;
         }
     }

@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */	
+ */
 package jparsec.io.device.implementation;
 
 import jparsec.io.device.GenericCamera;
@@ -174,11 +174,11 @@ public class ExternalCamera implements GenericCamera {
 		return 0;
 	}
 
-	
+
 	private String name;
 	private double ang = 0;
 	private CAMERA_MODEL model;
-	
+
 	@Override
 	public CAMERA_MODEL getCameraModel() {
 		return model;
@@ -204,7 +204,7 @@ public class ExternalCamera implements GenericCamera {
 	public double getCameraOrientation() {
 		return ang;
 	}
-	
+
 	public ExternalCamera(String name, CAMERA_MODEL model) {
 		this.name = name;
 		this.model = model;

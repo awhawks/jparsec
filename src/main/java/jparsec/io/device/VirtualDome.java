@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */	
+ */
 package jparsec.io.device;
 
 import javax.swing.JOptionPane;
@@ -39,7 +39,7 @@ public class VirtualDome implements GenericDome {
 	private DOME_MODEL dome;
 	private boolean isOpen = false;
 	private double azimuth = Math.PI;
-	
+
 	@Override
 	public boolean open() {
 		if (isOpen) return false;
@@ -79,12 +79,12 @@ public class VirtualDome implements GenericDome {
 	public DOME_MODEL getDomeModel() {
 		return dome;
 	}
-	
+
 	@Override
 	public boolean isOpen() {
 		return isOpen;
 	}
-	
+
 	@Override
 	public boolean sync(LocationElement locHz) {
 		if (getDomeModel().hasLeftRightControl() && !isMoving()) {
@@ -121,7 +121,7 @@ public class VirtualDome implements GenericDome {
 
 	@Override
 	public boolean isMoving() {
-		return false;	
+		return false;
 	}
 
 	@Override

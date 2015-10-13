@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.astronomy;
 
 import java.io.Serializable;
@@ -36,12 +36,12 @@ import jparsec.util.Translate;
  * A class to hold and to calculate the properties of an ocular. Calculations
  * are based on theoretical statements, so the real life could be somewhat
  * different.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
 public class OcularElement implements Serializable {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Creates a default OcularElement with focal length 20 mm, field of view 50 degrees,
@@ -52,12 +52,12 @@ public class OcularElement implements Serializable {
 		focalLength = 20;
 		fieldOfView = 50.0 * Constant.DEG_TO_RAD;
 		reticleSize = 32;
-		name = Translate.translate(Translate.JPARSEC_DEFAULT_OCULAR)+" 1-1/4, 20mm, 50\u00ba";
+		name = Translate.translate(Translate.JPARSEC_DEFAULT_OCULAR)+" 1-1/4, 20mm, 50\u00b0";
 	}
 
 	/**
 	 * Creates an Ocular object by giving the values of the fields.
-	 * 
+	 *
 	 * @param n Name of the ocular.
 	 * @param focal Focal length of the ocular in mm.
 	 * @param field Apparent field of view in radians.
@@ -96,9 +96,9 @@ public class OcularElement implements Serializable {
 	/**
 	 * To clone the object.
 	 */
+	@Override
 	public OcularElement clone()
 	{
-		if (this == null) return null;
 		OcularElement ocular = new OcularElement(this.name, this.focalLength, this.fieldOfView, this.reticleSize);
 		return ocular;
 	}
@@ -106,7 +106,7 @@ public class OcularElement implements Serializable {
 	/**
 	 * Returns true if a given ocular is equals to another.
 	 * @param ocular An ocular object.
-	 * @return true or false.
+	 * @return True or false.
 	 */
 	@Override
 	public boolean equals(Object ocular) {
@@ -134,10 +134,9 @@ public class OcularElement implements Serializable {
 		result = 31 * result + reticleSize;
 		return result;
 	}
-
 	/**
 	 * Return all oculars from external file.
-	 * 
+	 *
 	 * @return Array of Ocular objects.
 	 * @throws JPARSECException Thrown if the method fails.
 	 */
@@ -150,7 +149,7 @@ public class OcularElement implements Serializable {
 	}
 	/**
 	 * Return all oculars from external file.
-	 * 
+	 *
 	 * @return Array of ocular names.
 	 * @throws JPARSECException Thrown if the method fails.
 	 */
@@ -168,7 +167,7 @@ public class OcularElement implements Serializable {
 	/**
 	 * Return all oculars from an external file. Designed specially for input
 	 * file eyepiece.txt in sky.jar.
-	 * 
+	 *
 	 * @param jarpath Path to the file.
 	 * @param fmt File format array with ocular name as NAME, focal length in mm
 	 *        as FOCAL, and field of view as FIELD in degrees.
@@ -186,7 +185,7 @@ public class OcularElement implements Serializable {
 		int reticle = 32;
 
 		ReadFormat rf = new ReadFormat();
-		
+
 		rf.setFormatToRead(fmt);
 		for (int i = 0; i < v.size(); i++)
 		{
@@ -201,7 +200,7 @@ public class OcularElement implements Serializable {
 
 	/**
 	 * Return certain ocular.
-	 * 
+	 *
 	 * @param ocular_name Name of the ocular;
 	 * @return The required Ocular object, or null if none is found.
 	 * @throws JPARSECException Thrown if the method fails.

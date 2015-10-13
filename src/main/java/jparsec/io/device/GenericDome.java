@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */	
+ */
 package jparsec.io.device;
 
 import jparsec.io.image.ImageHeaderElement;
@@ -30,21 +30,21 @@ import jparsec.observer.LocationElement;
  */
 public interface GenericDome {
 
-	/** 
+	/**
 	 * The set of dome models supported.
 	 */
-	public static enum DOME_MODEL {
+	public enum DOME_MODEL {
 		/** A virtual dome for testing. */
 		VIRTUAL_ROLL_OFF_ROOF(false),
 		/** Another virtual dome for testing. */
 		VIRTUAL_DOME(true);
 
 		private boolean hasControl = false;
-		
+
 		private DOME_MODEL(boolean hasLeftRightAzControl) {
 			this.hasControl = hasLeftRightAzControl;
 		}
-		
+
 		/**
 		 * Returns if this dome has control to rotate left/right
 		 * and get its azimuth.
@@ -52,8 +52,8 @@ public interface GenericDome {
 		 */
 		public boolean hasLeftRightControl() {
 			return hasControl;
-		}		
-		
+		}
+
 		/**
 		 * Returns if this dome is virtual or not.
 		 * @return True or false.
@@ -63,7 +63,7 @@ public interface GenericDome {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Opens the dome.
 	 * @return True if the command success.
@@ -134,8 +134,8 @@ public interface GenericDome {
 	 * <pre>
 	 * Entry        Value (typical)   Description
 	 * ------------------------------------------
-	 * 
-	 * DOM_AZ      10.1              Dome azimuth (deg)             
+	 *
+	 * DOM_AZ      10.1              Dome azimuth (deg)
 	 * DOM_OPEN    true              Dome open ?
 	 * DOM_MOVI    false             Dome moving ?
 	 * DOM_MODE    VIRTUAL           Dome model (driver)

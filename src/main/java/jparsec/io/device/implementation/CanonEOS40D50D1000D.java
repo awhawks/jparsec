@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */	
+ */
 package jparsec.io.device.implementation;
 
 import javax.swing.JOptionPane;
@@ -26,6 +26,7 @@ import javax.swing.JOptionPane;
 import jparsec.graph.DataSet;
 import jparsec.io.FileIO;
 import jparsec.io.device.GenericCamera;
+import jparsec.io.device.implementation.GPhotoCamera.CAMERA_ID;
 import jparsec.io.device.implementation.GPhotoCamera.CAMERA_PARAMETER;
 import jparsec.io.image.ImageHeaderElement;
 import jparsec.math.Constant;
@@ -36,9 +37,9 @@ import jparsec.util.Translate;
 
 /**
  * An implementation of the GenericCamera interface for a wide range of Canon EOS
- * DSLR cameras, including the 1000D, 1100D, 40D, 400D, 450D, 50D, 500D, 550D, 
- * 5D Mark II, and maybe others, but not the most recent ones (60D/600D for instance). 
- * This implementation is based on the gphoto2 project and should work on Unix OS 
+ * DSLR cameras, including the 1000D, 1100D, 40D, 400D, 450D, 50D, 500D, 550D,
+ * 5D Mark II, and maybe others, but not the most recent ones (60D/600D for instance).
+ * This implementation is based on the gphoto2 project and should work on Unix OS
  * (Linux, Mac). Port of gphoto to Windows is available, but untested in this project.
  * @author T. Alonso Albi - OAN (Spain)
  */
@@ -193,12 +194,12 @@ public class CanonEOS40D50D1000D implements GenericCamera {
 	public CAMERA_MODEL getCameraModel() {
 		return model;
 	}
-	
+
 	@Override
 	public void setCCDorBulbModeTime(int seconds) {
 		gphoto.setBulbTime(seconds);
 	}
-	
+
 	@Override
 	public String getISO() {
 		return gphoto.getParameter(CAMERA_PARAMETER.ISO);
@@ -249,17 +250,17 @@ public class CanonEOS40D50D1000D implements GenericCamera {
 			return null;
 		}
 	}
-	
+
 	@Override
 	public String getCameraName() {
 		return cameraName+" ("+gphoto.getPort().trim()+")";
 	}
-	
+
 	@Override
 	public double getWidthHeightRatio() {
 		return 1.5;
 	}
-	
+
 	@Override
 	public double getInverseElectronicGain() {
 		// TODO: more camera models !
@@ -358,33 +359,33 @@ public class CanonEOS40D50D1000D implements GenericCamera {
 	 */
 	public CanonEOS40D50D1000D(CAMERA_MODEL cameraModel, String port) throws JPARSECException {
 		this.model = cameraModel;
-		
+
 		try {
 			String dir = FileIO.getTemporalDirectory();
 			String out[] = GPhotoCamera.autoDetect();
 			if (out == null || out.length == 0) throw new JPARSECException("No cameras detected.");
-			
+
 			gphoto = null;
 			if (out.length == 1 || port != null) {
 				if (port != null) {
-					gphoto = new GPhotoCamera(null, port, dir, false, null);
+					gphoto = new GPhotoCamera(CAMERA_ID.EOS40D, null, port, dir, false, null);
 					cameraName = gphoto.getModel();
 				} else {
 					cameraName = out[0].substring(0, out[0].indexOf("usb:")).trim();
-					gphoto = new GPhotoCamera(null, dir, false);
+					gphoto = new GPhotoCamera(CAMERA_ID.EOS40D, null, dir, false);
 				}
 			} else {
-				int s = JOptionPane.showOptionDialog(null, 
-						Translate.translate(1172), 
-						Translate.translate(1171), JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, 
+				int s = JOptionPane.showOptionDialog(null,
+						Translate.translate(1172),
+						Translate.translate(1171), JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null,
 						out, out[0]);
 				if (s >= 0) {
-					gphoto = new GPhotoCamera(out[s], dir, false);
+					gphoto = new GPhotoCamera(CAMERA_ID.EOS40D, out[s], dir, false);
 					cameraName = out[s].substring(0, out[s].indexOf("usb:")).trim();
 				}
 			}
 			if (gphoto == null) throw new JPARSECException("No camera initialized.");
-			
+
 		} catch (Exception exc) {
 			if (exc instanceof JPARSECException) throw (JPARSECException) exc;
 			throw new JPARSECException("An error occurred.", exc);

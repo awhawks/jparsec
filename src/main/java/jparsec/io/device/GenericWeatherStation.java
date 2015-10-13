@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */	
+ */
 package jparsec.io.device;
 
 import jparsec.io.image.ImageHeaderElement;
@@ -29,13 +29,13 @@ import jparsec.io.image.ImageHeaderElement;
  */
 public interface GenericWeatherStation {
 
-	/** 
+	/**
 	 * The set of weather stations supported.
 	 */
-	public static enum WEATHER_STATION_MODEL {
+	public enum WEATHER_STATION_MODEL {
 		/** A virtual station for testing. */
 		VIRTUAL_WEATHER_STATION;
-		
+
 		/**
 		 * Returns if this station is virtual or not.
 		 * @return True or false.
@@ -46,10 +46,10 @@ public interface GenericWeatherStation {
 		}
 	}
 
-	/** 
+	/**
 	 * The set of possible weather forecast values.
 	 */
-	public static enum WEATHER_FORECAST {
+	public enum WEATHER_FORECAST {
 		/** Sunny. */
 		SUNNY,
 		/** Between sunny and cloudy. */
@@ -122,7 +122,7 @@ public interface GenericWeatherStation {
 	 * <pre>
 	 * Entry        Value (typical)   Description
 	 * ------------------------------------------
-	 * 
+	 *
 	 * TEMP         10                Temperature (C) outside
 	 * PRES         1010              Pressure (mbar) outside
 	 * HUM          50                Humidity % (0-100) outside

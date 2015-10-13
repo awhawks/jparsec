@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2011 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 /*
  * This software is a cooperative product of The MathWorks and the National
  * Institute of Standards and Technology (NIST) which has been released to the
@@ -37,8 +37,8 @@ package jparsec.math.matrix;
 
 import java.io.Serializable;
 
-/** 
- * Eigenvalues and eigenvectors of a real matrix. 
+/**
+ * Eigenvalues and eigenvectors of a real matrix.
  * <P>
  * If A is symmetric, then A = V*D*V' where the eigenvalue matrix D is diagonal
  * and the eigenvector matrix V is orthogonal.  I.e. A =
@@ -54,47 +54,47 @@ import java.io.Serializable;
  * <p/>
  * Adapted from the <a href="http://math.nist.gov/javanumerics/jama/" target="_blank">JAMA</a> package.
  *
- * @author The Mathworks and NIST 
+ * @author The Mathworks and NIST
  * @author Fracpete (fracpete at waikato dot ac dot nz)
  * @version $Revision: 1.2 $
  */
 
-public class EigenvalueDecomposition 
+public class EigenvalueDecomposition
   implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-/** 
+/**
    * Row and column dimension (square matrix).
    * @serial matrix dimension.
    */
   private int n;
 
-  /** 
+  /**
    * Symmetry flag.
    * @serial internal symmetry flag.
    */
   private boolean issymmetric;
 
-  /** 
+  /**
    * Arrays for internal storage of eigenvalues.
    * @serial internal storage of eigenvalues.
    */
   private double[] d, e;
 
-  /** 
+  /**
    * Array for internal storage of eigenvectors.
    * @serial internal storage of eigenvectors.
    */
   private double[][] V;
 
-  /** 
+  /**
    * Array for internal storage of nonsymmetric Hessenberg form.
    * @serial internal storage of nonsymmetric Hessenberg form.
    */
   private double[][] H;
 
-  /** 
+  /**
    * Working storage for nonsymmetric algorithm.
    * @serial working storage for nonsymmetric algorithm.
    */
@@ -106,7 +106,7 @@ public class EigenvalueDecomposition
    */
   private transient double cdivr, cdivi;
 
-  /** 
+  /**
    * Symmetric Householder reduction to tridiagonal form.
    * <p/>
    * This is derived from the Algol procedures tred2 by Bowdler, Martin,
@@ -221,9 +221,9 @@ public class EigenvalueDecomposition
     }
     V[n-1][n-1] = 1.0;
     e[0] = 0.0;
-  } 
+  }
 
-  /** 
+  /**
    * Symmetric tridiagonal QL algorithm.
    * <p/>
    * This is derived from the Algol procedures tql2, by Bowdler, Martin,
@@ -437,7 +437,7 @@ public class EigenvalueDecomposition
   }
 
 
-  /** 
+  /**
    * Complex scalar division.
    */
   private void cdiv(double xr, double xi, double yr, double yi) {
@@ -899,7 +899,7 @@ public class EigenvalueDecomposition
   }
 
 
-  /** 
+  /**
    * Check for symmetry, then construct the eigenvalue decomposition
    *
    * @param Arg    Square matrix
@@ -949,7 +949,7 @@ public class EigenvalueDecomposition
     }
   }
 
-  /** 
+  /**
    * Return the eigenvector matrix
    * @return     V
    */
@@ -957,7 +957,7 @@ public class EigenvalueDecomposition
     return new Matrix(V,n,n);
   }
 
-  /** 
+  /**
    * Return the real parts of the eigenvalues
    * @return     real(diag(D))
    */
@@ -965,7 +965,7 @@ public class EigenvalueDecomposition
     return d;
   }
 
-  /** 
+  /**
    * Return the imaginary parts of the eigenvalues
    * @return     imag(diag(D))
    */
@@ -973,7 +973,7 @@ public class EigenvalueDecomposition
     return e;
   }
 
-  /** 
+  /**
    * Return the block diagonal eigenvalue matrix
    * @return     D
    */

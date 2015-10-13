@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.graph;
 
 import visad.*;
@@ -44,7 +44,7 @@ import jparsec.util.*;
  * @version 1.0
  */
 public class VISADCubeElement implements Serializable{
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
  /**
   * Holds the fields to be represented in the cube.
@@ -76,7 +76,7 @@ public class VISADCubeElement implements Serializable{
    * axis of the cube, by default 1.1.
    */
   public float overScanZ = 1.1f;
-  
+
   /**
    * Constructor for a default cube with right ascension, declination,
    * and velocity as axis.
@@ -95,7 +95,7 @@ public class VISADCubeElement implements Serializable{
   /**
    * The set of units for the axis of the cube.
    */
-  public static enum UNIT {
+  public enum UNIT {
 	  /** ID constant for Kelvin unit. */
 	  KELVIN,
 	  /** ID constant for meter unit. */
@@ -119,10 +119,10 @@ public class VISADCubeElement implements Serializable{
 	  /** ID constant for arcseconds unit. */
 	  ARCSEC
   };
-  
+
   private static final Unit[] UNITS = new Unit[] {SI.kelvin, SI.meter, SI.radian, SI.second,
 	  SI.steradian, SI.ampere, SI.candela, SI.kilogram, SI.mole, null, null};
-  
+
   /**
    * Constructor for a cube with custom elements in the axes.
    * @param cube The cube of data as an array in 3d, ordered by
@@ -160,7 +160,7 @@ public class VISADCubeElement implements Serializable{
 		  zu = zUnit.name();
 		  tl = tLabel;
 		  tu = tUnit.name();
-		  
+
 		  this.nlevels = cube.length;
 		  this.ncolumns = cube[0].length;
 		  this.nrows = cube[0][0].length;
@@ -180,7 +180,7 @@ public class VISADCubeElement implements Serializable{
 		        }
   		  this.initT = initT;
 		  this.finalT = endT;
-		  
+
 	    // Create the quantities
 	    // Use RealType(String name, Unit unit, Set set);
 		  try {
@@ -194,29 +194,29 @@ public class VISADCubeElement implements Serializable{
 		  velocity = RealType.getRealType(zLabel, UNITS[zUnit.ordinal()], null);
 		  flux = RealType.getRealType(tLabel, UNITS[tUnit.ordinal()], null);
 		  domain_tuple = new RealTupleType(rightAscension, declination, velocity);
-	
+
 	    // Create a FunctionType (domain_tuple -> range_tuple )
 	    // Use FunctionType(MathType domain, MathType range)
 	    func_domain_temp = new FunctionType( domain_tuple, flux);
-	
+
 	    // Create the domain Set
 	    // Integer3DSet(MathType type, int lengthX, int lengthY, int lengthZ)
-	    domain_set = new Linear3DSet(domain_tuple,  
+	    domain_set = new Linear3DSet(domain_tuple,
 	    		limits[0], limits[1], nrows,
 	    		limits[2], limits[3], ncolumns,
 	    		limits[4], limits[5], nlevels );
-	
+
 	    // Fill our 'flat' array with the temperature values
 	    // by looping over NCOLS and NROWS
 	    // but first get the samples to help with the calculations
 	    // Create a FlatField
 	    vals_ff = new FlatField( func_domain_temp, domain_set);
-	
+
 	    // ...and put the temperature values above into it
-	
+
 	    // Note the argument false, meaning that the array won't be copied
 	    float[][] samples = getSamples(cube);
-	
+
 	    vals_ff.setSamples( samples , false );
 	  } catch (RemoteException exc)
 	  {
@@ -224,13 +224,13 @@ public class VISADCubeElement implements Serializable{
 	  }
 	  catch (VisADException ex)
 	  {
-		  throw new JPARSECException("VisAD exception.",ex);		  
+		  throw new JPARSECException("VisAD exception.",ex);
 	  }
   }
-  
+
   /**
    * Returns the 'samples' object to be used as a FlatField in the
-   * VISAD library. 
+   * VISAD library.
    * @param cube The 3d cube.
    * @return The 2d samples.
    */
@@ -251,10 +251,10 @@ public class VISADCubeElement implements Serializable{
       }
     return flat_samples;
   }
-  
+
   /**
    * Returns the FlatField representing the temperature data in the cube
-   * @return The flat field object. 
+   * @return The flat field object.
    */
     public FlatField getData(){
     	return vals_ff;
@@ -280,7 +280,7 @@ public class VISADCubeElement implements Serializable{
         }
         return cube;
     }
-    
+
     /**
      * Return number of columns, x axis.
      * @return Number of columns.
@@ -305,22 +305,22 @@ public class VISADCubeElement implements Serializable{
     {
     	return this.nlevels;
     }
-    
+
     /**
      * Constructor for a given Gildas lmv file.
      * @param lmvFile The path to the file.
      * @throws JPARSECException If an error occurs.
      */
-    public VISADCubeElement(String lmvFile) throws JPARSECException {    	
+    public VISADCubeElement(String lmvFile) throws JPARSECException {
     	LMVCube lmv = new LMVCube(lmvFile);
-    	
+
   		float v0 = lmv.getv0();
 		float vf = lmv.getvf();
 		float x0 = (float) (lmv.getx0() * Constant.RAD_TO_ARCSEC);
 		float xf = (float) (lmv.getxf() * Constant.RAD_TO_ARCSEC);
 		float y0 = (float) (lmv.gety0() * Constant.RAD_TO_ARCSEC);
 		float yf = (float) (lmv.getyf() * Constant.RAD_TO_ARCSEC);
-		
+
 		this.init(lmv.getCubeData(),
 				  new float[] {x0, xf, y0, yf, v0, vf},
 				  "OFFSET_RA", VISADCubeElement.UNIT.ARCSEC,
@@ -328,7 +328,7 @@ public class VISADCubeElement implements Serializable{
 				  "Velocity", VISADCubeElement.UNIT.KILOMETER_PER_SECOND,
 				  "FLUX", VISADCubeElement.UNIT.KELVIN);
     }
-    
+
 	private void writeObject(ObjectOutputStream out)
 	throws IOException {
 		out.writeObject(this.cube);
@@ -342,7 +342,7 @@ public class VISADCubeElement implements Serializable{
 		out.writeObject(this.zu);
 		out.writeObject(this.tu);
 	}
-	
+
 	/**
 	 * Reads the object.
 	 * @param in Input stream.

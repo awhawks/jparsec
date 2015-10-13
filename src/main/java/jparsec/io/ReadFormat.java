@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.io;
 
 import java.util.ArrayList;
@@ -30,7 +30,7 @@ import jparsec.util.JPARSECException;
 
 /**
  * A class to read the format previously defined in {@linkplain FileFormatElement}.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -44,7 +44,7 @@ public class ReadFormat {
 
 	/**
 	 * Reads a field.
-	 * 
+	 *
 	 * @param line Record of the file.
 	 * @param fmt Object defining the field to read.
 	 * @return A string with the field. An empty string is returned if the
@@ -66,7 +66,7 @@ public class ReadFormat {
 
 	/**
 	 * Reads a field.
-	 * 
+	 *
 	 * @param line Record of the file.
 	 * @param field Field name.
 	 * @return A string with the field. An empty string is returned if the
@@ -90,7 +90,7 @@ public class ReadFormat {
 
 	/**
 	 * Sets the format to read.
-	 * 
+	 *
 	 * @param fmt An array of {@linkplain FileFormatElement} objects defining the format of the
 	 *        file.
 	 */
@@ -103,7 +103,7 @@ public class ReadFormat {
 			fieldNames.add(formatToRead[i].fieldName);
 		}
 	}
-	
+
 	/**
 	 * Constructor with a given file format array.
 	 * @param fmt File format array.
@@ -119,7 +119,7 @@ public class ReadFormat {
 
 	/**
 	 * Gets the fields from a {@linkplain FileFormatElement} object.
-	 * 
+	 *
 	 * @param fm A {@linkplain FileFormatElement} object defining the fields.
 	 * @return An array of strings with the list of fields.
 	 */
@@ -136,7 +136,7 @@ public class ReadFormat {
 
 	/**
 	 * Gets the fields from a {@linkplain FileFormatElement} object.
-	 * 
+	 *
 	 * @param fm A {@linkplain FileFormatElement} object defining the fields.
 	 * @return An array of Parameter objects with value and description
 	 * set to the name of each of the fields in the input object.
@@ -160,10 +160,10 @@ public class ReadFormat {
 	public boolean fieldExists(String name) {
 		return (fieldNames.indexOf(name) >= 0);
 	}
-	
+
 	/**
 	 * Gets a field from the current format to read.
-	 * 
+	 *
 	 * @param name The name/description of the field.
 	 * @return A {@linkplain FileFormatElement} object defining the field.
 	 * @throws JPARSECException Thrown if the field does not exist.
@@ -180,7 +180,7 @@ public class ReadFormat {
 
 	/**
 	 * Obtains the length of a field.
-	 * 
+	 *
 	 * @param fmt Field format.
 	 * @return Length.
 	 */
@@ -191,7 +191,7 @@ public class ReadFormat {
 
 	/**
 	 * Reads a double precision value.
-	 * 
+	 *
 	 * @param line The record of the file.
 	 * @param field The name/description of the field.
 	 * @return A double precision value.
@@ -204,7 +204,7 @@ public class ReadFormat {
 
 	/**
 	 * Reads a float value.
-	 * 
+	 *
 	 * @param line The record of the file.
 	 * @param field The name/description of the field.
 	 * @return A float value.
@@ -214,10 +214,10 @@ public class ReadFormat {
 	{
 		return Float.parseFloat(this.readField(line, field).trim());
 	}
-	
+
 	/**
 	 * Reads an integer value.
-	 * 
+	 *
 	 * @param line The record of the file.
 	 * @param field The name/description of the field.
 	 * @return An integer value.
@@ -230,7 +230,7 @@ public class ReadFormat {
 
 	/**
 	 * Reads a double precission value and converts it from degrees to radians.
-	 * 
+	 *
 	 * @param line The record of the file.
 	 * @param field The name/description of the field.
 	 * @return A double precission value in radians.
@@ -243,7 +243,7 @@ public class ReadFormat {
 
 	/**
 	 * Reads a string.
-	 * 
+	 *
 	 * @param line The record of the file.
 	 * @param field The name/description of the field.
 	 * @return A string with the field.

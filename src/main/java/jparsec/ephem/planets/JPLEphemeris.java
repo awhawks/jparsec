@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.ephem.planets;
 
 import java.io.BufferedReader;
@@ -62,13 +62,13 @@ import jparsec.util.JPARSECException;
 /**
  * A class to perform ephemeris calculations using JPL numerical integration
  * theories. Available integrations are DE200, DE403, DE405, DE406, DE413,
- * DE414, DE422, and DE430. The necessary files in ASCII format are provided to cover 
+ * DE414, DE422, and DE430. The necessary files in ASCII format are provided to cover
  * the time span from 1950 to 2050, or greater in some cases.
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
 public class JPLEphemeris {
-	
+
 	/**
 	 * ID for the ephemeris version.
 	 */
@@ -101,7 +101,7 @@ public class JPLEphemeris {
 	 * Number of coefficients for planets.
 	 */
 	private int lpt[][];
-	
+
 	private int yearsPerFile;
 
 	private String externalPath;
@@ -130,14 +130,14 @@ public class JPLEphemeris {
 	/**
 	 * Constructor.
 	 * @param jplID ID for the JPL ephemeris version.
-	 * @param externalPath External path for the external directory 
-	 * of the JPL files to read. They must be ASCII files named like 
+	 * @param externalPath External path for the external directory
+	 * of the JPL files to read. They must be ASCII files named like
 	 * ascpYEAR.xxx, where YEAR is the starting year of validity and
 	 * xxx is the JPL ephemeris version. Only JPL DE405 (years 1600
-	 * to 2200), DE406/422/424 (3000 B.C. to 3100), and DE430 (1550 to 2650) are 
+	 * to 2200), DE406/422/424 (3000 B.C. to 3100), and DE430 (1550 to 2650) are
 	 * supported when reading external files. Files can be downloaded
 	 * from ftp://ssd.jpl.nasa.gov/pub/eph/planets/ascii/. Set to null to
-	 * use JPARSEC file if it is available. 
+	 * use JPARSEC file if it is available.
 	 * @throws JPARSECException If the integration version is not available
 	 * (the header could not be read).
 	 */
@@ -147,7 +147,7 @@ public class JPLEphemeris {
 		if (externalPath != null && !externalPath.endsWith(FileIO.getFileSeparator())) externalPath += FileIO.getFileSeparator();
 		this.externalPath = externalPath;
 		this.jplID = jplID;
-		
+
 		switch (jplID)
 		{
 		case JPL_DE430:
@@ -173,7 +173,7 @@ public class JPLEphemeris {
 					2743728.5, 2780240.5, 2816816.5 };
 			years = new int[] {
 					-3000, -2900, -2800, -2700, -2600, -2500, -2400, -2300, -2200, -2100,
-					-2000, -1900, -1800, -1700, -1600, -1500, -1400, -1300, -1200, -1100, 
+					-2000, -1900, -1800, -1700, -1600, -1500, -1400, -1300, -1200, -1100,
 					-1000, -900, -800, -700, -600, -500, -400, -300, -200,  -100, 0, 100,
 					200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300,
 					1400, 1500, 1600, 1700, 1800, 1900, 2000, 2100, 2200, 2300, 2400,
@@ -195,7 +195,7 @@ public class JPLEphemeris {
 			};
 			years = new int[] {
 					-3000, -2900, -2800, -2700, -2600, -2500, -2400, -2300, -2200, -2100,
-					-2000, -1900, -1800, -1700, -1600, -1500, -1400, -1300, -1200, -1100, 
+					-2000, -1900, -1800, -1700, -1600, -1500, -1400, -1300, -1200, -1100,
 					-1000, -900, -800, -700, -600, -500, -400, -300, -200,  -100, 0, 100,
 					200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300,
 					1400, 1500, 1600, 1700, 1800, 1900, 2000, 2100, 2200, 2300, 2400,
@@ -207,7 +207,7 @@ public class JPLEphemeris {
 			dates = new double[] {
 					// Values comes from JDEread project by Peter Hristozov
                 	625360.5, 661776.5, 698320.5, 734864.5, 771344.5, 807888.5, 844432.5, 880976.5, 917456.5, 954000.5,
-                	990544.5, 1027024.5, 1063568.5, 1100112.5, 1136656.5, 1173136.5, 1209680.5, 1246224.5, 1282704.5, 1319248.5, 
+                	990544.5, 1027024.5, 1063568.5, 1100112.5, 1136656.5, 1173136.5, 1209680.5, 1246224.5, 1282704.5, 1319248.5,
                 	1355792.5, 1392272.5, 1428816.5, 1465360.5, 1501904.5, 1538384.5, 1574928.5, 1611472.5, 1647952.5,  1684496.5,
 					1721040.5, 1757520.5, 1794064.5, 1830608.5, 1867152.5, 1903632.5, 1940176.5, 1976720.5, 2013200.5,
 					2049744.5, 2086288.5, 2122832.5, 2159312.5, 2195856.5, 2232400.5, 2268880.5, 2305424.5, 2341968.5,
@@ -216,7 +216,7 @@ public class JPLEphemeris {
 			};
 			years = new int[] {
 					-3000, -2900, -2800, -2700, -2600, -2500, -2400, -2300, -2200, -2100,
-					-2000, -1900, -1800, -1700, -1600, -1500, -1400, -1300, -1200, -1100, 
+					-2000, -1900, -1800, -1700, -1600, -1500, -1400, -1300, -1200, -1100,
 					-1000, -900, -800, -700, -600, -500, -400, -300, -200,  -100, 0, 100,
 					200, 300, 400, 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400,
 					1500, 1600, 1700, 1800, 1900, 2000, 2100, 2200, 2300, 2400, 2500,
@@ -270,7 +270,7 @@ public class JPLEphemeris {
 		}
 		this.readHeader();
 	}
-	
+
 	/**
 	 * Returns JPL ephemeris version of this instance.
 	 * The returned value is not equal to {@linkplain JPLEphemeris#jplID}.
@@ -285,7 +285,7 @@ public class JPLEphemeris {
 	/**
 	 * Returns JPL ephemeris id version of this instance.
 	 * The returned value is equal to {@linkplain JPLEphemeris#jplID}.
-	 * For example, this method returns 0 for the last supported version, 
+	 * For example, this method returns 0 for the last supported version,
 	 * DE430.
 	 * @return JPL version id.
 	 */
@@ -322,14 +322,14 @@ public class JPLEphemeris {
 			if (year >= 0) {
 				filename +="p";
 			} else {
-				filename +="m";				
+				filename +="m";
 			}
 			filename += ""+year+"."+this.getJPLVersion();
 
 			String filePath = FileIO.DATA_JPL_EPHEM_DIRECTORY+"de"+this.getJPLVersion()+Zip.ZIP_SEPARATOR;
 			if (externalPath != null) filePath = externalPath;
 			filename = filePath + filename;
-			
+
 			if (externalPath == null) {
 				return ReadFile.resourceAvailable(filename);
 			} else {
@@ -346,9 +346,9 @@ public class JPLEphemeris {
 		// Header file provided by JPARSEC. Since the dates and years should be typed in this class
 		// it is not allowed to read an external header file, so only JPL integrations listed in this class
 		// are supported.
-		
+
 		filePath += "header." + version;
-		
+
 		String file[] = null;
 		// Read header from dependencies or from external directory if dependencies are not available
 		try {
@@ -359,7 +359,7 @@ public class JPLEphemeris {
 				file = DataSet.arrayListToStringArray(ReadFile.readAnyExternalFile(filePath));
 			}
 		}
-		
+
 		for (int i=0; i<file.length; i++)
 		{
 			if (file[i].startsWith("KSIZE=")) {
@@ -436,9 +436,9 @@ public class JPLEphemeris {
 					}
 				}
 				i = i + rows + 1;
-			}			
+			}
 		}
-		
+
 		int index = DataSet.getIndex(this.cnam, "EMRAT");
 		this.emrat = this.cval[index];
 		index = DataSet.getIndex(this.cnam, "AU");
@@ -450,18 +450,18 @@ public class JPLEphemeris {
 	private static double[] ephemerisDates = new double[3];
 	private static double[] ephemerisCoefficients;
 	private static int jplVersion = -1;
-	
+
 	/** The Earth-Moon mass ratio. */
 	public double emrat;
 	/** The value assumed for the Astronomical Unit. */
 	public double au;
 	private double interval_duration;
 	private int numbers_per_interval;
-	
+
 	private static TARGET targets[] = new TARGET[] {TARGET.NOT_A_PLANET, TARGET.MERCURY, TARGET.VENUS,
 		TARGET.Earth_Moon_Barycenter, TARGET.MARS, TARGET.JUPITER, TARGET.SATURN, TARGET.URANUS,
 		TARGET.NEPTUNE, TARGET.Pluto, TARGET.Moon, TARGET.SUN, TARGET.Nutation, TARGET.Libration, TARGET.Solar_System_Barycenter};
-	
+
 	/**
 	 * Calculate ephemeris, providing full data. This method uses JPL
 	 * ephemeris. The position of the Moon will contains the librations
@@ -470,7 +470,7 @@ public class JPLEphemeris {
 	 * otherwise Eckhardt's theory will be used. In case of lunar ephemerides you may also want
 	 * to correct it from center of mass to geometric center by means of
 	 * {@linkplain Elp2000#fromMoonBarycenterToGeometricCenter(TimeElement, ObserverElement, EphemerisElement, EphemElement)}.
-	 * 
+	 *
 	 * @param time Time object containing the date.
 	 * @param obs Observer object containing the observer position.
 	 * @param eph Ephemeris object with the target and ephemeris
@@ -487,21 +487,21 @@ public class JPLEphemeris {
 	{
 		// Obtain julian day in Barycentric Dynamical Time
 		double JD_TDB = TimeScale.getJD(time, obs, eph, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
-		EphemElement ephem_elem = this.JPLEphem(time, obs, eph, JD_TDB, true);
+		EphemElement ephem_elem = this.JPLEphem(time, obs, eph, JD_TDB, true, true);
 
 		/* Physical ephemeris */
 		EphemerisElement new_eph = eph.clone();
 		new_eph.ephemType = COORDINATES_TYPE.APPARENT;
 		new_eph.equinox = EphemerisElement.EQUINOX_OF_DATE;
 		EphemElement ephem_elem2 = ephem_elem;
-		if (eph.ephemType != EphemerisElement.COORDINATES_TYPE.APPARENT || eph.equinox != EphemerisElement.EQUINOX_OF_DATE) 
-			ephem_elem2 = this.JPLEphem(time, obs, new_eph, JD_TDB, true);
+		if (eph.ephemType != EphemerisElement.COORDINATES_TYPE.APPARENT || eph.equinox != EphemerisElement.EQUINOX_OF_DATE)
+			ephem_elem2 = this.JPLEphem(time, obs, new_eph, JD_TDB, true, true);
 		new_eph.targetBody = TARGET.SUN;
-		EphemElement ephemSun = this.JPLEphem(time, obs, new_eph, JD_TDB, false);
-		
+		EphemElement ephemSun = this.JPLEphem(time, obs, new_eph, JD_TDB, false, false);
+
 		ephem_elem2 = PhysicalParameters.physicalParameters(JD_TDB, ephemSun, ephem_elem2, obs, eph);
 		PhysicalParameters.setPhysicalParameters(ephem_elem, ephem_elem2, time, obs, eph);
-		
+
 		/* Horizontal coordinates */
 		if (eph.isTopocentric)
 			ephem_elem = Ephem.horizontalCoordinates(time, obs, eph, ephem_elem);
@@ -513,7 +513,7 @@ public class JPLEphemeris {
 		ephem_elem.name = eph.targetBody.getName();
 
 		/* Obtain accurate lunar orientation, if possible */
-		if (obs.getMotherBody() == TARGET.EARTH && eph.targetBody == TARGET.Moon && 
+		if (obs.getMotherBody() == TARGET.EARTH && eph.targetBody == TARGET.Moon &&
 				(eph.algorithm == ALGORITHM.JPL_DE403 ||
 				eph.algorithm == ALGORITHM.JPL_DE405 || eph.algorithm == ALGORITHM.JPL_DE413 ||
 				eph.algorithm == ALGORITHM.JPL_DE414 || eph.algorithm == ALGORITHM.JPL_DE422 ||
@@ -531,10 +531,10 @@ public class JPLEphemeris {
 	private EphemElement JPLEphem(TimeElement time, // Time Element
 			ObserverElement obs, // Observer Element
 			EphemerisElement eph, // Ephemeris Element
-			double JD_TDB, boolean addGCRS)
+			double JD_TDB, boolean addGCRS, boolean addOffset)
 	throws JPARSECException {
-		if ((!eph.targetBody.isPlanet() && eph.targetBody != TARGET.Moon && 
-				eph.targetBody != TARGET.SUN && eph.targetBody != TARGET.Pluto) || 
+		if ((!eph.targetBody.isPlanet() && eph.targetBody != TARGET.Moon &&
+				eph.targetBody != TARGET.SUN && eph.targetBody != TARGET.Pluto) ||
 				((eph.targetBody == TARGET.EARTH || eph.targetBody == TARGET.Earth_Moon_Barycenter) && obs.getMotherBody() == TARGET.EARTH))
 			throw new JPARSECException("target object is invalid.");
 
@@ -543,7 +543,7 @@ public class JPLEphemeris {
 			throw new JPARSECException("invalid ephemeris object. "+eph.algorithm);
 
 		// Obtain geocentric position
-		double geo_eq[] = this.getGeocentricPosition(JD_TDB, eph.targetBody, 0.0, true, obs);
+		double geo_eq[] = this.getGeocentricPosition(JD_TDB, eph.targetBody, 0.0, addOffset, obs);
 		if (Functions.equalVectors(geo_eq, JPLEphemeris.INVALID_VECTOR))
 			throw new JPARSECException(
 					"error during calculations. Resulting vector invalid.");
@@ -557,7 +557,7 @@ public class JPLEphemeris {
 		if (eph.ephemType != EphemerisElement.COORDINATES_TYPE.GEOMETRIC) // && eph.targetBody != TARGET.SUN)
 		{
 			double topo[] = obs.topocentricObserverICRF(time, eph);
-			geo_eq = this.getGeocentricPosition(JD_TDB, eph.targetBody, light_time, true, obs);
+			geo_eq = this.getGeocentricPosition(JD_TDB, eph.targetBody, light_time, addOffset, obs);
 			double light_time_corrected = Ephem.getTopocentricLightTime(geo_eq, topo, eph);
 			// Iterate to obtain correct light time and geocentric position.
 			// Typical difference in light time is 0.1 seconds. Iterate to
@@ -566,7 +566,7 @@ public class JPLEphemeris {
 			do
 			{
 				light_time = light_time_corrected;
-				geo_eq = this.getGeocentricPosition(JD_TDB, eph.targetBody, light_time_corrected, true, obs);
+				geo_eq = this.getGeocentricPosition(JD_TDB, eph.targetBody, light_time_corrected, addOffset, obs);
 				light_time_corrected = Ephem.getTopocentricLightTime(geo_eq, topo, eph);
 				// (A relativistic effect of about 1E-10 AU is neglected in the light time calculation)
 			} while (Math.abs(light_time - light_time_corrected) > (1.0E-6 / Constant.SECONDS_PER_DAY));
@@ -588,12 +588,14 @@ public class JPLEphemeris {
 		// Obtain heliocentric equatorial coordinates, J2000. Note JPL ephems are respect to
 		// Solar system barycenter, we will need to subtract the position of the Sun here
 		double helio_object[] = this.getPositionAndVelocity(JD_TDB - light_time, eph.targetBody);
-		Object o = DataBase.getData("offsetPosition", true);
-		if (o != null) {
-			double[] planetocentricPositionOfTargetSatellite = (double[]) o;
-			helio_object = Functions.sumVectors(helio_object, planetocentricPositionOfTargetSatellite);
+		if (addOffset) {
+			Object o = DataBase.getData("offsetPosition", true);
+			if (o != null) {
+				double[] planetocentricPositionOfTargetSatellite = (double[]) o;
+				helio_object = Functions.sumVectors(helio_object, planetocentricPositionOfTargetSatellite);
+			}
 		}
-		
+
 		if (eph.targetBody != TARGET.Moon)
 		{
 			LocationElement locP = LocationElement.parseRectangularCoordinates(helio_object);
@@ -612,7 +614,7 @@ public class JPLEphemeris {
 		// Correct for solar deflection and aberration
 		if (eph.ephemType == EphemerisElement.COORDINATES_TYPE.APPARENT)
 		{
-			if (//eph.preferPrecisionInEphemerides && 
+			if (//eph.preferPrecisionInEphemerides &&
 					(obs.getMotherBody() != TARGET.EARTH || (eph.targetBody != TARGET.SUN && eph.targetBody != TARGET.Moon))) {
 				double sun[] = this.getPositionAndVelocity(JD_TDB - lightTimeS, TARGET.SUN);
 				//geo_eq = Ephem.solarDeflection(geo_eq, geo_sun_0, Functions.substract(helio_object, sun));
@@ -639,15 +641,15 @@ public class JPLEphemeris {
 				geo_eq = m.times(new Matrix(DataSet.getSubArray(geo_eq, 0, 2))).getColumn(0);
 				helio_object = m.times(new Matrix(DataSet.getSubArray(helio_object, 0, 2))).getColumn(0);
 			}
-			
+
 			geo_eq = Ephem.toOutputFrame(geo_eq, FRAME.ICRF, eph.frame);
 			helio_object = Ephem.toOutputFrame(helio_object, FRAME.ICRF, eph.frame);
 		} else {
 			// FIXME: Not sure if the following rotation to FK5 is required. It seems so, but results
-			// from DE200 agree better with VSOP87 and ELP2000 if this is commented. 
+			// from DE200 agree better with VSOP87 and ELP2000 if this is commented.
 			geo_eq = meanEquatorialDE200ToFK5(geo_eq);
 			helio_object = meanEquatorialDE200ToFK5(helio_object);
-			
+
 			geo_eq = Ephem.toOutputFrame(geo_eq, FRAME.FK5, eph.frame);
 			helio_object = Ephem.toOutputFrame(helio_object, FRAME.FK5, eph.frame);
 		}
@@ -655,8 +657,8 @@ public class JPLEphemeris {
 		double geo_date[];
 		if (eph.frame == FRAME.FK4) {
 			// Transform from B1950 to mean equinox of date
-			 geo_date = Precession.precess(Constant.B1950, JD_TDB, geo_eq, eph);			
-			 helio_object = Precession.precess(Constant.B1950, JD_TDB, helio_object, eph);	
+			 geo_date = Precession.precess(Constant.B1950, JD_TDB, geo_eq, eph);
+			 helio_object = Precession.precess(Constant.B1950, JD_TDB, helio_object, eph);
 		} else {
 			// Transform from ICRS/J2000 to mean equinox of date
 			geo_date = Precession.precessFromJ2000(JD_TDB, geo_eq, eph);
@@ -671,7 +673,7 @@ public class JPLEphemeris {
 		if (obs.getMotherBody() == TARGET.EARTH) {
 			if (eph.ephemType == EphemerisElement.COORDINATES_TYPE.APPARENT)
 				true_eq = Nutation.nutateInEquatorialCoordinates(JD_TDB, eph, geo_date, true);
-	
+
 			// Correct for polar motion
 			if (eph.ephemType == EphemerisElement.COORDINATES_TYPE.APPARENT &&
 					eph.correctForPolarMotion)
@@ -683,7 +685,7 @@ public class JPLEphemeris {
 				true_eq = Functions.rotateZ(true_eq, gast);
 			}
 		}
-		
+
 		// Pass to coordinates as seen from another body, if necessary
 		if (obs.getMotherBody() != TARGET.NOT_A_PLANET)
 			true_eq = Ephem.getPositionFromBody(LocationElement.parseRectangularCoordinates(true_eq), time, obs, eph).getRectangularCoordinates();
@@ -702,22 +704,22 @@ public class JPLEphemeris {
 		// Note distances are apparent, not true
 		ephem_elem.distanceFromSun = loc_elem.getRadius();
 
-		if (eph.targetBody == TARGET.SUN) ephem_elem.heliocentricEclipticLatitude = ephem_elem.heliocentricEclipticLongitude = 
+		if (eph.targetBody == TARGET.SUN) ephem_elem.heliocentricEclipticLatitude = ephem_elem.heliocentricEclipticLongitude =
 			ephem_elem.distanceFromSun = 0;
 
 		/* Topocentric correction */
 		if (eph.isTopocentric)
 			ephem_elem = Ephem.topocentricCorrection(time, obs, eph, ephem_elem);
-		
+
 		return ephem_elem;
 	}
-	
+
 	/**
 	 * Transforms J2000 mean equatorial (dynamical equinox) coordinates into FK5.
 	 * Specific to this theory (class) only for DE200. Rotation is performed
-	 * according to IMCCE documentation, see 
+	 * according to IMCCE documentation, see
 	 * http://www.imcce.fr/en/ephemerides/generateur/ephepos/ephemcc_doc.ps.gz.
-	 * 
+	 *
 	 * @param position Equatorial coordinates (x, y, z) or (x, y, z, vx, vy, vz)
 	 *        from DE200.
 	 * @return Equatorial FK5 coordinates.
@@ -759,7 +761,7 @@ public class JPLEphemeris {
 	/**
 	 * Get rectangular equatorial geocentric position of a planet in epoch
 	 * J2000.
-	 * 
+	 *
 	 * @param JD Julian day in TDB.
 	 * @param planet Target ID.
 	 * @param light_time Light time in days.
@@ -768,7 +770,7 @@ public class JPLEphemeris {
 	 * @param obs The observer object. Can be null for the Earth's center.
 	 * @return Array with x, y, z, (geocentric position) vx, vy, vz (earth barycentric
 	 * velocity) coordinates. Note velocity components are those
-	 * for the Earth (used for aberration correction) not those for the planet relative to the 
+	 * for the Earth (used for aberration correction) not those for the planet relative to the
 	 * geocenter.
 	 * @throws JPARSECException Thrown if the calculation fails.
 	 */
@@ -776,10 +778,10 @@ public class JPLEphemeris {
 	{
 		// Heliocentric position corrected for light time
 		double helio_object[] = this.getPositionAndVelocity(JD - light_time, planet);
-		if (Functions.equalVectors(helio_object, JPLEphemeris.INVALID_VECTOR) && planet != TARGET.SUN 
+		if (Functions.equalVectors(helio_object, JPLEphemeris.INVALID_VECTOR) && planet != TARGET.SUN
 				&& planet != TARGET.Solar_System_Barycenter)
 			return JPLEphemeris.INVALID_VECTOR;
-		
+
 		if (addSat) {
 			Object o = DataBase.getData("offsetPosition", true);
 			if (o != null) {
@@ -815,9 +817,9 @@ public class JPLEphemeris {
 			EphemerisElement eph = new EphemerisElement();
 			eph.ephemMethod = REDUCTION_METHOD.IAU_2006;
 			eph.algorithm = this.jplID;
-			earth = obs.heliocentricPositionOfObserver(JD, eph);			
+			earth = obs.heliocentricPositionOfObserver(JD, eph);
 		}
-		
+
 		double geo_pos[] = Functions.substract(helio_object, earth);
 
 		geo_pos[3] = earth[3];
@@ -829,7 +831,7 @@ public class JPLEphemeris {
 	/**
 	 * Get rectangular equatorial geocentric position of a planet in epoch
 	 * J2000, using extended precision. Not actively used in JPARSEC.
-	 * 
+	 *
 	 * @param JD Julian day in TDB.
 	 * @param planet Target ID.
 	 * @param light_time Light time in days.
@@ -838,7 +840,7 @@ public class JPLEphemeris {
 	 * @param obs The observer object. Can be null for the Earth's center.
 	 * @return Array with x, y, z, (geocentric position) vx, vy, vz (earth barycentric
 	 * velocity) coordinates. Note velocity components are those
-	 * for the Earth (used for aberration correction) not those for the planet relative to the 
+	 * for the Earth (used for aberration correction) not those for the planet relative to the
 	 * geocenter.
 	 * @throws JPARSECException Thrown if the calculation fails.
 	 */
@@ -846,10 +848,10 @@ public class JPLEphemeris {
 	{
 		// Heliocentric position corrected for light time
 		double helio_object[] = this.getPositionAndVelocity(JD.subtract(new BigDecimal(light_time)), planet);
-		if (Functions.equalVectors(helio_object, JPLEphemeris.INVALID_VECTOR) && planet != TARGET.SUN 
+		if (Functions.equalVectors(helio_object, JPLEphemeris.INVALID_VECTOR) && planet != TARGET.SUN
 				&& planet != TARGET.Solar_System_Barycenter)
 			return JPLEphemeris.INVALID_VECTOR;
-		
+
 		if (addSat) {
 			Object o = DataBase.getData("offsetPosition", true);
 			if (o != null) {
@@ -885,7 +887,7 @@ public class JPLEphemeris {
 			EphemerisElement eph = new EphemerisElement();
 			eph.ephemMethod = REDUCTION_METHOD.IAU_2006;
 			eph.algorithm = this.jplID;
-			earth = obs.heliocentricPositionOfObserver(JD.doubleValue(), eph);			
+			earth = obs.heliocentricPositionOfObserver(JD.doubleValue(), eph);
 		}
 
 		double geo_pos[] = Functions.substract(helio_object, earth);
@@ -909,7 +911,7 @@ public class JPLEphemeris {
 		double moon[] = this.getPositionAndVelocity(JD, TARGET.Moon);
 		return Functions.substract(helio_barycenter, Functions.scalarProduct(moon, 1.0 / (1.0 + emrat)));
 	}
-	
+
 	/**
 	 * Obtains position and velocity of certain object using the selected
 	 * JPL ephemeris version.
@@ -918,7 +920,7 @@ public class JPLEphemeris {
 	 * barycenter, or can be also nutation and libration.
 	 * @return A vector with equatorial position and velocity from Solar System
 	 * Barycenter, refered to ICRS (or dynamical equinox and equator for DE200) and J2000 equinox.
-	 * For the Moon the geocentric position is returned. 
+	 * For the Moon the geocentric position is returned.
 	 * @throws JPARSECException If an error occurs.
 	 */
 	public double[] getPositionAndVelocity(double jd, TARGET target)
@@ -992,7 +994,7 @@ public class JPLEphemeris {
 		 * Calculate the chebyshev time within the subinterval, between -1 and +1.
 		 * jd is a double value. I have tested that with BigDecimal the difference
 		 * is around 20 microarcseconds for the Moon (0.04 m), and also below 1 m
-		 * for Mars and other planets. 
+		 * for Mars and other planets.
 		 */
 		chebyshev_time = 2.0 * (jd - ((subinterval - 1.0) * subinterval_duration + interval_start_time)) / subinterval_duration - 1.0;
 
@@ -1040,11 +1042,11 @@ public class JPLEphemeris {
 		}
 
 		double array[] = new double[] {
-			ephemeris_r[1], ephemeris_r[2], ephemeris_r[3], 
+			ephemeris_r[1], ephemeris_r[2], ephemeris_r[3],
 			ephemeris_r[4], ephemeris_r[5], ephemeris_r[6]
-		}; 
-		
-		if (target == TARGET.Nutation) array = DataSet.getSubArray(array, 0, 3); 
+		};
+
+		if (target == TARGET.Nutation) array = DataSet.getSubArray(array, 0, 3);
 
 		// Return position of Pluto's body center
 		if (target == TARGET.Pluto) {
@@ -1053,7 +1055,7 @@ public class JPLEphemeris {
 			array[1] = newPos[1];
 			array[2] = newPos[2];
 		}
-		
+
 		return array;
 	}
 
@@ -1066,13 +1068,13 @@ public class JPLEphemeris {
 	 * @param target Target. Can be a planet, Pluto, or the Sun, Moon, Earth-Moon
 	 * barycenter, or can be also nutation and libration.
 	 * @return A vector with equatorial position and velocity from Solar System
-	 * Barycenter, refered to ICRS (or dynamical equinox and equator for DE200) and J2000 equinox. 
+	 * Barycenter, refered to ICRS (or dynamical equinox and equator for DE200) and J2000 equinox.
 	 * @throws JPARSECException If an error occurs.
 	 */
 	public double[] getPositionAndVelocity(BigDecimal bigjd, TARGET target)
 	throws JPARSECException {
 		double jd = bigjd.doubleValue();
-		
+
 		if (target == TARGET.Solar_System_Barycenter) return new double[] {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 		int object = DataSet.getIndex(targets, target);
 		if (object <= 0) throw new JPARSECException("invalid target.");
@@ -1141,15 +1143,15 @@ public class JPLEphemeris {
 		 * Calculate the chebyshev time within the subinterval, between -1 and +1.
 		 * I have tested that with BigDecimal the difference
 		 * is around 20 microarcseconds for the Moon (0.04 m), and also below 1 m
-		 * for Mars and other planets. 
+		 * for Mars and other planets.
 		 */
 		//chebyshev_time = 2.0 * (jd - ((subinterval - 1.0) * subinterval_duration + interval_start_time)) / subinterval_duration - 1.0;
 		BigDecimal big_chebyshev_time = (bigjd.subtract(new BigDecimal((subinterval - 1.0) * subinterval_duration + interval_start_time)));
 		big_chebyshev_time = big_chebyshev_time.multiply(new BigDecimal(2.0 / subinterval_duration));
 		big_chebyshev_time = big_chebyshev_time.subtract(new BigDecimal(1.0));
 		chebyshev_time = big_chebyshev_time.doubleValue();
-		
-		
+
+
 		/* Calculate the Chebyshev position polynomials */
 		position_poly[1] = 1.0;
 		position_poly[2] = chebyshev_time;
@@ -1194,12 +1196,12 @@ public class JPLEphemeris {
 		}
 
 		double array[] = new double[] {
-			ephemeris_r[1], ephemeris_r[2], ephemeris_r[3], 
+			ephemeris_r[1], ephemeris_r[2], ephemeris_r[3],
 			ephemeris_r[4], ephemeris_r[5], ephemeris_r[6]
-		}; 
-		
-		if (target == TARGET.Nutation) array = DataSet.getSubArray(array, 0, 3); 
-		
+		};
+
+		if (target == TARGET.Nutation) array = DataSet.getSubArray(array, 0, 3);
+
 		return array;
 	}
 
@@ -1234,11 +1236,11 @@ public class JPLEphemeris {
 			if (year >= 0) {
 				filename +="p";
 			} else {
-				filename +="m";				
+				filename +="m";
 			}
 			filename += ""+Math.abs(year)+"."+this.getJPLVersion();
 			String JPLfilename = filename;
-			
+
 			String filePath = FileIO.DATA_JPL_EPHEM_DIRECTORY+"de"+this.getJPLVersion()+Zip.ZIP_SEPARATOR;
 			if (externalPath != null) filePath = externalPath;
 			filename = filePath + filename;
@@ -1246,7 +1248,7 @@ public class JPLEphemeris {
 			int seriesApprox = (int) (2.0 + 367.0 * (double) this.yearsPerFile / this.jds);
 			ephemerisCoefficients = new double[numbers_per_interval*seriesApprox+1];
 			jplVersion = this.getJPLVersion();
-						
+
 			InputStream is = null;
 			if (externalPath != null && new File(filename).exists()) {
 				URLConnection Connection = (URLConnection) ((new File(filename)).toURI().toURL()).openConnection();
@@ -1270,12 +1272,12 @@ public class JPLEphemeris {
 					line = DataSet.replaceAll(buff.readLine(), "D", "E", true);
 
 					if (i > 2) {
-						ephemerisCoefficients[(j - 1) * numbers_per_interval + (3 * (i - 2) - 1)] = 
+						ephemerisCoefficients[(j - 1) * numbers_per_interval + (3 * (i - 2) - 1)] =
 							Double.parseDouble(FileIO.getField(1, line, " ", true));
-						if (i < imax || (rest == 0 || rest == 2)) ephemerisCoefficients[(j - 1) * numbers_per_interval + (3 * (i - 2))] = 
+						if (i < imax || (rest == 0 || rest == 2)) ephemerisCoefficients[(j - 1) * numbers_per_interval + (3 * (i - 2))] =
 								Double.parseDouble(FileIO.getField(2, line, " ", true));
 					}
-					if (i < imax || rest == 0) ephemerisCoefficients[(j - 1) * numbers_per_interval + (3 * (i - 2) + 1)] = 
+					if (i < imax || rest == 0) ephemerisCoefficients[(j - 1) * numbers_per_interval + (3 * (i - 2) + 1)] =
 							Double.parseDouble(FileIO.getField(3, line, " ", true));
 				}
 			}
@@ -1283,14 +1285,14 @@ public class JPLEphemeris {
 		} catch (Exception e)
 		{
 			throw new JPARSECException("a problem was found when trying to read from the file "+filename+".", e);
-		} 
+		}
 	}
 
 	/**
 	 * Value of the Moon secular acceleration ("/cy^2) for DE403 and DE404.
 	 * The value is -25.8 as it appears in the IOM of JPL for DE403, but
-	 * from the information of the IOM of JPL DE421 it seems that this 
-	 * value could be -26.06. See page 7 of 
+	 * from the information of the IOM of JPL DE421 it seems that this
+	 * value could be -26.06. See page 7 of
 	 * http://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/de421_lunar_ephemeris_and_orientation.pdf.
 	 */
 	public static final double MOON_SECULAR_ACCELERATION_DE403 = -25.8;
@@ -1318,19 +1320,21 @@ public class JPLEphemeris {
 	 * From http://ipnpr.jpl.nasa.gov/progress_report/42-196/196C.pdf.
 	 */
 	public static final double MOON_SECULAR_ACCELERATION_DE430 = -25.82;
-	
+
 	/**
 	 * Corrects Julian day of calculations of JPL Ephemeris for a different value
 	 * of the secular acceleration of the Moon. This method uses the current value of static
-	 * variable {@linkplain Elp2000#MOON_SECULAR_ACCELERATION}, which is the (usually) adopted 
+	 * variable {@linkplain Elp2000#MOON_SECULAR_ACCELERATION}, which is the (usually) adopted
 	 * value. This correction is not applied automatically in JPARSEC, and should only be applied
 	 * to lunar ephemerides (mainly for DE200).
-	 * 
+	 *
 	 * @param jd Julian day in dynamical time.
 	 * @param jplID The algorithm.
 	 * @return Correction to non-dynamical time in days.
+	 * @throws JPARSECException If the input algorithm does not belong to a JPL ephemerides or
+	 * a compatible one (Vsop/ELP = DE200, and Moshier/Series96 = DE403).
 	 */
-	public static double timeCorrectionForSecularAcceleration(double jd, EphemerisElement.ALGORITHM jplID)
+	public static double timeCorrectionForSecularAcceleration(double jd, EphemerisElement.ALGORITHM jplID) throws JPARSECException
 	{
 		double moonSecularAcceleration = 0.0;
 		switch (jplID) {
@@ -1361,9 +1365,8 @@ public class JPLEphemeris {
 			moonSecularAcceleration = JPLEphemeris.MOON_SECULAR_ACCELERATION_DE430;
 			break;
 		default:
-			  break;
+			throw new JPARSECException("Invalid algorithm.");
 		}
-
 		double cent = (jd - 2435109.0) / Constant.JULIAN_DAYS_PER_CENTURY;
 		double deltaT = -0.91072 * (moonSecularAcceleration - Elp2000.MOON_SECULAR_ACCELERATION) * cent * cent;
 

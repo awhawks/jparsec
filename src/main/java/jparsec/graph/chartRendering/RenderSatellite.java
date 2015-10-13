@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.graph.chartRendering;
 
 import java.util.ArrayList;
@@ -58,7 +58,7 @@ import jparsec.util.JPARSECException;
  * <P>
  * The satellite are rendered with their subEarth positions projected in a
  * cylindrical view of the Earth. Sun and Moon are also shown using image icons.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -68,11 +68,11 @@ public class RenderSatellite
 	 * Render object that holds render parameters.
 	 */
 	public SatelliteRenderElement render;
-	
+
 	private TimeElement time;
 	private ObserverElement obs;
 	private EphemerisElement eph;
-	
+
 	private String sat_name = "";
 	private boolean showSatellite;
 
@@ -85,25 +85,21 @@ public class RenderSatellite
 	private int[] obsPos;
 	private LocationElement obsLoc;
 	private RenderPlanet rp = null;
-	
+
 	/** Hold the geographic position of rendered bodies. */
 	public LocationElement locSun, locEarth, locSatel[], locMoon[];
 
 	/**
-	 * True to allow using an spline technique (in case the instance of 
+	 * True to allow using an spline technique (in case the instance of
 	 * {@linkplain Graphics} supports it) to resize the image in high
-	 * quality mode. Default value is true, set to false for better 
+	 * quality mode. Default value is true, set to false for better
 	 * performance.
 	 */
 	public static boolean ALLOW_SPLINE_RESIZING = true;
 
-	public SatelliteEphemElement[] getEphemSat() {
-		return this.ephemSat;
-	}
-
 	/**
 	 * Renderize a satellite.
-	 * 
+	 *
 	 * @param g Graphics object.
 	 * @throws JPARSECException Thrown if the calculation fails.
 	 */
@@ -116,7 +112,7 @@ public class RenderSatellite
 		// recentered later.
 		int saty = 0;
 		int satx = 0;
-		
+
 		// Obtain sub-Earth positions of Sun, Moon, Earth, and satellite
 		locSun = new LocationElement(ephemSun.rightAscension - siderealTime,
 				ephemSun.declination, 1.0);
@@ -135,14 +131,14 @@ public class RenderSatellite
 		if (ephem != null) {
 			locMoon = new LocationElement[ephem.length];
 			for (int i=0; i<ephem.length; i++) {
-				locMoon[i] = new LocationElement(ephem[i].rightAscension - siderealTime, ephem[i].declination, 1.0);			
+				locMoon[i] = new LocationElement(ephem[i].rightAscension - siderealTime, ephem[i].declination, 1.0);
 			}
 		}
 
 		// Get the texture and images
 		TARGET target = obs.getMotherBody();
 		if (target == TARGET.NOT_A_PLANET) throw new JPARSECException("Observer must be on some Solar System body.");
-		
+
 		int targetW = (int)(render.width * render.planetMap.zoomFactor);
 		int targetH = (int)(render.height * render.planetMap.zoomFactor);
 		String s = target.getEnglishName();
@@ -155,7 +151,7 @@ public class RenderSatellite
 				if (target == TARGET.EARTH && targetW <= 1536 && targetH <= 768 && !g.renderingToAndroid()) {
 					imgNight = g.getImage(FileIO.DATA_TEXTURES_DIRECTORY + s + "_night_med_res.jpg");
 				} else {
-					imgNight = g.getImage(FileIO.DATA_TEXTURES_DIRECTORY + s + "_night.jpg");					
+					imgNight = g.getImage(FileIO.DATA_TEXTURES_DIRECTORY + s + "_night.jpg");
 				}
 			}
 			int size[] = g.getSize(imgNight);
@@ -167,11 +163,11 @@ public class RenderSatellite
 			s += "_low_res";
 		} else {
 			if (target == TARGET.EARTH && targetW <= 1536 && targetH <= 768 && !g.renderingToAndroid())
-				s += "_med_res";			
+				s += "_med_res";
 		}
 		Object img = null;
 		if (target == TARGET.EARTH && render.planetMap.EarthMapSource != null) {
-			img = g.getImage(render.planetMap.EarthMapSource);			
+			img = g.getImage(render.planetMap.EarthMapSource);
 		} else {
 			img = g.getImage(FileIO.DATA_TEXTURES_DIRECTORY + s + ".jpg");
 		}
@@ -212,10 +208,10 @@ public class RenderSatellite
 				sat_icon[i] = "tiangong1";
 			sat[i] = g.getImage(FileIO.DATA_ICONS_DIRECTORY + sat_icon[i] + ".png");
 		}
-		
+
 		g.waitUntilImagesAreRead(new Object[] {sun, moon, earth});
 		g.waitUntilImagesAreRead(sat);
-		
+
 		// Get image size and grab pixels
 		if (texturax > targetW || texturay > targetH) {
 			img = g.getScaledImage(img, targetW, targetH, false, ALLOW_SPLINE_RESIZING);
@@ -279,7 +275,7 @@ public class RenderSatellite
 			rp.render.ephem = ephemEarth;
 			rp.render.ephem.angularRadius = (float) (rp.render.telescope.getField() * 0.5 * render.planetMap.zoomFactor);
 			rp.render.ephemSun = ephemSun;
-			//if (g.renderingToAndroid()) 
+			//if (g.renderingToAndroid())
 				rp.render.highQuality = false;
 			rp.showDayAndNight = render.showDayAndNight;
 			rp.earthMap = render.planetMap;
@@ -299,7 +295,7 @@ public class RenderSatellite
 			//RenderPlanet.FORCE_WHITE_BACKGROUND = false;
 			renderImg = g.cloneImage(g.getImage(0, 0, g.getWidth(), g.getHeight()));
 		}
-		
+
 		obsPos = getPosition(obsLoc);
 		int factor = 40;
 		double initLightAtElevation = -0.5 * Constant.DEG_TO_RAD, endLightAtElevation = -6.0 * Constant.DEG_TO_RAD;
@@ -328,7 +324,7 @@ public class RenderSatellite
 				obsEcl = obs.clone();
 			} catch (Exception exc) {}
 		}
-		
+
 		for (int i = 0; i < (texturax * texturay); i++)
 		{
 			int posj = i / texturax;
@@ -338,7 +334,7 @@ public class RenderSatellite
 			int pos[] = this.getPosition(loc);
 			if (pos == null) continue;
 			if (pos[0] < tx || pos[0] >= g.getWidth()+tx || pos[1] < ty || pos[1] >= g.getHeight()+ty) continue;
-			
+
 			// Obtain RGB compounds
 			int red = 255, green = 255, blue = 0;
 			if (img != null) {
@@ -350,7 +346,7 @@ public class RenderSatellite
 					blue = 0xff & jj;
 				} else {
 					int jj = g.getRGB(img, posi, posj);
-		
+
 					red = 0xff & (jj >> 16);
 					green = 0xff & (jj >> 8);
 					blue = 0xff & jj;
@@ -385,7 +381,7 @@ public class RenderSatellite
 					alt_sat[j] = Constant.PI_OVER_TWO - LocationElement.getApproximateAngularDistance(loc, new_loc_sat);
 				}
 			}
-			
+
 			// Attenuate or intensify brightness whether the sun/satellite is
 			// above the horizon or not
 			int brightness = 0;
@@ -412,7 +408,7 @@ public class RenderSatellite
 						} else {
 							if (alt_moon > 0.0) {
 								delta = delta - 3.0 * alt_moon / altMoonLimit;
-							}						
+							}
 						}
 					}
 					brightness += (int) (-delta*alt_sun/endLightAtElevation);
@@ -423,7 +419,7 @@ public class RenderSatellite
 					int red2 = 5, green2 = 5, blue2 = 5;
 					if (target == TARGET.EARTH) {
 						int jjNight = g.getRGB(imgNight, posi, posj);
-		
+
 						red2 = 0xff & (jjNight >> 16);
 						green2 = 0xff & (jjNight >> 8);
 						blue2 = 0xff & jjNight;
@@ -432,7 +428,7 @@ public class RenderSatellite
 							red2 = red-min;
 							green2 = green-min;
 							blue2 = blue-min;
-							
+
 							if (red2 < 0) red2 = 0;
 							if (green2 < 0) green2 = 0;
 							if (blue2 < 0) blue2 = 0;
@@ -443,16 +439,16 @@ public class RenderSatellite
 						green = green2;
 						blue = blue2;
 					} else {
-						red = red + (int) ((red2 - red) * (alt_sun-initLightAtElevation) / (endLightAtElevation-initLightAtElevation)); 
-						green = green + (int) ((green2 - green) * (alt_sun-initLightAtElevation) / (endLightAtElevation-initLightAtElevation)); 
-						blue = blue + (int) ((blue2 - blue) * (alt_sun-initLightAtElevation) / (endLightAtElevation-initLightAtElevation)); 
+						red = red + (int) ((red2 - red) * (alt_sun-initLightAtElevation) / (endLightAtElevation-initLightAtElevation));
+						green = green + (int) ((green2 - green) * (alt_sun-initLightAtElevation) / (endLightAtElevation-initLightAtElevation));
+						blue = blue + (int) ((blue2 - blue) * (alt_sun-initLightAtElevation) / (endLightAtElevation-initLightAtElevation));
 					}
 				}
 			}
 			for (int j=0; j<locSatel.length; j++) {
 				if (alt_sat[j] > 0.0 && showSatellite) brightness += factor;
 			}
-			if (render.showDayAndNight && solarEclipse && 
+			if (render.showDayAndNight && solarEclipse &&
 					alt_sun > (-0.5*Constant.DEG_TO_RAD) ) {
 				obsEcl.setLatitudeRad(loc.getLatitude());
 				obsEcl.setLongitudeRad(loc.getLongitude());
@@ -460,13 +456,13 @@ public class RenderSatellite
 				LocationElement locSun = Ephem.fastTopocentricCorrection(time, obsEcl, ephEcl, ephemSun, lst);
 				LocationElement locMoon = Ephem.fastTopocentricCorrection(time, obsEcl, ephEcl, ephemMoon, lst);
 				double d = LocationElement.getApproximateAngularDistance(locSun, locMoon);
-				
+
 				if (d < (ephemSun.angularRadius + ephemMoon.angularRadius)) {
 					brightness -= 10;
 					double h = ephemMoon.angularRadius - ephemSun.angularRadius;
-					if (h > 0.0 && d < h) brightness -= 100;			
+					if (h > 0.0 && d < h) brightness -= 100;
 				}
-			}			
+			}
 			if (brightness == 0 && render.planetMap == PLANET_MAP.MAP_SPHERICAL) continue;
 
 			red = red + brightness;
@@ -517,7 +513,7 @@ public class RenderSatellite
 								blue = 255;
 
 							g.setColor(red, green, blue, 255);
-							g.fillOval(x, y, 1, 1, false);						
+							g.fillOval(x, y, 1, 1, false);
 						}
 					}
 				}
@@ -540,7 +536,7 @@ public class RenderSatellite
 
 		if (render.planetMap.showGrid && render.planetMap == PLANET_MAP.MAP_FLAT) {
 			g.setColor(render.planetMap.showGridColor, true);
-			
+
 			int pos[] = this.getPosition(new LocationElement(-Math.PI, Constant.PI_OVER_TWO, 1));
 			double deg30 = (render.width-1) * render.planetMap.zoomFactor / 12.0;
 			for (int i=0; i<7; i++) {
@@ -549,7 +545,7 @@ public class RenderSatellite
 				g.drawLine(0, py, render.width, py, true);
 				if (i==0) py += 10 + g.getFont().getSize();
 				int lat = 90 - 30 * i;
-				s = ""+lat+"\u00ba";
+				s = ""+lat+"\u00b0";
 				g.drawString(s, 15, py-5);
 			}
 			//int p0[] = this.getTexturePosition(new LocationElement(-Math.PI, 0.0, 1.0));
@@ -563,7 +559,7 @@ public class RenderSatellite
 				g.drawLine(px, 0, px, render.height, true);
 				int lon = -180 + 30 * i * increment;
 				if (lon < -180) lon = lon + 360;
-				s = ""+lon+"\u00ba";
+				s = ""+lon+"\u00b0";
 				int dx = 5;
 				if (px > render.width/2) dx = (int) (-5-g.getStringWidth(s));
 				g.drawString(s, px+dx, render.height-5-g.getFont().getSize());
@@ -598,7 +594,7 @@ public class RenderSatellite
 				}
 			}
 		}
-		
+
 		if (showSatellite) {
 			sat_pos = new int[locSatel.length][];
 			for (int j=0; j<locSatel.length; j++) {
@@ -656,7 +652,7 @@ public class RenderSatellite
 					}
 				}
 			}
-			
+
 			String label = obs.getName();
 			float w = g.getStringBounds(label).getWidth();
 			if (pos != null && (maxr > w || maxr == -1)) {
@@ -666,9 +662,9 @@ public class RenderSatellite
 				if (mindy > 0) mindy += 10;
 				g.drawString(label, pos[0]+(int)mindx-w/2f, pos[1]+(int)mindy);
 			}
-			
+
 		}
-		
+
 		// Draw sun, moon, and satellite icons
 		if (render.showSun && img != null && sun_pos != null) {
 			size = g.getSize(sun);
@@ -689,7 +685,7 @@ public class RenderSatellite
 				for (int i=0; i<locMoon.length; i++) {
 					int satpos[] = this.getPosition(locMoon[i]);
 					if (satpos == null) continue;
-					
+
 					double maxr = -1, mindx = 0, mindy = 0;
 					LocationElement loc = unfixLoc(new LocationElement(obs.getLongitudeRad(), obs.getLatitudeRad(), 1.0));
 					int pos[] = getPosition(loc);
@@ -708,7 +704,7 @@ public class RenderSatellite
 										delta += FastMath.hypot(px-satposi[0], py-satposi[1]);
 									}
 								}
-		
+
 								if (showSatellite) {
 									for (int j=0; j<locSatel.length; j++) {
 										delta += FastMath.hypot(px-sat_pos[j][0], py-sat_pos[j][1]);
@@ -722,7 +718,7 @@ public class RenderSatellite
 							}
 						}
 					}
-					
+
 					g.fillOval(satpos[0] + satx - sizeo, satpos[1] + saty - sizeo, sizeo2, sizeo2, refz/1.3f);
 					g.drawString(ephem[i].name, satpos[0] + satx + (int)mindx - g.getStringBounds(ephem[i].name).getWidth()/2, satpos[1] + saty + 20 + (int)mindy, refz/1.3f);
 				}
@@ -765,7 +761,7 @@ public class RenderSatellite
 	 * geographical coordinates. The position is measured from the top left
 	 * corner, which is supposed to be geographical coordinates lon = -PI, lat =
 	 * PI * 0.5.
-	 * 
+	 *
 	 * @param loc An object with the longitude and latitude in radians.
 	 * @return An array with (x, y) coordinates.
 	 */
@@ -791,14 +787,14 @@ public class RenderSatellite
 
 		int size_x = render.width;
 		int size_y = render.height;
-		
+
 		if (lon >= Math.PI) lon = lon - Constant.TWO_PI;
 		float x = (float) (0.5 * size_x + (double) size_x * lon / Constant.TWO_PI + 0.5);
 		float y = (float) (0.5 * size_y - (double) size_y * lat / Math.PI + 0.5);
-		
+
 		if (x < 0) x = x + size_x;
 		if (x >= size_x) x = x - size_x;
-		
+
 		if (obsPos != null && render.planetMap.zoomFactor > 1.0f) {
 			x = (int) (0.5f + (x - obsPos[0]) * render.planetMap.zoomFactor+render.width/2);
 			y = (int) (0.5f + (y - obsPos[1]) * render.planetMap.zoomFactor+render.height/2);
@@ -806,7 +802,7 @@ public class RenderSatellite
 			if (x >= fac) x -= fac;
 			if (x < 0) x += fac;
 		}
-		 
+
 		return new int[] {(int)x, (int)y };
 	}
 
@@ -815,7 +811,7 @@ public class RenderSatellite
 	 * geographical coordinates. The position is measured from the top left
 	 * corner, which is supposed to be geographical coordinates lon = -PI, lat =
 	 * PI * 0.5.
-	 * 
+	 *
 	 * @param loc An object with the longitude and latitude in radians.
 	 * @return An array with (x, y) coordinates.
 	 */
@@ -837,14 +833,14 @@ public class RenderSatellite
 
 		int size_x = render.width;
 		int size_y = render.height;
-		
+
 		if (lon >= Math.PI) lon = lon - Constant.TWO_PI;
 		float x = (float) (0.5 * size_x + (double) size_x * lon / Constant.TWO_PI + 0.5);
 		float y = (float) (0.5 * size_y - (double) size_y * lat / Math.PI + 0.5);
-		
+
 		if (x < 0) x = x + size_x;
 		if (x >= size_x) x = x - size_x;
-		
+
 		if (obsPos != null && render.planetMap.zoomFactor > 1.0f) {
 			x = (int) (0.5f + (x - obsPos[0]) * render.planetMap.zoomFactor+render.width/2);
 			y = (int) (0.5f + (y - obsPos[1]) * render.planetMap.zoomFactor+render.height/2);
@@ -852,13 +848,13 @@ public class RenderSatellite
 			if (x >= fac) x -= fac;
 			if (x < 0) x += fac;
 		}
-		
+
 		return new int[] {(int)x, (int)y };
 	}
 
 	/**
 	 * Obtains the geographical position corresponding to certain texture position.
-	 * 
+	 *
 	 * @param i Index of the texture, from 0 to size_x*size_y.
 	 * @param size_x Width of the texture in pixels.
 	 * @param size_y Height of the texture in pixels.
@@ -869,7 +865,7 @@ public class RenderSatellite
 	{
 		int jj = i / size_x;
 		int ii = i - jj * size_x;
-		
+
 		double longe = (double) (ii + 1 - size_x / 2.0) * Constant.TWO_PI / (double) (size_x);
 		double latge = (double) (size_y / 2.0 - jj - 1) * Math.PI / (double) (size_y);
 
@@ -881,7 +877,7 @@ public class RenderSatellite
 	/**
 	 * Obtains the geographical position corresponding to certain map
 	 * coordinates.
-	 * 
+	 *
 	 * @param x X position.
 	 * @param y Y position.
 	 * @return An object with the geographical coordinates. Distance is set to
@@ -891,7 +887,7 @@ public class RenderSatellite
 	{
  		int size_x = render.width;
 		int size_y = render.height;
-	
+
 		if (render.planetMap == PLANET_MAP.MAP_SPHERICAL) {
 			try {
 				return rp.getPlanetographicPosition((int)(x+0.5), (int)(y+0.5), 3, false);
@@ -906,12 +902,12 @@ public class RenderSatellite
 			if (x >= size_x) x -= size_x;
 			if (x < 0) x += size_x;
 		}
-		
+
 		double longe = (double) (x - 0.5f - size_x * 0.5) * Constant.TWO_PI / (double) size_x;
 		double latge = (double) (size_y * 0.5 - y + 0.5) * Math.PI / (double) size_y;
 		if (latge > Constant.PI_OVER_TWO) latge = Math.PI - latge;
 		if (latge < -Constant.PI_OVER_TWO) latge = -Math.PI - latge;
-		
+
 		LocationElement loc = fixLoc(new LocationElement(longe, latge, 1.0));
 
 		return loc;
@@ -919,7 +915,7 @@ public class RenderSatellite
 
 	/**
 	 * Constructor for satellite render process.
-	 * 
+	 *
 	 * @param time Time object.
 	 * @param obs Observer object.
 	 * @param eph Ephemeris object.
@@ -932,7 +928,7 @@ public class RenderSatellite
 	}
 	/**
 	 * Sets the satellite render objects.
-	 * 
+	 *
 	 * @param render Render object.
 	 * @param time Time object.
 	 * @param obs Observer object.
@@ -952,7 +948,7 @@ public class RenderSatellite
 			this.obs = obs;
 			this.eph = ephIn.clone();
 			if (eph.algorithm.ordinal() > ALGORITHM.SERIES96_MOSHIERForMoon.ordinal()) eph.algorithm = ALGORITHM.MOSHIER;
-			
+
 			EphemerisElement sun_eph = new EphemerisElement(TARGET.EARTH, eph.ephemType,
 					EphemerisElement.EQUINOX_OF_DATE, eph.isTopocentric, eph.ephemMethod, eph.frame);
 			sun_eph.algorithm = EphemerisElement.ALGORITHM.MOSHIER;
@@ -987,7 +983,7 @@ public class RenderSatellite
 				if (obs.getMotherBody() == TARGET.EARTH) ephemEarth = PlanetEphem.MoshierEphemeris(time, obs1, sun_eph);
 				sun_eph.targetBody = TARGET.SUN;
 				ephemSun = PlanetEphem.MoshierEphemeris(time, obs, sun_eph);
-				
+
 				// Little correction to avoid light-time effects and a little
 				// lack of accuracy in the calculation of Earth's meridian from
 				// an observer out from Earth
@@ -996,7 +992,7 @@ public class RenderSatellite
 				ephemEarth.subsolarLongitude += dlon;
 				ephemSun.longitudeOfCentralMeridian += dlon;
 				ephemSun.subsolarLongitude += dlon;
-				
+
 				PlanetRenderElement planetRender = new PlanetRenderElement();
 				planetRender.telescope = TelescopeElement.BINOCULARS_11x80;
 				planetRender.highQuality = true;
@@ -1038,6 +1034,8 @@ public class RenderSatellite
 					case URANUS:
 						mephem = MoonEphem.uranianSatellitesEphemerides_GUST86(time, obs, eph);
 						break;
+					default:
+						break;
 					}
 					if (mephem != null) {
 						ephem = new EphemElement[mephem.length];
@@ -1046,7 +1044,7 @@ public class RenderSatellite
 							ephem[i] = EphemElement.parseMoonEphemElement(mephem[i], jd);
 						}
 					}
-				}					
+				}
 			}
 
 			showSatellite = eph.targetBody.getIndex() > 0;
@@ -1103,13 +1101,13 @@ public class RenderSatellite
 	 * @return True if it was added correctly, false otherwise (for example
 	 * if the rendering date is more than 30 days far from the date of the
 	 * orbital elements).
-	 * @throws JPARSECException If the mother body is not the Earth, or if 
+	 * @throws JPARSECException If the mother body is not the Earth, or if
 	 * another error occurs.
 	 */
 	public boolean addSatellite(String name) throws JPARSECException {
 		if (obs.getMotherBody() != TARGET.EARTH)
 			throw new JPARSECException("Unsupported for mother body "+obs.getMotherBody().getEnglishName()+".");
-		
+
 		int index = SatelliteEphem.getArtificialSatelliteTargetIndex(name);
 		if (showSatellite && index >= 0) {
 			sat_name += " && " + SatelliteEphem.getArtificialSatelliteName(index);
@@ -1124,7 +1122,7 @@ public class RenderSatellite
 				}
 			}
 			ephemSat = newSat;
-		}		
+		}
 		if (index >= 0 && render.showOrbits) {
 			if (locSat == null) locSat = new ArrayList<LocationElement[]>();
 			SatelliteOrbitalElement sat = SatelliteEphem.getArtificialSatelliteOrbitalElement(index);

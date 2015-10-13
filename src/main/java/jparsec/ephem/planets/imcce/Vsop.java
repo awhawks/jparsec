@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.ephem.planets.imcce;
 
 import java.io.BufferedReader;
@@ -56,11 +56,11 @@ import jparsec.util.JPARSECException;
 
 /**
  * This class provides VSOP planetary positions for Mercury through Neptune.
- * The version of VSOP implemeted is VSOP87A (J2000 heliocentric rectangular 
+ * The version of VSOP implemeted is VSOP87A (J2000 heliocentric rectangular
  * coordinates).
 *
  * Bretagnon P., Francou G., : 1988, Astron. Astrophys., 202, 309.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -72,7 +72,7 @@ public class Vsop
 	/**
 	 * Obtain rectangular position of a planet using full VSOP87 theory. Mean
 	 * equinox and ecliptic J2000.
-	 * 
+	 *
 	 * @param JD Julian day in TDB.
 	 * @param planet Planet ID.
 	 * @return Array (x, y, z, vx, vy, vz).
@@ -113,6 +113,8 @@ public class Vsop
 		case Moon:
 			extension = "emb";
 			break;
+		default:
+			throw new JPARSECException("Invalid body.");
 		}
 
 		if (extension.equals(""))
@@ -127,7 +129,7 @@ public class Vsop
 
 	/**
 	 * Evaluates full VSOP87A theory.
-	 * 
+	 *
 	 * @param extension Planet extension of file.
 	 * @param jcen Julian centuries from J2000.
 	 * @return Array (x, y, z, vx, vy, vz), mean equinox and ecliptic J2000.
@@ -159,7 +161,7 @@ public class Vsop
 		rf_begin.setFormatToRead(VSOP_begin_record);
 		ReadFormat rf = new ReadFormat();
 		rf.setFormatToRead(VSOP_record);
-		
+
 		try
 		{
 			InputStream is = getClass().getClassLoader().getResourceAsStream(PATH_TO_FILE+"."+extension);
@@ -232,7 +234,7 @@ public class Vsop
 	/**
 	 * Get rectangular ecliptic geocentric position of a planet in equinox
 	 * J2000.
-	 * 
+	 *
 	 * @param JD Julian day in TDB.
 	 * @param planet Planet ID.
 	 * @param light_time Light time in days.
@@ -240,14 +242,14 @@ public class Vsop
 	 * of the planet.
 	 * @param obs The observer object. Can be null for the Earth's center.
 	 * @return Array with x, y, z, vx, vy, vz coordinates. Note velocity components are those
-	 * for the Earth (used for aberration correction) not those for the planet relative to the 
+	 * for the Earth (used for aberration correction) not those for the planet relative to the
 	 * geocenter.
 	 * @throws JPARSECException Thrown if the calculation fails.
 	 */
 	public static double[] getGeocentricPosition(double JD, TARGET planet, double light_time,
 			boolean addSat, ObserverElement obs) throws JPARSECException
 	{
-		// Heliocentric position corrected for light time 
+		// Heliocentric position corrected for light time
 		double helio_object[] = getHeliocentricEclipticPositionJ2000(JD - light_time, planet);
 
 		if (addSat) {
@@ -281,7 +283,7 @@ public class Vsop
 	/**
 	 * Transform J2000 mean ecliptic coordinates into equatorial.
 	 * Specific to this theory (class) to compare positions with DE200.
-	 * 
+	 *
 	 * @param position Ecliptic coordinates (x, y, z) or (x, y, z, vx, vy, vz)
 	 *        refered to mean ecliptic and dynamical equinox of J2000.
 	 * @return Equatorial FK5 coordinates.
@@ -329,7 +331,7 @@ public class Vsop
 	 * after 2100, despite that the results match JPL DE200 Ephemeris to within
 	 * the arcsecond for several millenia. Results closer to JPL DE403 can be obtained with
 	 * JPL ephemeris or Moshier algorithms.
-	 * 
+	 *
 	 * @param time Time object containing the date.
 	 * @param obs Observer object containing the observer position.
 	 * @param eph Ephemeris object with the target and ephemeris
@@ -352,7 +354,7 @@ public class Vsop
 			throw new JPARSECException("invalid ephemeris object.");
 
 		/* Obtain topocentric position of object */
-		EphemElement ephem_elem = vsopCalc(time, obs, eph, true);
+		EphemElement ephem_elem = vsopCalc(time, obs, eph, true, true);
 
 		// Obtain julian day in Barycentric Dynamical Time
 		double JD_TDB = TimeScale.getJD(time, obs, eph, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
@@ -362,10 +364,10 @@ public class Vsop
 		new_eph.ephemType = COORDINATES_TYPE.APPARENT;
 		new_eph.equinox = EphemerisElement.EQUINOX_OF_DATE;
 		EphemElement ephem_elem2 = ephem_elem;
-		if (eph.ephemType != EphemerisElement.COORDINATES_TYPE.APPARENT || eph.equinox != EphemerisElement.EQUINOX_OF_DATE) 
-			ephem_elem2 = vsopCalc(time, obs, new_eph, true);
+		if (eph.ephemType != EphemerisElement.COORDINATES_TYPE.APPARENT || eph.equinox != EphemerisElement.EQUINOX_OF_DATE)
+			ephem_elem2 = vsopCalc(time, obs, new_eph, true, true);
 		new_eph.targetBody = TARGET.SUN;
-		ephem_elem2 = PhysicalParameters.physicalParameters(JD_TDB, vsopCalc(time, obs, new_eph, false), ephem_elem2, obs, eph);
+		ephem_elem2 = PhysicalParameters.physicalParameters(JD_TDB, vsopCalc(time, obs, new_eph, false, false), ephem_elem2, obs, eph);
 		PhysicalParameters.setPhysicalParameters(ephem_elem, ephem_elem2, time, obs, eph);
 
 		/* Horizontal coordinates */
@@ -382,7 +384,7 @@ public class Vsop
 
 	private static EphemElement vsopCalc(TimeElement time, // Time Element
 			ObserverElement obs, // Observer Element
-			EphemerisElement eph, boolean addGCRS) // Ephemeris Element
+			EphemerisElement eph, boolean addGCRS, boolean addOffset) // Ephemeris Element
 			throws JPARSECException
 	{
 		// Obtain julian day in Barycentric Dynamical Time
@@ -392,7 +394,7 @@ public class Vsop
 		if ((JD_TDB < 2415020.5 || JD_TDB > 2488092.5) && eph.targetBody.compareTo(TARGET.MARS) > 0) JPARSECException.addWarning("VSOP is not recommended for giant planets outside years 1900-2100");
 
 		// Obtain geocentric position
-		double geo_eq[] = Vsop.meanEclipticJ2000ToEquatorialFK5(Vsop.getGeocentricPosition(JD_TDB, eph.targetBody, 0.0, true, obs));
+		double geo_eq[] = Vsop.meanEclipticJ2000ToEquatorialFK5(Vsop.getGeocentricPosition(JD_TDB, eph.targetBody, 0.0, addOffset, obs));
 
 		// Obtain topocentric light_time
 		LocationElement loc = LocationElement.parseRectangularCoordinates(geo_eq);
@@ -403,7 +405,7 @@ public class Vsop
 		if (eph.ephemType != EphemerisElement.COORDINATES_TYPE.GEOMETRIC) // && eph.targetBody != TARGET.SUN)
 		{
 			double topo[] = obs.topocentricObserverICRF(time, eph);
-			geo_eq = Vsop.meanEclipticJ2000ToEquatorialFK5(Vsop.getGeocentricPosition(JD_TDB, eph.targetBody, light_time, true, obs));
+			geo_eq = Vsop.meanEclipticJ2000ToEquatorialFK5(Vsop.getGeocentricPosition(JD_TDB, eph.targetBody, light_time, addOffset, obs));
 			double light_time_corrected = Ephem.getTopocentricLightTime(geo_eq, topo, eph);
 			// Iterate to obtain correct light time and geocentric position.
 			// Typical differente in light time is 0.1 seconds. Iterate to
@@ -412,7 +414,7 @@ public class Vsop
 			{
 				light_time = light_time_corrected;
 				geo_eq = Vsop.meanEclipticJ2000ToEquatorialFK5(Vsop.getGeocentricPosition(JD_TDB, eph.targetBody,
-						light_time, true, obs));
+						light_time, addOffset, obs));
 				light_time_corrected = Ephem.getTopocentricLightTime(geo_eq, topo, eph);
 			} while (Math.abs(light_time - light_time_corrected) > (1.0E-6 / Constant.SECONDS_PER_DAY));
 			light_time = light_time_corrected;
@@ -420,16 +422,18 @@ public class Vsop
 
 		// Obtain heliocentric equatorial coordinates
 		double helio_object[] = Vsop.getHeliocentricEclipticPositionJ2000(JD_TDB - light_time, eph.targetBody);
-		Object o = DataBase.getData("offsetPosition", true);
-		if (o != null) {
-			double[] planetocentricPositionOfTargetSatellite = (double[]) o;
-			helio_object = Functions.sumVectors(helio_object, planetocentricPositionOfTargetSatellite);
+		if (addOffset) {
+			Object o = DataBase.getData("offsetPosition", true);
+			if (o != null) {
+				double[] planetocentricPositionOfTargetSatellite = (double[]) o;
+				helio_object = Functions.sumVectors(helio_object, planetocentricPositionOfTargetSatellite);
+			}
 		}
 		helio_object = Ephem.eclipticToEquatorial(helio_object, Constant.J2000, eph);
-		
+
 		// Correct for solar deflection and aberration
 		if (eph.ephemType == EphemerisElement.COORDINATES_TYPE.APPARENT)
-		{ 
+		{
 			double geo_sun_0[] = Vsop.meanEclipticJ2000ToEquatorialFK5(Vsop
 					.getGeocentricPosition(JD_TDB, TARGET.SUN, 0.0, false, obs));
 			if (obs.getMotherBody() != TARGET.EARTH || (eph.targetBody != TARGET.SUN && eph.targetBody != TARGET.Moon))
@@ -450,8 +454,8 @@ public class Vsop
 		double geo_date[];
 		if (eph.frame == FRAME.FK4) {
 			// Transform from B1950 to mean equinox of date
-			 geo_date = Precession.precess(Constant.B1950, JD_TDB, geo_eq, eph);	
-			 helio_object = Precession.precess(Constant.B1950, JD_TDB, helio_object, eph);	
+			 geo_date = Precession.precess(Constant.B1950, JD_TDB, geo_eq, eph);
+			 helio_object = Precession.precess(Constant.B1950, JD_TDB, helio_object, eph);
 		} else {
 			// Transform from J2000 to mean equinox of date
 			geo_date = Precession.precessFromJ2000(JD_TDB, geo_eq, eph);
@@ -468,7 +472,7 @@ public class Vsop
 				/* Correct nutation */
 				true_eq = Nutation.nutateInEquatorialCoordinates(JD_TDB, eph, geo_date, true);
 			}
-	
+
 			// Correct for polar motion
 			if (eph.ephemType == EphemerisElement.COORDINATES_TYPE.APPARENT &&
 					eph.correctForPolarMotion)
@@ -499,7 +503,7 @@ public class Vsop
 		// Note distances are apparent, not true
 		ephem_elem.distanceFromSun = loc_elem.getRadius();
 
-		if (eph.targetBody == TARGET.SUN) ephem_elem.heliocentricEclipticLatitude = ephem_elem.heliocentricEclipticLongitude = 
+		if (eph.targetBody == TARGET.SUN) ephem_elem.heliocentricEclipticLatitude = ephem_elem.heliocentricEclipticLongitude =
 			ephem_elem.distanceFromSun = 0;
 
 		/* Topocentric correction */
@@ -508,4 +512,4 @@ public class Vsop
 
 		return ephem_elem;
 	}
-}
+};

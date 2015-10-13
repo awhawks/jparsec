@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -31,12 +31,12 @@ import jparsec.util.Logger;
 import jparsec.util.Logger.LEVEL;
 
 /**
- * RADEX program, adequate to calculate the strengths of atomic and 
- * molecular lines from interstellar clouds, which are assumed to be 
+ * RADEX program, adequate to calculate the strengths of atomic and
+ * molecular lines from interstellar clouds, which are assumed to be
  * homogeneous. The use of this class is subject to reference to the
  * original paper: Van der Tak, F.F.S., Black, J.H., Sch&ouml;ier, F.L.,
  * Jansen, D.J., van Dishoeck, E.F., 2007, A&A 468, 627-635.<P>
- * 
+ *
  * This Java version corresponds to the translation of the original
  * Fortran program version from August 29, 2007, updated to 30nov2011
  * version on April 4, 2012.
@@ -95,7 +95,7 @@ public class RADEX {
 	 * contains them at once (added). OH and HCL are not supported even in this way in COLOGNE.
 	 */
 	public boolean jpl;
-	
+
 	/**
 	 * Full constructor. This constructor also checks the input data, and, if everything is OK,
 	 * the calculation of line intensities are performed. Minimum and maximum frequencies can define
@@ -139,14 +139,14 @@ public class RADEX {
 		this.tkin = Tkin;
 		this.method = method;
 		this.jpl = jpl;
-		
+
 		this.check();
 		this.execute(true);
 	}
 
 	/**
-	 * Constructor for one collisional partner. This constructor also checks the 
-	 * input data, and, if everything is OK, the calculation of line intensities 
+	 * Constructor for one collisional partner. This constructor also checks the
+	 * input data, and, if everything is OK, the calculation of line intensities
 	 * are performed. Minimum and maximum frequencies can define
 	 * a range to return the intensities for a given set of transitions, or can be the same value
 	 * to specify exactly one and only that transition.
@@ -176,7 +176,7 @@ public class RADEX {
 	/**
 	 * The set of possible collisional partners.
 	 */
-	public static enum PARTNER {
+	public enum PARTNER {
 		/** ID constant for H2 collision partner. */
 		H2,
 		/** ID constant for p-H2 collision partner. */
@@ -192,11 +192,11 @@ public class RADEX {
 		/** ID constant for H+ collision partner. */
 		Hplus
 	};
-	
+
 	/**
 	 * The set of calculation methods.
 	 */
-	public static enum METHOD {
+	public enum METHOD {
 		/** ID constant for an uniform sphere method. */
 		UNIFORM_SPHERE,
 		/** ID constant for an expanding sphere method (LVG). */
@@ -204,7 +204,7 @@ public class RADEX {
 		/** ID constant for a plane parallel slab (shock). */
 		PLANE_PARALLEL_SLAB
 	};
-	
+
 	/**
 	 * Holds the names of the available molecules/atoms.
 	 */
@@ -213,17 +213,17 @@ public class RADEX {
 		"HCl_hfs", "HCl", "HCN_hfs", "HCN", "HCO+", "HCS+", "HDO", "HNC", "HNCO", "N2H+_hfs", "N2H+", "o-C3H2", "o-H2CO",
 		"o-H2O_lowT", "o-H2O", "o-H3O+", "o-NH3", "o-SiC2", "O", "OCS", "OH_hfs", "OH", "p-C3H2", "p-H2CO",
 		"p-H2O_lowT", "p-H20", "p-H3O+", "p-NH3", "SiO", "SiS", "SO", "SO2", "N2D+", "NO", "CN", "CH3CN", "HF", "HOC+"};
-	
+
 	/**
 	 * Holds the JPL catalog names of the available molecules/atoms.
 	 */
 	public static final String[] MOLECULE_ATOM_NAMES_CORRESPONDENCE_JPL_CATALOG = new String[] {
 		"29001 C-13-O", "45001 C-13-S", "45002 Si-29-O", "12001 C-atom", "NULL", "29006 CO-17",
-		"30001 CO-18", "46001 CS-34", "28001 CO", "44001 CS", "30003 DCO+", "32003 CH3OH", 
+		"30001 CO-18", "46001 CS-34", "28001 CO", "44001 CS", "30003 DCO+", "32003 CH3OH",
 		"28002 HC-13-N", "30002 HC-13-O+", "28003 HCN-15", "NULL", "31001 HCO-18+", "51001 HCCCN",
-		"36001 HCl", "NULL", "NULL", "27001 HCN", "29002 HCO+", "45005 HCS+", // HCl is always hfs 
+		"36001 HCl", "NULL", "NULL", "27001 HCN", "29002 HCO+", "45005 HCS+", // HCl is always hfs
 		"19002 HDO", "27002 HNC", "43002 HNCO", "NULL", "29005 NNH+", "38002 c-C3H2", "30004 H2CO",
-		"NULL", "18003 H2O", "19004 H3O+", "17002 NH3", "52007 SiCC", "16001 O-atom", "60001 OCS", 
+		"NULL", "18003 H2O", "19004 H3O+", "17002 NH3", "52007 SiCC", "16001 O-atom", "60001 OCS",
 		"17001 OH", "NULL", "38002 c-C3H2", "30004 H2CO", "NULL", "18003 H2O", "19004 H3O+", // OH is always hfs
 		"17002 NH3", "44002 SiO", "60002 SiS", "48001 SO", "64002 SO2", "30009 NND+",
 		"30008 NO", "26001 CN", "41001 CH3CN", "20002 HF", "29007 HOC+"};
@@ -235,9 +235,9 @@ public class RADEX {
 		"29501 C-13-O", "45501 C-13-S", "45504 Si-29-O", "12501 C-atom", "NULL", "29503 CO-17",
 		"30502 CO-18", "46501 CS-34", "28503 CO", "44501 CS", "30510 DCO+", "32504 *CH3OH",  // 44501 would be hfs ...
 		"28501 HC-13-N", "30504 HC-13-O+", "28506 HCN-15", "NULL", "31506 HCO-18+", "51501 HC3N",
-		"NULL", "NULL", "NULL", "27501 HCN", "29507 HCO+", "45506 HCS+", 
+		"NULL", "NULL", "NULL", "27501 HCN", "29507 HCO+", "45506 HCS+",
 		"NULL", "27502 HNC", "NULL", "NULL", "29506 N2H+", "38501 l-C3H2", "30501 H2CO",
-		"NULL", "NULL", "NULL", "NULL", "52527 SiC2", "NULL", "60503 OCS", 
+		"NULL", "NULL", "NULL", "NULL", "52527 SiC2", "NULL", "60503 OCS",
 		"NULL", "NULL", "38501 l-C3H2", "30501 H2CO", "NULL", "NULL", "NULL", // 17501 OH+, but not OH
 		"NULL", "44505 SiO", "60506 SiS", "48501 SO", "64502 SO2", "30509 N2D+",
 		"NULL", "26504 CN", "41505 CH3CN", "NULL", "29504 HOC+"};
@@ -262,7 +262,7 @@ public class RADEX {
 	 * Maximum number of collisional transitions.
 	 */
 	public static final int MAX_COLL = 19999;
-	
+
 	/**
 	 * Minimum number of iterations.
 	 */
@@ -294,12 +294,12 @@ public class RADEX {
 	throws JPARSECException {
 		if (fmin > fmax) throw new JPARSECException("invalid frequencies "+fmin+" -> "+fmax+".");
 		if (fmin < 0.0 || fmax > 3.0E7) throw new JPARSECException("invalid frequencies "+fmin+" -> "+fmax+".");
-		
+
 		if (tkin < 0.1 || tkin > 1E4) throw new JPARSECException("invalid kinetic temperature "+tkin+".");
 		if (npart < 1 || npart > 7) throw new JPARSECException("invalid number of collision partners "+npart+".");
 
 		if (tbg < 0.0 || tbg > 1E4) throw new JPARSECException("invalid background temperature "+tbg+".");
-		
+
 		for (int i=0; i<npart; i++)
 		{
 			if (density[i] < 1E-3 || density[i] > 1E13)
@@ -307,7 +307,7 @@ public class RADEX {
 		}
 
 		int minMol = 0; //(int) DataSet.getMinimumValue(MOLECULES);
-		int maxMol = RADEX.MOLECULE_ATOM_NAMES.length-1; //(int) DataSet.getMaximumValue(MOLECULES);		
+		int maxMol = RADEX.MOLECULE_ATOM_NAMES.length-1; //(int) DataSet.getMaximumValue(MOLECULES);
 		if (molfile < minMol || molfile > maxMol)
 			throw new JPARSECException("invalid molecule "+molfile+".");
 
@@ -332,12 +332,12 @@ public class RADEX {
 
 	// Common variables declaration
 	private int nlev, nline, ncoll, ntemp;
-	private int iupp[]; 
+	private int iupp[];
 	private int ilow[];
-	
+
 //	private double amass;
 	private double eterm[];
-	private double gstat[]; 
+	private double gstat[];
 	private double aeinst[];
 	private double eup[];
 	private double totdens;
@@ -358,7 +358,7 @@ public class RADEX {
 	private double crate[][];
     private double colld[][][];
 	private double xpop[];
-	private double ctot[]; 
+	private double ctot[];
 
 	/**
 	 * Reads the molecule data file.
@@ -368,11 +368,11 @@ public class RADEX {
 		  // Reads molecular data files (2003 format)
 	      //int ilev,jlev;   // to loop over energy levels
 
-	//     upper/lower levels of collisional transition 
+	//     upper/lower levels of collisional transition
 	      int lcu[];
 	      int lcl[];
-	      double coll[][][]; 
-	      double /*ediff,*/ temp[];  // collision temperatures
+	      double coll[][][];
+	      double temp[];  // collision temperatures
 
 //	      String collref; // text about source of collisional data
 
@@ -382,17 +382,17 @@ public class RADEX {
 
 	//     to verify matching of densities and rates
 	      //boolean found;
-	      
+
 	//     to calculate thermal o/p ratio for H2
 	      //double opr;
 
 	//     Executable part begins here.
 	      String jarpath = FileIO.DATA_RADEX_DIRECTORY + RADEX.MOLECULE_ATOM_NAMES[this.molfile].toLowerCase() + ".dat";
 	      String file[] = DataSet.arrayListToStringArray(ReadFile.readResource(jarpath));
-	      
+
 	      // Remove tabs
 	      file = DataSet.replaceAll(file, "\t", "  ", true);
-	      
+
 //	      specref = file[1];
 //	      amass = DataSet.parseDouble(file[3].trim());
 	      nlev = Integer.parseInt(file[5].trim());
@@ -407,7 +407,7 @@ public class RADEX {
 	    	  gstat[i] = DataSet.parseDouble(FileIO.getField(3, file[7+i], " ", true).trim());
 	    	  qnum[i] = FileIO.getField(4, file[7+i], " ", true);
 	      }
-	      
+
 	  	//     Radiative upper & lower levels and Einstein coefficients
 	      nline = Integer.parseInt(file[8+nlev].trim());
 	      iupp = new int[nline];
@@ -425,7 +425,7 @@ public class RADEX {
 	    	  eup[i] = DataSet.parseDouble(FileIO.getField(6, file[10+nlev+i], " ", true));
 	    	  xnu[i] = (eterm[iupp[i]] - eterm[ilow[i]]);
 	      }
-	      
+
 	  	//     Number of collision partners
 	      npart = Integer.parseInt(file[11+nlev+nline].trim());
 //	      if (npartMax < npart) throw new JPARSECException("the number of collision partners ("+npart+") is greater than the maximum value ("+npartMax+").");
@@ -442,14 +442,14 @@ public class RADEX {
 	    	  ncoll = Integer.parseInt(file[11+nlev+nline+index].trim());
 	    	  index += 2;
 	    	  ntemp = Integer.parseInt(file[11+nlev+nline+index].trim());
-	    	  
+
 	    	  temp = new double[ntemp];
 	    	  index += 2;
 	    	  for (int j=0; j<ntemp; j++)
 	    	  {
 	    		  temp[j] = DataSet.parseDouble(FileIO.getField(j+1, file[11+nlev+nline+index], " ", true));
 	    	  }
-	    	  
+
 	    	  lcu = new int[ncoll];
 	    	  lcl = new int[ncoll];
 	    	  if (i == 0) coll = new double[npart][ncoll][ntemp];
@@ -461,10 +461,10 @@ public class RADEX {
 		    	  for (int k = 0; k<ntemp; k++)
 		    	  {
 		    		  coll[i][j][k] = DataSet.parseDouble(FileIO.getField(4+k, file[11+nlev+nline+index+j], " ", true));
-		    	  }	    		  
+		    	  }
 	    	  }
 	    	  index = index + ncoll - 1;
-	    	  
+
 	    		//     interpolate array coll(ncol,ntemp) to desired temperature
 
 	    		//     Must do this now because generally, rates with different partners
@@ -475,11 +475,11 @@ public class RADEX {
 	    		  {
 		               iup=lcu[j];
 		               ilo=lcl[j];
-		               colld[i][iup][ilo] = coll[i][j][0];    			  
+		               colld[i][iup][ilo] = coll[i][j][0];
 	    		  }
 	    	  } else {
 	    		  if (tkin > temp[0]) {
-	    			  if (tkin < temp[ntemp-1]) 
+	    			  if (tkin < temp[ntemp-1])
 	    			  {
 	    		    		//===  interpolation :
 	    				  for (int j=0; j<(ntemp-1); j++)
@@ -494,7 +494,7 @@ public class RADEX {
 		                     iup=lcu[j];
 		                     ilo=lcl[j];
 		                     colld[i][iup][ilo] = coll[i][j][nint]+fint*(coll[i][j][nint+1]-coll[i][j][nint]);
-		                     if (colld[i][iup][ilo] < 0.0) colld[i][iup][ilo] = coll[i][j][nint];		                	
+		                     if (colld[i][iup][ilo] < 0.0) colld[i][iup][ilo] = coll[i][j][nint];
 		                }
 	    			  } else {
 	    				  // Tkin too high :
@@ -503,7 +503,7 @@ public class RADEX {
 		                  {
 		                     iup=lcu[j];
 		                     ilo=lcl[j];
-		                     colld[i][iup][ilo] = coll[i][j][ntemp-1];		                	  
+		                     colld[i][iup][ilo] = coll[i][j][ntemp-1];
 		                  }
 	    			  }
 	    		  } else {
@@ -513,13 +513,13 @@ public class RADEX {
 	                  {
 	                     iup=lcu[j];
 	                     ilo=lcl[j];
-	                     colld[i][iup][ilo] = coll[i][j][0];		                	  
+	                     colld[i][iup][ilo] = coll[i][j][0];
 	                  }
 	    		  }
 	    	  }
-	      }	      
+	      }
 	}
-	
+
 	private void reset() throws JPARSECException {
 		//     Combine rate coeffs of several partners, multiplying by partner density.
 	      crate = new double[nlev][nlev];
@@ -558,7 +558,7 @@ public class RADEX {
 				    	  for (int ilo=0; ilo<nlev; ilo++)
 				    	  {
 			                     crate[iup][ilo] += density[i] * colld[j][iup][ilo];
-				    	  }		
+				    	  }
 			    	  }
 		    	  }
 		      }
@@ -581,7 +581,7 @@ public class RADEX {
 	    		      crate[ilo][iup] = gstat[iup]/gstat[ilo]*Math.exp(-fk*ediff/tkin)*crate[iup][ilo];
 	    		    }
 	    		  }
-	    	  }		    		  
+	    	  }
 		      ctot[iup] = 0.0;
   	  }
 
@@ -591,11 +591,11 @@ public class RADEX {
       	  for (int jlev = 0; jlev < nlev; jlev ++)
       	  {
       		  ctot[ilev] += crate[ilev][jlev];
-      	  }    		  
+      	  }
   	  }
 
 	}
-	
+
 	private void execute(boolean readData)
 	throws JPARSECException {
 		//     Read data file
@@ -628,7 +628,7 @@ public class RADEX {
 		//     Write output
         	 output();
 	}
-	
+
 	private void output() throws JPARSECException
 	{
 	      int iline;    // to loop over lines
@@ -653,7 +653,7 @@ public class RADEX {
 	      int ntran = 0;
 	      for (iline=0; iline <nline; iline++)
 	      {
-	    	  if (isInRange(spfreq[iline])) 
+	    	  if (isInRange(spfreq[iline]))
 	    	  {
 	    		  ntran ++;
 	    	  }
@@ -667,14 +667,14 @@ public class RADEX {
 	      upper = new double[ntran];
 	      ergs = new double[ntran];
 	      trad = new double[ntran];
-	      
-	     ntran = -1; 
+
+	     ntran = -1;
 	     for (iline=0; iline <nline; iline++)
 	     {
 			m  = iupp[iline];
 			n  = ilow[iline];
 			xt = Math.pow(xnu[iline],3.0);
-			
+
 			//     Calculate source function
 			hnu = fk*xnu[iline]/tex[iline];
 			if (hnu >= 160.0) {
@@ -682,7 +682,7 @@ public class RADEX {
 			} else {
 			  bnutex = thc*xt/(Math.exp(fk*xnu[iline]/tex[iline])-1.0);
 			}
-	
+
 			//     Calculate line brightness in excess of background
 			ftau = 0.0;
 			if (Math.abs(taul[iline]) <= 300.0) ftau = Math.exp(-taul[iline]);
@@ -702,7 +702,7 @@ public class RADEX {
 			} else {
 			  tback = fk*xnu[iline]/Math.log(thc*xt/backi[iline]+1.0);
 			}
-	
+
 			//     Calculate antenna temperature
 			tbl = tbl-tback;
 		    hnu = fk*xnu[iline];
@@ -712,7 +712,7 @@ public class RADEX {
 		      ta = toti-backi[iline];
 		    }
 		    ta = ta/(thc*xnu[iline]*xnu[iline]/fk);
-		    
+
 		    //     Calculate radiation temperature
 			beta = escprob(taul[iline]);
 			bnu  = totalb[iline]*beta+(1.0-beta)*bnutex;
@@ -726,12 +726,12 @@ public class RADEX {
 			    tr = fk*xnu[iline]/Math.log(wh);
 			  }
 			}
-	
+
 			//    Check if line within output freq range
-			if (isInRange(spfreq[iline])) 
+			if (isInRange(spfreq[iline]))
 			{
 				ntran ++;
-				
+
 		          // wavel = CGSConstant.SPEED_OF_LIGHT / spfreq[iline] / 1.0E5; // unit =  micron
 		          kkms  = 1.0645*deltav*ta;
 		          ergs[ntran]  = fgaus*CGSConstant.BOLTZMANN_CONSTANT*deltav*ta*Math.pow(xnu[iline],3.0);
@@ -742,7 +742,7 @@ public class RADEX {
 		          exc[ntran] = tex[iline];
 		          opac[ntran] = taul[iline];
 		          freq[ntran] = spfreq[iline];
-		          upper[ntran] = eup[iline]; 
+		          upper[ntran] = eup[iline];
 			}
 	   }
 	}
@@ -762,11 +762,11 @@ public class RADEX {
 
 		if (Math.abs(freq - fmin) * 1000.0 < range) return true;
 		if (Math.abs(freq - fmax) * 1000.0 < range) return true;
-		
+
 		if (freq <= fmax && freq >= fmin) return true;
 		return false;
 	}
-	
+
 	/**
 	 * Returns the energy of the upper level.
 	 * @param line Index for the transition.
@@ -857,7 +857,7 @@ public class RADEX {
 	{
 		return ergs[line];
 	}
-	
+
 	private boolean matrix(int niter)
 	throws JPARSECException {
 		//     Set up rate matrix
@@ -900,7 +900,7 @@ public class RADEX {
 		      for (jlev = 0; jlev < nlev; jlev ++)
 		      {
 		          yrate[ilev][jlev] = 0.0;
-		      }	    	  
+		      }
 	      }
 
 	//     Initialize rate matrix
@@ -910,7 +910,7 @@ public class RADEX {
 		      for (jlev = 0; jlev < nlev; jlev ++)
 		      {
 		          yrate[ilev][jlev] =  -EPS*totdens;
-		      }	    	  
+		      }
 		  	//     Add conservation equation
 		      yrate[nplus][ilev] = 1.0;
 		      rhs[ilev] = EPS*totdens;
@@ -927,7 +927,7 @@ public class RADEX {
 	            m   = iupp[iline];
 	            n   = ilow[iline];
 	            etr = fk*xnu[iline]/trj[iline];
-	            if (etr >= 160.0) {         
+	            if (etr >= 160.0) {
 	               exr = 0.0;
 	            } else {
 	               exr = 1.0/(Math.exp(etr)-1.0);
@@ -988,8 +988,8 @@ public class RADEX {
 		           if(ilev != jlev) yrate[ilev][jlev] += - crate[jlev][ilev];
 		      }
 	      }
-	      
-	      if (reduce) 
+
+	      if (reduce)
 	      {
 	//     An auxiliary array is passed to the linear equation solver after
 	//     renormalization. The array Y retains the original matrix elements.
@@ -1038,13 +1038,13 @@ public class RADEX {
 		    	  matrix.set(matrix.getRowDimension(), bin, 1.0);
 		      }
 		      barray[barray.length-1] = 1.0;
-		      
+
 		      double rhsOut[][] = matrix.solve(new Matrix(barray)).getArray();
 		      for (int bin = 0; bin < rhsOut.length; bin ++)
 		      {
 		    	  rhs[bin] = rhsOut[bin][0];
 		      }
-		      
+
 		      //     Compute the populations of the highly excited states
 		      if (nlev > nreduce) {
 			      for (klev = nreduce; klev < nlev; klev ++)
@@ -1068,7 +1068,7 @@ public class RADEX {
 		    	  matrix.set(matrix.getRowDimension()-1, bin, 1.0);
 		      }
 		      barray[barray.length-1] = 1.0;
-		      
+
 		      double rhsOut[][] = matrix.solve(new Matrix(barray)).getArray();
 		      for (int bin = 0; bin < rhsOut.length; bin ++)
 		      {
@@ -1080,7 +1080,7 @@ public class RADEX {
 	      total = 0.0;
 	      for (ilev = 0; ilev < nlev; ilev ++)
 	      {
-	         total += rhs[ilev];   
+	         total += rhs[ilev];
 	      }
 
 	      //     Limit population to MIN_POP
@@ -1088,7 +1088,7 @@ public class RADEX {
 	      {
 	    	  if (niter > 0) xpopold[ilev] = xpop[ilev];
 	    	  xpop[ilev] = DataSet.getMaximumValue(new double[] {MIN_POP, rhs[ilev]/total});
-	    	  
+
 	    	  if (niter == 0) xpopold[ilev] = xpop[ilev];
 	      }
 
@@ -1118,20 +1118,20 @@ public class RADEX {
 	           taul[iline] = cddv*(xpop[n]*gstat[m]/gstat[n]-xpop[m])/(fgaus*xt/aeinst[iline]);
 	        }
     	  }
-    	  
+
     	  //     Introduce a minimum number of iterations
 	      if(niter >= MIN_ITER) {
 	         if (nthick == 0) conv = true;
 	         if( tsum/nthick < CCRIT) conv = true;
 	      }
-	      
+
 	      // now do the underrelaxation! (30nov2011 version)
 	      for (ilev = 0; ilev < nlev; ilev ++) {
 	    	  xpop[ilev]=0.3*xpop[ilev]+0.7*xpopold[ilev];
 	      }
 	      return conv;
 	}
-	
+
 	private double escprob(double tau)
 	{
 	      double beta = 0.0;
@@ -1170,7 +1170,7 @@ public class RADEX {
 	        }
 	        break;
 	      case PLANE_PARALLEL_SLAB:
-	    	  //     Slab geometry (e.g., shocks): de Jong, Dalgarno & Chu 1975, 
+	    	  //     Slab geometry (e.g., shocks): de Jong, Dalgarno & Chu 1975,
 	    	  //     ApJ 199, 69 (again with power law approximations)
 	        if (Math.abs(3.0*tau) < 0.1) {
 	          beta = 1.0 - 1.5*(tau + tau*tau);
@@ -1185,7 +1185,7 @@ public class RADEX {
 	      }
 	      return beta;
 	}
-	
+
 	private void backrad()
 	throws JPARSECException {
 		// This routine returns the intensity of continuum radiation that is
@@ -1195,12 +1195,12 @@ public class RADEX {
 		// OPTIONS:
 		//  1 - Single blackbody; default is the cosmic microwave background
 		//      at T_CMB=2.725 K.  For values different from the default, the
-		//      corresponding redshift is determined according to 
+		//      corresponding redshift is determined according to
 		//      T=T_CMB(1+z)
-		//  2 - The mean Galactic background radiation field plus CMB. This 
-		//      is a slightly revised version of Black, J. H. 1994, in 
-		//      The First Symposium on the Infrared Cirrus and Diffuse 
-		//      Interstellar Clouds. ASP Conference Series, Vol. 58, 
+		//  2 - The mean Galactic background radiation field plus CMB. This
+		//      is a slightly revised version of Black, J. H. 1994, in
+		//      The First Symposium on the Infrared Cirrus and Diffuse
+		//      Interstellar Clouds. ASP Conference Series, Vol. 58,
 		//      R.M. Cutri and W.B. Latter, Eds., p.355. Details are posted
 		//      at http://www.oso.chalmers.se/~jblack/RESEARCH/isrf.html
 		//      This spectrum is NOT adjustable by a scale factor because
@@ -1208,8 +1208,8 @@ public class RADEX {
 		//      scale linearly with respect to each other.
 		//  3 - A user-defined radiation field that is specified by NRAD
 		//      values of frequency [cm-1], intensity [Jy nsr-1], and dilution
-		//      factor [dimensionless]. Spline interpolation is applied to 
-		//      this table. The intensity need not be specified at all 
+		//      factor [dimensionless]. Spline interpolation is applied to
+		//      this table. The intensity need not be specified at all
 		//      frequencies of the line list, but a warning message will
 		//      appear if extrapolation (rather than interpolation) is required.
 
@@ -1262,7 +1262,7 @@ public class RADEX {
 		    	  }
 		      }
 	}
-	
+
 	private void galbr()
 	throws JPARSECException {
 	      int iline;
@@ -1282,7 +1282,7 @@ public class RADEX {
 	       hnuk = fk*xnu[iline]/tcmb;
 
 	       if (xnu[iline] <= 10.0) {
-	        cbi = aa/(Math.exp(hnuk) - 1.0); 
+	        cbi = aa/(Math.exp(hnuk) - 1.0);
 	        cmi = 0.3*1.767E-19/Math.pow(xnu[iline],0.75);     // synchrotron component
 	       } else {
 	    	   if (xnu[iline] <= 104.98) {
@@ -1292,17 +1292,17 @@ public class RADEX {
 	    	   } else {
 	    		   if (xnu[iline] <= 1113.126) {
 			        cmi = 1.3853E-12*Math.pow(xnu[iline], -1.8381);
-			        cbi = 0.0;                                      
+			        cbi = 0.0;
 	    		   } else {
 	    			   if (xnu[iline] <= 4461.40) {
 				        cbi = 0.0;
 				        cmi = 1.0E-18*(18.213601 - 0.023017717*xnu[iline] + 1.1029705E-5*Math.pow(xnu[iline], 2.0)
-				        		- 2.1887383E-9*Math.pow(xnu[iline], 3.0) + 1.5728533E-13*Math.pow(xnu[iline], 4.0));   
+				        		- 2.1887383E-9*Math.pow(xnu[iline], 3.0) + 1.5728533E-13*Math.pow(xnu[iline], 4.0));
 	    			   } else {
 	    				   if (xnu[iline] <= 8333.33) {
 					        cbi = 0.0;
 					        cmi = 1.0E-18*(-2.4304726 + 0.0020261152*xnu[iline]- 2.0830715E-7*Math.pow(xnu[iline], 2.0)
-					        		+ 6.1703393E-12*Math.pow(xnu[iline], 3.0)); 
+					        		+ 6.1703393E-12*Math.pow(xnu[iline], 3.0));
 	    				   } else {
 	    					   if (xnu[iline] <= 14286.0) {
 						        yy  = -17.092474 - 4.2153656E-5*xnu[iline];
@@ -1349,12 +1349,12 @@ public class RADEX {
 	    	   }
 	       }
 
-		      backi[iline] = cbi+cmi;                                                        
+		      backi[iline] = cbi+cmi;
 		      trj[iline]   = fk*xnu[iline]/Math.log(1.0+aa/backi[iline]);    // brightness temperature
 		      totalb[iline] = backi[iline]; // 24aug2011 version
     	  }
 	}
-	
+
 	/**
 	 * Return the integer identifier for a given molecule in RADEX, considering possible
 	 * orto and para cases.
@@ -1371,10 +1371,10 @@ public class RADEX {
 			mol = DataSet.getIndexContaining(RADEX.MOLECULE_ATOM_NAMES_CORRESPONDENCE_JPL_CATALOG, molecule);
 			n = DataSet.getRepeatedElements(MOLECULE_ATOM_NAMES_CORRESPONDENCE_JPL_CATALOG, RADEX.MOLECULE_ATOM_NAMES_CORRESPONDENCE_JPL_CATALOG[mol]);
 		} else {
-			mol = DataSet.getIndexContaining(RADEX.MOLECULE_ATOM_NAMES_CORRESPONDENCE_COLOGNE_CATALOG, molecule);				
+			mol = DataSet.getIndexContaining(RADEX.MOLECULE_ATOM_NAMES_CORRESPONDENCE_COLOGNE_CATALOG, molecule);
 			n = DataSet.getRepeatedElements(MOLECULE_ATOM_NAMES_CORRESPONDENCE_COLOGNE_CATALOG, RADEX.MOLECULE_ATOM_NAMES_CORRESPONDENCE_COLOGNE_CATALOG[mol]);
 		}
-		
+
 		if (n.length > 1) {
 			double minDif = -1;
 			int index = -1;
@@ -1392,16 +1392,16 @@ public class RADEX {
 		}
 		return mol;
 	}
-	
+
 	private static double[] getFreqs(int molfile) throws JPARSECException {
 	      String jarpath = FileIO.DATA_RADEX_DIRECTORY + RADEX.MOLECULE_ATOM_NAMES[molfile].toLowerCase() + ".dat";
 	      String file[] = DataSet.arrayListToStringArray(ReadFile.readResource(jarpath));
-	      
+
 	      // Remove tabs
 	      file = DataSet.replaceAll(file, "\t", "  ", true);
-	      
+
 	      int nlev = Integer.parseInt(file[5].trim());
-	      
+
 	  	//     Radiative upper & lower levels and Einstein coefficients
 	      int nline = Integer.parseInt(file[8+nlev].trim());
 	      double[] spfreq = new double[nline];
@@ -1409,10 +1409,10 @@ public class RADEX {
 	      {
 	    	  spfreq[i] = DataSet.parseDouble(FileIO.getField(5, file[10+nlev+i], " ", true));
 	      }
-	      
+
 	      return spfreq;
 	}
-	
+
 	/**
 	 * Updates calculations in case some values of the instance were modified by hand.
 	 * @throws JPARSECException If an error occurs.

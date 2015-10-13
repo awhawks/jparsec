@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.astrophysics;
 
 import java.io.Serializable;
@@ -28,7 +28,6 @@ import jparsec.astrophysics.photometry.Photometry;
 import jparsec.ephem.Functions;
 import jparsec.graph.DataSet;
 import jparsec.io.FileIO;
-import jparsec.math.Constant;
 import jparsec.math.Converter;
 import jparsec.math.FastMath;
 import jparsec.util.JPARSECException;
@@ -43,9 +42,9 @@ import jparsec.util.JPARSECException;
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
-public class MeasureElement implements Serializable 
+public class MeasureElement implements Serializable
 {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * The value.
@@ -59,7 +58,7 @@ public class MeasureElement implements Serializable
 	 * The unit.
 	 */
 	public String unit;
-	
+
 	/**
 	 * Simple constructor.
 	 * @param x Value.
@@ -84,7 +83,7 @@ public class MeasureElement implements Serializable
 		this.error = dx;
 		this.unit = unit;
 	}
-	
+
 	/**
 	 * Clones this instance.
 	 */
@@ -94,9 +93,9 @@ public class MeasureElement implements Serializable
 		MeasureElement p = new MeasureElement(this.value, this.error, this.unit);
 		return p;
 	}
-	
+
 	/**
-	 * Returns true if this instance is equal to another.
+	 * Returns if this instance is equals to another.
 	 */
 	@Override
 	public boolean equals(Object o) {
@@ -186,7 +185,7 @@ public class MeasureElement implements Serializable
 	 * ID constant for julian day in the x axis.
 	 */
 	public static final String UNIT_X_JULIAN_DAY = "JD";
-	
+
 	/**
 	 * ID constant for K in the y axis.
 	 */
@@ -280,8 +279,8 @@ public class MeasureElement implements Serializable
 	private String convert(String value, String newUnit)
 	throws JPARSECException {
 		if (this.unit.equals(newUnit) || newUnit == null) return value;
-		
-		if (this.unit.equals(MeasureElement.UNIT_Y_MAG) || newUnit.equals(MeasureElement.UNIT_Y_MAG)) 
+
+		if (this.unit.equals(MeasureElement.UNIT_Y_MAG) || newUnit.equals(MeasureElement.UNIT_Y_MAG))
 			throw new JPARSECException("general magnitude conversion is not supported here.");
 
 		// Reduce units
@@ -294,7 +293,7 @@ public class MeasureElement implements Serializable
 				}
 			}
 		}
-*/		
+*/
 		String tNewUnit = newUnit;
 		if (newUnit != null && !newUnit.equals("")) {
 			for (int i=newUnit.length()-1; i>=0; i--) {
@@ -311,21 +310,21 @@ public class MeasureElement implements Serializable
 		if (value.startsWith("<") || value.startsWith(">")) out = value.substring(0, 1) + out;
 		return out;
 	}
-	
+
 	/**
-	 * Converts a given value to a new Unit. 
+	 * Converts a given value to a new Unit.
 	 * @param newUnit New unit in standard conventions.
 	 * @throws JPARSECException If an error occurs.
 	 */
 	public void convert(String newUnit)
 	throws JPARSECException {
 		if (this.unit.equals(newUnit)) return;
-		
-		PhotometricBandElement pb1 = PhotometricBandElement.getPhotometricBand(this.unit); 
+
+		PhotometricBandElement pb1 = PhotometricBandElement.getPhotometricBand(this.unit);
 		PhotometricBandElement pb2 = PhotometricBandElement.getPhotometricBand(newUnit);
 		if (pb1 != null && pb2 != null)
 			throw new JPARSECException("cannot convert magnitudes in different photometric bands or systems.");
-		
+
 		if (pb1 != null)
 		{
 			MeasureElement out = Photometry.getFluxFromMagnitude(DataSet.getDoubleValueWithoutLimit(this.value), this.error, pb1);
@@ -343,8 +342,8 @@ public class MeasureElement implements Serializable
 				this.unit = pb2.name;
 			}
 		}
-		
-		if (pb2 != null) {			
+
+		if (pb2 != null) {
 			this.value = this.convert(this.value, newUnit);
 			this.error = DataSet.parseDouble(this.convert(""+this.error, newUnit));
 			this.unit = newUnit;
@@ -365,7 +364,7 @@ public class MeasureElement implements Serializable
 				}
 			}
 			this.unit = tunit;
-			
+
 		}
 	}
 	/**
@@ -378,7 +377,7 @@ public class MeasureElement implements Serializable
 	throws JPARSECException {
 		if (this.unit.equals(newUnit)) return this.clone();
 
-		PhotometricBandElement pb1 = PhotometricBandElement.getPhotometricBand(this.unit); 
+		PhotometricBandElement pb1 = PhotometricBandElement.getPhotometricBand(this.unit);
 		PhotometricBandElement pb2 = PhotometricBandElement.getPhotometricBand(newUnit);
 		if (pb1 != null && pb2 != null)
 			throw new JPARSECException("cannot convert magnitudes in different photometric bands or systems.");
@@ -407,7 +406,7 @@ public class MeasureElement implements Serializable
 		MeasureElement p = new MeasureElement(value, error, newUnit);
 		return p;
 	}
-	
+
 	/**
 	 * Returns the limit '<' or '>'.
 	 * @return The limit, or empty String if it does not exist.
@@ -416,7 +415,7 @@ public class MeasureElement implements Serializable
 	{
 		return DataSet.getLimit(this.value);
 	}
-	
+
 	/**
 	 * Returns the numerical value without the limit.
 	 * @return Value of the measure.
@@ -426,7 +425,7 @@ public class MeasureElement implements Serializable
 	throws JPARSECException {
 		return DataSet.getDoubleValueWithoutLimit(this.value);
 	}
-	
+
 	/**
 	 * Multiply the current measure by a double.
 	 * @param val The double.
@@ -438,7 +437,7 @@ public class MeasureElement implements Serializable
 		this.value = this.getLimit() + newVal;
 		this.error *= val;
 	}
-	
+
 	/**
 	 * Multiply a measure by another.
 	 * @param me The other measure. The unit will be transformed to the
@@ -626,23 +625,24 @@ public class MeasureElement implements Serializable
 			}
 			this.unit += ""+prev;
 		}
-*/		
+*/
 	}
 
 	/**
 	 * Returns a String representation of this object following international
-	 * conventions about error representation. For instance, the value 
+	 * conventions about error representation. For instance, the value
 	 * 0.000125 +/- 0.00009 is returned as 0.00013 +/- 0.00010, taking into
 	 * account the error to round the value properly. Empty String is returned
 	 * in case of error. The unit is also written.
 	 */
+	@Override
 	public String toString()
-	{		
+	{
 		return formatToString(0, true);
-	}	
+	}
 	/**
 	 * Returns a String representation of this object following international
-	 * conventions about error representation. For instance, the value 
+	 * conventions about error representation. For instance, the value
 	 * 0.000125 +/- 0.00009 is returned as 0.00013 +/- 0.00010, taking into
 	 * account the error to round the value properly, or as 0.00013 (0.00010)
 	 * in case parenthesis are used. Empty String is returned in case of error.
@@ -651,14 +651,14 @@ public class MeasureElement implements Serializable
 	 * @return The string.
 	 */
 	public String toString(boolean useParentheses)
-	{		
+	{
 		String out = formatToString(0, false);
 		if (useParentheses) out = formatWithParentheses(out);
 		return out;
 	}
 	/**
 	 * Returns a String representation of this object following international
-	 * conventions about error representation. For instance, the value 
+	 * conventions about error representation. For instance, the value
 	 * 0.000125 +/- 0.00009 is returned as 0.00013 +/- 0.00010, taking into
 	 * account the error to round the value properly, or as 0.00013 (0.00010)
 	 * in case parenthesis are used. Empty String is returned in case of error.
@@ -668,22 +668,22 @@ public class MeasureElement implements Serializable
 	 * @return The string.
 	 */
 	public String toString(boolean useParentheses, boolean includeUnit)
-	{		
+	{
 		if (!includeUnit) return toString(useParentheses);
-		
+
 		if (!useParentheses) {
 			if (!includeUnit) return formatToString(0, false);
 			return this.toString();
 		}
-		
+
 		String v = formatWithParentheses(formatToString(0, false));
 		if (!includeUnit || unit == null) return v;
 		return v + " " + this.unit;
 	}
 	/**
-	 * Returns a String representation of this object using parenthesis 
-	 * instead of +/- optionally. For instance, the value 0.00013 +/- 
-	 * 0.00010 is returned as that string or as 0.00013 (0.00010). Empty 
+	 * Returns a String representation of this object using parenthesis
+	 * instead of +/- optionally. For instance, the value 0.00013 +/-
+	 * 0.00010 is returned as that string or as 0.00013 (0.00010). Empty
 	 * String is returned in case of error. The unit is also written.
 	 * @param useParentheses True to use parenthesis instead of +/-.
 	 * @param decimalPlaces The number of significant digits to use for the error.
@@ -692,22 +692,22 @@ public class MeasureElement implements Serializable
 	 * @return The string.
 	 */
 	public String toString(boolean useParentheses, int decimalPlaces)
-	{		
+	{
 		if (!useParentheses) return this.formatToString(decimalPlaces, true);
-		
+
 		String v = this.formatToString(decimalPlaces, true);
 		return formatWithParentheses(v);
 	}
-	
+
 	// 0 decimalPlaces = obtain it automatically (1 for reduced error > 25 and 2 otherwise)
 	private String formatToString(int decimalPlaces, boolean unit)
-	{		
+	{
 		String out = "";
-		
+
 		try {
 			double n = this.getValue();
 			double dn = this.error;
-		
+
 			if (dn == 0.0 || new Double(dn).equals(Double.NaN)) {
 				if (unit && this.unit != null) return ""+this.getValue()+" +/- "+ dn + " " + this.unit.trim();
 				return ""+this.getValue()+" +/- "+dn;
@@ -725,14 +725,14 @@ public class MeasureElement implements Serializable
 					nm ++;
 				}
 			} while (dn < 9.0 || dn > 90.0);
-			
+
 			n = FastMath.multiplyBy10ToTheX(n, nm);
 
 			int place = 1;
 			if (dn <= 25) place = 0;
 			if (decimalPlaces > 0) place = 2-decimalPlaces;
 			if (place < 0) {
-				dn = DataSet.parseDouble(Functions.formatValue((float)dn+0.5*FastMath.multiplyBy10ToTheX(1.0, place), -place, 2-place, true));				
+				dn = DataSet.parseDouble(Functions.formatValue((float)dn+0.5*FastMath.multiplyBy10ToTheX(1.0, place), -place, 2-place, true));
 			} else {
 				dn = DataSet.parseDouble(Functions.formatValue((float)dn, 0, 2-place, true));
 			}
@@ -740,7 +740,7 @@ public class MeasureElement implements Serializable
 			n = Functions.roundToPlace(n, place);
 			int afterDecimalPoint = 0;
 			if (decimalPlaces == 0 && dn > 25) afterDecimalPoint = -1;
-			
+
 			n = FastMath.multiplyBy10ToTheX(n, -nm);
 			dn = FastMath.multiplyBy10ToTheX(dn, -nm);
 
@@ -769,7 +769,7 @@ public class MeasureElement implements Serializable
 			String f2 = FileIO.getField(2, v, "+/-", true).trim();
 			String f2a = FileIO.getField(1, f2, " ", true);
 			String f2b = FileIO.getRestAfterField(1, f2, " ", true);
-			
+
 			v = f1 + " ("+f2a+") "+f2b;
 		}
 		return v.trim();
@@ -810,12 +810,12 @@ public class MeasureElement implements Serializable
 	/** Classical radius of the electron in m. Value from CODATA 2010. */
 	public static final MeasureElement ELECTRON_RADIUS = new MeasureElement(2.8179403267E-15, 0.0000000027E-15, "m");
 
-	
+
 	/**
 	 * Returns an array with the values of a set of measures.
 	 * @param v The set of measures.
 	 * @return The set of values.
-	 * @throws JPARSECException If an error occurs retrieving the 
+	 * @throws JPARSECException If an error occurs retrieving the
 	 * value of any of the values in the input array.
 	 */
 	public static double[] getValues(MeasureElement v[]) throws JPARSECException {
@@ -850,6 +850,6 @@ public class MeasureElement implements Serializable
 		for (int i=0; i<v.length; i++) {
 			out[i] = v[i].toString(useParentheses, includeUnit);
 		}
-		return out;		
+		return out;
 	}
 }

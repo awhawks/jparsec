@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,14 +18,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.math;
 
 /**
  * A class to hold physical constants in C.G.S. units. Values are identical to the
  * corresponding SI constants defined in {@linkplain Constant} class, except for
  * the corresponding unit change.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -33,7 +33,7 @@ public class CGSConstant
 {
 	// private constructor so that this class cannot be instantiated.
 	private CGSConstant() {}
-	
+
 	/** Light speed in cm/s. */
 	public static final double SPEED_OF_LIGHT = Constant.SPEED_OF_LIGHT * 100.0;
 

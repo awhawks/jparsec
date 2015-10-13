@@ -98,7 +98,9 @@ public class SVGPlanets {
 	    	px = (int)(pluto.getOrigX()+pluto.getOrigWidth()/2f);
 	    	py = (int)(pluto.getOrigY()+pluto.getOrigHeight()/2f);
 	    	pluto.paintIcon(null, g, -px, -py);
-		default:	break;
+			break;
+		default:
+			break;
 		}
 	}
 
@@ -112,7 +114,7 @@ public class SVGPlanets {
 	{
 		int px = 0, py = 0, w = 0, h = 0;
 		BufferedImage image = null;
-		 
+
 		switch (target) {
 		case SUN:
 			Sun sun = new Sun();
@@ -253,7 +255,9 @@ public class SVGPlanets {
 	    	g.setColor(Color.BLACK);
 	    	pluto.paintIcon(null, g, -px, -py);
 	    	g.dispose();
-		default:	break;
+			break;
+		default:
+			break;
 		}
 		return image;
 	}
@@ -261,17 +265,17 @@ public class SVGPlanets {
 
 /**
  * This class has been automatically generated using svg2java
- * 
+ *
  */
 class Jupiter implements Icon {
-	
+
 	private float origAlpha = 1.0f;
 
 	/**
 	 * Paints the transcoded SVG image on the specified graphics context. You
 	 * can install a custom transformation on the graphics context to scale the
 	 * image.
-	 * 
+	 *
 	 * @param g
 	 *            Graphics context.
 	 */
@@ -280,13 +284,13 @@ class Jupiter implements Icon {
         origAlpha = 1.0f;
         Composite origComposite = g.getComposite();
         if (origComposite instanceof AlphaComposite) {
-            AlphaComposite origAlphaComposite = 
+            AlphaComposite origAlphaComposite =
                 (AlphaComposite)origComposite;
             if (origAlphaComposite.getRule() == AlphaComposite.SRC_OVER) {
                 origAlpha = origAlphaComposite.getAlpha();
             }
         }
-        
+
 		// _0
 		AffineTransform trans_0 = g.getTransform();
 		paintRootGraphicsNode_0(g);
@@ -413,8 +417,8 @@ class Jupiter implements Icon {
     public int getOrigHeight() {
         return 39;
     }
-    
-    
+
+
 	/**
 	 * The current width of this resizable icon.
 	 */
@@ -480,17 +484,17 @@ class Jupiter implements Icon {
 
 /**
  * This class has been automatically generated using svg2java
- * 
+ *
  */
 class Mars implements Icon {
-	
+
 	private float origAlpha = 1.0f;
 
 	/**
 	 * Paints the transcoded SVG image on the specified graphics context. You
 	 * can install a custom transformation on the graphics context to scale the
 	 * image.
-	 * 
+	 *
 	 * @param g
 	 *            Graphics context.
 	 */
@@ -499,13 +503,13 @@ class Mars implements Icon {
         origAlpha = 1.0f;
         Composite origComposite = g.getComposite();
         if (origComposite instanceof AlphaComposite) {
-            AlphaComposite origAlphaComposite = 
+            AlphaComposite origAlphaComposite =
                 (AlphaComposite)origComposite;
             if (origAlphaComposite.getRule() == AlphaComposite.SRC_OVER) {
                 origAlpha = origAlphaComposite.getAlpha();
             }
         }
-        
+
 		// _0
 		AffineTransform trans_0 = g.getTransform();
 		paintRootGraphicsNode_0(g);
@@ -617,8 +621,8 @@ class Mars implements Icon {
     public int getOrigHeight() {
         return 27;
     }
-    
-    
+
+
 	/**
 	 * The current width of this resizable icon.
 	 */
@@ -684,17 +688,17 @@ class Mars implements Icon {
 
 /**
  * This class has been automatically generated using svg2java
- * 
+ *
  */
 class Mercury implements Icon {
-	
+
 	private float origAlpha = 1.0f;
 
 	/**
 	 * Paints the transcoded SVG image on the specified graphics context. You
 	 * can install a custom transformation on the graphics context to scale the
 	 * image.
-	 * 
+	 *
 	 * @param g
 	 *            Graphics context.
 	 */
@@ -703,13 +707,13 @@ class Mercury implements Icon {
         origAlpha = 1.0f;
         Composite origComposite = g.getComposite();
         if (origComposite instanceof AlphaComposite) {
-            AlphaComposite origAlphaComposite = 
+            AlphaComposite origAlphaComposite =
                 (AlphaComposite)origComposite;
             if (origAlphaComposite.getRule() == AlphaComposite.SRC_OVER) {
                 origAlpha = origAlphaComposite.getAlpha();
             }
         }
-        
+
 		// _0
 		AffineTransform trans_0 = g.getTransform();
 		paintRootGraphicsNode_0(g);
@@ -835,8 +839,8 @@ class Mercury implements Icon {
     public int getOrigHeight() {
         return 46;
     }
-    
-    
+
+
 	/**
 	 * The current width of this resizable icon.
 	 */
@@ -902,17 +906,17 @@ class Mercury implements Icon {
 
 /**
  * This class has been automatically generated using svg2java
- * 
+ *
  */
 class Neptune implements Icon {
-	
+
 	private float origAlpha = 1.0f;
 
 	/**
 	 * Paints the transcoded SVG image on the specified graphics context. You
 	 * can install a custom transformation on the graphics context to scale the
 	 * image.
-	 * 
+	 *
 	 * @param g
 	 *            Graphics context.
 	 */
@@ -921,13 +925,13 @@ class Neptune implements Icon {
         origAlpha = 1.0f;
         Composite origComposite = g.getComposite();
         if (origComposite instanceof AlphaComposite) {
-            AlphaComposite origAlphaComposite = 
+            AlphaComposite origAlphaComposite =
                 (AlphaComposite)origComposite;
             if (origAlphaComposite.getRule() == AlphaComposite.SRC_OVER) {
                 origAlpha = origAlphaComposite.getAlpha();
             }
         }
-        
+
 		// _0
 		AffineTransform trans_0 = g.getTransform();
 		paintRootGraphicsNode_0(g);
@@ -1033,8 +1037,8 @@ class Neptune implements Icon {
     public int getOrigHeight() {
         return 40;
     }
-    
-    
+
+
 	/**
 	 * The current width of this resizable icon.
 	 */
@@ -1100,17 +1104,17 @@ class Neptune implements Icon {
 
 /**
  * This class has been automatically generated using svg2java
- * 
+ *
  */
 class Pluto implements Icon {
-	
+
 	private float origAlpha = 1.0f;
 
 	/**
 	 * Paints the transcoded SVG image on the specified graphics context. You
 	 * can install a custom transformation on the graphics context to scale the
 	 * image.
-	 * 
+	 *
 	 * @param g
 	 *            Graphics context.
 	 */
@@ -1119,13 +1123,13 @@ class Pluto implements Icon {
         origAlpha = 1.0f;
         Composite origComposite = g.getComposite();
         if (origComposite instanceof AlphaComposite) {
-            AlphaComposite origAlphaComposite = 
+            AlphaComposite origAlphaComposite =
                 (AlphaComposite)origComposite;
             if (origAlphaComposite.getRule() == AlphaComposite.SRC_OVER) {
                 origAlpha = origAlphaComposite.getAlpha();
             }
         }
-        
+
 		// _0
 		AffineTransform trans_0 = g.getTransform();
 		paintRootGraphicsNode_0(g);
@@ -1250,8 +1254,8 @@ class Pluto implements Icon {
     public int getOrigHeight() {
         return 37;
     }
-    
-    
+
+
 	/**
 	 * The current width of this resizable icon.
 	 */
@@ -1317,17 +1321,17 @@ class Pluto implements Icon {
 
 /**
  * This class has been automatically generated using svg2java
- * 
+ *
  */
 class Saturn implements Icon {
-	
+
 	private float origAlpha = 1.0f;
 
 	/**
 	 * Paints the transcoded SVG image on the specified graphics context. You
 	 * can install a custom transformation on the graphics context to scale the
 	 * image.
-	 * 
+	 *
 	 * @param g
 	 *            Graphics context.
 	 */
@@ -1336,13 +1340,13 @@ class Saturn implements Icon {
         origAlpha = 1.0f;
         Composite origComposite = g.getComposite();
         if (origComposite instanceof AlphaComposite) {
-            AlphaComposite origAlphaComposite = 
+            AlphaComposite origAlphaComposite =
                 (AlphaComposite)origComposite;
             if (origAlphaComposite.getRule() == AlphaComposite.SRC_OVER) {
                 origAlpha = origAlphaComposite.getAlpha();
             }
         }
-        
+
 		// _0
 		AffineTransform trans_0 = g.getTransform();
 		paintRootGraphicsNode_0(g);
@@ -1453,8 +1457,8 @@ class Saturn implements Icon {
     public int getOrigHeight() {
         return 38;
     }
-    
-    
+
+
 	/**
 	 * The current width of this resizable icon.
 	 */
@@ -1520,17 +1524,17 @@ class Saturn implements Icon {
 
 /**
  * This class has been automatically generated using svg2java
- * 
+ *
  */
 class Sun implements Icon {
-	
+
 	private float origAlpha = 1.0f;
 
 	/**
 	 * Paints the transcoded SVG image on the specified graphics context. You
 	 * can install a custom transformation on the graphics context to scale the
 	 * image.
-	 * 
+	 *
 	 * @param g
 	 *            Graphics context.
 	 */
@@ -1539,13 +1543,13 @@ class Sun implements Icon {
         origAlpha = 1.0f;
         Composite origComposite = g.getComposite();
         if (origComposite instanceof AlphaComposite) {
-            AlphaComposite origAlphaComposite = 
+            AlphaComposite origAlphaComposite =
                 (AlphaComposite)origComposite;
             if (origAlphaComposite.getRule() == AlphaComposite.SRC_OVER) {
                 origAlpha = origAlphaComposite.getAlpha();
             }
         }
-        
+
 		// _0
 		AffineTransform trans_0 = g.getTransform();
 		paintRootGraphicsNode_0(g);
@@ -1645,8 +1649,8 @@ class Sun implements Icon {
     public int getOrigHeight() {
         return 34;
     }
-    
-    
+
+
 	/**
 	 * The current width of this resizable icon.
 	 */
@@ -1712,17 +1716,17 @@ class Sun implements Icon {
 
 /**
  * This class has been automatically generated using svg2java
- * 
+ *
  */
 class Earth implements Icon {
-	
+
 	private float origAlpha = 1.0f;
 
 	/**
 	 * Paints the transcoded SVG image on the specified graphics context. You
 	 * can install a custom transformation on the graphics context to scale the
 	 * image.
-	 * 
+	 *
 	 * @param g
 	 *            Graphics context.
 	 */
@@ -1731,13 +1735,13 @@ class Earth implements Icon {
         origAlpha = 1.0f;
         Composite origComposite = g.getComposite();
         if (origComposite instanceof AlphaComposite) {
-            AlphaComposite origAlphaComposite = 
+            AlphaComposite origAlphaComposite =
                 (AlphaComposite)origComposite;
             if (origAlphaComposite.getRule() == AlphaComposite.SRC_OVER) {
                 origAlpha = origAlphaComposite.getAlpha();
             }
         }
-        
+
 		// _0
 		AffineTransform trans_0 = g.getTransform();
 		paintRootGraphicsNode_0(g);
@@ -1848,8 +1852,8 @@ class Earth implements Icon {
     public int getOrigHeight() {
         return 34;
     }
-    
-    
+
+
 	/**
 	 * The current width of this resizable icon.
 	 */
@@ -1915,17 +1919,17 @@ class Earth implements Icon {
 
 /**
  * This class has been automatically generated using svg2java
- * 
+ *
  */
 class Venus implements Icon {
-	
+
 	private float origAlpha = 1.0f;
 
 	/**
 	 * Paints the transcoded SVG image on the specified graphics context. You
 	 * can install a custom transformation on the graphics context to scale the
 	 * image.
-	 * 
+	 *
 	 * @param g
 	 *            Graphics context.
 	 */
@@ -1934,13 +1938,13 @@ class Venus implements Icon {
         origAlpha = 1.0f;
         Composite origComposite = g.getComposite();
         if (origComposite instanceof AlphaComposite) {
-            AlphaComposite origAlphaComposite = 
+            AlphaComposite origAlphaComposite =
                 (AlphaComposite)origComposite;
             if (origAlphaComposite.getRule() == AlphaComposite.SRC_OVER) {
                 origAlpha = origAlphaComposite.getAlpha();
             }
         }
-        
+
 		// _0
 		AffineTransform trans_0 = g.getTransform();
 		paintRootGraphicsNode_0(g);
@@ -2050,8 +2054,8 @@ class Venus implements Icon {
     public int getOrigHeight() {
         return 37;
     }
-    
-    
+
+
 	/**
 	 * The current width of this resizable icon.
 	 */
@@ -2117,17 +2121,17 @@ class Venus implements Icon {
 
 /**
  * This class has been automatically generated using svg2java
- * 
+ *
  */
 class Uranus implements Icon {
-	
+
 	private float origAlpha = 1.0f;
 
 	/**
 	 * Paints the transcoded SVG image on the specified graphics context. You
 	 * can install a custom transformation on the graphics context to scale the
 	 * image.
-	 * 
+	 *
 	 * @param g
 	 *            Graphics context.
 	 */
@@ -2136,13 +2140,13 @@ class Uranus implements Icon {
         origAlpha = 1.0f;
         Composite origComposite = g.getComposite();
         if (origComposite instanceof AlphaComposite) {
-            AlphaComposite origAlphaComposite = 
+            AlphaComposite origAlphaComposite =
                 (AlphaComposite)origComposite;
             if (origAlphaComposite.getRule() == AlphaComposite.SRC_OVER) {
                 origAlpha = origAlphaComposite.getAlpha();
             }
         }
-        
+
 		// _0
 		AffineTransform trans_0 = g.getTransform();
 		paintRootGraphicsNode_0(g);
@@ -2296,8 +2300,8 @@ class Uranus implements Icon {
     public int getOrigHeight() {
         return 36;
     }
-    
-    
+
+
 	/**
 	 * The current width of this resizable icon.
 	 */

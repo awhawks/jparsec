@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.io.image;
 
 import java.awt.Color;
@@ -36,8 +36,6 @@ import java.awt.RenderingHints;
 import java.awt.Robot;
 import java.awt.Toolkit;
 import java.awt.Transparency;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
@@ -93,13 +91,12 @@ import jparsec.vo.GeneralQuery;
 
 /**
  * A class to read, write, and process images.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
 public class Picture
 {
-	static final long serialVersionUID = 1L;
 	private JFrame frame;
     private JMenuItem saveAs;
     private JMenuItem print;
@@ -108,14 +105,14 @@ public class Picture
 
 	/** Set this flag to true to allow spline resizing in method
 	 * {@linkplain #getScaledInstanceUsingSplines(int, int, boolean)},
-	 * that calls to the resize method using finite differences 
+	 * that calls to the resize method using finite differences
 	 * implemented in class {@linkplain Resize}.
 	 * This is the default value. Set this to false to force the multi
 	 * step technique always, which is usually slightly worse, but much faster.
 	 * In less words, this flag allows to force fast resizing mode in
 	 * JPARSEC even when calling to the 'spline' resizing method. */
 	public static boolean ALLOW_SPLINE_RESIZING = true;
-	
+
 	/**
 	 * Constructor that reads an image from the disk, using ImageIO library.
 	 * Note imageIO does not support certain transparent PNG formats.
@@ -155,7 +152,7 @@ public class Picture
 		image.getRaster().setDataElements(0, 0, width, height, pixels);
 		this.image = image;
 	}
-	
+
 	/**
 	 * Constructor for a blank image of certain size.
 	 * @param width The width.
@@ -165,7 +162,7 @@ public class Picture
 	{
 		image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 	}
-	
+
 	/**
 	 * Constructor for a blank image of certain size.
 	 * @param width The width.
@@ -177,10 +174,10 @@ public class Picture
 		if (alpha) {
 			image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		} else {
-			image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);			
+			image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		}
 	}
-	
+
 	/**
 	 * Constructor for a given Image.
 	 * @param img The image.
@@ -188,17 +185,17 @@ public class Picture
 	public Picture (BufferedImage img)
 	{
 		image = img;
-/*		
+/*
     	BufferedImage bimage = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB); //img.getType());
 
 	    // Copy image to buffered image
 	    Graphics g = bimage.createGraphics();
-	
+
 	    // Paint the image onto the buffered image
 	    g.drawImage(img, 0, 0, null);
 	    g.dispose();
 	    image = bimage;
-*/	    
+*/
 		check();
 	}
 
@@ -210,7 +207,7 @@ public class Picture
 	}
 
 	/**
-	 * Constructor for an image given as an array. The image should be 
+	 * Constructor for an image given as an array. The image should be
 	 * given with the red, green, blue, and alpha components (array size
 	 * of 4, x, and y).
 	 * @param array The array.
@@ -296,10 +293,10 @@ public class Picture
 					if (ac < 0) ac = 0;
 					if (ac > 255) ac = 255;
 					rgb[i] = Functions.getColor(rc, gc, bc, ac);
-				} else {					
+				} else {
 					rgb[i] = Functions.getColor(rc, gc, bc, 255);
 				}
-			}			
+			}
 	        image.setRGB(0, j, r.length, 1, rgb, 0, r.length);
 		}
 	}
@@ -328,16 +325,16 @@ public class Picture
 				if (a != null) {
 					ac = a[i][j] + 0;
 					rgb[i] = Functions.getColor(rc, gc, bc, ac);
-				} else {					
+				} else {
 					rgb[i] = Functions.getColor(rc, gc, bc, 255);
 				}
 			}
 	        image.setRGB(0, j, r.length, 1, rgb, 0, r.length);
-		}			
+		}
 	}
 
 	/**
-	 * Constructor for an image given as a 2d array. The image should be 
+	 * Constructor for an image given as a 2d array. The image should be
 	 * given with ARGB colors.
 	 * @param array The array, ordered as [x][y].
 	 */
@@ -352,7 +349,7 @@ public class Picture
 				rgb[i] = array[i][j];
 			}
 	        image.setRGB(0, j, array.length, 1, rgb, 0, array.length);
-		}			
+		}
 	}
 
 	/**
@@ -363,7 +360,7 @@ public class Picture
 	{
 		return this.image;
 	}
-	
+
 	/**
 	 * Sets the current image.
 	 * @param img The image.
@@ -405,15 +402,15 @@ public class Picture
 	     if (width == -1 || height == -1) {
 	    	 do {
 	    		 if (width == -1) width = image.getWidth(null);
-	    		 if (height == -1) height = image.getHeight(null);	    		 
+	    		 if (height == -1) height = image.getHeight(null);
 	    	 } while (width == -1 || height == -1);
 	     }
 	     return new Dimension (width, height);
 	   }
-	
+
 	/**
 	 * Reads an image from hard disk, using ImageIO library.
-	 * 
+	 *
 	 * @param path Full path to the place where the image is located.
 	 * @throws JPARSECException Thrown if the method fails.
 	 * @return The image.
@@ -429,9 +426,9 @@ public class Picture
 				Logger.log(LEVEL.ERROR, "Could not clean the url/path "+path);
 			}
 		}
-		
+
 		if (path.toLowerCase().endsWith(".pgm")) return ObservationManager.readPGM(path, true);
-		
+
 		BufferedImage buf = null;
 		File file = new File(path2);
 		if (!file.exists()) throw new JPARSECException("file "+path2+" does not exist.");
@@ -447,7 +444,7 @@ public class Picture
 
 	/**
 	 * Reads an image from hard disk, using Toolkit.
-	 * 
+	 *
 	 * @param url Url to the file.
 	 * @throws JPARSECException Thrown if the method fails.
 	 * @return The image.
@@ -459,7 +456,7 @@ public class Picture
 		if (path.startsWith("file:")) {
 			if (path.toLowerCase().endsWith(".pgm")) return ObservationManager.readPGM(path, true);
 		}
-		
+
 		return Picture.toBufferedImage(Toolkit.getDefaultToolkit().getImage(url));
 	}
 
@@ -499,10 +496,10 @@ public class Picture
 			throw new JPARSECException("error creating image.", e);
 		}
 	}
-	
+
 	/**
 	 * Writes an image to hard disk.
-	 * 
+	 *
 	 * @param path Full path to the directory where the image will be created.
 	 * @param file_name Name of the image, including extension.
 	 * @param format Format ID constant.
@@ -514,7 +511,7 @@ public class Picture
 		try
 		{
 			String fullPath = path + file_name;
-			
+
 			if (format == Picture.FORMAT.EPS) {
 				Picture.exportAsEPSFile(fullPath, image);
 			} else {
@@ -530,7 +527,7 @@ public class Picture
 						if (format == Picture.FORMAT.BMP) formatS = FORMAT_BMP;
 
 						File file = new File(fullPath);
-						ImageIO.write(image, formatS, file);						
+						ImageIO.write(image, formatS, file);
 					}
 				}
 			}
@@ -557,12 +554,12 @@ public class Picture
 		boolean isSVG = path_and_file_name.toLowerCase().endsWith(".svg");
 		return isJPG || isPNG || isBMP || isGIF || isEPS || isPDF || isSVG;
 	}
-	
+
 	/**
 	 * Writes an image to hard disk. Format is automatically taken from name
 	 * extension (jpg, png, bmp, gif, and also eps, pdf, svg if dependencies are
 	 * satisfied to export to these formats).
-	 * 
+	 *
 	 * @param path_and_file_name Path plus name of the image, including
 	 *        extension.
 	 * @throws JPARSECException Thrown if the method fails.
@@ -599,7 +596,7 @@ public class Picture
 		try
 		{
 			String fullPath = path_and_file_name;
-			
+
 			if (format.equals(Picture.FORMAT_EPS)) {
 				Picture.exportAsEPSFile(fullPath, image);
 			} else {
@@ -623,7 +620,7 @@ public class Picture
 	/**
 	 * The set of image formats.
 	 */
-	public static enum FORMAT {
+	public enum FORMAT {
 		/** bmp image format */
 		BMP,
 		/** jpeg image format */
@@ -633,13 +630,13 @@ public class Picture
 		/** gif image format */
 		GIF,
 		/** eps image format */
-		EPS, 
+		EPS,
 		/** svg image format */
-		SVG, 
+		SVG,
 		/** pdf image format */
 		PDF
 	};
-	
+
 	/**
 	 * ID constant for .bmp image format.
 	 */
@@ -678,7 +675,7 @@ public class Picture
 	/**
 	 * Writes a JPEG image to hard disk, considering certain level of
 	 * compression quality.
-	 * 
+	 *
 	 * @param path_and_file_name Path plus name of the image, including
 	 *        extension.
 	 * @param quality The output quality (0.0 to 1.0).
@@ -702,7 +699,7 @@ public class Picture
 	/**
 	 * Writes a PNG image to hard disk, considering certain level of
 	 * compression quality. PNG is lossless.
-	 * 
+	 *
 	 * @param path_and_file_name Path plus name of the image, including
 	 *        extension.
 	 * @param quality The output quality (0.0 to 1.0).
@@ -722,7 +719,7 @@ public class Picture
 			throw new JPARSECException(e);
 		}
 	}
-	
+
 	/**
 	 * Flips the image in horizontal and/or vertical.
 	 * @param h True to flip horizontally.
@@ -753,13 +750,13 @@ public class Picture
 			}
 		}
 	}
-	
+
 	/**
 	 * Re-scales the image to another size. If it is desirable to re-scale just
 	 * in one axis, adapting the other to maintain the original width/height
-	 * ratio, then set the other length to zero. This method uses 
+	 * ratio, then set the other length to zero. This method uses
 	 * a multi-step technique.
-	 * 
+	 *
 	 * @param width New width.
 	 * @param height New height.
 	 * @see Resize
@@ -775,9 +772,9 @@ public class Picture
 			width = Math.abs(width);
 			height = Math.abs(height);
 		}
-		
+
 		if (width < 1 && height < 1) return;
-		
+
 		int origWidth = image.getWidth();
 		int origHeight = image.getHeight();
 
@@ -798,11 +795,11 @@ public class Picture
 		getScaledInstance(width, height, false);
 	}
 	/**
-	 * Re-scales the image to another size, maintaining the original image width/height 
+	 * Re-scales the image to another size, maintaining the original image width/height
 	 * ratio. The result will be the smallest image compatible with the input size. Width
 	 * or height can be set to 0 to calculate automatic value, but not both.
 	 * This method uses a multi-step technique.
-	 * 
+	 *
 	 * @param width New width. Set to 0 or negative to calculate value automatically.
 	 * @param height New height. Set to 0 or negative to calculate value automatically.
 	 * @see Resize
@@ -818,9 +815,9 @@ public class Picture
 			width = Math.abs(width);
 			height = Math.abs(height);
 		}
-		
+
 		if (width < 1 && height < 1) return;
-		
+
 		int origWidth = image.getWidth();
 		int origHeight = image.getHeight();
 
@@ -840,9 +837,9 @@ public class Picture
 					double scale = scaleW;
 					if (scaleH < scaleW) {
 						scale = scaleH;
-						width = (int) (scale * origWidth + 0.5);			
+						width = (int) (scale * origWidth + 0.5);
 					} else {
-						height = (int) (scale * origHeight + 0.5);				
+						height = (int) (scale * origHeight + 0.5);
 					}
 				}
 			}
@@ -852,19 +849,19 @@ public class Picture
 
 		getScaledInstance(width, height, false);
 	}
-	
-	
+
+
 	/**
-	 * Scales the image to another size using the multi-step technique described in 
-	 * http://today.java.net/pub/a/today/2007/04/03/perils-of-image-getscaledinstance.html. 
-	 * Width or height can be set to 0 to calculate automatic value assuming 
+	 * Scales the image to another size using the multi-step technique described in
+	 * http://today.java.net/pub/a/today/2007/04/03/perils-of-image-getscaledinstance.html.
+	 * Width or height can be set to 0 to calculate automatic value assuming
 	 * that the same width/height ratio must be preserved.
 	 * @param width Width. Set to 0 or negative to calculate value automatically.
 	 * @param height Height. Set to 0 or negative to calculate value automatically.
 	 * @param sameRatio True to maintain image ratio (maximum size that fits the rectangle
 	 * with the provided width and height).
 	 */
-	public void getScaledInstance(int width, int height, boolean sameRatio) { 
+	public void getScaledInstance(int width, int height, boolean sameRatio) {
 		// Flip in case of negative size
 		if (width < 0 || height < 0) {
 			boolean h = false, v = false;
@@ -876,7 +873,7 @@ public class Picture
 		}
 
 		if (width < 1 && height < 1) return;
-		
+
 		int origWidth = image.getWidth();
 		int origHeight = image.getHeight();
 
@@ -896,9 +893,9 @@ public class Picture
 					double scale = scaleW;
 					if (scaleH < scaleW) {
 						scale = scaleH;
-						width = (int) (scale * origWidth + 0.5);			
+						width = (int) (scale * origWidth + 0.5);
 					} else {
-						height = (int) (scale * origHeight + 0.5);				
+						height = (int) (scale * origHeight + 0.5);
 					}
 				}
 			}
@@ -906,7 +903,7 @@ public class Picture
 
 		if (origWidth == width && sameRatio || origHeight == height && sameRatio ||
 				origWidth == width && origHeight == height) return;
-		
+
         // Original implementation from http://today.java.net/pub/a/today/2007/04/03/perils-of-image-getscaledinstance.html
         int type = (image.getTransparency() == Transparency.OPAQUE) ?
                 BufferedImage.TYPE_INT_RGB : BufferedImage.TYPE_INT_ARGB;
@@ -920,7 +917,7 @@ public class Picture
         int w = image.getWidth();
         int h = image.getHeight();
         boolean bicubic = true;
-        
+
 	       do {
 	            if (w > width) {
 	                w /= 2;
@@ -949,13 +946,13 @@ public class Picture
 
 	            ret = tmp;
 	        } while (w != width || h != height);
-       
+
 	        image = ret;
 	}
-	
+
 	/**
-	 * Scales the image to another size using splines algorithm. Width or height can be set 
-	 * to 0 or negative to calculate automatic value assuming that the same width/height 
+	 * Scales the image to another size using splines algorithm. Width or height can be set
+	 * to 0 or negative to calculate automatic value assuming that the same width/height
 	 * ratio must be preserved. Splines is the best possible down-scaling algorithm, giving
 	 * very good results also when up-scaling, but it should be used with small images.
 	 * @param width Width. Set to 0 to calculate value automatically.
@@ -970,7 +967,7 @@ public class Picture
 			this.getScaledInstance(width, height, sameRatio);
 			return;
 		}
-		
+
 		// Flip in case of negative size
 		if (width < 0 || height < 0) {
 			boolean h = false, v = false;
@@ -980,10 +977,10 @@ public class Picture
 			width = Math.abs(width);
 			height = Math.abs(height);
 		}
-		
+
 		image = Resize.resize(image, width, height, sameRatio);
 	}
-	
+
 	/**
 	 * Rotates an image.
 	 * @param ang Rotation angle in radians.
@@ -1043,7 +1040,7 @@ public class Picture
 		if (image != null) d = this.getSize();
 		this.show(d.width, d.height, title, false, false, true);
 	}
-	
+
 	/**
 	 * re-paints the frame.
 	 * @throws JPARSECException If an error occurs.
@@ -1070,7 +1067,7 @@ public class Picture
 	{
 		return this.canvas;
 	}
-	
+
 	private DisplayCanvas canvas;
 	/**
 	 * Shows an image in an external frame with file save and mouse drag support.
@@ -1111,16 +1108,16 @@ public class Picture
 		Container container = frame.getContentPane();
 		container.setSize(width, height);
 		container.setPreferredSize(new Dimension(width, height));
-		
+
 		canvas = new DisplayCanvas(image, width, height, drag);
-		
+
 	    container.add(canvas);
 	    frame.setIconImage(image);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setTitle(title);
         frame.setResizable(true);
-	 
-        frame.pack();        
+
+        frame.pack();
         frame.setVisible(true);
         canvas.paintImmediately(0, 0, width, height);
 	}
@@ -1147,13 +1144,13 @@ public class Picture
 		for (int i=0; i<d.width; i++)
 		{
 			for (int j=0; j<d.height; j++)
-			{ 
+			{
 				int c[] = Picture.getColorComponents(image.getRGB(i, j));
 				a[0][i][j] = c[0];
 				a[1][i][j] = c[1];
 				a[2][i][j] = c[2];
 				a[3][i][j] = c[3];
-			}			
+			}
 		}
 		return a;
 	}
@@ -1175,13 +1172,13 @@ public class Picture
 		for (int i=0; i<d.width; i++)
 		{
 			for (int j=0; j<d.height; j++)
-			{ 
+			{
 				if (bo == 0) {
-					a[i][j] = image.getRGB(i, j) & 255;					
+					a[i][j] = image.getRGB(i, j) & 255;
 				} else {
-					a[i][j] = (image.getRGB(i, j) >> bo) & 255;										
+					a[i][j] = (image.getRGB(i, j) >> bo) & 255;
 				}
-			}			
+			}
 		}
 		return a;
 	}
@@ -1203,13 +1200,13 @@ public class Picture
 		for (int i=0; i<d.width; i++)
 		{
 			for (int j=0; j<d.height; j++)
-			{ 
+			{
 				if (bo == 0) {
-					a[i][j] = (byte) ((image.getRGB(i, j) & 255) - 128);					
+					a[i][j] = (byte) ((image.getRGB(i, j) & 255) - 128);
 				} else {
-					a[i][j] = (byte) (((image.getRGB(i, j) >> bo) & 255) - 128);										
+					a[i][j] = (byte) (((image.getRGB(i, j) >> bo) & 255) - 128);
 				}
-			}			
+			}
 		}
 		return a;
 	}
@@ -1228,7 +1225,7 @@ public class Picture
 			{
 				int c[] = Picture.getColorComponents(image.getRGB(i, j));
 				a[i][j] = Functions.getColor(c[0], c[1], c[2], c[3]);
-			}			
+			}
 		}
 		return a;
 	}
@@ -1280,7 +1277,7 @@ public class Picture
 	 * @param c The color.
 	 */
     public void setColor(int i, int j, Color c) {
-        if (c == null)  
+        if (c == null)
         	throw new RuntimeException("can't set color to null.");
         image.setRGB(i, j, c.getRGB());
     }
@@ -1325,7 +1322,7 @@ public class Picture
         gg2.dispose();
         image = dest;
     	 */
-        
+
     	for (int i=0; i<image.getWidth(); i++)
     	{
         	for (int j=0; j<image.getHeight(); j++)
@@ -1337,9 +1334,9 @@ public class Picture
         			c[3] = alpha;
         		}
         		this.setColor(i, j, Functions.getColor(c[0], c[1], c[2], c[3]));
-        	}    		
+        	}
     	}
-    	    	
+
     }
 
     /**
@@ -1364,7 +1361,7 @@ public class Picture
     {
     	int col0rgb = col0.getRGB();
     	int col1rgb = col1.getRGB();
-		
+
     	int a[] = this.getImageAsArray1d();
     	for (int i=0; i<a.length; i++)
     	{
@@ -1377,7 +1374,7 @@ public class Picture
     	}
     	this.setImage(a);
     }
-	
+
 	/**
 	 * Returns a label with the current image to include in a GUI widget.
 	 * @return The label.
@@ -1420,7 +1417,7 @@ public class Picture
 
 	/**
 	 * Transforms an Image to a BufferedImage. Pixel grabber
-     * is used to retrieve the image's color model and see 
+     * is used to retrieve the image's color model and see
      * if it has alpha channel.
 	 * @param image The image.
 	 * @return The BufferedImage.
@@ -1430,14 +1427,14 @@ public class Picture
         if (image instanceof BufferedImage) {
             return (BufferedImage)image;
         }
-    
+
         // This code ensures that all the pixels in the image are loaded
         image = new ImageIcon(image).getImage();
-    
+
         // Determine if the image has transparent pixels; for this method's
         // implementation, see e661 Determining If an Image Has Transparent Pixels
         boolean hasAlpha = hasAlpha(image);
-    
+
         // Create a buffered image with a format that's compatible with the screen
         BufferedImage bimage = null;
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -1447,7 +1444,7 @@ public class Picture
             if (hasAlpha) {
                 transparency = Transparency.BITMASK;
             }
-    
+
             // Create the buffered image
             GraphicsDevice gs = ge.getDefaultScreenDevice();
             GraphicsConfiguration gc = gs.getDefaultConfiguration();
@@ -1456,7 +1453,7 @@ public class Picture
         } catch (HeadlessException e) {
             // The system does not have a screen
         }
-    
+
         if (bimage == null) {
             // Create a buffered image using the default color model
             int type = BufferedImage.TYPE_INT_RGB;
@@ -1465,28 +1462,28 @@ public class Picture
             }
             bimage = new BufferedImage(image.getWidth(null), image.getHeight(null), type);
         }
-    
+
         // Copy image to buffered image
         Graphics g = bimage.createGraphics();
-    
+
         // Paint the image onto the buffered image
         g.drawImage(image, 0, 0, null);
         g.dispose();
-    
+
         return bimage;
     }
     /**
      * Returns true if the specified image has transparent pixels. Pixel grabber
      * is used to retrieve the image's color model.
      * @throws JPARSECException In case of error using pixel grabber.
-     */    
+     */
     private static boolean hasAlpha(Image image) throws JPARSECException {
         // If buffered image, the color model is readily available
         if (image instanceof BufferedImage) {
             BufferedImage bimage = (BufferedImage)image;
             return bimage.getColorModel().hasAlpha();
         }
-    
+
         // Use a pixel grabber to retrieve the image's color model;
         // grabbing a single pixel is usually sufficient
         PixelGrabber pg = new PixelGrabber(image, 0, 0, 1, 1, false);
@@ -1495,9 +1492,10 @@ public class Picture
         } catch (InterruptedException e) {
         	throw new JPARSECException("Error using the pixel grabber.");
         }
-    
+
         // Get the image's color model
         ColorModel cm = pg.getColorModel();
+        if (cm == null) return false;
         return cm.hasAlpha();
     }
 
@@ -1506,12 +1504,12 @@ public class Picture
      * is used to retrieve the image's color model.
      * @return True of false.
      * @throws JPARSECException  In case of error using pixel grabber.
-     */    
+     */
     public boolean hasAlpha() throws JPARSECException
     {
     	return Picture.hasAlpha(this.image);
     }
-    
+
     /**
      * Transforms the current image into transparent.
      * @param transparencyLevel Transparency level, from 0 (invisible pixel)
@@ -1524,7 +1522,7 @@ public class Picture
     {
     	Dimension d = this.getSize();
         BufferedImage buf = new BufferedImage(d.width, d.height, BufferedImage.TYPE_INT_ARGB);
-        
+
         Color backG = new Color(0,0,0);
         boolean back = false;
         int tr = -1, tg = -1, tb = -1;
@@ -1577,7 +1575,7 @@ public class Picture
         Graphics2D g = buf.createGraphics();
         g.drawImage(image, 0, 0, null);
         g.dispose();
-        
+
         // Primitive test, just an example
         final int r1 = c1.getRed();
         final int g1 = c1.getGreen();
@@ -1611,7 +1609,7 @@ public class Picture
         gg2.dispose();
         image = dest;
     }
-    
+
     /**
      * Transforms the current image into transparent, for a given range of colors.
      * @param buf The image.
@@ -1648,7 +1646,7 @@ public class Picture
 
         ImageProducer ip = new FilteredImageSource(buf.getSource(), filter);
         Image img = Toolkit.getDefaultToolkit().createImage(ip);
-        
+
         BufferedImage dest = new BufferedImage(buf.getWidth(), buf.getHeight(), BufferedImage.TYPE_INT_ARGB);
         Graphics2D gg2 = dest.createGraphics();
         gg2.drawImage(img, 0, 0, null);
@@ -1690,7 +1688,7 @@ public class Picture
 		0.0, -1.0/2.0, 0.0,
 		-1.0/2.0, 3.0, -1.0/2.0,
 		0.0, -1.0/2.0, 0.0};
-    
+
     /**
      * Convolves an image with a given pattern.
      * @param pattern Pattern to apply. Some constants defined in this class.
@@ -1718,7 +1716,7 @@ public class Picture
 	public void invertColors()
 	{
 		Dimension d = this.getSize();
-		
+
 		for (int i=0; i<d.width; i++)
 		{
 			for (int j=0; j<d.height; j++)
@@ -1735,7 +1733,7 @@ public class Picture
 			}
 		}
 	}
-	
+
 	/**
 	 * Inverts the colors of an image, giving a negative effect.
 	 * @param r True to invert red channel.
@@ -1745,7 +1743,7 @@ public class Picture
 	public void invertColors(boolean r, boolean g, boolean b)
 	{
 		Dimension d = this.getSize();
-		
+
 		for (int i=0; i<d.width; i++)
 		{
 			for (int j=0; j<d.height; j++)
@@ -1766,7 +1764,7 @@ public class Picture
 
 	/**
 	 * Encodes an image into a string in png format.
-	 * @param getHtmlSource True to get directly the contents of the srcc property 
+	 * @param getHtmlSource True to get directly the contents of the srcc property
 	 * of the html img tag to show the image.
 	 * @return The encoded image, in base64 and png format.
 	 * @throws JPARSECException If an error occurs.
@@ -1774,7 +1772,7 @@ public class Picture
 	public String imageToString(boolean getHtmlSource)
 	throws JPARSECException {
         String imageString = null;
- 
+
         //image to bytes
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         try {
@@ -1782,13 +1780,13 @@ public class Picture
             baos.flush();
             byte[] imageAsRawBytes = baos.toByteArray();
             baos.close();
- 
+
             //bytes to string
             imageString = new String(Base64Coder.encode(imageAsRawBytes));
         } catch (IOException ex) {
             throw new JPARSECException(ex);
         }
- 
+
         if (getHtmlSource) imageString = "data:image/png;base64,"+imageString;
         return imageString;
     }
@@ -1804,7 +1802,7 @@ public class Picture
 	public String imageToString(String format, boolean getHtmlSource)
 	throws JPARSECException {
         String imageString = null;
- 
+
         //image to bytes
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         try {
@@ -1812,13 +1810,13 @@ public class Picture
             baos.flush();
             byte[] imageAsRawBytes = baos.toByteArray();
             baos.close();
- 
+
             //bytes to string
             imageString = new String(Base64Coder.encode(imageAsRawBytes));
         } catch (IOException ex) {
             throw new JPARSECException(ex);
         }
- 
+
         if (getHtmlSource) imageString = "data:image/"+format+";base64,"+imageString;
         return imageString;
     }
@@ -1838,13 +1836,13 @@ public class Picture
         //image to bytes
         try {
             byte[] imageAsRawBytes = EncoderUtil.encode(image, "jpeg", (float) quality);
- 
+
             //bytes to string
             imageString = new String(Base64Coder.encode(imageAsRawBytes));
         } catch (IOException ex) {
             throw new JPARSECException(ex);
         }
- 
+
         if (getHtmlSource) imageString = "data:image/"+format+";base64,"+imageString;
         return imageString;
     }
@@ -1855,7 +1853,7 @@ public class Picture
 	 * @return The image.
 	 * @throws JPARSECException If an error occurs.
 	 */
-    public static BufferedImage stringToImage(String imageString) 
+    public static BufferedImage stringToImage(String imageString)
     throws JPARSECException {
         //string to ByteArrayInputStream
         BufferedImage bImage = null;
@@ -1866,10 +1864,10 @@ public class Picture
         } catch (IOException ex) {
             throw new JPARSECException(ex);
         }
- 
+
         return bImage;
     }
-    
+
     /**
      * Returns a clone copy of the input image.
      * @param img The image.
@@ -1880,14 +1878,14 @@ public class Picture
 
 	    // Copy image to buffered image
 	    Graphics g = bimage.createGraphics();
-	
+
 	    // Paint the image onto the buffered image
 	    g.drawImage(img, 0, 0, null);
 	    g.dispose();
-	
+
 	    return bimage;
     }
-    
+
     /**
      * Returns a clone copy of the input image including
      * an alpha channel.
@@ -1899,14 +1897,14 @@ public class Picture
 
 	    // Copy image to buffered image
 	    Graphics g = bimage.createGraphics();
-	
+
 	    // Paint the image onto the buffered image
 	    g.drawImage(img, 0, 0, null);
 	    g.dispose();
-	
+
 	    return bimage;
     }
-    
+
 	/**
 	 * Inverts a color.
 	 * @param col The color.
@@ -1969,11 +1967,11 @@ public class Picture
         ImageProducer ip = new FilteredImageSource(im.getSource(), filter);
         return Toolkit.getDefaultToolkit().createImage(ip);
     }
-    
+
 	/**
 	 * The RGB components.
 	 */
-	public static enum RGB {
+	public enum RGB {
 		/** ID constant for red component. */
 		COLOR_RED,
 		/** ID constant for green component. */
@@ -1981,7 +1979,7 @@ public class Picture
 		/** ID constant for blue component. */
 		COLOR_BLUE
 	};
-	
+
 	/**
 	 * Inverts the colors of an image, giving a negative effect.
 	 * @param componentToInvert ID constant of the component to invert.
@@ -1989,14 +1987,14 @@ public class Picture
 	public void invertColor(RGB componentToInvert)
 	{
 		Dimension d = this.getSize();
-		
+
 		for (int i=0; i<d.width; i++)
 		{
 			for (int j=0; j<d.height; j++)
 			{
 				int rgb = image.getRGB(i, j);
 				Color color = new Color(rgb);
-				
+
 				switch (componentToInvert)
 			    {
 			    case COLOR_RED:
@@ -2013,7 +2011,7 @@ public class Picture
 			}
 		}
 	}
-    
+
 	/**
 	 * Creates an SVG file by calling a given generic drawing method.
 	 * @param file_name The file name to create.
@@ -2035,7 +2033,7 @@ public class Picture
 			Object svgGraphics = cc.newInstance(new Object[] {plotFile, size});
 			Method m = c.getMethod("startExport", null);
 			m.invoke(svgGraphics, null);
-			
+
 			Method call = instance.getClass().getMethod(method, Graphics2D.class);
 			call.invoke(instance, svgGraphics);
 
@@ -2046,7 +2044,7 @@ public class Picture
 			throw new JPARSECException("cannot write to file.", e);
 		}
 	}
-	
+
 	/**
 	 * Creates an EPS file by calling a given generic drawing method.
 	 * @param file_name The file name to create.
@@ -2068,7 +2066,7 @@ public class Picture
 			Object svgGraphics = cc.newInstance(new Object[] {plotFile, size});
 			Method m = c.getMethod("startExport", null);
 			m.invoke(svgGraphics, null);
-			
+
 			Method call = instance.getClass().getMethod(method, Graphics2D.class);
 			call.invoke(instance, svgGraphics);
 
@@ -2079,7 +2077,7 @@ public class Picture
 			throw new JPARSECException("cannot write to file.", e);
 		}
 	}
-	
+
 	/**
 	 * Creates an PDF file by calling a given generic drawing method.
 	 * @param file_name The file name to create.
@@ -2101,7 +2099,7 @@ public class Picture
 			Object svgGraphics = cc.newInstance(new Object[] {plotFile, size});
 			Method m = c.getMethod("startExport", null);
 			m.invoke(svgGraphics, null);
-			
+
 			Method call = instance.getClass().getMethod(method, Graphics2D.class);
 			call.invoke(instance, svgGraphics);
 
@@ -2112,7 +2110,7 @@ public class Picture
 			throw new JPARSECException("cannot write to file.", e);
 		}
 	}
-	
+
 	private static void exportAsSVGFile(String file_name, BufferedImage image) throws JPARSECException
 	{
 		File plotFile = new File(file_name);
@@ -2178,7 +2176,7 @@ public class Picture
 			throw new JPARSECException("cannot write to file.", e);
 		}
 	}
-	
+
 	/**
 	 *  Create a BufferedImage for Swing components.
 	 *  The entire component will be captured to an image.
@@ -2242,16 +2240,11 @@ public class Picture
 	 * Transforms the image to grayscale.
 	 */
 	public void toGrayScale() {
-		Dimension d = this.getSize();
-		for (int i=0; i<d.width; i++)
-		{
-			for (int j=0; j<d.height; j++)
-			{
-				int rgb = image.getRGB(i, j);
-				Color color = new Color(rgb);
-				image.setRGB(i, j, toGray(color).getRGB());
-			}
-		}
+		BufferedImage gray = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_BYTE_GRAY);
+		Graphics g = gray.getGraphics();
+		g.drawImage(image, 0, 0, null);
+		g.dispose();
+		image = gray;
 	}
 
     /**
@@ -2276,12 +2269,12 @@ public class Picture
         Color gray = new Color(y, y, y, color.getAlpha());
         return gray;
     }
-    
+
 	/**
 	 * Modifies the contrast and/or brightness of the image. To increase the
 	 * contrast the usual way is to use a scale of 1.3 and to calculate the
 	 * offset with the expression offset = 255 - 255 * scale.
-	 * @param scale The scale factor, 1.0 to do nothing. It is a 
+	 * @param scale The scale factor, 1.0 to do nothing. It is a
 	 * multiplication factor, use around 1.2 to increase contrast and
 	 * obtain a visible effect. Can be lower than unity.
 	 * @param offset The brightness offset, use 0 to do nothing. It is
@@ -2292,10 +2285,10 @@ public class Picture
 		RescaleOp rescaleOp = new RescaleOp((float) scale, (float)offset, null);
 		rescaleOp.filter(Picture.copy(image), image);
 	}
-	
+
 	/**
 	 * Removes the alpha channel of the image, setting transparent colors
-	 * to a given color.	
+	 * to a given color.
 	 * @param image The input transparent image.
 	 * @param fillColor The color to fill transparent pixels.
 	 * @return output image.
@@ -2313,7 +2306,7 @@ public class Picture
 		g.dispose();
 		return image2;
 	}
-	
+
 	/**
 	 * Applies a median NEWS filter to remove noise. Based on code by John Burkardt.
 	 * This method can be called few times to remove noise more effectively.
@@ -2329,7 +2322,7 @@ public class Picture
 
 	  for (int c=0; c<4; c++) {
 		  int rgb2[][] = new int[m][n];
-		  
+
 		  //  Process the main part of the image:
 		  for ( i = 1; i < m - 1; i++ )
 		  {
@@ -2340,7 +2333,7 @@ public class Picture
 		      p[2] = rgb[c][i][j+1];
 		      p[3] = rgb[c][i][j-1];
 		      p[4] = rgb[c][i][j];
-		      
+
 		      if (aggressive > 0 && i > 1 && i < m - 2 && j > 1 && j < n - 2) {
 			      p[5] = rgb[c][i-1][j-1];
 			      p[6] = rgb[c][i+1][j+1];
@@ -2359,18 +2352,18 @@ public class Picture
 				      p[18] = rgb[c][i-1][j-2];
 				      p[19] = rgb[c][i+1][j+2];
 				      p[20] = rgb[c][i+1][j-2];
-				      
+
 			    	  rgb2[i][j] = (int) DataSet.getKthSmallestValue (p, p.length, p.length/2); //i4vec_median ( 5, p );
-			      } else {		
+			      } else {
 			    	  rgb2[i][j] = (int) DataSet.getKthSmallestValue (p, 13, 13/2); //i4vec_median ( 5, p );
 			      }
 		      } else {
-			      rgb2[i][j] = (int) DataSet.getKthSmallestValue (p, 5, 5/2); //i4vec_median ( 5, p );		    	  
+			      rgb2[i][j] = (int) DataSet.getKthSmallestValue (p, 5, 5/2); //i4vec_median ( 5, p );
 		      }
 		    }
 		  }
 		  //  Process the four borders.
-		  //  Get an odd number of data points, 
+		  //  Get an odd number of data points,
 		  for ( i = 1; i < m - 1; i++ )
 		  {
 			  j = 0;
@@ -2379,7 +2372,7 @@ public class Picture
 		      p[2] = rgb[c][i][j];
 		      p[3] = rgb[c][i][j+1];
 		      p[4] = rgb[c][i][j+2];
-	
+
 		      if (aggressive > 0) {
 			      p[5] = rgb[c][i+1][j+1];
 			      p[6] = rgb[c][i-1][j+1];
@@ -2395,14 +2388,14 @@ public class Picture
 		      } else {
 		    	  rgb2[i][j] = (int) DataSet.getKthSmallestValue (p, 5, 5/2);
 		      }
-	
+
 		      j = n - 1;
 		      p[0] = rgb[c][i-1][j];
 		      p[1] = rgb[c][i+1][j];
 		      p[2] = rgb[c][i][j-2];
 		      p[3] = rgb[c][i][j-1];
 		      p[4] = rgb[c][i][j];
-	
+
 		      if (aggressive > 0) {
 			      p[5] = rgb[c][i+1][j-1];
 			      p[6] = rgb[c][i-1][j-1];
@@ -2413,13 +2406,13 @@ public class Picture
 				      p[10] = rgb[c][i-1][j-2];
 			    	  rgb2[i][j] = (int) DataSet.getKthSmallestValue (p, 11, 11/2);
 			      } else {
-			    	  rgb2[i][j] = (int) DataSet.getKthSmallestValue (p, 7, 7/2);	    	  
+			    	  rgb2[i][j] = (int) DataSet.getKthSmallestValue (p, 7, 7/2);
 			      }
 		      } else {
 		    	  rgb2[i][j] = (int) DataSet.getKthSmallestValue (p, 5, 5/2);
 		      }
 		  }
-	
+
 		  for ( j = 1; j < n - 1; j++ )
 		  {
 			  i = 0;
@@ -2428,7 +2421,7 @@ public class Picture
 		      p[2] = rgb[c][i+2][j];
 		      p[3] = rgb[c][i][j-1];
 		      p[4] = rgb[c][i][j+1];
-	
+
 		      if (aggressive > 0) {
 			      p[5] = rgb[c][i+1][j+1];
 			      p[6] = rgb[c][i+1][j-1];
@@ -2439,19 +2432,19 @@ public class Picture
 				      p[10] = rgb[c][i+2][j-1];
 			    	  rgb2[i][j] = (int) DataSet.getKthSmallestValue (p, 11, 11/2);
 			      } else {
-			    	  rgb2[i][j] = (int) DataSet.getKthSmallestValue (p, 7, 7/2);	    	  
+			    	  rgb2[i][j] = (int) DataSet.getKthSmallestValue (p, 7, 7/2);
 			      }
 		      } else {
 		    	  rgb2[i][j] = (int) DataSet.getKthSmallestValue (p, 5, 5/2);
 		      }
-		      
+
 		      i = m - 1;
 		      p[0] = rgb[c][i-2][j];
 		      p[1] = rgb[c][i-1][j];
 		      p[2] = rgb[c][i][j];
 		      p[3] = rgb[c][i][j-1];
 		      p[4] = rgb[c][i][j+1];
-	
+
 		      if (aggressive > 0) {
 			      p[5] = rgb[c][i-1][j-1];
 			      p[6] = rgb[c][i-1][j+1];
@@ -2462,13 +2455,13 @@ public class Picture
 				      p[10] = rgb[c][i-2][j-1];
 			    	  rgb2[i][j] = (int) DataSet.getKthSmallestValue (p, 11, 11/2);
 			      } else {
-			    	  rgb2[i][j] = (int) DataSet.getKthSmallestValue (p, 7, 7/2);	    	  
+			    	  rgb2[i][j] = (int) DataSet.getKthSmallestValue (p, 7, 7/2);
 			      }
 		      } else {
 		    	  rgb2[i][j] = (int) DataSet.getKthSmallestValue (p, 5, 5/2);
 		      }
 		  }
-	
+
 		  //  Process the four corners.
 		  i = 0;
 		  j = 0;
@@ -2478,11 +2471,11 @@ public class Picture
 	      if (aggressive > 0) {
 		      p[3] = rgb[c][i+1][j+1];
 		      p[4] = rgb[c][i+2][j];
-	    	  rgb2[i][j] = (int) DataSet.getKthSmallestValue (p, 5, 5/2);	    	  
+	    	  rgb2[i][j] = (int) DataSet.getKthSmallestValue (p, 5, 5/2);
 	      } else {
 	    	  rgb2[i][j] = (int) DataSet.getKthSmallestValue (p, 3, 3/2);
 	      }
-	
+
 		  i = 0;
 		  j = n - 1;
 	      p[0] = rgb[c][i+1][j];
@@ -2491,10 +2484,10 @@ public class Picture
 	      if (aggressive > 0) {
 		      p[3] = rgb[c][i+1][j-1];
 		      p[4] = rgb[c][i+2][j];
-	    	  rgb2[i][j] = (int) DataSet.getKthSmallestValue (p, 5, 5/2);	    	  
+	    	  rgb2[i][j] = (int) DataSet.getKthSmallestValue (p, 5, 5/2);
 	      } else {
 	    	  rgb2[i][j] = (int) DataSet.getKthSmallestValue (p, 3, 3/2);
-	      }	
+	      }
 		  i = m - 1;
 		  j = 0;
 	      p[0] = rgb[c][i-1][j];
@@ -2503,11 +2496,11 @@ public class Picture
 	      if (aggressive > 0) {
 		      p[3] = rgb[c][i-1][j+1];
 		      p[4] = rgb[c][i-2][j];
-	    	  rgb2[i][j] = (int) DataSet.getKthSmallestValue (p, 5, 5/2);	    	  
+	    	  rgb2[i][j] = (int) DataSet.getKthSmallestValue (p, 5, 5/2);
 	      } else {
 	    	  rgb2[i][j] = (int) DataSet.getKthSmallestValue (p, 3, 3/2);
 	      }
-	      
+
 		  i = m - 1;
 		  j = n - 1;
 	      p[0] = rgb[c][i-1][j];
@@ -2516,18 +2509,17 @@ public class Picture
 	      if (aggressive > 0) {
 		      p[3] = rgb[c][i-1][j-1];
 		      p[4] = rgb[c][i-2][j];
-	    	  rgb2[i][j] = (int) DataSet.getKthSmallestValue (p, 5, 5/2);	    	  
+	    	  rgb2[i][j] = (int) DataSet.getKthSmallestValue (p, 5, 5/2);
 	      } else {
 	    	  rgb2[i][j] = (int) DataSet.getKthSmallestValue (p, 3, 3/2);
 	      }
-	      
+
 	      rgb[c] = rgb2;
 	  }
 
 	  this.setColor(rgb[0], rgb[1], rgb[2], rgb[3]);
 	}
-
-	private class MyAction implements ActionListener {
+	private class MyAction implements java.awt.event.ActionListener {
 		private Picture image;
 		/**
 		 * Constructor for an image.
@@ -2537,7 +2529,7 @@ public class Picture
 		{
 			image = pio;
 		}
-		public void actionPerformed(ActionEvent event) {
+		public void actionPerformed(java.awt.event.ActionEvent event) {
 			Object obj = event.getSource();
 			if (obj == saveAs)
 			{
@@ -2546,7 +2538,7 @@ public class Picture
 		        	if (name != null) image.write(name);
 	        	} catch (JPARSECException e)
 	        	{
-					JOptionPane.showMessageDialog(null, 
+					JOptionPane.showMessageDialog(null,
 							Translate.translate(
 									"Could not save the chart. Please enter the full\n" +
 									"file name including one of these extensions:\n" +
@@ -2559,29 +2551,31 @@ public class Picture
 		        	image.print();
 	        	} catch (JPARSECException e)
 	        	{
-					JOptionPane.showMessageDialog(null, 
+					JOptionPane.showMessageDialog(null,
 							Translate.translate(Translate.JPARSEC_COULD_NOT_PRINT_THE_CHART), Translate.translate(Translate.JPARSEC_ERROR), JOptionPane.ERROR_MESSAGE);
 	        	}
 			}
 			if (obj == close) frame.dispose();
 		}
 	}
+
 }
 
+
 class DisplayCanvas extends JPanel {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	   int x, y, oldx, oldy;
 	   int pressedX, pressedY;
 	   boolean drag;
 	   BufferedImage bi;
-	 
+
 	   DisplayCanvas(BufferedImage image, int w, int h, boolean d) throws JPARSECException {
 		   drag = d;
 	     setBackground(Color.white);
 	     setSize(w, h);
 	     addMouseMotionListener(new MouseMotionHandler());
-	 
+
 	     MediaTracker mt = new MediaTracker(this);
 	     mt.addImage(image, 1);
 	     try {
@@ -2589,17 +2583,17 @@ class DisplayCanvas extends JPanel {
 	     } catch (Exception e) {
 	    	 throw new JPARSECException("cannot red the image.", e);
 	     }
-	 
+
 	     pressedX = pressedY = oldx = oldy = x = y = 0;
 	     bi = image;
 	   }
-	 
+
 	   public void paintComponent(Graphics g) {
 	     super.paintComponent(g);
 	     Graphics2D g2D = (Graphics2D) g;
 	     g2D.drawImage(bi, x, y, this);
 	   }
-	 
+
 	   class MouseMotionHandler extends MouseMotionAdapter {
 	     public void mouseDragged(MouseEvent e) {
 	    	 if (drag) {

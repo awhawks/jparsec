@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.model;
 
 import java.awt.Color;
@@ -41,13 +41,13 @@ import jparsec.util.Translate;
 
 /**
  * A class to perform calculations using LTE for rotational diagrams.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
 public class RotationalDiagram implements Serializable
 {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	 /**
 	  * Molecule string as given from JPL or COLOGNE catalogs.
@@ -77,7 +77,7 @@ public class RotationalDiagram implements Serializable
 	 * Rotational temperature in K.
 	 */
 	public double forceTrot;
-	
+
 	/**
 	 * Width of the line. If more than one transition for a given molecule
 	 * exists at frequency around width/2 from the transition frequency, the
@@ -86,11 +86,11 @@ public class RotationalDiagram implements Serializable
 	public double[] width = null;
 
 	/**
-	 * Value of the partition function for the molecule at the rotational 
+	 * Value of the partition function for the molecule at the rotational
 	 * temperature.
 	 */
 	public double partitionFunction;
-	
+
 	/**
 	 * Holds column density in cm^-2 after a calculation is done.
 	 */
@@ -124,7 +124,7 @@ public class RotationalDiagram implements Serializable
 
 	/**
 	 * Array of labels (upper transition - lower transition) for the rotational
-	 * diagram, after a calculation is done. 
+	 * diagram, after a calculation is done.
 	 */
 	private String[] label;
 
@@ -146,7 +146,7 @@ public class RotationalDiagram implements Serializable
 	 * if {@link RotationalDiagram#obtainAreaFromFit(String)} is called. This flag is only
 	 * used in that function, other calculations will not change. */
 	public boolean beamFilling = false;
-	
+
 	/**
 	 * ID for an input width to disable any averaging for the transitions
 	 * found around a given frequency.
@@ -155,10 +155,10 @@ public class RotationalDiagram implements Serializable
 
 	/** Name of the molecule and transitions in the catalog. */
 	public String molname, tranname[];
-	
+
 	/** Labels for the chart, default value if it is null. */
 	public String chartTitle, chartXLabel, chartYLabel;
-	
+
 	/**
 	 * Empty constructor.
 	 */
@@ -166,7 +166,7 @@ public class RotationalDiagram implements Serializable
 
 	/**
 	 * Explicit constructor for one point.
-	 * 
+	 *
 	 * @param mol_name Molecule name as given by JPL or COLOGNE catalogs.
 	 * @param tran_name Transition name as given by JPL or COLOGNE catalogs.
 	 * @param jpl_cat True if JPL catalog is used, false for COLOGNE.
@@ -183,7 +183,7 @@ public class RotationalDiagram implements Serializable
 	{
 		molname = mol_name;
 		tranname = new String[] {tran_name};
-		
+
 		String mol = CatalogRead.getMolecule(mol_name, jpl_cat);
 		String tran = CatalogRead.getTransition(tran_name, mol_name, jpl_cat);
 
@@ -201,7 +201,7 @@ public class RotationalDiagram implements Serializable
 
 	/**
 	 * Explicit general constructor.
-	 * 
+	 *
 	 * @param mol_name Molecule name as given by JPL or COLOGNE catalogs.
 	 * @param tran_names Transition name array as given by JPL or COLOGNE catalogs.
 	 * @param jpl_cat True if JPL catalog is used, false for COLOGNE.
@@ -232,13 +232,13 @@ public class RotationalDiagram implements Serializable
 		this.area = area;
 		this.area_error = area_error;
 		this.width = width;
-		
+
 		this.applyLTE();
 	}
 
 	/**
 	 * Explicit constructor for one point.
-	 * 
+	 *
 	 * @param mol_name Molecule name as given by JPL or COLOGNE catalogs.
 	 * @param tran_name Transition name as given by JPL or COLOGNE catalogs.
 	 * @param jpl_cat True if JPL catalog is used, false for COLOGNE.
@@ -265,13 +265,13 @@ public class RotationalDiagram implements Serializable
 		this.area = new double[] {area};
 		this.area_error = new double[] {area_error};
 		this.forceTrot = Trot;
-		
+
 		this.applyLTEForOnePoint();
 	}
 
 	/**
 	 * Explicit general constructor.
-	 * 
+	 *
 	 * @param mol_name Molecule name as given by JPL or COLOGNE catalogs.
 	 * @param tran_names Transition name array as given by JPL or COLOGNE catalogs.
 	 * @param jpl_cat True if JPL catalog is used, false for COLOGNE.
@@ -300,20 +300,20 @@ public class RotationalDiagram implements Serializable
 		this.spline = spline;
 		this.area = area;
 		this.area_error = area_error;
-		
+
 		this.applyLTE();
 	}
 
 	/**
 	 * Obtains column density and it's error supposing a value of the rotational
 	 * temperature and applying LTE.
-	 * 
+	 *
 	 * @throws JPARSECException If an error occurs.
 	 */
 	private void applyLTEForOnePoint() throws JPARSECException
 	{
 		if (tran == null || tran.length < 1) throw new JPARSECException("One point at least is required.");
-		
+
 		// Obtain the values from the catalog - transition file
 		double frec = 1.0E+6 * DataSet.parseDouble(tran[0].substring(0, 13).trim());
 		double gu = DataSet.parseDouble(tran[0].substring(41, 44).trim());
@@ -343,7 +343,7 @@ public class RotationalDiagram implements Serializable
 				scaleFactor = rint / rintTotal;
 			}
 		}
-		
+
 		// Calculate everything
 		double engu = frec * Constant.HZ_TO_K + engl;
 		double fac = Math.exp(-engl / tr) - Math.exp(-engu / tr);
@@ -385,15 +385,15 @@ public class RotationalDiagram implements Serializable
 		double s_part_y[] = new double[7];
 
 		/* Now we have to interpolate to obtain Nt (column density) to this Trot
-		 * value. First we obtain the spin partition function from the catalog 
+		 * value. First we obtain the spin partition function from the catalog
 		 * format - molecule file
 		 */
 		for (int i = 0; i < 7; i++)
 		{
 
 			/* We first obtain the partition function values from the JPL or the
-			 * COLOGNE catalog. Note that we only use temperatures <= 300 K in 
-			 * the cologne catalog, and that in this case the use of the 
+			 * COLOGNE catalog. Note that we only use temperatures <= 300 K in
+			 * the cologne catalog, and that in this case the use of the
 			 * molecules "32504 *CH3OH, vt=0,1" & "33502 *C-13-H3OH, vt=0,1" will
 			 * cause numerical exception, since this molecules have currently no
 			 * partition values in the catalog
@@ -486,7 +486,7 @@ public class RotationalDiagram implements Serializable
 
 	/**
 	 * Obtains column density and it's error applying LTE.
-	 * 
+	 *
 	 * @throws JPARSECException If an error occurs.
 	 */
 	private void applyLTE() throws JPARSECException
@@ -579,17 +579,17 @@ public class RotationalDiagram implements Serializable
 			double s_part_y[] = new double[7];
 
 			/* Now we have to interpolate to obtain Nt (column density) to this
-			 * Trot value. Firts we obtain the spin partition function from the 
+			 * Trot value. Firts we obtain the spin partition function from the
 			 * catalog format - molecule file
 			 */
 			for (int i = 0; i < 7; i++)
 			{
 
 				/* We first obtain the partition function values from the jpl or
-				 * the cologne catalog. Note that we only use temperatures 
-				 * <= 300 K in the cologne catalog, and that in this case the 
-				 * use of the molecules "32504 *CH3OH, vt=0,1" & 
-				 * "33502 *C-13-H3OH, vt=0,1" will cause numerical exception, 
+				 * the cologne catalog. Note that we only use temperatures
+				 * <= 300 K in the cologne catalog, and that in this case the
+				 * use of the molecules "32504 *CH3OH, vt=0,1" &
+				 * "33502 *C-13-H3OH, vt=0,1" will cause numerical exception,
 				 * since this molecules have currently no partition values in
 				 * the catalog
 				 */
@@ -682,7 +682,7 @@ public class RotationalDiagram implements Serializable
 
 	/**
 	 * Returns the predicted area of a given transition assuming
-	 * LTE, using the results from the fit to the rotational diagram. 
+	 * LTE, using the results from the fit to the rotational diagram.
 	 * @param tran The transition data.
 	 * @return The area in K km/s.
 	 */
@@ -699,7 +699,7 @@ public class RotationalDiagram implements Serializable
 		double y0 = Math.log(this.columnDensity / partitionFunction);
 		double y = y0 + engu * slope;
 		double rnu = Math.pow(Math.E, y);
-		 
+
 		double scaleFactor = 1.0;
 		double tr = 300.0; // Default reference temperature for the intensity
 		double part = 0.0;
@@ -716,7 +716,7 @@ public class RotationalDiagram implements Serializable
 		double abis = rint * Math.pow(frec * 1.0E-6, 2.0) * part * 2.7964 * 1E-16 / (gu * fac);
 		double w = rnu / (8.0 * Math.PI * CGSConstant.BOLTZMANN_CONSTANT * frec * frec / (gu * abis * CGSConstant.PLANCK_CONSTANT * CGSConstant.SPEED_OF_LIGHT * CGSConstant.SPEED_OF_LIGHT * CGSConstant.SPEED_OF_LIGHT));
 		double area = w / (scaleFactor * 1.0E+5);
-		
+
 		if (this.beamFilling) {
 			int nfit = this.tran.length;
 			if (nfit > 1) {
@@ -725,7 +725,7 @@ public class RotationalDiagram implements Serializable
 					double freq = 1.0E+6 * DataSet.parseDouble(this.tran[i].substring(0, 13).trim());
 					if (freq > max || max == -1) max = freq;
 				}
-				
+
 				double factor = (max * max) / (frec * frec);
 				area /= factor;
 			}
@@ -733,8 +733,8 @@ public class RotationalDiagram implements Serializable
 
 		return area;
 	}
-	
-	
+
+
 	/**
 	 * Returns the maximum frequency in this rotational diagram. When
 	 * beam filling factor is applied, the area in each point is
@@ -750,10 +750,10 @@ public class RotationalDiagram implements Serializable
 		}
 		return max * 1.0E-9;
 	}
-	
+
 	/**
 	 * Obtains an upper limit to the abundance of certain molecule.
-	 * 
+	 *
 	 * @param beam_area Beam area in arcseconds^2.
 	 * @param distance Distance to object in pc.
 	 * @param distance_error Error in distance.
@@ -775,7 +775,7 @@ public class RotationalDiagram implements Serializable
 
 	/**
 	 * Obtains an upper limit to the abundance of certain molecule.
-	 * 
+	 *
 	 * @param beam_area Beam area in arcseconds^2.
 	 * @param distance Distance to object in pc.
 	 * @param distance_error Error in distance.
@@ -873,7 +873,7 @@ public class RotationalDiagram implements Serializable
 	{
 		return this.label;
 	}
-	
+
 	private ChartSeriesElement[] getSeries(boolean logScaleY)
 	throws JPARSECException {
 		int n = 1;
@@ -884,13 +884,13 @@ public class RotationalDiagram implements Serializable
 		double dy[] = this.getYErrors();
 		ArrayList<String> v = new ArrayList<String>();
 		v.add(labels[0]);
-		
+
 		Shape shapes[] = new Shape[] {ChartSeriesElement.SHAPE_CIRCLE, ChartSeriesElement.SHAPE_DIAMOND,
 				ChartSeriesElement.SHAPE_ELLIPSE, ChartSeriesElement.SHAPE_SQUARE, ChartSeriesElement.SHAPE_TRIANGLE_DOWN,
 				ChartSeriesElement.SHAPE_TRIANGLE_UP, ChartSeriesElement.SHAPE_TRIANGLE_LEFT, ChartSeriesElement.SHAPE_TRIANGLE_RIGHT};
 		Color colors[] = new Color[] {Color.BLACK, Color.BLUE, Color.RED, Color.LIGHT_GRAY, Color.GREEN,
 				Color.MAGENTA, Color.YELLOW, Color.ORANGE};
-		
+
 		boolean justOnePoint = false;
 		if (labels.length > 1) {
 			for (int i=1; i<labels.length; i++)
@@ -910,7 +910,7 @@ public class RotationalDiagram implements Serializable
 			justOnePoint = false;
 		}
 		int nseries = n;
-		
+
 		ChartSeriesElement series[] = new ChartSeriesElement[nseries+1];
 		for (int label=0; label<n; label ++)
 		{
@@ -946,7 +946,7 @@ public class RotationalDiagram implements Serializable
 			series[label] = new ChartSeriesElement(xval, yval, dxval, dyval, labelToSearch, true,
 					colors[nForShapeAndColor], shapes[nForShapeAndColor], ChartSeriesElement.REGRESSION.NONE);
 			series[label].showLines = false;
-			
+
 			if (justOnePoint) {
 				double xAux = xval[0] * 2.0;
 				yval[0] = (-1.0 / this.getTrot()) * (xAux - xval[0]) + yval[0];
@@ -981,7 +981,7 @@ public class RotationalDiagram implements Serializable
 
 		return series;
 	}
-	
+
 	/**
 	 * Obtains a chart with the rotational diagram.
 	 * @param title The default title of the chart.
@@ -999,7 +999,7 @@ public class RotationalDiagram implements Serializable
 		String labelY = "LOG(Nu/gu)";
 		if (logScaleY) labelY = "Nu/gu";
 		if (this.chartYLabel != null) labelY = chartYLabel;
-		
+
 		String labelX = Translate.translate(Translate.JPARSEC_TEMPERATURE)+" (K)";
 		if (this.chartXLabel != null) labelX = chartXLabel;
 
@@ -1008,7 +1008,7 @@ public class RotationalDiagram implements Serializable
 		//chart.showErrorBars = false;
 		chart.xTickLabels = ChartElement.TICK_LABELS.LOGARITHM_VALUES;
 		chart.yTickLabels = ChartElement.TICK_LABELS.LOGARITHM_VALUES;
-	
+
 		chart.xAxisInLogScale = logScaleX;
 		chart.yAxisInLogScale = logScaleY;
 

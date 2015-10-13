@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.ephem.moons;
 
 import jparsec.astronomy.CoordinateSystem;
@@ -39,7 +39,7 @@ import jparsec.util.JPARSECException;
 
 /**
  * Implementation of E2x3 and E5 jovian satellites theories by Jay Lieske.
- * 
+ *
  * @see MoonEphemElement
  * @author T. Alonso Albi - OAN (Spain)
  * @author Kerry Shetline
@@ -49,7 +49,7 @@ public class E
 {
 	// private constructor so that this class cannot be instantiated.
 	private E() {}
-	
+
 	/**
 	 * This is an implementation of the E2x3 Jovian satellite theory by Jay
 	 * Lieske, as presented by Jean Meeus, Astronomical Algorithms, 2nd Ed., pp.
@@ -60,7 +60,7 @@ public class E
 	 * the Moshier fit is used by default. You can select Series96 theory to
 	 * obtain the position of the satellites in the Ephemeris object.
 	 * This is recommended when possible (20th and 21st centuries).
-	 * 
+	 *
 	 * @param time Time object.
 	 * @param obs Observer object.
 	 * @param eph Ephemeris object.
@@ -85,7 +85,7 @@ public class E
 		new_eph.targetBody = TARGET.JUPITER;
 		EphemerisElement new_eph_sun =  eph.clone();
 		new_eph_sun.targetBody = TARGET.SUN;
-		
+
 		// Obtain position of planet
 		EphemElement ephem = new EphemElement();
 		ephem = MoonEphem.getBodyEphem(time, obs, new_eph, new double[] {0.0, 0.0, 0.0, 0.0, 0.0, 0.0}, time_JDE);
@@ -93,7 +93,7 @@ public class E
 		// Obtain position of sun
 		EphemElement ephem_sun = new EphemElement();
 		ephem_sun = MoonEphem.getBodyEphem(time, obs, new_eph_sun, new double[] {0.0, 0.0, 0.0, 0.0, 0.0, 0.0}, time_JDE);
-		
+
 		// Set light delay
 		double lightDelay = ephem.lightTime;
 		if (eph.ephemType == EphemerisElement.COORDINATES_TYPE.GEOMETRIC)
@@ -266,7 +266,7 @@ public class E
 				// From the observer
 				boolean inferior = (apparent_pos[2] <= 0.0);
 				Y1 = apparent_pos[1] * flattening;
-				
+
 				TARGET target = TARGET.values()[TARGET.Io.ordinal() + j];
 				double angularRadius = Math.atan(target.equatorialRadius / dist);
 				double satSize = angularRadius / ephem.angularRadius;
@@ -277,7 +277,7 @@ public class E
 				boolean withinDisc = (Math.sqrt(apparent_pos[0] * apparent_pos[0] + Y1 * Y1) <= (1.0 + satSize));
 				boolean transiting = withinDisc && inferior;
 				boolean withinDiscOcc = withinDisc;
-				if (ed == EVENT_DEFINITION.AUTOMATIC_FOR_DRAWING) withinDiscOcc = (Math.sqrt(apparent_pos[0] * apparent_pos[0] + Y1 * Y1) <= (1.0 + satSizeOccultation)); 
+				if (ed == EVENT_DEFINITION.AUTOMATIC_FOR_DRAWING) withinDiscOcc = (Math.sqrt(apparent_pos[0] * apparent_pos[0] + Y1 * Y1) <= (1.0 + satSizeOccultation));
 				boolean occulted = withinDiscOcc && !inferior;
 
 				// From Sun. Note we are neglecting the difference between light time from the planet
@@ -293,9 +293,9 @@ public class E
 				if (ed == EVENT_DEFINITION.AUTOMATIC_FOR_DRAWING) {
 					withinDisc_sunOcc = (Math.sqrt(apparent_pos[3] * apparent_pos[3] + Y1 * Y1) < (1.0 + satSizeOccultation));
 					eclipsed = withinDisc_sunOcc && !inferior_sun;
-					
+
 					double satRadius = satSize * TARGET.JUPITER.equatorialRadius;
-					double satPlanDistance = (Math.sqrt(apparent_pos[3] * apparent_pos[3] + apparent_pos[4] * apparent_pos[4] + apparent_pos[5] * apparent_pos[5]) - 1.0) * TARGET.JUPITER.equatorialRadius; 
+					double satPlanDistance = (Math.sqrt(apparent_pos[3] * apparent_pos[3] + apparent_pos[4] * apparent_pos[4] + apparent_pos[5] * apparent_pos[5]) - 1.0) * TARGET.JUPITER.equatorialRadius;
 					double sun_size = FastMath.atan2_accurate(TARGET.SUN.equatorialRadius, ephem.distanceFromSun * Constant.AU);
 					double shadow_cone_dist = satRadius / FastMath.tan(sun_size);
 					double shadow_size = (satSize * (1.0 - 0.5 * satPlanDistance / shadow_cone_dist));
@@ -336,7 +336,7 @@ public class E
 	 * the Moshier fit is used by default. You can select Series96 theory to
 	 * obtain the position of the satellites in the Ephemeris object.
 	 * This is recommended when possible (20th and 21st centuries).
-	 * 
+	 *
 	 * @param time Time object.
 	 * @param obs Observer object.
 	 * @param eph Ephemeris object.
@@ -541,7 +541,7 @@ public class E
 				// From the observer
 				boolean inferior = (apparent_pos[2] <= 0.0);
 				Y1 = apparent_pos[1] * flattening;
-				
+
 				TARGET target = TARGET.values()[TARGET.Io.ordinal() + j];
 				double angularRadius = Math.atan(target.equatorialRadius / dist);
 				double satSize = angularRadius / ephem.angularRadius;
@@ -552,11 +552,11 @@ public class E
 				boolean withinDisc = (Math.sqrt(apparent_pos[0] * apparent_pos[0] + Y1 * Y1) <= (1.0 + satSize));
 				boolean transiting = withinDisc && inferior;
 				boolean withinDiscOcc = withinDisc;
-				if (ed == EVENT_DEFINITION.AUTOMATIC_FOR_DRAWING) withinDiscOcc = (Math.sqrt(apparent_pos[0] * apparent_pos[0] + Y1 * Y1) <= (1.0 + satSizeOccultation)); 
+				if (ed == EVENT_DEFINITION.AUTOMATIC_FOR_DRAWING) withinDiscOcc = (Math.sqrt(apparent_pos[0] * apparent_pos[0] + Y1 * Y1) <= (1.0 + satSizeOccultation));
 				boolean occulted = withinDiscOcc && !inferior;
 
 				// From Sun. Note we are neglecting the difference between light
-				// time from the planet to the Earth, and to the Sun. This introduces 
+				// time from the planet to the Earth, and to the Sun. This introduces
 				// no significant errors in the calculations.
 				boolean inferior_sun = (apparent_pos[5] <= 0.0);
 				Y1 = apparent_pos[4] * flattening;
@@ -567,9 +567,9 @@ public class E
 				if (ed == EVENT_DEFINITION.AUTOMATIC_FOR_DRAWING) {
 					withinDisc_sunOcc = (Math.sqrt(apparent_pos[3] * apparent_pos[3] + Y1 * Y1) < (1.0 + satSizeOccultation));
 					eclipsed = withinDisc_sunOcc && !inferior_sun;
-					
+
 					double satRadius = satSize * TARGET.JUPITER.equatorialRadius;
-					double satPlanDistance = (Math.sqrt(apparent_pos[3] * apparent_pos[3] + apparent_pos[4] * apparent_pos[4] + apparent_pos[5] * apparent_pos[5]) - 1.0) * TARGET.JUPITER.equatorialRadius; 
+					double satPlanDistance = (Math.sqrt(apparent_pos[3] * apparent_pos[3] + apparent_pos[4] * apparent_pos[4] + apparent_pos[5] * apparent_pos[5]) - 1.0) * TARGET.JUPITER.equatorialRadius;
 					double sun_size = FastMath.atan2_accurate(TARGET.SUN.equatorialRadius, ephem.distanceFromSun * Constant.AU);
 					double shadow_cone_dist = satRadius / FastMath.tan(sun_size);
 					double shadow_size = (satSize * (1.0 - 0.5 * satPlanDistance / shadow_cone_dist));
@@ -581,7 +581,7 @@ public class E
 				}
 
 //				boolean eclipsed = false, occulted = false, transiting = false, shadow_transiting = false, inferior = false;
-				
+
 				// Create ephemeris object
 				moon[j] = new MoonEphemElement(nom, ra, dec, dist, RP, azi, ele, (float) ill, (float) elo, eclipsed, occulted,
 						transiting, shadow_transiting, inferior, apparent_pos[0], apparent_pos[1], apparent_pos[2],
@@ -590,7 +590,7 @@ public class E
 				// Obtain physical ephemerides
 				new_eph.targetBody = TARGET.values()[TARGET.Io.ordinal() + j];
 				moon[j] = MoonPhysicalParameters.physicalParameters(time_JDE, ephem_sun, moon[j], obs, new_eph);
-//				moon[j] = MoonEphem.satellitePhenomena(moon[j], ephem, TARGET.JUPITER); 
+//				moon[j] = MoonEphem.satellitePhenomena(moon[j], ephem, TARGET.JUPITER);
 
 				// Obtain relative phenomena
 				if (j == 0)

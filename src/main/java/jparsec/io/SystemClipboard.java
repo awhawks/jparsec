@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.io;
 
 import java.awt.*;
@@ -29,7 +29,7 @@ import jparsec.util.*;
 
 /**
  * A class to read from and write to the system clipboard using static methods.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -37,10 +37,10 @@ public class SystemClipboard
 {
 	// private constructor so that this class cannot be instantiated.
 	private SystemClipboard() {}
-	
+
 	/**
 	 * Copies an image (JPG, GIF) to the system clipboard.
-	 * 
+	 *
 	 * @param image Image to copy to clipboard.
 	 */
 	public static void setClipboard(Image image)
@@ -51,7 +51,7 @@ public class SystemClipboard
 
 	/**
 	 * Copies a string to the system clipboard.
-	 * 
+	 *
 	 * @param str String to copy to clipboard.
 	 */
 	public static void setClipboard(String str)
@@ -71,7 +71,7 @@ public class SystemClipboard
 
 	/**
 	 * Gets the current text from the system clipboard.
-	 * 
+	 *
 	 * @return The contents of the system clipboard.
 	 */
 	public static String getClipboard()
@@ -79,29 +79,29 @@ public class SystemClipboard
 		String text = Toolkit.getDefaultToolkit().getSystemClipboard().toString();
 		return text;
 	}
-	
+
 	/**
 	 * Gets an image from the system clipboard.
 	 * @return Image object.
 	 * @throws JPARSECException If an error occur.
 	 */
-    public static Image getImageFromClipboard() 
-    throws JPARSECException {	  
+    public static Image getImageFromClipboard()
+    throws JPARSECException {
     	  // get the system clipboard
     	  Clipboard systemClipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-    	  
-    	  // get the contents on the clipboard in a 
+
+    	  // get the contents on the clipboard in a
     	  // Transferable object
     	  Transferable clipboardContents = systemClipboard.getContents(null);
-    	  
+
     	  // check if contents are empty, if so, return null
     	  if (clipboardContents == null)
     	    return null;
     	  else
-    	    // make sure content on clipboard is 
-    	    // falls under a format supported by the 
+    	    // make sure content on clipboard is
+    	    // falls under a format supported by the
     	    // imageFlavor Flavor
-    	    if (clipboardContents.isDataFlavorSupported(DataFlavor.imageFlavor)) 
+    	    if (clipboardContents.isDataFlavorSupported(DataFlavor.imageFlavor))
     	       {
     	         // convert the Transferable object
     	         // to an Image object
@@ -118,7 +118,7 @@ public class SystemClipboard
 }
 
 //Inner class is used to hold an image while on the clipboard.
-class ImageSelection implements Transferable 
+class ImageSelection implements Transferable
 {
   // the Image object which will be housed by the ImageSelection
   private Image image;
@@ -128,22 +128,22 @@ class ImageSelection implements Transferable
   }
 
   // Returns the supported flavors of our implementation
-  public DataFlavor[] getTransferDataFlavors() 
+  public DataFlavor[] getTransferDataFlavors()
   {
     return new DataFlavor[] {DataFlavor.imageFlavor};
   }
-  
+
   // Returns true if flavor is supported
-  public boolean isDataFlavorSupported(DataFlavor flavor) 
+  public boolean isDataFlavorSupported(DataFlavor flavor)
   {
     return DataFlavor.imageFlavor.equals(flavor);
   }
 
   // Returns Image object housed by Transferable object
   public Object getTransferData(DataFlavor flavor)
-    throws UnsupportedFlavorException,IOException 
+    throws UnsupportedFlavorException,IOException
   {
-    if (!DataFlavor.imageFlavor.equals(flavor)) 
+    if (!DataFlavor.imageFlavor.equals(flavor))
     {
       throw new UnsupportedFlavorException(flavor);
     }

@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.io;
 
 import java.io.BufferedReader;
@@ -37,12 +37,11 @@ import jparsec.util.Logger.LEVEL;
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
-public class ApplicationLauncher 
+public class ApplicationLauncher
 {
 	// private constructor so that this class cannot be instantiated.
 	private ApplicationLauncher() {}
-
-  private static String linuxDesktop ;
+  private static String linuxDesktop = null;
 
   /**
    * Returns the value of an environment (System-dependent) variable.
@@ -55,7 +54,7 @@ public class ApplicationLauncher
       if(value==null) return null;
       else return value.toString().trim();
   }
- 
+
   /**
    * Obtains the desktop environment in execution in Linux: KDE or GNOME.
    * @return KDE (kde) or GNOME (gnome) as a lowercase string.
@@ -69,14 +68,14 @@ public class ApplicationLauncher
           linuxDesktop="gnome";
       }
       else linuxDesktop="kde";
-   
+
       return linuxDesktop;
   }
 
   /**
    * The different constants for the operating systems.
    */
-  public static enum OS {
+  public enum OS {
 	  /** ID constant for an unknown operating system. */
 	  UNKNOWN,
 	  /** ID constant for a Windows operating system. */
@@ -88,7 +87,7 @@ public class ApplicationLauncher
 	  /** ID constant for Android plantform. */
 	  ANDROID
   }
-  
+
   /**
    * Returns the ID constant of the current operating system.
    * @return The detected operating system.
@@ -97,11 +96,11 @@ public class ApplicationLauncher
   {
 	  String os = System.getProperty("os.name").toUpperCase();
 	  OS ops = ApplicationLauncher.OS.UNKNOWN;
-	  
-	  if (os.indexOf("WINDOWS") >= 0) ops = ApplicationLauncher.OS.WINDOWS; 
-	  if (os.indexOf("MAC") >= 0) ops = ApplicationLauncher.OS.MAC; 
-	  if (os.indexOf("LINUX") >= 0) ops = ApplicationLauncher.OS.LINUX; 
-	  
+
+	  if (os.indexOf("WINDOWS") >= 0) ops = ApplicationLauncher.OS.WINDOWS;
+	  if (os.indexOf("MAC") >= 0) ops = ApplicationLauncher.OS.MAC;
+	  if (os.indexOf("LINUX") >= 0) ops = ApplicationLauncher.OS.LINUX;
+
 	  if (ops == OS.UNKNOWN && System.getProperty("java.vm.name").equalsIgnoreCase("Dalvik"))
 		  ops = ApplicationLauncher.OS.ANDROID;
 
@@ -115,7 +114,7 @@ public class ApplicationLauncher
   public static String getProcessID() {
 	  return Thread.currentThread().getName();
   }
-  
+
   /**
    * Returns the current operating system version.
    * @return The detected operating system version.
@@ -178,7 +177,7 @@ public class ApplicationLauncher
       catch(IOException ioex){
     	  Logger.log(LEVEL.ERROR, "Could not launch url "+url+". Message was: "+ioex.getLocalizedMessage());
       }
-   
+
       return null;
   }
 
@@ -201,7 +200,7 @@ public class ApplicationLauncher
   {
 	  StringBuffer output = new StringBuffer("");
 	  try {
-		  	BufferedReader in = new BufferedReader(new InputStreamReader(pr.getInputStream()));
+		  	BufferedReader in = new BufferedReader(new InputStreamReader(pr.getInputStream(), ReadFile.ENCODING_UTF_8));
 			String line = null;
 			while ((line = in.readLine()) != null) {
 				output.append(line + FileIO.getLineSeparator());
@@ -211,7 +210,7 @@ public class ApplicationLauncher
 	  {
 		  output = null;
 	  }
-	  
+
 	  return output.toString();
   }
 
@@ -227,7 +226,7 @@ public class ApplicationLauncher
   {
 	  StringBuffer output = new StringBuffer("");
 	  try {
-		  	BufferedReader in = new BufferedReader(new InputStreamReader(pr.getErrorStream()));
+		  	BufferedReader in = new BufferedReader(new InputStreamReader(pr.getErrorStream(), ReadFile.ENCODING_UTF_8));
 			String line = null;
 			while ((line = in.readLine()) != null) {
 				output.append(line + FileIO.getLineSeparator());
@@ -237,7 +236,7 @@ public class ApplicationLauncher
 	  {
 		  output = null;
 	  }
-	  
+
 	  return output.toString();
   }
 
@@ -265,7 +264,7 @@ public class ApplicationLauncher
 	  } while (a >= 0);
 	  return in;
   }
-  
+
   /**
    * Executes a command.
    * @param command Command to execute.
@@ -274,16 +273,16 @@ public class ApplicationLauncher
    */
 	public static Process executeCommand(String command)
 	throws JPARSECException {
-		try { 
-		      	Runtime runtime = Runtime.getRuntime(); 
+		try {
+		      	Runtime runtime = Runtime.getRuntime();
 		      	Process pr = runtime.exec(parse(command));
 		      	return pr;
 		}
-		catch (Throwable t) { 
-		   	throw new JPARSECException("error while executing system command.", t);		      
-		} 
+		catch (Throwable t) {
+		   	throw new JPARSECException("error while executing system command.", t);
+		}
 	}
-	
+
   /**
    * Executes a command.
    * @param command Command to execute.
@@ -294,14 +293,14 @@ public class ApplicationLauncher
    */
 	public static Process executeCommand(String command, String env[], File dir)
 	throws JPARSECException {
-		try { 
-		      	Runtime runtime = Runtime.getRuntime(); 
+		try {
+		      	Runtime runtime = Runtime.getRuntime();
 		      	Process pr = runtime.exec(parse(command), env, dir);
 		      	return pr;
 		}
-		catch (Throwable t) { 
-		   	throw new JPARSECException("error while executing system command.", t);		      
-		} 
+		catch (Throwable t) {
+		   	throw new JPARSECException("error while executing system command.", t);
+		}
 	}
 
 	  /**
@@ -314,8 +313,8 @@ public class ApplicationLauncher
 	   */
 		public static Process executeCommand(String[] command, String env[], File dir)
 		throws JPARSECException {
-			try { 
-			      	Runtime runtime = Runtime.getRuntime(); 
+			try {
+			      	Runtime runtime = Runtime.getRuntime();
 			      	String c[] = command.clone();
 			      	for (int i=0; i<c.length; i++) {
 			      		c[i] = parse(c[i]);
@@ -323,11 +322,11 @@ public class ApplicationLauncher
 			      	Process pr = runtime.exec(c, env, dir);
 			      	return pr;
 			}
-			catch (Throwable t) { 
-			   	throw new JPARSECException("error while executing system command.", t);		      
-			} 
+			catch (Throwable t) {
+			   	throw new JPARSECException("error while executing system command.", t);
+			}
 		}
-		
+
 	  /**
 	   * Executes a set of commands by creating a script.
 	   * @param command Command to execute.
@@ -349,11 +348,11 @@ public class ApplicationLauncher
 				String out = getConsoleOutputFromProcess(p);
 				FileIO.deleteFile(path);
 				return out;
-			} catch (Throwable t) { 
-			   	throw new JPARSECException("error while executing system command.", t);		      
-			} 
+			} catch (Throwable t) {
+			   	throw new JPARSECException("error while executing system command.", t);
+			}
 		}
-		
+
   /**
    * Executes a command.
    * @param command Command to execute.
@@ -362,15 +361,45 @@ public class ApplicationLauncher
    */
 	public static Process executeCommand(String[] command)
 	throws JPARSECException {
-		try { 
-			Runtime runtime = Runtime.getRuntime(); 
-			Process pr = runtime.exec(command);			  
+		try {
+			Runtime runtime = Runtime.getRuntime();
+			Process pr = runtime.exec(command);
 			return pr;
-		} catch (Throwable t) { 
-			throw new JPARSECException("error while executing system command.", t);		      
-		} 
+		} catch (Throwable t) {
+			throw new JPARSECException("error while executing system command.", t);
+		}
 	}
-	
+
+	/**
+	 * Returns the shell command/s to access the shell in the current system.
+	 * @return Shell command/s.
+	 * @throws JPARSECException If the shell cannot be found.
+	 */
+	public static String[] getShell() throws JPARSECException {
+		String osName = System.getProperty("os.name");
+		String[] cmd = new String[2];
+		if (osName.equals("Windows 98") || osName.equals("Windows 95")) {
+			cmd[0] = "command.com";
+			cmd[1] = "/C";
+		} else if (osName.startsWith("Windows")) {
+			cmd[0] = "cmd.exe";
+			cmd[1] = "/C";
+		} else if (osName.equals("Linux")) {
+			if (FileIO.exists("/bin/bash")) return new String[] {"/bin/bash"};
+			if (FileIO.exists("/bin/sh")) return new String[] {"/bin/sh"};
+			if (FileIO.exists("/usr/bin/konsole")) {
+				cmd[0] = "/usr/bin/konsole";
+				cmd[1] = "-e";
+			} else {
+				throw new JPARSECException("Could not find the shell for this system");
+			}
+		} else { // for MAC
+			cmd[0] = "open";
+			cmd[1] = "-a";
+		}
+		return cmd;
+	}
+
   /**
    * Executes a system command.
    * @param command Command to execute.
@@ -379,34 +408,12 @@ public class ApplicationLauncher
    */
 	public static Process executeSystemCommand(String command)
 	throws JPARSECException {
-		try { 
-			String osName = System.getProperty("os.name"); 
-			String[] cmd = new String[3]; 
-			String cmdline = command; 
-			if (osName.equals("Windows 98") || osName.equals("Windows 95")) { 
-				cmd[0] = "command.com"; 
-				cmd[1] = "/C"; 
-				cmd[2] = cmdline; 
-			} else if (osName.startsWith("Windows")) { 
-				cmd[0] = "cmd.exe"; 
-				cmd[1] = "/C"; 
-				cmd[2] = cmdline; 
-			} else if (osName.equals("Linux")) { 
-				cmd[0] = "/usr/bin/konsole"; 
-				cmd[1] = "-e"; 
-				cmd[2] = cmdline; 
-			} else { // for MAC
-				cmd[0] = "open"; 
-				cmd[1] = "-a"; 
-				cmd[2] = cmdline; 		    	   
-			}
-		 
-			Runtime runtime = Runtime.getRuntime(); 
+		try {
+			Runtime runtime = Runtime.getRuntime();
 			Process pr = runtime.exec(parse(command));
-		      
 			return pr;
-		} catch (Throwable t) { 
-			throw new JPARSECException("error while executing system command.", t);		      
-		} 
+		} catch (Throwable t) {
+			throw new JPARSECException("error while executing system command.", t);
+		}
 	}
 }

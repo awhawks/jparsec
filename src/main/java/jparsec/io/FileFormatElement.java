@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.io;
 
 import java.io.Serializable;
@@ -33,14 +33,14 @@ import jparsec.graph.chartRendering.SkyRenderElement;
  * NOTE: The availability of the SkyMap format is only for our practical
  * purposes, since it is a popular commercial program used by astronomers. This
  * does not mean any particular interest at all.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  * @see ReadFile
  */
 public class FileFormatElement implements Serializable
 {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Define a {@linkplain FileFormatElement} object by giving the initial index of the field, the
@@ -48,7 +48,7 @@ public class FileFormatElement implements Serializable
 	 * common way as they are given in the description of the format in external
 	 * sources, starting at the position 1 for the first character in the
 	 * record. In Java, the starting position is usually 0.
-	 * 
+	 *
 	 * @param a Start of field in the file record.
 	 * @param b End position of the field.
 	 * @param field Name or description.
@@ -83,9 +83,8 @@ public class FileFormatElement implements Serializable
 	{
 		return new FileFormatElement(this.startingPosition, this.endingPosition, this.fieldName);
 	}
-
 	/**
-	 * Returns true if the input object is equal to this instance.
+	 * Returns if the input object is equals to this instance.
 	 */
 	@Override
 	public boolean equals(Object o) {
@@ -107,16 +106,15 @@ public class FileFormatElement implements Serializable
 		result = 31 * result + (fieldName != null ? fieldName.hashCode() : 0);
 		return result;
 	}
-
 	/**
 	 * A {@linkplain FileFormatElement} object suitable for reading asteroids in the MPC format.
 	 * During the reading process angles are adequate transfomed to radians.
 	 * <P>
-	 * 
+	 *
 	 * <pre>
 	 * <B>
 	 * Columns    Field Name                  Meaning</B>
-	 * 
+	 *
 	 * 1 -    7   PROVISIONAL_DESIGNATION     Number or provisional designation in packed form
 	 * 9 -   13   ABSOLUTE_MAGNITUDE          Absolute magnitude, H
 	 * 15 -  19   MAGNITUDE_SLOPE             Slope parameter, G
@@ -135,35 +133,35 @@ public class FileFormatElement implements Serializable
 	 *                                        also contain `D' if a double (or multiple)
 	 *                                        designation is involved or `F' if an e-assumed
 	 *                                        double (or multiple) designation is involved.
-	 *                   
+	 *
 	 * 108 - 116  REFERENCE                   Reference
 	 * 118 - 122  NUMBER_OF_OBSERVATIONS      Number of observations
 	 * 124 - 126  NUMBER_OF_OPOSITIONS        Number of oppositions
-	 * 
+	 *
 	 * For multiple-opposition orbits:
 	 * 128 - 131  FIRST_OBS_OR_ARC_LENGTH     Year of first observation
 	 * 132                                    '-'
 	 * 133 - 136  LAST_OBS_OR_DAYS            Year of last observation
-	 * 
+	 *
 	 * For single-opposition orbits:
 	 * 128 - 131  FIRST_OBS_OR_ARC_LENGTH     Arc length (days)
 	 * 133 - 136  LAST_OBS_OR_DAYS            'days'
-	 * 
+	 *
 	 * 138 - 141  RMS                         r.m.s residual (&quot;)
 	 * 143 - 145  COARSE_PERTURBERS           Coarse indicator of perturbers
 	 *                                        (blank if unperturbed one-opposition object)
 	 * 147 - 149  PRECISE_PERTURBERS          Precise indicator of perturbers
 	 *                                        (blank if unperturbed one-opposition object)
 	 * 151 - 160  COMPUTER NAME               Computer name
-	 * 
+	 *
 	 * There may sometimes be additional information beyond column 160
 	 * as follows:
-	 * 
+	 *
 	 * 162 - 165                              4-hexdigit flags
 	 *                                        The bottom 6 bits are used to encode a
 	 *                                        value representing the orbit type (other
 	 *                                        values are undefined):
-	 *                                        
+	 *
 	 *                                        Value
 	 *                                        2  Aten
 	 *                                        3  Apollo
@@ -178,10 +176,10 @@ public class FileFormatElement implements Serializable
 	 *                                       15  Other resonant TNO
 	 *                                       16  Cubewano
 	 *                                       17  Scattered disk
-	 *             
+	 *
 	 *                                        Additional information is conveyed by
 	 *                                        adding in the following bit values:
-	 *               
+	 *
 	 *                                       64  Unused
 	 *                                      128  Unused
 	 *                                      256  Unused
@@ -193,10 +191,10 @@ public class FileFormatElement implements Serializable
 	 *                                           earlier opposition
 	 *                                    16384  Critical list numbered object
 	 *                                    32768  Object is PHA
-	 *               
-	 * 
+	 *
+	 *
 	 * 167 - 194  NAME                        Readable designation
-	 * 
+	 *
 	 * 195 - 202                              Date of last observation included in
 	 *                                        orbit solution (YYYYMMDD format)
 	 * </pre>
@@ -217,11 +215,11 @@ public class FileFormatElement implements Serializable
 	/**
 	 * A {@linkplain FileFormatElement} object suitable for reading comets in the MPC format.
 	 * <p>
-	 * 
+	 *
 	 * <pre>
-	 * <B>   
+	 * <B>
 	 * Columns    Field Name                  Meaning</B>
-	 * 
+	 *
 	 * 1 -   4    COMET_NUMBER                Periodic comet number
 	 * 5          ORBIT_TYPE                  Orbit type (generally `C', `P' or `D')
 	 * 6 -  12    PROVISIONAL_DESIGNATION     Provisional designation (in packed form)
@@ -256,35 +254,35 @@ public class FileFormatElement implements Serializable
 	 * A {@linkplain FileFormatElement} object suitable for reading natural satellites in the MPC
 	 * format.
 	 * <p>
-	 * 
-	 * <PRE><B>   
+	 *
+	 * <PRE><B>
 	 * Columns     Field Name                 Meaning</B>
-	 * 
+	 *
 	 *   1 -  12   PROVISIONAL_DESIGNATION    Number or provisional designation in packed form
-	 * 
+	 *
 	 *  14 -  18   EPOCH                      Epoch in packed form
-	 * 
+	 *
 	 *  20 -  32   REFERENCE_TIME             Time of perihelion (JDT)
-	 * 
+	 *
 	 *  34 -  42   ARGUMENT_OF_PERIHELION     Argument of perihelion, J2000.0 (degrees)
 	 *  44 -  52   ASCENDING_NODE_LONGITUDE   Longitude of the ascending node, J2000.0 (degrees)
 	 *  54 -  62   INCLINATION                Inclination to the ecliptic, J2000.0 (degrees)
-	 * 
+	 *
 	 *  64 -  72   ECCENTRICITY               Orbital eccentricity
 	 *  74 -  82   PERIHELION_DISTANCE        Periapsis distance (AU)
-	 * 
+	 *
 	 *  84 -  85   CENTRAL_BODY               Central body (05 = Jupiter, 06 = Saturn, 07 = Uranus, 08 = Neptune)
 	 *  87 -  91   ABSOLUTE_MAGNITUDE         Absolute magnitude, H
-	 * 
+	 *
 	 *  93 -  98   OBSERVED_ARC               Observed arc (days)
 	 * 100 - 104   NUMBER_OF_OBSERVATION      Number of observations
-	 * 
+	 *
 	 * 106 - 108   ORBIT_COMPUTER             Orbit computer
 	 * 110 - 118   REFERENCE                  Publication reference
-	 * 
+	 *
 	 * 120 - 124   FIRST_OBS                  Date (UT) of first included observation in packed form
 	 * 126 - 130   LAST_OBS                   Date (UT) of last included observation in packed form
-	 *   
+	 *
 	 * 132 - 136   RMS                        r.m.s residual (")
 	 * 138 - 140   COARSE_PERTURBERS          Coarse indicator of perturbers
 	 * 142 - 144   PRECISE_PERTURBERS         Precise indicator of perturbers
@@ -381,11 +379,11 @@ public class FileFormatElement implements Serializable
 			new FileFormatElement(99, 108, "NAME"),
 			new FileFormatElement(109, 118, "VARIABLE_NAME"),
 			new FileFormatElement(119, 120, "RA_HOUR_J2000"), // ICRS
-			new FileFormatElement(121, 122, "RA_MIN_J2000"), 
+			new FileFormatElement(121, 122, "RA_MIN_J2000"),
 			new FileFormatElement(123, 129, "RA_SEC_J2000"),
-			new FileFormatElement(130, 132, "DEC_DEG_J2000"), 
+			new FileFormatElement(130, 132, "DEC_DEG_J2000"),
 			new FileFormatElement(133, 134, "DEC_MIN_J2000"),
-			new FileFormatElement(135, 140, "DEC_SEG_J2000"), 
+			new FileFormatElement(135, 140, "DEC_SEG_J2000"),
 			new FileFormatElement(150, 157, "RA_PM"), // s/y
 			new FileFormatElement(158, 165, "DEC_PM"), // "/y
 			new FileFormatElement(168, 173, "RADIAL_VELOCITY"), // km/s
@@ -401,9 +399,9 @@ public class FileFormatElement implements Serializable
 			new FileFormatElement(354, 360, "ORBIT_PERIOD"), // yr
 			new FileFormatElement(361, 363, "POSITION_ANGLE"), // deg
 			new FileFormatElement(364, 370, "OBSERVATION_YEAR"), // yr
-			new FileFormatElement(412, 416, "MAX_MAG"), 
-			new FileFormatElement(417, 421, "MIN_MAG"), 
-			new FileFormatElement(427, 427, "DMAG_BAND"), 
+			new FileFormatElement(412, 416, "MAX_MAG"),
+			new FileFormatElement(417, 421, "MIN_MAG"),
+			new FileFormatElement(427, 427, "DMAG_BAND"),
 			new FileFormatElement(428, 435, "VAR_PERIOD"), // d
 			new FileFormatElement(436, 443, "VAR_EPOCH"), // JD - 2400000
 			new FileFormatElement(444, 446, "VAR_TYPE"),
@@ -452,7 +450,7 @@ public class FileFormatElement implements Serializable
 	 * An adequate {@linkplain FileFormatElement} object to read line 1 of TLE (two line element)
 	 * data.
 	 * <P>
-	 * 
+	 *
      * <PRE>
      * Line 1
      * Column Name                    Description
@@ -485,7 +483,7 @@ public class FileFormatElement implements Serializable
 	 * An adequate {@linkplain FileFormatElement} object to read line 2 of TLE (two line element)
 	 * data.
 	 * <P>
-	 * 
+	 *
  	 * <PRE>
      * Line 2
      * Column Name                    Description
@@ -526,8 +524,8 @@ public class FileFormatElement implements Serializable
 	 * external file objects.txt.
 	 */
 	public static final FileFormatElement DEEP_SKY_OBJECTS[] =
-	{ new FileFormatElement(1, 12, "NAME"), new FileFormatElement(14, 27, "TYPE"), new FileFormatElement(29, 39, "RA"), 
-		new FileFormatElement(41, 52, "DEC"), new FileFormatElement(54, 58, "MAG"), new FileFormatElement(60, 69, "SIZE_MAX"), 
+	{ new FileFormatElement(1, 12, "NAME"), new FileFormatElement(14, 27, "TYPE"), new FileFormatElement(29, 39, "RA"),
+		new FileFormatElement(41, 52, "DEC"), new FileFormatElement(54, 58, "MAG"), new FileFormatElement(60, 69, "SIZE_MAX"),
 		new FileFormatElement(71, 80, "SIZE_MIN"), new FileFormatElement(82, 84, "PA"), new FileFormatElement(86, 300, "COMMENTS") };
 
 	/**
@@ -571,7 +569,7 @@ public class FileFormatElement implements Serializable
 			new FileFormatElement(460, 558, SkyRenderElement.EXTERNAL_CATALOG_FIELD_NAME1), // Planet name
 			new FileFormatElement(562, 567, SkyRenderElement.EXTERNAL_CATALOG_FIELD_MAG) // Star magnitude
 	};
-	
+
 	/**
 	 * The format of the orbital elements or double stars by Hartkopf 2010.
 	 */
@@ -586,7 +584,7 @@ public class FileFormatElement implements Serializable
 			new FileFormatElement(234, 234, "GRADE"), new FileFormatElement(236, 236, "NOTES"), new FileFormatElement(238, 245, "REF"),
 			new FileFormatElement(247, 264, "PNG")
 	};
-	
+
 	/**
 	 * The format of the orbital elements or double stars by Worley 1983.
 	 */
@@ -606,7 +604,7 @@ public class FileFormatElement implements Serializable
 	 * <P>
 	 * The meaning of the columns are as follows:
 	 * <P>
-	 * 
+	 *
 	 * <pre>
 	 * - Name of probe. A &quot;-&quot; and a number means the phase of the probe, which changes
 	 * when the motor was active and the trajectory changed.
@@ -654,7 +652,7 @@ public class FileFormatElement implements Serializable
 			new FileFormatElement(36, 39, "UMBRAL_AREA"), // UNTIL 1981
 			new FileFormatElement(41, 44, "SPOT_AREA"), new FileFormatElement(46, 50, "DISTANCE_TO_CENTRE"),
 			new FileFormatElement(52, 56, "POSITION_ANGLE"), new FileFormatElement(58, 62, "LONGITUDE"),
-			new FileFormatElement(64, 68, "LATITUDE"), new FileFormatElement(70, 74, "CENTRAL_MERIDIAN_DISTANCE"), 
-	};	
+			new FileFormatElement(64, 68, "LATITUDE"), new FileFormatElement(70, 74, "CENTRAL_MERIDIAN_DISTANCE"),
+	};
 }
 

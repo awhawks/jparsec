@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.time.calendar;
 
 import jparsec.util.JPARSECException;
@@ -27,7 +27,7 @@ import jparsec.util.Translate.LANGUAGE;
 
 /**
  * A class to transform the date between different calendars based on year, month, and day.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -35,17 +35,17 @@ public class CalendarGenericConversion
 {
 	// private constructor so that this class cannot be instantiated.
 	private CalendarGenericConversion() {}
-	
+
 	// List ordered by calendars in use or old calendars
-	
+
 	/**
 	 * The set of available calendars that have in common that
 	 * a given date is represented with a year, a month, and a day.
 	 * First 6 are old calendars, the next 9 ones are still used today.
 	 */
-	public static enum CALENDAR {
+	public enum CALENDAR {
 		// Old calendars
-		
+
 		/** ID constant for Julian calendar. */
 		JULIAN,
 		/** ID constant for Hindu (old solar) calendar. */
@@ -60,7 +60,7 @@ public class CalendarGenericConversion
 		ARITH_PERSIAN,
 
 		// In use
-		
+
 		/** ID constant for Gregorian calendar. */
 		GREGORIAN,
 		/** ID constant for Islamic calendar. */
@@ -79,23 +79,23 @@ public class CalendarGenericConversion
 		ETHIOPIC,
 		/** ID constant for Armenian calendar. */
 		ARMENIAN
-	}
-	
+	};
+
 	/**
 	 * Calendar names array.
 	 */
 	public static final String CALENDAR_NAMES[] =
-	{ 
+	{
 		"Julian", "Hindu solar (old)", "Egyptian", "French", "French (modified)", "Persian (old arithmetic)",
 		"Gregorian", "Islamic (arithmetic)", "Islamic (observational)", "Hebrew", "Hindu solar",
-		"Persian (astronomical)", "Coptic", "Ethiopic", "Armenian" 
+		"Persian (astronomical)", "Coptic", "Ethiopic", "Armenian"
 	};
 
 	/**
 	 * Converts a given date from one calendar to another. Any of the 15
 	 * different calendars with ID constants defined in this class are available
 	 * for input or output.
-	 * 
+	 *
 	 * @param input_calendar Input calendar.
 	 * @param output_calendar Output calendar.
 	 * @param year Year in input calendar. Year should be set in the astronomical convention, year 0 exists.
@@ -394,7 +394,7 @@ public class CalendarGenericConversion
 				break;
 			default:
 				throw new JPARSECException("calendar is invalid.");
-			}	
+			}
 			out = Translate.translate(out);
 			if (out.toLowerCase().equals("may") && Translate.getDefaultLanguage() == LANGUAGE.SPANISH) out += "o";
 			return out;
@@ -464,7 +464,7 @@ public class CalendarGenericConversion
 				break;
 			default:
 				throw new JPARSECException("calendar is invalid.");
-			}	
+			}
 			return out;
 		} catch (JPARSECException e) {
 			throw e;
@@ -472,7 +472,7 @@ public class CalendarGenericConversion
 			throw new JPARSECException("month is invalid.");
 		}
 	}
-	
+
 	/**
 	 * Returns the name of the day of the week for a given calendar.
 	 * @param jd The Julian day.
@@ -483,7 +483,6 @@ public class CalendarGenericConversion
 	public static String getDayOfWeekName(int jd, CALENDAR calendar) throws JPARSECException {
 		String out = "";
 		long day = jd - Gregorian.EPOCH;
-
 		try {
 			switch (calendar)
 			{
@@ -500,8 +499,7 @@ public class CalendarGenericConversion
 				out = Calendar.nameFromDayOfWeek(Calendar.dayOfWeekFromFixed(day), Ethiopic.DAY_OF_WEEK_NAMES);
 				break;
 			case FRENCH:
-				French f = new French(jd);
-				out = Calendar.nameFromNumber(f.getDayOfWeek(), French.DAY_OF_WEEK_NAMES);
+				out = Calendar.nameFromNumber(new French(jd).getDayOfWeek(), French.DAY_OF_WEEK_NAMES);
 				break;
 			case GREGORIAN:
 				out = Calendar.nameFromDayOfWeek(Calendar.dayOfWeekFromFixed(day), Gregorian.DAY_OF_WEEK_NAMES);
@@ -519,8 +517,7 @@ public class CalendarGenericConversion
 				out = Calendar.nameFromDayOfWeek(Calendar.dayOfWeekFromFixed(day), Gregorian.DAY_OF_WEEK_NAMES);
 				break;
 			case MODIFIED_FRENCH:
-				FrenchModified fm = new FrenchModified(jd);
-				out = Calendar.nameFromNumber(fm.getDayOfWeek(), French.DAY_OF_WEEK_NAMES);
+				out = Calendar.nameFromNumber(new French(jd).getDayOfWeek(), French.DAY_OF_WEEK_NAMES);
 				break;
 			case OBSERVATIONAL_ISLAMIC:
 				out = Calendar.nameFromDayOfWeek(Calendar.dayOfWeekFromFixed(day), Islamic.DAY_OF_WEEK_NAMES);
@@ -533,7 +530,7 @@ public class CalendarGenericConversion
 				break;
 			default:
 				throw new JPARSECException("calendar is invalid.");
-			}	
+			}
 			out = Translate.translate(out);
 			return out;
 		} catch (JPARSECException e) {
@@ -600,7 +597,7 @@ public class CalendarGenericConversion
 				break;
 			default:
 				throw new JPARSECException("calendar is invalid.");
-			}	
+			}
 			return out;
 		} catch (JPARSECException e) {
 			throw e;

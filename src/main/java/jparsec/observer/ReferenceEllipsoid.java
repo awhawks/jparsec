@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.observer;
 
 import jparsec.ephem.Target.TARGET;
@@ -27,7 +27,7 @@ import jparsec.math.FastMath;
 /**
  * A class to apply geodetic/geocentric coordinates transformations using
  * different reference ellipsoids.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain), M. Huss
  * @version 1.0
  */
@@ -35,11 +35,11 @@ public class ReferenceEllipsoid
 {
 	/** Empty constructor so that this class cannot be instantiated. */
 	private ReferenceEllipsoid() { }
-	
+
 	/**
 	 * The set of ellipsoids.
 	 */
-	public static enum ELLIPSOID {
+	public enum ELLIPSOID {
 		/** ID constant for WSG72 reference ellipsoid. */
 		WGS72 (6378.135, 298.26),
 		/** ID constant for WSG84 reference ellipsoid. */
@@ -82,17 +82,17 @@ public class ReferenceEllipsoid
 		 * is that of the Earth target. */
 		CUSTOM (TARGET.EARTH)
 		;
-		
+
 		/**
 		 * Earth radius in km;
 		 */
 		private double earthRadius;
 		/**
-		 * Inverse of the flattening factor = 
+		 * Inverse of the flattening factor =
 		 * (equatorial radius / (equatorial radius - polar radius)).
 		 */
 		private double inverseFlatteningFactor;
-		
+
 		private ELLIPSOID (double a, double f) {
 			this.earthRadius = a;
 			this.inverseFlatteningFactor = f;
@@ -137,7 +137,7 @@ public class ReferenceEllipsoid
 		public double getEquatorialRadius() {
 			return this.earthRadius;
 		}
-		
+
 		/**
 		 * Returns the polar radius of the Earth.
 		 * @return Polar radius.
@@ -163,5 +163,5 @@ public class ReferenceEllipsoid
 		public double getInverseOfFlatteningFactor() {
 			return this.inverseFlatteningFactor;
 		}
-	}
+	};
 }

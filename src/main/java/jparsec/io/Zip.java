@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.io;
 
 import java.io.*;
@@ -33,7 +33,7 @@ import jparsec.util.*;
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
-public class Zip 
+public class Zip
 {
 	// private constructor so that this class cannot be instantiated.
 	private Zip() {}
@@ -45,7 +45,7 @@ public class Zip
 
 	private static final int BUFFER = 2048;
 	private static final String SEPARATOR = FileIO.getFileSeparator();
-	
+
 	/**
 	 * Unzips a given zip file and returns the list of files inside it.
 	 * @param fileName File to unzip.
@@ -98,7 +98,7 @@ public class Zip
 	      } catch(Exception e) {
 		      throw new JPARSECException("error during uncompression.", e);
 	      }
-	      
+
 	      return DataSet.arrayListToStringArray(v);
 	}
 	/**
@@ -113,16 +113,16 @@ public class Zip
 	    try {
 	    		BufferedInputStream origin = null;
 	            FileOutputStream dest = new FileOutputStream(new File(fileName));
-	            
+
 	            CheckedOutputStream checksum = new CheckedOutputStream(dest, new Adler32());
-	            ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(checksum));	          
-	            
+	            ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(checksum));
+
 	            //out.setMethod(ZipOutputStream.DEFLATED);
 	            byte data[] = new byte[BUFFER];
-	            
+
 	            for (int i=0; i<filesToAdd.length; i++) {
 	            	if (!sameFile(filesToAdd[i], fileName)) {
-	            	   File file = new File(filesToAdd[i]);		  
+	            	   File file = new File(filesToAdd[i]);
 	            	   String zipPath = DataSet.replaceAll(filesToAdd[i], SEPARATOR, Zip.ZIP_SEPARATOR, true);
 		               ZipEntry entry = new ZipEntry(zipPath);
 		               out.putNextEntry(entry);
@@ -136,7 +136,7 @@ public class Zip
 	            	}
 	            }
 	            out.close();
-		      
+
 		    } catch(Exception e) {
 		      throw new JPARSECException("error during compression.", e);
 		    }
@@ -146,7 +146,7 @@ public class Zip
 	{
         try {
         	FileIO.deleteFile(path);
-        } catch (Exception e) {}        	
+        } catch (Exception e) {}
 	}
 	private static void addContents(ZipOutputStream out, String path, String folder)
 	throws Exception {
@@ -158,7 +158,7 @@ public class Zip
 	        for (int i=0; i<files.length; i++)
 	        {
 	        	ZipEntry entry = new ZipEntry(folder + FileIO.getLastField(files[i], SEPARATOR, true));
-	            out.putNextEntry(entry);         
+	            out.putNextEntry(entry);
 
 	            int count;
 	        	FileInputStream fi = new FileInputStream(files[i]);
@@ -179,10 +179,10 @@ public class Zip
 	        	ZipEntry entry = new ZipEntry(folder + FileIO.getLastField(dirs[i], SEPARATOR, true) + ZIP_SEPARATOR);
 	            out.putNextEntry(entry);
 	        }
-	        
+
 	        if (dirs.length == 0) deleteFile(path);
         }
-        
+
         if (dirs == null) deleteFile(path);
 	}
 	private static void addDirectory(String path, ZipOutputStream out)
@@ -202,7 +202,7 @@ public class Zip
 	        	String newPath = path + FileIO.getLastField(dirs[i], SEPARATOR, true) + SEPARATOR;
 	        	String newFolder = folder + FileIO.getLastField(dirs[i], SEPARATOR, true) + ZIP_SEPARATOR;
 	        	Zip.addContents(out, newPath, newFolder);
-	        	
+
 	            String dirs2[] = FileIO.getSubdirectories(newPath);
 	            if (dirs2 != null)
 	            {
@@ -211,7 +211,7 @@ public class Zip
 		            	String newPath2 = newPath + FileIO.getLastField(dirs2[j], SEPARATOR, true) + SEPARATOR;
 		            	String newFolder2 = newFolder + FileIO.getLastField(dirs2[j], SEPARATOR, true) + ZIP_SEPARATOR;
 		            	Zip.addContents(out, newPath2, newFolder2);
-		            	
+
 		                String dirs3[] = FileIO.getSubdirectories(newPath2);
 			            if (dirs3 != null)
 			            {
@@ -220,7 +220,7 @@ public class Zip
 			                	String newPath3 = newPath2 + FileIO.getLastField(dirs3[k], SEPARATOR, true) + SEPARATOR;
 			                	String newFolder3 = newFolder2 + FileIO.getLastField(dirs3[k], SEPARATOR, true) + ZIP_SEPARATOR;
 			                	Zip.addContents(out, newPath3, newFolder3);
-			                	
+
 			    	            String dirs4[] = FileIO.getSubdirectories(newPath3);
 			    	            if (dirs4 != null)
 			    	            {
@@ -229,7 +229,7 @@ public class Zip
 			    		            	String newPath4 = newPath3 + FileIO.getLastField(dirs4[l], SEPARATOR, true) + SEPARATOR;
 			    		            	String newFolder4 = newFolder3 + FileIO.getLastField(dirs4[l], SEPARATOR, true) + ZIP_SEPARATOR;
 			    		            	Zip.addContents(out, newPath4, newFolder4);
-			    		            	
+
 			    		                String dirs5[] = FileIO.getSubdirectories(newPath4);
 			    			            if (dirs5 != null)
 			    			            {
@@ -292,17 +292,17 @@ public class Zip
 	public static void zipDirectory(String fileName, String path)
 	throws JPARSECException {
 	    try {
-	    	FileOutputStream dest = new FileOutputStream(new File(fileName));
-	            
-	    	CheckedOutputStream checksum = new CheckedOutputStream(dest, new Adler32());
-	    	ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(checksum));	          
-	    	
-	    	File file = new File(path);		    
+	    	File file = new File(path);
 	    	if (!file.isDirectory()) throw new JPARSECException(path+" is not a directory.");
-	            
+	    	
+	    	FileOutputStream dest = new FileOutputStream(new File(fileName));
+
+	    	CheckedOutputStream checksum = new CheckedOutputStream(dest, new Adler32());
+	    	ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(checksum));
+
 	    	Zip.addDirectory(path, out);
 	    	out.close();
-		      
+
 	    } catch(Exception e) {
 	    	throw new JPARSECException("error during compression.", e);
 	    }
@@ -311,17 +311,17 @@ public class Zip
 	private static boolean sameFile(String file1, String file2)
 	throws JPARSECException {
 		boolean same = false;
-		
+
 		File f1 = new File(file1);
 		File f2 = new File(file2);
-		
+
 		try {
 			if (f1.getCanonicalPath().equals(f2.getCanonicalPath())) same = true;
 		} catch (IOException e)
 		{
 			throw new JPARSECException(e);
 		}
-		
+
 		return same;
 	}
 }

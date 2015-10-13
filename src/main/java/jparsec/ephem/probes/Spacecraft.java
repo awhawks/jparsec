@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.ephem.probes;
 
 import java.text.DecimalFormat;
@@ -58,23 +58,23 @@ import jparsec.util.JPARSECException;
  * System.
  * <P>
  * To use this class follow these simple steps: <P>
- * 
+ *
  * <pre>
  * // Search one probe.
  * int probe = Probes.searchProbe(&quot;Galileo-10&quot;);
- * 
+ *
  * // Modify the previously defined EphemerisElement to account for the algorithm
  * // to apply, and for the selected probe.
  * eph.TARGET_BODY = TARGET.NOT_A_PLANET;
  * eph.ALGORITHM = EphemerisElement.ALGORITHM.PROBE;
  * eph.ORBIT = (OrbitalElement) Probes.getProbeElement(probe);
- * 
+ *
  * // Calc ephemeris refered to certain Time and Observer objects.
  * EphemElement ephem = orbitEphemeris(time, observer, eph);
- * 
- * // A simple alternative (but less efficient for subsequent calculations) using 
+ *
+ * // A simple alternative (but less efficient for subsequent calculations) using
  * // the main Ephem class is, in its full form:
- * 
+ *
  * try
  * {
  *		AstroDate astro = new AstroDate(1, AstroDate.JANUARY, 2001, 0, 0, 0);
@@ -95,7 +95,7 @@ import jparsec.util.JPARSECException;
  * }
  *
  * </pre>
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -103,12 +103,12 @@ public class Spacecraft
 {
 	// private constructor so that this class cannot be instantiated.
 	private Spacecraft() {}
-	
+
 	private static ReadFile readFile;
-	
+
 	/**
 	 * Gets the name of the probe without it's current phase.
-	 * 
+	 *
 	 * @param index Probe index, from 0 to getNumberOfProbes()-1.
 	 * @return Name of the probe. Empty string if the index is incorrect.
 	 * @throws JPARSECException If an error occurs.
@@ -137,7 +137,7 @@ public class Spacecraft
 
 	/**
 	 * Gets the index of a probe.
-	 * 
+	 *
 	 * @param name Probe name.
 	 * @return Probe index of the first match, or -1 if no match in found.
 	 * @throws JPARSECException If an error occurs.
@@ -166,7 +166,7 @@ public class Spacecraft
 	/**
 	 * Gets the full name of the probe. Format is "NAME-PHASE". Phase does not
 	 * exist always.
-	 * 
+	 *
 	 * @param index Probe index, from 0 to getNumberOfProbes()-1.
 	 * @return Name of the probe. Empty string if the index is incorrect.
 	 * @throws JPARSECException If an error occurs.
@@ -195,7 +195,7 @@ public class Spacecraft
 	 * the trajectory of the probe is modified. Sometimes could exist several
 	 * phases active simultaneously. In that case, the last of them should be
 	 * considered as the correct position of the probe.
-	 * 
+	 *
 	 * @param index Probe index, from 0 to getNumberOfProbes()-1.
 	 * @return Phase of the probe. Empty string if no phase value exists, for
 	 *         example when the trajectory is Earth to target directly.
@@ -225,7 +225,7 @@ public class Spacecraft
 	 * a "-" symbol and the phase numeric value. For example, "Cassini" will
 	 * return the first match for Cassini space probe (typically phase 1), and
 	 * "Cassini-6" will return the sixth (last) phase for this spacecraft.
-	 * 
+	 *
 	 * @param name The name of the probe to search for.
 	 * @return The ID index value for this probe. -1 if no match is found.
 	 * @throws JPARSECException If an error occurs.
@@ -258,7 +258,7 @@ public class Spacecraft
 	 * Searches for a probe name active in certain Julian day. Search for
 	 * certain phase is possible by adding a "-" symbol and the phase numeric
 	 * value, although it is not recommended nor necessary in this method.
-	 * 
+	 *
 	 * @param name The name of the probe to search for.
 	 * @param jd Julian day.
 	 * @return The ID value for this probe. -1 if no match is found.
@@ -291,7 +291,7 @@ public class Spacecraft
 
 	/**
 	 * Gets the maximum value of the phase for certain probe.
-	 * 
+	 *
 	 * @param name The name of the probe.
 	 * @return The maximum phase. An empty string if no value exists.
 	 * @throws JPARSECException If an error occurs.
@@ -323,7 +323,7 @@ public class Spacecraft
 
 	/**
 	 * Returns if the current time is valid for certain probe.
-	 * 
+	 *
 	 * @param orbit Orbit object for the probe.
 	 * @param JD Julian day.
 	 * @return True is date is valid, false otherwise.
@@ -339,7 +339,7 @@ public class Spacecraft
 
 	/**
 	 * Returns if the current time is valid for certain probe.
-	 * 
+	 *
 	 * @param time Time object containing the date.
 	 * @param obs Observer object containing the observer position.
 	 * @param eph Ephemeris object with the orbital element set included,
@@ -363,7 +363,7 @@ public class Spacecraft
 
 	/**
 	 * Obtains orbital elements for a certain probe.
-	 * 
+	 *
 	 * @param index ID value for the probe. From 0 to getNumberOfProbes-1.
 	 * @return The Orbit object.
 	 * @throws JPARSECException If the reference or applicable times are
@@ -386,7 +386,7 @@ public class Spacecraft
 
 	/**
 	 * Obtains the number of probes in the database.
-	 * 
+	 *
 	 * @return The number of objects.
 	 * @throws JPARSECException If an error occurs.
 	 */
@@ -428,7 +428,7 @@ public class Spacecraft
 	 * <P>
 	 * Example of input format (taken from JPL Horizons system):
 	 * <P>
-	 * 
+	 *
 	 * <pre>
 	 * 2453795.500000000 = A.D. 2006-Mar-01 00:00:00.0000 (CT)
 	 * EC= 2.477738107218447E-01 QR= 1.012878320719386E+00 IN= 3.063985846769699E+00
@@ -436,13 +436,13 @@ public class Spacecraft
 	 * N = 6.307987654522806E-01 MA= 1.276579409631244E+02 TA= 1.462236568469655E+02
 	 * A = 1.346507653092158E+00 AD= 1.680136985464930E+00 PR= 5.707049850388993E+02
 	 * </pre>
-	 * 
+	 *
 	 * <P>
 	 * Output will be, if name set to MRO:
 	 * <P>
 	 * MRO e 3.063986 319.340296 358.4021022 1.3465077 0.6307988 0.2477738 127.65794096 03/01.0/2006 2000 0 0
 	 * <P>
-	 * 
+	 *
 	 * @param horizons String array of length 5, in the previous format.
 	 * @param probe_name Name of the probe.
 	 * @param init_jd Initial jd (launch date or after orbit correction).
@@ -461,7 +461,7 @@ public class Spacecraft
 	 * <P>
 	 * Example of input format (taken from JPL Horizons system):
 	 * <P>
-	 * 
+	 *
 	 * <pre>
 	 * 2453795.500000000 = A.D. 2006-Mar-01 00:00:00.0000 (CT)
 	 * EC= 2.477738107218447E-01 QR= 1.012878320719386E+00 IN= 3.063985846769699E+00
@@ -469,7 +469,7 @@ public class Spacecraft
 	 * N = 6.307987654522806E-01 MA= 1.276579409631244E+02 TA= 1.462236568469655E+02
 	 * A = 1.346507653092158E+00 AD= 1.680136985464930E+00 PR= 5.707049850388993E+02
 	 * </pre>
-	 * 
+	 *
 	 * @param horizons String array of length 5, in the previous format.
 	 * @param probe_name Name of the probe.
 	 * @param init_jd Initial jd (launch date or after orbit correction).
@@ -499,7 +499,7 @@ public class Spacecraft
 	 * Transforms an orbital element set to JPARSEC format of probes.
 	 * The invert transformation is provided by {@linkplain ReadFile#parseProbe(String)}.
 	 * <P>
-	 * 
+	 *
 	 * @param orbit OrbitalElement set.
 	 * @return JPARSEC format.
 	 * @throws JPARSECException If something goes wrong.
@@ -518,7 +518,7 @@ public class Spacecraft
 		String probe_name = orbit.name;
 
 		ReadFormat rf = new ReadFormat();
-		
+
 		rf.setFormatToRead(FileFormatElement.JPARSEC_PROBES_FORMAT);
 		if (ecc == 1.0)
 			orbit_type = "p";
@@ -597,7 +597,7 @@ public class Spacecraft
 		date = formatter7.format((int) (astro.getYear() + astro.getMonth() / 12.0));
 		output += "   " + date + "    0 0 ";
 		astro = new AstroDate(orbit.beginOfApplicableTime);
-		
+
 		String sep = " ";
 		if (formatter7.format(astro.getYear()).length() == 5) sep = "";
 		date = formatter7.format(astro.getYear()) + sep + formatter6.format(astro.getMonth()) + " " + formatter9
@@ -638,7 +638,7 @@ public class Spacecraft
 		if (val.startsWith("0"))
 			out = " " + val.substring(1);
 
-		
+
 		int p = out.indexOf(",")-beforeP;
 		if (out.startsWith("-")) p --;
 		if (p > 0) out = out.substring(0, out.length()-p);
@@ -651,12 +651,12 @@ public class Spacecraft
 	 * <P>
 	 * The orbital element is automatically obtained by this method if the input
 	 * orbital element set in the ephemeris object is null, and its target body
-	 * number is the desired probe. In this case the target can be set to any 
+	 * number is the desired probe. In this case the target can be set to any
 	 * phase of that probe, and if the probe has an active phase in the given
 	 * calculation time, then the adequate phase will be automatically taken
 	 * instead of the input one.
-	 * 
-	 * 
+	 *
+	 *
 	 * @param time Time object containing the date.
 	 * @param obs Observer object containing the observer position.
 	 * @param eph Ephemeris object with the target and ephemeris
@@ -726,7 +726,7 @@ public class Spacecraft
 
 	/**
 	 * Obtain heliocentric mean rectangular coordinates of a probe.
-	 * 
+	 *
 	 * @param time Time object containing the date.
 	 * @param obs Observer object containing the observer position.
 	 * @param eph Ephemeris object with the orbital element set included,

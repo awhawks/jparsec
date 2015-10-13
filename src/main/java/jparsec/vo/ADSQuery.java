@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.vo;
 
 import java.io.BufferedReader;
@@ -35,9 +35,9 @@ import jparsec.util.JPARSECException;
 
 /**
  * A class to send queries to ADS abstracts service.<P>
- * 
+ *
  * A simple example to retrieve a bibtex entry is:<P>
- * 
+ *
  *     	try {<BR>
  *     		query = ADSQuery.ADS_HARVARD_URL;<BR>
  *    		query += ADSQuery.addParameter(ADSQuery.PARAMETER.BIBCODE, "2007A&A...470..625D");<BR>
@@ -54,7 +54,7 @@ import jparsec.util.JPARSECException;
  * @version 1.0
  */
 public class ADSQuery implements Serializable {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	private String query;
 	/**
@@ -94,9 +94,9 @@ public class ADSQuery implements Serializable {
 		if (!this.query.endsWith("?")) add = "&"+add;
 		this.query += add;
 	}
-	
+
 	/**
-	 * Returns the adequate string to add the author. 
+	 * Returns the adequate string to add the author.
 	 * @param value Author.
 	 * @throws JPARSECException If an error occurs.
 	 */
@@ -105,7 +105,7 @@ public class ADSQuery implements Serializable {
 		addParameterToQuery(ADSQuery.PARAMETER.AUTHOR, value);
 	}
 	/**
-	 * Returns the adequate string to add the abstract. 
+	 * Returns the adequate string to add the abstract.
 	 * @param value Abstract.
 	 * @throws JPARSECException If an error occurs.
 	 */
@@ -114,7 +114,7 @@ public class ADSQuery implements Serializable {
 		addParameterToQuery(ADSQuery.PARAMETER.ABSTRACT, value);
 	}
 	/**
-	 * Returns the adequate string to add the bibcode. 
+	 * Returns the adequate string to add the bibcode.
 	 * @param value Bibcode.
 	 * @throws JPARSECException If an error occurs.
 	 */
@@ -123,7 +123,7 @@ public class ADSQuery implements Serializable {
 		addParameterToQuery(ADSQuery.PARAMETER.BIBCODE, value);
 	}
 	/**
-	 * Returns the adequate string to add the datatype. 
+	 * Returns the adequate string to add the datatype.
 	 * @param value Datatype.
 	 * @throws JPARSECException If an error occurs.
 	 */
@@ -132,7 +132,7 @@ public class ADSQuery implements Serializable {
 		addParameterToQuery(ADSQuery.PARAMETER.DATATYPE, value);
 	}
 	/**
-	 * Returns the adequate string to add the end year. 
+	 * Returns the adequate string to add the end year.
 	 * @param value End year.
 	 * @throws JPARSECException If an error occurs.
 	 */
@@ -141,7 +141,7 @@ public class ADSQuery implements Serializable {
 		addParameterToQuery(ADSQuery.PARAMETER.END_YEAR, value);
 	}
 	/**
-	 * Returns the adequate string to add the start year. 
+	 * Returns the adequate string to add the start year.
 	 * @param value Start year.
 	 * @throws JPARSECException If an error occurs.
 	 */
@@ -150,7 +150,7 @@ public class ADSQuery implements Serializable {
 		addParameterToQuery(ADSQuery.PARAMETER.START_YEAR, value);
 	}
 	/**
-	 * Returns the adequate string to add the object. 
+	 * Returns the adequate string to add the object.
 	 * @param value Object.
 	 * @throws JPARSECException If an error occurs.
 	 */
@@ -159,7 +159,7 @@ public class ADSQuery implements Serializable {
 		addParameterToQuery(ADSQuery.PARAMETER.OBJECT, value);
 	}
 	/**
-	 * Returns the adequate string to add the Title. 
+	 * Returns the adequate string to add the Title.
 	 * @param value Title.
 	 * @throws JPARSECException If an error occurs.
 	 */
@@ -179,7 +179,7 @@ public class ADSQuery implements Serializable {
 	/**
 	 * The set of parameters for the query.
 	 */
-	public static enum PARAMETER {
+	public enum PARAMETER {
 		/** ID code for author name parameter search. */
 		AUTHOR,
 		/** ID code for title name parameter search. */
@@ -197,11 +197,11 @@ public class ADSQuery implements Serializable {
 		/** ID code for object name parameter search. */
 		OBJECT
 	};
-	
+
 	/**
 	 * The set of data types for the query.
 	 */
-	public static enum DATATYPE {
+	public enum DATATYPE {
 		/** ID code for html returning datatype. */
 		HTML ("HTML"),
 		/** ID code for plain text returning datatype. */
@@ -212,13 +212,13 @@ public class ADSQuery implements Serializable {
 		VOTABLE ("VOTABLE"),
 		/** ID code for portable returning datatype. */
 		PORTABLE ("PORTABLE");
-		
+
 		private String type;
-		
+
 		private DATATYPE(String t) {
 			this.type = t;
 		}
-		
+
 		/**
 		 * Returns the type ID code.
 		 * @return The type code to use in the query.
@@ -280,32 +280,32 @@ public class ADSQuery implements Serializable {
 	 * @return Response from server.
 	 * @throws JPARSECException If an error occurs.
 	 */
-    public static String query(String query) 
-    throws JPARSECException 
-    {	 
+    public static String query(String query)
+    throws JPARSECException
+    {
 		String output = "";
     	try {
 			URL urlObject = new URL(query);
 			URLConnection con = urlObject.openConnection();
 			con.setRequestProperty
 			  ( "User-Agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0)" );
-						 
+
 			// Get the response
 	        BufferedReader in = new BufferedReader(
 	                      new InputStreamReader(
 	                      con.getInputStream()));
 			String inputLine;
-					
+
 			while ((inputLine = in.readLine()) != null)
 			{
-				output += inputLine + FileIO.getLineSeparator(); 
+				output += inputLine + FileIO.getLineSeparator();
 			}
 			in.close();
     	} catch (Exception e)
     	{
     		throw new JPARSECException(e);
     	}
-		
+
 		return output;
     }
 

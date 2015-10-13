@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.astronomy;
 
 import jparsec.ephem.Ephem;
@@ -44,11 +44,11 @@ import jparsec.util.JPARSECException;
  * A class to perform coordinates transformations. These methods take into
  * account the equinox specified in the {@linkplain EphemerisElement} object
  * or epoch input value to transform input/output coordinates from/to that epoch
- * accordingly (using IAU2006 algorithms). The frame is not taken into account, 
- * but note that equatorial to galactic coordinates should use the FK5 system as 
+ * accordingly (using IAU2006 algorithms). The frame is not taken into account,
+ * but note that equatorial to galactic coordinates should use the FK5 system as
  * input coordinates. Methods to transform between different frames are available
  * in {@linkplain Ephem} class. The orientation of the galactic plane follows
- * Jia-Cheng Liu et al. 2010 (see http://arxiv.org/abs/1010.3773), and since 
+ * Jia-Cheng Liu et al. 2010 (see http://arxiv.org/abs/1010.3773), and since
  * Sgr A is not at the center, a new definition of the galactic system is pending.
  * <P>
  * The methods in this class are complemented by those in other classes. For
@@ -57,7 +57,7 @@ import jparsec.util.JPARSECException;
  * can be used for frame transformations. In case the object has proper motions and
  * FK4 frame is involved, {@linkplain StarEphem} class provides methods to account
  * for proper motions.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  * @see LocationElement
@@ -68,10 +68,10 @@ public class CoordinateSystem
 {
 	// private constructor so that this class cannot be instantiated.
 	private CoordinateSystem() {}
-	
+
 	/**
 	 * Transform from horizontal (geometric) to equatorial coordinates.
-	 * 
+	 *
 	 * @param loc Location object with horizontal coordinates.
 	 * @param time Time object.
 	 * @param obs Observer object.
@@ -93,7 +93,7 @@ public class CoordinateSystem
 
 	/**
 	 * Transform from equatorial to horizontal (geometric) coordinates.
-	 * 
+	 *
 	 * @param loc Location object with equatorial coordinates.
 	 * @param time Time object.
 	 * @param obs Observer object.
@@ -116,7 +116,7 @@ public class CoordinateSystem
 
 	/**
 	 * Transform from horizontal to equatorial coordinates.
-	 * 
+	 *
 	 * @param loc Location object with horizontal coordinates.
 	 * @param ast Apparent Sidereal Time in radians.
 	 * @param lat Latitude of observer in radians.
@@ -131,7 +131,7 @@ public class CoordinateSystem
 		if (fast) {
 			LocationElement loc_out = fastRotateTo(rot);
 			loc_out.setRadius(loc.getRadius());
-			return loc_out;			
+			return loc_out;
 		} else {
 			LocationElement loc_out = rotateTo(rot);
 			loc_out.setRadius(loc.getRadius());
@@ -141,7 +141,7 @@ public class CoordinateSystem
 
 	/**
 	 * Transform from equatorial to horizontal coordinates.
-	 * 
+	 *
 	 * @param loc Location object with equatorial coordinates.
 	 * @param ast Apparent Sidereal Time in radians.
 	 * @param obs Observer object.
@@ -158,7 +158,7 @@ public class CoordinateSystem
 
 		LocationElement loc_out = null;
 		if (fast) {
-			loc_out = fastRotateFrom(rot);			
+			loc_out = fastRotateFrom(rot);
 		} else {
 			loc_out = rotateFrom(rot);
 		}
@@ -181,7 +181,7 @@ public class CoordinateSystem
 	 */
 	public static final LocationElement GALACTIC_POLE = new LocationElement(
 			Functions.parseRightAscension(12, 51, 26.27549),
-			Functions.parseDeclination("27", 7, 41.7043), 
+			Functions.parseDeclination("27", 7, 41.7043),
 			1.0);
 
 	/**
@@ -194,14 +194,14 @@ public class CoordinateSystem
 	 * Transform from galactic to equatorial coordinates. The IAU 1958 system
 	 * is used, established before the precise coordinates of Sagittarius A (the
 	 * core of our galaxy) were known. The real center of our galaxy lies at
-	 * -3' 21" of galactic longitude, and at -2' 46" of galactic latitude. 
-	 * 
+	 * -3' 21" of galactic longitude, and at -2' 46" of galactic latitude.
+	 *
 	 * @param loc Location object with galactic coordinates.
 	 * @param time Time object.
 	 * @param obs Observer object.
 	 * @param eph Ephemeris object. The equinox and frame fields are taken into account to
 	 * transform results to output equinox and frame.
-	 * @return Location object with the equatorial coordinates, respect to equinox and frame 
+	 * @return Location object with the equatorial coordinates, respect to equinox and frame
 	 * selected in the ephemeris object.
 	 * @throws JPARSECException If the date is invalid.
 	 */
@@ -226,7 +226,7 @@ public class CoordinateSystem
 			}
 		} else {
 			if (equinox != Constant.J2000)
-				loc_out = LocationElement.parseRectangularCoordinates(Precession.precess(Constant.J2000, equinox, loc_out.getRectangularCoordinates(), eph));				
+				loc_out = LocationElement.parseRectangularCoordinates(Precession.precess(Constant.J2000, equinox, loc_out.getRectangularCoordinates(), eph));
 		}
 
 		return loc_out;
@@ -236,8 +236,8 @@ public class CoordinateSystem
 	 * Transform from equatorial to galactic coordinates. The IAU 1958 system
 	 * is used, established before the precise coordinates of Sagittarius A (the
 	 * core of our galaxy) were known. The real center of our galaxy lies at
-	 * -3' 21" of galactic longitude, and at -2' 46" of galactic latitude. 
-	 * 
+	 * -3' 21" of galactic longitude, and at -2' 46" of galactic latitude.
+	 *
 	 * @param loc Location object with equatorial coordinates, FK5 J2000 (or any other
 	 * frame and equinox).
 	 * @param time Time object.
@@ -251,7 +251,7 @@ public class CoordinateSystem
 			EphemerisElement eph) throws JPARSECException
 	{
 		LocationElement loc_out = loc.clone();
-		
+
 		// Transform input position to FK5 J2000
 		double equinox = eph.equinox;
 		if (equinox == EphemerisElement.EQUINOX_OF_DATE) equinox = TimeScale.getJD(time, obs, eph, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
@@ -274,7 +274,7 @@ public class CoordinateSystem
 				double pos[] = LocationElement.parseLocationElement(loc_out);
 				double new_pos[] = Precession.precess(equinox, Constant.J2000, pos, eph);
 				loc_out = LocationElement.parseRectangularCoordinates(new_pos);
-			}			
+			}
 		}
 
 		// Rotate
@@ -288,7 +288,7 @@ public class CoordinateSystem
 
 	/**
 	 * Transform from ecliptic to equatorial coordinates.
-	 * 
+	 *
 	 * @param loc Location object with ecliptic coordinates.
 	 * @param time Time object.
 	 * @param obs Observer object.
@@ -319,7 +319,7 @@ public class CoordinateSystem
 
 	/**
 	 * Transform from equatorial to ecliptic coordinates.
-	 * 
+	 *
 	 * @param loc Location object with equatorial coordinates.
 	 * @param time Time object.
 	 * @param obs Observer object.
@@ -350,7 +350,7 @@ public class CoordinateSystem
 
 	/**
 	 * Transform from galactic to equatorial coordinates.
-	 * 
+	 *
 	 * @param loc Location object with galactic coordinates.
 	 * @param epoch Epoch for the output coordinates (Julian day).
 	 * @param fast True for an approximate but faster calculation.
@@ -363,7 +363,7 @@ public class CoordinateSystem
 		RotateTo galRot = new RotateTo(GALACTIC_POLE.getLongitude(), GALACTIC_POLE.getLatitude(), GALACTIC_POLE_NODE_J2000, loc.getLongitude(), loc.getLatitude());
 		LocationElement loc_out = null;
 		if (fast) {
-			loc_out = fastRotateTo(galRot);			
+			loc_out = fastRotateTo(galRot);
 		} else {
 			loc_out = rotateTo(galRot);
 		}
@@ -382,7 +382,7 @@ public class CoordinateSystem
 
 	/**
 	 * Transform from equatorial to galactic coordinates.
-	 * 
+	 *
 	 * @param loc Location object with equatorial coordinates referred to FK5 J2000.
 	 * @param fast True for an approximate but faster calculation.
 	 * @return Location object with the galactic coordinates.
@@ -393,7 +393,7 @@ public class CoordinateSystem
 		RotateFrom galRot2 = new RotateFrom(GALACTIC_POLE.getLongitude(), GALACTIC_POLE.getLatitude(), GALACTIC_POLE_NODE_J2000, loc.getLongitude(), loc.getLatitude());
 		LocationElement loc_out = null;
 		if (fast) {
-			loc_out = fastRotateFrom(galRot2);			
+			loc_out = fastRotateFrom(galRot2);
 		} else {
 			loc_out = rotateFrom(galRot2);
 		}
@@ -404,7 +404,7 @@ public class CoordinateSystem
 
 	/**
 	 * Transform from ecliptic to equatorial coordinates.
-	 * 
+	 *
 	 * @param loc Location object with ecliptic coordinates.
 	 * @param obliquity Correct obliquity in equinox and type (true or mean).
 	 * @param fast True for an approximate but faster calculation.
@@ -412,12 +412,12 @@ public class CoordinateSystem
 	 */
 	public static LocationElement eclipticToEquatorial(LocationElement loc, double obliquity, boolean fast)
 	{
-		RotateTo rot = new RotateTo(-Constant.PI_OVER_TWO, Constant.PI_OVER_TWO - obliquity, 0.0, 
+		RotateTo rot = new RotateTo(-Constant.PI_OVER_TWO, Constant.PI_OVER_TWO - obliquity, 0.0,
 				loc.getLongitude(), loc.getLatitude());
 
 		LocationElement loc_out = null;
 		if (fast) {
-			loc_out = fastRotateTo(rot);			
+			loc_out = fastRotateTo(rot);
 		} else {
 			loc_out = rotateTo(rot);
 		}
@@ -428,7 +428,7 @@ public class CoordinateSystem
 
 	/**
 	 * Transform from equatorial to ecliptic coordinates.
-	 * 
+	 *
 	 * @param loc Location object with equatorial coordinates.
 	 * @param obliquity Correct obliquity in equinox and type (true or mean).
 	 * @param fast True for an approximate but faster calculation.
@@ -441,7 +441,7 @@ public class CoordinateSystem
 
 		LocationElement loc_out = null;
 		if (fast) {
-			loc_out = fastRotateFrom(rot);			
+			loc_out = fastRotateFrom(rot);
 		} else {
 			loc_out = rotateFrom(rot);
 		}
@@ -452,7 +452,7 @@ public class CoordinateSystem
 
 	/**
 	 * Generic 'rotation to'.
-	 * 
+	 *
 	 * @param rot RotateTo object.
 	 * @return Rotated input.
 	 */
@@ -483,7 +483,7 @@ public class CoordinateSystem
 
 	/**
 	 * Generic 'rotation from'.
-	 * 
+	 *
 	 * @param rot RotateFrom object.
 	 * @return Rotated input.
 	 */
@@ -514,7 +514,7 @@ public class CoordinateSystem
 	/**
 	 * The set of available coordinate systems.
 	 */
-	public static enum COORDINATE_SYSTEM {
+	public enum COORDINATE_SYSTEM {
 		/** Symbolic constant for equatorial coordinates. */
 		EQUATORIAL,
 		/** Symbolic constant for galactic coordinates. */

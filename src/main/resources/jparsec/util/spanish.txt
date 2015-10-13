@@ -880,7 +880,7 @@ Objeto del Sistema Solar
 Tipo de objeto
 posición en pantalla
 Nombre propio
-Tipo y detalles (tipo; datos si es doble [sep, magA-B, periodo, PA]; datos si es variable [magMax, magMin, periodo, tipo])
+Tipo;Doble [sep ("), magA-B, periodo (años), AP (º)];Variable [magMax, magMin, periodo (días), tipo]
 Encontrada característica '%feature' sobre %object en la posición %x/%y (posición planetográfica %lon, %lat)
 Posición del ratón %x, %y. Posición planetográfica: %lon, %lat
 Por favor, introduzca el nombre de un objeto a buscar.
@@ -1116,7 +1116,7 @@ Fin de fase penumbral
 Elevación de la Luna
 Próximo eclipse de Sol
 Próximo eclipse de Luna
-SIN SALIDA/PUESTA/CULMINACIÓN
+SIN SALIDA/PUESTA
 Eclipse completo visible
 Eclipse no visible
 Primer contacto visible tras la salida (derecha) / antes de la puesta (izquierda) del Sol

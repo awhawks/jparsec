@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,20 +18,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.time.calendar;
 
 import java.io.Serializable;
 
 /**
  * Implements the Roman calendar. See Calendrical Calculations for reference.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
 public class Roman implements Serializable
 {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Year.
@@ -99,7 +99,7 @@ public class Roman implements Serializable
 
 	/**
 	 * Julian day constructor.
-	 * 
+	 *
 	 * @param jd Julian day.
 	 */
 	public Roman(int jd)
@@ -109,7 +109,7 @@ public class Roman implements Serializable
 
 	/**
 	 * Explicit constructor.
-	 * 
+	 *
 	 * @param ryear Year.
 	 * @param rmonth Month.
 	 * @param revent Event.
@@ -127,7 +127,7 @@ public class Roman implements Serializable
 
 	/**
 	 * To fixed day.
-	 * 
+	 *
 	 * @param year Year.
 	 * @param month Month.
 	 * @param event Event.
@@ -150,7 +150,7 @@ public class Roman implements Serializable
 
 	/**
 	 * To fixed day.
-	 * 
+	 *
 	 * @return Fixed date.
 	 */
 	public long toFixed()
@@ -160,7 +160,7 @@ public class Roman implements Serializable
 
 	/**
 	 * Transforms a Roman date into a Julian day.
-	 * 
+	 *
 	 * @param year Year.
 	 * @param month Month.
 	 * @param event Event.
@@ -175,7 +175,7 @@ public class Roman implements Serializable
 
 	/**
 	 * Transforms a Roman date into a Julian day.
-	 * 
+	 *
 	 * @return Julian day.
 	 */
 	public int toJulianDay()
@@ -185,7 +185,7 @@ public class Roman implements Serializable
 
 	/**
 	 * Sets a Roman date with a given Julian day.
-	 * 
+	 *
 	 * @param jd Julian day.
 	 */
 	public void fromJulianDay(int jd)
@@ -195,7 +195,7 @@ public class Roman implements Serializable
 
 	/**
 	 * Sets the date from fixed date.
-	 * 
+	 *
 	 * @param l Fixed day.
 	 */
 	public void fromFixed(long l)
@@ -265,7 +265,7 @@ public class Roman implements Serializable
 
 	/**
 	 * Return ides.
-	 * 
+	 *
 	 * @param i Month.
 	 * @return Ides, 13 if month = 3,5,7, or 10, and 15 otherwise.
 	 */
@@ -276,7 +276,7 @@ public class Roman implements Serializable
 
 	/**
 	 * Return nones of month.
-	 * 
+	 *
 	 * @param i Month.
 	 * @return Nones = ides - 8.
 	 */

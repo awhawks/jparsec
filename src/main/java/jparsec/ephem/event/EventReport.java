@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.ephem.event;
 
 import java.awt.geom.Point2D;
@@ -99,14 +99,14 @@ public class EventReport {
 	 * Maximum accuracy or not for planetary events. True means a few minutes of error at most, false a few hours.
 	 */
 	public static boolean maximumAccuracy = true;
-	
+
 	/**
 	 * Limiting magnitude for the conjunction between different objects. Default values are 5 for stars,
 	 * 10 for objects, and 9 for planets.
 	 */
 	public static float occultationsConjunctionsStarMaglim = 5f, occultationsConjunctionsObjectMaglim = 10f,
 		occultationsConjunctionsPlanetMaglim = 9f;
-	
+
 	/**
 	 * Set all static flags in this class to a given value.
 	 * @param a The value.
@@ -136,7 +136,7 @@ public class EventReport {
 		NEOs = a;
 		calendarDST = a;
 	}
-	
+
 	/**
 	 * Returns the set of astronomical events between two given dates. Events are
 	 * sorted in crescent order of date. Note this method requires a few hours in a
@@ -161,10 +161,10 @@ public class EventReport {
 	 * <P>
 	 * <P>(*) Events calculated considering the location of the observer, the other events are 'geocentric'.
 	 * <P>
-	 * <P>In the last two cases calculations are performed with the 'optimize' flag enabled in the constructor of the 
+	 * <P>In the last two cases calculations are performed with the 'optimize' flag enabled in the constructor of the
 	 * {@linkplain MoonEvent} object. Values for precision and accuracy are 300 and 30 for normal events and
 	 * 100 and 30 for mutual events, respectively.
-	 * 
+	 *
 	 * @param init Initial date.
 	 * @param end Final date.
 	 * @param obs The observer.
@@ -186,7 +186,7 @@ public class EventReport {
 		AstroDate al0 = new AstroDate(jdl0);
 		AstroDate alf = new AstroDate(jdlf);
 		int year0 = al0.getYear(), yearf = alf.getYear();
-		CityElement madrid = City.findCity("Madrid");
+
 		// Calculate events
 		for (int event = 0; event <= 54; event ++) {
 			double jd = jd0;
@@ -194,13 +194,13 @@ public class EventReport {
 			do {
 				EVENT_TIME eventTime = EVENT_TIME.NEXT;
 				if (jd == jd0) eventTime = EVENT_TIME.CLOSEST;
-				
+
 //				System.out.println(jd0+"/"+jdf+"/"+jd+"/"+event);
 				switch (event) {
 				case 0:
 					if (eclipses) s = MainEvents.MoonPhaseOrEclipse(jd, EVENT.MOON_LUNAR_ECLIPSE, eventTime);
 					if (s != null) jd = s.time + 15;
-					break; 
+					break;
 				case 1:
 					if (eclipses) s = MainEvents.MoonPhaseOrEclipse(jd, EVENT.MOON_SOLAR_ECLIPSE, eventTime);
 					if (s != null) jd = s.time + 15;
@@ -224,7 +224,7 @@ public class EventReport {
 				case 6:
 					if (equinoxesAndSolstices) {
 						for (int year = year0; year <= yearf; year ++) {
-							s = MainEvents.EquinoxesAndSolstices(year, EVENT.SUN_SPRING_EQUINOX, madrid);
+							s = MainEvents.EquinoxesAndSolstices(year, EVENT.SUN_SPRING_EQUINOX);
 							if (s.time > jd0 && s.time < jdf) list.add(s);
 						}
 					}
@@ -233,7 +233,7 @@ public class EventReport {
 				case 7:
 					if (equinoxesAndSolstices) {
 						for (int year = year0; year <= yearf; year ++) {
-							s = MainEvents.EquinoxesAndSolstices(year, EVENT.SUN_AUTUMN_EQUINOX, madrid);
+							s = MainEvents.EquinoxesAndSolstices(year, EVENT.SUN_AUTUMN_EQUINOX);
 							if (s.time > jd0 && s.time < jdf) list.add(s);
 						}
 					}
@@ -242,7 +242,7 @@ public class EventReport {
 				case 8:
 					if (equinoxesAndSolstices) {
 						for (int year = year0; year <= yearf; year ++) {
-							s = MainEvents.EquinoxesAndSolstices(year, EVENT.SUN_SUMMER_SOLSTICE, madrid);
+							s = MainEvents.EquinoxesAndSolstices(year, EVENT.SUN_SUMMER_SOLSTICE);
 							if (s.time > jd0 && s.time < jdf) list.add(s);
 						}
 					}
@@ -251,7 +251,7 @@ public class EventReport {
 				case 9:
 					if (equinoxesAndSolstices) {
 						for (int year = year0; year <= yearf; year ++) {
-							s = MainEvents.EquinoxesAndSolstices(year, EVENT.SUN_WINTER_SOLSTICE, madrid);
+							s = MainEvents.EquinoxesAndSolstices(year, EVENT.SUN_WINTER_SOLSTICE);
 							if (s.time > jd0 && s.time < jdf) list.add(s);
 						}
 					}
@@ -260,14 +260,14 @@ public class EventReport {
 				case 10:
 					if (MercuryVenusTransits) s = MainEvents.getMercuryOrVenusTransit(TARGET.MERCURY, jd, jdf, maximumAccuracy);
 					if (s != null) {
-						s.details = Translate.translate(841)+" "+DataSet.replaceAll(s.details.substring(1), ",", "\u00ba,", true);
+						s.details = Translate.translate(841)+" "+DataSet.replaceAll(s.details.substring(1), ",", "\u00b0,", true);
 						jd = s.time + 30;
 					}
 					break;
 				case 11:
 					if (MercuryVenusTransits) s = MainEvents.getMercuryOrVenusTransit(TARGET.VENUS, jd, jdf, maximumAccuracy);
 					if (s != null) {
-						s.details = Translate.translate(841)+" "+DataSet.replaceAll(s.details.substring(1), ",", "\u00ba,", true);
+						s.details = Translate.translate(841)+" "+DataSet.replaceAll(s.details.substring(1), ",", "\u00b0,", true);
 						jd = s.time + 30;
 					}
 					break;
@@ -286,7 +286,7 @@ public class EventReport {
 									if (Translate.getDefaultLanguage() == LANGUAGE.SPANISH) shower = f[0];
 									d = Translate.translate(1022)+" "+Translate.translate("of")+" "+shower+" ("+Translate.translate(1024).toLowerCase()+", "+Translate.translate(1023)+" "+f[3]+")";
 									ss[si].details = d;
-									list.add(ss[si]);							
+									list.add(ss[si]);
 								}
 							}
 						}
@@ -312,7 +312,7 @@ public class EventReport {
 					if (s != null) jd = s.time + 30;
 					break;
 				case 17:
-					if (planetaryEvents) 
+					if (planetaryEvents)
 					s = MainEvents.getPlanetaryEvent(TARGET.MERCURY, jd, EVENT.PLANET_MAXIMUM_ELONGATION, EVENT_TIME.CLOSEST, maximumAccuracy);
 					if (s != null) jd = s.time + 40;
 					break;
@@ -462,7 +462,7 @@ public class EventReport {
 					if (variableStars) {
 						for (int year = year0; year <= yearf; year ++) {
 							ArrayList<String[]> a = getVariableStarsEphemerides(
-									new TimeElement(new AstroDate(year, 1, 1), SCALE.UNIVERSAL_TIME_UTC), obs, VARIABLE_STARS_ALL, 
+									new TimeElement(new AstroDate(year, 1, 1), SCALE.UNIVERSAL_TIME_UTC), obs, VARIABLE_STARS_ALL,
 									5);
 							if (a != null) {
 								for (int i=0; i<a.size(); i++) {
@@ -470,9 +470,9 @@ public class EventReport {
 									double jdl = 0;
 									int in = d[d.length-1].indexOf(";");
 									if (in > 0) {
-										jdl = Double.parseDouble(d[d.length-1].substring(0, in).trim());										
+										jdl = Double.parseDouble(d[d.length-1].substring(0, in).trim());
 										if (jdl < jd0 - 1 || jdl > jdf + 1) continue;
-										jdl = Double.parseDouble(d[d.length-1].substring(in+1).trim());										
+										jdl = Double.parseDouble(d[d.length-1].substring(in+1).trim());
 										if (jdl < jd0 - 1 || jdl > jdf + 1) continue;
 									} else {
 										jdl = Double.parseDouble(d[d.length-1]);
@@ -490,7 +490,7 @@ public class EventReport {
 												// mag range, phase, jd of next minima
 												String details = Translate.translate(1025)+" "+Translate.translate("of")+" "+d[1]+" (mag "+d[4]+")";
 												//d[4]+", "+d[5].substring(0, d[5].indexOf(";")).trim()+", "+d[6];
-												s = new SimpleEventElement(jde, EVENT.VARIABLE_STAR_ECLIPSING, details);												
+												s = new SimpleEventElement(jde, EVENT.VARIABLE_STAR_ECLIPSING, details);
 											}
 											s.body = d[1];
 											s.eventLocation = new LocationElement(Double.parseDouble(d[2]), Double.parseDouble(d[3]), 1.0);
@@ -499,7 +499,7 @@ public class EventReport {
 												SimpleEventElement s2 = s.clone();
 												s2.details = Translate.translate(1026)+" "+Translate.translate("of")+" "+d[1]+" (mag "+d[4]+")";
 												s2.time = Double.parseDouble(d[6].substring(0, d[6].indexOf(";")).trim());
-												list.add(s2);												
+												list.add(s2);
 											}
 										}
 									}
@@ -514,7 +514,7 @@ public class EventReport {
 						ArrayList<SimpleEventElement> a = getCalendarEvents(jd0, jdf, year0, yearf, obs, eph);
 						for (int si = 0; si < a.size(); si ++) {
 							s = a.get(si);
-							if (s.time > jd0 && s.time < jdf) list.add(s);							
+							if (s.time > jd0 && s.time < jdf) list.add(s);
 						}
 					}
 					s = null;
@@ -532,7 +532,7 @@ public class EventReport {
 						ArrayList<SimpleEventElement> a = getLTP(jd0, jdf, obs, eph);
 						for (int si = 0; si < a.size(); si ++) {
 							s = a.get(si);
-							if (s.time > jd0 && s.time < jdf) list.add(s);							
+							if (s.time > jd0 && s.time < jdf) list.add(s);
 						}
 					}
 					s = null;
@@ -542,7 +542,7 @@ public class EventReport {
 						ArrayList<SimpleEventElement> a = getOccCon(jd0, jdf, obs, eph);
 						for (int si = 0; si < a.size(); si ++) {
 							s = a.get(si);
-							if (s.time > jd0 && s.time < jdf) list.add(s);							
+							if (s.time > jd0 && s.time < jdf) list.add(s);
 						}
 					}
 					s = null;
@@ -552,7 +552,7 @@ public class EventReport {
 						ArrayList<SimpleEventElement> a = getCometAsteroidVisibleNakedEye(jd0, jdf, obs, eph);
 						for (int si = 0; si < a.size(); si ++) {
 							s = a.get(si);
-							if (s.time > jd0 && s.time < jdf) list.add(s);							
+							if (s.time > jd0 && s.time < jdf) list.add(s);
 						}
 					}
 					s = null;
@@ -562,7 +562,7 @@ public class EventReport {
 						ArrayList<SimpleEventElement> a = getCloseApproachOfNEOs(jd0, jdf, obs, eph);
 						for (int si = 0; si < a.size(); si ++) {
 							s = a.get(si);
-							if (s.time > jd0 && s.time < jdf) list.add(s);							
+							if (s.time > jd0 && s.time < jdf) list.add(s);
 						}
 					}
 					s = null;
@@ -584,13 +584,13 @@ public class EventReport {
 									for (int si = 0; si < th0.a.size(); si ++) {
 										s = th0.a.get(si);
 										if (s.time > jd0 && s.time < jdf) list.add(s);
-									}									
+									}
 								}
 								if (th1.a != null) {
 									for (int si = 0; si < th1.a.size(); si ++) {
 										s = th1.a.get(si);
-										if (s.time > jd0 && s.time < jdf) list.add(s);							
-									}									
+										if (s.time > jd0 && s.time < jdf) list.add(s);
+									}
 								}
 							} catch (Exception exc) {
 								exc.printStackTrace();
@@ -600,19 +600,19 @@ public class EventReport {
 							ArrayList<SimpleEventElement> a = getMoonEvents(jd0, jdf, obs, eph);
 							for (int si = 0; si < a.size(); si ++) {
 								s = a.get(si);
-								if (s.time > jd0 && s.time < jdf) list.add(s);							
+								if (s.time > jd0 && s.time < jdf) list.add(s);
 							}
 							eph.targetBody = TARGET.SATURN;
 							a = getMoonEvents(jd0, jdf, obs, eph);
 							for (int si = 0; si < a.size(); si ++) {
 								s = a.get(si);
-								if (s.time > jd0 && s.time < jdf) list.add(s);							
+								if (s.time > jd0 && s.time < jdf) list.add(s);
 							}
 							eph.targetBody = TARGET.URANUS;
 							a = getMoonEvents(jd0, jdf, obs, eph);
 							for (int si = 0; si < a.size(); si ++) {
 								s = a.get(si);
-								if (s.time > jd0 && s.time < jdf) list.add(s);							
+								if (s.time > jd0 && s.time < jdf) list.add(s);
 							}
 						}
 					}
@@ -646,11 +646,11 @@ public class EventReport {
 					s = null;
 					break;
 				};
-				
+
 				if (s == null) break;
 				if (s.equals(sold)) {
 					jd += (jd - s.time);
-				} else { 
+				} else {
 					if (s.time > jd0 && s.time < jdf) {
 						if (event == 0 || event == 1 || event == 10 || event == 11) {
 							TimeElement time = new TimeElement(s.time, SCALE.TERRESTRIAL_TIME);
@@ -666,7 +666,7 @@ public class EventReport {
 								try {
 									re = new RenderEclipse(new AstroDate(s.time-0.25));
 								} catch (Exception exc) {
-									re = new RenderEclipse(new AstroDate(s.time+0.25));			
+									re = new RenderEclipse(new AstroDate(s.time+0.25));
 								}
 								if (Math.abs(re.getEclipseDate().jd()-s.time) < 3)
 									if (!re.isVisible(obs)) solarEclipseNotVisible = true;
@@ -691,8 +691,8 @@ public class EventReport {
 		Object a[] = DataSet.sortInCrescent(list.toArray(), val);
 		for (int i=0; i<list.size(); i++) {
 			list.set(i, (SimpleEventElement) a[i]);
-		}	
-		
+		}
+
 		// Eliminate duplicate entries, if any
 		for (int i=1; i<list.size(); i++) {
 			do {
@@ -706,14 +706,14 @@ public class EventReport {
 				}
 			} while(true);
 		}
-		
+
 		return list;
 	}
 
 	/**
 	 * Creates an RSS feed with astronomical events. The description of the
 	 * events is set according to the current language.
-	 *  
+	 *
 	 * @param list The list of events.
 	 * @param obs The observer.
 	 * @return The feed populate with events.
@@ -728,8 +728,8 @@ public class EventReport {
 		if (Translate.getDefaultLanguage() == LANGUAGE.SPANISH) language = "es";
 		String copyright = "";
 		String pubDate = "";
-		String url = "";		
-		
+		String url = "";
+
 		Feed feed = new Feed(title, link, description, language, copyright, pubDate);
 		feed.setFeedImage(url);
 
@@ -738,7 +738,7 @@ public class EventReport {
 				EphemerisElement.FRAME.DYNAMICAL_EQUINOX_J2000);
 		eph.correctForEOP = false;
 		eph.correctForPolarMotion = false;
-		
+
 		// Populate the feed
 		for (int i=0; i<list.size(); i++) {
 			SimpleEventElement s = list.get(i);
@@ -746,7 +746,7 @@ public class EventReport {
 			description = s.toString(obs, eph, SCALE.LOCAL_TIME);
 			int lastCP = description.lastIndexOf(")");
 			int twoP = description.indexOf(": ");
-			if (lastCP > 0 && twoP > 0 && twoP < lastCP && 
+			if (lastCP > 0 && twoP > 0 && twoP < lastCP &&
 					s.eventType != EVENT.PLANET_MINIMUM_DISTANCE &&
 					s.eventType != EVENT.PLANET_MAXIMUM_DISTANCE &&
 					s.eventType != EVENT.PLANET_MAXIMUM_DISTANCE_FROM_SUN &&
@@ -763,7 +763,7 @@ public class EventReport {
 					s.eventType != EVENT.MOON_APOGEE &&
 					s.eventType != EVENT.MOON_PERIGEE
 					) {
-				if (twoP >= 0 && (s.eventType == EVENT.ECLIPSE || s.eventType == EVENT.OCCULTATION || 
+				if (twoP >= 0 && (s.eventType == EVENT.ECLIPSE || s.eventType == EVENT.OCCULTATION ||
 						s.eventType == EVENT.MOON_MAXIMUM_DECLINATION || s.eventType == EVENT.MOON_MINIMUM_DECLINATION ||
 						s.eventType == EVENT.PLANET_CONJUNCTION || s.eventType == EVENT.PLANET_OPPOSITION)) {
 					title = description.substring(0, twoP).trim();
@@ -789,10 +789,10 @@ public class EventReport {
 			String imgs[] = null;
 			feed.addFeedMessage(Feed.createMessage(title, description, link, author, guid, imgs, getPDate(obs)));
 		}
-		
+
 		return feed;
 	}
-	
+
 	private static class thread0 implements Runnable {
 		private double jd0, jdf;
 		private ObserverElement obs;
@@ -816,9 +816,9 @@ public class EventReport {
 					}
 				}
 			} catch (Exception exc) {}
-		}		
+		}
 	}
-	
+
 	private static class thread1 implements Runnable {
 		private double jd0, jdf;
 		private ObserverElement obs;
@@ -835,14 +835,14 @@ public class EventReport {
 				eph.targetBody = TARGET.SATURN;
 				a = getMoonEvents(jd0, jdf, obs, eph);
 			} catch (Exception exc) {	}
-		}		
+		}
 	}
-	
+
 	private static String getPDate(ObserverElement obs) throws JPARSECException {
-		// Assume the execution is by the observer defined here 
+		// Assume the execution is by the observer defined here
 		return (new AstroDate()).toStandarizedString(obs);
 	}
-	
+
 	private static String replaceVars(String raw, String[] vars, String[] values) {
 		if (vars == null) return raw;
 		String out = raw;
@@ -864,7 +864,7 @@ public class EventReport {
 
 		ArrayList list = new ArrayList();
 		Object o = re.getReadElements();
-		
+
 		// Connect to the file
 		try
 		{
@@ -889,7 +889,7 @@ public class EventReport {
 			if (o == null) {
 				re.setReadElements(list);
 			} else {
-				re.addReadElements(list);				
+				re.addReadElements(list);
 			}
 		} catch (Exception e2)
 		{
@@ -897,7 +897,7 @@ public class EventReport {
 					"error while reading file " + re.pathToFile, e2);
 		}
 	}
-	
+
 	private static String types[] = new String[] {"unk", "gal", "neb", "pneb", "ocl", "gcl", "galpart", "qua", "duplicate", "duplicateInNGC", "star/s", "notFound"};
 	private static ArrayList<Object> readObjects(double maglim) throws JPARSECException {
 		ArrayList<Object> objects = new ArrayList<Object>();
@@ -917,7 +917,7 @@ public class EventReport {
 				String min = FileIO.getField(7, line, " ", true);
 				String pa = FileIO.getField(8, line, " ", true);
 				String com = FileIO.getRestAfterField(8, line, " ", true);
-				
+
 				double m = Double.parseDouble(mag);
 				LocationElement loc = new LocationElement(Double.parseDouble(ra)/Constant.RAD_TO_HOUR, Double.parseDouble(dec)*Constant.DEG_TO_RAD, 1.0);
 				if (loc != null && m < maglim) {
@@ -938,7 +938,7 @@ public class EventReport {
 					}
 					double maxSize = Double.parseDouble(max), minSize = Double.parseDouble(min);
 					if (tt == 6 && maxSize == 0.0) maxSize = minSize = 0.5/60.0;
-					
+
 					try {
 						int ngc = Integer.parseInt(name);
 						if (ngc > 0) name = "NGC" + name;
@@ -948,10 +948,10 @@ public class EventReport {
 						} catch (Exception exc2) {	}
 					}
 					if (!messier.equals("")) name += " ("+messier+")";
-					
-					objects.add(new Object[] {name, messier, tt, loc, m, 
+
+					objects.add(new Object[] {name, messier, tt, loc, m,
 							new float[] {(float) maxSize, (float) minSize}, pa, com});
-				}					
+				}
 			}
 
 			// Close file
@@ -969,7 +969,7 @@ public class EventReport {
 
 	private static ArrayList<SimpleEventElement> getCloseApproachOfNEOs(double jd0, double jdf, ObserverElement obs, EphemerisElement ephIn) throws JPARSECException {
 		ArrayList<SimpleEventElement> list = new ArrayList<SimpleEventElement>();
-	
+
 		ReadFile re = new ReadFile(FORMAT.MPC, OrbitEphem.PATH_TO_MPC_NEOs_FILE);
 		re.readFileOfNEOs((jd0+jdf)*0.5, 365);
 		int n = re.getNumberOfObjects();
@@ -982,38 +982,38 @@ public class EventReport {
 		eph.correctEOPForDiurnalSubdiurnalTides = false;
 		eph.correctForEOP = false;
 		eph.correctForPolarMotion = false;
-		
+
 		eph.targetBody = TARGET.NEO;
 		eph.algorithm = EphemerisElement.ALGORITHM.ORBIT;
 		double step = 1.0;
-		
+
 		double times[] = new double[n];
 		double minD[] = new double[n];
 		for (int i=0; i<n; i++) {
 			times[i] = -1;
 			minD[i] = -1;
 		}
-		
+
 		for (double jd = jd0; jd <=jdf; jd = jd + step) {
 			TimeElement time = new TimeElement(jd, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
 			for (int index = 0; index < n; index++)
 			{
-				OrbitalElement orbit = re.getOrbitalElement(index);				
+				OrbitalElement orbit = re.getOrbitalElement(index);
 				eph.orbit = orbit;
 				EphemElement ephem = OrbitEphem.orbitEphemeris(time, obs, eph);
-				
+
 				if (ephem.distance < minD[index] || minD[index] == -1) {
 					minD[index] = ephem.distance;
 					times[index] = jd;
 				}
 			}
 		}
-		
+
 		for (int i=0; i<n; i++) {
 			if (times[i] != -1 && minD[i] < 400000 / Constant.AU) {
-				OrbitalElement orbit = re.getOrbitalElement(i);				
+				OrbitalElement orbit = re.getOrbitalElement(i);
 				eph.orbit = orbit;
-				
+
 				double t[] = new double[5], d[] = new double[5];
 				double back = 0.75;
 				double tstep = 2.0 * back / 5.0;
@@ -1024,27 +1024,27 @@ public class EventReport {
 					t[nn] = jd;
 					d[nn] = ephem.distance;
 				}
-				
+
 				Interpolation interp = new Interpolation(t, d, false);
 				Point2D p = interp.MeeusExtremum();
 				double jd = p.getX();
 				TimeElement time = new TimeElement(jd, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
 				EphemElement ephem = OrbitEphem.orbitEphemeris(time, obs, eph);
-				
+
 				String details = ""+p.getY();
 				SimpleEventElement s = new SimpleEventElement(jd, EVENT.PLANET_MINIMUM_DISTANCE, details);
 				s.body = orbit.name;
 				s.eventLocation = ephem.getEquatorialLocation();
 				list.add(s);
 			}
-		}		
-		
+		}
+
 		return list;
 	}
-	
+
 	private static ArrayList<SimpleEventElement> getCometAsteroidVisibleNakedEye(double jd0, double jdf, ObserverElement obs, EphemerisElement ephIn) throws JPARSECException {
 		ArrayList<SimpleEventElement> list = new ArrayList<SimpleEventElement>();
-		
+
 		EphemerisElement eph = ephIn.clone();
 		eph.ephemType = COORDINATES_TYPE.ASTROMETRIC;
 		eph.equinox = Constant.J2000;
@@ -1053,7 +1053,7 @@ public class EventReport {
 		eph.correctEOPForDiurnalSubdiurnalTides = false;
 		eph.correctForEOP = false;
 		eph.correctForPolarMotion = false;
-		
+
 		int ncomet = OrbitEphem.getCometsCount();
 		int naster = OrbitEphem.getAsteroidsCount();
 		OrbitalElement comets[] = new OrbitalElement[ncomet];
@@ -1064,7 +1064,7 @@ public class EventReport {
 		for (int i=0; i<naster; i++) {
 			asteroids[i] = OrbitEphem.getOrbitalElementsOfAsteroid(i);
 		}
-		
+
 		eph.targetBody = TARGET.Comet;
 		eph.algorithm = EphemerisElement.ALGORITHM.ORBIT;
 		int year0 = (new AstroDate(jd0)).getYear();
@@ -1085,7 +1085,7 @@ public class EventReport {
 				if (orbit.name.startsWith("C/")) {
 					try {
 						if (orbit.referenceTime < jd0 - 365*2) continue;
-						
+
 						int year = Integer.parseInt(orbit.name.substring(2, orbit.name.indexOf(" ")));
 						if (year > year0+1) continue;
 					} catch (Exception exc) {
@@ -1093,9 +1093,9 @@ public class EventReport {
 						continue;
 					}
 				}
-				
+
 				eph.orbit = orbit;
-				if (Math.abs(orbit.referenceTime - jd) < Constant.JULIAN_DAYS_PER_CENTURY && 
+				if (Math.abs(orbit.referenceTime - jd) < Constant.JULIAN_DAYS_PER_CENTURY &&
 						orbit.getMagnitude(jd) < maglim)
 				{
 					eph.targetBody = TARGET.Comet;
@@ -1106,11 +1106,11 @@ public class EventReport {
 							events = DataSet.addStringArray(events, new String[] {cometVisible+ephem.name});
 							times = DataSet.addDoubleArray(times, new double[] {jd});
 							obj = DataSet.addObjectArray(obj, new Object[] {ephem.getEquatorialLocation()});
-							events = DataSet.addStringArray(events, new String[] {ephem.distance+" "+cometPerig+ephem.name});								
+							events = DataSet.addStringArray(events, new String[] {ephem.distance+" "+cometPerig+ephem.name});
 							times = DataSet.addDoubleArray(times, new double[] {jd});
 							obj = DataSet.addObjectArray(obj, new Object[] {ephem.getEquatorialLocation()});
 							if (orbit.meanAnomaly == 0.0) {
-								events = DataSet.addStringArray(events, new String[] {orbit.perihelionDistance+" "+cometPerih+ephem.name});								
+								events = DataSet.addStringArray(events, new String[] {orbit.perihelionDistance+" "+cometPerih+ephem.name});
 								times = DataSet.addDoubleArray(times, new double[] {orbit.referenceTime});
 								obj = DataSet.addObjectArray(obj, new Object[] {new LocationElement(0.0, 0.0, 0.0)});
 							}
@@ -1119,21 +1119,21 @@ public class EventReport {
 						if (imax >= 0) {
 							double mag = Double.parseDouble(FileIO.getField(1, events[imax], " ", true));
 							if (ephem.magnitude < mag) {
-								events[imax] = ephem.magnitude+" "+ephem.elongation+" "+cometMaxMag+ephem.name;							
+								events[imax] = ephem.magnitude+" "+ephem.elongation+" "+cometMaxMag+ephem.name;
 								times[imax] = jd;
 								obj[imax] = ephem.getEquatorialLocation();
 							}
 						} else {
-							events = DataSet.addStringArray(events, new String[] {ephem.magnitude+" "+ephem.elongation+" "+cometMaxMag+ephem.name});							
+							events = DataSet.addStringArray(events, new String[] {ephem.magnitude+" "+ephem.elongation+" "+cometMaxMag+ephem.name});
 							times = DataSet.addDoubleArray(times, new double[] {jd});
 							obj = DataSet.addObjectArray(obj, new Object[] {ephem.getEquatorialLocation()});
 						}
 					} else {
 						if (ivis0 >= 0) {
-							events = DataSet.addStringArray(events, new String[] {cometUnvisible+ephem.name});						
+							events = DataSet.addStringArray(events, new String[] {cometUnvisible+ephem.name});
 							times = DataSet.addDoubleArray(times, new double[] {jd});
 							obj = DataSet.addObjectArray(obj, new Object[] {ephem.getEquatorialLocation()});
-							events[ivis0] = "*"+cometVisible+ephem.name;														
+							events[ivis0] = "*"+cometVisible+ephem.name;
 						}
 					}
 					int imax = DataSet.getIndexEndingWith(events, " "+cometPerig+ephem.name);
@@ -1147,15 +1147,15 @@ public class EventReport {
 					}
 				}
 			}
-		
-			
+
+
 			eph.targetBody = TARGET.Asteroid;
 			eph.algorithm = EphemerisElement.ALGORITHM.ORBIT;
 			for (int index = 0; index < naster; index++)
 			{
 				OrbitalElement orbit = asteroids[index];
 				eph.orbit = orbit;
-				if (Math.abs(orbit.referenceTime - jd) < Constant.JULIAN_DAYS_PER_CENTURY && 
+				if (Math.abs(orbit.referenceTime - jd) < Constant.JULIAN_DAYS_PER_CENTURY &&
 						orbit.getAsteroidMaximumMagnitude() < maglim)
 				{
 					eph.targetBody = TARGET.Asteroid;
@@ -1171,28 +1171,28 @@ public class EventReport {
 						if (imax >= 0) {
 							double mag = Double.parseDouble(FileIO.getField(1, events[imax], " ", true));
 							if (ephem.magnitude < mag) {
-								events[imax] = ephem.magnitude+" "+ephem.elongation+" "+asteroidMaxMag+ephem.name;							
+								events[imax] = ephem.magnitude+" "+ephem.elongation+" "+asteroidMaxMag+ephem.name;
 								times[imax] = jd;
 								obj[imax] = ephem.getEquatorialLocation();
 							}
 						} else {
-							events = DataSet.addStringArray(events, new String[] {ephem.magnitude+" "+ephem.elongation+" "+asteroidMaxMag+ephem.name});							
+							events = DataSet.addStringArray(events, new String[] {ephem.magnitude+" "+ephem.elongation+" "+asteroidMaxMag+ephem.name});
 							times = DataSet.addDoubleArray(times, new double[] {jd});
 							obj = DataSet.addObjectArray(obj, new Object[] {ephem.getEquatorialLocation()});
 						}
 					} else {
 						if (ivis0 >= 0) {
-							events = DataSet.addStringArray(events, new String[] {asteroidUnvisible+ephem.name});						
+							events = DataSet.addStringArray(events, new String[] {asteroidUnvisible+ephem.name});
 							times = DataSet.addDoubleArray(times, new double[] {jd});
 							obj = DataSet.addObjectArray(obj, new Object[] {ephem.getEquatorialLocation()});
-							events[ivis0] = "*"+asteroidVisible+ephem.name;														
+							events[ivis0] = "*"+asteroidVisible+ephem.name;
 						}
 					}
 				}
 			}
 		}
-		
-		
+
+
 		String type = "";
 		String comet = Translate.translate(74), asteroid = Translate.translate(73);
 		for (int i=0; i<events.length; i++) {
@@ -1220,7 +1220,7 @@ public class EventReport {
 						LocationElement loc = (LocationElement) obj[i];
 						if (loc.getLatitude() != 0.0 || loc.getLongitude() != 0.0 || loc.getRadius() != 0.0)
 							s.eventLocation = loc;
-					}					
+					}
 				} else {
 					if (events[i].indexOf(" "+cometMaxMag) > 0) type = comet;
 					if (events[i].indexOf(" "+asteroidMaxMag) > 0) type = asteroid;
@@ -1259,29 +1259,29 @@ public class EventReport {
 									if (loc.getLatitude() != 0.0 || loc.getLongitude() != 0.0 || loc.getRadius() != 0.0)
 										s.eventLocation = loc;
 								}
-							}							
-						}											
-					}					
+							}
+						}
+					}
 				}
 			}
-			
+
 			if (s != null) list.add(s);
 		}
-		
+
 		return list;
 	}
-	
+
 	private static ArrayList<SimpleEventElement> getOccCon(double jd0, double jdf, ObserverElement obs, EphemerisElement ephIn) throws JPARSECException {
 		int stepTest = 0;
 		ArrayList<SimpleEventElement> list = new ArrayList<SimpleEventElement>();
-		
+
 		ReadFile re_star = new ReadFile();
 		re_star.setPath(FileIO.DATA_STARS_SKY2000_DIRECTORY + "JPARSEC_Sky2000.txt");
 		re_star.setFormat(ReadFile.FORMAT.JPARSEC_SKY2000);
 
-		readFileOfStars(occultationsConjunctionsStarMaglim, re_star);					
+		readFileOfStars(occultationsConjunctionsStarMaglim, re_star);
 		ArrayList<Object> objects = readObjects(occultationsConjunctionsObjectMaglim);
-		
+
 		double step = 0.0125; // 0.0125 d = 18 min => errors around 1 minute in star/planet occultations by Moon
 		EphemerisElement eph = ephIn.clone();
 		eph.ephemType = COORDINATES_TYPE.ASTROMETRIC;
@@ -1291,7 +1291,7 @@ public class EventReport {
 		eph.correctEOPForDiurnalSubdiurnalTides = false;
 		eph.correctForEOP = false;
 		eph.correctForPolarMotion = false;
-		
+
 		int ncomet = OrbitEphem.getCometsCount();
 		int naster = OrbitEphem.getAsteroidsCount();
 		double maglim = occultationsConjunctionsPlanetMaglim;
@@ -1308,7 +1308,7 @@ public class EventReport {
 					sourceEphem.add(null);
 				}
 			}
-			
+
 			eph.algorithm = ALGORITHM.MOSHIER;
 			for (int target = 0; target<=TARGET.Moon.ordinal(); target ++) {
 				if ((target != TARGET.EARTH.ordinal() || obs.getMotherBody() != TARGET.EARTH) && (target != TARGET.Pluto.ordinal() || includePlutoAsPlanet)) {
@@ -1335,16 +1335,16 @@ public class EventReport {
 					if (orbit.name.startsWith("C/")) {
 						try {
 							if (orbit.referenceTime < jd0 - 365*2) continue;
-							
+
 							int year = Integer.parseInt(orbit.name.substring(2, orbit.name.indexOf(" ")));
 							if (year > year0+1) continue;
 						} catch (Exception exc) {
 							continue;
 						}
 					}
-					
+
 					eph.orbit = orbit;
-					if (Math.abs(orbit.referenceTime - jd) < Constant.JULIAN_DAYS_PER_CENTURY && 
+					if (Math.abs(orbit.referenceTime - jd) < Constant.JULIAN_DAYS_PER_CENTURY &&
 							orbit.getMagnitude(jd) < maglim)
 					{
 						EphemElement ephem = OrbitEphem.orbitEphemeris(time, obs, eph);
@@ -1359,15 +1359,15 @@ public class EventReport {
 						//}
 					}
 				}
-	
-				
+
+
 				eph.targetBody = TARGET.Asteroid;
 				eph.algorithm = EphemerisElement.ALGORITHM.ORBIT;
 				for (int index = 0; index < naster; index++)
 				{
 					OrbitalElement orbit = OrbitEphem.getOrbitalElementsOfAsteroid(index);
 					eph.orbit = orbit;
-					if (Math.abs(orbit.referenceTime - jd) < Constant.JULIAN_DAYS_PER_CENTURY && 
+					if (Math.abs(orbit.referenceTime - jd) < Constant.JULIAN_DAYS_PER_CENTURY &&
 							orbit.getAsteroidMaximumMagnitude() < maglim)
 					{
 						EphemElement ephem = OrbitEphem.orbitEphemeris(time, obs, eph);
@@ -1378,7 +1378,7 @@ public class EventReport {
 								sourceEphem.add(ephem);
 							} else {
 								sourceEphem.set(si, ephem);
-							}						
+							}
 						//}
 					}
 				}
@@ -1386,29 +1386,29 @@ public class EventReport {
 
 			listEphem.add(sourceEphem);
 		}
-		
+
 		int moon = 8;
 		if (includePlutoAsPlanet) moon ++;
 		if (obs.getMotherBody() != TARGET.EARTH) moon ++;
-		
+
 		int nbody = source.size();
 		TARGET mother = obs.getMotherBody();
 		if (mother.isNaturalSatellite()) mother = mother.getCentralBody();
 		int initBody = moon+1;
 		if (mother != TARGET.EARTH && mother != TARGET.Moon) initBody = 1;
-		
+
 		// Comet/asteroid in front of Sun
 		for (int i=initBody; i<nbody; i++) {
 			if (i > moon || i < mother.ordinal())
-				addEvent(jd0, jdf, step, list, listEphem, 0, i, -1, obs, eph); // 0 = Sun, -1 = Sun radius and d<d0 => In front of Sun 
+				addEvent(jd0, jdf, step, list, listEphem, 0, i, -1, obs, eph); // 0 = Sun, -1 = Sun radius and d<d0 => In front of Sun
 		}
 		// Planet/comet/asteroid behind Moon
 		Object o[] = re_star.getReadElements();
 		if (mother == TARGET.EARTH) {
 			for (int i=1; i<nbody; i++) {
-				if (i != moon) addEvent(jd0, jdf, step, list, listEphem, moon, i, -2, obs, eph); // 8 = Moon, -2 = Moon radius and d<d0 => behind Moon 
+				if (i != moon) addEvent(jd0, jdf, step, list, listEphem, moon, i, -2, obs, eph); // 8 = Moon, -2 = Moon radius and d<d0 => behind Moon
 			}
-		
+
 			// Star behind Moon
 			for (int i=0; i<o.length; i++) {
 				StarElement s = (StarElement) o[i];
@@ -1420,32 +1420,32 @@ public class EventReport {
 				} else {
 					name = "star #"+name;
 				}
-				addEvent(jd0, jdf, step, list, listEphem, moon, 
-						new LocationElement(s.rightAscension, s.declination, s.getDistance() * (Constant.PARSEC / (Constant.AU * 1000.0))), 
-						name, -2, s.magnitude, obs, eph); // 8 = Moon, -2 = Moon radius and d<d0 => star behind Moon 
+				addEvent(jd0, jdf, step, list, listEphem, moon,
+						new LocationElement(s.rightAscension, s.declination, s.getDistance() * (Constant.PARSEC / (Constant.AU * 1000.0))),
+						name, -2, s.magnitude, obs, eph); // 8 = Moon, -2 = Moon radius and d<d0 => star behind Moon
 			}
 			// Deep sky object behind Moon
 			for (int i=0; i<objects.size(); i++) {
 				Object[] s = (Object[]) objects.get(i);
-				addEvent(jd0, jdf, step, list, listEphem, moon, 
-						(LocationElement) s[3], 
-						(String) s[0], -2, -100, obs, eph); // 8 = Moon, -2 = Moon radius and d<d0 => star behind Moon 
+				addEvent(jd0, jdf, step, list, listEphem, moon,
+						(LocationElement) s[3],
+						(String) s[0], -2, -100, obs, eph); // 8 = Moon, -2 = Moon radius and d<d0 => star behind Moon
 			}
 		}
-		
+
 		// Conjunctions between planets and comets/asteroids, not Moon, and not occultations
 		for (int i=3; i<nbody-1; i++) {
 			for (int j=i+1; j<nbody; j++) {
-				if (i != moon && j != moon) addEvent(jd0, jdf, step, list, listEphem, i, j, 5, obs, eph); 
+				if (i != moon && j != moon) addEvent(jd0, jdf, step, list, listEphem, i, j, 5, obs, eph);
 			}
 		}
 		// Conjunctions between Moon and planets, but without occultations
 		if (mother == TARGET.EARTH) {
 			for (int i=1; i<moon; i++) {
-				addEvent(jd0, jdf, step, list, listEphem, moon, i, 5, obs, eph); 
+				addEvent(jd0, jdf, step, list, listEphem, moon, i, 5, obs, eph);
 			}
 		}
-		
+
 		// Conjunctions between planets/Moon and stars
 		for (int i=1; i<nbody; i++) {
 			if (mother == TARGET.EARTH || (i != moon && i != mother.ordinal())) {
@@ -1462,9 +1462,9 @@ public class EventReport {
 					double lim = 5;
 					if (i > moon) lim = 1;
 					if (i <= moon && s.magnitude > 1.5) lim = 1;
-					addEvent(jd0, jdf, step, list, listEphem, i, 
-							new LocationElement(s.rightAscension, s.declination, s.getDistance() * (Constant.PARSEC / (Constant.AU * 1000.0))), 
-							name, lim, s.magnitude, obs, eph); 
+					addEvent(jd0, jdf, step, list, listEphem, i,
+							new LocationElement(s.rightAscension, s.declination, s.getDistance() * (Constant.PARSEC / (Constant.AU * 1000.0))),
+							name, lim, s.magnitude, obs, eph);
 				}
 			}
 		}
@@ -1474,7 +1474,7 @@ public class EventReport {
 				double lim = 1;
 				for (int j=0; j<objects.size(); j++) {
 					Object[] s = (Object[]) objects.get(j);
-					addEvent(jd0, jdf, step, list, listEphem, i, (LocationElement) s[3], (String) s[0], lim, -100, obs, eph); 
+					addEvent(jd0, jdf, step, list, listEphem, i, (LocationElement) s[3], (String) s[0], lim, -100, obs, eph);
 				}
 			}
 		}
@@ -1495,11 +1495,11 @@ public class EventReport {
 			index ++;
 			ArrayList<EphemElement> ephem = (ArrayList<EphemElement>) listEphem.get(index);
 			if (ephem.size() <= Math.max(body1, body0)) break;
-			
+
 		    EphemElement ephem0 = ephem.get(body0);
 		    EphemElement ephem1 = ephem.get(body1);
 		    if (ephem0 == null || ephem1 == null) break;
-		    
+
 		    double d = LocationElement.getApproximateAngularDistance(ephem0.getEquatorialLocation(), ephem1.getEquatorialLocation()) * Constant.RAD_TO_DEG;
 		    x.add(jd);
 		    y.add(d);
@@ -1508,13 +1508,13 @@ public class EventReport {
 		    double size = (ephem0.angularRadius + ephem1.angularRadius) * Constant.RAD_TO_DEG;
 		    if (ephem0.distance < ephem1.distance && limitD != -2 && limitD != 5 && limitD != 1) size = 0;
 		    z.add(size);
-		    
+
 		    if (jd == jd0) {
 		    	b0 = ephem0.name;
 		    	b1 = ephem1.name;
 		    }
 		}
-		
+
 		double xv[] = DataSet.arrayListToDoubleArray(x);
 		double yv[] = DataSet.arrayListToDoubleArray(y);
 		boolean down = false;
@@ -1532,7 +1532,7 @@ public class EventReport {
 						maxi = xv.length-1;
 						mini = maxi - 4;
 					}
-					
+
 					int meani = (mini + maxi) / 2;
 					double vx[] = DataSet.getSubArray(xv, mini, maxi);
 					double vy[] = DataSet.getSubArray(yv, mini, maxi);
@@ -1550,7 +1550,7 @@ public class EventReport {
 							Interpolation indec = new Interpolation(vx, vydec, false);
 							LocationElement loc = new LocationElement(inra.MeeusInterpolation(p.getX()),
 									indec.MeeusInterpolation(p.getX()), 1.0);
-							
+
 							EVENT event = EVENT.CONJUNCTION;
 							String details = "";
 							if (limitD == -1) {
@@ -1562,7 +1562,7 @@ public class EventReport {
 								event = EVENT.OCCULTATION;
 							}
 							if (limitD > 0) details = Translate.translate(1008)+" "+b0+"-"+b1;
-							String add = " (d = "+Functions.formatValue(p.getY(), 1)+"\u00ba)";
+							String add = " (d = "+Functions.formatValue(p.getY(), 1)+"\u00b0)";
 							double init = -1, end = -1;
 							if (event != EVENT.CONJUNCTION) {
 								double find = -1, previous = -1;
@@ -1592,12 +1592,12 @@ public class EventReport {
 								}
 								if (init != -1 && end != -1 && init != end) {
 									TimeElement timeE = new TimeElement(p.getX(), SCALE.TERRESTRIAL_TIME);
-									add = " (d = "+Functions.formatValue(p.getY(), 1)+"\u00ba, "+
+									add = " (d = "+Functions.formatValue(p.getY(), 1)+"\u00b0, "+
 										Translate.translate(1022).toLowerCase()+" "+timeE.toMinString()+")";
 								}
-							} 
+							}
 							details += add;
-							
+
 							if ((limitD != 5 && limitD != 1) || p.getY() >= z.get(meani)) {
 								SimpleEventElement s = new SimpleEventElement(p.getX(), event, details);
 								s.eventLocation = toApproximateApparent(loc, s.time);
@@ -1619,7 +1619,7 @@ public class EventReport {
 			}
 		}
 	}
-	
+
 	private static void addEvent(double jd0, double jdf, double step, ArrayList<SimpleEventElement> list,
 			ArrayList listEphem, int body0, LocationElement loc1, String b1, double limitD,
 			float magStar, ObserverElement obs, EphemerisElement eph) throws JPARSECException {
@@ -1636,7 +1636,7 @@ public class EventReport {
 			if (ephem.size() <= body0) break;
 		    EphemElement ephem0 = ephem.get(body0);
 		    if (ephem0 == null) break;
-		    
+
 		    double d = LocationElement.getApproximateAngularDistance(ephem0.getEquatorialLocation(), loc1) * Constant.RAD_TO_DEG;
 		    x.add(jd);
 		    y.add(d);
@@ -1645,10 +1645,10 @@ public class EventReport {
 		    double size = ephem0.angularRadius * Constant.RAD_TO_DEG;
 		    if (ephem0.distance < loc1.getRadius() && limitD != -2 && limitD != 5 && limitD != 1) size = 0;
 		    z.add(size);
-		    
+
 		    if (jd == jd0) b0 = ephem0.name;
 		}
-		
+
 		double xv[] = DataSet.arrayListToDoubleArray(x);
 		double yv[] = DataSet.arrayListToDoubleArray(y);
 		boolean down = false;
@@ -1666,7 +1666,7 @@ public class EventReport {
 						maxi = xv.length-1;
 						mini = maxi - 4;
 					}
-					
+
 					int meani = (mini + maxi) / 2;
 					double vx[] = DataSet.getSubArray(xv, mini, maxi);
 					double vy[] = DataSet.getSubArray(yv, mini, maxi);
@@ -1684,7 +1684,7 @@ public class EventReport {
 							Interpolation indec = new Interpolation(vx, vydec, false);
 							LocationElement loc = new LocationElement(inra.MeeusInterpolation(p.getX()),
 									indec.MeeusInterpolation(p.getX()), 1.0);
-							
+
 							EVENT event = EVENT.CONJUNCTION;
 							String details = "";
 							if (limitD == -1) {
@@ -1700,7 +1700,7 @@ public class EventReport {
 								if (p.getY() < z.get(meani))
 									details = b1+" "+Translate.translate(164).toLowerCase()+" "+Translate.translate(161)+" "+b0;
 							}
-							String add = " (d = "+Functions.formatValue(p.getY(), 1)+"\u00ba";
+							String add = " (d = "+Functions.formatValue(p.getY(), 1)+"\u00b0";
 							if (magStar > -100) add += ", mag = "+Functions.formatValue(magStar, 2);
 							add += ")";
 							double init = -1, end = -1;
@@ -1732,7 +1732,7 @@ public class EventReport {
 								}
 								if (init != -1 && end != -1 && init != end) {
 									TimeElement timeE = new TimeElement(p.getX(), SCALE.TERRESTRIAL_TIME);
-									add = " (d = "+Functions.formatValue(p.getY(), 1)+"\u00ba, "+
+									add = " (d = "+Functions.formatValue(p.getY(), 1)+"\u00b0, "+
 										Translate.translate(1022).toLowerCase()+" "+timeE.toMinString();
 									if (magStar > -100) add += ", mag = "+Functions.formatValue(magStar, 2);
 									add += ")";
@@ -1754,14 +1754,14 @@ public class EventReport {
 							}
 						}
 					}
-					
+
 					i = maxi;
 				}
 				down = false;
 			}
 		}
 	}
-	
+
 	private static LocationElement toApproximateApparent(LocationElement locIn, double equinox) throws JPARSECException {
 		LocationElement loc = locIn.clone();
 		loc.setRadius(1000 * Constant.RAD_TO_ARCSEC); // 1000 pctoApproximateApparent
@@ -1775,13 +1775,13 @@ public class EventReport {
 		loc = LocationElement.parseRectangularCoordinates(Nutation.nutateInEquatorialCoordinates(equinox, eph, r, true));
 		return loc;
 	}
-	
+
 	// Get events when Lunar Transient Phenomena (LTP) are more common. This method is based on historical records by
-	// NASA showing frequent/periodical LTP in certain craters at sunrise/sunset, so they can be 'predicted'. Although probably 
+	// NASA showing frequent/periodical LTP in certain craters at sunrise/sunset, so they can be 'predicted'. Although probably
 	// nothing strange would be visible within a few hours around the event, it is also nice to see the sun rising on them!
 	private static ArrayList<SimpleEventElement> getLTP(double jd0, double jdf, ObserverElement obs, EphemerisElement eph) throws JPARSECException {
 		ArrayList<SimpleEventElement> list = new ArrayList<SimpleEventElement>();
-		
+
 		double step = 2.0 / (60.0 * 24.0);
 		eph.targetBody = TARGET.Moon;
 		eph.algorithm = ALGORITHM.MOSHIER;
@@ -1799,7 +1799,7 @@ public class EventReport {
 		for (int i=0; i<crater.length; i++) {
 			event[i] = false;
 		}
-		
+
 		for (double jd = jd0; jd <=jdf; jd = jd + step) {
 			TimeElement time = new TimeElement(jd, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
 			EphemElement ephem = Ephem.getEphemeris(time, obs, eph, false);
@@ -1811,7 +1811,7 @@ public class EventReport {
 				double craterLon = Double.parseDouble(FileIO.getField(2, crater[i], " ", true)) * Constant.DEG_TO_RAD;
 				double craterLat = Double.parseDouble(FileIO.getField(3, crater[i], " ", true)) * Constant.DEG_TO_RAD;
 				double offset = Double.parseDouble(FileIO.getField(4, crater[i], " ", true));
-				
+
 				// Get elevation of sun from crater
 				double zx = (Math.cos(lonlsolar) * Math.sin(Constant.PI_OVER_TWO-latlsolar) - Math.cos(craterLon) * Math.sin(Constant.PI_OVER_TWO-craterLat));
 				double zy = (Math.sin(lonlsolar) * Math.sin(Constant.PI_OVER_TWO-latlsolar) - Math.sin(craterLon) * Math.sin(Constant.PI_OVER_TWO-craterLat));
@@ -1838,7 +1838,7 @@ public class EventReport {
 					event[i] = false;
 				}
 			}
-			
+
 			if (minValue > 0.2) {
 				double increment = minValue / 64.0; //16.0;
 				jd += increment;
@@ -1846,11 +1846,11 @@ public class EventReport {
 		}
 		return list;
 	}
-	
+
 	private static ArrayList<SimpleEventElement> getCalendarEvents(double jd0, double jdf, int year0, int yearf,
 			ObserverElement observer, EphemerisElement eph) throws JPARSECException {
 		ArrayList<SimpleEventElement> list = new ArrayList<SimpleEventElement>();
-		
+
 		MayanLongCount h = new MayanLongCount((int) (jd0 + 0.5));
 		MayanLongCount hNew = new MayanLongCount(h.baktun+1, 0, 0, 0, 0);
 		int lastDay = (int) (hNew.toJulianDay() + 0.5) - 1;
@@ -1861,7 +1861,7 @@ public class EventReport {
 			SimpleEventElement s = new SimpleEventElement(jd, EVENT.CALENDAR, details);
 			list.add(s);
 		}
-		
+
 		for (int year = year0; year <= yearf; year ++) {
 			int yearAstronomical = year;
 			if (year < 0) yearAstronomical ++;
@@ -1869,20 +1869,20 @@ public class EventReport {
 			for (int i=8;i<CalendarGenericConversion.CALENDAR_NAMES.length;i++) {
 				CALENDAR output_calendar = CALENDAR.values()[i];
 					int date[] = CalendarGenericConversion.GenericConversion(input_calendar, output_calendar, yearAstronomical, 1, 1);
-	
+
 					int monthForNewYear = 1;
 					if (i == CalendarGenericConversion.CALENDAR.HEBREW.ordinal()) monthForNewYear = 7;
-	
+
 					int date_back[] = CalendarGenericConversion.GenericConversion(output_calendar, input_calendar, date[0] + 1,	monthForNewYear, 1);
 					AstroDate astro_back = new AstroDate(date_back[0], date_back[1] , date_back[2]);
-	
+
 					jd = astro_back.jd();
 					if (jd > jd0 && jd < jdf) {
 						String details = Translate.translate("NEW").toLowerCase()+" "+Translate.translate(CalendarGenericConversion.CALENDAR_NAMES[i])+" "+Translate.translate("Year").toLowerCase();
-						SimpleEventElement s = new SimpleEventElement(jd, EVENT.CALENDAR, details); 
+						SimpleEventElement s = new SimpleEventElement(jd, EVENT.CALENDAR, details);
 						list.add(s);
 					}
-			}				
+			}
 			Chinese h0 = new Chinese((int) (jd + 0.5));
 			int yearTotal = h0.getYearNumber();
 			Chinese h2 = new Chinese(Chinese.newYear(year));
@@ -1891,7 +1891,7 @@ public class EventReport {
 			jd = astro_back.jd();
 			if (jd > jd0 && jd < jdf) {
 				String details = Translate.translate("NEW").toLowerCase()+" "+Translate.translate("Chinese")+" "+Translate.translate("Year").toLowerCase();
-				SimpleEventElement s = new SimpleEventElement(jd, EVENT.CALENDAR, details); 
+				SimpleEventElement s = new SimpleEventElement(jd, EVENT.CALENDAR, details);
 				list.add(s);
 			}
 		}
@@ -1902,24 +1902,24 @@ public class EventReport {
 			AstroDate astro_p1 = new AstroDate(Calendar.jdFromFixed(Ecclesiastical.easter(year)));
 			AstroDate astro_p2 = new AstroDate(Calendar.jdFromFixed(Ecclesiastical.pentecost(year)));
 
-			SimpleEventElement s1 = new SimpleEventElement(astro_p1.jd(), EVENT.CALENDAR, Translate.translate(1299)); 
+			SimpleEventElement s1 = new SimpleEventElement(astro_p1.jd(), EVENT.CALENDAR, Translate.translate(1299));
 			list.add(s1);
-			SimpleEventElement s2 = new SimpleEventElement(astro_p2.jd(), EVENT.CALENDAR, Translate.translate(1300)); 
+			SimpleEventElement s2 = new SimpleEventElement(astro_p2.jd(), EVENT.CALENDAR, Translate.translate(1300));
 			list.add(s2);
 
 			double times[] = TimeScale.getDSTStartEnd((new AstroDate(year1, 6, 1)).jd(), observer);
 			double dst1 = (new AstroDate(TimeScale.getJD(new TimeElement(times[0], SCALE.UNIVERSAL_TIME_UTC), observer, eph, SCALE.LOCAL_TIME))).jd();
 			double dst2 = (new AstroDate(1.0/24.0 + TimeScale.getJD(new TimeElement(times[1], SCALE.UNIVERSAL_TIME_UTC), observer, eph, SCALE.LOCAL_TIME))).jd();
-			
-			SimpleEventElement s3 = new SimpleEventElement(dst1, EVENT.CALENDAR, Translate.translate(1273)); 
+
+			SimpleEventElement s3 = new SimpleEventElement(dst1, EVENT.CALENDAR, Translate.translate(1273));
 			list.add(s3);
-			SimpleEventElement s4 = new SimpleEventElement(dst2, EVENT.CALENDAR, Translate.translate(1274)); 
+			SimpleEventElement s4 = new SimpleEventElement(dst2, EVENT.CALENDAR, Translate.translate(1274));
 			list.add(s4);
 		}
-		
+
 		return list;
 	}
-	
+
 	/**
 	 * ID constant for selecting eclipsing stars.
 	 */
@@ -1932,24 +1932,24 @@ public class EventReport {
 	 * ID constant for selecting both eclipsing and Mira-type stars.
 	 */
 	private static final int VARIABLE_STARS_ALL = 2;
-	
+
 	/**
-	 * Returns ephemerides for variable stars according to AAVSO bulletins and the 
-	 * <i>Up-to-date Linear Elements of Close Binaries</i>, (J.M. Kreiner, 2004), 
-	 * Acta Astronomica, vol. 54, pp 207-210. See AAVSO website and 
-	 * http://www.as.up.krakow.pl/o-c/cont.html for for more information on the 
+	 * Returns ephemerides for variable stars according to AAVSO bulletins and the
+	 * <i>Up-to-date Linear Elements of Close Binaries</i>, (J.M. Kreiner, 2004),
+	 * Acta Astronomica, vol. 54, pp 207-210. See AAVSO website and
+	 * http://www.as.up.krakow.pl/o-c/cont.html for for more information on the
 	 * variable stars.
 	 * @param time Time object.
 	 * @param observer Observer object.
 	 * @param which Selects which objects to retrieve, constants defined in this class.
 	 * @param minMag Minimum magnitude to filter results, or -1 to consider all.
-	 * @return A set of fields containing variable star type (ECLIPSING or MIRA), and, for 
-	 * eclipsing stars, name, RA, DEC (radians), magnitude range, phase; next minima date, jd of 
-	 * next minima. For long-period variables fields are: name, RA, DEC, magnitude range, 
-	 * next maxima; next minima, jd of next maxima; jd of next minima (local time). In 
-	 * case of error or date outside 1900-2100 null will be returned.  
+	 * @return A set of fields containing variable star type (ECLIPSING or MIRA), and, for
+	 * eclipsing stars, name, RA, DEC (radians), magnitude range, phase; next minima date, jd of
+	 * next minima. For long-period variables fields are: name, RA, DEC, magnitude range,
+	 * next maxima; next minima, jd of next maxima; jd of next minima (local time). In
+	 * case of error or date outside 1900-2100 null will be returned.
 	 */
-	private static ArrayList<String[]> getVariableStarsEphemerides(TimeElement time, ObserverElement observer, 
+	private static ArrayList<String[]> getVariableStarsEphemerides(TimeElement time, ObserverElement observer,
 			int which, double minMag) {
 		try {
 			EphemerisElement eph = new EphemerisElement(TARGET.NOT_A_PLANET, EphemerisElement.COORDINATES_TYPE.APPARENT,
@@ -1965,7 +1965,7 @@ public class EventReport {
 			if (which == VARIABLE_STARS_ECLIPSING || which == VARIABLE_STARS_ALL) {
 				ReadFile re = new ReadFile();
 				re.setPath(VariableStarElement.PATH_VARIABLE_STAR_CATALOG);
-				re.readFileOfVariableStars();				
+				re.readFileOfVariableStars();
 				int imax = re.getNumberOfObjects();
 
 				for (int i=0; i<imax;i++) {
@@ -1973,17 +1973,17 @@ public class EventReport {
 
 					try {
 						double primMag = Double.parseDouble(FileIO.getField(1, vstar.magRange, "-", true));
-						
+
 						boolean ok = true;
 						if (primMag > minMag && minMag != -1) ok = false;
-	
+
 						if (ok) {
 							vstar.calcEphemeris(time, observer, false);
-	
+
 							LocationElement loc = new LocationElement(vstar.rightAscension, vstar.declination, 1.0);
 							//String secondaryFlag = "";
 							//if (vstar.onlySecondaryMinima()) secondaryFlag = "*";
-	
+
 							double jd = vstar.getNextMinima();
 							String date1 = "-";
 							if (jd != 0.0) {
@@ -1991,7 +1991,7 @@ public class EventReport {
 								String l = "%day "+Translate.translate("of")+" %month, %hour:%minute LT";
 								date1 = replaceVars(l, new String[] {"year", "month", "day", "hour", "minute"}, new String[] {""+astro.getYear(), CalendarGenericConversion.getMonthName(astro.getMonth(), CalendarGenericConversion.CALENDAR.GREGORIAN), ""+astro.getDay(), ""+astro.getHour(), ""+astro.getMinute()});
 							}
-	
+
 							String c[] = new String[] {
 									"ECLIPSING",
 									vstar.name.trim(),
@@ -2002,7 +2002,7 @@ public class EventReport {
 									""+jd
 									//, vstar.spectralType+"|"+vstar.eclipsingType+"|"+vstar.minimaDuration
 							};
-							
+
 							a.add(c);
 						}
 					} catch (Exception exc) {}
@@ -2015,24 +2015,24 @@ public class EventReport {
 				if (year != 2011) path = DataSet.replaceAll(path, "2011", ""+year, false);
 				re.setPath(path);
 				try {
-					re.readFileOfVariableStars();				
+					re.readFileOfVariableStars();
 					int imax = re.getNumberOfObjects();
 
 					for (int i=0; i<imax;i++) {
 						VariableStarElement vstar = re.getVariableStarElement(i);
-	
+
 						String m = vstar.magRange;
 						if (m.lastIndexOf("-") > 0) {
 							m = m.substring(0, m.indexOf("-"));
 						}
 						double primMag = Double.parseDouble(m);
-						
+
 						boolean ok = true;
 						if (primMag > minMag && minMag != -1) ok = false;
-						
-						if (ok) { 
+
+						if (ok) {
 							LocationElement loc = new LocationElement(vstar.rightAscension, vstar.declination, 1.0);
-	
+
 							double jd = vstar.getNextMaxima(time, observer);
 							String date1 = "-";
 							String l = "%month, %day, %year";
@@ -2058,7 +2058,7 @@ public class EventReport {
 									date1+"; "+date2,
 									""+jdMax+";"+jd
 							};
-							
+
 							a.add(c);
 						}
 					}
@@ -2068,13 +2068,13 @@ public class EventReport {
 			}
 
 			return a;
-		} catch (Exception exc) { 
+		} catch (Exception exc) {
 			Logger.log(Logger.LEVEL.ERROR, exc.getMessage()+", at "+JPARSECException.getTrace(exc.getStackTrace())+".");
 		}
 		return null;
 	}
 
-	private static ArrayList<SimpleEventElement> getMoonEvents(double jd0, double jdf, ObserverElement obs, EphemerisElement ephIn) 
+	private static ArrayList<SimpleEventElement> getMoonEvents(double jd0, double jdf, ObserverElement obs, EphemerisElement ephIn)
 			throws JPARSECException {
 		ArrayList<SimpleEventElement> list = new ArrayList<SimpleEventElement>();
 		TimeElement timei = new TimeElement(jd0, SCALE.TERRESTRIAL_TIME);
@@ -2101,7 +2101,7 @@ public class EventReport {
 				}
 			}
 		}
-		
+
 		// Return all events for mutual phenomena
 		if (!moonEventsAlsoMutualEvents) return list;
 		onlySimultaneousEvents = false;

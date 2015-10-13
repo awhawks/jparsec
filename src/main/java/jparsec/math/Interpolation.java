@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.math;
 
 import java.awt.Color;
@@ -37,18 +37,18 @@ import jparsec.util.Translate;
 
 /**
  * Tools for linear and spline interpolation.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
 public class Interpolation implements Serializable
 {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	private double x_val[], y_val[], z_val[];
 	private boolean allowExtrapolation;
 	private double min, max;
-	
+
 	/**
 	 * Constructor for a 2d interpolation. Points are sorted
 	 * in abscissa crescent order, and repeated points are eliminated.
@@ -60,7 +60,7 @@ public class Interpolation implements Serializable
 	public Interpolation(double x[], double y[], boolean allowExtrapolation) throws JPARSECException {
 		init2d(x, y, allowExtrapolation);
 	}
-	
+
 	/**
 	 * Constructor for a 3d interpolation.
 	 * @param x X values.
@@ -92,9 +92,9 @@ public class Interpolation implements Serializable
 		this.allowExtrapolation = allowExtrapolation;
 		min = DataSet.getMinimumValue(x_val);
 		max = DataSet.getMaximumValue(x_val);
-		
+
 	}
-	
+
 	/**
 	 * Linear interpolation method.
 	 * @param x_point Interpolation point.
@@ -177,7 +177,7 @@ public class Interpolation implements Serializable
     	double p = 0.0, qn = 0.0, sig = 0.0, un = 0.0;
     	double[] u = new double[x_val.length];
     	d2ydx2 = new double[x_val.length];
-    	
+
         d2ydx2[0] = u[0] = 0.0;
     	for (int i=1; i<=x_val.length-2; i++){
 	    	sig = (x_val[i] - x_val[i-1]) / (x_val[i+1] - x_val[i-1]);
@@ -206,18 +206,18 @@ public class Interpolation implements Serializable
 		if (x < min || x > max) return true;
 		return false;
    	}
-   	
+
 	/**
-	 * Spline interpolation method. This method requires that the points are sorted in 
-	 * abscissa crescent order. Method adapted from the math library by Michael Thomas 
+	 * Spline interpolation method. This method requires that the points are sorted in
+	 * abscissa crescent order. Method adapted from the math library by Michael Thomas
 	 * Flanagan.
-	 * 
+	 *
 	 * @param xx Interpolation point.
 	 * @return The interpolated value. In case the input value is close enough to the
 	 * limit of the dataset (possible wrong output value) the spline interpolation with
 	 * 3rd order is called, since this method requires less points before/after the input
 	 * one. In case that method cannot be trusted, linear interpolation is returned.
-	 * @throws JPARSECException In case the input point is outside the valid range and 
+	 * @throws JPARSECException In case the input point is outside the valid range and
 	 * extrapolation is not allowed.
 	 */
 	public double splineInterpolation(double xx) throws JPARSECException {
@@ -225,7 +225,7 @@ public class Interpolation implements Serializable
 			if (isOutsideRange(xx))
 		    	throw new JPARSECException("Input value ("+xx+") is outside valid range ("+min+" to "+max+"), extrapolation required.");
 		}
-		
+
 		boolean canBeWrong = false;
 		int nlow = 0, nup = 0;
 		for (int i=0; i<x_val.length; i++) {
@@ -233,10 +233,10 @@ public class Interpolation implements Serializable
 			if (x_val[i] > xx) nup ++;
 		}
 		if (nlow < 8 || nup < 8) canBeWrong = true;
-		
-		
+
+
 		if (d2ydx2 == null) calcDeriv();
-		
+
         double h = 0.0, b = 0.0, a = 0.0, yy = 0.0;
     	int k = 0;
     	int klo = 0;
@@ -255,7 +255,7 @@ public class Interpolation implements Serializable
     	a = (x_val[khi] - xx) / h;
     	b = (xx - x_val[klo]) / h;
     	yy = a * y_val[klo] + b * y_val[khi] + ((a * a * a - a) * d2ydx2[klo] + (b * b * b - b) * d2ydx2[khi]) * (h * h) / 6.0;
-    	
+
     	if (canBeWrong) {
     		double l = this.linearInterpolation(xx);
     		double dif = Math.abs((yy - l) / l);
@@ -299,7 +299,7 @@ public class Interpolation implements Serializable
 		}
 		return nlow;
 	}
-	
+
 	/**
 	 * Spline interpolation method, up to third order of accuracy. This method
 	 * requires that the points are sorted in abscisa crescent order.
@@ -307,13 +307,13 @@ public class Interpolation implements Serializable
 	 * Reference:
 	 * <P>
 	 * <I>Basic Scientific Subroutines</I>, F. R. Ruckdeschel. 1982.
-	 * 
+	 *
 	 * @param px Interpolation point. Must be between minimum and maximum value
 	 *        of x array, or equal to one of them.
 	 * @param fixWrongValue It is well known that for certain datasets spline
 	 * interpolation can give wrong values for interpolation points close to the
-	 * limit of the dataset. Set this flag to true to check for this and return 
-	 * the linear interpolation result in that case. Otherwise, an error will be 
+	 * limit of the dataset. Set this flag to true to check for this and return
+	 * the linear interpolation result in that case. Otherwise, an error will be
 	 * launched.
 	 * @return The interpolated value.
 	 * @throws JPARSECException In case the output value is probably wrong and
@@ -381,14 +381,14 @@ public class Interpolation implements Serializable
     		double l = this.linearInterpolation(px);
     		double dif = Math.abs((py - l) / l);
     		if (dif > 2) {
-    			if (fixWrongValue) return l; 
+    			if (fixWrongValue) return l;
     			throw new JPARSECException("Cannot calculate spline interpolation so close to the edge of the range of x values.");
     		}
     	}
 
 		return py;
 	}
-	
+
 	/**
 	 * Linear interpolation method.
 	 * @param x_val X values.
@@ -470,7 +470,7 @@ public class Interpolation implements Serializable
 	 * Linear interpolation method, but applying natural logarithm to x and y
 	 * values previous to calculations.
 	 * <P>
-	 * 
+	 *
 	 * @param x_point Interpolation point.
 	 * @return The interpolated value.
 	 * @throws JPARSECException If allowExtrapolation is false and the point is
@@ -487,16 +487,16 @@ public class Interpolation implements Serializable
 		}
 		double px = Math.log(x_point);
 		double py = Math.exp(Interpolation.linearInterpolation(x, y, px, allowExtrapolation));
-		
+
 		return py;
 	}
 
 	/**
 	 * Linear interpolation method in 3d. It is supposed that the x array contains
 	 * several repeated points, each of them with a different value for the y
-	 * coordinate, and also with some value for the z coordinates. Obviously, now 
+	 * coordinate, and also with some value for the z coordinates. Obviously, now
 	 * the interpolation 'point' is the plain defined by an (x, z) point.
-	 * 
+	 *
 	 * @param x_point X interpolation point.
 	 * @param z_point Z interpolation point.
 	 * @return The interpolated value.
@@ -510,13 +510,13 @@ public class Interpolation implements Serializable
 	{
 		// Reduce to simple case if we have no z values
 		if (z_val == null) return this.linearInterpolation(x_point);
-		
+
 		double min = DataSet.getMinimumValue(x_val);
 		double max = DataSet.getMaximumValue(x_val);
-		
-		if (x_point < min || x_point > max) 
+
+		if (x_point < min || x_point > max)
 			throw new JPARSECException("the interpolation x point is outside the x domain.");
-			
+
 		// Obtain immediately previous and later x values from the x interpolation point
 		double lowerX = 0.0, greaterX = 0.0;
 		boolean lower = false, greater = false;
@@ -552,7 +552,7 @@ public class Interpolation implements Serializable
 					newZ[index] = z_val[i];
 				}
 			}
-			return Interpolation.linearInterpolation(newZ, newY, z_point, allowExtrapolation);			
+			return Interpolation.linearInterpolation(newZ, newY, z_point, allowExtrapolation);
 		}
 
 		// Obtain number of z (and y) values available for the immediately lower and later x values
@@ -562,7 +562,7 @@ public class Interpolation implements Serializable
 			if (x_val[i] == lowerX) nlow ++;
 			if (x_val[i] == greaterX) nup ++;
 		}
-		
+
 		// Obtain y and z values for those plains x = lowerX, x = greaterX
 		double lowy[] = new double[nlow];
 		double lowz[] = new double[nlow];
@@ -582,11 +582,11 @@ public class Interpolation implements Serializable
 				upy[nup] = y_val[i];
 				upz[nup] = z_val[i];
 			}
-		}		
+		}
 
-		if (nlow < 1 || nup < 1) 
+		if (nlow < 1 || nup < 1)
 			throw new JPARSECException("the z domain axis contains no points.");
-		
+
 		// Obtain the maximum and minimum values of z in those datasets
 		int greatest_z1 = (int) DataSet.getMaximumValue(lowz);
 		int greatest_z2 = (int) DataSet.getMaximumValue(upz);
@@ -600,7 +600,7 @@ public class Interpolation implements Serializable
 
 		// Sample the z axis using enough points
 		int np = 2 * (int) DataSet.getMaximumValue(new double[] {nlow, nup});
-		
+
 		// Reduce the z axis, using the same values for both datasets (they are
 		// initially supposed to be different)
 		double zz[] = new double[np];
@@ -611,23 +611,23 @@ public class Interpolation implements Serializable
 			double z = lowest_z + (double) i * (greatest_z - lowest_z) / ((double) (np - 1));
 			zz[i] = z;
 
-			double yy1 = Interpolation.linearInterpolation(lowz, lowy, z, true);			
+			double yy1 = Interpolation.linearInterpolation(lowz, lowy, z, true);
 			double yy2 = Interpolation.linearInterpolation(upz, upy, z, true);
 
 			// Interpolate linearly using a weight defined by the distance of the
 			// x interpolation point to both lowerX and greaterX
-			yy[i] = yy1 + frac * (yy2 - yy1); 
+			yy[i] = yy1 + frac * (yy2 - yy1);
 		}
 
-		return Interpolation.linearInterpolation(zz, yy, z_point, allowExtrapolation);			
+		return Interpolation.linearInterpolation(zz, yy, z_point, allowExtrapolation);
 	}
 
 	/**
 	 * Linear interpolation method in 3d in log scale. It is supposed that the x array contains
 	 * several repeated points, each of them with a different value for the y
-	 * coordinate, and also with some value for the z coordinates. Obviously, now 
+	 * coordinate, and also with some value for the z coordinates. Obviously, now
 	 * the interpolation 'point' is the plain defined by an (x, z) point.
-	 * 
+	 *
 	 * @param x_point X interpolation point.
 	 * @param z_point Z interpolation point.
 	 * @return The interpolated value.
@@ -642,7 +642,7 @@ public class Interpolation implements Serializable
 		double bx[] = x_val.clone();
 		double by[] = y_val.clone();
 		double bz[] = z_val.clone();
-		
+
 		for (int i = 0; i < x_val.length; i++)
 		{
 			x_val[i] = Math.log(x_val[i]);
@@ -652,11 +652,11 @@ public class Interpolation implements Serializable
 		double px = Math.log(x_point);
 		double pz = Math.log(z_point);
 		double py = Math.exp(linearInterpolation3d(px, pz));
-		
+
 		x_val = bx;
 		y_val = by;
 		z_val = bz;
-		return py;		
+		return py;
 	}
 
 	/**
@@ -688,7 +688,7 @@ public class Interpolation implements Serializable
 			double e = b - a, f = c - b, g = d - c;
 			double h = f - e, j = g - f, k = j - h;
 			n = (x_point - x_val[2]) / (x_val[2] - x_val[1]);
-			
+
 			return y_val[2] + n * ((b + c) * 0.5 - (h + j) / 12.0) + n * n * (f * 0.5 - k / 24.0) +
 				n * n * n * (h + j) / 12.0 + n * n * n * n * k / 24.0;
 		default:
@@ -711,7 +711,7 @@ public class Interpolation implements Serializable
 			double a = y_val[1] - y_val[0];
 			double b = y_val[2] - y_val[1];
 			double c = y_val[0] + y_val[2] - 2.0 * y_val[1];
-			
+
 			double ym = y_val[1] - (a + b) * (a + b) / (8.0 * c);
 			double xm = x_val[1] - (x_val[1] - x_val[0]) * (a + b) / (2.0 * c);
 			return new Point2D.Double(xm, ym);
@@ -731,7 +731,7 @@ public class Interpolation implements Serializable
 				niter ++;
 			} while (Math.abs(dn) > 1.0E-10 && niter < 100);
 			if (Math.abs(dn) > 1.0E-10) return null;
-			
+
 			double x_point = n * (x_val[2] - x_val[1]) + x_val[2];
 			double y_point = y_val[2] + n * ((b + c) * 0.5 - (h + j) / 12.0) + n * n * (f * 0.5 - k / 24.0) +
 				n * n * n * (h + j) / 12.0 + n * n * n * n * k / 24.0;
@@ -766,7 +766,7 @@ public class Interpolation implements Serializable
 				n += dn;
 				iter ++;
 			} while (Math.abs(dn) > 1.0E-10 && iter < 100);
-			if (Math.abs(dn) > 1.0E-10) throw new JPARSECException("Iteration did not converge."); 
+			if (Math.abs(dn) > 1.0E-10) throw new JPARSECException("Iteration did not converge.");
 			return n;
 		case 5:
 			a = y_val[1] - y_val[0];
@@ -785,8 +785,8 @@ public class Interpolation implements Serializable
 				n = newN + dn;
 				iter ++;
 			} while (Math.abs(dn) > 1.0E-10 && iter < 100);
-			if (Math.abs(dn) > 1.0E-10) throw new JPARSECException("Iteration did not converge."); 
-			
+			if (Math.abs(dn) > 1.0E-10) throw new JPARSECException("Iteration did not converge.");
+
 			double x_point = n * (x_val[2] - x_val[1]) + x_val[2];
 			return x_point;
 		default:
@@ -815,12 +815,12 @@ public class Interpolation implements Serializable
 			double c = 1.0;
 			for (int j=0; j<x_val.length; j++) {
 				if (j != i) c *= (x - x_val[j]) / (x_val[i] - x_val[j]);
-			}			
+			}
 			v += c * y_val[i];
 		}
 		return v;
 	}
-	
+
 	/**
 	 * Returns a string with the list of points.
 	 */
@@ -840,7 +840,7 @@ public class Interpolation implements Serializable
 		}
 		return s.toString();
 	}
-	
+
 	/**
 	 * Returns a chart showing the input data and the interpolated data.
 	 * @param useSpline True to use spline for interpolation, false for linear.
@@ -870,9 +870,9 @@ public class Interpolation implements Serializable
 				ChartSeriesElement.REGRESSION.SPLINE_INTERPOLATION);
 
 		ChartSeriesElement series[] = new ChartSeriesElement[] {chartSeries1, chartSeries2};
-		ChartElement chart = new ChartElement(series, ChartElement.TYPE.XY_CHART, 
+		ChartElement chart = new ChartElement(series, ChartElement.TYPE.XY_CHART,
 				ChartElement.SUBTYPE.XY_SCATTER,
-				"X, Y, "+label, 
+				"X, Y, "+label,
 				"X", "Y, "+label, false, 800, 600);
 		CreateChart ch = new CreateChart(chart);
 		return ch;

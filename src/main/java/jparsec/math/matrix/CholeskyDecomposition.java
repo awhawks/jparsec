@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2011 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 /*
  * This software is a cooperative product of The MathWorks and the National
  * Institute of Standards and Technology (NIST) which has been released to the
@@ -37,7 +37,7 @@ package jparsec.math.matrix;
 
 import java.io.Serializable;
 
-/** 
+/**
  * Cholesky Decomposition.
  * <P>
  * For a symmetric, positive definite matrix A, the Cholesky decomposition is
@@ -49,35 +49,35 @@ import java.io.Serializable;
  * <p/>
  * Adapted from the <a href="http://math.nist.gov/javanumerics/jama/" target="_blank">JAMA</a> package.
  *
- * @author The Mathworks and NIST 
+ * @author The Mathworks and NIST
  * @author Fracpete (fracpete at waikato dot ac dot nz)
  * @version $Revision: 1.2 $
  */
 
-public class CholeskyDecomposition 
+public class CholeskyDecomposition
   implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-/** 
+/**
    * Array for internal storage of decomposition.
    * @serial internal array storage.
    */
   private double[][] L;
 
-  /** 
+  /**
    * Row and column dimension (square matrix).
    * @serial matrix dimension.
    */
   private int n;
 
-  /** 
+  /**
    * Symmetric and positive definite flag.
    * @serial is symmetric and positive definite flag.
    */
   private boolean isspd;
 
-  /** 
+  /**
    * Cholesky algorithm for symmetric and positive definite matrix.
    *
    * @param  Arg   Square, symmetric matrix.
@@ -100,7 +100,7 @@ public class CholeskyDecomposition
         }
         Lrowj[k] = s = (A[j][k] - s)/L[k][k];
         d = d + s*s;
-        isspd = isspd & (A[k][j] == A[j][k]); 
+        isspd = isspd & (A[k][j] == A[j][k]);
       }
       d = A[j][j] - d;
       isspd = isspd & (d > 0.0);
@@ -111,7 +111,7 @@ public class CholeskyDecomposition
     }
   }
 
-  /** 
+  /**
    * Is the matrix symmetric and positive definite?
    * @return     true if A is symmetric and positive definite.
    */
@@ -119,7 +119,7 @@ public class CholeskyDecomposition
     return isspd;
   }
 
-  /** 
+  /**
    * Return triangular factor.
    * @return     L
    */
@@ -127,7 +127,7 @@ public class CholeskyDecomposition
     return new Matrix(L,n,n);
   }
 
-  /** 
+  /**
    * Solve A*X = B
    * @param  B   A Matrix with as many rows as A and any number of columns.
    * @return     X so that L*L'*X = B

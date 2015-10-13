@@ -23,7 +23,7 @@ public class FastMathTest {
         double y = 0;
 
         for (int i = 1; i <= n; i++) {
-            double x = FastMath.getPI2() / i;
+            double x = Constant.TWO_PI / i;
             y += Math.sin(x);
         }
 
@@ -35,7 +35,7 @@ public class FastMathTest {
         t0 = System.currentTimeMillis();
 
         for (int i = 1; i <= n; i++) {
-            double x = FastMath.getPI2() / i;
+            double x = Constant.TWO_PI / i;
             y += FastMath.sin(x);
         }
 
@@ -46,7 +46,7 @@ public class FastMathTest {
         double maxError = -1.0;
 
         for (int i = 1; i <= n; i++) {
-            double x = FastMath.getPI2() / i + FastMath.getSTEP() * 0.5; // to get max errors
+            double x = Constant.TWO_PI / i + FastMath.getResolution() * 0.5; // to get max errors
             double x1 = Math.sin(x);
             double x2 = FastMath.sin(x);
             double dif = Math.abs(x1 - x2);
@@ -59,7 +59,7 @@ public class FastMathTest {
         y = 0;
 
         for (int i = 1; i <= n; i++) {
-            double x = FastMath.getPI2() / i;
+            double x = Constant.TWO_PI / i;
             y += Math.cos(x);
         }
 
@@ -71,7 +71,7 @@ public class FastMathTest {
         t0 = System.currentTimeMillis();
 
         for (int i = 1; i <= n; i++) {
-            double x = FastMath.getPI2() / i;
+            double x = Constant.TWO_PI / i;
             y += FastMath.cos(x);
         }
 
@@ -82,7 +82,7 @@ public class FastMathTest {
         maxError = -1.0;
 
         for (int i = 1; i <= n; i++) {
-            double x = FastMath.getPI2() / i + FastMath.getSTEP() * 0.5; // to get max errors
+            double x = Constant.TWO_PI / i + FastMath.getResolution() * 0.5; // to get max errors
             double x1 = Math.cos(x);
             double x2 = FastMath.cos(x);
             double dif = Math.abs(x1 - x2);

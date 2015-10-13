@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -69,14 +69,14 @@ import jparsec.vo.GeneralQuery;
  * A special feature is to set the location of the observer to a given point
  * located in another planet or within the Solar System, using the class
  * {@linkplain ExtraterrestrialObserverElement}.
- * 
+ *
  * @see CityElement
  * @see ObservatoryElement
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
 public class ObserverElement implements Serializable {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Constructs an empty observer. All values to 0.0 or empty strings.
@@ -99,7 +99,7 @@ public class ObserverElement implements Serializable {
 	/**
 	 * Constructs a observer by giving the values of the fields. Pressure and
 	 * temperature are set to default values.
-	 * 
+	 *
 	 * @param loc_name Name of the city/observatory, or otherwise the user location.
 	 * @param loc_lon Longitude in radians. West negative.
 	 * @param loc_lat Latitude in radians.
@@ -119,9 +119,9 @@ public class ObserverElement implements Serializable {
 		isAnObservatory = false;
 		observerPosition = null;
 		ellipsoid = ELLIPSOID.LATEST;
-		
+
 		try {
-			// Set DST information 
+			// Set DST information
 			CityElement city = City.findNearestCity(new LocationElement(longitude, latitude, 1.0));
 			dstCode = Country.getID(city.country).getDSTCode();
 			if (name == null || name.equals("")) name = city.name;
@@ -134,7 +134,7 @@ public class ObserverElement implements Serializable {
 	/**
 	 * Constructs a observer by giving the values of all the main fields. Pressure and
 	 * temperature are set to default values.
-	 * 
+	 *
 	 * @param loc_name Name of the city/observatory, or otherwise the user location.
 	 * @param loc_lon Longitude in radians. West negative.
 	 * @param loc_lat Latitude in radians.
@@ -160,7 +160,7 @@ public class ObserverElement implements Serializable {
 
 	/**
 	 * Constructs a observer by giving the values of the fields.
-	 * 
+	 *
 	 * @param loc_name Name of the city/observatory, or otherwise the user location.
 	 * @param loc_lon Longitude in radians. West negative.
 	 * @param loc_lat Latitude in radians.
@@ -204,7 +204,7 @@ public class ObserverElement implements Serializable {
 
 	/**
 	 * Creates an Observer object from a City object.
-	 * 
+	 *
 	 * @param city City object.
 	 * @throws JPARSECException If an error occurs.
 	 */
@@ -229,7 +229,7 @@ public class ObserverElement implements Serializable {
 
 	/**
 	 * Creates an Observer object from an Observatory object.
-	 * 
+	 *
 	 * @param observatory Observatory object.
 	 * @throws JPARSECException If an error occurs.
 	 */
@@ -255,7 +255,7 @@ public class ObserverElement implements Serializable {
 
 	/**
 	 * Creates an Observer object from an Extraterrestrial object.
-	 * 
+	 *
 	 * @param et The extraterrestrial observer object.
 	 * @throws JPARSECException If an error occurs.
 	 */
@@ -304,7 +304,7 @@ public class ObserverElement implements Serializable {
 	 * Time zone, without considering daylight saving time,
 	 * which is calculated and applied automatically. Time
 	 * zone is the number of hours to be added to UTC to get
-	 * local time (without DST), and is always the same value 
+	 * local time (without DST), and is always the same value
 	 * for a given place.
 	 */
 	private double timeZone;
@@ -360,7 +360,7 @@ public class ObserverElement implements Serializable {
 	 * The mother planet for the observer. Earth by default.
 	 */
 	private TARGET motherPlanet = TARGET.EARTH;
-	
+
 	/**
 	 * The ellipsoid used as reference for the geodetic location of the observer,
 	 * by default the latest one available.
@@ -490,13 +490,13 @@ public class ObserverElement implements Serializable {
 	 * <BR>2. In case of changing 2h LT to 1h LT in autumn (DST changes from 1 to 0), 1h LT to 2h LT for DST 0 cannot be accessed. >=2h LT will be available for DST 0.
 	 * <BR>DST is obtained using UT in {@linkplain TimeScale#getDST(double, ObserverElement)}.
 	 */
-	public static enum DST_RULE {
+	public enum DST_RULE {
 		/** No daylight saving time rule or unknown. */
 		NONE,
 		/** Daylight saving time starts on last Sunday of march and ends on last Sunday of October.  */
-		N1, 
+		N1,
 		/** Daylight saving time starts on last Sunday of April and ends on last Sunday of November. */
-		N2, 
+		N2,
 		/** Daylight saving time starts on last Sunday of October and ends on last Sunday of March of the next year. */
 		S1,
 		/** Daylight saving time starts on last Sunday of November and ends on last Sunday of April of the next year. */
@@ -514,11 +514,11 @@ public class ObserverElement implements Serializable {
 		 */
 		USA_AUTO,
 		/** Symbolic constant for a custom DST rule. You will have to set also the
-		 * start and end fields accordingly (and, optionally, the time offset), 
-		 * using any of the constants provided in this class. The UNKNOWN field 
+		 * start and end fields accordingly (and, optionally, the time offset),
+		 * using any of the constants provided in this class. The UNKNOWN field
 		 * should not be used. */
 		CUSTOM;
-		
+
 		/** Sets the start of DST. Will have effect only for CUSTOM DST rule. */
 		public int start = UNKNOWN;
 		/** Sets the end of DST. Will have effect only for CUSTOM DST rule. */
@@ -526,7 +526,7 @@ public class ObserverElement implements Serializable {
 		/** Sets the time offset to apply the DST respect 0h UT. Set to 1 to
 		 * apply the DST at 1h UT, and so on. */
 		public double timeOffsetHours = 0;
-		
+
 		/** Constant for an UNKNOWN DST. */
 		public static final int UNKNOWN = 0;
 		/** Constant for last Sunday of March. */
@@ -547,7 +547,7 @@ public class ObserverElement implements Serializable {
 		public static final int FIRST_SUNDAY_NOVEMBER = 8;
 		/** Constant for second Sunday of March. */
 		public static final int SECOND_SUNDAY_MARCH = 9;
-		
+
 		/**
 		 * Resets the start and end of DST to their default values (UNKNOWN),
 		 * and time offset to 0.
@@ -560,10 +560,10 @@ public class ObserverElement implements Serializable {
 			}
 		}
 	};
-		
+
 	/**
 	 * Get latitude in degrees.
-	 * 
+	 *
 	 * @return Latitude in <B>degrees</B>
 	 * @throws JPARSECException If the observer is not on a Solar System body.
 	 */
@@ -574,7 +574,7 @@ public class ObserverElement implements Serializable {
 
 	/**
 	 * Get latitude in radians.
-	 * 
+	 *
 	 * @return Latitude in <B>radians</B>
 	 * @throws JPARSECException If the observer is not on a Solar System body.
 	 */
@@ -585,7 +585,7 @@ public class ObserverElement implements Serializable {
 
 	/**
 	 * Set latitude in <B>degrees</B>.
-	 * 
+	 *
 	 * @param lat Latitude in <B>degrees</B>
 	 * @throws JPARSECException If the observer is not on a Solar System body.
 	 */
@@ -597,7 +597,7 @@ public class ObserverElement implements Serializable {
 
 	/**
 	 * Set latitude in <B>radians</B>.
-	 * 
+	 *
 	 * @param lat Latitude in <B>radians</B>
 	 * @throws JPARSECException If the observer is not on a Solar System body.
 	 */
@@ -609,7 +609,7 @@ public class ObserverElement implements Serializable {
 
 	/**
 	 * Get longitude in degrees.
-	 * 
+	 *
 	 * @return Longitude in <B>degrees</B>
 	 * @throws JPARSECException If the observer is not on a Solar System body.
 	 */
@@ -620,7 +620,7 @@ public class ObserverElement implements Serializable {
 
 	/**
 	 * Get longitude in radians.
-	 * 
+	 *
 	 * @return Longitude in <B>radians</B>
 	 * @throws JPARSECException If the observer is not on a Solar System body.
 	 */
@@ -631,7 +631,7 @@ public class ObserverElement implements Serializable {
 
 	/**
 	 * Set longitude in degrees.
-	 * 
+	 *
 	 * @param lon Longitude in <B>degrees</B>
 	 * @throws JPARSECException If the observer is not on a Solar System body.
 	 */
@@ -644,7 +644,7 @@ public class ObserverElement implements Serializable {
 
 	/**
 	 * Set longitude in radians.
-	 * 
+	 *
 	 * @param lon Longitude in <B>radians</B>
 	 * @throws JPARSECException If the observer is not on a Solar System body.
 	 */
@@ -657,7 +657,7 @@ public class ObserverElement implements Serializable {
 
 	/**
 	 * Get time zone offset, without considering DST.
-	 * 
+	 *
 	 * @return Time zone offset from UTC (-12 to 12 inclusive)
 	 */
 	public double getTimeZone() {
@@ -666,7 +666,7 @@ public class ObserverElement implements Serializable {
 
 	/**
 	 * Set time zone offset.
-	 * 
+	 *
 	 * @param tz Time zone offset from UTC (-12 to 12 inclusive)
 	 */
 	public void setTimeZone(double tz) {
@@ -675,7 +675,7 @@ public class ObserverElement implements Serializable {
 
 	/**
 	 * Returns the height.
-	 * 
+	 *
 	 * @return Height above sea level in m.
 	 * @throws JPARSECException If the observer is not on a Solar System body.
 	 */
@@ -686,7 +686,7 @@ public class ObserverElement implements Serializable {
 
 	/**
 	 * Sets the height.
-	 * 
+	 *
 	 * @param h Height above sea level in m.
 	 * @param setDefaultPressure True to set the pressure to its
 	 * default value for the given height (for an observer on Earth).
@@ -745,7 +745,7 @@ public class ObserverElement implements Serializable {
 		}
 		return geoRad;
 	}
-	
+
 	/**
 	 * Returns the body where this observer is located.
 	 * @return The body.
@@ -896,11 +896,10 @@ public class ObserverElement implements Serializable {
 		this.ellipsoid = ELLIPSOID.LATEST;
 		motherPlanet = TARGET.EARTH;
 	}
-	
+
 	/**
 	 * Clones this instance.
 	 */
-	@Override
 	public ObserverElement clone() {
 		ObserverElement o = new ObserverElement("NO", longitude, latitude, height, timeZone, dstCode, pressure, temperature, humidity, ellipsoid, observerPosition);
 		o.name = this.name;
@@ -975,7 +974,7 @@ public class ObserverElement implements Serializable {
 
 	/**
 	 * Gets the {@linkplain ObserverElement} of certain {@linkplain CityElement}.
-	 * 
+	 *
 	 * @param city The city to parse.
 	 * @return The corresponding observer.
 	 * @throws JPARSECException Thrown if the method fails.
@@ -1003,7 +1002,7 @@ public class ObserverElement implements Serializable {
 	 * Gets the observer of certain observatory. Note 0.0 is the output for the
 	 * time zone offset due to a lack of information. DST rule is set to the country
 	 * where the observatory lies, if it is found.
-	 * 
+	 *
 	 * @param observatory The observatory to parse.
 	 * @return The corresponding observer.
 	 * @throws JPARSECException Thrown if the method fails.
@@ -1030,23 +1029,13 @@ public class ObserverElement implements Serializable {
 		return (obs);
 	}
 
-	private String getField(String field, String out) {
-		String s = "<li>"+field+" :";
-		int p = out.indexOf(s);
-		if (p < 0) return "";
-		String data = out.substring(p+s.length()+1).trim();
-		p = data.indexOf("<");
-		data = data.substring(0, p);
-		return data;
-	}
-
 	/**
 	 * Gets the observer for certain extraterrestrial object. Time zone and
-	 * elevation above reference level is set to 0, and dst rule to NONE. 
-	 * Any calculation with this kind of observer should never be done in 
+	 * elevation above reference level is set to 0, and dst rule to NONE.
+	 * Any calculation with this kind of observer should never be done in
 	 * local time, since local time is for an observer on Earth. Anyway, just
 	 * take into account that for an observer in other body local time = UTC.
-	 * 
+	 *
 	 * @param et The extraterrestrial object.
 	 * @return The corresponding observer.
 	 * @throws JPARSECException Thrown if the method fails.
@@ -1081,8 +1070,8 @@ public class ObserverElement implements Serializable {
 
 	/**
 	 * Creates an Observer object by using geolocalization to automatically find
-	 * the position of the user, using ipinfodb.com.
-	 * 
+	 * the position of the user, using freegeoip.net.
+	 *
 	 * @param ip The IP to be located, or null (or empty string) to use the
 	 * current computer IP.
 	 * @throws JPARSECException If an error occurs during the query.
@@ -1105,7 +1094,7 @@ public class ObserverElement implements Serializable {
 		country = DataSet.replaceAll(country, " And ", " and ", true);
 		country = DataSet.replaceAll(country, " Of ", " of ", true);
 		country = DataSet.replaceAll(country, " The ", " the ", true);
-		
+
 		double obslon = DataSet.parseDouble(lon);
 		double obslat = DataSet.parseDouble(lat);
 		double tz = 0.0; //DateTimeOps.tzOffset();
@@ -1149,7 +1138,7 @@ public class ObserverElement implements Serializable {
 		//ByteBuffer outputBuffer = iso88591charset.encode(data);
 		//byte[] outputData = inputBuffer.array();
 		//name = new String(outputData, utf8charset);
-		
+
 		try {
 			// Set DST information
 			dstCode = Country.getID(country).getDSTCode();
@@ -1162,7 +1151,7 @@ public class ObserverElement implements Serializable {
 	}
 
 	/**
-	 * Sets the elevation approximately by using an Earth bump map. The method will 
+	 * Sets the elevation approximately by using an Earth bump map. The method will
 	 * adjust the {@link #height} field or will do nothing
 	 * if there is a problem accessing the map or an error during calculations.
 	 * @param useBumpMap True to use a bump map, false to find closest city. In the
@@ -1171,34 +1160,34 @@ public class ObserverElement implements Serializable {
 	 */
 	public void obtainElevation(boolean useBumpMap) {
 		if (this.getMotherBody() != TARGET.EARTH) return;
-		
+
 		if (useBumpMap) {
 			double obslat = this.latitude * Constant.RAD_TO_DEG;
 			double obslon = this.longitude * Constant.RAD_TO_DEG;
-	
+
 			// Obtain location height in m using Earth bump map
 			String s = "4kEarthBump";
 			try {
 				ObjectInputStream is = new ObjectInputStream(getClass().getClassLoader().getResourceAsStream(FileIO.DATA_TEXTURES_DIRECTORY + s));
-	
+
 				int texturax = (Integer) is.readObject();
 				int texturay = (Integer) is.readObject();
 				int[] pixels = (int[]) is.readObject();
-	
+
 				int pos_y = (int) (texturay * 0.5 * (1.0 - obslat / 90.0) + 0.5);
 				int pos_x = (int) (texturax * 0.5 * (1.0 + obslon / 180.0) + 0.5);
-	
+
 				int img_index = (int) (pos_y * texturax + pos_x);
-	
+
 				int k = pixels[img_index];
 				int red = 0xff & (k >> 16);
 				int green = 0xff & (k >> 8);
 				int blue = 0xff & k;
-	
+
 				int valor0 = 0;
 				int alt = (int) (8848 * (red + green + blue - valor0 * 3) / (3.0 * (255 - valor0))); // 8420 could be better
 				if (alt < 0) alt = 0;
-	
+
 				height = alt;
 			} catch (Exception e3) {
 				// throw new JPARSECException("error while reading texture file " + FileIO.DATA_TEXTURES_DIRECTORY + s + "." , e3);
@@ -1207,7 +1196,7 @@ public class ObserverElement implements Serializable {
 			try {
 				LocationElement loc0 = new LocationElement(this.longitude, this.latitude, 1.0);
 				CityElement cc = City.findNearestCity(loc0);
-				
+
 				double dist0 = LocationElement.getAngularDistance(loc0, new LocationElement(cc.longitude*Constant.DEG_TO_RAD,cc.latitude*Constant.DEG_TO_RAD,1.0));
 				double dr = -1;
 				String ciudad = "", altura = "";
@@ -1230,12 +1219,12 @@ public class ObserverElement implements Serializable {
 						}
 					 }
 				}
-	
+
 				if ((dr >= 0 && dr < dist0) || ciudad.equals(cc.name)) {
 					if (name == null || name.equals("")) this.name = ciudad;
 					cc.height = Integer.parseInt(altura);
-				}			
-				
+				}
+
 				if (name == null || name.equals("")) this.name = cc.name;
 				this.height = cc.height;
 				this.timeZone = cc.timeZone;
@@ -1276,11 +1265,11 @@ public class ObserverElement implements Serializable {
 	public LocationElement getGeocentricLocation() throws JPARSECException {
 		return new LocationElement(this.getGeoLon(), this.getGeoLat(), this.getGeoRad());
 	}
-	
+
 	/**
 	 * Corrects geodetic coordinates by polar motion. This correction amounts to about 10m, and it is
-	 * not required most of the times (only for precise apparent positions). This correction, however, 
-	 * can improve ephemerides for Moon by about 2 mas, and those for artificial satellites by several 
+	 * not required most of the times (only for precise apparent positions). This correction, however,
+	 * can improve ephemerides for Moon by about 2 mas, and those for artificial satellites by several
 	 * arcseconds. JPARSEC never calls this method.
 	 * @param time Time object.
 	 * @param eph Ephemeris object.
@@ -1289,7 +1278,7 @@ public class ObserverElement implements Serializable {
 	public void correctObserverForPolarMotion(TimeElement time, EphemerisElement eph) throws JPARSECException {
 		if (getMotherBody() == TARGET.NOT_A_PLANET) throw new JPARSECException("Observer must be on some Solar System body.");
  		if (this.getMotherBody() != TARGET.EARTH) return;
-		
+
 		double jd_UTC = TimeScale.getJD(time, this, eph, SCALE.UNIVERSAL_TIME_UTC);
 		double eop[] = EarthOrientationParameters.obtainEOP(jd_UTC, eph);
 		double x = eop[2] * Constant.ARCSEC_TO_RAD, y = eop[3] * Constant.ARCSEC_TO_RAD;
@@ -1333,7 +1322,7 @@ public class ObserverElement implements Serializable {
 	 * system, for J2000 mean equinox and equator (GCRS coordinates). In case
 	 * the ephemerides properties are set to geocentric, this method returns
 	 * 0 for all components.
-	 * 
+	 *
 	 * @param time Time object.
 	 * @param eph Ephemeris object.
 	 * @return (x, y, z, vx, vy, vz) of observer in AU and AU/d. Zero values for
@@ -1348,7 +1337,7 @@ public class ObserverElement implements Serializable {
 		{
 			double JD = TimeScale.getJD(time, this, eph, SCALE.TERRESTRIAL_TIME);
 			double last = SiderealTime.apparentSiderealTime(time, this, eph);
-			
+
 			double geoLat = this.getGeoLat(), geoRad = this.getGeoRad();
 			double true_pos[] = LocationElement.parseLocationElement(new LocationElement(last,
 					geoLat, geoRad * this.ellipsoid.getEquatorialRadius() / Constant.AU));
@@ -1360,7 +1349,7 @@ public class ObserverElement implements Serializable {
 				true_pos = Nutation.nutateInEquatorialCoordinates(JD, eph, true_pos, false);
 				true_vel = Nutation.nutateInEquatorialCoordinates(JD, eph, true_vel, false);
 			}
-			
+
 			true_pos = Precession.precessToJ2000(JD, true_pos, eph);
 			true_vel = Precession.precessToJ2000(JD, true_vel, eph);
 
@@ -1372,11 +1361,11 @@ public class ObserverElement implements Serializable {
 
 		return new double[]	{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 	}
-	
+
 	/**
-	 * Return heliocentric equatorial rectangular coordinates of the observer's mother body in case the 
+	 * Return heliocentric equatorial rectangular coordinates of the observer's mother body in case the
 	 * observer is not located on Earth.
-	 * 
+	 *
 	 * @param JD_TDB Julian day in TDB.
 	 * @param eph Ephemeris object.
 	 * @return (x, y, z, vx, vy, vz) of observer in AU and AU/d, for J2000 equinox and equator.
@@ -1390,7 +1379,7 @@ public class ObserverElement implements Serializable {
 			TARGET body = this.getMotherBody();
 			if (body.isNaturalSatellite()) {
 				body = this.getMotherBody().getCentralBody();
-				
+
 				switch (body)
 				{
 				case MARS:
@@ -1443,11 +1432,11 @@ public class ObserverElement implements Serializable {
 					break;
 				default:
 					throw new JPARSECException("Invalid/unsupported algorithm.");
-				}	
+				}
 				body = TARGET.EARTH;
 				if (out.length == 3) out = new double[] {out[0], out[1], out[2], 0.0, 0.0, 0.0};
 			}
-			
+
 			switch (eph.algorithm) {
 			case SERIES96_MOSHIERForMoon:
 				// Compute position of Earth (or home planet)
@@ -1487,7 +1476,7 @@ public class ObserverElement implements Serializable {
 
 			default:
 				throw new JPARSECException("Invalid/unsupported algorithm.");
-			}	
+			}
 		}
 	}
 

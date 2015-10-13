@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.astronomy;
 
 import jparsec.ephem.EphemerisElement;
@@ -41,7 +41,7 @@ import jparsec.util.JPARSECException;
  * a given observing site and time: the lunar and solar zenith distances, the
  * air masses to those objects, the temperature and relative humidity, and so
  * forth.
- * 
+ *
  * @author M. Huss
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
@@ -50,7 +50,7 @@ public class VisualLimit
 {
 	/**
 	 * Explicit (all values) constructor.
-	 * 
+	 *
 	 * @param bandMask A logical mask which represents one or more of the five
 	 *        possible bands to calculate. Bands are U (1), B (2), V (4), R (8),
 	 *        and I (16), so to calculate all set this value to 31, the sum of all them.
@@ -67,7 +67,7 @@ public class VisualLimit
 
 	/**
 	 * Constructor to calculate limiting magnitudes.
-	 * 
+	 *
 	 * @param time Time object.
 	 * @param obs Observer object.
 	 * @param ephem_sun Ephem object containing Sun's ephemeris.
@@ -88,10 +88,10 @@ public class VisualLimit
 		computeSkyBrightness(v.angular);
 		computeExtinction();
 	}
-	
+
 	/**
 	 * Set the fixed brightness parameters.
-	 * 
+	 *
 	 * @param fbd The fixed brightness data.
 	 */
 	private void setBrightnessParams(VisualLimitFixedBrightnessData fbd)
@@ -148,7 +148,7 @@ public class VisualLimit
 
 	/**
 	 * Compute the sky brightness.
-	 * 
+	 *
 	 * @param abd The angular brightness data.
 	 */
 	private void computeSkyBrightness(VisualLimitAngularBrightnessData abd)
@@ -211,7 +211,7 @@ public class VisualLimit
 
 	/**
 	 * Calculate the limiting magnitude.
-	 * 
+	 *
 	 * @return The limiting magnitude.
 	 */
 	public double limitingMagnitude()
@@ -266,7 +266,7 @@ public class VisualLimit
 
 	/**
 	 * Get the K band value.
-	 * 
+	 *
 	 * @param i Index into the band data (0 for U, to 4 for I).
 	 * @return k[i].
 	 * @throws JPARSECException For an invalid band.
@@ -281,7 +281,7 @@ public class VisualLimit
 
 	/**
 	 * Get the brightness value.
-	 * 
+	 *
 	 * @param i Index into the band data (0 for U, to 4 for I).
 	 * @return brightness[i].
 	 * @throws JPARSECException For an invalid band.
@@ -296,7 +296,7 @@ public class VisualLimit
 
 	/**
 	 * Get the extinction value.
-	 * 
+	 *
 	 * @param i Index into the band data (0 for U, to 4 for I).
 	 * @return extinction[i].
 	 * @throws JPARSECException For an invalid band.
@@ -411,7 +411,7 @@ public class VisualLimit
 
 	/**
 	 * Computes limiting magnitude for V band.
-	 * 
+	 *
 	 * @param time Time object.
 	 * @param obs Observer object.
 	 * @param ephem_sun Ephem object containing Sun's ephemeris.
@@ -423,17 +423,17 @@ public class VisualLimit
 	 */
 	public static double getLimitingMagnitude(TimeElement time, ObserverElement obs, EphemElement ephem_sun,
 			EphemElement ephem_moon, double azimuth, double elevation) throws JPARSECException
-	{	
+	{
 		int bandMask = 0x1F; // all five bands
 		VisualLimit v = getInstance(time, obs, ephem_sun, ephem_moon, azimuth, elevation, bandMask);
 		double mag_limit = v.limitingMagnitude();
 		return mag_limit;
 	}
-	
+
 	private static VisualLimit getInstance(TimeElement time, ObserverElement obs, EphemElement ephem_sun,
 			EphemElement ephem_moon, double azimuth, double elevation, int bandMask) throws JPARSECException {
 		if (obs.getMotherBody() != TARGET.EARTH) throw new JPARSECException("Observer must be located on Earth.");
-		
+
 		VisualLimitFixedBrightnessData f = new VisualLimitFixedBrightnessData(Math.PI * 0.5 - ephem_moon.elevation, // zenithAngleMoon
 				Math.PI * 0.5 - ephem_sun.elevation, // zenithAngSun
 				ephem_moon.elongation, // moonElongation // 180g = full moon
@@ -460,7 +460,7 @@ public class VisualLimit
 
 	/**
 	 * Computes sky brightness for U, B, V, R, and I bands.
-	 * 
+	 *
 	 * @param time Time object.
 	 * @param obs Observer object.
 	 * @param ephem_sun Ephem object containing Sun's ephemeris.
@@ -474,7 +474,7 @@ public class VisualLimit
 			EphemElement ephem_moon, double azimuth, double elevation) throws JPARSECException
 	{
 		if (obs.getMotherBody() != TARGET.EARTH) throw new JPARSECException("Observer must be located on Earth.");
-		
+
 		VisualLimitFixedBrightnessData f = new VisualLimitFixedBrightnessData(Math.PI * 0.5 - ephem_moon.elevation, // zenithAngleMoon
 				Math.PI * 0.5 - ephem_sun.elevation, // zenithAngSun
 				ephem_moon.elongation, // moonElongation // 180g = full moon
@@ -498,24 +498,16 @@ public class VisualLimit
 		int bandMask = 0x1F; // all five bands
 
 		VisualLimit v = new VisualLimit(bandMask, f, a);
-		double[] bright = new double[5];
-		try
-		{
-			bright = new double[]
+		double[] bright = new double[]
 			{ v.getBrightness(0) / 1.11E-15, v.getBrightness(1) / 1.11E-15, v.getBrightness(2) / 1.11E-15,
 					v.getBrightness(3) / 1.11E-15, v.getBrightness(4) / 1.11E-15 };
-		} catch (JPARSECException ve)
-		{
-			throw ve;
-		}
-
 		return bright;
 	}
 
 	/**
 	 * Computes if the object is visible to the naked eye or not. Position of
 	 * the object is calculated using Moshier ephemeris.
-	 * 
+	 *
 	 * @param time Time object.
 	 * @param obs Observer object.
 	 * @param eph Ephemeris object.
@@ -527,37 +519,30 @@ public class VisualLimit
 			EphemElement ephem) throws JPARSECException
 	{
 		if (obs.getMotherBody() != TARGET.EARTH) throw new JPARSECException("Observer must be located on Earth.");
-		try
-		{
-			EphemerisElement sun_eph = (EphemerisElement) eph.clone();
-			sun_eph.targetBody = TARGET.SUN;
-			sun_eph.algorithm = EphemerisElement.ALGORITHM.MOSHIER;
-			EphemElement ephem_sun = PlanetEphem.MoshierEphemeris(time, obs, sun_eph);
+		EphemerisElement sun_eph = (EphemerisElement) eph.clone();
+		sun_eph.targetBody = TARGET.SUN;
+		sun_eph.algorithm = EphemerisElement.ALGORITHM.MOSHIER;
+		EphemElement ephem_sun = PlanetEphem.MoshierEphemeris(time, obs, sun_eph);
 
-			EphemerisElement moon_eph = (EphemerisElement) eph.clone();
-			moon_eph.targetBody = TARGET.Moon;
-			moon_eph.algorithm = EphemerisElement.ALGORITHM.MOSHIER;
-			EphemElement ephem_moon = PlanetEphem.MoshierEphemeris(time, obs, moon_eph);
+		EphemerisElement moon_eph = (EphemerisElement) eph.clone();
+		moon_eph.targetBody = TARGET.Moon;
+		moon_eph.algorithm = EphemerisElement.ALGORITHM.MOSHIER;
+		EphemElement ephem_moon = PlanetEphem.MoshierEphemeris(time, obs, moon_eph);
 
-			double limiting_magnitude = VisualLimit.getLimitingMagnitude(time, obs, ephem_sun, ephem_moon,
-					ephem.azimuth, ephem.elevation);
+		double limiting_magnitude = VisualLimit.getLimitingMagnitude(time, obs, ephem_sun, ephem_moon,
+				ephem.azimuth, ephem.elevation);
 
-			boolean isVisible = true;
+		boolean isVisible = true;
 
-			if (ephem.magnitude > limiting_magnitude)
-				isVisible = false;
+		if (ephem.magnitude > limiting_magnitude)
+			isVisible = false;
 
-			return isVisible;
-		} catch (JPARSECException ve)
-		{
-			throw ve;
-		}
-
+		return isVisible;
 	}
 
 	/**
 	 * Computes extinction coefficient for U, B, V, R, and I bands.
-	 * 
+	 *
 	 * @param time Time object.
 	 * @param obs Observer object.
 	 * @param ephem_sun Ephem object containing Sun's ephemeris.
@@ -594,15 +579,8 @@ public class VisualLimit
 		int bandMask = 0x1F; // all five bands
 
 		VisualLimit v = new VisualLimit(bandMask, f, a);
-		double[] bright = new double[5];
-		try
-		{
-			bright = new double[]
+		double[] bright = new double[]
 			{ v.getExtinction(0), v.getExtinction(1), v.getExtinction(2), v.getExtinction(3), v.getExtinction(4) };
-		} catch (JPARSECException ve)
-		{
-			throw ve;
-		}
 
 		return bright;
 	}
@@ -612,7 +590,7 @@ public class VisualLimit
  * A support class for VisualLimit.
  * <P>
  * Holds values which vary across the sky.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @author Mark Huss
  * @version 1.0
@@ -632,7 +610,7 @@ class VisualLimitAngularBrightnessData
 
 	/**
 	 * Constructor of an explicit defined object.
-	 * 
+	 *
 	 * @param za Zenith angle.
 	 * @param dm Angular distance of the Moon.
 	 * @param ds Angular distance of the Sun.
@@ -681,7 +659,7 @@ class VisualLimitFixedBrightnessData
 
 	/**
 	 * Constructor of an explicit defined object.
-	 * 
+	 *
 	 * @param zm Lunar zenith angle.
 	 * @param zs Solar zenith angle.
 	 * @param me Moon elongation.

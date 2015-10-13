@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -59,8 +59,8 @@ import jparsec.util.Translate;
  * interesting work by J. Garc&iacute;a Ferrer (in Spanish) at
  * http://personal.telefonica.terra.es/web/xgarciaf/eclipse/eclipse.htm,
  * used for the implementation done here.<P>
- * Bessel elements used in this class are those computed by Shinobu Takesako 
- * using JPL DE422 ephemerides. See EmapWin Ver. 2.12 (2012.11.17), 
+ * Bessel elements used in this class are those computed by Shinobu Takesako
+ * using JPL DE422 ephemerides. See EmapWin Ver. 2.12 (2012.11.17),
  * downloadable from http://www.kotenmon.com/cal/emapwin_eng.htm. All solar
  * eclipses between year 3000 B.C. and 3000 A.D. are available.<P>
  * Note implementation is not completely robust. Charts of solar eclipses
@@ -84,8 +84,8 @@ public class RenderEclipse {
 	private double Y0, Y1, Y2, Y3;
 	/** Reference time for the Besselian elements, measured in hours. */
 	private double T0;
-	/** Minimum distance shadow cone axis-Earth's center, in Earth equatorial radii units. 
-	 * Positive if shadow cone axis is towards north respect Earth's center. 
+	/** Minimum distance shadow cone axis-Earth's center, in Earth equatorial radii units.
+	 * Positive if shadow cone axis is towards north respect Earth's center.
 	 * Limiting value due to Earth flattening is 0.997. */
 	private double GAMMA;
 	/** Coefficients for the two degree polynomial to obtain D for any given time. D is
@@ -100,10 +100,10 @@ public class RenderEclipse {
 	/** Coefficients for the two degree polynomial to obtain L2 for any given time. L2 is
 	 * the radius of the umbral cone in the fundamental plain. */
 	private double L20, L21, L22;
-	/** Tangent of the Earth's penumbral cone wrt Moon's shadow cone axis. Always positive 
+	/** Tangent of the Earth's penumbral cone wrt Moon's shadow cone axis. Always positive
 	 * and considered constant during the eclipse. */
 	private double F1;
-	/** Tangent of the Earth's umbra cone wrt Moon's shadow cone axis. Always positive 
+	/** Tangent of the Earth's umbra cone wrt Moon's shadow cone axis. Always positive
 	 * and considered constant during the eclipse. */
 	private double F2;
 	/** TT-TU (s) for the eclipse */
@@ -116,7 +116,7 @@ public class RenderEclipse {
 	private static final double EARTH_RADIUS = 6378140.0;
 	private static final double DT_TO_DEG = Constant.SIDEREAL_DAY_LENGTH * 15.0 / 3600.0;
 	/**
-	 * True to show information in a simplified way for divulgation, without LT (local time). 
+	 * True to show information in a simplified way for divulgation, without LT (local time).
 	 * Default is false.
 	 */
 	public static boolean ShowWithoutLT = false;
@@ -124,7 +124,7 @@ public class RenderEclipse {
 	 * Selects if the Moon texture should be shown or not. Default is false.
 	 */
 	public static boolean ShowMoonTexture = false;
-	
+
 	/**
 	 * Basic constructor for a given date. Calculations uses Besselian elements
 	 * from the data included in JPARSEC.
@@ -135,25 +135,25 @@ public class RenderEclipse {
 		String sep = " ";
 		boolean skip = true;
 		String val = FileIO.addSpacesBeforeAString(""+astro.getAstronomicalYear(), 5)+sep+FileIO.addSpacesBeforeAString(""+astro.getMonth(), 2)+sep;
-		
+
 		String data[] = DataSet.arrayListToStringArray(ReadFile.readResourceContaining(FileIO.DATA_ORBITAL_ELEMENTS_DIRECTORY + "solarEclipses.txt", ReadFile.ENCODING_ISO_8859, val));
 		String val1 = val + FileIO.addSpacesBeforeAString(""+astro.getDay(), 2)+sep;
-		
+
 		int index = DataSet.getIndexStartingWith(data, val1);
 		double jd = astro.jd();
 		if (index < 0) {
 			val1 = val + FileIO.addSpacesBeforeAString(""+(astro.getDay()+1), 2)+sep;
-			index = DataSet.getIndexStartingWith(data, val1);		
+			index = DataSet.getIndexStartingWith(data, val1);
 			if (index >= 0) jd ++;
 		}
 		if (index < 0) {
 			val1 = val + FileIO.addSpacesBeforeAString(""+(astro.getDay()-1), 2)+sep;
-			index = DataSet.getIndexStartingWith(data, val1);			
+			index = DataSet.getIndexStartingWith(data, val1);
 			if (index >= 0) jd --;
 		}
 
 		if (index < 0) throw new JPARSECException("Solar eclipse not found on date "+astro.toMinString());
-		
+
 		int field = 10;
 		GAMMA = DataSet.parseDouble(FileIO.getField(6, data[index], sep, skip));
 		T0 = DataSet.parseDouble(FileIO.getField(field++, data[index], sep, skip));
@@ -181,7 +181,7 @@ public class RenderEclipse {
 		this.astro = new AstroDate(jd);
 		DT = TimeScale.getTTminusUT1(this.astro);
 	}
-	
+
 	/**
 	 * Returns the date found for the solar eclipse calculated in this instance.
 	 * @return The eclipse date.
@@ -189,7 +189,7 @@ public class RenderEclipse {
 	public AstroDate getEclipseDate() {
 		return this.astro;
 	}
-	
+
 	private double[] centralEclipseLatitudeLimits(double LG) {
 		// North limit
 		int I = 1;
@@ -198,7 +198,7 @@ public class RenderEclipse {
 		boolean fromNorth = false, fromSouth = false;
 		do {
 			double T2 = T * T, T3 = T2 * T;
-			
+
 			double X = X0 + X1 * T + X2 * T2 + X3 * T3;
 			double Y = Y0 + Y1 * T + Y2 * T2 + Y3 * T3;
 			double D = D0 + D1 * T + D2 * T2;
@@ -232,7 +232,7 @@ public class RenderEclipse {
 			double CQ = (B * Math.sin(H) * RSIN + A * (Math.cos(H) * Math.sin(D) * RSIN + Math.cos(D) * RCOS)) / (Constant.RAD_TO_DEG * N);
 			double CFI = (CW + I * Math.abs(L2P)) / CQ;
 			FI = FI + CFI;
-			
+
 			niter ++;
 			if (niter < 50) {
 				if (Math.abs(TAU) > .000001) continue;
@@ -251,18 +251,18 @@ public class RenderEclipse {
 						FI = -80;
 						niter = 0;
 						T = 0;
-						fromSouth = true;						
+						fromSouth = true;
 						continue;
 					} else {
 						if (I == 1) FI = 90;
 						if (I == -1) FI = -90;
-//						return null;						
+//						return null;
 					}
 				}
 			}
 
 			if (Math.abs(FI) > 90) FI = 90 * FastMath.sign(FI);
-			
+
 			if (I == -1) {
 				if (FIN == 90 && FI == -90) return null;
 				if ((FIN == 90 || FI == -90) && Math.abs(FIN-FI) > 25) return null;
@@ -275,7 +275,7 @@ public class RenderEclipse {
 			niter = 0;
 		} while (true);
 	}
-	
+
 	private double[] partialEclipseLatitudeLimits(double LG) {
 		// North limit
 		int I = 1;
@@ -284,7 +284,7 @@ public class RenderEclipse {
 		boolean fromNorth = false, fromSouth = false;
 		do {
 			double T2 = T * T, T3 = T2 * T;
-			
+
 			double X = X0 + X1 * T + X2 * T2 + X3 * T3;
 			double Y = Y0 + Y1 * T + Y2 * T2 + Y3 * T3;
 			double D = D0 + D1 * T + D2 * T2;
@@ -318,7 +318,7 @@ public class RenderEclipse {
 			double CQ = (B * Math.sin(H) * RSIN + A * (Math.cos(H) * Math.sin(D) * RSIN + Math.cos(D) * RCOS)) / (Constant.RAD_TO_DEG * N);
 			double CFI = (CW + I * Math.abs(L1P)) / CQ;
 			FI = FI + CFI;
-			
+
 			niter ++;
 			if (niter < 50) {
 				if (Math.abs(TAU) > .000001) continue;
@@ -337,17 +337,17 @@ public class RenderEclipse {
 						FI = -80;
 						niter = 0;
 						T = 0;
-						fromSouth = true;						
+						fromSouth = true;
 						continue;
 					} else {
 						if (I == 1) FI = 90;
 						if (I == -1) FI = -90;
-//						return null;						
+//						return null;
 					}
 				}
 			}
 			if (Math.abs(FI) > 90) FI = 90 * FastMath.sign(FI);
-			
+
 			if (I == -1) {
 				if (FIN == 90 && FI == -90) return null;
 //				if ((FIN == 90 || FI == -90) && Math.abs(FIN-FI) > 25) return null;
@@ -370,7 +370,7 @@ public class RenderEclipse {
 		double D = D0 + D1 * T + D2 * T2;
 		double M = M0 + M1 * T;
 		double L2 = L20 + L21 * T + L22 * T2;
-		
+
 		// Diurnal variations
 		double VX = X1 + 2 * X2 * T + 3 * X3 * T2;
 		double VY = Y1 + 2 * Y2 * T + 3 * Y3 * T2;
@@ -385,7 +385,7 @@ public class RenderEclipse {
 		double B1 = W * sinD;
 		double B2 = FLATENNING_FACTOR * W * cosD;
 		if ((1.0 - X * X - YP * YP) < 0) return null;
-		
+
 		double BT = Math.sqrt(1.0 - X * X - YP * YP);
 		double FI1 = Math.asin(BT * B1 + YP * B2);
 		double H = Math.atan(X / (BT * B2 - YP * B1));
@@ -410,11 +410,11 @@ public class RenderEclipse {
 
 	private double[] centralEclipseCurve(double LG) {
 		double T = 0, FI = 0, D = 0, X = 0, Y = 0, VX = 0, VY = 0, L2 = 0, T2 = 0, T3 = 0;
-		
+
 		int niter = 0;
 		while (true) {
 			niter ++;
-			
+
 			T2 = T * T;
 			T3 = T2 * T;
 			X = X0 + X1 * T + X2 * T2 + X3 * T3;
@@ -422,13 +422,13 @@ public class RenderEclipse {
 			D = D0 + D1 * T + D2 * T2;
 			double M = M0 + M1 * T;
 			L2 = L20 + L21 * T + L22 * T2;
-			
+
 			// Diurnal variations
 			VX = X1 + 2 * X2 * T + 3 * X3 * T2;
 			VY = Y1 + 2 * Y2 * T + 3 * Y3 * T2;
-	
+
 			double H = M + LG - DT_TO_DEG * DT;
-			
+
 			// Geocentric coordinates
 			double FU = Math.atan(FLATENNING_FACTOR * Math.tan(FI * Constant.DEG_TO_RAD));
 			double RSIN = FLATENNING_FACTOR * Math.sin(FU);
@@ -463,7 +463,7 @@ public class RenderEclipse {
 		double C = VX + P * Y * sinD;
 		double YP = W * Y;
 		if ((1.0 - X * X - YP * YP) < 0) return null;
-		
+
 		double BT = Math.sqrt(1.0 - X * X - YP * YP);
 		double L2P = L2 - BT * F2;
 		boolean total = true;
@@ -494,10 +494,10 @@ public class RenderEclipse {
 		ext = extremes(TAU2);
 		TAU2 += ext[1];
 		double TD2 = T0 + TAU2;
-		
+
 		return new double[] {TD1, TD2};
 	}
-	
+
 	private double[] extremes(double T) {
 		double T2 = T * T, T3 = T2 * T;
 		double X = X0 + X1 * T + X2 * T2 + X3 * T3;
@@ -515,7 +515,7 @@ public class RenderEclipse {
 		double CTAU2 = -(U * A + V * B) / (N * N) + sqS / N;
 		return new double[] {CTAU1, CTAU2};
 	}
-	
+
 	private double[] sameMagnitudeCurve(double G, double LG) {
 		double limit1[] = null, limit2[] = null;
 		int sgn = 1;
@@ -535,7 +535,7 @@ public class RenderEclipse {
 				double VX = X1 + 2 * X2 * T + 3 * X3 * T2;
 				double VY = Y1 + 2 * Y2 * T + 3 * Y3 * T2;
 				double H = M + LG - DT_TO_DEG * DT;
-				
+
 				// Geocentric coordinates
 				double FU = Math.atan(FLATENNING_FACTOR * Math.tan(FI * Constant.DEG_TO_RAD));
 				double RSIN = FLATENNING_FACTOR * FastMath.sin(FU);
@@ -567,8 +567,8 @@ public class RenderEclipse {
 				if (J > 50) break;
 				if (Math.abs(TAU) > .000001) continue;
 				if (Math.abs(CFI) >= .00001) continue;
-				
-				if (Math.abs(FI) > 90) FI = 90 * FastMath.sign(FI);					
+
+				if (Math.abs(FI) > 90) FI = 90 * FastMath.sign(FI);
 				// FI
 				double TD = T0 + T;
 				limit = new double[] { FI, TD - DT / 3600 };
@@ -576,7 +576,7 @@ public class RenderEclipse {
 				if (sinALT < ELEVATION_LIMIT) limit = null; // below -34' to consider refraction
 				break;
 			} while (true);
-			
+
 			if (limit == null) limit = new double[] {-1, -1};
 			if (i == 0) {
 				limit1 = limit;
@@ -585,7 +585,7 @@ public class RenderEclipse {
 			}
 			sgn = -1;
 		}
-		
+
 		return new double[] {limit1[0], limit1[1], limit2[0], limit2[1]};
 	}
 
@@ -594,16 +594,16 @@ public class RenderEclipse {
 		double limit[] = sameMagnitudeCurve(0, LG);
 		if (limit[0] != -1) max = limit[0];
 		if (limit[2] != -1) min = limit[2];
-		
+
 		double T = TU + DT / 3600 - T0;
 
 		double G_MAX = -1, FI_MAX = -1, minDif = 1E10;
 		for (double FI=min;FI<=max;FI=FI+dPHI) {
-			double FID = FI * Constant.DEG_TO_RAD;			
+			double FID = FI * Constant.DEG_TO_RAD;
 			double FU = FastMath.atan2_accurate(FLATENNING_FACTOR * Math.tan(FID), 1.0); //Math.atan(FLATENNING_FACTOR * Math.tan(FID));
 			double RSIN = FLATENNING_FACTOR * FastMath.sin(FU);
 			double RCOS = FastMath.cos(FU);
-			
+
 			// Calculate eclipse maximum
 			double data[] = this.fastEclipseMaximum(0, 0, 0, LG, 0.0, 0, RCOS, RSIN);
 			if (data != null) {
@@ -633,11 +633,11 @@ public class RenderEclipse {
 				}
 			}
 		}
-		
+
 		if (G_MAX < 0 || minDif > 0.01) return null;
 		return new double[] {FI_MAX, G_MAX};
 	}
-	
+
 	/**
 	 * Calculates if any part of the eclipse is visible from a given observer.
 	 * @param obs The observer.
@@ -686,7 +686,7 @@ public class RenderEclipse {
 					D = data[8];
 					H = data[9];
 					sinALT = Math.sin(D) * sinFI + Math.cos(D) * cosFI * Math.cos(H);
-					if (sinALT < ELEVATION_LIMIT) G = -10;							
+					if (sinALT < ELEVATION_LIMIT) G = -10;
 				}
 			}
 		}
@@ -738,7 +738,7 @@ public class RenderEclipse {
 			double time1 = ((int) (Math.abs(time0) - 0.5) + 0.5) * FastMath.sign(time0) + T0 / 24.0;
 			if (jd > time1 && time < T0) time += 24.0;
 			if (jd < time1 && time > T0) time -= 24.0;
-			double[] data = centralEclipseCurve(time, 0); 
+			double[] data = centralEclipseCurve(time, 0);
 			if (data != null) {
 				LocationElement centralPosition = new LocationElement(data[0] * Constant.DEG_TO_RAD, data[1] * Constant.DEG_TO_RAD, data[2]);
 				return centralPosition;
@@ -746,7 +746,7 @@ public class RenderEclipse {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Creates an image only with the map of a solar eclipse.
 	 * @param outputTimeScale The output time scale to use for labels in the chart.
@@ -758,7 +758,7 @@ public class RenderEclipse {
 	 * @param map Options for the map.
 	 * @throws JPARSECException If an error occurs.
 	 */
-	public void solarEclipseMap(SCALE outputTimeScale, ObserverElement observer, EphemerisElement eph0, Graphics g2, 
+	public void solarEclipseMap(SCALE outputTimeScale, ObserverElement observer, EphemerisElement eph0, Graphics g2,
 			PLANET_MAP map) throws JPARSECException {
 		float quality = 1;
 		if (!g2.renderingToAndroid() && (RenderPlanet.FORCE_HIGHT_QUALITY || map == PLANET_MAP.MAP_SPHERICAL || g2.renderingToExternalGraphics())) quality = RenderPlanet.MAXIMUM_TEXTURE_QUALITY_FACTOR;
@@ -775,11 +775,11 @@ public class RenderEclipse {
 		double jd = TimeScale.getJD(time, observer, eph, time.timeScale);
 		double DTU = (jd - jd_TU) * 24.0;
 		double t[] = this.extremeTimes();
-		
+
 		LocationElement cp = map.centralPosition;
 		if (map.centralPosition == null && map == PLANET_MAP.MAP_SPHERICAL) {
 			double data[] = null;
-			if (t != null) data = centralEclipseCurve((t[0] + t[1]) * 0.5, 0); 
+			if (t != null) data = centralEclipseCurve((t[0] + t[1]) * 0.5, 0);
 			if (data != null) {
 				map.centralPosition = new LocationElement(data[0] * Constant.DEG_TO_RAD, data[1] * Constant.DEG_TO_RAD, 1.0);
 			} else {
@@ -812,7 +812,7 @@ public class RenderEclipse {
 			Graphics g3 = g2.getGraphics(render.width, render.height);
 			g3.setFont(g3.getFont());
 			satRender.renderize(g3);
-			render.planetMap.showGridColor = c; 
+			render.planetMap.showGridColor = c;
 			this.renderMap(g3, map, satRender, w, DTU, observer, quality, t);
 			if (render.anaglyphMode.isReal3D()) {
 				g2.setAnaglyph(g3.getImage(0, 0, render.width, render.height), g3.getImage2(0, 0, render.width, render.height));
@@ -820,29 +820,29 @@ public class RenderEclipse {
 				g2.drawImage(g3.getRendering(), 0, 0);
 				g2.drawImage(g3.getRendering(), 0, 0);
 			}
-/*			
+/*
 			// Vector graphics disabled for planetary rendering here, since image quality is poor. Previous lines can be replaced by following ones
 			satRender.renderize(g2);
 			render.planetMap.showGridColor = c;
 			this.renderMap(g2, map, satRender, w, DTU, observer, quality, t);
-*/			
+*/
 		} else {
 			Graphics g3 = g2.getGraphics(render.width, render.height);
 			g3.setFont(FONT.getDerivedFont(g3.getFont(), g2.getFont().getSize()*2));
 			satRender.renderize(g3);
-			render.planetMap.showGridColor = c; 
+			render.planetMap.showGridColor = c;
 			this.renderMap(g3, map, satRender, (int) (w*quality), DTU, observer, w/400f, t);
 			if (render.anaglyphMode.isReal3D()) {
-				g2.setAnaglyph(g3.getScaledImage(g3.getImage(0, 0, render.width, render.height), w, g2.getHeight(), true, RenderSatellite.ALLOW_SPLINE_RESIZING), 
+				g2.setAnaglyph(g3.getScaledImage(g3.getImage(0, 0, render.width, render.height), w, g2.getHeight(), true, RenderSatellite.ALLOW_SPLINE_RESIZING),
 						g3.getScaledImage(g3.getImage2(0, 0, render.width, render.height), w, g2.getHeight(), true, false));
 			} else {
 				//g2.drawImage(g3.getScaledImage(g3.getRendering(), w, g2.getHeight(), true, RenderSatellite.ALLOW_SPLINE_RESIZING), 0, 0);
 				g2.drawImage(g3.getRendering(), 0, 0, 1.0/quality, 1.0/quality);
 			}
-		}	
+		}
 		render.planetMap.showGridColor = c2;
 		map.centralPosition = cp;
-		
+
 		// Draw leyend at the bottom
 		int limH = (int)(g2.getWidth()*1.2);
 		if (map == PLANET_MAP.MAP_FLAT) limH /= 2;
@@ -851,7 +851,7 @@ public class RenderEclipse {
 			if (map.EarthMapSource == null) {
 				transp2 = (96+32) / 255f;
 				transp3 = (128+32) / 255f;
-				transp4 = (164+32) / 255f;			
+				transp4 = (164+32) / 255f;
 			}
 			int red0 = 255, green0 = 255, blue0 = 255;
 			float tr = transp4;
@@ -859,11 +859,11 @@ public class RenderEclipse {
 			int green = (int) (green0 * (1.0 - tr));
 			int blue = (int) (blue0 * (1.0 - tr));
 			g2.setColor(red, green, blue, 255);
-			
+
 			int s = 5, s2 = 2*s+1, px = 20, dy = 20, dyt = g2.getFont().getSize()/2;
 			g2.fillOval(px-s, limH-s, s2, s2, false);
 			g2.drawString(Translate.translate(1121), px + 30, limH + dyt);
-			
+
 			tr = transp3;
 			limH += dy;
 			red = (int) (red0 * (1.0 - tr));
@@ -872,7 +872,7 @@ public class RenderEclipse {
 			g2.setColor(red, green, blue, 255);
 			g2.fillOval(px-s, limH-s, s2, s2, false);
 			g2.drawString(Translate.translate(1122), px + 30, limH + dyt);
-			
+
 			tr = transp2;
 			limH += dy;
 			red = (int) (red0 * (1.0 - tr));
@@ -886,7 +886,7 @@ public class RenderEclipse {
 	private void renderMap(Graphics g2, PLANET_MAP map, RenderSatellite satRender, int w, double DTU,
 			ObserverElement observer, float quality, double times[]) throws JPARSECException {
 		Object img = g2.cloneImage(g2.getImage(0, 0, g2.getWidth(), g2.getHeight()));
-		
+
 		float zoom = map.zoomFactor;
 		double lon0 = 0, lon1 = Constant.TWO_PI, lonStep = Constant.TWO_PI / (w * zoom);
 		double lat1 = -Constant.PI_OVER_TWO, lat0 = -lat1, ALTURA = 0;
@@ -907,9 +907,9 @@ public class RenderEclipse {
 		if (map.EarthMapSource == null) {
 			transp2 = (96+32) / 255f;
 			transp3 = (128+32) / 255f;
-			transp4 = (164+32) / 255f;			
+			transp4 = (164+32) / 255f;
 		}
-		
+
 		// Darken region where eclipse is visible
 		for (double FI = lat1; FI <= lat0; FI = FI + lonStep) {
 			double sinFI = Math.sin(FI), cosFI = Math.cos(FI);
@@ -922,13 +922,13 @@ public class RenderEclipse {
 				if (pos == null) continue;
 				if (pos[0] < 0 || pos[0] >= g2.getWidth()) continue;
 				if (pos[1] < 0 || pos[1] >= g2.getHeight()) continue;
-				int oldc = g2.getRGB(img, pos[0], pos[1]); 
+				int oldc = g2.getRGB(img, pos[0], pos[1]);
 				if (oldc != g2.getRGB(pos[0], pos[1])) continue;
-				
+
 				// Calculate eclipse maximum
 				double data[] = this.fastEclipseMaximum(0, 0, 0, lon * Constant.RAD_TO_DEG, DTU, 0, RCOS, RSIN);
 				if (data == null) continue;
-				
+
 				double G = -1;
 				visible = false;
 				double U = data[1], V = data[2], L1P = data[3], L2P = data[4], A = data[5], B = data[6], N = data[7], D = data[8], H = data[9];
@@ -963,12 +963,12 @@ public class RenderEclipse {
 						}
 					}
 //					}
-					
+
 
 				if (G == -10) {
 					float t = transp3;
 					if (visible) t = transp4;
-					
+
 					int red = (int) (g2.getRed(oldc) * (1.0 - t)); // + 0 * transp2);
 					int green = (int) (g2.getGreen(oldc) * (1.0 - t)); // + 0 * transp2);
 					int blue = (int) (g2.getBlue(oldc) * (1.0 - t)); // + 0 * transp2);
@@ -977,7 +977,7 @@ public class RenderEclipse {
 					if (ps2 <= 1) {
 						g2.fillOval(pos[0]-ps, pos[1]-ps, ps2, ps2, false);
 					} else {
-						g2.fillRect(pos[0]-ps, pos[1]-ps, ps2, ps2);					
+						g2.fillRect(pos[0]-ps, pos[1]-ps, ps2, ps2);
 					}
 				} else {
 					if (G < 0) continue;
@@ -990,10 +990,10 @@ public class RenderEclipse {
 					if (ps2 <= 1) {
 						g2.fillOval(pos[0]-ps, pos[1]-ps, ps2, ps2, false);
 					} else {
-						g2.fillRect(pos[0]-ps, pos[1]-ps, ps2, ps2);					
-					}					
+						g2.fillRect(pos[0]-ps, pos[1]-ps, ps2, ps2);
+					}
 				}
-			}		
+			}
 		}
 
 		img = g2.getImage(0, 0, g2.getWidth(), g2.getHeight());
@@ -1005,7 +1005,7 @@ public class RenderEclipse {
 		for (double lon = lon0; lon <= lon1; lon = lon + lonStep2) {
 			double lats[] = centralEclipseLatitudeLimits(lon * Constant.RAD_TO_DEG);
 			if (lats == null) continue;
-			
+
 			boolean total = false; //(val[5] == 1);
 			transp2 = (total? 255:156) / 255f;
 
@@ -1020,18 +1020,18 @@ public class RenderEclipse {
 					int px = posN[0];
 					if (map == PLANET_MAP.MAP_SPHERICAL) px = (int) (posN[0]+(posS[0]-posN[0])*(double)(posN[1]-j)/(double)(posN[1]-posS[1]));
 					if (j < 0 || j >= g2.getHeight()) continue;
-					int oldc = g2.getRGB(img, px, j); 
+					int oldc = g2.getRGB(img, px, j);
 					if (oldc != g2.getRGB(px, j)) continue;
-					
+
 					int red = (int) (g2.getRed(oldc) * (1.0 - transp2)); // + 0 * transp2);
 					int green = (int) (g2.getGreen(oldc) * (1.0 - transp2)); // + 0 * transp2);
 					int blue = (int) (g2.getBlue(oldc) * (1.0 - transp2)); // + 0 * transp2);
 					g2.setColor(red, green, blue, 255);
-	
+
 					if (ps2 <= 1) {
 						g2.fillOval(px-ps, j-ps, ps2, ps2, dist);
 					} else {
-						g2.fillRect(px-ps, j-ps, ps2, ps2, dist);					
+						g2.fillRect(px-ps, j-ps, ps2, ps2, dist);
 					}
 				}
 			}
@@ -1050,7 +1050,7 @@ public class RenderEclipse {
 		ps2 = 2*ps+1;
 		ArrayList<String> labels = new ArrayList<String>();
 		int dyt = 20;
-		
+
 		// Select correct initial longitude
 		double offset = 0;
 		double data[] = sameMagnitudeCurve(0.1, -180);
@@ -1073,7 +1073,7 @@ public class RenderEclipse {
 				if (data == null) continue;
 				double phi1 = data[0], phi2 = data[2];
 				if (phi1 == -1 && phi2 == -1) continue;
-				
+
 				if (phi1 != -1) {
 					int pos[] = satRender.getTexturePosition(new LocationElement(lon, phi1 * Constant.DEG_TO_RAD, 1.0));
 					if (pos != null && (pos[1] > dyt && pos[1] < g2.getHeight())) {
@@ -1118,12 +1118,12 @@ public class RenderEclipse {
 					if (pos == null) continue;
 					if (pos[0] < 0 || pos[0] > w) continue;
 				}
-				data = sameMagnitudeCurve(mag, lon*Constant.RAD_TO_DEG); 
+				data = sameMagnitudeCurve(mag, lon*Constant.RAD_TO_DEG);
 				if (data == null) continue;
 				double phi1 = data[0], phi2 = data[2];
 				if (phi1 == -1 && phi2 == -1) continue;
 				double newt1 = data[1] + DTU, newt2 = data[3] + DTU;
-				
+
 				if (phi1 != -1) {
 					if (oldt1 != -1 && (int) oldt1 != (int) newt1) {
 						int pos[] = satRender.getTexturePosition(new LocationElement(lon, phi1 * Constant.DEG_TO_RAD, 1.0));
@@ -1145,9 +1145,9 @@ public class RenderEclipse {
 					}
 					oldt1 = newt1;
 				} else {
-					oldt1 = -1;					
+					oldt1 = -1;
 				}
-				
+
 				if (phi2 != -1) {
 					if (oldt2 != -1 && (int) oldt2 != (int) newt2) {
 						int pos[] = satRender.getTexturePosition(new LocationElement(lon, phi2 * Constant.DEG_TO_RAD, 1.0));
@@ -1169,12 +1169,12 @@ public class RenderEclipse {
 					}
 					oldt2 = newt2;
 				} else {
-					oldt2 = -1;										
+					oldt2 = -1;
 				}
 			}
 		}
 */
-		
+
 		if (map.zoomFactor <= 3) {
 			//g2.setColor(255, 0, 0, 255);
 			labels = new ArrayList<String>();
@@ -1214,8 +1214,8 @@ public class RenderEclipse {
 						if (map == PLANET_MAP.MAP_SPHERICAL && lastx1[val] != -1 && FastMath.hypot(lastx1[val]-pos2[0], lasty1[val]-pos2[1])*360.0/(zoom*w) < 40) {
 							g2.drawLine(lastx1[val], lasty1[val], pos2[0], pos2[1], true);
 						} else {
-							g2.fillOval(pos2[0]-ps-1, pos2[1]-ps-1, ps2+2, ps2+2, false);						
-							g2.fillOval(lastx1[val]-ps-1, lasty1[val]-ps-1, ps2+2, ps2+2, false);						
+							g2.fillOval(pos2[0]-ps-1, pos2[1]-ps-1, ps2+2, ps2+2, false);
+							g2.fillOval(lastx1[val]-ps-1, lasty1[val]-ps-1, ps2+2, ps2+2, false);
 						}
 						lastx1[val] = pos2[0];
 						lasty1[val] = pos2[1];
@@ -1238,7 +1238,7 @@ public class RenderEclipse {
 				}
 			}
 		}
-		
+
 		// Show observer
 		LocationElement loc = new LocationElement(observer.getLongitudeRad(), observer.getLatitudeRad(), 1.0);
 		int pos[] = satRender.getTexturePosition(loc);
@@ -1254,7 +1254,7 @@ public class RenderEclipse {
 			}
 		}
 	}
-	
+
 	/**
 	 * Returns the maximum of the eclipse.
 	 * @param obs Observer.
@@ -1264,7 +1264,7 @@ public class RenderEclipse {
 	 */
 	public TimeElement solarEclipseMaximum(ObserverElement obs, EphemerisElement eph0) throws JPARSECException {
 		double LG = obs.getLongitudeDeg(), FI = obs.getLatitudeDeg(), ALTURA = obs.getHeight();
-		
+
 		TimeElement time0 = new TimeElement(astro, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
 		EphemerisElement eph = eph0.clone();
 		eph.targetBody = TARGET.Moon;
@@ -1275,7 +1275,7 @@ public class RenderEclipse {
 		double jd_TDB = TimeScale.getJD(time0, obs, eph, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
 		double jdRef = (int) (jd_TDB - 0.5) + 0.5;
 		double DTU = this.DT;
-		
+
 		// Geocentric coordinates
 		double sinFI = Math.sin(FI * Constant.DEG_TO_RAD), cosFI = Math.cos(FI * Constant.DEG_TO_RAD);
 		double FU = Math.atan(FLATENNING_FACTOR * Math.tan(FI * Constant.DEG_TO_RAD));
@@ -1290,7 +1290,7 @@ public class RenderEclipse {
 		double TD = T0 + data[0];
 		return new TimeElement(jdRef + TD / 24.0, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
 	}
-	
+
 	/**
 	 * Creates a chart of a solar eclipse with an scheme of the eclipse and
 	 * optionally also the map.
@@ -1303,10 +1303,10 @@ public class RenderEclipse {
 	 * @param map Options for the eclipse map. null will render no map at all.
 	 * @throws JPARSECException If an error occurs.
 	 */
-	public void renderSolarEclipse(SCALE outputTimeScale, ObserverElement obs, EphemerisElement eph0, Graphics g, 
+	public void renderSolarEclipse(SCALE outputTimeScale, ObserverElement obs, EphemerisElement eph0, Graphics g,
 			boolean horizontalCoord, PLANET_MAP map) throws JPARSECException {
 		double LG = obs.getLongitudeDeg(), FI = obs.getLatitudeDeg(), ALTURA = obs.getHeight();
-		
+
 		TimeElement time0 = new TimeElement(astro, outputTimeScale);
 		EphemerisElement eph = eph0.clone();
 		eph.targetBody = TARGET.Moon;
@@ -1319,7 +1319,7 @@ public class RenderEclipse {
 		double jdRef = (int) (jd_TDB - 0.5) + 0.5;
 		double DT = -(jd - jd_TDB) * Constant.SECONDS_PER_DAY;
 		double DTU = this.DT;
-		
+
 		// Geocentric coordinates
 		double sinFI = Math.sin(FI * Constant.DEG_TO_RAD), cosFI = Math.cos(FI * Constant.DEG_TO_RAD);
 		double FU = Math.atan(FLATENNING_FACTOR * Math.tan(FI * Constant.DEG_TO_RAD));
@@ -1405,7 +1405,7 @@ public class RenderEclipse {
 				}
 				PA -= p * Constant.RAD_TO_DEG;
 			}
-				
+
 			fPA = PA * Constant.DEG_TO_RAD;
 			fALT = ALT;
 			fTD = TD;
@@ -1468,7 +1468,7 @@ public class RenderEclipse {
 				if (map == PLANET_MAP.MAP_SPHERICAL && h > w) {
 					h = h - w;
 				} else {
-					h = h - w / 2;					
+					h = h - w / 2;
 				}
 			} else {
 				if (map == PLANET_MAP.MAP_SPHERICAL) {
@@ -1488,7 +1488,7 @@ public class RenderEclipse {
 		if (horizontalCoord) {
 			g.drawString("Z", cx - fs / 3, 20);
 		} else {
-			g.drawString("N", cx - fs / 3, 20);			
+			g.drawString("N", cx - fs / 3, 20);
 			g.drawString("E", 15, cy + fs / 3);
 		}
 		g.setColor(255, 255, 0, 255);
@@ -1519,10 +1519,10 @@ public class RenderEclipse {
 				g.setColor(255, 255, 255, 192);
 				g.drawOval(pxl - ss, pyl - ss, ss2, ss2, MoonDist);
 			}
-			if (first && last) { 
+			if (first && last) {
 				double jd_TDB2 = (int) (jd_TDB - 0.5) + 0.5 + TM / 24.0;
 				double sun[] = OrbitEphem.sun(jd_TDB2);
-				double sunDiam = Constant.RAD_TO_DEG * Math.atan2(TARGET.SUN.equatorialRadius * 2, Constant.AU * 
+				double sunDiam = Constant.RAD_TO_DEG * Math.atan2(TARGET.SUN.equatorialRadius * 2, Constant.AU *
 						Math.sqrt(sun[0] * sun[0] + sun[1] * sun[1] + sun[2] * sun[2]));
 
 				double rpix = mR * sp2 / sunDiam;
@@ -1530,14 +1530,14 @@ public class RenderEclipse {
 				pyc = (int) (0.5 + cy - rpix * Math.cos(mPA));
 
 				double m1 = (pyc - pyl) / (pxc - pxl), n1 = pyl - m1 * pxl;
-				
+
 				double m2 = (pyc - pyf) / (pxc - pxf), n2 = pyf - m2 * pxf;
 				double offx = (ss + 20) / Math.max(1.0, Math.abs(m2));
 				double size = (15.0 * w / Math.max(1.0, Math.abs(m1))) / 800.0;
 				double endx = pxf + offx, endy = m2 * endx + n2;
 				g.drawLine((float) (endx), (float) (endy), (float) (pxc),
 						(float) (pyc), true);
-	
+
 				double startx = pxc, starty = pyc;
 				offx = (ss + 20) / Math.max(1.0, Math.abs(m1));
 				endx = pxl - offx;
@@ -1552,7 +1552,7 @@ public class RenderEclipse {
 						(float) (endx1), (float) (endy1), true);
 				g.drawLine((float) (endx1), (float) (endy1), (float) (endx + dy),
 						(float) (endy - dx), true);
-		
+
 				g.setColor(0, 0, 0, 240);
 				renderMoon(pxc - ss, pyc - ss, ss2, MoonDist, g, jdRef + ME / 24.0, obs, eph, !horizontalCoord);
 				g.setColor(255, 255, 255, 192);
@@ -1568,7 +1568,7 @@ public class RenderEclipse {
 			g.drawString(label, 20, py+=step);
 			if (map == null || map == PLANET_MAP.NO_MAP) return;
 		}
-		
+
 		if (w >= 400 && !type.equals("No eclipse") && G > 0) {
 			String ts = TimeElement.TIME_SCALES_ABBREVIATED[time0.timeScale.ordinal()];
 			py = h - step * 5;
@@ -1586,15 +1586,15 @@ public class RenderEclipse {
 				SolarEclipse se = new SolarEclipse(new TimeElement(jd_TDB-1, SCALE.BARYCENTRIC_DYNAMICAL_TIME), obs, eph);
 				events = se.getEvents();
 				if (ShowWithoutLT) {
-					g.drawString(Translate.translate(1094)+": "+Functions.formatRA((ME-DT/3600.)/Constant.RAD_TO_HOUR, 0)+" "+ts2+" ("+Translate.translate(157)+": "+Functions.formatValue(G, 2)+")", px, py+=step);					
+					g.drawString(Translate.translate(1094)+": "+Functions.formatRA((ME-DT/3600.)/Constant.RAD_TO_HOUR, 0)+" "+ts2+" ("+Translate.translate(157)+": "+Functions.formatValue(G, 2)+")", px, py+=step);
 				} else {
 					g.drawString(Translate.translate(1094)+": "+Functions.formatRA((ME-DT/3600.)/Constant.RAD_TO_HOUR, 0)+" "+ts2, px, py+=step);
 				}
 //			} else {
 //				g.drawString(Translate.translate(1094)+": "+Functions.formatRA((ME-DT/3600.)/Constant.RAD_TO_HOUR, 0)+" "+ts, px, py+=step);
 //			}
-			
-			g.drawString(Translate.translate(1095)+": "+Functions.formatValue(Ephem.getApparentElevation(eph0, obs, mALT, 10)*Constant.RAD_TO_DEG, 1)+"\u00ba", px, py+=step);
+
+			g.drawString(Translate.translate(1095)+": "+Functions.formatValue(Ephem.getApparentElevation(eph0, obs, mALT, 10)*Constant.RAD_TO_DEG, 1)+"\u00b0", px, py+=step);
 			if (G >= 0) {
 				py = 10;
 				if (first && last) {
@@ -1610,8 +1610,8 @@ public class RenderEclipse {
 						g.drawString(Translate.translate(1097)+": "+Functions.formatRA((lTD-DT/3600.)/Constant.RAD_TO_HOUR, 0)+" "+ts, px, py);
 					}
 					//py+=step/2;
-					g.drawString(Translate.translate(1095)+": "+Functions.formatValue(Ephem.getApparentElevation(eph0, obs, fALT, 10)*Constant.RAD_TO_DEG, 1)+"\u00ba", px2, py+=step);
-					g.drawString(Translate.translate(1095)+": "+Functions.formatValue(Ephem.getApparentElevation(eph0, obs, lALT, 10)*Constant.RAD_TO_DEG, 1)+"\u00ba", px, py);
+					g.drawString(Translate.translate(1095)+": "+Functions.formatValue(Ephem.getApparentElevation(eph0, obs, fALT, 10)*Constant.RAD_TO_DEG, 1)+"\u00b0", px2, py+=step);
+					g.drawString(Translate.translate(1095)+": "+Functions.formatValue(Ephem.getApparentElevation(eph0, obs, lALT, 10)*Constant.RAD_TO_DEG, 1)+"\u00b0", px, py);
 					py+=step/2;
 				}
 				if (!ShowWithoutLT) {
@@ -1621,7 +1621,7 @@ public class RenderEclipse {
 					g.drawString(Translate.translate(type+" phase duration")+": "+Functions.formatValue(7200*DUR, 1)+"s", px, py+=step);
 			}
 		}
-		
+
 		if (map != null && map != PLANET_MAP.NO_MAP) {
 			if ((type.equals("No eclipse") || !this.isVisible(obs) || G < 0) && map != PLANET_MAP.MAP_SPHERICAL) map.zoomFactor = 1;
 			int mapx = 0, mapy = h;
@@ -1631,13 +1631,13 @@ public class RenderEclipse {
 			}
 			g.traslate(mapx, mapy);
 			g.setColor(255, 0, 0, 255);
-			
+
 			this.solarEclipseMap(time0.timeScale, obs, eph0, g, map);
 			g.traslate(-mapx, -mapy);
 		}
 		return;
 	}
-	
+
 	private double[] eclipseMaximum(int I, int J, double T, double LG, double DT, double S,
 			double RCOS, double RSIN)
 	{
@@ -1677,7 +1677,7 @@ public class RenderEclipse {
 			return new double[] {T, U, V, L1P, L2P, A, B, N, D, H};
 		} while (true);
 	}
-	
+
 	private double[] fastEclipseMaximum(int I, int J, double T, double LG, double DT, double S,
 			double RCOS, double RSIN)
 	{
@@ -1731,7 +1731,7 @@ public class RenderEclipse {
 	 * @param map Options for the eclipse map. null will render no map at all.
 	 * @throws JPARSECException If an error occurs.
 	 */
-	public static void renderLunarEclipse(TimeElement time0, ObserverElement obs, EphemerisElement eph0, Graphics g, 
+	public static void renderLunarEclipse(TimeElement time0, ObserverElement obs, EphemerisElement eph0, Graphics g,
 			boolean horizontalCoord, PLANET_MAP map) throws JPARSECException {
 		EphemerisElement eph = eph0.clone();
 		eph.correctForEOP = false;
@@ -1741,7 +1741,7 @@ public class RenderEclipse {
 		eph.isTopocentric = false;
 		eph.ephemType = COORDINATES_TYPE.APPARENT;
 		eph.equinox = EphemerisElement.EQUINOX_OF_DATE;
-		
+
 		double jd_TDB = TimeScale.getJD(time0, obs, eph, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
 		double jd = TimeScale.getJD(time0, obs, eph, time0.timeScale);
 		double jd0 = (int) (jd_TDB - 0.5) + 0.5;
@@ -1751,14 +1751,14 @@ public class RenderEclipse {
 		EphemElement sun = Ephem.getEphemeris(time, obs, eph, false);
 		eph.targetBody = TARGET.Moon;
 		EphemElement moon = Ephem.getEphemeris(time, obs, eph, false);
-		double AA = moon.rightAscension * Constant.RAD_TO_HOUR, CC = sun.rightAscension * Constant.RAD_TO_HOUR, 
+		double AA = moon.rightAscension * Constant.RAD_TO_HOUR, CC = sun.rightAscension * Constant.RAD_TO_HOUR,
 				KK = sun.declination * Constant.RAD_TO_DEG;
 		time.add(1.0);
 		eph.targetBody = TARGET.SUN;
 		EphemElement sunp = Ephem.getEphemeris(time, obs, eph, false);
 		eph.targetBody = TARGET.Moon;
 		EphemElement moonp = Ephem.getEphemeris(time, obs, eph, false);
-		double BB = moonp.rightAscension * Constant.RAD_TO_HOUR, DD = sunp.rightAscension * Constant.RAD_TO_HOUR, 
+		double BB = moonp.rightAscension * Constant.RAD_TO_HOUR, DD = sunp.rightAscension * Constant.RAD_TO_HOUR,
 				LL = sunp.declination * Constant.RAD_TO_DEG;
 
 		CC = 24.0 * ((CC + 12.0) / 24.0 - Math.floor((CC + 12.0) / 24.0));
@@ -1778,8 +1778,8 @@ public class RenderEclipse {
 		BB = moonhp.rightAscension * Constant.RAD_TO_HOUR;
 		double NN = moonhp.declination * Constant.RAD_TO_DEG;
 		double T = (AA - CC - (BB - AA) * (H)) / ((DD - CC) / 24.0 - BB + AA); // Time of oposition in RA, TDB
-		
-		double S1 = moonhp.angularRadius * Constant.RAD_TO_DEG * 60.0, 
+
+		double S1 = moonhp.angularRadius * Constant.RAD_TO_DEG * 60.0,
 				P1 = Math.asin(Constant.EARTH_RADIUS / (Constant.AU * moonhp.distance))	* Constant.RAD_TO_DEG * 60.0;
 		double R2 = sunhp.distance, S2 = sunhp.angularRadius * Constant.RAD_TO_DEG * 60.0, P2 = 8.793999 / R2;
 
@@ -1800,7 +1800,7 @@ public class RenderEclipse {
 		EphemElement moont = Ephem.getEphemeris(time, obs, eph, false);
 		double moonRA = moont.rightAscension;
 		double moonDEC = moont.declination;
-		
+
 		int I = -1;
 		double X = 0, P0[] = new double[3], F0[] = new double[3], PARF[] = new double[3], PARP[] = new double[3], F = 0; // , Z = 0, PC = 0, UC = 0;
 		String type = "";
@@ -1828,7 +1828,7 @@ public class RenderEclipse {
 					p = (y / Math.abs(y)) * Constant.PI_OVER_TWO;
 				}
 				PARF[I] = -p;
-				
+
 				A = O * (P0[I] - T);
 				B = (Q + U * (P0[I] - T));
 				moonHA = tsl + (P0[I] - T) * Constant.TWO_PI * Constant.SIDEREAL_DAY_LENGTH / 24.0 - (moonRA - A * Constant.DEG_TO_RAD / 60.0);
@@ -1852,7 +1852,7 @@ public class RenderEclipse {
 			I++;
 			P0[I] = T + (-W - Math.sqrt(W2 - V * X)) / V;
 			F0[I] = T + (-W + Math.sqrt(W2 - V * X)) / V;
-			
+
 			if (horizontalCoord) {
 				double A = O * (F0[I] - T);
 				double B = (Q + U * (F0[I] - T));
@@ -1868,7 +1868,7 @@ public class RenderEclipse {
 					p = (y / Math.abs(y)) * Constant.PI_OVER_TWO;
 				}
 				PARF[I] = -p;
-				
+
 				A = O * (P0[I] - T);
 				B = (Q + U * (P0[I] - T));
 				moonHA = tsl + (P0[I] - T) * Constant.TWO_PI * Constant.SIDEREAL_DAY_LENGTH / 24.0 - (moonRA - A * Constant.DEG_TO_RAD / 60.0);
@@ -1890,13 +1890,13 @@ public class RenderEclipse {
 
 			// Contact angle and phase
 			double Z = S;
-			if (type.equals("Penumbral")) Z = P; 
+			if (type.equals("Penumbral")) Z = P;
 			F = (Z + S1 - D) / (2 * S1);
 			/*
-			 * double HH = Math.asin(D / (Z + S1)), JJ = Math.acos(U / Math.sqrt(V)); 
+			 * double HH = Math.asin(D / (Z + S1)), JJ = Math.acos(U / Math.sqrt(V));
 			 * if (O * Q > 0) HH = -HH;
-			 * PC = (JJ + HH); // First contact, E 
-			 * UC = Math.PI - JJ + HH; // Last contact, W 
+			 * PC = (JJ + HH); // First contact, E
+			 * UC = Math.PI - JJ + HH; // Last contact, W
 			 */
 
 			// Penumbral phase
@@ -1905,7 +1905,7 @@ public class RenderEclipse {
 			I++;
 			P0[I] = T + (-W - Math.sqrt(W2 - V * X)) / V;
 			F0[I] = T + (-W + Math.sqrt(W2 - V * X)) / V;
-			
+
 			if (horizontalCoord) {
 				double A = O * (F0[I] - T);
 				double B = (Q + U * (F0[I] - T));
@@ -1921,7 +1921,7 @@ public class RenderEclipse {
 					p = (y / Math.abs(y)) * Constant.PI_OVER_TWO;
 				}
 				PARF[I] = -p;
-				
+
 				A = O * (P0[I] - T);
 				B = (Q + U * (P0[I] - T));
 				moonHA = tsl + (P0[I] - T) * Constant.TWO_PI * Constant.SIDEREAL_DAY_LENGTH / 24.0 - (moonRA - A * Constant.DEG_TO_RAD / 60.0);
@@ -1956,7 +1956,7 @@ public class RenderEclipse {
 				if (map == PLANET_MAP.MAP_SPHERICAL && h > w) {
 					h = h - w;
 				} else {
-					h = h - w / 2;					
+					h = h - w / 2;
 				}
 			} else {
 				if (map == PLANET_MAP.MAP_SPHERICAL) {
@@ -1974,7 +1974,7 @@ public class RenderEclipse {
 		g.setColor(255, 255, 255, 128);
 		int fs = g.getFont().getSize();
 		if (horizontalCoord) {
-			g.drawString("Z", cx - fs / 3, 20);			
+			g.drawString("Z", cx - fs / 3, 20);
 		} else {
 			g.drawString("N", cx - fs / 3, 20);
 			g.drawString("E", 15, cy + fs / 3);
@@ -1985,7 +1985,7 @@ public class RenderEclipse {
 		if (g.getAnaglyphMode().isReal3D()) {
 			g.setColor(255, 0, 0, 255);
 		} else {
-			g.setColor(255, 0, 0, 128);			
+			g.setColor(255, 0, 0, 128);
 		}
 		int ss = (int) ((S * cr) / P), ss2 = 2* ss + 1;
 		g.fillOval(cx - ss, cy - ss, ss2, ss2, false);
@@ -2000,7 +2000,7 @@ public class RenderEclipse {
 			g.drawLine((float) (endx - dy), (float) (endy + dx), (float) (endx + dy), (float) (endy - dx), true);
 			g.drawLine((float) (endx - dy), (float) (endy + dx), (float) (endx1), (float) (endy1), true);
 			g.drawLine((float) (endx1), (float) (endy1), (float) (endx + dy), (float) (endy - dx), true);
-	
+
 			for (int i = -3; i <= 3; i++) {
 				g.drawLine((float) (cx + O * i * extend), (float) (cy - ((Q + U * i) * extend) + extend), (float) (cx + O * i * extend), (float) (cy - ((Q + U * i) * extend) - extend), true);
 			}
@@ -2019,7 +2019,7 @@ public class RenderEclipse {
 					dy = cy - (float) (dr * Math.sin(dang));
 					if (lastx != -1 && lasty != -1)
 						g.drawLine((float) (lastx), (float) (lasty), (float) (dx), (float) (dy), true);
-					if (i == I) 
+					if (i == I)
 						g.drawLine((float) (dx + dx - lastx), (float) (dy + dy - lasty), (float) (lastx), (float) (lasty), true);
 					if (i == 0) {
 						finalx = dx;
@@ -2077,7 +2077,7 @@ public class RenderEclipse {
 				double dx = A, dy = -B, dr = FastMath.hypot(dx, dy), dang = FastMath.atan2_accurate(-dy, dx) + PARP[i];
 				dx = cx + (float) (dr * Math.cos(dang));
 				dy = cy - (float) (dr * Math.sin(dang));
-				renderMoon((float) (dx - C), (float) (dy - C), C2, dist, g, jdRef + P0[i] / 24.0, obs, eph, !horizontalCoord);				
+				renderMoon((float) (dx - C), (float) (dy - C), C2, dist, g, jdRef + P0[i] / 24.0, obs, eph, !horizontalCoord);
 			} else {
 				renderMoon((float) (cx + A - C), (float) (cy - B - C), C2, dist, g, jdRef + P0[i] / 24.0, obs, eph, !horizontalCoord);
 			}
@@ -2089,7 +2089,7 @@ public class RenderEclipse {
 				double dx = A, dy = -B, dr = FastMath.hypot(dx, dy), dang = FastMath.atan2_accurate(-dy, dx) + PARF[i];
 				dx = cx + (float) (dr * Math.cos(dang));
 				dy = cy - (float) (dr * Math.sin(dang));
-				renderMoon((float) (dx - C), (float) (dy - C), C2, dist, g, jdRef + F0[i] / 24.0, obs, eph, !horizontalCoord);				
+				renderMoon((float) (dx - C), (float) (dy - C), C2, dist, g, jdRef + F0[i] / 24.0, obs, eph, !horizontalCoord);
 			} else {
 				renderMoon((float) (cx + A - C), (float) (cy - B - C), C2, dist, g, jdRef + F0[i] / 24.0, obs, eph, !horizontalCoord);
 			}
@@ -2102,18 +2102,18 @@ public class RenderEclipse {
 			double dx = A, dy = -B, dr = FastMath.hypot(dx, dy), dang = FastMath.atan2_accurate(-dy, dx) + PARME;
 			dx = cx + (float) (dr * Math.cos(dang));
 			dy = cy - (float) (dr * Math.sin(dang));
-			renderMoon((float) (dx - C), (float) (dy - C), C2, dist, g, jdRef + ME / 24.0, obs, eph, !horizontalCoord);				
+			renderMoon((float) (dx - C), (float) (dy - C), C2, dist, g, jdRef + ME / 24.0, obs, eph, !horizontalCoord);
 		} else {
 			renderMoon((float) (cx + A - C), (float) (cy - B - C), C2, dist, g, jdRef + ME / 24.0, obs, eph, !horizontalCoord);
 		}
-		
+
 		g.setColor(255, 255, 255, 255);
 		int px = 10, py = 10, px2 = cx + 20, step = g.getFont().getSize() + 2;
 		if (type.equals("No eclipse")) {
 			g.drawString(Translate.translate(1089), 20, py+=step);
 			return;
 		}
-		
+
 		if (w > 400) {
 			// Improve time estimates using LunarEclipse class. Note we 'draw' some values
 			// assuming an uniform movement for the Moon, but we print 'others' (corrected ones)
@@ -2137,10 +2137,10 @@ public class RenderEclipse {
 						double oldP0 = P0[ii], oldF0 = F0[ii];
 						P0[ii] = (ev[ii].getEventTime(obs, eph, true, output)+0.5);
 						F0[ii] = (ev[ii].getEventTime(obs, eph, false, output)+0.5);
-						
+
 						P0[ii] = (P0[ii] - (int) P0[ii]) * 24.0;
 						F0[ii] = (F0[ii] - (int) F0[ii]) * 24.0;
-						
+
 						if (oldP0 > 23.0 && P0[ii] < 12) P0[ii] += 24.0;
 						if (oldF0 > 23.0 && F0[ii] < 12) F0[ii] += 24.0;
 					}
@@ -2148,7 +2148,7 @@ public class RenderEclipse {
 					JPARSECException.addWarning("Lunar eclipse found in LunarEclipse class around "+le.getEclipseMaximum()+", while here is around "+jd_TDB);
 				}
 			}
-			
+
 			String ts = TimeElement.TIME_SCALES_ABBREVIATED[time0.timeScale.ordinal()];
 			if (ShowWithoutLT && (ts.equals("TL") || ts.equals("LT"))) ts = "";
 			py = h - step * 5;
@@ -2160,7 +2160,7 @@ public class RenderEclipse {
 			time.add(ME / 24.0);
 			double elev = Ephem.getEphemeris(time, obs, eph, false).elevation;
 			time.add(-ME / 24.0);
-			g.drawString(Translate.translate(1094)+": "+Functions.formatRA((ME-DT/3600.)/Constant.RAD_TO_HOUR, 0)+" "+ts+" ("+Translate.translate(29)+" "+Functions.formatAngleAsDegrees(elev, 1)+"\u00ba)", px, py+=step);
+			g.drawString(Translate.translate(1094)+": "+Functions.formatRA((ME-DT/3600.)/Constant.RAD_TO_HOUR, 0)+" "+ts+" ("+Translate.translate(29)+" "+Functions.formatAngleAsDegrees(elev, 1)+"\u00b0)", px, py+=step);
 			py = 10;
 			String alt = "";
 			if (ShowWithoutLT) alt = Translate.translate(29)+" ";
@@ -2177,18 +2177,18 @@ public class RenderEclipse {
 				 */
 				time.add(P0[0] / 24.0);
 				elev = Ephem.getEphemeris(time, obs, eph, false).elevation;
-				g.drawString(Translate.translate(1109)+": "+Functions.formatRA((P0[0]-DT/3600.)/Constant.RAD_TO_HOUR, 0)+" "+ts+" ("+alt+Functions.formatAngleAsDegrees(elev, 1)+"\u00ba)", px2, py+=step);
+				g.drawString(Translate.translate(1109)+": "+Functions.formatRA((P0[0]-DT/3600.)/Constant.RAD_TO_HOUR, 0)+" "+ts+" ("+alt+Functions.formatAngleAsDegrees(elev, 1)+"\u00b0)", px2, py+=step);
 				time.add((-P0[0]+F0[0]) / 24.0);
 				elev = Ephem.getEphemeris(time, obs, eph, false).elevation;
-				g.drawString(Translate.translate(1110)+": "+Functions.formatRA((F0[0]-DT/3600.)/Constant.RAD_TO_HOUR, 0)+" "+ts+" ("+alt+Functions.formatAngleAsDegrees(elev, 1)+"\u00ba)", px, py);
+				g.drawString(Translate.translate(1110)+": "+Functions.formatRA((F0[0]-DT/3600.)/Constant.RAD_TO_HOUR, 0)+" "+ts+" ("+alt+Functions.formatAngleAsDegrees(elev, 1)+"\u00b0)", px, py);
 				//py+=step/2;
-				
+
 				time.add((-F0[0]+P0[1]) / 24.0);
 				elev = Ephem.getEphemeris(time, obs, eph, false).elevation;
-				g.drawString(Translate.translate(1111)+": "+Functions.formatRA((P0[1]-DT/3600.)/Constant.RAD_TO_HOUR, 0)+" "+ts+" ("+alt+Functions.formatAngleAsDegrees(elev, 1)+"\u00ba)", px2, py+=step);
+				g.drawString(Translate.translate(1111)+": "+Functions.formatRA((P0[1]-DT/3600.)/Constant.RAD_TO_HOUR, 0)+" "+ts+" ("+alt+Functions.formatAngleAsDegrees(elev, 1)+"\u00b0)", px2, py+=step);
 				time.add((-P0[1]+F0[1]) / 24.0);
 				elev = Ephem.getEphemeris(time, obs, eph, false).elevation;
-				g.drawString(Translate.translate(1112)+": "+Functions.formatRA((F0[1]-DT/3600.)/Constant.RAD_TO_HOUR, 0)+" "+ts+" ("+alt+Functions.formatAngleAsDegrees(elev, 1)+"\u00ba)", px, py);
+				g.drawString(Translate.translate(1112)+": "+Functions.formatRA((F0[1]-DT/3600.)/Constant.RAD_TO_HOUR, 0)+" "+ts+" ("+alt+Functions.formatAngleAsDegrees(elev, 1)+"\u00b0)", px, py);
 				//py+=step/2;
 				g.drawString(Translate.translate(1113)+": "+Functions.formatRA((P0[2]-DT/3600.)/Constant.RAD_TO_HOUR, 0)+" "+ts, px2, py+=step);
 				g.drawString(Translate.translate(1114)+": "+Functions.formatRA((F0[2]-DT/3600.)/Constant.RAD_TO_HOUR, 0)+" "+ts, px, py);
@@ -2197,10 +2197,10 @@ public class RenderEclipse {
 				if (I > 0) {
 					time.add(P0[0] / 24.0);
 					elev = Ephem.getEphemeris(time, obs, eph, false).elevation;
-					g.drawString(Translate.translate(1111)+": "+Functions.formatRA((P0[0]-DT/3600.)/Constant.RAD_TO_HOUR, 0)+" "+ts+" ("+alt+Functions.formatAngleAsDegrees(elev, 1)+"\u00ba)", px2, py+=step);
+					g.drawString(Translate.translate(1111)+": "+Functions.formatRA((P0[0]-DT/3600.)/Constant.RAD_TO_HOUR, 0)+" "+ts+" ("+alt+Functions.formatAngleAsDegrees(elev, 1)+"\u00b0)", px2, py+=step);
 					time.add((-P0[0]+F0[0]) / 24.0);
 					elev = Ephem.getEphemeris(time, obs, eph, false).elevation;
-					g.drawString(Translate.translate(1112)+": "+Functions.formatRA((F0[0]-DT/3600.)/Constant.RAD_TO_HOUR, 0)+" "+ts+" ("+alt+Functions.formatAngleAsDegrees(elev, 1)+"\u00ba)", px, py);
+					g.drawString(Translate.translate(1112)+": "+Functions.formatRA((F0[0]-DT/3600.)/Constant.RAD_TO_HOUR, 0)+" "+ts+" ("+alt+Functions.formatAngleAsDegrees(elev, 1)+"\u00b0)", px, py);
 					//py+=step/2;
 					g.drawString(Translate.translate(1113)+": "+Functions.formatRA((P0[1]-DT/3600.)/Constant.RAD_TO_HOUR, 0)+" "+ts, px2, py+=step);
 					g.drawString(Translate.translate(1114)+": "+Functions.formatRA((F0[1]-DT/3600.)/Constant.RAD_TO_HOUR, 0)+" "+ts, px, py);
@@ -2216,7 +2216,7 @@ public class RenderEclipse {
 			if (type.equals("Total") || type.equals("Partial")) type = "Umbral";
 			g.drawString(Translate.translate(type + " magnitude")+": "+Functions.formatValue(F, 3), px, py+=step);
 		}
-		
+
 		if (map != null && map != PLANET_MAP.NO_MAP) {
 			int mapx = 0, mapy = h;
 			if (horMap) {
@@ -2224,7 +2224,7 @@ public class RenderEclipse {
 				mapy = 0;
 			}
 			g.traslate(mapx, mapy);
-			lunarEclipseMap(new TimeElement(jd0+ME/24.0, SCALE.BARYCENTRIC_DYNAMICAL_TIME), obs, eph0, g, map);				
+			lunarEclipseMap(new TimeElement(jd0+ME/24.0, SCALE.BARYCENTRIC_DYNAMICAL_TIME), obs, eph0, g, map);
 //			if (map == PLANET_MAP.MAP_FLAT) {
 				boolean hq = RenderPlanet.FORCE_HIGHT_QUALITY;
 				float quality = 1, maxq = RenderPlanet.MAXIMUM_TEXTURE_QUALITY_FACTOR;
@@ -2236,7 +2236,7 @@ public class RenderEclipse {
 				Graphics g3 = g.getGraphics((int) (g.getWidth()*quality), (int) (g.getHeight()*quality));
 				ObserverElement obs2 = obs.clone();
 				obs2.setName("");
-				for (int i = I; i >= 0; i--) { 
+				for (int i = I; i >= 0; i--) {
 					lunarEclipseMap(new TimeElement(jd0+P0[i]/24.0, SCALE.BARYCENTRIC_DYNAMICAL_TIME), obs2, eph0, g3, map);
 					g.drawImage(g.makeColorTransparent(g3.getRendering(), 0, false, true, 30), 0, 0, 1.0/quality, 1.0/quality);
 					lunarEclipseMap(new TimeElement(jd0+F0[i]/24.0, SCALE.BARYCENTRIC_DYNAMICAL_TIME), obs2, eph0, g3, map);
@@ -2260,13 +2260,13 @@ public class RenderEclipse {
 	 * @param map Options for the eclipse map.
 	 * @throws JPARSECException If an error occurs.
 	 */
-	public static void lunarEclipseMap(TimeElement time, ObserverElement observer, EphemerisElement eph0, Graphics g, 
+	public static void lunarEclipseMap(TimeElement time, ObserverElement observer, EphemerisElement eph0, Graphics g,
 			PLANET_MAP map) throws JPARSECException {
 		float zoom = map.zoomFactor;
 		int w = g.getWidth();
 		g.setColor(0, 0, 0, 255);
 		g.fillRect(0, 0, w, g.getHeight());
-		
+
 		float quality = 1;
 		if (!g.renderingToAndroid() && (RenderPlanet.FORCE_HIGHT_QUALITY || map == PLANET_MAP.MAP_SPHERICAL || g.renderingToExternalGraphics())) quality = RenderPlanet.MAXIMUM_TEXTURE_QUALITY_FACTOR;
 		SatelliteRenderElement render = new SatelliteRenderElement((int) (w*quality), (int) (g.getHeight()*quality));
@@ -2277,7 +2277,7 @@ public class RenderEclipse {
 		render.planetMap = map;
 		render.anaglyphMode = g.getAnaglyphMode();
 		if (observer.getName() == null || observer.getName().equals("")) render.showObserver = false;
-		
+
 		EphemerisElement eph = eph0.clone();
 		eph.correctForEOP = false;
 		eph.correctForPolarMotion = false;
@@ -2298,8 +2298,8 @@ public class RenderEclipse {
 				//g.drawImage(g2.getScaledImage(g2.getRendering(), w, g.getHeight(), true, RenderSatellite.ALLOW_SPLINE_RESIZING), 0, 0);
 				g.drawImage(g2.getRendering(), 0, 0, 1.0/quality, 1.0/quality);
 			}
-		}	
-		
+		}
+
 		if (map == PLANET_MAP.MAP_SPHERICAL || observer.getName().equals("")) return;
 		int pos[] = satRender.getTexturePosition(satRender.locMoon[0]);
 		if (pos == null) return;
@@ -2314,7 +2314,7 @@ public class RenderEclipse {
 		float dx1 = 0, dx2 = 0;
 		if (px < 0 && px > -sw) {
 			dx1 = -px;
-			if (dx1 > sw && zoom == 1) dx1 = w/quality;			
+			if (dx1 > sw && zoom == 1) dx1 = w/quality;
 		}
 		g.drawString(label, px+dx1, pos[1]/quality);
 		if (px+dx1+sw*2 > w*zoom/quality) g.drawString(label, px+dx1-w*zoom/quality, pos[1]/quality);
@@ -2325,7 +2325,7 @@ public class RenderEclipse {
 		}
 		g.drawString(label, px+dx2, pos[1]/quality);
 		if (px+dx2+sw*2 > w*zoom/quality) g.drawString(label, px+dx2-w*zoom/quality, pos[1]/quality);
-		
+
 		label = Translate.translate(1107); //"at moonrise";
 		sw = g.getStringWidth(label)/2;
 		px = (pos[0]-w*zoom/4)/quality-sw;
@@ -2336,7 +2336,7 @@ public class RenderEclipse {
 		px = (pos[0]+w*zoom/4)/quality-sw;
 		g.drawString(label, px+dx2, pos[1]/quality+15);
 		if (px+dx2+sw*2 > w*zoom/quality) g.drawString(label, px+dx2-w*zoom/quality, pos[1]/quality+15);
-		
+
 		pos[1] += 65*quality;
 		label = Translate.translate(1119); // eclipse visible;
 		sw = g.getStringWidth(label);
@@ -2348,14 +2348,14 @@ public class RenderEclipse {
 		g.drawLine(px, pos[1]/quality-5, px, pos[1]/quality+5, true);
 		g.drawLine(px, pos[1]/quality-5, px - 10, pos[1]/quality, true);
 		g.drawLine(px, pos[1]/quality+5, px - 10, pos[1]/quality, true);
-		
+
 		pos = satRender.getTexturePosition(satRender.locSun);
 		if (pos == null) return;
 		pos[1] += 35*quality;
 		label = Translate.translate(1120); // eclipse not visible;
 		sw = g.getStringWidth(label);
 		px = pos[0]/quality-sw/2;
-		g.drawString(label, px+dx2, pos[1]/quality);		
+		g.drawString(label, px+dx2, pos[1]/quality);
 		if (px+dx2+sw*2 > w*zoom/quality) g.drawString(label, px+dx2-w*zoom/quality, pos[1]/quality);
 	}
 
@@ -2380,7 +2380,7 @@ public class RenderEclipse {
 		eph.isTopocentric = false;
 		eph.ephemType = COORDINATES_TYPE.APPARENT;
 		eph.equinox = EphemerisElement.EQUINOX_OF_DATE;
-		
+
 		double jd_TDB = TimeScale.getJD(time0, obs, eph, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
 		double jd0 = (int) (jd_TDB - 0.5) + 0.5;
 		TimeElement time = new TimeElement(jd0, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
@@ -2388,14 +2388,14 @@ public class RenderEclipse {
 		EphemElement sun = Ephem.getEphemeris(time, obs, eph, false);
 		eph.targetBody = TARGET.Moon;
 		EphemElement moon = Ephem.getEphemeris(time, obs, eph, false);
-		double AA = moon.rightAscension * Constant.RAD_TO_HOUR, CC = sun.rightAscension * Constant.RAD_TO_HOUR, 
+		double AA = moon.rightAscension * Constant.RAD_TO_HOUR, CC = sun.rightAscension * Constant.RAD_TO_HOUR,
 				KK = sun.declination * Constant.RAD_TO_DEG;
 		time.add(1.0);
 		eph.targetBody = TARGET.SUN;
 		EphemElement sunp = Ephem.getEphemeris(time, obs, eph, false);
 		eph.targetBody = TARGET.Moon;
 		EphemElement moonp = Ephem.getEphemeris(time, obs, eph, false);
-		double BB = moonp.rightAscension * Constant.RAD_TO_HOUR, DD = sunp.rightAscension * Constant.RAD_TO_HOUR, 
+		double BB = moonp.rightAscension * Constant.RAD_TO_HOUR, DD = sunp.rightAscension * Constant.RAD_TO_HOUR,
 				LL = sunp.declination * Constant.RAD_TO_DEG;
 
 		CC = 24.0 * ((CC + 12.0) / 24.0 - Math.floor((CC + 12.0) / 24.0));
@@ -2415,8 +2415,8 @@ public class RenderEclipse {
 		BB = moonhp.rightAscension * Constant.RAD_TO_HOUR;
 		double NN = moonhp.declination * Constant.RAD_TO_DEG;
 		double T = (AA - CC - (BB - AA) * (H)) / ((DD - CC) / 24.0 - BB + AA); // Time of oposition in RA, TDB
-		
-		double S1 = moonhp.angularRadius * Constant.RAD_TO_DEG * 60.0, 
+
+		double S1 = moonhp.angularRadius * Constant.RAD_TO_DEG * 60.0,
 				P1 = Math.asin(Constant.EARTH_RADIUS / (Constant.AU * moonhp.distance))	* Constant.RAD_TO_DEG * 60.0;
 		double R2 = sunhp.distance, S2 = sunhp.angularRadius * Constant.RAD_TO_DEG * 60.0, P2 = 8.793999 / R2;
 
@@ -2432,7 +2432,7 @@ public class RenderEclipse {
 		double D = Math.abs(O * Q) / Math.sqrt(V);
 
 		time.add((-H-1.0+T) / 24.0);
-		
+
 		int I = -1;
 		double X = 0, P0[] = new double[3], F0[] = new double[3]; // , Z = 0, PC = 0, UC = 0;
 		String type = "";
@@ -2459,12 +2459,12 @@ public class RenderEclipse {
 			// Contact angle and phase
 			/*
 			 * double Z = S;
-			 * (type.equals("Penumbral")) Z = P; 
+			 * (type.equals("Penumbral")) Z = P;
 			 * F = (Z + S1 - D) / (2 * S1);
-			 * double HH = Math.asin(D / (Z + S1)), JJ = Math.acos(U / Math.sqrt(V)); 
+			 * double HH = Math.asin(D / (Z + S1)), JJ = Math.acos(U / Math.sqrt(V));
 			 * if (O * Q > 0) HH = -HH;
-			 * PC = (JJ + HH); // First contact, E 
-			 * UC = Math.PI - JJ + HH; // Last contact, W 
+			 * PC = (JJ + HH); // First contact, E
+			 * UC = Math.PI - JJ + HH; // Last contact, W
 			 */
 
 			// Penumbral phase
@@ -2496,10 +2496,10 @@ public class RenderEclipse {
 					double oldP0 = P0[ii], oldF0 = F0[ii];
 					P0[ii] = (ev[ii].getEventTime(obs, eph, true, output)+0.5);
 					F0[ii] = (ev[ii].getEventTime(obs, eph, false, output)+0.5);
-					
+
 					P0[ii] = (P0[ii] - (int) P0[ii]) * 24.0;
 					F0[ii] = (F0[ii] - (int) F0[ii]) * 24.0;
-					
+
 					if (oldP0 > 23.0 && P0[ii] < 12) P0[ii] += 24.0;
 					if (oldF0 > 23.0 && F0[ii] < 12) F0[ii] += 24.0;
 				}
@@ -2507,7 +2507,7 @@ public class RenderEclipse {
 				JPARSECException.addWarning("Lunar eclipse found in LunarEclipse class around "+le.getEclipseMaximum()+", while here is around "+jd_TDB);
 			}
 		}
-*/		
+*/
 		eph.isTopocentric = true;
 		time.add((-T) / 24.0);
 		if (type.equals("No eclipse")) return false;
@@ -2531,7 +2531,7 @@ public class RenderEclipse {
 			} else {
 				if (I == 0) {
 					if (dI < 0) return false;
-					
+
 					time.add(P0[0] / 24.0);
 					elev1 = Ephem.getEphemeris(time, obs, eph, false).elevation;
 
@@ -2553,7 +2553,7 @@ public class RenderEclipse {
 	 * @return The magnitude of the eclipse.
 	 * @throws JPARSECException If an error occurs.
 	 */
-	public static double lunarEclipseMagnitude(TimeElement time0, ObserverElement obs, EphemerisElement eph0) 
+	public static double lunarEclipseMagnitude(TimeElement time0, ObserverElement obs, EphemerisElement eph0)
 			throws JPARSECException {
 		EphemerisElement eph = eph0.clone();
 		eph.correctForEOP = false;
@@ -2563,24 +2563,24 @@ public class RenderEclipse {
 		eph.isTopocentric = false;
 		eph.ephemType = COORDINATES_TYPE.APPARENT;
 		eph.equinox = EphemerisElement.EQUINOX_OF_DATE;
-		
+
 		double jd_TDB = TimeScale.getJD(time0, obs, eph, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
-		double jd = TimeScale.getJD(time0, obs, eph, time0.timeScale);
+		//double jd = TimeScale.getJD(time0, obs, eph, time0.timeScale);
 		double jd0 = (int) (jd_TDB - 0.5) + 0.5;
 		TimeElement time = new TimeElement(jd0, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
-		double DT = -(jd - jd_TDB) * Constant.SECONDS_PER_DAY;
+		//double DT = -(jd - jd_TDB) * Constant.SECONDS_PER_DAY;
 		eph.targetBody = TARGET.SUN;
 		EphemElement sun = Ephem.getEphemeris(time, obs, eph, false);
 		eph.targetBody = TARGET.Moon;
 		EphemElement moon = Ephem.getEphemeris(time, obs, eph, false);
-		double AA = moon.rightAscension * Constant.RAD_TO_HOUR, CC = sun.rightAscension * Constant.RAD_TO_HOUR, 
+		double AA = moon.rightAscension * Constant.RAD_TO_HOUR, CC = sun.rightAscension * Constant.RAD_TO_HOUR,
 				KK = sun.declination * Constant.RAD_TO_DEG;
 		time.add(1.0);
 		eph.targetBody = TARGET.SUN;
 		EphemElement sunp = Ephem.getEphemeris(time, obs, eph, false);
 		eph.targetBody = TARGET.Moon;
 		EphemElement moonp = Ephem.getEphemeris(time, obs, eph, false);
-		double BB = moonp.rightAscension * Constant.RAD_TO_HOUR, DD = sunp.rightAscension * Constant.RAD_TO_HOUR, 
+		double BB = moonp.rightAscension * Constant.RAD_TO_HOUR, DD = sunp.rightAscension * Constant.RAD_TO_HOUR,
 				LL = sunp.declination * Constant.RAD_TO_DEG;
 
 		CC = 24.0 * ((CC + 12.0) / 24.0 - Math.floor((CC + 12.0) / 24.0));
@@ -2600,8 +2600,8 @@ public class RenderEclipse {
 		BB = moonhp.rightAscension * Constant.RAD_TO_HOUR;
 		double NN = moonhp.declination * Constant.RAD_TO_DEG;
 		double T = (AA - CC - (BB - AA) * (H)) / ((DD - CC) / 24.0 - BB + AA); // Time of oposition in RA, TDB
-		
-		double S1 = moonhp.angularRadius * Constant.RAD_TO_DEG * 60.0, 
+
+		double S1 = moonhp.angularRadius * Constant.RAD_TO_DEG * 60.0,
 				P1 = Math.asin(Constant.EARTH_RADIUS / (Constant.AU * moonhp.distance))	* Constant.RAD_TO_DEG * 60.0;
 		double R2 = sunhp.distance, S2 = sunhp.angularRadius * Constant.RAD_TO_DEG * 60.0, P2 = 8.793999 / R2;
 
@@ -2617,7 +2617,7 @@ public class RenderEclipse {
 		double D = Math.abs(O * Q) / Math.sqrt(V);
 
 		time.add((-H-1.0+T) / 24.0);
-		
+
 		int I = -1;
 		double X = 0, P0[] = new double[3], F0[] = new double[3], F = 0; // , Z = 0, PC = 0, UC = 0;
 		String type = "";
@@ -2643,13 +2643,13 @@ public class RenderEclipse {
 
 			// Contact angle and phase
 			double Z = S;
-			if (type.equals("Penumbral")) Z = P; 
+			if (type.equals("Penumbral")) Z = P;
 			F = (Z + S1 - D) / (2 * S1);
 			/*
-			 * double HH = Math.asin(D / (Z + S1)), JJ = Math.acos(U / Math.sqrt(V)); 
+			 * double HH = Math.asin(D / (Z + S1)), JJ = Math.acos(U / Math.sqrt(V));
 			 * if (O * Q > 0) HH = -HH;
-			 * PC = (JJ + HH); // First contact, E 
-			 * UC = Math.PI - JJ + HH; // Last contact, W 
+			 * PC = (JJ + HH); // First contact, E
+			 * UC = Math.PI - JJ + HH; // Last contact, W
 			 */
 
 			// Penumbral phase
@@ -2657,12 +2657,12 @@ public class RenderEclipse {
 
 			I++;
 			P0[I] = T + (-W - Math.sqrt(W2 - V * X)) / V;
-			F0[I] = T + (-W + Math.sqrt(W2 - V * X)) / V;			
+			F0[I] = T + (-W + Math.sqrt(W2 - V * X)) / V;
 		}
 		if (type.equals("")) type = "No eclipse";
 		return F;
 	}
-	
+
 	/**
 	 * Returns a link to show a Google Map view of this solar eclipse using
 	 * the maps by Xavier Jubier at http://xjubier.free.fr.
@@ -2674,7 +2674,7 @@ public class RenderEclipse {
     	url += "Ecl=+" + date + "&Acc=2&Umb=1&Lmt=1&Mag=0&Max=0";
     	return url;
     }
-    
+
 	private static void renderMoon(float px, float py, float r, float dist, Graphics g,
 			double jd, ObserverElement obs, EphemerisElement eph, boolean northUp) {
 		if (ShowMoonTexture) {
@@ -2703,7 +2703,7 @@ public class RenderEclipse {
 			if (dist == 0) {
 				g.fillOval(px, py, r, r, false);
 			} else {
-				g.fillOval(px, py, r, r, dist);			
+				g.fillOval(px, py, r, r, dist);
 			}
 		}
 	}

@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -31,19 +31,19 @@ import jparsec.util.JPARSECException;
 /**
  * A class to instantiate an observer outside the Earth, as a previous step
  * to calculate ephemerides. In the ephemerides properties the algorithm to
- * use must support this observer (Moshier, Series96, or any of the JPL 
+ * use must support this observer (Moshier, Series96, or any of the JPL
  * integration methods, but not ELP2000 for the Moon). When using other
  * bodies take into account that local time = UTC on Earth, since no DST
  * rule can be applied. In practice, NEVER use local time when obtaining
- * ephemerides for an observer out from the Earth. 
- * 
+ * ephemerides for an observer out from the Earth.
+ *
  * @see EphemerisElement
  * @see ObserverElement
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
 public class ExtraterrestrialObserverElement implements Serializable {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Basic constructor.
@@ -76,12 +76,12 @@ public class ExtraterrestrialObserverElement implements Serializable {
 	 * Full constructor for an observer located on the surface of another non-Earth planet/satellite.
 	 * @param feature The name of a planetary feature. Just informative, not used internally.
 	 * @param target The body where the feature is located.
-	 * @param loc The location of the observer. Here you must be careful to put the correct 
+	 * @param loc The location of the observer. Here you must be careful to put the correct
 	 * longitude on a given planet, since the longitude to use here is the one calculated using
 	 * the IAU recomendations for the prime meridian of the planets, with has opposite sign in
 	 * some cases respect planetary nomenclature. The cases are Mars and the rest of outer
-	 * planets/satellites from Earth. For instance, Curiosity landed at 137.4 &ordm; E of longitude
-	 * (and 4.5 &ordm; S of latitude), here you should put -137.4 degrees (in radians). The radius
+	 * planets/satellites from Earth. For instance, Curiosity landed at 137.4&deg; E of longitude
+	 * (and 4.5&deg; S of latitude), here you should put -137.4 degrees (in radians). The radius
 	 * of the location object should be the desired elevation above sea level in m. You can use 0.
 	 * @throws JPARSECException If the body is not supported.
 	 */
@@ -101,5 +101,5 @@ public class ExtraterrestrialObserverElement implements Serializable {
 	/** The mother planet where the observer is located. */
 	public TARGET motherPlanet = null;
 	/** The observer location in the mother planet. */
-	public LocationElement obsLoc;
+	public LocationElement obsLoc = null;
 }

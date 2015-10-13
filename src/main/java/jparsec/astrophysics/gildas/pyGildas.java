@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.astrophysics.gildas;
 
 import java.io.File;
@@ -32,7 +32,7 @@ import jparsec.util.Configuration;
 import jparsec.util.JPARSECException;
 
 /**
- * This class allows GILDAS (or any other program) to be run and commanded 
+ * This class allows GILDAS (or any other program) to be run and commanded
  * in background. To simply launch applications use instead {@linkplain ApplicationLauncher} class.<BR>
  * When commanding GILDAS, there are two possibilities to use a given script.
  * One is to provide the contents of the script file as a string array. In this case
@@ -41,9 +41,9 @@ import jparsec.util.JPARSECException;
  * strategy the FOR and IF instructions will work. The script in .jparsec2 will be
  * identical to the input script, except that the modifier /global will be added to
  * define-like instructions (if necessary) to make any variable accessible from outside the script.
- * The second case is to use the @ command directly to execute the desired 
- * script. IF and FOR will work, but to return the value of a given variable from that 
- * script it should be defined with the modifier /global manually. The returned 
+ * The second case is to use the @ command directly to execute the desired
+ * script. IF and FOR will work, but to return the value of a given variable from that
+ * script it should be defined with the modifier /global manually. The returned
  * variable can be of type double, float, integer, or character, with just a value
  * (not an array).
  * @author T. Alonso Albi - OAN (Spain)
@@ -52,11 +52,10 @@ import jparsec.util.JPARSECException;
 public class pyGildas {
 
 	private String[] exportVariables;
-	private String[] sourceVariables; 
+	private String[] sourceVariables;
 	private String[] lastScript;
-	private boolean closed;
 	private String out[], variables[];
-	
+
 	/**
 	 * Working directory;
 	 */
@@ -75,9 +74,9 @@ public class pyGildas {
 	 * Constructor to launch GILDAS. GAG root and exec paths are taken
 	 * from the corresponding constants in {@linkplain Configuration} class.
 	 * @param workDir Working directory.
-	 * @param prog Program to launch, pyclass, pygreg, pyastro, pymapping, 
+	 * @param prog Program to launch, pyclass, pygreg, pyastro, pymapping,
 	 * pysic, or any other.
-	 * @throws JPARSECException If Gildas GAG root and exec variables are not 
+	 * @throws JPARSECException If Gildas GAG root and exec variables are not
 	 * properly configured.
 	 */
 	public pyGildas(String workDir, String prog) throws JPARSECException
@@ -87,7 +86,7 @@ public class pyGildas {
 		exportVariables = new String[] {"GAG_ROOT_DIR="+Configuration.PATH_GILDAS_GAG_ROOT, "GAG_EXEC_SYSTEM="+Configuration.PATH_GILDAS_GAG_EXEC};
 		sourceVariables = new String[] {"$GAG_ROOT_DIR/etc/bash_profile"};
 		workingDir = workDir;
-		if (workingDir.endsWith(FileIO.getFileSeparator())) workingDir = workingDir.substring(0, workingDir.length()-1); 
+		if (workingDir.endsWith(FileIO.getFileSeparator())) workingDir = workingDir.substring(0, workingDir.length()-1);
 		program = prog;
 		this.script = new String[] {
 				"#!/bin/bash",
@@ -107,7 +106,7 @@ public class pyGildas {
 	 * @param gagRoot Path of the GAG_ROOT_DIR environment variable.
 	 * @param gagExec Path of the GAG_EXEC_SYSTEM environment variable.
 	 * @param workDir Working directory.
-	 * @param prog Program to launch, pyclass, pygreg, pyastro, pymapping, 
+	 * @param prog Program to launch, pyclass, pygreg, pyastro, pymapping,
 	 * pysic, or any other.
 	 */
 	public pyGildas(String gagRoot, String gagExec, String workDir, String prog)
@@ -115,7 +114,7 @@ public class pyGildas {
 		exportVariables = new String[] {"GAG_ROOT_DIR="+gagRoot, "GAG_EXEC_SYSTEM="+gagExec};
 		sourceVariables = new String[] {"$GAG_ROOT_DIR/etc/bash_profile"};
 		workingDir = workDir;
-		if (workingDir.endsWith(FileIO.getFileSeparator())) workingDir = workingDir.substring(0, workingDir.length()-1); 
+		if (workingDir.endsWith(FileIO.getFileSeparator())) workingDir = workingDir.substring(0, workingDir.length()-1);
 		program = prog;
 		this.script = new String[] {
 				"#!/bin/bash",
@@ -132,12 +131,12 @@ public class pyGildas {
 
 	/**
 	 * Constructor to launch GILDAS.
-	 * @param configFile Path of the configuration file where GAG_ROOT_DIR and GAG_EXEC_SYSTEM 
+	 * @param configFile Path of the configuration file where GAG_ROOT_DIR and GAG_EXEC_SYSTEM
 	 * environment variables are set, following instructions given by Gildas during compilation.
 	 * @param workDir Working directory.
-	 * @param prog Program to launch, pyclass, pygreg, pyastro, pymapping, 
+	 * @param prog Program to launch, pyclass, pygreg, pyastro, pymapping,
 	 * pysic, or any other.
-	 * @throws JPARSECException If the environment variables are not found in the configuration file. 
+	 * @throws JPARSECException If the environment variables are not found in the configuration file.
 	 */
 	public pyGildas(String configFile, String workDir, String prog) throws JPARSECException
 	{
@@ -156,7 +155,7 @@ public class pyGildas {
 		exportVariables = new String[] {"GAG_ROOT_DIR="+gagRoot, "GAG_EXEC_SYSTEM="+gagExec};
 		sourceVariables = new String[] {"$GAG_ROOT_DIR/etc/bash_profile"};
 		workingDir = workDir;
-		if (workingDir.endsWith(FileIO.getFileSeparator())) workingDir = workingDir.substring(0, workingDir.length()-1); 
+		if (workingDir.endsWith(FileIO.getFileSeparator())) workingDir = workingDir.substring(0, workingDir.length()-1);
 		program = prog;
 		this.script = new String[] {
 				"#!/bin/bash",
@@ -173,18 +172,18 @@ public class pyGildas {
 
 	/**
 	 * Executes a script. The script files are named .jparsec, and .jparsec2 (created
-	 * only if necessary) and are saved in the working directory during the execution. 
+	 * only if necessary) and are saved in the working directory during the execution.
 	 * After that they are deleted.
 	 * @param s The script.
 	 * @param params Parameters of the input script, from &1 to &xx.
 	 * @param variables Names of the variables to be retrieved.
-	 * @return The contents of the output and error streams, followed by the values 
-	 * of the desired variables, if any. Note there are additional methods to handle the 
+	 * @return The contents of the output and error streams, followed by the values
+	 * of the desired variables, if any. Note there are additional methods to handle the
 	 * output more comfortably.
 	 * @throws JPARSECException If an error occurs.
 	 */
 	public String[] executeScript(String s[], String params[], String[] variables)
-	throws JPARSECException {		
+	throws JPARSECException {
 		String out[], script[] = new String[] {};
 		try {
 			String fileName = ".jparsec";
@@ -212,7 +211,7 @@ public class pyGildas {
 			}
 			script = DataSet.addStringArray(script, new String[] {"exit()", "exit"});
 			lastScript = script;
-			
+
 			// Adjust script for pyGildas after dec10c ...
 			int index = DataSet.getIndex(script, "python <<-exit");
 			int a = 0;
@@ -221,7 +220,7 @@ public class pyGildas {
 			script = DataSet.getSubArray(script, 0, index);
 			script[script.length-1] = "python .py";
 			WriteFile.writeAnyExternalFile(FileIO.getDirectoryFromPath(fullFileName)+".py", pyscript);
-			
+
 			WriteFile.writeAnyExternalFile(fullFileName, script);
 			String ln = "/bin/bash "+fileName;
 			Process p = ApplicationLauncher.executeCommand(ln, null, new File(dir));
@@ -230,16 +229,16 @@ public class pyGildas {
 			String output = ApplicationLauncher.getConsoleOutputFromProcess(p);
 			FileIO.deleteFile(fullFileName);
 			if (secondFile) FileIO.deleteFile(fullFileName+"2");
-			
+
 			FileIO.deleteFile(FileIO.getDirectoryFromPath(fullFileName)+".py");
-			
+
 			out = new String[] {output, error};
 			if (variables != null && output != null) {
 				String o[] = DataSet.toStringArray(output, FileIO.getLineSeparator());
 				String v = "";
 				for (int i=0; i<o.length; i++)
 				{
-					if (o[i].startsWith("<Sic")) v += o[i+1]+" "; 
+					if (o[i].startsWith("<Sic")) v += o[i+1]+" ";
 				}
 				int n = FileIO.getNumberOfFields(v, " ", true);
 				if (n >= variables.length) {
@@ -273,7 +272,7 @@ public class pyGildas {
 		if (out != null) this.out = out.clone();
 		return out;
 	}
-	
+
 	private String[] adaptScript(String ss[], String params[])
 	throws JPARSECException {
 		if (ss == null) return ss;
@@ -285,11 +284,11 @@ public class pyGildas {
 			if (params != null) {
 				for (int j=params.length-1; j>=0;  j--)
 				{
-					s[i] = DataSet.replaceAll(s[i], "&"+(j+1), params[j], true);					
-				}				
+					s[i] = DataSet.replaceAll(s[i], "&"+(j+1), params[j], true);
+				}
 			}
 			if (s[i].trim().toLowerCase().startsWith("def")) {
-				String a = s[i].trim().toLowerCase(); 
+				String a = s[i].trim().toLowerCase();
 				if (!a.endsWith(" /global") && !a.endsWith(" /globa") && !a.endsWith(" /glob")
 						&& !a.endsWith(" /glo") && !a.endsWith(" /gl") && !a.endsWith(" /g")) s[i] += " /global";
 			}
@@ -307,12 +306,12 @@ public class pyGildas {
 				s = DataSet.eliminateRowFromTable(s, row);
 			}
 		}
-		
+
 		if (s[s.length-1].trim().toLowerCase().startsWith("exit")) s = DataSet.eliminateRowFromTable(s, s.length);
-		
+
 		if (s.length == 1 && s[0].trim().startsWith("@")) {
 			s[0] = program+".comm('"+s[0];
-			if (params != null) {			
+			if (params != null) {
 				for (int j=0; j<params.length;  j++)
 				{
 					s[0] += " "+params[j];

@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */	
+ */
 package jparsec.io.device.implementation;
 
 import jparsec.astronomy.CoordinateSystem;
@@ -222,7 +222,7 @@ public class ExternalTelescope implements GenericTelescope {
 	public TELESCOPE_MODEL getTelescopeModel() {
 		return TELESCOPE_MODEL.EXTERNAL_TELESCOPE_JUST_MARK;
 	}
-	
+
 	private boolean connected = true;
 	private String name = null, path = null;
 	private double fov[] = new double[] {0};
@@ -230,7 +230,7 @@ public class ExternalTelescope implements GenericTelescope {
 	private POSITION_TYPE type;
 	private ObserverElement observer;
 	private TimeElement time = null;
-	
+
 	@Override
 	public void setCameras(GenericCamera[] cameras) throws JPARSECException {
 		fov = new double[cameras.length];
@@ -247,7 +247,7 @@ public class ExternalTelescope implements GenericTelescope {
 		return cameras;
 	}
 
-	
+
 	@Override
 	public boolean disconnect() {
 		connected = false;
@@ -264,11 +264,16 @@ public class ExternalTelescope implements GenericTelescope {
 	public boolean isConnected() {
 		return connected;
 	}
-	
+
 	@Override
 	public String getTelescopeName() {
 		return name;
 	}
+
+	@Override
+    public synchronized String getTelescopePort() {
+    	return null;
+    }
 
 	@Override
 	public void setFieldOfView(double field, int camera) {
@@ -290,8 +295,8 @@ public class ExternalTelescope implements GenericTelescope {
 		if (time != null) return time;
 		return new TimeElement();
 	}
-	
-	
+
+
 	@Override
 	public LocationElement getEquatorialPosition() {
 		if (type == POSITION_TYPE.EQUATORIAL_J2000) return getJ2000EquatorialPosition();
@@ -313,7 +318,7 @@ public class ExternalTelescope implements GenericTelescope {
 				return CoordinateSystem.horizontalToEquatorial(loc, time, observer, eph);
 			}
 		} catch (Exception exc) {
-			return null;			
+			return null;
 		}
 	}
 
@@ -321,7 +326,7 @@ public class ExternalTelescope implements GenericTelescope {
 	public LocationElement getJ2000EquatorialPosition() {
 		LocationElement loc = getLocation();
 		if (type == POSITION_TYPE.EQUATORIAL_J2000) return loc;
-		
+
 		EphemerisElement eph = new EphemerisElement();
 		try {
 			TimeElement time = getTime();
@@ -340,7 +345,7 @@ public class ExternalTelescope implements GenericTelescope {
 	public LocationElement getHorizontalPosition() {
 		LocationElement loc = getLocation();
 		if (type == POSITION_TYPE.HORIZONTAL) return loc;
-		
+
 		EphemerisElement eph = new EphemerisElement();
 		try {
 			TimeElement time = getTime();
@@ -366,12 +371,12 @@ public class ExternalTelescope implements GenericTelescope {
 			return new LocationElement();
 		}
 	}
-	
+
 	/**
 	 * The different position types allowed for the external file with
 	 * the current telescope coordinates.
 	 */
-	public static enum POSITION_TYPE {
+	public enum POSITION_TYPE {
 		/** Identifier for equatorial coordinates for equinox of date. */
 		EQUATORIAL_DATE,
 		/** Identifier for equatorial coordinates for J2000 equinox. */
@@ -379,7 +384,7 @@ public class ExternalTelescope implements GenericTelescope {
 		/** Identifier for horizontal coordinates. */
 		HORIZONTAL
 	};
-	
+
 	/**
 	 * Sets the time object.
 	 * @param time Time object.
@@ -387,7 +392,7 @@ public class ExternalTelescope implements GenericTelescope {
 	public void setTime(TimeElement time) {
 		this.time = time;
 	}
-	
+
 	/**
 	 * Constructor for an external telescope.
 	 * @param name The telescope name.

@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.ephem.stars;
 
 import java.io.Serializable;
@@ -30,23 +30,23 @@ import jparsec.vo.SimbadElement;
 
 /**
  * Convenient class for stars data access.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
 public class StarElement implements Serializable
 {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Value returned for the distance to the star when parallax is 0.
 	 * Current value is 1000 pc.
 	 */
 	public static final int DISTANCE_UNKNOWN = 1000;
-	
+
 	/**
 	 * Constructs an star object providing the values of the fields.
-	 * 
+	 *
 	 * @param nom Name.
 	 * @param ra Right Ascension in radians.
 	 * @param dec Declination in radians.
@@ -166,7 +166,7 @@ public class StarElement implements Serializable
 	 * Second is double star data (only if it is double or multiple). Third is variability
 	 * data (if it is variable). Double data includes four fields separated by a comma
 	 * (separation of main components in arcseconds, magnitude difference in components A-B,
-	 * orbit period in years, position angle in degrees), while variability data includes 
+	 * orbit period in years, position angle in degrees), while variability data includes
 	 * another four fields separated by a comma (maximum magnitude, minimum magnitude,
 	 * period of variability in days, variable type).
 	 */
@@ -185,9 +185,8 @@ public class StarElement implements Serializable
 		out.type = this.type;
 		return out;
 	}
-
 	/**
-	 * Returns true if the input object is equal to this
+	 * Returns true if the input object is equals to this
 	 * instance.
 	 */
 	@Override
@@ -237,7 +236,7 @@ public class StarElement implements Serializable
 
 	/**
 	 * Creates a star object from a Simbad one.
-	 * 
+	 *
 	 * @param s Simbad object.
 	 * @return Star object, with J2000 equinox and FK5 frame. In case
 	 * parallax is 0 distance is arbitrarily set to 1000 pc.
@@ -249,7 +248,7 @@ public class StarElement implements Serializable
 				Constant.J2000, EphemerisElement.FRAME.FK5);
 		return star;
 	}
-	
+
 	/**
 	 * Returns the distance to the star in pc.
 	 * @return Distance in pc, or 0 if parallax is 0.
@@ -258,7 +257,7 @@ public class StarElement implements Serializable
 		if (parallax == 0) return DISTANCE_UNKNOWN;
 		return (1000.0 / parallax);
 	}
-	
+
 	/**
 	 * Returns if the distance to the star is unknown.
 	 * @return True if parallax is 0, false otherwise.
@@ -266,7 +265,7 @@ public class StarElement implements Serializable
 	public boolean isDistanceUnknown() {
 		return (parallax == 0);
 	}
-	
+
 	/**
 	 * Returns the equatorial position of this star.
 	 * @return Equatorial position.

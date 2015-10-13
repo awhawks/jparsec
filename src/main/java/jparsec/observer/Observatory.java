@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.observer;
 
 import java.io.BufferedReader;
@@ -105,7 +105,7 @@ import jparsec.util.Logger.LEVEL;
  * elevation.
  * <P>
  * For this reason, the Sveshnikov data is still recommended when possible.
- * 
+ *
  * @see ObservatoryElement
  * @see Country
  * @author T. Alonso Albi - OAN (Spain)
@@ -115,7 +115,7 @@ public final class Observatory
 {
 	// private constructor so that this class cannot be instantiated.
 	private Observatory() {}
-	
+
 	/**
 	 * Returns the number of observatories by Sveshnikov in the database.
 	 * @return Number of cities, currently 1215.
@@ -123,7 +123,7 @@ public final class Observatory
 	 */
 	public static int getNumberOfObservatories() throws JPARSECException {
 		int n = 0;
-		
+
 		// Connect to the file
 		try
 		{
@@ -145,14 +145,14 @@ public final class Observatory
 		{
 			throw new JPARSECException(
 					"error while reading cities file.", e2);
-		}		
-		
+		}
+
 		return n;
 	}
-	
+
 	/**
 	 * Get the observatories for certain country.
-	 * 
+	 *
 	 * @param country_ID The ID constant of the country whose observatories are required.
 	 * @return The array ObservatoryElement[] containing observatories for the
 	 *         selected country, null if none is found.
@@ -212,9 +212,9 @@ public final class Observatory
 		}
 
 		if (vec.size() == 0) return null;
-		
+
 		ObservatoryElement loc_element[] = new ObservatoryElement[vec.size()];
-		
+
 		for (int i = 0; i < loc_element.length; i++) {
 			loc_element[i] = vec.get(i);
 		}
@@ -224,7 +224,7 @@ public final class Observatory
 
 	/**
 	 * Get all observatories from Sveshnikov, not from Marsden list.
-	 * 
+	 *
 	 * @return The array containing all the observatories.
 	 * @throws JPARSECException If an error occurs reading the observatories file.
 	 */
@@ -265,7 +265,7 @@ public final class Observatory
 				observatory.height = rf.readInteger(file_line, "height");
 				observatory.location = rf.readString(file_line, "location");
 				observatory.reference = rf.readString(file_line, "reference");
-				
+
 				index ++;
 				loc_element[index] = observatory;
 			}
@@ -288,7 +288,7 @@ public final class Observatory
 	/**
 	 * Find one observatory given the name of the place where it is located or
 	 * part of it.
-	 * 
+	 *
 	 * @param obs_location The full/partial name of the mountain/city where the
 	 *        observatory is located.
 	 * @return The object ObservatoryElement containing the observatory if it is found.
@@ -311,7 +311,7 @@ public final class Observatory
 						if ((loc_element_obs[j].location.toUpperCase().equals(obs_location.toUpperCase()) || loc_element_obs[j].name
 								.toUpperCase().equals(obs_location.toUpperCase())) && nfound > 0)
 							throw new JPARSECException("found 2 observatories with the same name '"+obs_location+"'.");
-							
+
 						if (loc_element_obs[j].location.toUpperCase().indexOf(obs_location.toUpperCase()) >= 0 || loc_element_obs[j].name
 								.toUpperCase().indexOf(obs_location.toUpperCase()) >= 0)
 						{
@@ -336,10 +336,10 @@ public final class Observatory
 	/**
 	 * Find one observatory given the name of the place where it is located or
 	 * part of it, and its country.
-	 * 
+	 *
 	 * @param obs_location The full/partial name of the mountain/city where the
 	 *        observatory is located.
-	 * @param country The country the desired location belongs to. 
+	 * @param country The country the desired location belongs to.
 	 * @return The object ObservatoryElement containing the observatory if it is found.
 	 * @throws JPARSECException Thrown if the observatory is not found.
 	 */
@@ -359,7 +359,7 @@ public final class Observatory
 						if ((loc_element_obs[j].location.toUpperCase().equals(obs_location.toUpperCase()) || loc_element_obs[j].name
 								.toUpperCase().equals(obs_location.toUpperCase())) && nfound > 0)
 							throw new JPARSECException("found 2 observatories with the same name '"+obs_location+"'.");
-							
+
 						if (loc_element_obs[j].location.toUpperCase().indexOf(obs_location.toUpperCase()) >= 0 || loc_element_obs[j].name
 								.toUpperCase().indexOf(obs_location.toUpperCase()) >= 0)
 						{
@@ -373,7 +373,7 @@ public final class Observatory
 				{
 				}
 			}
-		
+
 
 		if (loc_element == null)
 			throw new JPARSECException("observatory not found.");
@@ -383,7 +383,7 @@ public final class Observatory
 
 	/**
 	 * Search for an observatory by it's geographical position.
-	 * 
+	 *
 	 * @param loc Approximate position of the observatory.
 	 * @return Closest observatory.
 	 * @throws JPARSECException If an error occurs reading the observatories file.
@@ -392,7 +392,7 @@ public final class Observatory
 	{
 		// Search object
 		double distance = Double.MAX_VALUE;
-		
+
 		// Define necessary variables
 		String file_line = "";
 
@@ -431,7 +431,7 @@ public final class Observatory
 					observatory.height = rf.readInteger(file_line, "height");
 					observatory.location = rf.readString(file_line, "location");
 					observatory.reference = rf.readString(file_line, "reference");
-					
+
 					distance = distance1;
 					out = observatory;
 				}
@@ -454,7 +454,7 @@ public final class Observatory
 
 	/**
 	 * Find the country where a given observatory is in.
-	 * 
+	 *
 	 * @param obs_location The full/partial name of the mountain/city where the
 	 *        observatory is located.
 	 * @return The ID constant of the country, or null if no match is found.
@@ -502,7 +502,7 @@ public final class Observatory
 	 * contained in JPARSEC (the old catalog by Sveshnikov). Current Marsden
 	 * list contains non-integer codes, use the corresponding method to search
 	 * in the updated list.
-	 * 
+	 *
 	 * @param code ID value for this observatory.
 	 * @return The object ObservatoryElement containing the observatory if it is found.
 	 * @throws JPARSECException Thrown if the observatory is not found.
@@ -561,10 +561,10 @@ public final class Observatory
 	 * This is optional, since JPARSEC contains an internal catalog from MPC.
 	 */
 	public static String pathToFile;
-	
+
 	/**
 	 * Sets the path to the file of observatories.
-	 * 
+	 *
 	 * @param path Full path including extension.
 	 */
 	public static void setPath(String path)
@@ -583,11 +583,11 @@ public final class Observatory
 	 * 000   0.0000 0.62411 +0.77873 Greenwich
 	 * <P>
 	 * </pre>
-	 * 
+	 *
 	 * After the file is succesfully read, the elements are store in
 	 * {@linkplain Observatory#observatories} vector. Note this array is
 	 * static and not thread-safe.
-	 * 
+	 *
 	 * @throws JPARSECException Thrown if the method fails.
 	 */
 	private static void readFileOfObservatories() throws JPARSECException
@@ -637,11 +637,11 @@ public final class Observatory
 	 * 000   0.0000 0.62411 +0.77873 Greenwich
 	 * <P>
 	 * </pre>
-	 * 
+	 *
 	 * After the file is succesfully read, the elements are store in
 	 * {@linkplain Observatory#observatories} vector. Note this array is static
 	 * and not thread-safe.
-	 * 
+	 *
 	 * @throws JPARSECException Thrown if the method fails.
 	 */
 	public static void readFileOfObservatoriesFromExternalFile() throws JPARSECException
@@ -686,7 +686,7 @@ public final class Observatory
 	 * Creates an {@linkplain ObservatoryElement} object from a record of the file of
 	 * observatories. This method uses the latest reference ellipsoid to
 	 * transform from geocentric to geodetic coordinates.
-	 * 
+	 *
 	 * @param line Record to parse.
 	 * @return {@linkplain ObservatoryElement} object, or null if the observatory is not
 	 * in Earth.
@@ -705,7 +705,7 @@ public final class Observatory
 		String code = rf.readString(line, "CODE");
 		int obs_code = ObservatoryElement.getObservatoryCodeAsInt(code);
 
-		// Read and transform coordinates 
+		// Read and transform coordinates
 		ObserverElement obs = new ObserverElement();
 		try {
 			double cosine = rf.readDouble(line, "COSINE");
@@ -727,7 +727,7 @@ public final class Observatory
 
 	/**
 	 * Obtain number of observatories in the Marsden list.
-	 * 
+	 *
 	 * @return Number of observatories.
 	 */
 	public static int getNumberOfObservatoriesInMarsdenList()
@@ -736,16 +736,16 @@ public final class Observatory
 			try {
 				Observatory.readFileOfObservatories();
 			} catch (JPARSECException e) {
-				Logger.log(LEVEL.ERROR, "Could not read the file of observatories.");				
+				Logger.log(LEVEL.ERROR, "Could not read the file of observatories.");
 			}
 		}
-		
+
 		return observatories.size();
 	}
 
 	/**
 	 * Obtains one observatory.
-	 * 
+	 *
 	 * @param index ID value for the observatory. From 0 to
 	 *        {@linkplain Observatory#getNumberOfObservatoriesInMarsdenList()}-1.
 	 * @return The ObservatoryElement object.
@@ -757,10 +757,10 @@ public final class Observatory
 			try {
 				Observatory.readFileOfObservatories();
 			} catch (JPARSECException e) {
-				Logger.log(LEVEL.ERROR, "Could not read the file of observatories.");				
+				Logger.log(LEVEL.ERROR, "Could not read the file of observatories.");
 			}
 		}
-		
+
 		if (index < 0 || index >= getNumberOfObservatoriesInMarsdenList())
 			throw new JPARSECException("Index out of range 0-"+(getNumberOfObservatoriesInMarsdenList()-1));
 
@@ -771,7 +771,7 @@ public final class Observatory
 
 	/**
 	 * Search for an observatory by it's name.
-	 * 
+	 *
 	 * @param observatory Name of the observatory to seach for.
 	 * @return index value of the observatory. -1 is returned if no match is found.
 	 */
@@ -781,7 +781,7 @@ public final class Observatory
 			try {
 				Observatory.readFileOfObservatories();
 			} catch (JPARSECException e) {
-				Logger.log(LEVEL.ERROR, "Could not read the file of observatories.");				
+				Logger.log(LEVEL.ERROR, "Could not read the file of observatories.");
 			}
 		}
 
@@ -807,7 +807,7 @@ public final class Observatory
 
 	/**
 	 * Search for an observatory by it's geographical position in the Marsden list.
-	 * 
+	 *
 	 * @param loc Approximate position of the observatory.
 	 * @return index value of the observatory. -1 is returned if no match is found.
 	 */
@@ -817,7 +817,7 @@ public final class Observatory
 			try {
 				Observatory.readFileOfObservatories();
 			} catch (JPARSECException e) {
-				Logger.log(LEVEL.ERROR, "Could not read the file of observatories.");				
+				Logger.log(LEVEL.ERROR, "Could not read the file of observatories.");
 			}
 		}
 
@@ -843,7 +843,7 @@ public final class Observatory
 	 * Search for an observatory by it's Marsden code. The code is taken from
 	 * field reference, since field code is it's integer transformation and not
 	 * officially used.
-	 * 
+	 *
 	 * @param code Name of the observatory to seach for.
 	 * @return index value of the observatory. -1 is returned if no match is found.
 	 */
@@ -878,7 +878,7 @@ public final class Observatory
 
 	/**
 	 * Gets the name of an observatory.
-	 * 
+	 *
 	 * @param index Index for the observatory.
 	 * @return Name of the observatory.
 	 * @throws JPARSECException If the index is out of range.

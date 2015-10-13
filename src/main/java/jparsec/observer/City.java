@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -65,13 +65,13 @@ import jparsec.util.Logger.LEVEL;
  * it for details. The calculation made is an averaged measure of the altitude
  * in a circle of radius r <= 5 km (5 km for the equator). In plane terrains
  * maximum theoretical error is 15m. Typical errors will be about 50m.
- * 
+ *
  * @see CityElement
  * @see Country
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
-public final class City 
+public final class City
 {
 	// private constructor so that this class cannot be instantiated.
 	private City() {}
@@ -80,15 +80,15 @@ public final class City
 	 * The list of capitals for each of the Spanish provinces.
 	 */
 	public static final String SpainCapitals[] = new String[] {
-			"Girona", "Ourense", "Donostia-San Sebasti\u00e1n", "Lleida", "Castell\u00f3n de la Plana", 
-			"Pamplona", "Vitoria-Gasteiz", 
+			"Girona", "Ourense", "Donostia-San Sebasti\u00e1n", "Lleida", "Castell\u00f3n de la Plana",
+			"Pamplona", "Vitoria-Gasteiz",
 			"Albacete", "Alicante", "Almer\u00eda", "Oviedo", "\u00c1vila", "Badajoz",
 			"Palma de Mallorca", "Barcelona", "Burgos", "C\u00e1ceres", "C\u00e1diz", "Santander",
-			"Ceuta", "Ciudad Real", "C\u00f3rdoba", "Cuenca", "Zaragoza", 
+			"Ceuta", "Ciudad Real", "C\u00f3rdoba", "Cuenca", "Zaragoza",
 			"Granada", "Guadalajara", "Huelva", "Huesca", "Ja\u00e9n", "La Coru\u00f1a",
-			"Logro\u00f1o", "Las Palmas de Gran Canaria", "Le\u00f3n", "Lugo", "Madrid", "M\u00e1laga", 
+			"Logro\u00f1o", "Las Palmas de Gran Canaria", "Le\u00f3n", "Lugo", "Madrid", "M\u00e1laga",
 			"Melilla", "M\u00e9rida", "Murcia", "Palencia", "Pontevedra",
-			"Salamanca", "Santa Cruz de Tenerife", "Santiago de Compostela", "Segovia", "Sevilla", 
+			"Salamanca", "Santa Cruz de Tenerife", "Santiago de Compostela", "Segovia", "Sevilla",
 			"Soria", "Tarragona", "Teruel", "Toledo", "Valencia", "Valladolid", "Bilbao", "Zamora",
 	};
 
@@ -96,15 +96,15 @@ public final class City
 	 * The list of Spanish provinces (regions) in Spain.
 	 */
 	public static final String SpainProvinces[] = new String[] {
-			"Girona", "Orense", "Guip\u00fazcoa", "Lleida", "Castell\u00f3n", 
-			"Navarra", "\u00c1lava", 
+			"Girona", "Orense", "Guip\u00fazcoa", "Lleida", "Castell\u00f3n",
+			"Navarra", "\u00c1lava",
 			"Albacete", "Alicante", "Almer\u00eda", "Asturias", "\u00c1vila", "Badajoz",
 			"Baleares", "Barcelona", "Burgos", "C\u00e1ceres", "C\u00e1diz", "Santander",
-			"Ceuta", "Ciudad Real", "C\u00f3rdoba", "Cuenca", "Zaragoza", 
+			"Ceuta", "Ciudad Real", "C\u00f3rdoba", "Cuenca", "Zaragoza",
 			"Granada", "Guadalajara", "Huelva", "Huesca", "Ja\u00e9n", "La Coru\u00f1a",
-			"La Rioja", "Las Palmas", "Le\u00f3n", "Lugo", "Madrid", "M\u00e1laga", 
+			"La Rioja", "Las Palmas", "Le\u00f3n", "Lugo", "Madrid", "M\u00e1laga",
 			"Melilla", "M\u00e9rida", "Murcia", "Palencia", "Pontevedra",
-			"Salamanca", "Santa Cruz de Tenerife", "Santiago de Compostela", "Segovia", "Sevilla", 
+			"Salamanca", "Santa Cruz de Tenerife", "Santiago de Compostela", "Segovia", "Sevilla",
 			"Soria", "Tarragona", "Teruel", "Toledo", "Valencia", "Valladolid", "Vizcaya", "Zamora",
 	};
 
@@ -115,7 +115,7 @@ public final class City
 	 */
 	public static int getNumberOfCities() throws JPARSECException {
 		int n = 0;
-		
+
 		// Connect to the file
 		try
 		{
@@ -137,13 +137,13 @@ public final class City
 		{
 			throw new JPARSECException(
 					"error while reading cities file.", e2);
-		}		
-		
+		}
+
 		return n;
 	}
 	/**
 	 * Get the cities for certain country.
-	 * 
+	 *
 	 * @param country_ID The ID constant of the country whose cities are required.
 	 * @return The array CityElement[] containing cities for the selected
 	 *         country, or null if the database has no cities for a given country.
@@ -165,7 +165,7 @@ public final class City
 		ReadFormat rf = new ReadFormat(format);
 
 		String cc = country_ID.toString();
-		
+
 		// Connect to the file
 		try
 		{
@@ -200,7 +200,7 @@ public final class City
 
 		if (vec.size() == 0) return null;
 		CityElement loc_element[] = new CityElement[vec.size()];
-		
+
 		try {
 			for (int i = 0; i < loc_element.length; i++) {
 				loc_element[i] = vec.get(i);
@@ -215,7 +215,7 @@ public final class City
 
 	/**
 	 * Get the cities for a certain name.
-	 * 
+	 *
 	 * @param name Name of the city or part of it.
 	 * @return The array CityElement[] containing cities for the selected
 	 *         name, or null if the database has no cities with that name.
@@ -235,7 +235,7 @@ public final class City
 				new FileFormatElement(146, 149, "height")
 		};
 		ReadFormat rf = new ReadFormat(format);
-		
+
 		// Connect to the file
 		try
 		{
@@ -271,7 +271,7 @@ public final class City
 
 		if (vec.size() == 0) return null;
 		CityElement loc_element[] = new CityElement[vec.size()];
-		
+
 		try {
 			for (int i = 0; i < loc_element.length; i++) {
 				loc_element[i] = vec.get(i);
@@ -282,10 +282,10 @@ public final class City
 
 		return (loc_element);
 	}
-	
+
 	/**
 	 * Get the cities for certain country.
-	 * 
+	 *
 	 * @param country_ID The ID constant of the country whose cities are required.
 	 * @param SpainInDetail True to return a detailed list of Spanish locations,
 	 * instead of the main ones, in case the input country is Spain.
@@ -297,7 +297,7 @@ public final class City
 		// Define necessary variables
 		ArrayList<CityElement> vec = new ArrayList<CityElement>();
 		String cc = null;
-		
+
 		if (country_ID == COUNTRY.Spain && SpainInDetail) {
 			ArrayList<String> file = ReadFile.readResource("jparsec/observer/SpainCities.txt", ReadFile.ENCODING_ISO_8859);
 			for (int i = 0; i < file.size(); i = i + 2) {
@@ -322,7 +322,7 @@ public final class City
 			cc = country_ID.toString();
 		} else {
 			String file_line = "";
-	
+
 			FileFormatElement[] format = new FileFormatElement[] {
 					new FileFormatElement(1, 70, "name"),
 					new FileFormatElement(71, 120, "country"),
@@ -332,15 +332,15 @@ public final class City
 					new FileFormatElement(146, 149, "height")
 			};
 			ReadFormat rf = new ReadFormat(format);
-	
+
 			cc = country_ID.toString();
-			
+
 			// Connect to the file
 			try
 			{
 				InputStream is = City.class.getClassLoader().getResourceAsStream("jparsec/observer/cities.txt");
 				BufferedReader dis = new BufferedReader(new InputStreamReader(is, ReadFile.ENCODING_ISO_8859));
-	
+
 				while ((file_line = dis.readLine()) != null)
 				{
 					CityElement city = new CityElement();
@@ -354,10 +354,10 @@ public final class City
 						vec.add(city);
 					}
 				}
-	
+
 				// Close file
 				dis.close();
-	
+
 			} catch (FileNotFoundException e1)
 			{
 				throw new JPARSECException("cities file not found in path jparsec/observer/cities.txt.", e1);
@@ -367,10 +367,10 @@ public final class City
 						"error while reading cities file.", e2);
 			}
 			}
-		
+
 		if (vec.size() == 0) return null;
 		CityElement loc_element[] = new CityElement[vec.size()];
-		
+
 		try {
 			for (int i = 0; i < loc_element.length; i++) {
 				loc_element[i] = vec.get(i);
@@ -382,10 +382,10 @@ public final class City
 
 		return (loc_element);
 	}
-	
+
 	/**
 	 * Get all cities.
-	 * 
+	 *
 	 * @return The array CityElement[] containing all the cities.
 	 * @throws JPARSECException If an error occurs reading the cities file.
 	 */
@@ -402,11 +402,11 @@ public final class City
 			} catch (Exception exc) {
 				Logger.log(LEVEL.ERROR, "Country "+i+" not found. This should never happen.");
 			}
-			
-			
+
+
 			if (loc_element_city == null) continue;
 //				Logger.log(LEVEL.ERROR, "No cities found for country "+c+". This should never happen.");
-			
+
 			for (int j = 0; j < loc_element_city.length; j++) {
 				country++;
 				loc_element[country] = loc_element_city[j];
@@ -420,7 +420,7 @@ public final class City
 	/**
 	 * Find all cities given it's name or part of it. Returned array is ordered
 	 * in descent order respect the relevance of the city found.
-	 * 
+	 *
 	 * @param city_location The name of the city or representative part of it's name.
 	 * @return The list of cities, or null if none is found.
 	 * @throws JPARSECException If an error occurs.
@@ -428,11 +428,11 @@ public final class City
 	public static CityElement[] findAllCities(String city_location) throws JPARSECException {
 		return findAllCities(city_location, 0);
 	}
-	
+
 	/**
 	 * Find all cities given it's name or part of it. Returned array is ordered
 	 * in descent order respect the relevance of the city found.
-	 * 
+	 *
 	 * @param city_location The name of the city or representative part of it's name.
 	 * @param max Maximum number of locations to return. 0 or negative will return all found.
 	 * @return The list of cities, or null if none is found.
@@ -444,7 +444,7 @@ public final class City
 		ArrayList<String> listQ = new ArrayList<String>();
 
 		boolean equals = false;
-		
+
 		String record = city_location.toLowerCase();
 		record = record.substring(0, 1).toUpperCase() + record.substring(1);
 		ArrayList<String> file = readResourceContainingOnlyForSpanishCities("jparsec/observer/SpainCities.txt", ReadFile.ENCODING_ISO_8859, record);
@@ -476,10 +476,10 @@ public final class City
 				} else {
 					listQ.add("1-" + file.size() / 2);
 				}
-				
+
 			}
 		}
-		
+
 		if (max <= 0 || !equals) {
 			CityElement[] loc_element_city = jparsec.observer.City.getCities(city_location);
 			try {
@@ -497,10 +497,10 @@ public final class City
 				}
 			} catch (NullPointerException e) {	}
 		}
-		
+
 		if (list.size() == 0)
 			return null;
-		
+
 		if (equals) {
 			for (int i=listQ.size()-1;i>=0;i--) {
 				String l = listQ.get(i);
@@ -510,7 +510,7 @@ public final class City
 				}
 			}
 		}
-		
+
 		CityElement city[] = new CityElement[list.size()];
 		int index = 0;
 		do {
@@ -538,11 +538,11 @@ public final class City
 
 		return city;
 	}
-	
+
 	/**
 	 * Find all cities given it's name or part of it. Returned array is ordered
 	 * in descent order respect the relevance of the city found.
-	 * 
+	 *
 	 * @param city_location The name of the city or representative part of it's name.
 	 * @param SpainInDetail True to use the detailed file for Spanish cities. False
 	 * recommended for Android systems.
@@ -555,7 +555,7 @@ public final class City
 		ArrayList<String> listQ = new ArrayList<String>();
 
 		boolean equals = false;
-		
+
 		String record = city_location.toLowerCase();
 		record = record.substring(0, 1).toUpperCase() + record.substring(1);
 		if (SpainInDetail) {
@@ -571,7 +571,7 @@ public final class City
 				String alt = fip.substring(42).trim();
 				double lo = Functions.parseDeclination(lons);
 				double la = Functions.parseDeclination(lats);
-	
+
 				if (n.toUpperCase().indexOf(city_location.toUpperCase()) >= 0) {
 					double lat = la * Constant.RAD_TO_DEG;
 					CityElement loc_element = new CityElement(n, lo
@@ -579,7 +579,7 @@ public final class City
 					if (lat < 32)
 						loc_element.timeZone = 0;
 					loc_element.country = "Spain";
-	
+
 					list.add(loc_element);
 					if (n.toUpperCase().equals(city_location.toUpperCase())) {
 						listQ.add("0-" + file.size() / 2);
@@ -590,7 +590,7 @@ public final class City
 				}
 			}
 		}
-		
+
 		CityElement[] loc_element_city = jparsec.observer.City.getCities(city_location);
 		if (loc_element_city != null) {
 			for (int j = 0; j < loc_element_city.length; j++) {
@@ -608,7 +608,7 @@ public final class City
 
 		if (list.size() == 0)
 			return null;
-		
+
 		if (equals) {
 			for (int i=listQ.size()-1;i>=0;i--) {
 				String l = listQ.get(i);
@@ -618,7 +618,7 @@ public final class City
 				}
 			}
 		}
-		
+
 		CityElement city[] = new CityElement[list.size()];
 		int index = 0;
 		do {
@@ -648,16 +648,16 @@ public final class City
 	}
 
 	static protected CityElement c_Madrid = null;
-	
+
 	/**
 	 * Find one city given it's name or part of it.
-	 * 
+	 *
 	 * @param city_location The name of the city or representative part of it's name.
 	 * In case several locations could exists with the same name, you can use the
 	 * suffix [0] to get the first, [1] for the second, and so on. The complete
 	 * list of locations with a given name is provided by {@linkplain City#findAllCities(String)}.
 	 * @return The object CityElement containing the first city that matches the
-	 *         search, or the best match. Null if none is found. In case several are found with the 
+	 *         search, or the best match. Null if none is found. In case several are found with the
 	 *         provided name the most relevant one is returned (for Spanish cities the one using
 	 *         the detailed file), equivalent to adding the suffix [0] to the name (first result).
 	 * @throws JPARSECException If an error occurs.
@@ -676,20 +676,20 @@ public final class City
 				specified = true;
 			}
 		}
-		
+
 		CityElement c[] = findAllCities(city_location, specified ? 0 : 1);
 		if (c != null) {
 			if (c.length > 1 && !specified) JPARSECException.addWarning("Found "+c.length+" locations named '"+city_location+"'. Selecting the one with index number "+n+".");
 			if (c_Madrid == null && city_location.equals("Madrid")) c_Madrid = c[n];
 			return c[n];
 		}
-		
+
 		return null;
 	}
 
 	/**
 	 * Find the nearest city to certain coordinates.
-	 * 
+	 *
 	 * @param loc The approximate coordinates of the city.
 	 * @return The object CityElement containing the city that best matches the search.
 	 * @throws JPARSECException Thrown if the city is not found.
@@ -711,7 +711,7 @@ public final class City
 				new FileFormatElement(146, 149, "height")
 		};
 		ReadFormat rf = new ReadFormat(format);
-		
+
 		// Connect to the file
 		try
 		{
@@ -723,7 +723,7 @@ public final class City
 				CityElement city = new CityElement();
 				city.longitude = rf.readDouble(file_line, "longitude");
 				city.latitude = rf.readDouble(file_line, "latitude");
-				
+
 				LocationElement loc1 = LocationElement.parseCity(city);
 				double distance1 = Math.abs(LocationElement
 						.getLinearDistance(loc, loc1));
@@ -780,7 +780,7 @@ public final class City
 
 	/**
 	 * Find the nearest city to certain coordinates.
-	 * 
+	 *
 	 * @param loc The approximate coordinates of the city.
 	 * @param country The country where this position is located. Maybe null to search in all
 	 * countries, but in this case the special file with the detailed locations
@@ -805,7 +805,7 @@ public final class City
 			for (int i = COUNTRY.Afghanistan.ordinal(); i <= COUNTRY.Zimbabwe.ordinal(); i++) {
 				CityElement[] loc_element_city = jparsec.observer.City.getCities(COUNTRY.values()[i]);
 				if (loc_element_city == null || loc_element_city.length == 0) continue;
-				
+
 				try {
 					for (int j = 0; j < loc_element_city.length; j++) {
 						CityElement city = loc_element_city[j];
@@ -823,13 +823,13 @@ public final class City
 				} catch (NullPointerException e) {
 				}
 			}
-			
+
 			//if (loc_element.country != COUNTRY.Spain.toString())
 				return loc_element;
 			//country = COUNTRY.Spain;
-		} else {		
+		} else {
 			CityElement[] loc_element_city = jparsec.observer.City.getCities(country);
-	
+
 			try {
 				for (int j = 0; j < loc_element_city.length; j++) {
 					CityElement city = loc_element_city[j];
@@ -847,7 +847,7 @@ public final class City
 			} catch (NullPointerException e) {
 			}
 		}
-		
+
 		if (country != null && country == COUNTRY.Spain) {
 			ArrayList<String> file = ReadFile.readResource("jparsec/observer/SpainCities.txt");
 			for (int i = 0; i < file.size(); i = i + 2) {
@@ -878,7 +878,7 @@ public final class City
 
 	/**
 	 * Find the country where a given city is in.
-	 * 
+	 *
 	 * @param city_location The name of the city or representative part of it's name.
 	 * @return The ID constant of the country.
 	 * @throws JPARSECException Thrown if the city is not found.
@@ -920,7 +920,7 @@ public final class City
 	 * Reads a resource and returns it contents as an array of strings. Path is taken from
 	 * the current established path in this instance, and this path should be a local resource
 	 * available. Only lines containing a given record are returned.
-	 * 
+	 *
 	 * @param record Something to search for in each line of the file.
 	 * @return Array of strings.
 	 * @throws JPARSECException If an error occurs accessing the resource.
@@ -943,7 +943,7 @@ public final class City
 				// Store object in ArrayList
 				if (file_line.toLowerCase().indexOf(record) >= 0) {
 					vec.add(file_line);
-					vec.add(dis.readLine());					
+					vec.add(dis.readLine());
 				}
 			}
 

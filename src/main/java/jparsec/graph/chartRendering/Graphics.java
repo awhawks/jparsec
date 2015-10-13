@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.graph.chartRendering;
 
 import jparsec.graph.JPARSECStroke;
@@ -26,7 +26,7 @@ import jparsec.graph.chartRendering.SkyRenderElement.COLOR_MODE;
 
 /**
  * The main Graphics interface to provide rendering support in different platforms.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -34,14 +34,14 @@ public interface Graphics {
 
 	/**
 	 * The set of color modes for the anaglyph method.
-	 * There are two simple anaglyph modes (green-red and red-cyan glasses) to obtain 
-	 * an adequate anaglyph effect without losing too much performance in sky rendering. 
-	 * In case you select one of these you should also select the 
+	 * There are two simple anaglyph modes (green-red and red-cyan glasses) to obtain
+	 * an adequate anaglyph effect without losing too much performance in sky rendering.
+	 * In case you select one of these you should also select the
 	 * {@linkplain COLOR_MODE#WHITE_BACKGROUND_SIMPLE_GREEN_RED_OR_RED_CYAN_ANAGLYPH}
 	 * color mode. For other anaglyph methods the set of colors can be freely adjusted,
 	 * and can be applied to sky, planetary, and satellite rendering.
 	 */
-	public static enum ANAGLYPH_COLOR_MODE {
+	public enum ANAGLYPH_COLOR_MODE {
 		/** ID value for no anaglyph mode. */
 		NO_ANAGLYPH,
 		/** Simple green-red anaglyph: green for left eye, red for right. Only for
@@ -60,13 +60,13 @@ public interface Graphics {
 		TRUE_3D_MODE_LEFT_RIGHT,
 		/** Returns a true 3d image with left/view mode, and half width for each view. */
 		TRUE_3D_MODE_LEFT_RIGHT_HALF_WIDTH;
-		
+
 		private float z0 = 100f;
 		private float d = 0.5f;
-		
+
 		/**
 		 * Returns true if the mode is set to a real 3d mode (Dubois or left/right view).
-		 * @return True for any Dubois method and for the true left/right 3d mode, false 
+		 * @return True for any Dubois method and for the true left/right 3d mode, false
 		 * otherwise.
 		 */
 		public boolean isReal3D() {
@@ -90,7 +90,7 @@ public interface Graphics {
 			if (this == DUBOIS_AMBER_BLUE || this == DUBOIS_GREEN_MAGENTA || this == DUBOIS_RED_CYAN) return true;
 			return false;
 		}
-		
+
 		/**
 		 * Returns the reference z position, 100 by default.
 		 * Levels visible in depth will be from 0 to 2*z. This means that
@@ -101,7 +101,7 @@ public interface Graphics {
 		public float getReferenceZ() {
 			return z0;
 		}
-		
+
 		/**
 		 * Returns the eye separation, (8 / reference z) for red-cyan and
 		 * green-red simple anaglyph, and 0.5 by default
@@ -141,17 +141,17 @@ public interface Graphics {
 			if (d > 5.0f) d = 5.0f;
 			this.d = d;
 		}
-		
+
 		/**
 		 * Resets reference z and eye separation values to their
 		 * default values.
 		 */
 		public void clear() {
 			z0 = 100f;
-			d = 0.5f;			
+			d = 0.5f;
 		}
 	}
-	
+
 	  /**
 	   *  Dubois anaglyph matrix, green-magenta for left eye, see http://www.flickr.com/photos/e_dubois/5132528166/
 	   */
@@ -203,7 +203,7 @@ public interface Graphics {
 	 * Dialog, SansSerif, and Symbol. Symbol is not directly
 	 * supported by Java
 	 */
-	public static enum FONT {
+	public enum FONT {
 		SANS_SERIF_PLAIN_5(SANS_SERIF, PLAIN, 5),
 		SANS_SERIF_PLAIN_6(SANS_SERIF, PLAIN, 6),
 		SANS_SERIF_PLAIN_7(SANS_SERIF, PLAIN, 7),
@@ -235,7 +235,7 @@ public interface Graphics {
 		SANS_SERIF_PLAIN_33(SANS_SERIF, PLAIN, 33),
 		SANS_SERIF_PLAIN_34(SANS_SERIF, PLAIN, 34),
 		SANS_SERIF_PLAIN_35(SANS_SERIF, PLAIN, 35),
-		
+
 		SANS_SERIF_BOLD_5(SANS_SERIF, BOLD, 5),
 		SANS_SERIF_BOLD_6(SANS_SERIF, BOLD, 6),
 		SANS_SERIF_BOLD_7(SANS_SERIF, BOLD, 7),
@@ -267,7 +267,7 @@ public interface Graphics {
 		SANS_SERIF_BOLD_33(SANS_SERIF, BOLD, 33),
 		SANS_SERIF_BOLD_34(SANS_SERIF, BOLD, 34),
 		SANS_SERIF_BOLD_35(SANS_SERIF, BOLD, 35),
-		
+
 		SANS_SERIF_ITALIC_5(SANS_SERIF, ITALIC, 5),
 		SANS_SERIF_ITALIC_6(SANS_SERIF, ITALIC, 6),
 		SANS_SERIF_ITALIC_7(SANS_SERIF, ITALIC, 7),
@@ -299,7 +299,7 @@ public interface Graphics {
 		SANS_SERIF_ITALIC_33(SANS_SERIF, ITALIC, 33),
 		SANS_SERIF_ITALIC_34(SANS_SERIF, ITALIC, 34),
 		SANS_SERIF_ITALIC_35(SANS_SERIF, ITALIC, 35),
-		
+
 		DIALOG_PLAIN_5(DIALOG, PLAIN, 5),
 		DIALOG_PLAIN_6(DIALOG, PLAIN, 6),
 		DIALOG_PLAIN_7(DIALOG, PLAIN, 7),
@@ -331,7 +331,7 @@ public interface Graphics {
 		DIALOG_PLAIN_33(DIALOG, PLAIN, 33),
 		DIALOG_PLAIN_34(DIALOG, PLAIN, 34),
 		DIALOG_PLAIN_35(DIALOG, PLAIN, 35),
-		
+
 		DIALOG_BOLD_5(DIALOG, BOLD, 5),
 		DIALOG_BOLD_6(DIALOG, BOLD, 6),
 		DIALOG_BOLD_7(DIALOG, BOLD, 7),
@@ -363,7 +363,7 @@ public interface Graphics {
 		DIALOG_BOLD_33(DIALOG, BOLD, 33),
 		DIALOG_BOLD_34(DIALOG, BOLD, 34),
 		DIALOG_BOLD_35(DIALOG, BOLD, 35),
-		
+
 		DIALOG_ITALIC_5(DIALOG, ITALIC, 5),
 		DIALOG_ITALIC_6(DIALOG, ITALIC, 6),
 		DIALOG_ITALIC_7(DIALOG, ITALIC, 7),
@@ -395,7 +395,7 @@ public interface Graphics {
 		DIALOG_ITALIC_33(DIALOG, ITALIC, 33),
 		DIALOG_ITALIC_34(DIALOG, ITALIC, 34),
 		DIALOG_ITALIC_35(DIALOG, ITALIC, 35),
-		
+
 		SYMBOL_PLAIN_5(SYMBOL, PLAIN, 5),
 		SYMBOL_PLAIN_6(SYMBOL, PLAIN, 6),
 		SYMBOL_PLAIN_7(SYMBOL, PLAIN, 7),
@@ -427,20 +427,20 @@ public interface Graphics {
 		SYMBOL_PLAIN_33(SYMBOL, PLAIN, 33),
 		SYMBOL_PLAIN_34(SYMBOL, PLAIN, 34),
 		SYMBOL_PLAIN_35(SYMBOL, PLAIN, 35);
-		
+
 		private static final int MIN_SIZE = 5, MAX_SIZE = 35;
 		private static final String TYPES[] = new String[] {"_PLAIN_", "_BOLD_", "_ITALIC_"};
-		
+
 		private String name;
 		private int type;
 		private int size;
-		
+
 		private FONT(String name, int type, int size) {
 			this.name = name;
 			this.type = type;
 			this.size = size;
 		}
-		
+
 		/**
 		 * Returns the font name.
 		 * @return Font name.
@@ -547,7 +547,7 @@ public interface Graphics {
 	/**
 	 * Draws an straight line from (x0, y0) to (xf, yf).
 	 * x0 and xf or y0 and yf should be equal, otherwise
-	 * a fast line method is called. 
+	 * a fast line method is called.
 	 * @param i x0.
 	 * @param j y0.
 	 * @param k xf.
@@ -559,7 +559,7 @@ public interface Graphics {
 	 * Draws an straight line from (x0, y0) to (xf, yf),
 	 * for distances dist1 and dist2.
 	 * x0 and xf or y0 and yf should be equal, otherwise
-	 * a fast line method is called. 
+	 * a fast line method is called.
 	 * @param i x0.
 	 * @param j y0.
 	 * @param k xf.
@@ -569,7 +569,7 @@ public interface Graphics {
 	 */
 	void drawStraightLine(float i, float j, float k, float l, float dist1,
 			float dist2);
-	
+
 	/**
 	 * Sets a color from RGB components.
 	 * @param r Red, 0-255.
@@ -582,7 +582,7 @@ public interface Graphics {
 	/**
 	 * Draws an image at (x, y).
 	 * @param img The image object, previously read
-	 * using {@linkplain #getImage(String)}. For 
+	 * using {@linkplain #getImage(String)}. For
 	 * Java desktop it will an Image or ToolkitImage
 	 * object.
 	 * @param x X position.
@@ -594,7 +594,7 @@ public interface Graphics {
 	 * Returns the anaglyph mode.
 	 * @return Anaglyph color mode.
 	 */
-	ANAGLYPH_COLOR_MODE getAnaglyphMode(); 
+	ANAGLYPH_COLOR_MODE getAnaglyphMode();
 
 	/**
 	 * Draws an image at (x, y), with a given
@@ -602,7 +602,7 @@ public interface Graphics {
 	 * drawing images in (almost) vector graphics format
 	 * for scaling factors lower than unity.
 	 * @param img The image object, previously read
-	 * using {@linkplain #getImage(String)}. For 
+	 * using {@linkplain #getImage(String)}. For
 	 * Java desktop it will an Image or ToolkitImage
 	 * object.
 	 * @param x X position.
@@ -614,9 +614,9 @@ public interface Graphics {
 
 	/**
 	 * Returns an image.
-	 * @param url The path of an image resource in the 
+	 * @param url The path of an image resource in the
 	 * classpath.
-	 * @return The image object. For Java desktop it 
+	 * @return The image object. For Java desktop it
 	 * will a ToolkitImage object.
 	 */
 	Object getImage(String url);
@@ -626,7 +626,7 @@ public interface Graphics {
 	 * @param w The width.
 	 * @param h The height.
 	 * @param pixels the RGB colors of the pixels.
-	 * @return The image object. For Java desktop it 
+	 * @return The image object. For Java desktop it
 	 * will a BufferedImage object.
 	 */
 	Object getImage(int w, int h, int[] pixels);
@@ -639,7 +639,7 @@ public interface Graphics {
 	 * @param sameRatio True to maintain the image w/h ratio.
 	 * @param useSpline True to allow using spline technique for
 	 * resizing, in case the implementation supports it.
-	 * @return The image object. For Java desktop it 
+	 * @return The image object. For Java desktop it
 	 * will a BufferedImage object.
 	 */
 	Object getScaledImage(Object image, int w, int h, boolean sameRatio, boolean useSpline);
@@ -654,7 +654,7 @@ public interface Graphics {
 	 * resizing, in case the implementation supports it.
 	 * @param dy Number of pixels to move the image down. In case of not 0
 	 * the output image will be of greater size, recentered in vertical.
-	 * @return The image object. For Java desktop it 
+	 * @return The image object. For Java desktop it
 	 * will a BufferedImage object.
 	 */
 	Object getScaledImage(Object image, int w, int h, boolean sameRatio, boolean useSpline, int dy);
@@ -669,7 +669,7 @@ public interface Graphics {
 	 * @param ang Rotation angle in radians.
 	 * @param scalex Scale factor in x axis, after rotation.
 	 * @param scaley Scale factor in y axis, after rotation.
-	 * @return The image object. For Java desktop it 
+	 * @return The image object. For Java desktop it
 	 * will a BufferedImage object.
 	 */
 	Object getRotatedAndScaledImage(Object image, float radius_x,
@@ -681,7 +681,7 @@ public interface Graphics {
 	 * @return The copy.
 	 */
 	Object cloneImage(Object image);
-	
+
 	/**
 	 * Returns an image as a set of pixels.
 	 * @param image The image object.
@@ -692,7 +692,7 @@ public interface Graphics {
 	/**
 	 * Returns an image with inverted colors.
 	 * @param image Input image.
-	 * @return The output image object. For Java desktop it 
+	 * @return The output image object. For Java desktop it
 	 * will a BufferedImage object.
 	 */
 	Object getColorInvertedImage(Object image);
@@ -703,11 +703,11 @@ public interface Graphics {
 	 * @param r True to invert red channel.
 	 * @param g True to invert green channel.
 	 * @param b True to invert blue channel.
-	 * @return The output image object. For Java desktop it 
+	 * @return The output image object. For Java desktop it
 	 * will a BufferedImage object.
 	 */
 	Object getColorInvertedImage(Object image, boolean r, boolean g, boolean b);
-	
+
 	/**
 	 * Returns the width and height of an image.
 	 * @param img The image.
@@ -754,7 +754,7 @@ public interface Graphics {
 	 * @param col color.
 	 */
 	void drawPoint(int i, int j, int col);
-	
+
 	/**
 	 * Fills a rectangle within (x0, y0)-(x0+width, y0+height).
 	 * @param i x0.
@@ -780,12 +780,12 @@ public interface Graphics {
 	 * less quality) mode.
 	 */
 	void drawOval(float i, float j, float k, float l, boolean fastMode);
-	
+
 	/**
 	 * To disable antialiasing in shapes and text.
 	 */
 	void disableAntialiasing();
-	
+
 	/**
 	 * To enable antialiasing in shapes and text.
 	 */
@@ -811,7 +811,7 @@ public interface Graphics {
 	 * @return Four integers with x0, y0, width, height.
 	 */
 	int[] getClip();
-	
+
 	/**
 	 * Sets the stroke.
 	 * @param stroke The stroke object
@@ -871,7 +871,7 @@ public interface Graphics {
 	 * @return Its width.
 	 */
 	float getStringWidth(String labels);
-	
+
 	/**
 	 * Returns the RGB color at a given position. In case Dubois
 	 * anaglyph is selected this method returns the RGB color
@@ -957,7 +957,7 @@ public interface Graphics {
 	 * @return The color at (x, y).
 	 */
 	int getRGBRight(int i, int j, float z);
-	
+
 	/**
 	 * Returns the width of the image in this Graphics.
 	 * @return The width in pixels.
@@ -1080,9 +1080,9 @@ public interface Graphics {
 	 * @return The inverted color.
 	 */
 	int invertColor(int color);
-	
+
 	// Now methods for GeneralPath
-	
+
 	/**
 	 * Initializes a GeneralPath object.
 	 * @return The GeneralPath.
@@ -1134,7 +1134,7 @@ public interface Graphics {
 	void generalPathClosePath(Object obj);
 
 	// Now methods for rendering in anaglyph mode
-	
+
 	/**
 	 * Draws an oval within (x0, y0)-(x0+width, y0+height)
 	 * at a given distance.
@@ -1145,7 +1145,7 @@ public interface Graphics {
 	 * @param dist The distance.
 	 */
 	void drawOval(float i, float j, float k, float l, float dist);
-	
+
 	/**
 	 * Fills an oval within (x0, y0)-(x0+width, y0+height)
 	 * at a given distance.
@@ -1196,7 +1196,7 @@ public interface Graphics {
 	 * @param z The distance.
 	 */
 	void fill(Object s, float z);
-	
+
 	/**
 	 * Draws a String at a given distance.
 	 * @param s The string.
@@ -1205,11 +1205,11 @@ public interface Graphics {
 	 * @param z Distance.
 	 */
 	void drawString(String s, float x, float y, float z);
-	
+
 	/**
 	 * Draws an image at (x, y), distance z.
 	 * @param img The image object, previously read
-	 * using {@linkplain #getImage(String)}. For 
+	 * using {@linkplain #getImage(String)}. For
 	 * Java desktop it will an Image or ToolkitImage
 	 * object.
 	 * @param x X position.
@@ -1217,14 +1217,14 @@ public interface Graphics {
 	 * @param z Distance.
 	 */
 	void drawImage(Object img, float x, float y, float z);
-	
+
 	/**
 	 * Draws an image at (x, y), distance z, and with a given
 	 * scale in x/y. This method is designed to support
 	 * drawing images in (almost) vector graphics format
 	 * for scaling factors lower than unity.
 	 * @param img The image object, previously read
-	 * using {@linkplain #getImage(String)}. For 
+	 * using {@linkplain #getImage(String)}. For
 	 * Java desktop it will an Image or ToolkitImage
 	 * object.
 	 * @param x X position.
@@ -1246,14 +1246,14 @@ public interface Graphics {
 	 * @param z Distance.
 	 */
 	void fillRect(float i, float j, float width, float height, float z);
-	
+
 	/**
 	 * Draws a shape at distance z.
 	 * @param path The shape.
 	 * @param z Distance.
 	 */
 	void draw(Object path, float z);
-	
+
 	/**
 	 * Draws a rectangle at distance z.
 	 * @param x X.
@@ -1267,7 +1267,7 @@ public interface Graphics {
 	/** Disables the analyph mode. */
 	void disableAnaglyph();
 
-	/** Sets the left and right images of the anaglyph in the current Graphics. 
+	/** Sets the left and right images of the anaglyph in the current Graphics.
 	 * @param image1 Left image.
 	 * @param image2 Right image.
 	 */
@@ -1277,8 +1277,8 @@ public interface Graphics {
 	 * drawing them into a given (x, y) position.
 	 * @param image1 Left image.
 	 * @param image2 Right image.
-	 * @param x X position to draw the images on the current views. 
-	 * @param y Y position to draw the images on the current views. 
+	 * @param x X position to draw the images on the current views.
+	 * @param y Y position to draw the images on the current views.
 	 */
 	void setAnaglyph(Object image1, Object image2, float x, float y);
 
@@ -1308,7 +1308,7 @@ public interface Graphics {
 	   * Creates an anaglyph image from left and right eye views. This method uses
 	   * the method described in <i>Conversion of a Stereo Pair to Anaglyph with the
 	   * Lest-Squares Projection Method</i> (2009), by Eric Dubois (for CRT/Plasma
-	   * displays). The result is an anaglyph that can be viewed with a pair of 3d 
+	   * displays). The result is an anaglyph that can be viewed with a pair of 3d
 	   * glasses with some color for the left eye, and another for the right one.
 	   * @param leftImg Left image. Should be in RGB color space.
 	   * @param rightImg Right image. Should be in RGB color space.
@@ -1336,7 +1336,7 @@ public interface Graphics {
 
 	/**
 	 * Transforms to transparent the color in a given image.
-	 * @param img The image. 
+	 * @param img The image.
 	 * @param color The color.
 	 * @param fromBlack True to set as transparent all colors from
 	 * black to the input one.
@@ -1423,7 +1423,7 @@ public interface Graphics {
 	 * @param radians Angle in radians.
 	 */
 	void rotate(double radians);
-	
+
 	/**
 	 * Traslates the Graphics context. Support is minimal, use with care.
 	 * @param x X traslation.
@@ -1436,7 +1436,7 @@ public interface Graphics {
 	 * @return Angle in radians.
 	 */
 	double getRotation();
-	
+
 	/**
 	 * Returns the traslation values for this instance.
 	 * @return Traslation in x and in y.
@@ -1459,15 +1459,15 @@ public interface Graphics {
 	 * Clears the elements in the database.
 	 */
 	void clearDataBase();
-	
+
 	/**
 	 * Returns an object from the database.
-	 * @param id The identifier, for instance the path to an image in 
+	 * @param id The identifier, for instance the path to an image in
 	 * getImage method.
 	 * @return The object, or null if none is found.
 	 */
 	Object getFromDataBase(String id);
-	
+
 	/**
 	 * Changes a color in an image.
 	 * @param img The image.
@@ -1478,7 +1478,7 @@ public interface Graphics {
 	 * @return The new image.
 	 */
 	//Object changeColor(Object img, int col0, int col1, boolean both);
-	
+
 	  /** RGB color for IndianRed. */
 	  public static final int COLOR_RED_IndianRed = -3318692;
 	  /** RGB color for LightCoral. */
@@ -1764,7 +1764,7 @@ public interface Graphics {
 	  /** RGB color for DarkSlateGray. */
 	  public static final int COLOR_GRAY_DarkSlateGray = -13676721;
 	  /** RGB color for Black. */
-	  public static final int COLOR_GRAY_Black = -16777216;	  
+	  public static final int COLOR_GRAY_Black = -16777216;
 }
 
 /**
@@ -1782,7 +1782,7 @@ class Rectangle {
 		maxx = -1;
 		maxy = -1;
 	}
-	
+
 	/**
 	 * The constructor.
 	 * @param x X.
@@ -1795,7 +1795,7 @@ class Rectangle {
 		this.y = y;
 		this.width = width;
 		this.height = height;
-		
+
 		maxx = x + width - 1;
 		maxy = y + height - 1;
 	}
@@ -1820,10 +1820,10 @@ class Rectangle {
 		if (y > maxy) return false;
 		return true;
 	}
-	
+
 	  /**
 	   * Check if a specified line intersects a specified rectangle.
-	   * 
+	   *
 	   * @param lx0, ly0        1st end point of line
 	   * @param ly1, ly1        2nd end point of line
 	   * @param x0, y0, x1, y1  Upper left and lower right corner of rectangle
@@ -1835,7 +1835,7 @@ class Rectangle {
 			  float lx1, float ly1)
 	  {
 		  float x0 = x, y0 = y, x1 = x + width, y1 = y + height;
-		  
+
 		  // Is one of the line endpoints inside the rectangle
 		  if (isPointInsideRectangle (x0, y0, x1, y1, lx0, ly0) ||
 				  isPointInsideRectangle (x0, y0, x1, y1, lx1, ly1))
@@ -1860,20 +1860,20 @@ class Rectangle {
 
 		  return false;
 	  }
-	  
+
 	  private boolean isLineIntersectingLine (float x0, float y0, float x1, float y1,
 			  float x2, float y2, float x3, float y3)
 	  {
 		  int s1 = sameSide (x0, y0, x1, y1, x2, y2, x3, y3);
 		  int s2 = sameSide (x2, y2, x3, y3, x0, y0, x1, y1);
-		
+
 		  return s1 <= 0 && s2 <= 0;
 	  }
 	  private int sameSide (float x0, float y0, float x1, float y1,
 			  float px0, float py0, float px1, float py1)
 	  {
 		  int  sameSide = 0;
-		    
+
 		  double dx  = x1  - x0;
 		  double dy  = y1  - y0;
 		  double dx1 = px0 - x0;
@@ -1893,13 +1893,13 @@ class Rectangle {
 			  sameSide = !isBetween (x0, x1, px0) && !isBetween (x0, x1, px1) ? 1 : 0;
 
 		  return sameSide;
-	  }	  
+	  }
 	  private boolean isPointInsideRectangle (float x0, float y0, float x1, float y1,
 			  float x, float y)
 	  {
 		  return x >= x0 && x < x1 && y >= y0 && y < y1;
 	  }
-	  
+
 	  private boolean isBetween (float a, float b, float c)
 	  {
 		  return b > a ? c >= a && c <= b : c >= b && c <= a;

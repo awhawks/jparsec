@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.astrophysics.gildas;
 
 import java.util.GregorianCalendar;
@@ -36,7 +36,7 @@ public class ConverterFactory
 {
 	// private constructor so that this class cannot be instantiated.
 	private ConverterFactory() {}
-	
+
 	/**
 	 * ID constant for a VAX data type (MULTIPLE, not SINGLE).
 	 */
@@ -49,7 +49,7 @@ public class ConverterFactory
 	 * ID constant for a EEEI data type (MULTIPLE, not SINGLE).
 	 */
 	public static final String EEEI_CODE = "1B  ";
-	
+
     /**
      * Returns the interface to convert data of .30m files.
      * @param s Code of the header of the .30m file.
@@ -63,9 +63,9 @@ public class ConverterFactory
             return new IEEE2EEEI();
         if(s.compareTo(EEEI_CODE) == 0)
             return new EEEI2EEEI();
-        
+
         if (s.substring(0,1).equals("2")) return null; // new version unsupported
-        
+
         if (s.substring(1,2).equals(VAX_CODE.substring(1, 2))) return new VAX2EEEI();
         if (s.substring(1,2).equals(IEEE_CODE.substring(1, 2))) return new IEEE2EEEI();
         if (s.substring(1,2).equals(EEEI_CODE.substring(1, 2))) return new EEEI2EEEI();
@@ -88,27 +88,38 @@ public class ConverterFactory
         else
             return null;
     }
-    
+
     /**
      * Returns the date of a .30m file.
      * @param i The date as given by GILDAS.
      * @return The date.
-     * @throws JPARSECException If an error occurs. 
+     * @throws JPARSECException If an error occurs.
      */
     public static GregorianCalendar getDate(int i)
+    throws JPARSECException {
+     	return getAstroDate(i).toGCalendar();
+    }
+
+    /**
+     * Returns the date of a .30m file.
+     * @param i The date as given by GILDAS.
+     * @return The date.
+     * @throws JPARSECException If an error occurs.
+     */
+    public static AstroDate getAstroDate(int i)
     throws JPARSECException {
     	double gd = (double) i;
     	if (gd < 0.0) gd = gd + 0.5;
     	double jd = gd + 60549.0 + Constant.JD_MINUS_MJD;
     	jd = (int) (jd - 0.5) + 0.5;
     	AstroDate astro = new AstroDate(jd);
-    	return astro.toGCalendar();
+    	return astro;
     }
-    
+
     /**
      * Returns the GILDAS date corresponding to a given Julian day.
      * @param jd Julian day.
-     * @return Date for a GILDAS record. 
+     * @return Date for a GILDAS record.
      */
     public static int getGILDASdate(double jd)
     {

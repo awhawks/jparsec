@@ -26,7 +26,6 @@ import jparsec.io.FileIO;
 import jparsec.util.JPARSECException;
 import jparsec.util.Logger;
 import jparsec.util.Logger.LEVEL;
-
 import nom.tam.fits.*;
 
 /**
@@ -393,10 +392,10 @@ public class FitsBinaryTable
 		}
 
 		// Move binary table header entries to the end
-		// (probably not needed, just for stetic)
+		// (probably not needed, just for esthetic)
 		h = bthdu.getHeader();
 		int tf = h.getIntValue("TFIELDS");
-		HeaderCard card[][] = new HeaderCard[4][tf];
+		String card[][] = new String[4][tf];
 		for (int i=0; i<tf; i++)
 		{
 			card[0][i] = removeCard(h, "TTYPE"+(i+1));
@@ -406,15 +405,31 @@ public class FitsBinaryTable
 		}
 		for (int i=0; i<tf; i++)
 		{
-			if (!card[0][i].equals("")) h.addLine(card[0][i]);
-			if (!card[1][i].equals("")) h.addLine(card[1][i]);
-			if (!card[2][i].equals("")) h.addLine(card[2][i]);
-			if (!card[3][i].equals("")) h.addLine(card[3][i]);
+			if (!card[0][i].equals("")) addLine(h, card[0][i]);
+			if (!card[1][i].equals("")) addLine(h, card[1][i]);
+			if (!card[2][i].equals("")) addLine(h, card[2][i]);
+			if (!card[3][i].equals("")) addLine(h, card[3][i]);
 		}
 
 		return bhdu;
 	}
 
+	private static void addLine(Header h, String s) throws HeaderCardException {
+		s = s.trim();
+		if (s.equals("")) {
+			h.addValue("", "", "");
+			return;
+		}
+		
+		String comment = "";
+		String key = FileIO.getField(1, s, "=", false).trim();
+		String val = FileIO.getField(2, s, "=", false).trim();
+		if (val.indexOf("/") > 0) comment = val.substring(val.indexOf("/")+1);
+		if (val.indexOf("'") >= 0) val = val.substring(val.indexOf("'")+1, val.lastIndexOf("'"));
+		
+		h.addValue(key, val, comment);
+	}
+	
 	/**
 	 * Creates an HDU with an Ascii table.
 	 * @param header The header for the table, excluding
@@ -685,10 +700,10 @@ public class FitsBinaryTable
 		}
 
 		// Move binary table header entries to the end
-		// (probably not needed, just for stetic)
+		// (probably not needed, just for esthetic)
 		h = bthdu.getHeader();
 		int tf = h.getIntValue("TFIELDS");
-		HeaderCard card[][] = new HeaderCard[4][tf];
+		String card[][] = new String[4][tf];
 		for (int i=0; i<tf; i++)
 		{
 			card[0][i] = removeCard(h, "TTYPE"+(i+1));
@@ -698,10 +713,10 @@ public class FitsBinaryTable
 		}
 		for (int i=0; i<tf; i++)
 		{
-			if (null != card[0][i]) h.addLine(card[0][i]);
-			if (null != card[1][i]) h.addLine(card[1][i]);
-			if (null != card[2][i]) h.addLine(card[2][i]);
-			if (null != card[3][i]) h.addLine(card[3][i]);
+			if (!card[0][i].equals("")) addLine(h, card[0][i]);
+			if (!card[1][i].equals("")) addLine(h, card[1][i]);
+			if (!card[2][i].equals("")) addLine(h, card[2][i]);
+			if (!card[3][i].equals("")) addLine(h, card[3][i]);
 		}
 
 		return bhdu;
@@ -713,16 +728,29 @@ public class FitsBinaryTable
 	 * @param key The key to search for.
 	 * @return The card, or empty string if key is not found.
 	 */
-	private static HeaderCard removeCard(Header h, String key)
+	private static String removeCard(Header h, String key)
 	{
-		HeaderCard hc = h.findCard(key);
-		if (null == hc) {
-			Logger.log(LEVEL.TRACE_LEVEL2, "Key " + key + " not found!");
-			return null;
+		String card = "";
+		boolean exist = h.containsKey(key);
+		if (exist) {
+			int nc = h.getNumberOfCards();
+			int keyN = -1;
+			for (int i=0; i<nc; i++)
+			{
+				String k = h.getKey(i);
+				if (k.equals(key)) {
+					keyN = i;
+					break;
+				}
+			}
+			if (keyN < 0) {
+				Logger.log(LEVEL.TRACE_LEVEL2, "Key "+key+" not found!");
+			} else {
+				card = h.getCard(keyN);
+				h.deleteKey(h.getKey(keyN));
+			}
 		}
-
-		h.deleteKey(key);
-		return hc;
+		return card;
 	}
 
 	/**
@@ -813,7 +841,7 @@ public class FitsBinaryTable
 	/**
 	 * The set of different data types.
 	 */
-	public static enum COLUMN_FORMAT {
+	public enum COLUMN_FORMAT {
 		/** ID constant for integer column format. */
 		INT_J,
 		/** ID constant for string column format. */

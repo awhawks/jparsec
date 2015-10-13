@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.time.calendar;
 
 import java.io.Serializable;
@@ -28,13 +28,13 @@ import jparsec.observer.CityElement;
 /**
  * Implements the Future Bahai calendar. See Calendrical Calculations for
  * reference.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
 public class BahaiFuture implements Serializable
 {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Major.
@@ -75,7 +75,7 @@ public class BahaiFuture implements Serializable
 
 	/**
 	 * Julian day constructor.
-	 * 
+	 *
 	 * @param jd Julian day.
 	 */
 	public BahaiFuture(int jd)
@@ -85,7 +85,7 @@ public class BahaiFuture implements Serializable
 
 	/**
 	 * Explicit constructor.
-	 * 
+	 *
 	 * @param bmajor Major.
 	 * @param bcycle Cycle.
 	 * @param byear Year.
@@ -103,7 +103,7 @@ public class BahaiFuture implements Serializable
 
 	/**
 	 * To fixed date.
-	 * 
+	 *
 	 * @param major Major
 	 * @param cycle Cycle.
 	 * @param year Year.
@@ -133,7 +133,7 @@ public class BahaiFuture implements Serializable
 
 	/**
 	 * Sets the date from the fixed day.
-	 * 
+	 *
 	 * @param l Fixed day.
 	 */
 	public void fromFixed(long l)
@@ -155,7 +155,7 @@ public class BahaiFuture implements Serializable
 
 	/**
 	 * Sunset in Haifa.
-	 * 
+	 *
 	 * @param l Fixed day.
 	 * @return Sunset time.
 	 */
@@ -172,7 +172,7 @@ public class BahaiFuture implements Serializable
 
 	/**
 	 * New year before certain date.
-	 * 
+	 *
 	 * @param l Fixed day.
 	 * @return Previous new year.
 	 */
@@ -187,7 +187,7 @@ public class BahaiFuture implements Serializable
 
 	/**
 	 * Ridvan feast.
-	 * 
+	 *
 	 * @param l Fixed date.
 	 * @return Ridvan date.
 	 */
@@ -202,7 +202,7 @@ public class BahaiFuture implements Serializable
 
 	/**
 	 * Transforms a Bahai date into a Julian day
-	 * 
+	 *
 	 * @param major Major
 	 * @param cycle Cycle.
 	 * @param year Year.
@@ -226,7 +226,7 @@ public class BahaiFuture implements Serializable
 
 	/**
 	 * Sets a Bahai date with a given Julian day
-	 * 
+	 *
 	 * @param jd Julian day.
 	 */
 	public void fromJulianDay(int jd)

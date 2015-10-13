@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.time.calendar;
 
 import jparsec.graph.DataSet;
@@ -30,7 +30,7 @@ import jparsec.util.Translate.LANGUAGE;
 
 /**
  * A support class for the calendars, based on Calendrical Calculations book.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -38,7 +38,7 @@ public class Calendar
 {
 	// private constructor so that this class cannot be instantiated.
 	private Calendar() {}
-	
+
 	private static class ob
 	{
 		private static final double coeffObliquity[] =
@@ -319,7 +319,7 @@ public class Calendar
 
 	/**
 	 * Returns difference between two dates.
-	 * 
+	 *
 	 * @param l Date.
 	 * @param l1 Date.
 	 * @return l1 - l.
@@ -331,7 +331,7 @@ public class Calendar
 
 	/**
 	 * Returns module result.
-	 * 
+	 *
 	 * @param d Value.
 	 * @param d1 Value.
 	 * @return d % d1.
@@ -343,7 +343,7 @@ public class Calendar
 
 	/**
 	 * Returns module result.
-	 * 
+	 *
 	 * @param i Value.
 	 * @param j Value.
 	 * @return i % j.
@@ -355,7 +355,7 @@ public class Calendar
 
 	/**
 	 * Returns module result.
-	 * 
+	 *
 	 * @param l Value.
 	 * @param l1 Value.
 	 * @return l % l1.
@@ -367,7 +367,7 @@ public class Calendar
 
 	/**
 	 * Returns quotient.
-	 * 
+	 *
 	 * @param d Value.
 	 * @param d1 Value.
 	 * @return d/d1.
@@ -379,7 +379,7 @@ public class Calendar
 
 	/**
 	 * Returns adjusted module.
-	 * 
+	 *
 	 * @param i Value.
 	 * @param j Value.
 	 * @return j + i % -j.
@@ -391,7 +391,7 @@ public class Calendar
 
 	/**
 	 * Returns adjusted module.
-	 * 
+	 *
 	 * @param l Value.
 	 * @param l1 Value.
 	 * @return l1 + l % -l1.
@@ -403,7 +403,7 @@ public class Calendar
 
 	/**
 	 * Returns adjusted module.
-	 * 
+	 *
 	 * @param d Value.
 	 * @param d1 Value.
 	 * @return d1 + d % -d1.
@@ -415,7 +415,7 @@ public class Calendar
 
 	/**
 	 * Returns day of week from fixed day.
-	 * 
+	 *
 	 * @param l Fixed date.
 	 * @return Day of week.
 	 */
@@ -431,7 +431,7 @@ public class Calendar
 
 	/**
 	 * Returns nearest k day.
-	 * 
+	 *
 	 * @param l Fixed day.
 	 * @param k K day.
 	 * @return Nearest day.
@@ -443,7 +443,7 @@ public class Calendar
 
 	/**
 	 * Returns k day after.
-	 * 
+	 *
 	 * @param l Fixed day.
 	 * @param k K day.
 	 * @return After day.
@@ -460,7 +460,7 @@ public class Calendar
 
 	/**
 	 * Returns nth K day.
-	 * 
+	 *
 	 * @param n n. If positive will be before l, otherwise after.
 	 * @param k K day
 	 * @param l Fixed day.
@@ -476,7 +476,7 @@ public class Calendar
 
 	/**
 	 * Returns first k day.
-	 * 
+	 *
 	 * @param k K day.
 	 * @param l Fixed day.
 	 * @return Such day.
@@ -488,7 +488,7 @@ public class Calendar
 
 	/**
 	 * Returns last k day.
-	 * 
+	 *
 	 * @param k K day.
 	 * @param l Fixed day.
 	 * @return Such day.
@@ -531,7 +531,7 @@ public class Calendar
 
 	/**
 	 * Returns degrees.
-	 * 
+	 *
 	 * @param d Degrees.
 	 * @param d1 Minutes.
 	 * @param d2 Arcseconds.
@@ -544,7 +544,7 @@ public class Calendar
 
 	/**
 	 * Sin function using input angle in degrees.
-	 * 
+	 *
 	 * @param d Angle.
 	 * @return Sine.
 	 */
@@ -586,7 +586,7 @@ public class Calendar
 
 	/**
 	 * Returns fixed date from Julian day.
-	 * 
+	 *
 	 * @param d Julian day.
 	 * @return Fixed date.
 	 */
@@ -597,14 +597,14 @@ public class Calendar
 
 	/**
 	 * Returns Julian day from a fixed day.
-	 * 
+	 *
 	 * @param l Fixed day.
 	 * @return Julian day.
 	 */
 	 public static double jdFromFixed(long l) { return jdFromMoment(l); }
-	 
-	 private static double jdFromMoment(double d) {return d +1721424.5; } 
-	
+
+	 private static double jdFromMoment(double d) {return d +1721424.5; }
+
 	private static double julianCenturies(double d)
 	{
 		return (dynamicalFromUniversal(d) - J2000) / 36525.0;
@@ -669,7 +669,7 @@ public class Calendar
 
 	/**
 	 * Apparent time from local.
-	 * 
+	 *
 	 * @param d Julian day.
 	 * @return Equation of time.
 	 */
@@ -680,7 +680,7 @@ public class Calendar
 
 	/**
 	 * Solar longitude.
-	 * 
+	 *
 	 * @param d Julian day.
 	 * @return Solar longitude.
 	 */
@@ -831,7 +831,7 @@ public class Calendar
 	}
 
 	private static boolean visibleCrescent(long l, CityElement location) throws JPARSECException
-	{  
+	{
 		double d = universalFromStandard(dusk(l - 1L, location, 4.5), location);
 		double d1 = lunarPhase(d);
 		double d2 = lunarAltitude(d, location);
@@ -857,7 +857,7 @@ public class Calendar
 
 	/**
 	 * Gets the time of some solar longitude.
-	 * 
+	 *
 	 * @param d Fixed day before now, usually the beginning of the year.
 	 * @param d1 Longitude of the Sun to calculate. Some constants defined in this
 	 * class, like {@linkplain Calendar#SPRING}, {@linkplain Calendar#SUMMER}, and so on.
@@ -884,7 +884,7 @@ public class Calendar
 
 	/**
 	 * Gets previous new Moon.
-	 * 
+	 *
 	 * @param d Fixed day.
 	 * @return New Moon.
 	 */
@@ -902,7 +902,7 @@ public class Calendar
 
 	/**
 	 * Gets next new Moon.
-	 * 
+	 *
 	 * @param d Fixed day.
 	 * @return New Moon.
 	 */
@@ -919,7 +919,7 @@ public class Calendar
 
 	/**
 	 * Gets lunar phase.
-	 * 
+	 *
 	 * @param d Fixed date.
 	 * @param d1 Phase.
 	 * @return Next lunar phase.
@@ -944,7 +944,7 @@ public class Calendar
 
 	/**
 	 * Returns name from number.
-	 * 
+	 *
 	 * @param l Number.
 	 * @param as Name.
 	 * @return Name.
@@ -956,7 +956,7 @@ public class Calendar
 
 	/**
 	 * Returns name from day of week.
-	 * 
+	 *
 	 * @param l Day of week.
 	 * @param as Name.
 	 * @return Name.
@@ -968,7 +968,7 @@ public class Calendar
 
 	/**
 	 * Returns name from month.
-	 * 
+	 *
 	 * @param l Month.
 	 * @param as Set of names.
 	 * @return Name.
@@ -977,7 +977,7 @@ public class Calendar
 	{
 		return nameFromNumber(l, as);
 	}
-	
+
 	/**
 	 * Returns the index of a name in a given set.
 	 * @param name Name.
@@ -996,7 +996,7 @@ public class Calendar
 
 	/**
 	 * Gets the time of certain previous solar longitude.
-	 * 
+	 *
 	 * @param d Julian day.
 	 * @param d1 Solar longitude.
 	 * @return Fixed day.
@@ -1011,7 +1011,7 @@ public class Calendar
 
 	/**
 	 * Transforms time scale.
-	 * 
+	 *
 	 * @param d Fixed day.
 	 * @param location Location.
 	 * @return Resulting day.
@@ -1023,7 +1023,7 @@ public class Calendar
 
 	/**
 	 * Transforms time scale.
-	 * 
+	 *
 	 * @param d Fixed day.
 	 * @param location Location.
 	 * @return Resulting day.
@@ -1035,7 +1035,7 @@ public class Calendar
 
 	/**
 	 * Transforms time scale.
-	 * 
+	 *
 	 * @param d Fixed day.
 	 * @param location Location.
 	 * @return Resulting day.
@@ -1047,7 +1047,7 @@ public class Calendar
 
 	/**
 	 * Transforms time scale.
-	 * 
+	 *
 	 * @param d Fixed day.
 	 * @param location Location.
 	 * @return Resulting day.
@@ -1059,7 +1059,7 @@ public class Calendar
 
 	/**
 	 * Transforms time scale.
-	 * 
+	 *
 	 * @param d Fixed day.
 	 * @param location Location.
 	 * @return Resulting day.
@@ -1071,7 +1071,7 @@ public class Calendar
 
 	/**
 	 * Transforms time scale.
-	 * 
+	 *
 	 * @param d Fixed day.
 	 * @param location Location.
 	 * @return Resulting day.
@@ -1083,7 +1083,7 @@ public class Calendar
 
 	/**
 	 * Gets midday standard time.
-	 * 
+	 *
 	 * @param l Fixed day.
 	 * @param location Location.
 	 * @return Midday.
@@ -1095,7 +1095,7 @@ public class Calendar
 
 	/**
 	 * Gets midnight standard time.
-	 * 
+	 *
 	 * @param l Fixed day.
 	 * @param location Location.
 	 * @return Midnight.
@@ -1107,7 +1107,7 @@ public class Calendar
 
 	/**
 	 * Gets sunrise time.
-	 * 
+	 *
 	 * @param l Fixed day.
 	 * @param location Location.
 	 * @return Sunrise.
@@ -1124,7 +1124,7 @@ public class Calendar
 
 	/**
 	 * Gets sunset time.
-	 * 
+	 *
 	 * @param l Fixed day.
 	 * @param location Location.
 	 * @return Sunset.
@@ -1141,7 +1141,7 @@ public class Calendar
 
 	/**
 	 * Gets previous lunar phase.
-	 * 
+	 *
 	 * @param l Fixed day.
 	 * @param location Location.
 	 * @return Lunar phase event date.

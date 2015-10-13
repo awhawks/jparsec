@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */	
+ */
 package jparsec.io.device.implementation;
 
 import java.io.File;
@@ -88,7 +88,7 @@ public class WebcamCamera implements GenericCamera {
 	@Override
 	public boolean shotAndDownload(boolean keepInCamera) {
 		if (shooting) return false;
-		
+
 		shooting = true;
 		WebcamShotThread st = new WebcamShotThread();
 		st.start();
@@ -252,7 +252,7 @@ public class WebcamCamera implements GenericCamera {
 	}
 
 	private CAMERA_MODEL model;
-	
+
 	private double orientation = 0;
 	private IMAGE_ID id = IMAGE_ID.TEST;
 	private String lastImage = null;
@@ -266,8 +266,8 @@ public class WebcamCamera implements GenericCamera {
 
 	// Number of images to skip before starting, since some webcams require some time
 	// to give an output with correct brightness
-	private static final int SKIP_SHOTS = 10; 
-	
+	private static final int SKIP_SHOTS = 10;
+
 	/**
 	 * The constructor for a webcam.
 	 * @param model The camera model.
@@ -287,7 +287,7 @@ public class WebcamCamera implements GenericCamera {
 		@Override
 		public void run() {
 			shooting = true;
-			
+
 			// Control minimum time between shots
 			if (lastShot != null) {
 				TimeElement now = new TimeElement();
@@ -306,7 +306,7 @@ public class WebcamCamera implements GenericCamera {
 			if (t.equals(Translate.translate(1180))) t = ""+getCCDorBulbModeTime();
 			try {
 				double timeS = DataSet.getDoubleValueWithoutLimit(t);
-				lastShot.add(timeS / Constant.SECONDS_PER_DAY); 
+				lastShot.add(timeS / Constant.SECONDS_PER_DAY);
 			} catch (JPARSECException e) { e.printStackTrace(); }
 
 			try {
@@ -318,12 +318,12 @@ public class WebcamCamera implements GenericCamera {
 			shouldStop = true;
 			shooting = false;
 		}
-		
+
 		/** Returns if the thread is working or not. */
 		public boolean isWorking() {
 			return !shouldStop;
 		}
-		
+
 		private void createImage() throws JPARSECException {
 			String command = "mplayer -vo png -frames "+(bulbTime+SKIP_SHOTS)+" -nosound tv:// -tv driver=v4l2:device="+device;
 			Process pr = ApplicationLauncher.executeCommand(command, null, new File(path));

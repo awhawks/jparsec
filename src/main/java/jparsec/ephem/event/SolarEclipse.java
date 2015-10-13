@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -44,19 +44,19 @@ import jparsec.util.Translate;
  * independent from the ephemerides theory. It is quite fast if used
  * correctly. The effect of the mountains on lunar limb is ignored.
  * <P>
- * One advantage of this pure geometric approach is the possibility 
+ * One advantage of this pure geometric approach is the possibility
  * of calculating solar eclipses from other satellites (not the Moon).
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
 public class SolarEclipse
 {
-	private TARGET targetBody;
+	private TARGET targetBody = null;
 
 	/**
 	 * Checks for events.
-	 * 
+	 *
 	 * @param time Time object.
 	 * @param obs Observer object.
 	 * @param eph Ephemeris properties.
@@ -72,7 +72,7 @@ public class SolarEclipse
 		if (alg == ALGORITHM.NATURAL_SATELLITE) alg = ALGORITHM.MOSHIER;
 		if (targetBody != TARGET.Moon) new_eph.algorithm = ALGORITHM.NATURAL_SATELLITE;
 		EphemElement ephem_moon = Ephem.getEphemeris(time, obs, new_eph, false);
-		
+
 		new_eph.targetBody = TARGET.SUN;
 		new_eph.algorithm = alg;
 		EphemElement ephem = Ephem.getEphemeris(time, obs, new_eph, false);
@@ -155,11 +155,11 @@ public class SolarEclipse
 
 	private double jdMax;
 	private double[] events;
-	
+
 	/**
 	 * The set of eclipse types for both solar and lunar eclipses.
 	 */
-	public static enum ECLIPSE_TYPE {
+	public enum ECLIPSE_TYPE {
 		/** Constant ID for a total solar/lunar eclipse. */
 		TOTAL,
 		/** Constant ID for a partial solar/lunar eclipse. */
@@ -173,7 +173,7 @@ public class SolarEclipse
 		 */
 		NO_ECLIPSE
 	};
-	
+
 	/**
 	 * Eclipse type.
 	 */
@@ -184,28 +184,28 @@ public class SolarEclipse
 	 * Immediately before, or the day before a certain solar eclipse starts
 	 * (shadow ingress). Precision in the results is up to 0.5 seconds.
 	 * Comparisons with NASA published values (calculations by Fred Spenak) show
-	 * a mean difference of 1 second. The origin of this minimum discrepancy is 
-	 * probably due to the fact that here the difference between the Moon center 
-	 * of mass and its geometric center is not corrected. Otherwise, the irregular 
-	 * limb profile of the Moon (not taken into account here nor in Spenak's 
+	 * a mean difference of 1 second. The origin of this minimum discrepancy is
+	 * probably due to the fact that here the difference between the Moon center
+	 * of mass and its geometric center is not corrected. Otherwise, the irregular
+	 * limb profile of the Moon (not taken into account here nor in Spenak's
 	 * calculations) produces more effects than this negligible discrepancy.
-	 * 
+	 *
 	 * Events are:<P>
 	 * - Shadow ingress.<P>
 	 * - Shadow total/annular ingress.<P>
 	 * - Shadow total/annular egress.<P>
 	 * - Shadow egress.
-	 * 
+	 *
 	 * Eclipse type (total, partial, annular) is set in static variable type.
-	 * 
+	 *
 	 * If you are calculation eclipses for current dates the Moshier algorithm will give a
 	 * good performance. For better precision in ancient times use ELP2000, although internal
 	 * precision of the algorithm will be reduced to 1 second instead of 0.5s to improve
 	 * performance.
-	 * 
+	 *
 	 * Moon/Sun elevation above local horizon is not considered in this method, so output
 	 * events can be not visible by the input observer.
-	 * 
+	 *
 	 * @param time Time object with the date of the eclipse before it starts, but as close
 	 * as possible.
 	 * @param obs Observer object.
@@ -222,28 +222,28 @@ public class SolarEclipse
 	 * Obtain events for the next solar eclipse in TDB. Input time should be
 	 * Immediately before, or the day before a certain solar eclipse starts
 	 * (shadow ingress). This constructor is similar to the other one, but
-	 * it is intended to be used to calculate eclipses produced by other 
+	 * it is intended to be used to calculate eclipses produced by other
 	 * satellites, not the Moon. So it adds an accuracy parameter to control
-	 * the sensitivity of the search. 
-	 * 
+	 * the sensitivity of the search.
+	 *
 	 * Events are:<P>
 	 * - Shadow ingress.<P>
 	 * - Shadow total/annular ingress.<P>
 	 * - Shadow total/annular egress.<P>
 	 * - Shadow egress.
-	 * 
+	 *
 	 * Eclipse type (total, partial, annular) is set in static variable type.
-	 * 
+	 *
 	 * Moon/Sun elevation above local horizon is not considered in this method, so output
 	 * events can be not visible by the input observer.
-	 * 
+	 *
 	 * @param time Time object with the date of the eclipse before it starts, but as close
 	 * as possible.
 	 * @param obs Observer object.
 	 * @param eph Ephemeris properties.
-	 * @param accuracy Accuracy of the iterative search in seconds for eclipses produced by 
-	 * any moon besides the Moon. In case of solar eclipses from Earth or input values <= 0 this value 
-	 * will have no effect. Default value is 1s (for solar eclipses from Earth is irrelevant, it is set 
+	 * @param accuracy Accuracy of the iterative search in seconds for eclipses produced by
+	 * any moon besides the Moon. In case of solar eclipses from Earth or input values <= 0 this value
+	 * will have no effect. Default value is 1s (for solar eclipses from Earth is irrelevant, it is set
 	 * automatically).
 	 * @throws JPARSECException Thrown if the calculation fails.
 	 */
@@ -254,12 +254,12 @@ public class SolarEclipse
 		this.setAccuracy(accuracy);
 		init(time, obs, eph);
 	}
-	
+
 	private void init(TimeElement time, ObserverElement obs, EphemerisElement eph) throws JPARSECException {
 		if (eph.targetBody != TARGET.Moon && !eph.targetBody.isNaturalSatellite()) throw new JPARSECException("Target body must be the Moon or any other natural satellite.");
 		if (eph.targetBody.getCentralBody() != obs.getMotherBody()) throw new JPARSECException("Target body must orbit around the observer.");
 		targetBody = eph.targetBody;
-		
+
 		double jd = TimeScale.getJD(time, obs, eph, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
 		double precission = 0.5 / Constant.SECONDS_PER_DAY;
 		if (eph.algorithm == ALGORITHM.VSOP87_ELP2000ForMoon) precission = 1.0 / Constant.SECONDS_PER_DAY;
@@ -335,7 +335,7 @@ public class SolarEclipse
 			} while (out[3] == 0.0);
 		}
 		events = out;
-		
+
 		RenderEclipse re = null;
 		jdMax = (events[0] + events[3]) * 0.5;
 		if (events[1] != 0.0) jdMax = (events[1] + events[2]) * 0.5;
@@ -343,15 +343,15 @@ public class SolarEclipse
 			try {
 				re = new RenderEclipse(new AstroDate(events[0] - 0.25));
 			} catch (Exception exc) {
-				re = new RenderEclipse(new AstroDate(events[0] + 0.25));			
+				re = new RenderEclipse(new AstroDate(events[0] + 0.25));
 			}
 			jdMax = TimeScale.getJD(re.solarEclipseMaximum(obs, eph), obs, eph, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
 		}
 	}
-	
+
 	/**
 	 * Returns type of the current calculated eclipse.
-	 * 
+	 *
 	 * @return Eclipse type, such as annular, partial, or total.
 	 */
 	public String getEclipseType()
@@ -404,13 +404,13 @@ public class SolarEclipse
 				out[index] = event[i].clone();
 			}
 		}
-		
+
 		return out;
 	}
-	
+
 	/**
 	 * Return eclipse maximum as Julian day.
-	 * 
+	 *
 	 * @return Eclipse maximum in TDB.
 	 * @throws JPARSECException If an error occurs.
 	 */

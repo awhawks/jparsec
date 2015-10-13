@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.time;
 
 import java.util.Calendar;
@@ -32,7 +32,7 @@ import jparsec.util.JPARSECException;
  * <P>
  * Functions related to Daylight Saving Time work using
  * the current system settings, so its depends on the computer.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @author M. Huss
  * @version 1.0
@@ -41,11 +41,11 @@ public class DateTimeOps
 {
 	// private constructor so that this class cannot be instantiated.
 	private DateTimeOps() {}
-	
+
 	/**
 	 * Calculate the current Daylight Time offset ( 0 or -1 ). <BR>
 	 * Add the result of this function to the current time to adjust.
-	 * 
+	 *
 	 * @param cal A <TT>java.util.Calendar</TT> object which is used to get
 	 *        the <TT>DST_OFFSET</TT> from (e.g., <TT>java.util.GregorianCalendar</TT>).
 	 * @return <TT>DST_OFFSET</TT> in hours if Daylight time is in effect, 0
@@ -60,7 +60,7 @@ public class DateTimeOps
 	 * Calculate the current Daylight Time offset. <BR>
 	 * Add the result of this function to the current time to adjust.<BR>
 	 * This function uses a <TT>GregorianCalendar</TT> object.
-	 * 
+	 *
 	 * @return <TT>DST_OFFSET</TT> in hours if Daylight time is in effect, 0
 	 *         otherwise.
 	 */
@@ -72,7 +72,7 @@ public class DateTimeOps
 	/**
 	 * Calculate the current Daylight Time offset in fractional days. <BR>
 	 * Add the result of this function to the current time to adjust.
-	 * 
+	 *
 	 * @param cal A <TT>java.util.Calendar</TT> object which is used to get
 	 *        the <TT>DST_OFFSET</TT>.
 	 * @return <TT>DST_OFFSET</TT> in days if Daylight time is in effect, 0
@@ -87,7 +87,7 @@ public class DateTimeOps
 	 * Calculate the current Daylight Time offset in fractional days. <BR>
 	 * Add the result of this function to the current time to adjust.<BR>
 	 * This function uses a <TT>GregorianCalendar</TT> object.
-	 * 
+	 *
 	 * @return <TT>DST_OFFSET</TT> in days if Daylight time is in effect, 0
 	 *         otherwise.
 	 */
@@ -99,7 +99,7 @@ public class DateTimeOps
 	/**
 	 * Determine the absolute time zone offset from UTC in hours (-12 to +12)
 	 * for the spec'd Calendar.
-	 * 
+	 *
 	 * @param cal The Calendar to use.
 	 * @return The offset in hours.
 	 */
@@ -111,7 +111,7 @@ public class DateTimeOps
 	/**
 	 * Determine the absolute time zone offset from UTC in hours (-12 to +12)
 	 * using the local timezone.
-	 * 
+	 *
 	 * @return The offset in hours.
 	 */
 	public static float tzOffset()
@@ -122,7 +122,7 @@ public class DateTimeOps
 	/**
 	 * Determine the absolute time zone offset from UTC in fractional days (-0.5
 	 * to +0.5).
-	 * 
+	 *
 	 * @param cal The Calendar to use.
 	 * @return The offset in decimal day.
 	 */
@@ -134,7 +134,7 @@ public class DateTimeOps
 	/**
 	 * Determine the absolute time zone offset from UTC in fractional days (-0.5
 	 * to +0.5).
-	 * 
+	 *
 	 * @return The offset in decimal day.
 	 */
 	public static double tzOffsetInDays()
@@ -146,7 +146,7 @@ public class DateTimeOps
 	 * Format a time as a <TT>String</TT> using the format <TT>HH:MM</TT>.
 	 * <BR>
 	 * The returned string will be "--:--" if the time is invalid.
-	 * 
+	 *
 	 * @param t The time to format.
 	 * @return The formatted String.
 	 */
@@ -196,8 +196,8 @@ public class DateTimeOps
 
 	/**
 	 * Returns true if the year is a leap year in the Gregorian Calendar.
-	 * 
-	 * @param year Year value, as it is given by an <TT>AstroDate</TT> instance 
+	 *
+	 * @param year Year value, as it is given by an <TT>AstroDate</TT> instance
 	 * (-2 = 2 B.C. not the 'astronomical' year).
 	 * @return true if it is a leap year, false otherwise.
 	 */
@@ -207,17 +207,17 @@ public class DateTimeOps
 		int aux1;
 		int aux2;
 		int aux3;
-	
+
 		if (year < 0) year ++;
 		aux1 = year % 4;
 		aux2 = year % 100;
 		aux3 = year % 400;
-	
+
 		if (aux1 == 0 && (aux2 == 0 && aux3 == 0 || aux2 != 0))
 		{
 			isLeap = true;
 		}
-	
+
 		return isLeap;
 	}
 
@@ -228,7 +228,7 @@ public class DateTimeOps
 
 	/**
 	 * Returns the number of days in a given month in the Gregorian calendar.
-	 * @param year Year value, as it is given by an <TT>AstroDate</TT> instance 
+	 * @param year Year value, as it is given by an <TT>AstroDate</TT> instance
 	 * (-2 = 2 B.C. not the 'astronomical' year).
 	 * @param month Month.
 	 * @return Days in month.
@@ -249,7 +249,7 @@ public class DateTimeOps
 	 * Calculate the Julian day number for the date when Daylight time starts in
 	 * a given year in some countries of the north hemisphere, or ends in other
 	 * countries in the southern one.
-	 * 
+	 *
 	 * @param year The year of interest.
 	 * @return The corresponding Julian day.
 	 * @throws JPARSECException If the day is invalid.
@@ -261,7 +261,7 @@ public class DateTimeOps
 		while (6 != (jd % 7))
 			// Sunday
 			jd--;
-	
+
 		return (double) (jd - 0.5);
 	}
 
@@ -269,7 +269,7 @@ public class DateTimeOps
 	 * Calculate the Julian day number for the date when Daylight time ends in
 	 * some countries of the north hemisphere, or starts in others in the
 	 * southern one.
-	 * 
+	 *
 	 * @param year The year of interest.
 	 * @return The corresponding Julian day.
 	 * @throws JPARSECException If the day is invalid.
@@ -281,7 +281,7 @@ public class DateTimeOps
 		while (6 != (jd % 7))
 			// Sunday
 			jd--;
-	
+
 		return (double) (jd - 0.5);
 	}
 
@@ -289,7 +289,7 @@ public class DateTimeOps
 	 * Calculate the Julian day number for the date when Daylight time starts in
 	 * a given year in some countries in the north hemisphere, or ends in others
 	 * in the southern one.
-	 * 
+	 *
 	 * @param year The year of interest.
 	 * @return The corresponding Julian day.
 	 * @throws JPARSECException If the day is invalid.
@@ -301,7 +301,7 @@ public class DateTimeOps
 		while (6 != (jd % 7))
 			// Sunday
 			jd--;
-	
+
 		return (double) (jd - 0.5);
 	}
 
@@ -313,7 +313,7 @@ public class DateTimeOps
 	 * the DST ends in the first Sunday of November in that country and Canada,
 	 * except in the following regions that maintain the previous rule: Arizona,
 	 * Hawai, Puerto Rico, Virgin Islands, and American Samoa.
-	 * 
+	 *
 	 * @param year The year of interest.
 	 * @return The corresponding Julian day.
 	 * @throws JPARSECException If the day is invalid.
@@ -325,14 +325,14 @@ public class DateTimeOps
 		while (6 != (jd % 7))
 			// Sunday
 			jd--;
-	
+
 		return (double) (jd - 0.5);
 	}
 
 	/**
 	 * Calculate the Julian day number for the date when Daylight time ends in a
 	 * given year (2007 and after) in United States.
-	 * 
+	 *
 	 * @param year The year of interest.
 	 * @return The corresponding Julian day.
 	 * @throws JPARSECException If the day is invalid.
@@ -344,14 +344,14 @@ public class DateTimeOps
 		while (6 != (jd % 7))
 			// Sunday
 			jd++;
-	
+
 		return (double) (jd - 0.5);
 	}
 
 	/**
 	 * Calculate the Julian day number for the date when Daylight time starts in
 	 * a given year (2007 and after) in United States.
-	 * 
+	 *
 	 * @param year The year of interest.
 	 * @return The corresponding Julian day.
 	 * @throws JPARSECException If the day is invalid.
@@ -363,20 +363,20 @@ public class DateTimeOps
 		while (6 != (jd % 7))
 			// Monday
 			jd++;
-	
+
 		return (double) (jd - 0.5 + 7.0);
 	}
 
 	/**
 	 * Calculate the Julian day number for the date when Daylight time started
 	 * in a given year (before 2007) in United States and Canada. Note that
-	 * as of August 2005 law, approved by the congress of the USA, now the DST 
+	 * as of August 2005 law, approved by the congress of the USA, now the DST
 	 * starts in the second Sunday of March.
 	 * <P>
 	 * Please note that the new 'rule' is not applied in the whole USA, for
 	 * example in Arizona, Hawai, Puerto Rico, Virgin Islands, and American
 	 * Samoa.
-	 * 
+	 *
 	 * @param year The year of interest.
 	 * @return The corresponding Julian day.
 	 * @throws JPARSECException If the day is invalid.
@@ -388,7 +388,7 @@ public class DateTimeOps
 		while (6 != (jd % 7))
 			// Sunday
 			jd++;
-	
+
 		return (double) (jd - 0.5);
 	}
 }

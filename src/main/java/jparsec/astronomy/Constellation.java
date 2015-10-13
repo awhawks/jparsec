@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.astronomy;
 
 import java.util.ArrayList;
@@ -39,7 +39,7 @@ import jparsec.util.JPARSECException;
 /**
  * This class contains methods to get the constellation corresponding to a
  * given equatorial position.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -47,17 +47,17 @@ public class Constellation
 {
 	// private constructor so that this class cannot be instantiated.
 	private Constellation() {}
-	
+
 	/**
 	 * Types of constellations names.
 	 */
-	public static enum CONSTELLATION_NAME {
+	public enum CONSTELLATION_NAME {
 		/** Symbolic constant for Latin constellation names. */
 		LATIN,
 		/** Symbolic constant for Spanish constellation names. */
 		SPANISH,
-		/** Symbolic constant for Spanish constellation names with alternative 
-		 * names for some Zodiacal constellations. Gemelos is shown as 
+		/** Symbolic constant for Spanish constellation names with alternative
+		 * names for some Zodiacal constellations. Gemelos is shown as
 		 * G&eacute;minis, for instance. */
 		SPANISH_WITH_ALTERNATE_ZODIAC,
 		/** Symbolic constant for abbreviated constellation names. */
@@ -65,20 +65,20 @@ public class Constellation
 		/** Symbolic constant for English constellation names. */
 		ENGLISH
 	};
-	
+
 	/**
 	 * Latin constellation names for the array of limits.
 	 */
 	private static final String CONSTELLATION_NAMES_FOR_LIMITS[] =
-	{ "Andromeda", "Antlia", "Apus", "Aquila", "Aquarius", "Aries", "Ara", "Auriga", "Bootes", "Caelum", "Camelopardalis", 
-		"Cancer", "Capricornus", "Carina", "Cassiopeia", "Centaurus", "Cepheus", "Cetus", "Chamaeleon", "Circinus", "Canis Major", 
-		"Canis Minor", "Cancer", "Columba", "Coma Berenices", "Corona Australis", "Corona Borealis", "Crater", "Crux", 
-		"Corvus", "Canes Venatici", "Cygnus", "Delphinus", "Dorado", "Draco", "Equuleus", "Eridanus", "Fornax", "Gemini", 
-		"Grus", "Hercules", "Horologium", "Hydra", "Hydrus", "Indus", "Lacerta", "Leo", "Lepus", "Libra", "Leo Minor", 
-		"Lupus", "Lynx", "Lyra", "Mensa", "Microscopium", "Monoceros", "Musca", "Norma", "Octans", "Ophiuchus", "Orion", 
-		"Pavo", "Pegasus", "Perseus", "Phoenix", "Pictor", "Piscis Austrinus", "Pisces", "Puppis", "Pyxis", "Reticulum", 
-		"Sculptor", "Scorpius", "Scutum", "Serpens Caput", "Sextans", "Sagitta", "Sagittarius", "Taurus", "Telescopium", 
-		"Triangulum Australe", "Triangulum", "Tucana", "Ursa Major", "Ursa Minor", "Vela", "Virgo", "Volans", "Vulpecula", 
+	{ "Andromeda", "Antlia", "Apus", "Aquila", "Aquarius", "Aries", "Ara", "Auriga", "Bootes", "Caelum", "Camelopardalis",
+		"Cancer", "Capricornus", "Carina", "Cassiopeia", "Centaurus", "Cepheus", "Cetus", "Chamaeleon", "Circinus", "Canis Major",
+		"Canis Minor", "Cancer", "Columba", "Coma Berenices", "Corona Australis", "Corona Borealis", "Crater", "Crux",
+		"Corvus", "Canes Venatici", "Cygnus", "Delphinus", "Dorado", "Draco", "Equuleus", "Eridanus", "Fornax", "Gemini",
+		"Grus", "Hercules", "Horologium", "Hydra", "Hydrus", "Indus", "Lacerta", "Leo", "Lepus", "Libra", "Leo Minor",
+		"Lupus", "Lynx", "Lyra", "Mensa", "Microscopium", "Monoceros", "Musca", "Norma", "Octans", "Ophiuchus", "Orion",
+		"Pavo", "Pegasus", "Perseus", "Phoenix", "Pictor", "Piscis Austrinus", "Pisces", "Puppis", "Pyxis", "Reticulum",
+		"Sculptor", "Scorpius", "Scutum", "Serpens Caput", "Sextans", "Sagitta", "Sagittarius", "Taurus", "Telescopium",
+		"Triangulum Australe", "Triangulum", "Tucana", "Ursa Major", "Ursa Minor", "Vela", "Virgo", "Volans", "Vulpecula",
 		"Serpens Cauda"};
 
 	private static final String CONSTELLATION_ABBREV_FOR_LIMITS[] = {
@@ -90,24 +90,24 @@ public class Constellation
 		"Lup", "Lyn", "Lyr", "Men", "Mic", "Mon", "Mus", "Nor", "Oct", "Oph", "Ori",
 		"Pav",  "Peg", "Per", "Phe", "Pic", "PsA", "Psc", "Pup", "Pyx", "Ret",
 		"Scl", "Sco", "Sct", "Ser", "Sex", "Sge", "Sgr", "Tau", "Tel",
-		"Tra", "Tri", "Tyc", "UMa", "UMi", "Vel", "Vir", "Vol", "Vul", 
+		"Tra", "Tri", "Tyc", "UMa", "UMi", "Vel", "Vir", "Vol", "Vul",
 		"Ser"};
-	
+
 	// Note Cancer is repeated, so we use here a public array corrected for this
-	
+
 	/**
 	 * Latin constellation names, corresponding to the possible values of {@linkplain EphemElement#constellation}.
 	 */
 	public static final String CONSTELLATION_NAMES[] =
-	{ "Andromeda", "Antlia", "Apus", "Aquila", "Aquarius", "Ara", "Aries", "Auriga", "Bootes", "Caelum", "Camelopardalis", 
-		"Capricornus", "Carina", "Cassiopeia", "Centaurus", "Cepheus", "Cetus", "Chamaeleon", "Circinus", "Canis Major", 
-		"Canis Minor", "Cancer", "Columba", "Coma Berenices", "Corona Australis", "Corona Borealis", "Crater", "Crux", 
-		"Corvus", "Canes Venatici", "Cygnus", "Delphinus", "Dorado", "Draco", "Equuleus", "Eridanus", "Fornax", "Gemini", 
-		"Grus", "Hercules", "Horologium", "Hydra", "Hydrus", "Indus", "Lacerta", "Leo", "Lepus", "Libra", "Leo Minor", 
-		"Lupus", "Lynx", "Lyra", "Mensa", "Microscopium", "Monoceros", "Musca", "Norma", "Octans", "Ophiuchus", "Orion", 
-		"Pavo", "Pegasus", "Perseus", "Phoenix", "Pictor", "Piscis Austrinus", "Pisces", "Puppis", "Pyxis", "Reticulum", 
-		"Sculptor", "Scorpius", "Scutum", "Serpens Caput", "Serpens Cauda", "Sextans", "Sagitta", "Sagittarius", "Taurus", 
-		"Telescopium", "Triangulum Australe", "Triangulum", "Tucana", "Ursa Major", "Ursa Minor", "Vela", "Virgo", "Volans", 
+	{ "Andromeda", "Antlia", "Apus", "Aquila", "Aquarius", "Ara", "Aries", "Auriga", "Bootes", "Caelum", "Camelopardalis",
+		"Capricornus", "Carina", "Cassiopeia", "Centaurus", "Cepheus", "Cetus", "Chamaeleon", "Circinus", "Canis Major",
+		"Canis Minor", "Cancer", "Columba", "Coma Berenices", "Corona Australis", "Corona Borealis", "Crater", "Crux",
+		"Corvus", "Canes Venatici", "Cygnus", "Delphinus", "Dorado", "Draco", "Equuleus", "Eridanus", "Fornax", "Gemini",
+		"Grus", "Hercules", "Horologium", "Hydra", "Hydrus", "Indus", "Lacerta", "Leo", "Lepus", "Libra", "Leo Minor",
+		"Lupus", "Lynx", "Lyra", "Mensa", "Microscopium", "Monoceros", "Musca", "Norma", "Octans", "Ophiuchus", "Orion",
+		"Pavo", "Pegasus", "Perseus", "Phoenix", "Pictor", "Piscis Austrinus", "Pisces", "Puppis", "Pyxis", "Reticulum",
+		"Sculptor", "Scorpius", "Scutum", "Serpens Caput", "Serpens Cauda", "Sextans", "Sagitta", "Sagittarius", "Taurus",
+		"Telescopium", "Triangulum Australe", "Triangulum", "Tucana", "Ursa Major", "Ursa Minor", "Vela", "Virgo", "Volans",
 		"Vulpecula"};
 
 
@@ -217,7 +217,7 @@ public class Constellation
 	 * Pub. Astron. Soc. Pac. 99, 695, (1987).
 	 * <P>
 	 * This method comes from software by S. L. Moshier.
-	 * 
+	 *
 	 * @param ra Right ascension in radians.
 	 * @param dec Declination in radians.
 	 * @param epoch Reference epoch as a julian day.
@@ -239,7 +239,7 @@ public class Constellation
 	 * Pub. Astron. Soc. Pac. 99, 695, (1987).
 	 * <P>
 	 * This method comes from software by S. L. Moshier.
-	 * 
+	 *
 	 * @param loc Object position, should be mean astrometric referred to certain epoch.
 	 * @param epoch Reference epoch as a Julian day.
 	 * @param eph Ephemeris properties.
@@ -285,7 +285,7 @@ public class Constellation
 	 * Pub. Astron. Soc. Pac. 99, 695, (1987).
 	 * <P>
 	 * This method comes from software by S. L. Moshier.
-	 * 
+	 *
 	 * @param loc Object position, should be mean astrometric referred to certain epoch.
 	 * @param epoch Reference epoch as a Julian day.
 	 * @param eph Ephemeris properties.
@@ -322,10 +322,10 @@ public class Constellation
 
 		throw new JPARSECException("constellation not found");
 	}
-	
+
 	/**
 	 * Gets the positions of the constellations for certain date.
-	 * 
+	 *
 	 * @param jd Julian date. J2000 for catalog position.
 	 * @param type_name Type of name, constants defined in this class.
 	 *        Abbreviations by default.
@@ -391,7 +391,7 @@ public class Constellation
 
 	/**
 	 * Gets the position of the center of a constellation for certain date.
-	 * 
+	 *
 	 * @param cname Name of constellation to search.
 	 * @param jd Julian date. J2000 for catalogue position.
 	 * @param type_name Type of input name, constants defined in
@@ -445,7 +445,7 @@ public class Constellation
 				if (v0.get(i).indexOf(" "+name+" ") >= 0) break;
 			}
 		}
-		
+
 		if (v.size() == 0) throw new JPARSECException("Cannot find "+name+".");
 		if (v.size() == 1) {
 			String line = v.get(0);

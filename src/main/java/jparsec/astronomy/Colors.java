@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.astronomy;
 
 import jparsec.util.JPARSECException;
@@ -37,9 +37,9 @@ import jparsec.util.JPARSECException;
  * <P>
  * Code has been taken from Guide software. It has not been tested, use with
  * caution.<P>
- * Color index conversion is something complex and instrument dependent. For 
+ * Color index conversion is something complex and instrument dependent. For
  * a list of formulae you can check http://www.aerith.net/astro/color_conversion.html.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -47,7 +47,7 @@ public class Colors
 {
 	// private constructor so that this class cannot be instantiated.
 	private Colors() {}
-	
+
 	/*
 	 * Code to do assorted rough transformations between color systems, such as
 	 * getting a B-V value given a V-I color. I started out with FORTRAN code

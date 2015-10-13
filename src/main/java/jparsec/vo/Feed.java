@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.vo;
 
 import java.io.ByteArrayInputStream;
@@ -49,9 +49,9 @@ import jparsec.util.Version;
 
 /**
  * A class to read and write RSS feeds. Based on the tutorial at
- * http://www.vogella.de/articles/RSSFeed/article.html 
+ * http://www.vogella.de/articles/RSSFeed/article.html
  * Images are supported in messages using enclosures.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  * @since 1.85
@@ -61,7 +61,7 @@ public class Feed {
 	private static final String RSS = "rss";
 	private static final String VERSION = "version";
 	private static final String URL = "url";
-	
+
 	private static final String TITLE = "title";
 	private static final String DESCRIPTION = "description";
 	private static final String CHANNEL = "channel";
@@ -92,7 +92,7 @@ public class Feed {
 	private String generator;
 	private final String ttl;
 	private String imgURL = null;
-	
+
 	private ArrayList<FeedMessageElement> entries = new ArrayList<FeedMessageElement>();
 
 	/**
@@ -169,7 +169,7 @@ public class Feed {
 		for (int i=0; i<entries.size(); i++) {
 			entries.remove(entries.size()-1);
 		}
-		
+
 		for (int i=0; i<messages.size(); i++) {
 			entries.add(messages.get(i));
 		}
@@ -266,7 +266,7 @@ public class Feed {
 	}
 
 	/**
-	 * 	Sets an image to the feed. Maximum width is 144, default value is 88. 
+	 * 	Sets an image to the feed. Maximum width is 144, default value is 88.
 	 * Maximum height is 400, default value is 31.
 	 * @param url The url of the image, or null.
 	 */
@@ -303,7 +303,7 @@ public class Feed {
 		label = DataSet.replaceAll(label, "JPARSEC_A", "&", true);
 		return label;
 	}
-	
+
 	/**
 	 * Reads a feed from a given URL.
 	 * @param feedUrl The feed URL.
@@ -337,7 +337,7 @@ public class Feed {
 
 			InputStream in = new ByteArrayInputStream(txt.getBytes(ReadFile.ENCODING_UTF_8));
 			//InputStream in = feedUrl.openStream(); // Problems with &lt; and &gt;
-			
+
 			XMLEventReader eventReader = inputFactory.createXMLEventReader(in);
 			// Read the XML document
 			while (eventReader.hasNext()) {
@@ -365,7 +365,7 @@ public class Feed {
 							pubdate = null;
 						}
 						event = eventReader.nextEvent();
-						
+
 						description = "";
 						title = "";
 						link = "";
@@ -390,14 +390,14 @@ public class Feed {
 						if (a != null) imgs = DataSet.addStringArray(imgs, new String[] {a.getValue()});
 						event = eventReader.nextEvent();
 						continue;
-					}					
+					}
 
 					if (event.asStartElement().getName().getLocalPart() == (IMAGE)) {
 						Attribute a = event.asStartElement().getAttributeByName(QName.valueOf(URL));
 						if (a != null) img = a.getValue();
 						event = eventReader.nextEvent();
 						continue;
-					}					
+					}
 
 					if (event.asStartElement().getName().getLocalPart() == (TITLE)) {
 						event = eventReader.nextEvent();
@@ -442,7 +442,7 @@ public class Feed {
 						copyright = event.asCharacters().getData();
 						continue;
 					}
-					
+
 					if (event.asStartElement().getName().getLocalPart() == (LAST_BUILD)) {
 						event = eventReader.nextEvent();
 						lastBuild = event.asCharacters().getData();
@@ -502,55 +502,55 @@ public class Feed {
 		try {
 			// Create a XMLOutputFactory
 			XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
-	
+
 			// Create XMLEventWriter
 			StringWriter sw = new StringWriter();
 			XMLEventWriter eventWriter = outputFactory
 					.createXMLEventWriter(sw); //FileOutputStream(outputFile));
-	
+
 			// Create a EventFactory
-	
+
 			XMLEventFactory eventFactory = XMLEventFactory.newInstance();
 			XMLEvent end = eventFactory.createDTD("\n");
-	
+
 			// Create and write Start Tag
-	
+
 			StartDocument startDocument = eventFactory.createStartDocument();
-	
+
 			eventWriter.add(startDocument);
-	
+
 			// Create open tag
 			eventWriter.add(end);
-	
+
 			StartElement rssStart = eventFactory.createStartElement("", "", RSS);
 			eventWriter.add(rssStart);
 			eventWriter.add(eventFactory.createAttribute(VERSION, "2.0"));
 			eventWriter.add(end);
-	
+
 			eventWriter.add(eventFactory.createStartElement("", "", CHANNEL));
 			eventWriter.add(end);
-	
+
 			// Write the different nodes
-	
+
 			createNode(eventWriter, TITLE, getTitle());
-	
+
 			if (!getLink().equals("")) createNode(eventWriter, LINK, getLink());
-	 
+
 			if (!getDescription().equals("")) createNode(eventWriter, DESCRIPTION, getDescription());
-	
+
 			createNode(eventWriter, LANGUAGE, getLanguage());
-	
+
 			if (!getCopyright().equals("")) createNode(eventWriter, COPYRIGHT, getCopyright());
-	
+
 			if (!getPubDate().equals("")) createNode(eventWriter, PUB_DATE, getPubDate());
-	
+
 			if (getLastBuildDate() != null) createNode(eventWriter, LAST_BUILD, getLastBuildDate());
 			if (getManagingEditor() != null) createNode(eventWriter, EDITOR, getManagingEditor());
 			if (getWebMaster() != null) createNode(eventWriter, WEB_MASTER, getWebMaster());
 			if (getCachedTime() != null) createNode(eventWriter, TTL, getCachedTime());
-			if (getGenerator() != null) createNode(eventWriter, GENERATOR, getGenerator()); 
+			if (getGenerator() != null) createNode(eventWriter, GENERATOR, getGenerator());
 			if (getFeedImage() != null && !getFeedImage().equals("")) createImageNode(eventWriter, IMAGE, getFeedImage(), getTitle(), getLink());
-	
+
 			for (FeedMessageElement entry : getMessages()) {
 				eventWriter.add(eventFactory.createStartElement("", "", ITEM));
 				eventWriter.add(end);
@@ -569,21 +569,21 @@ public class Feed {
 				eventWriter.add(eventFactory.createEndElement("", "", ITEM));
 				eventWriter.add(end);
 			}
-	
+
 			eventWriter.add(end);
 			eventWriter.add(eventFactory.createEndElement("", "", CHANNEL));
 			eventWriter.add(end);
 			eventWriter.add(eventFactory.createEndElement("", "", RSS));
-	
+
 			eventWriter.add(end);
-	
+
 			eventWriter.add(eventFactory.createEndDocument());
-	
+
 			eventWriter.close();
-			
+
 			String out = sw.toString();
 			if (outputFile != null) WriteFile.writeAnyExternalFile(outputFile, out, ReadFile.ENCODING_UTF_8);
-			
+
 			return out;
 		} catch (Exception exc) {
 			throw new JPARSECException(exc);
@@ -622,8 +622,8 @@ public class Feed {
 		if (title == null && link == null) {
 			attr.add(eventFactory.createAttribute("type", "image/"+type));
 		} else {
-			if (title != null) attr.add(eventFactory.createAttribute(TITLE, title));			
-			if (link != null) attr.add(eventFactory.createAttribute(LINK, link));			
+			if (title != null) attr.add(eventFactory.createAttribute(TITLE, title));
+			if (link != null) attr.add(eventFactory.createAttribute(LINK, link));
 		}
 		StartElement sElement = eventFactory.createStartElement("", "", name, attr.iterator(), null);
 		eventWriter.add(tab);

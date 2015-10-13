@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.astrophysics.photometry;
 
 import java.io.Serializable;
@@ -27,14 +27,14 @@ import jparsec.math.Constant;
 
 /**
  * A class to hold photometric data from telescopes.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
 public class PhotometricBandElement implements Serializable
 {
-	static final long serialVersionUID = 1L;
-	
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Effective wavelength in microns.
 	 */
@@ -45,11 +45,11 @@ public class PhotometricBandElement implements Serializable
 	public float effectiveWavelengthError;
 	/**
 	 * Bandwidth in microns.
-	 */	
+	 */
 	public float bandWidth;
 	/**
 	 * Bandwidth error in microns.
-	 */	
+	 */
 	public float bandWidthError;
 	/**
 	 * Flux for magnitude mag0 in Jy.
@@ -68,12 +68,12 @@ public class PhotometricBandElement implements Serializable
 	 * will be consider as given in Jy.
 	 */
 	public boolean fluxGivenAsMagnitude = true;
-	
+
 	/**
 	 * Beam of the instrument in arcseconds.
 	 */
 	public float beam;
-	
+
 	/**
 	 * Name of the field (for an external catalogue) that contains the data for this band.
 	 */
@@ -82,7 +82,7 @@ public class PhotometricBandElement implements Serializable
 	 * Name of the photometric band.
 	 */
 	public String name = "";
-		
+
 	/**
 	 * Empty constructor.
 	 */
@@ -99,7 +99,7 @@ public class PhotometricBandElement implements Serializable
 		this.effectiveWavelength = wave;
 		this.bandWidth = width;
 		this.fluxAt0Magnitude = flux0;
-		
+
 		this.magnitude0ForFlux = 0.0f;
 	}
 
@@ -114,18 +114,18 @@ public class PhotometricBandElement implements Serializable
 	 * @param dflux0 Flux for magnitude 0 error.
 	 * @param beam The beam.
 	 */
-	public PhotometricBandElement(String name, float wave, float dwave, float width, 
+	public PhotometricBandElement(String name, float wave, float dwave, float width,
 			float dwidth, float flux0, float dflux0, float beam)
 	{
 		this.name = name;
 		this.effectiveWavelength = wave;
 		this.bandWidth = width;
 		this.fluxAt0Magnitude = flux0;
-		
+
 		this.effectiveWavelengthError = dwave;
 		this.bandWidthError = dwidth;
 		this.fluxAt0MagnitudeError = dflux0;
-		
+
 		this.magnitude0ForFlux = 0.0f;
 		this.beam = beam;
 	}
@@ -142,18 +142,18 @@ public class PhotometricBandElement implements Serializable
 	 * @param beam The beam.
 	 * @param magnitude False to consider the flux in Jy.
 	 */
-	public PhotometricBandElement(String name, float wave, float dwave, float width, 
+	public PhotometricBandElement(String name, float wave, float dwave, float width,
 			float dwidth, float flux0, float dflux0, float beam, boolean magnitude)
 	{
 		this.name = name;
 		this.effectiveWavelength = wave;
 		this.bandWidth = width;
 		this.fluxAt0Magnitude = flux0;
-		
+
 		this.effectiveWavelengthError = dwave;
 		this.bandWidthError = dwidth;
 		this.fluxAt0MagnitudeError = dflux0;
-		
+
 		this.magnitude0ForFlux = 0.0f;
 		this.fluxGivenAsMagnitude = magnitude;
 		this.beam = beam;
@@ -171,7 +171,7 @@ public class PhotometricBandElement implements Serializable
 		this.name = name;
 		return this;
 	}
-	
+
 	private static final float BEAM_2MASS = 2.0f;
 	private static final float BEAM_JOHNSON = 1.0f;
 	private static final float BEAM_MSX6C = 18.3f;
@@ -391,7 +391,7 @@ public class PhotometricBandElement implements Serializable
     public static final PhotometricBandElement BAND_W1_WISE = new PhotometricBandElement(
 			"WISE 3.4um", 3.353f, 0.013f, 0.066f, 0.001f, 309.54f, 4.58f, 3);
     // http://wise2.ipac.caltech.edu/docs/release/prelim/expsup/sec4_3g.html
-    
+
     /**
      * Photometric data for WISE W2 band. Cutri et al, 2013.
      */
@@ -407,7 +407,7 @@ public class PhotometricBandElement implements Serializable
      */
     public static final PhotometricBandElement BAND_W4_WISE = new PhotometricBandElement(
 			"WISE 22um", 22.088f, 0.118f, 4.1f, 0.05f, 8.363f, 0.12f, 15);
-    
+
     /**
      * Photometric data for S65 AKARI band.
      */
@@ -428,7 +428,7 @@ public class PhotometricBandElement implements Serializable
      */
     public static final PhotometricBandElement BAND_S160_AKARI = new PhotometricBandElement(
 			"AKARI S160", 160f, 0.0f, 40, 0.0f, 0.0f, 0.0f, 70, false);
-    
+
     private static final PhotometricBandElement[] ALL = new PhotometricBandElement[] {
     	PhotometricBandElement.BAND_100_IRAS,
     	PhotometricBandElement.BAND_12_IRAS,
@@ -467,7 +467,7 @@ public class PhotometricBandElement implements Serializable
     	PhotometricBandElement.BAND_S140_AKARI,
     	PhotometricBandElement.BAND_S160_AKARI
     };
-    
+
     /**
      * Returns a given photometric band by its name.
      * @param name The name to search.
@@ -482,7 +482,7 @@ public class PhotometricBandElement implements Serializable
     	}
     	return p;
     }
-    
+
     /**
      * To clone the object.
      */
@@ -503,11 +503,11 @@ public class PhotometricBandElement implements Serializable
     	p.beam = this.beam;
     	return p;
     }
-    
+
     /**
      * Checks if this object is equal to another one.
      * @param band Object to compare with.
-     * @return True if it is equal.
+     * @return True is it is equal.
      */
 	@Override
 	public boolean equals(Object band) {

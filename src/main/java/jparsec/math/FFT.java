@@ -51,6 +51,7 @@ public class FFT {
         return y;
     }
 
+
     /**
      * Compute the inverse FFT of x.
      * @param x Set of complex.
@@ -59,7 +60,7 @@ public class FFT {
      */
     public static Complex[] ifft(Complex[] x) throws JPARSECException {
         int N = x.length;
-        
+
         // radix 2 Cooley-Tukey FFT
         if (N % 2 != 0) throw new JPARSECException("N is not a power of 2");
 
@@ -136,17 +137,6 @@ public class FFT {
         return circularConvolution(a, b);
     }
 
-    // display an array of Complex numbers to standard output
-    /*
-    private static void show(Complex[] x, String title) {
-        System.out.println(title);
-        System.out.println("-------------------");
-        for (int i = 0; i < x.length; i++) {
-            System.out.println(x[i]);
-        }
-        System.out.println();
-    }*/
-
     /**
      * Returns the closest power of 2 lower or equal to the input value.
      * @param n Input value.
@@ -160,7 +150,7 @@ public class FFT {
      * Filters a set of data (likely a spectrum) and returns it after FFT filtering.
      * @param data The data to filter.
      * @param cutFactorRespectMax The cut factor respect the highest amplitude in the
-     * FFT transform. All frequencies below an amplitude equals to max/cutFactorRespectMax, 
+     * FFT transform. All frequencies below an amplitude equals to max/cutFactorRespectMax,
      * likely noise, will be removed.
      * @return The filtered spectrum.
      * @throws JPARSECException If an error occurs.
@@ -183,12 +173,12 @@ public class FFT {
 		Complex cccy[] = ifft(ccy);
 		return Complex.getSetOfReals(cccy);
     }
-    
+
     /**
      * Filters a set of data (likely a spectrum) and returns it after FFT filtering.
      * @param data The data to filter.
      * @param cutFactorRespectMax The cut factor respect the highest amplitude in the
-     * FFT transform. All frequencies below an amplitude equals to max/cutFactorRespectMax, 
+     * FFT transform. All frequencies below an amplitude equals to max/cutFactorRespectMax,
      * likely noise, will be removed.
      * @return The filtered spectrum.
      * @throws JPARSECException If an error occurs.

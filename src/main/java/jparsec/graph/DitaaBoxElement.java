@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */	
+ */
 package jparsec.graph;
 
 import jparsec.graph.DataSet;
@@ -42,11 +42,11 @@ public class DitaaBoxElement {
 	public String connect;
 	/** True for dashed shape. */
 	public boolean dashed;
-	
+
 	/**
 	 * The different types of shapes.
 	 */
-	public static enum TYPE {
+	public enum TYPE {
 		SIMPLE(""),
 		DOCUMENT("d"),
 		INPUT_OUTPUT("io"),
@@ -56,10 +56,10 @@ public class DitaaBoxElement {
 		MANUAL_OPERATION("mo"),
 		TRAPEZOID("tr"),
 		NO_BOX("");
-		
+
 		/** The string identifier for this type. */
 		public String id = "";
-		
+
 		/**
 		 * Constructor.
 		 * @param s Identifier.
@@ -68,11 +68,11 @@ public class DitaaBoxElement {
 			id = " ";
 			if (!s.equals("")) this.id = "{" + s + "}";
 		}
-		
+
 	};
 
 	/**
-	 * Constructor for a given shape. For 'no box' type the color and dashed 
+	 * Constructor for a given shape. For 'no box' type the color and dashed
 	 * properties are ignored, and the box connections are used to set the
 	 * text alignment.
 	 * @param t The text inside the shape.
@@ -88,7 +88,7 @@ public class DitaaBoxElement {
 		this.dashed = d;
 		this.connect = c;
 	}
-	
+
 	/**
 	 * Returns a string representation of this box.
 	 * @param w Width in characters of the box.
@@ -103,7 +103,7 @@ public class DitaaBoxElement {
 		}
 		int px = (int) (0.5 + (w - 2 - max) / 2.0);
 		if (px < 0) px = 0;
-		
+
 		String out[] = new String[h];
 		String line = DataSet.repeatString(" ", w);
 		for (int i=0; i<out.length; i++) {
@@ -128,7 +128,7 @@ public class DitaaBoxElement {
 			}
 			return new String[] {s};
 		}
-		
+
 		String boxLeftRight = "|" + DataSet.repeatString(" ", w - 2) + "|";
 		String boxUpDown = "+" + DataSet.repeatString("-", w - 2) + "+";
 		String boxLeftRightC = boxLeftRight;
@@ -176,10 +176,10 @@ public class DitaaBoxElement {
 				String s = out[i];
 				out[i] = DataSet.replaceOne(out[i], DataSet.repeatString(" ", this.color.length()), this.color, 1);
 				if (!s.equals(out[i])) color = true;
-			}			
-		}		
+			}
+		}
 		if (dashed) out[0] = DataSet.replaceOne(out[0], "-", "=", 1);
-		
+
 		return out;
 	}
 }

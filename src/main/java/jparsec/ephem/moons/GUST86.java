@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.ephem.moons;
 
 import jparsec.ephem.Functions;
@@ -31,7 +31,7 @@ import jparsec.math.Constant;
  * <P>
  * For reference see: GUST86 - An analytical ephemeris of the Uranian
  * satellites, Laskar J., Jacobson, R., Astron. Astrophys. 188, 212-224 (1987).
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -39,7 +39,7 @@ public class GUST86
 {
 	// private constructor so that this class cannot be instantiated.
 	private GUST86() {}
-	
+
 	private static double AN[] = new double[6];
 	private static double AE[] = new double[6];
 	private static double AI[] = new double[6];
@@ -65,7 +65,7 @@ public class GUST86
 	}
 	/**
 	 * GUST86 theory. Output array depends on the value of ICODE.
-	 * 
+	 *
 	 * @param TJJ Julian day in TDB.
 	 * @param IS Satellite ID, from 1 (Miranda) to 5 (Oberon).
 	 * @param ICODE Output format. 1 for eliptic elements B1950, 2 for
@@ -243,7 +243,7 @@ public class GUST86
 
 		double pXU[] = ELLIPX(EL, RMU, IS);
 		if (ICODE == 2 || ICODE == 3) pXU = FK4_TO_FK5(pXU);
-		
+
 		XU[1][IS] = pXU[1] / Constant.AU;
 		XU[2][IS] = pXU[2] / Constant.AU;
 		XU[3][IS] = pXU[3] / Constant.AU;
@@ -744,5 +744,4 @@ public class GUST86
 
 		return F;
 	}
-	
 }

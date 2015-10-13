@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.ephem;
 
 import jparsec.ephem.EphemerisElement;
@@ -30,7 +30,7 @@ import jparsec.util.JPARSECException;
  * Calculation of mean and true obliquity. Different methods can be applied, in
  * an unique system of constants compatible with {@linkplain EphemerisElement}
  * class.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -38,7 +38,7 @@ public class Obliquity
 {
 	// private constructor so that this class cannot be instantiated.
 	private Obliquity() {}
-	
+
 	private static final double[] xypol = new double[] {84028.206305, 0.3624445, -0.00004039, -110E-9};
 
 	private static final double[][] xyper = new double[][] {
@@ -55,7 +55,7 @@ public class Obliquity
 	};
 
 	/**
-	 * Calculates the mean obliquity at a given time. The code for this method 
+	 * Calculates the mean obliquity at a given time. The code for this method
 	 * comes from S. L. Moshier. In case IAU2006 or IAU2009 algorithms are used
 	 * and the Vondrak precession flag is enabled in the configuration, the obliquity
 	 * will be calculated using the formulae by Vondrak. Time span in Julian centuries
@@ -80,7 +80,7 @@ public class Obliquity
 	 * J. Laskar's expansion comes from "Secular terms of classical planetary
 	 * theories using the results of general theory," Astronomy and Astrophysics
 	 * 157, 59070 (1986).
-	 * 
+	 *
 	 * @param t Time in Julian centuries from J2000 in TT.<BR>
 	 *        Valid range is the years -8000 to +12000 (t = -100 to 100). In case of using
 	 *        the Vondrak formulae validity is t between +/- 2000.
@@ -134,12 +134,6 @@ public class Obliquity
 		EphemerisElement.REDUCTION_METHOD type = eph.ephemMethod;
 		switch (type)
 		{
-		case IAU_2000:
-		case IAU_2006:
-		case IAU_2009:
-			rvalStart = rvalStart_CAP;
-			coeffs = coeffs_CAP;
-			break;
 		case WILLIAMS_1994:
 		case JPL_DE4xx:
 			rvalStart = rvalStart_WIL;
@@ -156,6 +150,10 @@ public class Obliquity
 		case IAU_1976:
 			rvalStart = rvalStart_IAU;
 			coeffs = coeffs_IAU;
+			break;
+		default:
+			rvalStart = rvalStart_CAP;
+			coeffs = coeffs_CAP;
 			break;
 		}
 
@@ -175,31 +173,31 @@ public class Obliquity
 				w *= t;
 			}
 			rval = y * Constant.ARCSEC_TO_RAD;
-			
+
 			if (Math.abs(t) > 100)
 				JPARSECException.addWarning("Date is too far from J2000, obliquity forced to Vondr\u00e1k et al. 2011 model.");
 		} else {
 			u = u0 = t / 100.; // u is in julian 10000's of years
 			rval = rvalStart;
-	
+
 			for (int i = 0; i < OBLIQ_COEFFS; i++)
 			{
 				rval += u * coeffs[i] / 100.;
 				u *= u0;
 			}
-	
+
 			// convert from seconds to radians
 			rval = rval * Constant.ARCSEC_TO_RAD;
-			
+
 			if (Math.abs(t) > 100.0) JPARSECException.addWarning("This date is too far from J2000 epoch. Obliquity is probably incorrect.");
 		}
-		
+
 		return rval;
 	}
 
 	/**
 	 * Calculate true obliquity applying the corresponding nutation theory.
-	 * 
+	 *
 	 * @param t Julian centuries from J2000 in TT.
 	 * @param eph Ephemeris properties.
 	 * @return true obliquity.
@@ -209,7 +207,7 @@ public class Obliquity
 	public static double trueObliquity(double t, EphemerisElement eph) throws JPARSECException
 	{
 		double meanObliquity = meanObliquity(t, eph);
-		
+
 		// This corrects for polar movement, but it is not noticeable and usually done when correcting nutation.
 //		Nutation.clearPreviousCalculation();
 //		try {

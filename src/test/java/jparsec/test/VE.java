@@ -24,7 +24,7 @@ public class VE {
             eph.optimizeForSpeed();
 
             // Get equinox for 2015 in TT and LT
-            SimpleEventElement see = MainEvents.EquinoxesAndSolstices(2015, SimpleEventElement.EVENT.SUN_SPRING_EQUINOX, city);
+            SimpleEventElement see = MainEvents.EquinoxesAndSolstices(2015, SimpleEventElement.EVENT.SUN_SPRING_EQUINOX);
             TimeElement.SCALE outputTimeScale = TimeElement.SCALE.LOCAL_TIME;
             double jdLT = TimeScale.getJD(new TimeElement(see.time, TimeElement.SCALE.TERRESTRIAL_TIME), observer, eph, outputTimeScale);
 

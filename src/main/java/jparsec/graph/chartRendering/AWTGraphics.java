@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.graph.chartRendering;
 
 import java.awt.BasicStroke;
@@ -62,7 +62,7 @@ import jparsec.vo.GeneralQuery;
  * with anaglyph support and optional sub-pixel precision. This class
  * contains fast implementations of drawLine and other methods from the
  * PerfGraphics library at http://www.randelshofer.ch/oop/graphics/.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -72,7 +72,7 @@ public class AWTGraphics implements Graphics {
 	 * The color mode.
 	 */
 	private ANAGLYPH_COLOR_MODE colorMode = ANAGLYPH_COLOR_MODE.GREEN_RED;
-	
+
 	private BufferedImage image, image2 = null;
 	private Graphics2D g;
 	private Graphics2D g2 = null;
@@ -87,9 +87,9 @@ public class AWTGraphics implements Graphics {
 	private java.awt.Rectangle clip = null;
 	private boolean useRaster = false;
 	private TextLabel t = null;
-	
+
 	private static int IMAGE_TYPE = BufferedImage.TYPE_INT_RGB;
-	
+
 	/**
 	 * Sets the type of BufferedImage to be created. Default is RGB without
 	 * transparency.
@@ -98,7 +98,16 @@ public class AWTGraphics implements Graphics {
 	public static void setBufferedImageType(int type) {
 		IMAGE_TYPE = type;
 	}
-	
+
+	/**
+	 * Returns the type of BufferedImage to be created. Default is RGB without
+	 * transparency.
+	 * @return Image type used for rendering, one of the BufferedImage#TYPE constants.
+	 */
+	public static int getBufferedImageType() {
+		return IMAGE_TYPE;
+	}
+
 	/**
 	 * Creates a new Graphics provider for Java desktop platform,
 	 * with no anaglyph mode. Antialiasing is enabled by default.
@@ -121,7 +130,7 @@ public class AWTGraphics implements Graphics {
 
 	/**
 	 * Creates a new Graphics provider for Java desktop platform,
-	 * with no anaglyph mode, suitable for an external Graphics 
+	 * with no anaglyph mode, suitable for an external Graphics
 	 * object. Antialiasing is enabled by default.
 	 * @param w The width of the image to render.
 	 * @param h The height.
@@ -129,7 +138,7 @@ public class AWTGraphics implements Graphics {
 	 * @param invertV True to invert image vertically.
 	 * @param g The Graphics instance.
 	 * @param generateImageAlso True to generate also an image of the
-	 * rendering. False is recommended to save memory and performance, 
+	 * rendering. False is recommended to save memory and performance,
 	 * when possible.
 	 */
 	public AWTGraphics(int w, int h, boolean invertH, boolean invertV, Graphics2D g,
@@ -141,7 +150,7 @@ public class AWTGraphics implements Graphics {
 			this.g = image.createGraphics();
 			this.g2 = g;
 		} else {
-			this.g = g;			
+			this.g = g;
 		}
 		image2 = null;
 		this.colorMode = Graphics.ANAGLYPH_COLOR_MODE.NO_ANAGLYPH;
@@ -169,7 +178,7 @@ public class AWTGraphics implements Graphics {
 		this.colorMode = mode;
 		if (colorMode.isReal3D()) {
 			image2 = new BufferedImage(w, h, IMAGE_TYPE);
-			g2 = image2.createGraphics();			
+			g2 = image2.createGraphics();
 		}
 		this.enableAntialiasing();
 		this.invertH = invertH;
@@ -197,14 +206,14 @@ public class AWTGraphics implements Graphics {
 		this.colorMode = Graphics.ANAGLYPH_COLOR_MODE.NO_ANAGLYPH;
 		if (colorMode.isReal3D()) {
 			image2 = new BufferedImage(w, h, IMAGE_TYPE);
-			g2 = image2.createGraphics();			
+			g2 = image2.createGraphics();
 		}
 		this.enableAntialiasing();
 		this.invertH = invertH;
 		this.invertV = invertV;
 		if (!useRaster || rasterData == null) setUseRaster(true);
 	}
-	
+
 	/**
 	 * Regenerates the Graphics2D context in a fast way, without creating a new BufferedImage unless
 	 * something in the input values changed from initial values.
@@ -214,7 +223,7 @@ public class AWTGraphics implements Graphics {
 	 * @param mode The color mode, anaglyph or normal.
 	 * @param invertH True to invert image horizontally.
 	 * @param invertV True to invert image vertically.
-	 */	
+	 */
 	public void regenerate(int w, int h, ANAGLYPH_COLOR_MODE mode, boolean invertH, boolean invertV) {
 		if (w != this.w || h != this.h || colorMode != mode || invertH != this.invertH || invertV != this.invertV) {
 			this.w = w;
@@ -233,16 +242,16 @@ public class AWTGraphics implements Graphics {
 			this.invertV = invertV;
 		}
 		this.colorMode = mode;
-		
+
 		g = image.createGraphics();
 		g2 = null;
 		if (image2 != null && colorMode.isReal3D())
-			g2 = image2.createGraphics();			
-		this.enableAntialiasing();		
-		//if (!useRaster || rasterData == null) 
+			g2 = image2.createGraphics();
+		this.enableAntialiasing();
+		//if (!useRaster || rasterData == null)
 			setUseRaster(true);
 	}
-	
+
 	/**
 	 * Regenerates the Graphics2D context in a fast way, without creating a new BufferedImage unless
 	 * something in the input values changed from initial values.
@@ -254,7 +263,7 @@ public class AWTGraphics implements Graphics {
 	 * @param externalImage The external image to render to. The difference respect
 	 * other constructors not using this parameter is a better performance when
 	 * rendering to external graphics and anaglyph mode are not required.
-	 */	
+	 */
 	public void regenerate(int w, int h, boolean invertH, boolean invertV, BufferedImage externalImage) {
 		ANAGLYPH_COLOR_MODE mode = Graphics.ANAGLYPH_COLOR_MODE.NO_ANAGLYPH;
 		if (w != this.w || h != this.h || colorMode != mode || invertH != this.invertH || invertV != this.invertV) {
@@ -278,17 +287,17 @@ public class AWTGraphics implements Graphics {
 		g = image.createGraphics();
 		g2 = null;
 		if (image2 != null && colorMode.isReal3D())
-			g2 = image2.createGraphics();			
-		this.enableAntialiasing();		
-		
+			g2 = image2.createGraphics();
+		this.enableAntialiasing();
+
 		setUseRaster(true);
 	}
-	
+
 	@Override
 	public ANAGLYPH_COLOR_MODE getAnaglyphMode() {
 		return this.colorMode;
 	}
-	
+
 	@Override
 	public void disableAnaglyph() {
 		colorMode = ANAGLYPH_COLOR_MODE.NO_ANAGLYPH;
@@ -320,7 +329,7 @@ public class AWTGraphics implements Graphics {
 	public boolean renderingToExternalGraphics() {
 		return externalGraphics;
 	}
-	
+
 	@Override
 	public void enableInversion(boolean h, boolean v) {
 		this.invertEnabled = true;
@@ -331,16 +340,16 @@ public class AWTGraphics implements Graphics {
 	@Override
 	public void setAnaglyph(Object image1, Object image2) {
 		g.drawImage(toImage(image1), 0, 0, null);
-		
+
 		if (g2 != null && image2 != null) {
 			g2.drawImage(toImage(image2), 0, 0, null);
 		}
 	}
-	
+
 	@Override
 	public void setAnaglyph(Object image1, Object image2, float x, float y) {
 		g.drawImage(toImage(image1), (int)x, (int)y, null);
-		
+
 		if (g2 != null && image2 != null) {
 			g2.drawImage(toImage(image2), (int)x, (int)y, null);
 		}
@@ -352,19 +361,19 @@ public class AWTGraphics implements Graphics {
 	private float invertY(float y) {
 		return this.getHeight()-1-y;
 	}
-	
+
 	@Override
 	public void drawLine(float i, float j, float k, float l, boolean fast) {
 		drawLine(i, j, k, l, g, g2, fast); //, this.getClip());
 	}
-	
+
 	@Override
 	public void drawStraightLine(float i, float j, float k, float l) {
 		if (!externalGraphics && (i == k || j == l)) {
 			/*
 			Object aa = g.getRenderingHint(RenderingHints.KEY_ANTIALIASING);
 			this.disableAntialiasing();
-			drawLine(i, j, k, l, g, g2);			
+			drawLine(i, j, k, l, g, g2);
 			if (aa == RenderingHints.VALUE_ANTIALIAS_ON) this.enableAntialiasing();
 			*/
 			int ii = (int)(i), jj = (int)(j);
@@ -434,7 +443,7 @@ public class AWTGraphics implements Graphics {
 					if (g2 != null) image2.setRGB(ii, jj, w, h, data, 0, 0);
 				} else {
 */
-		    	drawFastLine((int)i, (int)j, (int)k, (int)l, color, this.getClip(), false);					
+		    	drawFastLine((int)i, (int)j, (int)k, (int)l, color, this.getClip(), false);
 //				}
 			}
 			return;
@@ -459,16 +468,16 @@ public class AWTGraphics implements Graphics {
 		    	}
 				drawFastLine((int)i, (int)j, (int)k, (int)l, color, this.getClip(), false);
 			} else {
-				drawLine(i, j, k, l, false);				
+				drawLine(i, j, k, l, false);
 			}
 		}
 	}
-	
+
 	private void drawLine(float i, float j, float k, float l, Graphics2D g, Graphics2D g2, boolean fast) { //, int clip[]) {
 /*		if (i < 0 || k < 0 || i > this.w || k > w || j < 0 || l < 0 || j > h || l > h) {
 			int x1 = (int) i, y1 = (int) j, x2 = (int) k, y2 = (int) l;
 	    	int cx1 = clip[0], cy1 = clip[1], cx2 = cx1 + clip[2]-1, cy2 = cy1 + clip[3]-1;
-	    	
+
 			if (this.invertEnabled) {
 				if (this.invertH) {
 					x1 = (int) invertX(x1);
@@ -479,12 +488,12 @@ public class AWTGraphics implements Graphics {
 					y2 = (int) invertY(y2);
 				}
 			}
-			
+
 	        // Clip line using Liang-Barsky line clipping
 	        u1 = 0;
 	        u2 = 1;
 	        int dx = x2 - x1;
-	        
+
 	        if (clipTest(-dx, x1 - cx1)) {
 	            if (clipTest(dx, cx2 - x1)) {
 	                int dy = y2 - y1;
@@ -507,10 +516,10 @@ public class AWTGraphics implements Graphics {
 	        k = x2;
 	        l = y2;
 		} else {
-			
+
 		}
 */
-		
+
 		if (g != null && !externalGraphics && this.isContinuous && lineWidth < 2 && fast) {
 	    	int color = getColor();
 	    	int alpha = this.getAlpha(color);
@@ -542,7 +551,7 @@ public class AWTGraphics implements Graphics {
 				l = invertY(l);
 			}
 		}
-		
+
 		if (!externalGraphics && (i == k && j == l)) {
 			int ii = (int)(i), jj = (int)(j);
 			int[] rec = this.getClip();
@@ -573,11 +582,11 @@ public class AWTGraphics implements Graphics {
 	public void drawLines(int i[], int j[], int np, boolean fastMode) {
 		drawLines(i, j, np, g, g2, fastMode);
 	}
-	
+
 	private void drawLines(int i[], int j[], int np, Graphics2D g, Graphics2D g2, boolean fastMode) {
 		if (fastMode && !externalGraphics) {
 			if (g != null) drawPolyline(i, j, np);
-			//if (g2 != null) drawPolyline(i, j, np);			
+			//if (g2 != null) drawPolyline(i, j, np);
 		} else {
 			if (this.invertEnabled && (this.invertH || this.invertV)) {
 				for (int k=0; k<np; k++) {
@@ -589,16 +598,16 @@ public class AWTGraphics implements Graphics {
 					}
 				}
 			}
-			
+
 			if (g != null) g.drawPolyline(i, j, np);
 			//if (g2 != null) g2.drawPolyline(i, j, np);
 		}
 	}
 
-    /** 
-     * Draws a line, using the current color, between the points 
-     * <code>(x1,&nbsp;y1)</code> and <code>(x2,&nbsp;y2)</code> 
-     * in this graphics context's coordinate system. 
+    /**
+     * Draws a line, using the current color, between the points
+     * <code>(x1,&nbsp;y1)</code> and <code>(x2,&nbsp;y2)</code>
+     * in this graphics context's coordinate system.
      * @param   x1  the first point's <i>x</i> coordinate.
      * @param   y1  the first point's <i>y</i> coordinate.
      * @param   x2  the second point's <i>x</i> coordinate.
@@ -606,7 +615,7 @@ public class AWTGraphics implements Graphics {
      * @param color The color.
      */
     private void drawFastLine(int x1, int y1, int x2, int y2, int color, int clip[],
-    		boolean antialias) {   	
+    		boolean antialias) {
 		if (this.invertEnabled) {
 			if (this.invertH) {
 				x1 = (int) invertX(x1);
@@ -617,12 +626,12 @@ public class AWTGraphics implements Graphics {
 				y2 = (int) invertY(y2);
 			}
 		}
-		
+
         // Clip line using Liang-Barsky line clipping
         u1 = 0;
         u2 = 1;
         int dx = x2 - x1;
-        
+
         if (dx == 0 && (x1 < 0 || x1 >= w)) return;
         if (clipTest(-dx, x1 - clip[0])) {
         	int cx2 = clip[0] + clip[2]-1;
@@ -645,14 +654,14 @@ public class AWTGraphics implements Graphics {
             } else return;
         } else return;
 
-        
+
         if (antialias) {
-        	plotLineWu(x1, y1, x2, y2, color);        	
+        	plotLineWu(x1, y1, x2, y2, color);
         } else {
         	plotLine(x1, y1, x2, y2, color);
         }
     }
-    
+
     /**
      * LiangBarsky clip test variables.
      */
@@ -680,10 +689,10 @@ public class AWTGraphics implements Graphics {
         } else if (q < 0f) {
             clipTest = false;
         }
-        
+
         return clipTest;
     }
-    
+
     /**
      * Draws digital line from (x1,y1) to (x2,y2).
      * Does no clipping.  Uses Bresenham's algorithm.
@@ -694,9 +703,9 @@ public class AWTGraphics implements Graphics {
             // from "Graphics Gems", Academic Press, 1990.
             int dx = x2-x1, ax = Math.abs(dx)<<1, sx = (dx > 0) ? 1 : -1;
             int dy = y2-y1, ay = Math.abs(dy)<<1, sy = (dy > 0) ? 1 : -1;
-            
+
             int x = x1, y = y1, d;
-            
+
             // Basic support only for point-like strokes
             int h = 0, hmax = 0;
             boolean continuos = isContinuous;
@@ -706,11 +715,11 @@ public class AWTGraphics implements Graphics {
             	if (da[0] < 2) {
             		hmax = (int)(0.5 + da[1] / da[0]);
             	} else {
-            		//hmax = -(int)da[0];            		
+            		//hmax = -(int)da[0];
             		continuos = true;
             	}
             }
-            
+
             if (ax>ay) {		/* x dominant */
                 d = ay-(ax>>1);
                 if (ay == 0 && d < 0 && continuos) {
@@ -725,7 +734,7 @@ public class AWTGraphics implements Graphics {
                     	}
 	                	image.setRGB(x, y, colors.length, 1, colors, 0, w);
 	                	if (image2 != null) image2.setRGB(x, y, x2-x, 1, colors, 0, w);
-*/	                	
+*/
 	                	return;
                 	} else {
                 		for (int px = x2; px <= x; px ++) {
@@ -754,7 +763,7 @@ public class AWTGraphics implements Graphics {
 	                		if (hmax < 0) {
 	                			if (h < 6) {
 	    		                	setImageRGB(x, y, color);
-	    		                	if (image2 != null) setImageRGB2(x, y, color);	                				
+	    		                	if (image2 != null) setImageRGB2(x, y, color);
 	                			} else {
 	                				h = 0;
 	                				for (int i=0; i<6;i++) {
@@ -796,7 +805,7 @@ public class AWTGraphics implements Graphics {
                     	}
 	                	image.setRGB(x, y, 1, colors.length, colors, 0, h);
 	                	if (image2 != null) image2.setRGB(x, y, 1, y2-y, colors, 0, h);
-*/	                	
+*/
 	                	return;
                 	} else {
                 		for (int py = y2; py <= y; py ++) {
@@ -813,7 +822,7 @@ public class AWTGraphics implements Graphics {
 	                	return;
                 	}
                 }
-                
+
                 for (;;) {
                 	if (!continuos) {
 	                	h ++;
@@ -824,7 +833,7 @@ public class AWTGraphics implements Graphics {
 	                	}
                 	} else {
                 		setImageRGB(x, y, color);
-	                	if (image2 != null) setImageRGB2(x, y, color);                		
+	                	if (image2 != null) setImageRGB2(x, y, color);
                 	}
                     //pixels[x + y] = color;
                     if (y==y2) return;
@@ -837,8 +846,8 @@ public class AWTGraphics implements Graphics {
                 }
             }
     }
-    
-    
+
+
     /**
      * Number of intensity bits.
      */
@@ -868,12 +877,12 @@ public class AWTGraphics implements Graphics {
     		this.plotLine(x1, y1, x2, y2, color);
     		return;
     	}
-*/    	
+*/
     	int alpha = 255; //this.getAlpha(color);
     	//if (alpha == 0) return;
     	WEIGHTING_COMPLEMENT_MASK = 255;
     	if (lineWidth > 1) WEIGHTING_COMPLEMENT_MASK = 511;
-    	
+
         oneMinusAlpha = alpha ^ WEIGHTING_COMPLEMENT_MASK;
         int redBits = (color & 0xff0000);
         int greenBits = (color & 0xff00);
@@ -892,10 +901,10 @@ public class AWTGraphics implements Graphics {
         // Draw the initial pixel, which is always exactly intersected by
         // the line and so needs no weighting
         plot(x1, y1);
-        
+
         int dx = x2 - x1;
         int dy = y2 - y1;
-        
+
         int sx;
         if (dx >= 0) {
             sx = 1;
@@ -903,7 +912,7 @@ public class AWTGraphics implements Graphics {
             sx = -1;
             dx = -dx; // make dx positive
         }
-        
+
         // Special-case horizontal, vertical, and diagonal lines, which
         // require no weighting because they go right through the center of
         // every pixel
@@ -961,26 +970,26 @@ public class AWTGraphics implements Graphics {
                 // END INLINED blend(xy)
             } while (--dy != 0);
         } else {
-            
+
             // Line is not horizontal, diagonal, or vertical
             // ---------------------------------------------
-            
-            
+
+
             int errorAcc = 0;  // initialize the line error accumulator to 0
-            
+
             // # of bits by which to shift errorAcc to get intensity level
             int intensityShift = 0xffff & (16 - INTENSITY_BITS);
-            
-            
+
+
             /* Is this an X-major or Y-major line? */
             if (dy > dx) {
                 // Y-major line; calculate 16-bit fixed-point fractional part of a
                 // pixel that X advances each time Y advances 1 pixel, truncating the
                 // result so that we won't overrun the endpoint along the X axis
                 int errorAdj = 0xffff & ((dx << 16) / dy);
-                
+
                 int y = y1; // *= w;
-                
+
                 // Draw all pixels other than the first and last
                 while (--dy != 0) {
                     int errorAccTemp = errorAcc;   // remember currrent accumulated error
@@ -990,40 +999,40 @@ public class AWTGraphics implements Graphics {
                         x1 += sx;
                     }
                     y ++; // Y-major, so always advance Y
-                    
-                    
+
+
                     // The INTENSITY_BITS most significant bits of errorAcc give us the
                     // intensity weighting for this pixel, and the complement of the
                     // weighting for the paired pixel */
                     //int intensity = errorAcc >> intensityShift;
                     //blend(x1 + sx + y, intensity);
                     //blend(x1+y, intensity ^ WEIGHTING_COMPLEMENT_MASK);
-                    
+
                     int intensity = errorAcc >> intensityShift;
-                    
+
                     // BEGIN INLINED blend(xy, intensity)
                     if (intensity != 0) {
                         int p = getImageRGB(x1 + sx, y);
                         int a = (intensity * alpha) / 255;
                         int oneMinusA = a ^ WEIGHTING_COMPLEMENT_MASK;
-                        
-                        setImageRGB(x1 + sx, y, 
+
+                        setImageRGB(x1 + sx, y,
                                 ((((p & 0xff0000) * oneMinusA + redBits * a) / 255) & 0xff0000) |
                                 ((((p & 0xff00) * oneMinusA + greenBits * a) / 255) & 0xff00) |
                                 ((((p & 0xff) * oneMinusA + blueBits * a) / 255) ) );
                     	if (image2 != null) setImageRGB2(x1 + sx, y, getImageRGB(x1 + sx, y));
                     }
                     // END INLINED blend(xy)
-                    
+
                     intensity ^= WEIGHTING_COMPLEMENT_MASK;
-                    
+
                     // BEGIN INLINED blend(xy, intensity)
                     if (intensity != 0) {
                         int p = getImageRGB(x1, y);
                         int a = (intensity * alpha) / 255;
                         int oneMinusA = a ^ WEIGHTING_COMPLEMENT_MASK;
-                        
-                        setImageRGB(x1, y, 
+
+                        setImageRGB(x1, y,
                                 ((((p & 0xff0000) * oneMinusA + redBits * a) / 255) & 0xff0000) |
                                 ((((p & 0xff00) * oneMinusA + greenBits * a) / 255) & 0xff00) |
                                 ((((p & 0xff) * oneMinusA + blueBits * a) / 255) ) );
@@ -1036,9 +1045,9 @@ public class AWTGraphics implements Graphics {
                 // pixel that Y advances each time X advances 1 pixel, truncating the
                 // result to avoid overrunning the endpoint along the X axis
                 int errorAdj = 0xffff & ((dy << 16) / dx);
-                
+
                 int y = y1; // *= w;
-                
+
                 // Draw all pixels other than the first and last
                 while (--dx != 0) {
                     int errorAccTemp = errorAcc;   // remember currrent accumulated error
@@ -1048,39 +1057,39 @@ public class AWTGraphics implements Graphics {
                         y ++ ;
                     }
                     x1 += sx; // X-major, so always advance X
-                    
+
                     // The INTENSITY_BITS most significant bits of errorAcc give us the
                     // intensity weighting for this pixel, and the complement of the
                     // weighting for the paired pixel
                     //int intensity = errorAcc >> intensityShift;
                     //blend(x1+y, intensity ^ WEIGHTING_COMPLEMENT_MASK);
                     //blend(x1+y+gw, intensity);
-                    
+
                     int intensity = errorAcc >> intensityShift;
-                    
+
                     // BEGIN INLINED blend(xy, intensity)
                     if (intensity != 0) {
                         int p = getImageRGB(x1, y + 1);
                         int a = (intensity * alpha) / 255;
                         int oneMinusA = a ^ WEIGHTING_COMPLEMENT_MASK;
-                        
-                        setImageRGB(x1, y + 1, 
+
+                        setImageRGB(x1, y + 1,
                                 ((((p & 0xff0000) * oneMinusA + redBits * a) / 255) & 0xff0000) |
                                 ((((p & 0xff00) * oneMinusA + greenBits * a) / 255) & 0xff00) |
                                 ((((p & 0xff) * oneMinusA + blueBits * a) / 255) ) );
                     	if (image2 != null) setImageRGB2(x1, y + 1, getImageRGB(x1, y + 1));
                     }
                     // END INLINED blend(xy)
-                    
+
                     intensity ^= WEIGHTING_COMPLEMENT_MASK;
-                    
+
                     // BEGIN INLINED blend(xy, intensity)
                     if (intensity != 0) {
                         int p = getImageRGB(x1, y);
                         int a = (intensity * alpha) / 255;
                         int oneMinusA = a ^ WEIGHTING_COMPLEMENT_MASK;
 
-                        setImageRGB(x1, y, 
+                        setImageRGB(x1, y,
                                 ((((p & 0xff0000) * oneMinusA + redBits * a) / 255) & 0xff0000) |
                                 ((((p & 0xff00) * oneMinusA + greenBits * a) / 255) & 0xff00) |
                                 ((((p & 0xff) * oneMinusA + blueBits * a) / 255) ));
@@ -1089,17 +1098,17 @@ public class AWTGraphics implements Graphics {
                     // END INLINED blend(xy)
                 }
             }
-            
+
             // Draw the final pixel, which is always exactly intersected by the line
             // and so needs no weighting
             plot(x2, y2);
         }
     }
-    
+
     private int getImageRGB(int x, int y) {
     	if (tx == 0 && ty == 0) {
         	if (rasterData == null) return image.getRGB(x, y);
-        	return (255<<24) | rasterData[x + y * image.getWidth()];    		
+        	return (255<<24) | rasterData[x + y * image.getWidth()];
     	}
     	if (rasterData == null) return image.getRGB(x + (int) tx, y + (int) ty);
     	return (255<<24) | rasterData[x + (int) tx + (y + (int) ty) * image.getWidth()];
@@ -1111,14 +1120,14 @@ public class AWTGraphics implements Graphics {
         	if (rasterData == null) {
         		image.setRGB(x, y, color);
         	} else {
-            	rasterData[x + y * image.getWidth()] = color;    		
-        	}    		
+            	rasterData[x + y * image.getWidth()] = color;
+        	}
         	return;
     	}
     	if (rasterData == null) {
     		image.setRGB(x + (int) tx, y + (int) ty, color);
     	} else {
-        	rasterData[x + (int) tx + (y + (int) ty) * image.getWidth()] = color;    		
+        	rasterData[x + (int) tx + (y + (int) ty) * image.getWidth()] = color;
     	}
     }
 
@@ -1129,14 +1138,14 @@ public class AWTGraphics implements Graphics {
         	if (rasterData == null) {
         		image2.setRGB(x, y, color);
         	} else {
-            	rasterData2[x + y * image2.getWidth()] = color;    		
-        	}    		
+            	rasterData2[x + y * image2.getWidth()] = color;
+        	}
         	return;
     	}
     	if (rasterData2 == null) {
     		image2.setRGB(x + (int) tx, y + (int) ty, color);
     	} else {
-        	rasterData2[x + (int) tx + (y + (int) ty) * image2.getWidth()] = color;    		
+        	rasterData2[x + (int) tx + (y + (int) ty) * image2.getWidth()] = color;
     	}
     }
 
@@ -1156,7 +1165,7 @@ public class AWTGraphics implements Graphics {
     	if (image2 != null) setImageRGB2(x, y, previousOut);
     }
 
-/*    
+/*
     private int cx1, cx2, cy1, cy2, color;
     private int redBits = (color & 0xff0000);
     private int greenBits = (color & 0xff00);
@@ -1164,7 +1173,7 @@ public class AWTGraphics implements Graphics {
     private void fastFill(Shape s, int c, int clip[]) {
     	if (colorBar == null) colorBar = new int[w];
         java.awt.Rectangle b = s.getBounds();
-        
+
         int x1 = b.x;
         int y1 = b.y;
         int x2 = x1 + b.width - 1;
@@ -1177,11 +1186,11 @@ public class AWTGraphics implements Graphics {
         redBits = (color & 0xff0000);
         greenBits = (color & 0xff00);
         blueBits = (color & 0xff);
-        
+
         if (x1 > cx2 || y1 > cy2 || x2 < cx1 || y2 < cy1) {
             return;
         }
-        
+
         scanFillHorizontal(s, b, c);
     }
     // ColorBar is used to speed up scan fill operations.
@@ -1208,13 +1217,13 @@ public class AWTGraphics implements Graphics {
         int v1, v2;
         int yPrev;
         int i;
-        
+
         yPrev = y[cnt - 2];
         for (v1 = cnt - 1; v1 >= 1; v1--) {
             yPrev = y[v1 - 1];
             if (yPrev != y[v1]) break;
         }
-        
+
         for (i = 0; i < cnt; i++) {
             v2 = i;
             if (y[v1] != y[v2]) {
@@ -1235,13 +1244,13 @@ public class AWTGraphics implements Graphics {
         int v1, v2;
         int xPrev;
         int i;
-        
+
         xPrev = x[cnt - 2];
         for (v1 = cnt - 1; v1 >= 1; v1--) {
             xPrev = x[v1 - 1];
             if (xPrev != x[v1]) break;
         }
-        
+
         for (i = 0; i < cnt; i++) {
             v2 = i;
             if (x[v1] != x[v2]) {
@@ -1260,7 +1269,7 @@ public class AWTGraphics implements Graphics {
     protected void makeEdgeRecHorizontal(int lower, int upper, int yComp, Edge edge, int[] x, int[] y) {
         edge.dPerScan = (x[upper] - x[lower]) / (float) (y[upper] - y[lower]);
         edge.intersect = x[lower];
-        
+
         if (y[lower] < cy1) {
             edge.intersect += edge.dPerScan * (cy1 - y[lower]);
         }
@@ -1329,7 +1338,7 @@ public class AWTGraphics implements Graphics {
     protected void makeEdgeRecVertical(int lower, int upper, int xComp, Edge edge, int[] x, int[] y) {
         edge.dPerScan = (y[upper] - y[lower]) / (float) (x[upper] - x[lower]);
         edge.intersect = y[lower];
-        
+
         if (x[lower] < cx1) {
             edge.intersect += edge.dPerScan * (cx1 - x[lower]);
         }
@@ -1356,7 +1365,7 @@ public class AWTGraphics implements Graphics {
     }
     protected void updateActiveList(int scan, Edge active) {
         Edge p, q;
-        
+
         q = active;
         p = active.next;
         while (p != null) {
@@ -1414,14 +1423,14 @@ public class AWTGraphics implements Graphics {
                 edges[i] = new Edge();
             }
         }
-        
+
         // Build the edge list
         int[] x = new int[100];
         int[] y = new int[100];
         int closeX = 0;
         int closeY = 0;
         int count = 0;
-        
+
         float[] coords = new float[6];
         boolean didClose = true;
         for (PathIterator i = s.getPathIterator(null, flatness); ! i.isDone(); i.next()) {
@@ -1469,14 +1478,14 @@ public class AWTGraphics implements Graphics {
             count++;
             buildEdgeListHorizontal(x, y, count);
         }
-        
-        
+
+
         // Initialize active list with dummy node.
         // We need the dummy node as anchor for the active list.
         Edge active = new Edge();
         int miny = Math.max(cy1, translatedShapeBounds.y);
         int maxy = Math.min(cy2, translatedShapeBounds.y + translatedShapeBounds.height - 1);
-        
+
         if (translatedShapeBounds.x >= cx1 && translatedShapeBounds.x + translatedShapeBounds.width - 1 <= cx2) {
             for (int scan = miny; scan <= maxy; scan++) {
                 buildActiveList(scan, active);
@@ -1503,8 +1512,8 @@ public class AWTGraphics implements Graphics {
             int p = image.getRGB(x, y);
             //int a = (intensity * alpha) / 255;
             int oneMinusA = a ^ WEIGHTING_COMPLEMENT_MASK;
-            
-            setImageRGB(x, y, 
+
+            setImageRGB(x, y,
                     ((((p & 0xff0000) * oneMinusA + redBits * a) / 255) & 0xff0000) |
                     ((((p & 0xff00) * oneMinusA + greenBits * a) / 255) & 0xff00) |
                     ((((p & 0xff) * oneMinusA + blueBits * a) / 255) ) );
@@ -1525,14 +1534,14 @@ public class AWTGraphics implements Graphics {
                 edges[i] = new Edge();
             }
         }
-        
+
         // Initialize active list with dummy node.
         // We need the dummy node as anchor for the active list.
         Edge active = new Edge();
-        
+
         // Build the edge list
         buildEdgeListHorizontal(x, y, cnt);
-        
+
         for (int scan = miny; scan <= maxy; scan++) {
             buildActiveList(scan, active);
             plotHClipped(scan, active);
@@ -1552,14 +1561,14 @@ public class AWTGraphics implements Graphics {
                 edges[i] = new Edge();
             }
         }
-        
+
         // Initialize active list with dummy node.
         // We need the dummy node as anchor for the active list.
         Edge active = new Edge();
-        
+
         // Build the edge list
         buildEdgeListVertical(x, y, cnt);
-        
+
         for (int scan = minx; scan <= maxx; scan++) {
             buildActiveList(scan, active);
             plotVClipped(scan, active);
@@ -1577,7 +1586,7 @@ public class AWTGraphics implements Graphics {
             p2 = p1.next;
             int x1 = (int) (p1.intersect);
             int x2 = (int) p2.intersect;
-            
+
             if (x1 <= cx2 && x2 >= cx1) {
                 if (p1.intersect + p1.dPerScan > p2.intersect + p2.dPerScan &&
                         p2.intersect - p1.intersect >= 1f) {
@@ -1624,11 +1633,11 @@ public class AWTGraphics implements Graphics {
                         if (x >= cx1) {
                             int p1i = Math.max(0, Math.min(255, (int) (p1y * 255f)));
                             int p2i = Math.max(0, Math.min(255, (int) (p2y * 255f)));
-                            
+
                             blend(x, scan,
                                     Math.abs(p1i - p2i)
                                     );
-                            
+
                         }
                         p1y += p1dPerPixel;
                         p2y += p2dPerPixel;
@@ -1637,18 +1646,18 @@ public class AWTGraphics implements Graphics {
                     // The two edges do not cross in the current scan line, and
                     // the polygon is at least one pixel wide in the current
                     // scan line
-                    
+
                     if (p1.dPerScan == 0f || p1.dPerScan == 1f || p1.dPerScan == -1f) {
                         // no antialiasing needed
                     } else if (p1.dPerScan < 0f) {
                         // Fractional part of the intersection at pixel x1
                         float frac = p1.intersect - (float) Math.floor(p1.intersect);
-                        
+
                         if (p1.dPerScan + frac >= 0f) {
                             // The edge leaves the scan line at the bottom of the
                             // pixel at x1. We only need to do alpha blending for
                             // the point at x1.
-                            
+
                             //  +----+---*+   * = edge at x1
                             //  |    |  /x|
                             //  |    | /xx|
@@ -1662,7 +1671,7 @@ public class AWTGraphics implements Graphics {
                             // The edge leaves the scan line at the left of the
                             // pixel at x1. We need to do alpha blending for
                             // the point at x1 and to points on its left.
-                            
+
                             //  +----+--*-+   * = edge at x1
                             //  |    |/xxx|
                             //  |   /|xxxx|
@@ -1672,11 +1681,11 @@ public class AWTGraphics implements Graphics {
                                         255 - (int) (frac * frac / -p1.dPerScan / 2f * 255f)
                                         );
                             }
-                            
-                            
+
+
                             // Plot points to the left of x1
                             float dPerPixel = 1f / p1.dPerScan;
-                            
+
                             // y-value of the edge at the center of the pixel.
                             // The y-value is expressed as a fraction of the height
                             // of the pixel, measured from the bottom of the pixel.
@@ -1706,11 +1715,11 @@ public class AWTGraphics implements Graphics {
                             }
                         }
                         x1++;
-                        
+
                     } else {
                         // Fractional part of the intersection at pixel x1
                         float frac = p1.intersect - (float) Math.floor(p1.intersect);
-                        
+
                         if (p1.dPerScan + frac <= 1f) {
                             // The edge leaves the scan line at the bottom of the
                             // pixel at x1. We only need to do alpha blending for
@@ -1766,12 +1775,12 @@ public class AWTGraphics implements Graphics {
                     } else if (p2.dPerScan < 0f) {
                         // Fractional part of the intersection at pixel x2
                         float frac = (float) (p2.intersect - Math.floor(p2.intersect));
-                        
+
                         if (p2.dPerScan + frac >= 0f) {
                             // The edge leaves the scan line at the bottom of the
                             // pixel at x2. We only need to do alpha blending for
                             // the point at x2.
-                            
+
                             //  +---*+   * = edge at x2
                             //  |xx/ |
                             //  |x/  |
@@ -1787,7 +1796,7 @@ public class AWTGraphics implements Graphics {
                             //  |xxxx|/   |
                             //  |xxx/|    |
                             //  +--*-+----+   * = edge at x2 + p2.dPerScan
-                            
+
                             if (x2 <= cx2) {
                                 blend(x2, scan,
                                         (int) (frac * frac / -p2.dPerScan / 2f * 255f)
@@ -1795,11 +1804,11 @@ public class AWTGraphics implements Graphics {
                             }
                             x2--;
                             //}
-                            
+
                             // Plot points to the left of x2
                             float dPerPixel = 1f / p2.dPerScan;
                             float yInPixel = (0.5f + frac) * -dPerPixel;
-                            
+
                             for (int i=0, n = (int) -p2.dPerScan + 1; i < n; i++) {
                                 if (x2 < cx1) break;
                                 if (yInPixel >= 1f) {
@@ -1828,12 +1837,12 @@ public class AWTGraphics implements Graphics {
                         }
                     } else {
                         float frac = p2.intersect - (float) Math.floor(p2.intersect);
-                        
+
                         if (p2.dPerScan + frac <= 1f) {
                             // The edge leaves the scan line at the bottom of the
                             // pixel at x2. We only need to do alpha blending for
                             // the point at x2.
-                            
+
                             //  +*---+   * = edge at x2
                             //  |x\  |
                             //  |xx\ |
@@ -1854,7 +1863,7 @@ public class AWTGraphics implements Graphics {
                                         255 - (int) (1f - frac + (1f - frac) / p2.dPerScan / 2f * 255f)
                                         );
                             }
-                            
+
                             // Plot points to the right of x2
                             //  +----+  We only consider the case, where the edge
                             //  |    |  enters at the left side of the pixel and leaves
@@ -1878,11 +1887,11 @@ public class AWTGraphics implements Graphics {
                                 x++;
                                 yInPixel += dPerPixel;
                             }
-                            
+
                             x2--;
                         }
                     }
-                    
+
                     // Arraycopy from color bar
                     if (x2 >= x1) {
                         try {
@@ -1908,7 +1917,7 @@ public class AWTGraphics implements Graphics {
             p2 = p1.next;
             int x1 = (int) (p1.intersect);
             int x2 = (int) p2.intersect;
-            
+
             if (x1 <= cx2 && x2 >= cx1) {
                 if (p1.intersect + p1.dPerScan > p2.intersect + p2.dPerScan &&
                         p2.intersect - p1.intersect >= 1f) {
@@ -1955,11 +1964,11 @@ public class AWTGraphics implements Graphics {
                         if (x >= cx1) {
                             int p1i = Math.max(0, Math.min(255, (int) (p1y * 255f)));
                             int p2i = Math.max(0, Math.min(255, (int) (p2y * 255f)));
-                            
+
                             blend(x, scan,
                                     Math.abs(p1i - p2i)
                                     );
-                            
+
                         }
                         p1y += p1dPerPixel;
                         p2y += p2dPerPixel;
@@ -1968,18 +1977,18 @@ public class AWTGraphics implements Graphics {
                     // The two edges do not cross in the current scan line, and
                     // the polygon is at least one pixel wide in the current
                     // scan line
-                    
+
                     if (p1.dPerScan == 0f || p1.dPerScan == 1f || p1.dPerScan == -1f) {
                         // no antialiasing needed
                     } else if (p1.dPerScan < 0f) {
                         // Fractional part of the intersection at pixel x1
                         float frac = p1.intersect - (float) Math.floor(p1.intersect);
-                        
+
                         if (p1.dPerScan + frac >= 0f) {
                             // The edge leaves the scan line at the bottom of the
                             // pixel at x1. We only need to do alpha blending for
                             // the point at x1.
-                            
+
                             //  +----+---*+   * = edge at x1
                             //  |    |  /x|
                             //  |    | /xx|
@@ -1993,7 +2002,7 @@ public class AWTGraphics implements Graphics {
                             // The edge leaves the scan line at the left of the
                             // pixel at x1. We need to do alpha blending for
                             // the point at x1 and to points on its left.
-                            
+
                             //  +----+--*-+   * = edge at x1
                             //  |    |/xxx|
                             //  |   /|xxxx|
@@ -2003,11 +2012,11 @@ public class AWTGraphics implements Graphics {
                                         255 - (int) (frac * frac / -p1.dPerScan / 2f * 255f)
                                         );
                             }
-                            
-                            
+
+
                             // Plot points to the left of x1
                             float dPerPixel = 1f / p1.dPerScan;
-                            
+
                             // y-value of the edge at the center of the pixel.
                             // The y-value is expressed as a fraction of the height
                             // of the pixel, measured from the bottom of the pixel.
@@ -2037,11 +2046,11 @@ public class AWTGraphics implements Graphics {
                             }
                         }
                         x1++;
-                        
+
                     } else {
                         // Fractional part of the intersection at pixel x1
                         float frac = p1.intersect - (float) Math.floor(p1.intersect);
-                        
+
                         if (p1.dPerScan + frac <= 1f) {
                             // The edge leaves the scan line at the bottom of the
                             // pixel at x1. We only need to do alpha blending for
@@ -2097,12 +2106,12 @@ public class AWTGraphics implements Graphics {
                     } else if (p2.dPerScan < 0f) {
                         // Fractional part of the intersection at pixel x2
                         float frac = (float) (p2.intersect - Math.floor(p2.intersect));
-                        
+
                         if (p2.dPerScan + frac >= 0f) {
                             // The edge leaves the scan line at the bottom of the
                             // pixel at x2. We only need to do alpha blending for
                             // the point at x2.
-                            
+
                             //  +---*+   * = edge at x2
                             //  |xx/ |
                             //  |x/  |
@@ -2118,7 +2127,7 @@ public class AWTGraphics implements Graphics {
                             //  |xxxx|/   |
                             //  |xxx/|    |
                             //  +--*-+----+   * = edge at x2 + p2.dPerScan
-                            
+
                             if (x2 <= cx2) {
                                 blend(x2, scan,
                                         (int) (frac * frac / -p2.dPerScan / 2f * 255f)
@@ -2126,11 +2135,11 @@ public class AWTGraphics implements Graphics {
                             }
                             x2--;
                             //}
-                            
+
                             // Plot points to the left of x2
                             float dPerPixel = 1f / p2.dPerScan;
                             float yInPixel = (0.5f + frac) * -dPerPixel;
-                            
+
                             for (int i=0, n = (int) -p2.dPerScan + 1; i < n; i++) {
                                 if (x2 < cx1) break;
                                 if (yInPixel >= 1f) {
@@ -2159,12 +2168,12 @@ public class AWTGraphics implements Graphics {
                         }
                     } else {
                         float frac = p2.intersect - (float) Math.floor(p2.intersect);
-                        
+
                         if (p2.dPerScan + frac <= 1f) {
                             // The edge leaves the scan line at the bottom of the
                             // pixel at x2. We only need to do alpha blending for
                             // the point at x2.
-                            
+
                             //  +*---+   * = edge at x2
                             //  |x\  |
                             //  |xx\ |
@@ -2185,7 +2194,7 @@ public class AWTGraphics implements Graphics {
                                         255 - (int) (1f - frac + (1f - frac) / p2.dPerScan / 2f * 255f)
                                         );
                             }
-                            
+
                             // Plot points to the right of x2
                             //  +----+  We only consider the case, where the edge
                             //  |    |  enters at the left side of the pixel and leaves
@@ -2209,11 +2218,11 @@ public class AWTGraphics implements Graphics {
                                 x++;
                                 yInPixel += dPerPixel;
                             }
-                            
+
                             x2--;
                         }
                     }
-                    
+
                     // Arraycopy from color bar
                     if (x2 >= x1) {
                         try {
@@ -2243,7 +2252,7 @@ public class AWTGraphics implements Graphics {
                 for (int xy = Math.max(cy1, y1), n = Math.min(cy2, y2); xy <= n; xy += w) {
                 	setImageRGB(scan, xy, color);
                 }
-                
+
             }
             // advance to next pair of intersections
             p1 = p2.next;
@@ -2252,13 +2261,13 @@ public class AWTGraphics implements Graphics {
     // -------------------------
     // END ScanFill algorithm
     // -------------------------
-*/    
-    
-    /** 
-     * Draws a sequence of connected lines defined by 
-     * arrays of <i>x</i> and <i>y</i> coordinates. 
+*/
+
+    /**
+     * Draws a sequence of connected lines defined by
+     * arrays of <i>x</i> and <i>y</i> coordinates.
      * Each pair of (<i>x</i>,&nbsp;<i>y</i>) coordinates defines a point.
-     * The figure is not closed if the first point 
+     * The figure is not closed if the first point
      * differs from the last point.
      * @param       xPoints an array of <i>x</i> points
      * @param       yPoints an array of <i>y</i> points
@@ -2284,7 +2293,7 @@ public class AWTGraphics implements Graphics {
     		blue = (int) (blue * (1 - masking_factor) + blue1 * masking_factor);
     		color = red<<16 | green<<8 | blue;
     	}
-    	
+
     	int clip[] = this.getClip();
         for (int i=1; i < nPoints; i++) {
         	if (xPoints[i-1] == yPoints[i-1] && xPoints[i-1] == -1) continue;
@@ -2292,16 +2301,16 @@ public class AWTGraphics implements Graphics {
             drawFastLine(xPoints[i-1], yPoints[i-1], xPoints[i], yPoints[i], color, clip, false);
         }
     }
-    
-    
+
+
 
     private int lastR = -1, lastG = -1, lastB = -1, lastA = -1, lastRGB = -1;
 	@Override
 	public void setColor(int r, int g, int b, int a) {
 		if (!transparencyEnabled) a = 255;
-		
+
 		if (a == lastA && r == lastR && g == lastG && b == lastB) return;
-		
+
 		Color col = new Color(r, g, b, a);
 		this.g.setColor(col);
 		if (g2 != null) g2.setColor(col);
@@ -2321,7 +2330,7 @@ public class AWTGraphics implements Graphics {
 	public void drawImage(Object img, float x, float y, double scalex, double scaley) {
 		drawImage(img, x, y, scalex, scaley, g, g2);
 	}
-	
+
 	private void drawImage(Object image, float x, float y, double scalex, double scaley, Graphics2D g, Graphics2D g2) {
 /*		if (image.getClass().isArray()) {
 			if (g != null) {
@@ -2342,7 +2351,7 @@ public class AWTGraphics implements Graphics {
 					//int py = (j-jj)*size[0];
 					//for (int i=ii; i<ii+size[0]; i++) {
 					//	if (i < rec[0] || i >= rec[0]+rec[2]) continue;
-						
+
 					//	int index = i-ii+py;
 				    //    int alpha = getAlpha(data[index]);
 				    //    oneMinusAlpha = 255 - alpha;
@@ -2350,10 +2359,10 @@ public class AWTGraphics implements Graphics {
 				    //    premultipliedG = (data[index] & 0xff00) * alpha;
 				    //    premultipliedB = (data[index] & 0xff) * alpha;
 				    //    previousIn = previousOut = data[index];
-				        
+
 				    //    this.plot(i, j);
 					//}
-					
+
 
 					// Method 2, for stars without textures (images with no alpha)
 					int dj = j * size[0];
@@ -2361,14 +2370,14 @@ public class AWTGraphics implements Graphics {
 					int dy = dj - dy0;
 					if (rasterData != null) System.arraycopy(data, dy, rasterData, py, size[0]);
 					if (rasterData2 != null) System.arraycopy(data, dy, rasterData2, py, size[0]);
-					
+
 				}
 			}
 			return;
 		}
-*/		
+*/
 		BufferedImage img = toImage(image);
-		
+
 		if (this.invertEnabled) {
 			if (this.invertH) x = invertX(x) - (int)(img.getWidth()*scalex)+1;
 			if (this.invertV) y = invertY(y) - (int)(img.getHeight()*scaley)+1;
@@ -2380,7 +2389,7 @@ public class AWTGraphics implements Graphics {
 				if (g2 != null) g2.drawImage(img, (int)x, (int)y, null);
 				return;
 			}
-			
+
 			if (g != null) {
 				g.translate(x, y);
 				g.drawImage(img, 0, 0, null);
@@ -2409,14 +2418,14 @@ public class AWTGraphics implements Graphics {
 	public Object getImage(String url) {
 		Object obj = DataBase.getData(url, "AWTGraphics", true);
 		if (obj != null) return obj;
-		
+
 		if (url.startsWith("file:") || url.startsWith("http:")) {
-			try { 
+			try {
 				BufferedImage img = GeneralQuery.queryImage(url);
 				return img;
 			} catch (Exception exc) { return null;}
 		}
-		
+
 		try {
 			InputStream res = getClass().getClassLoader().getResourceAsStream(url);
 			if (res == null) return null;
@@ -2430,30 +2439,30 @@ public class AWTGraphics implements Graphics {
 			} catch (JPARSECException e) {
 				e.printStackTrace();
 				return image; // XXX: Will produce slowdown when using getRGB, but this should never happen ?
-			}	
+			}
 		}
 	}
 
-	@Override	
+	@Override
 	public void addToDataBase(Object img, String id, int life) {
 		if (life <= 0) {
 			DataBase.addData(id, "AWTGraphics", img, true);
 			return;
 		}
-		
+
 		DataBase.addData(id, "AWTGraphics", img, true, life);
 	}
-	
+
 	@Override
 	public void clearDataBase() {
 		DataBase.deleteThreadData("AWTGraphics");
 	}
-	
+
 	@Override
 	public Object getFromDataBase(String id) {
 		return DataBase.getData(id, "AWTGraphics", true);
 	}
-	
+
 	@Override
 	public Object getImage(int w, int h, int[] pixels) {
 		BufferedImage image = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
@@ -2471,7 +2480,7 @@ public class AWTGraphics implements Graphics {
 	public Object getScaledImage(Object image, int w, int h, boolean sameRatio, boolean useSpline) {
 		return getScaledImage(image, w, h, sameRatio, useSpline, 0);
 	}
-	
+
 	@Override
 	public Object getScaledImage(Object image, int w, int h, boolean sameRatio, boolean useSpline, int dy) {
 		BufferedImage img = toImage(image);
@@ -2483,11 +2492,11 @@ public class AWTGraphics implements Graphics {
 				p.getScaledInstance(w, h, sameRatio);
 			}
 		} else {
-			p.getScaledInstance(w, h, sameRatio);			
+			p.getScaledInstance(w, h, sameRatio);
 		}
-		
+
 		if (dy == 0) return p.getImage();
-		
+
 		BufferedImage out = new BufferedImage(p.getWidth(), p.getHeight()+dy*2, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g = out.createGraphics();
 		g.drawImage(p.getImage(), 0, dy, null);
@@ -2499,7 +2508,7 @@ public class AWTGraphics implements Graphics {
 	public Object getRotatedAndScaledImage(Object image, float radius_x, float radius_y, float ang, float scalex,
 			float scaley) {
 		BufferedImage img = toImage(image);
-		
+
 		AffineTransform trans = new AffineTransform();
 
 		if (ang != 0.0) trans.rotate(ang, radius_x, radius_y );
@@ -2531,10 +2540,10 @@ public class AWTGraphics implements Graphics {
 	@Override
 	public int[] getImageAsPixels(Object image) {
 		BufferedImage img = toImage(image);
-		
+
 		int width = img.getWidth(), height = img.getHeight();
 		int a[] = new int[width*height];
-	
+
 		PixelGrabber pg = new PixelGrabber(img, 0, 0, width, height, a, 0, width);
 		try
 		{
@@ -2548,14 +2557,14 @@ public class AWTGraphics implements Graphics {
 				{
 					index ++;
 					a[index] = img.getRGB(i, height-1-j);
-				}			
+				}
 			}
 		}
-		
+
 		return a;
-		
+
 	}
-	
+
 	@Override
 	public int[] getSize(Object sun) {
 		BufferedImage img = toImage(sun);
@@ -2565,7 +2574,7 @@ public class AWTGraphics implements Graphics {
 	@Override
 	public Object getRendering() {
 		if (colorMode.isReal3D()) return blendImagesToAnaglyphMode(image, image2);
-		
+
 		return image;
 	}
 
@@ -2576,10 +2585,10 @@ public class AWTGraphics implements Graphics {
 		if (i+width > w) width = w-i;
 		if (j+k > h) k = h-j;
 		if (colorMode.isReal3D()) return blendImagesToAnaglyphMode(image.getSubimage(i, j, width, k), image2.getSubimage(i, j, width, k));
-		
+
 		return image.getSubimage(i, j, width, k);
 	}
-	
+
 	@Override
 	public void setColor(int col, boolean hasalpha) {
 		int alpha = 255;
@@ -2610,10 +2619,10 @@ public class AWTGraphics implements Graphics {
 	        } while (dy < 0);
 			return;
 		}
-		
+
 		fillOval(i, j, k, l, g, g2);
 	}
-	
+
 	private void fillOval(float i, float j, float k, float l, Graphics2D g, Graphics2D g2) {
 		if (this.invertEnabled) {
 			if (this.invertH) {
@@ -2623,7 +2632,7 @@ public class AWTGraphics implements Graphics {
 				j = invertY(j)-Math.abs(l)+1;
 			}
 		}
-		
+
 		if (!externalGraphics && k >= 0 && l >= 0 && k <= 1 && l <= 1) {
 			int ii = (int)(i), jj = (int)(j);
 			int[] rec = this.getClip();
@@ -2651,7 +2660,7 @@ public class AWTGraphics implements Graphics {
 			}
 			return;
 		}
- 
+
 		if (!externalGraphics && k == l && k >= 0 && l <= 2) {
 			int ii = (int)(i), jj = (int)(j);
 			int[] rec = this.getClip();
@@ -2729,12 +2738,12 @@ public class AWTGraphics implements Graphics {
 						k -= 1f;
 						l -= 1f;
 					}
-					g2.fillOval(0, 0, (int) (k+0.5), (int) (l+0.5));					
+					g2.fillOval(0, 0, (int) (k+0.5), (int) (l+0.5));
 				}
 			} else {
 				g2.fillOval(0, 0, (int) (k+0.5), (int) (l+0.5));
 			}
-			g2.translate(-i, -j);		
+			g2.translate(-i, -j);
 		}
 	}
 
@@ -2742,7 +2751,7 @@ public class AWTGraphics implements Graphics {
 	public void fillRect(float i, float j, float width, float height) {
 		fillRect(i, j, width, height, g, g2);
 	}
-	
+
 	private void fillRect(float i, float j, float width, float height, Graphics2D g, Graphics2D g2) {
 		if (this.invertEnabled) {
 			if (this.invertH) {
@@ -2766,7 +2775,7 @@ public class AWTGraphics implements Graphics {
 			if (g2 != null) g2.fillRect((int)(i+0.5), (int)(j+0.5), (int) (width+0.5), (int) (height+0.5));
 			return;
 		}
-		
+
 		if (g != null) {
 			g.translate(i, j);
 			g.fillRect(0, 0, (int) (width+0.5), (int)(height+0.5));
@@ -2778,12 +2787,12 @@ public class AWTGraphics implements Graphics {
 			g2.translate(-i, -j);
 		}
 	}
-		
+
 	@Override
 	public void drawString(String string, float i, float j) {
 		drawString(string, i, j, g, g2);
 	}
-	
+
 	private void drawString(String string, float i, float j, Graphics2D g, Graphics2D g2) {
 		if (this.invertEnabled) {
 			if (this.invertH) i = invertX(i);
@@ -2830,7 +2839,7 @@ public class AWTGraphics implements Graphics {
 	public void drawOval(float i, float j, float k, float l, boolean fast) {
 		drawOval(i, j, k, l, g, g2, fast);
 	}
-	
+
 	private void drawOval(float i, float j, float k, float l, Graphics2D g, Graphics2D g2,
 			boolean fast) {
 		if (this.invertEnabled) {
@@ -2888,7 +2897,7 @@ public class AWTGraphics implements Graphics {
 			g2.translate(-i, -j);
 		}
 	}
-    
+
     private void drawFastOval(int ox, int oy, int owidth, int oheight, int clip[]) {
     	int color = getColor();
     	int alpha = this.getAlpha(color);
@@ -2930,7 +2939,7 @@ public class AWTGraphics implements Graphics {
          * This software is provided "as is" without express or implied
          * warranty, and with no claim as to its suitability for any purpose.
          */
-        
+
         // Reject oval, if it is outside of clip bounds
     	int cx2 = clip[0] + clip[2]-1;
     	int cy2 = clip[1] + clip[3]-1;
@@ -2938,16 +2947,16 @@ public class AWTGraphics implements Graphics {
                 oy + oheight < clip[1] || oy > cy2) {
             return;
         }
-        
+
         int rx = owidth / 2; // radius x
         int ry = oheight / 2; // radius y
         int cxw = ox + rx; // center x for the west half of the ellipse
         int cyn = (oy + ry); // center y for the north half of the ellipse
         int cxe = cxw + owidth % 2; // center x for the east half of the ellipse
         int cys = cyn + (oheight % 2); // center y for the south half of the ellipse
-        
+
         EllipseBresenhamInterpolator ei = new EllipseBresenhamInterpolator(rx, ry);
-        
+
         //int dx, dy;
         if (ox >= clip[0] && oy >= clip[1] && ox + owidth <= cx2 && oy + oheight <= cy2) {
             // Do fast rendering without clipping
@@ -2962,7 +2971,7 @@ public class AWTGraphics implements Graphics {
                     	setImageRGB2(cxe + ei.dx, cyn + ei.dy, color);
                     	setImageRGB2(cxe + ei.dx, cys - ei.dy, color);
                     	setImageRGB2(cxw - ei.dx, cys - ei.dy, color);
-                    	setImageRGB2(cxw - ei.dx, cyn + ei.dy, color);                    	
+                    	setImageRGB2(cxw - ei.dx, cyn + ei.dy, color);
                     }
                     dy = ei.dy;
                     ei.next();
@@ -2982,7 +2991,7 @@ public class AWTGraphics implements Graphics {
                 	setImageRGB2(cxe + ei.dx, cyn + ei.dy, color);
                 	setImageRGB2(cxe + ei.dx, cys - ei.dy, color);
                 	setImageRGB2(cxw - ei.dx, cys - ei.dy, color);
-                	setImageRGB2(cxw - ei.dx, cyn + ei.dy, color);                    	
+                	setImageRGB2(cxw - ei.dx, cyn + ei.dy, color);
                 }
                 ei.next();
                 if (hmax > 0) {
@@ -2999,7 +3008,7 @@ public class AWTGraphics implements Graphics {
                     	setImageRGB2(cxe + ei.dx, cyn + ei.dy, color);
                     	setImageRGB2(cxe + ei.dx, cys - ei.dy, color);
                     	setImageRGB2(cxw - ei.dx, cys - ei.dy, color);
-                    	setImageRGB2(cxw - ei.dx, cyn + ei.dy, color);                    	
+                    	setImageRGB2(cxw - ei.dx, cyn + ei.dy, color);
                     }
                     ei.next();
                     if (hmax > 0) {
@@ -3012,7 +3021,7 @@ public class AWTGraphics implements Graphics {
                 setImageRGB(cxw - ei.dx, cyn + ei.dy, color);
                 if (image2 != null) {
                 	setImageRGB2(cxe + ei.dx, cys - ei.dy, color);
-                	setImageRGB2(cxw - ei.dx, cyn + ei.dy, color);                    	
+                	setImageRGB2(cxw - ei.dx, cyn + ei.dy, color);
                 }
             } else if (cyn != cys) {
                 setImageRGB(cxe + ei.dx, cyn + ei.dy, color);
@@ -3036,7 +3045,7 @@ public class AWTGraphics implements Graphics {
                         setImageRGB2(cxe + ei.dx, cyn + ei.dy, color);
                         setImageRGB2(cxe + ei.dx, cys - ei.dy, color);
                         setImageRGB2(cxw - ei.dx, cys - ei.dy, color);
-                        setImageRGB2(cxw - ei.dx, cyn + ei.dy, color);                    	
+                        setImageRGB2(cxw - ei.dx, cyn + ei.dy, color);
                     }
                     ei.next();
                     if (hmax > 0) {
@@ -3053,7 +3062,7 @@ public class AWTGraphics implements Graphics {
                     setImageRGB2(cxe + ei.dx, cyn + ei.dy, color);
                     setImageRGB2(cxe + ei.dx, cys - ei.dy, color);
                     setImageRGB2(cxw - ei.dx, cys - ei.dy, color);
-                    setImageRGB2(cxw - ei.dx, cyn + ei.dy, color);                    	
+                    setImageRGB2(cxw - ei.dx, cyn + ei.dy, color);
                 }
             } else {
                 setImageRGB(cxe + ei.dx, cyn + ei.dy, color);
@@ -3077,7 +3086,7 @@ public class AWTGraphics implements Graphics {
                         setImageRGB2(cxe + ei.dx, cyn + ei.dy, color);
                         setImageRGB2(cxe + ei.dx, cys - ei.dy, color);
                         setImageRGB2(cxw - ei.dx, cys - ei.dy, color);
-                        setImageRGB2(cxw - ei.dx, cyn + ei.dy, color);                    	
+                        setImageRGB2(cxw - ei.dx, cyn + ei.dy, color);
                     }
                     ei.next();
                     if (hmax > 0) {
@@ -3090,11 +3099,11 @@ public class AWTGraphics implements Graphics {
                 setImageRGB(cxw - ei.dx, cyn + ei.dy, color);
                 if (image2 != null) {
                     setImageRGB2(cxe + ei.dx, cys - ei.dy, color);
-                    setImageRGB2(cxw - ei.dx, cyn + ei.dy, color);                    	
+                    setImageRGB2(cxw - ei.dx, cyn + ei.dy, color);
                 }
             }
         } else {
-            
+
             // Do rendering with pixel level clipping
             cyn = (oy + ry); // center y for the north half of the ellipse
             cys = (cyn + oheight % 2); // center y for the south half of the ellipse
@@ -3129,9 +3138,9 @@ public class AWTGraphics implements Graphics {
             while(dy < 0);
         }
     }
-    
-	
-	
+
+
+
 	@Override
 	public void disableAntialiasing() {
 		//Object antialiasing = g.getRenderingHint(RenderingHints.KEY_ANTIALIASING);
@@ -3153,7 +3162,7 @@ public class AWTGraphics implements Graphics {
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
             g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
-            g2.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);        	
+            g2.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
         }
 	}
 
@@ -3175,7 +3184,7 @@ public class AWTGraphics implements Graphics {
 				j = (int) (invertY(j)-l+1);
 			}
 		}
-		
+
 		if (clip != null && i == clip.x && j == clip.y && k == clip.width && l == clip.height) return;
 		g.setClip(i, j, k, l);
 		clip = g.getClipBounds();
@@ -3187,7 +3196,7 @@ public class AWTGraphics implements Graphics {
 	}
 
 	@Override
-	public int[] getClip() { 
+	public int[] getClip() {
 		//Rectangle2D rec = g.getClipBounds();
 		//if (rec == null) return new int[] {0, 0, w, h};
 		//return new int[] {(int) rec.getX(), (int) rec.getY(), (int) rec.getWidth(), (int) rec.getHeight()};
@@ -3207,7 +3216,7 @@ public class AWTGraphics implements Graphics {
 	public void draw(Object pathAxes) {
 		draw(pathAxes, g, g2);
 	}
-	
+
 	private void draw(Object pathAxes, Graphics2D g, Graphics2D g2) {
 		if (pathAxes instanceof GeneralPath) {
 			if (g != null) g.draw((GeneralPath) pathAxes);
@@ -3259,7 +3268,7 @@ public class AWTGraphics implements Graphics {
 	public void fill(Object path) {
 		fill(path, g, g2);
 	}
-	
+
 	private void fill(Object path, Graphics2D g, Graphics2D g2) {
 		if (path instanceof GeneralPath) {
 			if (clip != null && !((GeneralPath) path).intersects(clip)) return;
@@ -3289,7 +3298,7 @@ public class AWTGraphics implements Graphics {
 		}
 		if (this.externalGraphics && g2 != null) {
 			Rectangle2D rec = g2.getFontMetrics().getStringBounds(labelg, g2);
-			return new Rectangle((float)rec.getX(), (float)rec.getY(), (float)rec.getWidth(), (float)rec.getHeight());			
+			return new Rectangle((float)rec.getX(), (float)rec.getY(), (float)rec.getWidth(), (float)rec.getHeight());
 		} else {
 			if (fontMetric == null || g.getFont() != fontMetricFont) {
 				fontMetric = g.getFontMetrics();
@@ -3304,26 +3313,26 @@ public class AWTGraphics implements Graphics {
 	public float getStringWidth(String labelg) {
 		return getStringBounds(labelg).getWidth();
 	}
-	
+
 	// Use raster to speed-up getRGB calls
 	private void setUseRaster(boolean raster) {
 		useRaster = false;
 		if (image == null) return;
-		
+
 		useRaster = raster;
 		if (useRaster) {
-			rasterData = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();			
-			if (image2 != null) rasterData2 = ((DataBufferInt) image2.getRaster().getDataBuffer()).getData();						
+			rasterData = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
+			if (image2 != null) rasterData2 = ((DataBufferInt) image2.getRaster().getDataBuffer()).getData();
 		}
 	}
-	
+
 	@Override
 	public int getRGB(int i, int j) {
 		if (this.invertEnabled) {
 			if (this.invertH) i = (int) invertX(i);
 			if (this.invertV) j = (int) invertY(j);
 		}
-		
+
 		if (rasterData != null) return (255<<24) | rasterData[i + j * image.getWidth()];
 		return image.getRGB(i, j);
 	}
@@ -3339,9 +3348,9 @@ public class AWTGraphics implements Graphics {
 			}
 		}
 
-		if (i+w > image.getWidth()) w = image.getWidth()-i; 
+		if (i+w > image.getWidth()) w = image.getWidth()-i;
 		if (j+h > image.getHeight()) h = image.getHeight()-j;
-		
+
 		if (rasterData != null) {
 			int rgb[] = new int[w*h];
 			for (int y=j; y<j+h; y++) {
@@ -3360,20 +3369,20 @@ public class AWTGraphics implements Graphics {
 			if (this.invertH) i = (int) invertX(i);
 			if (this.invertV) j = (int) invertY(j);
 		}
-		
+
 		if (rasterData2 != null) return (255<<24) | rasterData2[i + j * image2.getWidth()];
 		return image2.getRGB(i, j);
 	}
-	
+
 	@Override
 	public float[] getInvertedPosition(float i, float j) {
 		if (this.invertEnabled) {
 			if (this.invertH) i = (int) invertX(i);
 			if (this.invertV) j = (int) invertY(j);
-		}		
+		}
 		return new float[] {i, j};
 	}
-	
+
 	@Override
 	public int[] getInvertedRectangle(int[] rec) {
 		if (this.invertEnabled) {
@@ -3386,7 +3395,7 @@ public class AWTGraphics implements Graphics {
 		}
 		return rec;
 	}
-	
+
 	@Override
 	public int getRGB(Object s, int i, int j) {
 		BufferedImage img = toImage(s);
@@ -3434,7 +3443,7 @@ public class AWTGraphics implements Graphics {
 			if (this.invertH) i = (int) invertX(i);
 			if (this.invertV) j = (int) invertY(j);
 		}
-		
+
 		float y = this.getY(j, z);
 		float x = this.getXLeft(i, z);
 
@@ -3448,7 +3457,7 @@ public class AWTGraphics implements Graphics {
 			if (this.invertH) i = (int) invertX(i);
 			if (this.invertV) j = (int) invertY(j);
 		}
-		
+
 		float y = this.getY(j, z);
 		float x = this.getXRight(i, z);
 
@@ -3471,7 +3480,7 @@ public class AWTGraphics implements Graphics {
 		String n = f.getFontName();
 		// Hack to use a font supported by Java in PDF export (later transformed to Symbol again using a font mapping in iText).
 		// Symbol is for Greek alphabet
-		if (n.equals("Symbol")) n = Font.SERIF; 
+		if (n.equals("Symbol")) n = Font.SERIF;
 		Font font = new Font(n, f.getType(), f.getSize());
 		g.setFont(font);
 		if (g2 != null) g2.setFont(font);
@@ -3496,23 +3505,23 @@ public class AWTGraphics implements Graphics {
 				int c = ((this.getAlpha(color) >> 24) & 0xff) << 24 | 255<<16 | 255<<8 | 255;
 				return Picture.makeTransparent(image, new Color(color), new Color(c), t);
 				//waitUntilImagesAreRead(new Object[] {out});
-				//return ((sun.awt.image.ToolkitImage) out).getBufferedImage();				
+				//return ((sun.awt.image.ToolkitImage) out).getBufferedImage();
 			}
 		}
 	}
-	
+
 
 	@Override
 	public void drawRect(float i, float j, float k, float l) {
 		drawRect(i, j, k, l, g, g2);
 	}
-	
+
 	private void drawRect(float i, float j, float k, float l, Graphics2D g, Graphics2D g2) {
 		if (this.invertEnabled) {
 			if (this.invertH) i = invertX(i)-k+1;
 			if (this.invertV) j = invertY(j)-l+1;
 		}
-		
+
 		if (i == (int)(i) && j == (int) j) {
 			if (g != null) g.drawRect((int)i, (int)j, (int) (k-0.5), (int) (l-0.5));
 			if (g2 != null) g2.drawRect((int)i, (int)j, (int) (k-0.5), (int) (l-0.5));
@@ -3539,8 +3548,8 @@ public class AWTGraphics implements Graphics {
 			if (this.invertH) i = invertX(i);
 			if (this.invertV) j = invertY(j);
 		}
-		
-		if (g != null) { 
+
+		if (g != null) {
 			g.translate(i, j);
 			g.rotate(-k);
 			g.drawString(labelDEC, 0, 0);
@@ -3559,10 +3568,10 @@ public class AWTGraphics implements Graphics {
 	@Override
 	public Object getImage(Object img, int i, int j, int width, int k) {
 		BufferedImage image = toImage(img);
-		
+
 		return image.getSubimage(i, j, width, k);
 	}
-	
+
 	@Override
 	public Object getImage(int i, int j, int width, int k) {
 		if (image == null) return null;
@@ -3570,7 +3579,7 @@ public class AWTGraphics implements Graphics {
 			if (this.invertH) i = (int) (invertX(i)-width+1);
 			if (this.invertV) j = (int) (invertY(j)-k+1);
 		}
-		
+
 		if (i < 0) i = 0;
 		if (j < 0) j = 0;
 		if (i+width > w) width = w-i;
@@ -3585,7 +3594,7 @@ public class AWTGraphics implements Graphics {
 			if (this.invertH) i = (int) (invertX(i)-width+1);
 			if (this.invertV) j = (int) (invertY(j)-k+1);
 		}
-		
+
 		if (i < 0) i = 0;
 		if (j < 0) j = 0;
 		if (i+width > image2.getWidth()) width = image2.getWidth()-i;
@@ -3605,7 +3614,7 @@ public class AWTGraphics implements Graphics {
 			tracker.waitForAll();
 		} catch (Exception e) {
 			Logger.log(LEVEL.WARNING, "Could not read image/s completely.");
-		}		
+		}
 	}
 
 	@Override
@@ -3656,7 +3665,7 @@ public class AWTGraphics implements Graphics {
 		Color color = new Color(r, g, b, alpha);
 		this.g.setColor(color);
 		if (g2 != null) g2.setColor(color);
-		
+
 		lastR = r;
 		lastG = g;
 		lastB = b;
@@ -3679,7 +3688,7 @@ public class AWTGraphics implements Graphics {
 	}
 
 	// GeneralPath methods
-	
+
 	@Override
 	public Object generalPathInitialize() {
 		return new GeneralPath(criteria);
@@ -3691,7 +3700,7 @@ public class AWTGraphics implements Graphics {
 			if (this.invertH) x = invertX(x);
 			if (this.invertV) y = invertY(y);
 		}
-		
+
 		((GeneralPath) obj).moveTo(x, y);
 	}
 
@@ -3701,7 +3710,7 @@ public class AWTGraphics implements Graphics {
 			if (this.invertH) x = invertX(x);
 			if (this.invertV) y = invertY(y);
 		}
-		
+
 		((GeneralPath) obj).lineTo(x, y);
 	}
 
@@ -3718,7 +3727,7 @@ public class AWTGraphics implements Graphics {
 				y2 = invertY(y2);
 			}
 		}
-		
+
 		((GeneralPath) obj).quadTo(x1, y1, x2, y2);
 	}
 
@@ -3740,12 +3749,12 @@ public class AWTGraphics implements Graphics {
 
 		((GeneralPath) obj).curveTo(x1, y1, x2, y2, x3, y3);
 	}
-	
+
 	@Override
 	public void generalPathClosePath(Object obj) {
 		((GeneralPath) obj).closePath();
 	}
-	
+
 	// Anaglyph methods
 
 	@Override
@@ -3757,7 +3766,7 @@ public class AWTGraphics implements Graphics {
 	@Override
 	public void fillOvalAnaglyphRight(float i, float j, float k, float l, float dist) {
 		float ya = this.getY(j, dist);
-		fillOval(this.getXRight(i, dist), ya, k, l, null, g2);			
+		fillOval(this.getXRight(i, dist), ya, k, l, null, g2);
 	}
 
 	@Override
@@ -3769,26 +3778,26 @@ public class AWTGraphics implements Graphics {
 
 		float ya = this.getY(j, dist);
 		if (g2 == null) {
-			Color c = g.getColor(); 
+			Color c = g.getColor();
 			g.setColor(this.getColorLeft());
 			fillOval(this.getXLeft(i, dist), ya, k, l, false);
 			g.setColor(this.getColorRight());
 			fillOval(this.getXRight(i, dist), ya, k, l, false);
 			g.setColor(c);
-		} else { 
-			fillOval(this.getXLeft(i, dist), ya, k, l, g, null); 
-			fillOval(this.getXRight(i, dist), ya, k, l, null, g2);			
+		} else {
+			fillOval(this.getXLeft(i, dist), ya, k, l, g, null);
+			fillOval(this.getXRight(i, dist), ya, k, l, null, g2);
 		}
 	}
 
 	@Override
 	public void drawLine(float i, float j, float k, float l, float dist1, float dist2) {
-		if (this.colorMode == Graphics.ANAGLYPH_COLOR_MODE.NO_ANAGLYPH || 
+		if (this.colorMode == Graphics.ANAGLYPH_COLOR_MODE.NO_ANAGLYPH ||
 				(dist1 == this.colorMode.getReferenceZ() && dist2 == this.colorMode.getReferenceZ())) {
 			drawLine(i, j, k, l, false);
 			return;
 		}
-		
+
 		float ya1 = this.getY(j, dist1);
 		float ya2 = this.getY(l, dist2);
 		if (g2 == null) {
@@ -3801,18 +3810,18 @@ public class AWTGraphics implements Graphics {
 		} else {
 //			int clip[] = this.getClip();
 			drawLine(this.getXLeft(i, dist1), ya1, this.getXLeft(k, dist2), ya2, g, null, false); //, clip);
-			drawLine(this.getXRight(i, dist1), ya1, this.getXRight(k, dist2), ya2, null, g2, false); //, clip);			
+			drawLine(this.getXRight(i, dist1), ya1, this.getXRight(k, dist2), ya2, null, g2, false); //, clip);
 		}
 	}
 
 	@Override
 	public void drawStraightLine(float i, float j, float k, float l, float dist1, float dist2) {
-		if (this.colorMode == Graphics.ANAGLYPH_COLOR_MODE.NO_ANAGLYPH || 
+		if (this.colorMode == Graphics.ANAGLYPH_COLOR_MODE.NO_ANAGLYPH ||
 				(dist1 == this.colorMode.getReferenceZ() && dist2 == this.colorMode.getReferenceZ())) {
 			drawStraightLine(i, j, k, l);
 			return;
 		}
-		
+
 		float ya1 = this.getY(j, dist1);
 		float ya2 = this.getY(l, dist2);
 		if (g2 == null) {
@@ -3829,12 +3838,12 @@ public class AWTGraphics implements Graphics {
 
 	@Override
 	public void drawLines(int i[], int j[], int np, float dist[], boolean fastMode) {
-		if (this.colorMode == Graphics.ANAGLYPH_COLOR_MODE.NO_ANAGLYPH || 
+		if (this.colorMode == Graphics.ANAGLYPH_COLOR_MODE.NO_ANAGLYPH ||
 				(dist == null || (dist[0] == this.colorMode.getReferenceZ() && dist[1] == this.colorMode.getReferenceZ()))) {
 			drawLines(i, j, np, fastMode);
 			return;
 		}
-		
+
 		Color c = g.getColor();
 //		int clip[] = this.getClip();
 		for (int k=0; k<np-1; k++) {
@@ -3847,19 +3856,19 @@ public class AWTGraphics implements Graphics {
 				drawLine(this.getXRight(i[k], dist[k]), ya1, this.getXRight(i[k+1], dist[k+1]), ya2, false);
 			} else {
 				drawLine(this.getXLeft(i[k], dist[k]), ya1, this.getXLeft(i[k+1], dist[k+1]), ya2, g, null, false); //, clip);
-				drawLine(this.getXRight(i[k], dist[k]), ya1, this.getXRight(i[k+1], dist[k+1]), ya2, null, g2, false); //, clip);			
+				drawLine(this.getXRight(i[k], dist[k]), ya1, this.getXRight(i[k+1], dist[k+1]), ya2, null, g2, false); //, clip);
 			}
 		}
 		g.setColor(c);
 	}
-	
+
 	@Override
 	public void drawOval(float i, float j, float k, float l, float dist) {
 		if (this.colorMode == Graphics.ANAGLYPH_COLOR_MODE.NO_ANAGLYPH || dist == this.colorMode.getReferenceZ()) {
 			drawOval(i, j, k, l, false);
 			return;
 		}
-		
+
 		float ya = this.getY(j, dist);
 		if (g2 == null) {
 			Color c = g.getColor();
@@ -3870,10 +3879,10 @@ public class AWTGraphics implements Graphics {
 			g.setColor(c);
 		} else {
 			drawOval(this.getXLeft(i, dist), ya, k, l, g, null, false);
-			drawOval(this.getXRight(i, dist), ya, k, l, null, g2, false);			
+			drawOval(this.getXRight(i, dist), ya, k, l, null, g2, false);
 		}
 	}
-	
+
 	@Override
 	public void fill(Object s, float z) {
 		if (this.colorMode == Graphics.ANAGLYPH_COLOR_MODE.NO_ANAGLYPH || z == this.colorMode.getReferenceZ()) {
@@ -3900,10 +3909,10 @@ public class AWTGraphics implements Graphics {
 			g.translate(z, 0);
 			g2.translate(z, 0);
 			g2.fill((GeneralPath) s);
-			g2.translate(-z, 0);			
+			g2.translate(-z, 0);
 		}
 	}
-	
+
 	@Override
 	public void drawString(String str, float x, float y, float z) {
 		if (this.colorMode == Graphics.ANAGLYPH_COLOR_MODE.NO_ANAGLYPH || z == this.colorMode.getReferenceZ()) {
@@ -3929,7 +3938,7 @@ public class AWTGraphics implements Graphics {
 	public void drawImage(Object img, float x, float y, float z) {
 		drawImage(img, x, y, z, 1.0, 1.0);
 	}
-	
+
 	@Override
 	public void drawImage(Object img, float x, float y, float z, double scalex, double scaley) {
 		if (g2 == null || this.colorMode == Graphics.ANAGLYPH_COLOR_MODE.NO_ANAGLYPH || z == this.colorMode.getReferenceZ()) {
@@ -3941,7 +3950,7 @@ public class AWTGraphics implements Graphics {
 			if (this.invertH) x = invertX(x);
 			if (this.invertV) y = invertY(y);
 		}
-		
+
 		if (z > 2*this.colorMode.getReferenceZ()) z = 2 * this.colorMode.getReferenceZ();
 		if (z < 0) z = 0;
 		z = (z - this.colorMode.getReferenceZ()) * this.colorMode.getEyeSeparation() * 0.5f;
@@ -3954,13 +3963,13 @@ public class AWTGraphics implements Graphics {
 			g.translate(-2*z, 0);
 			drawImage(img, x, y, scalex, scaley, g, g2);
 			g.translate(z, 0);
-			g.setColor(c);	
+			g.setColor(c);
 		} else {
 */			g.translate(-z, 0);
 			g2.translate(z, 0);
 			drawImage(img, x, y, scalex, scaley, g, g2);
 			g.translate(z, 0);
-			g2.translate(-z, 0);			
+			g2.translate(-z, 0);
 //		}
 
 	}
@@ -3971,7 +3980,7 @@ public class AWTGraphics implements Graphics {
 			fillRect(i, j, k, l);
 			return;
 		}
-		
+
 		float ya = this.getY(j, dist);
 		if (g2 == null) {
 			Color c = g.getColor();
@@ -3979,10 +3988,10 @@ public class AWTGraphics implements Graphics {
 			fillRect(this.getXLeft(i, dist), ya, k, l);
 			g.setColor(this.getColorRight());
 			fillRect(this.getXRight(i, dist), ya, k, l);
-			g.setColor(c);	
+			g.setColor(c);
 		} else {
 			fillRect(this.getXLeft(i, dist), ya, k, l, g, null);
-			fillRect(this.getXRight(i, dist), ya, k, l, null, g2);			
+			fillRect(this.getXRight(i, dist), ya, k, l, null, g2);
 		}
 	}
 
@@ -4005,11 +4014,11 @@ public class AWTGraphics implements Graphics {
 			g.translate(2 * z, 0);
 			g.draw((GeneralPath) s);
 			g.translate(-z, 0);
-			g.setColor(c);	
+			g.setColor(c);
 		} else {
 			g.translate(-z, 0);
 			g.draw((GeneralPath) s);
-			g.translate(z, 0);			
+			g.translate(z, 0);
 			g2.translate(z, 0);
 			g2.draw((GeneralPath) s);
 			g2.translate(-z, 0);
@@ -4029,13 +4038,13 @@ public class AWTGraphics implements Graphics {
 			drawRect(this.getXLeft(i, dist), this.getY(j, dist), k, l);
 			g.setColor(this.getColorRight());
 			drawRect(this.getXRight(i, dist), this.getY(j, dist), k, l);
-			g.setColor(c);	
+			g.setColor(c);
 		} else {
 			drawRect(this.getXLeft(i, dist), this.getY(j, dist), k, l, g, null);
-			drawRect(this.getXRight(i, dist), this.getY(j, dist), k, l, null, g2);			
+			drawRect(this.getXRight(i, dist), this.getY(j, dist), k, l, null, g2);
 		}
 	}
-	
+
 	@Override
 	public void drawRotatedString(String label, float i, float j, float k,
 			float z) {
@@ -4048,7 +4057,7 @@ public class AWTGraphics implements Graphics {
 			if (this.invertH) i = invertX(i);
 			if (this.invertV) j = invertY(j);
 		}
-		
+
 		if (z > 2*this.colorMode.getReferenceZ()) z = 2 * this.colorMode.getReferenceZ();
 		if (z < 0) z = 0;
 		float r = (z - this.colorMode.getReferenceZ()) * this.colorMode.getEyeSeparation() * 0.5f;
@@ -4063,9 +4072,9 @@ public class AWTGraphics implements Graphics {
 		g2.rotate(k);
 		g2.translate(-i+r, -j);
 	}
-	
-	
-	
+
+
+
 	private Color getColorRight() {
 		if (colorMode == ANAGLYPH_COLOR_MODE.GREEN_RED) return new Color(0, 239, 0, 128);
 		return new Color(255, 0, 0, 128);
@@ -4079,7 +4088,7 @@ public class AWTGraphics implements Graphics {
 		if (z < 0) z = 0;
 		float dx = (0.5f + z - this.colorMode.getReferenceZ()) * this.colorMode.getEyeSeparation() * 0.5f;
 		if (this.invertEnabled && this.invertH) return x - dx;
-		return x + dx; 
+		return x + dx;
 //		if (x == (int) x) out = (int) (out+0.5);
 	}
 	private float getXLeft(float x, float z) {
@@ -4093,13 +4102,13 @@ public class AWTGraphics implements Graphics {
 	private float getY(float y, float z) {
 		return y;
 	}
-	
+
 	@Override
-	  public Object blendImagesToAnaglyphMode(Object l, Object r) 
+	  public Object blendImagesToAnaglyphMode(Object l, Object r)
 	  {
 		BufferedImage leftImg = toImage(l);
 		BufferedImage rightImg = toImage(r);
-		
+
 		if (colorMode == ANAGLYPH_COLOR_MODE.TRUE_3D_MODE_LEFT_RIGHT) {
 			 BufferedImage buf = new BufferedImage(w*2, h, BufferedImage.TYPE_INT_ARGB);
 			 Graphics2D g = buf.createGraphics();
@@ -4129,8 +4138,8 @@ public class AWTGraphics implements Graphics {
 			 }
 		 }
 
-		 int[] rgb1 = ((DataBufferInt) leftImg.getRaster().getDataBuffer()).getData();			
-		 int[] rgb2 = ((DataBufferInt) rightImg.getRaster().getDataBuffer()).getData();			
+		 int[] rgb1 = ((DataBufferInt) leftImg.getRaster().getDataBuffer()).getData();
+		 int[] rgb2 = ((DataBufferInt) rightImg.getRaster().getDataBuffer()).getData();
 
 		 for (int x=0; x<rgb1.length; x++) {
 			 rgb1[x] = combine(rgb1[x], rgb2[x], matrixLeft, matrixRight);
@@ -4162,14 +4171,14 @@ public class AWTGraphics implements Graphics {
 			 if (ga1 < 0) ga1 = 0;
 			 if (ba1 > 255) ba1 = 255;
 			 if (ba1 < 0) ba1 = 0;
-			 
+
 			 if (ra2 > 255) ra2 = 255;
 			 if (ra2 < 0) ra2 = 0;
 			 if (ga2 > 255) ga2 = 255;
 			 if (ga2 < 0) ga2 = 0;
 			 if (ba2 > 255) ba2 = 255;
 			 if (ba2 < 0) ba2 = 0;
-			 
+
 			 int rb = (int) (0.5 + ra1 + ra2);
 			 int gb = (int) (0.5 + ga1 + ga2);
 			 int bb = (int) (0.5 + ba1 + ba2);
@@ -4183,7 +4192,7 @@ public class AWTGraphics implements Graphics {
 
 			 return 255 << 24 | rb<<16 | gb<<8 | bb;
 	  }
-	  
+
 	  /**
 	   * Converts a {@linkplain JPARSECStroke} into its Java implementation.
 	   * @param s The JPARSEC stroke.
@@ -4324,13 +4333,13 @@ public class AWTGraphics implements Graphics {
 	  public Object getDirectGraphics2() {
 		  return g2;
 	  }
-	  
+
 	  private BufferedImage toImage(Object img) {
 			if (img instanceof BufferedImage) {
 				return (BufferedImage) img;
 			} else {
 				ImageIcon imgIcon = new ImageIcon((Image) img);
-				BufferedImage image = new BufferedImage(imgIcon.getIconWidth(), imgIcon.getIconHeight(), BufferedImage.TYPE_INT_ARGB); 
+				BufferedImage image = new BufferedImage(imgIcon.getIconWidth(), imgIcon.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
 				image.getGraphics().drawImage(imgIcon.getImage(), 0, 0, null);
 				return image;
 			}
@@ -4370,7 +4379,7 @@ public class AWTGraphics implements Graphics {
 	    		blue = (int) (blue * (1 - masking_factor) + blue1 * masking_factor);
 	    		color = 255<<24 | red<<16 | green<<8 | blue;
 	    	}
-	
+
 			setImageRGB(i, j, color);
 			if (g2 != null) setImageRGB2(i, j, color);
 		}
@@ -4387,7 +4396,7 @@ public class AWTGraphics implements Graphics {
 	@Override
 	public void traslate(double x, double y) {
 		if (g != null || g2 != null) {
-			tx = x; 
+			tx = x;
 			ty = y;
 		}
 		if (g != null) g.translate(x, y);
@@ -4414,7 +4423,7 @@ class EllipseBresenhamInterpolator {
      * Current m_dy value.
      */
     public int dy;
-    
+
     private int m_rx2;
     private int m_ry2;
     private int m_two_rx2;
@@ -4424,8 +4433,8 @@ class EllipseBresenhamInterpolator {
     private int m_cur_f;
     public int m_dx;
     public int m_dy;
-    
-    
+
+
     /**
      * Creates a new instance.
      */
@@ -4439,51 +4448,51 @@ class EllipseBresenhamInterpolator {
         m_inc_x = 0;
         m_inc_y = -ry * m_two_rx2;
         m_cur_f = 0;
-        
+
         dx = 0;
         dy = -ry;
     }
-    
+
     public boolean hasNext() {
         return dy < 0;
     }
-    
+
     public void next() {
         int mx, my, mxy, min_m;
         int fx, fy, fxy;
-        
+
         mx = fx = m_cur_f + m_inc_x + m_ry2;
         if (mx < 0) mx = -mx;
-        
+
         my = fy = m_cur_f + m_inc_y + m_rx2;
         if (my < 0) my = -my;
-        
+
         mxy = fxy = m_cur_f + m_inc_x + m_ry2 + m_inc_y + m_rx2;
         if (mxy < 0) mxy = -mxy;
-        
+
         min_m = mx;
         boolean flag = true;
-        
+
         if (min_m > my) {
             min_m = my;
             flag = false;
         }
-        
+
         m_dx = m_dy = 0;
-        
+
         if(min_m > mxy) {
             m_inc_x += m_two_ry2;
             m_inc_y += m_two_rx2;
             m_cur_f = fxy;
             m_dx = 1;
             m_dy = 1;
-            
+
             dx += m_dx;
             dy += m_dy;
-            
+
             return;
         }
-        
+
         if(flag) {
             m_inc_x += m_two_ry2;
             m_cur_f = fx;
@@ -4493,11 +4502,11 @@ class EllipseBresenhamInterpolator {
             dy += m_dy;
             return;
         }
-        
+
         m_inc_y += m_two_rx2;
         m_cur_f = fy;
         m_dy = 1;
-        
+
             dx += m_dx;
             dy += m_dy;
     }
@@ -4510,11 +4519,11 @@ class EllipseBresenhamInterpolator {
  * @version 1.0 April 5, 2006 Created.
  */
 class Edge {
-    
+
     /** Creates a new instance. */
     public Edge() {
     }
-    
+
     /**
      * Upper value on y-axis for horizontal scan fill algorithm.
      * Upper value on x-axis for vertical scan fill algorithm.

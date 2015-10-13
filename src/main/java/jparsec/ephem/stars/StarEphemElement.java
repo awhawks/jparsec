@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.ephem.stars;
 
 import java.io.Serializable;
@@ -30,19 +30,19 @@ import jparsec.observer.LocationElement;
  * <P>
  * This class provides access to the data resulting from the
  * calculation of ephemerides of stars.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
 public class StarEphemElement implements Serializable
 {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Constructs an star ephem object providing the values of the fields.
 	 * This sets the values of all the fields except light rise, set, transit,
 	 * transit elevation, and constellation.
-	 * 
+	 *
 	 * @param ra Right Ascension in radians.
 	 * @param dec Declination in radians.
 	 * @param r Distance to the observer in AU.
@@ -181,9 +181,8 @@ public class StarEphemElement implements Serializable
 
 		return s;
 	}
-
 	/**
-	 * Returns true if the input object is equal to this
+	 * Returns true if the input object is equals to this
 	 * instance.
 	 */
 	@Override
@@ -237,4 +236,4 @@ public class StarEphemElement implements Serializable
 		result = 31 * result + (name != null ? name.hashCode() : 0);
 		return result;
 	}
-}
+};

@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.math;
 
 import java.util.Enumeration;
@@ -40,7 +40,7 @@ import jparsec.util.*;
  * 		e.showException();
  * }
  * </pre>
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -54,7 +54,7 @@ public class Converter {
 	 * Target unit, for example km or c (speed of light).
 	 */
 	public String targetUnit;
-	
+
 	/**
 	 * Constructor.
 	 * @param origin Origin unit.
@@ -65,11 +65,11 @@ public class Converter {
 	throws JPARSECException {
 		this.originUnit = origin;
 		this.targetUnit = target;
-		
-		if (!this.isConversionSupported()) 
+
+		if (!this.isConversionSupported())
 			throw new JPARSECException("unsupported conversion.");
 	}
-	
+
 	/**
 	 * Returns all supported symbols.
 	 * @return Symbols.
@@ -85,7 +85,7 @@ public class Converter {
 		}
 		return jparsec.graph.DataSet.toStringArray(symbols, jparsec.io.FileIO.getLineSeparator());
 	}
-	
+
 	/**
 	 * Explains the meaning of a unit.
 	 * @param unit Any unit.
@@ -93,9 +93,9 @@ public class Converter {
 	 */
 	public static String explainUnit(String unit)
 	{
-		return Unit.explainUnit(unit);		
+		return Unit.explainUnit(unit);
 	}
-	
+
 	/**
 	 * Returns all symbols and their explanations.
 	 * @return Symbols plus explanations.
@@ -113,7 +113,7 @@ public class Converter {
 		}
 		return jparsec.graph.DataSet.toStringArray(symbols, jparsec.io.FileIO.getLineSeparator());
 	}
-	
+
 	/**
 	 * Check if a given symbol is supported.
 	 * @param symbol A primitive unit.
@@ -132,7 +132,7 @@ public class Converter {
 		}
 		return isSupported;
 	}
-	
+
 	/**
 	 * Checks if a given conversion is supported.
 	 * @return True if it is supported.
@@ -142,7 +142,7 @@ public class Converter {
 		try {
 			Unit u1 = new Unit(this.originUnit);
 			Unit u2 = new Unit(this.targetUnit);
-	
+
 			// If no error occurs instantiating, then it is supported
 			return true;
 		} catch (Exception e)
@@ -150,7 +150,7 @@ public class Converter {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Returns origin unit as a unit instance.
 	 * @return Instance.
@@ -166,7 +166,7 @@ public class Converter {
 			throw new JPARSECException("cannot understand origin unit.", e);
 		}
 	}
-	
+
 	/**
 	 * Returns target unit as a unit instance.
 	 * @return Instance.
@@ -182,7 +182,7 @@ public class Converter {
 			throw new JPARSECException("cannot understand target unit.", e);
 		}
 	}
-	
+
 	/**
 	 * Returns unit as a unit instance.
 	 * @param unit Unit.
@@ -199,7 +199,7 @@ public class Converter {
 			throw new JPARSECException("cannot understand target unit.", e);
 		}
 	}
-	
+
 	/**
 	 * Converts a value in a origin unit into the units of the target unit.
 	 * @param value Value.

@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.ephem.probes;
 
 import java.util.ArrayList;
@@ -70,7 +70,7 @@ public class SDP8_SGP8
 
   private double E1_EPOCH;
   final private double RHO = .15696615;
-  
+
   // SDP8 only
   private double C0;
   private double C4;
@@ -239,6 +239,14 @@ public class SDP8_SGP8
   private DoubleRef XINC = new DoubleRef(0.0f);
 
   /**
+   * Returns the orbital elements for the artificial satellite
+   * computed by this instance.
+   * @return The {@linkplain SatelliteOrbitalElement} object.
+   */
+  public SatelliteOrbitalElement getSat() {
+	  return this.sat;
+  }
+  /**
    * The constructor to apply SDP8/SGP8 model.
    * @param sat The orbital elements.
    * @throws JPARSECException If the orbital elements cannot be
@@ -250,15 +258,11 @@ public class SDP8_SGP8
 	    Init();
   }
 
-    public SatelliteOrbitalElement getSat() {
-        return this.sat;
-    }
-
   /**
    * Initialize the SDP8.
    *
    * <p>This initializes the SDP8 object.  Most state variables are set to
-   * zero, some to constants necessary for the calculations. 
+   * zero, some to constants necessary for the calculations.
  * @throws JPARSECException */
 
   private void Init() throws JPARSECException
@@ -268,6 +272,7 @@ public class SDP8_SGP8
     itsR[0] = 0.01; itsR[1] = 0.; itsR[2] = 0.;
     itsV[0] = 0.;   itsV[1] = 0.; itsV[2] = 0.;
     //itsEpochJD    = 0.;
+
 
     // RECOVER ORIGINAL MEAN MOTION (XNODP) AND SEMIMAJOR AXIS (AODP)
     // FROM INPUT ELEMENTS --------- CALCULATE BALLISTIC COEFFICIENT
@@ -288,7 +293,7 @@ public class SDP8_SGP8
     B=2.*(sat.drag/C1.AE)/RHO;
 
     // INITIALIZATION
-    
+
     PO=AODP*BETAO2;
     POM2=1./(PO*PO);
     SINI=Math.sin(sat.inclination);
@@ -329,7 +334,7 @@ public class SDP8_SGP8
     B1=C1.CK2*TTHMUN;
     B2=-C1.CK2*UNMTH2;
     B3=A3COF*SINI;
-    
+
 
     C0=.5*B*RHO*C1.QOMS2T*XNODP*AODP*Math.pow(TSI,4)*Math.pow(PSIM2,3.5)/Math.sqrt(ALPHA2);
     c1=1.5*XNODP*Math.pow(ALPHA2,2)*C0;
@@ -339,7 +344,7 @@ public class SDP8_SGP8
         (2.+ETA2*(3.+34.*EOSQ)+5.*EETA*(4.+ETA2)+8.5*EOSQ)+
         D1*D2*B1+   C4*COS2G+C5*SING);
     XNDTN=XNDT/XNODP;
-    
+
     if (isDeep) {
 	    EDOT=-C1.TOTHRD*XNDTN*(1.-sat.eccentricity);
 	    DEEP.DPINIT(sat,EOSQ,SINI,COSI,BETAO,AODP,THETA2,SING,COSG,
@@ -348,13 +353,13 @@ public class SDP8_SGP8
     }
 
     // INITIALIZATION SGP8
-    
+
     ISIMP=0;
-    
+
     // IF DRAG IS VERY SMALL, THE ISIMP FLAG IS SET AND THE
     // EQUATIONS ARE TRUNCATED TO LINEAR VARIATION IN MEAN
     // MOTION AND QUADRATIC VARIATION IN MEAN ANOMALY
-    
+
     if (Math.abs(XNDTN*C1.XMNPDA) >= 2.16E-3)
     {
         D6=ETA*(30.+22.5*ETA2);
@@ -448,7 +453,7 @@ public class SDP8_SGP8
   /**
    * Calculate ephemeris for the satellite.
    * The ephemerisElement object is used when transforming to apparent
-   * coordinates. In any other case output position is the same 
+   * coordinates. In any other case output position is the same
    * (geometric = astrometric).
    *
    * @param time Time object.
@@ -460,11 +465,11 @@ public class SDP8_SGP8
   {
 	  return calcSatellite(time, obs, eph, true);
   }
-	  
+
   /**
    * Calculate ephemeris for the satellite.
    * The ephemerisElement object is used when transforming to apparent
-   * coordinates. In any other case output position is the same 
+   * coordinates. In any other case output position is the same
    * (geometric = astrometric).
    *
    * @param time Time object.
@@ -490,7 +495,7 @@ public class SDP8_SGP8
     if (!isDeep) {RunSGP8(IFLAG, TS);}
     else                {RunSDP8(IFLAG, TS);}
 
-    
+
     // Rest of calculations for topocentric results
 	double LAT = obs.getLatitudeRad();
 	double LON = obs.getLongitudeRad();
@@ -543,10 +548,10 @@ public class SDP8_SGP8
     double VELx = itsV[0];
     double VELy = itsV[1];
     double VELz = itsV[2];
-    
+
 	double GHAA = jparsec.time.SiderealTime.greenwichMeanSiderealTime(time, obs, eph);
 	if (!FAST_MODE) GHAA += jparsec.time.SiderealTime.equationOfEquinoxes(time, obs, eph);
-	
+
 	double C = FastMath.cos(GHAA);
 	double S = -FastMath.sin(GHAA);
 	double Sx = (SATx * C - SATy * S);
@@ -591,7 +596,7 @@ public class SDP8_SGP8
 	double MASD = 0.98560028; // MA Sun and rate, deg, deg/day
 	double EQC1 = 0.03342;
 	double EQC2 = 0.00035; // Sun's Equation of centre terms
-	double EQC3 = 5.0E-6;		
+	double EQC3 = 5.0E-6;
 	double year = sat.year;
 	double days = sat.day;
 	// Convert satellite Epoch to Day No. and Fraction of day
@@ -615,18 +620,18 @@ public class SDP8_SGP8
 
 	double sunMeanRA = Constant.DEG_TO_RAD * G0 + TEG * earthTraslationRate + Math.PI; // Mean RA Sun at Sat epoch
 	double sunMeanAnomaly = Constant.DEG_TO_RAD * (MAS0 + MASD * TEG); // Mean MA Sun ..
-	
+
 	// Note other programs (XEphem among them) uses the following lines, which seems to be wrong
-	// by 0.004 deg around year 2011. Algorithm at Saros class from Calendrical Calculations agree 
+	// by 0.004 deg around year 2011. Algorithm at Saros class from Calendrical Calculations agree
 	// with previous code up to 0.00001 deg.
 	//double Tp = (itsEpochJD - 2415020.0) / 36525.0;
     //double sunMeanAnomaly2 = (358.475845 + 35999.04975 * Tp - 0.00015 * Tp * Tp - 0.00000333333 * Tp * Tp * Tp) * Constant.DEG_TO_RAD;
-    
+
 	double MAS = sunMeanAnomaly + Constant.DEG_TO_RAD * MASD * T; // MA of Sun round its orbit
 	MAS = Functions.normalizeRadians(MAS);
 	double TAS = sunMeanRA + earthTraslationRate * T + EQC1 * FastMath.sin(MAS) + EQC2 * FastMath.sin(2 * MAS) + EQC3 * FastMath.sin(3 * MAS);
 	TAS = Functions.normalizeRadians(TAS);
-	
+
 	double INS = Constant.DEG_TO_RAD * 23.4393;
 	double CNS = FastMath.cos(INS);
 	double SNS = FastMath.sin(INS); // Sun's inclination
@@ -712,7 +717,7 @@ public class SDP8_SGP8
 	if ((SEL * Constant.RAD_TO_DEG < -10.0) && !(ECL.equals("Eclipsed")))
 		ECL = "Possibly visible";
 
-	double iridiumAngle = SatelliteEphem.iridiumAngle(new double[] {Sx, Sy, Sz}, new double[] {Vx, Vy, Vz}, 
+	double iridiumAngle = SatelliteEphem.iridiumAngle(new double[] {Sx, Sy, Sz}, new double[] {Vx, Vy, Vz},
 			new double[] {Sx - Ox, Sy - Oy, Sz - Oz}, new double[] {Hx, Hy, Hz});
 
 	// Obtain Moon iridium angle
@@ -728,11 +733,11 @@ public class SDP8_SGP8
 
 		double Mx = MOONx * C - MOONy * S;
 		double My = MOONx * S + MOONy * C;
-		double Mz = MOONz; 
-		iridiumAngleMoon = SatelliteEphem.iridiumAngle(new double[] {Sx, Sy, Sz}, new double[] {Vx, Vy, Vz}, 
+		double Mz = MOONz;
+		iridiumAngleMoon = SatelliteEphem.iridiumAngle(new double[] {Sx, Sy, Sz}, new double[] {Vx, Vy, Vz},
 				new double[] {Sx - Ox, Sy - Oy, Sz - Oz}, new double[] {Mx, My, Mz});
 	}
-	
+
 	// Obtain Sun unit vector in EQ coordinates
 //	Hx =  SUNx*CXx + SUNy*CYx + SUNz*CZx;
 //	Hy =  SUNx*CXy + SUNy*CYy + SUNz*CZy;
@@ -742,20 +747,20 @@ public class SDP8_SGP8
 	if (ECL.equals("Eclipsed")) isEclipsed = true;
 
 	FastMath.EXACT_MODE = exactMode;
-	
+
 	double ELO = 0;
 	if (FAST_MODE) {
-		ELO = LocationElement.getApproximateAngularDistance(new LocationElement(SAZ, SEL, 1.0), new LocationElement(AZI, EL, 1.0));		
+		ELO = LocationElement.getApproximateAngularDistance(new LocationElement(SAZ, SEL, 1.0), new LocationElement(AZI, EL, 1.0));
 	} else {
 		ELO = LocationElement.getAngularDistance(new LocationElement(SAZ, SEL, 1.0), new LocationElement(AZI, EL, 1.0));
 	}
-	
+
 	LocationElement loc_horiz = new LocationElement(AZI, EL, R);
 	double ast = FAST_MODE ? GHAA + obs.getLongitudeRad() : SiderealTime.apparentSiderealTime(time, obs, eph);
 	LocationElement loc_eq = CoordinateSystem.horizontalToEquatorial(loc_horiz, ast, obs.getLatitudeRad(), true);
-	
+
 	if (FAST_MODE) {
-		SatelliteEphemElement ephem = new SatelliteEphemElement(sat.getName(), loc_eq.getLongitude(), loc_eq.getLatitude(), R, AZI, EL, 
+		SatelliteEphemElement ephem = new SatelliteEphemElement(sat.getName(), loc_eq.getLongitude(), loc_eq.getLatitude(), R, AZI, EL,
 				(float) SLON, (float) SLAT, (float) HGT, (float) RR, (float) ELO, (float) ILL,
 				isEclipsed, (int) RN);
 
@@ -799,14 +804,14 @@ public class SDP8_SGP8
 	 * Calculate the ephemeris of a satellite.
 	 * <P>
 	 * The ephemerisElement object is used when transforming to apparent
-	 * coordinates. In any other case output position is the same 
+	 * coordinates. In any other case output position is the same
 	 * (geometric = astrometric). Results are referred to mean equinox
 	 * of date.
 	 * <P>
 	 * A pass is defined as the instant when the satellite is more then 15
 	 * degrees above the horizon of the observer. A search for the next pass up
 	 * to 7 days after calculation time will be done.
-	 * 
+	 *
 	 * @param time Time object.
 	 * @param obs Observer object.
 	 * @param eph Ephemeris object. The index of the satellite must be added to the index property.
@@ -843,19 +848,19 @@ public class SDP8_SGP8
 
 		return ephem;
 	}
-	
+
 	/**
 	 * Calculate the ephemeris of a satellite.
 	 * <P>
 	 * The ephemerisElement object is used when transforming to apparent
-	 * coordinates. In any other case output position is the same 
+	 * coordinates. In any other case output position is the same
 	 * (geometric = astrometric). Results are referred to mean equinox
 	 * of date.
 	 * <P>
 	 * A pass is defined as the instant when the satellite is more then 15
 	 * degrees above the horizon of the observer. A search for the next pass up
 	 * to 7 days after calculation time will be done.
-	 * 
+	 *
 	 * @param time Time object.
 	 * @param obs Observer object.
 	 * @param eph Ephemeris object. The index of the satellite must be added to the index property.
@@ -903,7 +908,7 @@ public class SDP8_SGP8
 		double a = Math.pow((GM / (n * n)), 1.0 / 3.0); // Semi major axis km
 		double ecc = sat.eccentricity;
 		double b = a * Math.sqrt(1.0 - ecc * ecc); // Semi minor axis km
-		
+
 		double r = (a + b) / 2.0 - Constant.EARTH_RADIUS;
 		double ang = Constant.PI_OVER_TWO - 2.0 * minElev;
 		double dr = ang * r;
@@ -911,7 +916,7 @@ public class SDP8_SGP8
 		double dt = dr * Constant.SECONDS_PER_DAY / drDay;
 		return dt / Constant.SECONDS_PER_DAY; // days
 	}
-	
+
 	/**
 	 * Obtain the time of the next pass of the satellite above observer. It can be used
 	 * as an starting point prior to obtain rise, set, transit times.
@@ -923,12 +928,12 @@ public class SDP8_SGP8
 	 * <P>
 	 * The pass is a search iteration with a precision of 1 minute of time. If
 	 * the satellite appears too quickly or just below minimum elevation only
-	 * for a few seconds, then the search could fail. Another possible cause 
+	 * for a few seconds, then the search could fail. Another possible cause
 	 * of fail is for geostationary satellites.
 	 * <P>
 	 * The execution of this method is a low computer could last for quite a long
 	 * time.
-	 * 
+	 *
 	 * @param time Time object.
 	 * @param obs Observer object.
 	 * @param eph Ephemeris object.
@@ -937,7 +942,7 @@ public class SDP8_SGP8
 	 * @param maxDays Maximum number of days to search for a next pass.
 	 * @param current True to return the input time if the satellite is above the minimum
 	 * elevation, false to return next pass without considering the actual position of the satellite.
-	 * @return Julian day of the next pass in local time, or 0.0 if the satellite 
+	 * @return Julian day of the next pass in local time, or 0.0 if the satellite
 	 * has no next transit. If the day is negative that means that the satellite is
 	 * eclipsed during the next pass.
 	 * @throws JPARSECException If the method fails, for example because of an
@@ -951,7 +956,7 @@ public class SDP8_SGP8
 			throw new JPARSECException("invalid ephemeris object.");
 
 		if (min_elevation < 0.0 || min_elevation >= Math.PI*0.5) throw new JPARSECException("invalid minimum elevation.");
-		
+
 		// Obtain ephemeris
 		SDP8_SGP8 s = new SDP8_SGP8(sat);
 		s.FAST_MODE = true;
@@ -970,7 +975,7 @@ public class SDP8_SGP8
 		int quickSearch = (int) (0.5 + qs / 2.0);
 		if (quickSearch < 1) quickSearch = 1;
 		if (quickSearch > 8) quickSearch = 8;
-		
+
 		// Obtain next pass. First we obtain the time when the satellite is
 		// below the minimum elevation (necessary if it is currently above). Then, we
 		// obtain the next pass
@@ -984,7 +989,7 @@ public class SDP8_SGP8
 
 			ephem = s.calcSatellite(new_time, obs, eph, false);
 		}
-		
+
 		if (nstep >= max_step) {
 //			JPARSECException.addWarning("this satellite is permanently above the horizon and the minimum elevation.");
 			return 0.0;
@@ -998,11 +1003,11 @@ public class SDP8_SGP8
 				if (ephem.elevation < -15.0 * Constant.DEG_TO_RAD) {
 					int bqs = quickSearch / 2;
 					if (bqs < 1) bqs = 1;
-					nstep = nstep + bqs;				
+					nstep = nstep + bqs;
 				} else {
 					int bqs = quickSearch / 4;
 					if (bqs < 1) bqs = 1;
-					nstep = nstep + bqs;									
+					nstep = nstep + bqs;
 				}
 			}
 			double new_JD = JD + (double) nstep * time_step;
@@ -1025,7 +1030,7 @@ public class SDP8_SGP8
 		}
 
 		double next_pass = TimeScale.getJD(time, obs, eph, SCALE.LOCAL_TIME) + nstep * time_step;
-		
+
 		if (next_pass >= JD_LT + maxDays) {
 //			JPARSECException.addWarning("could not find next pass time during next "+maxDays+" days.");
 			next_pass = 0.0;
@@ -1043,10 +1048,10 @@ public class SDP8_SGP8
 	 * three latest objects the ephemerides for the satellite when the flare starts, ends, and
 	 * reaches its maximum. In these objects the apparent magnitude expected for the flare is
 	 * set to the magnitude field, and it is corrected for extinction.
-	 * 
+	 *
 	 * The field {@linkplain SatelliteEphem#MAXIMUM_IRIDIUM_ANGLE_FOR_FLARES} sets the sensitivty when
 	 * searching for more or less bright flares.
-	 * 
+	 *
 	 * @param time Time object.
 	 * @param obs Observer object.
 	 * @param eph Ephemeris object.
@@ -1054,7 +1059,7 @@ public class SDP8_SGP8
 	 * @param min_elevation Minimum elevation of the satellite in radians.
 	 * @param maxDays Maximum number of days to search for a next flare.
 	 * @param current True to return the input time if the satellite is above the minimum
-	 * elevation and flaring, false to return next flare without considering the actual 
+	 * elevation and flaring, false to return next flare without considering the actual
 	 * position of the satellite.
 	 * @param precision Precision in the search for events in seconds. The more the value you enter here,
 	 * the faster the calculations will be, but some of the events could be skipped. A good value is
@@ -1062,15 +1067,15 @@ public class SDP8_SGP8
 	 * 1 and 10. The output precision of the found flares will be always 1s.
 	 * @return An array list with all the events for this satellite. The list will be null
 	 * if the satellite has no next flare during the number of days given. Otherwise, it will
-	 * contains arrays of double values with the Julian day of the beggining of the next flare 
+	 * contains arrays of double values with the Julian day of the beggining of the next flare
 	 * in local time, the Julian day of the ending time of the flare, the Julian day of the
 	 * maximum of the flare, and the minimum iridium angle as fourth value. The fifth, sixth,
 	 * and seventh values will be respectivelly the {@linkplain SatelliteEphemElement} object
-	 * for the start, end, and maximum times. No check is done 
-	 * for flares during day or night, although it is easy to provide a time object for sunset 
-	 * and a maximum number of days of 0.5 or the required value for sunrise. Precision in 
-	 * returned times is 1 second, and they consider the minimum elevation so that the start/end 
-	 * times could reflect the instants when the satellite reaches the minimum elevation (or 
+	 * for the start, end, and maximum times. No check is done
+	 * for flares during day or night, although it is easy to provide a time object for sunset
+	 * and a maximum number of days of 0.5 or the required value for sunrise. Precision in
+	 * returned times is 1 second, and they consider the minimum elevation so that the start/end
+	 * times could reflect the instants when the satellite reaches the minimum elevation (or
 	 * is eclipsed) and not the start/end times of the flare.
 	 * @throws JPARSECException If the method fails, for example because of an
 	 *         invalid date.
@@ -1090,14 +1095,14 @@ public class SDP8_SGP8
 		double jd = inputJD, jdOut = 0.0;
 		while (jd < limitJD && jd != 0.0) {
 			TimeElement newTime = new TimeElement(jd, refScale);
-			maxDays = limitJD - jd; 
+			maxDays = limitJD - jd;
 			jd = SDP8_SGP8.getNextPass(newTime, obs, eph, sat, min_elevation, maxDays, current);
 			jd = Math.abs(jd); // <0 => eclipsed, but this limitation should be set at the end only if the sat is eclipsed
 			if (jd > 0.0 && jd < limitJD_LT) {
 	 			jd = TimeScale.getJD(new TimeElement(Math.abs(jd), SCALE.LOCAL_TIME), obs, eph, refScale);
 				current = false;
 
-				jdOut = jd;				
+				jdOut = jd;
 				SDP8_SGP8 s = new SDP8_SGP8(sat);
 				s.FAST_MODE = true;
 				newTime = new TimeElement(jdOut, refScale);
@@ -1140,7 +1145,7 @@ public class SDP8_SGP8
 							ephem = s.calcSatellite(newTime, obs, eph);
 							ephem.magnitude = (float) SatelliteEphem.getIridiumFlareMagnitude(ephem, obs);
 							if (ephem.elevation > min_elevation) above = true;
-							
+
 							if (ephem.iridiumAngle <= SatelliteEphem.MAXIMUM_IRIDIUM_ANGLE_FOR_FLARES && startTime == 0.0) {
 					 			if (ephem.elevation < min_elevation || ephem.isEclipsed) {
 									startTime = 0.0;
@@ -1168,9 +1173,9 @@ public class SDP8_SGP8
 								startTime = 0.0;
 								break;
 							}
-						} while (true);					
+						} while (true);
 					}
-					
+
 					jd = jdOut;
 					if (startTime != 0.0) {
 						if (!max.isEclipsed) {
@@ -1185,7 +1190,7 @@ public class SDP8_SGP8
 		}
 		return events;
 	}
-	
+
 	/**
 	 * Obtain the time of the next lunar flares of the satellite above observer. This
 	 * method calls {@linkplain SDP4_SGP4#getNextPass(TimeElement, ObserverElement, EphemerisElement, SatelliteOrbitalElement, double, double, boolean)}
@@ -1193,10 +1198,10 @@ public class SDP8_SGP8
 	 * three latest objects the ephemerides for the satellite when the flare starts, ends, and
 	 * reaches its maximum. In these objects the apparent magnitude expected for the flare is
 	 * set to the magnitude field, and it is corrected for extinction.
-	 * 
+	 *
 	 * The field {@linkplain SatelliteEphem#MAXIMUM_IRIDIUM_ANGLE_FOR_LUNAR_FLARES} sets the sensitivty when
 	 * searching for more or less bright lunar flares.
-	 * 
+	 *
 	 * @param time Time object.
 	 * @param obs Observer object.
 	 * @param eph Ephemeris object.
@@ -1204,7 +1209,7 @@ public class SDP8_SGP8
 	 * @param min_elevation Minimum elevation of the satellite in radians.
 	 * @param maxDays Maximum number of days to search for a next flare.
 	 * @param current True to return the input time if the satellite is above the minimum
-	 * elevation and flaring, false to return next flare without considering the actual 
+	 * elevation and flaring, false to return next flare without considering the actual
 	 * position of the satellite.
 	 * @param precision Precision in the search for events in seconds. The more the value you enter here,
 	 * the faster the calculations will be, but some of the events could be skipped. A good value is
@@ -1212,15 +1217,15 @@ public class SDP8_SGP8
 	 * 1 and 10. The output precision of the found flares will be always 1s.
 	 * @return An array list with all the events for this satellite. The list will be null
 	 * if the satellite has no next flare during the number of days given. Otherwise, it will
-	 * contains arrays of double values with the Julian day of the beggining of the next flare 
+	 * contains arrays of double values with the Julian day of the beggining of the next flare
 	 * in local time, the Julian day of the ending time of the flare, the Julian day of the
 	 * maximum of the flare, and the minimum iridium angle as fourth value. The fifth, sixth,
 	 * and seventh values will be respectivelly the {@linkplain SatelliteEphemElement} object
-	 * for the start, end, and maximum times. No check is done 
-	 * for flares during day or night, although it is easy to provide a time object for sunset 
-	 * and a maximum number of days of 0.5 or the required value for sunrise. Precision in 
-	 * returned times is 1 second, and they consider the minimum elevation so that the start/end 
-	 * times could reflect the instants when the satellite reaches the minimum elevation (or 
+	 * for the start, end, and maximum times. No check is done
+	 * for flares during day or night, although it is easy to provide a time object for sunset
+	 * and a maximum number of days of 0.5 or the required value for sunrise. Precision in
+	 * returned times is 1 second, and they consider the minimum elevation so that the start/end
+	 * times could reflect the instants when the satellite reaches the minimum elevation (or
 	 * is eclipsed) and not the start/end times of the flare.
 	 * @throws JPARSECException If the method fails, for example because of an
 	 *         invalid date.
@@ -1240,14 +1245,14 @@ public class SDP8_SGP8
 		double jd = inputJD, jdOut = 0.0;
 		while (jd < limitJD && jd != 0.0) {
 			TimeElement newTime = new TimeElement(jd, refScale);
-			maxDays = limitJD - jd; 
+			maxDays = limitJD - jd;
 			jd = SDP8_SGP8.getNextPass(newTime, obs, eph, sat, min_elevation, maxDays, current);
 			jd = Math.abs(jd); // <0 => eclipsed, but this limitation should be set at the end only if the sat is eclipsed
 			if (jd > 0.0 && jd < limitJD_LT) {
 	 			jd = TimeScale.getJD(new TimeElement(Math.abs(jd), SCALE.LOCAL_TIME), obs, eph, refScale);
 				current = false;
 
-				jdOut = jd;				
+				jdOut = jd;
 				SDP8_SGP8 s = new SDP8_SGP8(sat);
 				s.FAST_MODE = true;
 				newTime = new TimeElement(jdOut, refScale);
@@ -1290,7 +1295,7 @@ public class SDP8_SGP8
 							ephem = s.calcSatellite(newTime, obs, eph);
 							ephem.magnitude = (float) SatelliteEphem.getIridiumLunarFlareMagnitude(newTime, obs, eph, ephem);
 							if (ephem.elevation > min_elevation) above = true;
-							
+
 							if (ephem.iridiumAngleForMoon <= SatelliteEphem.MAXIMUM_IRIDIUM_ANGLE_FOR_LUNAR_FLARES && startTime == 0.0) {
 					 			if (ephem.elevation < min_elevation || ephem.isEclipsed) {
 									startTime = 0.0;
@@ -1318,9 +1323,9 @@ public class SDP8_SGP8
 								startTime = 0.0;
 								break;
 							}
-						} while (true);					
+						} while (true);
 					}
-					
+
 					jd = jdOut;
 					if (startTime != 0.0) {
 						if (!max.isEclipsed) {
@@ -1335,7 +1340,7 @@ public class SDP8_SGP8
 		}
 		return events;
 	}
-	
+
 	/**
 	 * Calculates current or next rise, set, transit for a satellite. It is recommended that the
 	 * input ephem objects corresponds to a time when the satellite is above the horizon,
@@ -1367,7 +1372,7 @@ public class SDP8_SGP8
 			sat.transit = DataSet.addDoubleArray(sat.transit, new double[] {0.0});
 			sat.transitElevation = DataSet.addFloatArray(sat.transitElevation, new float[] {0.0f});
 		}
-		SatelliteEphemElement satOut = sat.clone();		
+		SatelliteEphemElement satOut = sat.clone();
 
 		// Obtain next pass time, when the satellite is at least 15 degrees
 		// above horizon
@@ -1375,10 +1380,10 @@ public class SDP8_SGP8
 			// Check Ephemeris object
 			if (!EphemerisElement.checkEphemeris(eph))
 				throw new JPARSECException("invalid ephemeris object.");
-	
+
 			if (eph.targetBody.getIndex() < 0)
 				throw new JPARSECException("invalid target body in ephemeris object.");
-	
+
 			// Obtain object
 			SatelliteOrbitalElement satOrb = SatelliteEphem.getArtificialSatelliteOrbitalElement(eph.targetBody.getIndex());
 			double min_elevation = 15.0 * Constant.DEG_TO_RAD;
@@ -1412,7 +1417,7 @@ public class SDP8_SGP8
 		double rise = jd;
 		if (iter == maxIter) rise = 0.0;
 		iter = 0;
-		
+
 		jd = jdref;
 		do {
 			iter ++;
@@ -1438,7 +1443,7 @@ public class SDP8_SGP8
 		satOut.transitElevation[index] = traE;
 		return satOut;
 	}
-	
+
   /**
    * A helper routine to calculate the two-dimensional inverse tangens. */
   final static double ACTAN(double SINX, double COSX)
@@ -1493,7 +1498,7 @@ public class SDP8_SGP8
    *   It is then returned as 0 and can be given as 0 for further calls.
    * @param TSINCE
    *   TSINCE is the time difference between the time of interest and the
-   *   epoch of the TLE.  It must be given in minutes. 
+   *   epoch of the TLE.  It must be given in minutes.
  * @throws JPARSECException */
 
   private final void RunSDP8(int[] IFLAG, double TSINCE) throws JPARSECException
@@ -1638,7 +1643,7 @@ public class SDP8_SGP8
           Z1=XND*(TSINCE+OVGPP*(TEMP*TEMP1-1.));
       }
       else
-      { 
+      {
           XN.value = XNODP+XNDT*TSINCE;
           EM.value = sat.eccentricity+EDOT*TSINCE;
           Z1=.5*XNDT*TSINCE*TSINCE;
@@ -1649,7 +1654,7 @@ public class SDP8_SGP8
       XNODES.value=XNODES.value+Z7*XHDT1;
 
       // SOLVE KEPLERS EQUATION
-      
+
 
       ZC2=XMAM.value+EM.value*Math.sin(XMAM.value)*(1.+EM.value*Math.cos(XMAM.value));
       for ( int I = 1 ; I <= 10 ; I++ )
@@ -1723,7 +1728,7 @@ public class SDP8_SGP8
       TEMP=2.*Math.sqrt(1.-Y4*Y4-Y5*Y5);
       UZ=Y4*TEMP;
       VZ=Y5*TEMP;
-      
+
     /* POSITION AND VELOCITY */
 
     double E1_X = R * UX;
@@ -1741,7 +1746,7 @@ public class SDP8_SGP8
     itsV[2] = E1_ZDOT * C1.XKMPER / C1.AE * C1.XMNPDA / 86400.;
   }
 
-  
+
   /**
    * Reads the orbital elements into internal variables.
    * @param sat The orbital elements for the satellite.
@@ -1795,7 +1800,7 @@ class C1
     final static double AE = 1.;
     final static double QO = 120.0;
     final static double SO = 78.0;
-        
+
 
     final static double CK2 =.5*XJ2*Math.pow(AE,2);
     final static double CK4 = -.375*XJ4*Math.pow(AE,4);
@@ -1870,7 +1875,7 @@ class DEEP
           ROOT54 = 2.1765803E-9f;
           THDT = 4.3752691E-3f;
     }
-    
+
     static double THGR;
     static double EQ;
     static double XNQ;
@@ -2096,7 +2101,7 @@ class DEEP
       DEEP.OMGDT = OMGDT;
       DEEP.SINIQ = SINIQ;
       DEEP.COSIQ = COSIQ;
-      
+
       double E1_DS50 = 0;
 	  try {
 			AstroDate astro = new AstroDate(E1_EPOCH);
@@ -2111,8 +2116,8 @@ class DEEP
 			THGR = SiderealTime.greenwichMeanSiderealTime(time, observer, eph);
 	  } catch (Exception exc) {
 		  throw new JPARSECException("Invalid epoch");
-	  }		
-	  
+	  }
+
       EQ = sat.eccentricity;
       XNQ = XNODP;
       AQNV = 1.f/AO;
@@ -2186,7 +2191,7 @@ class DEEP
       X6=A6*SINOMO;
       X7=A5*COSOMO;
       X8=A6*COSOMO;
-      
+
       Z31=12.f*X1*X1-3.f*X3*X3;
       Z32=24.f*X1*X2-6.f*X3*X4;
       Z33=12.f*X2*X2-3.f*X4*X4;
@@ -2230,7 +2235,7 @@ class DEEP
       if (LS == 40) break;
 
       // DO LUNAR TERMS
-      
+
       SSE = SE;
       SSI=SI;
       SSL=SL;
@@ -2389,7 +2394,7 @@ class DEEP
       STEPN=-720.0;
       STEP2 = 259200.0;
      }
-     
+
      static void DPSEC(SatelliteOrbitalElement sat,
                        DoubleRef XLL,
                        DoubleRef OMGASM,
@@ -2420,7 +2425,7 @@ class DEEP
           (T < 0.0 && ATIME >= 0.0))
       {
           // EPOCH RESTART
-    
+
           if (T < 0.0)
           {
               DELT = STEPN;
@@ -2465,7 +2470,7 @@ class DEEP
           }
       }
       checkIRETN = true;
-      
+
       // DOT TERMS CALCULATED
 
       if (ISYNFL != 0)
@@ -2513,7 +2518,7 @@ class DEEP
           if (ISYNFL == 0) XLL.value = XL+TEMP+TEMP;
           return;
       }
-      
+
       // INTEGRATOR
 
       XLI = (XLI+XLDOT*DELT+XNDOT*STEP2);
@@ -2526,7 +2531,7 @@ class DEEP
       }
       }
      }
-     
+
      // ENTRANCES FOR LUNAR-SOLAR PERIODICS
      static void DPPER(DoubleRef EM,
                        DoubleRef XINC,
@@ -2567,11 +2572,11 @@ class DEEP
       PH=SHS+SHL;
       XINC.value = XINC.value+PINC;
       EM.value = EM.value+PE;
-      
+
       if (XQNCL >= .2)
       {
           // APPLY PERIODICS DIRECTLY
-          
+
           PH=PH/SINIQ;
           PGH=PGH-COSIQ*PH;
           OMGASM.value=OMGASM.value+PGH;
@@ -2581,7 +2586,7 @@ class DEEP
       else
       {
           // APPLY PERIODICS WITH LYDDANE MODIFICATION
-          
+
           SINOK=Math.sin(XNODES.value);
           COSOK=Math.cos(XNODES.value);
           ALFDP=SINIS*SINOK;

@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.vo;
 
 import cds.savot.model.*;
@@ -30,7 +30,7 @@ import jparsec.util.JPARSECException;
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
-public class VOTableUtils 
+public class VOTableUtils
 {
 	// private constructor so that this class cannot be instantiated.
 	private VOTableUtils() {}
@@ -50,23 +50,23 @@ public class VOTableUtils
 		String name = "";
 
 		// For each resource
-        for (int l = 0; l < sv.getResources().getItemCount(); l++) 
+        for (int l = 0; l < sv.getResources().getItemCount(); l++)
         {
           SavotResource currentResource = (SavotResource)(sv.getResources().getItemAt(l));
           String catalog = currentResource.getName().trim();
-         
+
           if (catalog.toLowerCase().equals(catalogName.toLowerCase())) {
 		  	  SavotTable svot = (SavotTable) currentResource.getTables().getItemAt(tableIndex);
 		  	  int n = svot.getFields().getItemCount();
-		  	  
+
 		  	  if (index >= n) throw new JPARSECException("index out of range.");
-		  	  
+
 			  SavotField sp = (SavotField) svot.getFields().getItemAt(index);
 			  name = sp.getName();
 			  break;
           }
         }
-        
+
         return name;
 	}
 	/**
@@ -82,25 +82,25 @@ public class VOTableUtils
 	public static String getFieldDataTypeInVOTable(SavotVOTable sv, String catalogName, int index, int tableIndex)
 	throws JPARSECException {
 		String name = "";
-		
+
 		// For each resource
-        for (int l = 0; l < sv.getResources().getItemCount(); l++) 
+        for (int l = 0; l < sv.getResources().getItemCount(); l++)
         {
           SavotResource currentResource = (SavotResource)(sv.getResources().getItemAt(l));
           String catalog = currentResource.getName().trim();
-         
+
           if (catalog.toLowerCase().equals(catalogName.toLowerCase())) {
 		  	  SavotTable svot = (SavotTable) currentResource.getTables().getItemAt(tableIndex);
 		  	  int n = svot.getFields().getItemCount();
-		  	  
+
 		  	  if (index >= n) throw new JPARSECException("index out of range.");
-		  	  
+
 			  SavotField sp = (SavotField) svot.getFields().getItemAt(index);
 			  name = sp.getDataType();
 			  break;
           }
         }
-        
+
         return name;
 	}
 	/**
@@ -117,25 +117,25 @@ public class VOTableUtils
 			int tableIndex)
 	throws JPARSECException {
 		String name = "";
-		
+
 		// For each resource
-        for (int l = 0; l < sv.getResources().getItemCount(); l++) 
+        for (int l = 0; l < sv.getResources().getItemCount(); l++)
         {
           SavotResource currentResource = (SavotResource)(sv.getResources().getItemAt(l));
           String catalog = currentResource.getName().trim();
-         
+
           if (catalog.toLowerCase().equals(catalogName.toLowerCase())) {
 		  	  SavotTable svot = (SavotTable) currentResource.getTables().getItemAt(tableIndex);
 		  	  int n = svot.getFields().getItemCount();
-		  	  
+
 		  	  if (index >= n) throw new JPARSECException("index out of range.");
-		  	  
+
 			  SavotField sp = (SavotField) svot.getFields().getItemAt(index);
 			  name = sp.getDescription();
 			  break;
           }
         }
-        
+
         return name;
 	}
 	/**
@@ -151,25 +151,25 @@ public class VOTableUtils
 	public static String getFieldIDInVOTable(SavotVOTable sv, String catalogName, int index, int tableIndex)
 	throws JPARSECException {
 		String name = "";
-		
+
 		// For each resource
-        for (int l = 0; l < sv.getResources().getItemCount(); l++) 
+        for (int l = 0; l < sv.getResources().getItemCount(); l++)
         {
           SavotResource currentResource = (SavotResource)(sv.getResources().getItemAt(l));
           String catalog = currentResource.getName().trim();
-         
+
           if (catalog.toLowerCase().equals(catalogName.toLowerCase())) {
 		  	  SavotTable svot = (SavotTable) currentResource.getTables().getItemAt(tableIndex);
 		  	  int n = svot.getFields().getItemCount();
-		  	  
+
 		  	  if (index >= n) throw new JPARSECException("index out of range.");
-		  	  
+
 			  SavotField sp = (SavotField) svot.getFields().getItemAt(index);
 			  name = sp.getId();
 			  break;
           }
         }
-        
+
         return name;
 	}
 	/**
@@ -185,25 +185,25 @@ public class VOTableUtils
 	public static String getFieldPrecissionInVOTable(SavotVOTable sv, String catalogName, int index, int tableIndex)
 	throws JPARSECException {
 		String name = "";
-		
+
 		// For each resource
-        for (int l = 0; l < sv.getResources().getItemCount(); l++) 
+        for (int l = 0; l < sv.getResources().getItemCount(); l++)
         {
           SavotResource currentResource = (SavotResource)(sv.getResources().getItemAt(l));
           String catalog = currentResource.getName().trim();
-         
+
           if (catalog.toLowerCase().equals(catalogName.toLowerCase())) {
 		  	  SavotTable svot = (SavotTable) currentResource.getTables().getItemAt(tableIndex);
 		  	  int n = svot.getFields().getItemCount();
-		  	  
+
 		  	  if (index >= n) throw new JPARSECException("index out of range.");
-		  	  
+
 			  SavotField sp = (SavotField) svot.getFields().getItemAt(index);
 			  name = sp.getPrecision();
 			  break;
           }
         }
-        
+
         return name;
 	}
 	/**
@@ -219,25 +219,25 @@ public class VOTableUtils
 	public static String getFieldRefInVOTable(SavotVOTable sv, String catalogName, int index, int tableIndex)
 	throws JPARSECException {
 		String name = "";
-		
+
 		// For each resource
-        for (int l = 0; l < sv.getResources().getItemCount(); l++) 
+        for (int l = 0; l < sv.getResources().getItemCount(); l++)
         {
           SavotResource currentResource = (SavotResource)(sv.getResources().getItemAt(l));
           String catalog = currentResource.getName().trim();
-         
+
           if (catalog.toLowerCase().equals(catalogName.toLowerCase())) {
 		  	  SavotTable svot = (SavotTable) currentResource.getTables().getItemAt(tableIndex);
 		  	  int n = svot.getFields().getItemCount();
-		  	  
+
 		  	  if (index >= n) throw new JPARSECException("index out of range.");
-		  	  
+
 			  SavotField sp = (SavotField) svot.getFields().getItemAt(index);
 			  name = sp.getRef();
 			  break;
           }
         }
-        
+
         return name;
 	}
 	/**
@@ -253,25 +253,25 @@ public class VOTableUtils
 	public static String getFieldTypeInVOTable(SavotVOTable sv, String catalogName, int index, int tableIndex)
 	throws JPARSECException {
 		String name = "";
-		
+
 		// For each resource
-        for (int l = 0; l < sv.getResources().getItemCount(); l++) 
+        for (int l = 0; l < sv.getResources().getItemCount(); l++)
         {
           SavotResource currentResource = (SavotResource)(sv.getResources().getItemAt(l));
           String catalog = currentResource.getName().trim();
-         
+
           if (catalog.toLowerCase().equals(catalogName.toLowerCase())) {
 		  	  SavotTable svot = (SavotTable) currentResource.getTables().getItemAt(tableIndex);
 		  	  int n = svot.getFields().getItemCount();
-		  	  
+
 		  	  if (index >= n) throw new JPARSECException("index out of range.");
-		  	  
+
 			  SavotField sp = (SavotField) svot.getFields().getItemAt(index);
 			  name = sp.getType();
 			  break;
           }
         }
-        
+
         return name;
 	}
 	/**
@@ -287,25 +287,25 @@ public class VOTableUtils
 	public static String getFieldUCDInVOTable(SavotVOTable sv, String catalogName, int index, int tableIndex)
 	throws JPARSECException {
 		String name = "";
-		
+
 		// For each resource
-        for (int l = 0; l < sv.getResources().getItemCount(); l++) 
+        for (int l = 0; l < sv.getResources().getItemCount(); l++)
         {
           SavotResource currentResource = (SavotResource)(sv.getResources().getItemAt(l));
           String catalog = currentResource.getName().trim();
-         
+
           if (catalog.toLowerCase().equals(catalogName.toLowerCase())) {
 		  	  SavotTable svot = (SavotTable) currentResource.getTables().getItemAt(tableIndex);
 		  	  int n = svot.getFields().getItemCount();
-		  	  
+
 		  	  if (index >= n) throw new JPARSECException("index out of range.");
-		  	  
+
 			  SavotField sp = (SavotField) svot.getFields().getItemAt(index);
 			  name = sp.getUcd();
 			  break;
           }
         }
-        
+
         return name;
 	}
 	/**
@@ -321,25 +321,25 @@ public class VOTableUtils
 	public static String getFieldUnitInVOTable(SavotVOTable sv, String catalogName, int index, int tableIndex)
 	throws JPARSECException {
 		String name = "";
-		
+
 		// For each resource
-        for (int l = 0; l < sv.getResources().getItemCount(); l++) 
+        for (int l = 0; l < sv.getResources().getItemCount(); l++)
         {
           SavotResource currentResource = (SavotResource)(sv.getResources().getItemAt(l));
           String catalog = currentResource.getName().trim();
-         
+
           if (catalog.toLowerCase().equals(catalogName.toLowerCase())) {
 		  	  SavotTable svot = (SavotTable) currentResource.getTables().getItemAt(tableIndex);
 		  	  int n = svot.getFields().getItemCount();
-		  	  
+
 		  	  if (index >= n) throw new JPARSECException("index out of range.");
-		  	  
+
 			  SavotField sp = (SavotField) svot.getFields().getItemAt(index);
 			  name = sp.getUnit();
 			  break;
           }
         }
-        
+
         return name;
 	}
 	/**
@@ -355,25 +355,25 @@ public class VOTableUtils
 	public static String getFieldUTypeInVOTable(SavotVOTable sv, String catalogName, int index, int tableIndex)
 	throws JPARSECException {
 		String name = "";
-		
+
 		// For each resource
-        for (int l = 0; l < sv.getResources().getItemCount(); l++) 
+        for (int l = 0; l < sv.getResources().getItemCount(); l++)
         {
           SavotResource currentResource = (SavotResource)(sv.getResources().getItemAt(l));
           String catalog = currentResource.getName().trim();
-         
+
           if (catalog.toLowerCase().equals(catalogName.toLowerCase())) {
 		  	  SavotTable svot = (SavotTable) currentResource.getTables().getItemAt(tableIndex);
 		  	  int n = svot.getFields().getItemCount();
-		  	  
+
 		  	  if (index >= n) throw new JPARSECException("index out of range.");
-		  	  
+
 			  SavotField sp = (SavotField) svot.getFields().getItemAt(index);
 			  name = sp.getUtype();
 			  break;
           }
         }
-        
+
         return name;
 	}
 	/**
@@ -389,25 +389,25 @@ public class VOTableUtils
 	public static String getFieldWidthInVOTable(SavotVOTable sv, String catalogName, int index, int tableIndex)
 	throws JPARSECException {
 		String name = "";
-		
+
 		// For each resource
-        for (int l = 0; l < sv.getResources().getItemCount(); l++) 
+        for (int l = 0; l < sv.getResources().getItemCount(); l++)
         {
           SavotResource currentResource = (SavotResource)(sv.getResources().getItemAt(l));
           String catalog = currentResource.getName().trim();
-         
+
           if (catalog.toLowerCase().equals(catalogName.toLowerCase())) {
 		  	  SavotTable svot = (SavotTable) currentResource.getTables().getItemAt(tableIndex);
 		  	  int n = svot.getFields().getItemCount();
-		  	  
+
 		  	  if (index >= n) throw new JPARSECException("index out of range.");
-		  	  
+
 			  SavotField sp = (SavotField) svot.getFields().getItemAt(index);
 			  name = sp.getWidth();
 			  break;
           }
         }
-        
+
         return name;
 	}
 	/**
@@ -421,20 +421,20 @@ public class VOTableUtils
 	public static int getFieldCountInVOTable(SavotVOTable sv, String catalogName, int tableIndex)
 	{
 		int n = -1;
-		
+
 		// For each resource
-        for (int l = 0; l < sv.getResources().getItemCount(); l++) 
+        for (int l = 0; l < sv.getResources().getItemCount(); l++)
         {
           SavotResource currentResource = (SavotResource)(sv.getResources().getItemAt(l));
           String catalog = currentResource.getName().trim();
-         
+
           if (catalog.toLowerCase().equals(catalogName.toLowerCase())) {
 		  	  SavotTable svot = (SavotTable) currentResource.getTables().getItemAt(tableIndex);
 		  	  n = svot.getFields().getItemCount();
 		  	  break;
           }
         }
-        
+
         return n;
 	}
 }

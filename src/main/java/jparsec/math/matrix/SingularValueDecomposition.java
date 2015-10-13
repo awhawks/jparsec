@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2011 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 /*
  * This software is a cooperative product of The MathWorks and the National
  * Institute of Standards and Technology (NIST) which has been released to the
@@ -39,7 +39,7 @@ import java.io.Serializable;
 
 import jparsec.graph.DataSet;
 
-/** 
+/**
  * Singular Value Decomposition.
  * <P>
  * For an m-by-n matrix A with m &gt;= n, the singular value decomposition is an
@@ -55,36 +55,36 @@ import jparsec.graph.DataSet;
  * <p/>
  * Adapted from the <a href="http://math.nist.gov/javanumerics/jama/" target="_blank">JAMA</a> package.
  *
- * @author The Mathworks and NIST 
+ * @author The Mathworks and NIST
  * @author Fracpete (fracpete at waikato dot ac dot nz)
  * @version $Revision: 1.2 $
  */
-public class SingularValueDecomposition 
+public class SingularValueDecomposition
   implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-/** 
+/**
    * Arrays for internal storage of U and V.
    * @serial internal storage of U.
    * @serial internal storage of V.
    */
   private double[][] U, V;
 
-  /** 
+  /**
    * Array for internal storage of singular values.
    * @serial internal storage of singular values.
    */
   private double[] s;
 
-  /** 
+  /**
    * Row and column dimensions.
    * @serial row dimension.
    * @serial column dimension.
    */
   private int m, n;
 
-  /** 
+  /**
    * Construct the singular value decomposition
    * @param Arg    Rectangular matrix
    */
@@ -320,7 +320,7 @@ public class SingularValueDecomposition
           if (ks == k) {
             break;
           }
-          double t = (ks != p ? Math.abs(e[ks]) : 0.) + 
+          double t = (ks != p ? Math.abs(e[ks]) : 0.) +
                                                   (ks != k+1 ? Math.abs(e[ks-1]) : 0.);
           if (Math.abs(s[ks]) <= eps*t)  {
             s[ks] = 0.0;
@@ -397,7 +397,7 @@ public class SingularValueDecomposition
                   // Calculate the shift.
 
                   double scale = Math.max(Math.max(Math.max(Math.max(
-                            Math.abs(s[p-1]),Math.abs(s[p-2])),Math.abs(e[p-2])), 
+                            Math.abs(s[p-1]),Math.abs(s[p-2])),Math.abs(e[p-2])),
                         Math.abs(s[k])),Math.abs(e[k]));
                   double sp = s[p-1]/scale;
                   double spm1 = s[p-2]/scale;
@@ -502,7 +502,7 @@ public class SingularValueDecomposition
     }
   }
 
-  /** 
+  /**
    * Return the left singular vectors
    * @return     U
    */
@@ -512,7 +512,7 @@ public class SingularValueDecomposition
     //return new Matrix(U,m,Math.min(rank(),n));
   }
 
-  /** 
+  /**
    * Return the right singular vectors
    * @return     V
    */
@@ -520,7 +520,7 @@ public class SingularValueDecomposition
     return new Matrix(V,n,n);
   }
 
-  /** 
+  /**
    * Return the one-dimensional array of singular values
    * @return     diagonal of S.
    */
@@ -528,7 +528,7 @@ public class SingularValueDecomposition
     return DataSet.getSubArray(s, 0, rank()-1);
   }
 
-  /** 
+  /**
    * Return the diagonal matrix of singular values
    * @return     S
    */
@@ -545,7 +545,7 @@ public class SingularValueDecomposition
     return X;
   }
 
-  /** 
+  /**
    * Two norm
    * @return     max(S)
    */
@@ -553,7 +553,7 @@ public class SingularValueDecomposition
     return s[0];
   }
 
-  /** 
+  /**
    * Two norm condition number
    * @return     max(S)/min(S)
    */
@@ -561,7 +561,7 @@ public class SingularValueDecomposition
     return s[0]/s[Math.min(m,n)-1];
   }
 
-  /** 
+  /**
    * Effective numerical matrix rank
    * @return     Number of nonnegligible singular values.
    */

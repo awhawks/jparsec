@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -42,7 +42,7 @@ import jparsec.util.Translate.LANGUAGE;
  * rotational parameters are known. Otherwise, ephemeris can also be obtained
  * for objects not listed here (see
  * {@linkplain MoonEphem#calcAllJPLSatellites(TimeElement, ObserverElement, EphemerisElement)}).
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -50,7 +50,7 @@ public final class Target
 {
 	// private constructor so that this class cannot be instantiated.
 	private Target() {}
-	
+
 	/**
 	 * The set of targets for JPARSEC ephemerides.
 	 */
@@ -308,7 +308,7 @@ public final class Target
 		}
 
 		/**
-		 * Sets the index of a body, used to select a minor body 
+		 * Sets the index of a body, used to select a minor body
 		 * when reading asteroids/comets. Default initial value
 		 * for index is -1.
 		 * @param i The index of the body. Should be >= 0.
@@ -333,7 +333,7 @@ public final class Target
 		 * (neither the Earth or its barycenter), true will be returned. If the index
 		 * is equal to a generic Comet/Asteroid true will be returned since this is
 		 * valid for that specific kind of calculations.
-		 * 
+		 *
 		 * @return True if it is a valid index, false otherwise.
 		 */
 		public boolean isValidObjectButNotASatelliteNeitherAnAsteroid()
@@ -346,7 +346,7 @@ public final class Target
 
 		/**
 		 * Check if the index is indeed a valid index of a natural satellite.
-		 * 
+		 *
 		 * @return True if it is a valid satellite, false otherwise. Note this method
 		 * returns false for the Moon.
 		 */
@@ -359,7 +359,7 @@ public final class Target
 
 		/**
 		 * Check if the index is indeed a planet.
-		 * 
+		 *
 		 * @return True if it is a planet or the Sun, false otherwise.
 		 */
 		public boolean isPlanet()
@@ -371,7 +371,7 @@ public final class Target
 
 		/**
 		 * Check if the index is indeed an asteroid (or comet).
-		 * 
+		 *
 		 * @return True if it is an asteroid, false otherwise.
 		 */
 		public boolean isAsteroid()
@@ -417,7 +417,7 @@ public final class Target
 		/**
 		 * Returns flattening factor = (equatorial radius - polar radius ) /
 		 * equatorial radius.
-		 * 
+		 *
 		 * @return Flattening factor. Set to 0 if the object size is unknown.
 		 */
 		public double getFlatteningFactor()
@@ -429,7 +429,7 @@ public final class Target
 
 		/**
 		 * Obtains the central body ID of certain object (natural satellite).
-		 * 
+		 *
 		 * @return The central body or SUN if it is not found.
 		 */
 		public TARGET getCentralBody()
@@ -489,7 +489,7 @@ public final class Target
 
 	/**
 	 * Obtain the ID constant of an object.
-	 * 
+	 *
 	 * @param name The name of the object.
 	 * @return Object ID, or the 'not a planet' constant if it is not found.
 	 * @throws JPARSECException If an error occurs, for instance when the object
@@ -498,7 +498,7 @@ public final class Target
 	public static TARGET getID(String name) throws JPARSECException
 	{
 		if (name == null || name.equals("")) throw new JPARSECException("null/empty String as input planet!");
-		
+
 		if (Translate.getDefaultLanguage() == LANGUAGE.ENGLISH) {
 			try {
 				TARGET out = TARGET.valueOf(name);
@@ -516,7 +516,7 @@ public final class Target
 
 	/**
 	 * Obtain the ID constant of an object.
-	 * 
+	 *
 	 * @param name The name of the object in English.
 	 * @return Object ID, or 'not a planet' constant if it is not found.
 	 * @throws JPARSECException If an error occurs, for instance when the object

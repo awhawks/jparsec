@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.ephem.moons;
 
 import jparsec.ephem.Ephem;
@@ -39,7 +39,7 @@ import jparsec.util.JPARSECException;
  * for the different values of the ephem method to apply in the ephemeris object.
  * The default method (for values different from IAU 2006 and IAU 2009) is the
  * IAU 2000 recommendations for the orientations of the satellite axes.
- * 
+ *
  * @see MoonEphem
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
@@ -48,13 +48,13 @@ public class MoonPhysicalParameters
 {
 	// private constructor so that this class cannot be instantiated.
 	private MoonPhysicalParameters() {}
-	
+
 	/**
 	 * Obtain physical parameters of the satellite: angular radius, visual
 	 * magnitude, and axis orientation. Any satellite with known information
 	 * (see IAU2009 report by B. A. Archinal et al.) is supported. No supported
 	 * objects will have zero in the corresponding fields.
-	 * 
+	 *
 	 * @param JD Julian day in dynamical time.
 	 * @param ephem_sun Ephem object with ephemeris of sun.
 	 * @param ephem_obj Moon ephem object to take and store data.
@@ -112,7 +112,7 @@ public class MoonPhysicalParameters
 		ephem.longitudeOfCentralMeridian = 0.0f;
 		ephem.magnitude = EphemElement.INVALID_MAGNITUDE;
 		ephem.angularRadius = 0f;
-		
+
 		if (eph.targetBody == TARGET.NOT_A_PLANET) return ephem;
 
 		// Visual magnitude and axis orientation
@@ -125,22 +125,17 @@ public class MoonPhysicalParameters
 
 		double rotationModel[] = null;
 		switch (eph.ephemMethod) {
-		case IAU_1976:
-		case IAU_2000:
-		case JPL_DE4xx:
-		case LASKAR_1986:
-		case SIMON_1994:
-		case WILLIAMS_1994:
-			rotationModel = getIAU2000Model(eph.targetBody, JD - ephem.distance * Constant.LIGHT_TIME_DAYS_PER_AU, rr);
-			break;
 		case IAU_2006:
 			rotationModel = getIAU2006Model(eph.targetBody, JD - ephem.distance * Constant.LIGHT_TIME_DAYS_PER_AU, rr);
 			break;
 		case IAU_2009:
 			rotationModel = getIAU2009Model(eph.targetBody, JD - ephem.distance * Constant.LIGHT_TIME_DAYS_PER_AU, rr);
 			break;
+		default:
+			rotationModel = getIAU2000Model(eph.targetBody, JD - ephem.distance * Constant.LIGHT_TIME_DAYS_PER_AU, rr);
+			break;
 		}
- 
+
 		if (rotationModel != null) {
 			mag = rotationModel[0];
 			ephem.northPoleRA = rotationModel[1];
@@ -152,7 +147,7 @@ public class MoonPhysicalParameters
 
 		// Apparent visual magnitude
 		ephem.magnitude = (float) mag;
-		
+
 		// Correct magnitude for phase
 		if (ephem.phase < 1.0 && mag != EphemElement.INVALID_MAGNITUDE) {
 			if (ephem.phase <= 0) {
@@ -174,12 +169,12 @@ public class MoonPhysicalParameters
 	/**
 	 * Calculate orientation of a satellite providing the position and the
 	 * direction of the north pole of rotation. The IAU 2000/2006/2009 models are used
-	 * depending on the properties of the ephemeris element object. See the 
+	 * depending on the properties of the ephemeris element object. See the
 	 * <I> REPORT OF THE IAU/IAG WORKING GROUP ON CARTOGRAPHIC COORDINATES
-	 * AND ROTATIONAL ELEMENTS: 2009</I>, B. A. Archinal et al, in Celestial 
+	 * AND ROTATIONAL ELEMENTS: 2009</I>, B. A. Archinal et al, in Celestial
 	 * Mechanics and Dynamical Astronomy, 2011.
 	 * <P>
-	 * 
+	 *
 	 * @param JD Julian day in TDB.
 	 * @param ephem_sun Ephem object with all data for the sun.
 	 * @param ephem_obj Moon ephem object with all data completed except those
@@ -188,7 +183,7 @@ public class MoonPhysicalParameters
 	 * @param rot_per_day Rotation speed in degrees/day.
 	 * @param eph Ephemeris object defining the ephemeris properties.
 	 * @param motherBody The mother body for the calculations. Can be set to null
-	 * for the Earth. 
+	 * for the Earth.
 	 * @return Moon ephem object with all the fields.
 	 * @throws JPARSECException If an error occurs.
 	 */
@@ -212,12 +207,12 @@ public class MoonPhysicalParameters
 
 		return moon_ephem;
 	}
-	
+
 	private static double[] getIAU2000Model(TARGET target, double JD, double rr) {
 		double mag = 0, northPoleRA = 0, northPoleDEC = 0, rot_per_day = 0, lon0 = 0;
-		
+
 		double calc_time = Functions.toCenturies(JD);
-		
+
 		double J1 = (073.32 + 91472.9 * calc_time) * Constant.DEG_TO_RAD;
 		double J2 = (024.62 + 45137.2 * calc_time) * Constant.DEG_TO_RAD;
 		double J3 = (283.90 + 4850.7 * calc_time) * Constant.DEG_TO_RAD;
@@ -636,13 +631,13 @@ public class MoonPhysicalParameters
 		default:
 			return null;
 		}
-		
+
 		return new double[] {mag, northPoleRA, northPoleDEC, lon0, rot_per_day};
 	}
-	
+
 	private static double[] getIAU2006Model(TARGET target, double JD, double rr) {
 		double mag = 0, northPoleRA = 0, northPoleDEC = 0, rot_per_day = 0, lon0 = 0;
-		
+
 		double calc_time = Functions.toCenturies(JD);
 
 		double J1 = (073.32 + 91472.9 * calc_time) * Constant.DEG_TO_RAD;
@@ -1058,10 +1053,10 @@ public class MoonPhysicalParameters
 		}
 		return new double[] {mag, northPoleRA, northPoleDEC, lon0, rot_per_day};
 	}
-	
+
 	private static double[] getIAU2009Model(TARGET target, double JD, double rr) {
 		double mag = 0, northPoleRA = 0, northPoleDEC = 0, rot_per_day = 0, lon0 = 0;
-		
+
 		double calc_time = Functions.toCenturies(JD);
 
 		double J1 = (073.32 + 91472.9 * calc_time) * Constant.DEG_TO_RAD;
@@ -1359,7 +1354,7 @@ public class MoonPhysicalParameters
 			lon0 = 178.58;
 			rot_per_day = 931.639;
 			break;
-		// Absolute magnitudes relative to Miranda derived from data at http://www.dtm.ciw.edu/users/sheppard/satellites/urasatdata.html 
+		// Absolute magnitudes relative to Miranda derived from data at http://www.dtm.ciw.edu/users/sheppard/satellites/urasatdata.html
 		case Cordelia:
 			mag = 11.4 + 5.0 * Math.log10(rr);
 			northPoleRA = (float) ((257.31 - 0.15 * Math.sin(U1)) * Constant.DEG_TO_RAD);
@@ -1430,7 +1425,7 @@ public class MoonPhysicalParameters
 			lon0 = 91.24 - 0.09 * Math.sin(U10);
 			rot_per_day = -472.5450690;
 			break;
-		// Absolute magnitudes relative to Triton derived from data at http://www.dtm.ciw.edu/users/sheppard/satellites/nepsatdata.html 
+		// Absolute magnitudes relative to Triton derived from data at http://www.dtm.ciw.edu/users/sheppard/satellites/nepsatdata.html
 		case Naiad:
 			mag = 9.86 + 5.0 * Math.log10(rr);
 			northPoleRA = (float) ((299.36 + 0.70 * Math.sin(N0) - 6.49 * Math.sin(N1) + 0.25 * Math.sin(2.0 * N1)) * Constant.DEG_TO_RAD);
@@ -1478,7 +1473,7 @@ public class MoonPhysicalParameters
 		}
 		return new double[] {mag, northPoleRA, northPoleDEC, lon0, rot_per_day};
 	}
-	
+
 	/**
 	 * Returns the mean rotation rate of a given body using the corresponding IAU model.
 	 * @param eph Ephemeris object containing target body and ephemeris method.
@@ -1488,24 +1483,19 @@ public class MoonPhysicalParameters
 	public static double getBodyMeanRotationRate(EphemerisElement eph) throws JPARSECException {
 		double JD = 2451545, rr = 1, rotationModel[] = null;
 		switch (eph.ephemMethod) {
-		case IAU_1976:
-		case IAU_2000:
-		case JPL_DE4xx:
-		case LASKAR_1986:
-		case SIMON_1994:
-		case WILLIAMS_1994:
-			rotationModel = getIAU2000Model(eph.targetBody, JD, rr);
-			break;
 		case IAU_2006:
 			rotationModel = getIAU2006Model(eph.targetBody, JD, rr);
 			break;
 		case IAU_2009:
 			rotationModel = getIAU2009Model(eph.targetBody, JD, rr);
 			break;
+		default:
+			rotationModel = getIAU2000Model(eph.targetBody, JD, rr);
+			break;
 		}
 		return rotationModel[4] * Math.PI / (24.0 * 3600.0 * 180.0);
 	}
-	
+
 	/**
 	 * Returns the mean rotation rate of a given body using the corresponding IAU model.
 	 * @param JD_TDB Julian day in TDB.
@@ -1516,25 +1506,20 @@ public class MoonPhysicalParameters
 	public static double getBodySiderealTimeAt0Lon(double JD_TDB, EphemerisElement eph) throws JPARSECException {
 		double JD = JD_TDB, rr = 1, rotationModel[] = null;
 		switch (eph.ephemMethod) {
-		case IAU_1976:
-		case IAU_2000:
-		case JPL_DE4xx:
-		case LASKAR_1986:
-		case SIMON_1994:
-		case WILLIAMS_1994:
-			rotationModel = getIAU2000Model(eph.targetBody, JD, rr);
-			break;
 		case IAU_2006:
 			rotationModel = getIAU2006Model(eph.targetBody, JD, rr);
 			break;
 		case IAU_2009:
 			rotationModel = getIAU2009Model(eph.targetBody, JD, rr);
 			break;
+		default:
+			rotationModel = getIAU2000Model(eph.targetBody, JD, rr);
+			break;
 		}
 		double lon = Functions.normalizeDegrees(90.0 + rotationModel[3] + rotationModel[4] * (JD - 2451545.0)) * Constant.DEG_TO_RAD;
 		return lon;
 	}
-	
+
 	/**
 	 * Returns the orientation of the north pole of rotation of a given body using the corresponding IAU model.
 	 * @param JD_TDB Julian day in TDB.
@@ -1545,19 +1530,14 @@ public class MoonPhysicalParameters
 	public static LocationElement getBodyNorthPole(double JD_TDB, EphemerisElement eph) throws JPARSECException {
 		double JD = JD_TDB, rr = 1, rotationModel[] = null;
 		switch (eph.ephemMethod) {
-		case IAU_1976:
-		case IAU_2000:
-		case JPL_DE4xx:
-		case LASKAR_1986:
-		case SIMON_1994:
-		case WILLIAMS_1994:
-			rotationModel = getIAU2000Model(eph.targetBody, JD, rr);
-			break;
 		case IAU_2006:
 			rotationModel = getIAU2006Model(eph.targetBody, JD, rr);
 			break;
 		case IAU_2009:
 			rotationModel = getIAU2009Model(eph.targetBody, JD, rr);
+			break;
+		default:
+			rotationModel = getIAU2000Model(eph.targetBody, JD, rr);
 			break;
 		}
 		if (rotationModel == null) return null;
@@ -1565,7 +1545,7 @@ public class MoonPhysicalParameters
 		if (eph.equinox != Constant.J2000) loc = LocationElement.parseRectangularCoordinates(Precession.precess(Constant.J2000, eph.getEpoch(JD), loc.getRectangularCoordinates(), eph));
 		return loc;
 	}
-	
+
 	/**
 	 * Returns the absolute magnitude of a given natural satellite.
 	 * @param eph Ephemeris object containing target body.
@@ -1576,19 +1556,14 @@ public class MoonPhysicalParameters
 	public static double getBodyAbsoluteMagnitude(EphemerisElement eph) throws JPARSECException {
 		double JD = Constant.J2000, rr = 1, rotationModel[] = null;
 		switch (eph.ephemMethod) {
-		case IAU_1976:
-		case IAU_2000:
-		case JPL_DE4xx:
-		case LASKAR_1986:
-		case SIMON_1994:
-		case WILLIAMS_1994:
-			rotationModel = getIAU2000Model(eph.targetBody, JD, rr);
-			break;
 		case IAU_2006:
 			rotationModel = getIAU2006Model(eph.targetBody, JD, rr);
 			break;
 		case IAU_2009:
 			rotationModel = getIAU2009Model(eph.targetBody, JD, rr);
+			break;
+		default:
+			rotationModel = getIAU2000Model(eph.targetBody, JD, rr);
 			break;
 		}
 		if (rotationModel == null) return EphemElement.INVALID_MAGNITUDE;

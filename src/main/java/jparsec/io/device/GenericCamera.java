@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */	
+ */
 package jparsec.io.device;
 
 import jparsec.io.image.ImageHeaderElement;
@@ -32,11 +32,11 @@ import jparsec.util.Translate;
  */
 public interface GenericCamera {
 
-	/** 
+	/**
 	 * The set of camera models supported.
 	 */
-	public static enum CAMERA_MODEL {
-		/** Driver for most Canon EOS DSLR cameras. This includes 1000D, 1100D, 
+	public enum CAMERA_MODEL {
+		/** Driver for most Canon EOS DSLR cameras. This includes 1000D, 1100D,
 		 * 40D, 400D, 450D, 50D, 500D, 550D, 5D Mark II, but not the most recent
 		 * ones (60D ...). */
 		CANON_EOS_40D_400D_50D_500D_1000D,
@@ -55,7 +55,7 @@ public interface GenericCamera {
 			if (this == VIRTUAL_ROUND_SENSOR) return true;
 			return false;
 		}
-		
+
 		/**
 		 * Returns if this dome is virtual or not.
 		 * @return True or false.
@@ -64,7 +64,7 @@ public interface GenericCamera {
 			if (this.name().startsWith("VIRTUAL_")) return true;
 			return false;
 		}
-		
+
 		/**
 		 * Returns if this camera is a CCD camera, not a DSLR one.
 		 * @return True or false.
@@ -72,7 +72,7 @@ public interface GenericCamera {
 		public boolean isCCD() {
 			return false;
 		}
-		
+
 		/**
 		 * Returns if this camera is a webcam one.
 		 * @return True or false.
@@ -88,7 +88,7 @@ public interface GenericCamera {
 		public boolean isDLSR() {
 			return !isCCD() && !isWebcam();
 		}
-		
+
 		/**
 		 * Returns a short string describing the camera type.
 		 * @return Camera type.
@@ -100,11 +100,11 @@ public interface GenericCamera {
 			return Translate.translate(1187);
 		}
 	}
-	
-	/** 
+
+	/**
 	 * The set of filters supported.
 	 */
-	public static enum FILTER {
+	public enum FILTER {
 		/** ID constant for no filter at all. */
 		NO_FILTER("-"),
 		/** ID constant for the UV/IR filter of a modified DLSR. */
@@ -132,7 +132,7 @@ public interface GenericCamera {
 		private FILTER(String name) {
 			this.name = name;
 		}
-		
+
 		/**
 		 * Returns the name of the filter.
 		 * @return Filter name.
@@ -140,17 +140,17 @@ public interface GenericCamera {
 		public String getFilterName() {
 			return name;
 		}
-		
+
 		/**
 		 * Sets the name of the filter for those filters named
-		 * 'FILTER_COLORx'. For the others the input name is 
+		 * 'FILTER_COLORx'. For the others the input name is
 		 * ignored.
 		 * @param name The filter name.
 		 */
 		public void setFilterName(String name) {
 			if (this.name.startsWith("FILTER_COLOR")) this.name = name;
 		}
-		
+
 		/**
 		 * Returns the names of all the filters available.
 		 * @return Filter names.
@@ -165,10 +165,10 @@ public interface GenericCamera {
 		}
 	}
 
-	/** 
+	/**
 	 * The set of image types supported.
 	 */
-	public static enum IMAGE_ID {
+	public enum IMAGE_ID {
 		/** ID constant for a dark frame. */
 		DARK,
 		/** ID constant for a flat frame. */
@@ -225,7 +225,7 @@ public interface GenericCamera {
 	 * Sets the resolution mode.
 	 * @param mode The mode.
 	 * @return True if the command success.
-	 */	
+	 */
 	public boolean setResolutionMode(String mode);
 	/**
 	 * Returns the resolution mode.
@@ -236,7 +236,7 @@ public interface GenericCamera {
 	 * Sets the aperture.
 	 * @param aperture The aperture.
 	 * @return True if the command success.
-	 */	
+	 */
 	public boolean setAperture(String aperture);
 	/**
 	 * Returns the aperture value.
@@ -369,7 +369,7 @@ public interface GenericCamera {
 	public double getSaturationLevelADUs();
 	/**
 	 * Returns image depth in bits. 8 bits means a maximum
-	 * intensity level of 255 in a pixel/color, usual in webcams. 
+	 * intensity level of 255 in a pixel/color, usual in webcams.
 	 * 14 is the usual value in modern DSLRs.
 	 * @return Bits per pixel.
 	 */
@@ -380,12 +380,12 @@ public interface GenericCamera {
 	 * those related to the properties of the shot, and not for the
 	 * telescope or other hardware. Note typical value of width/height
 	 * is 0 since the size of the image is not known until it is
-	 * downloaded, so these values should be set later. 
+	 * downloaded, so these values should be set later.
 	 * The entries contains the following keys:
 	 * <pre>
 	 * Entry    Value (typical)   Description
 	 * --------------------------------------
-	 * 
+	 *
 	 * BITPIX      32             Bits per data value
 	 * NAXIS        2             Dimensionality
 	 * NAXIS1       0             Width

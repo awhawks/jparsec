@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.vo;
 
 import java.io.ByteArrayInputStream;
@@ -52,43 +52,43 @@ import jparsec.util.Version;
 
 /**
  * Contains methods to read and write Virtual Observatory (VO) tables.<P>
- * 
+ *
  * Here is an example of how to create a VO table.<P>
- * 
+ *
  * <pre>
  * // Metadata for the fields
  * VOTableMeta fieldMeta[] = new VOTableMeta[] {
- *		new VOTableMeta("column 1", "1", "description of c1", "float", "3", "4", "ucd c1", "unit c1"), 
- *		new VOTableMeta("column 2", "2", "description of c2", "string", "3", "4", "ucd c2", "unit c2"), 
- *		new VOTableMeta("column 3", "3", "description of c3", "double", "3", "4", "ucd c3", "unit c3"), 
+ *		new VOTableMeta("column 1", "1", "description of c1", "float", "3", "4", "ucd c1", "unit c1"),
+ *		new VOTableMeta("column 2", "2", "description of c2", "string", "3", "4", "ucd c2", "unit c2"),
+ *		new VOTableMeta("column 3", "3", "description of c3", "double", "3", "4", "ucd c3", "unit c3"),
  *		new VOTableMeta("column 4", "4", "description of c4", "something", "3", "4", "ucd c4", "unit c4")
  * };
- * 
+ *
  * // Metadata for the resource
  * VOTableMeta resourceMeta = new VOTableMeta("resource 1", "r1", "description of resource 1");
- * 
+ *
  * // Metada for the table
  * VOTableMeta tableMeta = new VOTableMeta("table 1", "t1", "description of table 1");
- * 
+ *
  * // Table as string, to be created in VO format
  * String table = "r1c1   r1c2   r1c3   r1c4" + FileIO.getLineSeparator();
  * table += "r2c1   r2c2   r2c3   r2c4" + FileIO.getLineSeparator();
  * table += "r3c1   r3c2   r3c3   r3c4" + FileIO.getLineSeparator();
  * table += "r4c1   r4c2   r4c3   r4c4" + FileIO.getLineSeparator();
- * 
+ *
  * // Create table
  * SavotVOTable s = VOTable.createVOTable(table, " ", resourceMeta, tableMeta, fieldMeta);
- * 
+ *
  * // Print table as string
  * System.out.println(VOTable.toString(s));
  * </pre>
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
 public class VOTable implements Serializable {
-	static final long serialVersionUID = 1L; 
-	
+	private static final long serialVersionUID = 1L;
+
 	private SavotVOTable votable;
 	private String votableString;
 
@@ -128,13 +128,13 @@ public class VOTable implements Serializable {
      * @param separator Separator for elements in the table.
      * @param resourceMeta Metadata for the resource. Only name, id,
      * and description will be considered.
-     * @param tableMeta Metadata for the table, commonly equal 
+     * @param tableMeta Metadata for the table, commonly equal
      * or similar to the resource metadata. Only name, id,
      * and description will be considered.
      * @param fieldMeta Metadata for the fields.
      * @throws JPARSECException If an error occurs.
      */
-	public VOTable (String table, String separator, VOTableMeta resourceMeta, 
+	public VOTable (String table, String separator, VOTableMeta resourceMeta,
 			VOTableMeta tableMeta, VOTableMeta fieldMeta[])
 	throws JPARSECException {
 		this.votable = createVOTable(table, separator, resourceMeta, tableMeta, fieldMeta);
@@ -156,20 +156,20 @@ public class VOTable implements Serializable {
 	{
 		return this.votable;
 	}
-	
+
 	/**
 	 * Transforms a string representation of a VO Table into a VO Table object.
 	 * @param votable VO table as string.
 	 * @return VO Table.
 	 */
 	public static SavotVOTable toVOTable(String votable)
-	{		
+	{
 		ByteArrayInputStream source = new ByteArrayInputStream(votable.getBytes());
-		
-		SavotPullParser sb = new SavotPullParser(source, SavotPullEngine.FULL, "UTF-8"); 
+
+		SavotPullParser sb = new SavotPullParser(source, SavotPullEngine.FULL, "UTF-8");
 
 		SavotVOTable sv = sb.getVOTable();
-	      
+
 		return sv;
 	}
 
@@ -179,16 +179,16 @@ public class VOTable implements Serializable {
 	 * @return VO Table.
 	 */
 	public static SavotVOTable toVOTable(InputStream stream)
-	{		
-		SavotPullParser sb = new SavotPullParser(stream, SavotPullEngine.FULL, "UTF-8"); 
+	{
+		SavotPullParser sb = new SavotPullParser(stream, SavotPullEngine.FULL, "UTF-8");
 
 		SavotVOTable sv = sb.getVOTable();
-	      
+
 		return sv;
 	}
 
 	/**
-	 * Holds the VO table specification link. 
+	 * Holds the VO table specification link.
 	 */
     public static final String VOTABLE_XMLNS = "http://www.ivoa.net/xml/VOTable/v1.1";
 
@@ -198,19 +198,19 @@ public class VOTable implements Serializable {
      * @param separator Separator for elements in the table.
      * @param resourceMeta Metadata for the resource. Only name, id,
      * and description will be considered.
-     * @param tableMeta Metadata for the table, commonly equal 
+     * @param tableMeta Metadata for the table, commonly equal
      * or similar to the resource metadata. Only name, id,
      * and description will be considered.
      * @param fieldMeta Metadata for the fields.
      * @return The VO table.
      */
-	public static SavotVOTable createVOTable(String table, String separator, VOTableMeta resourceMeta, 
+	public static SavotVOTable createVOTable(String table, String separator, VOTableMeta resourceMeta,
 			VOTableMeta tableMeta, VOTableMeta fieldMeta[])
 	{
 		TableSet tableset = new TableSet();
 
         SavotTable savotTable = buildTable(table, separator, tableMeta, fieldMeta);
-        tableset.addItem(savotTable);        	
+        tableset.addItem(savotTable);
 
         SavotResource resource = new SavotResource();
         resource.setTables(tableset);
@@ -234,13 +234,13 @@ public class VOTable implements Serializable {
      * @param separator Separator for elements in the table.
      * @param resourceMeta Metadata for the resource. Only name, id,
      * and description will be considered.
-     * @param tableMeta Metadata for the table, commonly equal 
+     * @param tableMeta Metadata for the table, commonly equal
      * or similar to the resource metadata. Only name, id,
      * and description will be considered.
      * @param fieldMeta Metadata for the fields, set to a Vector.
      * @return The VO table.
      */
-	public static SavotVOTable createVOTableSet(String table[], String separator, VOTableMeta resourceMeta[], 
+	public static SavotVOTable createVOTableSet(String table[], String separator, VOTableMeta resourceMeta[],
 			VOTableMeta tableMeta[], ArrayList<VOTableMeta[]> fieldMeta)
 	{
 		TableSet tableset = new TableSet();
@@ -249,7 +249,7 @@ public class VOTable implements Serializable {
 		for (int i=0; i<table.length; i++)
 		{
 	        SavotTable savotTable = buildTable(table[i], separator, tableMeta[i], (VOTableMeta[]) fieldMeta.get(i));
-	        tableset.addItem(savotTable);        	
+	        tableset.addItem(savotTable);
 
 	        SavotResource resource = new SavotResource();
 	        resource.setTables(tableset);
@@ -257,7 +257,7 @@ public class VOTable implements Serializable {
 	        resource.setDescription(resourceMeta[i].description);
 	        resource.setId(resourceMeta[i].id);
 
-	        resources.addItem(resource);			
+	        resources.addItem(resource);
 		}
 
         SavotVOTable votable = new SavotVOTable();
@@ -319,6 +319,7 @@ public class VOTable implements Serializable {
 
     private static TRSet buildRowSet(String table, String separator) {
         TRSet rowset = new TRSet();
+
         String tab[] = jparsec.graph.DataSet.toStringArray(table, FileIO.getLineSeparator());
         for (int row = 0; row < tab.length; row++) {
         	int n = FileIO.getNumberOfFields(tab[row], separator, true);
@@ -332,6 +333,7 @@ public class VOTable implements Serializable {
             }
             SavotTR tr = new SavotTR();
             tr.setTDSet(tdset);
+
             rowset.addItem(tr);
         }
 
@@ -344,7 +346,7 @@ public class VOTable implements Serializable {
      * @return String.
      * @throws JPARSECException If an error occurs.
      */
-    public static String toString(SavotVOTable votable) 
+    public static String toString(SavotVOTable votable)
     throws JPARSECException {
     	SavotWriter writer = new SavotWriter();
     	String out = "";
@@ -353,14 +355,14 @@ public class VOTable implements Serializable {
             writer.generateDocument(votable, stream);
             stream.flush();
             stream.close();
-            
+
             out = stream.toString();
         } catch (FileNotFoundException e) {
         	throw new JPARSECException("File not found.", e);
         } catch (IOException e) {
         	throw new JPARSECException("IO error.", e);
         }
-        
+
         return out;
     }
 }

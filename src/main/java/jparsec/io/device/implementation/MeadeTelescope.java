@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */	
+ */
 package jparsec.io.device.implementation;
 
 import javax.swing.JOptionPane;
@@ -55,7 +55,7 @@ import jparsec.util.Version;
 public class MeadeTelescope implements GenericTelescope {
 
 	private SerialConnection sc;
-    
+
 	private TELESCOPE_MODEL telescopeModel = null;
 	private boolean isMoving = false, isMovingS = false, isMovingN = false, isMovingE = false, isMovingW = false;
 	private FOCUS_SPEED fs = FOCUS_SPEED.SLOW;
@@ -72,7 +72,7 @@ public class MeadeTelescope implements GenericTelescope {
 	private boolean noGW = false;
 	private String object;
 	private static final double MOVE_TOLERANCE_1s = 30 * Constant.ARCSEC_TO_RAD;
-	
+
 	@Override
 	public boolean hasGPS() {
 		if (telescopeModel != TELESCOPE_MODEL.MEADE_AUTOSTAR_II) return false;
@@ -98,10 +98,10 @@ public class MeadeTelescope implements GenericTelescope {
     public synchronized boolean setFocusSpeed(FOCUS_SPEED rate) {
 		boolean out = false;
 		switch(rate) {
-		case FAST: 
+		case FAST:
 			out = sendCmd("#:FF#");
 			break;
-		case SLOW: 
+		case SLOW:
 			out = sendCmd("#:FS#");
 			break;
 		}
@@ -114,10 +114,10 @@ public class MeadeTelescope implements GenericTelescope {
     public synchronized boolean startFocus(FOCUS_DIRECTION direction) {
 		boolean out = false;
 		switch(direction) {
-		case IN: 
+		case IN:
 			out = sendCmd("#:F+#");
 			break;
-		case OUT: 
+		case OUT:
 			out = sendCmd("#:F-#");
 			break;
 		}
@@ -128,7 +128,7 @@ public class MeadeTelescope implements GenericTelescope {
 	public FOCUS_DIRECTION getFocusDirection() { return fd; }
 	@Override
     public synchronized boolean stopFocus() {
-		if (sendCmd("#:FQ#")) { 
+		if (sendCmd("#:FQ#")) {
 			fd = null;
 			return true;
 		}
@@ -138,16 +138,16 @@ public class MeadeTelescope implements GenericTelescope {
     public synchronized boolean setMoveSpeed(MOVE_SPEED rate) {
 		boolean out = false;
 		switch(rate) {
-		case SLEW: 
+		case SLEW:
 			out = sendCmd("#:RS#");
 			break;
-		case FIND: 
+		case FIND:
 			out = sendCmd("#:RM#");
-			break;			
-		case CENTER: 
+			break;
+		case CENTER:
 			out = sendCmd("#:RC#");
 			break;
-		case GUIDE: 
+		case GUIDE:
 			out = sendCmd("#:RG#");
 			break;
 		}
@@ -160,19 +160,19 @@ public class MeadeTelescope implements GenericTelescope {
     public synchronized boolean startMove(MOVE_DIRECTION direction) {
 		boolean out = false;
 		switch(direction) {
-		case NORTH_UP: 
+		case NORTH_UP:
 			out = sendCmd("#:Mn#");
 			if (out) isMovingN = true;
 			break;
-		case EAST_LEFT: 
+		case EAST_LEFT:
 			out = sendCmd("#:Me#");
 			if (out) isMovingE = true;
 			break;
-		case SOUTH_DOWN: 
+		case SOUTH_DOWN:
 			out = sendCmd("#:Ms#");
 			if (out) isMovingS = true;
 			break;
-		case WEST_RIGHT: 
+		case WEST_RIGHT:
 			out = sendCmd("#:Mw#");
 			if (out) isMovingW = true;
 			break;
@@ -189,19 +189,19 @@ public class MeadeTelescope implements GenericTelescope {
 		final int time = (int) (seconds * 1000);
 		if (time > 9999) return false;
 		switch(direction) {
-		case NORTH_UP: 
+		case NORTH_UP:
 			out = sendCmd("#:Mgn"+time+"#");
 			if (out) isMovingN = true;
 			break;
-		case EAST_LEFT: 
+		case EAST_LEFT:
 			out = sendCmd("#:Mge"+time+"#");
 			if (out) isMovingE = true;
 			break;
-		case SOUTH_DOWN: 
+		case SOUTH_DOWN:
 			out = sendCmd("#:Mgs"+time+"#");
 			if (out) isMovingS = true;
 			break;
-		case WEST_RIGHT: 
+		case WEST_RIGHT:
 			out = sendCmd("#:Mgw"+time+"#");
 			if (out) isMovingW = true;
 			break;
@@ -232,26 +232,26 @@ public class MeadeTelescope implements GenericTelescope {
     public synchronized boolean stopMove(MOVE_DIRECTION direction) {
 		boolean out = false;
 		switch(direction) {
-		case NORTH_UP: 
+		case NORTH_UP:
 			out = sendCmd("#:Qn#");
 			if (out) isMovingN = false;
 			break;
-		case EAST_LEFT: 
+		case EAST_LEFT:
 			out = sendCmd("#:Qe#");
 			if (out) isMovingE = false;
 			break;
-		case SOUTH_DOWN: 
+		case SOUTH_DOWN:
 			out = sendCmd("#:Qs#");
 			if (out) isMovingS = false;
 			break;
-		case WEST_RIGHT: 
+		case WEST_RIGHT:
 			out = sendCmd("#:Qw#");
 			if (out) isMovingW = false;
 			break;
 		}
 		if (out) isMoving = checkMove();
 		return out;
-    }	
+    }
 	@Override
 	public MOVE_DIRECTION getLastMoveDirection() {return md;}
 	@Override
@@ -282,7 +282,7 @@ public class MeadeTelescope implements GenericTelescope {
 		eph.preferPrecisionInEphemerides = false;
 		eph.correctForEOP = false;
 		eph.correctForPolarMotion = false;
-		TimeElement time = getTime();		
+		TimeElement time = getTime();
 		try {
 			if (!this.telescopeModel.isJ2000()) return loc;
 			loc = Ephem.fromJ2000ToApparentGeocentricEquatorial(loc, time, obs, eph);
@@ -333,7 +333,7 @@ public class MeadeTelescope implements GenericTelescope {
 	@Override
     public synchronized boolean setObjectCoordinates(LocationElement loc0, String name) {
 		this.objLoc = loc0.clone();
-		
+
 		LocationElement loc = objLoc.clone();
 		if (this.telescopeModel.isJ2000()) {
 			try {
@@ -360,7 +360,7 @@ public class MeadeTelescope implements GenericTelescope {
         } else {
         	dec = "+"+dec;
         }
-        
+
         boolean rc = true;;
         sendCmd("#:Sr"+ra+"#");
         //rc = readBoolean();
@@ -381,7 +381,7 @@ public class MeadeTelescope implements GenericTelescope {
 		String ra = this.sendCmdAndReceiveResponse("#:Gr#");
 		String dec = this.sendCmdAndReceiveResponse("#:Gd#");
         return new LocationElement(raToFloat(ra) * Constant.DEG_TO_RAD, decToFloat(dec) * Constant.DEG_TO_RAD, 1.0);
-*/        
+*/
     }
 
 	@Override
@@ -396,7 +396,7 @@ public class MeadeTelescope implements GenericTelescope {
     	if (isEquatorial) {
     		return LocationElement.getAngularDistance(loc, getEquatorialPosition());
     	} else {
-    		return LocationElement.getAngularDistance(loc, getHorizontalPosition());    		
+    		return LocationElement.getAngularDistance(loc, getHorizontalPosition());
     	}
     }
 	@Override
@@ -416,14 +416,14 @@ public class MeadeTelescope implements GenericTelescope {
     public synchronized boolean setLocalTime(double hours) {
         double hms[] = Functions.getHMS(hours / Constant.RAD_TO_HOUR);
         String time = Functions.fmt((int) hms[0], 2, ':') + Functions.fmt((int) hms[1], 2, ':') + Functions.fmt((int) hms[2], 2);
-    	
+
     	if (sendCmd("#:SL"+time+"#")) return readBoolean();
     	return false;
     }
 	@Override
     public synchronized boolean sync() {
 		if (objLoc == null) return false;
-		String o = this.sendCmdAndReceiveResponse("#:CM#");
+		this.sendCmdAndReceiveResponse("#:CM#");
 		return true;
     }
 	@Override
@@ -438,10 +438,10 @@ public class MeadeTelescope implements GenericTelescope {
 	@Override
     public synchronized boolean park() {
 		if (parkPos == null) {
-		   	//sendCmd("#:hS#"); 
+		   	//sendCmd("#:hS#");
 		   	return sendCmd("#:hP#");
 		}
-		
+
 		try {
 			TimeElement time = getTime();
 			EphemerisElement eph = new EphemerisElement(TARGET.NOT_A_PLANET, EphemerisElement.COORDINATES_TYPE.APPARENT,
@@ -461,7 +461,7 @@ public class MeadeTelescope implements GenericTelescope {
 			}
 			this.setObjectCoordinates(loc, "Park position");
 			this.gotoObject();
-			objLoc = loc0; 
+			objLoc = loc0;
 			disconnect();
 			// TODO: disable tracking
 			return true;
@@ -474,7 +474,7 @@ public class MeadeTelescope implements GenericTelescope {
 			// TODO: recover control from park (sleep) mode
 			return false;
 		}
-		
+
 		try {
 			connect();
 			// TODO: enable tracking
@@ -494,6 +494,10 @@ public class MeadeTelescope implements GenericTelescope {
     	return "Meade "+n;
     }
 	@Override
+    public synchronized String getTelescopePort() {
+    	return sc.getPortName();
+    }
+	@Override
     public synchronized ObserverElement getObserver() {
 		if (obs != null) return obs;
 		String o = this.sendCmdAndReceiveResponse("#:GG#");
@@ -501,7 +505,7 @@ public class MeadeTelescope implements GenericTelescope {
     		double localToUTC = Double.parseDouble(o);
     		o = this.sendCmdAndReceiveResponse("#:Gg#");
     		if (o.equals("")) return new ObserverElement();
-    		
+
         		if (!o.startsWith("-") && !o.startsWith("+")) o = " "+o;
         		if (o.startsWith("+")) o = " "+o.substring(1);
         		int ld = Integer.parseInt(o.substring(0, 4).trim());
@@ -519,7 +523,7 @@ public class MeadeTelescope implements GenericTelescope {
             		if (o.length() > 7) ls = Integer.parseInt(o.substring(7));
             		double lat = (Math.abs(ld) + lm / 60.0 + ls / 3600.0);
             		if (o.startsWith("-")) lat = -lat;
-            		
+
             		ObserverElement observer = new ObserverElement(getTelescopeName(), lon * Constant.DEG_TO_RAD, lat * Constant.DEG_TO_RAD, 0, -localToUTC, DST_RULE.NONE);
             		obs = observer;
             		return observer;
@@ -537,7 +541,7 @@ public class MeadeTelescope implements GenericTelescope {
 	    		double hours = raToFloat(time) / 15.0;
 	    		AstroDate astro = new AstroDate(year, month, day + hours / 24.0);
 	    		TimeElement t = new TimeElement(astro, SCALE.LOCAL_TIME);
-    		
+
 	    		time0 = new TimeElement();
 	    		timeOffset = astro.jd() - time0.astroDate.jd();
 	    		return t;
@@ -568,7 +572,7 @@ public class MeadeTelescope implements GenericTelescope {
     		if (o != null && o.length() > 0 && !o.substring(2, 3).equals("0")) return true;
     	}
     	return false;
-    }  
+    }
 	@Override
     public synchronized MOUNT getMount() {
 		if (noGW || this.telescopeModel == TELESCOPE_MODEL.MEADE_AUTOSTAR) return MOUNT.AZIMUTHAL;
@@ -579,22 +583,22 @@ public class MeadeTelescope implements GenericTelescope {
     		return MOUNT.EQUATORIAL;
     	}
     	return null;
-    }  
+    }
 	@Override
     public synchronized boolean disconnect() {
 		sc.closeConnection();
     	return true;
-    }  
+    }
 	@Override
     public synchronized boolean connect() throws JPARSECException {
 		sc.openConnection();
     	return true;
-    }  
+    }
 	@Override
     public synchronized boolean isConnected() {
 		return sc.isOpen();
-    }  
-    
+    }
+
     /**
     * Convert RA from a string to a number.
     */
@@ -679,8 +683,8 @@ public class MeadeTelescope implements GenericTelescope {
 		String reply = this.sendCmdAndReceiveResponse("#:GR#");
 		return (reply.length()>7);
     }
-    
-    
+
+
     /**
     * Sends a command to the scope.
     */
@@ -702,7 +706,7 @@ public class MeadeTelescope implements GenericTelescope {
     		if (!sc.isOpen()) return null;
 
     		sc.sendString(cmd.substring(1));
-            
+
             return this.readString();
     	} catch (Exception exc) {
     		exc.printStackTrace();
@@ -723,7 +727,7 @@ public class MeadeTelescope implements GenericTelescope {
     */
     private synchronized String readString() {
 		if (!sc.isOpen()) return "";
-		
+
 		String s = sc.receiveString();
     	if (s == null) return "";
     	if (s.endsWith("#")) s = s.substring(0, s.length()-1);
@@ -744,7 +748,7 @@ public class MeadeTelescope implements GenericTelescope {
     public double getFieldOfView(int camera) {
     	return field[camera];
     }
-    
+
     @Override
     public void setFieldOfView(double field, int camera) {
     	this.field[camera] = field;
@@ -770,7 +774,7 @@ public class MeadeTelescope implements GenericTelescope {
 	public boolean invertVertically() {
 		return type.invertV();
 	}
-	
+
 	private TELESCOPE_TYPE type = TELESCOPE_TYPE.SCHMIDT_CASSEGRAIN;
 	@Override
 	public void setTelescopeType(TELESCOPE_TYPE type) {
@@ -793,7 +797,7 @@ public class MeadeTelescope implements GenericTelescope {
 			double jd = TimeScale.getJD(time, obs, eph, SCALE.UNIVERSAL_TIME_UT1);
 			LocationElement eq = this.getEquatorialPosition(), hz = this.getHorizontalPosition();
 			LocationElement eqapp = this.getApparentEquatorialPosition(), eq2000 = this.getJ2000EquatorialPosition();
-			
+
 			ImageHeaderElement header0[] = new ImageHeaderElement[] {
 					new ImageHeaderElement("BITPIX", "32", "Bits per data value"),
 					new ImageHeaderElement("NAXIS", "2", "Dimensionality"),
@@ -827,7 +831,7 @@ public class MeadeTelescope implements GenericTelescope {
 					new ImageHeaderElement("AZ", ""+hz.getLongitude(), "Telescope AZ"),
 					new ImageHeaderElement("EL", ""+hz.getLatitude(), "Telescope EL")
 			};
-			
+
 			if (cameraIndex < 0) return header0;
 
 			GenericCamera camera = this.getCameras()[cameraIndex];
@@ -848,7 +852,7 @@ public class MeadeTelescope implements GenericTelescope {
 					hz0 = CoordinateSystem.equatorialToHorizontal(eq, time, obs, eph);
 					header0 = ImageHeaderElement.addHeaderEntry(header0, new ImageHeaderElement("DATE-EFF", time.toString(), "Date and time for the middle of the observation"));
 					header0 = ImageHeaderElement.addHeaderEntry(header0, new ImageHeaderElement("AZ-EFF", ""+hz0.getLongitude(), "Telescope AZ for the middle of the observation"));
-					header0 = ImageHeaderElement.addHeaderEntry(header0, new ImageHeaderElement("EL-EFF", ""+hz0.getLatitude(), "Telescope EL for the middle of the observation"));					
+					header0 = ImageHeaderElement.addHeaderEntry(header0, new ImageHeaderElement("EL-EFF", ""+hz0.getLatitude(), "Telescope EL for the middle of the observation"));
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -857,7 +861,7 @@ public class MeadeTelescope implements GenericTelescope {
 			ImageHeaderElement cameraHeader[] = camera.getFitsHeaderOfLastImage();
 			cameraHeader = ImageHeaderElement.addHeaderEntry(cameraHeader, new ImageHeaderElement("FIELD", Functions.formatAngleAsDegrees(this.getFieldOfView(cameraIndex), 3), "Camera field of view (deg)"));
 			cameraHeader = ImageHeaderElement.addHeaderEntry(cameraHeader, new ImageHeaderElement("CAM_INDEX", ""+cameraIndex, "Camera index id value"));
-	
+
 			return ImageHeaderElement.addHeaderEntry(header0, cameraHeader);
 		} catch (Exception exc) {
 			exc.printStackTrace();
@@ -886,7 +890,7 @@ public class MeadeTelescope implements GenericTelescope {
 			        sc = new SerialConnection();
 			        sc.setPortName(ports[i]);
 			        sc.openConnection();
-			        
+
 			        String name = this.getTelescopeName();
 			        if (name != null && !name.equals("")) {
 			        	port = ports[i];
@@ -896,15 +900,15 @@ public class MeadeTelescope implements GenericTelescope {
 			        sc.closeConnection();
 				}
 				if (port == null) {
-					int s = JOptionPane.showOptionDialog(null, 
-							Translate.translate(1126), 
+					int s = JOptionPane.showOptionDialog(null,
+							Translate.translate(1126),
 							Translate.translate(1125), JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE, null, ports, ports[0]);
 					if (s >= 0) port = ports[s];
 				}
 			}
 		}
 		if (port == null) throw new JPARSECException("No serial ports selected/available!");
-		
+
         sc = new SerialConnection();
         sc.setPortName(port);
         sc.openConnection();
@@ -913,7 +917,7 @@ public class MeadeTelescope implements GenericTelescope {
        	setFocusSpeed(fs);
        	setMoveSpeed(ms);
 	}
-	
+
 	@Override
 	public boolean hasGOTO() {
 		return true;

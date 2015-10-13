@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,11 +18,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.graph;
 
 import java.io.*;
 import java.util.Arrays;
+
 import jparsec.graph.chartRendering.AWTGraphics;
 
 /**
@@ -35,7 +36,7 @@ import jparsec.graph.chartRendering.AWTGraphics;
  */
 public class JPARSECStroke implements Serializable {
 
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	private float lineWidth;
 	private int endCap;
@@ -43,7 +44,7 @@ public class JPARSECStroke implements Serializable {
 	private float miterLimit;
 	private float[] dashArray;
 	private float dashPhase;
-	
+
 	/**
 	 * Constructor for a stroke.
 	 * @param s Stroke.
@@ -109,7 +110,7 @@ public class JPARSECStroke implements Serializable {
 	private static final float SIZE_THICK = 4f;
 	private static final int JOIN_ROUND = 1;
 	private static final int CAP_BUTT = 0;
-	
+
 	/**
 	 * Stroke to represent lines as highly spaced points.
 	 */
@@ -291,7 +292,6 @@ public class JPARSECStroke implements Serializable {
         this.dashArray = dash;
         this.dashPhase = dashPhase;
  	}
-
 	/**
 	 * Clones this instance.
 	 */
@@ -300,9 +300,8 @@ public class JPARSECStroke implements Serializable {
 	{
         return new JPARSECStroke(this.lineWidth, this.endCap, this.lineJoin, this.miterLimit, this.dashArray, this.dashPhase);
 	}
-
 	/**
-	 * Returns true if the input object is equal to this stroke.
+	 * Returns true if the input object is equals to this stroke.
 	 */
 	@Override
 	public boolean equals(Object o) {
@@ -377,8 +376,8 @@ public class JPARSECStroke implements Serializable {
 	 */
 	public float getLineWidth() {
 		return this.lineWidth;
-	}	
-	
+	}
+
 	/**
 	 * Returns if this stroke represents a continuous line.
 	 * More exactly, it returns true if the dash array

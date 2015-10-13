@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -57,23 +57,23 @@ import jparsec.util.JPARSECException;
  * satellites. They are modeled mainly as precessing ellipses. <P>
  * To obtain ephemeris follow these simple steps: <P>
  * <pre>
- * 
+ *
  * // Search an object.
  * String name = &quot;ISS&quot;
  * int index = SatelliteEphem.getArtificialSatelliteTargetIndex(name);
- * 
+ *
  * // Declare an adequate Ephemeris object with the algorithm field set properly.
  * EphemerisElement eph = new EphemerisElement(TARGET.NOT_A_PLANET, EphemerisElement.COORDINATES_TYPE.APPARENT, EphemerisElement.EQUINOX_OF_DATE,
  * 		EphemerisElement.GEOCENTRIC, EphemerisElement.REDUCTION_METHOD.IAU2006, EphemerisElement.FRAME.ICRF);
  * eph.algorithm = EphemerisElement.ALGORITHM.ARTIFICIAL_SATELLITE;
  * eph.targetBody.setIndex(index);
- * 
+ *
  * // Call ephemeris using also a valid Time and Observer objects.
  * SatelliteEphemElement ephem = SatelliteEphem.satEphemeris(time, observer, eph, true);
  * </pre>
- * 
+ *
  * Better precision can be achieved using the {@linkplain SDP8_SGP8} class.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  * @see SDP4_SGP4
@@ -83,19 +83,19 @@ public class SatelliteEphem
 {
 	// private constructor so that this class cannot be instantiated.
 	private SatelliteEphem() {}
-	
+
 	private static ReadFile readFile = null;
 
 	/**
 	 * Set this flag to true to use the database of iridium artificial satellites.
 	 * Default is false to use 'normal' satellites. In case this flag is modified
 	 * after calculating ephemerides for satellites (and they were not loaded
-	 * by means of {@linkplain SatelliteEphem#setSatellitesFromExternalFile(String[])}) the method 
+	 * by means of {@linkplain SatelliteEphem#setSatellitesFromExternalFile(String[])}) the method
 	 * {@linkplain SatelliteEphem#setSatellitesFromExternalFile(String[])}
 	 * should be also called, giving null as argument.
 	 */
 	public static boolean USE_IRIDIUM_SATELLITES = false;
-	
+
 	/**
 	 * This constant holds the maximum value allowed for the panel angle of an
 	 * Iridium satellite to consider it can throw a flare. Default value is 5 (degrees),
@@ -105,16 +105,16 @@ public class SatelliteEphem
 
 	/**
 	 * This constant holds the maximum value allowed for the panel angle of an
-	 * Iridium satellite to consider it can throw a lunar flare. Default value is 
+	 * Iridium satellite to consider it can throw a lunar flare. Default value is
 	 * 0.5 (degrees), which corresponds to an apparent magnitude close to +8
 	 * for the full Moon (!).
 	 */
 	public static double MAXIMUM_IRIDIUM_ANGLE_FOR_LUNAR_FLARES = 0.25;
 
 	/**
-	 * Sets the list of orbital elements of satellite to that of an 
+	 * Sets the list of orbital elements of satellite to that of an
 	 * external file.
-	 * @param file The read file, in the three-line format 
+	 * @param file The read file, in the three-line format
 	 * (name and two-line elements) used by NORAD, or null to use the
 	 * internal file in orbital_elements.jar.
 	 * @throws JPARSECException If an error occurs.
@@ -124,11 +124,11 @@ public class SatelliteEphem
 			readFile = null;
 			return;
 		}
-		
+
 		readFile = new ReadFile();
 		readFile.readFileOfArtificialSatellitesFromExternalFile(file);
 	}
-	
+
 	/**
 	 * Searchs for a given artificial satellite and returns the index.
 	 * @param name Object name.
@@ -202,19 +202,19 @@ public class SatelliteEphem
 	}
 
 	private static boolean FAST_MODE = false;
-	
+
 	/**
 	 * Calculate the ephemeris of a satellite.
 	 * <P>
 	 * This method is not designed for precise ephemeris, although is gives
 	 * correct positions.
 	 * The ephemerisElement object is used when transforming to apparent
-	 * coordinates. In any other case output position is the same 
+	 * coordinates. In any other case output position is the same
 	 * (geometric = astrometric).
 	 * <P>
-	 * Based on the work by James Miller, PLAN-13 program, 
+	 * Based on the work by James Miller, PLAN-13 program,
 	 * http://www.amsat.org/amsat/articles/g3ruh/111.html.
-	 * 
+	 *
 	 * @param time Time object.
 	 * @param obs Observer object.
 	 * @param eph Ephemeris object.
@@ -234,7 +234,7 @@ public class SatelliteEphem
 		double MAS, Rx, Ry, Rz, Ox, Oy, Oz, Vx, Vy, equatorialRadius, HGT;
 		double Sx, Sy, Sz, SLON, Ax, Ay, Az, sinCorrectedNodeRA, EL, E, N, Nx, Ny, Nz, R, Ex, Ey;
 		double VELx, VELy, CZx, CZy, CZz, CYx, CYy, CYz, CXx, CXy, CXz;
-		double cosIncl, cosCorrectedArgPerigee, sinCorrectedArgPerigee, cosCorrectedNodeRA, correctedNodeRA, nodePrecessionRate, KDP, correctedArgPerigee, nodeRA, PC, dragCoeff, meanMotion, YG, firstDerivative, G0, LAT;
+		double cosIncl, cosCorrectedArgPerigee, sinCorrectedArgPerigee, cosCorrectedNodeRA, correctedNodeRA, nodePrecessionRate, KDP, correctedArgPerigee, nodeRA, PC, dragCoeff, meanMotion, firstDerivative, G0, LAT;
 		double LON, HT_km, cosLAT, sinLAT, flatenning, D, cosLON, sinLON, incl, argPerigee, meanAnomaly, YT, earthTraslationRate2, DT;
 		double DE, year, days, GM, J2, n, a, b, sinIncl, ecc, perigeePrecessionRate, INS, MAS0, TEG, ALON, ALAT;
 		double DN, TN, KD, M, DR, RN, revolutionNumber, EA, A, B, U, SLAT, polarRadius, RS;
@@ -247,7 +247,7 @@ public class SatelliteEphem
 		boolean exactMode = FastMath.EXACT_MODE;
 		FastMath.EXACT_MODE = false;
 		if (!FAST_MODE) FastMath.EXACT_MODE = true;
-		
+
 		// Fixed (not real) values for the orientation of the satellite antenna
 		ALON = 180.0;
 		ALAT = 0;
@@ -338,14 +338,14 @@ public class SatelliteEphem
 		SNS = FastMath.sin(INS); // Sun's inclination
 		EQC1 = 0.03342;
 		EQC2 = 0.00035; // Sun's Equation of centre terms
-		EQC3 = 5.0E-6;		
-		
+		EQC3 = 5.0E-6;
+
 		// Bring Sun data to Satellite Epoch
 		TEG = (DE - 2451543.5) + days; // Elapsed Time: Epoch - YG
 
 		sunMeanRA = Constant.DEG_TO_RAD * G0 + TEG * earthTraslationRate + Math.PI; // Mean RA Sun at Sat epoch
 		sunMeanAnomaly = Constant.DEG_TO_RAD * (MAS0 + MASD * TEG); // Mean MA Sun ..
-	
+
 		// Antenna unit vector in orbit plane coordinates.
 		cosLON = FastMath.cos(Constant.DEG_TO_RAD * ALON);
 		sinLON = FastMath.sin(Constant.DEG_TO_RAD * ALON);
@@ -357,7 +357,7 @@ public class SatelliteEphem
 
 		// Calculate Satellite Position at DN,TN
 		T = (DN - DE) + (TN - days); // Elapsed T since epoch, days
-		
+
 		DT = dragCoeff * T / 2.0;
 		KD = 1.0 + 4.0 * DT;
 		KDP = 1.0 - 7.0 * DT; // Linear drag terms
@@ -418,11 +418,11 @@ public class SatelliteEphem
 		SATz = Sx * CZx + Sy * CZy;
 		ANTz = Ax * CZx + Ay * CZy + Az * CZz;
 		VELz = Vx * CZx + Vy * CZy;
-		
-		// Also express SAT,ANT and VEL in GEOCENTRIC coordinates:		
+
+		// Also express SAT,ANT and VEL in GEOCENTRIC coordinates:
 		GHAA = jparsec.time.SiderealTime.greenwichMeanSiderealTime(time, obs, eph);
 		if (!FAST_MODE) GHAA += jparsec.time.SiderealTime.equationOfEquinoxes(time, obs, eph);
-		
+
 		C = FastMath.cos(GHAA);
 		S = -FastMath.sin(GHAA);
 		Sx = (SATx * C - SATy * S);
@@ -434,13 +434,13 @@ public class SatelliteEphem
 		Sz = SATz;
 		Az = ANTz;
 		Vz = VELz;
-		
+
 		double JD_TDB = 0;
 		if (!FAST_MODE) {
 			JD_TDB = TimeScale.getJD(time, obs, eph, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
 			DataBase.addData("GCRS", Precession.precessToJ2000(JD_TDB, new double[] {Sx / Constant.AU, Sy / Constant.AU, Sz / Constant.AU}, eph), true);
 		}
-		
+
 		// Compute and manipulate range/velocity/antenna vectors
 		Rx = Sx - Ox;
 		Ry = Sy - Oy;
@@ -463,7 +463,7 @@ public class SatelliteEphem
 		SLON = FastMath.atan2_accurate(Sy, Sx); // Lon, + East
 		SLAT = FAST_MODE ? FastMath.asin(Sz / RS) : Math.asin(Sz / RS); // Lat, + North
 		HGT = RS - equatorialRadius;
-		
+
 		// Resolve Sat-Obs velocity vector along unit range vector. (VOz=0)
 		RR = (Vx-VOx)*Rx + (Vy-VOy)*Ry + Vz*Rz; // Range rate, km/s
 
@@ -471,7 +471,7 @@ public class SatelliteEphem
 		TAS = sunMeanRA + earthTraslationRate * T + EQC1 * FastMath.sin(MAS) + EQC2 * FastMath.sin(2 * MAS) + EQC3 * FastMath.sin(3 * MAS);
 
 		// Note other programs (XEphem among them) uses the following lines, which seems to be wrong
-		// by 0.004 deg around year 2011. Algorithm at Saros class from Calendrical Calculations agree 
+		// by 0.004 deg around year 2011. Algorithm at Saros class from Calendrical Calculations agree
 		// with previous code up to 0.00001 deg.
 		//double Tp = (itsEpochJD - 2415020.0) / 36525.0;
 	    //double sunMeanAnomaly2 = (358.475845 + 35999.04975 * Tp - 0.00015 * Tp * Tp - 0.00000333333 * Tp * Tp * Tp) * Constant.DEG_TO_RAD;
@@ -511,7 +511,7 @@ public class SatelliteEphem
 		if ((SEL * Constant.RAD_TO_DEG < -10.0) && !(ECL.equals("Eclipsed")))
 			ECL = "Possibly visible";
 
-		double iridiumAngle = SatelliteEphem.iridiumAngle(new double[] {Sx, Sy, Sz}, new double[] {Vx, Vy, Vz}, 
+		double iridiumAngle = SatelliteEphem.iridiumAngle(new double[] {Sx, Sy, Sz}, new double[] {Vx, Vy, Vz},
 				new double[] {Sx - Ox, Sy - Oy, Sz - Oz}, new double[] {Hx, Hy, Hz});
 
 		// Obtain Moon iridium angle
@@ -527,11 +527,11 @@ public class SatelliteEphem
 
 			double Mx = MOONx * C - MOONy * S;
 			double My = MOONx * S + MOONy * C;
-			double Mz = MOONz; 
-			iridiumAngleMoon = SatelliteEphem.iridiumAngle(new double[] {Sx, Sy, Sz}, new double[] {Vx, Vy, Vz}, 
+			double Mz = MOONz;
+			iridiumAngleMoon = SatelliteEphem.iridiumAngle(new double[] {Sx, Sy, Sz}, new double[] {Vx, Vy, Vz},
 					new double[] {Sx - Ox, Sy - Oy, Sz - Oz}, new double[] {Mx, My, Mz});
 		}
-		
+
 		// Obtain Sun unit vector in EQ coordinates
 //		Hx =  SUNx*CXx + SUNy*CYx + SUNz*CZx;
 //		Hy =  SUNx*CXy + SUNy*CYy + SUNz*CZy;
@@ -541,20 +541,20 @@ public class SatelliteEphem
 		if (ECL.equals("Eclipsed")) isEclipsed = true;
 
 		FastMath.EXACT_MODE = exactMode;
-		
+
 		ELO = 0;
 		if (FAST_MODE) {
-			ELO = LocationElement.getApproximateAngularDistance(new LocationElement(SAZ, SEL, 1.0), new LocationElement(AZI, EL, 1.0));		
+			ELO = LocationElement.getApproximateAngularDistance(new LocationElement(SAZ, SEL, 1.0), new LocationElement(AZI, EL, 1.0));
 		} else {
 			ELO = LocationElement.getAngularDistance(new LocationElement(SAZ, SEL, 1.0), new LocationElement(AZI, EL, 1.0));
 		}
-		
+
 		LocationElement loc_horiz = new LocationElement(AZI, EL, R);
 		double ast = FAST_MODE ? GHAA + obs.getLongitudeRad() : SiderealTime.apparentSiderealTime(time, obs, eph);
 		LocationElement loc_eq = CoordinateSystem.horizontalToEquatorial(loc_horiz, ast, obs.getLatitudeRad(), true);
-		
+
 		if (FAST_MODE) {
-			SatelliteEphemElement ephem = new SatelliteEphemElement(sat.getName(), loc_eq.getLongitude(), loc_eq.getLatitude(), R, AZI, EL, 
+			SatelliteEphemElement ephem = new SatelliteEphemElement(sat.getName(), loc_eq.getLongitude(), loc_eq.getLatitude(), R, AZI, EL,
 					(float) SLON, (float) SLAT, (float) HGT, (float) RR, (float) ELO, (float) ILL,
 					isEclipsed, (int) RN);
 
@@ -585,7 +585,7 @@ public class SatelliteEphem
 		ephem.iridiumAngle = (float) iridiumAngle;
 		ephem.iridiumAngleForMoon = (float) iridiumAngleMoon;
 		ephem.sunElevation = (float) SEL;
-		
+
 		// Correct apparent magnitude for extinction
 		if (eph.ephemType == EphemerisElement.COORDINATES_TYPE.APPARENT && eph.correctForExtinction &&
 				obs.getMotherBody() == TARGET.EARTH && ephem.magnitude != SatelliteEphemElement.UNKNOWN_MAGNITUDE)
@@ -599,7 +599,7 @@ public class SatelliteEphem
 	 * information is known. Information is taken from Mike McCants,
 	 * http://www.io.com/~mmccants/index.html, to obtain this data. Apparent
 	 * magnitude is not corrected for atmosferic extinction.
-	 * 
+	 *
 	 * @param sat_ephem Satellite ephem object.
 	 * @param sat_orb Satellite orbit object.
 	 * @return The same object with missing data completed if this data is
@@ -612,7 +612,7 @@ public class SatelliteEphem
 		String satN = ""+sat_orb.satelliteNumber;
 		satN = DataSet.repeatString("0", 5-satN.length()) + satN + " ";
 		String pathToFile = FileIO.DATA_ORBITAL_ELEMENTS_DIRECTORY + "sat_mag.txt";
-		
+
 		sat_ephem.magnitude = SatelliteEphemElement.UNKNOWN_MAGNITUDE;
 		sat_ephem.angularRadius = SatelliteEphemElement.UNKNOWN_ANGULAR_SIZE;
 		try
@@ -632,16 +632,16 @@ public class SatelliteEphem
 							sat_ephem.magnitude = (float) (sat_ephem.magnitude - 15.75 + 2.5 * Math.log10(sat_ephem.distance * sat_ephem.distance / sat_ephem.illumination));
 						}
 					} catch (Exception exc) {}
-					
+
 					double sat_size = 0.0;
 					try {
 						String end_line = "";
 						if (line.length() > 53) {
 							end_line = line.substring(38, 53).trim();
-						} else if (line.length() > 51) { 
+						} else if (line.length() > 51) {
 							end_line = line.substring(38, 51).trim();
 						}
-						
+
 						if (!end_line.equals(""))
 							sat_size = DataSet.parseDouble(FileIO.getField(1, end_line, " ", true));
 						if (sat_size > 0.0)
@@ -680,18 +680,18 @@ public class SatelliteEphem
 	public static final String PATH_TO_SATELLITES_IRIDIUM_FILE = FileIO.DATA_ORBITAL_ELEMENTS_DIRECTORY + "iridium.txt";
 
 	/**
-	 * Calculate the ephemeris of a satellite using the method by James Miller, 
+	 * Calculate the ephemeris of a satellite using the method by James Miller,
 	 * PLAN-13 program, http://www.amsat.org/amsat/articles/g3ruh/111.html.
 	 * <P>
 	 * The ephemerisElement object is used when transforming to apparent
-	 * coordinates. In any other case output position is the same 
+	 * coordinates. In any other case output position is the same
 	 * (geometric = astrometric). Results are referred to mean equinox
 	 * of date.
 	 * <P>
 	 * A pass is defined as the instant when the satellite is more then 15
 	 * degrees above the horizon of the observer. A search for the next pass up
 	 * to 7 days after calculation time will be done.
-	 * 
+	 *
 	 * @param time Time object.
 	 * @param obs Observer object.
 	 * @param eph Ephemeris object. The index of the satellite must be added to the index property.
@@ -711,7 +711,7 @@ public class SatelliteEphem
 			re.readFileOfArtificialSatellites();
 			readFile = re;
 		}
-		
+
 		// Check Ephemeris object
 		if (!EphemerisElement.checkEphemeris(eph))
 			throw new JPARSECException("invalid ephemeris object.");
@@ -745,7 +745,7 @@ public class SatelliteEphem
 		double a = Math.pow((GM / (n * n)), 1.0 / 3.0); // Semi major axis km
 		double ecc = sat.eccentricity;
 		double b = a * Math.sqrt(1.0 - ecc * ecc); // Semi minor axis km
-		
+
 		double r = (a + b) / 2.0 - Constant.EARTH_RADIUS;
 		double ang = Constant.PI_OVER_TWO - 2.0 * minElev;
 		double dr = ang * r;
@@ -753,7 +753,7 @@ public class SatelliteEphem
 		double dt = dr * Constant.SECONDS_PER_DAY / drDay;
 		return dt / Constant.SECONDS_PER_DAY; // days
 	}
-	
+
 	/**
 	 * Obtain the time of the next pass of the satellite above observer. It can be used
 	 * as an starting point prior to obtain rise, set, transit times.
@@ -765,12 +765,12 @@ public class SatelliteEphem
 	 * <P>
 	 * The pass is a search iteration with a precision of 1 minute of time. If
 	 * the satellite appears too quickly or just below minimum elevation only
-	 * for a few seconds, then the search could fail. Another possible cause 
+	 * for a few seconds, then the search could fail. Another possible cause
 	 * of fail is for geostationary satellites.
 	 * <P>
 	 * The execution of this method is a slow computer could last for quite a long
 	 * time.
-	 * 
+	 *
 	 * @param time Time object.
 	 * @param obs Observer object.
 	 * @param eph Ephemeris object.
@@ -779,7 +779,7 @@ public class SatelliteEphem
 	 * @param maxDays Maximum number of days to search for a next pass.
 	 * @param current True to return the input time if the satellite is above the minimum
 	 * elevation, false to return next pass without considering the actual position of the satellite.
-	 * @return Julian day of the next pass in local time, or 0.0 if the satellite 
+	 * @return Julian day of the next pass in local time, or 0.0 if the satellite
 	 * has no next transit. If the day is negative that means that the satellite is
 	 * eclipsed during the next pass.
 	 * @throws JPARSECException If the method fails, for example because of an
@@ -804,7 +804,7 @@ public class SatelliteEphem
 		double minLatitude = sat.inclination + radius + min_elevation;
 		if (Math.abs(obs.getLatitudeRad()) > minLatitude) return 0;
 		*/
-		
+
 		boolean oldf = FAST_MODE;
 		FAST_MODE = true;
 
@@ -824,7 +824,7 @@ public class SatelliteEphem
 		int quickSearch = (int) (0.5 + qs / 2.0);
 		if (quickSearch < 1) quickSearch = 1;
 		if (quickSearch > 8) quickSearch = 8;
-		
+
 		// Obtain next pass. First we obtain the time when the satellite is
 		// below the minimum elevation (necessary if it is currently above). Then, we
 		// obtain the next pass
@@ -838,7 +838,7 @@ public class SatelliteEphem
 
 			ephem = SatelliteEphem.calcSatellite(new_time, obs, eph, sat, false);
 		}
-		
+
 		if (nstep >= max_step) {
 //			JPARSECException.addWarning("this satellite is permanently above the horizon and the minimum elevation.");
 			FAST_MODE = oldf;
@@ -853,11 +853,11 @@ public class SatelliteEphem
 				if (ephem.elevation < -15.0 * Constant.DEG_TO_RAD) {
 					int bqs = quickSearch / 2;
 					if (bqs < 1) bqs = 1;
-					nstep = nstep + bqs;				
+					nstep = nstep + bqs;
 				} else {
 					int bqs = quickSearch / 4;
 					if (bqs < 1) bqs = 1;
-					nstep = nstep + bqs;									
+					nstep = nstep + bqs;
 				}
 			}
 			double new_JD = JD + (double) nstep * time_step;
@@ -880,7 +880,7 @@ public class SatelliteEphem
 		}
 
 		double next_pass = TimeScale.getJD(time, obs, eph, SCALE.LOCAL_TIME) + nstep * time_step;
-		
+
 		FAST_MODE = oldf;
 		if (next_pass >= JD_LT + maxDays) {
 //			JPARSECException.addWarning("could not find next pass time during next "+maxDays+" days.");
@@ -888,7 +888,7 @@ public class SatelliteEphem
 		}
 
 		if (ephem.isEclipsed) next_pass = -next_pass;
-		
+
 		return next_pass;
 	}
 
@@ -921,7 +921,7 @@ public class SatelliteEphem
 	 * extinction correction flag also enabled).
 	 * @throws JPARSECException If an error occurs.
 	 */
-	public static double getIridiumLunarFlareMagnitude(TimeElement time, ObserverElement obs, EphemerisElement eph, 
+	public static double getIridiumLunarFlareMagnitude(TimeElement time, ObserverElement obs, EphemerisElement eph,
 			SatelliteEphemElement ephem) throws JPARSECException {
 		double jd = TimeScale.getJD(time, obs, eph, SCALE.TERRESTRIAL_TIME);
 		double moon[] = Saros.getMoonPosition(jd);
@@ -947,11 +947,11 @@ public class SatelliteEphem
 	 * three latest objects the ephemerides for the satellite when the flare starts, ends, and
 	 * reaches its maximum. In these objects the apparent magnitude expected for the flare is
 	 * set to the magnitude field, and it is corrected for extinction.
-	 * 
+	 *
 	 * The field {@linkplain #MAXIMUM_IRIDIUM_ANGLE_FOR_FLARES} sets the sensitivty when
 	 * searching for more or less bright flares. Note also the method {@linkplain SatelliteOrbitalElement#getStatus}
 	 * that returns a flag with the flaring status of the satellite.
-	 * 
+	 *
 	 * @param time Time object.
 	 * @param obs Observer object.
 	 * @param ephIn Ephemeris object.
@@ -959,7 +959,7 @@ public class SatelliteEphem
 	 * @param min_elevation Minimum elevation of the satellite in radians.
 	 * @param maxDays Maximum number of days to search for a next flare.
 	 * @param current True to return the input time if the satellite is above the minimum
-	 * elevation and flaring, false to return next flare without considering the actual 
+	 * elevation and flaring, false to return next flare without considering the actual
 	 * position of the satellite.
 	 * @param precision Precision in the search for events in seconds. The more the value you enter here,
 	 * the faster the calculations will be, but some of the events could be skipped. A good value is
@@ -967,17 +967,17 @@ public class SatelliteEphem
 	 * 1 and 10. The output precision of the found flares will be always 1s.
 	 * @return An array list with all the events for this satellite. The list will be null
 	 * if the satellite has no next flare during the number of days given. Otherwise, it will
-	 * contains arrays of double values with the Julian day of the beggining of the next flare 
+	 * contains arrays of double values with the Julian day of the beggining of the next flare
 	 * in local time, the Julian day of the ending time of the flare, the Julian day of the
 	 * maximum of the flare, and the minimum iridium angle as fourth value. The fifth, sixth,
 	 * and seventh values will be respectivelly the {@linkplain SatelliteEphemElement} object
-	 * for the start, end, and maximum times. No check is done 
-	 * for flares during day or night, although it is easy to provide a time object for sunset 
-	 * and a maximum number of days of 0.5 or the required value for sunrise. Precision in 
-	 * returned times is 1 second, and they consider the minimum elevation so that the start/end 
-	 * times could reflect the instants when the satellite reaches the minimum elevation (or 
+	 * for the start, end, and maximum times. No check is done
+	 * for flares during day or night, although it is easy to provide a time object for sunset
+	 * and a maximum number of days of 0.5 or the required value for sunrise. Precision in
+	 * returned times is 1 second, and they consider the minimum elevation so that the start/end
+	 * times could reflect the instants when the satellite reaches the minimum elevation (or
 	 * is eclipsed) and not the start/end times of the flare.
-	 * 
+	 *
 	 * @throws JPARSECException If the method fails, for example because of an
 	 *         invalid date.
 	 * @deprecated The {@linkplain SDP8_SGP8} class is recommended instead.
@@ -987,7 +987,7 @@ public class SatelliteEphem
 	{
 		if (sat == null || sat.name.toLowerCase().indexOf("dummy")>=0) return null;
 		if (precision < 1 || precision > 10) throw new JPARSECException("Precision parameters is "+precision+", which is outside range 1-10.");
-		
+
 		FAST_MODE = true;
 		ArrayList<Object[]> events = null;
 		SCALE refScale = SCALE.UNIVERSAL_TIME_UTC;
@@ -1000,14 +1000,14 @@ public class SatelliteEphem
 		double jd = inputJD, jdOut = 0.0;
 		while (jd < limitJD && jd != 0.0) {
 			TimeElement newTime = new TimeElement(jd, refScale);
-			maxDays = limitJD - jd; 
+			maxDays = limitJD - jd;
 			jd = SatelliteEphem.getNextPass(newTime, obs, eph, sat, min_elevation, maxDays, current);
 			jd = Math.abs(jd); // <0 => eclipsed, but this limitation should be set at the end only if the sat is eclipsed
 			if (jd > 0.0 && jd < limitJD_LT) {
 	 			jd = TimeScale.getJD(new TimeElement(Math.abs(jd), SCALE.LOCAL_TIME), obs, eph, refScale);
 				current = false;
-				
-				jdOut = jd;				
+
+				jdOut = jd;
 				newTime = new TimeElement(jdOut, refScale);
 				SatelliteEphemElement ephem = SatelliteEphem.calcSatellite(newTime, obs, eph, sat, false);
 				//if (!ephem.isEclipsed) { // this limitation should be set at the end only if the sat is eclipsed
@@ -1077,12 +1077,12 @@ public class SatelliteEphem
 								startTime = 0.0;
 								break;
 							}
-						} while (true);					
+						} while (true);
 					}
-					
+
 					jd = jdOut;
 					if (startTime != 0.0) {
-						if (!max.isEclipsed) {					
+						if (!max.isEclipsed) {
 							if (events == null) events = new ArrayList<Object[]>();
 							events.add(new Object[] {startTime, endTime, maxTime, minimumIA, start, end, max});
 						}
@@ -1105,11 +1105,11 @@ public class SatelliteEphem
 	 * set to the magnitude field, and it is corrected for extinction in case the ephemeris object
 	 * is set to return apparent coordinates from a site on Earth (and the extinction correction
 	 * flag is enabled).
-	 * 
+	 *
 	 * The field {@linkplain #MAXIMUM_IRIDIUM_ANGLE_FOR_LUNAR_FLARES} sets the sensitivty when
 	 * searching for more or less bright flares. Note also the method {@linkplain SatelliteOrbitalElement#getStatus}
 	 * that returns a flag with the flaring status of the satellite.
-	 * 
+	 *
 	 * @param time Time object.
 	 * @param obs Observer object.
 	 * @param ephIn Ephemeris object.
@@ -1117,7 +1117,7 @@ public class SatelliteEphem
 	 * @param min_elevation Minimum elevation of the satellite in radians.
 	 * @param maxDays Maximum number of days to search for a next lunar flare.
 	 * @param current True to return the input time if the satellite is above the minimum
-	 * elevation and flaring, false to return next lunar flare without considering the actual 
+	 * elevation and flaring, false to return next lunar flare without considering the actual
 	 * position of the satellite.
 	 * @param precision Precision in the search for events in seconds. The more the value you enter here,
 	 * the faster the calculations will be, but some of the events could be skipped. A good value is
@@ -1125,17 +1125,17 @@ public class SatelliteEphem
 	 * 1 and 10. The output precision of the found flares will be always 1s.
 	 * @return An array list with all the events for this satellite. The list will be null
 	 * if the satellite has no next lunar flare during the number of days given. Otherwise, it will
-	 * contains arrays of double values with the Julian day of the beggining of the next flare 
+	 * contains arrays of double values with the Julian day of the beggining of the next flare
 	 * in local time, the Julian day of the ending time of the flare, the Julian day of the
 	 * maximum of the flare, and the minimum iridium angle as fourth value. The fifth, sixth,
 	 * and seventh values will be respectivelly the {@linkplain SatelliteEphemElement} object
-	 * for the start, end, and maximum times. No check is done 
-	 * for flares during day or night, although it is easy to provide a time object for sunset 
-	 * and a maximum number of days of 0.5 or the required value for sunrise. Precision in 
-	 * returned times is 1 second, and they consider the minimum elevation so that the start/end 
-	 * times could reflect the instants when the satellite reaches the minimum elevation (or 
+	 * for the start, end, and maximum times. No check is done
+	 * for flares during day or night, although it is easy to provide a time object for sunset
+	 * and a maximum number of days of 0.5 or the required value for sunrise. Precision in
+	 * returned times is 1 second, and they consider the minimum elevation so that the start/end
+	 * times could reflect the instants when the satellite reaches the minimum elevation (or
 	 * is eclipsed) and not the start/end times of the flare.
-	 * 
+	 *
 	 * @throws JPARSECException If the method fails, for example because of an
 	 *         invalid date.
 	 * @deprecated The {@linkplain SDP8_SGP8} class is recommended instead.
@@ -1145,7 +1145,7 @@ public class SatelliteEphem
 	{
 		if (sat == null || sat.name.toLowerCase().indexOf("dummy")>=0) return null;
 		if (precision < 1 || precision > 10) throw new JPARSECException("Precision parameters is "+precision+", which is outside range 1-10.");
-		
+
 		FAST_MODE = true;
 		ArrayList<Object[]> events = null;
 		SCALE refScale = SCALE.UNIVERSAL_TIME_UTC;
@@ -1158,14 +1158,14 @@ public class SatelliteEphem
 		double jd = inputJD, jdOut = 0.0;
 		while (jd < limitJD && jd != 0.0) {
 			TimeElement newTime = new TimeElement(jd, refScale);
-			maxDays = limitJD - jd; 
+			maxDays = limitJD - jd;
 			jd = SatelliteEphem.getNextPass(newTime, obs, eph, sat, min_elevation, maxDays, current);
 			jd = Math.abs(jd); // <0 => eclipsed, but this limitation should be set at the end only if the sat is eclipsed
 			if (jd > 0.0 && jd < limitJD_LT) {
 	 			jd = TimeScale.getJD(new TimeElement(Math.abs(jd), SCALE.LOCAL_TIME), obs, eph, refScale);
 				current = false;
-				
-				jdOut = jd;				
+
+				jdOut = jd;
 				newTime = new TimeElement(jdOut, refScale);
 				SatelliteEphemElement ephem = SatelliteEphem.calcSatellite(newTime, obs, eph, sat, false);
 				//if (!ephem.isEclipsed) { // this limitation should be set at the end only if the sat is eclipsed
@@ -1235,12 +1235,12 @@ public class SatelliteEphem
 								startTime = 0.0;
 								break;
 							}
-						} while (true);					
+						} while (true);
 					}
-					
+
 					jd = jdOut;
 					if (startTime != 0.0) {
-						if (!max.isEclipsed) {					
+						if (!max.isEclipsed) {
 							if (events == null) events = new ArrayList<Object[]>();
 							events.add(new Object[] {startTime, endTime, maxTime, minimumIA, start, end, max});
 						}
@@ -1253,7 +1253,7 @@ public class SatelliteEphem
 		FAST_MODE = false;
 		return events;
 	}
-	
+
 	/**
 	 * Calculates current or next rise, set, transit for a satellite. It is recommended that the
 	 * input ephem objects corresponds to a time when the satellite is above the horizon,
@@ -1286,7 +1286,7 @@ public class SatelliteEphem
 			sat.transit = DataSet.addDoubleArray(sat.transit, new double[] {0.0});
 			sat.transitElevation = DataSet.addFloatArray(sat.transitElevation, new float[] {0.0f});
 		}
-		SatelliteEphemElement satOut = sat.clone();		
+		SatelliteEphemElement satOut = sat.clone();
 
 		// Obtain next pass time, when the satellite is at least 15 degrees
 		// above horizon
@@ -1298,14 +1298,14 @@ public class SatelliteEphem
 				re.readFileOfArtificialSatellites();
 				readFile = re;
 			}
-			
+
 			// Check Ephemeris object
 			if (!EphemerisElement.checkEphemeris(eph))
 				throw new JPARSECException("invalid ephemeris object.");
-	
+
 			if (eph.targetBody.getIndex() < 0)
 				throw new JPARSECException("invalid target body in ephemeris object.");
-	
+
 			// Obtain object
 			SatelliteOrbitalElement satOrb = (SatelliteOrbitalElement) readFile.getReadElements()[eph.targetBody.getIndex()];
 			double min_elevation = 15.0 * Constant.DEG_TO_RAD;
@@ -1339,7 +1339,7 @@ public class SatelliteEphem
 		double rise = jd;
 		if (iter == maxIter) rise = 0.0;
 		iter = 0;
-		
+
 		jd = jdref;
 		do {
 			iter ++;
@@ -1369,11 +1369,11 @@ public class SatelliteEphem
 	/**
 	 * Returns the smallest iridium angle. A given Iridium satellite will
 	 * be flaring if it is not eclipsed, above the horizon, and this
-	 * value is lower enough.  An empirical relationship between this angle 
-	 * and the brightness of the reflection has been determined (Randy John, 
-	 * 2002, SKYSAT v0.64, see http://home.comcast.net/~skysat). 2 &deg;
-	 * corresponds to about 0 mag, 0.5 &deg; to -3 mag. The brightest flares are
-	 * -8 or -9 mag (visible during day), and can last from 10 to 30s. This 
+	 * value is lower enough.  An empirical relationship between this angle
+	 * and the brightness of the reflection has been determined (Randy John,
+	 * 2002, SKYSAT v0.64, see http://home.comcast.net/~skysat). 2 deg
+	 * corresponds to about 0 mag, 0.5&deg; to -3 mag. The brightest flares are
+	 * -8 or -9 mag (visible during day), and can last from 10 to 30s. This
 	 * code comes from Horst Meyerdierks (Sputnik library).
 	 * @param itsR The geocentric position (x, y, z) of the satellite in arbitrary units.
 	 * @param itsV The geocentric velocity vector of the satellite in arbitrary units.
@@ -1385,14 +1385,14 @@ public class SatelliteEphem
 	 */
 	public static double iridiumAngle(double itsR[], double itsV[],
 			double t2[], double t1[]) {
-		
+
 		/* Forward reflector. */
 		double t = SAT_REFLECTION(itsR[0], itsR[1], itsR[2],
 	          itsV[0], itsV[1], itsV[2],
 		  t2[0], t2[1], t2[2], t1[0], t1[1], t1[2],
 		  -40.0*Constant.DEG_TO_RAD, 0.) * Constant.RAD_TO_DEG;
 		double tleft = t + 3, tright = tleft;
-		
+
 		/* Left rear reflector. */
 		if (t > 2) {
 			tleft = SAT_REFLECTION(itsR[0], itsR[1], itsR[2],
@@ -1417,11 +1417,11 @@ public class SatelliteEphem
 	/**
 	 * Returns the smallest iridium angle. A given Iridium satellite will
 	 * be flaring if it is not eclipsed, above the horizon, and this
-	 * value is lower enough.  An empirical relationship between this angle 
-	 * and the brightness of the reflection has been determined (Randy John, 
-	 * 2002, SKYSAT v0.64, see http://home.comcast.net/~skysat). 2 &deg;
-	 * corresponds to about 0 mag, 0.5 &deg; to -3 mag. The brightest flares are
-	 * -8 or -9 mag (visible during day), and can last from 10 to 30s. This 
+	 * value is lower enough.  An empirical relationship between this angle
+	 * and the brightness of the reflection has been determined (Randy John,
+	 * 2002, SKYSAT v0.64, see http://home.comcast.net/~skysat). 2 deg
+	 * corresponds to about 0 mag, 0.5&deg; to -3 mag. The brightest flares are
+	 * -8 or -9 mag (visible during day), and can last from 10 to 30s. This
 	 * code comes from Horst Meyerdierks (Sputnik library).
 	 * <P>
 	 * This method also returns the reflector that produces the minimum angle.
@@ -1444,7 +1444,7 @@ public class SatelliteEphem
 		  t2[0], t2[1], t2[2], t1[0], t1[1], t1[2],
 		  -40.0*Constant.DEG_TO_RAD, 0.) * Constant.RAD_TO_DEG;
 		double tleft = t + 3, tright = tleft, out = 0;
-		
+
 		/* Left rear reflector. */
 		if (t > 2) {
 			tleft = SAT_REFLECTION(itsR[0], itsR[1], itsR[2],
@@ -1467,11 +1467,11 @@ public class SatelliteEphem
 				out = 1;
 			}
 		}
-		
+
 		/* Return minimum angle */
 	    return new double[] {t, out};
 	}
-	
+
 	  /**
 	   * Calculate where the reflection of the observer's gaze would point to.
 	   * Code from Horst Meyerdierks (Sputnik library).
@@ -1532,7 +1532,7 @@ public class SatelliteEphem
 	   *   The second mirror rotation angle in rad.  The second angle says how much
 	   *   the mirror is rotated away from the forward direction.  Use 0&deg;,
 	   *   120&deg; and -120&deg; for Iridium satellites.  The three mirrors of
-	   *   these satellites require three calls to this routine. 
+	   *   these satellites require three calls to this routine.
 	   */
 	  private static double SAT_REFLECTION(
 	    double EQ_X, double EQ_Y, double EQ_Z,

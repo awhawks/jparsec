@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.io.image;
 
 import java.io.Serializable;
@@ -30,18 +30,18 @@ import jparsec.util.Logger;
 import jparsec.util.Logger.LEVEL;
 
 /**
- * Spline interpolation in 2D applied to rotate or resample images, 
+ * Spline interpolation in 2D applied to rotate or resample images,
  * based on two different routines by Philippe Th&eacute;venaz and A. Mu&ntilde;oz Barrutia et al.
  * Basic implementation of Th&eacute;venaz method is taken from SkyView.
  * The implementation by Th&eacute;venaz is not as good as the other, and it
  * is used to interpolate within the array representing an image. The
  * second method by Mu&ntilde;oz Barrutia et al. is better, and it is used to
  * change the size of the image.<P>
- * 
+ *
  * P. Th&eacute;venaz, T. Blu, M. Unser, "Interpolation Revisited," IEEE Transactions on Medical Imaging, vol. 19, no. 7, pp. 739-758, July 2000.<BR>
  * A. Mu&ntilde;oz Barrutia, T. Blu, M. Unser, "Least-Squares Image Resizing Using Finite Differences," IEEE Transactions on Image Processing,
  * vol. 10, no. 9, pp. 1365-1378, September 2001.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -60,7 +60,7 @@ public class ImageSplineTransform implements Serializable {
 	private int[][] imgInt;
 	private short[][] imgShort;
 	private byte[][] imgByte;
-	
+
 	/** Copy not transformed. Disabled to save memory. */
 //	private double[][] originalImage;
 	private int imgHeight, imgWidth;
@@ -72,12 +72,12 @@ public class ImageSplineTransform implements Serializable {
 	private static final double cte2 = (Math.sqrt(664.0 + Math.sqrt(438976.0)) - Math.sqrt(304.0) - 19.0);
 	private static final double cte3 = Math.sqrt(135.0 / 2.0 - Math.sqrt(17745.0 / 4.0)) + Math.sqrt(105.0 / 4.0) - 13.0 / 2.0;
 	private static final double cte4 = Math.sqrt(135.0 / 2.0 + Math.sqrt(17745.0 / 4.0)) - Math.sqrt(105.0 / 4.0) - 13.0 / 2.0;
-	private static final double v1Over24 = (1.0 / 24.0);	
+	private static final double v1Over24 = (1.0 / 24.0);
 	private static final double v11Over24 = (11.0 / 24.0);
-	
+
 	/**
 	 * Constructor for a given image.
-	 * @param degree Interpolation degree, between 2 and 9. 
+	 * @param degree Interpolation degree, between 2 and 9.
 	 * Usual value is 3.
 	 * @param image The image as a 2d array [x][y].
 	 * @throws JPARSECException If the degree is invalid.
@@ -95,7 +95,7 @@ public class ImageSplineTransform implements Serializable {
 
 	/**
 	 * Constructor for a given image.
-	 * @param degree Interpolation degree, between 2 and 9. 
+	 * @param degree Interpolation degree, between 2 and 9.
 	 * Usual value is 3.
 	 * @param image The image as a 2d array [x][y].
 	 * @throws JPARSECException If the degree is invalid.
@@ -113,7 +113,7 @@ public class ImageSplineTransform implements Serializable {
 
 	/**
 	 * Constructor for a given image.
-	 * @param degree Interpolation degree, between 2 and 9. 
+	 * @param degree Interpolation degree, between 2 and 9.
 	 * Usual value is 3.
 	 * @param image The image as a 2d array [x][y].
 	 * @throws JPARSECException If the degree is invalid.
@@ -131,7 +131,7 @@ public class ImageSplineTransform implements Serializable {
 
 	/**
 	 * Constructor for a given image.
-	 * @param degree Interpolation degree, between 2 and 9. 
+	 * @param degree Interpolation degree, between 2 and 9.
 	 * Usual value is 3.
 	 * @param image The image as a 2d array [x][y].
 	 * @throws JPARSECException If the degree is invalid.
@@ -160,7 +160,7 @@ public class ImageSplineTransform implements Serializable {
 		//originalImage = clone(image);
         this.image  = image; //clone(image);
 	}
-          
+
 /*	private double[][] clone(double[][] img)
 	{
 		double[][] out = new double[img.length][img[0].length];
@@ -181,7 +181,7 @@ public class ImageSplineTransform implements Serializable {
 	public int getWidth() {
 		return imgWidth;
 	}
-	
+
 	/**
 	 * Returns the height of the image in this instance.
 	 * @return The height.
@@ -189,19 +189,19 @@ public class ImageSplineTransform implements Serializable {
 	public int getHeight() {
 		return imgHeight;
 	}
-	
+
     /** Transform the image to spline coefficients on the image copy.
      * Note that except for
      * variables visible outside a method, these routines use
      * Thevenaz' original variable names which sometimes
      * violated Java conventions.
      */
-    private  int samplesToCoefficients () {   
+    private  int samplesToCoefficients () {
     	sTOc = true;
     	double[]  Line;
 	   	double[]  Pole = new double[4];
 	   	int	  NbPoles;
-	   
+
 	   	/* recover the poles from a lookup table */
 	   	switch (splineDegree) {
 		 case 2:
@@ -247,16 +247,16 @@ public class ImageSplineTransform implements Serializable {
 			Pole[1] = -0.20175052019315323879606468505597043468089886575747;
 			Pole[2] = -0.043222608540481752133321142979429688265852380231497;
 			Pole[3] = -0.0021213069031808184203048965578486234220548560988624;
-			break;		    			
+			break;
 		 default:
 			 System.err.println("Invalid spline degree\n");
 			 return(1);
 		}
-	   
+
 	   	/* convert the image samples into interpolation coefficients */
 	   	/* in-place separable process, along x */
 	   	Line = new double[imgHeight];
-	   
+
 	   	double logPole[] = new double[Pole.length];
 	   	for (int i=0; i<logPole.length; i++) {
 	   		logPole[i] = Math.log(Math.abs(Pole[i]));
@@ -268,21 +268,21 @@ public class ImageSplineTransform implements Serializable {
 		     convertToInterpolationCoefficients(Line, imgHeight, Pole, NbPoles, 1.e-14, logPole);
 		     putRow(imgCoef, y, Line, imgHeight);
 		}
-	   
+
 	   	/* in-place separable process, along y */
 	   	Line = new double[imgWidth];
-	   
+
 	   	for (int x = 0; x < imgHeight; x++) {
 		     getColumn(imgCoef, imgHeight, x, Line, imgWidth);
 		     convertToInterpolationCoefficients(Line, imgWidth, Pole, NbPoles, 1.e-14, logPole);
 		     putColumn(imgCoef, imgHeight, x, Line, imgWidth);
 		}
-	   
+
 	   	return(0);
    } /* end SamplesToCoefficients */
-   
 
-   private void convertToInterpolationCoefficients 
+
+   private void convertToInterpolationCoefficients
      (
     double	c[],		/* input samples --> output coefficients */
 	int	DataLength,	/* number of samples or coefficients */
@@ -292,24 +292,24 @@ public class ImageSplineTransform implements Serializable {
 	double logPole[]
      )
    { /* begin ConvertToInterpolationCoefficients */
-   
+
    	double	Lambda = 1.0;
-   
+
    	/* special case required by mirror boundaries */
    	if (DataLength == 1) {
 	    return;
 	}
-	
+
    	/* compute the overall gain */
    	for (int k = 0; k < NbPoles; k++) {
 	     Lambda = Lambda * (1.0 - z[k]) * (1.0 - 1.0 / z[k]);
 	}
-	
+
    	/* apply the gain */
    	for (int n = 0; n < DataLength; n++) {
 	     c[n] *= Lambda;
 	}
-	
+
    	/* loop over all poles */
    	double logTol = 0.0;
    	if (Tolerance > 0.0) logTol = Math.log(Tolerance);
@@ -339,14 +339,14 @@ public class ImageSplineTransform implements Serializable {
 				 					double	logTol,	/* admissible relative error */
 				 					double logPole
 				 				)
- 
+
    { /* begin InitialCausalCoefficient */
-   
+
    	double	Sum, zn, z2n, iz;
-   
+
    	/* this initialization corresponds to mirror boundaries */
    	int Horizon = DataLength;
-	
+
    	if (Tolerance > 0.0) {
    		/*
    		double x = logTol / logPole;
@@ -396,9 +396,9 @@ public class ImageSplineTransform implements Serializable {
 				 					double[] Line,		/* output linear array */
 				 					int	 Height		/* length of the line */
 				 				)
- 
+
    { /* begin GetColumn */
-   
+
    	for (int y = 0; y < Height; y++) {
 	     Line[y] = Image[y][x];
 	}
@@ -412,9 +412,9 @@ public class ImageSplineTransform implements Serializable {
 				 				       double[]  Line,	      	 	/* output linear array */
 				 					int	  Width		        /* length of the line */
 				 				)
- 
+
    { /* begin GetRow */
-   
+
 	   	for (int x = 0; x < Width; x++) {
 		     Line[x] = Image[y][x];
 		}
@@ -427,9 +427,9 @@ public class ImageSplineTransform implements Serializable {
 				 					int	DataLength,	/* number of samples or coefficients */
 				 					double	z			/* actual pole */
 				 				)
- 
+
    { /* begin InitialAntiCausalCoefficient */
-   
+
    	/* this initialization corresponds to mirror boundaries */
    	return((z / (z * z - 1.0)) * (z * c[DataLength - 2] + c[DataLength - 1]));
    } /* end InitialAntiCausalCoefficient */
@@ -444,10 +444,10 @@ public class ImageSplineTransform implements Serializable {
 				 					double	 Line[],		/* input linear array */
 				 					int	 Height		/* length of the line and height of the image */
 				 				)
- 
+
    { /* begin PutColumn */
-   
-   
+
+
    	for (int y = 0; y < Height; y++) {
  	   Image[y][x] = Line[y];
 	}
@@ -461,9 +461,9 @@ public class ImageSplineTransform implements Serializable {
 				 					double	 Line[],		/* input linear array */
 				 					int	 Width		/* length of the line and width of the image */
 				 				)
- 
+
    { /* begin PutRow */
-	
+
        	for (int x = 0; x < Width; x++) {
       	   Image[y][x] = Line[x];
     	}
@@ -485,12 +485,12 @@ public class ImageSplineTransform implements Serializable {
    public boolean isOutOfImage(double px, double py) {
 	   if (image == null) {
 		   if (imgInt != null) {
-			   if (px < 0 || px > imgInt.length-1 || py < 0 || py > imgInt[0].length-1) return true;			   
+			   if (px < 0 || px > imgInt.length-1 || py < 0 || py > imgInt[0].length-1) return true;
 		   } else {
 			   if (imgShort != null) {
 				   if (px < 0 || px > imgShort.length-1 || py < 0 || py > imgShort[0].length-1) return true;
 			   } else {
-				   if (px < 0 || px > imgByte.length-1 || py < 0 || py > imgByte[0].length-1) return true;				   
+				   if (px < 0 || px > imgByte.length-1 || py < 0 || py > imgByte[0].length-1) return true;
 			   }
 		   }
 		   return false;
@@ -500,7 +500,7 @@ public class ImageSplineTransform implements Serializable {
    }
 
    /**
-    * Interpolate at a given position using a fast bilinear algorithm. 
+    * Interpolate at a given position using a fast bilinear algorithm.
     * Image must be a 2x2 image at least.
     * @param x X index position in the image, from 0 to width-1.
     * @param y Y index position in the image, from 0 to height-1.
@@ -515,7 +515,7 @@ public class ImageSplineTransform implements Serializable {
    		int x0 = (int)x;
    		int y0 = (int)y;
 		if (x == x0 && y == y0) return getImage(x0, y0);
-		
+
    		int x1 = x0 + 1;
    		int y1 = y0 + 1;
    		if (y1 >= imgHeight-1) {
@@ -543,10 +543,10 @@ public class ImageSplineTransform implements Serializable {
 				double w = FastMath.pow(1.0 - FastMath.hypot((x-ix)/dxy2, (y-iy)/dxy2), dxy2*2);
 				norm += w;
 				out += w * getImage(ix, iy);
-			}			
+			}
 		}
 		return out / norm;
-*/		
+*/
 	}
 
    /**
@@ -561,7 +561,7 @@ public class ImageSplineTransform implements Serializable {
  				 					double	px,			/* x coordinate where to interpolate */
 				 					double	py			/* y coordinate where to interpolate */
 				 				) throws JPARSECException
- 
+
    { /* begin InterpolatedValue */
 
 	   if (isOutOfImage(px, py)) throw new JPARSECException("point ("+px+", "+py+") out of image (0, 0)-("+imgWidth+", "+imgHeight+").");
@@ -571,7 +571,7 @@ public class ImageSplineTransform implements Serializable {
 	   	double	 interpolated;
 	   	double	 w, w2, w4, t, t0, t1;
 		int i,j;
-	   
+
 	   	/* compute the interpolation indexes */
 	   	if (splineDegree % 2  != 0) {
 		    i = (int)Math.floor(py) - splineDegree / 2;
@@ -584,7 +584,7 @@ public class ImageSplineTransform implements Serializable {
 	    	xIndex[k] = i++;
 	    	yIndex[k] = j++;
 	    }
-	   
+
 	   	/* compute the interpolation weights */
 	   	switch (splineDegree) {
 		 case 2:
@@ -896,34 +896,34 @@ public class ImageSplineTransform implements Serializable {
 			yWeight[9] *= yWeight[9] * w / 362880.0;
 			yWeight[8] = 1.0 - yWeight[0] - yWeight[1] - yWeight[2] - yWeight[3]
 				- yWeight[4] - yWeight[5] - yWeight[6] - yWeight[7] - yWeight[9];
-			break;		      
+			break;
 		}
-	   
+
 	   	/* apply the mirror boundary conditions */
-	   	for (int k = 0; k <= splineDegree; k++) 
-	   	{    
+	   	for (int k = 0; k <= splineDegree; k++)
+	   	{
 		    xIndex[k] = (imgHeight == 1) ? (0) : ((xIndex[k] < 0) ?
 							  (-xIndex[k] - Width2 * ((-xIndex[k]) / Width2))
 							: (xIndex[k] - Width2 * (xIndex[k] / Width2)));
 		    if (imgHeight <= xIndex[k]) xIndex[k] = Width2 - xIndex[k];
-		    
+
 		    yIndex[k] = (imgWidth == 1) ? (0) : ((yIndex[k] < 0) ?
 							   (-yIndex[k] - Height2 * ((-yIndex[k]) / Height2))
 							 : (yIndex[k] - Height2 * (yIndex[k] / Height2)));
 		    if (imgWidth <= yIndex[k]) yIndex[k] = Height2 - yIndex[k];
 		}
-	   
+
 	   	/* perform interpolation */
-	   	interpolated = 0.0;	   	
+	   	interpolated = 0.0;
 	   	for (j = 0; j <= splineDegree; j++) {
-		    
+
 		     w = 0.0;
 		     for (i = 0; i <= splineDegree; i++) {
 		    	 w += xWeight[i] * getImage(yIndex[j], xIndex[i]);
 		     }
 		     interpolated += yWeight[j] * w;
 		}
-	   
+
 	   	return interpolated;
    }
 
@@ -1007,7 +1007,7 @@ public class ImageSplineTransform implements Serializable {
 		//this.image  = clone(originalImage);
         samplesToCoefficients();
    }
-   
+
    /**
     * Rotates around the center. Image dimensions will not change.
     * @param ang Angle in radians.
@@ -1042,7 +1042,7 @@ public class ImageSplineTransform implements Serializable {
 					   }
 				   }
 			   }
-		   }		   
+		   }
 	   }
 	   //this.originalImage = img;
        this.image  = img; //clone(originalImage);
@@ -1072,7 +1072,7 @@ public class ImageSplineTransform implements Serializable {
 			   } catch (Exception exc) {
 				   Logger.log(LEVEL.ERROR, "Found unexpected error when recentering image.");
 			   }
-		   }		   
+		   }
 	   }
 	   //this.originalImage = img;
        this.image  = img; //clone(originalImage);
@@ -1095,9 +1095,9 @@ public class ImageSplineTransform implements Serializable {
        this.image  = img; //clone(originalImage);
        imgWidth = image.length;
        imgHeight = image[0].length;
-       samplesToCoefficients(); 
+       samplesToCoefficients();
    }
-   
+
    /**
     * Resizes the image data to another size using the method
     * Least-Squares Image Resizing Using Finite Differences. This method is
@@ -1112,8 +1112,8 @@ public class ImageSplineTransform implements Serializable {
    public double[][] getResizedData(int w, int h) throws JPARSECException {
 	   return Resize.resize(this.getImage(), w, h, false);
    }
-   
-   
+
+
    /**
     * Resizes the image to another size using P. Th&eacute;venaz interpolation.
     * This method is generally slower and less accurate, but sometimes
@@ -1122,7 +1122,7 @@ public class ImageSplineTransform implements Serializable {
     * @param w New width.
     * @param h New height.
     * @param quality A quality value to set the quality of the resize.
-    * Should be and odd number equal or greater than 1. The greater the 
+    * Should be and odd number equal or greater than 1. The greater the
     * value the slower the resizing process will be.
     */
    public void resize(int w, int h, int quality)
@@ -1132,10 +1132,10 @@ public class ImageSplineTransform implements Serializable {
        this.image  = img; //clone(originalImage);
        imgWidth = image.length;
        imgHeight = image[0].length;
-       samplesToCoefficients(); 
+       samplesToCoefficients();
    }
 
-   
+
    /**
     * Resizes the image data to another size using P. Th&eacute;venaz interpolation.
     * This method is generally slower and less accurate, but sometimes
@@ -1144,7 +1144,7 @@ public class ImageSplineTransform implements Serializable {
     * @param w New width.
     * @param h New height.
     * @param quality A quality value to set the quality of the resize.
-    * Should be and odd number equal or greater than 1. The greater the 
+    * Should be and odd number equal or greater than 1. The greater the
     * value the slower the resizing process will be.
     * @return The image data.
     */
@@ -1178,7 +1178,7 @@ public class ImageSplineTransform implements Serializable {
 							   double nY = hs1 + hs0 * rj;
 							   if (nX >= 0 && nY >= 0 && nX <= w0 && nY <= h0) {
 								   double v = this.interpolate(nX, nY);
-	
+
 								   newZ += v;
 								   nc ++;
 							   }

@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.math;
 
 import java.awt.Color;
@@ -35,13 +35,13 @@ import jparsec.util.JPARSECException;
 
 /**
  * Provides method to perform numerical integration.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
 public class Integration implements Serializable
 {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	private double x[], y[], x1, x2;
 	private Interpolation interp;
@@ -55,7 +55,7 @@ public class Integration implements Serializable
 	 * @throws JPARSECException If an error occurs.
 	 */
 	public Integration(double x[], double y[], double x1, double x2) throws JPARSECException {
-		if (x != null && y != null) { 
+		if (x != null && y != null) {
 			ArrayList<double[]> l = DataSet.sortInCrescent(x, y, true);
 			this.x = l.get(0);
 			this.y = l.get(1);
@@ -64,7 +64,7 @@ public class Integration implements Serializable
 		this.x2 = x2;
 		interp = new Interpolation(x, y, false);
 	}
-	
+
 	/**
 	 * Simple low accuracy numerical integration method, based on the midpoint
 	 * rule.
@@ -186,9 +186,9 @@ public class Integration implements Serializable
 				y, null, null, "Y", true, Color.BLACK, ChartSeriesElement.SHAPE_CIRCLE,
 				ChartSeriesElement.REGRESSION.SPLINE_INTERPOLATION);
 		ChartSeriesElement series[] = new ChartSeriesElement[] {chartSeries1};
-		ChartElement chart = new ChartElement(series, ChartElement.TYPE.XY_CHART, 
+		ChartElement chart = new ChartElement(series, ChartElement.TYPE.XY_CHART,
 				ChartElement.SUBTYPE.XY_SCATTER,
-				"X, Y", 
+				"X, Y",
 				"X", "Y", false, 800, 600);
 		CreateChart ch = new CreateChart(chart);
 		Marker marker = new org.jfree.chart.plot.IntervalMarker(x1, x2);

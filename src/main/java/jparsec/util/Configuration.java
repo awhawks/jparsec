@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.util;
 
 import java.io.File;
@@ -38,22 +38,22 @@ import jparsec.vo.GeneralQuery;
 
 /**
  * A class to configure the behavior of JPARSEC in the current JVM.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
-public class Configuration 
+public class Configuration
 {
 	// private constructor so that this class cannot be instantiated.
 	private Configuration() {}
-	
+
 	/**
 	 * True to use disk to hold data. Default is false.
 	 */
 	//public static boolean USE_DISK_FOR_DATABASE = false;
 
 	/** Holds the number of similar instances that can be cached simultaneously in the database
-	 * when using the class {@linkplain ReadFile}. This means, for instance, the number of 
+	 * when using the class {@linkplain ReadFile}. This means, for instance, the number of
 	 * different sky renderings that can be hold on memory per thread (saving orbital elements,
 	 * stars, ...). */
 	public static int MAX_CACHE_SIZE = 3;
@@ -106,7 +106,7 @@ public class Configuration
 	 * Time out for the queries in milliseconds. Use <= 0 to disable downloads.
 	 */
 	public static int QUERY_TIMEOUT = 5000;
-	
+
 	/**
 	 * Forces the /lib subdirectory of JPARSEC (with all dependencies) to be
 	 * at certain path. Default is null to obtain it automatically.
@@ -139,7 +139,7 @@ public class Configuration
 	 * null to use JPARSEC file if it is available.
 	 */
 	public static String JPL_EPHEMERIDES_FILES_EXTERNAL_PATH = null;
-	
+
 	/**
 	 * Holds the number of decimal places for the precision of the
 	 * operations in big decimal mode. Default is 18.
@@ -149,7 +149,7 @@ public class Configuration
 	 * Holds the rounding mode for division operation in bid decimal mode. Default is 'half up'.
 	 */
 	public static RoundingMode BIG_DECIMAL_PRECISION_ROUNDING_MODE = RoundingMode.HALF_UP;
-	
+
 	/**
 	 * Returns the last time a given resource was modified.
 	 * @param j The jar file name. See {@linkplain FileIO} class.
@@ -163,7 +163,7 @@ public class Configuration
 		if (time <= 0) return null;
 		return new AstroDate(time);
 	}
-	
+
 	private static long getLastModifiedTimeOfResource(String j, String d, String f) {
 		try {
 			long date = FileIO.getLastModifiedTimeOfResource(j, d, f);
@@ -184,7 +184,7 @@ public class Configuration
 			}
 		}
 	}
-	
+
 	/**
 	 * Returns if a date is acceptable to show artificial satellites.
 	 * @param astro The date in UTC.
@@ -300,14 +300,14 @@ public class Configuration
 		if (dt < -max || dt > max) return false;
 		return true;
 	}
-	
+
 	private static double getdt(long t0, long t1) {
 		double dt = (t0 - t1) / (1000.0 * Constant.SECONDS_PER_DAY);
 		return dt;
 	}
-	
+
 	private static boolean appletOnLineModeArtSat = false, appletOnLineModeAst = false, appletOnLineModeCom = false, appletOnLineModeTran = false;
-	
+
 	/**
 	 * Updates the orbital elements of artificial satellites writing
 	 * the new file to the temporal directory.
@@ -315,21 +315,21 @@ public class Configuration
 	 * @return Null if the orbital elements in orbital_elements.jar are
 	 * already acceptable, null if the simulation date is too far from
 	 * current date (so updating the file would not be acceptable too), and
-	 * the path of the temporal file if the file already exists and it is 
+	 * the path of the temporal file if the file already exists and it is
 	 * acceptable or if it has been successfully downloaded. If not null
 	 * the process of reading the temp file can continue to draw the objects.
 	 * @throws JPARSECException If an error occurs.
 	 */
 	public static synchronized String updateArtificialSatellitesInTempDir(AstroDate astro) throws JPARSECException {
 		SatelliteEphem.setSatellitesFromExternalFile(null);
-		
+
 		if (isAcceptableDateForArtificialSatellites(astro)) return null;
-		
+
 		double dt = getdt(astro.msFrom1970(), System.currentTimeMillis());
-		
+
 		if (dt < -MAXIMUM_DAYS_FROM_ELEMENTS_ARTIFICIAL_SATELLITES || dt > MAXIMUM_DAYS_FROM_ELEMENTS_ARTIFICIAL_SATELLITES) {
 			if (dt < -MAXIMUM_DAYS_FROM_ELEMENTS_ARTIFICIAL_SATELLITES_SHOW || dt > MAXIMUM_DAYS_FROM_ELEMENTS_ARTIFICIAL_SATELLITES_SHOW) {
-				return null;				
+				return null;
 			} else {
 				SatelliteEphem.setSatellitesFromExternalFile(null);
 				return "DEFAULT_FILE";
@@ -342,11 +342,11 @@ public class Configuration
 
 		if (APPLET_MODE) {
 			if (appletOnLineModeArtSat) return "APPLET_MODE";
-			
+
 			String[] file = null;
 			if (SatelliteEphem.USE_IRIDIUM_SATELLITES) {
 				String query1 = Update.UPDATE_URL_VISUAL_ARTIFICIAL_SATELLITES_IRIDIUM;
-				file = DataSet.toStringArray(GeneralQuery.query(query1, QUERY_TIMEOUT), FileIO.getLineSeparator(), false);				
+				file = DataSet.toStringArray(GeneralQuery.query(query1, QUERY_TIMEOUT), FileIO.getLineSeparator(), false);
 			} else {
 				String query1 = Update.UPDATE_URL_VISUAL_ARTIFICIAL_SATELLITES;
 				String file1[] = DataSet.toStringArray(GeneralQuery.query(query1, QUERY_TIMEOUT), FileIO.getLineSeparator(), false);
@@ -360,10 +360,10 @@ public class Configuration
 				return "APPLET_MODE";
 			} catch (Exception exc) {
 				return null;
-			}			
+			}
 		}
-		
-		
+
+
 		String p = FileIO.getTemporalDirectory() + fileName;
 		File f = new File(p);
 		if (f.exists()) {
@@ -378,7 +378,7 @@ public class Configuration
 
 		if (SatelliteEphem.USE_IRIDIUM_SATELLITES) {
 			String query = Update.UPDATE_URL_VISUAL_ARTIFICIAL_SATELLITES_IRIDIUM;
-			String q = GeneralQuery.query(query, QUERY_TIMEOUT);				
+			String q = GeneralQuery.query(query, QUERY_TIMEOUT);
 			WriteFile.writeAnyExternalFile(p, q);
 		} else {
 			String query = Update.UPDATE_URL_VISUAL_ARTIFICIAL_SATELLITES;
@@ -387,7 +387,7 @@ public class Configuration
 			//String q2 = GeneralQuery.query(query, QUERY_TIMEOUT);
 			WriteFile.writeAnyExternalFile(p, q1);
 		}
-		
+
 		// Check the format
 		try {
 			String file[] = DataSet.arrayListToStringArray(ReadFile.readAnyExternalFile(p));
@@ -396,16 +396,16 @@ public class Configuration
 			FileIO.deleteFile(p);
 			return null;
 		}
-		
+
 		return p;
 	}
-	
+
 	/**
 	 * Updates the data for supernovae writing the new file to the temporal directory.
 	 * @param astro The date to show supernovae.
-	 * @return Null if the data is already acceptable, null if the simulation date is too 
+	 * @return Null if the data is already acceptable, null if the simulation date is too
 	 * far from current date (so updating the file would not be acceptable too), and
-	 * the path of the temporal file if the file already exists and it is 
+	 * the path of the temporal file if the file already exists and it is
 	 * acceptable or if it has been successfully downloaded. If not null
 	 * the process of reading the temporal file can continue to draw the objects.
 	 * @throws JPARSECException If an error occurs.
@@ -413,7 +413,7 @@ public class Configuration
 	public static synchronized String updateSupernovaeInTempDir(AstroDate astro) throws JPARSECException {
 		if (isAcceptableDateForSupernovae(astro)) return null;
 		if (APPLET_MODE) return "APPLET_MODE";
-		
+
 		double dt = getdt(astro.msFrom1970(), System.currentTimeMillis());
 
 		String p = FileIO.getTemporalDirectory() + "Padova-Asiago sn cat.txt";
@@ -427,16 +427,16 @@ public class Configuration
 
 		String query = Update.UPDATE_URL_PADOVA_ASIAGO_SN_CAT;
 		GeneralQuery.queryFile(query, p, QUERY_TIMEOUT);
-		
+
 		return p;
 	}
-	
+
 	/**
 	 * Updates the data for novae writing the new file to the temporal directory.
 	 * @param astro The date to show novae.
-	 * @return Null if the data is already acceptable, null if the simulation date is too 
+	 * @return Null if the data is already acceptable, null if the simulation date is too
 	 * far from current date (so updating the file would not be acceptable too), and
-	 * the path of the temporal file if the file already exists and it is 
+	 * the path of the temporal file if the file already exists and it is
 	 * acceptable or if it has been successfully downloaded. If not null
 	 * the process of reading the temporal file can continue to draw the objects.
 	 * @throws JPARSECException If an error occurs.
@@ -444,7 +444,7 @@ public class Configuration
 	public static synchronized String updateNovaeInTempDir(AstroDate astro) throws JPARSECException {
 		if (isAcceptableDateForNovae(astro)) return null;
 		if (APPLET_MODE) return "APPLET_MODE";
-		
+
 		double dt = getdt(astro.msFrom1970(), System.currentTimeMillis());
 
 		String p = FileIO.getTemporalDirectory() + "galnovae.txt";
@@ -458,10 +458,10 @@ public class Configuration
 
 		String query = Update.UPDATE_URL_NOVAE;
 		GeneralQuery.queryFile(query, p, QUERY_TIMEOUT);
-		
+
 		return p;
 	}
-	
+
 	/**
 	 * Updates the orbital elements of comets writing
 	 * the new file to the temporal directory.
@@ -469,16 +469,16 @@ public class Configuration
 	 * @return Null if the orbital elements in orbital_elements.jar is
 	 * already acceptable, null if the simulation date is too far from
 	 * current date (so updating the file would not be acceptable too), and
-	 * the path of the temporal file if the file already exists and it is 
+	 * the path of the temporal file if the file already exists and it is
 	 * acceptable or if it has been successfully downloaded. If not null
 	 * the process of reading the temp file can continue to draw the objects.
 	 * @throws JPARSECException If an error occurs.
 	 */
 	public static synchronized String updateCometsInTempDir(AstroDate astro) throws JPARSECException {
 		OrbitEphem.setCometsFromExternalFile(null);
-		
+
 		if (isAcceptableDateForComets(astro, true)) return null;
-		
+
 		double dt = getdt(astro.msFrom1970(), System.currentTimeMillis());
 		if (dt < -MAXIMUM_DAYS_FROM_ELEMENTS_COMETS_ASTEROIDS || dt > MAXIMUM_DAYS_FROM_ELEMENTS_COMETS_ASTEROIDS) {
 			return null;
@@ -494,7 +494,7 @@ public class Configuration
 				return "APPLET_MODE";
 			} catch (Exception exc) {
 				return null;
-			}			
+			}
 		}
 
 		String p = FileIO.getTemporalDirectory() + "MPC_comets.txt";
@@ -511,7 +511,7 @@ public class Configuration
 
 		String query = Update.UPDATE_URL_COMETS;
 		GeneralQuery.queryFile(query, p, QUERY_TIMEOUT);
-		
+
 		// Check the format
 		try {
 			String file[] = DataSet.arrayListToStringArray(ReadFile.readAnyExternalFile(p));
@@ -530,7 +530,7 @@ public class Configuration
 	 * @return Null if the orbital elements in orbital_elements.jar is
 	 * already acceptable, null if the simulation date is too far from
 	 * current date (so updating the file would not be acceptable too), and
-	 * the path of the temporal file if the file already exists and it is 
+	 * the path of the temporal file if the file already exists and it is
 	 * acceptable or if it has been successfully downloaded. If not null
 	 * the process of reading the temp file can continue to draw the objects.
 	 * @throws JPARSECException If an error occurs.
@@ -539,12 +539,12 @@ public class Configuration
 		OrbitEphem.setAsteroidsFromExternalFile(null);
 
 		if (isAcceptableDateForAsteroids(astro, true)) return null;
-		
+
 		double dt = getdt(astro.msFrom1970(), System.currentTimeMillis());
 		if (dt < -MAXIMUM_DAYS_FROM_ELEMENTS_COMETS_ASTEROIDS || dt > MAXIMUM_DAYS_FROM_ELEMENTS_COMETS_ASTEROIDS) {
 			return null;
 		}
-		
+
 		String query = Update.UPDATE_URL_BRIGHT_ASTEROIDS;
 		query = DataSet.replaceAll(query, "2007", ""+astro.getYear(), false);
 
@@ -552,22 +552,22 @@ public class Configuration
 			if (appletOnLineModeAst) return "APPLET_MODE";
 			try {
 				String filea = GeneralQuery.query(query, QUERY_TIMEOUT);
-				
+
 				try {
 					query = Update.UPDATE_URL_BRIGHT_ASTEROIDS;
 					query = DataSet.replaceAll(query, "2007", ""+(astro.getYear()-1), false);
 					String fileb = GeneralQuery.query(query, QUERY_TIMEOUT);
-					
+
 					filea = addAsteroids(filea, fileb);
 				} catch (Exception exc) {}
-				
+
 				String file[] = DataSet.toStringArray(filea, FileIO.getLineSeparator(), false);
 				OrbitEphem.setAsteroidsFromExternalFile(file);
 				appletOnLineModeAst = true;
 				return "APPLET_MODE";
 			} catch (Exception exc) {
 				return null;
-			}			
+			}
 		}
 
 		String p = FileIO.getTemporalDirectory() + "MPC_asteroids_bright.txt";
@@ -584,47 +584,47 @@ public class Configuration
 
 		try {
 			String filea = GeneralQuery.query(query, QUERY_TIMEOUT);
-			
+
 			try {
 				query = Update.UPDATE_URL_BRIGHT_ASTEROIDS;
 				query = DataSet.replaceAll(query, "2007", ""+(astro.getYear()-1), false);
 				String fileb = GeneralQuery.query(query, QUERY_TIMEOUT);
-				
+
 				filea = addAsteroids(filea, fileb);
 			} catch (Exception exc) {}
-			
+
 			WriteFile.writeAnyExternalFile(p, filea);
-			
+
 			//GeneralQuery.queryFile(query, p, QUERY_TIMEOUT);
 		} catch (Exception exc) {
 			if (astro.getMonth() == 1) {
 				query = Update.UPDATE_URL_BRIGHT_ASTEROIDS;
 				query = DataSet.replaceAll(query, "2007", ""+(astro.getYear()-1), false);
-				
+
 				try {
 					String filea = GeneralQuery.query(query, QUERY_TIMEOUT);
-					
+
 					try {
 						query = Update.UPDATE_URL_BRIGHT_ASTEROIDS;
 						query = DataSet.replaceAll(query, "2007", ""+(astro.getYear()-2), false);
 						String fileb = GeneralQuery.query(query, QUERY_TIMEOUT);
-						
+
 						filea = addAsteroids(filea, fileb);
 					} catch (Exception exc2) {}
-					
+
 					WriteFile.writeAnyExternalFile(p, filea);
-				
+
 					//GeneralQuery.queryFile(query, p, QUERY_TIMEOUT);
 				} catch (Exception exc2) {
 					try { FileIO.deleteFile(p); } catch (Exception exc3) {}
-					return null;					
+					return null;
 				}
 			} else {
 				try { FileIO.deleteFile(p); } catch (Exception exc3) {}
 				return null;
 			}
 		}
-		
+
 		// Check the format
 		try {
 			String file[] = DataSet.arrayListToStringArray(ReadFile.readAnyExternalFile(p));
@@ -653,11 +653,11 @@ public class Configuration
 				d2 = DataSet.eliminateRowFromTable(d2, i + 1);
 			}
 		}
-		
+
 		if (d2.length > 0) return f1 + DataSet.toString(d2, FileIO.getLineSeparator());
 		return f1;
 	}
-	
+
 	/**
 	 * Updates the orbital elements of transneptunians writing
 	 * the new file to the temporal directory.
@@ -665,7 +665,7 @@ public class Configuration
 	 * @return Null if the orbital elements in orbital_elements.jar is
 	 * already acceptable, null if the simulation date is too far from
 	 * current date (so updating the file would not be acceptable too), and
-	 * the path of the temporal file if the file already exists and it is 
+	 * the path of the temporal file if the file already exists and it is
 	 * acceptable or if it has been successfully downloaded. If not null
 	 * the process of reading the temp file can continue to draw the objects.
 	 * @throws JPARSECException If an error occurs.
@@ -674,7 +674,7 @@ public class Configuration
 		OrbitEphem.setTransNeptuniansFromExternalFile(null);
 
 		if (isAcceptableDateForTransNeptunians(astro, true)) return null;
-		
+
 		double dt = getdt(astro.msFrom1970(), System.currentTimeMillis());
 		if (dt < -MAXIMUM_DAYS_FROM_ELEMENTS_COMETS_ASTEROIDS || dt > MAXIMUM_DAYS_FROM_ELEMENTS_COMETS_ASTEROIDS) {
 			return null;
@@ -690,7 +690,7 @@ public class Configuration
 				return "APPLET_MODE";
 			} catch (Exception exc) {
 				return null;
-			}			
+			}
 		}
 
 		String p = FileIO.getTemporalDirectory() + "MPC_distant_bodies.txt";
@@ -707,7 +707,7 @@ public class Configuration
 
 		String query = Update.UPDATE_URL_DISTANT_BODIES;
 		GeneralQuery.queryFile(query, p, QUERY_TIMEOUT);
-		
+
 		// Check the format
 		try {
 			String file[] = DataSet.arrayListToStringArray(ReadFile.readAnyExternalFile(p));

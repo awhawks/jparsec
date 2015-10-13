@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 /*
  * This software is a cooperative product of The MathWorks and the National
  * Institute of Standards and Technology (NIST) which has been released to the
@@ -40,7 +40,7 @@ import java.io.Serializable;
 import jparsec.math.FastMath;
 import jparsec.util.JPARSECException;
 
-/** 
+/**
  * QR Decomposition.
 * <P>
 * For an m-by-n matrix A with m &gt;= n, the QR decomposition is an m-by-n
@@ -53,35 +53,35 @@ import jparsec.util.JPARSECException;
  * <p/>
  * Adapted from the <a href="http://math.nist.gov/javanumerics/jama/" target="_blank">JAMA</a> package.
  *
- * @author The Mathworks and NIST 
+ * @author The Mathworks and NIST
  * @author Fracpete (fracpete at waikato dot ac dot nz)
  * @version $Revision: 1.2 $
 */
-public class QRDecomposition 
+public class QRDecomposition
   implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-/** 
+/**
    * Array for internal storage of decomposition.
    *    @serial internal array storage.
    */
   private double[][] QR;
 
-  /** 
+  /**
    * Row and column dimensions.
    *    @serial column dimension.
    *    @serial row dimension.
    */
   private int m, n;
 
-  /** 
+  /**
    * Array for internal storage of diagonal of R.
    *    @serial diagonal of R.
    */
   private double[] Rdiag;
 
-  /** 
+  /**
    * QR Decomposition, computed by Householder reflections.
    * @param A    Rectangular matrix
    */
@@ -112,7 +112,7 @@ public class QRDecomposition
 
         // Apply transformation to remaining columns.
         for (int j = k+1; j < n; j++) {
-          double s = 0.0; 
+          double s = 0.0;
           for (int i = k; i < m; i++) {
             s += QR[i][k]*QR[i][j];
           }
@@ -126,7 +126,7 @@ public class QRDecomposition
     }
   }
 
-  /** 
+  /**
    * Is the matrix full rank?
    * @return     true if R, and hence A, has full rank.
    */
@@ -138,7 +138,7 @@ public class QRDecomposition
     return true;
   }
 
-  /** 
+  /**
    * Return the Householder vectors
    * @return     Lower trapezoidal matrix whose columns define the reflections
    */
@@ -157,7 +157,7 @@ public class QRDecomposition
     return X;
   }
 
-  /** 
+  /**
    * Return the upper triangular factor
    * @return     R
    */
@@ -178,7 +178,7 @@ public class QRDecomposition
     return X;
   }
 
-  /** 
+  /**
    * Generate and return the (economy-sized) orthogonal factor
    * @return     Q
    */
@@ -206,7 +206,7 @@ public class QRDecomposition
     return X;
   }
 
-  /** 
+  /**
    * Least squares solution of A*X = B
    * @param B    A Matrix with as many rows as A and any number of columns.
    * @return     X that minimizes the two norm of Q*R*X-B.
@@ -227,7 +227,7 @@ public class QRDecomposition
     // Compute Y = transpose(Q)*B
     for (int k = 0; k < n; k++) {
       for (int j = 0; j < nx; j++) {
-        double s = 0.0; 
+        double s = 0.0;
         for (int i = k; i < m; i++) {
           s += QR[i][k]*X[i][j];
         }

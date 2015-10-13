@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 /*
  * This software is a cooperative product of The MathWorks and the National
  * Institute of Standards and Technology (NIST) which has been released to the
@@ -39,7 +39,7 @@ import java.io.Serializable;
 
 import jparsec.util.JPARSECException;
 
-/** 
+/**
  * LU Decomposition.
  * <P>
  * For an m-by-n matrix A with m &gt;= n, the LU decomposition is an m-by-n
@@ -54,37 +54,37 @@ import jparsec.util.JPARSECException;
  * <p/>
  * Adapted from the <a href="http://math.nist.gov/javanumerics/jama/" target="_blank">JAMA</a> package.
  *
- * @author The Mathworks and NIST 
+ * @author The Mathworks and NIST
  * @author Fracpete (fracpete at waikato dot ac dot nz)
  * @version $Revision: 1.2 $
  */
 
-public class LUDecomposition 
+public class LUDecomposition
   implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-/** 
+/**
    * Array for internal storage of decomposition.
    * @serial internal array storage.
    */
   private double[][] LU;
 
-  /** 
+  /**
    * Row and column dimensions, and pivot sign.
    * @serial column dimension.
    * @serial row dimension.
    * @serial pivot sign.
    */
-  private int m, n, pivsign; 
+  private int m, n, pivsign;
 
-  /** 
+  /**
    * Internal storage of pivot vector.
    * @serial pivot vector.
    */
   private int[] piv;
 
-  /** 
+  /**
    * LU Decomposition
    * @param  A   Rectangular matrix
    * @throws JPARSECException If m is lower than n in the m.n matrix.
@@ -96,9 +96,9 @@ public class LUDecomposition
     LU = A.getArrayCopy();
     m = A.getRowDimension();
     n = A.getColumnDimension();
-    
+
     if (m < n) throw new JPARSECException("In the m.n matrix m ("+m+") must be greater than/equal to n ("+n+")");
-    
+
     piv = new int[m];
     for (int i = 0; i < m; i++) {
       piv[i] = i;
@@ -158,7 +158,7 @@ public class LUDecomposition
     }
   }
 
-  /** 
+  /**
    * Is the matrix nonsingular?
    * @return     true if U, and hence A, is nonsingular.
    */
@@ -170,7 +170,7 @@ public class LUDecomposition
     return true;
   }
 
-  /** 
+  /**
    * Return lower triangular factor
    * @return     L
    */
@@ -191,7 +191,7 @@ public class LUDecomposition
     return X;
   }
 
-  /** 
+  /**
    * Return upper triangular factor
    * @return     U
    */
@@ -210,7 +210,7 @@ public class LUDecomposition
     return X;
   }
 
-  /** 
+  /**
    * Return pivot permutation vector
    * @return     piv
    */
@@ -222,7 +222,7 @@ public class LUDecomposition
     return p;
   }
 
-  /** 
+  /**
    * Return pivot permutation vector as a one-dimensional double array
    * @return     (double) piv
    */
@@ -234,7 +234,7 @@ public class LUDecomposition
     return vals;
   }
 
-  /** 
+  /**
    * Determinant
    * @return     det(A)
    * @throws JPARSECException If matrix is not square.
@@ -250,7 +250,7 @@ public class LUDecomposition
     return d;
   }
 
-  /** 
+  /**
    * Solve A*X = B
    * @param  B   A Matrix with as many rows as A and any number of columns.
    * @return     X so that L*U*X = B(piv,:)

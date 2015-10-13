@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.graph.chartRendering;
 
 import java.io.Serializable;
@@ -29,13 +29,13 @@ import jparsec.observer.LocationElement;
 
 /**
  * A class to instantiate an adequate object for rendering operations.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
 public class SatelliteRenderElement implements Serializable
 {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Default constructor.
@@ -44,7 +44,7 @@ public class SatelliteRenderElement implements Serializable
 
 	/**
 	 * Constructor only for the size of the window.
-	 * 
+	 *
 	 * @param w Width of the window in pixels.
 	 * @param h Height of the window in pixels.
 	 */
@@ -110,7 +110,7 @@ public class SatelliteRenderElement implements Serializable
 	 * True will show Earth when rendering from other planets. True is the default value.
 	 */
 	public boolean showEarth = true;
-	
+
 	/**
 	 * The anaglyph mode, disabled by default.
 	 */
@@ -121,24 +121,24 @@ public class SatelliteRenderElement implements Serializable
 	 * included in JPARSEC with a zoom factor of 1.
 	 */
 	public PLANET_MAP planetMap = PLANET_MAP.MAP_FLAT;
-	
+
 	/** Set to true to highligh region where Moon is above horizon. Default is false. */
 	public boolean highlightMoon = false;
 
 	/**
 	 * The set of options to show the Earth map.
 	 */
-	public static enum PLANET_MAP {
+	public enum PLANET_MAP {
 		/** Constant ID to show no map. */
 		NO_MAP,
 		/** Constant ID to show a flat map lat vs lon. */
 		MAP_FLAT,
 		/** Constant ID to show the Earth sphere in the eclipse map. */
 		MAP_SPHERICAL;
-		
+
 		/** Zoom factor for the map. Default value is 1 to show the entire Earth. */
 		public float zoomFactor = 1f;
-		
+
 		/**
 		 * This string can be used to force a different Earth map located in another resource
 		 * in the classpath, instead of the natural-like map used by JPARSEC. Default value
@@ -149,7 +149,7 @@ public class SatelliteRenderElement implements Serializable
 		 * defined in this class for that.
 		 */
 		public String EarthMapSource = null;
-		
+
 		/**
 		 * The location object controls the central position of the chart in the rendering, in
 		 * Earth's geographical coordinates. Default value is null to set the center to the
@@ -157,14 +157,14 @@ public class SatelliteRenderElement implements Serializable
 		 * is set to 1, the value set here will have no effect.
 		 */
 		public LocationElement centralPosition = null;
-		
+
 		/** The path to the physical Earth map in JPARSEC. */
 		public static final String EARTH_MAP_PHYSICAL = FileIO.DATA_TEXTURES_DIRECTORY + "earthmap1.jpg";
 		/** The path to the political Earth map in JPARSEC. */
 		public static final String EARTH_MAP_POLITICAL = FileIO.DATA_TEXTURES_DIRECTORY + "earthmap2.jpg";
 		/** A constant (null) to force the use of the realistic Earth map in JPARSEC. */
 		public static final String EARTH_MAP_REALISTIC = null;
-		
+
 		/**
 		 * True will show the grid of coordinates in intervals of 30 deg. False is the default value.
 		 * For spherical maps the interval is 10 deg.
@@ -174,7 +174,7 @@ public class SatelliteRenderElement implements Serializable
 		 * The color for the grid.
 		 */
 		public int showGridColor = 192<<24 | 32<<16 | 92<<8 | 92;
-		
+
 		/**
 		 * Set the default values for all variables for this enum.
 		 */
@@ -211,7 +211,6 @@ public class SatelliteRenderElement implements Serializable
 		out.highlightMoon = this.highlightMoon;
 		return out;
 	}
-
 	/**
 	 * Returns true if the input object is equal to this instance.
 	 */

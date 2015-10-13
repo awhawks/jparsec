@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.time.calendar;
 
 import java.io.Serializable;
@@ -32,13 +32,13 @@ import jparsec.observer.CityElement;
  * Republic in 1793. It was used until the end of Gregorian year 1805.
  * <P>
  * See Calendrical Calculations for reference.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
 public class French implements Serializable
 {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * The year.
@@ -99,7 +99,7 @@ public class French implements Serializable
 
 	/**
 	 * Constructs a Hebrew date with a Julian day
-	 * 
+	 *
 	 * @param jd Julian day
 	 */
 	public French(int jd)
@@ -109,7 +109,7 @@ public class French implements Serializable
 
 	/**
 	 * Explicit constructor.
-	 * 
+	 *
 	 * @param y Year.
 	 * @param m Month.
 	 * @param d Day.
@@ -123,7 +123,7 @@ public class French implements Serializable
 
 	/**
 	 * To fixed day..
-	 * 
+	 *
 	 * @param y Year.
 	 * @param m Month.
 	 * @param d Day.
@@ -146,7 +146,7 @@ public class French implements Serializable
 
 	/**
 	 * Sets the date from the fixed day.
-	 * 
+	 *
 	 * @param l Fixed day.
 	 */
 	public void fromFixed(long l)
@@ -159,7 +159,7 @@ public class French implements Serializable
 
 	/**
 	 * Transforms a French date into a Julian day
-	 * 
+	 *
 	 * @param year Year.
 	 * @param month Month.
 	 * @param day Day.
@@ -181,7 +181,7 @@ public class French implements Serializable
 
 	/**
 	 * Sets a French date with a given Julian day
-	 * 
+	 *
 	 * @param jd Julian day.
 	 */
 	public void fromJulianDay(int jd)
@@ -191,7 +191,7 @@ public class French implements Serializable
 
 	/**
 	 * Midnight in Paris.
-	 * 
+	 *
 	 * @param l Fixed day.
 	 * @return Midnight time.
 	 */
@@ -202,7 +202,7 @@ public class French implements Serializable
 
 	/**
 	 * New year before certain fixed date.
-	 * 
+	 *
 	 * @param l Fixed date.
 	 * @return New year fixed date.
 	 */
@@ -217,14 +217,14 @@ public class French implements Serializable
 
 	/**
 	 * Gets the day of the week.
-	 * 
+	 *
 	 * @return Day of week.
 	 */
 	public int getDayOfWeek()
 	{
 		int day = this.day + 9;
-		if (this.month < 13) day = (this.day - 1) % 10;
-		day++;
+        if (month < 13) day = (this.day - 1) % 10;
+        day++;
 		if (day > French.DAY_OF_WEEK_NAMES.length) day -= French.DAY_OF_WEEK_NAMES.length;
 		if (day < 0) day += French.DAY_OF_WEEK_NAMES.length;
 		return day;
@@ -232,14 +232,14 @@ public class French implements Serializable
 
 	/**
 	 * Gets the decadi.
-	 * 
+	 *
 	 * @return Decadi index (0, 1, 2), or -1 for no decadi.
 	 */
 	public int getDecadi()
 	{
 		int week = -1;
-		if (this.month < 13) week = (this.day - 1) / 10 + 1;
-		if (week > 2) week = week - 3;
+        if (month < 13) week = (day - 1) / 10 + 1;
+        if (week > 2) week = week - 3;
 		return week;
 	}
 }

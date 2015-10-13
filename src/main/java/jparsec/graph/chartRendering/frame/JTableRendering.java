@@ -37,20 +37,19 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 	private String lineTable[][] = null, lineTableOriginal[][];
 	private boolean valueChanging = false;
     private JTableHeader tableHeader;
-	private final String SEPARATOR = "@<>@"; // A strange separator that is never used in the fields 
+	private final String SEPARATOR = "@<>@"; // A strange separator that is never used in the fields
 	private String selectedRow;
 	private int colColumn = -1;
 	private String[] colVal;
 	private Color[] colCol;
 	private String columnNames[];
 	private Class<?> columnClasses[];
-
 	/**
 	 * Constructor for a table.
 	 * @param columns The names of the columns.
 	 * @param classes The classes in each column. Valid values are numbers (Integer, ...), Boolean
 	 * and String classes. Set the entire array to null to use String for all columns, or any of the elements
-	 * to null to use String but letting the value to be parsed to an angle formatted by the methods in 
+	 * to null to use String but letting the value to be parsed to an angle formatted by the methods in
 	 * {@linkplain Functions} or a date formatted in {@linkplain TimeElement}.
 	 * @param editable True or false to allow or not to edit columns. Set to
 	 * null to set all to false for String and true for Boolean.
@@ -78,12 +77,12 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 			for (int j=0; j<table[i].length; j++) {
 				lineTable[i][j] = table[i][j];
 				lineTableOriginal[i][j] = table[i][j];
-			}			
+			}
 			lineTable[i][lineTable[0].length-1] = ""+i;
 			lineTableOriginal[i][lineTable[0].length-1] = ""+i;
 		}
 	}
-	
+
 	/**
 	 * Returns the table component.
 	 * @return The table.
@@ -91,7 +90,7 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 	public JTable getComponent() {
 		return table;
 	}
-	
+
 	/**
 	 * Returns a copy of the original data in the table.
 	 * @return The data, ordered as [rows][columns].
@@ -102,11 +101,11 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 			for (int j=0; j<lineTable[i].length-1; j++) {
 				ltOriginal[i][j] = lineTableOriginal[i][j];
 				ltOriginal[i][j] = lineTableOriginal[i][j];
-			}			
+			}
 		}
 		return ltOriginal;
 	}
-	
+
 	/**
 	 * Returns a copy of the current data in the table.
 	 * @return The data, ordered as [rows][columns].
@@ -119,14 +118,14 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 			for (int j=0; j<lineTable[i].length-1; j++) {
 				lt[i][j] = lineTable[i][j];
 				lt[i][j] = lineTable[i][j];
-			}	
+			}
 			index[i] = Integer.parseInt(lineTable[i][lineTable[0].length-1]);
 		}
-		
+
 		lt = (String[][]) DataSet.sortInCrescent(lt, index);
 		return lt;
 	}
-	
+
 	/**
 	 * Converts the row index from view to model. The underlying methods
 	 * of the table component should not be used in this class to convert
@@ -151,7 +150,7 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 		}
 		return modelRowIndex;
 	}
-	
+
 	/**
 	 * Sets the colors for the rows.
 	 * @param column The column to use to select the color based on its value.
@@ -170,7 +169,7 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 	 */
 	public void setColumnWidth(int width[]) {
 		for (int i=0; i<width.length; i++) {
-			table.getColumnModel().getColumn(i).setPreferredWidth(width[i]);			
+			table.getColumnModel().getColumn(i).setPreferredWidth(width[i]);
 		}
 	}
 
@@ -190,7 +189,7 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 	public String getSelectedRow(String separator) {
 		return DataSet.replaceAll(selectedRow, SEPARATOR, separator, true);
 	}
-	
+
 	private void createTable() throws JPARSECException {
 		final int columns = columnNames.length;
 		ascending = new boolean[columns];
@@ -198,7 +197,7 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 		{
 			ascending[i] = true;
 		}
-		
+
 	    TableModel dataModel = new AbstractTableModel() {
 	    	static final long serialVersionUID = 1L;
 	         public int getColumnCount() { return columns; }
@@ -246,8 +245,8 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 	        	return edit;
 	         }
 	    };
-	      
-		table = new JTable(dataModel) 
+
+		table = new JTable(dataModel)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -269,11 +268,11 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 				} else {
 					// If not shaded, match the table's background
 					c.setBackground(getBackground());
-				}		
+				}
 				return c;
 			}
 		};
-		table.getSelectionModel().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION); 
+		table.getSelectionModel().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
 		table.setAutoCreateColumnsFromModel(false);
 		table.setColumnSelectionAllowed(true);
@@ -284,7 +283,7 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 		tableHeader = table.getTableHeader();
 		tableHeader.addMouseListener(this);
 		Font h = tableHeader.getFont();
-		tableHeader.setFont(new Font(h.getFontName(), Font.BOLD, h.getSize()));		
+		tableHeader.setFont(new Font(h.getFontName(), Font.BOLD, h.getSize()));
 		updateTable(null, true);
 	}
 
@@ -322,7 +321,7 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 	    	tableHeader.repaint();
         }
 	}
-	
+
     //  Regardless of sort order (ascending or descending), null values always appear last.
     // colIndex specifies a column in model.
 	private int tableSorted = -1;
@@ -336,7 +335,7 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
         Arrays.sort(table, new ColumnSorter(ascending, colIndex));
     	for (int i=0; i<lineTable.length; i++) {
     		lineTable[i] = DataSet.toStringArray(table[i], SEPARATOR, false);
-    	}        
+    	}
         tableSorted = colIndex;
         tableSortAscending = ascending;
     }
@@ -352,7 +351,7 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
     		}
     		this.ascending[column] = asc;
     	}
-    	
+
     	this.sortColumn(table.getModel(), column, this.ascending[column]);
     	table.revalidate();
     }
@@ -435,7 +434,7 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 	        } else {
 	        	String fa = FileIO.getField(column + 1, (String) a, SEPARATOR, false);
 	        	String fb = FileIO.getField(column + 1, (String) b, SEPARATOR, false);
-	        	if (columnClasses[column] == Integer.class || columnClasses[column] == Double.class 
+	        	if (columnClasses[column] == Integer.class || columnClasses[column] == Double.class
 	        			|| columnClasses[column] == Long.class) {
 	        		Double va = Double.parseDouble(fa);
 	        		Double vb = Double.parseDouble(fb);
@@ -443,7 +442,7 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 		                return va.compareTo(vb);
 		            } else {
 		                return vb.compareTo(va);
-		       		}	        		
+		       		}
 	        	} else {
 	        		if (columnClasses[column] == null) {
 	        			try {
@@ -453,7 +452,7 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 	    		                return ffa.compareTo(ffb);
 	    		            } else {
 	    		                return ffb.compareTo(ffa);
-	    		       		}	        		
+	    		       		}
 	        			} catch (Exception exc) {
 	        				try {
 		        				Double ffa = Functions.parseDeclination(fa);
@@ -462,7 +461,7 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 		    		                return ffa.compareTo(ffb);
 		    		            } else {
 		    		                return ffb.compareTo(ffa);
-		    		       		}	        		
+		    		       		}
 	        				} catch (Exception exc2) {
 	        					try {
 	        						if (!DataSet.isDoubleOrMathOperationFastCheck(fa) ||
@@ -473,7 +472,7 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 	        			                return va.compareTo(vb);
 	        			            } else {
 	        			                return vb.compareTo(va);
-	        			       		}	      
+	        			       		}
 	        					} catch (Exception exc3) {
 	        						try {
 		    	        				Double ffa = (new TimeElement(fa)).astroDate.jd();
@@ -482,7 +481,7 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 				    		                return ffa.compareTo(ffb);
 				    		            } else {
 				    		                return ffb.compareTo(ffa);
-				    		       		}	 
+				    		       		}
 	        						} catch (Exception exc4) {}
 	        					}
 	        				}

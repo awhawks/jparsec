@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.vo;
 
 import javax.mail.*; 
@@ -49,7 +49,7 @@ public class MailElement
 	 * The password of the mail account.
 	 */
 	public String password;
-	
+
 	/**
 	 * The name of the smtp server.
 	 */
@@ -70,7 +70,7 @@ public class MailElement
 	 * Sets the content type of the mail.
 	 */
 	public String contentType;
-	
+
 	/**
 	 * Constant for a plain text message.
 	 */
@@ -79,7 +79,7 @@ public class MailElement
 	 * Constant for a html message.
 	 */
 	public static final String CONTENT_TYPE_HTML_TEXT = "text/html";
-	
+
 	private ArrayList<String> attachments = new ArrayList<String>();
 
 	/**
@@ -98,17 +98,17 @@ public class MailElement
 	 * @throws JPARSECException If an error occurs.
 	 */
 	public void send(String from)
-	throws JPARSECException {	 
+	throws JPARSECException {
 		String server = "smtp";
 		if (this.smtpServer.indexOf("pop") >= 0) server = "pop";
-		Properties prop = new Properties();	 
-		prop.put("mail."+server+".host", this.smtpServer); 
-		prop.put("mail."+server+".auth", "true"); 
+		Properties prop = new Properties();
+		prop.put("mail."+server+".host", this.smtpServer);
+		prop.put("mail."+server+".auth", "true");
 		prop.put("mail."+server+".starttls.enable","true");
-		 
-		try{ 		 
-			Session session = Session.getInstance(prop , null ); 
-			Message msg = getMessage(session); 
+
+		try{
+			Session session = Session.getInstance(prop , null );
+			Message msg = getMessage(session);
 			if (!from.equals(this.login)) msg.setFrom(new InternetAddress(from, this.name));
 
 			Transport t = session.getTransport(server);
@@ -117,15 +117,15 @@ public class MailElement
 			    t.sendMessage(msg, msg.getAllRecipients());
 			} finally {
 			    t.close();
-			} 
+			}
 		}
 		catch (Exception e)
-		{ 
+		{
 			throw new JPARSECException(e);
-		}	 
+		}
 	}
-	
-	private MimeMessage getMessage(Session session) 
+
+	private MimeMessage getMessage(Session session)
 	throws JPARSECException {
 		try{
 			MimeMessage msg = new MimeMessage(session);
@@ -147,7 +147,7 @@ public class MailElement
 		catch (MessagingException ex)
 		{
 			throw new JPARSECException(ex);
-		} 
+		}
 	}
 
 	/**
@@ -163,9 +163,9 @@ public class MailElement
 		this.content += "[ATTACHMENT]";
 		attachments.add(fileName);
 	}
-	
+
     private void setContent(Message msg)
-             throws MessagingException 
+             throws MessagingException
     {
     	int n = FileIO.getNumberOfFields(this.content, "[ATTACHMENT]", true);
     	if (n == 1) return;
@@ -175,7 +175,7 @@ public class MailElement
     	for (int i=0; i<n; i++)
     	{
     		String part = FileIO.getField(i+1, this.content, "[ATTACHMENT]", true);
-    		
+
             // Create and fill first part
             MimeBodyPart p1 = new MimeBodyPart();
             p1.setContent(part, this.contentType);
@@ -185,12 +185,12 @@ public class MailElement
             {
 	            // Create second part
 	            MimeBodyPart p2 = new MimeBodyPart();
-	
+
 	            // Put a file in the second part
 	            FileDataSource fds = new FileDataSource(this.attachments.get(i));
 	            p2.setDataHandler(new DataHandler(fds));
 	            p2.setFileName(fds.getName());
-	            
+
 	            mp.addBodyPart(p2);
             }
     	}

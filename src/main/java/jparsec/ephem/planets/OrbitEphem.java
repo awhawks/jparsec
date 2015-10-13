@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.ephem.planets;
 
 import java.util.ArrayList;
@@ -73,7 +73,7 @@ import jparsec.util.JPARSECException;
  * These orbital elements are suitable for accurate ephemeris, with errors well
  * below the arcsecond level when comparing to the full VSOP87 theory. An
  * additional advantage is the calculation speed.<P>
- * 
+ *
  * Example of use applying the main Ephem class:<P>
  * <pre>
  * try
@@ -93,11 +93,11 @@ import jparsec.util.JPARSECException;
  * } catch (JPARSECException ve)
  * {
  *		ve.showException();
- * } 
+ * }
  * </pre><P>
  * It is recommended to use the particular method for this class instead of the main Ephem
  * class. The process is the same as in the {@linkplain Spacecraft} class, changing Probe by Comet or Asteroid.<P>
- * 
+ *
  * @see OrbitalElement
  * @see ReadFile
  * @see Ephem
@@ -108,12 +108,12 @@ public class OrbitEphem
 {
 	// private constructor so that this class cannot be instantiated.
 	private OrbitEphem() {}
-	
+
 	private static ReadFile readFile_asteroids = null;
 	private static ReadFile readFile_comets = null;
 	private static ReadFile readFile_transNeptunians = null;
 	private static ReadFile readFile_NEOs = null;
-	
+
 	/**
 	 * Sets an external file for asteroids.
 	 * @param file The read file, or null to set the internal file.
@@ -127,7 +127,7 @@ public class OrbitEphem
 			re.setPath(OrbitEphem.PATH_TO_MPC_BRIGHT_ASTEROIDS_FILE);
 			re.readFileOfAsteroids();
 			readFile_asteroids = re;
-*/			
+*/
 		} else {
 			ReadFile re = new ReadFile();
 			re.setFormat(ReadFile.FORMAT.MPC);
@@ -149,7 +149,7 @@ public class OrbitEphem
 			re.setPath(OrbitEphem.PATH_TO_MPC_COMETS_FILE);
 			re.readFileOfComets();
 			readFile_comets = re;
-*/			
+*/
 		} else {
 			ReadFile re = new ReadFile();
 			re.setFormat(ReadFile.FORMAT.MPC);
@@ -171,7 +171,7 @@ public class OrbitEphem
 			re.setPath(OrbitEphem.PATH_TO_MPC_COMETS_FILE);
 			re.readFileOfComets();
 			readFile_comets = re;
-*/			
+*/
 		} else {
 			ReadFile re = new ReadFile();
 			re.setFormat(ReadFile.FORMAT.MPC);
@@ -193,7 +193,7 @@ public class OrbitEphem
 			re.setPath(OrbitEphem.PATH_TO_MPC_DISTANT_BODIES_FILE);
 			re.readFileOfAsteroids();
 			readFile_transNeptunians = re;
-*/			
+*/
 		} else {
 			ReadFile re = new ReadFile();
 			re.setFormat(ReadFile.FORMAT.MPC);
@@ -202,7 +202,7 @@ public class OrbitEphem
 			readFile_transNeptunians = re;
 		}
 	}
-	
+
 	/**
 	 * Gets the closest available orbital elements of a planet (except Earth) to
 	 * certain julian day. Orbital elements come from VSOP87 Theory, and are
@@ -216,9 +216,9 @@ public class OrbitEphem
 	 * Theory.
 	 * <P>
 	 * For Pluto an approximate set of elements (fit to DE102 ephemerides done
-	 * by S. Moshier) will be returned. Accuracy of some minutes of arc between 
+	 * by S. Moshier) will be returned. Accuracy of some minutes of arc between
 	 * 1400 B.C. to 3000 A.D.
-	 * 
+	 *
 	 * @param planet ID constant of the planet.
 	 * @param JD Julian Day.
 	 * @return The {@linkplain OrbitalElement} object.
@@ -313,7 +313,7 @@ public class OrbitEphem
 	 * Errors should be below 5 arcminutes respect to DE102 in this time spand.
 	 * A set of perturbations, here not considered, can reduce errors to about 5
 	 * arcseconds.
-	 * 
+	 *
 	 * @param JD Julian day for the elements set.
 	 * @return {@linkplain OrbitalElement} object.
 	 * @throws JPARSECException Thrown if the date is invalid.
@@ -388,7 +388,7 @@ public class OrbitEphem
 	 * the milliarcsecond level comparing with the corresponding full theories,
 	 * except with Moshier and VSOP algorithms. For orbital elements adequate for
 	 * a longer time span use the method that returns the orbital elements from VSOP theory.
-	 * 
+	 *
 	 * @param planet ID constant of the planet.
 	 * @param jd Julian Day.
 	 * @param algorithm Algorithm to apply. Constants defined in
@@ -402,7 +402,7 @@ public class OrbitEphem
 		OrbitalElement orbit = new OrbitalElement();
 
 		double posP[], velP[];
-		switch (algorithm) 
+		switch (algorithm)
 		{
 		case JPL_DE200:
 		case JPL_DE403:
@@ -413,11 +413,11 @@ public class OrbitEphem
 		case JPL_DE422:
 			JPLEphemeris jplEphemeris = new JPLEphemeris(algorithm);
 			posP = jplEphemeris.getPositionAndVelocity(jd, planet);
-			
+
 			// Correct posP to center it on the Sun instead of the Solar System barycenter
 			velP = jplEphemeris.getPositionAndVelocity(jd, TARGET.SUN);
 			posP = Functions.substract(posP, velP);
-			
+
 			// rotate velP and posP to ecliptic
 			EphemerisElement eph = new EphemerisElement();
 			eph.ephemMethod = REDUCTION_METHOD.JPL_DE4xx;
@@ -459,7 +459,7 @@ public class OrbitEphem
 		}
 
 		orbit.name = planet.getName();
-		
+
 		return orbit;
 	}
 
@@ -527,7 +527,7 @@ public class OrbitEphem
 		}
 		return readFile_NEOs.getNumberOfObjects();
 	}
-	
+
 	/**
 	 * Returns the index of certain asteroid by its name.
 	 * @param name Name.
@@ -596,7 +596,7 @@ public class OrbitEphem
 		}
 		return readFile_NEOs.searchByName(name);
 	}
-	
+
 	/**
 	 * Returns the orbital element of certain asteroid by its index.
 	 * @param index Index.
@@ -681,7 +681,7 @@ public class OrbitEphem
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Returns the orbital elements of all asteroids.
 	 * @return Orbital elements set.
@@ -746,7 +746,7 @@ public class OrbitEphem
 		}
 		return (OrbitalElement[]) readFile_NEOs.getReadElements();
 	}
-	
+
 	private static double lastTDB = -1;
 	private static double lastSun0[] = null;
 	private static ObserverElement lastObserver = null;
@@ -764,7 +764,7 @@ public class OrbitEphem
 	 * <P>
 	 * For comets and asteroids, this method returns the angular size of the
 	 * body by assuming an albedo of 0.5 and 0.25, respectively.
-	 * 
+	 *
 	 * @param time Time object containing the date.
 	 * @param obs Observer object containing the observer position.
 	 * @param eph Ephemeris object with the target and ephemeris
@@ -793,7 +793,7 @@ public class OrbitEphem
 			lastTDB = -1;
 			lastObserver = null;
 		}
-		
+
 		OrbitalElement orbit = eph.orbit;
 
 		// Obtain object position
@@ -822,7 +822,7 @@ public class OrbitEphem
 				sun = Ephem.eclipticToEquatorial(sun, Constant.J2000, eph);
 			}
 		}
-		
+
 		// Pass to equatorial
 		coords = Ephem.eclipticToEquatorial(coords, orbit.referenceEquinox, eph);
 
@@ -863,7 +863,7 @@ public class OrbitEphem
 				geo = Ephem.solarAndPlanetaryDeflection(geo, sun, coords,
 					new TARGET[] {TARGET.JUPITER, TARGET.SATURN, TARGET.EARTH}, JD, false, obs);
 			geo = Ephem.aberration(geo, sun, light_time);
-			
+
 			DataBase.addData("GCRS", geo, true); // Geocentric celestial position J2000
 		} else {
 			DataBase.addData("GCRS", null, true);
@@ -873,7 +873,7 @@ public class OrbitEphem
 		double eq[] = geo;
 
 		/* Correction to output frame. */
-		if (eph.preferPrecisionInEphemerides || 
+		if (eph.preferPrecisionInEphemerides ||
 				(eph.frame == FRAME.FK4 && orbit.referenceFrame != FRAME.FK4) ||
 				(eph.frame != FRAME.FK4 && orbit.referenceFrame == FRAME.FK4)
 				)
@@ -882,8 +882,8 @@ public class OrbitEphem
 
 		if (eph.frame == FRAME.FK4) {
 			// Transform from B1950 to mean equinox of date
-			eq = Precession.precess(Constant.B1950, JD, eq, eph);	
-			 helio_object = Precession.precess(Constant.B1950, JD, helio_object, eph);	
+			eq = Precession.precess(Constant.B1950, JD, eq, eph);
+			 helio_object = Precession.precess(Constant.B1950, JD, helio_object, eph);
 		} else {
 			// Transform from J2000 to mean equinox of date
 			eq = Precession.precessFromJ2000(JD, eq, eph);
@@ -901,7 +901,7 @@ public class OrbitEphem
 				/* Correct nutation */
 				true_eq = Nutation.nutateInEquatorialCoordinates(JD, eph, eq, true);
 			}
-	
+
 			// Correct for polar motion
 			if (eph.ephemType == EphemerisElement.COORDINATES_TYPE.APPARENT &&
 					eph.correctForPolarMotion)
@@ -913,7 +913,7 @@ public class OrbitEphem
 				true_eq = Functions.rotateZ(true_eq, gast);
 			}
 		}
-		
+
 		// Pass to coordinates as seen from another body, if necessary
 		if (obs.getMotherBody() != TARGET.NOT_A_PLANET && obs.getMotherBody() != TARGET.EARTH)
 			true_eq = Ephem.getPositionFromBody(LocationElement.parseRectangularCoordinates(true_eq), time, obs, eph).getRectangularCoordinates();
@@ -925,7 +925,7 @@ public class OrbitEphem
 			lastSun0 = sun;
 			lastObserver = obs.clone();
 		}
-		
+
 		// Get equatorial coordinates
 		LocationElement ephem_loc = LocationElement.parseRectangularCoordinates(true_eq);
 
@@ -1004,11 +1004,11 @@ public class OrbitEphem
 				switch (orbit.magnitudeModel) {
 				case COMET_gk:
 					ephem_elem.angularRadius = (float) Math
-							.atan(0.5 * OrbitEphem.getProbableDiameter(orbit.absoluteMagnitude, 0.5) / (ephem_elem.distance * Constant.AU));					
+							.atan(0.5 * OrbitEphem.getProbableDiameter(orbit.absoluteMagnitude, 0.5) / (ephem_elem.distance * Constant.AU));
 					break;
 				case ASTEROID_HG:
 					ephem_elem.angularRadius = (float) Math
-							.atan(0.5 * OrbitEphem.getProbableDiameter(orbit.absoluteMagnitude, 0.15) / (ephem_elem.distance * Constant.AU));					
+							.atan(0.5 * OrbitEphem.getProbableDiameter(orbit.absoluteMagnitude, 0.15) / (ephem_elem.distance * Constant.AU));
 					break;
 				case NONE:
 					ephem_elem.angularRadius = 0;
@@ -1016,7 +1016,7 @@ public class OrbitEphem
 				}
 				break;
 			}
-			
+
 			// Correct magnitude for phase, since previous value assume phase close to 1
 			// FIXME ? Apply the correction also for all asteroids (NEOs), but not for planets ?
 			/*
@@ -1031,12 +1031,12 @@ public class OrbitEphem
 				}
 			}
 			*/
-			
+
 			// Correct apparent magnitude for extinction
 			if (eph.ephemType == EphemerisElement.COORDINATES_TYPE.APPARENT && eph.correctForExtinction &&
 					obs.getMotherBody() == TARGET.EARTH)
 				ephem_elem.magnitude += Star.getExtinction(Constant.PI_OVER_TWO-ephem_elem.elevation, obs.getHeight() / 1000.0, 5);
-	
+
 			// Compute surface brightness
 			ephem_elem.surfaceBrightness = (float) Star.getSurfaceBrightness(ephem_elem.magnitude,
 					ephem_elem.angularRadius * Constant.RAD_TO_ARCSEC);
@@ -1052,7 +1052,7 @@ public class OrbitEphem
 
 	/**
 	 * Obtain heliocentric mean ecliptic coordinates of a planet.
-	 * 
+	 *
 	 * @param time Time object containing the date.
 	 * @param obs Observer object containing the observer position.
 	 * @param eph Ephemeris object with the target and ephemeris
@@ -1083,7 +1083,7 @@ public class OrbitEphem
 
 		double finalJD = JD;
 		if (eph.equinox != EphemerisElement.EQUINOX_OF_DATE) finalJD = eph.equinox;
-		
+
 		// Precession
 		coords = Precession.precessPosAndVelInEcliptic(orbit.referenceEquinox, finalJD, coords, eph);
 
@@ -1093,7 +1093,7 @@ public class OrbitEphem
 	/**
 	 * Obtain rectangular coordinates of the object in the orbit plane,
 	 * according to the object's orbit: elliptic, parabolic, or hyperbolic.
-	 * 
+	 *
 	 * @param orbit {@linkplain OrbitalElement} object.
 	 * @param JD Julian day of calculations.
 	 * @return Array with x, y, vx, vy in the orbit plane.
@@ -1114,7 +1114,7 @@ public class OrbitEphem
 
 	/**
 	 * Calculate rectangular coordinates for an elliptic orbit.
-	 * 
+	 *
 	 * @param orbit {@linkplain OrbitalElement} object. Eccentricity is supposed to be lower
 	 *        than unity.
 	 * @param JD Julian Day of calculations.
@@ -1164,13 +1164,13 @@ public class OrbitEphem
 				 * zero. Use the derivative of the error to converge to solution by
 				 * Newton's method.
 				 */
-	
+
 				de = (m + orbit.eccentricity * Math.sin(E) - E) / (1.0 - orbit.eccentricity * Math.cos(E));
 				E = E + de;
 				iteration++;
 			} while (iteration < 25 && Math.abs(de) > 1E-15);
 		}
-		
+
 		/*
 		 * The exact formula for the area in the ellipse is
 		 * 2.0*atan(c2*tan(0.5*W)) - c1*eccent*sin(W)/(1+e*cos(W)) where c1 =
@@ -1204,7 +1204,7 @@ public class OrbitEphem
 	/**
 	 * Calculate rectangular coordinates for a parabolic orbit. This method
 	 * can be used for eccentricities between 0.98 and 1.1.
-	 * 
+	 *
 	 * @param orbit {@linkplain OrbitalElement} object.
 	 * @param JD Julian Day of calculations.
 	 * @return Array with x, y, vx, vy values in the orbit plane at time JD,
@@ -1213,7 +1213,7 @@ public class OrbitEphem
 	public static double[] parabolic(OrbitalElement orbit, double JD)
 	{
 		double s = 0.0, ds = 1.0, Q = orbit.perihelionDistance;
-		
+
 		// See Meeus, chapter 33. It's better to use the iterative method
 		double w = 3.0 * Constant.EARTH_MEAN_ORBIT_RATE * (JD - orbit.referenceTime) / (Q * Math.sqrt(2.0 * Q));
 		int iterN = 0;
@@ -1223,13 +1223,13 @@ public class OrbitEphem
 			s = newS;
 			iterN ++;
 		} while (iterN < 25 && ds > 1.0E-15);
-		
+
 		if (ds >= 1.0E-15) {
 			// Solve Baker's equation directly
 			double B = Math.pow((w * 0.5 + Math.sqrt(w * w / 4.0 + 1.0)), 1.0 / 3.0);
 			s = B - 1.0 / B;
 		}
-		
+
 		if (orbit.eccentricity != 1.0) {
 			double QQ = Constant.EARTH_MEAN_ORBIT_RATE * 0.5 * Math.sqrt((1.0 + orbit.eccentricity)/orbit.perihelionDistance) / orbit.perihelionDistance;
 			double GG = (1.0 - orbit.eccentricity) / (1.0 + orbit.eccentricity);
@@ -1238,7 +1238,7 @@ public class OrbitEphem
 			// Note this is dangerous when tt is high, and some control should be done, although Meeus says nothing
 			if (!Double.isInfinite(s2) && !Double.isNaN(s2) && s2 != 0.0 && Math.abs((s-s2)/s2) < 0.25) s = s2;
 		}
-		
+
 		// Obtain mean motion
 		double k = Constant.EARTH_MEAN_ORBIT_RATE / Math.sqrt(2.0 * Q);
 		double r = Q * (1.0 + s * s);
@@ -1254,7 +1254,7 @@ public class OrbitEphem
 
 	/**
 	 * Calculate rectangular coordinates for a hyperbolic orbit.
-	 * 
+	 *
 	 * @param orbit {@linkplain OrbitalElement} object. Eccentricity is supposed to be
 	 *        greater than unity.
 	 * @param JD Julian Day of calculations.
@@ -1266,7 +1266,7 @@ public class OrbitEphem
 		double mean_anom_at_epoch, m, E, DE, x, y, vx, vy;
 
 		/*
-		 * The equation of the hyperbola in polar coordinates r, theta is 
+		 * The equation of the hyperbola in polar coordinates r, theta is
 		 * r = a(e^2 - 1)/(1 + e cos(theta)) so the perihelion distance q = a(e-1),
 		 * the "mean distance" a = q/(e-1).
 		 */
@@ -1290,7 +1290,7 @@ public class OrbitEphem
 				DE = (-m - E + orbit.eccentricity * Math.sinh(E)) / (1.0 - orbit.eccentricity * Math.cosh(E));
 				E = E + DE;
 			} while (Math.abs(E) < 100.0 && iteration < 20 && Math.abs(DE) > 1e-10);
-	
+
 			// If no convergency is reached, then retry with a more adequate initial
 			// value. Sorry I can't give reference about this, I cannot remember now...
 			if (Math.abs(E) > 100.0 || Math.abs(DE) > 1e-5)
@@ -1305,7 +1305,7 @@ public class OrbitEphem
 		}
 
 		// Exception if no convergency is reached
-		if (Math.abs(E) > 100.0 || Math.abs(DE) > 1e-5) 
+		if (Math.abs(E) > 100.0 || Math.abs(DE) > 1e-5)
 			throw new RuntimeException("no convergency was reached when computing hyperbolic position in orbit plane.");
 
 		// Obtain rectangular position and velocity
@@ -1320,7 +1320,7 @@ public class OrbitEphem
 
 	/**
 	 * Transform coordinates from the orbit plane to the ecliptic plane.
-	 * 
+	 *
 	 * @param orbit {@linkplain OrbitalElement} object.
 	 * @param position Array with x, y, vx, vy values.
 	 * @return Array with x, y, z, vx, vy, vz values.
@@ -1363,8 +1363,8 @@ public class OrbitEphem
 
 	/**
 	 * Geocentric rectangular coordinates of the Sun. Mean equinox and ecliptic
-	 * of date. Not used actively in this library. Adequate for fast and low precission
-	 * ephemeris. Ecliptic latitude is supossed to be 0.0.
+	 * of date. Adequate for fast and low precission ephemeris. Ecliptic latitude 
+	 * is supossed to be 0.0.
 	 * <P>
 	 * Expansion is from "Planetary Programs and Tables" by Pierre Bretagnon and
 	 * Jean-Louis Simon, Willman-Bell, 1986.
@@ -1372,7 +1372,7 @@ public class OrbitEphem
 	 * The expansion is valid from 4000 B.C. to 8000 A.D. Stated peak error of
 	 * longitude is as follows (tested by Steve L. Moshier against JPL DE200):
 	 * <P>
-	 * 
+	 *
 	 * <pre>
 	 *      years       degrees
 	 * <BR>
@@ -1387,15 +1387,14 @@ public class OrbitEphem
 	 *  2800 to 8000    .0009
 	 * <P>
 	 *</pre>
-	 * 
+	 *
 	 * Accuracy said by 1986 Astronomical Almanac is 0.1s R.A., 0.8" Dec.
 	 * <P>
 	 * This implementation uses the {@linkplain FastMath} class for fast sin/cos
 	 * operations, introducing an additional error of the same level as above.
-	 * 
+	 *
 	 * @param JD Julian Day of calculations in dynamical time.
 	 * @return Array with x, y, z, vx, vy, vz values. z and vz are supposed to be 0.0.
-	 * @deprecated Better results can be achieved by VSOP theory.
 	 */
 	public static double[] sun(double JD)
 	{
@@ -1496,7 +1495,7 @@ public class OrbitEphem
 	 * <P>
 	 * Typical icy objects in the outer Solar System will have an albedo of 0.5.
 	 * Rocky objects lies between 0.25 and 0.05.
-	 * 
+	 *
 	 * @param H Absolute magnitude.
 	 * @param albedo Albedo of the object.
 	 * @return Probable diameter in km.
@@ -1516,7 +1515,7 @@ public class OrbitEphem
 	 * from a tabulated table from the Minor Planet Center, called <I>Conversion
 	 * of Absolute Magnitude to Diameter</I>. The fit found is excelent in the
 	 * albedo interval of the table, 0.05 to 0.5.
-	 * 
+	 *
 	 * @param H Absolute magnitude.
 	 * @param diameter Diameter of the object in km.
 	 * @return Probable albedo.
@@ -1533,8 +1532,8 @@ public class OrbitEphem
 	 * semimajor axis. This method takes use of the mass of the body, so it
 	 * slightly improves accuracy respect to default value for a massless
 	 * object.
-	 * 
-	 * @param planet Planet ID constant, can be any planet or Pluto, or 
+	 *
+	 * @param planet Planet ID constant, can be any planet or Pluto, or
 	 * any other to assume a massless body.
 	 * @param a Semimajor axis.
 	 * @return The mean motion in radians per day.
@@ -1552,7 +1551,7 @@ public class OrbitEphem
 	 * semimajor axis and mass. The mass ob the body is considered, so it
 	 * slightly improves accuracy respect to default value for a massless
 	 * object.
-	 * 
+	 *
 	 * @param mass Mass of the body in kg.
 	 * @param a Semimajor axis.
 	 * @return The mean motion in radians per day.
@@ -1566,14 +1565,14 @@ public class OrbitEphem
 	}
 
 	/**
-	 * Solves an orbit from 3 observations, returning the approximate orbital elements of the body. 
-	 * This method is adequate for short time spands in the observations, so that perturbations 
-	 * are not very important, but not very short, since the orbit should be sampled enough. 
+	 * Solves an orbit from 3 observations, returning the approximate orbital elements of the body.
+	 * This method is adequate for short time spands in the observations, so that perturbations
+	 * are not very important, but not very short, since the orbit should be sampled enough.
 	 * Observations must be sorted by date.<P>
-	 * 
+	 *
 	 * This implementations follows <i>Astronomy on the Personal Computer</i>,
 	 * by Oliver Montenbruck.<P>
-	 * 
+	 *
 	 * To use this method adequately with topocentric observations the flag topocentric should
 	 * be enabled in each of the ephemeris input objects, otherwise the observations will be
 	 * considered as geocentric. In case of topocentric observations the input positions
@@ -1586,13 +1585,13 @@ public class OrbitEphem
 	 * correct distances. The new returned orbital elements will be more accurate, which means
 	 * they should return a lower value of the rms (set as the object name field in the returned
 	 * elements).
-	 * 
-	 * @param loc Object's apparent position (RA, DEC, and distance) for the three different 
+	 *
+	 * @param loc Object's apparent position (RA, DEC, and distance) for the three different
 	 * observations.
 	 * @param time Time objects for the observations.
 	 * @param obs Observer positions in each observation.
 	 * @param eph Ephemeris objects for each observation.
-	 * @return Orbital element set. The name of the body in the orbit object is set to the rms 
+	 * @return Orbital element set. The name of the body in the orbit object is set to the rms
 	 * of the fit in radians.
 	 * @throws JPARSECException If no convergence is found.
 	 */
@@ -1601,7 +1600,7 @@ public class OrbitEphem
 	{
 		if (loc.length != time.length || loc.length != obs.length || time.length != obs.length || loc.length != 3)
 			throw new JPARSECException("Please enter 3 observations.");
-		
+
 		// Pass to mean ecliptic J2000
 		LocationElement nloc[] = new LocationElement[loc.length];
 		double earth[][] = new double[loc.length][3];
@@ -1609,21 +1608,21 @@ public class OrbitEphem
 		EphemerisElement neph[] = new EphemerisElement[loc.length];
 		for (int i=0; i<loc.length; i++) {
 			nloc[i] = Ephem.toMeanEquatorialJ2000(loc[i], time[i], obs[i], eph[i]);
-			
+
 			double JD0 = TimeScale.getJD(time[i], obs[i], eph[i], SCALE.BARYCENTRIC_DYNAMICAL_TIME), JD = Constant.J2000;
 			if (jdPrev != -1 && jdPrev >= JD0) throw new JPARSECException("Input observations must be sorted by date.");
-			jdPrev = JD0;			
+			jdPrev = JD0;
 			nloc[i] = LocationElement.parseRectangularCoordinates(Ephem.equatorialToEcliptic(nloc[i].getRectangularCoordinates(), JD, eph[i]));
 
 			earth[i] = PlanetEphem.getHeliocentricEclipticPositionJ2000(JD0, TARGET.EARTH);
-			
+
 			neph[i] = eph[i].clone();
 			neph[i].algorithm = ALGORITHM.ORBIT;
 			neph[i].targetBody = TARGET.Asteroid;
 			neph[i].correctForEOP = false;
-			neph[i].correctForPolarMotion = false;			
+			neph[i].correctForPolarMotion = false;
 		}
-		
+
 		// Initial approximations of n1 and n3
 		double jd0[] = new double[] {
 				TimeScale.getJD(time[0], obs[0], eph[0], SCALE.BARYCENTRIC_DYNAMICAL_TIME),
@@ -1632,16 +1631,16 @@ public class OrbitEphem
 		};
 		if (jd0[0] > jd0[1] || jd0[0] > jd0[2] || jd0[1] > jd0[2])
 			throw new JPARSECException("Observations not sorted by date.");
-		
+
 		// Uncomment to use the test by Montenbruck, page 251
 		// jd0 = new double[] {2380570.51, 2380704.42, 2380830.35};
-		
-		double n[] = new double[] { 
+
+		double n[] = new double[] {
 				(jd0[2]-jd0[1]) / (jd0[2]-jd0[0]),
 				-1.0,
 				(jd0[1]-jd0[0]) / (jd0[2]-jd0[0])
 		};
-		
+
 		// Matrix d and its determinant
 		double rsun[][] = earth.clone(), e[][] = new double[3][3], rpl[][] = new double[3][3];
 		double dd[][] = new double[3][3];
@@ -1650,7 +1649,7 @@ public class OrbitEphem
 			rsun[i][1] = -rsun[i][1];
 			rsun[i][2] = -rsun[i][2];
 			e[i] = nloc[i].getRectangularCoordinates();
-			
+
 			// Uncomment to use the test by Montenbruck, page 251
 			/*
 			rsun[i] = DataSet.getSubArray(OrbitEphem.sun(jd0[i]), 0, 2);
@@ -1661,7 +1660,7 @@ public class OrbitEphem
 			//System.out.println("sun lon "+lon);
 			*/
 		}
-		
+
 		double di[] = Functions.crossProduct(e[1], e[2]);
 		for (int i=0; i<3; i++) {
 			dd[0][i] = Functions.scalarProduct(di, rsun[i]);
@@ -1675,12 +1674,12 @@ public class OrbitEphem
 			dd[2][i] = Functions.scalarProduct(di, rsun[i]);
 		}
 		double det = Functions.scalarProduct(e[2], di);
-		
+
 		// Iterate until distance rho[1] does not change any more
 		double rho[] = new double[3], eta[] = new double[3], jd[] = new double[3];
 		rho[1] = 0;
 		double eps_rho = 1E-8, rhoold = 0;
-		
+
 		do {
 			rhoold = rho[1];
 
@@ -1692,7 +1691,7 @@ public class OrbitEphem
 			}
 			// Uncomment to use the test by Montenbruck, page 251
 			// System.out.println(rho[0]+"/"+rho[1]+"/"+rho[2]);
-			
+
 			// Light time correction and calculate time differences
 			tau[0] = Constant.EARTH_MEAN_ORBIT_RATE * (jd[2] - jd[1]);
 			tau[1] = Constant.EARTH_MEAN_ORBIT_RATE * (jd[2] - jd[0]);
@@ -1703,8 +1702,8 @@ public class OrbitEphem
 				for (int s=0; s<3; s++) {
 					rpl[i][s] = rho[i] * e[i][s] - rsun[i][s];
 				}
-			}		
-			
+			}
+
 			// Sector/triangle ratios
 			eta[0] = eta(rpl[1], rpl[2], tau[0]);
 			eta[1] = eta(rpl[0], rpl[2], tau[1]);
@@ -1714,7 +1713,7 @@ public class OrbitEphem
 			n[0] = (tau[0] / eta[0]) / (tau[1] / eta[1]);
 			n[2] = (tau[2] / eta[2]) / (tau[1] / eta[1]);
 		} while(Math.abs(rho[1] - rhoold) >= eps_rho);
-		
+
 		OrbitalElement orbit = obtainOrbitalElementsFromTwoPosition(jd[0], jd[2], rpl[0], rpl[2]);
 		EphemerisElement ephCopy[] = new EphemerisElement[] {eph[0].clone(), eph[1].clone(), eph[2].clone()};
 		orbit.name = "dummy";
@@ -1759,26 +1758,26 @@ public class OrbitEphem
 		if (inc == 0) {
 			u = Math.atan2(ra[1], ra[0]);
 		} else {
-			u = Math.atan2(e0[0] * r[1] - e0[1] * r[0], -ea[0] * r[1] + ea[1] * r[0]);			
+			u = Math.atan2(e0[0] * r[1] - e0[1] * r[0], -ea[0] * r[1] + ea[1] * r[0]);
 		}
-		
+
 		// Semilatus rectum p
 		double tau = Constant.EARTH_MEAN_ORBIT_RATE * Math.abs(jdb - jda);
 		double eta = eta(ra, rb, tau);
 		double p = sa * s0 * eta / tau;
 		p *= p;
-		
+
 		// Eccentricity, true anomaly, and perihelion longitude
 		double cos_dny = fac / sb, sin_dny = s0 / sb;
 		double ecos_ny = p / sa - 1.0, esin_ny = (ecos_ny * cos_dny - (p / sb - 1.0)) / sin_dny;
 		loc = LocationElement.parseRectangularCoordinates(ecos_ny, esin_ny, 0.0);
 		double ecc = loc.getRadius(), ny = loc.getLongitude();
 		double aop = Functions.normalizeRadians(u - ny);
-		
+
 		// Perihelion distance, semimajor axis, and mean daily motion
 		double q = p / (1.0 + ecc), ax = q / (1.0 - ecc);
 		double n = Constant.EARTH_MEAN_ORBIT_RATE / Math.sqrt(Math.abs(ax * ax * ax));
-		
+
 		// Mean anomaly and perihelion time
 		double e, m;
 		if (ecc < 1.0) {
@@ -1794,7 +1793,7 @@ public class OrbitEphem
 		orbit.meanMotion = n;
 		return orbit;
 	}
-	
+
 	// sector/triangle ratio from two positions and time difference
 	// See Montenbruck's Astronomy on the Personal Computer, page 232
 	private static Double eta(double ra[], double rb[], double tau) throws JPARSECException {
@@ -1803,12 +1802,12 @@ public class OrbitEphem
 		double m = tau * tau / (FastMath.pow(kappa, 3));
 		double l = (sa + sb) / (2.0 * kappa) - 0.5;
 		double eta_min = Math.sqrt(m / (l + 1.0));
-		
+
 		// Hansen approximation
 		double eta2 = (12.0 + 10.0 * Math.sqrt(1.0 + (44.0 / 9.0) * m / (l + 5.0 / 6.0))) / 22.0;
 		double eta1 = eta2 + 0.1, f1 = F(eta1, m, l), f2 = F(eta2, m, l);
 		int i = 0, maxit = 30;
-		
+
 		// Secant method
 		double delta = 1.0E-9;
 		while(Math.abs(f2 - f1) > delta && i < maxit) {
@@ -1825,7 +1824,7 @@ public class OrbitEphem
 		if (i == maxit) throw new JPARSECException("No convergence"); // No convergence
 		return eta2;
 	}
-	
+
 	// 1 - eta + (m / eta^2) * w ( m / eta^2 - 1)
 	private static double F(double eta, double m, double l) {
 		double eps = 1.0E-10;
@@ -1847,13 +1846,13 @@ public class OrbitEphem
 				double g = 2.0 * Math.log(Math.sqrt(-w) + Math.sqrt(1.0 - w));
 				double e = Math.exp(g), s = 0.5 * (e - 1.0 / e);
 				e *= e;
-				ww = (0.5 * (e - 1.0 / e) - 2.0 * g) / (s * s * s);				
+				ww = (0.5 * (e - 1.0 / e) - 2.0 * g) / (s * s * s);
 			}
 		}
 		return 1.0 - eta + (w + l) * ww;
 	}
-		
-	private static double getPositionError(LocationElement loc[], TimeElement time[], ObserverElement obs[], EphemerisElement eph[]) 
+
+	private static double getPositionError(LocationElement loc[], TimeElement time[], ObserverElement obs[], EphemerisElement eph[])
 			throws JPARSECException {
 		double rms = 0;
 		for (int i = 0; i< loc.length; i++) {
@@ -1864,7 +1863,7 @@ public class OrbitEphem
 		rms = Math.sqrt(rms / loc.length);
 		return rms;
 	}
-	
+
 	/**
 	 * Obtain a set of orbital elements knowing the position and velocity
 	 * vectors in certain instant, according to the classical theory of the two
@@ -1872,7 +1871,7 @@ public class OrbitEphem
 	 * <P>
 	 * For reference see Practical Ephemeris Calculations, by Oliver
 	 * Montenbruck, chapter 3.
-	 * 
+	 *
 	 * @param pos Geometric heliocentric position vector in ecliptic coordinates, in AU.
 	 * @param v Heliocentric velocity vector in ecliptic coordinates, in AU /
 	 *        day.

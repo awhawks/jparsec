@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.time.calendar;
 
 import java.io.Serializable;
@@ -31,13 +31,13 @@ import jparsec.observer.CityElement;
  * The lunar calendar used by Moslems. Days begin at sunset.
  * <P>
  * See Calendrical Calculations for reference.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
 public class Islamic implements Serializable
 {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * The year.
@@ -86,7 +86,7 @@ public class Islamic implements Serializable
 
 	/**
 	 * Julian day constructor.
-	 * 
+	 *
 	 * @param jd Julian day.
 	 */
 	public Islamic(int jd)
@@ -96,7 +96,7 @@ public class Islamic implements Serializable
 
 	/**
 	 * Explicit constructor.
-	 * 
+	 *
 	 * @param y Year.
 	 * @param m Month.
 	 * @param d Day.
@@ -110,7 +110,7 @@ public class Islamic implements Serializable
 
 	/**
 	 * To fixed date.
-	 * 
+	 *
 	 * @param y Year.
 	 * @param m Month.
 	 * @param d Day.
@@ -124,7 +124,7 @@ public class Islamic implements Serializable
 
 	/**
 	 * To fixed date.
-	 * 
+	 *
 	 * @return Fixed date.
 	 */
 	public long toFixed()
@@ -134,7 +134,7 @@ public class Islamic implements Serializable
 
 	/**
 	 * Sets the date from a fixed day.
-	 * 
+	 *
 	 * @param l Fixed date.
 	 */
 	public void fromFixed(long l)
@@ -147,7 +147,7 @@ public class Islamic implements Serializable
 
 	/**
 	 * To know if the year is a leap one.
-	 * 
+	 *
 	 * @param l Fixed day.
 	 * @return True if it is a leap year.
 	 */
@@ -158,7 +158,7 @@ public class Islamic implements Serializable
 
 	/**
 	 * Transforms an Islamic date into a Julian day
-	 * 
+	 *
 	 * @param year Year.
 	 * @param month Month.
 	 * @param day Day.
@@ -171,7 +171,7 @@ public class Islamic implements Serializable
 
 	/**
 	 * Transforms an Islamic date into a Julian day
-	 * 
+	 *
 	 * @return Julian day.
 	 */
 	public int toJulianDay()
@@ -181,7 +181,7 @@ public class Islamic implements Serializable
 
 	/**
 	 * Sets an Islamic date with a given Julian day
-	 * 
+	 *
 	 * @param jd Julian day.
 	 */
 	public void fromJulianDay(int jd)

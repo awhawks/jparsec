@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.astrophysics;
 
 import jparsec.graph.DataSet;
@@ -61,11 +61,11 @@ public class SingleDish {
 	 * Telescope ID constant.
 	 */
 	private TELESCOPE id;
-	
+
 	/**
 	 * The set of telescopes.
 	 */
-	public static enum TELESCOPE {
+	public enum TELESCOPE {
 		/** ID constant for IRAM 30m. */
 		IRAM30m,
 		/** ID constant for JCMT. */
@@ -77,9 +77,9 @@ public class SingleDish {
 		/** ID constant for APEX. */
 		APEX
 	};
-	
+
 	private String data[];
-	
+
 	/**
 	 * Constructor for a given telescope.
 	 * @param id The telescope ID constant.
@@ -93,7 +93,7 @@ public class SingleDish {
 		this.tau = 0.0;
 		this.elev = 0.0;
 	}
-	
+
 	/**
 	 * Sets the telescope data as the content of
 	 * a file in the CASSIS software format.
@@ -103,7 +103,7 @@ public class SingleDish {
 	{
 		this.data = data;
 	}
-	
+
 	private void readData()
 	throws JPARSECException {
 		String path = FileIO.DATA_TELESCOPES_DIRECTORY;
@@ -130,11 +130,11 @@ public class SingleDish {
 		this.data = DataSet.arrayListToStringArray(ReadFile.readResource(path+file));
 		this.diameter = Double.parseDouble(data[1]);
 	}
-	
+
 	/**
 	 * Returns the K to Jy transform coefficient in antenna temperature.
 	 * Antenna diameter, source elevation, opacity, and aperture efficiency must be defined.
-	 * @param freq Frequency in GHz. 
+	 * @param freq Frequency in GHz.
 	 * @return The K to Jy transform coefficient.
 	 */
 	public double getJyKInTa(double freq)
@@ -144,14 +144,14 @@ public class SingleDish {
 		double Tap = 1.0 * Math.exp(-tau*A);
 		double Ageom = Math.PI * Math.pow(diameter * 100.0 / 2.0, 2.0);
 		double Aeff = aperEff * Ageom;
-		double JyKInTa = (2.0 * CGSConstant.BOLTZMANN_CONSTANT * Tap / Aeff) * Constant.ERG_S_CM2_HZ_TO_JY; 
+		double JyKInTa = (2.0 * CGSConstant.BOLTZMANN_CONSTANT * Tap / Aeff) * Constant.ERG_S_CM2_HZ_TO_JY;
 
 		return JyKInTa;
 	}
 
 	/**
 	 * Returns the K to Jy transform coefficient in main beam temperature.
-	 * @param freq Frequency in GHz. 
+	 * @param freq Frequency in GHz.
 	 * @return The K to Jy transform coefficient.
 	 * @throws JPARSECException If an error occurs.
 	 */
@@ -167,7 +167,7 @@ public class SingleDish {
 	 * Returns the beam efficiency for a given frequency. This factor (beff)
 	 * can be used to transform emission given in antenna temperature (Ta)
 	 * to main beam temperature (Tmb) with the formula Tmb = Ta / beff.
-	 * @param freq Frequency in GHz. 
+	 * @param freq Frequency in GHz.
 	 * @return The beam efficiency.
 	 * @throws JPARSECException If an error occurs.
 	 */
@@ -207,7 +207,7 @@ public class SingleDish {
 	{
 		return Tmb * (fwhmSource*fwhmSource + fwhmBeam*fwhmBeam) / (fwhmSource * fwhmSource);
 	}
-	
+
 	/**
 	 * Returns the beam size.
 	 * @param freq Frequency in GHz.

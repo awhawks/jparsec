@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */	
+ */
 package jparsec.astrophysics;
 
 import java.awt.Color;
@@ -56,7 +56,7 @@ public class HRDiagram {
 	private double dist;
 	private HRDiagram fittedHR = null;
 	private MeasureElement turnOff[] = null;
-	
+
 	/**
 	 * Constructor for an HR diagram using experimental data.
 	 * @param T The set of effective temperatures.
@@ -69,7 +69,7 @@ public class HRDiagram {
 		this.Mv = m.clone();
 		this.source = source;
 	}
-	
+
 	/**
 	 * Creates a synthetic HR diagram with absolute magnitude as
 	 * function of effective temperature.
@@ -94,7 +94,7 @@ public class HRDiagram {
 		}
 		T = new double[n];
 		Mv = new double[n];
-		
+
 		Star.LUMINOSITY_CLASS lclass = LUMINOSITY_CLASS.MAIN_SEQUENCE_V;
 		for (int i=0; i<n; i++) {
 			if (i < np) {
@@ -127,13 +127,13 @@ public class HRDiagram {
 		if (source != null) title = "HR diagram of " + source;
 		int ss = ChartSeriesElement.getShapeSize();
 		ChartSeriesElement.setShapeSize(1);
-		ChartSeriesElement s = new ChartSeriesElement(T, Mv, null, null, source == null ? title:source, true, Color.BLACK, 
+		ChartSeriesElement s = new ChartSeriesElement(T, Mv, null, null, source == null ? title:source, true, Color.BLACK,
 				ChartSeriesElement.SHAPE_CIRCLE, ChartSeriesElement.REGRESSION.NONE);
 		//s.shape = ChartSeriesElement.SHAPE_EMPTY;
 		//s.showShapes = false;
 		ChartSeriesElement.setShapeSize(2);
 		if (fittedHR == null) {
-			ChartElement chart = new ChartElement(new ChartSeriesElement[] {s}, ChartElement.TYPE.XY_CHART, ChartElement.SUBTYPE.XY_SCATTER, 
+			ChartElement chart = new ChartElement(new ChartSeriesElement[] {s}, ChartElement.TYPE.XY_CHART, ChartElement.SUBTYPE.XY_SCATTER,
 					title, "Effective temperature (K)", source == null ? "Absolute visual magnitude" : "Apparent visual magnitude", false, 800, 600);
 			if (turnOff != null && turnOff.length == 2 && turnOff[0] != null && turnOff[1] != null) s.pointers = new String[] {"("+(turnOff[0].getValue()+1500)+", "+turnOff[1].getValue()+") @LEFT@REDTurn-off point at ("+turnOff[0].toString(true)+", "+turnOff[1].toString(true)+")"};
 			if (invert) chart.xAxisInverted = chart.yAxisInverted = true;
@@ -141,18 +141,18 @@ public class HRDiagram {
 			return new CreateChart(chart);
 		}
 		ChartSeriesElement s2 = fittedHR.getChart(invert).getSeries(0);
-		s2.color = Color.BLUE;		
+		s2.color = Color.BLUE;
 		s2.shape = ChartSeriesElement.SHAPE_CIRCLE;
 		//s2.showShapes = false;
 		ChartSeriesElement.setShapeSize(ss);
-		
-		ChartElement chart = new ChartElement(new ChartSeriesElement[] {s, s2}, ChartElement.TYPE.XY_CHART, ChartElement.SUBTYPE.XY_SCATTER, 
+
+		ChartElement chart = new ChartElement(new ChartSeriesElement[] {s, s2}, ChartElement.TYPE.XY_CHART, ChartElement.SUBTYPE.XY_SCATTER,
 				title, "Effective temperature (K)", source == null ? "Absolute visual magnitude" : "Apparent visual magnitude", false, 800, 600);
 		if (turnOff != null && turnOff.length == 2 && turnOff[0] != null && turnOff[1] != null) s.pointers = new String[] {"("+(turnOff[0].getValue()+1500)+", "+turnOff[1].getValue()+") @LEFT@REDTurn-off point at ("+turnOff[0].toString(true)+", "+turnOff[1].toString(true)+")"};
 		if (invert) chart.xAxisInverted = chart.yAxisInverted = true;
 		return new CreateChart(chart);
 	}
-	
+
 	/**
 	 * Fits this HR diagram with another one, setting the value of the distance.
 	 * @param hr The HR diagram to fit to.
@@ -174,19 +174,19 @@ public class HRDiagram {
 		double ymin = DataSet.getMinimumValue(Mv);
 		double ymax1 = DataSet.getMaximumValue(hr.Mv);
 		double ymin1 = DataSet.getMinimumValue(hr.Mv);
-		
+
 		double dymax = ymax1 - ymax, dymin = ymin1 - ymin;
 		if (dymax < dymin) {
 			double tmp = dymax;
 			dymax = dymin;
 			dymin = tmp;
 		}
-		
+
 		double minDisp = -1, bestdy = -1;
 		for (double dy = dymin; dy <= dymax; dy = dy + tolerance) {
 			DoubleVector dv = new DoubleVector(Mv);
-			double newM[] = dv.plus(dy).getArray(); 
-			
+			double newM[] = dv.plus(dy).getArray();
+
 			double disp = getDispersion(hr, T, newM);
 			if (disp < minDisp || minDisp == -1) {
 				minDisp = disp;
@@ -197,11 +197,11 @@ public class HRDiagram {
 			dist = hr.dist -10 + Star.distance(0, bestdy);
 			fittedHR = hr.clone();
 			DoubleVector dv = new DoubleVector(fittedHR.Mv);
-			double newM[] = dv.plus(-bestdy).getArray(); 
+			double newM[] = dv.plus(-bestdy).getArray();
 			fittedHR.Mv = newM;
 		}
 	}
-	
+
 	private double getDispersion(HRDiagram hr, double newT[], double[] newM) {
 		boolean used[] = new boolean[hr.T.length];
 		double totalDisp = 0;
@@ -218,12 +218,12 @@ public class HRDiagram {
 			}
 			if (closest == -1) break;
 			used[closest] = true;
-			
+
 			totalDisp += mind;
 		}
 		return totalDisp;
 	}
-	
+
 	/**
 	 * Returns the distance to the source.
 	 * @return Distance in pc.
@@ -231,13 +231,13 @@ public class HRDiagram {
 	public double getDistance() {
 		return dist;
 	}
-	
+
 	/**
 	 * Compute the turnOff point of the cluster.
 	 * @param minT Minimum temperature of the region with the main sequence.
 	 * @param maxT Maximum temperature of the region with the main sequence.
 	 * @param minMag Minimum value of the magnitude of the region with the main sequence.
-	 * @param maxMag Maximum value of the magnitude of the region within the main sequence. 
+	 * @param maxMag Maximum value of the magnitude of the region within the main sequence.
 	 * @param tolerance Tolerance or desired error of the fitting in magnitudes.
 	 * @throws JPARSECException If an error occurs.
 	 */
@@ -248,7 +248,7 @@ public class HRDiagram {
 		LinearFit lf = new LinearFit(data.get(0), data.get(1));
 		turnOff = lf.getMaximumCorrelation(MAX_CORRELATION.TAKE_POINTS_WITH_Y_GREATER, minMag, maxMag, tolerance);
 	}
-	
+
 	/**
 	 * Returns the turn-off point magnitude.
 	 * @return Turn-off point.
@@ -266,7 +266,7 @@ public class HRDiagram {
 	}
 
 	/**
-	 * Returns true if this instance is equal to another.
+	 * Returns if this instance is equals to another.
 	 */
 	@Override
 	public boolean equals(Object o) {
@@ -301,7 +301,6 @@ public class HRDiagram {
 	/**
 	 * Clones this instance.
 	 */
-	@Override
 	public HRDiagram clone() {
 		HRDiagram hr = new HRDiagram(T.clone(), Mv.clone(), source);
 		hr.dist = dist;
@@ -309,10 +308,10 @@ public class HRDiagram {
 		if (fittedHR != null) hr.fittedHR = this.fittedHR.clone();
 		return hr;
 	}
-	
+
 	/**
 	 * Draws the different branches of the HR diagram to a Graphics2D device. The Graphics
-	 * instance should be previosuly 'prepared' using the method {@linkplain CreateChart#prepareGraphics2D(Graphics2D, boolean)}. 
+	 * instance should be previosuly 'prepared' using the method {@linkplain CreateChart#prepareGraphics2D(Graphics2D, boolean)}.
 	 * @param g A 'prepared' Graphics2D instance of an image where the HR diagram was previosuly drawn using the method
 	 * of this instance.
 	 * @param mainSequence Color for the main sequence branch, or null to skip drawing it.
@@ -372,7 +371,7 @@ public class HRDiagram {
 			g.setColor(mainSequence);
 			g.fill(path);
 		}
-		
+
 		if (giant != null) {
 			path = new GeneralPath();
 			path.moveTo(6879.3047, 1.908919);
@@ -392,7 +391,7 @@ public class HRDiagram {
 			g.setColor(giant);
 			g.fill(path);
 		}
-		
+
 		if (sgiant != null) {
 			path = new GeneralPath();
 			path.moveTo(2750.0176, -5.6377497);

@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.time.calendar;
 
 import java.io.Serializable;
@@ -26,13 +26,13 @@ import java.io.Serializable;
 /**
  * Implements the Old Hindu Solar calendar. See Calendrical Calculations for
  * reference.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
 public class HinduOldSolar implements Serializable
 {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * The year.
@@ -89,7 +89,7 @@ public class HinduOldSolar implements Serializable
 
 	/**
 	 * Julian day constructor.
-	 * 
+	 *
 	 * @param jd Julian day.
 	 */
 	public HinduOldSolar(int jd)
@@ -99,7 +99,7 @@ public class HinduOldSolar implements Serializable
 
 	/**
 	 * Explicit constructor.
-	 * 
+	 *
 	 * @param y Year.
 	 * @param m Month.
 	 * @param d Day.
@@ -113,7 +113,7 @@ public class HinduOldSolar implements Serializable
 
 	/**
 	 * To fixed day.
-	 * 
+	 *
 	 * @param year Year.
 	 * @param month Month.
 	 * @param day Day.
@@ -127,7 +127,7 @@ public class HinduOldSolar implements Serializable
 
 	/**
 	 * To fixed day.
-	 * 
+	 *
 	 * @return Fixed date.
 	 */
 	public long toFixed()
@@ -137,7 +137,7 @@ public class HinduOldSolar implements Serializable
 
 	/**
 	 * Sets the date from fixed date.
-	 * 
+	 *
 	 * @param l Fixed day.
 	 */
 	public void fromFixed(long l)
@@ -150,7 +150,7 @@ public class HinduOldSolar implements Serializable
 
 	/**
 	 * Gets days elapsed since epoch.
-	 * 
+	 *
 	 * @param l Fixed day.
 	 * @return Elapsed days.
 	 */
@@ -161,7 +161,7 @@ public class HinduOldSolar implements Serializable
 
 	/**
 	 * Gets days elapsed since epoch.
-	 * 
+	 *
 	 * @param d Fixed day.
 	 * @return Elapsed days.
 	 */
@@ -172,7 +172,7 @@ public class HinduOldSolar implements Serializable
 
 	/**
 	 * Gets the jovian year.
-	 * 
+	 *
 	 * @param l Fixed day.
 	 * @return Jovian year.
 	 */
@@ -183,7 +183,7 @@ public class HinduOldSolar implements Serializable
 
 	/**
 	 * Transforms a Hindu date into a Julian day.
-	 * 
+	 *
 	 * @param year Year.
 	 * @param month Month.
 	 * @param day Day.
@@ -196,7 +196,7 @@ public class HinduOldSolar implements Serializable
 
 	/**
 	 * Transforms a Hindu date into a Julian day.
-	 * 
+	 *
 	 * @return Julian day.
 	 */
 	public int toJulianDay()
@@ -206,7 +206,7 @@ public class HinduOldSolar implements Serializable
 
 	/**
 	 * Sets a Hindu date with a given Julian day
-	 * 
+	 *
 	 * @param jd Julian day.
 	 */
 	public void fromJulianDay(int jd)

@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.graph.chartRendering.frame;
 
 import java.awt.BorderLayout;
@@ -57,7 +57,7 @@ import jparsec.util.Logger.LEVEL;
 /**
  * Support class to use Swing/AWT graph components for
  * planetary rendering. See also {@linkplain SkyChart} class.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  * @see SkyChart
@@ -72,7 +72,7 @@ public class PlanetaryRendering  implements Serializable
 
 	/**
 	 * Sample render constructor.
-	 * 
+	 *
 	 * @param time Time object.
 	 * @param obs Observer object.
 	 * @param eph Ephemeris object.
@@ -100,7 +100,7 @@ public class PlanetaryRendering  implements Serializable
 	{
 		this.showRendering(false);
 	}
-	
+
 	/**
 	 * To show the rendering.
 	 * @param undecorated True to show the Frame without decoration.
@@ -112,7 +112,7 @@ public class PlanetaryRendering  implements Serializable
 			frame = new Frame(t);
 		}
 		frame.setUndecorated(undecorated);
-		
+
 		frame.addWindowListener(new WindowAdapter()
 		{
 			public void windowClosing(WindowEvent evt)
@@ -131,7 +131,7 @@ public class PlanetaryRendering  implements Serializable
 
 		frame.setVisible(true);
 	}
-	
+
 	/**
 	 * Draws the current chart to a Graphics device.
 	 * @param g Graphics object.
@@ -172,7 +172,7 @@ public class PlanetaryRendering  implements Serializable
 	 * System III for giant planets (rotation of the magnetic field), so the
 	 * apparent rotation will not match that of the observed equatorial nor
 	 * tropical belts in these planets.
-	 * 
+	 *
 	 * @param GRS_lon Observed longitude in radians.
 	 * @param system System of coordinates of GRS_lon, 1, 2, or 3. Will be
 	 *        usually 2, since the Great Red Spot is in the tropical belt (1
@@ -203,7 +203,7 @@ public class PlanetaryRendering  implements Serializable
 	{
 		renderPlanet.getRenderPlanet().render.foreground = foreground.getRGB();
 	}
-	
+
 	/**
 	 * Returns the render panel.
 	 * @return The panel.
@@ -211,7 +211,7 @@ public class PlanetaryRendering  implements Serializable
 	public JComponent getPanel() {
 		return this.renderPlanet;
 	}
-	
+
 	/**
 	 * Returns render object.
 	 * @return Render object.
@@ -220,7 +220,7 @@ public class PlanetaryRendering  implements Serializable
 	{
 		return this.renderPlanet.getRenderPlanet();
 	}
-	
+
 	/**
 	 * Returns time object.
 	 * @return Time object.
@@ -284,8 +284,8 @@ public class PlanetaryRendering  implements Serializable
 class RenderPlanet extends JComponent
 {
 	private static final long serialVersionUID = 1L;
-	jparsec.graph.chartRendering.RenderPlanet rp; 
-	
+	jparsec.graph.chartRendering.RenderPlanet rp;
+
 	/**
 	 * The constructor.
 	 * @param time Time object.
@@ -299,7 +299,7 @@ class RenderPlanet extends JComponent
 		super.setDoubleBuffered(false);
 		rp = new jparsec.graph.chartRendering.RenderPlanet(time, obs, eph, render);
 	}
-	
+
 	/**
 	 * Paint the graph.
 	 */
@@ -316,7 +316,7 @@ class RenderPlanet extends JComponent
 
 	/**
 	 * Renderize a planet.
-	 * 
+	 *
 	 * @param g Graphics object.
 	 * @throws JPARSECException Thrown if the calculation fails.
 	 */
@@ -341,16 +341,16 @@ class RenderPlanet extends JComponent
 	public jparsec.graph.chartRendering.RenderPlanet getRenderPlanet() {
 		return rp;
 	}
-	
+
 	/**
 	 * The buffer image
 	 */
-	public Image buffer = null;	
+	public Image buffer = null;
 	private boolean doRedraw = true;
-	
+
 	/**
 	 * Paints the canvas using double buffering.
-	 * 
+	 *
 	 * @see #offscreenPaint
 	 */
 	public final void paintComponent(Graphics g)
@@ -376,7 +376,7 @@ class RenderPlanet extends JComponent
 			offscreenPaint(graphics);
 		}
 		g.drawImage(buffer, insets.left, insets.top, null);
-		
+
 		// Fix component's background in case its size is greater than the rendering
 		Color c = g.getColor();
 		g.setColor(new Color(rp.render.background));
@@ -412,7 +412,7 @@ class RenderPlanet extends JComponent
 
 	/**
 	 * Double buffering is always enabled.
-	 * 
+	 *
 	 * @return true.
 	 */
 	public final boolean isDoubleBuffered()

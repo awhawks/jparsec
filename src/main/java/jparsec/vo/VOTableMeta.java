@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,21 +18,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.vo;
 
 import java.io.Serializable;
 
 /**
  * A class to set metadata for VO tables.<P>
- * 
+ *
  * Metadata are atributes to resources, tables, or fields in the VO Table.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
 public class VOTableMeta implements Serializable {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * ID constant for float datatype.
@@ -54,7 +54,7 @@ public class VOTableMeta implements Serializable {
 	 * ID constant for double datatype.
 	 */
 	public static final String DATATYPE_DOUBLE = "double";
-	
+
 	/**
 	 * ID constant for magnitude unit.
 	 */
@@ -93,7 +93,7 @@ public class VOTableMeta implements Serializable {
 	public static final String UNIT_S = "s";
 
 	/**
-	 * Name. 
+	 * Name.
 	 */
 	public String name;
 	/**
@@ -146,7 +146,7 @@ public class VOTableMeta implements Serializable {
 	}
 	private VOTableMeta() {}
 	/**
-	 * Constructor adequate for fields. 
+	 * Constructor adequate for fields.
 	 * @param name Name.
 	 * @param id ID.
 	 * @param description Description.
@@ -170,10 +170,11 @@ public class VOTableMeta implements Serializable {
 	}
 
 	/**
-	 * Returns true if the input object is equal to this instance.
+	 * Returns true if the input object is equals to this instance.
 	 */
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals (Object o)
+	{
 		if (this == o) return true;
 		if (!(o instanceof VOTableMeta)) return false;
 
@@ -191,7 +192,7 @@ public class VOTableMeta implements Serializable {
 
 		return !(ref != null ? !ref.equals(that.ref) : that.ref != null);
 	}
-
+	
 	@Override
 	public int hashCode() {
 		int result = name != null ? name.hashCode() : 0;
@@ -206,7 +207,7 @@ public class VOTableMeta implements Serializable {
 		result = 31 * result + (ref != null ? ref.hashCode() : 0);
 		return result;
 	}
-
+	
 	/**
 	 * Clones this instance.
 	 */

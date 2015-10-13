@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.astrophysics;
 
 import jparsec.math.Constant;
@@ -26,7 +26,7 @@ import jparsec.util.JPARSECException;
 
 /**
  * A class to perform some useful calculations on IRAM instruments.
- * @author T. Alonso Albi - OAN (Spain) 
+ * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
 public class IRAMPdBI {
@@ -56,7 +56,7 @@ public class IRAMPdBI {
 	 * Efficiency factor at 3 mm.
 	 */
 	public static double eta_3mm = 0.9;
-	
+
 	/**
 	 * System temperature below 110 GHz.
 	 */
@@ -128,7 +128,7 @@ public class IRAMPdBI {
 	 * Number of configurations.
 	 */
 	public int Nc;
-	
+
 	/**
 	 * Constructor.
 	 * @param wave The wavelength.
@@ -164,7 +164,7 @@ public class IRAMPdBI {
 			eta = IRAMPdBI.eta_3mm;
 		}
 	}
-	
+
 	/**
 	 * Returns the RMS in the PdBI.
 	 * @return The rms value.

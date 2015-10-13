@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.graph;
 
 import java.awt.Color;
@@ -82,7 +82,7 @@ import visad.util.VisADSlider;
 /**
  * A VISAD chart element consisting on a grid chart, a VISAD cube, and the control panel, to show
  * in detail a 3d cube of data.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -228,23 +228,23 @@ public class VISADChart implements Serializable, MouseMotionListener, MouseListe
 			fluxUnit = lmvObs.fluxUnit.trim();
 			VISADCubeElement cube = new VISADCubeElement(lmvObs.getCubeData(),
 					  new float[] {x0, xf, y0, yf, v0, vf},
-					  Translate.translate(904), //"OFFSET_RA", 
+					  Translate.translate(904), //"OFFSET_RA",
 					  VISADCubeElement.UNIT.ARCSEC,
-					  Translate.translate(905), // "OFFSET_DEC", 
+					  Translate.translate(905), // "OFFSET_DEC",
 					  VISADCubeElement.UNIT.ARCSEC,
-					  Translate.translate(906), // "VELOCITY", 
+					  Translate.translate(906), // "VELOCITY",
 					  VISADCubeElement.UNIT.KILOMETER_PER_SECOND,
-					  Translate.translate(907), //"FLUX", 
+					  Translate.translate(907), //"FLUX",
 					  VISADCubeElement.UNIT.KELVIN); // Should be Jy/beam, but VISAD don't accept this unit. Anyway it is not shown ...
 			if (reduced) cube = new VISADCubeElement(lmvObs.getCubeData(),
 					  new float[] {x0, xf, y0, yf, v0, vf},
-					  Translate.translate(904), // "RA", 
+					  Translate.translate(904), // "RA",
 					  VISADCubeElement.UNIT.ARCSEC,
-					  Translate.translate(905), // "DEC", 
+					  Translate.translate(905), // "DEC",
 					  VISADCubeElement.UNIT.ARCSEC,
-					  Translate.translate(908), // "VEL", 
+					  Translate.translate(908), // "VEL",
 					  VISADCubeElement.UNIT.KILOMETER_PER_SECOND,
-					  Translate.translate(907), // "FLUX", 
+					  Translate.translate(907), // "FLUX",
 					  VISADCubeElement.UNIT.KELVIN); // Should be Jy/beam, but VISAD don't accept this unit. Anyway it is not shown ...
 			if (ch != null) {
 				float valx[] = null, valy[] = null, valz[] = null;
@@ -278,11 +278,11 @@ public class VISADChart implements Serializable, MouseMotionListener, MouseListe
     		y0 = (float) (lmvObs.gety0() * Constant.RAD_TO_ARCSEC);
     		yf = (float) (lmvObs.getyf() * Constant.RAD_TO_ARCSEC);
 			GridChartElement chart = new GridChartElement("",
-					Translate.translate(909)+" (\")", // "RA offset (\")", 
-					Translate.translate(910)+ " (\")", // "DEC offset (\")", 
-					"", 
-					GridChartElement.COLOR_MODEL.BLUE_TO_RED, 
-					new double[] {x0, xf, y0, yf},  DataSet.toDoubleArray(data0), 
+					Translate.translate(909)+" (\")", // "RA offset (\")",
+					Translate.translate(910)+ " (\")", // "DEC offset (\")",
+					"",
+					GridChartElement.COLOR_MODEL.BLUE_TO_RED,
+					new double[] {x0, xf, y0, yf},  DataSet.toDoubleArray(data0),
 					null, 400);
 			chart.levelsOrientation = GridChartElement.WEDGE_ORIENTATION.HORIZONTAL_TOP;
 			chart.levelsBorderStyle = GridChartElement.WEDGE_BORDER.NO_BORDER;
@@ -297,7 +297,7 @@ public class VISADChart implements Serializable, MouseMotionListener, MouseListe
 	    	if (background != null && background.getAlpha() > 200) panel.setOpaque(true);
 			if (title != null) {
 				panel.setBorder(BorderFactory.createCompoundBorder(
-					BorderFactory.createTitledBorder(null, title, TitledBorder.LEFT, TitledBorder.TOP, 
+					BorderFactory.createTitledBorder(null, title, TitledBorder.LEFT, TitledBorder.TOP,
 							new Font("Dialog", Font.BOLD, 16), Color.BLACK),
 					BorderFactory.createEmptyBorder(borderSize,borderSize,borderSize,borderSize)));
 			}
@@ -326,7 +326,7 @@ public class VISADChart implements Serializable, MouseMotionListener, MouseListe
 				f.setBounds(X0*3+gWidth, Y0*3, gWidth, gHeight);
 				if (!fast) panel.add(f);
 			}
-			
+
 			controlPanel = new JPanel();
 			controlPanel.removeAll();
 			controlPanel.setLayout(null);
@@ -348,7 +348,7 @@ public class VISADChart implements Serializable, MouseMotionListener, MouseListe
 				js.setBackground(background);
 				js.setOpaque(false);
  				s.setBackground(background);
-				controlPanel.add(s); 
+				controlPanel.add(s);
 				if (rangeSliders == null) rangeSliders = createRangeSliders();
 				rangeSliders.setBounds(paramWidth/30, panelHeight/5, paramWidth*28/30, panelHeight*3/7);
 				rangeSliders.setBackground(background2);
@@ -361,7 +361,7 @@ public class VISADChart implements Serializable, MouseMotionListener, MouseListe
 				if (s1 >=0) contourList.setSelectedIndex(s1);
 				labelContour = new JLabel(Translate.translate(911)); // "Set Contours");
 				labelContour.setBounds(paramWidth*11/20, panelHeight*35/56, paramWidth*2/4, panelHeight/10);
-				controlPanel.add(labelContour);	
+				controlPanel.add(labelContour);
 				sp = new JScrollPane(contourList);
 				sp.setBounds(paramWidth/30, panelHeight*18/28, paramWidth/2-paramWidth*2/15, panelHeight/5);
 				sp.setOpaque(false);
@@ -376,7 +376,7 @@ public class VISADChart implements Serializable, MouseMotionListener, MouseListe
 				}
 				addContour.setBounds(paramWidth*2/5, panelHeight*83/112, paramWidth*2/7, panelHeight/10);
 				deleteContour.setBounds(paramWidth*69/100, panelHeight*83/112, paramWidth*2/7, panelHeight/10);
-				controlPanel.add(addContour);	
+				controlPanel.add(addContour);
 				controlPanel.add(deleteContour);
 				controlPanel.setForeground(background2);
 				integratedIntensity = new JCheckBox(Translate.translate(925)); // "Integrated");
@@ -390,7 +390,7 @@ public class VISADChart implements Serializable, MouseMotionListener, MouseListe
 				resetB = createResetButton();
 				resetB.setBounds(paramWidth/2-paramWidth/30, panelHeight*7/8, paramWidth/2, panelHeight/10);
 				controlPanel.add(resetB);
-				
+
 				panel.add(controlPanel);
 		        infoPanel = new JPanel();
 				infoPanel.removeAll();
@@ -424,7 +424,7 @@ public class VISADChart implements Serializable, MouseMotionListener, MouseListe
 		    		cy = Translate.translate(919); // "Grid y";
 		    	}
 		    	labels = new String[] {
-		    			equinox+cx, cy, 
+		    			equinox+cx, cy,
 		    			FileIO.addSpacesBeforeAString(Translate.translate(920), 14) // "     Intensity"
 		    	};
 		    	if (w < 800) {
@@ -480,14 +480,14 @@ public class VISADChart implements Serializable, MouseMotionListener, MouseListe
 			this.getComponent();
 			BufferedImage buf = new BufferedImage(w, h, type);
 			Graphics g = buf.createGraphics();
-			
+
 			// Retrieve the graphics context; this object is used to paint shapes
 	        Graphics2D g2d = (Graphics2D)g;
-	    
+
 	        // Enable antialiasing for shapes
 	        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 	                             RenderingHints.VALUE_ANTIALIAS_ON);
-	    
+
 	        // Enable antialiasing for text
 	        g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
 	                             RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
@@ -508,7 +508,7 @@ public class VISADChart implements Serializable, MouseMotionListener, MouseListe
 		panel.setSize(w, h);
 		return panel;
 	}
-	
+
 	/**
 	 * Returns x position, without scaling.
 	 * @return x.
@@ -576,7 +576,7 @@ public class VISADChart implements Serializable, MouseMotionListener, MouseListe
 	 */
 	public void mouseDragged(MouseEvent e) {
     	if (ch != null) {
-    		if (e.getSource().equals(ch.getVelSlider().getComponent(0))) { 
+    		if (e.getSource().equals(ch.getVelSlider().getComponent(0))) {
     			if (!integratedIntensity.isSelected()) updateChart(false, true, -1, -1);
     		}
     	}
@@ -591,11 +591,11 @@ public class VISADChart implements Serializable, MouseMotionListener, MouseListe
     	if (gridChartObs != null) {
 	    	if (e.getSource().equals(gridChartObs.getDisplay()) && mod == 0) {
 	    		int x = e.getX(), y = e.getY();
-	    		updatePosAndFluxObs(x, y, true); 
+	    		updatePosAndFluxObs(x, y, true);
 	    	}
     	}
-    	if (e.getSource() == integratedIntensity || e.getSource() == ch.getVelSlider() 
-    			|| e.getSource() == ch.getVelSlider().getComponent(0)) { 
+    	if (e.getSource() == integratedIntensity || e.getSource() == ch.getVelSlider()
+    			|| e.getSource() == ch.getVelSlider().getComponent(0)) {
     		panel.repaint();
     	}
 	}
@@ -623,7 +623,7 @@ public class VISADChart implements Serializable, MouseMotionListener, MouseListe
 	 */
 	public void mousePressed(MouseEvent e) {
     	if (ch != null) {
-    		if (e.getSource().equals(ch.getVelSlider().getComponent(0))) { 
+    		if (e.getSource().equals(ch.getVelSlider().getComponent(0))) {
     			updateChart(false, true, -1, -1);
     		}
     	}
@@ -646,7 +646,7 @@ public class VISADChart implements Serializable, MouseMotionListener, MouseListe
 			updateChart(true, true, -1, -1);
 			panel.validate();
 			panel.repaint();
-		}		
+		}
 	}
 
 	/**
@@ -669,9 +669,9 @@ public class VISADChart implements Serializable, MouseMotionListener, MouseListe
 	    		panel.repaint();
 	    	}
     	}
-	
+
 	}
-	
+
     private void updateChart(boolean anyWay, boolean paint, int x, int y)
     {
     	boolean doneObs = updateChartObs(anyWay, paint);
@@ -699,7 +699,7 @@ public class VISADChart implements Serializable, MouseMotionListener, MouseListe
 		    		float x0 = (float) (lmvObs.getx0() * Constant.RAD_TO_ARCSEC);
 		    		float xf = (float) (lmvObs.getxf() * Constant.RAD_TO_ARCSEC);
 		    		float y0 = (float) (lmvObs.gety0() * Constant.RAD_TO_ARCSEC);
-		    		float yf = (float) (lmvObs.getyf() * Constant.RAD_TO_ARCSEC);	    		
+		    		float yf = (float) (lmvObs.getyf() * Constant.RAD_TO_ARCSEC);
 		    		float data0[][] = lmvObs.getCubeData(plane0);
 		    		if (integratedIntensity.isSelected()) {
 			    		data0 = lmvObs.getCubeData(0);
@@ -732,16 +732,16 @@ public class VISADChart implements Serializable, MouseMotionListener, MouseListe
 		    			}
 		    		}
 					GridChartElement chart = new GridChartElement("",
-							Translate.translate(909)+" (\")", // "RA offset (\")", 
-							Translate.translate(910)+" (\")", // "DEC offset (\")", 
-							"", 
-							GridChartElement.COLOR_MODEL.BLUE_TO_RED, 
-							new double[] {x0, xf, y0, yf},  DataSet.toDoubleArray(data0), 
+							Translate.translate(909)+" (\")", // "RA offset (\")",
+							Translate.translate(910)+" (\")", // "DEC offset (\")",
+							"",
+							GridChartElement.COLOR_MODEL.BLUE_TO_RED,
+							new double[] {x0, xf, y0, yf},  DataSet.toDoubleArray(data0),
 							contour, 400);
 					chart.levelsOrientation = GridChartElement.WEDGE_ORIENTATION.HORIZONTAL_TOP;
 					chart.levelsBorderStyle = GridChartElement.WEDGE_BORDER.NO_BORDER;
 			        int paramWidth = 260;
-			        int panelHeight = h - Y0 * 5;			         
+			        int panelHeight = h - Y0 * 5;
 					int gWidth = ((w - paramWidth)/2 - X0*2);
 					if (gWidth < 250) {
 						gWidth = 250;
@@ -780,7 +780,7 @@ public class VISADChart implements Serializable, MouseMotionListener, MouseListe
 			double startY = gridChartObs.getDisplay().getRange().getYRange().start;
 			double endX = gridChartObs.getDisplay().getRange().getXRange().end;
 			double endY = gridChartObs.getDisplay().getRange().getYRange().end;
-			
+
 			if (startX > endX) {
 				double tmp = startX;
 				startX = endX;
@@ -791,7 +791,7 @@ public class VISADChart implements Serializable, MouseMotionListener, MouseListe
 				startY = endY;
 				endY = tmp;
 			}
-			
+
 			if (reCalc) {
 				physX = gridChartObs.getDisplay().getLayer("Layer 1").getXDtoP(x) - 0.1;    // 0 -> 5.27
 				physY = gridChartObs.getDisplay().getLayer("Layer 1").getYDtoP(y-2) - 0.6; // 0 -> 4.77
@@ -827,13 +827,13 @@ public class VISADChart implements Serializable, MouseMotionListener, MouseListe
         				posAndFlux[1].setText(Functions.formatAngle(loc.getLatitude(), 2));
         			} else {
         				posAndFlux[0].setText(""+(px+1));
-        				posAndFlux[1].setText(""+(py+1));        				
+        				posAndFlux[1].setText(""+(py+1));
         			}
     			} else {
 	    			if (coordType == 0) {
 	    				posAndFlux[0].setText(Functions.formatRA(loc.getLongitude(), 3));
 	    			} else {
-	    				posAndFlux[0].setText(Functions.formatDEC(loc.getLongitude(), 2));    				
+	    				posAndFlux[0].setText(Functions.formatDEC(loc.getLongitude(), 2));
 	    			}
 	    			posAndFlux[1].setText(Functions.formatDEC(loc.getLatitude(), 2));
     			}
@@ -879,11 +879,11 @@ public class VISADChart implements Serializable, MouseMotionListener, MouseListe
 						int pyf= gridChartObs.getDisplay().getLayer("Layer 1").getYPtoD(pyb+0.6); // 0 -> 4.77
 						g.drawLine(pxf, pyf, pxf, pyf+1);
 					}
-				} catch (Exception exc) { 
+				} catch (Exception exc) {
      				Logger.log(LEVEL.ERROR, "Error drawing the beam. Message was: "+exc.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(exc.getStackTrace()));
 				}
 			}
-						
+
 		} catch (Exception exc) {
 			Logger.log(LEVEL.ERROR, "Error updating the chart. Message was: "+exc.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(exc.getStackTrace()));
 		}
@@ -897,7 +897,7 @@ public class VISADChart implements Serializable, MouseMotionListener, MouseListe
     		if (lmvObs != null) epoch = lmvObs.epoch;
     		double jd = Constant.J2000 + (epoch - 2000f) * 365.25; // approx., I know ...
     		if (epoch == (int) epoch) jd = new AstroDate((int) epoch, AstroDate.JANUARY, 1.5).jd();
-    				
+
 			AstroDate astro = new AstroDate(jd);
 			TimeElement time = new TimeElement(astro, SCALE.TERRESTRIAL_TIME);
 			CityElement city = City.findCity("Madrid");
@@ -946,7 +946,7 @@ public class VISADChart implements Serializable, MouseMotionListener, MouseListe
             	panel.repaint();
         		panel.requestFocusInWindow();
             }
-            catch (Exception exc) {  
+            catch (Exception exc) {
  				Logger.log(LEVEL.ERROR, "Error processing reset button. Message was: "+exc.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(exc.getStackTrace()));
             }
           }
@@ -1012,7 +1012,7 @@ public class VISADChart implements Serializable, MouseMotionListener, MouseListe
         	panel.repaint();
 		}
 	}
-	
+
 	private void setHeight()
 	{
 		this.h = w * 7 / 16;
@@ -1100,7 +1100,7 @@ public class VISADChart implements Serializable, MouseMotionListener, MouseListe
     	updateChart(true, true, -1, -1);
     	panel.repaint();
 	}
-	
+
 	/**
 	 * Writes the object to a binary file.
 	 * @param out Output stream.
@@ -1113,7 +1113,7 @@ public class VISADChart implements Serializable, MouseMotionListener, MouseListe
 		out.writeInt(this.w0);
 		out.writeInt(this.background.getRGB());
 		out.writeObject(this.title);
-		
+
 		out.writeFloat(vel);
 		out.writeBoolean(integratedIntensity.isSelected());
 		out.writeObject(contours);
@@ -1147,17 +1147,17 @@ public class VISADChart implements Serializable, MouseMotionListener, MouseListe
 		w = in.readInt();
 		int backg = in.readInt();
 		title = (String) in.readObject();
-		
+
 		float vel = in.readFloat();
 		boolean ii = in.readBoolean();
 		String con[] = (String[]) in.readObject();
 		float[] rxVal = (float[]) in.readObject();
 		float[] ryVal = (float[]) in.readObject();
 		float[] rzVal = (float[]) in.readObject();
-		
+
 		lmvObs = (LMVCube) in.readObject();
  		reduced = in.readBoolean();
-		
+
 		x0 = x;
 		y0 = y;
 		w0 = w;
@@ -1167,13 +1167,13 @@ public class VISADChart implements Serializable, MouseMotionListener, MouseListe
 
 		try {
 			this.create();
-			
+
 			this.setPreferences(vel, ii, con, rxVal[0], rxVal[1], ryVal[0], ryVal[1], rzVal[0], rzVal[1]);
 		} catch (Exception exc) {
 			panel = new JPanel();
 		}
  	}
-	
+
 	/**
 	 * Updates the panel.
 	 */
@@ -1186,7 +1186,7 @@ public class VISADChart implements Serializable, MouseMotionListener, MouseListe
 		if (h > hh) {
 			h = hh;
 		}
-		
+
 		int paramWidth = 260;
         int panelHeight = h - Y0 * 5;
 		int gWidth = ((w - paramWidth)/2 - X0*2);

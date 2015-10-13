@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.ephem.moons;
 
 import java.io.Serializable;
@@ -28,19 +28,19 @@ import jparsec.observer.LocationElement;
 
 /**
  * Convenient class to store results of ephemeris of natural satellites.
- * 
+ *
  * @see MoonEphem
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
 public class MoonEphemElement implements Serializable
 {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Constructs a MoonEphem object giving all the data except angular
 	 * radius, magnitude, ecliptic position, phase angle, and axis orientation.
-	 * 
+	 *
 	 * @param nom Name of the satellite.
 	 * @param ra Right ascension.
 	 * @param dec Declination.
@@ -207,7 +207,7 @@ public class MoonEphemElement implements Serializable
 	public boolean transiting;
 
 	/**
-	 * True if the satellite is in front of the planet as seen from Earth, with 
+	 * True if the satellite is in front of the planet as seen from Earth, with
 	 * z position lower than 0.0.
 	 */
 	public boolean inferior;
@@ -330,7 +330,7 @@ public class MoonEphemElement implements Serializable
 	/**
 	 * Transform the corresponding information in an Ephem object into a
 	 * moon ephem object.
-	 * 
+	 *
 	 * @param ephem Ephem object.
 	 * @return Moon ephem object.
 	 */
@@ -403,9 +403,8 @@ public class MoonEphemElement implements Serializable
 		moon.zPositionFromSun = this.zPositionFromSun;
 		return moon;
 	}
-
 	/**
-	 * Return true if the object is equal to another moon
+	 * Return true if the object is equals to another moon
 	 * ephem object.
 	 */
 	@Override

@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */				
+ */
 package jparsec.io.device;
 
 import java.awt.Color;
@@ -114,15 +114,15 @@ import jparsec.vo.SExtractor;
  * @version 1.0
  */
 public class ObservationManager extends JPanel implements MouseListener, ActionListener, MouseMotionListener, ComponentListener {
-  private static final long serialVersionUID = 1L;
-
-  private TELESCOPE_MODEL telescope;
+	private static final long serialVersionUID = 1L;
+	
+	private TELESCOPE_MODEL telescope;
 	private CAMERA_MODEL cameras[];
 	private DOME_MODEL dome;
 	private WEATHER_STATION_MODEL weatherStation;
 	private TELESCOPE_TYPE telType;
 	private String workingDir, obsDir;
-	
+
 	private String telescopePort, cameraPort[], cameraDir[];
 	private int cameraInterval[];
 	private double cameraPosErr[];
@@ -131,7 +131,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 
 	private String projectName = null, projectDescription = null,
 			projectObserver = null, telescopeInstitute = null;
-	
+
 	private BufferedImage lastImage;
 	private String lastImagePath, previousSExtractor = null, lastImageTable[][] = null;
 	private WCS lastImageWCS = null;
@@ -146,26 +146,26 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 	private boolean autoReduceOnFrames = true;
 	private double humidityLimit = 80, windSpeedLimit = 100, maxTemperatureLimit = 50, minTemperatureLimit = -20;
 	private LocationElement parkPos = null;
-	private BasicHDU<?> binaryTable = null;
+	private BasicHDU binaryTable = null;
 	private Point startPt;
 
 	private double minValueObjType = 0.5; // >= 0, => all source types
 	private int minArea = 6, sigma = 8, maxSources = 50; // maxS = 0 => all detected, 50 => 50 brightest sources when solving triangles
-	
+
 	/**
 	 * Combination methods for individual flat/dark frames.
 	 */
-	public static enum COMBINATION_METHOD {
+	public enum COMBINATION_METHOD {
 		/** ID constant for combining flats/darks using the median. */
 		MEDIAN,
-		/** ID constant for combining flats/darks using the mean average. 
+		/** ID constant for combining flats/darks using the mean average.
 		 * Median method is better. */
 		MEAN_AVERAGE,
 		/** To combine flats/darks using the maximum intensity in each pixel. */
 		MAXIMUM,
 		/** To combine flats/darks using kappa sigma clipping method. */
 		KAPPA_SIGMA;
-		
+
 		/** The value of sigma for the kappa sigma method. Default value is 3. */
 		public static double kappaSigmaValue = 3;
 	}
@@ -173,7 +173,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 	/**
 	 * The set of possible image orientations.
 	 */
-	public static enum IMAGE_ORIENTATION {
+	public enum IMAGE_ORIENTATION {
 		/** Inverted horizontally and vertically, north downwards and east towards right. */
 		INVERTED_HORIZONTALLY_AND_VERTICALLY,
 		/** Inverted horizontally, but N upwards. */
@@ -181,11 +181,11 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 		/** Not inverted, N up and E towards left. */
 		NOT_INVERTED
 	};
-	
+
 	/**
 	 * Drizzle modes for better output image quality.
 	 */
-	public static enum DRIZZLE {
+	public enum DRIZZLE {
 		/** ID constant for no drizzle mode. */
 		NO_DRIZZLE,
 		/** ID constant for 2x drizzle mode. */
@@ -198,10 +198,10 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 	}
 
 	/**
-	 * The different possible interpolation methods to resample images 
+	 * The different possible interpolation methods to resample images
 	 * during the stacking process.
 	 */
-	public static enum INTERPOLATION {
+	public enum INTERPOLATION {
 		/** ID constant for nearest neighbor mode. */
 		NEAREST_NEIGHBOR,
 		/** ID constant for bilinear interpolation. */
@@ -215,7 +215,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 	 * in the output image given a set of intensities interpolated from the stacked
 	 * images.
 	 */
-	public static enum AVERAGE_METHOD {
+	public enum AVERAGE_METHOD {
 		/** ID constant for a ponderation operation considering all points and their
 		 * distances from the interpolated point to the (integer) pixel position in the images. */
 		PONDERATION,
@@ -232,13 +232,13 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 	 * in the output image given a set of intensities interpolated from the stacked
 	 * images.
 	 */
-	public static enum AVERAGE_NORMALIZATION {
+	public enum AVERAGE_NORMALIZATION {
 		/** ID constant to use the minimum exposition time to normalize stacked frames to create the
-		 * averaged one. Exposition time of the averaged frame will be the minimum among the input 
+		 * averaged one. Exposition time of the averaged frame will be the minimum among the input
 		 * frames, preventing for overexposition. */
 		MINIMUM,
 		/** ID constant to use the maximum exposition time to normalize stacked frames to create the
-		 * averaged one. Exposition time of the averaged frame will be the maximum among the input 
+		 * averaged one. Exposition time of the averaged frame will be the maximum among the input
 		 * frames, scaling those will less time, something that could produce overexposition, but will
 		 * conserve all flux. */
 		MAXIMUM,
@@ -257,14 +257,14 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 		Translate.translate(1022),
 		Translate.translate(1229)
 	};
-	
+
 	/**
 	 * The names for the set of different drizzle methods available.
 	 */
 	public static final String DRIZZLE_METHODS[] = new String[] {
 		Translate.translate(211), "2x", "3x", "0.5x"
 	};
-	
+
 	/**
 	 * The names for the set of different interpolation methods available.
 	 */
@@ -273,14 +273,14 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 		Translate.translate(1250),
 		Translate.translate(1251)
 	};
-	
+
 	/**
 	 * The names for the set of different frame average methods available.
 	 */
 	public static final String AVERAGE_METHODS[] = new String[] {
 		Translate.translate(1252),
 		Translate.translate(1253),
-		Translate.translate(1288)		
+		Translate.translate(1288)
 	};
 
 	/**
@@ -291,24 +291,24 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 		Translate.translate(1268),
 		Translate.translate(1270)
 	};
-	
+
 	/**
-	 * The names for the set of different frame average normalization methods 
+	 * The names for the set of different frame average normalization methods
 	 * available.
 	 */
 	public static final String NORMALIZATION_METHODS[] = new String[] {
 		Translate.translate(1289),
 		Translate.translate(1290),
-		Translate.translate(211)		
+		Translate.translate(211)
 	};
-	
+
 	/**
 	 * Constructor for an observation manager.
 	 * @param mainWorkingDir Main working directory where all observations are located.
 	 * Can be null, although in this case no reduction will be possible.
 	 * @param obsDir New observation directory for the current night, should be a (still) non-existing directory.
 	 * You can use the date or a 'project name'. Can be null, although in this case no reduction will be possible.
-	 * @param telescope The telescope to use. In case of a real telescope port value will be initially null to 
+	 * @param telescope The telescope to use. In case of a real telescope port value will be initially null to
 	 * select automatically the first available telescope. You can set later the port with {@linkplain #setTelescopePort(String)}.
 	 * @param cameras The camera/s to use. Can be null, although in this case no reduction will be possible. In case
 	 * of a real camera port will be initially null to select the first available one, you can later set the port
@@ -326,7 +326,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 
 		this.workingDir = mainWorkingDir;
 		this.obsDir = obsDir;
-		
+
 		doReduce = false;
 		if (workingDir != null) {
 			File f1 = new File(mainWorkingDir);
@@ -340,7 +340,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 			}
 		}
 		reducePossible = doReduce;
-		
+
 		if (telescope == null) throw new JPARSECException("Invalid telescope");
 		if (cameras != null) {
 			cameraPort = new String[cameras.length];
@@ -365,7 +365,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 				averagedDir[i] = "averaged"+FileIO.getFileSeparator();
 			}
 		}
-		
+
 		worker = new Worker();
 		Thread workerThread = new Thread(worker);
 		workerThread.start();
@@ -441,7 +441,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 	public AVERAGE_NORMALIZATION getNormalizationMethod() {
 		return normalizationMethod;
 	}
-	
+
 	/**
 	 * Sets the image orientation for the output processed frames.
 	 * @param method The method to use for the image orientation.
@@ -488,13 +488,13 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 		this.projectObserver = observer;
 		this.projectDescription = description;
 	}
-	
+
 	/**
 	 * Sets the name of the institute responsible for this telescope.
 	 * @param institute Institute responsible for the telescope, or null.
 	 */
 	public void setTelescopeInstitute(String institute) {
-		this.telescopeInstitute = institute;		
+		this.telescopeInstitute = institute;
 	}
 
 	/**
@@ -502,12 +502,12 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 	 * @return Institute responsible for the telescope, or null.
 	 */
 	public String getTelescopeInstitute() {
-		return this.telescopeInstitute;		
+		return this.telescopeInstitute;
 	}
 
 	/**
 	 * Returns the values for the project properties.
-	 * @return Project name, observer, and description. Default values 
+	 * @return Project name, observer, and description. Default values
 	 * are null for each of them.
 	 */
 	public String[] getProjectInfo() {
@@ -525,18 +525,18 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 		this.humidityLimit = humLim;
 		this.windSpeedLimit = windSpeedLim;
 		this.maxTemperatureLimit = tempMaxLim;
-		this.minTemperatureLimit= tempMinLim; 
+		this.minTemperatureLimit= tempMinLim;
 	}
-	
+
 	/**
 	 * Returns the weather alarm conditions.
-	 * @return Four doubles with the maximum humidity in %, maximum wind speed in km/s, 
+	 * @return Four doubles with the maximum humidity in %, maximum wind speed in km/s,
 	 * maximum temperature in C, and minimum working temperature in C.
 	 */
 	public double[] getWeatherAlarmConditions() {
 		return new double[] {humidityLimit, windSpeedLimit, maxTemperatureLimit, minTemperatureLimit};
 	}
-	
+
 	/**
 	 * Sets the telescope type.
 	 * @param type Telescope type.
@@ -544,7 +544,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 	public void setTelescopeType(TELESCOPE_TYPE type) {
 		this.telType = type;
 	}
-	
+
 	/**
 	 * Returns the telescope type.
 	 * @return Telescope type.
@@ -552,7 +552,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 	public TELESCOPE_TYPE getTelescopeType() {
 		return telType;
 	}
-	
+
 	/**
 	 * Sets the values to configure how SExtractor will solve sources.
 	 * @param minArea Minimum number of pixels for a detection.
@@ -568,9 +568,9 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 		this.minValueObjType = minObjType;
 		this.maxSources = maxSources;
 	}
-	
+
 	/**
-	 * Returns the configuration values for SExtractor: minimum number of pixels for detection, sigma, 
+	 * Returns the configuration values for SExtractor: minimum number of pixels for detection, sigma,
 	 * object classification limiting value, and maximum number of sources.
 	 * @return The 4 values for SExtractor configuration. Values are in a double array despite only the
 	 * object classification value is not an integer.
@@ -578,7 +578,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 	public double[] getSExtractorValues() {
 		return new double[] {minArea, sigma, minValueObjType, maxSources};
 	}
-	
+
 	/**
 	 * Sets the telescope port.
 	 * @param port Port value (COMx, /dev/tty...).
@@ -604,7 +604,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 	public String getTelescopePort() {
 		return telescopePort;
 	}
-	
+
 	/**
 	 * Returns the camera port.
 	 * @param index Index for the camera.
@@ -617,7 +617,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 	}
 
 	/**
-	 * Sets the directory for the images taken from this camera. 
+	 * Sets the directory for the images taken from this camera.
 	 * Should not be modified after observation begins.
 	 * @param index Camera index.
 	 * @param dir Directory name. Default value is 'camerax', where
@@ -637,13 +637,13 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 	public void setTelescopeParkPosition(LocationElement loc) {
 		parkPos = loc;
 	}
-	
+
 	/**
 	 * Returns the park position for the telescope.
 	 * @return Park position.
 	 */
 	public LocationElement getTelescopeParkPosition() { return parkPos; }
-	
+
 	/**
 	 * Sets the minimum time between shots to allow the camera to cool down.
 	 * Default is 0.
@@ -742,7 +742,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 		this.stackedDir[index] = dir;
 		if (!stackedDir[index].endsWith(FileIO.getFileSeparator())) stackedDir[index] += FileIO.getFileSeparator();
 	}
-	
+
 	/**
 	 * Sets the name of the directory where averaged frames will be saved.
 	 * Default value is 'averaged'.
@@ -804,7 +804,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 	public String getStackedDir(int index) {
 		return stackedDir[index];
 	}
-	
+
 	/**
 	 * Returns the directory name for the averaged frames. Default value is 'averaged'.
 	 * Should not be modified after observation begins.
@@ -814,7 +814,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 	public String getAveragedDir(int index) {
 		return averagedDir[index];
 	}
-	
+
 	/**
 	 * Returns the telescope model.
 	 * @return Telescope model.
@@ -884,7 +884,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 	/**
 	 * Sets if automatic reduction should be enabled or not for on
 	 * frames. Default is true, and this means that in each new on
-	 * frame the program will search for its corresponding master 
+	 * frame the program will search for its corresponding master
 	 * dark and flat, creating a reduced on frame in case the dark
 	 * exists (using the flat if it exists, but flat is not required).
 	 * No stacking or combination is done since this process should
@@ -919,7 +919,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 //		System.out.println(camIndex);
 		return camIndex;
 	}
-	
+
 	/**
 	 * Offers a new frame to this manager. In case of a PNG/JPG file the
 	 * new file is copied to the corresponding folder as a fits, using the
@@ -944,8 +944,8 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 			fpath = workingDir + obsDir + cameraDir[camIndex] + darkDir[camIndex];
 			checkDir(fpath);
 			newPath = processFrame(path, fpath, fitsHeader);
-			
-			updateTable(false);			
+
+			updateTable(false);
 			if (doReduce && newPath != null) {
 				reduce(id, new String[] {newPath}, camIndex);
 			} else {
@@ -958,8 +958,8 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 			fpath = workingDir + obsDir + cameraDir[camIndex] + flatDir[camIndex];
 			checkDir(fpath);
 			newPath = processFrame(path, fpath, fitsHeader);
-			
-			updateTable(false);			
+
+			updateTable(false);
 			if (doReduce && newPath != null) {
 				reduce(id, new String[] {newPath}, camIndex);
 			} else {
@@ -974,7 +974,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 			newPath = processFrame(path, fpath, fitsHeader);
 
 			if (autoReduceOnFrames && newPath != null) {
-				updateTable(false);			
+				updateTable(false);
 				if (doReduce) {
 					reduce(id, new String[] {newPath}, camIndex);
 				} else {
@@ -990,7 +990,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 		default:
 			throw new JPARSECException("This method should never be called for this image id value!");
 		}
-		
+
 		updatePanel();
 	}
 
@@ -1010,7 +1010,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 	 */
 	public void offerFrame(IMAGE_ID id, String path[], ImageHeaderElement fitsHeader[], int camIndex) throws JPARSECException {
 		if (!reducePossible) return;
-		
+
 		//int max = Integer.parseInt(ImageHeaderElement.getByKey(fitsHeader, "MAXCOUNT").value);
 		String fpath = null;
 		String newPaths[] = new String[path.length];
@@ -1068,7 +1068,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 		if (f.exists()) return;
 		FileIO.createDirectories(p);
 	}
-	
+
 	private String processFrame(String input, String output, ImageHeaderElement fitsHeader[]) throws JPARSECException {
 		if (output == null) {
 			if (input.endsWith(".png") || input.endsWith(".jpg")) {
@@ -1080,7 +1080,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 				String newFile = input.substring(0, input.lastIndexOf(".")) + ".pgm";
 				lastImage = readPGM(newFile, true);
 				lastImagePath = newFile;
-			}			
+			}
 			lastImageWCS = null;
 			lastImageAstrometry = null;
 			lastImageTable = null;
@@ -1113,7 +1113,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 						rgb[0][x][y] = (byte) (((argb[y] >> 16) & 0xff)-max);
 						rgb[1][x][y] = (byte) (((argb[y] >> 8) & 0xff)-max);
 						rgb[2][x][y] = (byte) ((argb[y] & 0xff)-max);
-					}						
+					}
 				}
 				FitsIO fio = new FitsIO(rgb[0]);
 				fio.setHeader(0, fitsHeader);
@@ -1139,7 +1139,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 				for (int x=0; x<pgm.getWidth(); x++) {
 					for (int y=0; y<pgm.getHeight(); y++) {
 						rgb[x][y] = (short) (getPixelCount(x, y, pgm) - max);
-					}						
+					}
 				}
 				fitsHeader = ImageHeaderElement.addHeaderEntry(fitsHeader, new ImageHeaderElement("BITPIX", ""+bp, "Bits per data value"));
 				fitsHeader = ImageHeaderElement.addHeaderEntry(fitsHeader, new ImageHeaderElement("BZERO", ""+max, "(minus) data zero value"));
@@ -1157,7 +1157,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 			return newOutput;
 		}
 	}
-	
+
 	private synchronized void reduce(IMAGE_ID imgID, String newFiles[], int camIndex) throws JPARSECException {
 		if (imgID.name().equals("REDUCED_ON")) {
 			stack(newFiles[0], camIndex);
@@ -1168,14 +1168,14 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 			return;
 		}
 		if (imgID == IMAGE_ID.STACKED || imgID.name().startsWith("REDUCED") || imgID == IMAGE_ID.TEST) return;
-		
+
 		if (combineMethod == null) {
-			int result = JOptionPane.showOptionDialog(null, Translate.translate(1210), Translate.translate(1211), JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, 
-					null, //new ImageIcon(ReadFile.readImageResource(FileIO.DATA_IMAGES_DIRECTORY+"planetaryNeb_transparentOK.png")), 
+			int result = JOptionPane.showOptionDialog(null, Translate.translate(1210), Translate.translate(1211), JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,
+					null, //new ImageIcon(ReadFile.readImageResource(FileIO.DATA_IMAGES_DIRECTORY+"planetaryNeb_transparentOK.png")),
 					COMBINATION_METHODS, COMBINATION_METHODS[0]);
 			this.setCombineMethod(COMBINATION_METHOD.values()[result]);
 		}
-		
+
 		String path = FileIO.getDirectoryFromPath(newFiles[0]);
 		String files[] = FileIO.getFiles(path);
 		boolean done[] = new boolean[files.length];
@@ -1187,7 +1187,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 		}
 		for (int i=0; i<files.length; i++) {
 			String lineTableCopy[] = lineTable.clone();
-			
+
 			String name = FileIO.getFileNameFromPath(files[i]);
 			if (!name.startsWith("super") && name.endsWith(".fits") && !done[i]) {
 				String id = getFitsMainData(files[i]);
@@ -1198,13 +1198,13 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 				data[0] = getFitsData(files[i], 0, raw);
 				if (!raw) {
 					data[1] = getFitsData(files[i], 1, raw);
-					data[2] = getFitsData(files[i], 2, raw);					
+					data[2] = getFitsData(files[i], 2, raw);
 				}
 				int n = 1;
 				int row = DataSet.getIndexContaining(lineTable, files[i]);
 				if (row < 0) {
 					updateTable(false);
-					row = DataSet.getIndexContaining(lineTable, files[i]);					
+					row = DataSet.getIndexContaining(lineTable, files[i]);
 				}
 				lineTable[row] = lineTable[row].substring(0, lineTable[row].lastIndexOf(SEPARATOR)+1)+"0";
 				ImageHeaderElement header[] = getFitsHeader(files[i], 0);
@@ -1221,22 +1221,22 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 								done[j] = true;
 								n ++;
 								combination += ","+files[j];
-	
+
 								if (row >= 0 && lineTable[row].endsWith("false"))
 									lineTable[row] = lineTable[row].substring(0, lineTable[row].lastIndexOf("false"))+"true";
-								
+
 								if (combineMethod == COMBINATION_METHOD.MEAN_AVERAGE) {
 									data[0] = add(data[0], getFitsData(files[j], 0, raw));
 									if (!raw) {
 										data[1] = add(data[1], getFitsData(files[j], 1, raw));
-										data[2] = add(data[2], getFitsData(files[j], 2, raw));								
+										data[2] = add(data[2], getFitsData(files[j], 2, raw));
 									}
 								}
 							}
-						}					
+						}
 					}
 				}
-				
+
 				String outputFile = FileIO.getDirectoryFromPath(files[i])+"super_"+id+".fits";
 				String masterDark = workingDir + obsDir + cameraDir[camIndex] + darkDir[camIndex] + FileIO.getFileNameFromPath(outputFile);
 				String masterFlat = workingDir + obsDir + cameraDir[camIndex] + flatDir[camIndex] + FileIO.getFileNameFromPath(outputFile);
@@ -1249,10 +1249,10 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 						lineTable = lineTableCopy;
 						continue;
 					}
-					
+
 					if (imgID == IMAGE_ID.ON_SOURCE) {
 						File masterF = new File(masterFlat);
-						outputFile = workingDir + obsDir + cameraDir[camIndex] + reducedDir[camIndex] + FileIO.getFileNameFromPath(files[i]);						
+						outputFile = workingDir + obsDir + cameraDir[camIndex] + reducedDir[camIndex] + FileIO.getFileNameFromPath(files[i]);
 						this.checkDir(FileIO.getDirectoryFromPath(outputFile));
 						if (!masterF.exists()) {
 							int start = masterFlat.indexOf("_BULBTIME"), end = masterFlat.indexOf("_RAW");
@@ -1279,13 +1279,13 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 				} else {
 					masterDark = null;
 				}
-				
+
 				if (n == 1) {
-					if (imgID != IMAGE_ID.DARK && masterDark != null) { 
+					if (imgID != IMAGE_ID.DARK && masterDark != null) {
 						data[0] = subtract(data[0], getFitsData(masterDark, 0, raw), 1, raw);
 						if (!raw) {
 							data[1] = subtract(data[1], getFitsData(masterDark, 1, raw), 1, raw);
-							data[2] = subtract(data[2], getFitsData(masterDark, 2, raw), 1, raw);								
+							data[2] = subtract(data[2], getFitsData(masterDark, 2, raw), 1, raw);
 						}
 					}
 				} else {
@@ -1299,9 +1299,9 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 						data[0] = multiply(data[0], 1.0 / n);
 						if (!raw) {
 							if (masterDark != null) data[1] = subtract(data[1], getFitsData(masterDark, 1, raw), n, raw);
-							if (masterDark != null) data[2] = subtract(data[2], getFitsData(masterDark, 2, raw), n, raw);								
+							if (masterDark != null) data[2] = subtract(data[2], getFitsData(masterDark, 2, raw), n, raw);
 							data[1] = multiply(data[1], 1.0 / n);
-							data[2] = multiply(data[2], 1.0 / n);						
+							data[2] = multiply(data[2], 1.0 / n);
 						}
 						break;
 					case MEDIAN:
@@ -1316,8 +1316,8 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 							datas0.add(fio.getData(0));
  							if (!raw) {
 								datas1.add(fio.getData(1));
-								datas2.add(fio.getData(2));					
-								
+								datas2.add(fio.getData(2));
+
 								if (imgID == IMAGE_ID.FLAT && f.length > 1) {
 									double s1 = 0, s2 = 0, s3 = 0;
 									Object d1 = datas0.get(datas0.size()-1);
@@ -1327,7 +1327,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 										for (int y=0; y<h; y++) {
 											s1 += ((byte[][])d1)[x][y];
 											s2 += ((byte[][])d2)[x][y];
-											s3 += ((byte[][])d3)[x][y];											
+											s3 += ((byte[][])d3)[x][y];
 										}
 									}
 									sum.add(new double[] {s1, s2, s3});
@@ -1358,7 +1358,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 										val[z] = flatScaling * ((short[][])datas0.get(z))[x][y];
 									}
 									double median = DataSet.getKthSmallestValue (val, val.length, val.length/2);
-									data[0][x][y] = (int) median;									
+									data[0][x][y] = (int) median;
 								} else {
 									for (int z=0; z<f.length; z++) {
 										flatScaling = 1.0;
@@ -1368,7 +1368,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 										val[z] = ((byte[][])datas0.get(z))[x][y];
 									}
 									double median = DataSet.getKthSmallestValue (val, val.length, val.length/2);
-									data[0][x][y] = (int) median;									
+									data[0][x][y] = (int) median;
 
 									for (int z=0; z<f.length; z++) {
 										flatScaling = 1.0;
@@ -1378,7 +1378,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 										val[z] = ((byte[][])datas1.get(z))[x][y];
 									}
 									median = DataSet.getKthSmallestValue (val, val.length, val.length/2);
-									data[1][x][y] = (int) median;									
+									data[1][x][y] = (int) median;
 
 									for (int z=0; z<f.length; z++) {
 										flatScaling = 1.0;
@@ -1390,17 +1390,17 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 									median = DataSet.getKthSmallestValue (val, val.length, val.length/2);
 									data[2][x][y] = (int) median;
 								}
-							}							
+							}
 						}
 						if (masterDark != null) {
 							data[0] = subtract(data[0], getFitsData(masterDark, 0, raw), 1, raw);
 							if (!raw) {
 								data[1] = subtract(data[1], getFitsData(masterDark, 1, raw), 1, raw);
-								data[2] = subtract(data[2], getFitsData(masterDark, 2, raw), 1, raw);								
+								data[2] = subtract(data[2], getFitsData(masterDark, 2, raw), 1, raw);
 							}
 						}
 
-						
+
 /*						int[][] data2 = new int[1][];
 						if (!raw) data2 = new int[3][];
 						int values1[][] = null, values2[][] = null;
@@ -1408,14 +1408,14 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 							int values0[][] = new int[f.length][data[0].length];
 							if (!raw) {
 								values1 = new int[f.length][data[0].length];
-								values2 = new int[f.length][data[0].length];								
+								values2 = new int[f.length][data[0].length];
 							}
 							for (int i2=0; i2<f.length; i2++) {
 								data2[0] = getFitsData(f[i2], 0, raw)[i1];
 								values0[i2] = data2[0];
 								if (!raw) {
 									data2[1] = getFitsData(f[i2], 1, raw)[i1];
-									data2[2] = getFitsData(f[i2], 2, raw)[i1];					
+									data2[2] = getFitsData(f[i2], 2, raw)[i1];
 									values1[i2] = data2[1];
 									values2[i2] = data2[2];
 								}
@@ -1474,7 +1474,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 							data[0] = subtract(data[0], getFitsData(masterDark, 0, raw), 1, raw);
 							if (!raw) {
 								data[1] = subtract(data[1], getFitsData(masterDark, 1, raw), 1, raw);
-								data[2] = subtract(data[2], getFitsData(masterDark, 2, raw), 1, raw);								
+								data[2] = subtract(data[2], getFitsData(masterDark, 2, raw), 1, raw);
 							}
 						}
 						break;
@@ -1491,8 +1491,8 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 							datas0.add(fio.getData(0));
  							if (!raw) {
 								datas1.add(fio.getData(1));
-								datas2.add(fio.getData(2));					
-								
+								datas2.add(fio.getData(2));
+
 								if (imgID == IMAGE_ID.FLAT && f.length > 1) {
 									double s1 = 0, s2 = 0, s3 = 0;
 									Object d1 = datas0.get(datas0.size()-1);
@@ -1502,7 +1502,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 										for (int y=0; y<h; y++) {
 											s1 += ((byte[][])d1)[x][y];
 											s2 += ((byte[][])d2)[x][y];
-											s3 += ((byte[][])d3)[x][y];											
+											s3 += ((byte[][])d3)[x][y];
 										}
 									}
 									sum.add(new double[] {s1, s2, s3});
@@ -1534,7 +1534,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 									}
 									MeanValue mv = new MeanValue(val, null);
 									double median = mv.getAverageUsingKappaSigmaClipping(COMBINATION_METHOD.kappaSigmaValue, 0);
-									data[0][x][y] = (int) median;									
+									data[0][x][y] = (int) median;
 								} else {
 									for (int z=0; z<f.length; z++) {
 										flatScaling = 1.0;
@@ -1545,7 +1545,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 									}
 									MeanValue mv = new MeanValue(val, null);
 									double median = mv.getAverageUsingKappaSigmaClipping(COMBINATION_METHOD.kappaSigmaValue, 0);
-									data[0][x][y] = (int) median;									
+									data[0][x][y] = (int) median;
 
 									for (int z=0; z<f.length; z++) {
 										flatScaling = 1.0;
@@ -1556,7 +1556,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 									}
 									mv = new MeanValue(val, null);
 									median = mv.getAverageUsingKappaSigmaClipping(COMBINATION_METHOD.kappaSigmaValue, 0);
-									data[1][x][y] = (int) median;									
+									data[1][x][y] = (int) median;
 
 									for (int z=0; z<f.length; z++) {
 										flatScaling = 1.0;
@@ -1569,19 +1569,19 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 									median = mv.getAverageUsingKappaSigmaClipping(COMBINATION_METHOD.kappaSigmaValue, 0);
 									data[2][x][y] = (int) median;
 								}
-							}							
+							}
 						}
 						if (masterDark != null) {
 							data[0] = subtract(data[0], getFitsData(masterDark, 0, raw), 1, raw);
 							if (!raw) {
 								data[1] = subtract(data[1], getFitsData(masterDark, 1, raw), 1, raw);
-								data[2] = subtract(data[2], getFitsData(masterDark, 2, raw), 1, raw);								
+								data[2] = subtract(data[2], getFitsData(masterDark, 2, raw), 1, raw);
 							}
 						}
 						break;
 					}
 				}
-				
+
 				// Apply flat field and solve WCS
 				binaryTable = null;
 				if (imgID == IMAGE_ID.ON_SOURCE) {
@@ -1594,25 +1594,25 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 						};
 						if (!raw) {
 							data2[1] = getFitsData(masterFlat, 1, raw);
-							data2[2] = getFitsData(masterFlat, 2, raw);								
+							data2[2] = getFitsData(masterFlat, 2, raw);
 							sumFlat = new double[] {
 									this.average(data2[0]),
 									this.average(data2[1]),
 									this.average(data2[2])
 							};
-						}						
+						}
 						for (int x=0;x<data[0].length; x++) {
 							for (int y=0;y<data[0][0].length; y++) {
 								data[0][x][y] = (int) (0.5 + data[0][x][y] / (data2[0][x][y] / sumFlat[0]));
 								if (!raw) {
 									data[1][x][y] = (int) (0.5 + data[1][x][y] / (data2[1][x][y] / sumFlat[1]));
-									data[2][x][y] = (int) (0.5 + data[2][x][y] / (data2[2][x][y] / sumFlat[2]));									
+									data[2][x][y] = (int) (0.5 + data[2][x][y] / (data2[2][x][y] / sumFlat[2]));
 								}
-							}							
+							}
 						}
 					}
-					
-					
+
+
 					if (raw) {
 						header = solveWCS(DataSet.toShortArray(data[0], -FastMath.multiplyBy2ToTheX(1, 16-1)), header, raw, null, null); // RGB in separated pixels or R/G/B in CCD
 					} else {
@@ -1622,7 +1622,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 								added[x][y] = data[0][x][y] + data[1][x][y] + data[2][x][y];
 							}
 						}
-						
+
 						// Hack header to allow 16 bit data by adding RGB channels for better photometry and astrometry
 						String bp = header[ImageHeaderElement.getIndex(header, "BITPIX")].value;
 						String bz = header[ImageHeaderElement.getIndex(header, "BZERO")].value;
@@ -1634,7 +1634,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 					}
 				}
 
- 				
+
 				header = ImageHeaderElement.addHeaderEntry(header, new ImageHeaderElement("DATE", ""+(new TimeElement()).toString(), "fits file creation date and time"));
 				header = ImageHeaderElement.addHeaderEntry(header, new ImageHeaderElement("IMGID", "Reduced "+GenericCamera.IMAGE_IDS[imgID.ordinal()].toLowerCase(), "Image id: Dark, Flat, On, Test, or Reduced"));
 				if (!raw) {
@@ -1647,7 +1647,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 					fio.writeEntireFits(outputFile);
 				} else {
 					int bp = 16, maxV = FastMath.multiplyBy2ToTheX(1, bp-1);
-					FitsIO fio = new FitsIO(DataSet.toShortArray(data[0], -maxV));					
+					FitsIO fio = new FitsIO(DataSet.toShortArray(data[0], -maxV));
 					fio.setHeader(0, header);
 					if (binaryTable != null) fio.addHDU(binaryTable);
 					fio.writeEntireFits(outputFile);
@@ -1754,7 +1754,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 			return;
 		}
 		System.out.println("STACK");
-		
+
 		String path = workingDir + obsDir + cameraDir[camIndex] + reducedDir[camIndex];
 		String files[] = FileIO.getFiles(path);
 		String id = this.getFitsMainDataWithSource(file, false);
@@ -1772,14 +1772,14 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 					continue;
 				}
 			}
-			
-		} 
+
+		}
 
 		if (files == null || files.length < 1) {
 			System.out.println("There are no files to stack");
-			return;	
+			return;
 		}
-		
+
 		// Get list of previously stacked and enabled frames
 		String s[] = FileIO.getFiles(workingDir + obsDir + cameraDir[camIndex] + stackedDir[camIndex]);
 		if (s != null && s.length > 0) {
@@ -1798,10 +1798,10 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 						continue;
 					}
 				}
-				
-			} 
+
+			}
 		}
-		
+
 		// Check and remove frames already used for stacked frames in previous calls
 		if (s != null && s.length > 0 && files != null && files.length >= 2) {
 			//stacked = stacked.substring(0, stacked.length()-1);
@@ -1827,16 +1827,16 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 				}
 			}
 		}
-		
+
 		if (files == null || files.length < 2) {
 			if (files != null && files.length == 1) {
 				System.out.println("Only 1 image");
 			} else {
 				System.out.println("There are no new files to stack");
-				return;	
+				return;
 			}
 		}
-		
+
 		boolean raw = isFitsRaw(file);
 		ImageHeaderElement header[] = getFitsHeader(file, 0);
 		boolean exists = true;
@@ -1861,8 +1861,8 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 			width /= 2;
 			height /= 2;
 		}
-		header = ImageHeaderElement.addHeaderEntry(header, new ImageHeaderElement("NAXIS1", ""+width, "Width in pixels"));		
-		header = ImageHeaderElement.addHeaderEntry(header, new ImageHeaderElement("NAXIS2", ""+height, "Height in pixels"));		
+		header = ImageHeaderElement.addHeaderEntry(header, new ImageHeaderElement("NAXIS1", ""+width, "Width in pixels"));
+		header = ImageHeaderElement.addHeaderEntry(header, new ImageHeaderElement("NAXIS2", ""+height, "Height in pixels"));
 		int[][][] data = new int[1][width][height];
 		if (!raw) data = new int[3][width][height];
 		boolean eastLeft = true, northUp = true;
@@ -1936,7 +1936,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 				return;
 			}
 		}
-		
+
 		tjd /= files.length;
 		int interpDeg = 3;
 		if (interpolationMethod == INTERPOLATION.BICUBIC) interpDeg = 2;
@@ -1960,14 +1960,14 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 					if (!raw || DLSRandRAW) {
 						val[y][1].delete(0, val[y][1].length());
 						val[y][2].delete(0, val[y][2].length());
-						if (data.length == 4) val[y][3].delete(0, val[y][3].length());				
+						if (data.length == 4) val[y][3].delete(0, val[y][3].length());
 					}
 				} else {
-					val[y][0] = new StringBuffer();					
+					val[y][0] = new StringBuffer();
 					if (!raw || DLSRandRAW) {
-						val[y][1] = new StringBuffer();					
-						val[y][2] = new StringBuffer();					
-						if (data.length == 4) val[y][3] = new StringBuffer();					
+						val[y][1] = new StringBuffer();
+						val[y][2] = new StringBuffer();
+						if (data.length == 4) val[y][3] = new StringBuffer();
 					}
 				}
 			}
@@ -1984,12 +1984,12 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 							offset -= dif;
 						}
 					}
-*/					
-					
+*/
+
 					if (DLSRandRAW && index > 0) continue;
 					for (int y=0; y<height; y += step) {
 						Point2D p = wcsList[i].getPixelCoordinates(l[y]);
-					
+
 						if (index == 0) {
 							String addDVAL = noDataSC;
 							if (!DLSRandRAW) {
@@ -2001,7 +2001,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 							}
 							dval[y] += addDVAL;
 						}
-						
+
 						int x0 = (int) (p.getX() - BORDER);
 						int y0 = (int) (p.getY() - BORDER);
 						if (x0 < 0) x0 = 0;
@@ -2020,7 +2020,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 									iv = 2;
 									if (col1) iv = 3;
 								}
-								
+
 								if (!col1) x0 ++;
 								if (!row1) y0 ++;
 							} else {
@@ -2028,7 +2028,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 								continue;
 							}
 						}
-						
+
 						ist = getIST(x0, y0, iv, interpDeg, DLSRandRAW, raw, height, files[i], ifio[i], 1.0);
 
 						p.setLocation(p.getX()-x0, p.getY()-y0);
@@ -2039,12 +2039,12 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 										if (interpolationMethod == INTERPOLATION.NEAREST_NEIGHBOR) {
 											val[y][iv].append(""+(float)ist.getImage()[(int) (p.getX()/2.0)][(int) (p.getY()/2.0)]+",");
 										} else {
-											val[y][iv].append(""+(float)ist.interpolate(p.getX()/2.0, p.getY()/2.0)+",");											
+											val[y][iv].append(""+(float)ist.interpolate(p.getX()/2.0, p.getY()/2.0)+",");
 										}
 /*										if (interpolationMethod == INTERPOLATION.NEAREST_NEIGHBOR) {
-											if (index == 0) val[y][0].append(""+(float)ist.getImage()[(int) (p.getX()/2.0)][(int) (p.getY()/2.0)]+",");								
-											if (index == 1) val[y][1].append(""+(float)ist.getImage()[(int) (p.getX()/2.0 - 0.5)][(int) (p.getY()/2.0)]+",");								
-											if (index == 2) val[y][2].append(""+(float)ist.getImage()[(int) (p.getX()/2.0 - 0.5)][(int) (p.getY()/2.0 - 0.5)]+",");								
+											if (index == 0) val[y][0].append(""+(float)ist.getImage()[(int) (p.getX()/2.0)][(int) (p.getY()/2.0)]+",");
+											if (index == 1) val[y][1].append(""+(float)ist.getImage()[(int) (p.getX()/2.0 - 0.5)][(int) (p.getY()/2.0)]+",");
+											if (index == 2) val[y][2].append(""+(float)ist.getImage()[(int) (p.getX()/2.0 - 0.5)][(int) (p.getY()/2.0 - 0.5)]+",");
 											if (index == 3) val[y][3].append(""+(float)ist.getImage()[(int) (p.getX()/2.0)][(int) (p.getY()/2.0 - 0.5)]+",");
 										} else {
 											if (index == 0) val[y][0].append(""+(float)ist.interpolate(p.getX()/2.0-0.5, p.getY()/2.0-0.5)+",");
@@ -2052,16 +2052,16 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 											if (index == 2) val[y][2].append(""+(float)ist.interpolate(Math.max(0.0, p.getX()/2.0-1.0), Math.max(0.0, p.getY()/2.0-1.0))+",");
 											if (index == 3) val[y][3].append(""+(float)ist.interpolate(p.getX()/2.0-0.5, Math.max(0.0, p.getY()/2.0-1.0))+",");
 										}
-*/										
+*/
 									} else {
 										if (interpolationMethod == INTERPOLATION.NEAREST_NEIGHBOR) {
-											if (index == 0) val[y][0].append(""+(float)ist.getImage()[(int) (p.getX() - 0.5)][(int) (p.getY() - 0.5)]+",");								
+											if (index == 0) val[y][0].append(""+(float)ist.getImage()[(int) (p.getX() - 0.5)][(int) (p.getY() - 0.5)]+",");
 										} else {
 											if (index == 0) val[y][0].append(""+(float)ist.interpolate(p.getX()-1, p.getY()-1)+",");
 										}
 									}
 								} catch (Exception exc) {
-									val[y][iv].append(noDataSC);									
+									val[y][iv].append(noDataSC);
 								}
 							} else {
 								val[y][iv].append(noDataSC);
@@ -2070,7 +2070,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 							if (!ist.isOutOfImage(p.getX()-1, p.getY()-1)) {
 								try {
 									if (interpolationMethod == INTERPOLATION.NEAREST_NEIGHBOR) {
-										val[y][index].append(""+(float)ist.getImage()[(int) (p.getX() - 0.5)][(int) (p.getY() - 0.5)]+",");								
+										val[y][index].append(""+(float)ist.getImage()[(int) (p.getX() - 0.5)][(int) (p.getY() - 0.5)]+",");
 									} else {
 										val[y][index].append(""+(float)ist.interpolate(p.getX()-1, p.getY()-1)+",");
 									}
@@ -2092,7 +2092,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 					}
 				}
 			}
-						
+
 			for (int y=0; y<height; y +=step) {
 				double dnv[] = toDoubleValues(DataSet.toStringArray(dval[y].substring(0, dval[y].length()-1), ",", false));
 				for (int i=0; i<data.length; i++) {
@@ -2108,7 +2108,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 							n = DataSet.getIndexOfMinimum(nval);
 						}
 					}
-					
+
 					data[i][x][y] = 0;
 					if (nval.length > 1) {
 						double value = 0;
@@ -2145,7 +2145,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 				data = out;
 			}
 		}
-		
+
 		header = ImageHeaderElement.addHeaderEntry(header, new ImageHeaderElement[] {
 				new ImageHeaderElement("TIME", ""+Functions.sumComponents(time), "Exposure time in s"),
 				new ImageHeaderElement("RAW", ""+false, "True for raw mode"),
@@ -2158,7 +2158,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 				new ImageHeaderElement("INTERP", getInterpolationMethod().name(), "Interpolation method when resampling frames"),
 				new ImageHeaderElement("DRIZZLE", getDrizzleMethod().name(), "Drizzle method")
 		});
-		
+
 		header = ImageHeaderElement.deleteHeaderEntries(header, DataSet.toStringArray("AZ,EL,AZ0,EL0,AZ-EFF,EL-EFF,DATE0,DOM_AZ,DOM_OPEN,DOM_MOVI,DOM_MODE,TEMP,PRES,HUM,TEMP_IN,HUM_IN,WIND_SP,WIND_AZ,RAIN", ",", false));
 		if (addWCS) {
 /*			if (raw && !DLSRandRAW) {
@@ -2184,12 +2184,12 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 		} else {
 			header = WCS.removeWCSentries(header);
 		}
-		
+
 		header = ImageHeaderElement.addHeaderEntry(header, new ImageHeaderElement("DATE", ""+(new TimeElement()).toString(), "fits file creation date and time"));
 		header = ImageHeaderElement.addHeaderEntry(header, new ImageHeaderElement("IMGID", GenericCamera.IMAGE_IDS_ALL[7], "Image id: Dark, Flat, On, Test, or Reduced"));
-		header = ImageHeaderElement.addHeaderEntry(header, new ImageHeaderElement("STACKED", ""+files.length, "Number of source files stacked"));			
+		header = ImageHeaderElement.addHeaderEntry(header, new ImageHeaderElement("STACKED", ""+files.length, "Number of source files stacked"));
 		for (int i=0; i<files.length; i++) {
-			header = ImageHeaderElement.addHeaderEntry(header, new ImageHeaderElement("STACK"+i, FileIO.getFileNameFromPath(files[i]), "Source file stacked"));			
+			header = ImageHeaderElement.addHeaderEntry(header, new ImageHeaderElement("STACK"+i, FileIO.getFileNameFromPath(files[i]), "Source file stacked"));
 		}
 		checkDir(FileIO.getDirectoryFromPath(outputFile));
 		if (!raw) {
@@ -2205,39 +2205,39 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 			fio.writeEntireFits(outputFile);
 		} else {
 			int bp = 16, maxV = FastMath.multiplyBy2ToTheX(1, bp-1);
-			FitsIO fio = new FitsIO(DataSet.toShortArray(data[0], -maxV));					
+			FitsIO fio = new FitsIO(DataSet.toShortArray(data[0], -maxV));
 			fio.setHeader(0, header);
 			if (addWCS) fio.setWCS(0, wcs);
 			if (DLSRandRAW) {
 				fio.addHDU(FitsIO.createHDU(DataSet.toShortArray(data[1], -maxV), header));
-				if (addWCS) fio.setWCS(1, wcs);				
+				if (addWCS) fio.setWCS(1, wcs);
 				fio.addHDU(FitsIO.createHDU(DataSet.toShortArray(data[2], -maxV), header));
-				if (addWCS) fio.setWCS(2, wcs);				
+				if (addWCS) fio.setWCS(2, wcs);
 				if (data.length > 3) {
 					fio.addHDU(FitsIO.createHDU(DataSet.toShortArray(data[3], -maxV), header));
-					if (addWCS) fio.setWCS(3, wcs);		
+					if (addWCS) fio.setWCS(3, wcs);
 				}
 			}
 			if (binaryTable != null) fio.addHDU(binaryTable);
 			fio.writeEntireFits(outputFile);
 		}
 	}
-	
+
 	private void average(String file, int camIndex) throws JPARSECException {
 		if (!file.endsWith(".fits")) {
 			System.out.println("Cannot average the non fits image "+file);
 			return;
 		}
 		System.out.println("AVERAGE");
-		
+
 		String path = workingDir + obsDir + cameraDir[camIndex] + stackedDir[camIndex];
 		String files[] = FileIO.getFiles(path);
 		String id = this.getFitsMainDataWithSource(file, false);
 		if (files == null || files.length < 1) {
 			System.out.println("There are no files to average");
-			return;			
+			return;
 		}
-		
+
 		// Get list of compatible files to average
 		for (int i=files.length-1; i>=0; i--) {
 			String id2 = this.getFitsMainDataWithSource(files[i], false);
@@ -2252,13 +2252,13 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 					continue;
 				}
 			}
-		} 
-		
+		}
+
 		if (files == null || files.length < 1) {
 			System.out.println("There are no files to average");
-			return;			
+			return;
 		}
-		
+
 		// Get list of previously averaged and enabled frames
 		String s[] = FileIO.getFiles(workingDir + obsDir + cameraDir[camIndex] + averagedDir[camIndex]);
 		if (s != null && s.length > 0) {
@@ -2270,10 +2270,10 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 						continue;
 					}
 				}
-				
-			} 
+
+			}
 		}
-		
+
 		// Check and remove frames already used for stacked frames in previous calls
 		if (s != null && s.length > 0 && files != null && files.length >= 1) {
 			for (int i=0; i<s.length; i++) {
@@ -2297,16 +2297,16 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 				}
 			}
 		}
-		
+
 		if (files == null || files.length < 2) {
 			if (files != null && files.length == 1) {
 				System.out.println("Only 1 image");
 			} else {
 				System.out.println("There are no new files to average");
-				return;	
+				return;
 			}
 		}
-		
+
 		boolean raw = isFitsRaw(file);
 		ImageHeaderElement header[] = getFitsHeader(file, 0);
 		boolean exists = true;
@@ -2397,7 +2397,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 				return;
 			}
 		}
-		
+
 		tjd /= files.length;
 		int interpDeg = 3;
 		if (interpolationMethod == INTERPOLATION.BICUBIC) interpDeg = 2;
@@ -2423,14 +2423,14 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 					if (!raw || DLSRandRAW) {
 						val[y][1].delete(0, val[y][1].length());
 						val[y][2].delete(0, val[y][2].length());
-						if (data.length == 4) val[y][3].delete(0, val[y][3].length());				
+						if (data.length == 4) val[y][3].delete(0, val[y][3].length());
 					}
 				} else {
-					val[y][0] = new StringBuffer();					
+					val[y][0] = new StringBuffer();
 					if (!raw || DLSRandRAW) {
-						val[y][1] = new StringBuffer();					
-						val[y][2] = new StringBuffer();					
-						if (data.length == 4) val[y][3] = new StringBuffer();					
+						val[y][1] = new StringBuffer();
+						val[y][2] = new StringBuffer();
+						if (data.length == 4) val[y][3] = new StringBuffer();
 					}
 				}
 			}
@@ -2449,7 +2449,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 					}
 
 					ist = getIST(x, index, interpDeg, DLSRandRAW, raw, height, files[i], ifio[i], normalizeTime / time[i]);
-*/					
+*/
 					if (DLSRandRAW && index > 0) continue;
 					for (int y=0; y<height; y +=step) {
 						Point2D p = wcsList[i].getPixelCoordinates(l[y]);
@@ -2484,7 +2484,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 									iv = 2;
 									if (col1) iv = 3;
 								}
-								
+
 								if (!col1) x0 ++;
 								if (!row1) y0 ++;
 							} else {
@@ -2506,10 +2506,10 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 										}
 
 /*										if (interpolationMethod == INTERPOLATION.NEAREST_NEIGHBOR) {
-											if (index == 0) val[y][0].append(""+(float)ist.getImage()[(int) (p.getX()/2.0)][(int) (p.getY()/2.0)]+",");								
-											if (index == 1) val[y][1].append(""+(float)ist.getImage()[(int) (p.getX()/2.0 - 0.5)][(int) (p.getY()/2.0)]+",");								
-											if (index == 2) val[y][2].append(""+(float)ist.getImage()[(int) (p.getX()/2.0 - 0.5)][(int) (p.getY()/2.0 - 0.5)]+",");								
-											if (index == 3) val[y][3].append(""+(float)ist.getImage()[(int) (p.getX()/2.0)][(int) (p.getY()/2.0 - 0.5)]+",");								
+											if (index == 0) val[y][0].append(""+(float)ist.getImage()[(int) (p.getX()/2.0)][(int) (p.getY()/2.0)]+",");
+											if (index == 1) val[y][1].append(""+(float)ist.getImage()[(int) (p.getX()/2.0 - 0.5)][(int) (p.getY()/2.0)]+",");
+											if (index == 2) val[y][2].append(""+(float)ist.getImage()[(int) (p.getX()/2.0 - 0.5)][(int) (p.getY()/2.0 - 0.5)]+",");
+											if (index == 3) val[y][3].append(""+(float)ist.getImage()[(int) (p.getX()/2.0)][(int) (p.getY()/2.0 - 0.5)]+",");
 										} else {
 											if (index == 0) val[y][0].append(""+(float)ist.interpolate(p.getX()/2.0-0.5, p.getY()/2.0-0.5)+",");
 											if (index == 1) val[y][1].append(""+(float)ist.interpolate(Math.max(0.0, p.getX()/2.0-1.0), p.getY()/2.0-0.5)+",");
@@ -2518,13 +2518,13 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 										}
 */									} else {
 										if (interpolationMethod == INTERPOLATION.NEAREST_NEIGHBOR) {
-											if (index == 0) val[y][0].append(""+(float)ist.getImage()[(int) (p.getX() - 0.5)][(int) (p.getY() - 0.5)]+",");								
+											if (index == 0) val[y][0].append(""+(float)ist.getImage()[(int) (p.getX() - 0.5)][(int) (p.getY() - 0.5)]+",");
 										} else {
 											if (index == 0) val[y][0].append(""+(float)ist.interpolate(p.getX()-1, p.getY()-1)+",");
 										}
 									}
 								} catch (Exception exc) {
-									val[y][iv].append(noDataSC);									
+									val[y][iv].append(noDataSC);
 								}
 							} else {
 								val[y][iv].append(noDataSC);
@@ -2533,7 +2533,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 							if (!ist.isOutOfImage(p.getX()-1, p.getY()-1)) {
 								try {
 									if (interpolationMethod == INTERPOLATION.NEAREST_NEIGHBOR) {
-										val[y][index].append(""+(float)ist.getImage()[(int) (p.getX() - 0.5)][(int) (p.getY() - 0.5)]+",");								
+										val[y][index].append(""+(float)ist.getImage()[(int) (p.getX() - 0.5)][(int) (p.getY() - 0.5)]+",");
 									} else {
 										val[y][index].append(""+(float)ist.interpolate(p.getX()-1, p.getY()-1)+",");
 									}
@@ -2555,7 +2555,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 					}
 				}
 			}
-						
+
 			for (int y=0; y<height; y += step) {
 				double dnv[] = toDoubleValues(DataSet.toStringArray(dval[y].substring(0, dval[y].length()-1), ",", false));
 				for (int i=0; i<data.length; i++) {
@@ -2571,7 +2571,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 							n = DataSet.getIndexOfMinimum(nval);
 						}
 					}
-					
+
 					data[i][x][y] = 0;
 					if (nval.length > 1) {
 						if (averageMethod == AVERAGE_METHOD.CLOSEST_POINT) {
@@ -2584,17 +2584,17 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 								data[i][x][y] = (int) (mv.getMeanValue() + 0.5);
 							} else {
 								if (combineMethod == COMBINATION_METHOD.MEAN_AVERAGE) {
-									data[i][x][y] = (int) (mv.getAverageValue() + 0.5);									
+									data[i][x][y] = (int) (mv.getAverageValue() + 0.5);
 								} else {
 									if (combineMethod == COMBINATION_METHOD.MEDIAN) {
-										data[i][x][y] = (int) (mv.getMedian() + 0.5);									
+										data[i][x][y] = (int) (mv.getMedian() + 0.5);
 									} else {
 										if (combineMethod == COMBINATION_METHOD.MAXIMUM) {
-											data[i][x][y] = (int) (DataSet.getMaximumValue(nval) + 0.5);									
+											data[i][x][y] = (int) (DataSet.getMaximumValue(nval) + 0.5);
 										} else {
-											data[i][x][y] = (int) (mv.getAverageUsingKappaSigmaClipping(COMBINATION_METHOD.kappaSigmaValue, 0) + 0.5);									
-										}										
-									}									
+											data[i][x][y] = (int) (mv.getAverageUsingKappaSigmaClipping(COMBINATION_METHOD.kappaSigmaValue, 0) + 0.5);
+										}
+									}
 								}
 							}
 						}
@@ -2626,7 +2626,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 				new ImageHeaderElement("DRIZZLE", getDrizzleMethod().name(), "Drizzle method"),
 				new ImageHeaderElement("GAIN", ""+Functions.sumComponents(gain), "Gain e-/ADU")
 		});
-		
+
 		header = ImageHeaderElement.deleteHeaderEntries(header, DataSet.toStringArray("AZ,EL,AZ0,EL0,AZ-EFF,EL-EFF,DATE0,DOM_AZ,DOM_OPEN,DOM_MOVI,DOM_MODE,TEMP,PRES,HUM,TEMP_IN,HUM_IN,WIND_SP,WIND_AZ,RAIN", ",", false));
 		if (addWCS) {
 /*			if (raw && !DLSRandRAW) {
@@ -2638,7 +2638,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 						added[x][y] = data[0][x][y] + data[1][x][y] + data[2][x][y];
 					}
 				}
-				
+
 				// Hack header to allow 16 bit data by adding RGB channels for better photometry and astrometry
 				String bp = header[ImageHeaderElement.getIndex(header, "BITPIX")].value;
 				String bz = header[ImageHeaderElement.getIndex(header, "BZERO")].value;
@@ -2648,17 +2648,17 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 				header[ImageHeaderElement.getIndex(header, "BITPIX")].value = bp;
 				header[ImageHeaderElement.getIndex(header, "BZERO")].value = bz;
 			}
-*/			
+*/
 			header = ImageHeaderElement.addHeaderEntry(header, wcs.getAsHeader());
 		} else {
-			header = WCS.removeWCSentries(header);			
+			header = WCS.removeWCSentries(header);
 		}
-		
+
 		header = ImageHeaderElement.addHeaderEntry(header, new ImageHeaderElement("DATE", ""+(new TimeElement()).toString(), "fits file creation date and time"));
 		header = ImageHeaderElement.addHeaderEntry(header, new ImageHeaderElement("IMGID", GenericCamera.IMAGE_IDS_ALL[8], "Image id: Dark, Flat, On, Test, or Reduced"));
-		header = ImageHeaderElement.addHeaderEntry(header, new ImageHeaderElement("AVERAGED", ""+files.length, "Number of source files averaged"));			
+		header = ImageHeaderElement.addHeaderEntry(header, new ImageHeaderElement("AVERAGED", ""+files.length, "Number of source files averaged"));
 		for (int i=0; i<files.length; i++) {
-			header = ImageHeaderElement.addHeaderEntry(header, new ImageHeaderElement("AVERAG"+i, FileIO.getFileNameFromPath(files[i]), "Source file averaged"));			
+			header = ImageHeaderElement.addHeaderEntry(header, new ImageHeaderElement("AVERAG"+i, FileIO.getFileNameFromPath(files[i]), "Source file averaged"));
 		}
 		checkDir(FileIO.getDirectoryFromPath(outputFile));
 		JPARSECException.DISABLE_WARNINGS = warnings;
@@ -2675,24 +2675,24 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 			fio.writeEntireFits(outputFile);
 		} else {
 			int bp = 16, maxV = FastMath.multiplyBy2ToTheX(1, bp-1);
-			FitsIO fio = new FitsIO(DataSet.toShortArray(data[0], -maxV));					
+			FitsIO fio = new FitsIO(DataSet.toShortArray(data[0], -maxV));
 			fio.setHeader(0, header);
 			if (addWCS) fio.setWCS(0, wcs);
 			if (DLSRandRAW) {
 				fio.addHDU(FitsIO.createHDU(DataSet.toShortArray(data[1], -maxV), header));
-				if (addWCS) fio.setWCS(1, wcs);				
+				if (addWCS) fio.setWCS(1, wcs);
 				fio.addHDU(FitsIO.createHDU(DataSet.toShortArray(data[2], -maxV), header));
-				if (addWCS) fio.setWCS(2, wcs);				
+				if (addWCS) fio.setWCS(2, wcs);
 				if (data.length > 3) {
 					fio.addHDU(FitsIO.createHDU(DataSet.toShortArray(data[3], -maxV), header));
-					if (addWCS) fio.setWCS(3, wcs);		
+					if (addWCS) fio.setWCS(3, wcs);
 				}
 			}
 			if (binaryTable != null) fio.addHDU(binaryTable);
 			fio.writeEntireFits(outputFile);
 		}
 	}
-	
+
 	// RG
 	// GB
 	private double[][] getImageColor(double img[][], int offx, int offy) {
@@ -2708,12 +2708,12 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 				for (int j=offy; j<h; j = j + 2) {
 					iy ++;
 					if (iy < out[0].length) out[ix][iy] = img[i][j];
-				}			
+				}
 			}
 		}
 		return out;
 	}
-	
+
 	private static final int BORDER = 4;
 	private ImageSplineTransform getIST(int x0, int y0, int index, int interpDeg, boolean DLSRandRAW, boolean raw, int height, String file, FitsIO ifio, double iscale) throws JPARSECException {
 		int plain = raw ? 0: index;
@@ -2734,7 +2734,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 		ImageSplineTransform ist = new ImageSplineTransform(interpDeg, img);
 		return ist;
 	}
-	
+
 	private ImageHeaderElement[] solveWCS(Object data, ImageHeaderElement header[], boolean raw, GenericTelescope tel, Object dataRGB) {
 		try {
 			// First get a star catalog around the image coordinates
@@ -2770,7 +2770,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 					tz,
 					DST_RULE.valueOf(dst)
 			);
-			
+
 			// Now get a list of sources in the image
 			FitsIO fio = new FitsIO(data);
 			fio.setHeader(0, header);
@@ -2779,7 +2779,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 				minArea = 8;
 				sigma = 10;
 			}
-			
+
 			SExtractor sex = fio.solveSources(0, minArea, sigma);
 			System.out.println("sextractor nstars: "+sex.getNumberOfSources());
 			String out[] = DataSet.toStringArray(sex.toString(), FileIO.getLineSeparator());
@@ -2794,7 +2794,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 			System.out.println("unique sextractor nstars: "+sources.length);
 			int nsources = sources.length;
 			if (maxSources > 0 && nsources > maxSources) nsources = maxSources;
-			
+
 			// Now get catalog sources
 			if (tel == null) {
 				if (telescope.isMeade()) tel = new MeadeTelescope(telescope, telescopePort);
@@ -2821,18 +2821,18 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 			eph2.isTopocentric = false;
 			eq = Ephem.toMeanEquatorialJ2000(eq, time, obs, eph);
 			String catalog[] = VirtualCamera.getStarCatalog(eq, field, w, h, orientation, m, maglim, tel, time2, obs, eph2, nstars);
-*/			
+*/
 			String catalog[] = VirtualCamera.getStarCatalog(eq, field, w, h, orientation, m, maglim, tel, time, obs, eph, nstars, true);
-						
+
 			System.out.println("Catalog");
 			ConsoleReport.stringArrayReport(catalog);
-			
+
 			System.out.println("Sources");
 			ConsoleReport.stringArrayReport(sources);
-			
+
 			// Now we have to correlate sources with catalog to derive WCS
 			if (catalog.length < 4 || sources.length < 4) return header;
-			
+
 			String sep = ",", seps = " ";
 			double sourceX[] = DataSet.toDoubleValues(DataSet.extractColumnFromTable(sources, seps, 0));
 			double sourceY[] = DataSet.toDoubleValues(DataSet.extractColumnFromTable(sources, seps, 1));
@@ -2848,7 +2848,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 			int id[] = new int[nsources]; // Identify index id[...] with catalog
 			for (int i = 0; i < id.length; i++) { id[i] = -1; }
 			Astrometry preliminarAstrometry = null;
-			
+
 			// Make first triangle from brightest source
 			double seeing = Math.max(5, 3 * field * Constant.RAD_TO_ARCSEC / w); // Seeing = 5" or 3 px of error
 			double maxError = seeing / (field * Constant.RAD_TO_ARCSEC / w); // number of pixels in 5" (approx. seeing)
@@ -2884,7 +2884,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 						id[tri] = tr[0][0];
 						id[tri+1] = tr[0][1];
 						id[tri+2] = tr[0][2];
-						
+
 						ntrisolved ++;
 						if (ntrisolved > 1) {
 
@@ -2897,7 +2897,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 							int centralStar = -1;
 							for (int i=0; i<id.length; i++) {
 								if (id[i] >= 0) {
-									loc[index] = new LocationElement(catalogRA[id[i]], catalogDEC[id[i]], 1.0);		
+									loc[index] = new LocationElement(catalogRA[id[i]], catalogDEC[id[i]], 1.0);
 									p[index] = new Point2D.Double(sourceX[i], sourceY[i]);
 									double d = FastMath.hypot(w/2.0-sourceX[i], h/2.0-sourceY[i]);
 									if (d < minDist || minDist == -1) {
@@ -2906,7 +2906,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 									}
 									index ++;
 								}
-							}			
+							}
 							preliminarAstrometry = new Astrometry(loc[centralStar], loc, p);
 							double res[] = preliminarAstrometry.getPlatePositionResidual();
 							if (res[0] > seeing * Constant.ARCSEC_TO_RAD || res[1] > seeing * Constant.ARCSEC_TO_RAD) {
@@ -2917,7 +2917,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 									ntrisolved = 0;
 									this.scale = 0;
 									this.angle = 0;
-									this.nobs = 0;									
+									this.nobs = 0;
 								} else {
 									// Discard only the last triangle
 									System.out.println("Discarding last triangles");
@@ -2947,14 +2947,14 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 				tri ++;
 			}
 
-			// Solve WCS and photometry			
+			// Solve WCS and photometry
 			int nsolved = 0;
 			for (int i=0; i<id.length; i++) {
 				if (id[i] >= 0) {
 					System.out.println("Source star #"+i+" ("+sources[i]+") is identified with catalog star #"+id[i]+" ("+catalog[id[i]]+")");
 					nsolved ++;
 				}
-			}			
+			}
 			if (nsolved < 4) return header;
 
 			double solvedX[] = new double[sources.length];
@@ -2987,7 +2987,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 					//solvedDEC[index] = catalogDEC[id[i]];
 					if (solvedVar[index].equals("N")) novar ++;
 					if (solvedVar[index].equals("V")) var ++;
-					
+
 					double d = FastMath.hypot(w/2.0-solvedX[index], h/2.0-solvedY[index]);
 					if (d < minDist || minDist == -1) {
 						minDist = d;
@@ -2995,7 +2995,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 					}
 					index ++;
 				}
-			}			
+			}
 			for (int i=0; i<id.length; i++) {
 				if (i >= id.length || id[i] < 0) {
 					solvedX[index] = sourceX[i];
@@ -3009,16 +3009,16 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 					solvedDEC[index] = -1;
 					index ++;
 				}
-			}			
+			}
 
 			LocationElement loc[] = new LocationElement[nsolved];
 			Point2D p[] = new Point2D[nsolved];
 			for (int i=0; i<nsolved; i++) {
-				loc[i] = new LocationElement(solvedRA[i], solvedDEC[i], 1.0);		
+				loc[i] = new LocationElement(solvedRA[i], solvedDEC[i], 1.0);
 				p[i] = new Point2D.Double(solvedX[i], solvedY[i]);
 				System.out.println(p[i].getX()+", "+p[i].getY()+", "+loc[i].toStringAsEquatorialLocation());
 			}
-			
+
 			// Do astrometric fit and eliminate all possible bad stars to repeat the astrometry if necessary
 			LocationElement loc0;
 			Astrometry astrometry = null;
@@ -3032,7 +3032,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 					res[i] = Math.abs(res[i]);
 				}
 				double sumErrRA = Functions.sumComponents(DataSet.getSubArray(res, 0, nsolved-1));
-				double sumErrDEC = Functions.sumComponents(DataSet.getSubArray(res, nsolved, 2*nsolved-1)); 
+				double sumErrDEC = Functions.sumComponents(DataSet.getSubArray(res, nsolved, 2*nsolved-1));
 				int removeIndex = -1;
 				for (int i=0; i<nsolved; i++) {
 					if (res[i] > sumErrRA * 0.3) {
@@ -3051,10 +3051,10 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 				System.out.println("Removing star "+removeIndex+" from the astrometric fit");
 				loc = (LocationElement[]) DataSet.deleteIndex(loc, removeIndex);
 				p = (Point2D[]) DataSet.deleteIndex(p, removeIndex);
-				
+
 				if (centralStar >= loc.length) centralStar = 0;
 			}
-			
+
 			ConsoleReport.doubleArrayReport(res, "f3.6");
 
 			double c[] = astrometry.getPlateConstants();
@@ -3086,15 +3086,15 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 					new ImageHeaderElement("PLATE_H", ""+loc0.getLatitude(), "PLATE REFERENCE LATITUDE"),
 					new ImageHeaderElement("PLATE_I", ""+(res[0]*Constant.RAD_TO_ARCSEC), "PLATE FIT RESIDUAL IN RA (ARCSEC)"),
 					new ImageHeaderElement("PLATE_J", ""+(res[1]*Constant.RAD_TO_ARCSEC), "PLATE FIT RESIDUAL IN DEC (ARCSEC)")
-			});			
-			
+			});
+
 			// Photometric fit
 			int unk = solvedVar.length - var - novar;
 			if (novar < 1 && unk < 1) {
 				header2 = ImageHeaderElement.addHeaderEntry(header2, new ImageHeaderElement[] {
 						new ImageHeaderElement("REF_MAG", "", "Reference magnitude (photometric fit, blank = not available)"),
 						new ImageHeaderElement("REF_FLUX", "", "Reference flux (photometric fit, blank = not available)")
-				});				
+				});
 			} else {
 				ArrayList<String> val = new ArrayList<String>();
 				double minMag = -10, minFlux = -1;
@@ -3113,7 +3113,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 						}
 					} else {
 						if (solvedVar[i].equals("-")) {
-							val.add(line);						
+							val.add(line);
 							if (solvedMag[i] > minMag) {
 								minMag = solvedMag[i];
 								minFlux = solvedFlux[i];
@@ -3121,7 +3121,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 								ypos = solvedY[i];
 							}
 						}
-					}					
+					}
 				}
 				LinearFit lf = null;
 				if (val.size()  < 2) {
@@ -3130,15 +3130,15 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 							new ImageHeaderElement("REF_MAGX", ""+xpos, "X position in image of reference star (photometric fit)"),
 							new ImageHeaderElement("REF_MAGY", ""+ypos, "Y position in image of reference star (photometric fit)"),
 							new ImageHeaderElement("REF_FLUX", ""+minFlux, "Reference flux (photometric fit, 0 = not available)")
-					});									
-					// mag * = REF_MAG - 2.5 log10 (flux * / flux * ref)     
+					});
+					// mag * = REF_MAG - 2.5 log10 (flux * / flux * ref)
 					//    flux * ref should be REF_FLUX if using SExtractor, otherwise the flux of the * at (REF_MAGX, REF_MAGY)
 				} else {
 					double x[] = new double[val.size()];
 					double y[] = new double[val.size()];
 					for (int i=0; i<x.length; i++) {
-						y[i] = Double.parseDouble(FileIO.getField(1, val.get(i), " ", true)) - minMag; 
-						x[i] = -2.5*Math.log10(Double.parseDouble(FileIO.getField(2, val.get(i), " ", true)) / minFlux); 
+						y[i] = Double.parseDouble(FileIO.getField(1, val.get(i), " ", true)) - minMag;
+						x[i] = -2.5*Math.log10(Double.parseDouble(FileIO.getField(2, val.get(i), " ", true)) / minFlux);
 						System.out.println("photo fit "+x[i]+"/"+y[i]);
 					}
 					// Get linear fit and remove all possible points outside the best fitting line
@@ -3162,9 +3162,9 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 						}
 						break;
 					}
-						
+
 					System.out.println("Photometric fit: found slope "+lf.slope+" and n = "+lf.valueInXEqualToZero+", with correlation "+lf.correlation);
-					
+
 					header2 = ImageHeaderElement.addHeaderEntry(header2, new ImageHeaderElement[] {
 							new ImageHeaderElement("REF_MAG", ""+minMag, "Reference magnitude of faintest star (photometric fit, 0 = not available)"),
 							new ImageHeaderElement("REF_MAGX", ""+xpos, "X position in image of reference star (photometric fit)"),
@@ -3177,7 +3177,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 					//                                             dmag theoric * = -2.5 log10 (flux * / flux * ref)
 				}
 				// dmagFlux = m * dmagMag + n = m * (magcat - magmin) + n = -2.5 log10(fluxobs / fluxmin) = thdmag
-				
+
 				String table[][] = new String[solvedX.length+1][10];
 				table[0] = new String[] {"X", "Y", "FLUX", "MAG", "CAT_RA", "CAT_DEC", "CAT_MAG", "VAR", "SP_TYPE", "NAME"};
 				for (int i=0; i<solvedX.length; i++) {
@@ -3197,7 +3197,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 			        	"NSOLVED  I  "+nsolved
 				});
 				this.binaryTable = FitsBinaryTable.createBinaryTable(tableHeader, table);
-			}			
+			}
 			header = ImageHeaderElement.addHeaderEntry(header, header2);
 		} catch (Exception exc) {
 			exc.printStackTrace();
@@ -3205,7 +3205,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 
 		return header;
 	}
-	
+
 	private double scale = 0, angle = 0, nobs = 0;
 	private int[][] findTriangle(double x[], double y[], double l[], double err, int id[], int tri, double maxl, double angle) {
 		int out[][] = null;
@@ -3230,7 +3230,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 				if (j == i) continue;
 				for (int k=kmin; k<kmax; k++) {
 					if (k == i || k == j) continue;
-					
+
 					int nsolved = 0;
 					for (int m=0; m<id.length; m++) {
 						if (id[m] == i && tri != m) nsolved ++;
@@ -3238,7 +3238,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 						if (id[m] == k && (tri+2) != m) nsolved ++;
 					}
 					if (nsolved > 0) continue;
-					
+
 					double max = 0, length[] = new double[3], ang = -1;
 					double dx = x[i] - x[j];
 					double dy = y[i] - y[j];
@@ -3253,7 +3253,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 					dy = y[k] - y[i];
 					length[2] = FastMath.hypot(dx, dy);
 					if (length[2] > max) max = length[2];
-					
+
 					length[0] = length[0] / max;
 					length[1] = length[1] / max;
 					length[2] = length[2] / max;
@@ -3265,19 +3265,19 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 					double orientationDifference = Functions.normalizeRadians(angle - ang);
 					if (orientationDifference > Math.PI) orientationDifference = Math.abs(orientationDifference - Constant.TWO_PI);
 					if (orientationDifference > Constant.PI_OVER_TWO) continue;
-					
+
 					if (isSimilar(l, length, 0, 1, 2, err / Math.max(max, maxl))) {
 						if (nobs > 1) {
 							double meanScale = scale / nobs, meanAngle = this.angle / nobs;
 							double difScale = meanScale / triangleScaleRatio;
-							double difAngle = Functions.normalizeRadians(meanAngle - orientationDifference); 
+							double difAngle = Functions.normalizeRadians(meanAngle - orientationDifference);
 							if (difAngle > Math.PI) difAngle = Math.abs(difAngle - Constant.TWO_PI);
 							if (difScale > 1.2 || difScale < 0.8 || difAngle > 5 * Constant.DEG_TO_RAD) continue;
 						}
 						nobs ++;
 						scale += triangleScaleRatio;
 						this.angle += orientationDifference;
-						
+
 						solution.add(new int[] {i, j, k});
 					}
 /*					if (isSimilar(l, length, 0, 2, 1, err / Math.max(max, maxl))) solution.add(new int[] {i, k, j});
@@ -3285,11 +3285,11 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 					if (isSimilar(l, length, 1, 0, 2, err / Math.max(max, maxl))) solution.add(new int[] {j, i, k});
 					if (isSimilar(l, length, 2, 1, 0, err / Math.max(max, maxl))) solution.add(new int[] {k, j, i});
 					if (isSimilar(l, length, 2, 0, 1, err / Math.max(max, maxl))) solution.add(new int[] {k, i, j});
-*/					
-				}				
-			}			
+*/
+				}
+			}
 		}
-		
+
 		if (solution.size() > 0) {
 			out = new int[solution.size()][3];
 			for (int i = 0; i < solution.size(); i++) {
@@ -3298,7 +3298,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 		}
 		return out;
 	}
-	
+
 	private boolean isSimilar(double l1[], double l2[], int i1, int i2, int i3, double err) {
 		double ratio1 = Math.abs(l1[0] - l2[i1]) / Math.min(l1[0], l2[i1]);
 		double ratio2 = Math.abs(l1[1] - l2[i2]) / Math.min(l1[1], l2[i2]);
@@ -3306,7 +3306,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 		if (ratio1 < err && ratio2 < err && ratio3 < err) return true;
 		return false;
 	}
-	
+
 	/**
 	 * Process a given raw file using DCRaw. Parameters passed to DCRaw are
 	 * fixed to obtain a PGM file as output. This method is called internally
@@ -3332,7 +3332,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 			e.printStackTrace();
 		}
 	}
-	
+
 	private static BufferedImage pgm(int width, int height, int maxcolval, byte[] data, boolean scale) {
 		if (maxcolval < 256){
 			BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY);
@@ -3471,7 +3471,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 	 * an 8 bit image, 65535 for a 16 bit image.
 	 * @param data The image data.
 	 * @param scale True to scale the data to 255 or 65535 in case the maximum
-	 * intensity is not any of those 2 values. True is recommended unless the 
+	 * intensity is not any of those 2 values. True is recommended unless the
 	 * original count numbers should be preserved.
 	 * @return The image.
 	 */
@@ -3563,7 +3563,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 	        	} else {
 			        int data[] = new int[width*height];
 			        iis.readFully(data, 0, data.length);
-			        return ObservationManager.pgm(width, height, depth, data, scale);	        		
+			        return ObservationManager.pgm(width, height, depth, data, scale);
 	        	}
 	        }
 		} catch (Exception exc) {
@@ -3588,15 +3588,15 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 			for (int y=0;y<img[0].length;y++) {
 				for (int x=0;x<img.length;x++) {
 					if (max < 256) {
-						iis.write(img[x][y]);						
+						iis.write(img[x][y]);
 					} else {
 						if (max < 65536) {
-							iis.writeChar(img[x][y]);							
+							iis.writeChar(img[x][y]);
 						} else {
-							iis.writeInt(img[x][y]); // Non standard							
+							iis.writeInt(img[x][y]); // Non standard
 						}
 					}
-				}				
+				}
 			}
 		} catch (Exception exc) {
 			throw new JPARSECException("Could not write to the file "+file, exc);
@@ -3620,7 +3620,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 	private void createPanel() throws JPARSECException {
 		int vgap = 25;
 		Color fc = Color.lightGray;
-				
+
 		// Observation panel
 		MigLayout imgLayout = new MigLayout("wrap 8");
 		JPanel imgPanel = new JPanel(imgLayout);
@@ -3653,14 +3653,14 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 		dect.setFocusable(false);
 		dect.setEditable(false);
 		imgPanel.add(pxl, "width 9%");
-		imgPanel.add(pxt, "width 9%");		
+		imgPanel.add(pxt, "width 9%");
 		imgPanel.add(pyl, "width 9%");
 		imgPanel.add(pyt, "width 9%");
 		imgPanel.add(ral, "width 9%");
 		imgPanel.add(rat, "width 23%");
 		imgPanel.add(decl, "width 9%");
 		imgPanel.add(dect, "width 23%");
-				
+
 		// Image info panel
 		MigLayout infoLayout = new MigLayout("wrap 2", "[50%][50%]", "[]"+vgap+"[]");
 		JPanel infoPanel = new JPanel(infoLayout);
@@ -3684,12 +3684,12 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 		imgInfo.setFont(mono);
 		imgInfo.setEditable(false);
 		imgInfoScroll = new JScrollPane(imgInfo);
-/*		
+/*
 		imgInfo.setBackground(null);
 		imgInfoScroll.setBackground(null);
 		imgInfo.setForeground(fc);
 		imgInfoScroll.setForeground(fc);
-*/		
+*/
 		infoPanel.add(imgInfoScroll, "span,wrap,width 100%,height 80%");
 		infoPanel.add(autoReduce, "align center");
 		infoPanel.add(focusAssist, "align center");
@@ -3705,7 +3705,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 		tableScroll = new JScrollPane(table.getComponent());
 		tableScroll.setAutoscrolls(true);
 		tablePanel.add(tableScroll, "span,wrap,height 100%, width 100%");
-		
+
 		// Global panels
 		String constrainColumn = "";
 		MigLayout globalLayout = new MigLayout("fillx", constrainColumn);
@@ -3735,7 +3735,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 					Picture pic = new Picture(r, g, b, null);
 					lastImage = pic.getImage();
 				}
-				
+
 				if (lastImageTable == null) {
 					int sou = -1;
 					for (int i=0; i<fio.getNumberOfPlains(); i++) {
@@ -3751,13 +3751,13 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 						}
 					}
 					if (sou < 0) return;
-					
+
 					lastImageTable = FitsBinaryTable.getBinaryTable(fio.getHDU(sou));
 				}
        		} catch (Exception exc) { exc.printStackTrace(); }
 		}
 	}
-	
+
 	private void updatePanel() {
 		if (!this.reducePossible) return;
 
@@ -3765,16 +3765,16 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 		if (lastImage != null) {
 			if (scaleMode == 200 || scaleMode == 50 || scaleMode == 0) {
 				Picture pic = new Picture(lastImage);
-				
+
 				if (scaleMode == 200) {
 					pic.scaleImage(pic.getWidth()*2, pic.getHeight()*2);
 					imgScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-					imgScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);				
+					imgScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 				} else {
 					if (scaleMode == 50) {
 						pic.scaleImage(pic.getWidth()/2, pic.getHeight()/2);
 						imgScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-						imgScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);				
+						imgScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 					} else {
 						pic.scaleMaintainingImageRatio(imgScroll.getWidth(), 0);
 						imgScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -3788,20 +3788,20 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 				img.setImage(pic.getImage());
 			} else {
 				imgScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-				imgScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);				
+				imgScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 				Picture pic = new Picture(lastImage);
 				if (colorMode > 0) {
 					byte[][] pixels = pic.getImageAsByteArray(colorMode-1);
 					pic = new Picture(pixels, pixels, pixels, null);
 				}
-				
+
 				img.setImage(pic.getImage());
 			}
 		}
 
 		if (autoReduce.isSelected() && !this.reductionEnabled()) autoReduce.setSelected(false);
 		if (!autoReduce.isSelected() && this.reductionEnabled()) autoReduce.setSelected(true);
-		
+
 		if (lastImagePath == null) {
 			imgInfo.setText("");
 			try {
@@ -3812,7 +3812,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 			this.img.setIcon(img);
 			return;
 		}
-		
+
 		if (focusAssist.isSelected()) {
 			if (lastImagePath.endsWith(".fits") || lastImagePath.endsWith(".jpg") ||
 					lastImagePath.endsWith(".png") || lastImagePath.endsWith(".pgm")) {
@@ -3822,8 +3822,8 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 					Graphics2D g = null;
 					double scale = 1;
 					int r = 8, r2 = 2*r;
-					try { 
-						image = Picture.copy(Picture.toBufferedImage(img.getImage())); 
+					try {
+						image = Picture.copy(Picture.toBufferedImage(img.getImage()));
 						g = image.createGraphics();
 						g.setColor(Color.WHITE);
 						scale = image.getWidth() / (double) lastImage.getWidth();
@@ -3831,7 +3831,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 					for (int i=0; i<lastImageTable.length; i++) {
 						for (int j=0; j<lastImageTable[0].length;j++) {
 							if (i == 0 || !DataSet.isDoubleStrictCheck(lastImageTable[i][j])) {
-								s.append(FileIO.addSpacesBeforeAString(lastImageTable[i][j], 12));								
+								s.append(FileIO.addSpacesBeforeAString(lastImageTable[i][j], 12));
 							} else {
 								double f = 1.0;
 								int ndec = 3;
@@ -3840,7 +3840,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 								if (j == 4 || j == 5) ndec = 6;
 								String v = Functions.formatValue(f * Double.parseDouble(lastImageTable[i][j]), ndec);
 								v = DataSet.replaceAll(v, ".000", "", true);
-								
+
 								if ((j == 4 || j == 5 || j == 6) && (lastImageTable[i][4].equals("-1.0") && lastImageTable[i][5].equals("-1.0"))) {
 									s.append(FileIO.addSpacesBeforeAString("-", 12));
 								} else {
@@ -3849,7 +3849,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 							}
 						}
 						s.append(FileIO.getLineSeparator());
-						
+
 						if (i > 0 && g != null) {
 							int x = (int) ((Double.parseDouble(lastImageTable[i][0]) - 1) * scale);
 							int y = (int) ((Double.parseDouble(lastImageTable[i][1]) - 1) * scale);
@@ -3931,7 +3931,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 					for (int i=0; i<fio.getNumberOfPlains(); i++) {
 						header += FileIO.getLineSeparator() + "Header of plain #"+i + FileIO.getLineSeparator() + ImageHeaderElement.toString(fio.getHeader(i), 25, 10);
 					}
-					imgInfo.setText(DataSet.toString(data, FileIO.getLineSeparator()) + FileIO.getLineSeparator() + 
+					imgInfo.setText(DataSet.toString(data, FileIO.getLineSeparator()) + FileIO.getLineSeparator() +
 							fio.toString() + header);
 				} else {
 					Picture pic;
@@ -3942,7 +3942,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 					} else {
 						pic = new Picture(lastImagePath);
 						w = pic.getWidth();
-						h = pic.getHeight();					
+						h = pic.getHeight();
 					}
 					String data[] = new String[] {
 							"Path: "+lastImagePath,
@@ -3964,29 +3964,29 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 			exc.printStackTrace();
 		}
 	}
-	
+
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		worker.addToQueue(e);
 	}
 	Popup popup = null;
-	
+
 	@Override
 	public void mouseEntered(MouseEvent e) {}
 	@Override
 	public void mouseExited(MouseEvent e) {}
 	@Override
 	public void mousePressed(MouseEvent e) {
-		if (e.getSource() == img) startPt = e.getPoint();  
+		if (e.getSource() == img) startPt = e.getPoint();
 	}
-	
+
 	@Override
 	public void mouseReleased(MouseEvent e) {}
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
 		if (e.getSource() == img) {
-		    img.setLocation(img.getX()+e.getX()-startPt.x, img.getY()+e.getY()-startPt.y);  
+		    img.setLocation(img.getX()+e.getX()-startPt.x, img.getY()+e.getY()-startPt.y);
 		    ((JComponent)img.getParent()).scrollRectToVisible(img.getBounds());
 		    //imgScroll.getHorizontalScrollBar().setValues(imgScroll.getHorizontalScrollBar().getValue()+(e.getX()-startPt.x)/2, img.getWidth()/10, 0, img.getWidth());
 		    //imgScroll.getVerticalScrollBar().setValues(imgScroll.getVerticalScrollBar().getValue()+(e.getY()-startPt.y)/2, img.getHeight()/10, 0, img.getHeight());
@@ -4005,7 +4005,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 				dect.setText("");
 				return;
 			}
-			
+
 			// First pixel should be (1, 1) as in SExtractor
 			int px = e.getX() + 1, py = e.getY() + 1;
 			if (scaleMode == 200) {
@@ -4049,7 +4049,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 
 	private void createTable() throws JPARSECException {
 		updateTable(false);
-		
+
 		final String columnNames[] = new String[] {
 				Translate.translate(1200)+" ?", Translate.translate(506), Translate.translate(1201), "ISO", Translate.translate(180)+" (s)", Translate.translate(1202)
 		};
@@ -4085,14 +4085,14 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 				if (id == 3) dir = workingDir + obsDir + cameraDir[camIndex] + reducedDir[camIndex];
 				if (id == 4) dir = workingDir + obsDir + cameraDir[camIndex] + stackedDir[camIndex];
 				if (id == 5) dir = workingDir + obsDir + cameraDir[camIndex] + averagedDir[camIndex];
-				
+
 				String files[] = FileIO.getFiles(dir);
 				if (files == null) continue;
 				for (int j=0; j<files.length; j++) {
 					if (!files[j].endsWith(".fits")) continue;
 					FitsIO fio = new FitsIO(files[j]);
 					ImageHeaderElement header[] = fio.getHeader(0);
-					
+
 					boolean raw = Boolean.parseBoolean(header[ImageHeaderElement.getIndex(header, "RAW")].value);
 					String type = "raw";
 					if (!raw) type = "rgb";
@@ -4100,10 +4100,10 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 					String date = "-";
 					int datei = ImageHeaderElement.getIndex(header, "DATE-OBS");
 					if (datei >= 0 && id < 3) {
-						date = header[datei].value; 
+						date = header[datei].value;
 					} else {
 						datei = ImageHeaderElement.getIndex(header, "DATE");
-						if (datei >= 0) date = header[datei].value; 
+						if (datei >= 0) date = header[datei].value;
 					}
 					String source = header[ImageHeaderElement.getIndex(header, "OBJECT")].value;
 					String imgid = header[ImageHeaderElement.getIndex(header, "IMGID")].value;
@@ -4112,9 +4112,9 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 					if (imgid.equals(IMAGE_ID.FLAT.name())) imgid = GenericCamera.IMAGE_IDS[IMAGE_ID.FLAT.ordinal()];
 					String time = header[ImageHeaderElement.getIndex(header, "TIME")].value;
 					if (!DataSet.isDoubleFastCheck(time)) time = header[ImageHeaderElement.getIndex(header, "BULBTIME")].value;
-	
+
 					boolean enabled = true;
-					int status = 0; 
+					int status = 0;
 					if (lineTable != null) {
 						int tindex = DataSet.getIndexContaining(lineTable, files[j]);
 						if (tindex >= 0) {
@@ -4135,20 +4135,20 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 						if (id == 2 && imgid.equals(GenericCamera.IMAGE_IDS[IMAGE_ID.ON_SOURCE.ordinal()])) {
 							String outputFile = workingDir + obsDir + cameraDir[camIndex] + reducedDir[camIndex] + FileIO.getFileNameFromPath(files[j]);
 							File master = new File(outputFile);
-							if (status == 0 && !master.exists()) status = 1;						
+							if (status == 0 && !master.exists()) status = 1;
 						}
 						if (id >= 3) {
 							if (status == 3) status = 0;
 							if (ImageHeaderElement.getByKey(header, "CRVAL1") == null) status = 3;
 						}
 					}
-					
-					// XXX Values of status: 
+
+					// XXX Values of status:
 					// 0 => everything ok, completely reduced if it is a reduced observation
 					// 1 => master not found (master dark / master flat / reduced frame) => not reduced => in red
 					// 2 => master flat not applied in reduced on observation => not completely reduced => in yellow
 					// 3 => WCS not solved for a reduced on observation => not completely/correctly solved => in blue
-					
+
 					if (lastImagePath != null && lastImagePath.equals(files[j])) {
 						index = list.size();
 						reduceButton.setText(Translate.translate(1197));
@@ -4160,7 +4160,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 					type = " ("+type+")";
 					if (imgid.equals(GenericCamera.IMAGE_IDS_ALL[IMAGE_ID.AVERAGED.ordinal()]) ||
 							imgid.equals(GenericCamera.IMAGE_IDS_ALL[IMAGE_ID.STACKED.ordinal()]) ||
-							imgid.equals(GenericCamera.IMAGE_IDS_ALL[IMAGE_ID.ON_SOURCE.ordinal()]) || 
+							imgid.equals(GenericCamera.IMAGE_IDS_ALL[IMAGE_ID.ON_SOURCE.ordinal()]) ||
 							imgid.equals(GenericCamera.IMAGE_IDS_ALL[IMAGE_ID.REDUCED_ON.ordinal()])) type = " " + source + type;
 					list.add(""+enabled+SEPARATOR+files[j]+SEPARATOR+imgid+type+SEPARATOR+ISO+SEPARATOR+time+SEPARATOR+date+SEPARATOR+status);
 				}
@@ -4168,7 +4168,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 		}
 		lineTable = DataSet.arrayListToStringArray(list);
 		if (table != null) table.updateTable(toTable(lineTable), show);
-		
+
 		String element = null;
 		if (index >= 0) element = lineTable[index];
         if (show) {
@@ -4181,7 +4181,6 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 	    	table.getComponent().repaint();
         }
 	}
-
 	@Override
 	public void componentHidden(ComponentEvent arg0) {
 	}
@@ -4207,7 +4206,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 	private boolean optionsPanelShown = false;
 	private JPanel createOptionsPanel() throws JPARSECException {
 		Color fc = Color.lightGray;
-				
+
 		// Project info panel
 		String data[] = this.getProjectInfo();
 		prName = new JTextField(data[0], 15);
@@ -4377,7 +4376,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 		camSD = new JTextField[nc];
 		camAD = new JTextField[nc];
 		for (int index = 0; index < nc; index ++) {
-			String c[] = new String[] {""+(float)(getCameraPositionError(index) * Constant.RAD_TO_DEG), ""+getCameraMinimumIntervalBetweenShots(index), 
+			String c[] = new String[] {""+(float)(getCameraPositionError(index) * Constant.RAD_TO_DEG), ""+getCameraMinimumIntervalBetweenShots(index),
 					getDarkDir(index), getFlatDir(index), getOnDir(index), getReducedDir(index), getStackedDir(index), getAveragedDir(index)};
 			MigLayout camLayout = new MigLayout("wrap 8"); //, "[50%][50%]", "[]"+vgap+"[]");
 			JPanel camPanel = new JPanel(camLayout);
@@ -4425,11 +4424,11 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 			camPanel.add(camAD[index], "align left");
 			panel.add(camPanel, "width 100%,span,wrap");
 		}
-		
+
 		panel.addComponentListener(this);
 		return panel;
 	}
-	
+
 	private static double[] toDoubleValues(String[] array) throws JPARSECException
 	{
 		double out[] = new double[array.length];
@@ -4440,16 +4439,16 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 		}
 		return out;
 	}
-	
+
 	private Worker worker = null;
 	private class Worker implements Runnable {
 		private ArrayList<Object> queue = new ArrayList<Object>();
 		public Worker() { }
-		
+
 		public void addToQueue(Object event) {
 			queue.add(event);
 		}
-		
+
 		public void run() {
 			while (true) {
 				try {
@@ -4457,7 +4456,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 						Thread.sleep(500);
 						continue;
 					}
-					
+
 					Object e = queue.get(0);
 					if (e instanceof MouseEvent) {
 						processEvent((MouseEvent)e);
@@ -4473,8 +4472,8 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 					exc.printStackTrace();
 				}
 			}
-		}		
-		
+		}
+
 		private void processEvent(MouseEvent e) {
 	  		if (e.getSource() == table.getComponent()) {
 				int row = table.getComponent().getSelectedRow(), column = table.getComponent().getSelectedColumn();
@@ -4515,7 +4514,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 									);
 							double res[] = new double[] {
 									Double.parseDouble(ImageHeaderElement.getByKey(header, "PLATE_I").value) * Constant.ARCSEC_TO_RAD,
-									Double.parseDouble(ImageHeaderElement.getByKey(header, "PLATE_J").value) * Constant.ARCSEC_TO_RAD							
+									Double.parseDouble(ImageHeaderElement.getByKey(header, "PLATE_J").value) * Constant.ARCSEC_TO_RAD
 							};
 							lastImageAstrometry = new Astrometry(loc0, c, res);
 						} catch (Exception exc) {}
@@ -4541,11 +4540,11 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 	  			 JMenuItem menu13 = new JMenuItem(Translate.translate(1190));
 	  			 Font f = menu11.getFont();
 	  			 f = f.deriveFont((float) (f.getSize() + 6));
-	  			 if (scaleMode == 200) menu10.setFont(f);  			 
-	  			 if (scaleMode == 100) menu11.setFont(f);  			 
-	  			 if (scaleMode == 50) menu12.setFont(f);  			 
-	  			 if (scaleMode == 0) menu13.setFont(f);  			 
-	  			 
+	  			 if (scaleMode == 200) menu10.setFont(f);
+	  			 if (scaleMode == 100) menu11.setFont(f);
+	  			 if (scaleMode == 50) menu12.setFont(f);
+	  			 if (scaleMode == 0) menu13.setFont(f);
+
 	  			 menu1.add(menu10);
 	  			 menu1.add(menu11);
 	  			 menu1.add(menu12);
@@ -4588,7 +4587,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 	  			 if (colorMode == 1) menu22.setFont(f);
 	  			 if (colorMode == 2) menu23.setFont(f);
 	  			 if (colorMode == 3) menu24.setFont(f);
-	  			 
+
 	  			 menu2.add(menu21);
 	  			 menu2.add(menu22);
 	  			 menu2.add(menu23);
@@ -4630,7 +4629,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 	  				}
 	  			 });
 	  			popupMenu.add(menu2);
-	  			
+
 	  			String add = Translate.translate(1200);
 	  			if (!showGrid) add = Translate.translate(1228);
 	 			 JMenuItem menu31 = new JMenuItem(Translate.translate(1203) + " ("+add+")");
@@ -4643,7 +4642,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 	  				}
 	  			 });
 	   			popupMenu.add(menu31);
-	   			
+
 	   			add = "Log";
 	   			if (linearIntensityScale) add = Translate.translate(212);;
 				 JMenuItem menu41 = new JMenuItem(Translate.translate(1226) + " ("+add+")");
@@ -4656,7 +4655,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 	  						plev2 = PICTURE_LEVEL.LOG_SCALE;
 	  					} else {
 	  						plev1 = PICTURE_LEVEL.EXP_SCALE;
-	  						plev2 = PICTURE_LEVEL.LINEAR_INTERPOLATION;  						
+	  						plev2 = PICTURE_LEVEL.LINEAR_INTERPOLATION;
 	  					}
 	  					updateImage();
 						updatePanel();
@@ -4683,7 +4682,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 	  			 });
 				if (lastImage != null) popupMenu.add(menu51);
 				popupMenu.addSeparator();
-				
+
 				 JMenuItem menu61 = new JMenuItem(Translate.translate(1231));
 	  			 menu61.addActionListener(new ActionListener() {
 	  				 @Override
@@ -4773,7 +4772,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 	  				}
 	  			 });
 	 			popupMenu.add(menu61);
-	  			 
+
 	  			try {
 	  				popupMenu.show(img, e.getX(), e.getY());
 	  			} catch (Exception exc) {
@@ -4822,14 +4821,14 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 	  					JTextArea ta = new JTextArea(DataSet.toString(message, FileIO.getLineSeparator()), 8, 30);
 	  					Point p = e.getLocationOnScreen();
 	  					popup = popupF.getPopup(img, ta, p.x, p.y);
-	  					popup.show();							
+	  					popup.show();
 					}
 				} catch (Exception exc) {
 					exc.printStackTrace();
 				}
 	  		}
 		}
-		
+
 		private void processEvent(ActionEvent e) {
 			if (e.getSource() == autoReduce || e.getSource() == focusAssist) {
 				if (e.getSource() == autoReduce) {
@@ -4861,7 +4860,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 								IMAGE_ID imgID = IMAGE_ID.values()[index];
 								if (imgID != IMAGE_ID.ON_SOURCE && imgID != IMAGE_ID.TEST && imgID != IMAGE_ID.REDUCED_ON &&
 										imgID != IMAGE_ID.STACKED && imgID != IMAGE_ID.AVERAGED) {
-									focusAssist.setSelected(false);							
+									focusAssist.setSelected(false);
 								}
 							} else {
 								focusAssist.setSelected(false);
@@ -4909,10 +4908,10 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 					int ask = JOptionPane.showConfirmDialog(null, DataSet.replaceAll(Translate.translate(1287), "%file", lastImagePath, true), Translate.translate(1286), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 					if (ask == JOptionPane.YES_OPTION) {
 						int camIndex = getCameraIndex(lastImagePath);
-						String ondir = workingDir + obsDir + cameraDir[camIndex] + onDir[camIndex] + FileIO.getFileNameFromPath(lastImagePath);						
-						String reduceddir = workingDir + obsDir + cameraDir[camIndex] + reducedDir[camIndex] + FileIO.getFileNameFromPath(lastImagePath);						
-						String stackeddir = workingDir + obsDir + cameraDir[camIndex] + stackedDir[camIndex] + FileIO.getFileNameFromPath(lastImagePath);						
-						String averageddir = workingDir + obsDir + cameraDir[camIndex] + averagedDir[camIndex] + FileIO.getFileNameFromPath(lastImagePath);						
+						String ondir = workingDir + obsDir + cameraDir[camIndex] + onDir[camIndex] + FileIO.getFileNameFromPath(lastImagePath);
+						String reduceddir = workingDir + obsDir + cameraDir[camIndex] + reducedDir[camIndex] + FileIO.getFileNameFromPath(lastImagePath);
+						String stackeddir = workingDir + obsDir + cameraDir[camIndex] + stackedDir[camIndex] + FileIO.getFileNameFromPath(lastImagePath);
+						String averageddir = workingDir + obsDir + cameraDir[camIndex] + averagedDir[camIndex] + FileIO.getFileNameFromPath(lastImagePath);
 						if (lastImagePath.equals(ondir)) {
 							FileIO.deleteFile(reduceddir);
 						} else {
@@ -4931,7 +4930,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 							}
 						}
 						FileIO.deleteFile(lastImagePath);
-		
+
 						lastImagePath = null;
 						lastImage = null;
 						lastImageWCS = null;
@@ -4941,7 +4940,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 					}
 				} catch (Exception exc) {
 					exc.printStackTrace();
-				}			
+				}
 			}
 		}
 	}

@@ -1,9 +1,9 @@
 /** This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -85,7 +85,7 @@ import jparsec.util.Logger.LEVEL;
  * http://www.ee.ucl.ac.uk/~mflanaga/java/Regression.html<BR>
  * http://www.ee.ucl.ac.uk/~mflanaga/java/
  * <P>
- * 
+ *
  * @author M. Thomas Flanagan
  * @author T. Alonso Albi - OAN (Spain), just code cleanup
  * @version 1.0
@@ -263,7 +263,7 @@ public class Regression {
 												// whether degrees of freedom
 												// are greater than zero is
 												// ignored
-	
+
 	/**
 	 * Constructor with data with x as 1D array and no weights (they are set to 1).
 	 * @param xxData The x values.
@@ -728,7 +728,7 @@ public class Regression {
 
 			this.covar = new double[this.nTerms][this.nTerms];
 			this.corrCoeff = new double[this.nTerms][this.nTerms];
-			;
+			
 			for (int i = 0; i < this.nTerms; i++) {
 				this.bestSd[i] = Double.NaN;
 				this.pseudoSd[i] = Double.NaN;
@@ -1112,13 +1112,13 @@ public class Regression {
 
 	/**
 	 * Sets the maximum number of iterations in the estimation of Nelder and Mead simplex.
-	 * Default value is 3000, which could slowdown massive calculations. 
+	 * Default value is 3000, which could slowdown massive calculations.
 	 * @param n The new value.
 	 */
 	public void setMaximumNumberOfInterationsForNelderAndMeadSimplex(int n) {
 		this.nMax = n;
 	}
-	
+
 	// Square of a double number
 	private double square(double a) {
 		return a * a;
@@ -1248,7 +1248,7 @@ public class Regression {
 		}
 
 		lastSS = ss;
-		
+
 		// return sum of squares
 		return ss;
 	}
@@ -1974,7 +1974,7 @@ public class Regression {
 	public double getRMS() {
 		return this.lastSS;
 	}
-	
+
 	/**
 	 * Fits the input data to a custom function f=f(x). The unknown parameters
 	 * must be named p1, p2, p3, ... Convergency is not guarranteed, even in case
@@ -2010,10 +2010,10 @@ public class Regression {
 
 	/**
 	 * Fits data to a Gaussian (normal) probability function
-	 * with option to fix some of the parameters. Pparameter 
+	 * with option to fix some of the parameters. Pparameter
 	 * order is mean, sd, and yscale in the function:
 	 * (yscale/sd.sqrt(2.pi)).exp(-0.5[(x - xmean)/sd]^2).
-	 * 
+	 *
 	 * @param initialEstimates Initial estimates of the three mentioned values.
 	 * @param fixed True or false to fix each of them.
 	 * @throws JPARSECException If an error occurs.
@@ -2027,7 +2027,7 @@ public class Regression {
 	 * Generalised linear regression
 	 * y = a.f1(x) + b.f2(x) + c.f3(x) + . . .
 	 * for a set of x input arrays.
-	 * 
+	 *
 	 * @throws JPARSECException If an error occurs.
 	 */
 	public void linearGeneral() throws JPARSECException {
@@ -2084,7 +2084,7 @@ public class Regression {
 	/**
 	 * Polynomial fitting
 	 * y = a + b.x + c.x^2 + d.x^3 + . . .
-	 * 
+	 *
 	 * @param deg The degree of the polynomial.
 	 * @return A series object representing the data and the fitting, for charting
 	 * purposes.
@@ -2125,7 +2125,7 @@ public class Regression {
 		this.generalLinear(aa);
 		if (!this.ignoreDofFcheck)
 			this.generalLinearStats(aa);
-		
+
 		ChartSeriesElement series = new ChartSeriesElement(
 				xData[0], yData, null, null,
 				"", true, Color.BLACK, ChartSeriesElement.SHAPE_CIRCLE,
@@ -2138,7 +2138,7 @@ public class Regression {
 	/**
 	 * Polynomial fitting
 	 * y = a + b.x + c.x^2 + d.x^3 + . . .
-	 * 
+	 *
 	 * @param deg The degree of the polynomial.
 	 * @return Coefficients of the best estimates for the polynomial.
 	 * @throws JPARSECException If an error occurs.
@@ -2178,15 +2178,15 @@ public class Regression {
 		this.generalLinear(aa);
 		if (!this.ignoreDofFcheck)
 			this.generalLinearStats(aa);
-		
+
 		return this.getBestEstimates();
 	}
-	
+
 	/**
 	 * Polynomial fitting
 	 * y = a + b.x + c.x^2 + d.x^3 + . . .
 	 * where a is fixed.
-	 * 
+	 *
 	 * @param deg Degree of the polynomial.
 	 * @param fixed_a The value of a.
 	 * @return A series object representing the data and the fitting, for charting
@@ -2261,7 +2261,7 @@ public class Regression {
 
 			this.covar = new double[this.nTerms][this.nTerms];
 			this.corrCoeff = new double[this.nTerms][this.nTerms];
-			
+
 			for (int i = 0; i < this.nTerms; i++) {
 				this.bestSd[i] = Double.NaN;
 				this.pseudoSd[i] = Double.NaN;
@@ -2421,7 +2421,7 @@ public class Regression {
 			itis = true;
 		return itis;
 	}
-	
+
 	private static final double SQRT_TWO_PI = Math.sqrt(Constant.TWO_PI);
 
 	// Class to evaluate the Gausian (normal) function y = (yscale/sd.sqrt(2.pi)).exp(-0.5[(x - xmean)/sd]^2).
@@ -2443,7 +2443,7 @@ public class Regression {
 			function = f;
 			eval = new Evaluation(function, null);
 		}
-		
+
 	    public double function(double[] p, double[] x){
 	    	try {
 	    		String param[] = new String[p.length];

@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -34,7 +34,7 @@ import jparsec.util.*;
  * except a few of them with very little population. Also, some of the
  * 'countries' are (speaking rigorously) just regions, like 'Antarctica' or
  * 'Terres Australes'.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -42,11 +42,11 @@ public class Country
 {
 	// private constructor so that this class cannot be instantiated.
 	private Country() {}
-	
+
 	/**
 	 * The set of countries.
 	 */
-	public static enum COUNTRY {
+	public enum COUNTRY {
 		/** Constant ID for Afghanistan. */
 		Afghanistan,
 		/** Constant ID for Albania. */
@@ -409,7 +409,7 @@ public class Country
 		Samoa,
 		/** Constant ID for San Marino. */
 		San_Marino,
-		/** Constant ID for S&atilde;o Tom&eacute; and Pr&iacute;ncipe. */
+		/** Constant ID for São Tom&eacute; and Pr&iacute;ncipe. */
 		Sao_Tome_and_Principe,
 		/** Constant ID for Saudi Arabia. */
 		Saudi_Arabia,
@@ -515,12 +515,13 @@ public class Country
 		SudanOfSouth,
 		/** Constant ID for Zimbabwe. */
 		Zimbabwe	;
-		
+
 		/**
 		 * Gets the name of the country providing the ID constant.
-		 * 
+		 *
 		 * @return The country name.
 		 */
+		@Override
 		public String toString()
 		{
 			if (this == COUNTRY.American_Samoa)
@@ -650,7 +651,7 @@ public class Country
 				return "San Marino";
 
 			if (this == COUNTRY.Sao_Tome_and_Principe)
-				return "S\u00e3o Tom\u00e9 and Pr\u00edncipe";
+				return "São Tom\u00e9 and Pr\u00edncipe";
 
 			if (this == COUNTRY.Saudi_Arabia)
 				return "Saudi Arabia";
@@ -703,7 +704,7 @@ public class Country
 
 			return this.name();
 		}
-		
+
 		/**
 		 * Returns the daylight saving time rule for a given country.
 		 * <P>
@@ -711,17 +712,17 @@ public class Country
 		 * does not provide valid output for all countries. For Europe is fine.
 		 * <P>
 		 * The change is 1 hour and is set at the beginning of the last Sunday in
-		 * the corresponding month. See {@link TimeScale#getDST(double, ObserverElement)} 
-		 * for more information. The only exception to this rule is currently 
-		 * United States and Canada, where the change starts now on the second 
+		 * the corresponding month. See {@link TimeScale#getDST(double, ObserverElement)}
+		 * for more information. The only exception to this rule is currently
+		 * United States and Canada, where the change starts now on the second
 		 * Monday of April, and ends on the first Sunday of November.
 		 * <P>
 		 * The JPARSEC package applies this change in the same way in the whole USA
-		 * (new rule adopted in 2007, old rule previously for the entire country), although 
-		 * some regions in USA have maintained the old rule. To select the correct rule 
+		 * (new rule adopted in 2007, old rule previously for the entire country), although
+		 * some regions in USA have maintained the old rule. To select the correct rule
 		 * it is posible to set DST information properly in the observer object.
-		 * 
-		 * @return The DST code for the country, could be {@linkplain DST_RULE#NONE} if no 
+		 *
+		 * @return The DST code for the country, could be {@linkplain DST_RULE#NONE} if no
 		 * DST information exists.
 		 * @throws JPARSECException Thrown if DST is unknown and
 		 *         {@link JPARSECException#treatWarningsAsErrors(boolean)} is set to true.
@@ -933,10 +934,10 @@ public class Country
 			return DST_RULE.NONE;
 		}
 	};
-	
+
 	/**
 	 * Returns the number of countries.
-	 * 
+	 *
 	 * @return The number of countries.
 	 */
 	public static int getNumberOfCountries()
@@ -947,7 +948,7 @@ public class Country
 
 	/**
 	 * Gets the ID number of the country providing it's name.
-	 * 
+	 *
 	 * @param country The name of the country.
 	 * @return The ID number.
 	 * @throws JPARSECException Thrown if the country is not found.
@@ -1499,7 +1500,7 @@ public class Country
 		if (country.equals("San Marino"))
 			c = COUNTRY.San_Marino;
 
-		if (country.equals("S\u00e3o Tom\u00e9 and Pr\u00edncipe"))
+		if (country.equals("São Tom\u00e9 and Pr\u00edncipe"))
 			c = COUNTRY.Sao_Tome_and_Principe;
 
 		if (country.equals("Saudi Arabia"))

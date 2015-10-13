@@ -728,7 +728,7 @@ Fabra Obs. (J.Comas Sola)                                             Spain     
 Deep Space Sta., Radio                                                Spain                                             -4.3667   40.455   1538  789  Cebreros                      4  
 German+Spanish Center                                                 Spain                                             -2.5367   37.230   493   2168 Gergal/Calar Alto Mtn.        4  
 Cartuja Obs. (former Jesuites Obs.)                                   Spain                                             -3.5922   37.187   1113  775  Granada                       6  
-Millimeter Radio Sta.                                                 Spain                                             -3.4000   37.068   1540  2870 Granada/Pico Veleto           4  
+Millimeter Radio Sta.                                                 Spain                                             -3.4000   37.068   1540  2870 Granada/Pico Veleta           4  
 Roque de los Muchachos Obs.                                           Spain                                             -17.8817  28.760   950   2326 La Palma Island,Canaries      4  
 National Obs.                                                         Spain                                             -3.6880   40.408   990   655  Madrid                        3  
 Obs. Astronomico de Mallorca                                          Spain                                             2.9500    39.643   620   206  Mallorca                      1  

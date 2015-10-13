@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -32,7 +32,7 @@ import jparsec.util.*;
 
 /**
  * A class to create simple HTML files.<P>
- * 
+ *
  * The basic process is to write the header, to start the body, to end the body, and
  * to end the document. Any text to write should be located inside the body. Anyway,
  * the header/body and document end are handled or called automatically in case the
@@ -41,7 +41,7 @@ import jparsec.util.*;
  * @version 1.0
  */
 public class HTMLReport implements Serializable {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	private StringBuffer htmlCode = new StringBuffer(1000);
 
@@ -49,16 +49,16 @@ public class HTMLReport implements Serializable {
 	private SIZE textSize = SIZE.NORMAL;
 	private String textColor = COLOR_BLACK;
 
-	private String sep = FileIO.getLineSeparator();	
+	private String sep = FileIO.getLineSeparator();
 	private String msg = Translate.translate(Translate.JPARSEC_AUTOMATICALLY_GENERATED)+" "+Translate.translate(Translate.JPARSEC_BY)+" "+Version.PACKAGE_NAME+" v"+Version.VERSION_ID+
 	" "+Translate.translate(Translate.JPARSEC_ON) + " ";
 
 	private boolean header = false, body = false, document = true;
-	
+
 	/**
 	 * The set of text styles.
 	 */
-	public static enum STYLE {
+	public enum STYLE {
 		/** ID constant for a plain text style. */
 		PLAIN,
 		/** ID constant for an underline plain text style. */
@@ -76,7 +76,7 @@ public class HTMLReport implements Serializable {
 	/**
 	 * The set of text sizes.
 	 */
-	public static enum SIZE {
+	public enum SIZE {
 		/** ID constant for a very small text size. */
 		VERY_SMALL,
 		/** ID constant for a small text size. */
@@ -88,7 +88,7 @@ public class HTMLReport implements Serializable {
 		/** ID constant for a very large text size. */
 		VERY_LARGE
 	};
-	
+
 	/**
 	 * ID constant for a black text color.
 	 */
@@ -113,7 +113,7 @@ public class HTMLReport implements Serializable {
 	 * ID constant for a yellow text color.
 	 */
 	public static final String COLOR_YELLOW = "ffff00";
-	
+
 	/**
 	 * Writes the header of the HTML file.
 	 * @param windowTitle Title to be seen in the web browser.
@@ -130,7 +130,7 @@ public class HTMLReport implements Serializable {
 		htmlCode.append("</head>" + sep);
 		header = true;
 	}
-	
+
 	/**
 	 * Writes the header of the HTML file.
 	 * @param windowTitle Title to be seen in the web browser.
@@ -172,14 +172,14 @@ public class HTMLReport implements Serializable {
 		if (htmlCode.indexOf("<body") >= 0) return;
 		String c = "";
 		if (backgroundColor != null) c = " bgcolor=\""+backgroundColor+"\"";
-		htmlCode.append("<body"+c+">" + sep);	
+		htmlCode.append("<body"+c+">" + sep);
 	}
 	/**
 	 * Ends the body tag.
 	 */
 	public void endBody()
 	{
-		htmlCode.append("</body>" + sep);		
+		htmlCode.append("</body>" + sep);
 		body = false;
 	}
 	/**
@@ -187,7 +187,7 @@ public class HTMLReport implements Serializable {
 	 */
 	public void endDocument()
 	{
-		htmlCode.append("</html>" + sep);		
+		htmlCode.append("</html>" + sep);
 		document = false;
 	}
 	/**
@@ -376,7 +376,7 @@ public class HTMLReport implements Serializable {
 		if (!body) try { beginBody(); } catch (Exception exc) {}
 		htmlCode.append("<table border="+border+" cellspacing="+cellspacing+" cellpadding="+cellpadding+" width="+width+">"+ sep);
 	}
-	
+
 	/**
 	 * Ends a table tag.
 	 */
@@ -401,20 +401,20 @@ public class HTMLReport implements Serializable {
 			writeRowInTable(MeasureElement.toString(table.getRowValues(0, i), useParentheses, includeUnit), null, null, null);
 		}
 	}
-	
+
 	/**
 	 * Write a row in a table.<P>
-	 * 
+	 *
 	 * The background color is composed by three groups of two characters in hexadecimal format,
 	 * for each component red, green, and blue. 0000ff is intense blue, ff0000 is red, and so on.<P>
-	 * 
+	 *
 	 * Align commands are right, left, center.<P>
-	 * 
+	 *
 	 * Column span is the number of columns to be agruped by a given text. If a table has 6 columns
 	 * (length of columns array), then a column span of 6 alows to write text ocuping the whole row,
 	 * as a title for example. In this case the columns array should have length 1 to write only that
 	 * title.
-	 * 
+	 *
 	 * @param columns Columns to be written to complete the row.
 	 * @param bgcolor Background color. Set to null to skip the command.
 	 * @param align Align command. Set to null to skip the command.
@@ -443,7 +443,7 @@ public class HTMLReport implements Serializable {
 		String prop = bgcolor+" "+align+" "+colspan;
 		prop = prop.trim();
 		if (!prop.equals("")) prop = " " + prop;
-		
+
 		for (int i=0; i<columns.length; i++)
 		{
 			htmlCode.append("<td"+prop+">"+sep);
@@ -456,17 +456,17 @@ public class HTMLReport implements Serializable {
 	/**
 	 * Write a row in a table including a possible title (tooltip text) that appears when
 	 * the mouse is on the text item.<P>
-	 * 
+	 *
 	 * The background color is composed by three groups of two characters in hexadecimal format,
 	 * for each component red, green, and blue. 0000ff is intense blue, ff0000 is red, and so on.<P>
-	 * 
+	 *
 	 * Align commands are right, left, center.<P>
-	 * 
+	 *
 	 * Column span is the number of columns to be agruped by a given text. If a table has 6 columns
 	 * (length of columns array), then a column span of 6 alows to write text ocuping the whole row,
 	 * as a title for example. In this case the columns array should have length 1 to write only that
 	 * title.
-	 * 
+	 *
 	 * @param columns Columns to be written to complete the row.
 	 * @param title Title for the tooltip in each column item.
 	 * @param bgcolor Background color. Set to null to skip the command.
@@ -496,7 +496,7 @@ public class HTMLReport implements Serializable {
 		String prop = bgcolor+" "+align+" "+colspan;
 		prop = prop.trim();
 		if (!prop.equals("")) prop = " " + prop;
-		
+
 		for (int i=0; i<columns.length; i++)
 		{
 			htmlCode.append("<td"+prop+" title=\""+title[i]+"\">"+sep);
@@ -551,7 +551,7 @@ public class HTMLReport implements Serializable {
 	}
 	/**
 	 * Returns the code for an image tag. The image text is not written to the html
-	 * code since here is supposed that further processing is required. None of the 
+	 * code since here is supposed that further processing is required. None of the
 	 * parameters can be null.
 	 * @param width Width.
 	 * @param height Height.
@@ -586,7 +586,7 @@ public class HTMLReport implements Serializable {
 		code += "border=\""+border+"\" alt=\""+HTMLReport.format(alt)+"\" src=\""+src+"\">";
 		htmlCode.append(code);
 	}
-	
+
 	/**
 	 * Writes the code for an image tag. This methods is here to support the change from a
 	 * Latex to an HTML report without issues. Caption is ignored.
@@ -606,7 +606,7 @@ public class HTMLReport implements Serializable {
 		code += "alt=\""+HTMLReport.format(alt)+"\" src=\""+src+"\">";
 		htmlCode.append(code);
 	}
-	
+
 	/**
 	 * Returns the HTML code.
 	 * @return HTML code.
@@ -631,7 +631,7 @@ public class HTMLReport implements Serializable {
 	{
 		this.htmlCode = new StringBuffer(code);
 	}
-	
+
 	private String getBeginOfCurrentStyle()
 	{
 		String style = "";
@@ -702,7 +702,7 @@ public class HTMLReport implements Serializable {
 	}
 	/**
 	 * Sets the color of the text to write.
-	 * @param color Text color in hex format. 
+	 * @param color Text color in hex format.
 	 * Some constants defined in this class.
 	 */
 	public void setTextColor(String color)
@@ -717,9 +717,9 @@ public class HTMLReport implements Serializable {
 		htmlCode.append("</font>");
 		htmlCode.append(this.getEndOfCurrentStyle());
 	}
-	
+
 	/**
-	 * Formats a given string changing \u00e1 by &aacute; for example, and other symbols.
+	 * Formats a given string changing &aacute; by &aacute; for example, and other symbols.
 	 * @param input Input string.
 	 * @return The output.
 	 */
@@ -738,7 +738,6 @@ public class HTMLReport implements Serializable {
 		input = DataSet.replaceAll(input, "\u00f1", "&ntilde;", true);
 		input = DataSet.replaceAll(input, "\u00d1", "&Ntilde;", true);
 		input = DataSet.replaceAll(input, "\u00b0", "&deg;", true);
-		input = DataSet.replaceAll(input, "\u00ba", "&ordm;", true);
 		input = DataSet.replaceAll(input, "\\mu", "&micro;", true);
 		input = DataSet.replaceAll(input, "+/-", "&plusmn;", true);
 		return input;

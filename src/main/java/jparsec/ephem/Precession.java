@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.ephem;
 
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ import jparsec.util.JPARSECException;
 
 /**
  * Precession of the equinox and ecliptic.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -41,10 +41,10 @@ public class Precession
 {
 	// private constructor so that this class cannot be instantiated.
 	private Precession() {}
-	
+
 	/**
 	 * Get the precession matrices.
-	 * 
+	 *
 	 * @param type Precession method.
 	 * @return Vector with position angle, node, and inclination of Earth's
 	 *         orbit.
@@ -104,7 +104,7 @@ public class Precession
 					{ -8.66e-10, -4.759e-8, 2.424e-7, 1.3095e-5, 1.7451e-4, -1.8055e-3, -0.235316, 0.07732, 111.1971, 50290.966 });
 			// Bretagnon and Chapront 1981
 //			        { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.076, 111.37, 50290.966 });
-			
+
 			/*
 			 * Node and inclination of the earth's orbit computed from Laskar's
 			 * data as done in Bretagnon and Francou's paper. Units are radians.
@@ -119,7 +119,7 @@ public class Precession
 		case IAU_1976:
 			v.add(new double[]
 					{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.006, 111.113, 50290.966 });
-			
+
 			/*
 			 * Node and inclination of the earth's orbit computed from Laskar's
 			 * data as done in Bretagnon and Francou's paper. Units are radians.
@@ -140,33 +140,33 @@ public class Precession
 
 	/**
 	 * Get precession angles.
-	 * 
+	 *
 	 * @param toJ2000 True to precess to J2000, false for from J2000.
 	 * @param JD Julian day of the output angles.
 	 * @param eph Ephemeris properties.
 	 * @return Array with the three precession angles (pA, omega, i) in the ecliptic,
-	 * or with the precession angles (psiA, omegaA, chiA, EPS0) in the equator for IAU2000 and 
+	 * or with the precession angles (psiA, omegaA, chiA, EPS0) in the equator for IAU2000 and
 	 * later resolutions.
 	 * @throws JPARSECException If the reduction method is not supported.
 	 */
 	public static double[] getAngles(boolean toJ2000, double JD, EphemerisElement eph) throws JPARSECException
 	{
 		double JD0 = Constant.J2000;
-		
+
 		/*
 		 * Each precession angle is specified by a polynomial in T = Julian
 		 * centuries from JD0. See AA page B18.
 		 */
 		double T = (JD - JD0) / Constant.JULIAN_DAYS_PER_CENTURY;
-		
+
 		EphemerisElement.REDUCTION_METHOD type = eph.ephemMethod;
 		if (type == REDUCTION_METHOD.IAU_2006 || type == REDUCTION_METHOD.IAU_2009 || type == REDUCTION_METHOD.IAU_2000) {
 			if (toJ2000) T = -T;
-	
+
 			if (type == REDUCTION_METHOD.IAU_2000) {
 				double T0 = 0.0;
 				if (!toJ2000) T0 = Functions.toCenturies(JD);
-				
+
 				double EPS0 = 84381.448;
 				double PSIA = ((((-0.0 * T + 0.0) * T - 0.001147) * T - 1.07259) * T + 5038.7784) * T - 0.29965 * T0;
 				double OMEGAA = ((((+0.0 * T - 0.0) * T - 0.007726) * T + 0.05127) * T - 0.0) * T + EPS0 - 0.02524 * T0;
@@ -175,7 +175,8 @@ public class Precession
 				PSIA *= Constant.ARCSEC_TO_RAD;
 				OMEGAA *= Constant.ARCSEC_TO_RAD;
 				CHIA *= Constant.ARCSEC_TO_RAD;
-				return new double[] {PSIA, OMEGAA, CHIA, EPS0};				
+				EPS0 *= Constant.ARCSEC_TO_RAD;
+				return new double[] {PSIA, OMEGAA, CHIA, EPS0};
 			} else {
 				if (eph.useVondrak2011PrecessionFormulaInsteadOfIAU2006) {
 					double x = 0, y = 0, z = 0;
@@ -186,7 +187,7 @@ public class Precession
 						double c = Math.cos(a);
 						x += c * xyper[i][1] + s * xyper[i][3];
 						y += c * xyper[i][2] + s * xyper[i][4];
-						
+
 						a = w / zper[i][0];
 						s = Math.sin(a);
 						c = Math.cos(a);
@@ -203,23 +204,25 @@ public class Precession
 					x *= Constant.ARCSEC_TO_RAD;
 					y *= Constant.ARCSEC_TO_RAD;
 					z *= Constant.ARCSEC_TO_RAD;
-					
-					double PSIA = x, OMEGAA = y, CHIA = z, EPS0 = 84381.406 * Constant.ARCSEC_TO_RAD;					
+
+					double PSIA = Functions.normalizeRadians(x), OMEGAA = Functions.normalizeRadians(y),
+							CHIA = Functions.normalizeRadians(z), EPS0 = 84381.406 * Constant.ARCSEC_TO_RAD;
 					return new double[] {PSIA, OMEGAA, CHIA, EPS0};
 				} else {
 					double EPS0 = 84381.406;
 					double PSIA = ((((-0.0000000951 * T + 0.000132851) * T - 0.00114045) * T - 1.0790069) * T + 5038.481507) * T;
 					double OMEGAA = ((((+0.0000003337 * T - 0.000000467) * T - 0.00772503) * T + 0.0512623) * T - 0.025754) * T + EPS0;
 					double CHIA = ((((-0.0000000560 * T + 0.000170663) * T - 0.00121197) * T - 2.3814292) * T + 10.556403) * T;
-			
+
 					PSIA *= Constant.ARCSEC_TO_RAD;
 					OMEGAA *= Constant.ARCSEC_TO_RAD;
 					CHIA *= Constant.ARCSEC_TO_RAD;
+					EPS0 *= Constant.ARCSEC_TO_RAD;
 					return new double[] {PSIA, OMEGAA, CHIA, EPS0};
 				}
 			}
 		}
-		
+
 		double pA, W, z;
 		double element1[], element2[], element3[];
 		int p1 = -1, p2 = -1, p3 = -1;
@@ -313,7 +316,7 @@ public class Precession
 	};
 	/**
 	 * Precession following Vondrak et al. 2011. See A&A 534, A22.
-	 * 
+	 *
 	 * @param JD0 Julian day of input vector (equatorial rectangular).
 	 * @param JD Julian day of output. Either JD or JD0 must be equal to
 	 *        Constant.J2000.
@@ -323,9 +326,9 @@ public class Precession
 	 */
 	public static double[] precessionVondrak2011(double JD0, double JD, double[] R) throws JPARSECException
 	{
-		if (JD != Constant.J2000 && JD0 != Constant.J2000) 
+		if (JD != Constant.J2000 && JD0 != Constant.J2000)
 			throw new JPARSECException("Precession must be from or to J2000 epoch.");
-		
+
 		double T = (JD - JD0) / Constant.JULIAN_DAYS_PER_CENTURY;
 		if (JD == Constant.J2000)
 			T = -T;
@@ -338,7 +341,7 @@ public class Precession
 			double c = Math.cos(a);
 			x += c * xyper[i][1] + s * xyper[i][3];
 			y += c * xyper[i][2] + s * xyper[i][4];
-			
+
 			a = w / zper[i][0];
 			s = Math.sin(a);
 			c = Math.cos(a);
@@ -358,7 +361,7 @@ public class Precession
 		//w = x * x + y * y;
 		//double z = 0.0;
 		//if (w < 1.0) z = -Math.sqrt(1.0 - w);
-		
+
 		double PSIA = x, OMEGAA = y, CHIA = z, EPS0 = 84381.406 * Constant.ARCSEC_TO_RAD;
 		double SA = Math.sin(EPS0);
 		double CA = Math.cos(EPS0);
@@ -399,7 +402,7 @@ public class Precession
 
 		return new double[] { px, py, pz };
 	}
-	
+
 	/**
 	 * Precession following Capitaine et al. 2003.
 	 * <P>
@@ -410,7 +413,7 @@ public class Precession
 	 * <P>
 	 * Reference: Capitaine et al., Astronomy & Astrophysics 412, 567-586,
 	 * 2003.
-	 * 
+	 *
 	 * @param JD0 Julian day of input vector (equatorial rectangular).
 	 * @param JD Julian day of output. Either JD or JD0 must be equal to
 	 *        Constant.J2000.
@@ -420,9 +423,9 @@ public class Precession
 	 */
 	protected static double[] precessionIAU2006(double JD0, double JD, double[] R) throws JPARSECException
 	{
-		if (JD != Constant.J2000 && JD0 != Constant.J2000) 
+		if (JD != Constant.J2000 && JD0 != Constant.J2000)
 			throw new JPARSECException("Precession must be from or to J2000 epoch.");
-		
+
 		double T = (JD - JD0) / Constant.JULIAN_DAYS_PER_CENTURY;
 		if (JD == Constant.J2000)
 			T = -T;
@@ -482,7 +485,7 @@ public class Precession
 	 * <P>
 	 * Reference: Capitaine et al., Astronomy & Astrophysics 400, 1145-1154,
 	 * 2003. See also Lieske et al. 1977.
-	 * 
+	 *
 	 * @param JD0 Julian day of input vector (equatorial rectangular).
 	 * @param JD Julian day of output. Either JD or JD0 must be equal to
 	 *        Constant.J2000.
@@ -549,7 +552,7 @@ public class Precession
 
 	/**
 	 * Precess rectangular equatorial coordinates from J2000 epoch.
-	 * 
+	 *
 	 * @param JD Equinox of the output in Julian day (TT).
 	 * @param R Array with x, y, z.
 	 * @param eph Ephemeris properties.
@@ -652,7 +655,7 @@ public class Precession
 
 	/**
 	 * Precess rectangular equatorial coordinates to J2000 epoch.
-	 * 
+	 *
 	 * @param JD Equinox of the input in Julian day (TT).
 	 * @param R Array with x, y, z.
 	 * @param eph The ephemeris properties.
@@ -755,7 +758,7 @@ public class Precession
 
 	/**
 	 * Precess rectangular equatorial coordinates between two epochs.
-	 * 
+	 *
 	 * @param JD0 Equinox of the input in Julian day (TT).
 	 * @param JD Equinox of the output in Julian day (TT).
 	 * @param R Array with x, y, z.
@@ -777,7 +780,7 @@ public class Precession
 	/**
 	 * Precess equatorial coordinates between two epochs. Input is taken
 	 * from the ephem object, and results set in it.
-	 * 
+	 *
 	 * @param JD0 Equinox of the input in Julian day.
 	 * @param JD Equinox of the output in Julian day.
 	 * @param ephem Ephem object.
@@ -787,7 +790,7 @@ public class Precession
 	public static void precessEphemObject(double JD0, double JD, EphemElement ephem, EphemerisElement eph) throws JPARSECException
 	{
 		double R[] = ephem.getEquatorialLocation().getRectangularCoordinates();
-		
+
 		// Transform to J2000
 		double to2000[] = Precession.precessToJ2000(JD0, R, eph);
 
@@ -802,7 +805,7 @@ public class Precession
 	/**
 	 * Performs precession correction to the direction of the north pole of
 	 * rotation, refered to J2000 epoch.
-	 * 
+	 *
 	 * @param JD Desired date of the results.
 	 * @param ephem {@linkplain EphemElement} with the input values of RA and DEC of north
 	 *        pole.
@@ -833,7 +836,7 @@ public class Precession
 	/**
 	 * Performs precession in ecliptic coordinates both in positions and
 	 * velocities.
-	 * 
+	 *
 	 * @param JD0 Julian day of reference (TT).
 	 * @param JD Julian day of the results (TT).
 	 * @param coords Array with x, y, z, vx, vy, vz refered to mean ecliptic of
@@ -861,7 +864,7 @@ public class Precession
 	/**
 	 * Performs precession in equatorial coordinates both in positions and
 	 * velocities.
-	 * 
+	 *
 	 * @param JD0 Julian day of reference.
 	 * @param JD Julian day of the results.
 	 * @param eq Array with x, y, z, vx, vy, vz refered to mean equator of JD0.
@@ -881,7 +884,7 @@ public class Precession
 	/**
 	 * Transforms B1950 coordinates (FK4 system) to J2000, supposing that the
 	 * object has no proper motion or is far away.
-	 * 
+	 *
 	 * @param eq Equatorial coordinates FK4 B1950.
 	 * @return FK5 J2000 coordinates.
 	 * @throws JPARSECException Should not be thrown.
@@ -892,7 +895,7 @@ public class Precession
 		LocationElement loc = LocationElement.parseRectangularCoordinates(new double[] {eq[0], eq[1], eq[2]});
 
 		// Create an static star at this position in FK4 B1950
-		StarElement star = new StarElement("", loc.getLongitude(), loc.getLatitude(), 0, 
+		StarElement star = new StarElement("", loc.getLongitude(), loc.getLatitude(), 0,
 				0.0f, 0.0f, 0.0f, 0.0f, Constant.B1950, EphemerisElement.FRAME.FK4);
 
 		// Transform coordinates.
@@ -910,7 +913,7 @@ public class Precession
 	/**
 	 * Transforms J2000 FK5 coordinates to FK4 B1950, supposing that the
 	 * object has no proper motion or is far away.
-	 * 
+	 *
 	 * @param eq Equatorial coordinates FK5 J2000.
 	 * @return FK4 B1950 coordinates.
 	 * @throws JPARSECException Should not be thrown.
@@ -921,7 +924,7 @@ public class Precession
 		LocationElement loc = LocationElement.parseRectangularCoordinates(new double[] {eq[0], eq[1], eq[2]});
 
 		// Create an static star at this position in FK5 J2000
-		StarElement star = new StarElement("", loc.getLongitude(), loc.getLatitude(), 0, 
+		StarElement star = new StarElement("", loc.getLongitude(), loc.getLatitude(), 0,
 				0.0f, 0.0f, 0.0f, 0.0f, Constant.J2000, EphemerisElement.FRAME.FK5);
 
 		// Transform coordinates.
@@ -940,7 +943,7 @@ public class Precession
 	 * Transforms FK5 coordinates to FK4, supposing that the
 	 * object has no proper motion or is far away. The equinoxes for the
 	 * input/output positions can be selected.
-	 * 
+	 *
 	 * @param eq Equatorial coordinates FK5 Jxxxx.
 	 * @param jdFK5 The equinox for the input equatorial coordinates.
 	 * @param jdFK4 The equinox desired for the output FK4 coordinates.
@@ -954,11 +957,11 @@ public class Precession
 		eq = Precession.precess(jdFK5, Constant.J2000, eq, eph);
 
 		// To B1950 FK4
-		eq = FK5_J2000ToFK4_B1950(eq);		
+		eq = FK5_J2000ToFK4_B1950(eq);
 		LocationElement out = LocationElement.parseRectangularCoordinates(eq);
-		
-		// Apply correction for the precession constant between Newcomb and IAU 1976 precession methods: 1.13"/century. 
-		if (jdFK4 != Constant.B1950) {				
+
+		// Apply correction for the precession constant between Newcomb and IAU 1976 precession methods: 1.13"/century.
+		if (jdFK4 != Constant.B1950) {
 			double eqc = (jdFK4 - Constant.B1950) * 0.07555 * 15.0 * Constant.ARCSEC_TO_RAD / Constant.JULIAN_DAYS_PER_CENTURY;
 			out = LocationElement.parseRectangularCoordinates(Ephem.equatorialToEcliptic(eq, Constant.B1950, eph));
 			out.setLongitude(out.getLongitude()-eqc);
@@ -970,11 +973,11 @@ public class Precession
 
 		return out.getRectangularCoordinates();
 	}
-	
+
 	/**
 	 * Transforms B1950 coordinates (FK4 system) to J2000 or another equinox, supposing that the
 	 * object has no proper motion or is far away.
-	 * 
+	 *
 	 * @param eq Equatorial coordinates FK4 B1950.
 	 * @param jdFK5 The epoch of the output coordinates as a Julian day.
 	 * @param jdFK4 The epoch of observation as a Julian day, in case it is not B1950.
@@ -988,7 +991,7 @@ public class Precession
 		LocationElement loc = LocationElement.parseRectangularCoordinates(new double[] {eq[0], eq[1], eq[2]});
 
 		// Create an static star at this position in FK4 B1950
-		StarElement star = new StarElement("", loc.getLongitude(), loc.getLatitude(), 0, 
+		StarElement star = new StarElement("", loc.getLongitude(), loc.getLatitude(), 0,
 				0.0f, 0.0f, 0.0f, 0.0f, jdFK4, EphemerisElement.FRAME.FK4);
 
 		// Transform coordinates
@@ -1008,7 +1011,7 @@ public class Precession
 	/**
 	 * Transforms coordinates for precession between two dates, using the method
 	 * by Newcomb. This is an old method implemented for the transformation of
-	 * coordinates between Bessel epochs, and it is not used in JPARSEC actively. 
+	 * coordinates between Bessel epochs, and it is not used in JPARSEC actively.
 	 * Algorithm based on Woolard and Clemence 1966 (see AA suplement, page 107).
 	 * @param from Julian date of reference.
 	 * @param to Julian date for the mean equinox of the output.
@@ -1019,35 +1022,35 @@ public class Precession
 		double t1 = (from - Constant.B1950) / (1000.0 * Constant.TROPICAL_YEAR);
 		double t2 = (to - Constant.B1950) / (1000.0 * Constant.TROPICAL_YEAR);
 		double tau = t2 - t1;
-		
-		double zeta1 = 23035.545 + 139.720 * t1 + 0.060 * t1 * t1, zeta2 = 30.240 - 0.270 * t1; 
-		double z1 = zeta1, z2 = 109.480 + 0.390 * t1; 
-		double theta1 = 20051.12 - 85.29 * t1 - 0.37 * t1 * t1, theta2 = -42.65 - 0.37 * t1; 
-		
+
+		double zeta1 = 23035.545 + 139.720 * t1 + 0.060 * t1 * t1, zeta2 = 30.240 - 0.270 * t1;
+		double z1 = zeta1, z2 = 109.480 + 0.390 * t1;
+		double theta1 = 20051.12 - 85.29 * t1 - 0.37 * t1 * t1, theta2 = -42.65 - 0.37 * t1;
+
 		double zeta = zeta1 * tau + zeta2 * tau * tau + 17.995 * tau * tau * tau;
 		double z = z1 * tau + z2 * tau * tau + 18.325 * tau * tau * tau;
 		double theta = theta1 * tau + theta2 * tau * tau - 41.80 * tau * tau * tau;
-		
+
 		zeta *= Constant.ARCSEC_TO_RAD;
 		z *= Constant.ARCSEC_TO_RAD;
 		theta *= Constant.ARCSEC_TO_RAD;
-		
+
 		LocationElement loc = LocationElement.parseRectangularCoordinates(p);
-		
+
 		double term1 = Math.sin(loc.getLongitude() + zeta) * Math.cos(loc.getLatitude());
 		double term2 = Math.cos(loc.getLongitude() + zeta) * Math.cos(theta) * Math.cos(loc.getLatitude()) - Math.sin(theta) * Math.sin(loc.getLatitude());
 		double term3 = Math.cos(loc.getLongitude() + zeta) * Math.sin(theta) * Math.cos(loc.getLatitude()) + Math.cos(theta) * Math.sin(loc.getLatitude());
-		
+
 		double alfa = Math.atan2(term1, term2) + z;
 		double delta = Math.asin(term3);
-		
+
 		loc = new LocationElement(alfa, delta, loc.getRadius());
 		return LocationElement.parseLocationElement(loc);
 	}
 
 	/**
-	 * Transforms coordinates for precession between J2000 and another date, 
-	 * using the method by Lieske. This is an old method implemented here to 
+	 * Transforms coordinates for precession between J2000 and another date,
+	 * using the method by Lieske. This is an old method implemented here to
 	 * support old reduction models.
 	 * @param from Julian day of input vector (equatorial rectangular) in TT.
 	 * @param to Julian day of output in TT. Either from or to must be equal to J2000.
@@ -1060,32 +1063,32 @@ public class Precession
 		double J = from;
 		if (J == Constant.J2000) J = to;
 		double t = Functions.toCenturies(J);
-		
+
 		double zeta = 2306.2181 * t + 0.30188 * t * t + 0.017998 * t * t * t;
 		double z = 2306.2181 * t + 1.09468 * t * t + 0.018203 * t * t * t;
 		double theta = 2004.3109 * t - 0.42665 * t * t - 0.041833 * t * t * t;
-		
+
 		zeta *= Constant.ARCSEC_TO_RAD;
 		z *= Constant.ARCSEC_TO_RAD;
 		theta *= Constant.ARCSEC_TO_RAD;
 
-		double sinth = Math.sin(theta), costh = Math.cos(theta), 
+		double sinth = Math.sin(theta), costh = Math.cos(theta),
 			sinZ = Math.sin(zeta), cosZ = Math.cos(zeta), sinz = Math.sin(z), cosz = Math.cos(z);
 		double A = cosZ*costh;
 		double B = sinZ*costh;
 
 		double x[] = new double[3];
-		if( from == Constant.J2000) { 
+		if( from == Constant.J2000) {
 			/* From J2000.0 to J */
 			x[0] =    (A*cosz - sinZ*sinz)*p[0] - (B*cosz + cosZ*sinz)*p[1] - sinth*cosz*p[2];
 			x[1] =    (A*sinz + sinZ*cosz)*p[0] - (B*sinz - cosZ*cosz)*p[1] - sinth*sinz*p[2];
 			x[2] =    cosZ*sinth*p[0] - sinZ*sinth*p[1] + costh*p[2];
-		} else { 
+		} else {
 				/* From J to J2000.0 */
 			x[0] =    (A*cosz - sinZ*sinz)*p[0] + (A*sinz + sinZ*cosz)*p[1] + cosZ*sinth*p[2];
 			x[1] =   -(B*cosz + cosZ*sinz)*p[0] - (B*sinz - cosZ*cosz)*p[1] - sinZ*sinth*p[2];
 			x[2] =   -sinth*cosz*p[0] - sinth*sinz*p[1] + costh*p[2];
-		}	
+		}
 		return x;
 	}
 }

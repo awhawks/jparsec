@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.astrophysics.gildas;
 
 import java.util.GregorianCalendar;
@@ -73,9 +73,9 @@ public interface Convertible
      */
     public abstract GregorianCalendar readDate(byte abyte0[], int i)
     throws JPARSECException ;
-    
-    
-    
+
+
+
     /**
      * Writes a short value.
      * @param abyte0 The array where the value will be written.

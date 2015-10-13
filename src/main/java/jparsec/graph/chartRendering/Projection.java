@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.graph.chartRendering;
 
 import jparsec.astronomy.CoordinateSystem;
@@ -46,7 +46,7 @@ import jparsec.util.JPARSECException;
  * Provides support for drawing the sky using different kind of projections.
  * The projections are implemented here without using other (more complete)
  * libraries, since these other libraries are generally too slow.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -55,7 +55,7 @@ public class Projection
 	/**
 	 * The set of available projections.
 	 */
-	public static enum PROJECTION {
+	public enum PROJECTION {
 		/** Symbolic constant for stereographic sky projection. */
 		STEREOGRAPHICAL,
 		/** Symbolic constant for spheric sky projection. */
@@ -66,7 +66,7 @@ public class Projection
 		CYLINDRICAL_EQUIDISTANT,
 		/** Symbolic constant for polar sky projection. */
 		POLAR
-	}
+	};
 
 	/**
 	 * The coordinate system list array.
@@ -94,7 +94,7 @@ public class Projection
 	 * Sky render object
 	 */
 	SkyRenderElement render;
-	
+
 	/**
 	 * Holds field of view in radians, automatically set from the current
 	 * selected telescope.
@@ -122,7 +122,7 @@ public class Projection
 	private float sin_lat0, cos_lat0, cos_lat0_times_sy, sin_lat0_times_sy;
 	private boolean fastCalc = true;
 	private LocationElement np = null;
-	
+
 	/**
 	 * Constructor.
 	 * @param time Time object.
@@ -134,7 +134,7 @@ public class Projection
 	 * @param y0 Y center position in pixels.
 	 * @throws JPARSECException If an error occurs.
 	 */
-	public Projection(TimeElement time, ObserverElement obs, EphemerisElement eph, SkyRenderElement render, 
+	public Projection(TimeElement time, ObserverElement obs, EphemerisElement eph, SkyRenderElement render,
 			double field, int x0, int y0)
 	throws JPARSECException {
 		this.time = time.clone();
@@ -144,7 +144,7 @@ public class Projection
 		this.eph.correctEquatorialCoordinatesForRefraction = false;
 		this.centerX = x0;
 		this.centerY = y0;
-		
+
 		jd = TimeScale.getJD(time, obs, eph, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
 		double equinox = eph.equinox;
 		if (equinox == EphemerisElement.EQUINOX_OF_DATE)
@@ -153,7 +153,7 @@ public class Projection
 		if (eph.ephemType == EphemerisElement.COORDINATES_TYPE.APPARENT) {
 			obliquity = Obliquity.trueObliquity(Functions.toCenturies(equinox), eph);
 		} else {
-			obliquity = Obliquity.meanObliquity(Functions.toCenturies(equinox), eph);			
+			obliquity = Obliquity.meanObliquity(Functions.toCenturies(equinox), eph);
 		}
 		try {
 			ast = SiderealTime.apparentSiderealTime(time, obs, eph);
@@ -191,7 +191,7 @@ public class Projection
 		this.centerX = x0;
 		this.centerY = y0;
 		lh = null;
-		
+
 		configure(render);
 		setField(field);
 	}
@@ -203,7 +203,7 @@ public class Projection
 
 	/**
 	 * Checks if certain position in the screen is invalid or not.
-	 * 
+	 *
 	 * @param position Input position.
 	 * @return True if it is invalid.
 	 */
@@ -214,7 +214,7 @@ public class Projection
 
 	/**
 	 * Configures the selected projection with a new sky render object.
-	 * 
+	 *
 	 * @param render Sky render object.
 	 * @throws JPARSECException If the method fails.
 	 */
@@ -227,7 +227,7 @@ public class Projection
 		sin_lat0 = (float) Math.sin(render.centralLatitude);
 		cos_lat0 = (float) Math.cos(render.centralLatitude);
 		loc0 = new LocationElement(render.centralLongitude, render.centralLatitude, 1.0);
-		setField(render.telescope.getField());		
+		setField(render.telescope.getField());
  	}
 
 	/**
@@ -237,8 +237,8 @@ public class Projection
 	 * @return Approximate angular distance.
 	 */
 	public double getApproximateAngularDistance(LocationElement loc)
-	{		
-		return FastMath.acos(FastMath.sin(loc.getLatitude()) * sin_lat0 + FastMath.cos(loc.getLatitude()) * cos_lat0 * FastMath.cos(loc.getLongitude()-loc0.getLongitude()));		
+	{
+		return FastMath.acos(FastMath.sin(loc.getLatitude()) * sin_lat0 + FastMath.cos(loc.getLatitude()) * cos_lat0 * FastMath.cos(loc.getLongitude()-loc0.getLongitude()));
 	}
 
 	/**
@@ -249,10 +249,10 @@ public class Projection
 	 * @return Approximate angular distance.
 	 */
 	public double getApproximateAngularDistance(double ra, double dec)
-	{		
-		return FastMath.acos(FastMath.sin(dec) * sin_lat0 + FastMath.cos(dec) * cos_lat0 * FastMath.cos(ra-loc0.getLongitude()));		
+	{
+		return FastMath.acos(FastMath.sin(dec) * sin_lat0 + FastMath.cos(dec) * cos_lat0 * FastMath.cos(ra-loc0.getLongitude()));
 	}
-	
+
 	/**
 	 * Changes the field of view.
 	 * @param field New field of view in radians.
@@ -267,7 +267,7 @@ public class Projection
 		stxxTimesCenterX = stxx * centerX;
 		cos_lat0_times_sy = cos_lat0 * Math.abs(stxxTimesCenterX);
 		sin_lat0_times_sy = sin_lat0 * Math.abs(stxxTimesCenterX);
-		
+
 		cylindrical = false;
 		if (render.drawClever) {
 			if (field < Constant.DEG_TO_RAD && Math.abs(render.centralLatitude) < Constant.PI_OVER_TWO-Constant.DEG_TO_RAD) cylindrical = true;
@@ -317,7 +317,7 @@ public class Projection
 	/**
 	 * Obtains position of an object using the current sky projection and
 	 * coordinate system.
-	 * 
+	 *
 	 * @param loc Location object with the position in equatorial
 	 *        coordinates.
 	 * @param size Angular radius of rendered object in pixels.
@@ -329,9 +329,9 @@ public class Projection
 	public float[] project(LocationElement loc, int size, boolean check_limits)
 			throws JPARSECException
 	{
-		loc = getApparentLocationInSelectedCoordinateSystem(loc, true, fastCalc, size/rwf);			
+		loc = getApparentLocationInSelectedCoordinateSystem(loc, true, fastCalc, size/rwf);
 		if (loc == null) return INVALID_POSITION;
-		
+
 		if (render.projection == PROJECTION.SPHERICAL &&
 				getApproximateAngularDistance(loc) > Constant.PI_OVER_TWO)
 			return INVALID_POSITION;
@@ -353,7 +353,7 @@ public class Projection
 	/**
 	 * Obtains position of an object using the current sky projection and
 	 * coordinate system. Special for Earth's shadow cone.
-	 * 
+	 *
 	 * @param loc Location object with the position in equatorial
 	 *        coordinates.
 	 * @param size Angular radius of rendered object in pixels.
@@ -365,9 +365,9 @@ public class Projection
 	public float[] projectEarthShadow(LocationElement loc, int size, boolean check_limits)
 			throws JPARSECException
 	{
-		loc = getApparentLocationInSelectedCoordinateSystem(loc, false, fastCalc, size/rwf);			
+		loc = getApparentLocationInSelectedCoordinateSystem(loc, false, fastCalc, size/rwf);
 		if (loc == null) return INVALID_POSITION;
-		
+
 		if (render.projection == PROJECTION.SPHERICAL &&
 				getApproximateAngularDistance(loc) > Constant.PI_OVER_TWO)
 			return INVALID_POSITION;
@@ -402,20 +402,20 @@ public class Projection
 	{
 		if (lh != null) render.drawSkyCorrectingLocalHorizon = lh;
 	}
-	
+
 	/**
 	 * Returns apparent position of the input equatorial position correcting for local horizon and
 	 * coordinate system.
 	 * @param locIn Input coordinates in equatorial system.
 	 * @param checkHorizon True to return null if the object is below the horizon and only the sky
 	 * above horizon should be drawn.
-	 * @return Output position, or null if the object will not be visible and to check 
+	 * @return Output position, or null if the object will not be visible and to check
 	 * horizon is enabled.
 	 * @param fast True for an approximate but faster calculation.
 	 * @param angRadius Angular radius of the object in radians.
 	 * @throws JPARSECException If an error occurs.
 	 */
-	public LocationElement getApparentLocationInSelectedCoordinateSystem(LocationElement locIn, boolean checkHorizon, 
+	public LocationElement getApparentLocationInSelectedCoordinateSystem(LocationElement locIn, boolean checkHorizon,
 			boolean fast, float angRadius)
 	throws JPARSECException {
 
@@ -455,7 +455,7 @@ public class Projection
 			double d = eph.getEpoch(jd);
 			if (d != Constant.J2000) {
 				if (fast) {
-					loc = LocationElement.parseRectangularCoordinatesFast(Precession.precessToJ2000(jd, loc.getRectangularCoordinates(), eph));					
+					loc = LocationElement.parseRectangularCoordinatesFast(Precession.precessToJ2000(jd, loc.getRectangularCoordinates(), eph));
 				} else {
 					loc = LocationElement.parseRectangularCoordinates(Precession.precessToJ2000(jd, loc.getRectangularCoordinates(), eph));
 				}
@@ -470,21 +470,21 @@ public class Projection
 
 		return locIn;
 	}
-	
+
 	/**
 	 * Returns apparent position of the input equatorial position correcting for local horizon and
 	 * coordinate system.
 	 * @param locIn Input coordinates in equatorial system.
 	 * @param checkHorizon True to return null if the object is below the horizon and only the sky
 	 * above horizon should be drawn.
-	 * @return Output position, or null if the object will not be visible and to check 
+	 * @return Output position, or null if the object will not be visible and to check
 	 * horizon is enabled.
 	 * @param fast True for an approximate but faster calculation.
 	 * @param coordinateSystem The coordinate system for the output position.
 	 * @param angRadius Angular radius of the object in radians.
 	 * @throws JPARSECException If an error occurs.
 	 */
-	public LocationElement getApparentLocationInSelectedCoordinateSystem(LocationElement locIn, boolean checkHorizon, 
+	public LocationElement getApparentLocationInSelectedCoordinateSystem(LocationElement locIn, boolean checkHorizon,
 			boolean fast, COORDINATE_SYSTEM coordinateSystem, float angRadius)
 	throws JPARSECException {
 
@@ -540,7 +540,7 @@ public class Projection
 	/**
 	 * Obtains position of an object using the current sky projection and
 	 * coordinate system, without transforming them to equatorial.
-	 * 
+	 *
 	 * @param loc Location object with the position in a given coordinate system.
 	 * @param size Angular radius of rendered object in pixels.
 	 * @param check_limits True to check for object limits in the rendered
@@ -556,7 +556,7 @@ public class Projection
 		if (render.projection == PROJECTION.SPHERICAL &&
 				getApproximateAngularDistance(loc) > Constant.PI_OVER_TWO)
 			return INVALID_POSITION;
-		
+
 		float[] pos = project_position(loc);
 
 		if (!check_limits || pos == null)
@@ -574,7 +574,7 @@ public class Projection
 	/**
 	 * Obtains position of an object using the current sky projection and
 	 * coordinate system, without transforming them to equatorial.
-	 * 
+	 *
 	 * @param loc Location object with the position in a given coordinate system.
 	 * @param size Angular radius of rendered object in pixels.
 	 * @param check_limits True to check for object limits in the rendered
@@ -607,7 +607,7 @@ public class Projection
 	/**
 	 * Obtains position of an object using the current sky projection and
 	 * coordinate system, without transforming them to equatorial.
-	 * 
+	 *
 	 * @param loc Location object with the position in a given coordinate system.
 	 * @param size Angular radius of rendered object in pixels.
 	 * @param check_limits True to check for object limits in the rendered
@@ -651,10 +651,10 @@ public class Projection
 	private float[] project_position(LocationElement loc) throws JPARSECException
 	{
 		if (cylindrical) return cylindricalEquidistant(loc);
-		
+
 		// Without waiting for switch is slightly faster ...
 		if (render.projection == PROJECTION.STEREOGRAPHICAL) return stereographic(loc);
-		
+
 		switch (render.projection)
 		{
 		case SPHERICAL:
@@ -669,14 +669,14 @@ public class Projection
 			throw new JPARSECException("invalid projection.");
 		}
 	}
-	
+
 	private float[] project_position(float[] loc) throws JPARSECException
 	{
 		if (cylindrical) return cylindricalEquidistant(loc);
-		
+
 		// Without waiting for switch is slightly faster ...
 		if (render.projection == PROJECTION.STEREOGRAPHICAL) return stereographic(loc);
-		
+
 		switch (render.projection)
 		{
 		case SPHERICAL:
@@ -693,11 +693,17 @@ public class Projection
 	}
 
 	private float stxx, sxx, sxs, stxxTimesCenterX;
-	
+	private float out[] = new float[2];
+	/** Set to true (default value) to create a new array with the location
+	 * calculated for the projected object, and false to use a preallocated
+	 * array, which should not be modified later. Setting to false is only
+	 * possible when the array will not be modified later, and will perform
+	 * faster. */
+	public boolean createNewArrayWhenProjecting = true;
 	/**
 	 * Obtains position of an object using cylindrical equidistant projection.
 	 * Used if field of view is lower than 30 deg.
-	 * 
+	 *
 	 * @param loc Location object with the position, in equatorial,
 	 *        horizontal, galactic, or ecliptic coordinates.
 	 * @return Array with (x, y) position in the screen.
@@ -707,10 +713,10 @@ public class Projection
 		float y = (float) (loc.getLatitude() - render.centralLatitude);
 		if (Math.abs(x) > Math.PI) x = x - (float) (Constant.TWO_PI * FastMath.sign(x));
 		x *= FastMath.cosf(loc.getLatitude());
-			
+
 		float pox = (centerX - sxx * x);
 		float poy = (centerY - rwf * y);
- 
+
 		if (render.poleAngle != 0.0)
 		{
 			float dx = pox - centerX;
@@ -723,17 +729,20 @@ public class Projection
 			poy = centerY + (r * FastMath.sinf(ang - render.poleAngle));
 		}
 
-		return new float[]{ pox, poy };
+		if (createNewArrayWhenProjecting) return new float[]{ pox, poy };
+		out[0] = pox;
+		out[1] = poy;
+		return out;
 	}
 	private float[] cylindricalEquidistant(float[] loc) {
 		float x = (float) (loc[0] - render.centralLongitude);
 		float y = (float) (loc[1] - render.centralLatitude);
 		if (Math.abs(x) > Math.PI) x = x - (float) (Constant.TWO_PI * FastMath.sign(x));
 		x *= FastMath.cosf(loc[1]);
-			
+
 		float pox = (centerX - sxx * x);
 		float poy = (centerY - rwf * y);
- 
+
 		if (render.poleAngle != 0.0)
 		{
 			float dx = pox - centerX;
@@ -746,12 +755,15 @@ public class Projection
 			poy = centerY + (r * FastMath.sinf(ang - render.poleAngle));
 		}
 
-		return new float[]{ pox, poy };
+		if (createNewArrayWhenProjecting) return new float[]{ pox, poy };
+		out[0] = pox;
+		out[1] = poy;
+		return out;
 	}
 
 	/**
 	 * Obtains position of an object by inverting the cylindric equidistant sky projection.
-	 * 
+	 *
 	 * @param pox X position.
 	 * @param poy Y position.
 	 * @return Coordinates in the sky, or null if the position cannot be calculated.
@@ -760,10 +772,10 @@ public class Projection
 	{
 		if (render.telescope.invertHorizontal) pox = render.width-1-pox;
 		if (render.telescope.invertVertical) poy = render.height-1-poy;
-		
+
 		float pos0[] = new float[] {pox, poy};
 		if (this.isInvalid(pos0)) return null;
-		
+
 		if (render.poleAngle != 0.0)
 		{
 			double dx = pox - centerX;
@@ -782,11 +794,11 @@ public class Projection
 		double lat = y + render.centralLatitude;
 		return new LocationElement(x / FastMath.cos(lat) + render.centralLongitude, lat, 1.0);
 	}
-	
+
 	private double sincosLat[] = new double[2], sincosLon[] = new double[2];
 	/**
 	 * Obtains position of an object using stereographic sky projection.
-	 * 
+	 *
 	 * @param loc Location object with the position, in equatorial,
 	 *        horizontal, galactic, or ecliptic coordinates.
 	 * @return Array with (x, y) position in the screen.
@@ -795,11 +807,11 @@ public class Projection
 	{
 		FastMath.sincos(loc.getLatitude(), false, sincosLat);
 		FastMath.sincos(loc.getLongitude() - render.centralLongitude, false, sincosLon);
-		
+
 		double h = sincosLat[1] * sincosLon[1];
 		double div = (1.0f + sin_lat0 * sincosLat[0] + cos_lat0 * h);
 		if (div == 0) return Projection.INVALID_POSITION;
-			
+
 		float pox = (float) (centerX - stxxTimesCenterX * (sincosLat[1] * sincosLon[0] / div));
 		float poy = (float) (centerY - (cos_lat0_times_sy * sincosLat[0] - sin_lat0_times_sy * h) / div);
 
@@ -815,7 +827,10 @@ public class Projection
 			poy = centerY + (r * FastMath.sinf(ang - render.poleAngle));
 		}
 
-		return new float[]{ pox, poy };
+		if (createNewArrayWhenProjecting) return new float[]{ pox, poy };
+		out[0] = pox;
+		out[1] = poy;
+		return out;
 	}
 	private float[] stereographic(float[] loc)
 	{
@@ -825,7 +840,7 @@ public class Projection
 		double h = sincosLat[1] * sincosLon[1];
 		double div = (1.0f + sin_lat0 * sincosLat[0] + cos_lat0 * h);
 		if (div == 0) return Projection.INVALID_POSITION;
-			
+
 		float pox = (float) (centerX - stxxTimesCenterX * (sincosLat[1] * sincosLon[0] / div));
 		float poy = (float) (centerY - (cos_lat0_times_sy * sincosLat[0] - sin_lat0_times_sy * h) / div);
 
@@ -841,12 +856,15 @@ public class Projection
 			poy = centerY + (r * FastMath.sinf(ang - render.poleAngle));
 		}
 
-		return new float[]{ pox, poy };
+		if (createNewArrayWhenProjecting) return new float[]{ pox, poy };
+		out[0] = pox;
+		out[1] = poy;
+		return out;
 	}
 
 	/**
 	 * Obtains position of an object using mercator sky projection.
-	 * 
+	 *
 	 * @param loc Location object with the position, in equatorial,
 	 *        horizontal, galactic, or ecliptic coordinates.
 	 * @return Array with (x, y) position in the screen.
@@ -870,7 +888,10 @@ public class Projection
 			poy = centerY + (r * FastMath.sinf(ang - render.poleAngle));
 		}
 
-		return new float[] { pox, poy };
+		if (createNewArrayWhenProjecting) return new float[]{ pox, poy };
+		out[0] = pox;
+		out[1] = poy;
+		return out;
 	}
 	private float[] cylindric(float[] loc)
 	{
@@ -891,12 +912,15 @@ public class Projection
 			poy = centerY + (r * FastMath.sinf(ang - render.poleAngle));
 		}
 
-		return new float[] { pox, poy };
+		if (createNewArrayWhenProjecting) return new float[]{ pox, poy };
+		out[0] = pox;
+		out[1] = poy;
+		return out;
 	}
 
 	/**
 	 * Obtains position of an object by inverting the cylindric sky projection.
-	 * 
+	 *
 	 * @param pox X position.
 	 * @param poy Y position.
 	 * @return Coordinates in the sky, or null if the position cannot be calculated.
@@ -908,7 +932,7 @@ public class Projection
 
 		float pos0[] = new float[] {pox, poy};
 		if (this.isInvalid(pos0)) return null;
-		
+
 		if (render.poleAngle != 0.0)
 		{
 			double dx = pox - centerX;
@@ -920,16 +944,16 @@ public class Projection
 			pox = (float) (centerX + (r * FastMath.cos(ang + render.poleAngle)));
 			poy = (float) (centerY + (r * FastMath.sin(ang + render.poleAngle)));
 		}
-		
+
 		float x = (centerX - pox) / sxx;
 		float y = (centerY - poy) / rwf;
 
 		return new LocationElement(x + render.centralLongitude, y + render.centralLatitude, 1.0);
 	}
-	
+
 	/**
 	 * Obtains position of an object using spheric sky projection.
-	 * 
+	 *
 	 * @param loc Location object with the position, in equatorial,
 	 *        horizontal, galactic, or ecliptic coordinates.
 	 * @return Array with (x, y) position in the screen.
@@ -940,7 +964,7 @@ public class Projection
 
 		double dlon = loc.getLongitude() - render.centralLongitude;
 		if (dlon < 0 || dlon > Constant.TWO_PI) dlon = Functions.normalizeRadians(dlon);
-		
+
 		float pox = (centerX * (1.0f - sxs * FastMath.sinf(dlon) * cos_lat));
 		float poy = (centerY - sy * (FastMath.sinf(loc.getLatitude()) * cos_lat0 - cos_lat * sin_lat0 * FastMath.cosf(dlon)));
 
@@ -954,7 +978,10 @@ public class Projection
 			poy = centerY + (r * FastMath.sinf(ang - render.poleAngle));
 		}
 
-		return new float[] { pox, poy };
+		if (createNewArrayWhenProjecting) return new float[]{ pox, poy };
+		out[0] = pox;
+		out[1] = poy;
+		return out;
 	}
 	private float[] spheric(float[] loc)
 	{
@@ -976,12 +1003,15 @@ public class Projection
 			poy = centerY + (r * FastMath.sinf(ang - render.poleAngle));
 		}
 
-		return new float[] { pox, poy };
+		if (createNewArrayWhenProjecting) return new float[]{ pox, poy };
+		out[0] = pox;
+		out[1] = poy;
+		return out;
 	}
 
 	/**
 	 * Obtains position of an object by inverting the spherical sky projection.
-	 * 
+	 *
 	 * @param pox X position.
 	 * @param poy Y position.
 	 * @return Coordinates in the sky, or null if the position cannot be calculated.
@@ -993,7 +1023,7 @@ public class Projection
 
 		float pos0[] = new float[] {pox, poy};
 		if (this.isInvalid(pos0)) return null;
-		
+
 		if (render.poleAngle != 0.0)
 		{
 			double dx = pox - centerX;
@@ -1005,13 +1035,13 @@ public class Projection
 			pox = (float) (centerX + (r * FastMath.cos(ang + render.poleAngle)));
 			poy = (float) (centerY + (r * FastMath.sin(ang + render.poleAngle)));
 		}
-		
+
 		double dx = pox - centerX, dy = centerY - poy;
 		dx = -dx / (centerX * sxs);
 		dy = -dy / sy;
 		double tmp = (dx * dx + dy * dy);
 		if (tmp > 1.0) return null;
-		
+
 		double dz = Math.sqrt(1.0 - tmp);
 		double sinlat = FastMath.sin(render.centralLatitude), coslat = FastMath.cos(render.centralLatitude);
 		tmp = dy * sinlat + dz * coslat;
@@ -1020,45 +1050,45 @@ public class Projection
 		double lat = FastMath.atan2_accurate(dx, dz);
 		double lon = Functions.normalizeRadians(render.centralLongitude + lat);
 		lat = Math.asin(-dy);
-		
+
 		return new LocationElement(lon, lat, 1.0);
 	}
 
 	/**
 	 * Obtains position of an object using polar projection.
-	 * 
+	 *
 	 * @param loc Location object with the position, in equatorial,
 	 *        horizontal, galactic, or ecliptic coordinates.
 	 * @return Array with (x, y) position in the screen.
 	 */
 	public float[] polar(LocationElement loc) {
 		float pox, poy;
-		
-		double offx = Math.PI, offy = 1.0;
+
+		double offx = 0, offy = 1.0;
 		if (render.telescope.invertHorizontal) offx += Math.PI;
 		if (render.telescope.invertVertical) offy = -1.0;
 		if (render.centralLatitude >= 0.0) {
 			if (loc.getLatitude() < -this.horizon_elevation) return INVALID_POSITION;
 			double r0 = -offy*sy * FastMath.sin(Constant.PI_OVER_TWO - render.centralLatitude);
 			double r = -sy * FastMath.sin(loc.getLatitude() - Constant.PI_OVER_TWO);
-			
-			double dlon = loc.getLongitude() - render.centralLongitude + offx;
+
+			double dlon = loc.getLongitude() - render.centralLongitude + Math.PI + offx;
 			if (dlon < 0 || dlon > Constant.TWO_PI) dlon = Functions.normalizeRadians(dlon);
 
-			pox = (float) (r * FastMath.sin(dlon) + centerX);
+			pox = (float) (-r * FastMath.sin(dlon) + centerX);
 			poy = (float) (-r * FastMath.cos(dlon) + centerY + r0);
 		} else {
 			if (loc.getLatitude() > this.horizon_elevation) return INVALID_POSITION;
 			double r0 = -offy*sy * FastMath.sin(-Constant.PI_OVER_TWO - render.centralLatitude);
 			double	r = -sy * FastMath.sin(loc.getLatitude() + Constant.PI_OVER_TWO);
-			
+
 			double dlon = loc.getLongitude() - render.centralLongitude + offx + Math.PI;
 			if (dlon < 0 || dlon > Constant.TWO_PI) dlon = Functions.normalizeRadians(dlon);
-			
+
 			pox = (float) (r * FastMath.sin(dlon) + centerX);
-			poy = (float) (-r * FastMath.cos(dlon) + centerY + r0);			
+			poy = (float) (-r * FastMath.cos(dlon) + centerY + r0);
 		}
-		
+
 		if (render.poleAngle != 0.0)
 		{
 			float dx = pox - centerX;
@@ -1071,36 +1101,39 @@ public class Projection
 			poy = centerY + (r * FastMath.sinf(ang - render.poleAngle));
 		}
 
-		return new float[]{ pox, poy };
+		if (createNewArrayWhenProjecting) return new float[]{ pox, poy };
+		out[0] = pox;
+		out[1] = poy;
+		return out;
 	}
 	private float[] polar(float[] loc) {
 		float pox, poy;
-		
-		double offx = Math.PI, offy = 1.0;
+
+		double offx = 0, offy = 1.0;
 		if (render.telescope.invertHorizontal) offx += Math.PI;
 		if (render.telescope.invertVertical) offy = -1.0;
 		if (render.centralLatitude >= 0.0) {
 			if (loc[1] < -this.horizon_elevation) return INVALID_POSITION;
 			double r0 = -offy*sy * FastMath.sin(Constant.PI_OVER_TWO - render.centralLatitude);
 			double r = -sy * FastMath.sin(loc[1] - Constant.PI_OVER_TWO);
-			
-			double dlon = loc[0] - render.centralLongitude + offx;
+
+			double dlon = loc[0] - render.centralLongitude + Math.PI + offx;
 			if (dlon < 0 || dlon > Constant.TWO_PI) dlon = Functions.normalizeRadians(dlon);
-			
-			pox = (float) (r * FastMath.sin(dlon) + centerX);
+
+			pox = (float) (-r * FastMath.sin(dlon) + centerX);
 			poy = (float) (-r * FastMath.cos(dlon) + centerY + r0);
 		} else {
 			if (loc[1] > this.horizon_elevation) return INVALID_POSITION;
 			double r0 = -offy*sy * FastMath.sin(-Constant.PI_OVER_TWO - render.centralLatitude);
 			double	r = -sy * FastMath.sin(loc[1] + Constant.PI_OVER_TWO);
-			
+
 			double dlon = loc[0] - render.centralLongitude + offx + Math.PI;
 			if (dlon < 0 || dlon > Constant.TWO_PI) dlon = Functions.normalizeRadians(dlon);
-			
+
 			pox = (float) (r * FastMath.sin(dlon) + centerX);
-			poy = (float) (-r * FastMath.cos(dlon) + centerY + r0);			
+			poy = (float) (-r * FastMath.cos(dlon) + centerY + r0);
 		}
-		
+
 		if (render.poleAngle != 0.0)
 		{
 			float dx = pox - centerX;
@@ -1113,12 +1146,15 @@ public class Projection
 			poy = centerY + (r * FastMath.sinf(ang - render.poleAngle));
 		}
 
-		return new float[]{ pox, poy };
+		if (createNewArrayWhenProjecting) return new float[]{ pox, poy };
+		out[0] = pox;
+		out[1] = poy;
+		return out;
 	}
 
 	/**
 	 * Obtains position of an object by inverting the polar sky projection.
-	 * 
+	 *
 	 * @param pox X position.
 	 * @param poy Y position.
 	 * @return Coordinates in the sky, or null if the position cannot be calculated.
@@ -1130,7 +1166,7 @@ public class Projection
 
 		float pos0[] = new float[] {pox, poy};
 		if (this.isInvalid(pos0)) return null;
-		
+
 		if (render.poleAngle != 0.0)
 		{
 			double dx = pox - centerX;
@@ -1142,20 +1178,20 @@ public class Projection
 			pox = (float) (centerX + (r * FastMath.cos(ang + render.poleAngle)));
 			poy = (float) (centerY + (r * FastMath.sin(ang + render.poleAngle)));
 		}
-		
-		double offx = Math.PI;
+
+		double offx = 0;
 		float offy = 1.0f;
 		if (render.telescope.invertHorizontal) offx += Math.PI;
 		if (render.telescope.invertVertical) offy = -1.0f;
 		if (render.centralLatitude >= 0.0) {
 			float r0 = -offy*sy * FastMath.sinf(Constant.PI_OVER_TWO - render.centralLatitude);
 			poy = -(poy - r0 - centerY);
-			pox = (pox - centerX);
+			pox = -(pox - centerX);
 			double lon = FastMath.atan2_accurate(pox, poy);
 			double r = pox / FastMath.sin(lon);
 			double lat = Math.asin(-r / sy) + Constant.PI_OVER_TWO;
 			if (Double.isNaN(lat) || lat < 0.0) return null;
-			return new LocationElement(lon + render.centralLongitude - offx, lat, 1.0);
+			return new LocationElement(lon + render.centralLongitude - offx + Math.PI, lat, 1.0);
 		} else {
 			float r0 = -offy*sy * FastMath.sinf(-Constant.PI_OVER_TWO - render.centralLatitude);
 			poy = -(poy - r0 - centerY);
@@ -1167,7 +1203,7 @@ public class Projection
 			return new LocationElement(lon + render.centralLongitude - Math.PI - offx, lat, 1.0);
 		}
 	}
-	
+
 	/**
 	 * Returns ecliptic position of the central position.
 	 * @return Ecliptic position of central longitude and latitude.
@@ -1209,7 +1245,7 @@ public class Projection
 	public LocationElement getEquatorialPositionOfRendering() throws JPARSECException
 	{
 		if (render.coordinateSystem == CoordinateSystem.COORDINATE_SYSTEM.EQUATORIAL) return loc0;
-		
+
 		boolean fast = true;
 		switch (this.render.coordinateSystem)
 		{
@@ -1238,7 +1274,7 @@ public class Projection
 		if (obs.getMotherBody() == TARGET.NOT_A_PLANET) return null;
 		return CoordinateSystem.horizontalToEquatorial(new LocationElement(0.0, Constant.PI_OVER_TWO, 1.0), this.ast, this.obs.getLatitudeRad(), true);
 	}
-	
+
 	/**
 	 * Returns galactic position of the central position.
 	 * @return Galactic position of central longitude and latitude.
@@ -1304,7 +1340,7 @@ public class Projection
 			return loc0;
 		}
 	}
-	
+
 	/**
 	 * Returns the location of the central position in the current coordinate system.
 	 * @return Central longitude and latitude.
@@ -1368,24 +1404,26 @@ public class Projection
 		LocationElement loc = null;
 		LocationElement locEq = null;
 		if (loc00 == null) {
-			locEq = this.getEquatorialPositionOfRendering();			
-			loc = this.getPositionOfRendering();			
+			locEq = this.getEquatorialPositionOfRendering();
+			loc = this.getPositionOfRendering();
 		} else {
 			if (!isEquatorial) {
 				loc = loc00.clone();
 				locEq = this.toEquatorialPosition(loc00, fastCalc);
 			} else {
 				locEq = loc00.clone();
-				loc = getApparentLocationInSelectedCoordinateSystem(locEq, false, fastCalc, 0);			
+				loc = getApparentLocationInSelectedCoordinateSystem(locEq, false, fastCalc, 0);
 			}
 		}
 
+		boolean newArray = createNewArrayWhenProjecting;
+		createNewArrayWhenProjecting = true;
 		pos0 = project_position(loc);
 
 		if (obs.getMotherBody() == TARGET.EARTH && field < Constant.DEG_TO_RAD && render.coordinateSystem == COORDINATE_SYSTEM.HORIZONTAL) {
 			double angh = ast - locEq.getLongitude();
-			double sinlat = Math.sin(obs.getLatitudeRad()); 
-			double coslat = Math.cos(obs.getLatitudeRad()); 
+			double sinlat = Math.sin(obs.getLatitudeRad());
+			double coslat = Math.cos(obs.getLatitudeRad());
 			double sindec = Math.sin(locEq.getLatitude()), cosdec = Math.cos(locEq.getLatitude());
 			double y = Math.sin(angh);
 			double x = (sinlat / coslat) * cosdec - sindec * Math.cos(angh);
@@ -1397,32 +1435,35 @@ public class Projection
 			{
 				p = (y / Math.abs(y)) * Constant.PI_OVER_TWO;
 			}
-			
+
 			float center[] = project_position(new LocationElement(loc.getLongitude(), Math.min(loc.getLatitude()+10*Constant.DEG_TO_RAD, Constant.PI_OVER_TWO), 1.0));
 			float dx = pos0[0] - center[0];
 			float dy = pos0[1] - center[1];
 			double ang = FastMath.atan2_accurate(-dy, dx);
 
 			this.enableCorrectionOfLocalHorizon();
+			createNewArrayWhenProjecting = newArray;
 			return p-ang;
 		}
 
 		if (pos0 == null) {
+			this.enableCorrectionOfLocalHorizon();
 			JPARSECException.addWarning("Could not calculate where is north. Trace: "+JPARSECException.getCurrentTrace());
+			createNewArrayWhenProjecting = newArray;
 			return 0;
 		}
 
 		if (passToEarth && obs.getMotherBody() != TARGET.EARTH && obs.getMotherBody() != TARGET.NOT_A_PLANET) locEq = getPositionFromEarth(locEq, true);
 		double lat = locEq.getLatitude();
-		
+
 		double DEC = Math.max(this.getField() * 0.1, 0.1 * Constant.DEG_TO_RAD);
 		DEC += lat;
 		if (DEC > Constant.PI_OVER_TWO) DEC = Constant.PI_OVER_TWO;
 		locEq.setLatitude(DEC);
 		if (passToEarth && obs.getMotherBody() != TARGET.EARTH && obs.getMotherBody() != TARGET.NOT_A_PLANET) locEq = getPositionFromBody(locEq, true);
-		loc = getApparentLocationInSelectedCoordinateSystem(locEq, false, fastCalc, 0);			
+		loc = getApparentLocationInSelectedCoordinateSystem(locEq, false, fastCalc, 0);
 		float[] pos1 = project_position(loc);
-		
+
 		double off = Math.PI;
 		if (pos1 == null) {
 			DEC = -Math.max(this.getField() * 0.1, 0.1 * Constant.DEG_TO_RAD);
@@ -1430,18 +1471,21 @@ public class Projection
 			if (DEC < -Constant.PI_OVER_TWO) DEC = -Constant.PI_OVER_TWO;
 			locEq.setLatitude(DEC);
 			if (passToEarth && obs.getMotherBody() != TARGET.EARTH && obs.getMotherBody() != TARGET.NOT_A_PLANET) locEq = getPositionFromBody(locEq, true);
-			loc = getApparentLocationInSelectedCoordinateSystem(locEq, false, fastCalc, 0);			
+			loc = getApparentLocationInSelectedCoordinateSystem(locEq, false, fastCalc, 0);
 			pos1 = project_position(loc);
 			off = 0;
-			
+
 			if (pos1 == null) {
+				this.enableCorrectionOfLocalHorizon();
 				JPARSECException.addWarning("Could not calculate where is north. Trace: "+JPARSECException.getCurrentTrace());
+				createNewArrayWhenProjecting = newArray;
 				return 0;
 			}
 		}
 		this.enableCorrectionOfLocalHorizon();
-		
+
 		double ang = FastMath.atan2_accurate(pos1[1] - pos0[1], pos1[0] - pos0[0]) + off;
+		createNewArrayWhenProjecting = newArray;
 		return ang;
 	}
 
@@ -1463,18 +1507,20 @@ public class Projection
 		LocationElement locH = null;
 		if (loc00 == null) {
 			locH = this.getEquatorialPositionOfRendering();
-			loc = this.getPositionOfRendering();			
+			loc = this.getPositionOfRendering();
 		} else {
 			if (!isEquatorial) {
 				loc = loc00.clone();
 				locH = this.toEquatorialPosition(loc00, true);
 			} else {
 				locH = loc00.clone();
-				loc = getApparentLocationInSelectedCoordinateSystem(locH, false, fastCalc, 0);			
+				loc = getApparentLocationInSelectedCoordinateSystem(locH, false, fastCalc, 0);
 			}
 		}
 		locH = this.getApparentLocationInSelectedCoordinateSystem(locH, false, fastCalc, COORDINATE_SYSTEM.HORIZONTAL, 0);
 
+		boolean newArray = createNewArrayWhenProjecting;
+		createNewArrayWhenProjecting = true;
 		pos0 = project_position(loc);
 
 		double dH = Math.max(this.getField() * 0.1, 0.1 * Constant.DEG_TO_RAD);
@@ -1482,22 +1528,24 @@ public class Projection
 		if (dH > Constant.PI_OVER_TWO) dH = Constant.PI_OVER_TWO;
 		locH.setLatitude(dH);
 		LocationElement locEq = CoordinateSystem.horizontalToEquatorial(locH, ast, obs.getLatitudeRad(), fastCalc);
-		loc = getApparentLocationInSelectedCoordinateSystem(locEq, false, fastCalc, 0);			
+		loc = getApparentLocationInSelectedCoordinateSystem(locEq, false, fastCalc, 0);
 		float[] pos1 = project_position(loc);
-		
+
 		this.enableCorrectionOfLocalHorizon();
 		if (pos0 == null || pos1 == null) {
 			JPARSECException.addWarning("Could not calculate where is north. Trace: "+JPARSECException.getCurrentTrace());
+			createNewArrayWhenProjecting = newArray;
 			return 0;
 		}
-		
+
 		double dh = 1.0, dv = 1.0;
 		if (render.telescope.invertHorizontal) dh = -1;
 		if (render.telescope.invertVertical) dv = -1;
 		double ang = FastMath.atan2_accurate(-dh*(pos1[1] - pos0[1]), dv*(pos1[0] - pos0[0])) + Math.PI;
+		createNewArrayWhenProjecting = newArray;
 		return ang;
 	}
-	
+
 	/**
 	 * Sets a new direction for the pole in the current projection.
 	 * This overrides the initial value in the {@linkplain SkyRenderElement} object.
@@ -1506,10 +1554,10 @@ public class Projection
 	public void setPoleAngle(double ang) {
 		render.poleAngle = (float) ang;
 	}
-	
+
 	/**
 	 * Obtains position of an object by inverting the stereographic sky projection.
-	 * 
+	 *
 	 * @param pox X position.
 	 * @param poy Y position.
 	 * @return Coordinates in the sky, or null if the position cannot be calculated.
@@ -1522,7 +1570,7 @@ public class Projection
 
 		float pos0[] = new float[] {pox, poy};
 		if (this.isInvalid(pos0)) return null;
-		
+
 		if (render.poleAngle != 0.0)
 		{
 			double dx = pox - centerX;
@@ -1539,18 +1587,18 @@ public class Projection
 		poy = -(poy - centerY);
 		if (render.coordinateSystem == COORDINATE_SYSTEM.HORIZONTAL) poy = -poy;
 		double rho = FastMath.hypot(pox, poy), R = stxxTimesCenterX * 0.5;
-		
+
 		if (fastCalc) {
 			double c = 2 * FastMath.atan2_accurate(rho * 0.5, R);
 			double sinc = FastMath.sin(c), cosc = FastMath.cos(c);
 			double phi = render.centralLatitude;
 			if (rho > 0) phi = FastMath.asin(cosc * sin_lat0 + poy * sinc * cos_lat0 / rho);
 			double lam = render.centralLongitude + FastMath.atan2_accurate(pox * sinc, rho * cos_lat0 * cosc - poy * sin_lat0 * sinc);
-	
+
 			LocationElement out = new LocationElement(lam, phi, 1.0);
 			return out;
 		}
-		
+
 		double c = 2 * Math.atan2(rho * 0.5, R);
 		double sinc = FastMath.sin(c), cosc = FastMath.cos(c);
 		double phi = render.centralLatitude;
@@ -1572,12 +1620,12 @@ public class Projection
 	 */
 	public LocationElement getPositionFromBody(LocationElement loc, boolean fast) throws JPARSECException {
 		if (obs.getMotherBody() != TARGET.NOT_A_PLANET && obs.getMotherBody() != TARGET.EARTH) {
-			
+
 			if (!fast)
 				return new LocationElement(LocationElement.getPositionAngle(np, loc), Constant.PI_OVER_TWO - LocationElement.getAngularDistance(np, loc), loc.getRadius());
 			return new LocationElement(LocationElement.getApproximatePositionAngle(np, loc), Constant.PI_OVER_TWO - LocationElement.getApproximateAngularDistance(np, loc), loc.getRadius());
 		}
-		
+
 		return loc;
 	}
 
@@ -1597,12 +1645,12 @@ public class Projection
 			//LocationElement np = Ephem.getPositionFromBody(this.np, time, obs, eph);
 			//np.setLatitude(this.np.getLatitude());
 
-			
+
 			if (!fast)
 				return new LocationElement(LocationElement.getPositionAngle(np, loc) - (np.getLongitude() - this.np.getLongitude()), Constant.PI_OVER_TWO - LocationElement.getAngularDistance(np, loc), loc.getRadius());
 			return new LocationElement(LocationElement.getApproximatePositionAngle(np, loc) - (np.getLongitude() - this.np.getLongitude()), Constant.PI_OVER_TWO - LocationElement.getApproximateAngularDistance(np, loc), loc.getRadius());
 		}
-		
+
 		return loc;
 	}
 }

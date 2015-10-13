@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.ephem.moons;
 
 import java.io.Serializable;
@@ -30,14 +30,14 @@ import jparsec.math.Constant;
 /**
  * An adequate class for storing orbital elements of natural
  * satellites.
- * 
+ *
  * @see MoonEphem
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
 public class MoonOrbitalElement implements Serializable
 {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Constructs an empty moon orbital object.
@@ -70,12 +70,12 @@ public class MoonOrbitalElement implements Serializable
 	 * fields. Argument of periapsis is set to periapsis longitude minus
 	 * ascending node longitude. Mean anomaly is set to mean longitude minus
 	 * periapsis longitude. Mean motion is set to Constant.GAUSS / (sma *
-	 * Math.sqrt(sma), assuming a massless object in planetocentric orbit. 
+	 * Math.sqrt(sma), assuming a massless object in planetocentric orbit.
 	 * sma = semimajor axis.
 	 * <P>
 	 * Is is necessary to set also the reference equinox to get correct
 	 * ephemeris.
-	 * 
+	 *
 	 * @param sma Semimajor axis in AU.
 	 * @param mean_lon Mean Longitude in radians.
 	 * @param ecc Eccentricity.
@@ -108,7 +108,7 @@ public class MoonOrbitalElement implements Serializable
 	/**
 	 * Constructs a moon orbit object giving the values of all the
 	 * fields.
-	 * 
+	 *
 	 * @param nom Name of the object
 	 * @param sma Semimajor axis in AU.
 	 * @param mean_anom Mean anomaly in radians.
@@ -183,7 +183,7 @@ public class MoonOrbitalElement implements Serializable
 		meanLongitude = meanAnomaly + periapsisLongitude;
 		semimajorAxis = Double.parseDouble(FileIO.getField(3, elementsFromHorizons[4], " ", true));
 	}
-	
+
 	/**
 	 * Semimajor axis of the orbit in AU.
 	 */
@@ -301,16 +301,16 @@ public class MoonOrbitalElement implements Serializable
 	/**
 	 * The different reference planes for the elements.
 	 */
-	public static enum REFERENCE_PLANE {
+	public enum REFERENCE_PLANE {
 		/** Laplace reference plane (defined by the angular momentum vector of the Solar System). */
-		LAPLACE, 
+		LAPLACE,
 		/** Ecliptic reference plane for the elements. */
-		ECLIPTIC, 
+		ECLIPTIC,
 		/** Earth's equator reference plane for the elements. */
-		EQUATOR, 
-		/** Planet equator reference plane for the elements. Horizons can provide elements 
+		EQUATOR,
+		/** Planet equator reference plane for the elements. Horizons can provide elements
 		 * for this plane, as 'Body Mean Equator and Node of Date'. */
-		PLANET_EQUATOR}
+		PLANET_EQUATOR};
 
 	/**
 	 * To clone the object.
@@ -330,9 +330,8 @@ public class MoonOrbitalElement implements Serializable
 		orbit.periapsisLongitude = this.periapsisLongitude;
 		return orbit;
 	}
-
 	/**
-	 * Returns true if the input object is equal to this moon orbital
+	 * Returns true if the input object is equals to this moon orbital
 	 * element object..
 	 */
 	@Override

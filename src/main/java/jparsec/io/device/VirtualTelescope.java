@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */	
+ */
 package jparsec.io.device;
 
 import jparsec.astronomy.CoordinateSystem;
@@ -56,8 +56,8 @@ public class VirtualTelescope implements GenericTelescope {
 	private TELESCOPE_MODEL model;
 	private double[] field = new double[] {-1, -1, -1, -1, -1};
 	private MoveThread move;
-	
-	private boolean isMoving = false, isMovingS = false, isMovingN = false, isMovingE = false, 
+
+	private boolean isMoving = false, isMovingS = false, isMovingN = false, isMovingE = false,
 			isMovingW = false, connected = true, isTracking = true;
 	private FOCUS_SPEED fs = FOCUS_SPEED.SLOW;
 	private FOCUS_DIRECTION fd = FOCUS_DIRECTION.IN;
@@ -86,9 +86,9 @@ public class VirtualTelescope implements GenericTelescope {
 	@Override
     public synchronized boolean setFocusSpeed(FOCUS_SPEED rate) {
 		switch(rate) {
-		case FAST: 
+		case FAST:
 			break;
-		case SLOW: 
+		case SLOW:
 			break;
 		}
 		fs = rate;
@@ -99,9 +99,9 @@ public class VirtualTelescope implements GenericTelescope {
 	@Override
     public synchronized boolean startFocus(FOCUS_DIRECTION direction) {
 		switch(direction) {
-		case IN: 
+		case IN:
 			break;
-		case OUT: 
+		case OUT:
 			break;
 		}
 		fd = direction;
@@ -124,22 +124,22 @@ public class VirtualTelescope implements GenericTelescope {
 	@Override
     public synchronized boolean startMove(MOVE_DIRECTION direction) {
 		switch(direction) {
-		case NORTH_UP: 
+		case NORTH_UP:
 			isMovingN = true;
 			break;
-		case EAST_LEFT: 
+		case EAST_LEFT:
 			isMovingE = true;
 			break;
-		case SOUTH_DOWN: 
+		case SOUTH_DOWN:
 			isMovingS = true;
 			break;
-		case WEST_RIGHT: 
+		case WEST_RIGHT:
 			isMovingW = true;
 			break;
 		}
 		md = direction;
 		isMoving = true;
-		
+
 		if (move != null && move.isWorking()) {
 			move.shouldStopN = !isMovingN;
 			move.shouldStopS = !isMovingS;
@@ -164,26 +164,26 @@ public class VirtualTelescope implements GenericTelescope {
 	@Override
     public synchronized boolean stopMove(MOVE_DIRECTION direction) {
 		switch(direction) {
-		case NORTH_UP: 
+		case NORTH_UP:
 			isMovingN = false;
 			if (move != null && move.isWorking()) move.shouldStopN = true;
 			break;
-		case EAST_LEFT: 
+		case EAST_LEFT:
 			isMovingE = false;
 			if (move != null && move.isWorking()) move.shouldStopE = true;
 			break;
-		case SOUTH_DOWN: 
+		case SOUTH_DOWN:
 			isMovingS = false;
 			if (move != null && move.isWorking()) move.shouldStopS = true;
 			break;
-		case WEST_RIGHT: 
+		case WEST_RIGHT:
 			isMovingW = false;
 			if (move != null && move.isWorking()) move.shouldStopW = true;
 			break;
 		}
 		isMoving = checkMove();
 		return true;
-    }	
+    }
 	@Override
 	public MOVE_DIRECTION getLastMoveDirection() {return md;}
 	@Override
@@ -191,12 +191,12 @@ public class VirtualTelescope implements GenericTelescope {
         if (isTracking) return loc.clone();
 		try {
 			if (parkPos != null)
-				return CoordinateSystem.horizontalToEquatorial(parkPos, time, obs, eph);					
+				return CoordinateSystem.horizontalToEquatorial(parkPos, time, obs, eph);
 			return CoordinateSystem.horizontalToEquatorial(new LocationElement(0, Constant.PI_OVER_TWO, 1), time, obs, eph);
 		} catch (Exception exc) { return null; }
 	}
 	@Override
-	public synchronized LocationElement getApparentEquatorialPosition() { 
+	public synchronized LocationElement getApparentEquatorialPosition() {
 		LocationElement loc = this.getEquatorialPosition();
 		try {
 			if (!this.model.isJ2000()) return loc;
@@ -225,7 +225,7 @@ public class VirtualTelescope implements GenericTelescope {
 			if (parkPos != null) return parkPos;
 			return new LocationElement(0, Constant.PI_OVER_TWO, 1);
 		}
-		
+
 		updateTime();
 		try {
 			return CoordinateSystem.equatorialToHorizontal(getApparentEquatorialPosition(), time, obs, eph);
@@ -257,9 +257,9 @@ public class VirtualTelescope implements GenericTelescope {
 		}
 
 		if (move != null && move.isWorking()) return false;
-		
+
 		move = new MoveThread(this.loc, loc, SPEED[0], getMount() == MOUNT.EQUATORIAL);
-		move.start();		
+		move.start();
 		return true;
     }
 	@Override
@@ -267,7 +267,7 @@ public class VirtualTelescope implements GenericTelescope {
     	if (isEquatorial) {
     		return LocationElement.getAngularDistance(loc, getEquatorialPosition());
     	} else {
-    		return LocationElement.getAngularDistance(loc, getHorizontalPosition());    		
+    		return LocationElement.getAngularDistance(loc, getHorizontalPosition());
     	}
     }
 	@Override
@@ -320,7 +320,7 @@ public class VirtualTelescope implements GenericTelescope {
 			}
 			this.setObjectCoordinates(loc, "Park position");
 			this.gotoObject();
-			objLoc = loc0; 
+			objLoc = loc0;
 			disconnect();
 			isTracking = false;
 			return true;
@@ -348,6 +348,10 @@ public class VirtualTelescope implements GenericTelescope {
 		return Translate.translate(1185);
     }
 	@Override
+    public synchronized String getTelescopePort() {
+    	return null;
+    }
+	@Override
     public synchronized ObserverElement getObserver() {
 		return obs;
     }
@@ -363,27 +367,27 @@ public class VirtualTelescope implements GenericTelescope {
 	@Override
     public synchronized boolean isAligned() {
 		return connected && true;
-    }  
+    }
 	@Override
     public synchronized MOUNT getMount() {
 		if (this.model == TELESCOPE_MODEL.VIRTUAL_TELESCOPE_AZIMUTHAL_MOUNT) return MOUNT.AZIMUTHAL;
 		return MOUNT.EQUATORIAL;
-    }  
+    }
 	@Override
     public synchronized boolean disconnect() {
 		connected = false;
     	return true;
-    }  
+    }
 	@Override
     public synchronized boolean connect() throws JPARSECException {
 		connected = true;
     	return true;
-    }  
+    }
 	@Override
     public synchronized boolean isConnected() {
 		return connected;
-    }  
-    
+    }
+
     private boolean checkMove() {
     	if (isMovingN || isMovingE || isMovingW || isMovingS) return true;
 		return this.isMoving(1, MOVE_TOLERANCE_1s);
@@ -407,12 +411,12 @@ public class VirtualTelescope implements GenericTelescope {
     public double getFieldOfView(int camera) {
     	return field[camera];
     }
-    
+
     @Override
     public void setFieldOfView(double field, int camera) {
     	this.field[camera] = field;
     }
-    
+
 	private GenericCamera[] cameras;
 	@Override
 	public GenericCamera[] getCameras() {
@@ -423,7 +427,7 @@ public class VirtualTelescope implements GenericTelescope {
 	public void setCameras(GenericCamera[] cameras) throws JPARSECException {
 		this.cameras = cameras;
 	}
-	
+
 	@Override
 	public boolean invertHorizontally() {
 		return type.invertH();
@@ -433,7 +437,7 @@ public class VirtualTelescope implements GenericTelescope {
 	public boolean invertVertically() {
 		return type.invertV();
 	}
-	
+
 	private TELESCOPE_TYPE type = TELESCOPE_TYPE.SCHMIDT_CASSEGRAIN;
 	@Override
 	public void setTelescopeType(TELESCOPE_TYPE type) {
@@ -455,7 +459,7 @@ public class VirtualTelescope implements GenericTelescope {
 
 			LocationElement eq = this.getEquatorialPosition(), hz = this.getHorizontalPosition();
 			LocationElement eqapp = this.getApparentEquatorialPosition(), eq2000 = this.getJ2000EquatorialPosition();
-			
+
 			ImageHeaderElement header0[] = new ImageHeaderElement[] {
 					new ImageHeaderElement("BITPIX", "32", "Bits per data value"),
 					new ImageHeaderElement("NAXIS", "2", "Dimensionality"),
@@ -489,7 +493,7 @@ public class VirtualTelescope implements GenericTelescope {
 					new ImageHeaderElement("AZ", ""+hz.getLongitude(), "Telescope AZ"),
 					new ImageHeaderElement("EL", ""+hz.getLatitude(), "Telescope EL")
 			};
-			
+
 			if (cameraIndex < 0) return header0;
 
 			GenericCamera camera = this.getCameras()[cameraIndex];
@@ -515,11 +519,11 @@ public class VirtualTelescope implements GenericTelescope {
 					e.printStackTrace();
 				}
 			}
-				
+
 			ImageHeaderElement cameraHeader[] = camera.getFitsHeaderOfLastImage();
 			cameraHeader = ImageHeaderElement.addHeaderEntry(cameraHeader, new ImageHeaderElement("FIELD", Functions.formatAngleAsDegrees(this.getFieldOfView(cameraIndex), 3), "Camera field of view (deg)"));
 			cameraHeader = ImageHeaderElement.addHeaderEntry(cameraHeader, new ImageHeaderElement("CAM_INDE", ""+cameraIndex, "Camera index id value"));
-	
+
 			return ImageHeaderElement.addHeaderEntry(header0, cameraHeader);
 		} catch (Exception exc) {
 			exc.printStackTrace();
@@ -536,7 +540,7 @@ public class VirtualTelescope implements GenericTelescope {
        	setFocusSpeed(fs);
        	setMoveSpeed(ms);
        	this.model = telescope;
-       	
+
        	time = new TimeElement();
        	try {
        		obs = new ObserverElement("");
@@ -551,15 +555,15 @@ public class VirtualTelescope implements GenericTelescope {
 		eph.preferPrecisionInEphemerides = false;
 		eph.correctForEOP = false;
 		eph.correctForPolarMotion = false;
-		
+
 		loc = CoordinateSystem.horizontalToEquatorial(new LocationElement(0, Constant.PI_OVER_TWO, 1), time, obs, eph);
 	}
-	
+
 	class MoveThread extends Thread {
 		private LocationElement loc0, loc1;
 		private double speed;
 		private boolean eq;
-		
+
 		public boolean shouldStop = false, shouldStopN = true, shouldStopS = true, shouldStopE = true, shouldStopW = true;
 		private boolean isObj = false;
 		public MoveThread(LocationElement loc0, LocationElement loc1, double speed, boolean eq) {
@@ -575,7 +579,7 @@ public class VirtualTelescope implements GenericTelescope {
 					if (loc1 != null) this.loc1 = CoordinateSystem.equatorialToHorizontal(loc1, time, obs, eph);
 				} catch (Exception e) {
 					e.printStackTrace();
-					System.out.println("ERROR MOVING THE VIRTUAL TELESCOPE !");					
+					System.out.println("ERROR MOVING THE VIRTUAL TELESCOPE !");
 				}
 			}
 			this.speed = speed * Constant.DEG_TO_RAD;
@@ -605,7 +609,7 @@ public class VirtualTelescope implements GenericTelescope {
 					long t1 = System.currentTimeMillis();
 					double ang = speed * (t1 - t0) * 0.001;
 					t0 = t1;
-					
+
 					// Move
 					if (loc1 == null) {
 						if (!shouldStopN) loc0.setLatitude(loc0.getLatitude() + ang);
@@ -639,7 +643,7 @@ public class VirtualTelescope implements GenericTelescope {
 						loc0.setLongitude(newLon);
 						loc0.setLatitude(newLat);
 					}
-					
+
 					// Set new location
 					if (eq) {
 						loc = loc0;
@@ -648,22 +652,22 @@ public class VirtualTelescope implements GenericTelescope {
 							loc  = CoordinateSystem.horizontalToEquatorial(loc0, time, obs, eph);
 						} catch (Exception e) {
 							e.printStackTrace();
-							System.out.println("ERROR MOVING THE VIRTUAL TELESCOPE !");					
-						}							
+							System.out.println("ERROR MOVING THE VIRTUAL TELESCOPE !");
+						}
 					}
-					
+
 					sleep(100);
 				} while(!shouldStop && (loc1 == null || (dlon != 0.0 || dlat != 0.0)));
 				shouldStop = true;
 				isMoving = false;
-				
+
 				if (loc1 != null && isObj) loc = objLoc.clone();
 			} catch (Exception exc) {
 				exc.printStackTrace();
 				System.out.println("ERROR MOVING THE VIRTUAL TELESCOPE !");
 			}
 		}
-		
+
 		/** Returns if the thread is working or not. */
 		public boolean isWorking() {
 			return !shouldStop;

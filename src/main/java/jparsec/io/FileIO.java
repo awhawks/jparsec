@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.io;
 
 import java.io.File;
@@ -39,7 +39,7 @@ import jparsec.util.Logger.LEVEL;
 
 /**
  * Miscellaneous utility functions for file I/O.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -47,11 +47,11 @@ public class FileIO
 {
 	// private constructor so that this class cannot be instantiated.
 	private FileIO() {}
-	
+
 	/**
 	 * Obtains path of the working directory.
-	 * 
-	 * @param clean True to remove file:/ from the 
+	 *
+	 * @param clean True to remove file:/ from the
 	 * beginning of the output string. True recommended
 	 * since it depends on the operating system.
 	 * @return Full path.
@@ -63,7 +63,7 @@ public class FileIO
 			if (!p.endsWith(FileIO.getFileSeparator())) p += FileIO.getFileSeparator();
 			return p;
 		}
-		
+
 		URL url = FileIO.class.getClassLoader().getResource(LIBRARY_ROOT_NAME + "/io/package.html");
 		String path = getPathFromURL(url.toString());
 		if (clean) {
@@ -77,7 +77,7 @@ public class FileIO
 
 		return path;
 	}
-	
+
 	/**
 	 * Returns the path from a given URL.
 	 * @param path The URL as a String.
@@ -95,10 +95,10 @@ public class FileIO
 		if (path.startsWith("jar:")) path = path.substring(4);
 		return path;
 	}
-	
+
 	/**
 	 * Adds spaces to a string to get certain length, after the text.
-	 * 
+	 *
 	 * @param field Text.
 	 * @param length Desired length.
 	 * @return New string with the necessary spaces after the text.
@@ -119,7 +119,7 @@ public class FileIO
 
 	/**
 	 * Adds spaces to a string to get certain length, before the text.
-	 * 
+	 *
 	 * @param field Text.
 	 * @param length Desired length.
 	 * @return New string with the necessary spaces before the text.
@@ -140,7 +140,7 @@ public class FileIO
 
 	/**
 	 * Get rest of the string after something.
-	 * 
+	 *
 	 * @param line_file Input string.
 	 * @param what The text just before what you want.
 	 * @return Output String, or empty String if fails.
@@ -149,7 +149,7 @@ public class FileIO
 	{
 		int space;
 		String out = "";
-	
+
 		if (line_file.equals(""))
 		{
 			space = 0;
@@ -159,10 +159,10 @@ public class FileIO
 			if (space >= 0)
 				out = line_file.substring(space+what.length());
 		}
-	
+
 		return out;
 	}
-	
+
 	/**
 	 * Obtains the name of a file from a given path.
 	 * @param path The path.
@@ -171,7 +171,7 @@ public class FileIO
 	public static String getFileNameFromPath(String path)
 	{
 		  String name = path;
-		  if (path.indexOf(FileIO.getFileSeparator()) >= 0) 
+		  if (path.indexOf(FileIO.getFileSeparator()) >= 0)
 			  name = path.substring(path.lastIndexOf(FileIO.getFileSeparator()) + 1);
 		  return name;
 	}
@@ -184,14 +184,14 @@ public class FileIO
 	public static String getDirectoryFromPath(String path)
 	{
 		  String name = "";
-		  if (path.indexOf(FileIO.getFileSeparator()) >= 0) 
+		  if (path.indexOf(FileIO.getFileSeparator()) >= 0)
 			  name = path.substring(0, path.lastIndexOf(FileIO.getFileSeparator()) + 1);
 		  return name;
 	}
 
 	/**
 	 * Get text of the string before next two spaces.
-	 * 
+	 *
 	 * @param line_file Input string.
 	 * @return Output String.
 	 */
@@ -199,7 +199,7 @@ public class FileIO
 	{
 		int space;
 		String out = "";
-	
+
 		if (line_file.equals(""))
 		{
 			space = 0;
@@ -214,14 +214,14 @@ public class FileIO
 				out = line_file.substring(0, space).trim();
 			}
 		}
-	
+
 		return out;
 	}
 
 	/**
 	 * To obtain a list of all files available in certain path. Files
 	 * are usually sorted by name, but this is not guaranteed.
-	 * 
+	 *
 	 * @param path A directory path.
 	 * @return List of files.
 	 * @throws JPARSECException If an error occurs.
@@ -279,7 +279,7 @@ public class FileIO
 	/**
 	 * To obtain a list of all files available in certain path,
 	 * ordered by date.
-	 * 
+	 *
 	 * @param path A directory path.
 	 * @param recentFilesFirst True to return the most recent file
 	 * in the first index of the array, false to return the most recent
@@ -291,15 +291,15 @@ public class FileIO
 	{
 		String files[] = FileIO.getFiles(path);
 		if (files == null) return null;
-		
+
 		double dates[] = new double[files.length];
 		for (int i=0; i<files.length; i++) {
 			File f = new File(files[i]);
 			dates[i] = f.lastModified();
 		}
-		
+
 		if (recentFilesFirst) {
-			return DataSet.sortInDescent(files, dates);			
+			return DataSet.sortInDescent(files, dates);
 		} else {
 			return DataSet.sortInCrescent(files, dates);
 		}
@@ -307,7 +307,7 @@ public class FileIO
 
 	/**
 	 * To obtain a list of all subdirectories available in certain path.
-	 * 
+	 *
 	 * @param path A directory path.
 	 * @return List of subdirectories.
 	 * @throws JPARSECException If an error occurs.
@@ -364,7 +364,7 @@ public class FileIO
 
 	/**
 	 * Get how many times an expression is repeated in an argument.
-	 * 
+	 *
 	 * @param arg Argument.
 	 * @param expression Expression.
 	 * @return Repeated times of expression in argument.
@@ -376,7 +376,7 @@ public class FileIO
 		{
 			int end = i + expression.length();
 			if (end > arg.length()) break;
-			
+
 			String compare = arg.substring(i, end);
 			if (compare.equals(expression))
 				n++;
@@ -387,7 +387,7 @@ public class FileIO
 	/**
 	 * Get last field of a string. Fields are supposed to be separated by a
 	 * string called separator.
-	 * 
+	 *
 	 * @param arg String with fields.
 	 * @param separator String that defines the separator.
 	 * @param skip True to skip several consecutive separators.
@@ -398,13 +398,13 @@ public class FileIO
 		int n = FileIO.getNumberOfFields(arg, separator, skip);
 		return FileIO.getField(n, arg, separator, skip);
 	}
-	
+
 	/**
 	 * Get certain field of a string. Fields are supposed to be separated by a
 	 * string called separator. If the separator is a blank space or tab several
 	 * consecutive separators can be treated as one separator only if skip is
 	 * set to true, which is the default value for other methods in the library.
-	 * 
+	 *
 	 * @param field Number of field. 1, 2, ...
 	 * @param text String with fields.
 	 * @param separator String that defines the separator.
@@ -418,7 +418,7 @@ public class FileIO
 		if (!separator.trim().equals("")) skip = false;
 		if (skip) text = text.trim();
 		String myfield = "";
-		
+
 		int space;
 		int err = 0;
 		for (int i = 0; i < field; i++)
@@ -470,15 +470,15 @@ public class FileIO
 			n ++;
 			arg = arg.substring(space);
 			if (skip) arg = arg.trim();
-			space = arg.indexOf(separator) + 1;			
+			space = arg.indexOf(separator) + 1;
 		} while (space > 0);
 		return n;
 	}
-	
+
 	/**
 	 * Reads contents after certain field in a formatted line with fields
 	 * separated by some separator.
-	 * 
+	 *
 	 * @param field Field number: 1, 2, ...
 	 * @param text Formatted string
 	 * @param separator Separator string.
@@ -514,7 +514,7 @@ public class FileIO
 	/**
 	 * Reads contents before certain field in a formatted line with fields
 	 * separated by some separator.
-	 * 
+	 *
 	 * @param field Field number: 2, 3, ...
 	 * @param text Formatted string
 	 * @param separator Separator string.
@@ -534,7 +534,7 @@ public class FileIO
 
 	/**
 	 * Get the system file separator ("/" or "\").
-	 * 
+	 *
 	 * @return "/" or "\".
 	 */
 	public static String getFileSeparator()
@@ -544,7 +544,7 @@ public class FileIO
 
 	/**
 	 * Get the system line separator.
-	 * 
+	 *
 	 * @return Line separator.
 	 */
 	public static String getLineSeparator()
@@ -554,7 +554,7 @@ public class FileIO
 
 	/**
 	 * Get the current working directory.
-	 * 
+	 *
 	 * @return The path.
 	 */
 	public static String getWorkingDirectory()
@@ -563,10 +563,10 @@ public class FileIO
 		if (!wd.endsWith(FileIO.getFileSeparator())) wd += FileIO.getFileSeparator();
 		return wd;
 	}
-	
+
 	/**
 	 * Get the OS current temporal directory.
-	 * 
+	 *
 	 * @return The path.
 	 */
 	public static String getTemporalDirectory()
@@ -576,7 +576,7 @@ public class FileIO
 			if (!s.endsWith(FileIO.getFileSeparator())) s += FileIO.getFileSeparator();
 			return s;
 		}
-		
+
 		String s = System.getProperty("java.io.tmpdir");
 		if (!s.endsWith(FileIO.getFileSeparator())) s += FileIO.getFileSeparator();
 		return s;
@@ -584,7 +584,7 @@ public class FileIO
 
 	/**
 	 * Get the user name.
-	 * 
+	 *
 	 * @return The name.
 	 */
 	public static String getUserName()
@@ -593,7 +593,7 @@ public class FileIO
 	}
 	/**
 	 * Get the user home directory.
-	 * 
+	 *
 	 * @return The path.
 	 */
 	public static String getUserHomeDirectory()
@@ -605,7 +605,7 @@ public class FileIO
 
 	/**
 	 * Determine if the specified file exists and is readable.
-	 * 
+	 *
 	 * @param filespec the file name to test.
 	 * @return <TT>true</TT> if the specified file exists and is readable,
 	 *         <TT>false</TT> otherwise.
@@ -617,7 +617,7 @@ public class FileIO
 	}
 	/**
 	 * Determine if the specified file/directory exists.
-	 * 
+	 *
 	 * @param filespec the file name to test.
 	 * @return <TT>true</TT> if the specified file/directory exists,
 	 *         <TT>false</TT> otherwise.
@@ -850,10 +850,10 @@ public class FileIO
 	 * @return Directory path. Null if cancel is pressed.
 	 * @throws JPARSECException If an error occurs.
 	 */
-	public static String directoryChooser(String initialPath, boolean open) 
+	public static String directoryChooser(String initialPath, boolean open)
 	throws JPARSECException {
 		String filePath = null;
-		
+
 		JFileChooser chooser = new JFileChooser(  );
 		if (initialPath != null) chooser = new JFileChooser(initialPath);
 		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -862,7 +862,7 @@ public class FileIO
 		{
 			result = chooser.showOpenDialog(new JPanel());
 		} else {
-			result = chooser.showSaveDialog(new JPanel());			
+			result = chooser.showSaveDialog(new JPanel());
 		}
 		if (result == JFileChooser.CANCEL_OPTION) return filePath;
 		try {
@@ -880,17 +880,17 @@ public class FileIO
 	 * @param open True to show an open dialog, false for a save dialog.
 	 * @throws JPARSECException If an error occurs.
 	 */
-	public static String fileChooser(boolean open) 
+	public static String fileChooser(boolean open)
 	throws JPARSECException {
 		String filePath = null;
-		
+
 		JFileChooser chooser = new JFileChooser(  );
 		int result = -1;
 		if (open)
 		{
 			result = chooser.showOpenDialog(new JPanel());
 		} else {
-			result = chooser.showSaveDialog(new JPanel());			
+			result = chooser.showSaveDialog(new JPanel());
 		}
 		if (result == JFileChooser.CANCEL_OPTION) return filePath;
 		try {
@@ -901,7 +901,7 @@ public class FileIO
 		}
 		return filePath;
 	}
-	
+
 	/**
 	 * Selects a file using the default graphical interface and a file
 	 * filter.
@@ -911,10 +911,10 @@ public class FileIO
 	 * @return File path. Null if cancel is pressed.
 	 * @throws JPARSECException If an error occurs.
 	 */
-	public static String fileChooser(String fileFilter, String initialPath, boolean open) 
+	public static String fileChooser(String fileFilter, String initialPath, boolean open)
 	throws JPARSECException {
 		String filePath = null;
-		
+
 		JFileChooser chooser = new JFileChooser(  );
 		if (initialPath != null) chooser = new JFileChooser(initialPath);
 		if (fileFilter != null) chooser.addChoosableFileFilter(new MyFilter(fileFilter));
@@ -923,7 +923,7 @@ public class FileIO
 		{
 			result = chooser.showOpenDialog(new JPanel());
 		} else {
-			result = chooser.showSaveDialog(new JPanel());			
+			result = chooser.showSaveDialog(new JPanel());
 		}
 		if (result == JFileChooser.CANCEL_OPTION) return filePath;
 		try {
@@ -934,7 +934,7 @@ public class FileIO
 		}
 		return filePath;
 	}
-	
+
 	/**
 	 * Deletes a file or directory.
 	 * @param path Path of the file/directory to delete.
@@ -942,7 +942,7 @@ public class FileIO
 	 * because it contains protected/opened files/subdirectories.
 	 */
 	public static void deleteFile(String path)
-	throws JPARSECException {		
+	throws JPARSECException {
 		File f = new File(path);
 		if (!f.exists()) return;
 		boolean success = true;
@@ -965,7 +965,7 @@ public class FileIO
 		if (success) success = f.delete();
 		if (!success) throw new JPARSECException("could not delete file/directory "+path);
 	}
-	
+
 	/**
 	 * Create a given directory.
 	 * @param path Path of the directory.
@@ -1016,7 +1016,7 @@ public class FileIO
      * as jparsec.jar), without extension.
      * @param jarPath The path to a given given directory inside the .jar file.
      * @param fileName The name of the a file inside that .jar and directory.
-     * @return Last modified time of the file inside the .jar, given as milliseconds 
+     * @return Last modified time of the file inside the .jar, given as milliseconds
      * from 1970 January 1 at 0h UTC, or -1 if an error occurs.
      */
     public static long getLastModifiedTimeOfResource(String jarFile, String jarPath, String fileName) {
@@ -1030,7 +1030,7 @@ public class FileIO
 				return file.lastModified();
 			}
 			path = path.substring(0, p+4);
-			
+
 			JarFile jarfile = new JarFile(path);
 			Enumeration<JarEntry> jarEnum = jarfile.entries();
 			JarEntry entry;
@@ -1045,7 +1045,6 @@ public class FileIO
 			return -1;
 		}
     }
-
     /**
      * Eliminates leading 0 from a given input string.
      * @param value The string value.

@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.graph;
 
 import java.awt.Color;
@@ -54,9 +54,9 @@ import jparsec.io.image.Picture;
 import jparsec.util.JPARSECException;
 
 /**
- * A class to create 3d charts using JMathPlot visualization library. 
+ * A class to create 3d charts using JMathPlot visualization library.
  * Some features implemented in the other charts are not available here, but it is
- * possible to use the 3d features of the library. You may consider using 
+ * possible to use the 3d features of the library. You may consider using
  * {@linkplain CreateSurface3D} class instead, since visualization is much better.
  * <P>
  * A 3d chart created with this class can be rotated and zoomed with the mouse. The
@@ -66,11 +66,11 @@ import jparsec.util.JPARSECException;
  * @version 1.0
  */
 public class CreateChart3D implements Serializable, MouseWheelListener, MouseListener {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	private JPanel panel;
 	private ChartElement3D chart_elem;
-	
+
     private Plot3DPanel plot;
 
 	/**
@@ -82,7 +82,7 @@ public class CreateChart3D implements Serializable, MouseWheelListener, MouseLis
 	throws JPARSECException {
 		init(chart);
 	}
-	
+
 	/**
 	 * Returns the component of this chart.
 	 * @return The JPanel.
@@ -90,8 +90,7 @@ public class CreateChart3D implements Serializable, MouseWheelListener, MouseLis
 	public JPanel getComponent() {
 		return panel;
 	}
-
-  private void init(ChartElement3D chart)
+	private void init(ChartElement3D chart)
 	throws JPARSECException {
 		try {
 			this.chart_elem = chart.clone();
@@ -99,64 +98,81 @@ public class CreateChart3D implements Serializable, MouseWheelListener, MouseLis
 			plot = new Plot3DPanel();
 			if (chart_elem.showLegend)
 				plot = new Plot3DPanel("SOUTH");
-	
+
 			for (int i=0; i<chart_elem.series.length; i++)
 			{
-			  ChartSeriesElement3D series = chart_elem.series[i];
-			  double[] xValues = DataSet.toDoubleValues(series.xValues);
-			  double[] yValues = DataSet.toDoubleValues(series.yValues);
-
-			  if (chart_elem.series[i].isSurface) {
-					plot.addGridPlot(series.legend, series.color, xValues, yValues, (double[][]) series.zValues);
+				if (chart_elem.series[i].isSurface) {
+					plot.addGridPlot(chart_elem.series[i].legend, chart_elem.series[i].color,
+							DataSet.toDoubleValues(chart_elem.series[i].xValues),
+							DataSet.toDoubleValues(chart_elem.series[i].yValues),
+							(double[][]) chart_elem.series[i].zValues);
 				} else {
-					if (series.drawLines) {
+					if (chart_elem.series[i].drawLines) {
 						try {
-							plot.addLinePlot(series.legend, series.color, xValues, yValues, (double[]) series.zValues);
+							plot.addLinePlot(chart_elem.series[i].legend, chart_elem.series[i].color,
+								DataSet.toDoubleValues(chart_elem.series[i].xValues),
+								DataSet.toDoubleValues(chart_elem.series[i].yValues),
+								(double[]) chart_elem.series[i].zValues);
 						} catch (Exception exc)
 						{
-							plot.addLinePlot(series.legend, series.color, xValues, yValues, DataSet.toDoubleValues((String[]) series.zValues));
+							plot.addLinePlot(chart_elem.series[i].legend, chart_elem.series[i].color,
+									DataSet.toDoubleValues(chart_elem.series[i].xValues),
+									DataSet.toDoubleValues(chart_elem.series[i].yValues),
+									DataSet.toDoubleValues((String[]) chart_elem.series[i].zValues));
 						}
 					} else {
-						if (series.isBarPlot) {
+						if (chart_elem.series[i].isBarPlot) {
 							try {
-								plot.addBarPlot(series.legend, series.color, xValues, yValues, (double[]) series.zValues);
+								plot.addBarPlot(chart_elem.series[i].legend, chart_elem.series[i].color,
+									DataSet.toDoubleValues(chart_elem.series[i].xValues),
+									DataSet.toDoubleValues(chart_elem.series[i].yValues),
+									(double[]) chart_elem.series[i].zValues);
 							} catch (Exception exc)
 							{
-								plot.addBarPlot(series.legend, series.color, xValues, yValues, DataSet.toDoubleValues((String[]) series.zValues));
+								plot.addBarPlot(chart_elem.series[i].legend, chart_elem.series[i].color,
+										DataSet.toDoubleValues(chart_elem.series[i].xValues),
+										DataSet.toDoubleValues(chart_elem.series[i].yValues),
+										DataSet.toDoubleValues((String[]) chart_elem.series[i].zValues));
 							}
 						} else {
 							try {
-								plot.addScatterPlot(series.legend, series.color, xValues, yValues, (double[]) series.zValues);
+								plot.addScatterPlot(chart_elem.series[i].legend, chart_elem.series[i].color,
+									DataSet.toDoubleValues(chart_elem.series[i].xValues),
+									DataSet.toDoubleValues(chart_elem.series[i].yValues),
+									(double[]) chart_elem.series[i].zValues);
 							} catch (Exception exc)
 							{
-								plot.addScatterPlot(series.legend, series.color,  xValues, yValues, DataSet.toDoubleValues((String[]) series.zValues));
+								plot.addScatterPlot(chart_elem.series[i].legend, chart_elem.series[i].color,
+										DataSet.toDoubleValues(chart_elem.series[i].xValues),
+										DataSet.toDoubleValues(chart_elem.series[i].yValues),
+										DataSet.toDoubleValues((String[]) chart_elem.series[i].zValues));
 							}
 						}
 					}
-					if (series.pointers.length > 0) {
-						for (int ix = 0; ix<series.pointers.length; ix++)
+					if (chart_elem.series[i].pointers.length > 0) {
+						for (int ix = 0; ix<chart_elem.series[i].pointers.length; ix++)
 						{
-							int p = Integer.parseInt(FileIO.getField(1, series.pointers[ix], " ", true))-1;
-							plot.addLabel(FileIO.getRestAfterField(1, series.pointers[ix], " ", true), 
-									series.color, 
-									new double[] {DataSet.getDoubleValueWithoutLimit(series.xValues[p]), 
-								DataSet.getDoubleValueWithoutLimit(series.yValues[p]), ((double[]) series.zValues)[p]});
+							int p = Integer.parseInt(FileIO.getField(1, chart_elem.series[i].pointers[ix], " ", true))-1;
+							plot.addLabel(FileIO.getRestAfterField(1, chart_elem.series[i].pointers[ix], " ", true),
+									chart_elem.series[i].color,
+									new double[] {DataSet.getDoubleValueWithoutLimit(chart_elem.series[i].xValues[p]),
+								DataSet.getDoubleValueWithoutLimit(chart_elem.series[i].yValues[p]), ((double[]) chart_elem.series[i].zValues)[p]});
 						}
 					}
 				}
 
-				if (!series.isSurface) {
+				if (!chart_elem.series[i].isSurface) {
 					boolean limits = false;
 					double l = (chart_elem.getxMax() - chart_elem.getxMin()) / 10.0;
-					double lim[][] = new double[series.xValues.length][3];
-					for (int j = 0; j<series.xValues.length; j++)
+					double lim[][] = new double[chart_elem.series[i].xValues.length][3];
+					for (int j = 0; j<chart_elem.series[i].xValues.length; j++)
 					{
 						lim[j] = new double[] {0.0, 0.0, 0.0};
-						String lx = DataSet.getLimit(series.xValues[j]);
-						String ly = DataSet.getLimit(series.yValues[j]);
+						String lx = DataSet.getLimit(chart_elem.series[i].xValues[j]);
+						String ly = DataSet.getLimit(chart_elem.series[i].yValues[j]);
 						String lz = "";
 						try {
-							lz = DataSet.getLimit(((String[]) series.zValues)[j]);
+							lz = DataSet.getLimit(((String[]) chart_elem.series[i].zValues)[j]);
 						} catch (Exception exc) {}
 						if (lx.equals("<")) {
 							lim[j][0] = -l;
@@ -186,45 +202,45 @@ public class CreateChart3D implements Serializable, MouseWheelListener, MouseLis
 					if (limits) plot.addVectortoPlot(i, lim);
 				}
 
-				if (!series.isSurface && (series.dxValues != null ||
-						series.dyValues != null || series.dzValues != null)) {
-					double box[][] = new double[series.xValues.length][6];
+				if (!chart_elem.series[i].isSurface && (chart_elem.series[i].dxValues != null ||
+						chart_elem.series[i].dyValues != null || chart_elem.series[i].dzValues != null)) {
+					double box[][] = new double[chart_elem.series[i].xValues.length][6];
 					boolean ok = true;
-					for (int j = 0; j<series.xValues.length; j++)
+					for (int j = 0; j<chart_elem.series[i].xValues.length; j++)
 					{
 						String pz = "";
 						try {
-							pz = ((String[]) series.zValues)[j];
+							pz = ((String[]) chart_elem.series[i].zValues)[j];
 						} catch (Exception exc1) {
 							try {
-								pz = ""+((double[]) series.zValues)[j];
+								pz = ""+((double[]) chart_elem.series[i].zValues)[j];
 							} catch (Exception exc2) {
 								ok = false;
 								break;
 							}
 						}
 						box[j] = new double[] {
-								DataSet.getDoubleValueWithoutLimit(series.xValues[j]), 
-								DataSet.getDoubleValueWithoutLimit(series.yValues[j]), 
-								DataSet.getDoubleValueWithoutLimit(pz), 
+								DataSet.getDoubleValueWithoutLimit(chart_elem.series[i].xValues[j]),
+								DataSet.getDoubleValueWithoutLimit(chart_elem.series[i].yValues[j]),
+								DataSet.getDoubleValueWithoutLimit(pz),
 								0.0, 0.0, 0.0};
-						if (series.dxValues != null) box[j][3] = 2.0 * series.dxValues[j];
-						if (series.dyValues != null) box[j][4] = 2.0 * series.dyValues[j];
-						if (series.dzValues != null) box[j][5] = 2.0 * series.dzValues[j];
+						if (chart_elem.series[i].dxValues != null) box[j][3] = 2.0 * chart_elem.series[i].dxValues[j];
+						if (chart_elem.series[i].dyValues != null) box[j][4] = 2.0 * chart_elem.series[i].dyValues[j];
+						if (chart_elem.series[i].dzValues != null) box[j][5] = 2.0 * chart_elem.series[i].dzValues[j];
 					}
-					if (ok) plot.addBoxPlot("", series.color, box);
+					if (ok) plot.addBoxPlot("", chart_elem.series[i].color, box);
 				}
 			}
-	
+
 			if (!chart_elem.showGridX) plot.getAxis(0).setGridVisible(false);
 			if (!chart_elem.showGridY) plot.getAxis(1).setGridVisible(false);
 			if (!chart_elem.showGridZ) plot.getAxis(2).setGridVisible(false);
-	
+
 			plot.setAxisLabels(new String[] {chart_elem.xLabel, chart_elem.yLabel, chart_elem.zLabel});
 			if (chart_elem.xAxisInLogScale) plot.setAxisScale(0, "LOG");
 			if (chart_elem.yAxisInLogScale) plot.setAxisScale(1, "LOG");
 			if (chart_elem.zAxisInLogScale) plot.setAxisScale(2, "LOG");
-			
+
             // add a title
 			if (chart_elem.showTitle) {
 				try {
@@ -240,7 +256,7 @@ public class CreateChart3D implements Serializable, MouseWheelListener, MouseLis
 		            plot.addPlotable(title);
 				} catch (Exception exc) {}
 			}
-			
+
 			// put the PlotPanel in a JFrame like a JPanel
 			panel = new JPanel();
 			panel.setSize(chart_elem.imageWidth, chart_elem.imageHeight);
@@ -266,7 +282,7 @@ public class CreateChart3D implements Serializable, MouseWheelListener, MouseLis
 		double xmax = this.chart_elem.getxMax(), xmin = this.chart_elem.getxMin();
 		double ymax = this.chart_elem.getyMax(), ymin = this.chart_elem.getyMin();
 		double zmax = this.chart_elem.getzMax(), zmin = this.chart_elem.getzMin();
-		
+
 		double dx = xmax - xmin, dy = ymax - ymin, dz = zmax - zmin;
 		if (dx > dy && dx > dz) {
 			double off = dx / 8;
@@ -320,12 +336,12 @@ public class CreateChart3D implements Serializable, MouseWheelListener, MouseLis
 			return;
 		}
 	}
-	
+
 	/**
 	 * To make the chart visible.
 	 * @param width Width.
 	 * @param height Height.
-	 * @return The frame if you prefer to set 
+	 * @return The frame if you prefer to set
 	 * a different size or value for other property.
 	 */
 	public JFrame showChart(int width, int height)
@@ -342,7 +358,7 @@ public class CreateChart3D implements Serializable, MouseWheelListener, MouseLis
 		frame.setVisible(true);
 		return frame;
 	}
-	
+
 	/**
 	 * Returns the chart object of this instance.
 	 * @return Chart.
@@ -351,7 +367,7 @@ public class CreateChart3D implements Serializable, MouseWheelListener, MouseLis
 	{
 		return this.chart_elem;
 	}
-	
+
 	private void writeObject(ObjectOutputStream out)
 	throws IOException {
 		out.writeObject(this.chart_elem);
@@ -364,15 +380,15 @@ public class CreateChart3D implements Serializable, MouseWheelListener, MouseLis
 		} catch (Exception exc) {}
  	}
 
-	
 
-	
+
+
 	/**
 	 * Exports the chart as a SVG file.
-	 * 
+	 *
 	 * @param file_name File name without extension.
 	 * @throws JPARSECException If an error occurs.
-	 */	
+	 */
 	public void chartAsSVGFile(String file_name) throws JPARSECException
 	{
 		int ext = file_name.toLowerCase().lastIndexOf(".svg");
@@ -398,10 +414,10 @@ public class CreateChart3D implements Serializable, MouseWheelListener, MouseLis
 			throw new JPARSECException("cannot write to file.", e);
 		}
 	}
-	
+
 	/**
 	 * Exports the chart as an EPS file.
-	 * 
+	 *
 	 * @param file_name File name without extension.
 	 * @throws JPARSECException If an error occurs.
 	 */
@@ -433,7 +449,7 @@ public class CreateChart3D implements Serializable, MouseWheelListener, MouseLis
 
 	/**
 	 * Exports the chart as a PDF file.
-	 * 
+	 *
 	 * @param file_name File name without extension.
 	 * @throws JPARSECException If an error occurs.
 	 */
@@ -463,10 +479,10 @@ public class CreateChart3D implements Serializable, MouseWheelListener, MouseLis
 		}
 	}
 
-	
+
 	/**
 	 * Exports the chart as an PNG file.
-	 * 
+	 *
 	 * @param file_name File name without extension.
 	 * @throws JPARSECException If an error occurs.
 	 */
@@ -490,7 +506,7 @@ public class CreateChart3D implements Serializable, MouseWheelListener, MouseLis
 		plot.plotCanvas.setSize(chart_elem.imageWidth, chart_elem.imageHeight);
 		plot.plotCanvas.paint(g);
 	}
-	
+
 	/**
 	 * Returns a BufferedImage instance with the current chart, adequate to
 	 * write an image to disk.
@@ -515,7 +531,7 @@ public class CreateChart3D implements Serializable, MouseWheelListener, MouseLis
 	 * @throws JPARSECException If an error occurs.
 	 */
 	public double getIntensityAt(double x, double y, String legend)
-	throws JPARSECException 
+	throws JPARSECException
 	{
 		int index = -1;
 		if (legend == null && chart_elem.series.length == 1) {
@@ -529,14 +545,14 @@ public class CreateChart3D implements Serializable, MouseWheelListener, MouseLis
 			}
 		}
 		if (index < 0) throw new JPARSECException("series "+legend+" not found.");
-		
+
 		GridChartElement gridChart;
 		try {
-		gridChart = new GridChartElement("", "", "", "", 
+		gridChart = new GridChartElement("", "", "", "",
 				GridChartElement.COLOR_MODEL.BLACK_TO_WHITE,
 				GridChartElement.getLimitsFromDataSet(
-						DataSet.getDoubleValuesExcludingLimits(this.chart_elem.series[index].xValues), 
-						DataSet.getDoubleValuesExcludingLimits(this.chart_elem.series[index].yValues)), 
+						DataSet.getDoubleValuesExcludingLimits(this.chart_elem.series[index].xValues),
+						DataSet.getDoubleValuesExcludingLimits(this.chart_elem.series[index].yValues)),
 						(double[][]) this.chart_elem.series[index].zValues,
 				null, 600
 				);
@@ -546,7 +562,7 @@ public class CreateChart3D implements Serializable, MouseWheelListener, MouseLis
 
 		ImageSplineTransform t = new ImageSplineTransform(GridChartElement.ObjectToDoubleArray(gridChart.data));
 		int pointsX = gridChart.data.length;
-		int pointsY = gridChart.data[0].length;			
+		int pointsY = gridChart.data[0].length;
 		double px = (x - gridChart.limits[0]) * ((double) (pointsX - 1.0)) / (gridChart.limits[1] - gridChart.limits[0]);
 		double py = (y - gridChart.limits[2]) * ((double) (pointsY - 1.0)) / (gridChart.limits[3] - gridChart.limits[2]);
 		double data = t.interpolate(px, py);
@@ -576,7 +592,7 @@ public class CreateChart3D implements Serializable, MouseWheelListener, MouseLis
 	 * Zoom operation.
 	 */
 	public void mouseWheelMoved(MouseWheelEvent e) {
-		plot.plotCanvas.ActionMode = PlotCanvas.ZOOM;		
+		plot.plotCanvas.ActionMode = PlotCanvas.ZOOM;
 	}
 
 	/**
@@ -604,7 +620,7 @@ public class CreateChart3D implements Serializable, MouseWheelListener, MouseLis
 	 */
 	public void mousePressed(MouseEvent e) {
 		int b = e.getButton();
-		if (b == MouseEvent.BUTTON1) 
+		if (b == MouseEvent.BUTTON1)
 			plot.plotCanvas.ActionMode = Plot3DCanvas.ROTATION;
 		if (b == MouseEvent.BUTTON3)
 			plot.plotCanvas.ActionMode = PlotCanvas.TRANSLATION;

@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */	
+ */
 package jparsec.io.device;
 
 import java.util.ArrayList;
@@ -47,7 +47,7 @@ public class VirtualWeatherStation implements GenericWeatherStation {
 			double datay[] = DataSet.toDoubleValues(DataSet.toStringArray(currentData, ","));
 			datay = DataSet.addDoubleArray(new double[] {datay[datay.length-1]}, datay);
 			double datax[] = DataSet.getSetOfValues(0, 24, datay.length, false);
-			
+
 			double x = AstroDate.getDayFraction(astro.jd()) * 24.0;
 			Interpolation interp = new Interpolation(datax, datay, false);
 			return interp.linearInterpolation(x);
@@ -71,13 +71,13 @@ public class VirtualWeatherStation implements GenericWeatherStation {
 	public double getHumidity() {
 		getForecastInFollowingDays();
 		String currentData = data[0][HUM];
-		
+
 		try {
 			AstroDate astro = new AstroDate();
 			double datay[] = DataSet.toDoubleValues(DataSet.toStringArray(currentData, ","));
 			datay = DataSet.addDoubleArray(new double[] {datay[datay.length-1]}, datay);
 			double datax[] = DataSet.getSetOfValues(0, 24, datay.length, false);
-			
+
 			double x = AstroDate.getDayFraction(astro.jd()) * 24.0;
 			Interpolation interp = new Interpolation(datax, datay, false);
 			return interp.linearInterpolation(x);
@@ -106,13 +106,13 @@ public class VirtualWeatherStation implements GenericWeatherStation {
 	public boolean isRaining() {
 		getForecastInFollowingDays();
 		String currentData = data[0][RAIN];
-		
+
 		try {
 			AstroDate astro = new AstroDate();
 			double datay[] = DataSet.toDoubleValues(DataSet.toStringArray(currentData, ","));
 			datay = DataSet.addDoubleArray(new double[] {datay[datay.length-1]}, datay);
 			double datax[] = DataSet.getSetOfValues(0, 24, datay.length, false);
-			
+
 			double x = AstroDate.getDayFraction(astro.jd()) * 24.0;
 			Interpolation interp = new Interpolation(datax, datay, false);
 			return (interp.linearInterpolation(x) > 80); // Rain probability > 80%
@@ -132,7 +132,7 @@ public class VirtualWeatherStation implements GenericWeatherStation {
 		long t = System.currentTimeMillis();
 		if (lastForecastTime == -1 || (t - lastForecastTime) > (updateTimeHrs * 3600000)) {
 			lastForecastTime = t;
-			
+
 			try {
 				String out = GeneralQuery.query(forecastQuery);
 				String o[] = DataSet.toStringArray(out, FileIO.getLineSeparator());
@@ -147,7 +147,7 @@ public class VirtualWeatherStation implements GenericWeatherStation {
 					boolean isT = false, isH = false;
 					for (int i=0; i<o.length; i++) {
 						if (o[i].indexOf("<dia fecha") >= 0) break;
-						
+
 						if (o[i].indexOf("<temperatura>") >= 0) isT = true;
 						if (o[i].indexOf("</temperatura>") >= 0) isT = false;
 						if (o[i].indexOf("<humedad_relativa>") >= 0) {
@@ -155,7 +155,7 @@ public class VirtualWeatherStation implements GenericWeatherStation {
 							isT = false;
 						}
 						if (o[i].indexOf("</humedad_relativa>") >= 0) isH = false;
-						
+
 						if (o[i].indexOf("<prob_precipitacion") >= 0) nRain += ","+getValue2(o[i]);
 						if (o[i].indexOf("<estado_cielo") >= 0) nCloud += ","+getValue(o[i].substring(o[i].indexOf("descripcion")));
 						if (o[i].indexOf("<dato hora") >= 0 && isT) nTemp += ","+getValue2(o[i]);
@@ -175,7 +175,7 @@ public class VirtualWeatherStation implements GenericWeatherStation {
 					nCloud = DataSet.replaceAll(nCloud, "Muy nuboso con lluvia escasa", "3", true);
 					nCloud = DataSet.replaceAll(nCloud, "Muy nuboso", "3", true);
 					// ... TODO
-					
+
 
 					if (nRain.equals("")) nRain = " ";
 					if (nCloud.equals("")) nCloud = " ";
@@ -190,12 +190,12 @@ public class VirtualWeatherStation implements GenericWeatherStation {
 						exc.printStackTrace();
 						list.add(WEATHER_FORECAST.SOME_CLOUDS);
 					}
-					
+
 					data.add(new String[] {nRain.substring(1), nCloud.substring(1), nTemp.substring(1), nHum.substring(1)});
-					
+
 					day = DataSet.getIndexContaining(o, "<dia fecha");
 				} while (day >= 0);
-				
+
 				lastForecast = new WEATHER_FORECAST[list.size()];
 				this.data = new String[list.size()][];
 				for (int i=0; i<list.size(); i++) {
@@ -208,7 +208,7 @@ public class VirtualWeatherStation implements GenericWeatherStation {
 		}
 		return lastForecast;
 	}
-	
+
 	private String getValue(String line) {
 		int i0 = line.indexOf("\""), i1 = line.lastIndexOf("\"");
 		return line.substring(i0+1,  i1);
@@ -238,7 +238,7 @@ public class VirtualWeatherStation implements GenericWeatherStation {
 	private String[][] data = null;
 	private String forecastQuery;
 	private static final int updateTimeHrs = 12, RAIN = 0, TEMP = 2, HUM = 3;
-	
+
 	/**
 	 * Constructor for a virtual weather station.
 	 * @param postalCode Postal code to obtain weather forecast in Spain.
@@ -248,7 +248,7 @@ public class VirtualWeatherStation implements GenericWeatherStation {
 		String pc = postalCode;
 		if (pc == null || pc.length() != 5) pc = "28038";
 		forecastQuery = "http://www.aemet.es/xml/municipios/localidad_"+pc+".xml";
-		
+
 		getForecastInFollowingDays();
 	}
 }

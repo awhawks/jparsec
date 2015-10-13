@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */		
+ */
 package jparsec.util;
 
 
@@ -48,15 +48,15 @@ import jparsec.io.ReadFile;
  * @version 1.0
  * @since 1.85
  */
-public class Logger 
+public class Logger
 {
 	// private constructor so that this class cannot be instantiated.
 	private Logger() {}
-	
+
 	/**
 	 * The basic levels of a given log message.
 	 */
-	public static enum LEVEL {
+	public enum LEVEL {
 		/** A trace message of lowest importance. */
 		TRACE_LEVEL1,
 		/** A trace message of medium importance. */
@@ -66,11 +66,11 @@ public class Logger
 		/** A message with user configuration data. The priority of this
 		 * kind of message is between {@linkplain LEVEL#INFO} and
 		 * {@linkplain LEVEL#TRACE_LEVEL3}.
-		 * Internally JPARSEC does not use information or configuration messages, 
+		 * Internally JPARSEC does not use information or configuration messages,
 		 * but only trace messages (and warnings/errors). */
 		CONFIG,
 		/** An informative message, with a priority just below the warning level.
-		 * Internally JPARSEC does not use information or configuration messages, 
+		 * Internally JPARSEC does not use information or configuration messages,
 		 * but only trace messages (and warnings/errors). */
 		INFO,
 		/** A warning to the user. */
@@ -90,7 +90,7 @@ public class Logger
 	private static java.util.logging.Logger logger = java.util.logging.Logger.getLogger("JPARSEC");
 
 	private static boolean ENABLE_LOGGING = true;
-	
+
 	/**
 	 * Enables the logging system. Logging is enabled by default.
 	 */
@@ -103,9 +103,9 @@ public class Logger
 	public static void disableLogging() {
 		ENABLE_LOGGING = false;
 	}
-	
+
 	/**
-	 * Writes a message to the log. In case the logger is not 
+	 * Writes a message to the log. In case the logger is not
 	 * started, it is automatically done.
 	 * @param level The level of the message.
 	 * @param message The message.
@@ -113,9 +113,9 @@ public class Logger
 	public static void log(LEVEL level, String message) {
 		Logger.log(level, message, JPARSECException.getLastMethodName());
 	}
-	
+
 	/**
-	 * Writes a message to the log. In case the logger is not 
+	 * Writes a message to the log. In case the logger is not
 	 * started, it is automatically done.
 	 * @param level The level of the message.
 	 * @param message The message.
@@ -123,20 +123,20 @@ public class Logger
 	 */
 	public static void log(LEVEL level, String message, String lastMethod) {
 		if (!ENABLE_LOGGING) return;
-		
-		if (fh == null) try { Logger.startup(); } catch (Exception exc) { 
+
+		if (fh == null) try { Logger.startup(); } catch (Exception exc) {
 			if (!Configuration.APPLET_MODE) exc.printStackTrace(); // In applet mode it is started, but Logger level cannot be adjusted
 			return;
 		}
-						
+
 		String pid = ApplicationLauncher.getProcessID();
-		
+
 		LogRecord record = new LogRecord(Level.INFO, message);
 		record.setSourceClassName("("+pid+")");
 		record.setSourceMethodName(lastMethod);
 
 		if (!reportJPARSECLogs && record.getSourceMethodName().trim().toLowerCase().startsWith("jparsec.")) return;
-		
+
 		switch (level) {
 		case TRACE_LEVEL1:
 			record.setLevel(Level.FINEST);
@@ -163,7 +163,7 @@ public class Logger
 	}
 
 	/**
-	 * Starts the logger using the log file and maximum size 
+	 * Starts the logger using the log file and maximum size
 	 * selected. The default level of the global logger is information,
 	 * and all messages for the file handler.
 	 * @throws SecurityException If an error occurs.
@@ -179,13 +179,13 @@ public class Logger
 		    		true); //append
 		    fh.setLevel(Level.ALL); // level
 		    fh.setFormatter(new MySimpleFormatter()); //formatter
-		    
+
 			logger.addHandler(fh);
 		}
-		
+
 		setLoggerLevel(LEVEL.INFO);
 	}
-	
+
 	/**
 	 * Sets the logging level of the global logger. The default value is the
 	 * information level.
@@ -225,7 +225,7 @@ public class Logger
 	/**
 	 * Sets the logging level of the file handler. The default value
 	 * at startup will write all messages to the file.
-	 * @param level The minimum level to report logs 
+	 * @param level The minimum level to report logs
 	 * to the file. Null will turn off the logger.
 	 * @throws IOException  If the logger cannot be initialized.
 	 * @throws SecurityException  If the logger cannot be initialized.
@@ -265,7 +265,7 @@ public class Logger
 		}
 		fh.setLevel(l);
 	}
-	
+
 	/**
 	 * Disables the output of the logging to the file.
 	 */
@@ -289,11 +289,11 @@ public class Logger
 			    fh.setLevel(Level.ALL); // level
 			    fh.setFormatter(new MySimpleFormatter()); //formatter
 			}
-			
+
 			if (fh != null) logger.addHandler(fh);
 		}
 	}
-	
+
 	/**
 	 * Removes the log file.
 	 * @return True if it is deleted successfully.
@@ -303,7 +303,7 @@ public class Logger
 		if (file.exists()) return file.delete();
 		return false;
 	}
-	
+
 	/**
 	 * Returns the contents of the log file.
 	 * @return The contents, or null if it is not found.
@@ -322,7 +322,7 @@ class MySimpleFormatter extends Formatter {
     	out += " "+record.getSourceClassName()+", "+record.getSourceMethodName()+": "+record.getMessage()+FileIO.getLineSeparator();
         return out;
     }
-    
+
     private String calcDate(long millisecs)
     {
     	SimpleDateFormat date_format = new SimpleDateFormat("yyyy-MMM-dd HH:mm:ss");

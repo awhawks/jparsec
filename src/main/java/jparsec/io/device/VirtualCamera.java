@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */	
+ */
 package jparsec.io.device;
 
 import java.awt.Color;
@@ -90,7 +90,7 @@ public class VirtualCamera implements GenericCamera {
 	 * Set to true (default value) to allow the rendering of planetary textures.
 	 */
 	public static boolean DRAW_PLANETARY_TEXTURES = true;
-	
+
 	@Override
 	public boolean setISO(String iso) {
 		this.iso = iso;
@@ -140,14 +140,14 @@ public class VirtualCamera implements GenericCamera {
 	@Override
 	public boolean shotAndDownload(boolean keepInCamera) {
 		if (shooting) return false;
-		
+
 		shooting = true;
 		lastImage = path + "capt0000.jpg";
 		if (raw) lastImage = path + "capt0000.pgm";
-		
+
 		ShotThread st = new ShotThread();
 		st.start();
-				
+
 		return true;
 	}
 
@@ -219,7 +219,7 @@ public class VirtualCamera implements GenericCamera {
 	public boolean isBulb() {
 		return texp.equals(Translate.translate(1180));
 	}
-	
+
 	@Override
 	public String[] getPossibleApertures() {
 		return new String[] {};
@@ -308,7 +308,7 @@ public class VirtualCamera implements GenericCamera {
 	private int w = 3888, h = 2592, index;
 	private boolean raw = false;
 	private final GenericTelescope telescope;
-	
+
 	private double orientation = 0;
 	private IMAGE_ID id = IMAGE_ID.TEST;
 	private String lastImage = null;
@@ -321,7 +321,7 @@ public class VirtualCamera implements GenericCamera {
 	private boolean[][] hotPixel = null;
 	private int minInterval = 0;
 	private TimeElement lastShot = null;
-	
+
 	/**
 	 * The constructor for a virtual camera.
 	 * @param model The camera model.
@@ -332,7 +332,7 @@ public class VirtualCamera implements GenericCamera {
 	 */
 	public VirtualCamera(CAMERA_MODEL model, GenericTelescope telescope, int index) throws JPARSECException {
 		if (!model.isVirtual()) throw new JPARSECException("Camera must be a virtual one!");
-	
+
 		this.model = model;
 		this.telescope = telescope;
 		this.index = index;
@@ -344,7 +344,7 @@ public class VirtualCamera implements GenericCamera {
 		@Override
 		public void run() {
 			shooting = true;
-			
+
 			// Control minimum time between shots
 			if (lastShot != null) {
 				TimeElement now = new TimeElement();
@@ -357,7 +357,7 @@ public class VirtualCamera implements GenericCamera {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-			}			
+			}
 			try {
 				createImage();
 			} catch (Exception exc) {
@@ -365,18 +365,18 @@ public class VirtualCamera implements GenericCamera {
 				exc.printStackTrace();
 				System.out.println("ERROR USING THE VIRTUAL CAMERA !");
 			}
-			
+
 			lastShot = new TimeElement();
 /*			String t = getExpositionTime();
 			if (t.equals(Translate.translate(1180))) t = ""+getCCDorBulbModeTime();
 			try {
 				double timeS = DataSet.getDoubleValueWithoutLimit(t);
 				lastShot.add(timeS / Constant.SECONDS_PER_DAY); } catch (JPARSECException e) { e.printStackTrace(); }
-*/				
+*/
 			shouldStop = true;
 			shooting = false;
 		}
-		
+
 		/** Returns if the thread is working or not. */
 		public boolean isWorking() {
 			return !shouldStop;
@@ -408,10 +408,10 @@ public class VirtualCamera implements GenericCamera {
 			timeS = (int) (timeS * Double.parseDouble(getISO()) / 400.0);
 			double maglim = 6.0 + timeS / 40.0;
 			if (maglim > 15) maglim = 15;
-			
+
 			while (nimg > 50) {
 				nimg /= 2;
-				stepSeconds *= 2;									
+				stepSeconds *= 2;
 			};
 			timeS /= nimg;
 			time = telescope.getTime().clone();
@@ -428,7 +428,7 @@ public class VirtualCamera implements GenericCamera {
 					}
 				}
 			}
-			
+
 			// Set image to blank with some hot pixels/bad columns
 			int nhotp = 20;
 			if (model.isCCD()) nhotp = 2;
@@ -448,7 +448,7 @@ public class VirtualCamera implements GenericCamera {
 							//System.out.println("HOT PIXEL AT "+i+"/"+j);
 							if (model.isCCD()) {
 								for (int l=0; l<=j; l++) {
-									img[i][l] = max;									
+									img[i][l] = max;
 								}
 							} else {
 								img[i][j] = max;
@@ -456,7 +456,7 @@ public class VirtualCamera implements GenericCamera {
 						}
 					}
 				}
-			}				
+			}
 			loc0J2000 = LocationElement.parseRectangularCoordinates(Precession.precessToJ2000(time.astroDate.jd(), eq.getRectangularCoordinates(), eph));
 			pixels_per_radian = w / field;
 			pixels_per_degree = pixels_per_radian / Constant.RAD_TO_DEG;
@@ -469,13 +469,13 @@ public class VirtualCamera implements GenericCamera {
 			//pattern = ist.getResizedData(starSize, starSize);
 			int patternR = starSize/2; //pattern.length/2;
 			ArrayList<String> list = null;
-			
+
 			double pang = 0;
 			if (!equatorial) {
 				double ast = SiderealTime.apparentSiderealTime(time, obs, eph);
 				double angh = ast - eq.getLongitude();
-				double sinlat = Math.sin(obs.getLatitudeRad()); 
-				double coslat = Math.cos(obs.getLatitudeRad()); 
+				double sinlat = Math.sin(obs.getLatitudeRad());
+				double coslat = Math.cos(obs.getLatitudeRad());
 				double sindec = Math.sin(eq.getLatitude()), cosdec = Math.cos(eq.getLatitude());
 				double y = Math.sin(angh);
 				double x = (sinlat / coslat) * cosdec - sindec * Math.cos(angh);
@@ -487,8 +487,8 @@ public class VirtualCamera implements GenericCamera {
 				{
 					p = (y / Math.abs(y)) * Constant.PI_OVER_TWO;
 				}
-				
-				pang = p;	
+
+				pang = p;
 			}
 
 			for (int n=0; n<nimg; n++) {
@@ -500,24 +500,24 @@ public class VirtualCamera implements GenericCamera {
 				poleAngle = orientation;
 				if (equatorial) {
 					centralLongitude = eq.getLongitude();
-					centralLatitude = eq.getLatitude();				
+					centralLatitude = eq.getLatitude();
 				} else {
 					LocationElement hz = CoordinateSystem.equatorialToHorizontal(eq, time, obs, eph);
 					centralLongitude = hz.getLongitude();
-					centralLatitude = hz.getLatitude();				
+					centralLatitude = hz.getLatitude();
 				}
 				sin_lat0 = (float) Math.sin(centralLatitude);
 				cos_lat0 = (float) Math.cos(centralLatitude);
-				
+
 				double sx = 1.0f;
 				if (m == MOUNT.AZIMUTHAL) sx = -1.0f;
 				double stx = sx * (float) Math.PI * 1.3333;
-				
+
 				double stxx = stx / field;
 				stxxTimesCenterX = stxx * centerX;
 				cos_lat0_times_sy = cos_lat0 * Math.abs(stxxTimesCenterX);
 				sin_lat0_times_sy = sin_lat0 * Math.abs(stxxTimesCenterX);
-				
+
 				// Star reading
 				if (re_star == null || (lastEq != null && !lastEq.equals(eq))) {
 					re_star = new ReadFile();
@@ -528,7 +528,7 @@ public class VirtualCamera implements GenericCamera {
 					readFileOfStars(9.5, re_star, time, obs, eph, w, h, equatorial);
 				}
 				lastEq = eq;
-				
+
 				Object[] readStars = re_star.getReadElements();
 				int maxStars = readStars.length;
 				int noise = (int) (((timeS / 50.0) * max) / 100);
@@ -547,7 +547,7 @@ public class VirtualCamera implements GenericCamera {
 								img[i][j] = getStarCol(-1, hotPixel[i][j] ? max : max/2); // + (int) (3 * Math.random()));
 							}
 						}
-					}				
+					}
 				} else {
 					if (n == 0) {
 						for (int i=0; i<w; i++) {
@@ -567,7 +567,7 @@ public class VirtualCamera implements GenericCamera {
 					}
 					if (id != IMAGE_ID.DARK) {
 						if (DRAW_DSO_TEXTURES) drawDSOImage(maglim, eph, !equatorial, eq, max);
-						
+
 						double noise0 = (int) (noise * nimg * 0.005 * Math.random());
 						for (int iii = 0; iii < maxStars; iii++)
 						{
@@ -589,7 +589,7 @@ public class VirtualCamera implements GenericCamera {
 								sd.pos = pos;
 							}
 						}
-			
+
 						for (int i = 0; i < maxStars; i++)
 						{
 							StarData sd = (StarData) readStars[i];
@@ -597,7 +597,7 @@ public class VirtualCamera implements GenericCamera {
 							float[] pos = sd.pos;
 							drawStar(pos, max, maglim, timeS, sd.mag, sd.sp, sd.spi, patternR, pattern, starSize, ist, noise0);
 						}
-						
+
 						if (maglim >= 10) {
 							eq.setRadius(2062650);
 							LocationElement eq2000 = Ephem.toMeanEquatorialJ2000(eq, time, obs, eph);
@@ -606,10 +606,10 @@ public class VirtualCamera implements GenericCamera {
 							for (int i=0; i<list.size(); i++) {
 								String s = list.get(i);
 								LocationElement loc = new LocationElement(
-										Double.parseDouble(FileIO.getField(1, s, " ", true)), 
+										Double.parseDouble(FileIO.getField(1, s, " ", true)),
 										Double.parseDouble(FileIO.getField(2, s, " ", true)), 1.0);
 								loc = Ephem.correctEquatorialCoordinatesForRefraction(time, obs, eph, loc);
-								
+
 								if (equatorial) {
 									pos = stereographic(loc, telescope, w, h);
 								} else {
@@ -621,7 +621,7 @@ public class VirtualCamera implements GenericCamera {
 								drawStar(pos, max, maglim, timeS, Double.parseDouble(FileIO.getField(3, s, " ", true)), "A", 2, patternR, pattern, starSize, ist, noise0);
 							}
 						}
-						
+
 						EphemerisElement eph0 = eph.clone();
 						TARGET tt[] = new TARGET[] {
 								TARGET.MERCURY, TARGET.VENUS, TARGET.MARS, TARGET.JUPITER, TARGET.SATURN, TARGET.URANUS, TARGET.NEPTUNE, TARGET.Pluto
@@ -629,7 +629,7 @@ public class VirtualCamera implements GenericCamera {
 						float pos[] = null;
 						for (int i=0; i<tt.length; i++) {
 							eph0.targetBody = tt[i];
-							
+
 							EphemElement ephem = Ephem.getEphemeris(time, obs, eph0, false);
 							double d = LocationElement.getAngularDistance(eq, ephem.getEquatorialLocation());
 							if (d < 2 * Constant.DEG_TO_RAD) {
@@ -670,7 +670,7 @@ public class VirtualCamera implements GenericCamera {
 											for (int y = y0; y < y0 + img0.getHeight(); y ++) {
 												if (y < 0) continue;
 												if (y >= h) continue;
-												
+
 												img[x][y] = img0.getRGB(x-x0, y-y0);
 												if (raw) {
 													int comp = x % 2 + y % 2;
@@ -681,12 +681,12 @@ public class VirtualCamera implements GenericCamera {
 													img[x][y] = (cc * max) / 255;
 													if (img[x][y] > max) img[x][y] = max;
 												}
-											}									
+											}
 										}
 									}
 								}
-									
-								
+
+
 								if (i >= 2) { // Moons
 									MoonEphemElement mephem[] = null;
 									if (i == 2) mephem = MoonEphem.martianSatellitesEphemerides_2007(time, obs, eph0);
@@ -706,8 +706,8 @@ public class VirtualCamera implements GenericCamera {
 											pos = stereographic(ll, telescope, w, h);
 										}
 										if (pos != null && (pos[0] <= 0 || pos[0] >= (w-1) || pos[1] <= 0 || pos[1] >= (h-1))) pos = null;
-										if (pos != null) 
-											drawStar(pos, max, maglim, timeS, mephem[j].magnitude, "A", 2, patternR, pattern, starSize, ist, noise0);											
+										if (pos != null)
+											drawStar(pos, max, maglim, timeS, mephem[j].magnitude, "A", 2, patternR, pattern, starSize, ist, noise0);
 									}
 								}
 							}
@@ -720,7 +720,7 @@ public class VirtualCamera implements GenericCamera {
 			} else {
 				Picture pic = new Picture(img);
 				pic = new Picture(pic.getImageAsByteArray(0), pic.getImageAsByteArray(1), pic.getImageAsByteArray(2), null);
-				pic.write(lastImage);				
+				pic.write(lastImage);
 			}
 		}
 
@@ -744,9 +744,9 @@ public class VirtualCamera implements GenericCamera {
 				}
 				patternR *= factor;
 				starSize *= factor;
-							
+
 				double frac[] = new double[] {1.0, 1.0, 1.0};
-				if (!sp.isEmpty() && spi >= 0) { 
+				if (!sp.isEmpty() && spi >= 0) {
 					int fc[] = Functions.getColorComponents(getStarCol(spi, 255));
 					frac = new double[] {fc[0]/255.0, fc[1]/255.0, fc[2]/255.0};
 				}
@@ -757,15 +757,15 @@ public class VirtualCamera implements GenericCamera {
 					double vx = factor/3 + ((rx-(pos[0]-patternR))/(double)starSize) * (pattern.length);
 					for (int ry = y-patternR; ry<=y+patternR; ry++) {
 						if (ry < 0 || ry >= h) continue;
-						
+
 						double vy = factor/3 + ((ry-(pos[1]-patternR))/(double)starSize) * (pattern.length);
 						try {
 							double v = ist.interpolate(vx, vy);
 							if (v == 0 || FastMath.hypot(rx-x, ry-y) > patternR) continue;
-							if (!raw) { 
+							if (!raw) {
 								int coli = (int) (nc * v);
 								int c[] = Functions.getColorComponents(img[rx][ry]);
-								if (!sp.isEmpty() && spi >= 0) { 
+								if (!sp.isEmpty() && spi >= 0) {
 									img[rx][ry] = getStarCol(spi, coli);
 								} else {
 									img[rx][ry] = getStarCol(-1, coli);
@@ -780,11 +780,11 @@ public class VirtualCamera implements GenericCamera {
 								if (img[rx][ry] < 0) img[rx][ry] = 0;
 							}
 						} catch (Exception exc) {}
-					}						
+					}
 				}
 			}
 		}
-		
+
 		private int getStarCol(int index, int v) {
 			if (v > 255) v = 255;
 			int v2 = (v * 2) / 3;
@@ -798,12 +798,12 @@ public class VirtualCamera implements GenericCamera {
 			if (index == 6) return 255<<24 | v<<16 | min<<8 | min; // M
 			return 255<<24 | v<<16 | v<<8 | v;
 		}
-		
-		private void drawDSOImage(double maglim, EphemerisElement eph, boolean horizontal, LocationElement locEq, int max) 
+
+		private void drawDSOImage(double maglim, EphemerisElement eph, boolean horizontal, LocationElement locEq, int max)
 				throws JPARSECException {
 			Object o = DataBase.getDataForAnyThread("objects", true);
 			if (o == null) return;
-			ArrayList<Object> objects = new ArrayList<Object>(Arrays.asList((Object[]) o)); 
+			ArrayList<Object> objects = new ArrayList<Object>(Arrays.asList((Object[]) o));
 			float size_xy[], size0, pos0[], size;
 			String name;
 			LocationElement loc;
@@ -812,8 +812,8 @@ public class VirtualCamera implements GenericCamera {
 			if (horizontal) {
 				double ast = SiderealTime.apparentSiderealTime(time, obs, eph);
 				double angh = ast - locEq.getLongitude();
-				double sinlat = Math.sin(obs.getLatitudeRad()); 
-				double coslat = Math.cos(obs.getLatitudeRad()); 
+				double sinlat = Math.sin(obs.getLatitudeRad());
+				double coslat = Math.cos(obs.getLatitudeRad());
 				double sindec = Math.sin(locEq.getLatitude()), cosdec = Math.cos(locEq.getLatitude());
 				double y = Math.sin(angh);
 				double x = (sinlat / coslat) * cosdec - sindec * Math.cos(angh);
@@ -825,20 +825,20 @@ public class VirtualCamera implements GenericCamera {
 				{
 					p = (y / Math.abs(y)) * Constant.PI_OVER_TWO;
 				}
-				
-				pang = p;	
+
+				pang = p;
 			}
-			
-			for (Iterator<Object> itr = objects.iterator();itr.hasNext();)  
+
+			for (Iterator<Object> itr = objects.iterator();itr.hasNext();)
 			{
 				Object[] obj = (Object[]) itr.next();
-				
+
 				float mag = (Float) obj[4];
 				String messier = (String) obj[1];
 				if (mag > maglim) break;
-				
+
 				if (obj.length == 9) break; // external catalog
-	 
+
 				int type = (Integer) obj[2];
 				if (maglim > 12 && (type == 4 || type == 5)) { // mag components around cluster mag + 3
 					// Don't draw the glob cl itself, when the cluster is partially
@@ -846,7 +846,7 @@ public class VirtualCamera implements GenericCamera {
 					size_xy = (float[]) obj[5];
 					if (size_xy[0] > 0.1) type = -type; // size greater than 0.1 deg = 6'
 				}
-				
+
 				size_xy = (float[]) obj[5];
 				size0 = (float) (size_xy[0] * pixels_per_degree) + 1;
 				loc = ((LocationElement) obj[3]);
@@ -859,22 +859,22 @@ public class VirtualCamera implements GenericCamera {
 				}
 				if (pos0 != null && (pos0[0] <= 0 || pos0[0] >= (w-1) || pos0[1] <= 0 || pos0[1] >= (h-1))) pos0 = null;
 				if (pos0 == null) continue;
-				
+
 				name = (String) obj[0];
 				size = Math.max(size0, 3);
-	
+
 				if (size < 15) continue;
-	
+
 				String file = name.toLowerCase() + ".jpg";
-				
+
 				if (file.indexOf("caldwell")>=0) file = ""; // FIXME Unsupported
 				if (DataSet.isDoubleFastCheck(name) || (name.length() > 4 && DataSet.isDoubleFastCheck(name.substring(0, 4))))
 					file = "ngc "+name+".jpg";
 				if (name.startsWith("I.")) file = "ic "+name.substring(2).toLowerCase()+".jpg";
 				if (name.startsWith("QSO")) file = name.toLowerCase()+".png";
-				if (!messier.isEmpty() && !messier.startsWith("C")) file = messier.toLowerCase()+".jpg";				
+				if (!messier.isEmpty() && !messier.startsWith("C")) file = messier.toLowerCase()+".jpg";
 				String file0 = file;
-				if (file0.equals("m43.jpg") || file0.equals("ngc 2244.jpg") || file0.equals("m110.jpg") || file0.equals("m32.jpg") || file0.equals("ngc 5195.jpg") 
+				if (file0.equals("m43.jpg") || file0.equals("ngc 2244.jpg") || file0.equals("m110.jpg") || file0.equals("m32.jpg") || file0.equals("ngc 5195.jpg")
 						|| (Math.abs(jd-Constant.J2000) > 365250 && (Math.abs(type) == 2 || Math.abs(type) == 4))
 					    // In epochs far from J2000 stars in clusters/nebula will appear moved due to proper motions
 						) {
@@ -902,14 +902,14 @@ public class VirtualCamera implements GenericCamera {
 						if (index >= 0 && !list[index].startsWith("#")) {
 							int c = 255 << 24 | 0<<16 | 0<<8 | 0;
 							img0 = Picture.makeTransparent(img0, new Color(c), new Color(10, 10, 10, 255), 0);
-							
+
 							double sc = Double.parseDouble(FileIO.getField(5, list[index].trim(), UnixSpecialCharacter.UNIX_SPECIAL_CHARACTER.TAB.value, true));
 							double rot = Double.parseDouble(FileIO.getField(6, list[index].trim(), UnixSpecialCharacter.UNIX_SPECIAL_CHARACTER.TAB.value, true));
 							float scale = (float) ((sc * pixels_per_degree / 60.0) / img0.getWidth()), ang = (float)(rot * Constant.DEG_TO_RAD);
-							
+
 							float radius_x = img0.getWidth() * scale * 0.5f;
 							float radius_y = img0.getHeight() * scale * 0.5f;
-							
+
 							if (radius_x < w && radius_y < h) {
 								if (telescope.invertHorizontally() || telescope.invertVertically()) {
 									int w = 1, h = 1;
@@ -925,8 +925,8 @@ public class VirtualCamera implements GenericCamera {
 									pic.getScaledInstance(img0.getWidth()*w, img0.getHeight()*h, true);
 									img0 = pic.getImage();
 								}
-								
-	
+
+
 								double ra = Double.parseDouble(FileIO.getField(2, list[index].trim(), UnixSpecialCharacter.UNIX_SPECIAL_CHARACTER.TAB.value, true)) * Constant.DEG_TO_RAD;
 								double dec = Double.parseDouble(FileIO.getField(3, list[index].trim(), UnixSpecialCharacter.UNIX_SPECIAL_CHARACTER.TAB.value, true)) * Constant.DEG_TO_RAD;
 									loc = new LocationElement(ra, dec, 1.0);
@@ -937,19 +937,19 @@ public class VirtualCamera implements GenericCamera {
 											double light_time = loc.getRadius() * Constant.LIGHT_TIME_DAYS_PER_AU;
 											if (baryc == null)
 												baryc = Ephem.eclipticToEquatorial(PlanetEphem.getGeocentricPosition(equinox, TARGET.Solar_System_Barycenter, 0.0, false, obs), Constant.J2000, eph);
-	
+
 											double r[] = Ephem.aberration(loc.getRectangularCoordinates(), baryc, light_time);
-	
+
 											r = Precession.precessFromJ2000(equinox, r, eph);
 											loc = LocationElement.parseRectangularCoordinates(Nutation.nutateInEquatorialCoordinates(equinox, eph, r, true));
 										} else {
 											loc = LocationElement.parseRectangularCoordinates(Precession.precessFromJ2000(equinox,
-													LocationElement.parseLocationElement(loc), eph));									
+													LocationElement.parseLocationElement(loc), eph));
 										}
 									}
-	
+
 									if (loc == null) continue;
-								
+
 								double ang2 = -poleAngle;
 								if (horizontal) {
 									loc = CoordinateSystem.equatorialToHorizontal(loc, time, obs, eph);
@@ -969,7 +969,7 @@ public class VirtualCamera implements GenericCamera {
 									}
 								}
 								ang += ang2;
-					
+
 								Picture pic = new Picture(img0);
 								pic.getScaledInstance(2*(int)radius_x, 2*(int)radius_y, true);
 								pic.rotate(ang, (int)radius_x, (int)radius_y);
@@ -981,7 +981,7 @@ public class VirtualCamera implements GenericCamera {
 									for (int y = y0; y < y0 + img0.getHeight(); y ++) {
 										if (y < 0) continue;
 										if (y >= h) continue;
-										
+
 										img[x][y] = img0.getRGB(x-x0, y-y0);
 										if (raw) {
 											int comp = x % 2 + y % 2;
@@ -992,7 +992,7 @@ public class VirtualCamera implements GenericCamera {
 											img[x][y] = (cc * max) / 255;
 											if (img[x][y] > max) img[x][y] = max;
 										}
-									}									
+									}
 								}
 							}
 						}
@@ -1001,7 +1001,7 @@ public class VirtualCamera implements GenericCamera {
 			}
 		}
 	}
-	
+
 	private double centralLongitude, centralLatitude;
 	private double centerX;
 	private double centerY;
@@ -1032,13 +1032,13 @@ public class VirtualCamera implements GenericCamera {
 		double hh = cos_lat * FastMath.cos(dlon);
 		double div = (1.0f + sin_lat0 * sin_lat + cos_lat0 * hh);
 		if (div == 0) return null;
-			
+
 		double pox = (centerX - stxxTimesCenterX * (cos_lat * FastMath.sin(dlon) / div));
 		double poy = (centerY - (cos_lat0_times_sy * sin_lat - sin_lat0_times_sy * hh) / div);
 
 		if (telescope.invertHorizontally()) pox = w - pox;
 		if (telescope.invertVertically()) poy = h - poy;
-		
+
 		if (poleAngle != 0.0)
 		{
 			double dx = pox - centerX;
@@ -1061,8 +1061,8 @@ public class VirtualCamera implements GenericCamera {
 
 		ArrayList<StarData> list = new ArrayList<StarData>();
 		Object o[] = re.getReadElements();
-		
-		ReadFormat rf = new ReadFormat(); 
+
+		ReadFormat rf = new ReadFormat();
 		rf.setFormatToRead(FileFormatElement.JPARSEC_SKY2000_FORMAT);
 		String greek = "AlpBetGamDelEpsZetEtaTheIotKapLamMu Nu Xi OmiPi RhoSigTauUpsPhiChiPsiOme";
 		double lim = Constant.PI_OVER_TWO + 0.6 * Constant.DEG_TO_RAD; // aberration + nutation + refraction
@@ -1072,7 +1072,7 @@ public class VirtualCamera implements GenericCamera {
 		int index = -1;
 		if (o != null) index = 8883;
 		double[] baryc = Ephem.eclipticToEquatorial(PlanetEphem.getGeocentricPosition(jd, TARGET.Solar_System_Barycenter, 0.0, false, obs), Constant.J2000, eph);
-		
+
 		// Connect to the file
 		try
 		{
@@ -1096,10 +1096,10 @@ public class VirtualCamera implements GenericCamera {
 			// Close file
 			dis.close();
 
-			if (o == null) { 
+			if (o == null) {
 				re.setReadElements(list);
 			} else {
-				re.addReadElements(list);				
+				re.addReadElements(list);
 			}
 		} catch (Exception e2)
 		{
@@ -1113,33 +1113,33 @@ public class VirtualCamera implements GenericCamera {
 	{
 		try {
 			StarElement star = new StarElement();
-			
+
 			star.rightAscension = rf.readDouble(line, "RA");
 			star.rightAscension = star.rightAscension / Constant.RAD_TO_HOUR;
 			star.declination = rf.readDouble(line, "DEC");
 			star.declination = star.declination * Constant.DEG_TO_RAD;
-			
+
 			LocationElement locStar0 = new LocationElement(star.rightAscension, star.declination, 1.0);
-			double approxAngDist = LocationElement.getApproximateAngularDistance(loc0J2000, locStar0);						
+			double approxAngDist = LocationElement.getApproximateAngularDistance(loc0J2000, locStar0);
 			if (approxAngDist > field) return null;
-			
+
 			star.properMotionRA = (float) (rf.readDouble(line, "RA_PM") * 15.0 * Constant.ARCSEC_TO_RAD);
 			star.properMotionDEC = (float) (rf.readDouble(line, "DEC_PM") * Constant.ARCSEC_TO_RAD);
-			
-			double properM = Math.max(Math.abs(star.properMotionDEC), Math.abs(star.properMotionRA / FastMath.cos(star.declination)));	
+
+			double properM = Math.max(Math.abs(star.properMotionDEC), Math.abs(star.properMotionRA / FastMath.cos(star.declination)));
 
 			star.name = rf.readString(line, "NAME");
 			star.spectrum = rf.readString(line, "SPECTRUM");
 			star.type = rf.readString(line, "TYPE")+";"+rf.readString(line, "DATA");
 			star.magnitude = (float) rf.readDouble(line, "MAG");
 			star.properMotionRadialV = 0.0f;
-			if (!rf.readString(line, "RADIAL_VELOCITY").isEmpty()) 
+			if (!rf.readString(line, "RADIAL_VELOCITY").isEmpty())
 				star.properMotionRadialV = (float) rf.readDouble(line, "RADIAL_VELOCITY");
 			double parallax = rf.readDouble(line, "PARALLAX");
 			star.parallax = parallax;
 			star.equinox = Constant.J2000;
 			star.frame = EphemerisElement.FRAME.ICRF;
-	
+
 			// Add classical name
 			String id = rf.readString(line, "ID");
 			String constel = "";
@@ -1149,7 +1149,7 @@ public class VirtualCamera implements GenericCamera {
 				String idd = "";
 				if (index >= 0) {
 					idd = id.substring(index + 1);
-					index = Integer.parseInt(id.substring(0, index));					
+					index = Integer.parseInt(id.substring(0, index));
 				} else {
 					index = Integer.parseInt(id);
 				}
@@ -1173,7 +1173,7 @@ public class VirtualCamera implements GenericCamera {
 			}
 
 			StarData sd = null;
-			
+
 			double cte1 = 30 * Constant.ARCSEC_TO_DEG * pixels_per_degree; // aberration + nutation
 			double cte11 = cte1 / pixels_per_radian;
 			double r[];
@@ -1182,7 +1182,7 @@ public class VirtualCamera implements GenericCamera {
 			if (fieldLimit < Constant.DEG_TO_RAD) fieldLimit = Constant.DEG_TO_RAD;
 			double jYearsFromJ2000 = Math.abs(jd - Constant.J2000) / 365.25;
 
-			properM = Math.max(Math.abs(star.properMotionDEC), Math.abs(star.properMotionRA / FastMath.cos(star.declination)));	
+			properM = Math.max(Math.abs(star.properMotionDEC), Math.abs(star.properMotionRA / FastMath.cos(star.declination)));
 
 			LocationElement l = locStar0.clone();
 
@@ -1208,7 +1208,7 @@ public class VirtualCamera implements GenericCamera {
 				}
 				l = LocationElement.parseRectangularCoordinates(p);
 			}
-			
+
 			l.setRadius(l.getRadius() * star.getDistance() * Constant.RAD_TO_ARCSEC);
 			//if (jd != Constant.J2000) {
 				// Correct for aberration, precession, and nutation
@@ -1219,7 +1219,7 @@ public class VirtualCamera implements GenericCamera {
 					r = Ephem.toOutputFrame(r, star.frame, eph.frame);
 					r = Precession.precessFromJ2000(jd, r, eph);
 					r = Nutation.nutateInEquatorialCoordinates(jd, eph, r, true);
-					
+
 					// Correct for polar motion
 					if (eph.ephemType == EphemerisElement.COORDINATES_TYPE.APPARENT &&
 							eph.correctForPolarMotion)
@@ -1230,26 +1230,26 @@ public class VirtualCamera implements GenericCamera {
 						r = mat.times(new Matrix(r)).getColumn(0);
 						r = Functions.rotateZ(r, gast);
 					}
-					
+
 					l = LocationElement.parseRectangularCoordinates(r);
 				} else {
 					l = LocationElement.parseRectangularCoordinates(Precession.precessFromJ2000(jd,
-							LocationElement.parseLocationElement(l), eph));									
+							LocationElement.parseLocationElement(l), eph));
 				}
 			//}
-			 
+
 			if (equatorial) {
 				sd = new StarData(l, star.magnitude, star.spectrum, star.type);
 				sd.loc = Ephem.correctEquatorialCoordinatesForRefraction(time, obs, eph, l);
 			} else {
 				LocationElement ll = CoordinateSystem.equatorialToHorizontal(l, time, obs, eph);
 				ll.setLatitude(Ephem.getApparentElevation(eph, obs, ll.getLatitude(), 5));
-				sd = new StarData(ll, star.magnitude, star.spectrum, star.type);					
+				sd = new StarData(ll, star.magnitude, star.spectrum, star.type);
 			}
 			sd.mag0 = star.magnitude;
 			sd.ra = l.getLongitude();
 			sd.dec = l.getLatitude();
-			
+
 			String spectrum = "OBAFGKM";
 			sd.spi = -1;
 			if (!sd.sp.equals("")) sd.spi = (short) spectrum.indexOf(sd.sp.substring(0, 1));
@@ -1257,7 +1257,7 @@ public class VirtualCamera implements GenericCamera {
 			int bracket2 = star.name.indexOf(")");
 			if (bracket1 >= 0 && bracket2 >= 0) {
 				sd.nom2 = star.name.substring(bracket1 + 1, bracket2);
-				
+
 				bracket1 = star.name.lastIndexOf("(");
 				bracket2 = star.name.lastIndexOf(")");
 				String name2 = star.name.substring(bracket1 + 1, bracket2);
@@ -1270,7 +1270,7 @@ public class VirtualCamera implements GenericCamera {
 				//label = "@SIZE+4"+greek[Integer.parseInt(name2) - 1]+name3+"@SIZE-4";
 				sd.properName = name3;
 			}
-		
+
 			return sd;
 		} catch (Exception exc) {
 			exc.printStackTrace();
@@ -1316,11 +1316,11 @@ public class VirtualCamera implements GenericCamera {
 		boolean equatorial = (m == MOUNT.EQUATORIAL);
 		if (equatorial) {
 			vc.centralLongitude = eq.getLongitude();
-			vc.centralLatitude = eq.getLatitude();				
+			vc.centralLatitude = eq.getLatitude();
 		} else {
 			LocationElement hz = CoordinateSystem.equatorialToHorizontal(eq, time, obs, eph);
 			vc.centralLongitude = hz.getLongitude();
-			vc.centralLatitude = hz.getLatitude();				
+			vc.centralLatitude = hz.getLatitude();
 		}
 		vc.sin_lat0 = (float) Math.sin(vc.centralLatitude);
 		vc.cos_lat0 = (float) Math.cos(vc.centralLatitude);
@@ -1332,12 +1332,12 @@ public class VirtualCamera implements GenericCamera {
 		double sx = 1.0f;
 		if (m == MOUNT.AZIMUTHAL) sx = -1.0f;
 		double stx = sx * (float) Math.PI * 1.3333;
-		
+
 		double stxx = stx / field;
 		vc.stxxTimesCenterX = stxx * vc.centerX;
 		vc.cos_lat0_times_sy = vc.cos_lat0 * Math.abs(vc.stxxTimesCenterX);
 		vc.sin_lat0_times_sy = vc.sin_lat0 * Math.abs(vc.stxxTimesCenterX);
-		
+
 		// Star reading
 		if (vc.re_star == null || (vc.lastEq != null && !vc.lastEq.equals(eq))) {
 			vc.re_star = new ReadFile();
@@ -1348,14 +1348,14 @@ public class VirtualCamera implements GenericCamera {
 			vc.readFileOfStars(9.5, vc.re_star, time, obs, eph, w, h, equatorial);
 		}
 		vc.lastEq = eq;
-		
+
 		Object[] readStars = vc.re_star.getReadElements();
 		int maxStars = readStars.length;
-	
+
 		StringBuffer out = new StringBuffer("");
 		String sep = ",";
 		int ns = 0;
-		
+
 		if (includePlanets) {
 			EphemerisElement eph0 = eph.clone();
 			TARGET t[] = new TARGET[] {
@@ -1364,7 +1364,7 @@ public class VirtualCamera implements GenericCamera {
 			float pos[] = null;
 			for (int i=0; i<t.length; i++) {
 				eph0.targetBody = t[i];
-				
+
 				EphemElement ephem = Ephem.getEphemeris(time, obs, eph0, false);
 				double d = LocationElement.getAngularDistance(eq, ephem.getEquatorialLocation());
 				if (d < 2 * Constant.DEG_TO_RAD) {
@@ -1378,7 +1378,7 @@ public class VirtualCamera implements GenericCamera {
 					if (pos != null && (pos[0] <= 0 || pos[0] >= (w-1) || pos[1] <= 0 || pos[1] >= (h-1))) pos = null;
 					if (pos != null)
 						out.append("" + pos[0] + sep + pos[1] + sep + ephem.magnitude + sep + ephem.rightAscension + sep + ephem.declination + sep + "-" + sep + "-" + sep + ephem.name + FileIO.getLineSeparator());
-					
+
 					if (i >= 2) { // Moons
 						MoonEphemElement mephem[] = null;
 						if (i == 2) mephem = MoonEphem.martianSatellitesEphemerides_2007(time, obs, eph0);
@@ -1405,7 +1405,7 @@ public class VirtualCamera implements GenericCamera {
 				}
 			}
 		}
-		
+
 		for (int iii = 0; iii < maxStars; iii++)
 		{
 			if (readStars[iii] != null) {
@@ -1435,7 +1435,7 @@ public class VirtualCamera implements GenericCamera {
 				}
 			}
 		}
-		
+
 		if (maglim >= 10 && (nstars == -1 || ns < nstars)) {
 			if (nstars > 0 && nstars > ns && ns > 0) {
 				int factor = 1 + (nstars - ns) / (2 * ns);
@@ -1449,7 +1449,7 @@ public class VirtualCamera implements GenericCamera {
 			for (int i=0; i<list.size(); i++) {
 				String s = list.get(i);
 				LocationElement loc = new LocationElement(
-						Double.parseDouble(FileIO.getField(1, s, " ", true)), 
+						Double.parseDouble(FileIO.getField(1, s, " ", true)),
 						Double.parseDouble(FileIO.getField(2, s, " ", true)), 1.0);
 				LocationElement loc2 = Ephem.correctEquatorialCoordinatesForRefraction(time, obs, eph, loc);
 				if (equatorial) {
@@ -1464,10 +1464,10 @@ public class VirtualCamera implements GenericCamera {
 					out.append("" + pos[0] + sep + pos[1] + sep + Double.parseDouble(FileIO.getField(3, s, " ", true)) + sep + loc.getLongitude() + sep + loc.getLatitude() + sep + "-" + sep + "-" + sep + "-" + FileIO.getLineSeparator());
 					ns ++;
 					if (ns >= nstars && nstars > 0) break;
-				}				
+				}
 			}
 		}
-		
+
 		// 2 or more stars closer than resolution must appear in the catalog as one with combined magnitudes
 		String outData[] = DataSet.toStringArray(out.toString(), FileIO.getLineSeparator());
 		double xp[] = DataSet.toDoubleValues(DataSet.extractColumnFromTable(outData, sep, 0));
@@ -1475,7 +1475,7 @@ public class VirtualCamera implements GenericCamera {
 		for (int i=0; i<outData.length; i++) {
 			for (int j=i+1; j<outData.length; j++) {
 				if (j == i) continue;
-				
+
 				double d = FastMath.hypot(xp[i] - xp[j], yp[i] -yp[j]);
 				if (d < 1) {
 					double mag1 = Double.parseDouble(FileIO.getField(3, outData[i], sep, false));
@@ -1494,7 +1494,7 @@ public class VirtualCamera implements GenericCamera {
 						if (ra2 < ra1) {
 							ra2 += Constant.TWO_PI;
 						} else {
-							ra1 += Constant.TWO_PI;							
+							ra1 += Constant.TWO_PI;
 						}
 						if (Math.abs(ra2 - ra1) > Math.PI) {
 							System.out.println("*** ERROR *** RA OF COMBINED DOUBLE CANNOT BE CALCULATED. SHOULD NEVER HAPPEN");
@@ -1514,7 +1514,7 @@ public class VirtualCamera implements GenericCamera {
 					if (!nom2.equals("-")) nom += " + "+nom2;
 					String sp = FileIO.getField(7, outData[i], sep, false);
 					if (mag2 < mag1) sp = FileIO.getField(7, outData[j], sep, false);
-					
+
 					String newLine = "" + px + sep + py + sep + mag + sep + ra + sep + dec + sep + var + sep + sp + sep + nom;
 					//System.out.println("Replacing "+outData[i]+"/"+outData[j]+"  by  "+newLine);
 					outData[i] = newLine;
@@ -1533,7 +1533,7 @@ class StarData {
 	public String sp, type, nom2, properName;
 	public int index;
 	public short spi;
-	
+
 	public StarData(LocationElement loc, float mag, String sp, String type) {
 		this.loc = loc;
 		this.mag = mag;

@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.model;
 
 import java.io.Serializable;
@@ -34,9 +34,9 @@ import jparsec.util.JPARSECException;
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
-public class MieTheory implements Serializable 
+public class MieTheory implements Serializable
 {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Particle size in physical units.
@@ -51,13 +51,13 @@ public class MieTheory implements Serializable
 	 */
 	public Complex cxref;
 	/**
-	 * Number of angles to compute. Greater than 1, and as large as possible, 
+	 * Number of angles to compute. Greater than 1, and as large as possible,
 	 * but must be lower than a limits of 1000. A value of 10 adequate.
 	 */
 	public int nang;
-	
+
 	/**
-	 * (Incid. E perp. to scatt. plane, scatt. E perp. to scatt. plane). 
+	 * (Incid. E perp. to scatt. plane, scatt. E perp. to scatt. plane).
 	 * 2*(nang-1) compounds.
 	 */
 	private Complex[] cxs1;
@@ -66,7 +66,7 @@ public class MieTheory implements Serializable
 	 * 2*(nang-1) compounds.
 	 */
 	private Complex[] cxs2;
-	
+
 	/**
 	 * C_ext/(pi*a*a) = efficiency factor for extinction.
 	 */
@@ -89,7 +89,7 @@ public class MieTheory implements Serializable
 	private double qabs;
 
 	private static final Complex CXONE = new Complex(1.0, 0.0);
-	
+
 	/**
 	 * Index for absorption coefficient in the output array of the
 	 * Mie theory.
@@ -123,11 +123,11 @@ public class MieTheory implements Serializable
 
 	/**
 	 * Explicit constructor. This constructor already calls {@linkplain MieTheory#applyBohrenHuffmanMieTheory()} to obtain
-	 * the coefficients. 
+	 * the coefficients.
 	 * @param a Particle size in physical units.
 	 * @param lambda Wavelength in the same units.
 	 * @param cxref Complex refractive index of the grain for the input wavelength.
-	 * @param nang Number of angles to compute. Greater than 1, and as large as possible, 
+	 * @param nang Number of angles to compute. Greater than 1, and as large as possible,
 	 * but must be lower than a limits of 1000.
 	 * @throws JPARSECException If an error occurs.
 	 */
@@ -137,38 +137,38 @@ public class MieTheory implements Serializable
 		this.lambda = lambda;
 		this.cxref = cxref;
 		this.nang = nang;
-		
+
 		this.applyBohrenHuffmanMieTheory();
 	}
-	
+
 	/**
-	 * Bohren-Huffman implementation of Mie theory, to calculate scattering 
+	 * Bohren-Huffman implementation of Mie theory, to calculate scattering
 	 * and absorption by a homogenous isotropic sphere.<P>
-	 * 
+	 *
 	 * Original program taken from Bohren and Huffman (1983), Appendix A.
-	 * Modified by B. T. Draine, Princeton Univ. Obs., 90/10/26 in order 
+	 * Modified by B. T. Draine, Princeton Univ. Obs., 90/10/26 in order
 	 * to compute the mean value of cos(theta).
-	 * 
+	 *
 	 * @throws JPARSECException If an error occurs.
 	 */
 	public void applyBohrenHuffmanMieTheory()
-	throws JPARSECException 
+	throws JPARSECException
 	{
 		double x = 2.0 * Math.PI * grainSize / lambda;
-		
+
 		double mx = cxref.abs() * x;
 		if (mx > 1000.0 || mx < 0.001)
 			JPARSECException.addWarning("Mie theory should not be applied when |m|*x is outside " +
 					"interval 0.001 - 1000, being m the refractive index and x = 2 PI a / lambda.");
-		
+
 	/* .. Array Arguments .. */
 		cxs1 = new Complex[2*nang];
 		cxs2 = new Complex[2*nang];
 	/* .. Local Scalars ..*/
-	      Complex cxan = new Complex(), cxan1 = new Complex(), cxbn = new Complex(), 
+	      Complex cxan = new Complex(), cxan1 = new Complex(), cxbn = new Complex(),
 	      	cxbn1 = new Complex(), cxxi, cxy, cxxi1; // cxxi0
 	      Complex cxtemp;
-	      double apsi, apsi1, chi, chi0, chi1, dang, fn, p, pii, 
+	      double apsi, apsi1, chi, chi0, chi1, dang, fn, p, pii,
 	        rn, t, theta, xstop, ymod;  // apsi0
 	      double  dn, dx, psi, psi0, psi1;
 	      int  j, jj, n, nmx, nn, nstop;
@@ -182,7 +182,7 @@ public class MieTheory implements Serializable
 	      if (nang > 1000 || nang < 2) {
 	        throw new JPARSECException("number of angles cannot be lower than 2 or larger than 1000.");
 	      }
-	      
+
 	      pii = 4.0*Math.atan(1.0);
 	      dx = x;
 	      cxy = (new Complex(x,0.0)).multiply(cxref);
@@ -196,7 +196,7 @@ public class MieTheory implements Serializable
 	      nmx += 15;
 
 	      Complex cxd[] = new Complex[nmx+1];
-	      
+
 
 	      dang = .50*pii/ (float)(nang-1);
 	      for (j = 1; j<=nang; j++) {
@@ -243,7 +243,7 @@ public class MieTheory implements Serializable
 	      qsca = 0.0;
 	      gsca = 0.0;
 
-	    for ( n = 1; n <= nstop; n++) {  
+	    for ( n = 1; n <= nstop; n++) {
 
 	        dn = n;
 	        rn = n;
@@ -288,8 +288,8 @@ public class MieTheory implements Serializable
 
 	/* Augment sums for qsca and g=<cos(theta)> */
 	/*        qsca = qsca + (2.*rn+1.)*(cabs(cxan)**2+cabs(cxbn)**2); */
-	 qsca += (2.*rn+1.)*(cxan.abs()*cxan.abs()+cxbn.abs()*cxbn.abs()); 
-	 gsca += ((2.*rn+1.)/(rn*(rn+1.)))*(cxan.real*cxbn.real+cxan.imaginary*cxbn.imaginary); 
+	 qsca += (2.*rn+1.)*(cxan.abs()*cxan.abs()+cxbn.abs()*cxbn.abs());
+	 gsca += ((2.*rn+1.)/(rn*(rn+1.)))*(cxan.real*cxbn.real+cxan.imaginary*cxbn.imaginary);
 
 	        if (n>1) {
 	          gsca += ((rn-1.)*(rn+1.)/rn)*(cxan1.real*cxan.real+
@@ -355,13 +355,13 @@ public class MieTheory implements Serializable
 	      return;
 
 	}
-	
+
 	/**
-	 * Obtains the cross sections for absorption, scattering, and extinction of dust 
+	 * Obtains the cross sections for absorption, scattering, and extinction of dust
 	 * for a given size distribution. An integration
 	 * is performed from 5E-3 microns up to the given maximum dust radius. This
 	 * method ussually requires a a lot of computing time.
-	 * 
+	 *
 	 * @param dust Dust properties.
 	 * @param wavelength Wavelenth in microns, between 0.001 and 1000.
 	 * @param refractiveIndex The adequate refractive index for the current grain.
@@ -382,7 +382,7 @@ public class MieTheory implements Serializable
 		double sizeStep = (sizeMax - sizeMin) / (np-1.0);
 		double size = sizeMin - sizeStep;
 		double waveCM = wavelength * Constant.MICRON_TO_CM;
-		
+
 		// See Draine, ApJ 636, 1114-1120 (2006), section 4, equation 4.
 		double integralUpY_Qabs[] = new double[np];
 		double integralUpY_Qext[] = new double[np];
@@ -395,14 +395,14 @@ public class MieTheory implements Serializable
 		String warn = "";
 		String warns = JPARSECException.getWarnings();
 		JPARSECException.clearWarnings();
-			
+
 		for (int i=0; i<np; i++)
 		{
 			size += sizeStep;
 			MieTheory mt = new MieTheory(size, waveCM, cxref, 10);
 			if (warn.equals("")) warn = JPARSECException.getWarnings();
 			JPARSECException.clearWarnings();
-			
+
 			double dnda = Math.pow(size, -dust.sizeDistributionCoefficient);
 			double mass = 4.0 * Math.PI * Math.pow(size, 3.0) * dust.grainDensity / 3.0;
 
@@ -416,7 +416,7 @@ public class MieTheory implements Serializable
 		}
 		JPARSECException.setWarnings(warns);
 		if (!warn.equals("")) JPARSECException.addWarning(warn);
-		
+
 		// Perform integrations
 		double xmin = DataSet.getMinimumValue(integralX);
 		double xmax = DataSet.getMaximumValue(integralX);
@@ -479,7 +479,7 @@ public class MieTheory implements Serializable
 		return this.gsca;
 	}
 	/**
-	 * Obtains incident E perpendicular to scattering plane. 2*({@linkplain MieTheory#nang}-1) 
+	 * Obtains incident E perpendicular to scattering plane. 2*({@linkplain MieTheory#nang}-1)
 	 * compounds.
 	 * @return E perpendicular to scattering plane.
 	 */
@@ -488,7 +488,7 @@ public class MieTheory implements Serializable
 		return this.cxs1;
 	}
 	/**
-	 * Obtains incident E parallel to scattering plane. 2*({@linkplain MieTheory#nang}-1) 
+	 * Obtains incident E parallel to scattering plane. 2*({@linkplain MieTheory#nang}-1)
 	 * compounds.
 	 * @return E parallel to scattering plane.
 	 */
@@ -496,7 +496,7 @@ public class MieTheory implements Serializable
 	{
 		return this.cxs2;
 	}
-	
+
 	/**
 	 * Obtains the albedo.
 	 * @return Albedo.

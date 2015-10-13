@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.time;
 
 import java.math.BigDecimal;
@@ -45,7 +45,7 @@ import jparsec.util.JPARSECException;
  * on the ephemeris properties the methods in this class will use algorithms according
  * to different methods or IAU resolutions: IAU 1976, 2000/2006/2009 (the three treated in the same
  * way), WILLIAMS/SIMON 1994 (both treated in the same way), and DE403 method.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -53,7 +53,7 @@ public class SiderealTime
 {
 	// private constructor so that this class cannot be instantiated.
 	private SiderealTime() {}
-	
+
 	/**
 	 * Calculates the Greenwich mean sidereal time.
 	 * <P>
@@ -75,7 +75,7 @@ public class SiderealTime
 	 * Precession Quantities Based upon the IAU (1976) System of Astronomical
 	 * Constants," Astronomy and Astrophysics 58, 1-16 (1977).
 	 * <P>
-	 * 
+	 *
 	 * @param time Time object containing the date.
 	 * @param obs Observer object containing the observer position.
 	 * @param eph Ephemeris object.
@@ -112,7 +112,7 @@ public class SiderealTime
 		} else
 		{
 
-			if (eph.ephemMethod == EphemerisElement.REDUCTION_METHOD.IAU_2000 || 
+			if (eph.ephemMethod == EphemerisElement.REDUCTION_METHOD.IAU_2000 ||
 					eph.ephemMethod == EphemerisElement.REDUCTION_METHOD.IAU_2006 ||
 					eph.ephemMethod == EphemerisElement.REDUCTION_METHOD.IAU_2009)
 			{
@@ -129,7 +129,7 @@ public class SiderealTime
 						eph.ephemMethod == EphemerisElement.REDUCTION_METHOD.IAU_2009)
 				{
 					// Precession contributions from Capitaine et al. 2005
-					gmst += (0.014506 + (4612.156534 + (+1.3915817 + (-0.00000044 + (-0.000029956 + (-0.0000000368) * DT) * DT) * DT) * DT) * DT) * Constant.ARCSEC_TO_RAD;					
+					gmst += (0.014506 + (4612.156534 + (+1.3915817 + (-0.00000044 + (-0.000029956 + (-0.0000000368) * DT) * DT) * DT) * DT) * DT) * Constant.ARCSEC_TO_RAD;
 				} else {
 					// Precession contributions from Capitaine et al. 2003
 					gmst += (0.014506 + (4612.15739966 + (+1.39667721 + (-0.00009344 + (+0.00001882) * DT) * DT) * DT) * DT) * Constant.ARCSEC_TO_RAD;
@@ -161,7 +161,7 @@ public class SiderealTime
 		lastGMST = gmst;
 		return lastGMST;
 	}
-	
+
 	/**
 	 * Calculates the Greenwich mean sidereal time.
 	 * <P>
@@ -180,7 +180,7 @@ public class SiderealTime
 	 * J. H. Lieske, T. Lederle, W. Fricke, and B. Morando, "Expressions for the
 	 * Precession Quantities Based upon the IAU (1976) System of Astronomical
 	 * Constants," Astronomy and Astrophysics 58, 1-16 (1977).
-	 * 
+	 *
 	 * @param time Time object containing the date.
 	 * @param obs Observer object containing the observer position.
 	 * @param eph Ephemeris object.
@@ -192,14 +192,14 @@ public class SiderealTime
 	{
 		if (!eph.preferPrecisionInEphemerides)
 			return greenwichMeanSiderealTimeDoublePrecisionMode(time, obs, eph);
-		
+
 		// Obtain julian day in Universal Time
 		BigDecimal jd = TimeScale.getExactJD(time, obs, eph, SCALE.UNIVERSAL_TIME_UT1);
 		if (lastBigDecimal != null && lastBigDecimal.doubleValue() == jd.doubleValue()) return lastGMST;
-		
+
 		BigDecimal gmst = new BigDecimal(0.0);
 		BigDecimal msday = new BigDecimal(0.0);
-		
+
 		/* Correct Julian day to express it referred to the previous midnight */
 		double jd0 = Math.floor(jd.doubleValue() - 0.5) + 0.5;
 
@@ -217,21 +217,21 @@ public class SiderealTime
 			/* mean solar days per sidereal day at date T0 */
 			msday = new BigDecimal(1.0).add(((((new BigDecimal(-1.86e-5).multiply(T0)).add(new BigDecimal(0.186208))).multiply(T0)).add(new BigDecimal(8640184.812866))).divide(new BigDecimal(Constant.SECONDS_PER_DAY * Constant.JULIAN_DAYS_PER_CENTURY), Configuration.BIG_DECIMAL_PRECISION_DECIMAL_PLACES, Configuration.BIG_DECIMAL_PRECISION_ROUNDING_MODE));
 		} else {
-			if (eph.ephemMethod == EphemerisElement.REDUCTION_METHOD.IAU_2000 || 
+			if (eph.ephemMethod == EphemerisElement.REDUCTION_METHOD.IAU_2000 ||
 					eph.ephemMethod == EphemerisElement.REDUCTION_METHOD.IAU_2006 ||
 					eph.ephemMethod == EphemerisElement.REDUCTION_METHOD.IAU_2009)
 			{
 				// Compute Earth rotation angle
 				BigDecimal DT0 = jd.subtract(new BigDecimal(Constant.J2000));
 				gmst = Constant.BIG_TWO_PI.multiply(((secs.divide(new BigDecimal(Constant.SECONDS_PER_DAY), Configuration.BIG_DECIMAL_PRECISION_DECIMAL_PLACES, Configuration.BIG_DECIMAL_PRECISION_ROUNDING_MODE)).add(new BigDecimal(1.2790572732640))).add(new BigDecimal(Constant.SIDEREAL_DAY_LENGTH - 1.0).multiply(DT0)));
-				
+
 				// Obtain julian day in Dynamical Time
 				double DT = Functions.toCenturies(TimeScale.getExactJD(time, obs, eph, SCALE.TERRESTRIAL_TIME)).doubleValue();
 				if (eph.ephemMethod == EphemerisElement.REDUCTION_METHOD.IAU_2006 ||
 						eph.ephemMethod == EphemerisElement.REDUCTION_METHOD.IAU_2009)
 				{
 					// Precession contributions from Capitaine et al. 2005
-					gmst = gmst.add(new BigDecimal((0.014506 + (4612.156534 + (+1.3915817 + (-0.00000044 + (-0.000029956 + (-0.0000000368) * DT) * DT) * DT) * DT) * DT) * Constant.ARCSEC_TO_RAD));					
+					gmst = gmst.add(new BigDecimal((0.014506 + (4612.156534 + (+1.3915817 + (-0.00000044 + (-0.000029956 + (-0.0000000368) * DT) * DT) * DT) * DT) * DT) * Constant.ARCSEC_TO_RAD));
 				} else {
 					// Precession contributions from Capitaine et al. 2003
 					gmst = gmst.add(new BigDecimal((0.014506 + (4612.15739966 + (+1.39667721 + (-0.00009344 + (+0.00001882) * DT) * DT) * DT) * DT) * Constant.ARCSEC_TO_RAD));
@@ -249,7 +249,7 @@ public class SiderealTime
 					 * (1994)
 					 */
 					gmst = (((((((T0.multiply(new BigDecimal(-2.0e-6))).add(new BigDecimal(-3.e-7))).multiply(T0)).add(new BigDecimal(9.27695e-2))).multiply(T0)).add(new BigDecimal(8640184.7928613))).multiply(T0)).add(new BigDecimal(24110.54841));
-	
+
 					/* mean solar (er, UT) days per sidereal day at date T0 */
 					msday = (((((((T0.multiply(new BigDecimal(-8.0e-6))).add(new BigDecimal(-9.e-7))).multiply(T0)).add(new BigDecimal(2. * 9.27695e-2))).multiply(T0)).add(new BigDecimal(8640184.7928613))).divide(new BigDecimal(Constant.SECONDS_PER_DAY * Constant.JULIAN_DAYS_PER_CENTURY), Configuration.BIG_DECIMAL_PRECISION_DECIMAL_PLACES, Configuration.BIG_DECIMAL_PRECISION_ROUNDING_MODE)).add(new BigDecimal(1.0));
 				} else {
@@ -257,7 +257,7 @@ public class SiderealTime
 					 * Williams values updated to DE403
 					 */
 					gmst = (((((((T0.multiply(new BigDecimal(-2.0e-6))).add(new BigDecimal(-3.e-7))).multiply(T0)).add(new BigDecimal(9.27701e-2))).multiply(T0)).add(new BigDecimal(8640184.7942063))).multiply(T0)).add(new BigDecimal(24110.54841));
-	
+
 					/* mean solar (er, UT) days per sidereal day at date T0 */
 					msday = (((((((T0.multiply(new BigDecimal(-8.0e-6))).add(new BigDecimal(-9.e-7))).multiply(T0)).add(new BigDecimal(2. * 9.27701e-2))).multiply(T0)).add(new BigDecimal(8640184.7942063))).divide(new BigDecimal(Constant.SECONDS_PER_DAY * Constant.JULIAN_DAYS_PER_CENTURY), Configuration.BIG_DECIMAL_PRECISION_DECIMAL_PLACES, Configuration.BIG_DECIMAL_PRECISION_ROUNDING_MODE)).add(new BigDecimal(1.0));
 				}
@@ -278,10 +278,10 @@ public class SiderealTime
 	private static BigDecimal lastBigDecimal;
 	private static double lastJD;
 	private static double lastGMST;
-	
+
 	/**
 	 * Returns apparent sidereal time of the observer.
-	 * 
+	 *
 	 * @param time Time object.
 	 * @param obs Observer object.
 	 * @param eph Ephemeris object.
@@ -304,14 +304,14 @@ public class SiderealTime
 			if (obs.getMotherBody().isNaturalSatellite()) {
 				st = MoonPhysicalParameters.getBodySiderealTimeAt0Lon(JD_TDB, ephIn);
 				if (MoonPhysicalParameters.getBodyMeanRotationRate(ephIn) < 0.0) {
-					return st + obs.getLongitudeRad() + Math.PI;				
+					return st + obs.getLongitudeRad() + Math.PI;
 				} else {
 					return st - obs.getLongitudeRad() + Math.PI;
 				}
 			} else {
-				st = PhysicalParameters.getBodySiderealTimeAt0Lon(JD_TDB, ephIn);				
+				st = PhysicalParameters.getBodySiderealTimeAt0Lon(JD_TDB, ephIn);
 				if (PhysicalParameters.getBodyMeanRotationRate(ephIn) < 0.0 || ephIn.targetBody == TARGET.SUN || ephIn.targetBody == TARGET.Moon) {
-					return st + obs.getLongitudeRad() + Math.PI;				
+					return st + obs.getLongitudeRad() + Math.PI;
 				} else {
 					return st - obs.getLongitudeRad() + Math.PI;
 				}
@@ -321,7 +321,7 @@ public class SiderealTime
 
 	/**
 	 * Returns apparent sidereal time for Greenwich.
-	 * 
+	 *
 	 * @param time Time object.
 	 * @param obs Observer object.
 	 * @param eph Ephemeris object.
@@ -343,7 +343,7 @@ public class SiderealTime
 	 * @param time Time object.
 	 * @param obs Observer object.
 	 * @param eph Ephemeris object. If defined, the algorithm, set of reduction
-	 * algorithms, and the geocentric/topocentric flag are taken from it. Default 
+	 * algorithms, and the geocentric/topocentric flag are taken from it. Default
 	 * values are Moshier, IAU 2006, and geocentric. The correction flags to
 	 * optimize for speed or accuracy are also considered.
 	 * @return Equation of time in radians.
@@ -354,7 +354,7 @@ public class SiderealTime
 		double t = Functions.toCenturies(TimeScale.getExactJD(time, obs, eph, SCALE.TERRESTRIAL_TIME)).doubleValue();
 		double lon = Functions.normalizeDegrees(280.4664567 + 36000.76982779 * t + .0003032028 * t * t + t * t * t / 49931000.0 -
 				t * t * t * t / 152990000.0 - t * t * t * t * t / 198800000000.0) * Constant.DEG_TO_RAD;
-		
+
 		EphemerisElement eph2= new EphemerisElement(TARGET.SUN, EphemerisElement.COORDINATES_TYPE.APPARENT,
 				EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.GEOCENTRIC, EphemerisElement.REDUCTION_METHOD.IAU_2009,
 				EphemerisElement.FRAME.FK5, EphemerisElement.ALGORITHM.MOSHIER);
@@ -367,7 +367,7 @@ public class SiderealTime
 		eph2.correctForExtinction = eph.correctForExtinction;
 		eph2.correctForPolarMotion = eph.correctForPolarMotion;
 		EphemElement ephem = Ephem.getEphemeris(time, obs, eph2, false);
-		
+
 		Nutation.calcNutation(t, eph2);
 		double eps = Obliquity.trueObliquity(t, eph2);
 
@@ -378,14 +378,14 @@ public class SiderealTime
 
 		return eqTime;
 	}
-	
+
 	/**
 	 * Returns the equation of time and the declination of the Sun for a given instant.
 	 * These are the values required to construct an analemma chart.
 	 * @param time Time object.
 	 * @param obs Observer object.
 	 * @param eph Ephemeris object. If defined, the algorithm, set of reduction
-	 * algorithms, and the geocentric/topocentric flag are taken from it. Default 
+	 * algorithms, and the geocentric/topocentric flag are taken from it. Default
 	 * values are Moshier, IAU 2006, and geocentric. The correction flags to
 	 * optimize for speed or accuracy are also considered.
 	 * @return Equation of time and declination of the Sun in radians.
@@ -396,7 +396,7 @@ public class SiderealTime
 		double t = Functions.toCenturies(TimeScale.getExactJD(time, obs, eph, SCALE.TERRESTRIAL_TIME)).doubleValue();
 		double lon = Functions.normalizeDegrees(280.4664567 + 36000.76982779 * t + .0003032028 * t * t + t * t * t / 49931000.0 -
 				t * t * t * t / 152990000.0 - t * t * t * t * t / 198800000000.0) * Constant.DEG_TO_RAD;
-		
+
 		EphemerisElement eph2= new EphemerisElement(TARGET.SUN, EphemerisElement.COORDINATES_TYPE.APPARENT,
 				EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.GEOCENTRIC, EphemerisElement.REDUCTION_METHOD.IAU_2009,
 				EphemerisElement.FRAME.FK5, EphemerisElement.ALGORITHM.MOSHIER);
@@ -409,7 +409,7 @@ public class SiderealTime
 		eph2.correctForExtinction = eph.correctForExtinction;
 		eph2.correctForPolarMotion = eph.correctForPolarMotion;
 		EphemElement ephem = Ephem.getEphemeris(time, obs, eph2, false);
-		
+
 		Nutation.calcNutation(t, eph2);
 		double eps = Obliquity.trueObliquity(t, eph2);
 
@@ -420,14 +420,14 @@ public class SiderealTime
 
 		return new double[] {eqTime, ephem.declination};
 	}
-	
+
 	/**
 	 * Returns equation of equinoxes. Complementary terms are included in case
 	 * of IAU 2000/2006/2009 reduction methods. In case the ephemeris properties
 	 * are set with the flag {@linkplain EphemerisElement#preferPrecisionInEphemerides}
-	 * disabled (and the date is between years -3000 to +3000), a low precision but 
+	 * disabled (and the date is between years -3000 to +3000), a low precision but
 	 * fast method is used to return the equation of equinoxes with an accuracy around 1 ms.
-	 * 
+	 *
 	 * @param time Time object.
 	 * @param obs Observer object.
 	 * @param eph Ephemeris object.
@@ -575,7 +575,7 @@ public class SiderealTime
 			dp += -3 * FastMath.sin(3 * Mm + 2 * F + 2 * omega);
 			dp += -3 * FastMath.sin(2 * D - M + 2 * F + 2 * omega);
 			 */
-			
+
 			// Nutation in longitude
 			double delta_psi = dp / 36000000.0;
 
@@ -590,11 +590,11 @@ public class SiderealTime
 
 			// Equation of the equinoxes
 			double EoE = 240 * delta_psi * FastMath.cos(eps * Constant.DEG_TO_RAD);
-			
+
 			return EoE * 15.0 * Constant.ARCSEC_TO_RAD;
 		}
-		
-		
+
+
 		// Obtain mean obliquity
 		double t = Functions.toCenturies(TimeScale.getExactJD(time, obs, eph, SCALE.TERRESTRIAL_TIME)).doubleValue();
 		if (t == lastT) {
@@ -603,7 +603,7 @@ public class SiderealTime
 					eph.ephemMethod == EphemerisElement.REDUCTION_METHOD.IAU_2009;
 			if (c == ct) return lastEQEQ;
 		}
-		
+
 		double epsilon = Obliquity.meanObliquity(t, eph);
 
 		// Calculate Nutation
@@ -624,7 +624,7 @@ public class SiderealTime
 
 		lastEQEQ = eq_eq;
 		lastT = t;
-		
+
 		return eq_eq;
 	}
 	private static double lastT, lastEQEQ;
@@ -632,7 +632,7 @@ public class SiderealTime
 
 	/**
 	 * Complementary terms of equation of equinoxes from SOFA library.
-	 * 
+	 *
 	 * @param T Julian centuries from J2000 in dynamical time.
 	 * @return Value in radians.
 	 */
@@ -646,7 +646,7 @@ public class SiderealTime
 			EECT_last_value = d[0];
 			EECT_last_calc_T = d[1];
 		}
-		
+
 		if (T == EECT_last_calc_T)
 			return EECT_last_value;
 		EECT_last_calc_T = T;
@@ -768,7 +768,7 @@ final class eect00
 		// DATA ( ( KE0(I,J), I=1,14), J = 31, NE0 ),
 		{ 0, 0, 2, -2, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
 		{ 1, 0, -2, 0, -3, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-		{ 1, 0, -2, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0 } 
+		{ 1, 0, -2, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 	};
 
 	// Argument coefficients for t^1
@@ -813,10 +813,9 @@ final class eect00
 		// DATA ( ( SE0(I,J), I=1,2), J = 31, NE0 ),
 		{ -0.11e-6, +0.00e-6 },
 		{ +0.11e-6, +0.00e-6 },
-		{ +0.11e-6, +0.00e-6 }, 
+		{ +0.11e-6, +0.00e-6 },
 	};
 
 	// Sine and cosine coefficients for t^1
 	static double SE1[] = { -0.87e-6, +0.00e-6, };
 }
-

@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.graph;
 
 import java.awt.Color;
@@ -28,8 +28,8 @@ import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.Serializable;
 import java.util.ArrayList;
-
 import java.util.Arrays;
+
 import jparsec.ephem.Functions;
 import jparsec.graph.chartRendering.AWTGraphics;
 import jparsec.graph.chartRendering.Graphics;
@@ -42,18 +42,18 @@ import jparsec.util.Logger.LEVEL;
 
 /**
  * Creates a chart element to be later drawn by JFreeChart.<P>
- * 
+ *
  * In this object the labels for x and y axes, as well as the title can be
  * encoded following the instructions given in {@linkplain TextLabel} class. This
  * provides some possibilities like to dynamically change color/size, include superscript
  * or subscript text, or greek letters.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
 public class ChartElement implements Serializable
 {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Default empty constructor.
@@ -63,7 +63,7 @@ public class ChartElement implements Serializable
 	/**
 	 * Constructor adequate for any chart. In pie charts only the first series
 	 * will be considered.
-	 * 
+	 *
 	 * @param series Series to draw.
 	 * @param charttype Type of chart.
 	 * @param chartsubtype Subtype of chart.
@@ -90,7 +90,7 @@ public class ChartElement implements Serializable
 		this.imageWidth = 600;
 		this.imageHeight = 400;
 		if (this.chartType == ChartElement.TYPE.CATEGORY_CHART) this.setCategories();
-		
+
 		double mins[] = new double[series.length];
 		for (int i=0; i<mins.length; i++)
 		{
@@ -109,7 +109,7 @@ public class ChartElement implements Serializable
 	/**
 	 * Constructor adequate for any chart. In pie charts only the first series
 	 * will be considered.
-	 * 
+	 *
 	 * @param series Series to draw.
 	 * @param charttype Type of chart.
 	 * @param chartsubtype Subtype of chart.
@@ -138,7 +138,7 @@ public class ChartElement implements Serializable
 		this.imageWidth = size_x;
 		this.imageHeight = size_y;
 		if (this.chartType == ChartElement.TYPE.CATEGORY_CHART) this.setCategories();
-		
+
 		double mins[] = new double[series.length];
 		for (int i=0; i<mins.length; i++)
 		{
@@ -212,8 +212,8 @@ public class ChartElement implements Serializable
 	/**
 	 * Holds sub-chart position.
 	 */
-	public Point subChartPosition[] = null; 
-	
+	public Point subChartPosition[] = null;
+
 	/**
 	 * Show x axis in log scale.
 	 */
@@ -229,17 +229,17 @@ public class ChartElement implements Serializable
 	 * charts.
 	 */
 	public boolean xAxisInverted = false;
-	
+
 	/**
 	 * Set to true to invert the y axis.
 	 */
 	public boolean yAxisInverted = false;
-	
+
 	/**
 	 * Select to show error bars or not.
 	 */
 	public boolean showErrorBars = true;
-	
+
 	/**
 	 * Selects the color/gradient of the background. It is recommended
 	 * to use just a color instead a gradient for better compatibility
@@ -310,8 +310,8 @@ public class ChartElement implements Serializable
 	}
 
 	/**
-	 * Returns true if the input object is equal to this chart object. An hypothetical sub-chart
-	 * is not tested for equality.
+	 * Returns true if the input object is equals to this chart object. An hypothetical sub-chart
+	 * is not tested for equallity.
 	 */
 	@Override
 	public boolean equals(Object o) {
@@ -379,7 +379,6 @@ public class ChartElement implements Serializable
 		result = 31 * result + (yTickLabels != null ? yTickLabels.hashCode() : 0);
 		return result;
 	}
-
 	/**
 	 * Transforms a {@linkplain SimpleChartElement} into a {@linkplain ChartElement}.
 	 * @param sc A {@linkplain SimpleChartElement}.
@@ -472,7 +471,7 @@ public class ChartElement implements Serializable
 		}
 		this.series = ns;
 	}
-	
+
 	/**
 	 * Deletes a series from the current chart.
 	 * @param legend Legend of the series to delete.
@@ -506,7 +505,7 @@ public class ChartElement implements Serializable
 			throw new JPARSECException(ex);
 		}
 	}
-	
+
 	/**
 	 * Deletes all series from the current chart except one.
 	 * @param legend Legend of the series to maintain.
@@ -551,7 +550,7 @@ public class ChartElement implements Serializable
 		}
 		return val;
 	}
-	
+
 	/**
 	 * Obtains the maximum value of x. For category charts the index of the maximum value
 	 * will be returned.
@@ -573,14 +572,14 @@ public class ChartElement implements Serializable
 			} else {
 				x = (double[]) DataSet.getDoubleValuesIncludingLimits(this.series[i].xValues).get(0);
 			}
-			
+
 			double m = DataSet.getMaximumValue(x);
 			if (m > max || !done)
 			{
 				max = m;
 				done = true;
 			}
-			
+
 		}
 		return max;
 	}
@@ -606,7 +605,7 @@ public class ChartElement implements Serializable
 			} else {
 				x = (double[]) DataSet.getDoubleValuesIncludingLimits(this.series[i].xValues).get(0);
 			}
-			
+
 			double m = DataSet.getMinimumValue(x);
 			if (m < min || !done)
 			{
@@ -660,7 +659,7 @@ public class ChartElement implements Serializable
 		}
 		return min;
 	}
-	
+
 	/**
 	 * Obtains the maximum value of x errors. For category charts the index of the maximum value
 	 * will be returned.
@@ -681,7 +680,7 @@ public class ChartElement implements Serializable
 					done = true;
 				}
 			}
-			
+
 		}
 		return max;
 	}
@@ -725,11 +724,11 @@ public class ChartElement implements Serializable
 		}
 		this.xForCategoryCharts = DataSet.arrayListToStringArray(v);
 	}
-	
+
 	private void checkChartElementLegends()
 	throws JPARSECException {
 		if (this.series.length < 2) return;
-		
+
 		for (int i=0; i<this.series.length-1; i++)
 		{
 			String si = this.series[i].legend;
@@ -740,7 +739,7 @@ public class ChartElement implements Serializable
 				String sj = this.series[j].legend;
 				int aj = sj.indexOf("*");
 				if (aj > 0 && sj.endsWith("*")) sj = sj.substring(0, aj);
-				
+
 				if (si.equals(sj))
 					throw new JPARSECException("series are not allowed to have similar legend names.");
 			}
@@ -750,7 +749,7 @@ public class ChartElement implements Serializable
 	/**
 	 * The set of chart types.
 	 */
-	public static enum TYPE {
+	public enum TYPE {
 		/** Constant ID for an xy chart. */
 		XY_CHART,
 		/** Constant ID for a category chart. */
@@ -758,7 +757,7 @@ public class ChartElement implements Serializable
 		/** Constant ID for a pie chart. */
 		PIE_CHART
 	};
-	
+
 	/**
 	 * Chart types in the same way as the individual variables are set.
 	 */
@@ -767,7 +766,7 @@ public class ChartElement implements Serializable
 	/**
 	 * The set of subtypes for X-Y charts.
 	 */
-	public static enum SUBTYPE {
+	public enum SUBTYPE {
 		/** Selects this subtype of x-y chart. */
 		XY_SCATTER,
 		/** Selects this subtype of x-y chart. */
@@ -810,7 +809,7 @@ public class ChartElement implements Serializable
 		/** Selects this subtype of pie chart. */
 		PIE_3D
 	};
-	
+
 	/**
 	 * Chart x-y subtypes in the same way as the individual variables are set.
 	 */
@@ -820,14 +819,14 @@ public class ChartElement implements Serializable
 	/**
 	 * Chart category subtypes in the same way as the individual variables are set.
 	 */
-	private static final String[] SUBTYPES_CATEGORY = new String[] {"Bar", "Stacked bar", "Bar 3d", 
+	private static final String[] SUBTYPES_CATEGORY = new String[] {"Bar", "Stacked bar", "Bar 3d",
 		"Stacked bar 3d", "Water fall", "Area", "Stacked area", "Line", "Line 3d"};
 
 	/**
 	 * Chart pie subtypes in the same way as the individual variables are set.
 	 */
 	private static final String[] SUBTYPES_PIE = new String[] {"Normal", "Ring", "3d"};
-	
+
 	/**
 	 * Chart subtypes in the same way as the individual variables are set.
 	 */
@@ -837,7 +836,7 @@ public class ChartElement implements Serializable
 	/**
 	 * The set of tick labels types.
 	 */
-	public static enum TICK_LABELS {
+	public enum TICK_LABELS {
 		/** Constant ID for regular values in labels. Example: 10 000. */
 		REGULAR_VALUES,
 		/** Constant ID for exponential values in labels. Example: 1e4. */
@@ -845,7 +844,7 @@ public class ChartElement implements Serializable
 		/** Constant ID for log10 values in labels. Example: 10^4. */
 		LOGARITHM_VALUES
 	};
-	
+
 	/**
 	 * Returns a simple chart without using JFreeChart of the input chart object.
 	 * Only XY scatter (and time) charts are currently supported.
@@ -857,7 +856,7 @@ public class ChartElement implements Serializable
 		if (chart.chartType != TYPE.XY_CHART || (chart.subType != SUBTYPE.XY_SCATTER
 				&& chart.subType != SUBTYPE.XY_TIME))
 			throw new JPARSECException("Unsupported chart type.");
-		
+
 		int w = chart.imageWidth, h = chart.imageHeight;
 		w = 200;
 		h = 200;
@@ -871,11 +870,11 @@ public class ChartElement implements Serializable
 		float radiusY = (float) ((ymax - ymin)*0.6f);
 		float midX = (float) ((xmax + xmin)*0.5f);
 		float midY = (float) ((ymax + ymin)*0.5f);
-		int cxmin = (int) Math.floor(xmin - radiusX * 0.); 
-		int cymin = (int) Math.floor(ymin - radiusY * 0.); 
-		int cxmax = (int) Math.floor(xmax + radiusX * 0.); 
-		int cymax = (int) Math.floor(ymax + radiusY * 0.); 
-		
+		int cxmin = (int) Math.floor(xmin - radiusX * 0.);
+		int cymin = (int) Math.floor(ymin - radiusY * 0.);
+		int cxmax = (int) Math.floor(xmax + radiusX * 0.);
+		int cymax = (int) Math.floor(ymax + radiusY * 0.);
+
 		if (w < 280) g.setFont(Graphics.FONT.getDerivedFont(g.getFont(), g.getFont().getSize()-2));
 		if (w >= 280 && w < 380) g.setFont(Graphics.FONT.getDerivedFont(g.getFont(), g.getFont().getSize()-1));
 		int offy = g.getFont().getSize();
@@ -912,7 +911,7 @@ public class ChartElement implements Serializable
 			g.drawLine(x0 - scaleX * (px - midX), y0 - scaleY * radiusY + b, x0 - scaleX * (px - midX), y0 - scaleY * radiusY, false);
 			float offx = g.getStringWidth(label)/2;
 			g.drawString(label, x0 - scaleX * (px - midX) - offx, y0 - scaleY * radiusY + b + offy+offy/2);
-			
+
 			px = (float) (cymin + (l+nlab)*(cymax-cymin)/(2.0*nlab));
 			label = Functions.formatValue(px, 1);
 			px = (float) Double.parseDouble(label);
@@ -921,11 +920,11 @@ public class ChartElement implements Serializable
 			g.drawString(label, x0 + scaleX * radiusX - b - offx*2 - offy/2, y0 + scaleY * (px - midY) + offy/2);
 		}
 		g.setClip((int) (x0 + scaleX * radiusX - b), 0, (int) (x0 - scaleX * radiusX + b), (int) (y0 - scaleY * radiusY + b));
-		
+
 		if (chart.backgroundImage != null && chart.showBackgroundImage) {
 			Picture back = new Picture(Picture.toBufferedImage(chart.backgroundImage));
-			int backScaleW = (int) (1 + Math.abs(scaleX) * radiusX * 2); 
-			int backScaleH = (int) (1 + Math.abs(scaleY) * radiusY * 2); 
+			int backScaleW = (int) (1 + Math.abs(scaleX) * radiusX * 2);
+			int backScaleH = (int) (1 + Math.abs(scaleY) * radiusY * 2);
 			back.getScaledInstance(backScaleW, backScaleH, true);
 			back = new Picture(Picture.copyWithTransparency(back.getImage()));
 			back.setAlphaChannel(190, false);
@@ -943,7 +942,7 @@ public class ChartElement implements Serializable
 			r = (chart.series[s].shapeSize*2)/3;
 			float oldpx = -1, oldpy = -1;
 			g.setStroke(chart.series[s].stroke);
-			
+
 			if (chart.series[s].showLegend) {
 				leyendIndex ++;
 				float tw = g.getStringWidth(chart.series[s].legend);
@@ -960,7 +959,7 @@ public class ChartElement implements Serializable
 				oldpy = newpy;
 			}
 		}
-		
+
 		g.setClip(0, 0, w, h);
 		g.setFont(Graphics.FONT.getDerivedFont(g.getFont(), g.getFont().getSize()+2));
 		offy = g.getFont().getSize();
@@ -988,7 +987,7 @@ public class ChartElement implements Serializable
 		} else {
 			g.drawString(title, x0 - tw/2, w*0.05f);
 		}
-				
+
 		return (BufferedImage) g.getRendering();
 	}
 }

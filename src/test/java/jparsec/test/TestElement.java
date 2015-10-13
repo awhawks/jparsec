@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,11 +18,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.test;
 
-import java.io.Serializable;
-import java.util.Arrays;
+import java.io.*;
+
 import jparsec.astronomy.AtlasChart;
 import jparsec.astronomy.Constellation;
 import jparsec.astronomy.CoordinateSystem;
@@ -67,9 +67,9 @@ import jparsec.observer.ReferenceEllipsoid.ELLIPSOID;
 import jparsec.time.AstroDate;
 import jparsec.time.SiderealTime;
 import jparsec.time.TimeElement;
-import jparsec.time.TimeElement.SCALE;
 import jparsec.time.TimeFormat;
 import jparsec.time.TimeScale;
+import jparsec.time.TimeElement.SCALE;
 import jparsec.time.calendar.CalendarGenericConversion;
 import jparsec.time.calendar.CalendarGenericConversion.CALENDAR;
 import jparsec.util.Configuration;
@@ -85,7 +85,7 @@ import jparsec.vo.SimbadQuery;
  * @version 1.0
  */
 public class TestElement implements Serializable {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Event id code. Constants defined in the enumeration in this class.
@@ -104,12 +104,12 @@ public class TestElement implements Serializable {
 	 * Holds the values found after executing the test. They are not always available.
 	 */
 	private String[] foundValues;
-	
+
 	/**
 	 * Output and error logs.
 	 */
 	private String out, err;
-	
+
 	/**
 	 * Constructor for a simple test.
 	 * @param id Event ID constant.
@@ -122,7 +122,7 @@ public class TestElement implements Serializable {
 		this.testID = id;
 		this.expectedValues = output;
 	}
-	
+
 	/**
 	 * Clones this instance.
 	 */
@@ -135,36 +135,21 @@ public class TestElement implements Serializable {
 		e.foundValues = foundValues.clone();
 		return e;
 	}
-
 	/**
 	 * Returns whether the input Object contains the same information
 	 * as this instance.
 	 */
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (!(o instanceof TestElement)) return false;
-
-		TestElement that = (TestElement) o;
-
-		if (testID != that.testID) return false;
-		if (!Arrays.equals(testValues, that.testValues)) return false;
-		if (!Arrays.equals(expectedValues, that.expectedValues)) return false;
-		if (!Arrays.equals(foundValues, that.foundValues)) return false;
-		if (out != null ? !out.equals(that.out) : that.out != null) return false;
-
-		return !(err != null ? !err.equals(that.err) : that.err != null);
-	}
-
-	@Override
-	public int hashCode() {
-		int result = testID != null ? testID.hashCode() : 0;
-		result = 31 * result + (testValues != null ? Arrays.hashCode(testValues) : 0);
-		result = 31 * result + (expectedValues != null ? Arrays.hashCode(expectedValues) : 0);
-		result = 31 * result + (foundValues != null ? Arrays.hashCode(foundValues) : 0);
-		result = 31 * result + (out != null ? out.hashCode() : 0);
-		result = 31 * result + (err != null ? err.hashCode() : 0);
-		return result;
+	public boolean equals(Object e)
+	{
+		if (e == null) return false;
+		TestElement ee = (TestElement) e;
+		if (!DataSet.sameArrayValues(ee.testValues, this.testValues)) return false;
+		if (!DataSet.sameArrayValues(ee.expectedValues, this.expectedValues)) return false;
+		if (!DataSet.sameArrayValues(ee.foundValues, this.foundValues)) return false;
+		if (ee.testID != this.testID) return false;
+		if (!ee.err.equals(this.err)) return false;
+		if (!ee.out.equals(this.out)) return false;
+		return true;
 	}
 
 	/**
@@ -174,7 +159,7 @@ public class TestElement implements Serializable {
 	public String getOutput() {
 		return out;
 	}
-	
+
 	/**
 	 * Returns the error output from the test, if it was executed.
 	 * @return The error output.
@@ -190,7 +175,7 @@ public class TestElement implements Serializable {
 	public String[] getValuesFound() {
 		return foundValues;
 	}
-	
+
 	private EphemElement getPlanetOrStarEphem(TimeElement time,
 			ObserverElement observer, EphemerisElement eph,
 			String body, boolean preferPrecision, boolean topocentric,
@@ -220,7 +205,7 @@ public class TestElement implements Serializable {
 			}
 		}
 	}
-	
+
 	/**
 	 * Executes the test.
 	 * @throws JPARSECException If an error occurs.
@@ -230,11 +215,11 @@ public class TestElement implements Serializable {
 		err = FileIO.getLineSeparator();
 
 		AstroDate astro = new AstroDate(2000, AstroDate.JANUARY, 1, 12, 0, 0);
-		TimeElement time = new TimeElement(astro, SCALE.TERRESTRIAL_TIME);
+		TimeElement time = new TimeElement(astro, TimeElement.SCALE.TERRESTRIAL_TIME);
 		//CityElement city = City.findCity("Madrid", COUNTRY.Spain, false);
 		//ObserverElement observer = ObserverElement.parseCity(city);
-		ObserverElement observer = new ObserverElement("Madrid", Functions.parseDeclination("-03\u00ba 42' 36.000\""),
-				Functions.parseDeclination("40\u00ba 25' 12.000\""), 693, 1, DST_RULE.N1);
+		ObserverElement observer = new ObserverElement("Madrid", Functions.parseDeclination("-03\u00b0 42' 36.000\""),
+				Functions.parseDeclination("40\u00b0 25' 12.000\""), 693, 1, DST_RULE.N1);
 		EphemerisElement eph = new EphemerisElement(TARGET.NOT_A_PLANET, EphemerisElement.COORDINATES_TYPE.APPARENT,
 				EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.TOPOCENTRIC, EphemerisElement.REDUCTION_METHOD.IAU_2006,
 				EphemerisElement.FRAME.ICRF);
@@ -286,7 +271,7 @@ public class TestElement implements Serializable {
 			double in[] = DataSet.toDoubleValues(DataSet.getSubArray(testValues, 0, 4));
 			astro = new AstroDate((int) in[0], (int) in[1], (int) in[2], (int) in[3], (int) in[4], (in[4]-(int) in[4])*60.0);
 
-			time = new TimeElement(astro, SCALE.UNIVERSAL_TIME_UT1);
+			time = new TimeElement(astro, TimeElement.SCALE.UNIVERSAL_TIME_UT1);
 			String foregroundBody = testValues[5].trim(), backgroundBody = testValues[6].trim();
 
 			// Test with accurate ephemerides
@@ -329,7 +314,7 @@ public class TestElement implements Serializable {
 		case EPHEMERIDES_NATURAL_SATELLITES:
 			in = DataSet.toDoubleValues(DataSet.getSubArray(testValues, 0, 5));
 			astro = new AstroDate((int) in[0], (int) in[1], (int) in[2], (int) in[3], (int) in[4], (int) in[5]);
-			time = new TimeElement(astro, SCALE.UNIVERSAL_TIME_UTC);
+			time = new TimeElement(astro, TimeElement.SCALE.UNIVERSAL_TIME_UTC);
 			String cityName = testValues[6].trim();
 			CityElement city = City.findCity(cityName);
 			observer = ObserverElement.parseCity(city);
@@ -519,7 +504,7 @@ public class TestElement implements Serializable {
 
 			in = DataSet.toDoubleValues(DataSet.getSubArray(testValues, 0, 2));
 			astro = new AstroDate((int) in[0], (int) in[1], (int) in[2]);
-			time = new TimeElement(astro, SCALE.TERRESTRIAL_TIME);
+			time = new TimeElement(astro, TimeElement.SCALE.TERRESTRIAL_TIME);
 			TARGET body = Target.getIDFromEnglishName(testValues[3].trim());
 			double precision1 = Double.parseDouble(testValues[4].trim()) * Constant.ARCSEC_TO_RAD;
 			double precision2 = Double.parseDouble(testValues[5].trim());
@@ -678,7 +663,7 @@ public class TestElement implements Serializable {
 		case SIDEREAL_TIME_OBLIQUITY_AND_NUTATION:
 			in = DataSet.toDoubleValues(DataSet.getSubArray(testValues, 0, 2));
 			astro = new AstroDate((int) in[0], (int) in[1], (int) in[2]);
-			time = new TimeElement(astro, SCALE.UNIVERSAL_TIME_UT1);
+			time = new TimeElement(astro, TimeElement.SCALE.UNIVERSAL_TIME_UT1);
 
 			String what = testValues[3].trim().toLowerCase();
 			if (what.equals("siderealtime")) {
@@ -712,7 +697,7 @@ public class TestElement implements Serializable {
 			break;
 		case NATURAL_SATELLITES_AND_JPLDExxx_THEORIES:
 			astro = new AstroDate(Double.parseDouble(testValues[0]));
-			time = new TimeElement(astro, SCALE.TERRESTRIAL_TIME);
+			time = new TimeElement(astro, TimeElement.SCALE.TERRESTRIAL_TIME);
 
 			what = testValues[1].trim().toLowerCase();
 			int which = Integer.parseInt(testValues[2].trim());
@@ -793,7 +778,7 @@ public class TestElement implements Serializable {
 		case STARS:
 			in = DataSet.toDoubleValues(DataSet.getSubArray(testValues, 0, 5));
 			astro = new AstroDate((int) in[0], (int) in[1], (int) in[2], (int) in[3], (int) in[4], in[5]);
-			time = new TimeElement(astro, SCALE.UNIVERSAL_TIME_UT1);
+			time = new TimeElement(astro, TimeElement.SCALE.UNIVERSAL_TIME_UT1);
 
 			String name = testValues[6].trim();
 			SimbadElement simbad = SimbadQuery.query(name);
@@ -821,13 +806,13 @@ public class TestElement implements Serializable {
 		case MAIN_EVENTS:
 			in = DataSet.toDoubleValues(DataSet.getSubArray(testValues, 0, 2));
 			astro = new AstroDate((int) in[0], (int) in[1], (int) in[2]);
-			time = new TimeElement(astro, SCALE.UNIVERSAL_TIME_UT1);
+			time = new TimeElement(astro, TimeElement.SCALE.UNIVERSAL_TIME_UT1);
 
 			type = testValues[3].toLowerCase().trim();
 
 			if (type.equals("grs")) {
-				SimpleEventElement see = MainEvents.getJupiterGRSNextTransitTime(TimeScale.getJD(new TimeElement(astro.jd(), SCALE.UNIVERSAL_TIME_UT1), observer, eph, SCALE.BARYCENTRIC_DYNAMICAL_TIME));
-				foundValues = new String[] {TimeFormat.formatJulianDayAsDateAndTimeOnlyMinutes(new TimeElement(TimeScale.getJD(new TimeElement(see.time, SCALE.BARYCENTRIC_DYNAMICAL_TIME), observer, eph, SCALE.UNIVERSAL_TIME_UT1), SCALE.UNIVERSAL_TIME_UT1), true, true) };
+				SimpleEventElement see = MainEvents.getJupiterGRSNextTransitTime(TimeScale.getJD(new TimeElement(astro.jd(), TimeElement.SCALE.UNIVERSAL_TIME_UT1), observer, eph, SCALE.BARYCENTRIC_DYNAMICAL_TIME));
+				foundValues = new String[] {TimeFormat.formatJulianDayAsDateAndTimeOnlyMinutes(new TimeElement(TimeScale.getJD(new TimeElement(see.time, TimeElement.SCALE.BARYCENTRIC_DYNAMICAL_TIME), observer, eph, SCALE.UNIVERSAL_TIME_UT1), SCALE.UNIVERSAL_TIME_UT1), true, true) };
 			}
 			if (type.equals("moon")) {
 				SimpleEventElement see = MainEvents.MoonPhaseOrEclipse(astro.jd(), SimpleEventElement.EVENT.values()[Integer.parseInt(testValues[4].trim())], MainEvents.EVENT_TIME.values()[Integer.parseInt(testValues[5].trim())]);
@@ -835,16 +820,15 @@ public class TestElement implements Serializable {
 			}
 			if (type.equals("planet")) {
 				SimpleEventElement see = MainEvents.getPlanetaryEvent(TARGET.values()[Integer.parseInt(testValues[4].trim())], astro.jd(), SimpleEventElement.EVENT.values()[Integer.parseInt(testValues[5].trim())], MainEvents.EVENT_TIME.NEXT, true);
-				foundValues = new String[] {TimeFormat.formatJulianDayAsDateAndTime(new TimeElement(TimeScale.getJD(new TimeElement(see.time, SCALE.BARYCENTRIC_DYNAMICAL_TIME), observer, eph, SCALE.LOCAL_TIME), SCALE.LOCAL_TIME), true, true)};
+				foundValues = new String[] {TimeFormat.formatJulianDayAsDateAndTime(new TimeElement(TimeScale.getJD(new TimeElement(see.time, TimeElement.SCALE.BARYCENTRIC_DYNAMICAL_TIME), observer, eph, SCALE.LOCAL_TIME), SCALE.LOCAL_TIME), true, true)};
 			}
 			if (type.equals("equinoxsolstice")) {
-                city = City.findCity("Madrid");
-				SimpleEventElement see = MainEvents.EquinoxesAndSolstices(astro.getYear(), SimpleEventElement.EVENT.values()[Integer.parseInt(testValues[4].trim())], city);
-				foundValues = new String[] {TimeFormat.formatJulianDayAsDateAndTime(new TimeElement(TimeScale.getJD(new TimeElement(see.time, SCALE.BARYCENTRIC_DYNAMICAL_TIME), observer, eph, SCALE.LOCAL_TIME), SCALE.LOCAL_TIME), true, true)};
+				SimpleEventElement see = MainEvents.EquinoxesAndSolstices(astro.getYear(), SimpleEventElement.EVENT.values()[Integer.parseInt(testValues[4].trim())]);
+				foundValues = new String[] {TimeFormat.formatJulianDayAsDateAndTime(new TimeElement(TimeScale.getJD(new TimeElement(see.time, TimeElement.SCALE.BARYCENTRIC_DYNAMICAL_TIME), observer, eph, SCALE.LOCAL_TIME), SCALE.LOCAL_TIME), true, true)};
 			}
 			if (type.equals("transit")) {
 				SimpleEventElement see = MainEvents.getMercuryOrVenusTransit(TARGET.values()[Integer.parseInt(testValues[4].trim())], astro.jd(), astro.jd()+5*365.25, true);
-				foundValues = new String[] {TimeFormat.formatJulianDayAsDateAndTime(new TimeElement(TimeScale.getJD(new TimeElement(see.time, SCALE.BARYCENTRIC_DYNAMICAL_TIME), observer, eph, SCALE.LOCAL_TIME), SCALE.LOCAL_TIME), true, true)};
+				foundValues = new String[] {TimeFormat.formatJulianDayAsDateAndTime(new TimeElement(TimeScale.getJD(new TimeElement(see.time, TimeElement.SCALE.BARYCENTRIC_DYNAMICAL_TIME), observer, eph, SCALE.LOCAL_TIME), SCALE.LOCAL_TIME), true, true)};
 			}
 			if (type.equals("apogeeperigee")) {
 				int w = Integer.parseInt(testValues[4].trim());
@@ -856,7 +840,7 @@ public class TestElement implements Serializable {
 			}
 			if (type.equals("librations")) {
 				eph.isTopocentric = false;
-				time = new TimeElement(astro, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
+				time = new TimeElement(astro, TimeElement.SCALE.BARYCENTRIC_DYNAMICAL_TIME);
 				double r[] = LunarEvent.getEckhardtMoonLibrations(time, observer, eph);
 				foundValues = new String[] {"l = "+Functions.formatAngleAsDegrees(r[0], 2) + ", b = "+Functions.formatAngleAsDegrees(r[1], 2) + ", p = "+Functions.formatAngleAsDegrees(r[2], 2)};
 				foundValues = DataSet.toStringArray(foundValues[0], ",", true);
@@ -879,7 +863,7 @@ public class TestElement implements Serializable {
 		case DOUBLE_VARIABLE_STARS:
 			in = DataSet.toDoubleValues(DataSet.getSubArray(testValues, 0, 5));
 			astro = new AstroDate((int) in[0], (int) in[1], (int) in[2], (int) in[3], (int) in[4], in[5]);
-			time = new TimeElement(astro, SCALE.LOCAL_TIME);
+			time = new TimeElement(astro, TimeElement.SCALE.LOCAL_TIME);
 
 			type = testValues[6].toLowerCase().trim();
 			name = testValues[7].trim();
@@ -946,7 +930,7 @@ public class TestElement implements Serializable {
 
 			in = DataSet.toDoubleValues(DataSet.getSubArray(testValues, 0, 2));
 			astro = new AstroDate((int) in[0], (int) in[1], (int) in[2]);
-			time = new TimeElement(astro, SCALE.UNIVERSAL_TIME_UTC);
+			time = new TimeElement(astro, TimeElement.SCALE.UNIVERSAL_TIME_UTC);
 
 			type = testValues[3].toLowerCase().trim();
 			timeScale = testValues[4].trim();
@@ -959,12 +943,12 @@ public class TestElement implements Serializable {
 				foundValues = new String[events.length+1];
 				for (int i = 0; i < events.length; i++)
 				{
-					TimeElement t = new TimeElement(events[i].startTime, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
+					TimeElement t = new TimeElement(events[i].startTime, TimeElement.SCALE.BARYCENTRIC_DYNAMICAL_TIME);
 					jd = TimeScale.getJD(t, observer, eph, SCALE.values()[ts]);
 					if (events[i].startTime != 0.0)
 						foundValues[i] = TimeFormat.formatJulianDayAsDateAndTime(new TimeElement(jd, null), true, true) + " (" + events[i].details + ")";
 				}
-				TimeElement t = new TimeElement(se.getEclipseMaximum(), SCALE.BARYCENTRIC_DYNAMICAL_TIME);
+				TimeElement t = new TimeElement(se.getEclipseMaximum(), TimeElement.SCALE.BARYCENTRIC_DYNAMICAL_TIME);
 				jd = TimeScale.getJD(t, observer, eph, SCALE.values()[ts]);
 				foundValues[foundValues.length-1] = TimeFormat.formatJulianDayAsDateAndTime(new TimeElement(jd, null), true, true) + " (Eclipse maximum)";
 			}
@@ -977,12 +961,12 @@ public class TestElement implements Serializable {
 				foundValues = new String[events.length+1];
 				for (int i = 0; i < events.length; i++)
 				{
-					TimeElement t = new TimeElement(events[i].startTime, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
+					TimeElement t = new TimeElement(events[i].startTime, TimeElement.SCALE.BARYCENTRIC_DYNAMICAL_TIME);
 					jd = TimeScale.getJD(t, observer, eph, SCALE.values()[ts]);
 					if (events[i].startTime != 0.0)
 						foundValues[i] = TimeFormat.formatJulianDayAsDateAndTime(new TimeElement(jd, null), true, true) + " (" + events[i].details + ")";
 				}
-				TimeElement t = new TimeElement(le.getEclipseMaximum(), SCALE.BARYCENTRIC_DYNAMICAL_TIME);
+				TimeElement t = new TimeElement(le.getEclipseMaximum(), TimeElement.SCALE.BARYCENTRIC_DYNAMICAL_TIME);
 				jd = TimeScale.getJD(t, observer, eph, SCALE.values()[ts]);
 				foundValues[foundValues.length-1] = TimeFormat.formatJulianDayAsDateAndTime(new TimeElement(jd, null), true, true) + " (Eclipse maximum)";
 			}
@@ -1009,7 +993,7 @@ public class TestElement implements Serializable {
 
 			in = DataSet.toDoubleValues(DataSet.getSubArray(testValues, 0, 2));
 			astro = new AstroDate((int) in[0], (int) in[1], (int) in[2]);
-			time = new TimeElement(astro, SCALE.TERRESTRIAL_TIME);
+			time = new TimeElement(astro, TimeElement.SCALE.TERRESTRIAL_TIME);
 
 			String b = testValues[3].trim();
 			String method = testValues[4].toUpperCase().trim();
@@ -1067,8 +1051,8 @@ public class TestElement implements Serializable {
 			int hour = Integer.parseInt(FileIO.getField(1, eo1, " ", true));
 			int minute = Integer.parseInt(FileIO.getField(2, eo1, " ", true));
 			astro = new AstroDate((int) in[0], (int) in[1], (int) in[2], hour, minute - 8, 0.0);
-			time = new TimeElement(astro, SCALE.TERRESTRIAL_TIME);
-			
+			time = new TimeElement(astro, TimeElement.SCALE.TERRESTRIAL_TIME);
+
 			body = TARGET.values()[Integer.parseInt(testValues[3].trim())];
 			String event = testValues[4].toUpperCase().trim();
 
@@ -1079,7 +1063,7 @@ public class TestElement implements Serializable {
 			eph.algorithm = EphemerisElement.ALGORITHM.JPL_DE405;
 			eph.ephemMethod = EphemerisElement.REDUCTION_METHOD.IAU_1976;
 			eph.correctForEOP = false;
-			MoonEvent me = new MoonEvent(time, observer, eph, new TimeElement(astro.jd()+1.0/24.0, time.timeScale), 
+			MoonEvent me = new MoonEvent(time, observer, eph, new TimeElement(astro.jd()+1.0/24.0, time.timeScale),
 					precision, accuracy, false, MoonEvent.JUPITER_THEORY.E2x3, MoonEvent.SATURN_THEORY.TASS);
 			MoonEventElement ev[] = me.getMutualPhenomena(all);
 			TARGET first = TARGET.Io;
@@ -1096,7 +1080,7 @@ public class TestElement implements Serializable {
 				} else {
 					e += ""+(ev[i].mainBody.ordinal()-first.ordinal()+1);
 				}
-				
+
 				if (event.startsWith(e)) {
 					found = true;
 					//System.out.println(ev[i].startTime+"/"+ev[i].details);
@@ -1104,7 +1088,7 @@ public class TestElement implements Serializable {
 					//AstroDate max = new AstroDate((ev[i].startTime+ev[i].endTime) / 2.0);
 					AstroDate max = new AstroDate(Double.parseDouble(FileIO.getField(2, ev[i].details, ",", true)));
 					int duration = (int) (0.5 + (ev[i].endTime - ev[i].startTime) * Constant.SECONDS_PER_DAY);
-					
+
 					String o1 = prepareTime(start), o2 = prepareTime(max), o3 = ""+duration;
 					foundValues = new String[] {o1, o2, o3};
 //					if (getTimeDif(o1, eo1) > 30 || getTimeDif(o2, eo2) > 30 || Math.abs(duration-Integer.parseInt(eo3)) > 30)
@@ -1119,7 +1103,7 @@ public class TestElement implements Serializable {
 			in = DataSet.toDoubleValues(DataSet.getSubArray(testValues, 0, 5));
 			astro = new AstroDate((int) in[0], (int) in[1], (int) in[2], (int) in[3], (int) in[4], (int) in[5]);
 			time = new TimeElement(astro, TimeElement.fromTimeScaleAbbreviation(testValues[6].trim()));
-			
+
 			body = Target.getIDFromEnglishName(testValues[7].trim());
 			eph = new EphemerisElement(body, EphemerisElement.COORDINATES_TYPE.APPARENT,
 					EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.TOPOCENTRIC, EphemerisElement.REDUCTION_METHOD.IAU_1976,
@@ -1129,8 +1113,8 @@ public class TestElement implements Serializable {
 			String planet = obs.substring(0, obs.indexOf(" "));
 			System.out.println(obs);
 			String coord = obs.substring(obs.indexOf("(")+1, obs.indexOf(")"));
-			observer = ObserverElement.parseExtraterrestrialObserver(new ExtraterrestrialObserverElement(planet, Target.getIDFromEnglishName(planet), 
-					new LocationElement(Double.parseDouble(FileIO.getField(1, coord, " ", false).trim()) * Constant.DEG_TO_RAD, 
+			observer = ObserverElement.parseExtraterrestrialObserver(new ExtraterrestrialObserverElement(planet, Target.getIDFromEnglishName(planet),
+					new LocationElement(Double.parseDouble(FileIO.getField(1, coord, " ", false).trim()) * Constant.DEG_TO_RAD,
 							Double.parseDouble(FileIO.getField(2, coord, " ", false).trim())* Constant.DEG_TO_RAD, 0.0)));
 
 			pephem = Ephem.getEphemeris(time, observer, eph, false);
@@ -1141,16 +1125,16 @@ public class TestElement implements Serializable {
 			String sEl = Functions.formatAngle(pephem.elevation, 3);
 
 			String exp = DataSet.toString(expectedValues, ",").trim();
-			String fou = sRA+", "+sDEC+", "+sAz+", "+sEl; 
+			String fou = sRA+", "+sDEC+", "+sAz+", "+sEl;
 			if (!exp.equals(fou)) {
 				err += "Expected '"+exp+"', but found '"+fou+"'." + FileIO.getLineSeparator();
-			}		
+			}
 			break;
 		default:
 			this.out += "Found unsupported test: "+TEST_DESCRIPTION[testID.ordinal()]+FileIO.getLineSeparator();
 			break;
 		}
-		
+
 		if (err.equals(FileIO.getLineSeparator())) err = "";
 		Configuration.JPL_EPHEMERIDES_FILES_EXTERNAL_PATH = externalPath;
 	}
@@ -1177,7 +1161,7 @@ public class TestElement implements Serializable {
 	/**
 	 * The set of available tests.
 	 */
-	public static enum TEST {
+	public enum TEST {
 		/** ID constant for testing the atlas charts. */
 		ATLAS_CHART,
 		/** ID constant for testing the constellations. */
@@ -1221,7 +1205,7 @@ public class TestElement implements Serializable {
 		/** ID constant for selecting all tests. */
 		ALL,
 	};
-	
+
 	/**
 	 * Holds descriptions for the tests.
 	 */

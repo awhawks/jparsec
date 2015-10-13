@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,13 +18,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.vo;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-
 import java.util.Arrays;
+
 import jparsec.astrophysics.MeasureElement;
 import jparsec.astrophysics.Spectrum;
 import jparsec.astrophysics.photometry.*;
@@ -40,9 +40,9 @@ import jparsec.util.JPARSECException;
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
-public class VizierElement implements Serializable 
+public class VizierElement implements Serializable
 {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Name of catalog.
@@ -57,7 +57,7 @@ public class VizierElement implements Serializable
 	 */
 	public String catalogDescription;
 	/**
-	 * Beam of instrument in arcseconds, that can be used to search around an object 
+	 * Beam of instrument in arcseconds, that can be used to search around an object
 	 * inside the beam.
 	 */
 	public float beam;
@@ -70,7 +70,7 @@ public class VizierElement implements Serializable
 	public String[][] fields;
 	/**
 	 * Photometric bands used by the catalog. The name of the band should be set to
-	 * the name of the field that holds the flux for this band. The corresponding flux 
+	 * the name of the field that holds the flux for this band. The corresponding flux
 	 * error field name should be the same name as the flux plus the string "_ERROR".
 	 */
 	public PhotometricBandElement[] bands;
@@ -94,7 +94,7 @@ public class VizierElement implements Serializable
 	public String[] links;
 
 	private int tableIndex = 0;
-	
+
 	/**
 	 * Constructor.
 	 * @param name Name of catalog.
@@ -158,7 +158,7 @@ public class VizierElement implements Serializable
 					PhotometricBandElement.BAND_Ks_DENIS.setBandAndFieldName("MAG_K", "DENIS Ks BAND").clone()
 			}
 	);
-	
+
 	/**
 	 * Default object for 2MASS database.
 	 */
@@ -168,7 +168,7 @@ public class VizierElement implements Serializable
 			2.0f,
 			new String[][] {
 					new String[] {
-					"RAJ2000  RAJ2000", "DECJ2000  DEJ2000", "ID  2MASS", "MAG_J  Jmag", 
+					"RAJ2000  RAJ2000", "DECJ2000  DEJ2000", "ID  2MASS", "MAG_J  Jmag",
 					"MAG_J_ERROR  e_Jmag",
 					"MAG_H  Hmag", "MAG_H_ERROR  e_Hmag", "MAG_K  Kmag", "MAG_K_ERROR  e_Kmag",
 					"QUALITY  Qflg"
@@ -180,7 +180,7 @@ public class VizierElement implements Serializable
 					PhotometricBandElement.BAND_Ks_2MASS.setBandAndFieldName("MAG_K", "2MASS Ks BAND").clone()
 			}
 	);
-	
+
 	/**
 	 * Default object for USNO-B1 database.
 	 */
@@ -191,9 +191,9 @@ public class VizierElement implements Serializable
 			2.0f,
 			new String[][] {
 					new String[] {
-					"NAME  USNO-B1.0", "RAJ2000  RAJ2000", "DECJ2000  DEJ2000", 
+					"NAME  USNO-B1.0", "RAJ2000  RAJ2000", "DECJ2000  DEJ2000",
 					"RA_ERROR  e_RAdeg", "DEC_ERROR  e_DEdeg",
-					"EPOCH  Epoch", "PM_RA  pmRA", "PM_DEC  pmDE", "N_DET  Ndet", 
+					"EPOCH  Epoch", "PM_RA  pmRA", "PM_DEC  pmDE", "N_DET  Ndet",
 					"MAG_B1  B1mag", "MAG_R1  R1mag",
 					"MAG_B2  B2mag", "MAG_R2  R2mag", "MAG_I  Imag"
 					}
@@ -204,18 +204,18 @@ public class VizierElement implements Serializable
 					PhotometricBandElement.BAND_I_JOHNSON_MORGAN.setBandAndFieldName("MAG_I", "USNO I BAND").clone()
 			}
 	);
-	
+
 	/**
 	 * Default object for MSX6C database.
 	 */
 	public static final VizierElement MSX6C = new VizierElement(
 			"V/114", "Egan et al. 2003",
-			"MSX6C Infrared Point Source Catalog" //+ FileIO.getLineSeparator() + "The complete MSX6C catalogue in the Galactic Plane (|b|<=6\u00ba)"
+			"MSX6C Infrared Point Source Catalog" //+ FileIO.getLineSeparator() + "The complete MSX6C catalogue in the Galactic Plane (|b|<=6\u00b0)"
 			,
 			36.0f,
 			new String[][] {
 					new String[] {
-					"NAME  MSX6C", "RAJ2000  RAJ2000", "DECJ2000  DEJ2000", 
+					"NAME  MSX6C", "RAJ2000  RAJ2000", "DECJ2000  DEJ2000",
 					"POS_ERROR  ePos",
 					"MAG_B1  B1", "QUALITY_B1  q_B1", "MAG_B2  B2", "QUALITY_B2  q_B2",
 					"MAG_A  A", "QUALITY_A  q_A", "MAG_C  C", "QUALITY_C  q_C",
@@ -231,7 +231,7 @@ public class VizierElement implements Serializable
 					PhotometricBandElement.BAND_E_MSX6C.setBandAndFieldName("MAG_E", "MSX6C E BAND").clone()
 			}
 	);
-	
+
 	/**
 	 * Default object for IRAS database.
 	 */
@@ -242,9 +242,9 @@ public class VizierElement implements Serializable
 			new String[][] {
 					new String[] {
 					"NAME  IRAS", "RA1950  RA1950", "DEC1950  DE1950", "FLUX_12  Fnu_12",
-					"FLUX_25  Fnu_25", "FLUX_60  Fnu_60", "FLUX_100  Fnu_100", 
+					"FLUX_25  Fnu_25", "FLUX_60  Fnu_60", "FLUX_100  Fnu_100",
 					"QUALITY_12  q_Fnu_12",
-					"QUALITY_25  q_Fnu_25", "QUALITY_60  q_Fnu_60", 
+					"QUALITY_25  q_Fnu_25", "QUALITY_60  q_Fnu_60",
 					"QUALITY_100  q_Fnu_100",
 					}
 			},
@@ -266,9 +266,9 @@ public class VizierElement implements Serializable
 			new String[][] {
 					new String[] {
 					"TYPE  St", "NAME  Name", "SPECTRAL_TYPE  SpType", "LIMIT_FLAT_S  l_S(250)",
-					"S250  S(250)", "S250_ERROR  e_S(250)", "LIMIT_FLAG_SPECTRAL_INDEX  l_alf", 
+					"S250  S(250)", "S250_ERROR  e_S(250)", "LIMIT_FLAG_SPECTRAL_INDEX  l_alf",
 					"SPECTRAL_INDEX  alf",
-					"RMS_SPECTRAL_INDEX  e_alf", "UNCERTAINTY_ALF  u_alf", 
+					"RMS_SPECTRAL_INDEX  e_alf", "UNCERTAINTY_ALF  u_alf",
 					"REMARKS  Rem", "SIMBAD  SimbadName", "RAJ2000  _RA", " DECJ2000  _DE"
 					}
 			},
@@ -287,9 +287,9 @@ public class VizierElement implements Serializable
 			new String[][] {
 					new String[] {
 					"ID  TD1", "NAME_HD  HD", "MAG_V  Vmag", "SpType  SpType",
-					"RA1950  RA1950", "DEC1950  DE1950", "F2740  F2740", 
+					"RA1950  RA1950", "DEC1950  DE1950", "F2740  F2740",
 					"F2365  F2365",
-					"F1965  F1965", "F1565  F1565", 
+					"F1965  F1965", "F1565  F1565",
 					"REMARKS  Rem", "SIMBAD  SimbadName", "RAJ2000  _RA", " DECJ2000  _DE"
 					}
 			},
@@ -311,9 +311,9 @@ public class VizierElement implements Serializable
 			2.0f,
 			new String[][] {
 					new String[] {
-					"NAME  LID", "SUFFIX  n_LID", "MAG_U  U", "MAG_B  B", 
+					"NAME  LID", "SUFFIX  n_LID", "MAG_U  U", "MAG_B  B",
 					"MAG_V  V", "MAG_R  R",
-					"MAG_I  I", "MAG_J  J", "MAG_K  K", "MAG_L  L", "MAG_M  M", 
+					"MAG_I  I", "MAG_J  J", "MAG_K  K", "MAG_L  L", "MAG_M  M",
 					"MAG_N  N",	"MAG_H  H", "REF  ref", "RAJ2000  _RA", "DECJ2000 _DE"
 					}
 			},
@@ -379,21 +379,21 @@ public class VizierElement implements Serializable
 			2.0f,
 			new String[][] {
 					new String[] {
-					"PROGRAM_CODE  Prog", "SOURCE  Source", "DATE_INI  Obs", 
+					"PROGRAM_CODE  Prog", "SOURCE  Source", "DATE_INI  Obs",
 					"INT_TIME  tos", "PROGRAM_TYPE  Type", "VEL  Vel",
-					"LSR_VEL  n_Vel", "FREQ_3MM  F3mm", "N_FREQ_3MM  n_F3mm", 
+					"LSR_VEL  n_Vel", "FREQ_3MM  F3mm", "N_FREQ_3MM  n_F3mm",
 					"FREQ_1MM  F1mm", "N_FREQ_1MM  n_F1mm", "CONF  Conf",
 					"RAJ2000  RAJ2000", "DECJ2000  DEJ2000"
 					},
 					new String[] {
-						"SOURCE  Name", "DATE_INI  Obs", "OBS_MODE  obsMode", "SCAN  scan", "TAU  tau", 
-						"RECEIVER  receiv", "LINE  line", "FREQ  Freq", "RAJ2000  RAJ2000", "DECJ2000  DEJ2000"							
+						"SOURCE  Name", "DATE_INI  Obs", "OBS_MODE  obsMode", "SCAN  scan", "TAU  tau",
+						"RECEIVER  receiv", "LINE  line", "FREQ  Freq", "RAJ2000  RAJ2000", "DECJ2000  DEJ2000"
 					}
 			},
 			new PhotometricBandElement[] {
 			}
 	);
-	
+
 	/**
 	 * Default object for ISO database.
 	 */
@@ -420,9 +420,9 @@ public class VizierElement implements Serializable
 			15.0f, // Doubts/problems
 			new String[][] {
 					new String[] {
-					"ID_NUMBER  Seq", "CODE_ERROR  u_Seq", "ID_ALTERNATIVE  HBC", 
+					"ID_NUMBER  Seq", "CODE_ERROR  u_Seq", "ID_ALTERNATIVE  HBC",
 					"SOURCE  Name", "OTHER NAME  OName", "SPECTRAL_TYPE  SpType",
-					"TYPE  Cat", "NOTE  n_Cat", "NUMBER_OF_OBSERVATIONS  N", 
+					"TYPE  Cat", "NOTE  n_Cat", "NUMBER_OF_OBSERVATIONS  N",
 					"CODE_MISC  sp", "PLOT_DATA_LINK  Plot", "SIMBAD_DATA_LINK  Simbad",
 					"RAJ2000  _RA", "DECJ2000  _DE"
 					}
@@ -434,7 +434,7 @@ public class VizierElement implements Serializable
 					"SIMBAD_DATA_LINK  http://simbad.u-strasbg.fr/simbad/sim-id?Ident=<SOURCE>%20"
 			}
 	);
-	
+
 	/**
 	 * Default object for Wendker catalog of radio continuum emission from stars.
 	 */
@@ -444,7 +444,7 @@ public class VizierElement implements Serializable
 			1.0f,
 			new String[][] {
 					new String[] {
-					"ID  Seq", "NAME  Name", "ALIAS  Alias", 
+					"ID  Seq", "NAME  Name", "ALIAS  Alias",
 					"DETECTED  Det", "RA1950  RA1950", "DEC1950  DE1950",
 					"DATA_LINK  Data"
 					}
@@ -455,7 +455,7 @@ public class VizierElement implements Serializable
 					"DATA_LINK  http://cdsarc.u-strasbg.fr/viz-bin/vizExec/getstar?II/199A&<ID>"
 			}
 	);
-	
+
 	/**
 	 * Default object for IUE database.
 	 */
@@ -465,7 +465,7 @@ public class VizierElement implements Serializable
 			15.0f,
 			new String[][] {
 					new String[] {
-					"DATE_INI  Obs", "INT_TIME  ExpTime", "SOURCE  Object", 
+					"DATE_INI  Obs", "INT_TIME  ExpTime", "SOURCE  Object",
 					"RAJ2000  RA2000", "DECJ2000  DE2000",
 					"CLASS  IUEClass", "SPECTRUM_LINK  Spectrum"
 					}
@@ -476,7 +476,7 @@ public class VizierElement implements Serializable
 					"SPECTRUM_LINK  http://sdc.laeff.inta.es/cgi-ines/IUEdbsMY?rd_mm=0&rd_ss=<SEARCH_RADIUS>&object=<SOURCE>"
 			}
 	);
-	
+
 	/**
 	 * Default object for VLA 1.4 GHz sky survey database.
 	 */
@@ -495,10 +495,10 @@ public class VizierElement implements Serializable
 					PhotometricBandElement.BAND_1p4GHz_VLA.setBandAndFieldName("S1_4", "NVSS (VLA) 1.4GHz").clone()
 			},
 			new String[] {
-					"IMAGE_LINK   http://www.cv.nrao.edu/cgi-bin/postage.pl?RA=<RAJ2000>&Dec=<DECJ2000>&Cells=5.0%205.0&Type=image/x-fits"					
+					"IMAGE_LINK   http://www.cv.nrao.edu/cgi-bin/postage.pl?RA=<RAJ2000>&Dec=<DECJ2000>&Cells=5.0%205.0&Type=image/x-fits"
 			}
 	);
-	
+
 	/**
 	 * Default object for WISE sky survey database.
 	 */
@@ -508,7 +508,7 @@ public class VizierElement implements Serializable
 			12.0f,
 			new String[][] {
 					new String[] {
-					"SOURCE  AllWISE", "RAJ2000  RAJ2000", "DECJ2000  DEJ2000", 
+					"SOURCE  AllWISE", "RAJ2000  RAJ2000", "DECJ2000  DEJ2000",
 					"W1  W1mag", "W1_ERROR  e_W1mag",
 					"W2  W2mag", "W2_ERROR  e_W2mag",
 					"W3  W3mag", "W3_ERROR  e_W3mag",
@@ -532,7 +532,7 @@ public class VizierElement implements Serializable
 			8.0f,
 			new String[][] {
 					new String[] {
-					"SOURCE  objName", "RAJ2000  RAJ2000", "DECJ2000  DEJ2000", 
+					"SOURCE  objName", "RAJ2000  RAJ2000", "DECJ2000  DEJ2000",
 					"S65  S65", "S65_ERROR  e_S65",
 					"S90  S90", "S90_ERROR  e_S90",
 					"S140  S140", "S140_ERROR  e_S140",
@@ -548,19 +548,19 @@ public class VizierElement implements Serializable
 	);
 
 	private static final VizierElement[] ALL = new VizierElement[] {
-		DENIS, 
-		_2MASS, 
-		USNO_B1, 
-		MSX6C, 
-		UBVRIJKLMNH, 
-		IRAS, 
+		DENIS,
+		_2MASS,
+		USNO_B1,
+		MSX6C,
+		UBVRIJKLMNH,
+		IRAS,
 		TYCHO2,
 		RADIO,
 		//UV,
 		PdBI, ISO, IUE, IUE_PRE_MAIN, VLA, Wendker, KHARCHENKO,
 		WISE, AKARI
 	};
-	
+
 	/**
 	 * Gets one of the predefined Vizier objects from its name.
 	 * @param name Name. If the name cannot be found, the search will be extended
@@ -571,7 +571,7 @@ public class VizierElement implements Serializable
 	{
 		VizierElement elem = null;
 		if (name == null || name.equals("")) return elem;
-		
+
 		for (int i=0; i<ALL.length; i++)
 		{
 			if (ALL[i].catalogName.toLowerCase().equals(name.toLowerCase())) {
@@ -581,7 +581,7 @@ public class VizierElement implements Serializable
 		}
 		return elem;
 	}
-	
+
 	/**
 	 * Checks if certain {@linkplain PhotometricBandElement} is present in this instance.
 	 * @param band A band element.
@@ -596,7 +596,7 @@ public class VizierElement implements Serializable
 		}
 		return belongs;
 	}
-	
+
 
 	/**
 	 * Obtains the fluxes for a given Vizier element as an spectrum.
@@ -628,7 +628,7 @@ public class VizierElement implements Serializable
 	throws JPARSECException {
 		if (bandName == null) bandName = "";
 		bandName = bandName.trim();
-		
+
 		ArrayList<String> out = new ArrayList<String>();
 		for (int i=0; i<this.bands.length; i++)
 		{
@@ -636,50 +636,50 @@ public class VizierElement implements Serializable
 			{
 				int nData = 1;
 				if (allFluxes) nData = this.data.size();
-								
+
 				ArrayList<String> pond = new ArrayList<String>();
 				for (int j=0; j<nData; j++)
 				{
 					String f[] = this.getFluxAndError(i, j);
 					if (f != null) {
-						String flux = f[0], fluxError = f[1];					
+						String flux = f[0], fluxError = f[1];
 						flux = flux.trim();
 						if (!flux.equals("")) {
 							MeasureElement fluxAndError = Photometry.getFluxFromMagnitude(
-									DataSet.parseDouble(flux), 
-									DataSet.parseDouble(fluxError), 
+									DataSet.parseDouble(flux),
+									DataSet.parseDouble(fluxError),
 									this.bands[i]);
-	
+
 							String adding = "   "+this.bands[i].name+"   "+this.bands[i].beam;
 							if (fluxAndError.getValue() > 0.0) {
 								pond.add(""+this.bands[i].effectiveWavelength*Constant.MICRON_TO_CM+"   "+(fluxAndError.getValue()*1.0E3)+"   "+(fluxAndError.error*1.0E3)+adding);
-	
+
 								out.add(""+this.bands[i].effectiveWavelength*Constant.MICRON_TO_CM+"   "+(fluxAndError.getValue()*1.0E3)+"   "+(fluxAndError.error*1.0E3)+adding);
 							}
 						}
 					}
-				}				
+				}
 			}
 		}
-		
+
 		if (VizierElement.TYCHO2.equalsExceptForTheData(this) &&
 				this.data.size() == 1 && out.size() == 2) {
 			String fB[] = this.getFluxAndError(0, 0);
-			String fV[] = this.getFluxAndError(1, 0);		
-			
+			String fV[] = this.getFluxAndError(1, 0);
+
 			if (fB != null && fV != null) {
 				double mB = DataSet.parseDouble(fB[0]);
 				double mV = DataSet.parseDouble(fV[0]);
 				double newM[] = Photometry.getApproximateJohnsonBVFromTycho(mB, mV, use_ESA_method);
 				MeasureElement fluxAndErrorB = Photometry.getFluxFromMagnitude(
-						newM[0], 
-						DataSet.parseDouble(fB[1]), 
+						newM[0],
+						DataSet.parseDouble(fB[1]),
 						this.bands[0]);
 				MeasureElement fluxAndErrorV = Photometry.getFluxFromMagnitude(
-						newM[1], 
-						DataSet.parseDouble(fV[1]), 
+						newM[1],
+						DataSet.parseDouble(fV[1]),
 						this.bands[1]);
-	
+
 				String lB = out.get(0);
 				String lV = out.get(1);
 				String newlB = FileIO.getField(1, lB, " ", true) + "   "+(fluxAndErrorB.getValue()*1.0E3) + "   "+(fluxAndErrorB.error*1.0E3);
@@ -690,13 +690,13 @@ public class VizierElement implements Serializable
 				out.add(newlB);
 				out.add(newlV);
 			} else {
-				JPARSECException.addWarning("cannot correct Tycho-2 magnitudes to Johnson system.");				
+				JPARSECException.addWarning("cannot correct Tycho-2 magnitudes to Johnson system.");
 			}
 		} else {
 			if (VizierElement.TYCHO2.equalsExceptForTheData(this))
 				JPARSECException.addWarning("cannot correct Tycho-2 magnitudes to Johnson system.");
 		}
-		
+
 		if (this.bands.length == 0 && VizierElement.IUE_PRE_MAIN.equalsExceptForTheData(this) &&
 				this.data.size() == 1) {
 			try {
@@ -766,7 +766,7 @@ public class VizierElement implements Serializable
 
 		return DataSet.arrayListToStringArray(out);
 	}
-	
+
 	/**
 	 * Obtains the index of a given field in the Vizier catalogue.
 	 * @param fieldName Field name as stablished in the JPARSEC convention.
@@ -780,21 +780,21 @@ public class VizierElement implements Serializable
 		int vizierFieldIndex = DataSet.getIndex(this.dataFields, vizierFieldName);
 		return vizierFieldIndex;
 	}
-	
+
 	private String[] getFluxAndError(int i, int j)
 	throws JPARSECException {
 		int vizierFieldIndex = this.getVizierFieldIndex(this.bands[i].fieldName);
 		int vizierFieldErrorIndex = this.getVizierFieldIndex(this.bands[i].fieldName+"_ERROR");
-				
+
 		if (vizierFieldIndex == -1) {
 			return null;
 		}
-		
+
 		String[] record = this.data.get(j);
 		String flux = record[vizierFieldIndex];
 		String fluxError = "";
 		if (vizierFieldErrorIndex >= 0) fluxError = record[vizierFieldErrorIndex];
-		
+
 		if (flux.indexOf("   ") >= 0) {
 			fluxError = FileIO.getField(2, flux, " ", true);
 			flux = FileIO.getField(1, flux, " ", true);
@@ -804,7 +804,7 @@ public class VizierElement implements Serializable
 		fluxError = fluxError.trim();
 		if (flux.equals("")) return null;
 		if (fluxError.equals("")) fluxError = "0";
-		
+
 		double fluxValue = DataSet.parseDouble(flux);
 		if (fluxValue > 30.0 && this.bands[i].fluxGivenAsMagnitude) {
 			return null;
@@ -829,14 +829,14 @@ public class VizierElement implements Serializable
 				 }
 			}
 		}
-		
+
 		return new String[] {flux, fluxError};
 	}
 
 	/**
 	 * Returns field position from a name.
 	 * @param fieldName Field name.
-	 * @return Position in {@linkplain VizierElement#fields} 
+	 * @return Position in {@linkplain VizierElement#fields}
 	 * array, or -1 if it is not found.
 	 */
 	public int getFieldPosition(String fieldName)
@@ -851,6 +851,7 @@ public class VizierElement implements Serializable
 		}
 		return out;
 	}
+
 
 	/**
 	 * Checks if this element is equal to another one.
@@ -902,21 +903,14 @@ public class VizierElement implements Serializable
 	 */
 	public boolean equalsExceptForTheData(VizierElement v)
 	{
-		if (v == null) {
-			if (this == null) return true;
-			return false;
-		}
-		if (this == null) {
-			return false;
-		}
-		boolean isEqual = true;
-		
-		if (v.beam != this.beam) isEqual = false;
-		if (!v.catalogAuthor.equals(this.catalogAuthor)) isEqual = false;
-		if (!v.catalogDescription.equals(this.catalogDescription)) isEqual = false;
-		if (!v.catalogName.equals(this.catalogName)) isEqual = false;
+		if (v == null) return false;
 
-		if (!isEqual || fields.length != v.fields.length) return false;
+		if (v.beam != this.beam) return false;
+		if (!v.catalogAuthor.equals(this.catalogAuthor)) return false;
+		if (!v.catalogDescription.equals(this.catalogDescription)) return false;
+		if (!v.catalogName.equals(this.catalogName)) return false;
+
+		if (fields.length != v.fields.length) return false;
 		for (int in=0; in<fields.length; in++) {
 			for (int i=0; i<this.fields[in].length; i++)
 			{
@@ -924,25 +918,25 @@ public class VizierElement implements Serializable
 				String f2 = null;
 				if (this.fields[in].length == v.fields[in].length) {
 					f2 = v.fields[in][i];
-					if (!f1.equals(f2)) isEqual = false;
+					if (!f1.equals(f2)) return false;
 				} else {
-					isEqual = false;
-				}			
+					return false;
+				}
 			}
 		}
-		
+
 		for (int i=0; i<this.bands.length; i++)
 		{
 			if (v.bands.length != this.bands.length) {
-				isEqual = false;
+				return false;
 			} else {
-				if (!this.bands[i].equals(v.bands[i])) isEqual = false;
+				if (!this.bands[i].equals(v.bands[i])) return false;
 			}
 		}
-		
-		return isEqual;
+
+		return true;
 	}
-	
+
 	/**
 	 * To clone the object.
 	 */
@@ -954,7 +948,7 @@ public class VizierElement implements Serializable
 		{
 			bands[i] = this.bands[i].clone();
 		}
-		
+
 		VizierElement v = new VizierElement(this.catalogName, this.catalogAuthor,
 				this.catalogDescription, this.beam, this.fields.clone(), bands);
 		v.data = null;
@@ -972,12 +966,12 @@ public class VizierElement implements Serializable
 		if (unit != null) v.unit = this.unit;
 		return v;
 	}
-	
+
 	/**
 	 * Sets the table index for this Vizier object. This value
-	 * is automatically set in JPARSEC by means of the 
-	 * {@linkplain VizierQuery#readVOTable(cds.savot.model.SavotVOTable, jparsec.observer.LocationElement)}. 
-	 * 
+	 * is automatically set in JPARSEC by means of the
+	 * {@linkplain VizierQuery#readVOTable(cds.savot.model.SavotVOTable, jparsec.observer.LocationElement)}.
+	 *
 	 * @param index The table index, 0 for the first (default
 	 * value), 1 for the second, and so on.
 	 */

@@ -73,16 +73,16 @@ public class RenderSatelliteTest {
                     SatelliteEphem.getArtificialSatelliteTargetIndex(name[1])
             };
             long t0 = System.currentTimeMillis();
-            if (satRender.getEphemSat() != null && satRender.getEphemSat().length > 0) {
-                for (int i = 0; i < satRender.getEphemSat().length; i++) {
-                    if (satRender.getEphemSat()[i] != null) {
+            if (satRender.getSatelliteEphem() != null && satRender.getSatelliteEphem().length > 0) {
+                for (int i = 0; i < satRender.getSatelliteEphem().length; i++) {
+                    if (satRender.getSatelliteEphem()[i] != null) {
                         SatelliteOrbitalElement sat = SatelliteEphem.getArtificialSatelliteOrbitalElement(sources[i]);
-                        satRender.getEphemSat()[i].nextPass = SatelliteEphem.getNextPass(time, observer, eph, sat, min_elevation, max, true);
+                        satRender.getSatelliteEphem()[i].nextPass = SatelliteEphem.getNextPass(time, observer, eph, sat, min_elevation, max, true);
                         double dt = (System.currentTimeMillis() - t0) / 1000.0;
-                        if (satRender.getEphemSat()[i].nextPass != 0.0) {
-                            System.out.println(satRender.getEphemSat()[i].name + ": " + dt + "/" + TimeFormat.formatJulianDayAsDateAndTime(Math.abs(satRender.getEphemSat()[i].nextPass), TimeElement.SCALE.LOCAL_TIME));
+                        if (satRender.getSatelliteEphem()[i].nextPass != 0.0) {
+                            System.out.println(satRender.getSatelliteEphem()[i].name + ": " + dt + "/" + TimeFormat.formatJulianDayAsDateAndTime(Math.abs(satRender.getSatelliteEphem()[i].nextPass), TimeElement.SCALE.LOCAL_TIME));
                         } else {
-                            System.out.println(satRender.getEphemSat()[i].name + ": " + dt + "/" + "No pass in the next " + max + " days.");
+                            System.out.println(satRender.getSatelliteEphem()[i].name + ": " + dt + "/" + "No pass in the next " + max + " days.");
                         }
                     }
                 }

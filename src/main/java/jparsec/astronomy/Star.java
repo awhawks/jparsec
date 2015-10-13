@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.astronomy;
 
 import jparsec.ephem.Ephem;
@@ -42,9 +42,9 @@ import jparsec.time.TimeElement.SCALE;
 import jparsec.util.JPARSECException;
 
 /**
- * Class that performs some simple calculations about star properties, including 
+ * Class that performs some simple calculations about star properties, including
  * simple photometry and extinction.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -52,10 +52,10 @@ public class Star
 {
 	// private constructor so that this class cannot be instantiated.
 	private Star() {}
-	
+
 	/**
 	 * Calculate luminosity ratio L1/L2.
-	 * 
+	 *
 	 * @param m1 Absolute magnitude of body 1.
 	 * @param m2 Absolute magnitude of body 2.
 	 * @return Luminosity ratio.
@@ -83,9 +83,9 @@ public class Star
 		double m = m2 - 2.5 * Math.log10(1.0 + lum);
 		return m;
 	}
-	
+
 	/**
-	 * Returns the magnitude difference between two fluxes measured in 
+	 * Returns the magnitude difference between two fluxes measured in
 	 * different bands for the same object.
 	 * @param flux1 Flux for band 1.
 	 * @param flux2 Flux for band 2.
@@ -94,10 +94,10 @@ public class Star
 	public static double getMagnitudeDifference(double flux1, double flux2) {
 		return -2.5 * Math.log10(flux1 / flux2);
 	}
-	
+
 	/**
 	 * Obtain absolute magnitude.
-	 * 
+	 *
 	 * @param ap_mag Apparent magnitude.
 	 * @param dist Distance in parsec.
 	 * @return Absolute magnitude.
@@ -110,7 +110,7 @@ public class Star
 
 	/**
 	 * Gets the distance of a star.
-	 * 
+	 *
 	 * @param ap_mag Apparent magnitude.
 	 * @param abs_mag Absolute magnitude.
 	 * @return The distance in parsec.
@@ -135,7 +135,7 @@ public class Star
 	/**
 	 * Obtains the dynamical parallax in a double star system
 	 * using Kepler's third law.
-	 * 
+	 *
 	 * @param a Distance (semi-major axis) in arcseconds.
 	 * @param P Period in years.
 	 * @param M Mass of the system in solar masses.
@@ -149,7 +149,7 @@ public class Star
 
 	/**
 	 * Obtains gravitational energy of a body in J.
-	 * 
+	 *
 	 * @param M Mass in solar masses.
 	 * @param r Radius in solar radii.
 	 * @return Energy in J.
@@ -163,7 +163,7 @@ public class Star
 	/**
 	 * Obtains gravitational time scale, or the maximum time a given body could
 	 * radiate energy during a contraction phase.
-	 * 
+	 *
 	 * @param M Mass in solar masses.
 	 * @param r Radius in solar radii.
 	 * @param L Luminosity in J/s.
@@ -178,7 +178,7 @@ public class Star
 	/**
 	 * Obtains Schwartzchild radius for an object of certain mass. If the radius
 	 * is lower than this value, then the object is a black hole.
-	 * 
+	 *
 	 * @param M Mass in solar masses.
 	 * @return Radius in solar radii.
 	 */
@@ -192,7 +192,7 @@ public class Star
 	/**
 	 * Obtain wind mass lost ratio in solar masses by year. The effect in
 	 * stellar evolution is negligible except in high mass stars.
-	 * 
+	 *
 	 * @param n Proton density in cm^-3 at certain distance from the star.
 	 *        Typical value of 7 for the Sun.
 	 * @param v Proton velocity in km/s at the same distance. Typical value of
@@ -211,7 +211,7 @@ public class Star
 
 	/**
 	 * Returns the mass of an object using Kepler's third law.
-	 * 
+	 *
 	 * @param a Distance of a measure in AU.
 	 * @param P Orbital period at that position in years.
 	 * @return Mass in solar masses.
@@ -225,7 +225,7 @@ public class Star
 
 	/**
 	 * Obtain total flux of a black body at certain temperature.
-	 * 
+	 *
 	 * @param T Effective temperature.
 	 * @return Flux in W/m^2.
 	 */
@@ -245,7 +245,7 @@ public class Star
 	 * Al alternative approach for this result is given with the method to compute
 	 * the luminosity using the Fabber-Jackson relation, that can also be applied to
 	 * spirals.
-	 * 
+	 *
 	 * @param v Rotation velocity in km/s in the outer galaxy.
 	 * @return Luminosity in solar units.
 	 */
@@ -260,13 +260,13 @@ public class Star
 
 	/**
 	 * Applies Fabber-Jackson relation for obtaining the luminosity of an
-	 * elliptical galaxy. This relation is a power law with index 4.55, 
+	 * elliptical galaxy. This relation is a power law with index 4.55,
 	 * calibrated using the Milky Way with a total luminosity of 4.5E10 Lsun
 	 * (Portinari 2005), and circular velocity (or dispersion in case of
-	 * ellipticals) of 250 km/s (Turner 2013). This method can also be applied 
+	 * ellipticals) of 250 km/s (Turner 2013). This method can also be applied
 	 * as the Tully Fisher relation by providing the circular velocity instead
 	 * of velocity dispersion.
-	 * 
+	 *
 	 * @param sigma Velocity dispersion in km/s in the inner region.
 	 * @return Luminosity in solar units.
 	 */
@@ -283,7 +283,7 @@ public class Star
 
 	/**
 	 * Calculates Sechter luminosity function.
-	 * 
+	 *
 	 * @param L Luminosity in solar units.
 	 * @param alfa Slope parameter.
 	 * @return Number of objects per unit of luminosity, dN/dL.
@@ -300,7 +300,7 @@ public class Star
 
 	/**
 	 * Obtains gamma function for evaluating Sechter luminosity function.
-	 * 
+	 *
 	 * @param alfa Slope parameter. Must be integer or half-integer.
 	 * @return Value of the function.
 	 */
@@ -324,7 +324,7 @@ public class Star
 
 	/**
 	 * Obtains gravitational redshift.
-	 * 
+	 *
 	 * @param M Mass in solar masses.
 	 * @param R Radio in solar radii.
 	 * @return Redshift z.
@@ -339,7 +339,7 @@ public class Star
 
 	/**
 	 * Obtains cosmological redshift.
-	 * 
+	 *
 	 * @param v Velocity of the source in m/s.
 	 * @return Redshift z.
 	 */
@@ -352,9 +352,9 @@ public class Star
 
 	/**
 	 * Obtains the contribution of the motion of the Sun in the galaxy to the redshift.
-	 * It is supposed that the Sun moves at 250 km/s (see Turner 2013) towards a direction 
-	 * l = 90&ordm;, b = 0&ordm;, in galactic coordinates.
-	 * 
+	 * It is supposed that the Sun moves at 250 km/s (see Turner 2013) towards a direction
+	 * l = 90&deg;, b = 0&deg;, in galactic coordinates.
+	 *
 	 * @param loc Galactic coordination of the source.
 	 * @return Contribution of the Sun movement in the galaxy to the redshift
 	 * towards the given direction.
@@ -369,7 +369,7 @@ public class Star
 	/**
 	 * Obtain wavelength of the peak emission of a black body applying Wien's
 	 * approximation.
-	 * 
+	 *
 	 * @param T Temperature in K.
 	 * @return Wavelength in m.
 	 */
@@ -380,7 +380,7 @@ public class Star
 
 	/**
 	 * Evaluates Planck's function.
-	 * 
+	 *
 	 * @param T Temperature in K.
 	 * @param lambda Wavelength in m.
 	 * @return B in Jy/sr.
@@ -397,7 +397,7 @@ public class Star
 
 	/**
 	 * Evaluates Planck's function.
-	 * 
+	 *
 	 * @param T Temperature in K.
 	 * @param nu Frequency in Hz.
 	 * @return B in Jy/sr.
@@ -414,7 +414,7 @@ public class Star
 	/**
 	 * Evaluates error of Planck's function, taking into account certain error
 	 * in the temperature.
-	 * 
+	 *
 	 * @param T Temperature in K.
 	 * @param dT Temperature error in K.
 	 * @param lambda Wavelength in m.
@@ -434,7 +434,7 @@ public class Star
 
 	/**
 	 * Obtains surface brightness of an object.
-	 * 
+	 *
 	 * @param m Magnitude.
 	 * @param r Radius in arcseconds. If the object is not circular, an
 	 *        equivalent value can be given so that the area (PI * r^2) in equal
@@ -445,7 +445,7 @@ public class Star
 	{
 		double bright = 0.0;
 		if (r <= 0.0) return bright;
-		
+
 		double area = Math.PI * (r / 60.0) * (r / 60.0);
 		double s1 = m + Math.log(area) / Math.log(Math.pow(100.0, 0.2));
 		bright = s1 + 8.890756;
@@ -492,34 +492,34 @@ public class Star
 		double time = 1.0E10 * mass / getLuminosityFromMassLuminosityRelation(mass);
 		return time;
 	}
-	
+
 	/**
 	 * Obtains star radius.
-	 * 
+	 *
 	 * @param luminosity Luminosity in solar units.
 	 * @param temperature Temperature in K.
 	 * @return Radius in solar radii.
 	 */
 	public static double getStarRadius(double luminosity, double temperature)
 	{
-		return Math.sqrt(luminosity * Constant.SUN_LUMINOSITY / (4.0 * Math.PI * Constant.STEFAN_BOLTZMANN_CONSTANT * 
+		return Math.sqrt(luminosity * Constant.SUN_LUMINOSITY / (4.0 * Math.PI * Constant.STEFAN_BOLTZMANN_CONSTANT *
 				Math.pow(temperature, 4.0))) / (Constant.SUN_RADIUS * 1000.0);
 	}
 	/**
 	 * Obtains star luminosity.
-	 * 
+	 *
 	 * @param radius Radius in solar units.
 	 * @param temperature Temperature in K.
 	 * @return Luminosity in solar units.
 	 */
 	public static double getStarLuminosity(double radius, double temperature)
 	{
-		double luminosity =  Math.pow(radius * Constant.SUN_RADIUS * 1000.0, 2.0) * 
+		double luminosity =  Math.pow(radius * Constant.SUN_RADIUS * 1000.0, 2.0) *
 			(4.0 * Math.PI * Constant.STEFAN_BOLTZMANN_CONSTANT * Math.pow(temperature, 4.0));
 
 		return luminosity / Constant.SUN_LUMINOSITY;
 	}
-	
+
 	/**
 	 * Obtain distance modulus
 	 * @param distance Distance in pc.
@@ -561,7 +561,7 @@ public class Star
 		double mag = 2.5 * Math.log(fluxComparison / flux) / Math.log(10.0) + magComparison;
 		return mag;
 	}
-	
+
 	/**
 	 * Calculates the size of an impact crater.
 	 * @param impactorDiameter Diameter of the impactor in m.
@@ -570,7 +570,7 @@ public class Star
 	 * @param zenithAngle Zenith angle of the impactor trajectory in degrees.
 	 * @return Diameter and depth of the impact crater in m.
 	 */
-	public static double[] impactCrater(double impactorDiameter, double impactorDensity, 
+	public static double[] impactCrater(double impactorDiameter, double impactorDensity,
 			double impactorVelocity, double zenithAngle)
 	{
 		double IV=impactorVelocity * 1000.0;
@@ -596,19 +596,19 @@ public class Star
 	 */
 	public static double getExtinction(double z, double h, int quality) {
 		if (z > Constant.PI_OVER_TWO) return 0.0;
-		
+
 		// I'm following http://www.icq.eps.harvard.edu/ICQExtinct.html
 		// Air mass, Rozenberg (1966)
 		double X = 1.0 / (Math.cos(z) + 0.025 * Math.exp(-11.0 * Math.cos(z)));
 		// Extinction in magnitudes per unit mass due to Rayleigh scattering, Hayes and Latham 1975
-		double Aray = 0.1451 * Math.exp(-h / 7.996);		
+		double Aray = 0.1451 * Math.exp(-h / 7.996);
 		// Same due to aerosols, corrected after Angstrom (1961) and Schaefer (1992)
 		double H = 1.5;
 		double A0 = 0.065 - (quality * 0.03 / 10.0);
 		double Aaer = A0 * Math.pow(0.51, -1.3) * Math.exp(-h / H);
 		// Extinction due to ozone is less important and almost constant, Schaefer 1992
 		double Aoz = 0.016;
-		
+
 		return X * (Aray + Aaer + Aoz);
 	}
 
@@ -632,7 +632,7 @@ public class Star
 	 * Variable star designations follow a rather ugly scheme, for historical
 	 * reasons. The first 334 are labeled in the following order:
 	 * <P>
-	 * 
+	 *
 	 * <pre>
 	 *   R  S  T  U  V  W  X  Y  Z RR RS RT RU RV RW RX RY RZ SS ST SU SV SW SX
 	 *  SY SZ TT TU TV TW TX TY TZ UU UV UW UX UY UZ VV VW VX VY VZ WW WX WY WZ
@@ -649,7 +649,7 @@ public class Star
 	 *  NN NO NP NQ NR NS NT NU NV NW NX NY NZ OO OP OQ OR OS OT OU OV OW OX OY
 	 *  OZ PP PQ PR PS PT PU PV PW PX PY PZ QQ QR QS QT QU QV QW QX QY QZ
 	 * </pre>
-	 * 
+	 *
 	 * <P>
 	 * The first one found in a constellation is 'R (constellation name)'; followed
 	 * by 'S', 'T', ... 'Z'. That allows up to nine variables per constellation; the
@@ -664,16 +664,16 @@ public class Star
 	 * <P>
 	 * Following this lunacy for 334 variable stars, they are simply labelled
 	 * "V335", "V336", etc.
-	 * 
+	 *
 	 * @param var_no Variable number.
 	 * @return String representation.
 	 * @throws JPARSECException For input below 1.
 	 */
 	public static String getVariableStarDesignation(int var_no)
 	throws JPARSECException {
-		if (var_no > 334) return "V"+var_no; 
+		if (var_no > 334) return "V"+var_no;
 		if (var_no < 1) throw new JPARSECException("invalid variable number, must be greater than 0.");
-		
+
 		char buff1 = ' ', buff2 = ' ';
 		String var = "";
 		int i, curr_no = 10;
@@ -724,7 +724,7 @@ public class Star
 	 * Variable star designations follow a rather ugly scheme, for historical
 	 * reasons. The first 334 are labeled in the following order:
 	 * <P>
-	 * 
+	 *
 	 * <pre>
 	 *   R  S  T  U  V  W  X  Y  Z RR RS RT RU RV RW RX RY RZ SS ST SU SV SW SX
 	 *  SY SZ TT TU TV TW TX TY TZ UU UV UW UX UY UZ VV VW VX VY VZ WW WX WY WZ
@@ -741,7 +741,7 @@ public class Star
 	 *  NN NO NP NQ NR NS NT NU NV NW NX NY NZ OO OP OQ OR OS OT OU OV OW OX OY
 	 *  OZ PP PQ PR PS PT PU PV PW PX PY PZ QQ QR QS QT QU QV QW QX QY QZ
 	 * </pre>
-	 * 
+	 *
 	 * <P>
 	 * The first one found in a constellation is 'R (constellation name)'; followed
 	 * by 'S', 'T', ... 'Z'. That allows up to nine variables per constellation; the
@@ -756,7 +756,7 @@ public class Star
 	 * <P>
 	 * Following this lunacy for 334 variable stars, they are simply labelled
 	 * "V335", "V336", etc.
-	 *  
+	 *
 	 * @param designation String representation of the variable.
 	 * @return Integer value with the variable number.
 	 */
@@ -769,7 +769,7 @@ public class Star
 				return n;
 			} catch (Exception exc) {}
 		}
-		
+
 		int first, second, rval = -2;
 
 		designation = designation.toUpperCase().trim();
@@ -825,7 +825,7 @@ public class Star
 		rval++;
 		return (rval);
 	}
-	
+
 	/**
 	 * Based on the cosmology calculator by Edward L. Wright,
 	 * javascript version at http://www.astro.ucla.edu/~wright/CosmoCalc.html.
@@ -842,7 +842,7 @@ public class Star
 	 * The comoving volume within redshift z in Gpc^3.<BR>
 	 * The angular size distance in Mpc and Gly (2 values).<BR>
 	 * Scale factor when imaging the object, in kpc/".<BR>
-	 * The luminosity distance in Mpc and Gly (2 values).<BR> 
+	 * The luminosity distance in Mpc and Gly (2 values).<BR>
 	 */
 	public static double[] cosmology(double H0, double WM, double WV, double z) {
 		int i = 0;	// index
@@ -872,7 +872,7 @@ public class Star
 		double V_Gpc = 0.0;
 		double a = 1.0;	// 1/(1+z), the scale factor of the Universe
 		double az = 0.5;	// 1/(1+z(object))
-		  
+
 		az = 1.0 / (1 + 1.0 * z);
 		age = 0;
 		for (i = 0; i < n; i++) {
@@ -880,7 +880,7 @@ public class Star
 		    age = age + 1.0 / Math.sqrt(WK + (WM / a) + (WR / (a * a)) + (WV * a * a));
 		};
 		zage = az * age / n;
-		
+
 		// Correction for annihilations of particles not present now like e+/e-
 		// added 13-Aug-03 based on T_vs_t.f
 		double lpz = Math.log((1.0 + 1.0 * z)) / Math.log(10.0);
@@ -902,7 +902,7 @@ public class Star
 		zage_Gyr = (Tyr / H0) * zage;
 		DTT = 0.0;
 		DCMR = 0.0;
-		
+
 		// Do integral over a=1/(1+z) from az to 1 in n steps, midpoint rule
 		for (i = 0; i != n; i++) {
 			a = az + (1.0 - az) * (i + 0.5) / n;
@@ -925,14 +925,14 @@ public class Star
 		DL_Mpc = (c / H0) * DL;
 		DL_Gyr = (Tyr / H0) * DL;
 		V_Gpc = Constant.FOUR_PI * Math.pow(0.001 * c / H0, 3.0) * VCM(WK, DCMR);
-		
+
 		if (DA_Mpc < 100) nda = 3;
 		double roundFactor = Math.pow(10, nda);
-		return new double[] {age_Gyr, zage_Gyr, DTT_Gyr, DCMR_Mpc, DCMR_Gyr, V_Gpc, 
-				((int) (DA_Mpc * roundFactor)) / roundFactor, ((int) (DA_Gyr * roundFactor * 1E3)) / (1E3 * roundFactor), 
+		return new double[] {age_Gyr, zage_Gyr, DTT_Gyr, DCMR_Mpc, DCMR_Gyr, V_Gpc,
+				((int) (DA_Mpc * roundFactor)) / roundFactor, ((int) (DA_Gyr * roundFactor * 1E3)) / (1E3 * roundFactor),
 				kpc_DA, DL_Mpc, DL_Gyr};
 	}
-	
+
 	// Tangential comoving distance
 	private static double DCMT(double WK, double DCMR) {
 	  double ratio = 1.0;
@@ -942,7 +942,7 @@ public class Star
 	    return ratio * DCMR;
 	  };
 	  double y = x * x;
-	  
+
 	  // Statement below fixed 13-Aug-03 to correct sign error in expansion
 	  if (WK < 0) y = -y;
 	  ratio = 1.0 + y / 6.0 + y * y/ 120.0;
@@ -954,18 +954,18 @@ public class Star
 	  double ratio = 1.0;
 	  double x = Math.sqrt(Math.abs(WK)) * DCMR;
 	  if (x > 0.1) {
-	    ratio =  (WK > 0) ? (0.125 * (Math.exp(2.0 * x) - Math.exp(-2.0 * x)) - x / 2.0) / (x * x * x / 3.0) : 
+	    ratio =  (WK > 0) ? (0.125 * (Math.exp(2.0 * x) - Math.exp(-2.0 * x)) - x / 2.0) / (x * x * x / 3.0) :
 	    	(x / 2.0 - Math.sin(2.0 * x) / 4.0) / (x * x * x / 3.0);
 	    return ratio * DCMR * DCMR * DCMR / 3.0;
 	  };
 	  double y = x * x;
-	  
+
 	  // Statement below fixed 13-Aug-03 to correct sign error in expansion
 	  if (WK < 0) y = -y;
 	  ratio = 1.0 + y / 5.0 + (2.0 / 105.0) * y * y;
 	  return ratio * DCMR * DCMR * DCMR / 3.0;
 	}
-	
+
 	/**
 	 * Based on the cosmology calculator by Edward L. Wright,
 	 * javascript version at http://www.astro.ucla.edu/~wright/CosmoCalc.html.
@@ -1007,7 +1007,7 @@ public class Star
 	public static double getBlackBodyBminusV(double T) {
 		return -0.715 + 7090.0 / T;
 	}
-	
+
 	/**
 	 * Returns the effective temperature of a perfect black body.
 	 * @param BminusV The B-V color index.
@@ -1020,14 +1020,14 @@ public class Star
 	/**
 	 * The set of luminosity classes.
 	 */
-	public static enum LUMINOSITY_CLASS {
+	public enum LUMINOSITY_CLASS {
 		/** Class V or main sequence. */
 		MAIN_SEQUENCE_V,
 		/** Class III or giants. */
 		GIANTS_III,
 		/** Class I or supergiants */
 		SUPERGIANTS_I;
-		
+
 		/**
 		 * Returns the set of B-V values.
 		 * @return B-V values.
@@ -1072,7 +1072,7 @@ public class Star
 			if (this == GIANTS_III) return DataSet.toDoubleValues(DataSet.extractColumnFromTable(CLASS_III, " ", 7));
 			return DataSet.toDoubleValues(DataSet.extractColumnFromTable(CLASS_I, " ", 7));
 		}
-		
+
 		/**
 		 * Returns the set of absolute magnitudes.
 		 * @return Mv values.
@@ -1107,7 +1107,7 @@ public class Star
 			return getBV();
 		}
 	};
-	
+
 	/**
 	 * Returns the B-V color index of a star.
 	 * Based on Flower P.J. Astrophys. J. 469, 355 (1996) and A. Cox (1982).
@@ -1120,19 +1120,19 @@ public class Star
 	 */
 	public static double getStarBminusV(double T, LUMINOSITY_CLASS lclass) throws JPARSECException {
 		if (lclass == LUMINOSITY_CLASS.MAIN_SEQUENCE_V && (T > 56000 || T < 3000)) return Double.NaN;
-		
+
 		Interpolation interp = new Interpolation(lclass.getLogT(), lclass.getBV(), false);
 		return interp.splineInterpolation(Math.log10(T));
 		// Here is a polynomial fit which is not accurate when combining calculations between this and other methods
 /*		double x = Math.log10(T), x2 = x * x, x3 = x2 * x, x5 = x3 * x2;
-		double BV = -36370.66211753678 + 37826.28473926049 * x -12700.250994398428 * x2 + 883.8098942811079 * x3 + 77.57933148146785 * x3 * x + 
+		double BV = -36370.66211753678 + 37826.28473926049 * x -12700.250994398428 * x2 + 883.8098942811079 * x3 + 77.57933148146785 * x3 * x +
 				157.47625738199721 * x5 -68.220300847538 * x5 * x + 10.003149493700073 * x5 * x2 -0.5168390134081507 * x5 * x3;
 		return BV;
-*/		
+*/
 	}
-	
+
 	/**
-	 * Returns the effective temperature of a star. Based on Flower P.J., 
+	 * Returns the effective temperature of a star. Based on Flower P.J.,
 	 * Astrophys. J. 469, 355 (1996), and Cox (1982).
 	 * @param BminusV The B-V color index.
 	 * @param lclass The luminosity class for the star.
@@ -1152,14 +1152,14 @@ public class Star
 				-5.398083203668783 * x5 + 2.1935533649084467 * x5 * x -0.3596113050478236 * x5 * x2;
 		return Math.pow(10.0, logT);
 */	}
-	
+
 	/**
-	 * Returns the bolometric correction for a star, so 
-	 * that Mbol = Mv + BC. Based on Flower P.J. Astrophys. J. 469, 355 (1996) 
+	 * Returns the bolometric correction for a star, so
+	 * that Mbol = Mv + BC. Based on Flower P.J. Astrophys. J. 469, 355 (1996)
 	 * and Cox (1982).
 	 * @param T Effective temperature in K.
 	 * @param lclass The luminosity class for the star.
-	 * @return BC. NaN is returned in case no solution is possible (T > 56000 or T < 3000) 
+	 * @return BC. NaN is returned in case no solution is possible (T > 56000 or T < 3000)
 	 * and luminosity class is main sequence, otherwise an error can be thrown.
 	 * @throws JPARSECException If an error occurs.
 	 */
@@ -1171,11 +1171,11 @@ public class Star
 /*		try {
 			double x[] = DataSet.toDoubleValues(DataSet.extractColumnFromTable(MAIN_SEQUENCE, " ", 1));
 			double y[] = DataSet.toDoubleValues(DataSet.extractColumnFromTable(MAIN_SEQUENCE, " ", 2));
-			
+
 			ArrayList<Object> dataset = DataSet.subDatasetFromXMinimum(x, y, null, null, 3.9);
 			x = (double[]) dataset.get(0);
 			y = (double[]) dataset.get(1);
-			
+
 			LinearFit lf = new LinearFit(x, y);
 			ChartSeriesElement s = lf.linearFit();
 			s.regressionType = REGRESSION.POLYNOMIAL;
@@ -1193,7 +1193,7 @@ public class Star
 			exc.printStackTrace();
 		}
 */
-/*		
+/*
 		// Here is a polynomial fit which is not accurate when combining calculations between this and other methods
 		double x = Math.log10(T), x2 = x * x, x3 = x2 * x, x5 = x3 * x2;
 		if (x < 3.90) {
@@ -1203,13 +1203,13 @@ public class Star
 			double fit[] = new double[] {-20832.77718809523, 14505.923551816906, -2277.510188459424, -197.95006207390435, -38.57648381130758, 25.49546471255087, 4.630526075492948, -2.0907365069125405, 0.1674501944747572};
 			return fit[0] + fit[1] * x + fit[2] * x2 + fit[3] * x3 + fit[4] * x3 * x + fit[5] * x5 + fit[6] * x5 * x + fit[7] * x5 * x2 + fit[8] * x5 * x3;
 		}
-*/		
+*/
 	}
 
 	/**
 	 * Obtains stellar bolometric luminosity for a star in the main sequence, using
 	 * the bolometric correction and the bolometric magnitude of the Sun = 4.75.
-	 * 
+	 *
 	 * @param mv Star absolute magnitude.
 	 * @param T Effective temperature in K.
 	 * @param lclass The luminosity class for the star.
@@ -1225,11 +1225,11 @@ public class Star
 	}
 
 	/**
-	 * Obtains the bolometric luminosity of a star in the main sequence. This method 
-	 * only needs the effective temperature, which is used to compute the 
-	 * star B-V color and then its absolute magnitude. Then the bolometric 
+	 * Obtains the bolometric luminosity of a star in the main sequence. This method
+	 * only needs the effective temperature, which is used to compute the
+	 * star B-V color and then its absolute magnitude. Then the bolometric
 	 * correction is used to compute the luminosity relative to the Sun.
-	 * 
+	 *
 	 * @param T Effective temperature in K for the star in the main sequence.
 	 * @param lclass The luminosity class for the star.
 	 * @return Luminosity in solar units.
@@ -1241,14 +1241,14 @@ public class Star
 	}
 
 	/**
-	 * Returns the absolute magnitude of a star given its 
+	 * Returns the absolute magnitude of a star given its
 	 * B-V color index. Based on Flower (1996), Pickles (1998), and Cox (1982).
 	 * @param BminusV B-V.
 	 * @param lclass The luminosity class for the star.
 	 * @return Absolute magnitude. NaN is returned for a B-V out of range
-	 * -0.35 to 1.80 and luminosity class main sequence, otherwise an error can 
+	 * -0.35 to 1.80 and luminosity class main sequence, otherwise an error can
 	 * be thrown.
-	 * @throws JPARSECException Should never happen. 
+	 * @throws JPARSECException Should never happen.
 	 */
 	public static double getStarAbsoluteMagnitude(double BminusV, LUMINOSITY_CLASS lclass) throws JPARSECException {
 		if (lclass == LUMINOSITY_CLASS.MAIN_SEQUENCE_V && (BminusV < -0.35 || BminusV > 1.8)) return Double.NaN;
@@ -1256,9 +1256,9 @@ public class Star
 		return interp.splineInterpolation(BminusV);
 		// Note data from Schmidt-Kaler, http://xoomer.virgilio.it/hrtrace/Sk.htm, is outdated (1982)
 	}
-	
+
 	/**
-	 * Returns the B-V given the absolute magnitude of the star. A table is used to compute 
+	 * Returns the B-V given the absolute magnitude of the star. A table is used to compute
 	 * the best B-V by interpolating.
 	 * @param Mv Absolute magnitude.
 	 * @param lclass The luminosity class for the star.
@@ -1284,7 +1284,7 @@ public class Star
 	 */
 	public static String getSpectralType(double T, int ndec) throws JPARSECException {
 		if (T > 56000 || T < 3000) return null;
-		
+
 		String dataset[] = new String[0];
 		for (int i=0; i<MAIN_SEQUENCE.length; i++) {
 			int n = FileIO.getNumberOfFields(MAIN_SEQUENCE[i], " ", true);
@@ -1305,7 +1305,7 @@ public class Star
 			} else {
 				subT = 0;
 				index ++;
-				out = SpT.substring(index, index + 1);				
+				out = SpT.substring(index, index + 1);
 			}
 		}
 		if (ndec > 0) {
@@ -1325,7 +1325,7 @@ public class Star
 		String SpT = "OBAFGKM";
 		int index = SpT.indexOf(sp.substring(0, 1));
 		double s = Double.parseDouble(sp.substring(1)) + index * 10;
-		
+
 		String dataset[] = new String[0];
 		for (int i=0; i<MAIN_SEQUENCE.length; i++) {
 			int n = FileIO.getNumberOfFields(MAIN_SEQUENCE[i], " ", true);
@@ -1347,7 +1347,7 @@ public class Star
 		double L = 1.15 * Math.log10(period) + 2.47;
 		return L;
 	}
-	
+
 	/**
 	 * Applies the Virial Theorem that relates the velocity dispersion
 	 * in a set of sources (cluster of galaxies, globular cluster, ...)
@@ -1361,29 +1361,29 @@ public class Star
 		double M = 3 * 0.5 * sigma * sigma * 1.0E6 * radius / Constant.GRAVITATIONAL_CONSTANT;
 		return M / Constant.SUN_MASS;
 	}
-	
+
 	/**
 	 * Returns the Carrington rotation number for the Sun at the specified Julian day.<P>
-	 * 
-	 * Richard C. Carrington determined the solar rotation rate by watching low-latitude sunspots in the 
-	 * 1850s. He defined a fixed solar coordinate system that rotates in a sidereal frame exactly once 
-	 * every 25.38 days (Carrington, Observations of the Spots on the Sun, 1863, p 221, 244). The synodic 
-	 * rotation rate varies a little during the year because of the eccentricity of the Earth's orbit; 
+	 *
+	 * Richard C. Carrington determined the solar rotation rate by watching low-latitude sunspots in the
+	 * 1850s. He defined a fixed solar coordinate system that rotates in a sidereal frame exactly once
+	 * every 25.38 days (Carrington, Observations of the Spots on the Sun, 1863, p 221, 244). The synodic
+	 * rotation rate varies a little during the year because of the eccentricity of the Earth's orbit;
 	 * the mean synodic value is about 27.2753 days.<P>
-	 * 
-	 * Carrington Rotation 1 began at a seemingly arbitrary instant late on Nov 9, 1853, when Carrington 
-	 * began his Greenwich photo-heliographic series. Rotations are counted from that time with the 
-	 * central meridian longitude decreasing from 360 to 0 during each rotation as the central meridian 
+	 *
+	 * Carrington Rotation 1 began at a seemingly arbitrary instant late on Nov 9, 1853, when Carrington
+	 * began his Greenwich photo-heliographic series. Rotations are counted from that time with the
+	 * central meridian longitude decreasing from 360 to 0 during each rotation as the central meridian
 	 * point rotates under the Earth. Actually the canonical zero meridian used today is the one that
-	 * passed through the ascending node of the solar equator on the ecliptic at Greenwich mean noon on 
+	 * passed through the ascending node of the solar equator on the ecliptic at Greenwich mean noon on
 	 * January 1, 1854 (Julian Day 2398220.0).<P>
-	 * 
+	 *
 	 * @param jd Julian day in TT.
 	 * @return Carrington rotation number.
 	 */
 	public static int getCarringtonRotationNumber(double jd) {
 		double rotation = ((jd - 2451545.11) / 27.2753) + 1958;
-		
+
 		double frac = rotation - Math.floor(rotation);
 		if (frac < 0) frac ++;
 		double timeMarginDays = 1;
@@ -1396,7 +1396,7 @@ public class Star
 				EphemerisElement eph = new EphemerisElement(TARGET.SUN, EphemerisElement.COORDINATES_TYPE.APPARENT,
 						EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.GEOCENTRIC, EphemerisElement.REDUCTION_METHOD.IAU_2006,
 						EphemerisElement.FRAME.DYNAMICAL_EQUINOX_J2000, EphemerisElement.ALGORITHM.MOSHIER);
-				
+
 				EphemElement ephem = Ephem.getEphemeris(time, observer, eph, false);
 				double lon = Functions.normalizeRadians(ephem.longitudeOfCentralMeridian) * Constant.RAD_TO_DEG;
 				if (lon > 0 && lon < (timeMarginDays*360.0/27.2753))
@@ -1406,7 +1406,7 @@ public class Star
 
 		return (int) Math.floor(rotation);
 	}
-	
+
 	/**
 	 * Returns the Julian day when the solar longitude was 0.0 degres prior to the specified
 	 * Julian day. Accuracy is better than 1s. Calculation is geocentric.
@@ -1438,25 +1438,25 @@ public class Star
 			iter ++;
 			if (Math.abs(off) < maxErr) break;
 		}
-		
+
 		return time.astroDate.jd();
 	}
-	
+
 	/**
 	 * Returns the number in Ernest W. Brown's numbered series of lunar
-	 * cycles for the specified JD. The base Julian day for Ernest W. 
+	 * cycles for the specified JD. The base Julian day for Ernest W.
 	 * Brown's numbered series of lunations is 1923 Jan 17 02:41 UT.
 	 * This date has been widely quoted as "Jan 16 1923" and indeed it
 	 * was (in EST) at Yale University where Prof. Brown worked.<P>
-	 * 
+	 *
 	 * A lunation starts with a new Moon.<P>
-	 * 
+	 *
 	 * The output of this method is the correct lunation number for the
 	 * specified Julian day in TT, in case a new lunation number started
 	 * just before the input date. Note Meeus also introduced another
 	 * lunation number starting from the first new moon in year 2000
 	 * (Jan 6, 18:14 UTC). Meeus lunation = Brown lunation - 953.
-	 * 
+	 *
 	 * @param jd Julian day in TDB.
 	 * @return Lunation number.
 	 */
@@ -1474,10 +1474,9 @@ public class Star
 				if (elapsed > 0 && elapsed < timeMarginDays) lun ++;
 			} catch (Exception exc) {}
 		}
-		
+
 		return (int) Math.floor(lun);
 	}
-
 	/**
 	 * Following data is for main sequence stars, compiled with data coming from
 	 * different sources: Flower P.J. Astrophys. J. 469, 355 (1996), Pickles (1998),
@@ -1702,8 +1701,8 @@ public class Star
 		"1.79 3.4771 -5.004  3000",
 		"1.80 3.4678 -5.535  2936   16.5   67"
 	};
-	
-	// Data from Allen's Astrophysical Quantities, by Arthur N. Cox. 
+
+	// Data from Allen's Astrophysical Quantities, by Arthur N. Cox.
 	// See http://xoomer.virgilio.it/hrtrace/Sk.htm
 	private static final String[] CLASS_III = new String[] {
 		// SpT Mv B-V   U-B   V-R   R-I  Teff  BC
@@ -1716,7 +1715,7 @@ public class Star
 		"M2 -0.6  1.60  1.89  1.34  1.10 3540 -1.62",
 		"M5 -0.3  1.63  1.58  2.18  1.96 3380 -2.48"
 	};
-	
+
 	private static final String[] CLASS_I = new String[] {
 		"O9 -6.5 -0.27 -1.13 -0.15 -0.32 32000 -3.18",
 		"B2 -6.4 -0.17 -0.93 -0.05 -0.15 17600 -1.58",

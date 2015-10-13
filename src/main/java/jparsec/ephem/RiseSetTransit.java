@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.ephem;
 
 import jparsec.ephem.EphemerisElement.COORDINATES_TYPE;
@@ -38,7 +38,7 @@ import jparsec.util.JPARSECException;
 /**
  * Provides methods for calculation of the rise, set and transit instants. These
  * events can be obtained referred to any of the predefined twilight events.
- *  
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
@@ -46,10 +46,10 @@ public class RiseSetTransit
 {
 	// private constructor so that this class cannot be instantiated.
 	private RiseSetTransit() {}
-	
+
 	/**
 	 * Constant ID for a circumpolar object, which has no rise or set times.
-	 * Please note that for astronomical twilights (for instance) calculations, 
+	 * Please note that for astronomical twilights (for instance) calculations,
 	 * this would mean that the object never reaches a geometric elevation
 	 * of -18 degrees, but could have other rise/set events like the usual
 	 * astronomical one.
@@ -63,15 +63,15 @@ public class RiseSetTransit
 
 	/**
 	 * This value is used for objects that have no rise, set, or transit
-	 * in a given date in local time, when the events calculated are those 
+	 * in a given date in local time, when the events calculated are those
 	 * referred to current date.
 	 */
 	public static final int NO_RISE_SET_TRANSIT =  -1000000002;
-	
+
 	/**
 	 * The set of twilights to calculate (types of rise/set events).
 	 */
-	public static enum TWILIGHT {
+	public enum TWILIGHT {
 		/**
 		 * Event ID for calculation of rising and setting times for astronomical
 		 * twilight. In this case, the calculated time will be the time when the
@@ -120,7 +120,7 @@ public class RiseSetTransit
 		 * elevation.
 		 */
 		CUSTOM;
-		
+
 		/** Set the minimum elevation above the horizon in radians to consider the rise and
 		 * set of a given object. */
 		public double horizonElevation = 0.0;
@@ -128,11 +128,11 @@ public class RiseSetTransit
 		 * calculation. Default value is true. */
 		public boolean considerObjectAngularRadius = true;
 	};
-	
+
 	/**
 	 * The set of possible events.
 	 */
-	public static enum EVENT {
+	public enum EVENT {
 		/** Constant ID for obtaining the transit time only. */
 		TRANSIT,
 		/** Constant ID for obtaining the rise time only. */
@@ -142,7 +142,7 @@ public class RiseSetTransit
 		/** Constant ID for obtaining rise, set, and transit times. */
 		ALL
 	};
-	
+
 	/**
 	 * Compute next instants of rise or set assuming that the body is static.
 	 * Results of rise and set fields could be equal to {@linkplain RiseSetTransit#CIRCUMPOLAR} or
@@ -150,7 +150,7 @@ public class RiseSetTransit
 	 * taking into account the refraction in the horizon (about 33'), the size
 	 * of the body, and the depression of the horizon, but only
 	 * for events in the horizon.
-	 * 
+	 *
 	 * @param time Time object.
 	 * @param obs Observer object.
 	 * @param eph Ephemeris object.
@@ -208,7 +208,7 @@ public class RiseSetTransit
 			ephCopy.targetBody = obs.getMotherBody();
 			celestialHoursToEarthTime /= (obs.getMotherBodyMeanRotationRate(ephCopy) / Constant.EARTH_MEAN_ROTATION_RATE);
 		}
-		
+
 		// Make calculations for the meridian
 		if (event == EVENT.TRANSIT || event == EVENT.ALL)
 		{
@@ -219,7 +219,7 @@ public class RiseSetTransit
 			ephem.transit[index] = jd_TDB + transit_time;
 			ephem.transitElevation[index] = (float) transit_alt;
 			if (eph.ephemType == COORDINATES_TYPE.APPARENT) ephem.transitElevation[index] = (float) Ephem.getApparentElevation(eph, obs, transit_alt, 30);
-			
+
 			if (event == EVENT.TRANSIT) return ephem;
 		}
 
@@ -272,7 +272,7 @@ public class RiseSetTransit
 	 * taking into account the refraction in the horizon (about 33'), the size
 	 * of the body, and the depression of the horizon, but only
 	 * for events in the horizon.
-	 * 
+	 *
 	 * @param time Time object.
 	 * @param obs Observer object.
 	 * @param eph Ephemeris object.
@@ -341,7 +341,7 @@ public class RiseSetTransit
 			ephem.transit[index] = jd_TDB + transit_time;
 			ephem.transitElevation[index] = (float) transit_alt;
 			if (eph.ephemType == COORDINATES_TYPE.APPARENT) ephem.transitElevation[index] = (float) Ephem.getApparentElevation(eph, obs, transit_alt, 30);
-			
+
 			if (event == EVENT.TRANSIT) return ephem;
 		}
 
@@ -397,7 +397,7 @@ public class RiseSetTransit
 	 * <P>
 	 * This method provides the nearest events in time. Adequate for objects at
 	 * high elevation.
-	 * 
+	 *
 	 * @param time Time object.
 	 * @param obs Observer object.
 	 * @param eph Ephemeris object.
@@ -538,7 +538,7 @@ public class RiseSetTransit
 	 * <P>
 	 * This method provides the last rise and nearest transit, and the next set
 	 * time. Adequate for objects above the horizon.
-	 * 
+	 *
 	 * @param time Time object.
 	 * @param obs Observer object.
 	 * @param eph Ephemeris object.
@@ -581,7 +581,7 @@ public class RiseSetTransit
 			if (twilight_event.considerObjectAngularRadius) tmp -= ephem.angularRadius;
 			break;
 		}
-		
+
 		// Compute cosine of hour angle
 		tmp = (Math.sin(tmp) - Math.sin(obs.getLatitudeRad()) * Math.sin(ephem.declination)) / (Math.cos(obs.getLatitudeRad()) * Math
 				.cos(ephem.declination));
@@ -683,7 +683,7 @@ public class RiseSetTransit
 	 * Gets the angle of depression of the horizon. An object will be just in
 	 * the geometric horizon when it's elevation is equal to minus this value.
 	 * This correction can modify the time of the events by some minutes.
-	 * 
+	 *
 	 * @param obs Observer object.
 	 * @param eph Ephemeris object.
 	 * @return The angle in radians.
@@ -705,7 +705,7 @@ public class RiseSetTransit
 	 * object. For objects above the horizon, the result is refered to the
 	 * current day, otherwise they will be the next rise, set, and transit
 	 * events.
-	 * 
+	 *
 	 * @param time Time object containing the date.
 	 * @param obs Observer object containing the observer position.
 	 * @param eph Ephemeris object defining the ephemeris properties.
@@ -733,7 +733,7 @@ public class RiseSetTransit
 	/**
 	 * Provides next rise, set, and transit times correcting for the movement of
 	 * the object.
-	 * 
+	 *
 	 * @param time Time object containing the date.
 	 * @param obs Observer object containing the observer position.
 	 * @param eph Ephemeris object defining the ephemeris properties.
@@ -757,7 +757,7 @@ public class RiseSetTransit
 	/**
 	 * Provides current (refered to the actual day) rise, set, and transit times
 	 * correcting for the movement of the object.
-	 * 
+	 *
 	 * @param time Time object containing the date.
 	 * @param obs Observer object containing the observer position.
 	 * @param eph Ephemeris object defining the ephemeris properties.
@@ -781,7 +781,7 @@ public class RiseSetTransit
 	/**
 	 * Provides previous rise, set, and transit times correcting for the
 	 * movement of the object.
-	 * 
+	 *
 	 * @param time Time object containing the date.
 	 * @param obs Observer object containing the observer position.
 	 * @param eph Ephemeris object defining the ephemeris properties.
@@ -805,7 +805,7 @@ public class RiseSetTransit
 	/**
 	 * Provides nearest rise, set, and transit times correcting for the movement
 	 * of the object.
-	 * 
+	 *
 	 * @param time Time object containing the date.
 	 * @param obs Observer object containing the observer position.
 	 * @param eph Ephemeris object defining the ephemeris properties.
@@ -842,11 +842,11 @@ public class RiseSetTransit
 	 * ID constant for nearest events in {@linkplain RiseSetTransit#obtainCertainRiseSetTransit(TimeElement, ObserverElement, EphemerisElement, EphemElement, double, int)}.
 	 */
 	private static final int OBTAIN_NEAREST_EVENTS = 3;
-	
+
 	/**
 	 * Provides any rise, set, and transit times correcting for the movement
 	 * of the object.
-	 * 
+	 *
 	 * @param time Time object containing the date.
 	 * @param obs Observer object containing the observer position.
 	 * @param eph Ephemeris object defining the ephemeris properties.
@@ -865,7 +865,7 @@ public class RiseSetTransit
 		// Return no data for geocentric position
 		if (!eph.isTopocentric || obs.getMotherBody() == TARGET.NOT_A_PLANET)
 			return ephem_obj;
-		
+
 		// Declare new TimeElement
 		TimeElement new_time = time.clone();
 
@@ -878,7 +878,7 @@ public class RiseSetTransit
 
 		// Obtain event to better than 0.5 seconds of precision
 		double precision_in_seconds = 0.5;
-		
+
 		EphemElement ephem_elem = ephem_obj.clone();
 
 		// Update input ephem object in case, for instance, it was calculated for J2000 equinox,
@@ -977,7 +977,7 @@ public class RiseSetTransit
 				if (eph.algorithm == null || eph.algorithm == EphemerisElement.ALGORITHM.STAR) {
 					dt = 0.0;
 				}
-							
+
 				// If elapsed time is greater than the desired precision,
 				// update time and calculate ephemeris for the new time
 				if (Math.abs(dt) > (precision_in_seconds / (double) Constant.SECONDS_PER_DAY) && n_iter < n_iter_max)
@@ -993,8 +993,8 @@ public class RiseSetTransit
 					new_ephem_elem = new_ephem_elem2;
 				}
 
-				// If the objects 'gets' circumpolar or never rises then try 
-				// to continue. Mainly for comets/NEOs (and the Moon in 
+				// If the objects 'gets' circumpolar or never rises then try
+				// to continue. Mainly for comets/NEOs (and the Moon in
 				// extreme cases).
 				if ((time_event == RiseSetTransit.ALWAYS_BELOW_HORIZON || time_event == RiseSetTransit.CIRCUMPOLAR) &&
 						eph.algorithm != null && eph.algorithm != EphemerisElement.ALGORITHM.STAR && (i == EVENT.RISE.ordinal() || i == EVENT.SET.ordinal())) {
@@ -1003,7 +1003,7 @@ public class RiseSetTransit
 						dt = 0.0;
 					} else {
 						triedBefore = true;
-						
+
 						// Just go to transit time (close to maximum elevation)
 						AstroDate new_astro = new AstroDate(ephem_elem.transit[index]);
 						new_time = new TimeElement(new_astro, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
@@ -1015,7 +1015,7 @@ public class RiseSetTransit
 						new_ephem_elem = new_ephem_elem2;
 					}
 				}
-				
+
 			} while (Math.abs(dt) > (precision_in_seconds / (double) Constant.SECONDS_PER_DAY) && n_iter < n_iter_max);
 
 			// Set time of event in our output Ephem object
@@ -1024,7 +1024,7 @@ public class RiseSetTransit
 			if (i == EVENT.SET.ordinal()) timeTDB = new_ephem_elem.set[index];
 			TimeElement etime = new TimeElement(timeTDB, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
 			double timeLT = TimeScale.getJD(etime, obs, eph, SCALE.LOCAL_TIME);
-			
+
 			if (i == EVENT.RISE.ordinal())
 				ephem_elem.rise[index] = timeLT;
 			if (i == EVENT.TRANSIT.ordinal()) {
@@ -1034,7 +1034,7 @@ public class RiseSetTransit
 			if (i == EVENT.SET.ordinal())
 				ephem_elem.set[index] = timeLT;
 
-			if (n_iter == n_iter_max) {
+			if (n_iter == n_iter_max || dt == 0) {
 				if (i == EVENT.RISE.ordinal()) ephem_elem.rise[index] = NO_RISE_SET_TRANSIT;
 				if (i == EVENT.SET.ordinal()) ephem_elem.set[index] = NO_RISE_SET_TRANSIT;
 				if (i == EVENT.TRANSIT.ordinal()) {
@@ -1042,7 +1042,7 @@ public class RiseSetTransit
 					ephem_elem.transitElevation[index] = 0.0f;
 				}
 			}
-			if (how == OBTAIN_CURRENT_EVENTS && n_iter != n_iter_max) {
+			if (how == OBTAIN_CURRENT_EVENTS && (n_iter != n_iter_max && dt != 0)) {
 				double jd = TimeScale.getJD(time, obs, eph, SCALE.LOCAL_TIME);
 				double jdToday = Math.floor(jd - 0.5) + 0.5;
 				if (i == EVENT.RISE.ordinal()) {
@@ -1065,7 +1065,7 @@ public class RiseSetTransit
 		ephem_obj.rise = ephem_elem.rise;
 		ephem_obj.set = ephem_elem.set;
 		ephem_obj.transit = ephem_elem.transit;
-		ephem_obj.transitElevation = ephem_elem.transitElevation;		
+		ephem_obj.transitElevation = ephem_elem.transitElevation;
 		return ephem_obj;
 	}
 }

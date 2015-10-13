@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,32 +18,32 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.graph;
 
 import java.awt.Color;
 import java.awt.Paint;
 import java.io.Serializable;
-
 import java.util.Arrays;
+
 import jparsec.graph.ChartElement.SUBTYPE;
 import jparsec.graph.ChartElement.TYPE;
 import jparsec.util.JPARSECException;
 
 /**
  * Creates a simple chart element for JFreeChart.<P>
- * 
+ *
  * In this object the labels for x and y axes, as well as the title can be
  * encoded following the instructions given in {@linkplain TextLabel} class. This
  * provides some possibilities like to dynamically change color/size, include superscript
  * or subscript text, or Greek letters.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
 public class SimpleChartElement implements Serializable
 {
-	static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Default empty constructor.
@@ -53,7 +53,7 @@ public class SimpleChartElement implements Serializable
 	/**
 	 * Constructor adequate for a simple scatter chart with a default image size of 600x400
 	 * pixels.
-	 * 
+	 *
 	 * @param x X values.
 	 * @param y Y values.
 	 * @param title Title.
@@ -66,7 +66,7 @@ public class SimpleChartElement implements Serializable
 	{
 		this.chartType = TYPE.XY_CHART;
 		this.subType = SUBTYPE.XY_SCATTER;
-		
+
 		this.xValues = x;
 		this.yValues = y;
 		this.xLabel = x_label;
@@ -84,7 +84,7 @@ public class SimpleChartElement implements Serializable
 	/**
 	 * Constructor adequate for an x-y chart with a default image size of 600x400
 	 * pixels.
-	 * 
+	 *
 	 * @param charttype Type.
 	 * @param chartsubtype Subtype.
 	 * @param x X values.
@@ -102,7 +102,7 @@ public class SimpleChartElement implements Serializable
 	{
 		this.chartType = charttype;
 		this.subType = chartsubtype;
-		
+
 		if ((chartType == TYPE.XY_CHART && subType.name().indexOf("XY") < 0) ||
 				(chartType == TYPE.CATEGORY_CHART && subType.name().indexOf("CATEGORY") < 0) ||
 				(chartType == TYPE.PIE_CHART && subType.name().indexOf("PIE") < 0))
@@ -122,7 +122,7 @@ public class SimpleChartElement implements Serializable
 
 	/**
 	 * Constructor adequate for an x-y chart.
-	 * 
+	 *
 	 * @param charttype Type.
 	 * @param chartsubtype Subtype.
 	 * @param x X values.
@@ -248,7 +248,7 @@ public class SimpleChartElement implements Serializable
 	public SimpleChartElement clone()
 	{
 		SimpleChartElement s = null;
-		try { 
+		try {
 			s = new SimpleChartElement(this.chartType, this.subType, this.xValues.clone(), this.yValues.clone(),
 				this.title, this.xLabel, this.yLabel, this.legend, this.showLegend,
 				this.changeOrientationToHorizontal);
@@ -261,7 +261,6 @@ public class SimpleChartElement implements Serializable
 		s.xValuesForPieAndCategoryCharts = this.xValuesForPieAndCategoryCharts.clone();
 		return s;
 	}
-
 	/**
 	 * Returns true if the input object is equals to this chart object.
 	 */

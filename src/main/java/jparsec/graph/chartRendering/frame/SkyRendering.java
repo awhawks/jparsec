@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.graph.chartRendering.frame;
 
 import java.awt.BorderLayout;
@@ -61,7 +61,7 @@ import jparsec.util.Logger.LEVEL;
 /**
  * Support class to use Swing/AWT graph components for sky
  * and planetary rendering. See also {@linkplain SkyChart} class.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  * @see SkyChart
@@ -76,7 +76,7 @@ public class SkyRendering implements Serializable
 
 	/**
 	 * Sample render program.
-	 * 
+	 *
 	 * @param time Time object.
 	 * @param obs Observer object.
 	 * @param eph Ephemeris object.
@@ -105,7 +105,7 @@ public class SkyRendering implements Serializable
 	{
 		this.showRendering(false);
 	}
-	
+
 	/**
 	 * To show the rendering.
 	 * @param undecorated True to show the Frame without decoration.
@@ -138,7 +138,7 @@ public class SkyRendering implements Serializable
 		if (renderSky.getRenderSky().render.anaglyphMode == ANAGLYPH_COLOR_MODE.TRUE_3D_MODE_LEFT_RIGHT) fac = 2;
 		frame.setSize(renderSky.getRenderSky().render.width*fac, renderSky.getRenderSky().render.height);
 
-		//final Panel 
+		//final Panel
 		final Panel renderGraphPanel = new Panel(new BorderLayout());
 		renderGraphPanel.add(renderSky, BorderLayout.CENTER);
 
@@ -163,7 +163,7 @@ public class SkyRendering implements Serializable
 			renderSky.getRenderSky().setSkyRenderElement(
 				sky == null ? renderSky.getRenderSky().render : sky, this.time, this.obs, this.eph);
 		} else {
-			renderSky.getRenderSky().setSkyRenderElement(sky == null ? renderSky.getRenderSky().render : sky);			
+			renderSky.getRenderSky().setSkyRenderElement(sky == null ? renderSky.getRenderSky().render : sky);
 		}
 	}
 
@@ -173,7 +173,7 @@ public class SkyRendering implements Serializable
 	public void resetGraphics() {
 		renderSky.gj = null;
 	}
-	
+
 	/**
 	 * Draws the current chart to a Graphics device.
 	 * @param g Graphics object.
@@ -183,7 +183,7 @@ public class SkyRendering implements Serializable
 	throws JPARSECException {
 		renderSky.renderize(g);
 	}
-	
+
 	/**
 	 * Draws the current chart to an image supplied. This method
 	 * has better performance compared to the one using a Graphics2D
@@ -212,7 +212,7 @@ public class SkyRendering implements Serializable
 		g.dispose();
 		return buf;
 	}
-	
+
 	/**
 	 * Returns a BufferedImage instance with the current rendering, adequate to
 	 * write an image to disk. The returned image has a transparent (alpha) channel.
@@ -250,7 +250,7 @@ public class SkyRendering implements Serializable
 	 * apparent rotation will not match that of the observed equatorial nor
 	 * tropical belts in these planets. This function is intended to adjust
 	 * specifically the apparent sight of Jupiter's disk.
-	 * 
+	 *
 	 * @param GRS_lon Observed longitude in radians.
 	 * @param system System of coordinates of GRS_lon, 1, 2, or 3. Will be
 	 *        ussually 2, since the Great Red Spot is in the tropical belt (1
@@ -354,7 +354,7 @@ public class SkyRendering implements Serializable
 			Logger.log(LEVEL.ERROR, "JPARSEC exception: "+e.getMessage());
 		}
  	}
-	
+
 	/**
 	 * Returns a JFrame with the provided component.
 	 * @param w Width in pixels.
@@ -377,9 +377,9 @@ public class SkyRendering implements Serializable
 class RenderSky extends JComponent
 {
 	private static final long serialVersionUID = 1L;
-	jparsec.graph.chartRendering.RenderSky rp; 
+	jparsec.graph.chartRendering.RenderSky rp;
 	BufferedImage img;
-	
+
 	/**
 	 * The constructor.
 	 * @throws JPARSECException If an error occurs.
@@ -390,7 +390,7 @@ class RenderSky extends JComponent
 		rp = new jparsec.graph.chartRendering.RenderSky(time, obs, eph, sky);
 		rp.dateChanged(true);
 	}
-	
+
 	/**
 	 * Paint the graph.
 	 */
@@ -409,7 +409,7 @@ class RenderSky extends JComponent
 
 	/**
 	 * Renderize the sky.
-	 * 
+	 *
 	 * @param g Graphics object.
 	 * @throws JPARSECException Thrown if the calculation fails.
 	 */
@@ -419,7 +419,7 @@ class RenderSky extends JComponent
 			// Support for vector graphics. FIXME: Not good idea to use sun.java2d.SunGraphics2D, but works on Java 6 & 7
 			if (rp.render.anaglyphMode == ANAGLYPH_COLOR_MODE.NO_ANAGLYPH && g.getClass().toString().indexOf("sun.java2d.SunGraphics2D") < 0) {
 				boolean createImg = true;
-				jparsec.graph.chartRendering.Graphics gj = new AWTGraphics(rp.render.width, rp.render.height, 
+				jparsec.graph.chartRendering.Graphics gj = new AWTGraphics(rp.render.width, rp.render.height,
 						rp.render.telescope.invertHorizontal, rp.render.telescope.invertVertical, g, createImg);
 				rp.renderize(gj);
 				if (createImg) {
@@ -428,7 +428,7 @@ class RenderSky extends JComponent
 					img = null;
 				}
 			} else {
-				if (gj == null) { 
+				if (gj == null) {
 					gj = new AWTGraphics(rp.render.width, rp.render.height, rp.render.anaglyphMode,
 						rp.render.telescope.invertHorizontal, rp.render.telescope.invertVertical);
 				} else {
@@ -438,7 +438,7 @@ class RenderSky extends JComponent
 				rp.renderize(gj);
 				img = (BufferedImage) gj.getRendering();
 				g.drawImage(img, 0, 0, null);
-				
+
 				// draw image to clipped rectangle for better performance:
 				// performance increase is negligible (3%), and this can cause problems when rendering only images
 /*				int clip[] = gj.getClip();
@@ -448,14 +448,14 @@ class RenderSky extends JComponent
 					int fsy2 = (rp.graphMarginX - 1)/2; //(25*rp.render.drawCoordinateGridFont.getSize())/15;
 					if (clip[0] >= fsx) {
 						clip[2] += fsx;
-						clip[0] -= fsx;						
+						clip[0] -= fsx;
 					} else {
 						clip[2] += clip[0];
 						clip[0] = 0;
 					}
 					if (clip[1] < fsy) {
 						clip[3] += clip[1];
-						clip[1] = 0;						
+						clip[1] = 0;
 					}
 					clip[3] += fsy2;
 					if (clip[0]+clip[2] > rp.render.width) clip[2] = rp.render.width - clip[0];
@@ -463,10 +463,10 @@ class RenderSky extends JComponent
 				}
 				if (clip[1] < 0) {
 					clip[3] += clip[1];
-					clip[1] = 0;						
+					clip[1] = 0;
 				}
 				g.drawImage(img.getSubimage(clip[0], clip[1], clip[2], clip[3]), clip[0], clip[1], null);
-*/				
+*/
 			}
 		} catch (Exception exc) {
 			exc.printStackTrace();
@@ -477,7 +477,7 @@ class RenderSky extends JComponent
 
 	/**
 	 * Renderize the sky.
-	 * 
+	 *
 	 * @param image The image to render to.
 	 * @throws JPARSECException Thrown if the calculation fails.
 	 */
@@ -485,27 +485,27 @@ class RenderSky extends JComponent
 	{
 		try {
 			if (image != null && rp.render.anaglyphMode == ANAGLYPH_COLOR_MODE.NO_ANAGLYPH) {
-				if (gj == null) { 
-					gj = new AWTGraphics(rp.render.width, rp.render.height, 
+				if (gj == null) {
+					gj = new AWTGraphics(rp.render.width, rp.render.height,
 							rp.render.telescope.invertHorizontal, rp.render.telescope.invertVertical, image);
 				} else {
 					// Force external graphics for testing
-/*					jparsec.graph.chartRendering.Graphics gj = new AWTGraphics(rp.render.width, rp.render.height, 
+/*					jparsec.graph.chartRendering.Graphics gj = new AWTGraphics(rp.render.width, rp.render.height,
 							rp.render.telescope.invertHorizontal, rp.render.telescope.invertVertical, image.createGraphics(), true);
 					rp.renderize(gj);
 					img = (BufferedImage) gj.getRendering();
 					image.createGraphics().drawImage(img, 0, 0, null);
 					return;
-*/					
-					((AWTGraphics) gj).regenerate(rp.render.width, rp.render.height, 
+*/
+					((AWTGraphics) gj).regenerate(rp.render.width, rp.render.height,
 							rp.render.telescope.invertHorizontal, rp.render.telescope.invertVertical, image);
 				}
 				rp.renderize(gj);
 				img = image;
 				return;
 			}
-			
-			if (gj == null) { 
+
+			if (gj == null) {
 				gj = new AWTGraphics(rp.render.width, rp.render.height, rp.render.anaglyphMode,
 					rp.render.telescope.invertHorizontal, rp.render.telescope.invertVertical);
 			} else {
@@ -526,7 +526,7 @@ class RenderSky extends JComponent
 			throw new JPARSECException("Error during rendering. Details: "+exc.getLocalizedMessage(), exc);
 		}
 	}
-	
+
 	/**
 	 * Returns the {@linkplain RenderSky} object.
 	 * @return The {@linkplain RenderSky} object
@@ -534,16 +534,16 @@ class RenderSky extends JComponent
 	public jparsec.graph.chartRendering.RenderSky getRenderSky() {
 		return rp;
 	}
-	
+
 	/**
 	 * The buffer image
 	 */
-	public Image buffer = null;	
+	public Image buffer = null;
 	private boolean doRedraw = true;
-	
+
 	/**
 	 * Paints the canvas using double buffering.
-	 * 
+	 *
 	 * @see #offscreenPaint
 	 */
 	@Override
@@ -570,7 +570,7 @@ class RenderSky extends JComponent
 			offscreenPaint(graphics);
 		}
 		g.drawImage(buffer, insets.left, insets.top, null);
-		
+
 		// Fix component's background in case its size is greater than the rendering
 		Color c = g.getColor();
 		g.setColor(new Color(rp.render.background));
@@ -606,7 +606,7 @@ class RenderSky extends JComponent
 
 	/**
 	 * Double buffering is always enabled.
-	 * 
+	 *
 	 * @return true.
 	 */
 	public final boolean isDoubleBuffered()

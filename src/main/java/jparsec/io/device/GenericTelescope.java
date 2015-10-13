@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */	
+ */
 package jparsec.io.device;
 
 import jparsec.io.image.ImageHeaderElement;
@@ -38,16 +38,16 @@ public interface GenericTelescope {
 	/**
 	 * Focus speed values.
 	 */
-	public static enum FOCUS_SPEED {
+	public enum FOCUS_SPEED {
 		FAST(1),
 		SLOW(2);
-		
+
 		private int val;
 		private FOCUS_SPEED(int x) {
 			val = x;
 		}
-		
-		/** Returns the value for this constant. 
+
+		/** Returns the value for this constant.
 		 * @return ID constant for the value. */
 		public int getValue() { return val; }
 	};
@@ -55,16 +55,16 @@ public interface GenericTelescope {
 	/**
 	 * Focus direction values.
 	 */
-	public static enum FOCUS_DIRECTION {
+	public enum FOCUS_DIRECTION {
 		IN(1),
 		OUT(2);
-		
+
 		private int val;
 		private FOCUS_DIRECTION(int x) {
 			val = x;
 		}
-		
-		/** Returns the value for this constant. 
+
+		/** Returns the value for this constant.
 		 * @return ID constant for the enum value. */
 		public int getValue() { return val; }
 	};
@@ -72,18 +72,18 @@ public interface GenericTelescope {
 	/**
 	 * Slew rates values.
 	 */
-	public static enum MOVE_SPEED {
+	public enum MOVE_SPEED {
 		SLEW(1),
 		FIND(2),
 		CENTER(3),
 		GUIDE(4);
-		
+
 		private int val;
 		private MOVE_SPEED(int x) {
 			val = x;
 		}
-		
-		/** Returns the value for this constant. 
+
+		/** Returns the value for this constant.
 		 * @return ID constant for the value. */
 		public int getValue() { return val; }
 	};
@@ -92,26 +92,26 @@ public interface GenericTelescope {
 	 * Slew direction values, in equatorial or azimuthal
 	 * depending on how the scope is mounted.
 	 */
-	public static enum MOVE_DIRECTION {
+	public enum MOVE_DIRECTION {
 		NORTH_UP(1),
 		EAST_LEFT(2),
 		SOUTH_DOWN(3),
 		WEST_RIGHT(4);
-		
+
 		private int val;
 		private MOVE_DIRECTION(int x) {
 			val = x;
 		}
-		
-		/** Returns the value for this constant. 
+
+		/** Returns the value for this constant.
 		 * @return ID constant for the value. */
 		public int getValue() { return val; }
 	};
-    
+
 	/**
 	 * Mount types.
 	 */
-	public static enum MOUNT {
+	public enum MOUNT {
 		AZIMUTHAL,
 		EQUATORIAL
 	};
@@ -119,15 +119,15 @@ public interface GenericTelescope {
 	/**
 	 * The set of telescope types.
 	 */
-	public static enum TELESCOPE_TYPE {
+	public enum TELESCOPE_TYPE {
 		SCHMIDT_CASSEGRAIN(true, false),
 		NEWTON(true, true),
 		REFRACTOR(true, true),
 		REFRACTOR_WITH_ERECTING_PRISM(false, false),
 		/** Hypothetical telescope that only inverts vertically. Like an
-		 * Schmidt-Cassegrain rotated 90 &ordm;. */
+		 * Schmidt-Cassegrain rotated 90&deg;. */
 		SC_VERTICALLY_INVERTED(false, true);
-		
+
 		private boolean ih, iv;
 		private TELESCOPE_TYPE(boolean ih, boolean iv) {
 			this.ih = ih;
@@ -148,18 +148,18 @@ public interface GenericTelescope {
 			return iv;
 		}
 	};
-	
+
 	/**
 	 * The list of telescope types available.
 	 */
 	public static final String[] TELESCOPE_TYPES = new String[] {
 		"Schmidt-Cassegrain", "Newton", Translate.translate(67), Translate.translate(69)
 	};
-	
-	/** 
+
+	/**
 	 * The set of telescope models supported.
 	 */
-	public static enum TELESCOPE_MODEL {
+	public enum TELESCOPE_MODEL {
 		/** AutoStar I model series, for ETX, DS, LX90, LXD, and LT models. */
 		MEADE_AUTOSTAR(false),
 		/** AutoStar II model series, LX200, LX400, and others, with GPS. */
@@ -194,7 +194,7 @@ public interface GenericTelescope {
 		private boolean isCelestron = false;
 		private boolean hasGPS = true;
 		private boolean J2000 = false;
-		
+
 		private TELESCOPE_MODEL(boolean hasGPS) {
 			this.hasGPS = hasGPS;
 			isMeade = false;
@@ -203,20 +203,20 @@ public interface GenericTelescope {
 			if (this.name().startsWith("CELESTRON")) isCelestron = true;
 
 			J2000 = false;
-			
+
 			// TODO: Check this for Celestron, Meade ok !!!
 			if (isMeade || isCelestron) J2000 = true;
 		}
-		
+
 		/**
-		 * Returns if this telescope uses mean J2000 coordinates as input/output 
+		 * Returns if this telescope uses mean J2000 coordinates as input/output
 		 * to command position. False means it uses apparent coordinates.
 		 * @return True or false.
 		 */
 		public boolean isJ2000() {
 			return J2000;
 		}
-		
+
 		/**
 		 * Returns if this telescope has GPS or not.
 		 * @return True or false.
@@ -224,7 +224,7 @@ public interface GenericTelescope {
 		public boolean hasGPS() {
 			return hasGPS;
 		}
-				
+
 		/**
 		 * Sets if this telescope has GPS or not.
 		 * @param hasGPS True or false.
@@ -232,7 +232,7 @@ public interface GenericTelescope {
 		public void setHasGPS(boolean hasGPS) {
 			this.hasGPS = hasGPS;
 		}
-		
+
 		/**
 		 * Returns if this telescope is a Meade model or not.
 		 * @return True or false.
@@ -240,7 +240,7 @@ public interface GenericTelescope {
 		public boolean isMeade() {
 			return isMeade;
 		}
-		
+
 		/**
 		 * Returns if this telescope is a Celestron model or not.
 		 * @return True or false.
@@ -248,7 +248,7 @@ public interface GenericTelescope {
 		public boolean isCelestron() {
 			return isCelestron;
 		}
-		
+
 		/**
 		 * Returns if this telescope if a virtual telescope or not.
 		 * @return True or false.
@@ -257,7 +257,7 @@ public interface GenericTelescope {
 			if (this.name().startsWith("VIRTUAL_")) return true;
 			return false;
 		}
-		
+
 		/**
 		 * Clears this enum in case the has GPS method was called.
 		 */
@@ -265,7 +265,7 @@ public interface GenericTelescope {
 			hasGPS = false;
 			if (this == MEADE_AUTOSTAR_II) hasGPS = true;
 		}
-		
+
 		/**
 		 * Returns the approximate error in radians expected in this telescope model
 		 * when commanding a given position.
@@ -273,7 +273,7 @@ public interface GenericTelescope {
 		 */
 		public double getExpectedErrorWhenCenteringObjects() {
 			double error = 0;
-			
+
 			// exact => error = 0
 			if (!isVirtual()) {
 				// 1 deg
@@ -285,17 +285,17 @@ public interface GenericTelescope {
 					error = Constant.DEG_TO_RAD * 5.0 / 60.0;
 				}
 			}
-			
+
 			return error;
 		}
 	}
-	
+
 	/**
 	 * Returns if this telescope has goto or not.
 	 * @return True or false.
 	 */
 	public boolean hasGOTO();
-	
+
 	/**
 	 * Checks if this telescope has GPS active or not. GPS is
 	 * only available is AutoStar II models and Celestron GPS.
@@ -419,7 +419,7 @@ public interface GenericTelescope {
 	 */
 	public LocationElement getHorizontalPosition();
 	/**
-	 * Sets the coordinates for an object to later command a goto. 
+	 * Sets the coordinates for an object to later command a goto.
 	 * @param loc The position in apparent equatorial coordinates.
 	 * @param name Object name.
 	 * @return True if the command success, false otherwise.
@@ -478,7 +478,7 @@ public interface GenericTelescope {
 	 * precision when measuring offsets from a given object. It is
 	 * recommended to call first {@linkplain #distanceToPosition(LocationElement, boolean)}
 	 * with the target position to be sure that the distance is below a given
-	 * reasonably limit (1 or 2 degrees). 
+	 * reasonably limit (1 or 2 degrees).
 	 * @return True if the command success, false otherwise.
 	 */
 	public boolean sync();
@@ -509,6 +509,11 @@ public interface GenericTelescope {
 	 * @return Model name. In case the command fails, null is returned.
 	 */
 	public String getTelescopeName();
+	/**
+	 * Returns the telescope port name.
+	 * @return Port name. In case the command fails, null is returned.
+	 */
+	public String getTelescopePort();
 	/**
 	 * Returns the observer's location as it is set by the
 	 * telescope.
@@ -593,7 +598,7 @@ public interface GenericTelescope {
 	 * <pre>
 	 * Entry    Value (typical)   Description
 	 * --------------------------------------
-	 * 
+	 *
 	 * BITPIX      16             Bits per data value
 	 * NAXIS        2             Dimensionality
 	 * NAXIS1       0             Width
@@ -619,17 +624,17 @@ public interface GenericTelescope {
 	 * ALIGNED      true          Telescope aligned ?
 	 * MOVING       false         Telescope moving ?
 	 * RA           12h 00m 00s   Telescope apparent RA
-	 * DEC          10 &ordm; 00' 00"   Telescope apparent DEC
+	 * DEC          10&deg; 00' 00"   Telescope apparent DEC
 	 * RAJ2000      12h 00m 00s   Telescope J2000 RA
-	 * DECJ2000     10 &ordm; 00' 00"   Telescope J2000 DEC
-	 * AZ           10 &ordm; 00' 00"   Telescope AZ
-	 * EL           10 &ordm; 00' 00"   Telescope EL
+	 * DECJ2000     10&deg; 00' 00"   Telescope J2000 DEC
+	 * AZ           10&deg; 00' 00"   Telescope AZ
+	 * EL           10&deg; 00' 00"   Telescope EL
 	 * DATE0        2013-01-01 .. Date and time for the beginning of the observation
-	 * AZ0          10 &ordm; 00' 00"   Telescope AZ for the beginning of the observation
-	 * EL0          10 &ordm; 00' 00"   Telescope EL for the beginning of the observation
+	 * AZ0          10&deg; 00' 00"   Telescope AZ for the beginning of the observation
+	 * EL0          10&deg; 00' 00"   Telescope EL for the beginning of the observation
 	 * DATE-EFF     2013-01-01 .. Date and time for the middle of the observation
-	 * AZ-EFF       10 &ordm; 00' 00"   Telescope AZ for the middle of the observation
-	 * EL-EFF       10 &ordm; 00' 00"   Telescope EL for the middle of the observation
+	 * AZ-EFF       10&deg; 00' 00"   Telescope AZ for the middle of the observation
+	 * EL-EFF       10&deg; 00' 00"   Telescope EL for the middle of the observation
 	 * ... + camera entries ...
 	 * FIELD        0.5           Camera field of view (deg)
 	 * CAM_INDE     0             Camera index id value

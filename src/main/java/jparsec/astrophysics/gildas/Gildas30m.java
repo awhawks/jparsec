@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -18,9 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- */					
+ */
 package jparsec.astrophysics.gildas;
- 
+
 import java.io.*;
 import java.util.ArrayList;
 
@@ -33,15 +33,11 @@ import jparsec.util.JPARSECException;
  * several spectra are read from a file. The possible values of some parameters (projection,
  * coordinates, velocity, and spectrum kind) are listed here as constants, and not with
  * enumeration, since some values for those constants have values like -1.
- *  
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
 public class Gildas30m {
-
-	// Maximum iterations when searching for a given scan inside a 30m file. A value
-	// of 100 is enough to read OTF maps of 32 GB.
-	//private static final int MAX_ITER = 100;
 
 	/**
 	 * Gildas value used as an identifier for projection none.
@@ -121,7 +117,7 @@ public class Gildas30m {
      * Gildas value used as an identifier for a continuum observation.
      */
     public static final int KIND_CONTINUUM = 1;
-    
+
 	/**
 	 * ID constant for this header parameter.
 	 */
@@ -429,6 +425,14 @@ public class Gildas30m {
 	/**
 	 * ID constant for this header parameter.
 	 */
+    public static final String DOPPLER= "doppler";
+	/**
+	 * Holds a description for this header parameter.
+	 */
+    public static final String DOPPLER_DESC = "Doppler correction";
+	/**
+	 * ID constant for this header parameter.
+	 */
     public static final String BEAM_EFF = "beameff";
 	/**
 	 * Holds a description for this header parameter.
@@ -514,6 +518,14 @@ public class Gildas30m {
 	 * Holds a description for this header parameter.
 	 */
     public static final String TAUIMA_DESC = "Opacity in image band";
+	/**
+	 * ID constant for this header parameter.
+	 */
+    public static final String TATMIMG = "tauima";
+	/**
+	 * Holds a description for this header parameter.
+	 */
+    public static final String TATMIMG_DESC = "Atmosphere temp in image band";
 	/**
 	 * ID constant for this header parameter.
 	 */
@@ -714,7 +726,7 @@ public class Gildas30m {
 	 * Holds a description for this header parameter.
 	 */
     public static final String GAUSS_DESC = "Gauss fitting parameters";
-    
+
     private int next_free_block;
     private String code;
     private int ilex;
@@ -725,7 +737,7 @@ public class Gildas30m {
     private Convertible convert;
     private ArrayList<String> ordered_index, ordered_kind, ordered_keys;
     private String index[];
-    
+
     private void createIndex(int max)
     throws JPARSECException {
     	index = new String[next_free_entry - 1];
@@ -737,7 +749,7 @@ public class Gildas30m {
         if (max <= 0) max = next_free_entry;
         for(int i = 0; i < max - 1; i++)
         {
-            Parameter aobj1[] = readHeader(i); 
+            Parameter aobj1[] = readHeader(i);
             index[i] = ((Parameter) aobj1[1]).value;
             int val = Integer.parseInt(aobj1[0].value);
             vals[i] = val;
@@ -803,7 +815,7 @@ public class Gildas30m {
 	        {
 	        	int k = Integer.parseInt((String) kinds[i]);
 	        	if (k == Gildas30m.KIND_SPECTRAL) nsp ++;
-	        }        	
+	        }
 	        int key[] = new int[nsp];
 	        nsp = 0;
 	        for (int i=0; i<kinds.length; i++)
@@ -813,7 +825,7 @@ public class Gildas30m {
 	        		key[nsp] = Integer.parseInt((String) keys[i]);
 	        		nsp ++;
 	        	}
-	        }        	
+	        }
 	        return key;
         }
     }
@@ -830,7 +842,7 @@ public class Gildas30m {
     public void recoverDamagedFile(int n) throws JPARSECException {
     	createIndex(n);
     }
-    
+
     /**
      * Returns the header of a given spectrum.
      * @param i The index of the spectrum.
@@ -844,7 +856,7 @@ public class Gildas30m {
         int ix = integer1.intValue();
         return new SpectrumHeader30m(this.readHeader(ix));
     }
-    
+
     private Parameter[] readHeader(int i)
     throws JPARSECException {
         int j = i / ilex;
@@ -900,7 +912,7 @@ public class Gildas30m {
     private float[] readData(int i)
     throws JPARSECException {
         try
-        { 
+        {
             byte abyte0[] = readSomeBlocks(i);
             //convert.readInt(abyte0, 8);
             int k = convert.readInt(abyte0, 16);
@@ -908,7 +920,7 @@ public class Gildas30m {
             //convert.readInt(abyte0, 28);
             //convert.readInt(abyte0, 32);
             float ad[] = new float[l];
-            for(int k1 = 0; k1 < ad.length; k1++) 
+            for(int k1 = 0; k1 < ad.length; k1++)
                 ad[k1] = convert.readFloat(abyte0, ((k + k1) - 1) * 4);
 
             return ad;
@@ -927,47 +939,47 @@ public class Gildas30m {
             //convert.readInt(abyte0, 8);
             //convert.readInt(abyte0, 16);
             //convert.readInt(abyte0, 20);
-            int i1 = convert.readInt(abyte0, 28);
+            int i1 = convert.readInt(abyte0, 28); // Number of sections
             //convert.readInt(abyte0, 32);
             int ai[] = new int[i1];
             int ai1[] = new int[i1];
             int ai2[] = new int[i1];
             for(int k1 = 0; k1 < i1; k1++)
             {
-                ai[k1] = convert.readInt(abyte0, 36 + k1 * 4);
-                ai1[k1] = convert.readInt(abyte0, 36 + i1 * 4 + k1 * 4);
-                ai2[k1] = convert.readInt(abyte0, 36 + i1 * 4 + i1 * 4 + k1 * 4);
+                ai[k1] = convert.readInt(abyte0, 36 + k1 * 4); // Section id
+                ai1[k1] = convert.readInt(abyte0, 36 + i1 * 4 + k1 * 4); // Section length
+                ai2[k1] = convert.readInt(abyte0, 36 + i1 * 4 + i1 * 4 + k1 * 4); // Section address
                 switch(ai[k1])
                 {
-                case -2: 
+                case -2:
                     readGeneralSection(abyte0, ai2[k1], ai1[k1], spectrum);
                     break;
 
-                case -3: 
+                case -3:
                     readPositionSection(abyte0, ai2[k1], ai1[k1], spectrum);
                     break;
 
-                case -4: 
+                case -4:
                     readSpectroscopySection(abyte0, ai2[k1], ai1[k1], spectrum);
                     break;
 
-                case -10: 
+                case -10:
                     readContinuumSection(abyte0, ai2[k1], ai1[k1], spectrum);
                     break;
 
-                case -14: 
+                case -14:
                     readCalibrationSection(abyte0, ai2[k1], ai1[k1], spectrum);
                     break;
 
-                case -30: 
+                case -30:
                     readDataDescriptorSection(abyte0, ai2[k1], ai1[k1], spectrum);
                     break;
 
-                case -8: 
+                case -8:
                     readFrequencySwitchingSection(abyte0, ai2[k1], ai1[k1], spectrum);
                     break;
 
-                case -5: 
+                case -5:
                     readBaselineSection(abyte0, ai2[k1], ai1[k1], spectrum);
                     break;
                 }
@@ -1066,6 +1078,12 @@ public class Gildas30m {
         spectrum.put(new String(Gildas30m.IMAGE), new Parameter(d1, Gildas30m.IMAGE_DESC));
         int l = convert.readInt(abyte0, i * 4 + 56);
         spectrum.put(new String(Gildas30m.VEL_TYPE), new Parameter(l, Gildas30m.VEL_TYPE_DESC));
+        if (j >= 17) {
+	        double f6 = convert.readDouble(abyte0, i * 4 + 60);
+	        spectrum.put(new String(Gildas30m.DOPPLER), new Parameter(f6, Gildas30m.DOPPLER_DESC));
+        } else {
+	        spectrum.put(new String(Gildas30m.DOPPLER), new Parameter(0.0, Gildas30m.DOPPLER_DESC));
+        }
     }
 
     private void readCalibrationSection(byte abyte0[], int i, int j, Spectrum30m spectrum)
@@ -1093,7 +1111,9 @@ public class Gildas30m {
         spectrum.put(new String(Gildas30m.TAUSIG), new Parameter(f9, Gildas30m.TAUSIG_DESC));
         float f10 = convert.readFloat(abyte0, i * 4 + 40);
         spectrum.put(new String(Gildas30m.TAUIMA), new Parameter(f10, Gildas30m.TAUIMA_DESC));
-        float f11 = convert.readFloat(abyte0, i * 4 + 44);
+        float f11a = convert.readFloat(abyte0, i * 4 + 44);
+        spectrum.put(new String(Gildas30m.TATMIMG), new Parameter(f11a, Gildas30m.TATMIMG_DESC));
+        float f11 = convert.readFloat(abyte0, i * 4 + 48);
         spectrum.put(new String(Gildas30m.TREC), new Parameter(f11, Gildas30m.TREC_DESC));
         int k = convert.readInt(abyte0, i * 4 + 48 + 4);
         spectrum.put(new String(Gildas30m.MODE), new Parameter(k, Gildas30m.MODE_DESC));
@@ -1202,7 +1222,7 @@ public class Gildas30m {
         float y[] = this.readData(integer.intValue());
     	return y;
     }
-       
+
     /**
      * Closes the file and liberates resources. Once closed, the
      * file cannot be read again.
@@ -1212,15 +1232,15 @@ public class Gildas30m {
     	try {
     		if (file != null) file.close();
     	} catch (Exception exc) {
-	    	 throw new JPARSECException("cannot close the file.", exc);    		
+	    	 throw new JPARSECException("cannot close the file.", exc);
     	}
     }
-    
+
     /**
      * Constructor given the path of a .30m file. Don't forget to
      * close the file after using it.
-     * @param path The path of a .30m file. A .fits file from Gildas 
-     * containing spectra is also acceptable, 
+     * @param path The path of a .30m file. A .fits file from Gildas
+     * containing spectra is also acceptable,
      * but will be converted into old .30m format,
      * saved in the same input directory (as xxx.old30m), and NOT removed.
      * @throws JPARSECException If an error occurs.
@@ -1232,12 +1252,12 @@ public class Gildas30m {
 			Spectrum30m.writeAs30m(Spectrum30m.readSpectraFromFITS(path), newPath);
 			path = newPath;
 		}
-		
+
         index_arr = new byte[1004];
         index = null;
-		
-		try { 	   
-		   if (file != null) file.close(); 
+
+		try {
+		   if (file != null) file.close();
            file = new RandomAccessFile(new File(path), "r");
            byte abyte0[] = new byte[4];
            file.read(abyte0);
@@ -1264,9 +1284,9 @@ public class Gildas30m {
 	    	 throw new JPARSECException("file "+path+" not found.", fnf);
 	     } catch (IOException ioe) {
 	    	 throw new JPARSECException("error reading, probably corrupt file.", ioe);
-	     } 
+	     }
 	}
-	
+
 	private static void writeInt(byte[] array, int offset, int value) {
 		array[offset] =     (byte)(value >> 24);
 		array[offset + 1] = (byte)(value >> 16);
