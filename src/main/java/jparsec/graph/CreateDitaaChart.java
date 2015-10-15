@@ -305,7 +305,7 @@ public class CreateDitaaChart {
 		pr.setPerformSeparationOfCommonEdges(this.separateCommonEdges);
 		pr.setCharacterEncoding(encoding);
 		
-		Diagram diagram = new Diagram(grid, co);
+		Diagram diagram = new Diagram(grid, co, pr);
 		
 		BufferedImage image = new BufferedImage(diagram.getWidth(), diagram.getHeight(), 
 				transparent ? BufferedImage.TYPE_INT_ARGB : BufferedImage.TYPE_INT_RGB);
@@ -320,7 +320,7 @@ public class CreateDitaaChart {
 	 * Renders a diagram to an external Graphics object.
 	 * @param g2 The graphics object.
 	 */
-	public void draw(Graphics2D g2) {
+/*	public void draw(Graphics2D g2) {
 		TextGrid grid = new TextGrid();
 
 		try {
@@ -346,7 +346,7 @@ public class CreateDitaaChart {
 		Diagram diagram = new Diagram(grid, co);
 
 		new BitmapRenderer().render(diagram, g2, co.renderingOptions);
-	}
+	} */
 
 	/**
 	 * Sets if antialiasing should be used. Default is true.
