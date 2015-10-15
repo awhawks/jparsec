@@ -305,7 +305,7 @@ public class CreateDitaaChart {
 		pr.setPerformSeparationOfCommonEdges(this.separateCommonEdges);
 		pr.setCharacterEncoding(encoding);
 		
-		Diagram diagram = new Diagram(grid, co, pr);
+		Diagram diagram = new Diagram(grid, co);
 		
 		BufferedImage image = new BufferedImage(diagram.getWidth(), diagram.getHeight(), 
 				transparent ? BufferedImage.TYPE_INT_ARGB : BufferedImage.TYPE_INT_RGB);
@@ -320,7 +320,7 @@ public class CreateDitaaChart {
 	 * Renders a diagram to an external Graphics object.
 	 * @param g2 The graphics object.
 	 */
-/*	public void draw(Graphics2D g2) {
+	public void draw(Graphics2D g2) {
 		TextGrid grid = new TextGrid();
 
 		try {
@@ -334,24 +334,19 @@ public class CreateDitaaChart {
 
 		ConversionOptions co = new ConversionOptions();
 		co.setDebug(false);
-
 		co.renderingOptions.setDropShadows(this.shadows);
 		co.renderingOptions.setAntialias(this.antialiasing);
 		co.renderingOptions.setScale(this.scale);
+		co.processingOptions.setAllCornersAreRound(this.round);
+		co.processingOptions.setPerformSeparationOfCommonEdges(this.separateCommonEdges);
+		co.processingOptions.setCharacterEncoding(encoding);
 		Color col = new Color(background.getRed(), background.getGreen(), background.getBlue(), background.getAlpha());
 		if (transparent) col = new Color(background.getRed(), background.getGreen(), background.getBlue(), 0);
-		//co.renderingOptions.setBackgroundColor(col);
-		
-		ProcessingOptions pr = new ProcessingOptions();
-		pr.setAllCornersAreRound(this.round);
-		pr.setPerformSeparationOfCommonEdges(this.separateCommonEdges);
-		pr.setCharacterEncoding(encoding);
-		
-		Diagram diagram = new Diagram(grid, co, pr);
-		g2.setColor(col);
-		g2.fillRect(0, 0, diagram.getWidth(), diagram.getHeight());
+		co.renderingOptions.setBackgroundColor(col);
+		Diagram diagram = new Diagram(grid, co);
+
 		new BitmapRenderer().render(diagram, g2, co.renderingOptions);
-	} */
+	}
 
 	/**
 	 * Sets if antialiasing should be used. Default is true.

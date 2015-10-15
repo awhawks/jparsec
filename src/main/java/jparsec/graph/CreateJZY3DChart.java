@@ -65,7 +65,7 @@ import jparsec.util.JPARSECException;
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
-public class CreateJZY3DChart {
+public class CreateJZY3DChart_new {
 
 	private ChartElement3D chart_elem;
 	private GridChartElement grid_chart_elem;
@@ -78,7 +78,7 @@ public class CreateJZY3DChart {
 	 * @param chart3d The 3d chart object.
 	 * @throws JPARSECException If an error occurs.
 	 */
-	public CreateJZY3DChart(ChartElement3D chart3d) throws JPARSECException {
+	public CreateJZY3DChart_new(ChartElement3D chart3d) throws JPARSECException {
 		this.chart_elem = chart3d.clone();
 		init(chart3d);
 	}
@@ -87,7 +87,7 @@ public class CreateJZY3DChart {
 	 * @param chart The grid chart object.
 	 * @throws JPARSECException If an error occurs.
 	 */
-	public CreateJZY3DChart(GridChartElement chart) throws JPARSECException {
+	public CreateJZY3DChart_new(GridChartElement chart) throws JPARSECException {
 		this.grid_chart_elem = chart.clone();
 		init(chart);
 	}
@@ -99,7 +99,7 @@ public class CreateJZY3DChart {
 	 * @param n The number of points to sample the function in x/y axes.
 	 * @throws JPARSECException If an error occurs.
 	 */
-	public CreateJZY3DChart(String fxy, int min, int max, int n) throws JPARSECException {
+	public CreateJZY3DChart_new(String fxy, int min, int max, int n) throws JPARSECException {
 		this.fxy = fxy;
 		this.min = min;
 		this.max = max;

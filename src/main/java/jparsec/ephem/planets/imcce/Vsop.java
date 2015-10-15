@@ -114,7 +114,7 @@ public class Vsop
 			extension = "emb";
 			break;
 		default:
-			throw new JPARSECException("Invalid body.");
+			throw new JPARSECException("Invalid body "+planet+".");
 		}
 
 		if (extension.equals(""))

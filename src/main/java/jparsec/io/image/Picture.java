@@ -236,12 +236,28 @@ public class Picture
 	 */
 	public Picture(int[][] r, int[][] g, int[][] b, int[][] a)
 	{
-		if (a != null) {
-			image = new BufferedImage(r.length, r[0].length, BufferedImage.TYPE_INT_ARGB);
+		int w = 0, h = 0;
+		if (r != null) {
+			w = r.length;
+			h = r[0].length;
 		} else {
-			image = new BufferedImage(r.length, r[0].length, BufferedImage.TYPE_INT_RGB);
+			if (g != null) {
+				w = g.length;
+				h = g[0].length;
+			} else {
+				if (b != null) {
+					w = b.length;
+					h = b[0].length;
+				} else {
+					if (a != null) {
+						w = a.length;
+						h = a[0].length;
+					}
+				}
+			}
 		}
-
+		int t = (a == null) ? BufferedImage.TYPE_INT_RGB : BufferedImage.TYPE_INT_ARGB;
+		image = new BufferedImage(w, h, t);
 		setColor(r, g, b, a);
 	}
 
@@ -255,12 +271,28 @@ public class Picture
 	 */
 	public Picture(byte[][] r, byte[][] g, byte[][] b, byte[][] a)
 	{
-		if (a != null) {
-			image = new BufferedImage(r.length, r[0].length, BufferedImage.TYPE_INT_ARGB);
+		int w = 0, h = 0;
+		if (r != null) {
+			w = r.length;
+			h = r[0].length;
 		} else {
-			image = new BufferedImage(r.length, r[0].length, BufferedImage.TYPE_INT_RGB);
+			if (g != null) {
+				w = g.length;
+				h = g[0].length;
+			} else {
+				if (b != null) {
+					w = b.length;
+					h = b[0].length;
+				} else {
+					if (a != null) {
+						w = a.length;
+						h = a[0].length;
+					}
+				}
+			}
 		}
-
+		int t = (a == null) ? BufferedImage.TYPE_INT_RGB : BufferedImage.TYPE_INT_ARGB;
+		image = new BufferedImage(w, h, t);
 		setColor(r, g, b, a);
 	}
 

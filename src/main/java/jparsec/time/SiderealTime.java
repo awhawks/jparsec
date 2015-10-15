@@ -195,7 +195,7 @@ public class SiderealTime
 
 		// Obtain julian day in Universal Time
 		BigDecimal jd = TimeScale.getExactJD(time, obs, eph, SCALE.UNIVERSAL_TIME_UT1);
-		if (lastBigDecimal != null && lastBigDecimal.doubleValue() == jd.doubleValue()) return lastGMST;
+		if (lastBigDecimal != null && lastBigDecimal.doubleValue() == jd.doubleValue()) return lastBigGMST;
 
 		BigDecimal gmst = new BigDecimal(0.0);
 		BigDecimal msday = new BigDecimal(0.0);
@@ -238,8 +238,8 @@ public class SiderealTime
 				}
 
 				lastBigDecimal = jd;
-				lastGMST = Functions.normalizeRadians(gmst).doubleValue();
-				return lastGMST;
+				lastBigGMST = Functions.normalizeRadians(gmst).doubleValue();
+				return lastBigGMST;
 			} else {
 				if (eph.ephemMethod == EphemerisElement.REDUCTION_METHOD.WILLIAMS_1994 ||
 						eph.ephemMethod == EphemerisElement.REDUCTION_METHOD.SIMON_1994) {
@@ -272,12 +272,12 @@ public class SiderealTime
 		gmst = Functions.normalizeRadians(gmst);
 
 		lastBigDecimal = jd;
-		lastGMST = gmst.doubleValue();
-		return lastGMST;
+		lastBigGMST = gmst.doubleValue();
+		return lastBigGMST;
 	}
 	private static BigDecimal lastBigDecimal;
 	private static double lastJD;
-	private static double lastGMST;
+	private static double lastBigGMST, lastGMST;
 
 	/**
 	 * Returns apparent sidereal time of the observer.

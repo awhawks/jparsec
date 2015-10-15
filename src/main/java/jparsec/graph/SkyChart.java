@@ -1424,22 +1424,24 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 			}
 
 			int s = 10;
-			g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, s));
-			int x0 = 5;
-			int w1 = chart.width/3+2*x0, h = s+3; //g.getFontMetrics().stringWidth(msg1)+2*x0, h = 18;
-			int w2 = chart.width/3+2*x0; //g.getFontMetrics().stringWidth(msg2)+2*x0;
-			int y0 = chart.height - h;
-			int w0 =  chart.width;
-			g.setColor(new Color(skyRender.getRenderSkyObject().render.background));
-			g.fillRect(0, y0, w1, h);
-			g.fillRect(w0-w2, y0, w2, h);
-			g.setColor(new Color(skyRender.getRenderSkyObject().render.drawCoordinateGridColor));
-			y0 += (h + s) / 2;
-			TextLabel tl = new TextLabel(msg1);
-			tl.draw(g, x0, y0);
-			//g.drawString(msg1, x0, y0);
-			w2 = g.getFontMetrics().stringWidth(msg2)+2*x0;
+			if (g != null) {
+				g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, s));
+				int x0 = 5;
+				int w1 = chart.width/3+2*x0, h = s+3; //g.getFontMetrics().stringWidth(msg1)+2*x0, h = 18;
+				int w2 = chart.width/3+2*x0; //g.getFontMetrics().stringWidth(msg2)+2*x0;
+				int y0 = chart.height - h;
+				int w0 =  chart.width;
+				g.setColor(new Color(skyRender.getRenderSkyObject().render.background));
+				g.fillRect(0, y0, w1, h);
+				g.fillRect(w0-w2, y0, w2, h);
+				g.setColor(new Color(skyRender.getRenderSkyObject().render.drawCoordinateGridColor));
+				y0 += (h + s) / 2;
+				TextLabel tl = new TextLabel(msg1);
+				tl.draw(g, x0, y0);
+				//g.drawString(msg1, x0, y0);
+				w2 = g.getFontMetrics().stringWidth(msg2)+2*x0;
 			g.drawString(msg2, w0-w2+x0, y0);
+			}
 		}
 	}
 
