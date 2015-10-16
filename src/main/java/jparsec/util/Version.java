@@ -321,7 +321,7 @@ public class Version
 			"surfacePlotter2.0.jar                         1.00",
 			"miglayout-4.0-swing.jar                       1.00",
 			"nrjavaserial-3.8.8.jar                        1.00",
-			"ditaa.jar                                     1.00",
+			"ditaa.jar                                     1.01",
 
 			"skyViewWCS.jar                                1.00",
 			"jsky-coords.jar                               1.00",
