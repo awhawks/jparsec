@@ -544,16 +544,16 @@ public class MoonEvent {
 			}
 		}
 
-		String x[] = new String[vector.size()];
-		String y[] = new String[vector.size()];
+		double x[] = new double[vector.size()];
+		double y[] = new double[vector.size()];
 		double dy[] = new double[vector.size()];
 		for (int i=0; i<vector.size(); i++)
 		{
 			double set[] = vector.get(i);
 			TimeElement myTime = new TimeElement(set[0], SCALE.BARYCENTRIC_DYNAMICAL_TIME);
 			double outjd = TimeScale.getJD(myTime, observer, eph, outputTimeScale);
-			x[i] = ""+outjd;
-			y[i] = ""+set[1];
+			x[i] = outjd;
+			y[i] = set[1];
 			dy[i] = 0.005;
 		}
 		ChartSeriesElement chartSeries = new ChartSeriesElement(x, y, null, dy,
@@ -918,7 +918,9 @@ public class MoonEvent {
 			String table[] = DataSet.toStringArray(dataTable[i], lineSep);
 			double x[] = DataSet.toDoubleValues(DataSet.extractColumnFromTable(table, fieldSep, 1));
 			double y[] = DataSet.toDoubleValues(DataSet.extractColumnFromTable(table, fieldSep, 0));
-			x = DataSet.applyFunction("x+"+initJD, x);
+			for (int j=0; j<x.length; j++) {
+				x[j] += initJD;
+			}
 			series[i] = new ChartSeriesElement(x, y, null, null,
 					targetBodies[i].getName(), true, col[i % col.length], ChartSeriesElement.SHAPE_EMPTY,
 					ChartSeriesElement.REGRESSION.NONE);

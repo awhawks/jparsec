@@ -65,6 +65,7 @@ public class FileIO
 		}
 
 		URL url = FileIO.class.getClassLoader().getResource(LIBRARY_ROOT_NAME + "/io/package.html");
+		if (url == null) return null;
 		String path = getPathFromURL(url.toString());
 		if (clean) {
 			try {
