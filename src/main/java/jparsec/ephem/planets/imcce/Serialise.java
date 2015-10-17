@@ -3,12 +3,12 @@ package jparsec.ephem.planets.imcce;
 import com.thoughtworks.xstream.XStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.InputStream;
+import jparsec.xml.JParsecDoubleConverter;
+
 //import java.nio.file.Files;
 //import java.nio.file.Path;
 //import java.nio.file.Paths;
-import java.io.IOException;
-import java.io.InputStream;
-import jparsec.xml.JParsecDoubleConverter;
 
 /**
  * Created by carlo on 14.10.15.
@@ -176,6 +176,7 @@ public class Serialise {
 
         //FileOutputStream fos = new FileOutputStream(file.toFile());
         FileOutputStream fos = new FileOutputStream(file);
+        fos.write("<?xml version='1.0' encoding='utf-8'?>\n".getBytes());
 
         XStream xs = new XStream();
         xs.registerConverter(new JParsecDoubleConverter(), XStream.PRIORITY_VERY_HIGH);
@@ -219,14 +220,14 @@ public class Serialise {
         //return xs.fromXML(file.toFile());
         return xs.fromXML(file);
         */
-        Serialise ser = new Serialise();
-        InputStream stream = ser.getClass().getResourceAsStream("jparsec/ephem/planets/imcce/" + fileName);
+
+        InputStream stream = Serialise.class.getClassLoader().getResourceAsStream("/jparsec/ephem/planets/imcce/" + fileName);
         Object result = xs.fromXML(stream);
-        try {
-            stream.close();
-        } catch (IOException e) {
-            throw new RuntimeException("Could not close input stream for " + fileName);
-        }
+//        try {
+//            stream.close();
+//        } catch (IOException e) {
+//            throw new RuntimeException("Could not close input stream for " + fileName);
+//        }
 
         return result;
     }
