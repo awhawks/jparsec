@@ -282,6 +282,7 @@ public class TimeElement implements Serializable
 	/**
 	 * Returns a simple String representation of this instant.
 	 */
+	@Override
 	public String toString() {
 		try {
 			return astroDate.toString(this.decimalsInSeconds)+" "+getTimeScaleAbbreviation();

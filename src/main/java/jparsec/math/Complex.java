@@ -1152,6 +1152,7 @@ public class Complex implements Serializable {
 	 *         representation
 	 *         <p>
 	 **/
+	@Override
 	public String toString() {
 		if (imaginary < 0.0) { // ...remembering NaN & Infinity
 			return ("(" + real + " - " + (-imaginary) + "i)");

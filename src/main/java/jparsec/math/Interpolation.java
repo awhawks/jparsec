@@ -824,6 +824,7 @@ public class Interpolation implements Serializable
 	/**
 	 * Returns a string with the list of points.
 	 */
+	@Override
 	public String toString() {
 		StringBuffer s = new StringBuffer("");
 		String lsep = FileIO.getLineSeparator();

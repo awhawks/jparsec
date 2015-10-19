@@ -255,7 +255,7 @@ public class SkyChartTest {
 			w = d.width;
 			h = d.height;
 */
-        final SkyChart sc = new SkyChart(w, h, skyRender, true, false, 5, true); //skyFast);
+        final SkyChart sc = new SkyChart(w, h, skyRender, true, false, 5, false); //skyFast);
 
 /*			sc.chartForDragging = sky.clone();
 			sc.chartForDragging.drawMilkyWayContoursWithTextures = false;

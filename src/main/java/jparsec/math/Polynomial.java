@@ -22,8 +22,8 @@
 package jparsec.math;
 
 import java.awt.Color;
-
 import java.util.Arrays;
+
 import jparsec.graph.ChartElement;
 import jparsec.graph.ChartSeriesElement;
 import jparsec.graph.CreateChart;
@@ -391,6 +391,7 @@ public class Polynomial implements Cloneable, java.io.Serializable {
 	*
 	*  @return  The String representation of this object.
 	**/
+	@Override
     public String toString() {
     	StringBuffer buffer = new StringBuffer();
 

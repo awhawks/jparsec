@@ -28,7 +28,6 @@ import java.awt.geom.Point2D;
 import nom.tam.fits.*;
 import nom.tam.image.ImageTiler;
 import nom.tam.util.*;
-
 import jparsec.astrophysics.gildas.Parameter;
 import jparsec.ephem.Functions;
 import jparsec.graph.DataSet;
@@ -1400,6 +1399,7 @@ public class FitsIO {
 	 * In case of error getting the information from the
 	 * fits, null will be returned.
 	 */
+	@Override
 	public String toString() {
 		String sep = FileIO.getLineSeparator();
 		int nameAdd = 4;

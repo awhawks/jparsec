@@ -98,6 +98,7 @@ import jparsec.math.Interpolation;
 import jparsec.math.matrix.Matrix;
 import jparsec.observer.ExtraterrestrialObserverElement;
 import jparsec.observer.LocationElement;
+import jparsec.observer.LocationElementFloat;
 import jparsec.observer.ObserverElement;
 import jparsec.time.AstroDate;
 import jparsec.time.TimeScale;
@@ -1782,7 +1783,7 @@ public class RenderSky
 			{
 				if (readStars[iii] != null) {
 					StarData sd = (StarData)readStars[iii];
-					if (sd.mag0 > maglim) {
+					if (sd.mag[0] > maglim) {
 						if (maxStars == -1) maxStars = iii;
 						if (iii >= 4255 || db_conlin >= 0) break;
 					}
@@ -1969,7 +1970,7 @@ public class RenderSky
 			float pos[], mag, sep, maxMag, pa;
 			int iii, n;
 			float dist = 0, position;
-			String type, name, label;
+			String name, label;
 			g.setColor(render.drawStarsColor, true);
 
 			boolean joinGreekAndName = true;
@@ -2004,7 +2005,7 @@ public class RenderSky
 				if (!projection.isInvalid(pos))
 				{
 					if (!this.isInTheScreen((int)pos[0], (int)pos[1])) continue;
-					mag = sd.mag;
+					mag = sd.mag[sd.mag.length-1];
 
 			    	if (render.anaglyphMode != ANAGLYPH_COLOR_MODE.NO_ANAGLYPH) dist = getDistStar(sd.loc.getRadius());
 					size = getSizeForAGivenMagnitude(mag);
@@ -2061,18 +2062,20 @@ public class RenderSky
 						float tx = (pos[0]) - size;
 						float ty = (pos[1]) - size;
 
-						type = sd.type.substring(0, 1);
-						if (render.drawStarsSymbols && size > 0 && (type.equals("D") || type.equals("B") || type.equals("V")))
+						if (render.drawStarsSymbols && size > 0 && sd.doub != null) //(type.equals("D") || type.equals("B") || type.equals("V")))
 						{
-							sep = sd.sep;
-							pa = sd.pa;
+							sep = pa = 0;
+							if (sd.doub != null) {
+								sep = sd.doub[0];
+								pa = sd.doub[1];
+							}
 
 							maxMag = mag;
 							newSize = size+minSizeVariable;
-							if (sd.minMag != sd.maxMag) {
-								if (sd.minMag - sd.maxMag > render.limitOfDifferenceOfMagnitudesForVariableStars)
-									mag = sd.minMag;
-								maxMag = sd.maxMag;
+							if (sd.var != null) {
+								if (sd.var[0] - sd.var[1] > render.limitOfDifferenceOfMagnitudesForVariableStars)
+									mag = sd.var[0];
+								maxMag = sd.var[1];
 								newSize = getSizeForAGivenMagnitude(maxMag);
 								if (!g.renderingToExternalGraphics()) newSize = (int) newSize;
 								if (Math.abs(newSize-size) < minSizeVariable) newSize = size + minSizeVariable;
@@ -2096,7 +2099,7 @@ public class RenderSky
 
 							}
 
-							if ((type.equals("V") || type.equals("B")) && mag-maxMag > render.limitOfDifferenceOfMagnitudesForVariableStars)
+							if (sd.var != null && mag-maxMag > render.limitOfDifferenceOfMagnitudesForVariableStars)
 							{
 								if (render.anaglyphMode == ANAGLYPH_COLOR_MODE.NO_ANAGLYPH) {
 									fillOval(g, tx, ty, tsize, tsize, colIndex);
@@ -2107,7 +2110,7 @@ public class RenderSky
 
 									g.drawOval(tx, ty, tsize, tsize, render.drawFastLinesMode.fastOvals());
 
-									if (type.equals("B") && sep > render.limitOfSeparationForDoubleStars)
+									if (sd.doub != null && sep > render.limitOfSeparationForDoubleStars)
 									{
 										if (!render.drawStarsPositionAngleInDoubles || pa == 0) {
 											g.drawStraightLine(tx, (pos[1]), (pos[0]) - tsize,  pos[1]);
@@ -2127,7 +2130,7 @@ public class RenderSky
 
 									g.drawOval(tx, ty, tsize, tsize, dist);
 
-									if (type.equals("B") && sep > render.limitOfSeparationForDoubleStars)
+									if (sd.doub != null && sep > render.limitOfSeparationForDoubleStars)
 									{
 										if (!render.drawStarsPositionAngleInDoubles || pa == 0) {
 											g.drawStraightLine(tx, (pos[1]), (pos[0]) - tsize,  pos[1], dist, dist);
@@ -2157,7 +2160,7 @@ public class RenderSky
 
 								if (render.anaglyphMode == ANAGLYPH_COLOR_MODE.NO_ANAGLYPH) {
 									fillOval(g, tx, ty, tsize, tsize, colIndex);
-									if ((type.equals("D") || type.equals("B")) && sep > render.limitOfSeparationForDoubleStars)
+									if (sd.doub != null && sep > render.limitOfSeparationForDoubleStars)
 									{
 										if (!render.drawStarsPositionAngleInDoubles || pa == 0) {
 											g.drawStraightLine(tx, pos[1], (pos[0]) - tsize, pos[1]);
@@ -2170,7 +2173,7 @@ public class RenderSky
 									}
 								} else {
 									g.fillOval(tx, ty, tsize, tsize, dist);
-									if ((type.equals("D") || type.equals("B")) && sep > render.limitOfSeparationForDoubleStars)
+									if (sd.doub != null && sep > render.limitOfSeparationForDoubleStars)
 									{
 										if (!render.drawStarsPositionAngleInDoubles || pa == 0) {
 											g.drawStraightLine(tx, pos[1], (pos[0]) - tsize, pos[1], dist, dist);
@@ -2208,7 +2211,7 @@ public class RenderSky
 					}
 
 					position = 0;
-	 				if (sd.nom2 != null && labels && sd.mag0 < render.drawStarsLabelsLimitingMagnitude && render.drawStarsLabels != SkyRenderElement.STAR_LABELS.NONE)
+	 				if (sd.nom2 != null && labels && sd.mag[0] < render.drawStarsLabelsLimitingMagnitude && render.drawStarsLabels != SkyRenderElement.STAR_LABELS.NONE)
 					{
 						name = sd.nom2;
 						if (sn.contains(name)) continue;
@@ -2222,7 +2225,7 @@ public class RenderSky
 								name = names[n];
 
 								if (render.drawStarsGreekSymbols) {
-									if (sd.mag0 > render.drawStarsLabelsLimitingMagnitude) name = "";
+									if (sd.mag[0] > render.drawStarsLabelsLimitingMagnitude) name = "";
 									if (joinGreekAndName) {
 										//label = "@SIZE+4"+greek[Integer.parseInt(name2) - 1]+name3+"@SIZE-4 "+name;
 										label = sd.greek + sd.properName+" "+name;
@@ -2250,10 +2253,10 @@ public class RenderSky
 						}
 					}
 
-	 				if (magLabelCount < 20 && maglim >= 8.5 && render.drawMagnitudeLabels && sd.mag < maglim - 2) {
+	 				if (magLabelCount < 20 && maglim >= 8.5 && render.drawMagnitudeLabels && sd.mag[sd.mag.length-1] < maglim - 2) {
 	 					magLabelCount ++;
 	 					if (position == 0) position = Math.max(size * 3, size+fontSize);
-						drawString(render.drawStarsColor, render.drawStarsNamesFont, Functions.formatValue(sd.mag, 1), pos[0], pos[1], -position, false);
+						drawString(render.drawStarsColor, render.drawStarsNamesFont, Functions.formatValue(sd.mag[sd.mag.length-1], 1), pos[0], pos[1], -position, false);
 	 				}
 				}
 			}
@@ -2595,11 +2598,10 @@ public class RenderSky
     			name+= "white";
     		}
 			for (int tsizeIndex=1; tsizeIndex < starImg.length; tsizeIndex ++) {
-	        	int ss = (int) (tsizeIndex*2*starFactor[index]);
 	        	for (int i=0; i<7; i++) {
 	        		String sname = name + "_"+index+"_"+tsizeIndex+"_"+i+".png";
 		    		starImg[tsizeIndex][i] = g.getImage(sname);
-		    		starSize[tsizeIndex] = ss/2f;
+		    		starSize[tsizeIndex] = g.getSize(starImg[tsizeIndex][i])[1]/2f;
 	        	}
 			}
         	g.setColor(c, true);
@@ -4306,23 +4308,23 @@ public class RenderSky
 
 				if (!projection.isInvalid(pos0))
 				{
-					if (!this.isInTheScreen((int)pos0[0], (int)pos0[1], size)) continue;
 					if (!start) {
 						g.generalPathMoveTo(pathConLim, pos0[0], pos0[1]);
-						oldpos0 = pos0;
+						start = true;
 					} else {
-						if (oldpos0 != null && (render.telescope.invertHorizontal || render.telescope.invertVertical ||
+						if (oldpos0 != null && (this.isInTheScreen((int)pos0[0], (int)pos0[1], size) || 
+								render.telescope.invertHorizontal || render.telescope.invertVertical ||
 								rec.isLineIntersectingRectangle(oldpos0[0], oldpos0[1], pos0[0], pos0[1]))) {
 							g.generalPathLineTo(pathConLim, pos0[0], pos0[1]);
-						} else {
-							start = true;
 						}
 					}
+					oldpos0 = pos0;
 				}
 			} else {
 				//loc1 = new LocationElement(val[2], val[3], 1.0);
 				pos1 = projection.projectPosition(val, 0, false);
 				start = false;
+				oldpos0 = null;
 				if (!projection.isInvalid(pos1))
 				{
 					if (!this.isInTheScreen((int)pos1[0], (int)pos1[1], size)) continue;
@@ -4616,7 +4618,7 @@ public class RenderSky
 				g.drawImage(img, pos00[0]-radius_x, pos00[1]-radius_y);
 			}
 			type = -Math.abs(type);
-			if (obj != null) loc = ((LocationElement) obj[3]);
+			//if (obj != null) loc = ((LocationElementFloat) obj[3]);
 		}
 		return type;
 	}
@@ -4681,6 +4683,7 @@ public class RenderSky
 			maglimStarsNotDrag = maglim;
 		}
 		LocationElement loc;
+		LocationElementFloat locF;
 		Object obj[];
 		double mag;
 		float size_xy[];
@@ -4827,6 +4830,10 @@ public class RenderSky
 		}
 
 		ArrayList<Object> objects = readObjects(projection, false);
+		ArrayList<Object> objectsJ2000 = null;
+		Object o = DataBase.getData("objectsJ2000", null, true);
+		if (o == null) o = populate(false);
+		objectsJ2000 = new ArrayList<Object>(Arrays.asList((Object[]) o));
 
 		float fieldLimit = g.renderingToAndroid() ? 40:60;
 		float minX = rec.getMinX(), minY = rec.getMinY(), maxX = rec.getMaxX(), maxY = rec.getMaxY();
@@ -4835,8 +4842,20 @@ public class RenderSky
 		{
 			font = mainFont;
 			obj = (Object[]) objects.get(s);
+			if (obj.length <= 3) {
+				locF = ((LocationElementFloat) obj[1]);
+				if (obj.length == 3) {
+					mag = (Float) obj[2];					
+					obj = (Object[]) objectsJ2000.get((Integer) obj[0]);
+				} else {
+					obj = (Object[]) objectsJ2000.get((Integer) obj[0]);
+					mag = (Float) obj[4];					
+				}
+			} else {
+				mag = (Float) obj[4];
+				locF = ((LocationElementFloat) obj[3]);
+			}
 
-			mag = (Float) obj[4];
 			messier = (String) obj[1];
 			if (mag > objMagLim && (render.drawFastLinesMode.fastGrid() || maglim != render.drawStarsLimitingMagnitude)) {
 				if (render.drawDeepSkyObjectsAllMessierAndCaldwell && !external && fieldDeg < fieldLimit) {
@@ -4880,17 +4899,17 @@ public class RenderSky
 				if ((!render.drawDeepSkyObjectsOnlyMessier || (render.drawDeepSkyObjectsOnlyMessier && !messier
 						.isEmpty())) && (!SN1054 || (SN1054 && !messier.equals("M1"))))
 				{
-					loc = ((LocationElement) obj[3]);
+					//loc = ((LocationElement) obj[3]);
 
 					if (rotateOverlay) {
-						LocationElement locEq = projection.toEquatorialPosition(loc, true);
+						LocationElement locEq = projection.toEquatorialPosition(new LocationElement(locF), true);
 						sph = LocationElement.solveSphericalTriangle(locEq, locPolar0, locPolar, true);
 					}
 
 					// Correct apparent magnitude for extinction
 					if (projection.eph.ephemType == EphemerisElement.COORDINATES_TYPE.APPARENT && projection.eph.correctForExtinction &&
 							projection.obs.getMotherBody() == TARGET.EARTH && projection.eph.isTopocentric) {
-						LocationElement locEq = projection.toEquatorialPosition(loc, true);
+						LocationElement locEq = projection.toEquatorialPosition(new LocationElement(locF), true);
 						double angh = lst - locEq.getLongitude();
 						double h = FastMath.sin(projection.obs.getLatitudeRad()) * FastMath.sin(locEq.getLatitude()) + FastMath.cos(projection.obs.getLatitudeRad()) * FastMath.cos(locEq.getLatitude()) * FastMath
 								.cos(angh);
@@ -4901,7 +4920,7 @@ public class RenderSky
 
 					size_xy = (float[]) obj[5];
 					size0 = (float) (size_xy[0] * pixels_per_degree) + 1;
-					pos0 = projection.projectPosition(loc, 0, false);
+					pos0 = projection.projectPosition(locF, 0, false);
 					if (pos0 != null && !this.isInTheScreen(pos0[0], pos0[1], (int) (size0 * (Math.abs(type) == 3? 2:1)), minX, minY, maxX, maxY)) pos0 = null;
 
 					if (!projection.isInvalid(pos0))
@@ -4931,7 +4950,10 @@ public class RenderSky
 							if (file.equals("m42.jpg")) file = "m42.png";
 							if (file.equals("m37.jpg")) file = "m37.png";
 							String file0 = file;
-							if (file0.equals("m43.jpg") || file0.equals("ngc 2244.jpg") || file0.equals("m110.jpg") || file0.equals("m32.jpg") || file0.equals("ngc 5195.jpg")
+							if (	(file0.equals("m43.jpg") && fieldDeg > 0.25) 
+									|| (file0.equals("ngc 2244.jpg") && fieldDeg > 0.44)
+									|| ((file0.equals("m110.jpg") || file0.equals("m32.jpg")) && fieldDeg > 1.3) 
+									|| (file0.equals("ngc 5195.jpg") && fieldDeg > 0.04)
 //									|| (Math.abs(jd-Constant.J2000) > 365250 && (Math.abs(type) == 2 || Math.abs(type) == 4))
 								    // In epochs far from J2000 stars in clusters/nebula will appear moved due to proper motions
 									) {
@@ -4953,7 +4975,7 @@ public class RenderSky
 									g.waitUntilImagesAreRead(new Object[] {img});
 								}
 								if (img != null) {
-									Object o = null;
+									o = null;
 									if (db_deepSkyTextures >= 0) {
 										o = DataBase.getData(db_deepSkyTextures);
 									} else {
@@ -4987,7 +5009,7 @@ public class RenderSky
 							size2 = Math.max((int) (size_xy[1] * pixels_per_degree) + 1, 1);
 							if (size > 3 && size2 != size && pa != -1f)
 							{
-								double add = projection.getNorthAngleAt(loc, false, true);
+								double add = projection.getNorthAngleAt(locF, false, true);
 								double ang0 = -pa + add + sph;
 								int jmax = 20;
 								if (size > 27.5) jmax = (int)(4*Math.sqrt(size));
@@ -5121,7 +5143,7 @@ public class RenderSky
 							if (type <= 7) objType = objt[type];
 							minorObjects.add(new Object[] {
 									RenderSky.OBJECT.DEEPSKY, pos0.clone(),
-									new String[] {name2print, ""+loc.getLongitude(), ""+loc.getLatitude(), Double.toString(Math.abs(mag)), objType, ""+size_xy[0]+"x"+size_xy[1], comments}
+									new String[] {name2print, ""+locF.getLongitude(), ""+locF.getLatitude(), Double.toString(Math.abs(mag)), objType, ""+size_xy[0]+"x"+size_xy[1], comments}
 							});
 						}
 					}
@@ -8429,8 +8451,8 @@ public class RenderSky
 						android, cte0, cte1, cte11, jYearsFromJ2000, fieldLimit);
 				index ++;
 				if (star != null) {
-					if (star.mag0 > maglim) break;
-					star.index = index;
+					if (star.mag[0] > maglim) break;
+					//star.index = index;
 					list.add(star);
 				} else {
 					if (index < CRITICAL_NSTARS) list.add(null);
@@ -8495,22 +8517,24 @@ public class RenderSky
 	};
 
 	class StarData {
-		public LocationElement loc;
+		public LocationElementFloat loc;
 		public double ra, dec;
-		public float mag, mag0, pos[], sep, minMag, maxMag, pa;
-		public String sp, type, nom2, greek, properName;
-		public int index, sky2000;
+		public float pos[], var[], doub[], mag[];
+		public String sp, nom2, properName, type;
+		public char greek;
+		public int sky2000; // index
 		public short spi;
 
 		public StarData(LocationElement loc, float mag, String sp, String type) {
-			this.loc = loc;
-			this.mag = mag;
+			this.loc = new LocationElementFloat(loc);
+			this.mag = new float[] {mag};
 			this.sp = sp;
-			this.type = type;
+			if (!type.equals("N")) this.type = type;
 		}
 	}
 
 	/** Nasty clone of method in ReadFile class to improve performance. */
+	private StarElement starElem = null;
 	private StarData parseJPARSECfile(double jd, double equinox, Projection projection, String line, ReadFormat rf, String greek,
 			EphemerisElement eph, LocationElement eqCenit, double lim, double cte, double baryc[],
 			boolean externalGraphics, boolean android,
@@ -8537,21 +8561,21 @@ public class RenderSky
 				if (approxAngDist2 > lim + (properM * cte)) return null;
 			}
 
-			StarElement star = new StarElement();
-			star.rightAscension = sra;
-			star.declination = sdec;
-			star.properMotionRA = pmra;
-			star.properMotionDEC = pmdec;
+			starElem = new StarElement();
+			starElem.rightAscension = sra;
+			starElem.declination = sdec;
+			starElem.properMotionRA = pmra;
+			starElem.properMotionDEC = pmdec;
 
-			star.name = rf.readString(line, "NAME");
-			star.spectrum = rf.readString(line, "SPECTRUM");
-			star.type = rf.readString(line, "TYPE")+";"+rf.readString(line, "DATA");
-			star.magnitude = (float) rf.readFloat(line, "MAG");
-			//star.properMotionRadialV = 0.0f;
+			starElem.name = rf.readString(line, "NAME");
+			starElem.spectrum = rf.readString(line, "SPECTRUM");
+			starElem.type = rf.readString(line, "TYPE")+";"+rf.readString(line, "DATA");
+			starElem.magnitude = (float) rf.readFloat(line, "MAG");
+			//starElem.properMotionRadialV = 0.0f;
 			String rv = rf.readString(line, "RADIAL_VELOCITY");
-			if (!rv.isEmpty()) star.properMotionRadialV = Float.parseFloat(rv);
-			star.parallax = rf.readFloat(line, "PARALLAX");
-			star.equinox = Constant.J2000;
+			if (!rv.isEmpty()) starElem.properMotionRadialV = Float.parseFloat(rv);
+			starElem.parallax = rf.readFloat(line, "PARALLAX");
+			starElem.equinox = Constant.J2000;
 			//star.frame = EphemerisElement.FRAME.ICRF;
 
 			// Add classical name
@@ -8585,12 +8609,12 @@ public class RenderSky
 					constel = code;
 				}
 				if (!constel.isEmpty())
-					star.name += " (" + constel + ") (" + id + ")";
+					starElem.name += " (" + constel + ") (" + id + ")";
 			}
 
 
 			StarData sd = null;
-			double properM = Math.max(Math.abs(star.properMotionDEC), Math.abs(star.properMotionRA / cosdec));
+			double properM = Math.max(Math.abs(starElem.properMotionDEC), Math.abs(starElem.properMotionRA / cosdec));
 
 			// Reduce (very slightly) the accuracy of star ephemerides for better startup time in Android.
 			// Accuracy is sacrified by less than 1", and startup time is 2-3 times faster. Note star proper
@@ -8602,19 +8626,19 @@ public class RenderSky
 			if (projection.eph.ephemType != COORDINATES_TYPE.GEOMETRIC && properM > 0)
 			{
 				double p[] = new double[3];
-				double relativisticFactor = 1.0 / (1.0 - star.properMotionRadialV / Constant.SPEED_OF_LIGHT);
-				double sindec = FastMath.sin(star.declination);
-				double cosra = FastMath.cos(star.rightAscension);
-				double sinra = FastMath.sin(star.rightAscension);
+				double relativisticFactor = 1.0 / (1.0 - starElem.properMotionRadialV / Constant.SPEED_OF_LIGHT);
+				double sindec = FastMath.sin(starElem.declination);
+				double cosra = FastMath.cos(starElem.rightAscension);
+				double sinra = FastMath.sin(starElem.rightAscension);
 				double q[] = new double[] {cosra * cosdec, sinra * cosdec, sindec};
 				double cte2 = 0.21094952658238966; // Constant.SECONDS_PER_DAY * Constant.JULIAN_DAYS_PER_CENTURY * 0.01 / Constant.AU;
-				double cte3 = star.parallax * 0.001 / Constant.RAD_TO_ARCSEC;
-				double vpi = cte2 * star.properMotionRadialV * cte3;
+				double cte3 = starElem.parallax * 0.001 / Constant.RAD_TO_ARCSEC;
+				double vpi = cte2 * starElem.properMotionRadialV * cte3;
 				double m[] = new double[3];
-				m[0] = (-star.properMotionRA * cosdec * sinra - star.properMotionDEC * sindec * cosra + vpi * q[0]) * relativisticFactor;
-				m[1] = (star.properMotionRA * cosdec * cosra - star.properMotionDEC * sindec * sinra + vpi * q[1]) * relativisticFactor;
-				m[2] = (star.properMotionDEC * cosdec + vpi * q[2]) * relativisticFactor;
-				double T = (jd - star.equinox) * 100.0 / Constant.JULIAN_DAYS_PER_CENTURY;
+				m[0] = (-starElem.properMotionRA * cosdec * sinra - starElem.properMotionDEC * sindec * cosra + vpi * q[0]) * relativisticFactor;
+				m[1] = (starElem.properMotionRA * cosdec * cosra - starElem.properMotionDEC * sindec * sinra + vpi * q[1]) * relativisticFactor;
+				m[2] = (starElem.properMotionDEC * cosdec + vpi * q[2]) * relativisticFactor;
+				double T = (jd - starElem.equinox) * 100.0 / Constant.JULIAN_DAYS_PER_CENTURY;
 				for (int i = 0; i < 3; i++)
 				{
 					p[i] = q[i] + T * m[i] + baryc[i] * cte3;
@@ -8622,14 +8646,14 @@ public class RenderSky
 				locStar0 = LocationElement.parseRectangularCoordinates(p);
 			}
 
-			locStar0.setRadius(star.getDistance() * Constant.RAD_TO_ARCSEC);
+			locStar0.setRadius(starElem.getDistance() * Constant.RAD_TO_ARCSEC);
 			//if (equinox != Constant.J2000) {
 				// Correct for aberration, precession, and nutation
 				if (projection.eph.ephemType == COORDINATES_TYPE.APPARENT) {
 					double light_time = locStar0.getRadius() * Constant.LIGHT_TIME_DAYS_PER_AU;
 					double[] r = Ephem.aberration(locStar0.getRectangularCoordinates(), baryc, light_time);
 
-					if (highPrecision) r = Ephem.toOutputFrame(r, star.frame, eph.frame);
+					if (highPrecision) r = Ephem.toOutputFrame(r, starElem.frame, eph.frame);
 					r = precessFromJ2000(equinox, r, projection.eph);
 					r = nutateInEquatorialCoordinates(equinox, projection.eph, r, true);
 
@@ -8668,24 +8692,27 @@ public class RenderSky
 				if (pos0 == null) ll = null;
 			}
 			if (ll != null) ll.setRadius(ll.getRadius() / Constant.RAD_TO_ARCSEC);
-			sd = new StarData(ll, star.magnitude, star.spectrum, star.type);
-			sd.mag0 = star.magnitude;
+			sd = new StarData(ll, starElem.magnitude, starElem.spectrum, starElem.type);
 			sd.ra = locStar0.getLongitude();
 			sd.dec = locStar0.getLatitude();
-			if (eph.correctForExtinction) sd.mag = (float) correctForExtinction(locStar0, sd.mag);
+			if (eph.correctForExtinction) {
+				sd.mag = new float[] {starElem.magnitude, (float) correctForExtinction(locStar0, starElem.magnitude)};
+			} else {
+				sd.mag = new float[] {starElem.magnitude};				
+			}
 
 			String spectrum = "OBAFGKM";
 			sd.spi = -1;
 			if (!sd.sp.equals("")) sd.spi = (short) spectrum.indexOf(sd.sp.substring(0, 1));
-			sd.sky2000 = Integer.parseInt(FileIO.getField(1, star.name, " ", true));
-			int bracket1 = star.name.indexOf("(");
-			int bracket2 = star.name.indexOf(")");
+			sd.sky2000 = Integer.parseInt(FileIO.getField(1, starElem.name, " ", true));
+			int bracket1 = starElem.name.indexOf("(");
+			int bracket2 = starElem.name.indexOf(")");
 			if (bracket1 >= 0 && bracket2 >= 0) {
-				sd.nom2 = star.name.substring(bracket1 + 1, bracket2);
+				sd.nom2 = starElem.name.substring(bracket1 + 1, bracket2);
 
-				bracket1 = star.name.lastIndexOf("(");
-				bracket2 = star.name.lastIndexOf(")");
-				String name2 = star.name.substring(bracket1 + 1, bracket2);
+				bracket1 = starElem.name.lastIndexOf("(");
+				bracket2 = starElem.name.lastIndexOf(")");
+				String name2 = starElem.name.substring(bracket1 + 1, bracket2);
 				String name3 = "";
 				int n3 = name2.indexOf("-");
 				if (n3 >= 0) {
@@ -8694,18 +8721,19 @@ public class RenderSky
 				}
 				//label = "@SIZE+4"+greek[Integer.parseInt(name2) - 1]+name3+"@SIZE-4";
 				if (externalGraphics && !android) {
-					sd.greek = ""+greekPDF[Integer.parseInt(name2) - 1];
+					sd.greek = greekPDF[Integer.parseInt(name2) - 1];
 				} else {
-					sd.greek = ""+RenderSky.greek[Integer.parseInt(name2) - 1];
+					sd.greek = RenderSky.greek[Integer.parseInt(name2) - 1];
 				}
 				sd.properName = name3;
 			}
 
-			int nData = FileIO.getNumberOfFields(sd.type, ";", true);
-			float pa = 0, sep = 1;
+			int nData = 0;
+			if (sd.type != null) nData = FileIO.getNumberOfFields(sd.type, ";", true);
 			if (nData >= 2) {
 				String dData = FileIO.getField(2, sd.type, ";", true);
 				String s = FileIO.getField(1, dData, ",", true);
+				float pa = 0, sep = 1;
 				if (s != null && !s.isEmpty())
 					sep = Float.parseFloat(s);
 				if (render.drawStarsPositionAngleInDoubles) {
@@ -8718,13 +8746,9 @@ public class RenderSky
 					}
 					if (pa == 0) pa = (float)(0.001 * Constant.DEG_TO_RAD);
 				}
+				sd.doub = new float[] {sep, pa};
 			}
-			sd.pa = pa;
-			sd.sep = sep;
 
-			float minMag = sd.mag, maxMag = sd.mag;
-			sd.minMag = minMag;
-			sd.maxMag = maxMag;
 			if (nData == 3) {
 				String varData = FileIO.getField(3, sd.type, ";", true);
 				int varnData = FileIO.getNumberOfFields(varData, ",", false);
@@ -8732,10 +8756,9 @@ public class RenderSky
 					String max = FileIO.getField(1, varData, ",", true);
 					String min = FileIO.getField(2, varData, ",", true);
 					if (!max.isEmpty() && !min.isEmpty()) {
-						maxMag = Float.parseFloat(max);
+						float maxMag = Float.parseFloat(max);
 						float minm = Float.parseFloat(min);
-						sd.minMag = minm;
-						sd.maxMag = maxMag;
+						sd.var = new float[] {minm, maxMag};
 					}
 				}
 			}
@@ -8979,16 +9002,29 @@ public class RenderSky
 			o = DataBase.getData(db_objects);
 		} else {
 			o = DataBase.getData("objects", threadID, true);
-		}
+		} 
 //		if (o == null) o = populate();
 		if (o != null) objects = new ArrayList<Object>(Arrays.asList((Object[]) o));
 		if (objects == null) return null;
 
+		ArrayList<Object> objectsJ2000 = null;
+		o = DataBase.getData("objectsJ2000", null, true);
+		if (o == null) o = populate(false);
+		objectsJ2000 = new ArrayList<Object>(Arrays.asList((Object[]) o));
+
 		LocationElement ephem = null;
 		String obj_name2 = obj_name.toLowerCase();
+		LocationElementFloat locF;
 		for (int i = 0; i < objects.size(); i++)
 		{
 			Object[] obj = (Object[]) objects.get(i);
+			if (obj.length <= 3) {
+				locF = (LocationElementFloat) obj[1];
+				obj = (Object[]) objectsJ2000.get((Integer) obj[0]);
+			} else {
+				locF = (LocationElementFloat) obj[3];				
+			}
+
 			String messier = (String) obj[1];
 			String name = (String) obj[0];
 			messier = DataSet.replaceAll(messier, " ", "", true);
@@ -9009,7 +9045,7 @@ public class RenderSky
 			if (obj_name2.equals(name.toLowerCase()) || obj_name.equals(messier.trim()) || obj_name.equals(name+messier) ||
 					obj_name.equals(name+messier+" - "+com) ||
 					(name.indexOf(" ") > 0 && (name.substring(name.indexOf(" ")).trim()+messier+" - "+com).indexOf(obj_name) == 0)) {
-				LocationElement loc = (LocationElement) obj[3];
+				LocationElement loc = new LocationElement(locF);
 				loc = projection.toEquatorialPosition(loc, false);
 				ephem = loc.clone();
 				break;
@@ -9019,6 +9055,12 @@ public class RenderSky
 			for (int i = 0; i < objects.size(); i++)
 			{
 				Object[] obj = (Object[]) objects.get(i);
+				if (obj.length <= 3) {
+					locF = (LocationElementFloat) obj[1];
+					obj = (Object[]) objectsJ2000.get((Integer) obj[0]);
+				} else {
+					locF = (LocationElementFloat) obj[3];				
+				}
 
 				String com = "";
 				String comments = (String) obj[7];
@@ -9026,7 +9068,7 @@ public class RenderSky
 				if (pp>=0) com = comments.substring(pp+14).trim();
 
 				if (com.toLowerCase().indexOf(obj_name2) >= 0) {
-					LocationElement loc = (LocationElement) obj[3];
+					LocationElement loc = new LocationElement(locF);
 					loc = projection.toEquatorialPosition(loc, false);
 					ephem = loc.clone();
 					break;
@@ -9157,7 +9199,7 @@ public class RenderSky
 				if (sd == null) continue;
 				String name = ""+sd.sky2000;
 				if (sd.nom2 != null) name += " ("+sd.nom2+")";
-				if (sd.greek != null) name += " ("+sd.greek+")";
+				if (sd.greek != '\u0000') name += " ("+sd.greek+")";
 				if (name.equals(object) || (name.indexOf("("+object+")") >= 0))
 				{
 					index = i;
@@ -9240,10 +9282,10 @@ public class RenderSky
 		if (star == null || star.loc == null) return null;
 		float p = 0;
 		double az = 0, el = 0;
-		StarEphemElement se = new StarEphemElement(star.ra, star.dec, star.loc.getRadius(), star.mag, p, az, el);
+		StarEphemElement se = new StarEphemElement(star.ra, star.dec, star.loc.getRadius(), star.mag[star.mag.length-1], p, az, el);
 		String name = ""+star.sky2000;
 		if (star.nom2 != null) name += " ("+star.nom2+")";
-		if (star.greek != null) name += " ("+star.greek+")";
+		if (star.greek != '\u0000') name += " ("+star.greek+")";
 		se.name = name;
 		LocationElement locE = new LocationElement(star.ra, star.dec, 1.0);
 		if (projection.obs.getMotherBody() != TARGET.NOT_A_PLANET && projection.obs.getMotherBody() != TARGET.EARTH)
@@ -9285,11 +9327,12 @@ public class RenderSky
 		StarData sd = (StarData) readStars[my_star];
 		String name = ""+sd.sky2000;
 		if (sd.nom2 != null) name += " ("+sd.nom2+")";
-		if (sd.greek != null) name += " ("+sd.greek+")";
+		if (sd.greek != '\u0000') name += " ("+sd.greek+")";
 		double p = sd.loc.getRadius();
 		if (p != 0) p = 1000.0 / p;
-		StarElement se = new StarElement(name, sd.ra, sd.dec, p, sd.mag, 0.0f, 0.0f, 0.0f, Constant.J2000, FRAME.ICRF);
+		StarElement se = new StarElement(name, sd.ra, sd.dec, p, sd.mag[sd.mag.length-1], 0.0f, 0.0f, 0.0f, Constant.J2000, FRAME.ICRF);
 		se.type = sd.type;
+		if (se.type == null) se.type = "N";
 		se.spectrum = sd.sp;
 		return se;
 	}
@@ -9392,7 +9435,7 @@ public class RenderSky
 			if (rec.contains(pos[0], pos[1]) && (dist < minDist || minDist == -1.0)) {
 				int element = i;
 				if (considerMagLim) {
-					double mag = sd.mag;
+					double mag = sd.mag[sd.mag.length-1];
 
  					if (mag <= maglim) {
 						minDist = dist;
@@ -13642,6 +13685,7 @@ public class RenderSky
 		if (out == null) {
 			ArrayList<String> objs = ReadFile.readResource(FileIO.DATA_SKY_DIRECTORY + "objects.txt");
 			ArrayList<Object[]> outObj = new ArrayList<Object[]>();
+			String nodraw[] = new String[] {"LMC", "292", "1976", "1982", "6995", "6979", "I.1287", "I.4601", "6514", "6526", "3324", "896"};
 			for (int i = 0; i < objs.size(); i++)
 			{
 				String line = objs.get(i);
@@ -13660,7 +13704,7 @@ public class RenderSky
 				String dec = FileIO.getField(4, line, " ", true);
 				String com = FileIO.getRestAfterField(8, line, " ", true);
 
-				LocationElement loc = new LocationElement(Double.parseDouble(ra)/Constant.RAD_TO_HOUR, Double.parseDouble(dec)*Constant.DEG_TO_RAD, 1.0);
+				LocationElementFloat loc = new LocationElementFloat((float)(Double.parseDouble(ra)/Constant.RAD_TO_HOUR), (float)(Double.parseDouble(dec)*Constant.DEG_TO_RAD), 1.0f);
 //				if (jd != Constant.J2000)
 //					loc = LocationElement.parseRectangularCoordinates(Precession.precess(Constant.J2000, jd,
 //							LocationElement.parseLocationElement(loc), EphemerisElement.REDUCTION_METHOD.IAU_2006));
@@ -13702,6 +13746,13 @@ public class RenderSky
 					float maxSize = Float.parseFloat(max), minSize = Float.parseFloat(min);
 					if (tt == 6 && maxSize == 0.0) maxSize = minSize = 0.5f/60.0f;
 
+					if (nodraw.length > 0) {
+						int nodrawIndex = DataSet.getIndex(nodraw, name);
+						if (nodrawIndex >=0) {
+							tt = -tt;
+							nodraw = DataSet.eliminateRowFromTable(nodraw, nodrawIndex+1);
+						}
+					}
 					float paf = -1;
 					try {
 						if (!pa.equals("-") && !pa.equals(""))
@@ -13917,6 +13968,7 @@ public class RenderSky
 				readFileOfStars(jd, equinox, projection, zenith, 6.5, re_star, FileIO.DATA_STARS_SKY2000_DIRECTORY + "JPARSEC_Sky2000.txt", g.renderingToExternalGraphics(), g.renderingToAndroid());
 				readFileOfStars(jd, equinox, projection, zenith, render.drawStarsLimitingMagnitude, re_star, FileIO.DATA_STARS_SKY2000_DIRECTORY + "JPARSEC_Sky2000_plus.txt", g.renderingToExternalGraphics(), g.renderingToAndroid());
 			}
+			starElem = null;
 			if (drawAll) nstars = re_star.getNumberOfObjects();
 			return re_star;
 	}
@@ -13948,9 +14000,11 @@ public class RenderSky
 			double equinox = projection.eph.equinox;
 			if (equinox == EphemerisElement.EQUINOX_OF_DATE)
 				equinox = jd;
-			String nodraw[] = new String[] {"LMC", "292", "1976", "1982", "6995", "6979", "I.1287", "I.4601", "6514", "6526", "3324", "896"};
 
 			double[] baryc = Ephem.eclipticToEquatorial(PlanetEphem.getGeocentricPosition(equinox, TARGET.Solar_System_Barycenter, 0.0, false, projection.obs), Constant.J2000, projection.eph);
+			boolean extinction = false;
+			if (projection.obs.getMotherBody() == TARGET.EARTH && projection.eph.ephemType == EphemerisElement.COORDINATES_TYPE.APPARENT && projection.eph.correctForExtinction)
+				extinction = true;
 			for (int index=0; index<objectsJ2000.size(); index++)
 			{
 				Object obj[] = (Object[]) objectsJ2000.get(index);
@@ -13969,7 +14023,7 @@ public class RenderSky
 					//if (magnitude < 100 && outsideMag) continue;
 				}
 
-				LocationElement loc = (LocationElement) obj[3];
+				LocationElement loc = new LocationElement((LocationElementFloat) obj[3]);
 				if (equinox != Constant.J2000) {
 					// Correct for aberration, precession, and nutation
 					if (projection.eph.ephemType == COORDINATES_TYPE.APPARENT) {
@@ -13998,20 +14052,12 @@ public class RenderSky
 					if (pos0 == null) loc = null;
 				}
 				if (loc != null) {
-					String name = (String) obj[0];
-					int tt = (Integer) obj[2];
-
-					if (nodraw.length > 0) {
-						int nodrawIndex = DataSet.getIndex(nodraw, name);
-						if (nodrawIndex >=0) {
-							tt = -tt;
-							nodraw = DataSet.eliminateRowFromTable(nodraw, nodrawIndex+1);
-						}
+					if (extinction && magnitude < 100) {
+						magnitude = (float) correctForExtinction(eq, magnitude);
+						objects.add(new Object[] {index, new LocationElementFloat(loc), (float)magnitude});
+					} else {
+						objects.add(new Object[] {index, new LocationElementFloat(loc)});						
 					}
-
-					if (magnitude < 100) magnitude = (float) correctForExtinction(eq, magnitude);
-					objects.add(new Object[] {name, messier, tt, loc, (float)magnitude,
-							ss, obj[6], obj[7]});
 				}
 			}
 
@@ -14057,7 +14103,7 @@ public class RenderSky
 										if (pos0 != null && !this.isInTheScreen((int)pos0[0], (int)pos0[1], 0)) pos0 = null;
 										if (pos0 == null) loc = null;
 									}
-									data[3] = loc;
+									data[3] = new LocationElementFloat(loc);
 									if (loc != null) objects.add(data);
 								}
 							}

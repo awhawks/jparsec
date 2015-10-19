@@ -734,6 +734,7 @@ public class  DoubleVector implements Cloneable {
    * Returns a string representation of the vector.
    * @return The string.
    */
+	@Override
   public String toString() {
 	  return DataSet.toString(DataSet.toStringValues(V), ", ");
   }

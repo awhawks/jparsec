@@ -229,6 +229,7 @@ public class ImageHeaderElement implements Serializable {
 	/**
 	 * Returns a string representation of this header entry.
 	 */
+	@Override
 	public String toString() {
 		String out = this.key+" -> "+this.value;
 		if (format != null && !this.format.equals("")) out += " ("+format+")";

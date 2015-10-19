@@ -681,6 +681,7 @@ public class EphemerisElement implements Serializable
 	/**
 	 * Returns a String representation of this object.
 	 */
+	@Override
 	public String toString() {
 		String out = "target: "+this.targetBody+", algorithm: "+this.algorithm+", eph method: "+this.ephemMethod+", eph type: "+this.ephemType+", frame: "+this.frame+", equinox: "+this.equinox+", topocentric: "+this.isTopocentric;
 		return out;

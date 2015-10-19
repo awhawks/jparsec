@@ -150,6 +150,7 @@ public class SpectrumLine implements Serializable {
 	}
 
 	/** Returns a string object with the parameters of the Gaussian. */
+	@Override
 	public String toString() {
 		MeasureElement v = new MeasureElement(vel, velError, MeasureElement.UNIT_X_KMS);
 		MeasureElement w = new MeasureElement(width, widthError, MeasureElement.UNIT_X_KMS);

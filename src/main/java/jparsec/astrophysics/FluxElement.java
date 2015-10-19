@@ -185,6 +185,7 @@ public class FluxElement implements Serializable
 	/**
 	 * Returns a String representation of this object.
 	 */
+	@Override
 	public String toString() {
 		String s = x.toString()+", "+y.toString();
 		if (photometricBand != null) s += " ("+photometricBand.name+")";

@@ -166,9 +166,21 @@ public class LocationElement implements Serializable
 	}
 
 	/**
+	 * Constructor to parse a {@linkplain LocationElementFloat} object.
+	 *
+	 * @param loc The location object.
+	 */
+	public LocationElement(LocationElementFloat loc)
+	{
+		lon = loc.getLongitude();
+		lat = loc.getLatitude();
+		rad = loc.getRadius();
+	}
+	
+	/**
 	 * Vector constructor.
 	 *
-	 * @param vector { lat, lon, rad }
+	 * @param vector { lon, lat, rad }
 	 */
 	public LocationElement(double vector[])
 	{
@@ -207,7 +219,7 @@ public class LocationElement implements Serializable
 
 	/**
 	 * Get all values in this instance as a vector. <P>
-	 * The vector is an array of three doubles, latitude, longitude, radius.
+	 * The vector is an array of three doubles, longitude, latitude, radius.
 	 *
 	 * @return v[0] = longitude, v[1] = latitude, v[2] = radius.
 	 */
@@ -248,7 +260,7 @@ public class LocationElement implements Serializable
 
 	/**
 	 * Set all members of this instance from a vector. <P>
-	 * The vector is an array of three doubles, latitude, longitude, radius, in
+	 * The vector is an array of three doubles, longitude, latitude, radius, in
 	 * that order.
 	 *
 	 * @param vector v[0] = longitude, v[1] = latitude, v[2] = radius.
@@ -656,6 +668,7 @@ public class LocationElement implements Serializable
 	/**
 	 * Returns a String representation of this object.
 	 */
+	@Override
 	public String toString() {
 		String out = "lon: "+Functions.formatDEC(this.lon)+", lat: "+Functions.formatDEC(this.lat)+", rad: "+this.rad;
 		return out;

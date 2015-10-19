@@ -37,7 +37,6 @@
 package jparsec.math.matrix;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.PrintWriter;
 import java.io.Reader;
@@ -50,7 +49,6 @@ import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.StringTokenizer;
-import java.util.Vector;
 
 import jparsec.ephem.Functions;
 import jparsec.graph.DataSet;
@@ -1405,6 +1403,7 @@ public class Matrix
    *
    * @return    the converted string
    */
+  @Override
   public String toString() {
     // Determine the width required for the maximum element,
     // and check for fractional display requirement.

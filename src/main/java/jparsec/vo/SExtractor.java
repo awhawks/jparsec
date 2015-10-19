@@ -450,6 +450,7 @@ public class SExtractor {
 	 * Returns a list of sources detected. Starting from third line a table
 	 * with x position, y, size w x h (pixels), flux, and class is given, including errors.
 	 */
+	@Override
 	public String toString() {
 		String sep = FileIO.getLineSeparator();
 		StringBuffer out = new StringBuffer("Detected "+getNumberOfSources()+" sources over a background flux of "+getBackgroundFlux()+". Maximum flux: "+getMaxFlux()+sep);

@@ -1498,6 +1498,7 @@ class TextState extends Object {
       /**
        * Returns the text.
        */
+      @Override
       public String toString() {
              return s.toString();
 	   }

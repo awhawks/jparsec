@@ -703,6 +703,7 @@ public class Table {
 	 * Returns a simple string representation of this table.
 	 * Separator is 3 blank spaces.
 	 */
+	@Override
 	public String toString() {
 		StringBuffer out = new StringBuffer("");
 		String sep = FileIO.getLineSeparator(), fieldSep = "   ";
