@@ -50,7 +50,7 @@ public class SpectrumHeader30m
      * Returns the header as a set of 15 objects.
      * Values from index 0 are obs num (0), block (1), obs version (2),
      * source name (3), line name (4), telescope (5), obs date (6),
-     * reduction date (7), offset RA (8, arcsec), offset DEC (9, arcsec), coord type (10),
+     * reduction date (7), offset RA (8, rad), offset DEC (9, rad), coord type (10),
      * kind (11), quality (12), scan number (13), pos angle (14, in deg).
      * @return  The header.
      */
@@ -64,7 +64,7 @@ public class SpectrumHeader30m
      * are visible in GILDAS when a spectrum is drawn.
      * Values from index 0 are obs num (0), obs version (1),
      * source name (2), line name (3), telescope (4), offset RA
-     * (5, in arcsec), offset DEC (6, in arcsec), scan number (7).
+     * (5, in rad), offset DEC (6, in rad), scan number (7).
      * @return The 8 main header values.
      */
     public Parameter[] getVisibleHeader()
