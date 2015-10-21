@@ -390,7 +390,7 @@ public final class Target
 		 */
 		public String getName()
 		{
-			return getNameForLanguage(Translate.getDefaultLanguage());
+			return getNames()[this.ordinal()];
 		}
 
 		/**
@@ -400,7 +400,7 @@ public final class Target
 		 */
 		public String getEnglishName()
 		{
-			return getNameForLanguage(LANGUAGE.ENGLISH);
+			return getNames(LANGUAGE.ENGLISH)[this.ordinal()];
 		}
 
 		private String getNameForLanguage(final LANGUAGE lang)
@@ -438,15 +438,15 @@ public final class Target
 		}
 	}
 
-	private static String[] populateStringArrayList()
+	private static String[] populateStringArrayList(LANGUAGE language)
 	{
 		ArrayList<String> vS = new ArrayList<String>();
 		for (TARGET target : TARGET.values()) {
-			vS.add(target.getName());
+			vS.add(target.getNameForLanguage(language));
 		}
 
 		String data[] = DataSet.arrayListToStringArray(vS);
-		String lang = Translate.getDefaultLanguage().toString();
+		String lang = language.toString();
 		DataBase.addData("targetNames"+lang, null, data, true);
 		return data;
 	}
@@ -457,35 +457,26 @@ public final class Target
 	 */
 	public static String[] getNames()
 	{
-		String lang = Translate.getDefaultLanguage().toString();
+		LANGUAGE language = Translate.getDefaultLanguage();
+		String lang = language.toString();
 		String vS[] = (String[]) DataBase.getData("targetNames"+lang, null, true);
-		if (vS == null) vS = populateStringArrayList();
+		if (vS == null) vS = populateStringArrayList(language);
 		return vS;
 	}
-
-	private static int[] populateIntegerArrayList()
-	{
-		ArrayList<Integer> vI = new ArrayList<Integer>();
-		for (int i = TARGET.SUN.ordinal(); i <= TARGET.NOT_A_PLANET.ordinal(); i++)
-		{
-			vI.add(i);
-		}
-		int[] data = DataSet.arrayListToIntegerArray(vI);
-		DataBase.addData("targetIDs", null, data, true);
-		return data;
-	}
-
+	
 	/**
-	 * Returns the IDs of all available targets.
-	 * @return All IDs.
+	 * Returns the names of all available targets for a given
+	 * language.
+	 * @param language The language.
+	 * @return All names.
 	 */
-	public static int[] getIDs()
+	public static String[] getNames(LANGUAGE language)
 	{
-		int vI[] = (int[]) DataBase.getData("targetIDs", null, true);
-		if (vI == null) vI = populateIntegerArrayList();
-		return vI;
+		String lang = language.toString();
+		String vS[] = (String[]) DataBase.getData("targetNames"+lang, null, true);
+		if (vS == null) vS = populateStringArrayList(language);
+		return vS;
 	}
-
 
 	/**
 	 * Obtain the ID constant of an object.
@@ -526,13 +517,15 @@ public final class Target
 	{
 		if (name == null || name.equals("")) throw new JPARSECException("null/empty String as input planet!");
 
-		for (TARGET target : TARGET.values()) {
-			String n = target.getEnglishName();
+		try {
+			TARGET out = TARGET.valueOf(name);
+			return out;
+		} catch (Exception exc) {}
 
-			if (0 == name.compareToIgnoreCase(n)) {
-				return target;
-			}
-		}
+		String names[] = Target.getNames(LANGUAGE.ENGLISH);
+		int index = DataSet.getIndex(names, name);
+		if (index < 0) index = DataSet.getIndexStartingWith(names, name);
+		if (index >= 0) return TARGET.values()[index];
 
 		return TARGET.NOT_A_PLANET;
 	}

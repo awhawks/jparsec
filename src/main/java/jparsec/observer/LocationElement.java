@@ -33,6 +33,7 @@ import jparsec.ephem.moons.MoonEphem;
 import jparsec.ephem.planets.EphemElement;
 import jparsec.ephem.stars.StarElement;
 import jparsec.ephem.stars.StarEphem;
+import jparsec.graph.DataSet;
 import jparsec.graph.chartRendering.RenderSky;
 import jparsec.math.Constant;
 import jparsec.math.FastMath;
@@ -57,9 +58,7 @@ public class LocationElement implements Serializable
 	 */
 	public LocationElement()
 	{
-		this.lat = 0.0;
-		this.lon = 0.0;
-		this.rad = 0.0;
+		set(new double[] {0.0, 0.0, 0.0});
 	}
 
 	/**
@@ -71,10 +70,7 @@ public class LocationElement implements Serializable
 	 */
 	public LocationElement(double lon, double lat, double rad)
 	{
-		this.lat = lat;
-		this.lon = lon;
-		if (lon < 0.0 || lon > Constant.TWO_PI) this.lon = Functions.normalizeRadians(lon);
-		this.rad = rad;
+		set(lon, lat, rad);
 	}
 
 	/**
@@ -114,30 +110,22 @@ public class LocationElement implements Serializable
 			if (index == -1) {
 				LocationElement se = RenderSky.searchDeepSkyObjectJ2000(body);
 				if (se == null) throw new JPARSECException("Object not found");
-				this.lon = se.lon;
-				this.lat = se.lat;
-				this.rad = 1.0;
+				set(se.get());
 			} else {
 				StarElement star = StarEphem.getStarElement(index);
-				lon = star.rightAscension;
-				lat = star.declination;
-				rad = star.getDistance();
+				set(star.rightAscension, star.declination, star.getDistance());
 			}
 
 			if (apparentOfDate) {
 				LocationElement loc =  Ephem.fromJ2000ToApparentGeocentricEquatorial(this, time, observer, eph);
-				rad = loc.rad;
-				lon = loc.lon;
-				lat = loc.lat;
+				set(loc.get());
 			}
 		} else {
 			eph.targetBody = t;
 			if (t.isAsteroid()) eph.algorithm = ALGORITHM.ORBIT;
 			if (t.isNaturalSatellite()) eph.algorithm = ALGORITHM.NATURAL_SATELLITE;
 			EphemElement ephem = Ephem.getEphemeris(time, observer, eph, false);
-			lon = ephem.rightAscension;
-			lat = ephem.declination;
-			rad = ephem.distance;
+			set(ephem.rightAscension, ephem.declination, ephem.distance);
 		}
 	}
 
@@ -160,21 +148,7 @@ public class LocationElement implements Serializable
 	public LocationElement(String body, TimeElement time, ObserverElement observer,
 			EphemerisElement eph0) throws JPARSECException {
 		EphemElement ephem = Ephem.getEphemeris(body, time, observer, eph0, false);
-		lon = ephem.rightAscension;
-		lat = ephem.declination;
-		rad = ephem.distance;
-	}
-
-	/**
-	 * Constructor to parse a {@linkplain LocationElementFloat} object.
-	 *
-	 * @param loc The location object.
-	 */
-	public LocationElement(LocationElementFloat loc)
-	{
-		lon = loc.getLongitude();
-		lat = loc.getLatitude();
-		rad = loc.getRadius();
+		set(new double[] {ephem.rightAscension, ephem.declination, ephem.distance});
 	}
 	
 	/**
@@ -188,13 +162,39 @@ public class LocationElement implements Serializable
 	}
 
 	/**
+	 * Explicit constructor for float values.
+	 * The instance will use float internally to reduce memory use.
+	 *
+	 * @param lon longitude.
+	 * @param lat latitude.
+	 * @param rad radius.
+	 */
+	public LocationElement(float lon, float lat, float rad)
+	{
+		set(lon, lat, rad);
+	}
+	
+	/**
+	 * Vector constructor using floats.
+	 * The instance will use float internally to reduce memory use.
+	 *
+	 * @param vector { lon, lat, rad }
+	 */
+	public LocationElement(float vector[])
+	{
+		set(vector);
+	}
+	
+	/**
 	 * Gets the latitude.
 	 *
 	 * @return The latitude value of this instance.
 	 */
 	public double getLatitude()
 	{
-		return lat;
+		if (lonLatRad != null)
+			return lonLatRad[1];
+		return lonLatRadF[1];
 	}
 
 	/**
@@ -204,7 +204,9 @@ public class LocationElement implements Serializable
 	 */
 	public double getLongitude()
 	{
-		return lon;
+		if (lonLatRad != null)
+			return lonLatRad[0];
+		return lonLatRadF[0];
 	}
 
 	/**
@@ -214,7 +216,9 @@ public class LocationElement implements Serializable
 	 */
 	public double getRadius()
 	{
-		return rad;
+		if (lonLatRad != null)
+			return lonLatRad[2];
+		return lonLatRadF[2];
 	}
 
 	/**
@@ -225,7 +229,9 @@ public class LocationElement implements Serializable
 	 */
 	public double[] get()
 	{
-		return new double[] {lon, lat, rad};
+		if (lonLatRad != null)
+			return lonLatRad;
+		return DataSet.toDoubleArray(lonLatRadF);
 	}
 
 	/**
@@ -235,7 +241,11 @@ public class LocationElement implements Serializable
 	 */
 	public void setLatitude(double d)
 	{
-		lat = d;
+		if (lonLatRad != null) {
+			lonLatRad[1] = d;
+		} else {
+			lonLatRadF[1] = (float) d;
+		}
 	}
 
 	/**
@@ -245,7 +255,11 @@ public class LocationElement implements Serializable
 	 */
 	public void setLongitude(double d)
 	{
-		lon = d;
+		if (lonLatRad != null) {
+			lonLatRad[0] = d;
+		} else {
+			lonLatRadF[0] = (float) d;
+		}
 	}
 
 	/**
@@ -255,7 +269,11 @@ public class LocationElement implements Serializable
 	 */
 	public void setRadius(double d)
 	{
-		rad = d;
+		if (lonLatRad != null) {
+			lonLatRad[2] = d;
+		} else {
+			lonLatRadF[2] = (float) d;
+		}
 	}
 
 	/**
@@ -267,9 +285,8 @@ public class LocationElement implements Serializable
 	 */
 	public void set(double vector[])
 	{
-		lon = vector[0];
-		lat = vector[1];
-		rad = vector[2];
+		lonLatRad = vector;
+		lonLatRadF = null;
 	}
 
 	/**
@@ -281,25 +298,44 @@ public class LocationElement implements Serializable
 	 */
 	public void set(double lon, double lat, double rad)
 	{
-		this.lat = lat;
-		this.lon = lon;
-		this.rad = rad;
+		lonLatRad = new double[] {lon, lat, rad};
+		lonLatRadF = null;
+	}
+	
+	/**
+	 * Set all members of this instance from a vector. <P>
+	 * The vector is an array of three doubles, longitude, latitude, radius, in
+	 * that order.
+	 *
+	 * @param vector v[0] = longitude, v[1] = latitude, v[2] = radius.
+	 */
+	public void set(float vector[])
+	{
+		lonLatRadF = vector;
+		lonLatRad = null;
 	}
 
 	/**
-	 * latitude.
+	 * Set all members of this instance individually.
+	 *
+	 * @param lon The new longitude.
+	 * @param lat The new latitude.
+	 * @param rad The new radius.
 	 */
-	private double lat;
+	public void set(float lon, float lat, float rad)
+	{
+		lonLatRadF = new float[] {lon, lat, rad};
+		lonLatRad = null;
+	}
 
 	/**
-	 * longitude.
+	 * Longitude, latitude, and radius.
 	 */
-	private double lon;
-
+	private double[] lonLatRad;
 	/**
-	 * radius.
+	 * Longitude, latitude, and radius when using floats.
 	 */
-	private double rad;
+	private float[] lonLatRadF;
 
 	/**
 	 * Transforms rectangular coordinates x, y, z contained in an array to a
@@ -393,10 +429,11 @@ public class LocationElement implements Serializable
 	 */
 	public static double[] parseLocationElement(LocationElement loc)
 	{
-		double cl = Math.cos(loc.lat);
-		double x = loc.rad * Math.cos(loc.lon) * cl;
-		double y = loc.rad * Math.sin(loc.lon) * cl;
-		double z = loc.rad * Math.sin(loc.lat);
+		double lon = loc.getLongitude(), lat = loc.getLatitude(), rad = loc.getRadius();
+		double cl = Math.cos(lat);
+		double x = rad * Math.cos(lon) * cl;
+		double y = rad * Math.sin(lon) * cl;
+		double z = rad * Math.sin(lat);
 
 		return new double[] { x, y, z };
 	}
@@ -410,10 +447,11 @@ public class LocationElement implements Serializable
 	 */
 	public static double[] parseLocationElementFast(LocationElement loc)
 	{
-		double cl = FastMath.cos(loc.lat);
-		double x = loc.rad * FastMath.cos(loc.lon) * cl;
-		double y = loc.rad * FastMath.sin(loc.lon) * cl;
-		double z = loc.rad * FastMath.sin(loc.lat);
+		double lon = loc.getLongitude(), lat = loc.getLatitude(), rad = loc.getRadius();
+		double cl = FastMath.cos(lat);
+		double x = rad * FastMath.cos(lon) * cl;
+		double y = rad * FastMath.sin(lon) * cl;
+		double z = rad * FastMath.sin(lat);
 
 		return new double[] { x, y, z };
 	}
@@ -553,7 +591,10 @@ public class LocationElement implements Serializable
 	 */
 	public static double getApproximateAngularDistance(LocationElement loc1, LocationElement loc2)
 	{
-		return FastMath.acos(FastMath.sin(loc2.lat) * FastMath.sin(loc1.lat) + FastMath.cos(loc2.lat) * FastMath.cos(loc1.lat) * FastMath.cos(loc2.lon-loc1.lon));
+		double lon1 = loc1.getLongitude(), lat1 = loc1.getLatitude();
+		double lon2 = loc2.getLongitude(), lat2 = loc2.getLatitude();
+
+		return FastMath.acos(FastMath.sin(lat2) * FastMath.sin(lat1) + FastMath.cos(lat2) * FastMath.cos(lat1) * FastMath.cos(lon2-lon1));
 	}
 
 	/**
@@ -646,16 +687,19 @@ public class LocationElement implements Serializable
 
 		LocationElement that = (LocationElement) o;
 
-		if (Double.compare(that.lat, lat) != 0) return false;
-		if (Double.compare(that.lon, lon) != 0) return false;
+		double lon = getLongitude(), lat = getLatitude(), rad = getRadius();
+		double lont = that.getLongitude(), latt = that.getLatitude(), radt = that.getRadius();
+		if (Double.compare(latt, lat) != 0) return false;
+		if (Double.compare(lont, lon) != 0) return false;
 
-		return Double.compare(that.rad, rad) == 0;
+		return Double.compare(radt, rad) == 0;
 	}
 
 	@Override
 	public int hashCode() {
 		int result;
 		long temp;
+		double lon = getLongitude(), lat = getLatitude(), rad = getRadius();
 		temp = Double.doubleToLongBits(lat);
 		result = (int) (temp ^ (temp >>> 32));
 		temp = Double.doubleToLongBits(lon);
@@ -670,7 +714,8 @@ public class LocationElement implements Serializable
 	 */
 	@Override
 	public String toString() {
-		String out = "lon: "+Functions.formatDEC(this.lon)+", lat: "+Functions.formatDEC(this.lat)+", rad: "+this.rad;
+		double lon = getLongitude(), lat = getLatitude(), rad = getRadius();
+		String out = "lon: "+Functions.formatDEC(lon)+", lat: "+Functions.formatDEC(lat)+", rad: "+rad;
 		return out;
 	}
 
@@ -679,7 +724,8 @@ public class LocationElement implements Serializable
 	 * @return The string.
 	 */
 	public String toStringAsEquatorialLocation() {
-		String out = "RA: "+Functions.formatRA(this.lon)+", DEC: "+Functions.formatDEC(this.lat)+", DIST: "+this.rad;
+		double lon = getLongitude(), lat = getLatitude(), rad = getRadius();
+		String out = "RA: "+Functions.formatRA(lon)+", DEC: "+Functions.formatDEC(lat)+", DIST: "+rad;
 		return out;
 	}
 
@@ -691,9 +737,9 @@ public class LocationElement implements Serializable
 	 * @param dr Displacemente in distance, in units of the distance.
 	 */
 	public void move(double dlon, double dlat, double dr) {
-		lon += dlon;
-		lat += dlat;
-		rad += dr;
+		if (dlon != 0.0) setLongitude(getLongitude() + dlon);
+		if (dlat != 0.0) setLatitude(getLatitude() + dlat);
+		if (dr != 0.0) setRadius(getRadius() + dr);
 	}
 
 	/**
@@ -704,8 +750,8 @@ public class LocationElement implements Serializable
 	 * @param dlat Displacement in latitude, radians.
 	 */
 	public void toOffset(double dlon, double dlat) {
-		double lonp = dlon / Math.cos(lat);
-		lon += lonp;
-		lat += dlat;
+		double lonp = dlon / Math.cos(getLatitude());
+		if (lonp != 0.0) setLongitude(getLongitude() + lonp);
+		if (dlat != 0.0) setLatitude(getLatitude() + dlat);
 	}
 }

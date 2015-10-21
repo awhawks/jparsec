@@ -98,7 +98,6 @@ import jparsec.math.Interpolation;
 import jparsec.math.matrix.Matrix;
 import jparsec.observer.ExtraterrestrialObserverElement;
 import jparsec.observer.LocationElement;
-import jparsec.observer.LocationElementFloat;
 import jparsec.observer.ObserverElement;
 import jparsec.time.AstroDate;
 import jparsec.time.TimeScale;
@@ -4618,7 +4617,7 @@ public class RenderSky
 				g.drawImage(img, pos00[0]-radius_x, pos00[1]-radius_y);
 			}
 			type = -Math.abs(type);
-			//if (obj != null) loc = ((LocationElementFloat) obj[3]);
+			//if (obj != null) loc = ((LocationElement) obj[3]);
 		}
 		return type;
 	}
@@ -4683,7 +4682,7 @@ public class RenderSky
 			maglimStarsNotDrag = maglim;
 		}
 		LocationElement loc;
-		LocationElementFloat locF;
+		LocationElement locF;
 		Object obj[];
 		double mag;
 		float size_xy[];
@@ -4843,7 +4842,7 @@ public class RenderSky
 			font = mainFont;
 			obj = (Object[]) objects.get(s);
 			if (obj.length <= 3) {
-				locF = ((LocationElementFloat) obj[1]);
+				locF = ((LocationElement) obj[1]);
 				if (obj.length == 3) {
 					mag = (Float) obj[2];					
 					obj = (Object[]) objectsJ2000.get((Integer) obj[0]);
@@ -4853,7 +4852,7 @@ public class RenderSky
 				}
 			} else {
 				mag = (Float) obj[4];
-				locF = ((LocationElementFloat) obj[3]);
+				locF = ((LocationElement) obj[3]);
 			}
 
 			messier = (String) obj[1];
@@ -4902,14 +4901,14 @@ public class RenderSky
 					//loc = ((LocationElement) obj[3]);
 
 					if (rotateOverlay) {
-						LocationElement locEq = projection.toEquatorialPosition(new LocationElement(locF), true);
+						LocationElement locEq = projection.toEquatorialPosition(locF, true);
 						sph = LocationElement.solveSphericalTriangle(locEq, locPolar0, locPolar, true);
 					}
 
 					// Correct apparent magnitude for extinction
 					if (projection.eph.ephemType == EphemerisElement.COORDINATES_TYPE.APPARENT && projection.eph.correctForExtinction &&
 							projection.obs.getMotherBody() == TARGET.EARTH && projection.eph.isTopocentric) {
-						LocationElement locEq = projection.toEquatorialPosition(new LocationElement(locF), true);
+						LocationElement locEq = projection.toEquatorialPosition(locF, true);
 						double angh = lst - locEq.getLongitude();
 						double h = FastMath.sin(projection.obs.getLatitudeRad()) * FastMath.sin(locEq.getLatitude()) + FastMath.cos(projection.obs.getLatitudeRad()) * FastMath.cos(locEq.getLatitude()) * FastMath
 								.cos(angh);
@@ -8517,7 +8516,7 @@ public class RenderSky
 	};
 
 	class StarData {
-		public LocationElementFloat loc;
+		public LocationElement loc;
 		public double ra, dec;
 		public float pos[], var[], doub[], mag[];
 		public String sp, nom2, properName, type;
@@ -8526,7 +8525,8 @@ public class RenderSky
 		public short spi;
 
 		public StarData(LocationElement loc, float mag, String sp, String type) {
-			this.loc = new LocationElementFloat(loc);
+			loc.set(DataSet.toFloatArray(loc.get())); // Reduce memory use
+			this.loc = loc;
 			this.mag = new float[] {mag};
 			this.sp = sp;
 			if (!type.equals("N")) this.type = type;
@@ -9014,15 +9014,15 @@ public class RenderSky
 
 		LocationElement ephem = null;
 		String obj_name2 = obj_name.toLowerCase();
-		LocationElementFloat locF;
+		LocationElement locF;
 		for (int i = 0; i < objects.size(); i++)
 		{
 			Object[] obj = (Object[]) objects.get(i);
 			if (obj.length <= 3) {
-				locF = (LocationElementFloat) obj[1];
+				locF = (LocationElement) obj[1];
 				obj = (Object[]) objectsJ2000.get((Integer) obj[0]);
 			} else {
-				locF = (LocationElementFloat) obj[3];				
+				locF = (LocationElement) obj[3];				
 			}
 
 			String messier = (String) obj[1];
@@ -9045,8 +9045,7 @@ public class RenderSky
 			if (obj_name2.equals(name.toLowerCase()) || obj_name.equals(messier.trim()) || obj_name.equals(name+messier) ||
 					obj_name.equals(name+messier+" - "+com) ||
 					(name.indexOf(" ") > 0 && (name.substring(name.indexOf(" ")).trim()+messier+" - "+com).indexOf(obj_name) == 0)) {
-				LocationElement loc = new LocationElement(locF);
-				loc = projection.toEquatorialPosition(loc, false);
+				LocationElement loc = projection.toEquatorialPosition(locF, false);
 				ephem = loc.clone();
 				break;
 			}
@@ -9056,10 +9055,10 @@ public class RenderSky
 			{
 				Object[] obj = (Object[]) objects.get(i);
 				if (obj.length <= 3) {
-					locF = (LocationElementFloat) obj[1];
+					locF = (LocationElement) obj[1];
 					obj = (Object[]) objectsJ2000.get((Integer) obj[0]);
 				} else {
-					locF = (LocationElementFloat) obj[3];				
+					locF = (LocationElement) obj[3];				
 				}
 
 				String com = "";
@@ -9068,8 +9067,7 @@ public class RenderSky
 				if (pp>=0) com = comments.substring(pp+14).trim();
 
 				if (com.toLowerCase().indexOf(obj_name2) >= 0) {
-					LocationElement loc = new LocationElement(locF);
-					loc = projection.toEquatorialPosition(loc, false);
+					LocationElement loc = projection.toEquatorialPosition(locF, false);
 					ephem = loc.clone();
 					break;
 				}
@@ -13704,7 +13702,7 @@ public class RenderSky
 				String dec = FileIO.getField(4, line, " ", true);
 				String com = FileIO.getRestAfterField(8, line, " ", true);
 
-				LocationElementFloat loc = new LocationElementFloat((float)(Double.parseDouble(ra)/Constant.RAD_TO_HOUR), (float)(Double.parseDouble(dec)*Constant.DEG_TO_RAD), 1.0f);
+				LocationElement loc = new LocationElement((float)(Double.parseDouble(ra)/Constant.RAD_TO_HOUR), (float)(Double.parseDouble(dec)*Constant.DEG_TO_RAD), 1.0f);
 //				if (jd != Constant.J2000)
 //					loc = LocationElement.parseRectangularCoordinates(Precession.precess(Constant.J2000, jd,
 //							LocationElement.parseLocationElement(loc), EphemerisElement.REDUCTION_METHOD.IAU_2006));
@@ -13758,6 +13756,7 @@ public class RenderSky
 						if (!pa.equals("-") && !pa.equals(""))
 							paf = (float) (Float.parseFloat(pa) * Constant.DEG_TO_RAD);
 					} catch (Exception exc) {}
+					loc.set(DataSet.toFloatArray(loc.get())); // Reduce memory use
 					outObj.add(new Object[] {name, messier, tt, loc, magnitude,
 							new float[] {maxSize, minSize}, paf, com});
 			}
@@ -14023,7 +14022,7 @@ public class RenderSky
 					//if (magnitude < 100 && outsideMag) continue;
 				}
 
-				LocationElement loc = new LocationElement((LocationElementFloat) obj[3]);
+				LocationElement loc = (LocationElement) obj[3];
 				if (equinox != Constant.J2000) {
 					// Correct for aberration, precession, and nutation
 					if (projection.eph.ephemType == COORDINATES_TYPE.APPARENT) {
@@ -14052,11 +14051,12 @@ public class RenderSky
 					if (pos0 == null) loc = null;
 				}
 				if (loc != null) {
+					loc.set(DataSet.toFloatArray(loc.get())); // Reduce memory use
 					if (extinction && magnitude < 100) {
 						magnitude = (float) correctForExtinction(eq, magnitude);
-						objects.add(new Object[] {index, new LocationElementFloat(loc), (float)magnitude});
+						objects.add(new Object[] {index, loc, (float)magnitude});
 					} else {
-						objects.add(new Object[] {index, new LocationElementFloat(loc)});						
+						objects.add(new Object[] {index, loc});						
 					}
 				}
 			}
@@ -14103,7 +14103,7 @@ public class RenderSky
 										if (pos0 != null && !this.isInTheScreen((int)pos0[0], (int)pos0[1], 0)) pos0 = null;
 										if (pos0 == null) loc = null;
 									}
-									data[3] = new LocationElementFloat(loc);
+									data[3] = loc;
 									if (loc != null) objects.add(data);
 								}
 							}

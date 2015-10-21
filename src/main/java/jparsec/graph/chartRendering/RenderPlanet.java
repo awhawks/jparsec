@@ -1495,6 +1495,9 @@ public class RenderPlanet
 									float d = getDist(dz0/r, refz);
 									drawPoint(i, j, d, true, g, dubois);
 
+									// FIXME: Dead code in Android. MUST BE REMOVED FOR ANDROID, OTHERWISE
+									// ART WILL NOT COMPILE IT AND INSTALLATION WILL BE IMPOSSIBLE !!!
+									// THIS ALSO FIXES SOME ISSUES IN DALVIK ...
 									if (r > 7 && doit && !g.renderingToAndroid()) {
 										tmp = Math.sqrt(tmp);
 										if (first) {

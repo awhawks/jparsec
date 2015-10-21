@@ -35,7 +35,6 @@ import jparsec.ephem.planets.EphemElement;
 import jparsec.math.Constant;
 import jparsec.math.FastMath;
 import jparsec.observer.LocationElement;
-import jparsec.observer.LocationElementFloat;
 import jparsec.observer.ObserverElement;
 import jparsec.time.SiderealTime;
 import jparsec.time.TimeElement;
@@ -238,17 +237,6 @@ public class Projection
 	 * @return Approximate angular distance.
 	 */
 	public double getApproximateAngularDistance(LocationElement loc)
-	{
-		return FastMath.acos(FastMath.sin(loc.getLatitude()) * sin_lat0 + FastMath.cos(loc.getLatitude()) * cos_lat0 * FastMath.cos(loc.getLongitude()-loc0.getLongitude()));
-	}
-
-	/**
-	 * Returns the distance to the current central position of rendering.
-	 * better than 0.2 deg of precision.
-	 * @param loc The position in the current coordinate system.
-	 * @return Approximate angular distance.
-	 */
-	public double getApproximateAngularDistance(LocationElementFloat loc)
 	{
 		return FastMath.acos(FastMath.sin(loc.getLatitude()) * sin_lat0 + FastMath.cos(loc.getLatitude()) * cos_lat0 * FastMath.cos(loc.getLongitude()-loc0.getLongitude()));
 	}
@@ -582,40 +570,6 @@ public class Projection
 
 		return pos;
 	}
-
-	/**
-	 * Obtains position of an object using the current sky projection and
-	 * coordinate system, without transforming them to equatorial.
-	 *
-	 * @param loc Location object with the position in a given coordinate system.
-	 * @param size Angular radius of rendered object in pixels.
-	 * @param check_limits True to check for object limits in the rendered
-	 *        window (in a soft way).
-	 * @return Array with (x, y) position in the screen.
-	 * @throws JPARSECException Thrown if the calculation fails.
-	 */
-	public float[] projectPosition(LocationElementFloat loc, float size, boolean check_limits) throws JPARSECException
-	{
-		if (loc == null || (render.coordinateSystem == CoordinateSystem.COORDINATE_SYSTEM.HORIZONTAL && loc.getLatitude() < -horizon_elevation && render.drawSkyCorrectingLocalHorizon && !render.drawSkyBelowHorizon))
-			return INVALID_POSITION;
-
-		if (render.projection == PROJECTION.SPHERICAL &&
-				getApproximateAngularDistance(loc) > Constant.PI_OVER_TWO)
-			return INVALID_POSITION;
-
-		float[] pos = project_position(loc);
-
-		if (!check_limits || pos == null)
-			return pos;
-
-		if (size == 0 && render.projection == PROJECTION.STEREOGRAPHICAL) size = 100;
-		if (-size > pos[0] || -size > pos[1])
-			return INVALID_POSITION;
-		if (pos[0] > (render.width + size) || pos[1] > (render.height + size))
-			return INVALID_POSITION;
-
-		return pos;
-	}
 	
 	/**
 	 * Obtains position of an object using the current sky projection and
@@ -684,41 +638,6 @@ public class Projection
 
 		return pos;
 	}
-	
-	/**
-	 * Obtains position of an object using the current sky projection and
-	 * coordinate system, without transforming them to equatorial.
-	 *
-	 * @param loc Location object with the position in a given coordinate system.
-	 * @param size Angular radius of rendered object in pixels.
-	 * @param check_limits True to check for object limits in the rendered
-	 *        window (in a soft way).
-	 * @param factor Number of screen widths to consider a position as invalid.
-	 * @return Array with (x, y) position in the screen.
-	 * @throws JPARSECException Thrown if the calculation fails.
-	 */
-	public float[] projectPosition(LocationElementFloat loc, int size, boolean check_limits, int factor)
-			throws JPARSECException
-	{
-		if (loc == null || (render.coordinateSystem == CoordinateSystem.COORDINATE_SYSTEM.HORIZONTAL && loc.getLatitude() < -horizon_elevation && render.drawSkyCorrectingLocalHorizon && !render.drawSkyBelowHorizon))
-			return INVALID_POSITION;
-
-		if (render.projection == PROJECTION.SPHERICAL &&
-				getApproximateAngularDistance(loc) > Constant.PI_OVER_TWO)
-			return INVALID_POSITION;
-
-		float[] pos = project_position(loc);
-
-		if (!check_limits)
-			return pos;
-
-		if (pos[0] > factor*(render.width + size) || pos[1] > factor*(render.height + size))
-			return INVALID_POSITION;
-		if ((factor-1)*(-size-render.width) > pos[0] || (factor-1)*(-size-render.height) > pos[1])
-			return INVALID_POSITION;
-
-		return pos;
-	}
 
 	/**
 	 * Returns true if cylindrical equidistant projection is forced to ensure
@@ -746,28 +665,6 @@ public class Projection
 			return cylindric(loc);
 		case POLAR:
 			return polar(loc);
-		default:
-			throw new JPARSECException("invalid projection.");
-		}
-	}
-	
-	private float[] project_position(LocationElementFloat loc) throws JPARSECException
-	{
-		if (cylindrical) return cylindricalEquidistant(loc.get());
-
-		// Without waiting for switch is slightly faster ...
-		if (render.projection == PROJECTION.STEREOGRAPHICAL) return stereographic(loc.get());
-
-		switch (render.projection)
-		{
-		case SPHERICAL:
-			return spheric(loc.get());
-		case CYLINDRICAL_EQUIDISTANT:
-			return cylindricalEquidistant(loc.get());
-		case CYLINDRICAL:
-			return cylindric(loc.get());
-		case POLAR:
-			return polar(loc.get());
 		default:
 			throw new JPARSECException("invalid projection.");
 		}
@@ -1619,167 +1516,6 @@ public class Projection
 				locH = loc00.clone();
 				loc = getApparentLocationInSelectedCoordinateSystem(locH, false, fastCalc, 0);
 			}
-		}
-		locH = this.getApparentLocationInSelectedCoordinateSystem(locH, false, fastCalc, COORDINATE_SYSTEM.HORIZONTAL, 0);
-
-		boolean newArray = createNewArrayWhenProjecting;
-		createNewArrayWhenProjecting = true;
-		pos0 = project_position(loc);
-
-		double dH = Math.max(this.getField() * 0.1, 0.1 * Constant.DEG_TO_RAD);
-		dH += locH.getLatitude();
-		if (dH > Constant.PI_OVER_TWO) dH = Constant.PI_OVER_TWO;
-		locH.setLatitude(dH);
-		LocationElement locEq = CoordinateSystem.horizontalToEquatorial(locH, ast, obs.getLatitudeRad(), fastCalc);
-		loc = getApparentLocationInSelectedCoordinateSystem(locEq, false, fastCalc, 0);
-		float[] pos1 = project_position(loc);
-
-		this.enableCorrectionOfLocalHorizon();
-		if (pos0 == null || pos1 == null) {
-			JPARSECException.addWarning("Could not calculate where is north. Trace: "+JPARSECException.getCurrentTrace());
-			createNewArrayWhenProjecting = newArray;
-			return 0;
-		}
-
-		double dh = 1.0, dv = 1.0;
-		if (render.telescope.invertHorizontal) dh = -1;
-		if (render.telescope.invertVertical) dv = -1;
-		double ang = FastMath.atan2_accurate(-dh*(pos1[1] - pos0[1]), dv*(pos1[0] - pos0[0])) + Math.PI;
-		createNewArrayWhenProjecting = newArray;
-		return ang;
-	}
-
-	/**
-	 * Gets the north angle at a specific equatorial position.
-	 * @param loc00 Position. If null the angle will be calculated for the current central
-	 * position of the rendering.
-	 * @param isEquatorial True if the input position is in equatorial coordinates, false
-	 * if it is (possibly) in other coordinate system.
-	 * @param passToEarth True to get north angle considering that the input position should
-	 * be converted to that from Earth, in case the observer is located in another planet.
-	 * @return The angle towards north in radians.
-	 * @throws JPARSECException If an error occurs.
-	 */
-	public double getNorthAngleAt(LocationElementFloat loc00, boolean isEquatorial, boolean passToEarth) throws JPARSECException
-	{
-		this.disableCorrectionOfLocalHorizon();
-
-		float pos0[] = new float[2];
-		LocationElement loc = null;
-		LocationElement locEq = null;
-		if (loc00 == null) {
-			locEq = this.getEquatorialPositionOfRendering();
-			loc = this.getPositionOfRendering();
-		} else {
-			if (!isEquatorial) {
-				loc = new LocationElement(new double[] {loc00.getLongitude(), loc00.getLatitude(), loc00.getRadius()});
-				locEq = this.toEquatorialPosition(loc.clone(), fastCalc);
-			} else {
-				locEq = new LocationElement(new double[] {loc00.getLongitude(), loc00.getLatitude(), loc00.getRadius()});
-				loc = getApparentLocationInSelectedCoordinateSystem(locEq, false, fastCalc, 0);
-			}
-		}
-
-		boolean newArray = createNewArrayWhenProjecting;
-		createNewArrayWhenProjecting = true;
-		pos0 = project_position(loc);
-
-		if (obs.getMotherBody() == TARGET.EARTH && field < Constant.DEG_TO_RAD && render.coordinateSystem == COORDINATE_SYSTEM.HORIZONTAL) {
-			double angh = ast - locEq.getLongitude();
-			double sinlat = Math.sin(obs.getLatitudeRad());
-			double coslat = Math.cos(obs.getLatitudeRad());
-			double sindec = Math.sin(locEq.getLatitude()), cosdec = Math.cos(locEq.getLatitude());
-			double y = Math.sin(angh);
-			double x = (sinlat / coslat) * cosdec - sindec * Math.cos(angh);
-			double p = 0.0;
-			if (x != 0.0)
-			{
-				p = Math.atan2(y, x);
-			} else
-			{
-				p = (y / Math.abs(y)) * Constant.PI_OVER_TWO;
-			}
-
-			float center[] = project_position(new LocationElement(loc.getLongitude(), Math.min(loc.getLatitude()+10*Constant.DEG_TO_RAD, Constant.PI_OVER_TWO), 1.0));
-			float dx = pos0[0] - center[0];
-			float dy = pos0[1] - center[1];
-			double ang = FastMath.atan2_accurate(-dy, dx);
-
-			this.enableCorrectionOfLocalHorizon();
-			createNewArrayWhenProjecting = newArray;
-			return p-ang;
-		}
-
-		if (pos0 == null) {
-			this.enableCorrectionOfLocalHorizon();
-			JPARSECException.addWarning("Could not calculate where is north. Trace: "+JPARSECException.getCurrentTrace());
-			createNewArrayWhenProjecting = newArray;
-			return 0;
-		}
-
-		if (passToEarth && obs.getMotherBody() != TARGET.EARTH && obs.getMotherBody() != TARGET.NOT_A_PLANET) locEq = getPositionFromEarth(locEq, true);
-		double lat = locEq.getLatitude();
-
-		double DEC = Math.max(this.getField() * 0.1, 0.1 * Constant.DEG_TO_RAD);
-		DEC += lat;
-		if (DEC > Constant.PI_OVER_TWO) DEC = Constant.PI_OVER_TWO;
-		locEq.setLatitude(DEC);
-		if (passToEarth && obs.getMotherBody() != TARGET.EARTH && obs.getMotherBody() != TARGET.NOT_A_PLANET) locEq = getPositionFromBody(locEq, true);
-		loc = getApparentLocationInSelectedCoordinateSystem(locEq, false, fastCalc, 0);
-		float[] pos1 = project_position(loc);
-
-		double off = Math.PI;
-		if (pos1 == null) {
-			DEC = -Math.max(this.getField() * 0.1, 0.1 * Constant.DEG_TO_RAD);
-			DEC += lat;
-			if (DEC < -Constant.PI_OVER_TWO) DEC = -Constant.PI_OVER_TWO;
-			locEq.setLatitude(DEC);
-			if (passToEarth && obs.getMotherBody() != TARGET.EARTH && obs.getMotherBody() != TARGET.NOT_A_PLANET) locEq = getPositionFromBody(locEq, true);
-			loc = getApparentLocationInSelectedCoordinateSystem(locEq, false, fastCalc, 0);
-			pos1 = project_position(loc);
-			off = 0;
-
-			if (pos1 == null) {
-				this.enableCorrectionOfLocalHorizon();
-				JPARSECException.addWarning("Could not calculate where is north. Trace: "+JPARSECException.getCurrentTrace());
-				createNewArrayWhenProjecting = newArray;
-				return 0;
-			}
-		}
-		this.enableCorrectionOfLocalHorizon();
-
-		double ang = FastMath.atan2_accurate(pos1[1] - pos0[1], pos1[0] - pos0[0]) + off;
-		createNewArrayWhenProjecting = newArray;
-		return ang;
-	}
-
-	/**
-	 * Gets the north angle at a specific equatorial position.
-	 * @param loc00 Position. If null the angle will be calculated for the current central
-	 * position of the rendering.
-	 * @param isEquatorial True if the input position is in equatorial coordinates, false
-	 * if it is (possibly) in other coordinate system.
-	 * @return The angle towards zenith in radians.
-	 * @throws JPARSECException If an error occurs.
-	 */
-	public double getCenitAngleAt(LocationElementFloat loc00, boolean isEquatorial) throws JPARSECException
-	{
-		this.disableCorrectionOfLocalHorizon();
-
-		float pos0[] = new float[2];
-		LocationElement loc = null;
-		LocationElement locH = null;
-		if (loc00 == null) {
-			locH = this.getEquatorialPositionOfRendering();
-			loc = this.getPositionOfRendering();
-		} else {
-			if (!isEquatorial) {
-				loc = new LocationElement(new double[] {loc00.getLongitude(), loc00.getLatitude(), loc00.getRadius()});
-				locH = this.toEquatorialPosition(loc.clone(), true);
-			} else {
-				locH = new LocationElement(new double[] {loc00.getLongitude(), loc00.getLatitude(), loc00.getRadius()});
-				loc = getApparentLocationInSelectedCoordinateSystem(locH, false, fastCalc, 0);
-			}			
 		}
 		locH = this.getApparentLocationInSelectedCoordinateSystem(locH, false, fastCalc, COORDINATE_SYSTEM.HORIZONTAL, 0);
 

@@ -32,7 +32,6 @@ import jparsec.io.FileIO;
 import jparsec.io.ReadFile;
 import jparsec.math.Constant;
 import jparsec.observer.LocationElement;
-import jparsec.observer.LocationElementFloat;
 import jparsec.util.DataBase;
 import jparsec.util.JPARSECException;
 import jparsec.util.Translate;
@@ -283,7 +282,7 @@ public class SimbadElement implements Serializable
 				} catch (Exception exc) {}
 			}
 
-			LocationElement loc = new LocationElement((LocationElementFloat) obj[3]);
+			LocationElement loc = (LocationElement)obj[3];
 			if (obj_name2.equals(name.toLowerCase()) || obj_name.equals(messier.trim()) || obj_name.equals(name+messier) ||
 					obj_name.equals(name+messier+" - "+com) ||
 					(name.indexOf(" ") > 0 && (name.substring(name.indexOf(" ")).trim()+messier+" - "+com).indexOf(obj_name) == 0)) {
@@ -386,7 +385,8 @@ public class SimbadElement implements Serializable
 						if (!pa.equals("-") && !pa.equals(""))
 							paf = (float) (Float.parseFloat(pa) * Constant.DEG_TO_RAD);
 					} catch (Exception exc) {}
-					outObj.add(new Object[] {name, messier, tt, new LocationElementFloat(loc), (float) Double.parseDouble(mag),
+					loc.set(DataSet.toFloatArray(loc.get())); // Reduce memory use
+					outObj.add(new Object[] {name, messier, tt, loc, (float) Double.parseDouble(mag),
 							new float[] {maxSize, minSize}, paf, com});
 				}
 			}
