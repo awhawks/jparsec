@@ -21,6 +21,9 @@
  */
 package jparsec.vo;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,8 +31,8 @@ import java.util.Arrays;
 import jparsec.ephem.Functions;
 import jparsec.ephem.stars.StarElement;
 import jparsec.graph.DataSet;
+import jparsec.graph.chartRendering.RenderSky;
 import jparsec.io.FileIO;
-import jparsec.io.ReadFile;
 import jparsec.math.Constant;
 import jparsec.observer.LocationElement;
 import jparsec.util.DataBase;
@@ -329,66 +332,78 @@ public class SimbadElement implements Serializable
 	private static Object[] populate() throws JPARSECException {
 		Object out = DataBase.getData("objectsJ2000", null, true);
 		if (out == null) {
-			ArrayList<String> objs = ReadFile.readResource(FileIO.DATA_SKY_DIRECTORY + "objects.txt");
 			ArrayList<Object[]> outObj = new ArrayList<Object[]>();
-			for (int i = 0; i < objs.size(); i++)
+			// Connect to the file
+			try
 			{
-				String line = objs.get(i);
-				String name = FileIO.getField(1, line, " ", true);
-				String type = FileIO.getField(2, line, " ", true);
-				int tt = DataSet.getIndex(types, type);
-				// Don't want to see duplicate objects, stars, inexistents, ...
-				if (tt > 7) continue;
-				String ra = FileIO.getField(3, line, " ", true);
-				String dec = FileIO.getField(4, line, " ", true);
-				String mag = FileIO.getField(5, line, " ", true);
-				String max = FileIO.getField(6, line, " ", true);
-				String min = FileIO.getField(7, line, " ", true);
-				String pa = FileIO.getField(8, line, " ", true);
-				String com = FileIO.getRestAfterField(8, line, " ", true);
-
-				LocationElement loc = new LocationElement(Double.parseDouble(ra)/Constant.RAD_TO_HOUR, Double.parseDouble(dec)*Constant.DEG_TO_RAD, 1.0);
-//				if (jd != Constant.J2000)
-//					loc = LocationElement.parseRectangularCoordinates(Precession.precess(Constant.J2000, jd,
-//							LocationElement.parseLocationElement(loc), EphemerisElement.REDUCTION_METHOD.IAU_2006));
-				if (loc != null) {
-					int mes1 = com.indexOf(" M ");
-					int mes2 = com.indexOf(" part of M ");
-					int mes3 = com.indexOf(" in M ");
-					int mes4 = com.indexOf(" near M ");
-					int mes5 = com.indexOf(" not M ");
-					int mes6 = com.indexOf(" on M ");
-					int mes7 = com.indexOf("in M ");
-					String messier = "";
-					if (mes1 >= 0 && mes2 < 0 && mes3 < 0 && mes4 < 0 && mes5<0 && mes6<0 && mes7<0) {
-						messier = com.substring(mes1);
-						int c = messier.indexOf(",");
-						if (c < 0) c = messier.indexOf(";");
-						messier = DataSet.replaceAll(messier.substring(0, c), " ", "", false);
-					}
-					if (messier.equals("")) {
-						int cal = com.indexOf("CALDWELL");
-						if (cal >= 0) {
-							messier = com.substring(cal);
-							int end = messier.indexOf(";");
-							int end2 = messier.indexOf(",");
-							if (end > 0) messier = messier.substring(0, end);
-							end = messier.length();
-							if (end2 > 0 && end2 < end) messier = messier.substring(0, end2);
+				InputStream is = RenderSky.class.getClassLoader().getResourceAsStream(FileIO.DATA_SKY_DIRECTORY + "objects.txt");
+				BufferedReader dis = new BufferedReader(new InputStreamReader(is));
+				String line;
+				while ((line = dis.readLine()) != null)
+				{
+					String name = FileIO.getField(1, line, " ", true);
+					String type = FileIO.getField(2, line, " ", true);
+					int tt = DataSet.getIndex(types, type);
+					// Don't want to see duplicate objects, stars, inexistents, ...
+					if (tt > 7) continue;
+					String ra = FileIO.getField(3, line, " ", true);
+					String dec = FileIO.getField(4, line, " ", true);
+					String mag = FileIO.getField(5, line, " ", true);
+					String max = FileIO.getField(6, line, " ", true);
+					String min = FileIO.getField(7, line, " ", true);
+					String pa = FileIO.getField(8, line, " ", true);
+					String com = FileIO.getRestAfterField(8, line, " ", true);
+	
+					LocationElement loc = new LocationElement(Double.parseDouble(ra)/Constant.RAD_TO_HOUR, Double.parseDouble(dec)*Constant.DEG_TO_RAD, 1.0);
+	//				if (jd != Constant.J2000)
+	//					loc = LocationElement.parseRectangularCoordinates(Precession.precess(Constant.J2000, jd,
+	//							LocationElement.parseLocationElement(loc), EphemerisElement.REDUCTION_METHOD.IAU_2006));
+					if (loc != null) {
+						int mes1 = com.indexOf(" M ");
+						int mes2 = com.indexOf(" part of M ");
+						int mes3 = com.indexOf(" in M ");
+						int mes4 = com.indexOf(" near M ");
+						int mes5 = com.indexOf(" not M ");
+						int mes6 = com.indexOf(" on M ");
+						int mes7 = com.indexOf("in M ");
+						String messier = "";
+						if (mes1 >= 0 && mes2 < 0 && mes3 < 0 && mes4 < 0 && mes5<0 && mes6<0 && mes7<0) {
+							messier = com.substring(mes1);
+							int c = messier.indexOf(",");
+							if (c < 0) c = messier.indexOf(";");
+							messier = DataSet.replaceAll(messier.substring(0, c), " ", "", false);
 						}
+						if (messier.equals("")) {
+							int cal = com.indexOf("CALDWELL");
+							if (cal >= 0) {
+								messier = com.substring(cal);
+								int end = messier.indexOf(";");
+								int end2 = messier.indexOf(",");
+								if (end > 0) messier = messier.substring(0, end);
+								end = messier.length();
+								if (end2 > 0 && end2 < end) messier = messier.substring(0, end2);
+							}
+						}
+	
+						float maxSize = Float.parseFloat(max), minSize = Float.parseFloat(min);
+						if (tt == 6 && maxSize == 0.0) maxSize = minSize = 0.5f/60.0f;
+						float paf = -1;
+						try {
+							if (!pa.equals("-") && !pa.equals(""))
+								paf = (float) (Float.parseFloat(pa) * Constant.DEG_TO_RAD);
+						} catch (Exception exc) {}
+						loc.set(DataSet.toFloatArray(loc.get())); // Reduce memory use
+						outObj.add(new Object[] {name, messier, tt, loc, (float) Double.parseDouble(mag),
+								new float[] {maxSize, minSize}, paf, com});
 					}
-
-					float maxSize = Float.parseFloat(max), minSize = Float.parseFloat(min);
-					if (tt == 6 && maxSize == 0.0) maxSize = minSize = 0.5f/60.0f;
-					float paf = -1;
-					try {
-						if (!pa.equals("-") && !pa.equals(""))
-							paf = (float) (Float.parseFloat(pa) * Constant.DEG_TO_RAD);
-					} catch (Exception exc) {}
-					loc.set(DataSet.toFloatArray(loc.get())); // Reduce memory use
-					outObj.add(new Object[] {name, messier, tt, loc, (float) Double.parseDouble(mag),
-							new float[] {maxSize, minSize}, paf, com});
 				}
+				// Close file
+				dis.close();
+
+			} catch (Exception e2)
+			{
+				throw new JPARSECException(
+						"error while reading objects file", e2);
 			}
 			Object outO[] = new Object[outObj.size()];
 			for (int i=0; i<outO.length; i++) {

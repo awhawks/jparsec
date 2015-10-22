@@ -2271,7 +2271,16 @@ public class RenderSky
 
 		if (ww < 20 && ww == hh && ww == (int) ww) {
 		   	if (starImg == null || starImg[(int)ww][0] == null) {
-	    		if (starImg == null) starImg = new Object[20][7];
+	    		if (starImg == null) {
+	    			int max = 45;
+	    			// Use more memory in Android to render colors in stars, but only when width or
+	    			// height is high, which is also equivalent to say JVM memory per app is high enough
+	    			if (g.renderingToAndroid() && (g.getWidth() < 1000 && g.getHeight() < 1000)) {
+	    				starImg = new Object[max][1];
+	    			} else {
+	    				starImg = new Object[max][7];
+	    			}
+	    		}
  	    		Object img = g.getImage("jparsec/data/icons/starSimple.png");
 				if (render.getColorMode() == COLOR_MODE.WHITE_BACKGROUND
 						|| render.getColorMode() == COLOR_MODE.PRINT_MODE
@@ -2291,6 +2300,7 @@ public class RenderSky
 		        		lev2 = 0;
 		        	}
 		        	for (int i=0; i<starImg[0].length; i++) {
+		        		int iindex = starImg[0].length > 1 ? i : 2;
 		            	int[] colors0 = colors.clone();
 //		        		if (render.getColorMode() == COLOR_MODE.BLACK_BACKGROUND || render.getColorMode() == COLOR_MODE.NIGHT_MODE) {
 			            	for (int j=0; j<colors0.length; j ++) {
@@ -2309,16 +2319,16 @@ public class RenderSky
 					        		cg = off;
 					        		cb = off;
 					        	} else {
-				            		if (i == 0) cb += lev1;
-				            		if (i == 1) cb += lev2;
-				            		if (i == 2) {
+				            		if (iindex == 0) cb += lev1;
+				            		if (iindex == 1) cb += lev2;
+				            		if (iindex == 2) {
 				            			cr += lev1;
 				            			cg += lev1;
 				            			cb += lev1;
 				            		}
-				            		if (i == 3 || i == 4) cg += lev1;
-				            		if (i >= 4) cr += lev1;
-				            		if (i == 5) cg += lev2;
+				            		if (iindex == 3 || iindex == 4) cg += lev1;
+				            		if (iindex >= 4) cr += lev1;
+				            		if (iindex == 5) cg += lev2;
 
 				            		if (cr > 255) cr = 255;
 				            		if (cg > 255) cg = 255;
@@ -2491,20 +2501,8 @@ public class RenderSky
 		 "@xi", "@omicron", "@pi", "@rho", "@sigma", "@tau", "@upsilon", "@phi", "@chi", "@psi", "@omega"};
 */
 
-	// Renderize sky
-    /**
-     * Scales the size of the textures used to draw stars.
-     * @param value The scaling factor, 1.0 for default sizes.
-     */
-    public void setStarTexturesSize(float value) {
-        starFactor = new float[] {2.0f * value, 1.0f * value, 2f * value};
-        starImg = null;
-    }
+	// Renderize stars
     Object starImg[][] = null;
-
-    private static final String star[] = new String[] {"1", "", "2"};
-    //private static float starFactor[] = new float[] {1.7f, 1.3f, 1.4f};
-    private static float starFactor[] = new float[] {2.0f, 1.0f, 2f};
     private static float starSize[] = null;
     private void drawStar(int tsize, float[] pos, float dist, int colIndex, Graphics g) {
     	if (render.getColorMode() == COLOR_MODE.NIGHT_MODE) colIndex = 6;
@@ -2581,9 +2579,14 @@ public class RenderSky
     	if (starImg != null && tsize >= starImg.length) starImg = null;
      	if (starImg == null || (starImg[tsize][0] == null && tsize > 0)) {
     		if (starImg == null) {
-    			int max = 45; //(int)(2.0*(getSizeForAGivenMagnitude(-3, maglim, hugeFactor)+1));
-    			//if (render.getColorMode() == COLOR_MODE.PRINT_MODE) max += 1;
-    			starImg = new Object[max][7];
+    			int max = 45;
+    			// Use more memory in Android to render colors in stars, but only when width or
+    			// height is high, which is also equivalent to say JVM memory per app is high enough
+    			if (g.renderingToAndroid() && (g.getWidth() < 1000 && g.getHeight() < 1000)) {
+    				starImg = new Object[max][1];
+    			} else {
+    				starImg = new Object[max][7];
+    			}
     			starSize = new float[max];
     		}
 
@@ -2597,10 +2600,12 @@ public class RenderSky
     			name+= "white";
     		}
 			for (int tsizeIndex=1; tsizeIndex < starImg.length; tsizeIndex ++) {
-	        	for (int i=0; i<7; i++) {
-	        		String sname = name + "_"+index+"_"+tsizeIndex+"_"+i+".png";
+	        	for (int i=0; i<starImg[0].length; i++) {
+	        		int iindex = starImg[0].length > 1 ? i : 2;
+	        		String sname = name + "_"+index+"_"+tsizeIndex+"_"+iindex+".png";
 		    		starImg[tsizeIndex][i] = g.getImage(sname);
-		    		starSize[tsizeIndex] = g.getSize(starImg[tsizeIndex][i])[1]/2f;
+		    		if (starImg[tsizeIndex][i] != null)
+		    			starSize[tsizeIndex] = g.getSize(starImg[tsizeIndex][i])[1]/2f;
 	        	}
 			}
         	g.setColor(c, true);
@@ -2612,6 +2617,7 @@ public class RenderSky
 	    	if (index == 1) ss = (ss * 2) / 3;
     	}
 */
+    	if (starImg[0].length == 1) colIndex = 0;
     	if (render.anaglyphMode == ANAGLYPH_COLOR_MODE.NO_ANAGLYPH) {
     		if (tsize <= 1) {
         		g.fillOval(pos[0], pos[1], 1, 1, false);
@@ -13681,84 +13687,97 @@ public class RenderSky
 		Object out = DataBase.getData("objectsJ2000", null, true);
 
 		if (out == null) {
-			ArrayList<String> objs = ReadFile.readResource(FileIO.DATA_SKY_DIRECTORY + "objects.txt");
 			ArrayList<Object[]> outObj = new ArrayList<Object[]>();
 			String nodraw[] = new String[] {"LMC", "292", "1976", "1982", "6995", "6979", "I.1287", "I.4601", "6514", "6526", "3324", "896"};
-			for (int i = 0; i < objs.size(); i++)
+			
+			// Connect to the file
+			try
 			{
-				String line = objs.get(i);
+				InputStream is = RenderSky.class.getClassLoader().getResourceAsStream(FileIO.DATA_SKY_DIRECTORY + "objects.txt");
+				BufferedReader dis = new BufferedReader(new InputStreamReader(is));
+				String line;
+				while ((line = dis.readLine()) != null)
+				{
+					String mag = FileIO.getField(5, line, " ", true);
+					float magnitude = Float.parseFloat(mag);
+					//if (magnitude >= 14) break;
 
-				String mag = FileIO.getField(5, line, " ", true);
-				float magnitude = Float.parseFloat(mag);
-				//if (magnitude >= 14) break;
+					String type = FileIO.getField(2, line, " ", true);
+					int tt = DataSet.getIndex(types, type);
+					// Don't want to see duplicate objects, stars, inexistents, ...
+					if (tt > 7) continue;
 
-				String type = FileIO.getField(2, line, " ", true);
-				int tt = DataSet.getIndex(types, type);
-				// Don't want to see duplicate objects, stars, inexistents, ...
-				if (tt > 7) continue;
+					String name = FileIO.getField(1, line, " ", true);
+					String ra = FileIO.getField(3, line, " ", true);
+					String dec = FileIO.getField(4, line, " ", true);
+					String com = FileIO.getRestAfterField(8, line, " ", true);
 
-				String name = FileIO.getField(1, line, " ", true);
-				String ra = FileIO.getField(3, line, " ", true);
-				String dec = FileIO.getField(4, line, " ", true);
-				String com = FileIO.getRestAfterField(8, line, " ", true);
+					LocationElement loc = new LocationElement((float)(Double.parseDouble(ra)/Constant.RAD_TO_HOUR), (float)(Double.parseDouble(dec)*Constant.DEG_TO_RAD), 1.0f);
+//					if (jd != Constant.J2000)
+//						loc = LocationElement.parseRectangularCoordinates(Precession.precess(Constant.J2000, jd,
+//								LocationElement.parseLocationElement(loc), EphemerisElement.REDUCTION_METHOD.IAU_2006));
 
-				LocationElement loc = new LocationElement((float)(Double.parseDouble(ra)/Constant.RAD_TO_HOUR), (float)(Double.parseDouble(dec)*Constant.DEG_TO_RAD), 1.0f);
-//				if (jd != Constant.J2000)
-//					loc = LocationElement.parseRectangularCoordinates(Precession.precess(Constant.J2000, jd,
-//							LocationElement.parseLocationElement(loc), EphemerisElement.REDUCTION_METHOD.IAU_2006));
-
-					int mes1 = com.indexOf(" M ");
-					int mes2 = com.indexOf(" part of M ");
-					int mes3 = com.indexOf(" in M ");
-					int mes4 = com.indexOf(" near M ");
-					int mes5 = com.indexOf(" not M ");
-					int mes6 = com.indexOf(" on M ");
-					int mes7 = com.indexOf("in M ");
-					String messier = "";
-					if (mes1 >= 0 && mes2 < 0 && mes3 < 0 && mes4 < 0 && mes5<0 && mes6<0 && mes7<0) {
-						messier = com.substring(mes1);
-						int c = messier.indexOf(",");
-						if (c < 0) c = messier.indexOf(";");
-						messier = DataSet.replaceAll(messier.substring(0, c), " ", "", false);
-					}
-					if (messier.equals("")) {
-						int cal = com.indexOf("CALDWELL");
-						if (cal >= 0) {
-							messier = com.substring(cal);
-							int end = messier.indexOf(";");
-							int end2 = messier.indexOf(",");
-							if (end > 0) messier = messier.substring(0, end);
-							end = messier.length();
-							if (end2 > 0 && end2 < end) messier = messier.substring(0, end2);
+						int mes1 = com.indexOf(" M ");
+						int mes2 = com.indexOf(" part of M ");
+						int mes3 = com.indexOf(" in M ");
+						int mes4 = com.indexOf(" near M ");
+						int mes5 = com.indexOf(" not M ");
+						int mes6 = com.indexOf(" on M ");
+						int mes7 = com.indexOf("in M ");
+						String messier = "";
+						if (mes1 >= 0 && mes2 < 0 && mes3 < 0 && mes4 < 0 && mes5<0 && mes6<0 && mes7<0) {
+							messier = com.substring(mes1);
+							int c = messier.indexOf(",");
+							if (c < 0) c = messier.indexOf(";");
+							messier = DataSet.replaceAll(messier.substring(0, c), " ", "", false);
 						}
-					}
-
-					if (android && messier.equals("")) {
-						if (magnitude < 100 && magnitude > 12.5) continue;
-					}
-
-					String max = FileIO.getField(6, line, " ", true);
-					String min = FileIO.getField(7, line, " ", true);
-					String pa = FileIO.getField(8, line, " ", true);
-
-					float maxSize = Float.parseFloat(max), minSize = Float.parseFloat(min);
-					if (tt == 6 && maxSize == 0.0) maxSize = minSize = 0.5f/60.0f;
-
-					if (nodraw.length > 0) {
-						int nodrawIndex = DataSet.getIndex(nodraw, name);
-						if (nodrawIndex >=0) {
-							tt = -tt;
-							nodraw = DataSet.eliminateRowFromTable(nodraw, nodrawIndex+1);
+						if (messier.equals("")) {
+							int cal = com.indexOf("CALDWELL");
+							if (cal >= 0) {
+								messier = com.substring(cal);
+								int end = messier.indexOf(";");
+								int end2 = messier.indexOf(",");
+								if (end > 0) messier = messier.substring(0, end);
+								end = messier.length();
+								if (end2 > 0 && end2 < end) messier = messier.substring(0, end2);
+							}
 						}
-					}
-					float paf = -1;
-					try {
-						if (!pa.equals("-") && !pa.equals(""))
-							paf = (float) (Float.parseFloat(pa) * Constant.DEG_TO_RAD);
-					} catch (Exception exc) {}
-					loc.set(DataSet.toFloatArray(loc.get())); // Reduce memory use
-					outObj.add(new Object[] {name, messier, tt, loc, magnitude,
-							new float[] {maxSize, minSize}, paf, com});
+
+						if (android && messier.equals("")) {
+							if (magnitude < 100 && magnitude > 12.5) continue;
+						}
+
+						String max = FileIO.getField(6, line, " ", true);
+						String min = FileIO.getField(7, line, " ", true);
+						String pa = FileIO.getField(8, line, " ", true);
+
+						float maxSize = Float.parseFloat(max), minSize = Float.parseFloat(min);
+						if (tt == 6 && maxSize == 0.0) maxSize = minSize = 0.5f/60.0f;
+
+						if (nodraw.length > 0) {
+							int nodrawIndex = DataSet.getIndex(nodraw, name);
+							if (nodrawIndex >=0) {
+								tt = -tt;
+								nodraw = DataSet.eliminateRowFromTable(nodraw, nodrawIndex+1);
+							}
+						}
+						float paf = -1;
+						try {
+							if (!pa.equals("-") && !pa.equals(""))
+								paf = (float) (Float.parseFloat(pa) * Constant.DEG_TO_RAD);
+						} catch (Exception exc) {}
+						loc.set(DataSet.toFloatArray(loc.get())); // Reduce memory use
+						outObj.add(new Object[] {name, messier, tt, loc, magnitude,
+								new float[] {maxSize, minSize}, paf, com});
+				}
+
+				// Close file
+				dis.close();
+
+			} catch (Exception e2)
+			{
+				throw new JPARSECException(
+						"error while reading objects file", e2);
 			}
 			Object outO[] = outObj.toArray();
 			DataBase.addData("objectsJ2000", null, outO, true);

@@ -253,7 +253,7 @@ public class Constellation
 
 		// double B1875 = Constant.B1900 + Constant.TROPICAL_YEAR * (1875.0 - 1900.0); // 2405889.25855 ...
 		loc = LocationElement.parseRectangularCoordinatesFast(Precession.precess(epoch, 2405889.25855, LocationElement.parseLocationElementFast(loc), eph));
-		double ra = loc.getLongitude();
+		double ra = Functions.normalizeRadians(loc.getLongitude());
 		ra *= 43200.0 / Math.PI; // Constant.RAD_TO_ARCSEC / 15.0;
 		double dec = loc.getLatitude() * Constant.RAD_TO_ARCSEC;
 
@@ -299,7 +299,7 @@ public class Constellation
 
 		// double B1875 = Constant.B1900 + Constant.TROPICAL_YEAR * (1875.0 - 1900.0); // 2405889.25855 ...
 		loc = LocationElement.parseRectangularCoordinatesFast(Precession.precess(epoch, 2405889.25855, LocationElement.parseLocationElementFast(loc), eph));
-		double ra = loc.getLongitude();
+		double ra = Functions.normalizeRadians(loc.getLongitude());
 		ra *= 43200.0 / Math.PI; // Constant.RAD_TO_ARCSEC / 15.0;
 		double dec = loc.getLatitude() * Constant.RAD_TO_ARCSEC;
 

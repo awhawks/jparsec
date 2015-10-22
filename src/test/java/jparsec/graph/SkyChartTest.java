@@ -231,7 +231,7 @@ public class SkyChartTest {
 			//sky.poleAngle = (float) Constant.PI_OVER_FOUR;
 */
 
-        String contents[] = DataSet.arrayListToStringArray(ReadFile.readResource(FileIO.DATA_SKY_DIRECTORY + "iram-J2000.sou"));
+/*        String contents[] = DataSet.arrayListToStringArray(ReadFile.readResource(FileIO.DATA_SKY_DIRECTORY + "iram-J2000.sou"));
         sky.addExternalCatalog(Translate.translate("IRAM catalog"), Translate.translate("Radiosource"), Color.RED.getRGB(), contents, FileFormatElement.IRAM_SOU_FORMAT);
 
         contents = DataSet.arrayListToStringArray(ReadFile.readResource(FileIO.DATA_ORBITAL_ELEMENTS_DIRECTORY + "extrasolarPlanets.txt"));
@@ -240,7 +240,7 @@ public class SkyChartTest {
         for (int i = 0; i < sky.getNumberOfExternalCatalogs(); i++) {
             sky.drawExternalCatalogs[i] = false;
         }
-
+*/
 /*
 			skyFast.drawExternalCatalogs = true;
 			skyFast.addExternalCatalog("IRAM catalog", "Radiosource", Color.RED.getRGB(), "/home/alonso/colaboraciones/Pablo/2007/wp5000/catalogs/iram-J2000.sou",
