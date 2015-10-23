@@ -10117,16 +10117,17 @@ public class RenderSky
 							if (render.trajectory[index].showTime && (stepTime < 1.0 || (//stepTime < 15 &&
 									(jd-0.5) != (int)(jd-0.5)))) {
 								AstroDate astro2 = new AstroDate(jd + 0.5 / 1440.0);
-								label = astro2.getDay() + " " + mont[-1 + astro2.getMonth()]+" "+Functions.fmt(astro2.getHour(), 2, ':')+Functions.fmt(astro2.getMinute(), 2, ' ');
+								String label2 = Functions.fmt(astro2.getHour(), 2, ':')+Functions.fmt(astro2.getMinute(), 2, ' ');
 								if (render.trajectory[index].stepTimeJD * render.trajectory[index].labelsSteps * 1440.0 < 1.0) {
-									label = Functions.fmt(astro.getHour(), 2, ':')+Functions.fmt(astro.getMinute(), 2, ' ');
+									label = label2;
 									if (render.trajectory[index].stepTimeJD * render.trajectory[index].labelsSteps * 1440.0 < 0.5) {
 										label = label.trim()+":"+Functions.formatValue(astro.getSeconds(), 1);
 									} else {
 										label = label.trim()+":"+Functions.fmt((int)astro.getSeconds(), 2, ' ');
 									}
 								} else {
-									if (label.trim().endsWith("00:00")) label = DataSet.replaceAll(label, "00:00", "0h", true);
+									if (label2.trim().endsWith("00:00")) label2 = DataSet.replaceAll(label2, "00:00", "0h", true);
+									label += " "+label2;
 								}
 								label = label.trim();
 								if (render.trajectory[index].showTimeScale && render.trajectory[index].timeScaleForLabels != SCALE.LOCAL_TIME)

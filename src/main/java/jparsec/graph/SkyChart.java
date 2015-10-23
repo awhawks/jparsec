@@ -2250,7 +2250,14 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 		  	    			SkyRenderElement sky = skyRender.getRenderSkyObject().render;
 		  	  				double jd_bdt = TimeScale.getJD(time, obs, eph, TimeElement.SCALE.BARYCENTRIC_DYNAMICAL_TIME);
 		  	  				TrajectoryElement.LABELS labelType = TrajectoryElement.LABELS.DAY_MONTH_ABBREVIATION;
-		  	  				if (Math.abs(after-before) > 365) labelType = TrajectoryElement.LABELS.YEAR_MONTH_DAY;
+		  	  				if (Math.abs(after-before) > 365) {
+		  	  					if (before == (int) before) {
+		  	  						double jd = TimeScale.getJD(time, obs, eph, TimeElement.SCALE.LOCAL_TIME);
+		  	  						jd = Math.floor(jd - 0.5) + 0.5;
+				  	  				jd_bdt = TimeScale.getJD(new TimeElement(jd, SCALE.LOCAL_TIME), obs, eph, TimeElement.SCALE.BARYCENTRIC_DYNAMICAL_TIME);
+		  	  					}
+		  	  					//labelType = TrajectoryElement.LABELS.YEAR_MONTH_DAY;
+		  	  				}
 		  	  				int labelStep = 3;
 		  	  				if (step <= 0.5) labelStep = (int)(0.5 + 1.0 / step);
 		  	  				if (FileIO.getNumberOfFields(s, ",", false) >= 4) labelStep = (int)DataSet.parseDouble(FileIO.getField(4, s, ",", false).trim());
