@@ -100,6 +100,60 @@ public class Nutation
 	}
 
 	/**
+	 * Returns the nutation in longitude and obliquity following Petter Duffet's
+	 * book Astronomy with your Personal Computer.
+	 * @param jd Julian day in dynamical time.
+	 * @return Nutation in longitude and obliquity in radians.
+	 */
+	public static double[] getFastNutation(double jd) {
+		double t, DJ, T2, aq, b, L1, L2, D1, D2, M1, M2, N1, N2, DP, DOSR;
+		
+		DJ = jd - 2415020.0;
+		t = DJ / 36525.0;
+		T2 = t * t;
+		aq = 100.0021358 * t;
+		b = 360.0 * (aq - Math.floor(aq));
+		L1 = 279.6967 + .000303 * T2 + b;
+		L2 = 2.0 * L1 * Constant.DEG_TO_RAD;
+		aq = 1336.855231 * t;
+		b = 360.0 * (aq - Math.floor(aq));
+		D1 = 270.4342 - .001133 * T2 + b;
+		D2 = 2.0 * D1 * Constant.DEG_TO_RAD;
+		aq = 99.99736056 * t;
+		b = 360.0 * (aq - Math.floor(aq));
+		M1 = 358.4758 - .00015 * T2 + b;
+		M1 = M1 * Constant.DEG_TO_RAD;
+		aq = 1325.552359 * t;
+		b = 360.0 * (aq - Math.floor(aq));
+		M2 = 296.1046 + .009192 * T2 + b;
+		M2 = M2 * Constant.DEG_TO_RAD;
+		aq = 5.372616667 * t;
+		b = 360.0 * (aq - Math.floor(aq));
+		N1 = 259.1833 + .002078 * T2 - b;
+		N1 = Constant.DEG_TO_RAD * N1;
+		N2 = 2.0 * N1; // * Constant.DEG_TO_RAD // A bug in Peter Duffett's code !?
+				
+		DP = (-17.2327 - .01737 * t) * Math.sin(N1);
+		DP = DP + (-1.2729 - .00013 * t) * Math.sin(L2) + .2088 * Math.sin(N2);
+		DP = DP - .2037 * Math.sin(D2) + (.1261 - .00031 * t) * Math.sin(M1);
+		DP = DP + .0675 * Math.sin(M2) - (.0497 - .00012 * t) * Math.sin(L2 + M1);
+		DP = DP - .0342 * Math.sin(D2 - N1) - .0261 * Math.sin(D2 + M2);
+		DP = DP + .0214 * Math.sin(L2 - M1) - .0149 * Math.sin(L2 - D2 + M2);
+		DP = DP + .0124 * Math.sin(L2 - N1) + .0114 * Math.sin(D2 - M2);
+		
+		DOSR = (9.21 + .00091 * t) * Math.cos(N1);
+		DOSR = DOSR + (.5522 - .00029 * t) * Math.cos(L2) - .0904 * Math.cos(N2);
+		DOSR = DOSR + .0884 * Math.cos(D2) + .0216 * Math.cos(L2 + M1);
+		DOSR = DOSR + .0183 * Math.cos(D2 - N1) + .0113 * Math.cos(D2 + M2);
+		DOSR = DOSR - .0093 * Math.cos(L2 - M1) - .0066 * Math.cos(L2 - N1);
+		
+		DP = DP * Constant.ARCSEC_TO_RAD;
+		DOSR = DOSR * Constant.ARCSEC_TO_RAD;
+		
+		return new double[] {DP, DOSR};
+	}
+	
+	/**
 	 * Calculate nutation in longitude and obliquity. Results are saved in
 	 * {@linkplain DataBase}, using as identifier 'Nutation' for the array
 	 * containing the values.
@@ -200,9 +254,9 @@ public class Nutation
 	public static double[] nutateInEquatorialCoordinates(double jd_tt, EphemerisElement eph,
 			double[] in, boolean meanToTrue) throws JPARSECException {
 		double t = Functions.toCenturies(jd_tt);
-		double oblm = Obliquity.meanObliquity(t, eph);
-		double oblt = Obliquity.trueObliquity(t, eph);
 		double nut[] = Nutation.calcNutation(t, eph);
+		double oblm = Obliquity.meanObliquity(t, eph);
+		double oblt = oblm + nut[1];
 		double dpsi = nut[0];
 
 		double cobm = Math.cos(oblm), sobm = Math.sin(oblm);

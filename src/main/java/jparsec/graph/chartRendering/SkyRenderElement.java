@@ -311,7 +311,7 @@ public class SkyRenderElement implements Serializable
 	 * Set whether to draw or not the stars using different colors for spectral
 	 * types. Only applied in case the background is not white.
 	 */
-	public boolean drawStarsColors = false;
+	public boolean drawStarsColors = true;
 
 	/**
 	 * Select if stars should be rendered in a realistic way (using textures) or not.
@@ -322,8 +322,8 @@ public class SkyRenderElement implements Serializable
 
 	/**
 	 * Set the color for stars, only when {@linkplain SkyRenderElement#drawStarsColors}
-	 * is false; This will be also the color for the planets in intermediate fields, when
-	 * they appear as little disks.
+	 * is false. This will be also the color for the planets in intermediate fields, when
+	 * they appear as little disks, and for their labels.
 	 */
 	public int drawStarsColor = 156<<24 | 0<<16 | 0<<8 | 0;
 

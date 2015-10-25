@@ -305,9 +305,12 @@ public class CoordinateSystem
 		double equinox = eph.equinox;
 		if (equinox == EphemerisElement.EQUINOX_OF_DATE)
 			equinox = JD;
-		double obliquity = Obliquity.meanObliquity(Functions.toCenturies(equinox), eph);
-		if (eph.ephemType == EphemerisElement.COORDINATES_TYPE.APPARENT)
+		double obliquity = 0.0;
+		if (eph.ephemType == EphemerisElement.COORDINATES_TYPE.APPARENT) {
 			obliquity = Obliquity.trueObliquity(Functions.toCenturies(equinox), eph);
+		} else {
+			obliquity = Obliquity.meanObliquity(Functions.toCenturies(equinox), eph);			
+		}
 		RotateTo rot = new RotateTo(-Constant.PI_OVER_TWO, Constant.PI_OVER_TWO - obliquity, 0.0, loc.getLongitude(), loc
 				.getLatitude());
 
@@ -336,9 +339,12 @@ public class CoordinateSystem
 		double equinox = eph.equinox;
 		if (equinox == EphemerisElement.EQUINOX_OF_DATE)
 			equinox = JD;
-		double obliquity = Obliquity.meanObliquity(Functions.toCenturies(equinox), eph);
-		if (eph.ephemType == EphemerisElement.COORDINATES_TYPE.APPARENT)
+		double obliquity = 0.0;
+		if (eph.ephemType == EphemerisElement.COORDINATES_TYPE.APPARENT) {
 			obliquity = Obliquity.trueObliquity(Functions.toCenturies(equinox), eph);
+		} else {
+			obliquity = Obliquity.meanObliquity(Functions.toCenturies(equinox), eph);			
+		}
 		RotateFrom rot = new RotateFrom(Constant.PI_OVER_TWO, Constant.PI_OVER_TWO + obliquity, 0.0, loc.getLongitude(), loc
 				.getLatitude());
 

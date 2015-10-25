@@ -33,6 +33,8 @@ import jparsec.astronomy.CoordinateSystem;
 import jparsec.ephem.Ephem;
 import jparsec.ephem.EphemerisElement;
 import jparsec.ephem.Functions;
+import jparsec.ephem.Obliquity;
+import jparsec.ephem.PhysicalParameters;
 import jparsec.ephem.Precession;
 import jparsec.ephem.EphemerisElement.ALGORITHM;
 import jparsec.ephem.EphemerisElement.COORDINATES_TYPE;
@@ -59,6 +61,7 @@ import jparsec.observer.CityElement;
 import jparsec.observer.LocationElement;
 import jparsec.observer.ObserverElement;
 import jparsec.time.AstroDate;
+import jparsec.time.SiderealTime;
 import jparsec.time.TimeElement;
 import jparsec.time.TimeScale;
 import jparsec.time.TimeElement.SCALE;
@@ -1801,11 +1804,41 @@ public class EventReport {
 		}
 
 		for (double jd = jd0; jd <=jdf; jd = jd + step) {
+			EphemElement ephem = null;
+			boolean fast = !eph.preferPrecisionInEphemerides && Math.abs(jd-Constant.J2000) < 36525;
 			TimeElement time = new TimeElement(jd, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
-			EphemElement ephem = Ephem.getEphemeris(time, obs, eph, false);
+			if (fast) {
+				double sunPos[] = Saros.getSunPosition(jd);
+				double moonPos[] = Saros.getMoonPosition(jd);
+				double obliquity = Obliquity.meanObliquity(Functions.toCenturies(jd), eph);
+				obliquity += Nutation.getFastNutation(jd)[1];
+				double lst = SiderealTime.apparentSiderealTime(time, obs, eph);
+				moonPos[2] *= Constant.EARTH_RADIUS / Constant.AU;
+				double PH = 0.0, rr = sunPos[2] * moonPos[2];
+				double[] rotationModel = PhysicalParameters.getIAU2009Model(TARGET.Moon, jd, rr, PH);
+				if (rotationModel != null) {
+					ephem = new EphemElement();
+					ephem.northPoleRA = rotationModel[1];
+					ephem.northPoleDEC = rotationModel[2];
+					EphemElement ephem_sun = new EphemElement();
+					LocationElement loc = CoordinateSystem.eclipticToEquatorial(new LocationElement(sunPos[0], sunPos[1], sunPos[2]), obliquity, true);
+					ephem_sun.setEquatorialLocation(loc);
+					ephem_sun.setEquatorialLocation(Ephem.fastTopocentricCorrection(time, obs, eph, ephem_sun, lst));
+					loc = CoordinateSystem.eclipticToEquatorial(new LocationElement(moonPos[0], moonPos[1], moonPos[2]), obliquity, true);
+					ephem.setEquatorialLocation(loc);
+					ephem = PhysicalParameters.calcAxis(jd, ephem_sun, ephem, rotationModel[3], rotationModel[4], eph, obs.getMotherBody());
+					ephem.setEquatorialLocation(Ephem.fastTopocentricCorrection(time, obs, eph, ephem, lst));
+				}
+			} else {
+				ephem = Ephem.getEphemeris(time, obs, eph, false);
+			}
 
 			double lonlsolar = ephem.subsolarLongitude;
 			double latlsolar = ephem.subsolarLatitude;
+			double sinLatSolar = FastMath.sin(Constant.PI_OVER_TWO-latlsolar);
+			double cosLatSolar = FastMath.cos(Constant.PI_OVER_TWO-latlsolar);
+			double cosLonSolar = FastMath.cos(lonlsolar);
+			double sinLonSolar = FastMath.sin(lonlsolar);
 			double minValue = -1;
 			for (int i=0; i<crater.length; i++) {
 				double craterLon = Double.parseDouble(FileIO.getField(2, crater[i], " ", true)) * Constant.DEG_TO_RAD;
@@ -1813,17 +1846,19 @@ public class EventReport {
 				double offset = Double.parseDouble(FileIO.getField(4, crater[i], " ", true));
 
 				// Get elevation of sun from crater
-				double zx = (Math.cos(lonlsolar) * Math.sin(Constant.PI_OVER_TWO-latlsolar) - Math.cos(craterLon) * Math.sin(Constant.PI_OVER_TWO-craterLat));
-				double zy = (Math.sin(lonlsolar) * Math.sin(Constant.PI_OVER_TWO-latlsolar) - Math.sin(craterLon) * Math.sin(Constant.PI_OVER_TWO-craterLat));
-				double zz = (Math.cos(Constant.PI_OVER_TWO-latlsolar) - Math.cos(Constant.PI_OVER_TWO-craterLat));
+				double sinCraterLat = FastMath.sin(Constant.PI_OVER_TWO-craterLat);
+				double zx = (cosLonSolar * sinLatSolar - FastMath.cos(craterLon) * sinCraterLat);
+				double zy = (sinLonSolar * sinLatSolar - FastMath.sin(craterLon) * sinCraterLat);
+				double zz = (cosLatSolar - FastMath.cos(Constant.PI_OVER_TWO-craterLat));
 				double tmp2 = zx * zx + zy * zy + zz * zz;
 				double sunElev = (Constant.PI_OVER_TWO - Math.acos(1.0 - tmp2 * 0.5)) * Constant.RAD_TO_DEG;
 				double oldMV = minValue;
 				if (Math.abs(sunElev) < minValue || minValue == -1) minValue = Math.abs(sunElev);
 
 				String name = FileIO.getField(1, crater[i], " ", true);
-				if (Math.abs(sunElev+offset) < maxDif && (!name.equals("Lunar-X") || FastMath.sin(lonlsolar) > 0)) {
+				if (Math.abs(sunElev+offset) < maxDif) {
 					if (!event[i]) {
+						if (fast) ephem = Ephem.getEphemeris(time, obs, eph, false);
 						String details = Translate.translate(1007)+" "+name;
 						if (!name.equals("Lunar-X")) details = Translate.translate(1078)+" "+name;
 						SimpleEventElement s = new SimpleEventElement(jd, EVENT.CRATER, details);

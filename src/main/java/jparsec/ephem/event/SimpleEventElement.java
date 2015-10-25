@@ -23,7 +23,6 @@ package jparsec.ephem.event;
 
 import jparsec.time.*;
 import jparsec.time.TimeElement.SCALE;
-import jparsec.time.calendar.CalendarGenericConversion;
 import jparsec.util.*;
 import jparsec.util.Translate.LANGUAGE;
 import jparsec.math.Constant;
@@ -381,21 +380,54 @@ public class SimpleEventElement implements Serializable {
 		String body = fix(this.body, true);
 		String secondaryBody = fix(this.secondaryBody, true);
 		boolean secondaryIsNaturalSatellite = false;
-		try { secondaryIsNaturalSatellite = Target.getIDFromEnglishName(secondaryBody).isNaturalSatellite(); } catch (Exception exc) { }
+		TARGET mainBody = null, secBody = null;
+		try {
+			secBody = Target.getIDFromEnglishName(secondaryBody);
+			secondaryIsNaturalSatellite = secBody.isNaturalSatellite(); 
+		} catch (Exception exc) { }
+		try {
+			mainBody = Target.getIDFromEnglishName(body);
+			if (mainBody == TARGET.NOT_A_PLANET)
+				mainBody = Target.getID(body);
+		} catch (Exception exc) { }
 		String out = "";
-		out = Translate.translate(EVENTS[eventType.ordinal()]);
+		if (eventType.ordinal() < 21) {
+			out = Translate.translate(829 + eventType.ordinal());
+		} else {
+			out = Translate.translate(EVENTS[eventType.ordinal()]);
+		}
 		TimeElement timeE = null;
+		String tbody = null;
+		if (mainBody != null && mainBody != TARGET.NOT_A_PLANET) {
+			tbody = mainBody.getName();
+		} else {
+			tbody = Translate.translate(body);
+		}
+		String tof = Translate.translate(160); // of
+		String tsecondaryBody = null;
+		if (secondaryBody != null) {
+			if (secBody != null && secBody != TARGET.NOT_A_PLANET) {
+				tsecondaryBody = secBody.getName();
+			} else {
+				tsecondaryBody = Translate.translate(secondaryBody);
+			}
+		}
+		String tevent = out;
 		try {
 			if (secondaryBody == null && ((eventType.compareTo(EVENT.PLANET_MINIMUM_DISTANCE) >= 0 &&
 				eventType.compareTo(EVENT.PLANET_MAXIMUM_ELONGATION) <= 0) || eventType == EVENT.PLANET_CONJUNCTION ||
 				eventType == EVENT.PLANET_OPPOSITION)) {
-				out = Translate.translate(EVENTS[eventType.ordinal()] + " of") + " " + Translate.translate(body);
+				if (eventType == EVENT.PLANET_CONJUNCTION || eventType == EVENT.PLANET_OPPOSITION) {
+					out = tevent + " " + tof + " " + tbody;					
+				} else {
+					out = tevent + " " + tbody;
+				}
 			} else {
 				if (secondaryBody != null) {
 					if (eventType == EVENT.OCCULTATION || eventType == EVENT.ECLIPSE) {
-						out = Translate.translate(EVENTS[eventType.ordinal()]) + " "+Translate.translate("of") + " " + Translate.translate(body)+" " + Translate.translate("by") + " " + Translate.translate(secondaryBody);
+						out = tevent + " "+ tbody+" " + Translate.translate(161) + " " + tsecondaryBody;
 					} else {
-						out = Translate.translate(EVENTS[eventType.ordinal()]) + " "+Translate.translate("of") + " " + Translate.translate(body)+" " + Translate.translate("on top of") + " " + Translate.translate(secondaryBody);
+						out = tevent + " "+ tbody+" " + Translate.translate(1020) + " " + tsecondaryBody;
 					}
 				}
 			}
@@ -438,9 +470,8 @@ public class SimpleEventElement implements Serializable {
 						eventType == EVENT.PLANET_MAXIMUM_ELONGATION || eventType == EVENT.PLANET_MINIMUM_ELONGATION
 						|| eventType == EVENT.PLANET_CONJUNCTION || eventType == EVENT.PLANET_OPPOSITION) {
 					d += "\u00b0";
-					if (eventType == EVENT.PLANET_MAXIMUM_ELONGATION && (body.equals(TARGET.MERCURY.getName()) ||
-							body.equals(TARGET.MERCURY.getEnglishName()) || body.equals(TARGET.VENUS.getName()) ||
-							body.equals(TARGET.VENUS.getEnglishName()))) {
+					if (eventType == EVENT.PLANET_MAXIMUM_ELONGATION && (mainBody == TARGET.MERCURY ||
+									mainBody == TARGET.VENUS)) {
 						int c = details.indexOf(",");
 						if (c > 0) d += details.substring(1+c);
 					}
@@ -459,7 +490,7 @@ public class SimpleEventElement implements Serializable {
 					String p = Functions.formatAngle(value, 3);
 					double dist = Constant.EARTH_RADIUS / Math.sin(value);
 					String d = Functions.formatValue(dist, 0);
-					out += " ("+Translate.translate("parallax")+" = "+p+", "+Translate.translate("distance")+" = "+d+" km)";
+					out += " ("+Translate.translate(850).toLowerCase()+" = "+p+", "+Translate.translate(299).toLowerCase()+" = "+d+" km)";
 				} else {
 					String details = fix(this.details, false);
 					if (this.eventType == EVENT.SATURN_RINGS_MAXIMUM_APERTURE) {
@@ -506,20 +537,16 @@ public class SimpleEventElement implements Serializable {
 			int translateLC[] = new int[] {1022, 1024};
 			if (eventType != EVENT.OTHER) {
 				String translateS[] = new String[] {"ends", "new", "year"};
+				int translateI[] = new int[] {1005, 535, 454};
 				for (int i=0; i<translateS.length; i++) {
 					try {
-						out = DataSet.replaceAll(out, translateS[i], Translate.translate(translateS[i]).toLowerCase(), true);
+						out = DataSet.replaceAll(out, translateS[i], Translate.translate(translateI[i]).toLowerCase(), true);
 						if (Translate.getDefaultLanguage() == LANGUAGE.SPANISH && (out.startsWith("new") || out.startsWith("nuevo")) && eventType == EVENT.CALENDAR) {
 							out = "nuevo a\u00f1o "+DataSet.replaceAll(FileIO.getRestAfterField(1, out, " ", true), "a\u00f1o", "", true).trim();
 						}
 					} catch (Exception exc) {}
 				}
 			}
-			String[] translateS = CalendarGenericConversion.CALENDAR_NAMES;
-			translateS = DataSet.addStringArray(translateS, new String[] {TARGET.SUN.getEnglishName(),
-					TARGET.MERCURY.getEnglishName(), TARGET.VENUS.getEnglishName(), TARGET.MARS.getEnglishName(),
-					TARGET.JUPITER.getEnglishName(), TARGET.SATURN.getEnglishName(), TARGET.URANUS.getEnglishName(),
-					TARGET.NEPTUNE.getEnglishName(), TARGET.Pluto.getEnglishName(), TARGET.Moon.getEnglishName()});
 			for (int i=0; i<translate.length; i++) {
 				try {
 					String in1 = Translate.getEntry(translate[i], LANGUAGE.ENGLISH);
@@ -545,21 +572,23 @@ public class SimpleEventElement implements Serializable {
 					out = DataSet.replaceAll(out, Translate.getEntry(translateLC[i], LANGUAGE.ENGLISH).toLowerCase(), Translate.translate(translateLC[i]).toLowerCase(), true);
 				} catch (Exception exc) {}
 			}
-			for (int i=0; i<translateS.length; i++) {
+			for (int i=0; i<11; i++) {
+				if (i == 3) continue;
 				try {
-					out = DataSet.replaceAll(out, translateS[i], Translate.translate(translateS[i]), true);
+					String s = Translate.getEntry(i, LANGUAGE.ENGLISH);
+					out = DataSet.replaceAll(out, s, Translate.translate(i), true);
 				} catch (Exception exc) {}
 			}
 			out = DataSet.replaceAll(out, "Saturnoo", "Saturno", true);
 			out = DataSet.replaceAll(out, "Asteroidee", "Asteroide", true);
 			out = DataSet.replaceAll(out, "Cometaa", "Cometa", true);
-			out = DataSet.replaceAll(out, "star", Translate.translate("Star").toLowerCase(), true);
-			out = DataSet.replaceAll(out, "Chinese", Translate.translate("Chinese"), true);
-			out = DataSet.replaceAll(out, " of ", " "+Translate.translate("of")+" ", true);
+			out = DataSet.replaceAll(out, "star", Translate.translate(79).toLowerCase(), true);
+			out = DataSet.replaceAll(out, "Chinese", Translate.translate(1006), true);
+			out = DataSet.replaceAll(out, " of ", " "+tof+" ", true);
 		}
 
 		if (this.eventLocation != null) {
-			out +=". " + Translate.translate("Coordinates")+" "+Translate.translate("of")+" "+Translate.translate(body)+": " + Functions.formatRAOnlyMinutes(this.eventLocation.getLongitude(), 2)+", "+Functions.formatDECOnlyMinutes(this.eventLocation.getLatitude(), 1);
+			out +=". " + Translate.translate(790)+" "+tof+" "+tbody+": " + Functions.formatRAOnlyMinutes(this.eventLocation.getLongitude(), 2)+", "+Functions.formatDECOnlyMinutes(this.eventLocation.getLatitude(), 1);
 		}
 		return out;
 	}

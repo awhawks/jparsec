@@ -321,15 +321,16 @@ public class PhysicalParameters
 	 * position in the disk surface.
 	 *
 	 * @param JD Julian day in TDB.
-	 * @param ephem_sun EphemElement with all data for the sun.
-	 * @param ephem_obj EphemElement with all data completed except those fields
-	 *        related to the disk orientation.
-	 * @param lon0 Initial longitude of planet at JD = 2451545.0.
+	 * @param ephem_sun EphemElement with at least RA, DEC, and distance for the Sun.
+	 * @param ephem_obj EphemElement with at least RA, DEC, distance, and north pole
+	 * direction.
+	 * @param lon0 Initial longitude of planet at JD = 2451545.0 in degrees.
 	 * @param rot_per_day Rotation speed in degrees/day.
 	 * @param eph Ephemeris object defining the ephemeris properties.
 	 * @param motherBody The mother body for the calculations. Can be set to null
 	 * for the Earth.
-	 * @return Ephem object with all the fields.
+	 * @return Ephem object with all the fields (PA pole, PA axis, bright limb angle, central
+	 * meridian, and subsolar longitude and latitude).
 	 * @throws JPARSECException If an error occurs.
 	 */
 	public static EphemElement calcAxis(double JD, EphemElement ephem_sun, EphemElement ephem_obj, double lon0,
@@ -527,7 +528,21 @@ public class PhysicalParameters
 		return incc;
 	}
 
-	private static double[] getIAU2009Model(TARGET target, double JD, double rr, double PH) throws JPARSECException {
+	/**
+	 * Returns the magnitude and rotation model parameters of the body following IAU 2009
+	 * resolutions.
+	 * @param target Target body.
+	 * @param JD Julian day in dynamical time.
+	 * @param rr Distance parameter of the body: distance (to Earth) * distance from Sun. 
+	 * For the Sun this value is its distance.
+	 * @param PH Phase angle in degrees, as a positive value. Both this value and the previous
+	 * one affects only the returned magnitude (first value).
+	 * @return The magnitude and rotation model for IAU 2009: magnitude, north pole RA,
+	 * north pole DEC (rad), longitude of planet at J2000 (deg), and speed rotation in degrees/day.
+	 * Null is returned for a valid target but without these data.
+	 * @throws JPARSECException For an invalid target.
+	 */
+	public static double[] getIAU2009Model(TARGET target, double JD, double rr, double PH) throws JPARSECException {
 		double mag = 0, northPoleRA = 0, northPoleDEC = 0, rot_per_day = 0, lon0 = 0;
 
 		double calc_time = Functions.toCenturies(JD);
@@ -726,7 +741,21 @@ public class PhysicalParameters
 		return new double[] {mag, northPoleRA, northPoleDEC, lon0, rot_per_day};
 	}
 
-	private static double[] getIAU2006Model(TARGET target, double JD, double rr, double PH) throws JPARSECException {
+	/**
+	 * Returns the magnitude and rotation model parameters of the body following IAU 2006
+	 * resolutions.
+	 * @param target Target body.
+	 * @param JD Julian day in dynamical time.
+	 * @param rr Distance parameter of the body: distance (to Earth) * distance from Sun. 
+	 * For the Sun this value is its distance.
+	 * @param PH Phase angle in degrees, as a positive value. Both this value and the previous
+	 * one affects only the returned magnitude (first value).
+	 * @return The magnitude and rotation model for IAU 2006: magnitude, north pole RA,
+	 * north pole DEC (rad), longitude of planet at J2000 (deg), and speed rotation in degrees/day.
+	 * Null is returned for a valid target but without these data.
+	 * @throws JPARSECException For an invalid target.
+	 */
+	public static double[] getIAU2006Model(TARGET target, double JD, double rr, double PH) throws JPARSECException {
 		double mag = 0, northPoleRA = 0, northPoleDEC = 0, rot_per_day = 0, lon0 = 0;
 
 		double calc_time = Functions.toCenturies(JD);
@@ -892,7 +921,21 @@ public class PhysicalParameters
 		return new double[] {mag, northPoleRA, northPoleDEC, lon0, rot_per_day};
 	}
 
-	private static double[] getIAU2000Model(TARGET target, double JD, double rr, double PH) throws JPARSECException {
+	/**
+	 * Returns the magnitude and rotation model parameters of the body following IAU 2000
+	 * resolutions.
+	 * @param target Target body.
+	 * @param JD Julian day in dynamical time.
+	 * @param rr Distance parameter of the body: distance (to Earth) * distance from Sun. 
+	 * For the Sun this value is its distance.
+	 * @param PH Phase angle in degrees, as a positive value. Both this value and the previous
+	 * one affects only the returned magnitude (first value).
+	 * @return The magnitude and rotation model for IAU 2000: magnitude, north pole RA,
+	 * north pole DEC (rad), longitude of planet at J2000 (deg), and speed rotation in degrees/day.
+	 * Null is returned for a valid target but without these data.
+	 * @throws JPARSECException For an invalid target.
+	 */
+	public static double[] getIAU2000Model(TARGET target, double JD, double rr, double PH) throws JPARSECException {
 		double mag = 0, northPoleRA = 0, northPoleDEC = 0, rot_per_day = 0, lon0 = 0;
 
 		double calc_time = Functions.toCenturies(JD);

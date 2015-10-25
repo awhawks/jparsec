@@ -2273,9 +2273,8 @@ public class RenderSky
 		   	if (starImg == null || starImg[(int)ww][0] == null) {
 	    		if (starImg == null) {
 	    			int max = 45;
-	    			// Use more memory in Android to render colors in stars, but only when width or
-	    			// height is high, which is also equivalent to say JVM memory per app is high enough
-	    			if (g.renderingToAndroid() && (g.getWidth() < 1000 && g.getHeight() < 1000)) {
+	    			// Reduce memory use when colors are not required in stars
+	    			if (!render.drawStarsColors) {
 	    				starImg = new Object[max][1];
 	    			} else {
 	    				starImg = new Object[max][7];
@@ -2580,9 +2579,8 @@ public class RenderSky
      	if (starImg == null || (starImg[tsize][0] == null && tsize > 0)) {
     		if (starImg == null) {
     			int max = 45;
-    			// Use more memory in Android to render colors in stars, but only when width or
-    			// height is high, which is also equivalent to say JVM memory per app is high enough
-    			if (g.renderingToAndroid() && (g.getWidth() < 1000 && g.getHeight() < 1000)) {
+    			// Reduce memory use when colors are not required in stars
+    			if (!render.drawStarsColors) {
     				starImg = new Object[max][1];
     			} else {
     				starImg = new Object[max][7];
