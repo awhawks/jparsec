@@ -628,6 +628,7 @@ public class Functions
 		double decs = 0.0;
 
 		int g = dec.indexOf("\u00b0");
+		if (g < 0) g = dec.indexOf("\u00ba");
 		if (g < 0)
 			g = dec.indexOf("d");
 		int m = dec.indexOf("'");
@@ -699,6 +700,7 @@ public class Functions
 	public static String getDegreesFromFormattedDEC (String dec)
 	{
 		int h = dec.indexOf("\u00b0");
+		if (h < 0) h = dec.indexOf("\u00ba");
 		if (h < 0) h = dec.indexOf("d");
 		String deg = dec.substring(0, h);
 		if (!deg.startsWith("-")) deg = "+"+deg;
@@ -712,6 +714,7 @@ public class Functions
 	public static String getMinutesFromFormattedDEC (String dec)
 	{
 		int h = dec.indexOf("\u00b0");
+		if (h < 0) h = dec.indexOf("\u00ba");
 		if (h < 0) h = dec.indexOf("d");
 		int m = dec.indexOf("'");
 		String min = dec.substring(h+1, m).trim();
