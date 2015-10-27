@@ -179,7 +179,7 @@ public class ProcessSpectrum {
 
 		double xArray[] = DataSet.getSetOfValues(1.0, vv.length, vv.length, false);
         double sdArray[] = DataSet.getSetOfValues(sigma, sigma, vv.length, false); // Use sigma as the error in each point
-        fitGaussian(xArray, vv, sdArray);
+        fitAGaussian(xArray, vv, sdArray);
         double v[] = fitx; // mean, sd, y_scale
         double dv[] = fitdx;
         v[0] += i0 - basen;
@@ -1318,7 +1318,7 @@ public class ProcessSpectrum {
 	}
 
 	private double fitx[], fitdx[];
-	private void fitGaussian(double x[], double y[], double w[]) throws JPARSECException {
+	private void fitAGaussian(double x[], double y[], double w[]) throws JPARSECException {
 		jparsec.math.Regression reg = new jparsec.math.Regression(x, y, w);
 		reg.setMaximumNumberOfInterationsForNelderAndMeadSimplex(maximumNumberOfIterationsForNelderAndMeadSimplexInRegressionClass);
 		reg.gaussian();
@@ -1338,6 +1338,37 @@ public class ProcessSpectrum {
 	public static double[] fitGaussian(double x[], double y[], double sigma) throws JPARSECException {
         double w[] = DataSet.getSetOfValues(sigma, sigma, x.length, false); // Use sigma as the error in each point
 		jparsec.math.Regression reg = new jparsec.math.Regression(x, y, w);
+		reg.setMaximumNumberOfInterationsForNelderAndMeadSimplex(maximumNumberOfIterationsForNelderAndMeadSimplexInRegressionClass);
+		reg.gaussian();
+
+		double[] fitx = reg.getBestEstimates();
+		double[] fitdx = reg.getBestEstimatesErrors();
+        double v[] = fitx; // mean, sd, y_scale
+        double dv[] = fitdx;
+        double sqrttwopi = Math.sqrt(Constant.TWO_PI);
+        MeasureElement me1 = new MeasureElement(v[1] * sqrttwopi, dv[1] * sqrttwopi, MeasureElement.UNIT_Y_K);
+        MeasureElement me2 = new MeasureElement(v[2], dv[2], MeasureElement.UNIT_Y_K);
+        me2.divide(me1);
+		double g = cte;
+		double v0 = 1; //Math.abs(vres);
+        double out[] = new double[] {
+        		v[0], v[1] * g * v0, me2.getValue(), v[2] * v0, // x, w, T, A
+        		Math.abs(dv[0] * v0), Math.abs(dv[1] * g * v0), Math.abs(me2.error), Math.abs(dv[2] * v0), // errors
+        };
+        return out;
+	}
+	
+	/**
+	 * Performs a quick and simple gaussian fit to a set of data.
+	 * @param x The x values.
+	 * @param y The y values for the gaussian profile.
+	 * @param sigma The error or 1-sigma level of the data.
+	 * @return x position of the gaussian center, width of the gaussian, peak, and area,
+	 * referred to the units for the x axis. Another 4 values for their respective errors.
+	 * @throws JPARSECException If an error occurs.
+	 */
+	public static double[] fitGaussian(double x[], double y[], double sigma[]) throws JPARSECException {
+		jparsec.math.Regression reg = new jparsec.math.Regression(x, y, sigma);
 		reg.setMaximumNumberOfInterationsForNelderAndMeadSimplex(maximumNumberOfIterationsForNelderAndMeadSimplexInRegressionClass);
 		reg.gaussian();
 
