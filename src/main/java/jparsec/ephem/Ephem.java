@@ -390,6 +390,8 @@ public class Ephem
 			case JPL_DE413:
 			case JPL_DE414:
 			case JPL_DE422:
+			case JPL_DE424:
+			case JPL_DE430:
 				JPLEphemeris jpl = null;
 				try {
 					jpl = new JPLEphemeris(eph.algorithm, Configuration.JPL_EPHEMERIDES_FILES_EXTERNAL_PATH);
@@ -531,7 +533,7 @@ public class Ephem
 				ephem_elem = EphemElement.parseStarEphemElement(StarEphem.starEphemeris(time, obs, eph, full_ephem));
 				break;
 			default:
-				throw new JPARSECException("invalid algorithm.");
+				throw new JPARSECException("invalid algorithm "+eph.algorithm+".");
 			}
 
 			return ephem_elem;

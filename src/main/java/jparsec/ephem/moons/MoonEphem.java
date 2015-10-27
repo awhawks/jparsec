@@ -133,6 +133,8 @@ public class MoonEphem
 			case JPL_DE413:
 			case JPL_DE414:
 			case JPL_DE422:
+			case JPL_DE424:
+			case JPL_DE430:
 				eq = Ephem.DynamicaltoICRSFrame(eq);
 				break;
 			case SERIES96_MOSHIERForMoon:
