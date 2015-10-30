@@ -2178,9 +2178,11 @@ public class RenderPlanet
 
 								float penumbraIntensity = (0.3f + 0.7f * (float) ((sdr-dr)/(sampling-dr)));
 								if (penumbraIntensity < 0.0) penumbraIntensity = 0.0f;
-								red = (int) (penumbraIntensity*red);
-								green = (int) (penumbraIntensity*green);
-								blue = (int) (penumbraIntensity*blue);
+								if (penumbraIntensity < 1.0) {
+									red = (int) (penumbraIntensity*red);
+									green = (int) (penumbraIntensity*green);
+									blue = (int) (penumbraIntensity*blue);
+								}
 								g.setColor(red, green, blue, 255);
 								g.fillOvalAnaglyphLeft(shadowX, shadowY, 1, 1, sdz);
 								if (texture_step == 1) { // More points to avoid gaps when rendering to a big size
@@ -2210,9 +2212,11 @@ public class RenderPlanet
 
 								float penumbraIntensity = (0.3f + 0.7f * (float) ((sdr-dr)/(sampling-dr)));
 								if (penumbraIntensity < 0.0) penumbraIntensity = 0.0f;
-								red = (int) (penumbraIntensity*red);
-								green = (int) (penumbraIntensity*green);
-								blue = (int) (penumbraIntensity*blue);
+								if (penumbraIntensity < 1.0) {
+									red = (int) (penumbraIntensity*red);
+									green = (int) (penumbraIntensity*green);
+									blue = (int) (penumbraIntensity*blue);
+								}
 								g.setColor(red, green, blue, 255);
 								g.fillOvalAnaglyphRight(shadowX, shadowY, 1, 1, sdz);
 								if (texture_step == 1) { // More points to avoid gaps when rendering to a big size
@@ -2242,9 +2246,11 @@ public class RenderPlanet
 
 							float penumbraIntensity = (0.3f + 0.7f * (float) ((sdr-dr)/(sampling-dr)));
 							if (penumbraIntensity < 0.0) penumbraIntensity = 0.0f;
-							red = (int) (penumbraIntensity*red);
-							green = (int) (penumbraIntensity*green);
-							blue = (int) (penumbraIntensity*blue);
+							if (penumbraIntensity < 1.0) {
+								red = (int) (penumbraIntensity*red);
+								green = (int) (penumbraIntensity*green);
+								blue = (int) (penumbraIntensity*blue);
+							}
 							g.setColor(red, green, blue, 255);
 							g.fillOval(shadowX, shadowY, 1, 1, sdz);
 //						}
