@@ -21,6 +21,8 @@
  */
 package jparsec.ephem.planets.imcce;
 
+import java.io.Serializable;
+
 /**
  * All the static data of the ELP2000 theory (part 1), in a
  * separate file for managability. The whole theory is applied. This is part 1
@@ -37,237 +39,76 @@ package jparsec.ephem.planets.imcce;
  * @since version 1.0
  */
 
-final class elp_lon_sine_0 {
-    // First 400 terms
-    static final Elp2000Set1[] LonSine0 = (Elp2000Set1[]) Serialise.deserialise("elp_lon_sine_0.LonSine0.xml");
-}
-
-final class elp_lon_sine_1 {
-    // Next 400 terms
-    static final Elp2000Set1[] LonSine1 = (Elp2000Set1[]) Serialise.deserialise("elp_lon_sine_1.LonSine1.xml");
-}
-
-final class elp_lon_sine_2 {
-    // Last 223 terms
-    static final Elp2000Set1[] LonSine2 = (Elp2000Set1[]) Serialise.deserialise("elp_lon_sine_2.LonSine2.xml");
-}
-
-final class elp_lat_sine_0 {
-    static final Elp2000Set1[] LatSine0 = (Elp2000Set1[]) Serialise.deserialise("elp_lat_sine_0.LatSine0.xml");
-}
-
-final class elp_lat_sine_1 {
-    static final Elp2000Set1[] LatSine1 = (Elp2000Set1[]) Serialise.deserialise("elp_lat_sine_1.LatSine1.xml");
-}
-
-final class elp_lat_sine_2 {
-    static final Elp2000Set1[] LatSine2 = (Elp2000Set1[]) Serialise.deserialise("elp_lon_sine_2.LonSine2.xml");
-}
-
-final class elp_rad_cose_0 {
-    // First 400 terms
-    static final Elp2000Set1[] RadCose0 = (Elp2000Set1[]) Serialise.deserialise("elp_rad_cose_0.RadCose0.xml");
-}
-
-final class elp_rad_cose_1 {
-    // Last terms
-    static final Elp2000Set1[] RadCose1 = (Elp2000Set1[]) Serialise.deserialise("elp_rad_cose_1.RadCose1.xml");
-}
-
-final class elp_lon_earth_perturb {
-    static final Elp2000Set2[] Lon = (Elp2000Set2[]) Serialise.deserialise("elp_lon_earth_perturb.Lon.xml");
-}
-
-final class elp_lat_earth_perturb {
-    static final Elp2000Set2[] Lat = (Elp2000Set2[]) Serialise.deserialise("elp_lat_earth_perturb.Lat.xml");
-}
-
-final class elp_rad_earth_perturb {
-    static final Elp2000Set2[] Rad = (Elp2000Set2[]) Serialise.deserialise("elp_rad_earth_perturb.Rad.xml");
-}
-
-final class elp_earth_perturb_t {
-    static final Elp2000Set2[] Lon = (Elp2000Set2[]) Serialise.deserialise("elp_earth_perturb_t.Lon.xml");
-    static final Elp2000Set2[] Lat = (Elp2000Set2[]) Serialise.deserialise("elp_earth_perturb_t.Lat.xml");
-    static final Elp2000Set2[] Rad = (Elp2000Set2[]) Serialise.deserialise("elp_earth_perturb_t.Rad.xml");
-}
-
-final class elp_tidal {
-    static final Elp2000Set2[] Lon = (Elp2000Set2[]) Serialise.deserialise("elp_tidal.Lon.xml");
-    static final Elp2000Set2[] Lat = (Elp2000Set2[]) Serialise.deserialise("elp_tidal.Lat.xml");
-    static final Elp2000Set2[] Rad = (Elp2000Set2[]) Serialise.deserialise("elp_tidal.Rad.xml");
-    static final Elp2000Set2[] Lon_t = (Elp2000Set2[]) Serialise.deserialise("elp_tidal.Lon_t.xml");
-    static final Elp2000Set2[] Lat_t = (Elp2000Set2[]) Serialise.deserialise("elp_tidal.Lat_t.xml");
-    static final Elp2000Set2[] Rad_t = (Elp2000Set2[]) Serialise.deserialise("elp_tidal.Rad_t.xml");
-}
-
-final class elp_moon {
-    static final Elp2000Set2[] Lon = (Elp2000Set2[]) Serialise.deserialise("elp_moon.Lon.xml");
-    static final Elp2000Set2[] Lat = (Elp2000Set2[]) Serialise.deserialise("elp_moon.Lat.xml");
-    static final Elp2000Set2[] Rad = (Elp2000Set2[]) Serialise.deserialise("elp_moon.Rad.xml");
-}
-
-final class elp_rel {
-    static final Elp2000Set2[] Lon = (Elp2000Set2[]) Serialise.deserialise("elp_rel.Lon.xml");
-    static final Elp2000Set2[] Lat = (Elp2000Set2[]) Serialise.deserialise("elp_rel.Lat.xml");
-    static final Elp2000Set2[] Rad = (Elp2000Set2[]) Serialise.deserialise("elp_rel.Rad.xml");
-}
-
-final class elp_plan {
-    static final Elp2000Set2[] Lon = (Elp2000Set2[]) Serialise.deserialise("elp_plan.Lon.xml");
-    static final Elp2000Set2[] Lat = (Elp2000Set2[]) Serialise.deserialise("elp_plan.Lat.xml");
-    static final Elp2000Set2[] Rad = (Elp2000Set2[]) Serialise.deserialise("elp_plan.Rad.xml");
-}
-
-final class elp_plan_perturb2 {
-    static final Elp2000Set3[] Lon = (Elp2000Set3[]) Serialise.deserialise("elp_plan_perturb2.Lon.xml");
-    static final Elp2000Set3[] Lat = (Elp2000Set3[]) Serialise.deserialise("elp_plan_perturb2.Lat.xml");
-    static final Elp2000Set3[] Rad = (Elp2000Set3[]) Serialise.deserialise("elp_plan_perturb2.Rad.xml");
-    static final Elp2000Set3[] Lon_t = (Elp2000Set3[]) Serialise.deserialise("elp_plan_perturb2.Lon_t.xml");
-    static final Elp2000Set3[] Lat_t = (Elp2000Set3[]) Serialise.deserialise("elp_plan_perturb2.Lat_t.xml");
-    static final Elp2000Set3[] Rad_t = (Elp2000Set3[]) Serialise.deserialise("elp_plan_perturb2.Rad_t.xml");
-}
-
-final class elp_plan_perturb10_0 {
-    static final Elp2000Set3[] Lon = (Elp2000Set3[]) Serialise.deserialise("elp_plan_perturb10_0.Lon.xml");
-}
-
-final class elp_plan_perturb10_1 {
-    static final Elp2000Set3[] Lon = (Elp2000Set3[]) Serialise.deserialise("elp_plan_perturb10_1.Lon.xml");
-}
-
-final class elp_plan_perturb10_2 {
-    static final Elp2000Set3[] Lon = (Elp2000Set3[]) Serialise.deserialise("elp_plan_perturb10_2.Lon.xml");
-}
-
-final class elp_plan_perturb10_3 {
-    static final Elp2000Set3[] Lon = (Elp2000Set3[]) Serialise.deserialise("elp_plan_perturb10_3.Lon.xml");
-}
-
-final class elp_plan_perturb10_4 {
-    static final Elp2000Set3[] Lon = (Elp2000Set3[]) Serialise.deserialise("elp_plan_perturb10_4.Lon.xml");
-}
-
-final class elp_plan_perturb10_5 {
-    static final Elp2000Set3[] Lon = (Elp2000Set3[]) Serialise.deserialise("elp_plan_perturb10_5.Lon.xml");
-}
-
-final class elp_plan_perturb10_6 {
-    static final Elp2000Set3[] Lon = (Elp2000Set3[]) Serialise.deserialise("elp_plan_perturb10_6.Lon.xml");
-}
-
-final class elp_plan_perturb10_7 {
-    static final Elp2000Set3[] Lon = (Elp2000Set3[]) Serialise.deserialise("elp_plan_perturb10_7.Lon.xml");
-}
-
-final class elp_plan_perturb10_8 {
-    static final Elp2000Set3[] Lon = (Elp2000Set3[]) Serialise.deserialise("elp_plan_perturb10_8.Lon.xml");
-}
-
-final class elp_plan_perturb10_9 {
-    static final Elp2000Set3[] Lon = (Elp2000Set3[]) Serialise.deserialise("elp_plan_perturb10_9.Lon.xml");
-}
-
-final class elp_plan_perturb10_10 {
-    static final Elp2000Set3[] Lon = (Elp2000Set3[]) Serialise.deserialise("elp_plan_perturb10_10.Lon.xml");
-}
-
-final class elp_plan_perturb10_11 {
-    static final Elp2000Set3[] Lon = (Elp2000Set3[]) Serialise.deserialise("elp_plan_perturb10_11.Lon.xml");
-}
-
-final class elp_plan_perturb10_12 {
-    static final Elp2000Set3[] Lon = (Elp2000Set3[]) Serialise.deserialise("elp_plan_perturb10_12.Lon.xml");
-}
-
-final class elp_plan_perturb10_13 {
-    static final Elp2000Set3[] Lon = (Elp2000Set3[]) Serialise.deserialise("elp_plan_perturb10_13.Lon.xml");
-}
-
-final class elp_plan_perturb10_14 {
-    static final Elp2000Set3[] Lon = (Elp2000Set3[]) Serialise.deserialise("elp_plan_perturb10_14.Lon.xml");
-}
-
-final class elp_plan_perturb10_15 {
-    static final Elp2000Set3[] Lon = (Elp2000Set3[]) Serialise.deserialise("elp_plan_perturb10_15.Lon.xml");
-}
-
-final class elp_plan_perturb10_16 {
-    static final Elp2000Set3[] Lon = (Elp2000Set3[]) Serialise.deserialise("elp_plan_perturb10_16.Lon.xml");
-}
-
-final class elp_plan_perturb10_17 {
-    static final Elp2000Set3[] Lon = (Elp2000Set3[]) Serialise.deserialise("elp_plan_perturb10_17.Lon.xml");
-}
-
-final class elp_plan_perturb10_18 {
-    static final Elp2000Set3[] Lon = (Elp2000Set3[]) Serialise.deserialise("elp_plan_perturb10_18.Lon.xml");
-}
-
-final class elp_plan_perturb10_19 {
-    static final Elp2000Set3[] Lon = (Elp2000Set3[]) Serialise.deserialise("elp_plan_perturb10_19.Lon.xml");
-}
-
-final class elp_plan_perturb10_20 {
-    static final Elp2000Set3[] Lon = (Elp2000Set3[]) Serialise.deserialise("elp_plan_perturb10_20.Lon.xml");
-}
-
-final class elp_plan_perturb10_21 {
-    static final Elp2000Set3[] Lon = (Elp2000Set3[]) Serialise.deserialise("elp_plan_perturb10_21.Lon.xml");
-}
-
-final class elp_plan_perturb10_22 {
-    static final Elp2000Set3[] Lon = (Elp2000Set3[]) Serialise.deserialise("elp_plan_perturb10_22.Lon.xml");
-}
-
-final class elp_plan_perturb10_23 {
-    static final Elp2000Set3[] Lon = (Elp2000Set3[]) Serialise.deserialise("elp_plan_perturb10_23.Lon.xml");
-}
-
-final class elp_plan_perturb10_24 {
-    static final Elp2000Set3[] Lon = (Elp2000Set3[]) Serialise.deserialise("elp_plan_perturb10_24.Lon.xml");
-}
-
-final class elp_plan_perturb10_25 {
-    static final Elp2000Set3[] Lon = (Elp2000Set3[]) Serialise.deserialise("elp_plan_perturb10_25.Lon.xml");
-}
-
-final class elp_plan_perturb10_26 {
-    static final Elp2000Set3[] Lon = (Elp2000Set3[]) Serialise.deserialise("elp_plan_perturb10_26.Lon.xml");
-}
-
-final class elp_plan_perturb10_27 {
-    static final Elp2000Set3[] Lon = (Elp2000Set3[]) Serialise.deserialise("elp_plan_perturb10_27.Lon.xml");
-}
-
-final class elp_plan_perturb10_28 {
-    static final Elp2000Set3[] Lon = (Elp2000Set3[]) Serialise.deserialise("elp_plan_perturb10_28.Lon.xml");
-}
-
-final class elp_plan_perturb10_29 {
-    static final Elp2000Set3[] Lon = (Elp2000Set3[]) Serialise.deserialise("elp_plan_perturb10_29.Lon.xml");
-}
-
-final class elp_plan_perturb10_30 {
-    static final Elp2000Set3[] Lon = (Elp2000Set3[]) Serialise.deserialise("elp_plan_perturb10_30.Lon.xml");
-}
-
-final class elp_plan_perturb10_31 {
-    static final Elp2000Set3[] Lon = (Elp2000Set3[]) Serialise.deserialise("elp_plan_perturb10_31.Lon.xml");
-}
-
-final class elp_plan_perturb10_32 {
-    static final Elp2000Set3[] Lon = (Elp2000Set3[]) Serialise.deserialise("elp_plan_perturb10_32.Lon.xml");
-}
-
-final class elp_plan_perturb10_33 {
-    static final Elp2000Set3[] Lon = (Elp2000Set3[]) Serialise.deserialise("elp_plan_perturb10_33.Lon.xml");
-}
-
-final class elp_plan_perturb10_34 {
-    static final Elp2000Set3[] Lon = (Elp2000Set3[]) Serialise.deserialise("elp_plan_perturb10_34.Lon.xml");
-}
-
-final class elp_plan_perturb10_35 {
-    static final Elp2000Set3[] Lon = (Elp2000Set3[]) Serialise.deserialise("elp_plan_perturb10_35.Lon.xml");
+public final class Elp2000_data1 implements Serializable {
+    public Elp2000Set1[] elp_lon_sine_0_LonSine0; // Serialise.deserialiseXML("elp_lon_sine_0.xml");
+    public Elp2000Set1[] elp_lon_sine_1_LonSine1; // Serialise.deserialiseXML("elp_lon_sine_1.xml");
+    public Elp2000Set1[] elp_lon_sine_2_LonSine2; // Serialise.deserialiseXML("elp_lon_sine_2.xml");
+    public Elp2000Set1[] elp_lat_sine_0_LatSine0; // Serialise.deserialiseXML("elp_lat_sine_0.xml");
+    public Elp2000Set1[] elp_lat_sine_1_LatSine1; // Serialise.deserialiseXML("elp_lat_sine_1.xml");
+    public Elp2000Set1[] elp_lat_sine_2_LatSine2; // Serialise.deserialiseXML("elp_lon_sine_2.xml");
+    public Elp2000Set1[] elp_rad_cose_0_RadCose0; // Serialise.deserialiseXML("elp_rad_cose_0.xml");
+    public Elp2000Set1[] elp_rad_cose_1_RadCose1; // Serialise.deserialiseXML("elp_rad_cose_1.xml");
+    public Elp2000Set2[] elp_lon_earth_perturb_Lon; // Serialise.deserialiseXML("elp_lon_earth_perturb.xml");
+    public Elp2000Set2[] elp_lat_earth_perturb_Lat; // Serialise.deserialiseXML("elp_lat_earth_perturb.xml");
+    public Elp2000Set2[] elp_rad_earth_perturb_Rad; // Serialise.deserialiseXML("elp_rad_earth_perturb.xml");
+    public Elp2000Set2[] elp_earth_perturb_t_Lon; // Serialise.deserialiseXML("elp_earth_perturb_t.xml");
+    public Elp2000Set2[] elp_earth_perturb_t_Lat; // Serialise.deserialiseXML("elp_earth_perturb_t.xml");
+    public Elp2000Set2[] elp_earth_perturb_t_Rad; // Serialise.deserialiseXML("elp_earth_perturb_t.xml");
+    public Elp2000Set2[] elp_tidal_Lon; // Serialise.deserialiseXML("elp_tidal.xml");
+    public Elp2000Set2[] elp_tidal_Lat; // Serialise.deserialiseXML("elp_tidal.xml");
+    public Elp2000Set2[] elp_tidal_Rad; // Serialise.deserialiseXML("elp_tidal.xml");
+    public Elp2000Set2[] elp_tidal_Lon_t; // Serialise.deserialiseXML("elp_tidal.xml");
+    public Elp2000Set2[] elp_tidal_Lat_t; // Serialise.deserialiseXML("elp_tidal.xml");
+    public Elp2000Set2[] elp_tidal_Rad_t; // Serialise.deserialiseXML("elp_tidal.xml");
+    public Elp2000Set2[] elp_moon_Lon; // Serialise.deserialiseXML("elp_moon.xml");
+    public Elp2000Set2[] elp_moon_Lat; // Serialise.deserialiseXML("elp_moon.xml");
+    public Elp2000Set2[] elp_moon_Rad; // Serialise.deserialiseXML("elp_moon.xml");
+    public Elp2000Set2[] elp_rel_Lon; // Serialise.deserialiseXML("elp_rel.xml");
+    public Elp2000Set2[] elp_rel_Lat; // Serialise.deserialiseXML("elp_rel.xml");
+    public Elp2000Set2[] elp_rel_Rad; // Serialise.deserialiseXML("elp_rel.xml");
+    public Elp2000Set2[] elp_plan_Lon; // Serialise.deserialiseXML("elp_plan.xml");
+    public Elp2000Set2[] elp_plan_Lat; // Serialise.deserialiseXML("elp_plan.xml");
+    public Elp2000Set2[] elp_plan_Rad; // Serialise.deserialiseXML("elp_plan.xml");
+    public Elp2000Set3[] elp_plan_perturb2_Lon; // Serialise.deserialiseXML("elp_plan_perturb2.xml");
+    public Elp2000Set3[] elp_plan_perturb2_Lat; // Serialise.deserialiseXML("elp_plan_perturb2.xml");
+    public Elp2000Set3[] elp_plan_perturb2_Rad; // Serialise.deserialiseXML("elp_plan_perturb2.xml");
+    public Elp2000Set3[] elp_plan_perturb2_Lon_t; // Serialise.deserialiseXML("elp_plan_perturb2.xml");
+    public Elp2000Set3[] elp_plan_perturb2_Lat_t; // Serialise.deserialiseXML("elp_plan_perturb2.xml");
+    public Elp2000Set3[] elp_plan_perturb2_Rad_t; // Serialise.deserialiseXML("elp_plan_perturb2.xml");
+    public Elp2000Set3[] elp_plan_perturb10_0_Lon; // Serialise.deserialiseXML("elp_plan_perturb10_0.xml");
+    public Elp2000Set3[] elp_plan_perturb10_1_Lon; // Serialise.deserialiseXML("elp_plan_perturb10_1.xml");
+    public Elp2000Set3[] elp_plan_perturb10_2_Lon; // Serialise.deserialiseXML("elp_plan_perturb10_2.xml");
+    public Elp2000Set3[] elp_plan_perturb10_3_Lon; // Serialise.deserialiseXML("elp_plan_perturb10_3.xml");
+    public Elp2000Set3[] elp_plan_perturb10_4_Lon; // Serialise.deserialiseXML("elp_plan_perturb10_4.xml");
+    public Elp2000Set3[] elp_plan_perturb10_5_Lon; // Serialise.deserialiseXML("elp_plan_perturb10_5.xml");
+    public Elp2000Set3[] elp_plan_perturb10_6_Lon; // Serialise.deserialiseXML("elp_plan_perturb10_6.xml");
+    public Elp2000Set3[] elp_plan_perturb10_7_Lon; // Serialise.deserialiseXML("elp_plan_perturb10_7.xml");
+    public Elp2000Set3[] elp_plan_perturb10_8_Lon; // Serialise.deserialiseXML("elp_plan_perturb10_8.xml");
+    public Elp2000Set3[] elp_plan_perturb10_9_Lon; // Serialise.deserialiseXML("elp_plan_perturb10_9.xml");
+    public Elp2000Set3[] elp_plan_perturb10_10_Lon; // Serialise.deserialiseXML("elp_plan_perturb10_10.xml");
+    public Elp2000Set3[] elp_plan_perturb10_11_Lon; // Serialise.deserialiseXML("elp_plan_perturb10_11.xml");
+    public Elp2000Set3[] elp_plan_perturb10_12_Lon; // Serialise.deserialiseXML("elp_plan_perturb10_12.xml");
+    public Elp2000Set3[] elp_plan_perturb10_13_Lon; // Serialise.deserialiseXML("elp_plan_perturb10_13.xml");
+    public Elp2000Set3[] elp_plan_perturb10_14_Lon; // Serialise.deserialiseXML("elp_plan_perturb10_14.xml");
+    public Elp2000Set3[] elp_plan_perturb10_15_Lon; // Serialise.deserialiseXML("elp_plan_perturb10_15.xml");
+    public Elp2000Set3[] elp_plan_perturb10_16_Lon; // Serialise.deserialiseXML("elp_plan_perturb10_16.xml");
+    public Elp2000Set3[] elp_plan_perturb10_17_Lon; // Serialise.deserialiseXML("elp_plan_perturb10_17.xml");
+    public Elp2000Set3[] elp_plan_perturb10_18_Lon; // Serialise.deserialiseXML("elp_plan_perturb10_18.xml");
+    public Elp2000Set3[] elp_plan_perturb10_19_Lon; // Serialise.deserialiseXML("elp_plan_perturb10_19.xml");
+    public Elp2000Set3[] elp_plan_perturb10_20_Lon; // Serialise.deserialiseXML("elp_plan_perturb10_20.xml");
+    public Elp2000Set3[] elp_plan_perturb10_21_Lon; // Serialise.deserialiseXML("elp_plan_perturb10_21.xml");
+    public Elp2000Set3[] elp_plan_perturb10_22_Lon; // Serialise.deserialiseXML("elp_plan_perturb10_22.xml");
+    public Elp2000Set3[] elp_plan_perturb10_23_Lon; // Serialise.deserialiseXML("elp_plan_perturb10_23.xml");
+    public Elp2000Set3[] elp_plan_perturb10_24_Lon; // Serialise.deserialiseXML("elp_plan_perturb10_24.xml");
+    public Elp2000Set3[] elp_plan_perturb10_25_Lon; // Serialise.deserialiseXML("elp_plan_perturb10_25.xml");
+    public Elp2000Set3[] elp_plan_perturb10_26_Lon; // Serialise.deserialiseXML("elp_plan_perturb10_26.xml");
+    public Elp2000Set3[] elp_plan_perturb10_27_Lon; // Serialise.deserialiseXML("elp_plan_perturb10_27.xml");
+    public Elp2000Set3[] elp_plan_perturb10_28_Lon; // Serialise.deserialiseXML("elp_plan_perturb10_28.xml");
+    public Elp2000Set3[] elp_plan_perturb10_29_Lon; // Serialise.deserialiseXML("elp_plan_perturb10_29.xml");
+    public Elp2000Set3[] elp_plan_perturb10_30_Lon; // Serialise.deserialiseXML("elp_plan_perturb10_30.xml");
+    public Elp2000Set3[] elp_plan_perturb10_31_Lon; // Serialise.deserialiseXML("elp_plan_perturb10_31.xml");
+    public Elp2000Set3[] elp_plan_perturb10_32_Lon; // Serialise.deserialiseXML("elp_plan_perturb10_32.xml");
+    public Elp2000Set3[] elp_plan_perturb10_33_Lon; // Serialise.deserialiseXML("elp_plan_perturb10_33.xml");
+    public Elp2000Set3[] elp_plan_perturb10_34_Lon; // Serialise.deserialiseXML("elp_plan_perturb10_34.xml");
+    public Elp2000Set3[] elp_plan_perturb10_35_Lon; // Serialise.deserialiseXML("elp_plan_perturb10_35.xml");
 }

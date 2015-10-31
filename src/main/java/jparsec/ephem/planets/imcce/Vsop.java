@@ -80,7 +80,7 @@ public class Vsop
 	 */
 	public static double[] getHeliocentricEclipticPositionJ2000(double JD, TARGET planet) throws JPARSECException
 	{
-		String extension = "";
+		String extension;
 		switch (planet)
 		{
 		case MERCURY:
@@ -113,16 +113,18 @@ public class Vsop
 		case Moon:
 			extension = "emb";
 			break;
+		case SUN:
+			extension = "";
+			break;
 		default:
-			throw new JPARSECException("Invalid body "+planet+".");
+			throw new JPARSECException("Invalid body " + planet + '.');
 		}
 
-		if (extension.equals(""))
+		if ("".equals(extension))
 			return new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 
 		double jcen = Functions.toCenturies(JD);
-		Vsop vsop = new Vsop();
-		return vsop.evaluateVsop(extension, jcen);
+		return evaluateVsop(extension, jcen);
 	}
 
 	private static final String PATH_TO_FILE = FileIO.VSOP87_DIRECTORY + "VSOP87a";
@@ -135,7 +137,7 @@ public class Vsop
 	 * @return Array (x, y, z, vx, vy, vz), mean equinox and ecliptic J2000.
 	 * @throws JPARSECException Thrown if the calculation fails.
 	 */
-	private double[] evaluateVsop(String extension, double jcen) throws JPARSECException
+	private static double[] evaluateVsop(String extension, double jcen) throws JPARSECException
 	{
 		double out[] = new double[]
 		{ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
@@ -164,7 +166,7 @@ public class Vsop
 
 		try
 		{
-			InputStream is = getClass().getClassLoader().getResourceAsStream(PATH_TO_FILE+"."+extension);
+			InputStream is = Vsop.class.getClassLoader().getResourceAsStream(PATH_TO_FILE+"."+extension);
 			BufferedReader dis = new BufferedReader(new InputStreamReader(is));
 
 			while ((line = dis.readLine()) != null)
@@ -203,7 +205,6 @@ public class Vsop
 						out[ic + 3] -= t[it] * a * c * su;
 					}
 				}
-
 			}
 
 			// Close file
@@ -219,7 +220,6 @@ public class Vsop
 
 			if (k != 0)
 				out[k] = Functions.normalizeRadians(out[k]);
-
 		} catch (FileNotFoundException e1)
 		{
 			throw new JPARSECException("file not found in path " + PATH_TO_FILE+".", e1);
@@ -512,4 +512,4 @@ public class Vsop
 
 		return ephem_elem;
 	}
-};
+}
