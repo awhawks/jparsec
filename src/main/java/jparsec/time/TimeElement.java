@@ -75,6 +75,7 @@ public class TimeElement implements Serializable
 	 * @deprecated Dates cannot be represented in a {@linkplain GregorianCalendar}
 	 * with a precision better than 1 ms.
 	 */
+	@Deprecated
 	public TimeElement(GregorianCalendar obs_date, SCALE ts)
 	{
 		astroDate = new AstroDate(obs_date);

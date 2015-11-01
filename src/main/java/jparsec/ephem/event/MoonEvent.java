@@ -766,8 +766,8 @@ public class MoonEvent {
 			// Accelerate calculations
 			if (eventPersists) {
 				double timeStep = 20 * step;
-				double step2 = (double) 20.0 / Constant.SECONDS_PER_DAY;
-				double step3 = (double) 300.0 / Constant.SECONDS_PER_DAY;
+				double step2 = 20.0 / Constant.SECONDS_PER_DAY;
+				double step3 = 300.0 / Constant.SECONDS_PER_DAY;
 				if (timeStep < step2) timeStep = step2;
 				if (timeStep > step3) timeStep = step3;
 				do {

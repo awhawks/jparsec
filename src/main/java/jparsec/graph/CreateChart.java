@@ -1226,8 +1226,8 @@ public class CreateChart implements Serializable
 				if (nser == 0 || thisymin < y_min)
 					y_min = thisymin;
 
-				double dx_val[] = (double[]) chart_elem.series[nser].dxValues;
-				double dy_val[] = (double[]) chart_elem.series[nser].dyValues;
+				double dx_val[] = chart_elem.series[nser].dxValues;
+				double dy_val[] = chart_elem.series[nser].dyValues;
 				for (int i = 0; i < x_val.length; i++)
 				{
 					boolean flag1 = false, flag2 = false;
@@ -1268,7 +1268,7 @@ public class CreateChart implements Serializable
 					{
 						double jd = DataSet.getDoubleValueWithoutLimit(chart_elem.series[nser].xValues[i]);
 						AstroDate astro = new AstroDate(jd);
-						Date date = new java.util.Date(astro.getYear()-1900, astro.getMonth()-1, astro.getDay(), astro.getHour(), astro.getMinute(), astro.getRoundedSecond()); //(long) ((astro.jd()-epoch)*Constant.MILLISECONDS_PER_HOUR*24.0));
+						Date date = new Date(astro.getYear()-1900, astro.getMonth()-1, astro.getDay(), astro.getHour(), astro.getMinute(), astro.getRoundedSecond()); //(long) ((astro.jd()-epoch)*Constant.MILLISECONDS_PER_HOUR*24.0));
 						timeSeries.addOrUpdate(
 								new Second(date),
 								y_val[i]);
@@ -1803,11 +1803,11 @@ public class CreateChart implements Serializable
 						if (n < 100) n = 100;
 						double step = Math.abs(xmax - xmin) / (n-1);
 						ArrayList<double[]> v = DataSet.sortInCrescent(x_val, y_val, true);
-						x_val = (double[]) v.get(0);
-						y_val = (double[]) v.get(1);
+						x_val = v.get(0);
+						y_val = v.get(1);
 						for (double x = xmin; x <= xmax; x = x + step)
 						{
-							double px = x, y = 0.0;
+							double px = x, y;
 
 							Interpolation interp = new Interpolation(x_val, y_val, false);
 							if (chart_elem.series[i].regressionType == ChartSeriesElement.REGRESSION.SPLINE_INTERPOLATION)
@@ -3073,7 +3073,7 @@ public class CreateChart implements Serializable
 				for (int i=0; i<this.chart_elem.subCharts.length; i++)
 				{
 					CreateChart newChart = new CreateChart(this.chart_elem.subCharts[i]);
-					script.append("! CODE TO SHOW A SUBCHART INSIDE THE MAIN CHART" + sep);
+					script.append("! CODE TO SHOW A SUBCHART INSIDE THE MAIN CHART"+sep);
 					Point p = this.chart_elem.subChartPosition[i];
 					double subWidth = this.chart_elem.subCharts[i].imageWidth;
 					double subHeight = this.chart_elem.subCharts[i].imageHeight;
@@ -3091,8 +3091,8 @@ public class CreateChart implements Serializable
 					String pyi = "box_ymin+"+(physY0/17.0)+"*(box_ymax-box_ymin)";
 					String pyf = "box_ymin+"+(physYf/17.0)+"*(box_ymax-box_ymin)";
 
-					script.append("set expand 0.7*(box_xmax-box_xmin)/24" + sep);
-					script.append("set box "+pxi+" "+pxf+" "+pyf+" "+pyi + sep);
+					script.append("set expand 0.7*(box_xmax-box_xmin)/24"+sep);
+					script.append("set box "+pxi+" "+pxf+" "+pyf+" "+pyi+sep);
 					script.append(newChart.exportChartForGILDAS(false, 0.7, i, leyendPosition, path, fileName));
 				}
 			}
@@ -3146,7 +3146,7 @@ public class CreateChart implements Serializable
 		BOTTOM_RIGHT_CORNER,
 		/** Symbolic constant to set the position of the leyend in a GILDAS figure. */
 		NO_LEYEND
-	};
+	}
 
 	/**
 	 * Creates a script to draw the current chart using GILDAS. Only the most
@@ -3171,7 +3171,7 @@ public class CreateChart implements Serializable
 		String sep = FileIO.getLineSeparator();
 
 		JFreeChart jf = this.getChart();
-		double xmin = 0.0, xmax = 0.0, ymin = 0.0, ymax = 0.0;
+		double xmin, xmax, ymin, ymax;
 		try {
 			XYPlot plot = (XYPlot) jf.getPlot();
 			ValueAxis y_axis = plot.getRangeAxis();
@@ -3892,7 +3892,7 @@ public class CreateChart implements Serializable
 			script.append("let py user_ymin-my*0.03"+ sep);
 			for (int i=0; i<n; i++)
 			{
-				double frac = (double) (i + 1.0) / ((double) n + 1.0);
+				double frac = (i + 1.0) / ((double) n + 1.0);
 				if (i <= xmax) script.append("greg1\\draw text user_xmin+mx*"+frac+" py \""+toGILDASformat(this.chart_elem.xForCategoryCharts[i].trim())+"\" 5 0 /user"+ sep);
 			}
 		}
@@ -4175,11 +4175,11 @@ public class CreateChart implements Serializable
 		{
 			for (int x = 1; x<= nx; x++)
 			{
-				double bx0 = xmin + (double) (x - 1) * (double) (xmax - xmin) / (double) nx;
-				double bxf = bx0 + (double) (xmax - xmin) / (double) maxNx;
+				double bx0 = xmin + (double) (x - 1) * (xmax - xmin) / (double) nx;
+				double bxf = bx0 + (xmax - xmin) / (double) maxNx;
 
-				double byf = (ymin + (double) (y - 1) * (double) (ymax - ymin) / (double) ny);
-				double by0 = (byf + (double) (ymax - ymin) / (double) maxNy);
+				double byf = (ymin + (double) (y - 1) * (ymax - ymin) / (double) ny);
+				double by0 = (byf + (ymax - ymin) / (double) maxNy);
 
 				by0 = ymax + ymin - by0;
 				byf = ymax + ymin - byf;

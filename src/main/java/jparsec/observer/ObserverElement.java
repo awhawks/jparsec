@@ -1177,7 +1177,7 @@ public class ObserverElement implements Serializable {
 				int pos_y = (int) (texturay * 0.5 * (1.0 - obslat / 90.0) + 0.5);
 				int pos_x = (int) (texturax * 0.5 * (1.0 + obslon / 180.0) + 0.5);
 
-				int img_index = (int) (pos_y * texturax + pos_x);
+				int img_index = pos_y * texturax + pos_x;
 
 				int k = pixels[img_index];
 				int red = 0xff & (k >> 16);

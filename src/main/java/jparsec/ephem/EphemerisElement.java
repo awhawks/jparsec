@@ -277,6 +277,7 @@ public class EphemerisElement implements Serializable
 		 * when possible. Planetary rotation models are set to IAU 2000 resolutions.
 		 * @deprecated It is not recommended since the precession is inconsistent.
 		 */
+		@Deprecated
 		IAU_2000,
 		/**
 		 * Constant ID for selecting IAU 2006 formulae of obliquity, nutation, and
