@@ -8548,12 +8548,12 @@ public class RenderSky
 			starElem.spectrum = rf.readString(line, "SPECTRUM");
 			starElem.type = rf.readString(line, "TYPE")+";"+rf.readString(line, "DATA");
 			starElem.magnitude = (float) rf.readFloat(line, "MAG");
-			//star.properMotionRadialV = 0.0f;
+			//starElem.properMotionRadialV = 0.0f;
 			String rv = rf.readString(line, "RADIAL_VELOCITY");
 			if (!rv.isEmpty()) starElem.properMotionRadialV = Float.parseFloat(rv);
 			starElem.parallax = rf.readFloat(line, "PARALLAX");
 			starElem.equinox = Constant.J2000;
-			//star.frame = EphemerisElement.FRAME.ICRF;
+			//starElem.frame = EphemerisElement.FRAME.ICRF;
 
 			// Add classical name
 			String id = rf.readString(line, "ID");
