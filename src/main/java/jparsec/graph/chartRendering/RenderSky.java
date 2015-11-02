@@ -8551,7 +8551,7 @@ public class RenderSky
 			//star.properMotionRadialV = 0.0f;
 			String rv = rf.readString(line, "RADIAL_VELOCITY");
 			if (!rv.isEmpty()) starElem.properMotionRadialV = Float.parseFloat(rv);
-			starElem.parallax = (float) rf.readFloat(line, "PARALLAX");
+			starElem.parallax = rf.readFloat(line, "PARALLAX");
 			starElem.equinox = Constant.J2000;
 			//star.frame = EphemerisElement.FRAME.ICRF;
 
@@ -8670,7 +8670,6 @@ public class RenderSky
 			}
 			if (ll != null) ll.setRadius(ll.getRadius() / Constant.RAD_TO_ARCSEC);
 			sd = new StarData(ll, starElem.magnitude, starElem.spectrum, starElem.type);
-			sd.mag0 = starElem.magnitude;
 			sd.ra = locStar0.getLongitude();
 			sd.dec = locStar0.getLatitude();
 			if (eph.correctForExtinction) sd.mag = (float) correctForExtinction(locStar0, sd.mag);
