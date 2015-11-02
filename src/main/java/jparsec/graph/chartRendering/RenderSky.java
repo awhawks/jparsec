@@ -8509,9 +8509,8 @@ public class RenderSky
 		}
 	}
 
-	private StarElement starElem = new StarElement();
-
 	/** Nasty clone of method in ReadFile class to improve performance. */
+	private StarElement starElem = null;
 	private StarData parseJPARSECfile(double jd, double equinox, Projection projection, String line, ReadFormat rf, String greek,
 			EphemerisElement eph, LocationElement eqCenit, double lim, double cte, double baryc[],
 			boolean externalGraphics, boolean android,
