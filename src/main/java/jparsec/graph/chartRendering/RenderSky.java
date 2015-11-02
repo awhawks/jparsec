@@ -8509,6 +8509,8 @@ public class RenderSky
 		}
 	}
 
+	private StarElement starElement = new StarElement();
+
 	/** Nasty clone of method in ReadFile class to improve performance. */
 	private StarData parseJPARSECfile(double jd, double equinox, Projection projection, String line, ReadFormat rf, String greek,
 			EphemerisElement eph, LocationElement eqCenit, double lim, double cte, double baryc[],
@@ -8536,21 +8538,21 @@ public class RenderSky
 				if (approxAngDist2 > lim + (properM * cte)) return null;
 			}
 
-			StarElement star = new StarElement();
-			star.rightAscension = sra;
-			star.declination = sdec;
-			star.properMotionRA = pmra;
-			star.properMotionDEC = pmdec;
+			starElement = new StarElement();
+			starElement.rightAscension = sra;
+			starElement.declination = sdec;
+			starElement.properMotionRA = pmra;
+			starElement.properMotionDEC = pmdec;
 
-			star.name = rf.readString(line, "NAME");
-			star.spectrum = rf.readString(line, "SPECTRUM");
-			star.type = rf.readString(line, "TYPE")+";"+rf.readString(line, "DATA");
-			star.magnitude = rf.readFloat(line, "MAG");
+			starElement.name = rf.readString(line, "NAME");
+			starElement.spectrum = rf.readString(line, "SPECTRUM");
+			starElement.type = rf.readString(line, "TYPE")+";"+rf.readString(line, "DATA");
+			starElement.magnitude = (float) rf.readFloat(line, "MAG");
 			//star.properMotionRadialV = 0.0f;
 			String rv = rf.readString(line, "RADIAL_VELOCITY");
-			if (!rv.isEmpty()) star.properMotionRadialV = Float.parseFloat(rv);
-			star.parallax = rf.readFloat(line, "PARALLAX");
-			star.equinox = Constant.J2000;
+			if (!rv.isEmpty()) starElement.properMotionRadialV = Float.parseFloat(rv);
+			starElement.parallax = (float) rf.readFloat(line, "PARALLAX");
+			starElement.equinox = Constant.J2000;
 			//star.frame = EphemerisElement.FRAME.ICRF;
 
 			// Add classical name
@@ -8584,12 +8586,12 @@ public class RenderSky
 					constel = code;
 				}
 				if (!constel.isEmpty())
-					star.name += " (" + constel + ") (" + id + ")";
+					starElement.name += " (" + constel + ") (" + id + ")";
 			}
 
 
 			StarData sd = null;
-			double properM = Math.max(Math.abs(star.properMotionDEC), Math.abs(star.properMotionRA / cosdec));
+			double properM = Math.max(Math.abs(starElement.properMotionDEC), Math.abs(starElement.properMotionRA / cosdec));
 
 			// Reduce (very slightly) the accuracy of star ephemerides for better startup time in Android.
 			// Accuracy is sacrified by less than 1", and startup time is 2-3 times faster. Note star proper
@@ -8601,19 +8603,19 @@ public class RenderSky
 			if (projection.eph.ephemType != COORDINATES_TYPE.GEOMETRIC && properM > 0)
 			{
 				double p[] = new double[3];
-				double relativisticFactor = 1.0 / (1.0 - star.properMotionRadialV / Constant.SPEED_OF_LIGHT);
-				double sindec = FastMath.sin(star.declination);
-				double cosra = FastMath.cos(star.rightAscension);
-				double sinra = FastMath.sin(star.rightAscension);
+				double relativisticFactor = 1.0 / (1.0 - starElement.properMotionRadialV / Constant.SPEED_OF_LIGHT);
+				double sindec = FastMath.sin(starElement.declination);
+				double cosra = FastMath.cos(starElement.rightAscension);
+				double sinra = FastMath.sin(starElement.rightAscension);
 				double q[] = new double[] {cosra * cosdec, sinra * cosdec, sindec};
 				double cte2 = 0.21094952658238966; // Constant.SECONDS_PER_DAY * Constant.JULIAN_DAYS_PER_CENTURY * 0.01 / Constant.AU;
-				double cte3 = star.parallax * 0.001 / Constant.RAD_TO_ARCSEC;
-				double vpi = cte2 * star.properMotionRadialV * cte3;
+				double cte3 = starElement.parallax * 0.001 / Constant.RAD_TO_ARCSEC;
+				double vpi = cte2 * starElement.properMotionRadialV * cte3;
 				double m[] = new double[3];
-				m[0] = (-star.properMotionRA * cosdec * sinra - star.properMotionDEC * sindec * cosra + vpi * q[0]) * relativisticFactor;
-				m[1] = (star.properMotionRA * cosdec * cosra - star.properMotionDEC * sindec * sinra + vpi * q[1]) * relativisticFactor;
-				m[2] = (star.properMotionDEC * cosdec + vpi * q[2]) * relativisticFactor;
-				double T = (jd - star.equinox) * 100.0 / Constant.JULIAN_DAYS_PER_CENTURY;
+				m[0] = (-starElement.properMotionRA * cosdec * sinra - starElement.properMotionDEC * sindec * cosra + vpi * q[0]) * relativisticFactor;
+				m[1] = (starElement.properMotionRA * cosdec * cosra - starElement.properMotionDEC * sindec * sinra + vpi * q[1]) * relativisticFactor;
+				m[2] = (starElement.properMotionDEC * cosdec + vpi * q[2]) * relativisticFactor;
+				double T = (jd - starElement.equinox) * 100.0 / Constant.JULIAN_DAYS_PER_CENTURY;
 				for (int i = 0; i < 3; i++)
 				{
 					p[i] = q[i] + T * m[i] + baryc[i] * cte3;
@@ -8621,14 +8623,14 @@ public class RenderSky
 				locStar0 = LocationElement.parseRectangularCoordinates(p);
 			}
 
-			locStar0.setRadius(star.getDistance() * Constant.RAD_TO_ARCSEC);
+			locStar0.setRadius(starElement.getDistance() * Constant.RAD_TO_ARCSEC);
 			//if (equinox != Constant.J2000) {
 				// Correct for aberration, precession, and nutation
 				if (projection.eph.ephemType == COORDINATES_TYPE.APPARENT) {
 					double light_time = locStar0.getRadius() * Constant.LIGHT_TIME_DAYS_PER_AU;
 					double[] r = Ephem.aberration(locStar0.getRectangularCoordinates(), baryc, light_time);
 
-					if (highPrecision) r = Ephem.toOutputFrame(r, star.frame, eph.frame);
+					if (highPrecision) r = Ephem.toOutputFrame(r, starElement.frame, eph.frame);
 					r = precessFromJ2000(equinox, r, projection.eph);
 					r = nutateInEquatorialCoordinates(equinox, projection.eph, r, true);
 
@@ -8667,8 +8669,8 @@ public class RenderSky
 				if (pos0 == null) ll = null;
 			}
 			if (ll != null) ll.setRadius(ll.getRadius() / Constant.RAD_TO_ARCSEC);
-			sd = new StarData(ll, star.magnitude, star.spectrum, star.type);
-			sd.mag0 = star.magnitude;
+			sd = new StarData(ll, starElement.magnitude, starElement.spectrum, starElement.type);
+			sd.mag0 = starElement.magnitude;
 			sd.ra = locStar0.getLongitude();
 			sd.dec = locStar0.getLatitude();
 			if (eph.correctForExtinction) sd.mag = (float) correctForExtinction(locStar0, sd.mag);
@@ -8676,15 +8678,15 @@ public class RenderSky
 			String spectrum = "OBAFGKM";
 			sd.spi = -1;
 			if (!sd.sp.equals("")) sd.spi = (short) spectrum.indexOf(sd.sp.substring(0, 1));
-			sd.sky2000 = Integer.parseInt(FileIO.getField(1, star.name, " ", true));
-			int bracket1 = star.name.indexOf("(");
-			int bracket2 = star.name.indexOf(")");
+			sd.sky2000 = Integer.parseInt(FileIO.getField(1, starElement.name, " ", true));
+			int bracket1 = starElement.name.indexOf("(");
+			int bracket2 = starElement.name.indexOf(")");
 			if (bracket1 >= 0 && bracket2 >= 0) {
-				sd.nom2 = star.name.substring(bracket1 + 1, bracket2);
+				sd.nom2 = starElement.name.substring(bracket1 + 1, bracket2);
 
-				bracket1 = star.name.lastIndexOf("(");
-				bracket2 = star.name.lastIndexOf(")");
-				String name2 = star.name.substring(bracket1 + 1, bracket2);
+				bracket1 = starElement.name.lastIndexOf("(");
+				bracket2 = starElement.name.lastIndexOf(")");
+				String name2 = starElement.name.substring(bracket1 + 1, bracket2);
 				String name3 = "";
 				int n3 = name2.indexOf("-");
 				if (n3 >= 0) {
