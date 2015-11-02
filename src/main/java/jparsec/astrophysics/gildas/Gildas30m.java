@@ -750,7 +750,7 @@ public class Gildas30m {
         for(int i = 0; i < max - 1; i++)
         {
             Parameter aobj1[] = readHeader(i);
-            index[i] = ((Parameter) aobj1[1]).value;
+            index[i] = aobj1[1].value;
             int val = Integer.parseInt(aobj1[0].value);
             vals[i] = val;
             if (val > maxVal || maxVal == -1) maxVal = val;
@@ -778,14 +778,12 @@ public class Gildas30m {
     throws JPARSECException {
         Spectrum30m spectrum = new Spectrum30m();
         if(index == null) createIndex(-1);
-        Integer integer = null;
-        Integer integer1 = new Integer(ordered_index.get(i));
-        int ii = integer1.intValue();
+        int ii = new Integer(ordered_index.get(i));
         if (ii < 0) {
         	throw new JPARSECException("Cannot find spectrum #"+i+"!");
         }
-        integer = new Integer(index[ii].toString());
-        readSections(integer.intValue(), spectrum);
+        Integer integer = new Integer(index[ii]);
+        readSections(integer, spectrum);
         spectrum = new Spectrum30m(spectrum.getTreeMap(), this.getHeader(i),
         		this.getData(i));
         return spectrum;

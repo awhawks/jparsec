@@ -127,7 +127,7 @@ public class RiseSetTransit
 		/** Set to false to neglect the angular size of the object when using a custom rise and set
 		 * calculation. Default value is true. */
 		public boolean considerObjectAngularRadius = true;
-	};
+	}
 
 	/**
 	 * The set of possible events.
@@ -141,7 +141,7 @@ public class RiseSetTransit
 		SET,
 		/** Constant ID for obtaining rise, set, and transit times. */
 		ALL
-	};
+	}
 
 	/**
 	 * Compute next instants of rise or set assuming that the body is static.
@@ -522,7 +522,6 @@ public class RiseSetTransit
 			{
 				ephem.set[index] = jd_TDB + set_time;
 			}
-
 		}
 
 		return ephem;
@@ -827,19 +826,19 @@ public class RiseSetTransit
 	}
 
 	/**
-	 * ID constant for next events in {@linkplain RiseSetTransit#obtainCertainRiseSetTransit(TimeElement, ObserverElement, EphemerisElement, EphemElement, double, int)}.
+	 * ID constant for next events in {@linkplain RiseSetTransit#obtainCertainRiseSetTransit(TimeElement, ObserverElement, EphemerisElement, EphemElement, TWILIGHT, int)}
 	 */
 	private static final int OBTAIN_NEXT_EVENTS = 0;
 	/**
-	 * ID constant for current events in {@linkplain RiseSetTransit#obtainCertainRiseSetTransit(TimeElement, ObserverElement, EphemerisElement, EphemElement, double, int)}.
+	 * ID constant for current events in {@linkplain RiseSetTransit#obtainCertainRiseSetTransit(TimeElement, ObserverElement, EphemerisElement, EphemElement, TWILIGHT, int)}
 	 */
 	private static final int OBTAIN_CURRENT_EVENTS = 1;
 	/**
-	 * ID constant for previous events in {@linkplain RiseSetTransit#obtainCertainRiseSetTransit(TimeElement, ObserverElement, EphemerisElement, EphemElement, double, int)}.
+	 * ID constant for previous events in {@linkplain RiseSetTransit#obtainCertainRiseSetTransit(TimeElement, ObserverElement, EphemerisElement, EphemElement, TWILIGHT, int)}.
 	 */
 	private static final int OBTAIN_PREVIOUS_EVENTS = 2;
 	/**
-	 * ID constant for nearest events in {@linkplain RiseSetTransit#obtainCertainRiseSetTransit(TimeElement, ObserverElement, EphemerisElement, EphemElement, double, int)}.
+	 * ID constant for nearest events in {@linkplain RiseSetTransit#obtainCertainRiseSetTransit(TimeElement, ObserverElement, EphemerisElement, EphemElement, TWILIGHT, int)}.
 	 */
 	private static final int OBTAIN_NEAREST_EVENTS = 3;
 
@@ -918,9 +917,9 @@ public class RiseSetTransit
 		ephem_elem.rise[index] = not_yet_calculated;
 		ephem_elem.set[index] = not_yet_calculated;
 		ephem_elem.transit[index] = not_yet_calculated;
-		double last_time_event = not_yet_calculated;
-		double time_event = not_yet_calculated;
-		double dt = not_yet_calculated;
+		double last_time_event;
+		double time_event;
+		double dt;
 
 		// Calculate time of events
 		for (int i = EVENT.TRANSIT.ordinal(); i <= EVENT.SET.ordinal(); i++)
@@ -980,7 +979,7 @@ public class RiseSetTransit
 
 				// If elapsed time is greater than the desired precision,
 				// update time and calculate ephemeris for the new time
-				if (Math.abs(dt) > (precision_in_seconds / (double) Constant.SECONDS_PER_DAY) && n_iter < n_iter_max)
+				if (Math.abs(dt) > (precision_in_seconds / Constant.SECONDS_PER_DAY) && n_iter < n_iter_max)
 				{
 					last_time_event = time_event;
 					AstroDate new_astro = new AstroDate(time_event);
@@ -998,7 +997,7 @@ public class RiseSetTransit
 				// extreme cases).
 				if ((time_event == RiseSetTransit.ALWAYS_BELOW_HORIZON || time_event == RiseSetTransit.CIRCUMPOLAR) &&
 						eph.algorithm != null && eph.algorithm != EphemerisElement.ALGORITHM.STAR && (i == EVENT.RISE.ordinal() || i == EVENT.SET.ordinal())) {
-					dt = 2.0 * precision_in_seconds / (double) Constant.SECONDS_PER_DAY;
+					dt = 2.0 * precision_in_seconds / Constant.SECONDS_PER_DAY;
 					if (triedBefore) {
 						dt = 0.0;
 					} else {
@@ -1016,7 +1015,7 @@ public class RiseSetTransit
 					}
 				}
 
-			} while (Math.abs(dt) > (precision_in_seconds / (double) Constant.SECONDS_PER_DAY) && n_iter < n_iter_max);
+			} while (Math.abs(dt) > (precision_in_seconds / Constant.SECONDS_PER_DAY) && n_iter < n_iter_max);
 
 			// Set time of event in our output Ephem object
 			double timeTDB = new_ephem_elem.rise[index];
@@ -1062,10 +1061,12 @@ public class RiseSetTransit
 				}
 			}
 		}
+
 		ephem_obj.rise = ephem_elem.rise;
 		ephem_obj.set = ephem_elem.set;
 		ephem_obj.transit = ephem_elem.transit;
 		ephem_obj.transitElevation = ephem_elem.transitElevation;
+
 		return ephem_obj;
 	}
 }

@@ -297,20 +297,18 @@ public class CreateChart implements Serializable
 		try
 		{
 			// Using reflection so that everything will work without freehep in classpath
-			Class c = Class.forName("org.freehep.graphicsio.ps.PSGraphics2D");
-			Constructor cc = c.getConstructor(new Class[] {plotFile.getClass(), size.getClass()});
-			Object psGraphics = cc.newInstance(new Object[] {plotFile, size});
-			Method m = c.getMethod("startExport", null);
-			m.invoke(psGraphics, null);
+			Class<?> c = Class.forName("org.freehep.graphicsio.ps.PSGraphics2D");
+			Constructor<?> cc = c.getConstructor(new Class[] { File.class, Dimension.class });
+			Object psGraphics = cc.newInstance(new Object[] { plotFile, size });
+			Method m = c.getMethod("startExport");
+			m.invoke(psGraphics);
 			this.paintChart((Graphics2D) psGraphics, size_x, size_y);
-			Method mm = c.getMethod("endExport", null);
-			mm.invoke(psGraphics, null);
-
+			Method mm = c.getMethod("endExport");
+			mm.invoke(psGraphics);
 		} catch (Exception e)
 		{
 			throw new JPARSECException("cannot write to file.", e);
 		}
-
 	}
 
 	private void chartAsEPSFile(SimpleChartElement chart_elem, String file_name) throws JPARSECException
@@ -415,7 +413,6 @@ public class CreateChart implements Serializable
 		{
 			throw new JPARSECException(e);
 		}
-
 	}
 
 	private void chartAsPNGFile(SimpleChartElement chart_elem, String file_name) throws JPARSECException
@@ -494,15 +491,14 @@ public class CreateChart implements Serializable
 		try
 		{
 			// Using reflection so that everything will work without freehep in classpath
-			Class c = Class.forName("org.freehep.graphicsio.ps.PSGraphics2D");
-			Constructor cc = c.getConstructor(new Class[] {plotFile.getClass(), size.getClass()});
+			Class<?> c = Class.forName("org.freehep.graphicsio.ps.PSGraphics2D");
+			Constructor<?> cc = c.getConstructor(new Class[] {plotFile.getClass(), size.getClass()});
 			Object psGraphics = cc.newInstance(new Object[] {plotFile, size});
-			Method m = c.getMethod("startExport", null);
-			m.invoke(psGraphics, null);
+			Method m = c.getMethod("startExport");
+			m.invoke(psGraphics);
 			rPlot.getChart().draw((Graphics2D) psGraphics, new Rectangle2D.Double(0, 0, chart_elem.imageWidth, chart_elem.imageHeight));
-			Method mm = c.getMethod("endExport", null);
-			mm.invoke(psGraphics, null);
-
+			Method mm = c.getMethod("endExport");
+			mm.invoke(psGraphics);
 		} catch (Exception e)
 		{
 			throw new JPARSECException("cannot write to file.", e);
@@ -537,21 +533,19 @@ public class CreateChart implements Serializable
 		try
 		{
 			// Using reflection so that everything will work without freehep in classpath (not this)
-			Class c = Class.forName("org.freehep.graphicsio.pdf.PDFGraphics2D");
-			Constructor cc = c.getConstructor(new Class[] {plotFile.getClass(), size.getClass()});
+			Class<?> c = Class.forName("org.freehep.graphicsio.pdf.PDFGraphics2D");
+			Constructor<?> cc = c.getConstructor(new Class[] {plotFile.getClass(), size.getClass()});
 			Object pdfGraphics = cc.newInstance(new Object[] {plotFile, size});
-			Method m = c.getMethod("startExport", null);
-			m.invoke(pdfGraphics, null);
+			Method m = c.getMethod("startExport");
+			m.invoke(pdfGraphics);
 			rPlot.getChart().draw((Graphics2D) pdfGraphics, new Rectangle2D.Double(0, 0, chart_elem.imageWidth, chart_elem.imageHeight));
-			Method mm = c.getMethod("endExport", null);
-			mm.invoke(pdfGraphics, null);
-
+			Method mm = c.getMethod("endExport");
+			mm.invoke(pdfGraphics);
 		} catch (Exception e)
 		{
 			throw new JPARSECException("cannot write to file.", e);
 		}
 	}
-
 
 	/**
 	 * Creates a PNG file with the chart.
@@ -614,15 +608,14 @@ public class CreateChart implements Serializable
 		try
 		{
 			// Using reflection so that everything will work without freehep in classpath
-			Class c = Class.forName("org.freehep.graphicsio.svg.SVGGraphics2D");
-			Constructor cc = c.getConstructor(new Class[] {plotFile.getClass(), size.getClass()});
-			Object svgGraphics = cc.newInstance(new Object[] {plotFile, size});
-			Method m = c.getMethod("startExport", null);
-			m.invoke(svgGraphics, null);
+			Class<?> c = Class.forName("org.freehep.graphicsio.svg.SVGGraphics2D");
+			Constructor<?> cc = c.getConstructor(new Class[] { File.class, Dimension.class });
+			Object svgGraphics = cc.newInstance(new Object[] { plotFile, size });
+			Method m = c.getMethod("startExport");
+			m.invoke(svgGraphics);
 			rPlot.getChart().draw((Graphics2D) svgGraphics, new Rectangle2D.Double(0, 0, chart_elem.imageWidth, chart_elem.imageHeight));
-			Method mm = c.getMethod("endExport", null);
-			mm.invoke(svgGraphics, null);
-
+			Method mm = c.getMethod("endExport");
+			mm.invoke(svgGraphics);
 		} catch (Exception e)
 		{
 			throw new JPARSECException("cannot write to file.", e);
@@ -643,20 +636,19 @@ public class CreateChart implements Serializable
 		if (ext > 0) file_name = file_name.substring(0, ext);
 
 		File plotFile = new File(file_name + ".svg");
-
 		final Dimension size = new Dimension(size_x, size_y);
+
 		try
 		{
 			// Using reflection so that everything will work without freehep in classpath
-			Class c = Class.forName("org.freehep.graphicsio.svg.SVGGraphics2D");
-			Constructor cc = c.getConstructor(new Class[] {plotFile.getClass(), size.getClass()});
+			Class<?> c = Class.forName("org.freehep.graphicsio.svg.SVGGraphics2D");
+			Constructor<?> cc = c.getConstructor(new Class[] {File.class, Dimension.class });
 			Object svgGraphics = cc.newInstance(new Object[] {plotFile, size});
-			Method m = c.getMethod("startExport", null);
-			m.invoke(svgGraphics, null);
+			Method m = c.getMethod("startExport");
+			m.invoke(svgGraphics);
 			this.paintChart((Graphics2D) svgGraphics, size_x, size_y);
-			Method mm = c.getMethod("endExport", null);
-			mm.invoke(svgGraphics, null);
-
+			Method mm = c.getMethod("endExport");
+			mm.invoke(svgGraphics);
 		} catch (Exception e)
 		{
 			throw new JPARSECException("cannot write to file.", e);
@@ -924,7 +916,7 @@ public class CreateChart implements Serializable
           		   try {
           			   ChartElement ce = getChartElement();
           			   for (int i=0; i<ce.series.length; i++) {
-          				   if (ce.series[i].enable == false) {
+          				   if (!ce.series[i].enable) {
           					   ce.series[i].enable = true;
           					   break;
           				   }
@@ -939,7 +931,7 @@ public class CreateChart implements Serializable
           		   try {
           			   ChartElement ce = getChartElement();
           			   for (int i=ce.series.length-1; i>=0; i--) {
-          				   if (ce.series[i].enable == true) {
+          				   if (ce.series[i].enable) {
           					   ce.series[i].enable = false;
           					   break;
           				   }
@@ -972,6 +964,7 @@ public class CreateChart implements Serializable
             }
       });
 	}
+
 	private Picture p = null;
 	private transient ChartPanel chartPanel = null;
 
@@ -1226,8 +1219,8 @@ public class CreateChart implements Serializable
 				if (nser == 0 || thisymin < y_min)
 					y_min = thisymin;
 
-				double dx_val[] = (double[]) chart_elem.series[nser].dxValues;
-				double dy_val[] = (double[]) chart_elem.series[nser].dyValues;
+				double dx_val[] = chart_elem.series[nser].dxValues;
+				double dy_val[] = chart_elem.series[nser].dyValues;
 				for (int i = 0; i < x_val.length; i++)
 				{
 					boolean flag1 = false, flag2 = false;
@@ -1268,7 +1261,7 @@ public class CreateChart implements Serializable
 					{
 						double jd = DataSet.getDoubleValueWithoutLimit(chart_elem.series[nser].xValues[i]);
 						AstroDate astro = new AstroDate(jd);
-						Date date = new java.util.Date(astro.getYear()-1900, astro.getMonth()-1, astro.getDay(), astro.getHour(), astro.getMinute(), astro.getRoundedSecond()); //(long) ((astro.jd()-epoch)*Constant.MILLISECONDS_PER_HOUR*24.0));
+						Date date = new Date(astro.getYear()-1900, astro.getMonth()-1, astro.getDay(), astro.getHour(), astro.getMinute(), astro.getRoundedSecond()); //(long) ((astro.jd()-epoch)*Constant.MILLISECONDS_PER_HOUR*24.0));
 						timeSeries.addOrUpdate(
 								new Second(date),
 								y_val[i]);
@@ -1803,11 +1796,11 @@ public class CreateChart implements Serializable
 						if (n < 100) n = 100;
 						double step = Math.abs(xmax - xmin) / (n-1);
 						ArrayList<double[]> v = DataSet.sortInCrescent(x_val, y_val, true);
-						x_val = (double[]) v.get(0);
-						y_val = (double[]) v.get(1);
+						x_val = v.get(0);
+						y_val = v.get(1);
 						for (double x = xmin; x <= xmax; x = x + step)
 						{
-							double px = x, y = 0.0;
+							double px = x, y;
 
 							Interpolation interp = new Interpolation(x_val, y_val, false);
 							if (chart_elem.series[i].regressionType == ChartSeriesElement.REGRESSION.SPLINE_INTERPOLATION)
@@ -3073,7 +3066,7 @@ public class CreateChart implements Serializable
 				for (int i=0; i<this.chart_elem.subCharts.length; i++)
 				{
 					CreateChart newChart = new CreateChart(this.chart_elem.subCharts[i]);
-					script.append("! CODE TO SHOW A SUBCHART INSIDE THE MAIN CHART" + sep);
+					script.append("! CODE TO SHOW A SUBCHART INSIDE THE MAIN CHART"+sep);
 					Point p = this.chart_elem.subChartPosition[i];
 					double subWidth = this.chart_elem.subCharts[i].imageWidth;
 					double subHeight = this.chart_elem.subCharts[i].imageHeight;
@@ -3091,8 +3084,8 @@ public class CreateChart implements Serializable
 					String pyi = "box_ymin+"+(physY0/17.0)+"*(box_ymax-box_ymin)";
 					String pyf = "box_ymin+"+(physYf/17.0)+"*(box_ymax-box_ymin)";
 
-					script.append("set expand 0.7*(box_xmax-box_xmin)/24" + sep);
-					script.append("set box "+pxi+" "+pxf+" "+pyf+" "+pyi + sep);
+					script.append("set expand 0.7*(box_xmax-box_xmin)/24"+sep);
+					script.append("set box "+pxi+" "+pxf+" "+pyf+" "+pyi+sep);
 					script.append(newChart.exportChartForGILDAS(false, 0.7, i, leyendPosition, path, fileName));
 				}
 			}
@@ -3146,7 +3139,7 @@ public class CreateChart implements Serializable
 		BOTTOM_RIGHT_CORNER,
 		/** Symbolic constant to set the position of the leyend in a GILDAS figure. */
 		NO_LEYEND
-	};
+	}
 
 	/**
 	 * Creates a script to draw the current chart using GILDAS. Only the most
@@ -3171,7 +3164,7 @@ public class CreateChart implements Serializable
 		String sep = FileIO.getLineSeparator();
 
 		JFreeChart jf = this.getChart();
-		double xmin = 0.0, xmax = 0.0, ymin = 0.0, ymax = 0.0;
+		double xmin, xmax, ymin, ymax;
 		try {
 			XYPlot plot = (XYPlot) jf.getPlot();
 			ValueAxis y_axis = plot.getRangeAxis();
@@ -3892,7 +3885,7 @@ public class CreateChart implements Serializable
 			script.append("let py user_ymin-my*0.03"+ sep);
 			for (int i=0; i<n; i++)
 			{
-				double frac = (double) (i + 1.0) / ((double) n + 1.0);
+				double frac = (i + 1.0) / ((double) n + 1.0);
 				if (i <= xmax) script.append("greg1\\draw text user_xmin+mx*"+frac+" py \""+toGILDASformat(this.chart_elem.xForCategoryCharts[i].trim())+"\" 5 0 /user"+ sep);
 			}
 		}
@@ -4175,11 +4168,11 @@ public class CreateChart implements Serializable
 		{
 			for (int x = 1; x<= nx; x++)
 			{
-				double bx0 = xmin + (double) (x - 1) * (double) (xmax - xmin) / (double) nx;
-				double bxf = bx0 + (double) (xmax - xmin) / (double) maxNx;
+				double bx0 = xmin + (double) (x - 1) * (xmax - xmin) / (double) nx;
+				double bxf = bx0 + (xmax - xmin) / (double) maxNx;
 
-				double byf = (ymin + (double) (y - 1) * (double) (ymax - ymin) / (double) ny);
-				double by0 = (byf + (double) (ymax - ymin) / (double) maxNy);
+				double byf = (ymin + (double) (y - 1) * (ymax - ymin) / (double) ny);
+				double by0 = (byf + (ymax - ymin) / (double) maxNy);
 
 				by0 = ymax + ymin - by0;
 				byf = ymax + ymin - byf;

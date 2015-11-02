@@ -3287,12 +3287,12 @@ public class AWTGraphics implements Graphics {
 	private Font fontMetricFont = null;
 	@Override
 	public Rectangle getStringBounds(String labelg) {
-		if (labelg.indexOf("^") >= 0 || labelg.indexOf("_") >= 0 || labelg.indexOf("@") >= 0) {
-			if (labelg.indexOf("^{") >= 0) {
+		if (labelg.contains("^") || labelg.contains("_") || labelg.contains("@")) {
+			if (labelg.contains("^{")) {
 				labelg = DataSet.replaceOne(labelg, "^{", "", 1);
 				if (labelg.endsWith("}")) labelg = labelg.substring(0, labelg.length()-1);
 			}
-			if (labelg.indexOf("^") >= 0 || labelg.indexOf("_") >= 0 || labelg.indexOf("@") >= 0) {
+			if (labelg.contains("^") || labelg.contains("_") || labelg.contains("@")) {
 				labelg = TextLabel.getSimplifiedString(labelg);
 			}
 		}
@@ -3401,8 +3401,8 @@ public class AWTGraphics implements Graphics {
 		BufferedImage img = toImage(s);
 
 		if (this.invertEnabled) {
-			if (this.invertH) i = (int) (img.getWidth()-1 - i);
-			if (this.invertV) j = (int) (img.getHeight()-1 - j);
+			if (this.invertH) i = img.getWidth() - 1 - i;
+			if (this.invertV) j = img.getHeight() - 1 - j;
 		}
 
 		return img.getRGB(i, j);
@@ -4509,46 +4509,5 @@ class EllipseBresenhamInterpolator {
 
             dx += m_dx;
             dy += m_dy;
-    }
-}
-
-/**
- * Edge used by scan fill algorithm.
- *
- * @author Werner Randelshofer.
- * @version 1.0 April 5, 2006 Created.
- */
-class Edge {
-
-    /** Creates a new instance. */
-    public Edge() {
-    }
-
-    /**
-     * Upper value on y-axis for horizontal scan fill algorithm.
-     * Upper value on x-axis for vertical scan fill algorithm.
-     */
-    public int upper;
-    /**
-     * Intersection on x-axis for horizontal scan fill algorithm.
-     * Intersection on y-axis for vertical scan fill algorithm.
-     */
-    public float intersect;
-    /**
-     * Delta-x per scan on y-axis for horizontal scan fill algorithm.
-     * Delta-y per scan on x-axis for horizontal scan fill algorithm.
-     */
-    public float dPerScan;
-    public Edge next;
-    public String toString() {
-        StringBuffer buf = new StringBuffer();
-        for (Edge e = this; e != null; e = e.next) {
-            if (e != this) buf.append(", ");
-            buf.append("xI:");
-            buf.append(e.intersect);;
-            buf.append(" yU:");
-            buf.append(e.upper);
-        }
-        return buf.toString();
     }
 }

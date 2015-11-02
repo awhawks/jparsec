@@ -2383,7 +2383,7 @@ public class ReadFile implements Serializable
 		// Connect to the file
 		try
 		{
-			URLConnection Connection = (URLConnection) ((new File(path)).toURI().toURL()).openConnection();
+			URLConnection Connection = ((new File(path)).toURI().toURL()).openConnection();
 			InputStream is = Connection.getInputStream();
 			BufferedReader dis = new BufferedReader(new InputStreamReader(is, charset));
 
@@ -2420,7 +2420,7 @@ public class ReadFile implements Serializable
 		// Connect to the file
 		try
 		{
-			URLConnection Connection = (URLConnection) ((new File(pathToFile)).toURI().toURL()).openConnection();
+			URLConnection Connection = ((new File(pathToFile)).toURI().toURL()).openConnection();
 			InputStream is = Connection.getInputStream();
 			BufferedReader dis = new BufferedReader(new InputStreamReader(is, charset));
 			return dis;
@@ -2446,7 +2446,7 @@ public class ReadFile implements Serializable
 		// Connect to the file
 		try
 		{
-			URLConnection Connection = (URLConnection) ((new File(path)).toURI().toURL()).openConnection();
+			URLConnection Connection = ((new File(path)).toURI().toURL()).openConnection();
 			InputStream is = Connection.getInputStream();
 			BufferedReader dis = new BufferedReader(new InputStreamReader(is));
 
@@ -2489,7 +2489,7 @@ public class ReadFile implements Serializable
 		// Connect to the file
 		try
 		{
-			URLConnection Connection = (URLConnection) ((new File(path)).toURI().toURL()).openConnection();
+			URLConnection Connection = ((new File(path)).toURI().toURL()).openConnection();
 			InputStream is = Connection.getInputStream();
 			BufferedReader dis = new BufferedReader(new InputStreamReader(is, encoding));
 
@@ -2534,7 +2534,7 @@ public class ReadFile implements Serializable
 		// Connect to the file
 		try
 		{
-			URLConnection Connection = (URLConnection) ((new File(path)).toURI().toURL()).openConnection();
+			URLConnection Connection = ((new File(path)).toURI().toURL()).openConnection();
 			InputStream is = Connection.getInputStream();
 			BufferedReader dis = new BufferedReader(new InputStreamReader(is, encoding));
 
@@ -2581,7 +2581,7 @@ public class ReadFile implements Serializable
 		// Connect to the file
 		try
 		{
-			URLConnection Connection = (URLConnection) ((new File(path)).toURI().toURL()).openConnection();
+			URLConnection Connection = ((new File(path)).toURI().toURL()).openConnection();
 			InputStream is = Connection.getInputStream();
 			BufferedReader dis = new BufferedReader(new InputStreamReader(is, encoding));
 
@@ -2629,7 +2629,7 @@ public class ReadFile implements Serializable
 		// Connect to the file
 		try
 		{
-			URLConnection Connection = (URLConnection) ((new File(path)).toURI().toURL()).openConnection();
+			URLConnection Connection = ((new File(path)).toURI().toURL()).openConnection();
 			InputStream is = Connection.getInputStream();
 			BufferedReader dis = new BufferedReader(new InputStreamReader(is, encoding));
 
@@ -2666,12 +2666,12 @@ public class ReadFile implements Serializable
 	{
 		// Define necesary variables
 		ArrayList<String> vec = new ArrayList<String>();
-		String file_line = "";
+		String file_line;
 
 		// Connect to the file
 		try
 		{
-			URLConnection Connection = (URLConnection) pathToFile.openConnection();
+			URLConnection Connection = pathToFile.openConnection();
 			InputStream is = Connection.getInputStream();
 			BufferedReader dis = new BufferedReader(new InputStreamReader(is, charset));
 
@@ -2695,7 +2695,6 @@ public class ReadFile implements Serializable
 					"error while reading file " + pathToFile + ".", e2);
 		}
 	}
-
 
 	/**
 	 * Returns the input stream of a resource.
@@ -2731,7 +2730,7 @@ public class ReadFile implements Serializable
 	{
 		// Define necessary variables
 		ArrayList<String> vec = new ArrayList<String>();
-		String file_line = "";
+		String file_line;
 
 		// Connect to the file
 		try

@@ -328,8 +328,8 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 				Class c = Class.forName("org.freehep.graphicsio.ps.PSGraphics2D");
 				Constructor cc = c.getConstructor(new Class[] {plotFile.getClass(), size.getClass()});
 				Object psGraphics = cc.newInstance(new Object[] {plotFile, size});
-				Method m = c.getMethod("startExport", null);
-				m.invoke(psGraphics, null);
+				Method m = c.getMethod("startExport");
+				m.invoke(psGraphics);
 
 				try {
 					if (this.rpl_.isEnabled())
@@ -339,11 +339,10 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 	 				Logger.log(LEVEL.ERROR, "Error drawing the chart to an image. Message was: "+exc.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(exc.getStackTrace()));
 				}
 
-				Method mm = c.getMethod("endExport", null);
-				mm.invoke(psGraphics, null);
+				Method mm = c.getMethod("endExport");
+				mm.invoke(psGraphics);
 
 				if (!isShown) frame.dispose();
-
 			} catch (Exception e)
 			{
 				throw new JPARSECException("cannot write to file.", e);
@@ -373,8 +372,8 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 				Class c = Class.forName("org.freehep.graphicsio.pdf.PDFGraphics2D");
 				Constructor cc = c.getConstructor(new Class[] {plotFile.getClass(), size.getClass()});
 				Object pdfGraphics = cc.newInstance(new Object[] {plotFile, size});
-				Method m = c.getMethod("startExport", null);
-				m.invoke(pdfGraphics, null);
+				Method m = c.getMethod("startExport");
+				m.invoke(pdfGraphics);
 
 				try {
 					if (this.rpl_.isEnabled())
@@ -384,11 +383,10 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 	 				Logger.log(LEVEL.ERROR, "Error drawing the chart to an image. Message was: "+exc.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(exc.getStackTrace()));
 				}
 
-				Method mm = c.getMethod("endExport", null);
-				mm.invoke(pdfGraphics, null);
+				Method mm = c.getMethod("endExport");
+				mm.invoke(pdfGraphics);
 
 				if (!isShown) frame.dispose();
-
 			} catch (Exception e)
 			{
 				throw new JPARSECException("cannot write to file.", e);
@@ -418,8 +416,8 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 				Class c = Class.forName("org.freehep.graphicsio.svg.SVGGraphics2D");
 				Constructor cc = c.getConstructor(new Class[] {plotFile.getClass(), size.getClass()});
 				Object svgGraphics = cc.newInstance(new Object[] {plotFile, size});
-				Method m = c.getMethod("startExport", null);
-				m.invoke(svgGraphics, null);
+				Method m = c.getMethod("startExport");
+				m.invoke(svgGraphics);
 
 				try {
 					if (this.rpl_.isEnabled())
@@ -429,8 +427,8 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 	 				Logger.log(LEVEL.ERROR, "Error drawing the chart to an image. Message was: "+exc.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(exc.getStackTrace()));
 				}
 
-				Method mm = c.getMethod("endExport", null);
-				mm.invoke(svgGraphics, null);
+				Method mm = c.getMethod("endExport");
+				mm.invoke(svgGraphics);
 
 				if (!isShown) frame.dispose();
 

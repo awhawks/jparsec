@@ -244,8 +244,8 @@ public class StarElement implements Serializable
 	public static StarElement parseSimbadElement(SimbadElement s)
 	{
 		StarElement star = new StarElement(s.name, s.rightAscension, s.declination, s.parallax,
-				0, (float) (s.properMotionRA), (float) s.properMotionDEC, (float) s.properMotionRadialV,
-				Constant.J2000, EphemerisElement.FRAME.FK5);
+			0, s.properMotionRA, s.properMotionDEC, s.properMotionRadialV,
+			Constant.J2000, EphemerisElement.FRAME.FK5);
 		return star;
 	}
 

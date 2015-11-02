@@ -295,6 +295,7 @@ public class GeneralQuery implements Serializable {
 	 * @throws JPARSECException If the input is invalid.
 	 * @deprecated DSS queries can also be done using SkyView.
 	 */
+	@Deprecated
 	public static String getQueryToSDSS(LocationElement loc, SDSS_PLATE plate, double field, boolean fitsFormat)
 	throws JPARSECException{
 		String format = "gif";

@@ -64,8 +64,7 @@ public class DataSet
 
 		double x[] = new double[npoints];
 		double y[] = new double[npoints];
-
-		double step = (xf - x0) / (double) (npoints - 1.0);
+		double step = (xf - x0) / (npoints - 1.0);
 		int i = 0;
 		for (double px = x0; px <= xf; px = px + step)
 		{
@@ -1183,11 +1182,11 @@ public class DataSet
 		}
 
 		ArrayList<double[]> v = DataSet.sortInCrescent(x_val, y_val, eliminateRepeatedPoints);
-		double x[] = (double[]) v.get(0);
+		double x[] = v.get(0);
 		double xo[] = new double[x.length];
 		double y[] = null, yo[] = null;
 		if (y_val != null) {
-			y = (double[]) v.get(1);
+			y = v.get(1);
 			yo = new double[y.length];
 		}
 		for (int i=0; i<x.length; i++)

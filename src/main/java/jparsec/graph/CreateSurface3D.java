@@ -694,32 +694,32 @@ public class CreateSurface3D implements Serializable {
 			final Class c = Class.forName("org.freehep.graphicsio.svg.SVGGraphics2D");
 			Constructor cc = c.getConstructor(new Class[] {plotFile.getClass(), size.getClass()});
 			final Object svgGraphics = cc.newInstance(new Object[] {plotFile, size});
-			Method m = c.getMethod("startExport", null);
-			m.invoke(svgGraphics, null);
+			Method m = c.getMethod("startExport");
+			m.invoke(svgGraphics);
 
 		    Thread t = new Thread(new Runnable() {
 		    	public void run() {
-	    			try {
-	    				Thread.sleep(1000);
-			    		do {
-			    			try {
-			    				Thread.sleep(1000);
-			    			} catch (InterruptedException e) {
-			    				Logger.log(LEVEL.ERROR, "Error sleeping thread. Message was: "+e.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e.getStackTrace()));
-			    			}
-		    			} while (!surface.isValid() || !surface.isEnabled());
-	    				panel.paintComponents((Graphics2D) (svgGraphics));
+				try {
+					Thread.sleep(1000);
+					do {
+						try {
+							Thread.sleep(1000);
+						} catch (InterruptedException e) {
+							Logger.log(LEVEL.ERROR, "Error sleeping thread. Message was: "+e.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e.getStackTrace()));
+						}
+					} while (!surface.isValid() || !surface.isEnabled());
+					panel.paintComponents((Graphics2D) (svgGraphics));
 
-	    				Method mm = c.getMethod("endExport", null);
-	    				mm.invoke(svgGraphics, null);
-	    			} catch (Exception e) {
-	    				Logger.log(LEVEL.ERROR, "Error painting chart to image. Message was: "+e.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e.getStackTrace()));
-	    			}
-	    			if (!isShown) frame.dispose();
-		    	}
+					Method mm = c.getMethod("endExport");
+					mm.invoke(svgGraphics);
+				} catch (Exception e) {
+					Logger.log(LEVEL.ERROR, "Error painting chart to image. Message was: "+e.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e.getStackTrace()));
+				}
+				if (!isShown) frame.dispose();
+			    	}
 			});
-		    t.start();
 
+			t.start();
 		} catch (Exception e)
 		{
 			throw new JPARSECException("cannot write to file.", e);
@@ -756,7 +756,7 @@ public class CreateSurface3D implements Serializable {
 			final Class c = Class.forName("org.freehep.graphicsio.ps.PSGraphics2D");
 			Constructor cc = c.getConstructor(new Class[] {plotFile.getClass(), size.getClass()});
 			final Object psGraphics = cc.newInstance(new Object[] {plotFile, size});
-			Method m = c.getMethod("startExport", null);
+			Method m = c.getMethod("startExport");
 			m.invoke(psGraphics, null);
 
 		    Thread t = new Thread(new Runnable() {
@@ -772,16 +772,16 @@ public class CreateSurface3D implements Serializable {
 		    			} while (!surface.isValid() || !surface.isEnabled());
 	    				panel.paintComponents((Graphics2D) (psGraphics));
 
-	    				Method mm = c.getMethod("endExport", null);
-	    				mm.invoke(psGraphics, null);
+	    				Method mm = c.getMethod("endExport");
+	    				mm.invoke(psGraphics);
 	    			} catch (Exception e) {
 	    				Logger.log(LEVEL.ERROR, "Error painting chart to image. Message was: "+e.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e.getStackTrace()));
 	    			}
 	    			if (!isShown) frame.dispose();
 		    	}
 			});
-		    t.start();
 
+		    t.start();
 		} catch (Exception e)
 		{
 			throw new JPARSECException("cannot write to file.", e);
@@ -818,32 +818,32 @@ public class CreateSurface3D implements Serializable {
 			final Class c = Class.forName("org.freehep.graphicsio.pdf.PDFGraphics2D");
 			Constructor cc = c.getConstructor(new Class[] {plotFile.getClass(), size.getClass()});
 			final Object pdfGraphics = cc.newInstance(new Object[] {plotFile, size});
-			Method m = c.getMethod("startExport", null);
-			m.invoke(pdfGraphics, null);
+			Method m = c.getMethod("startExport");
+			m.invoke(pdfGraphics);
 
 		    Thread t = new Thread(new Runnable() {
 		    	public void run() {
-	    			try {
-	    				Thread.sleep(1000);
-			    		do {
-			    			try {
-			    				Thread.sleep(1000);
-			    			} catch (InterruptedException e) {
-			    				Logger.log(LEVEL.ERROR, "Error sleeping thread. Message was: "+e.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e.getStackTrace()));
-			    			}
-		    			} while (!surface.isValid() || !surface.isEnabled());
-	    				panel.paintComponents((Graphics2D) (pdfGraphics));
+				try {
+					Thread.sleep(1000);
+					do {
+						try {
+							Thread.sleep(1000);
+						} catch (InterruptedException e) {
+							Logger.log(LEVEL.ERROR, "Error sleeping thread. Message was: "+e.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e.getStackTrace()));
+						}
+					} while (!surface.isValid() || !surface.isEnabled());
+					panel.paintComponents((Graphics2D) (pdfGraphics));
 
-	    				Method mm = c.getMethod("endExport", null);
-	    				mm.invoke(pdfGraphics, null);
-	    			} catch (Exception e) {
-	    				Logger.log(LEVEL.ERROR, "Error painting chart to image. Message was: "+e.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e.getStackTrace()));
-	    			}
-	    			if (!isShown) frame.dispose();
-		    	}
+					Method mm = c.getMethod("endExport");
+					mm.invoke(pdfGraphics);
+				} catch (Exception e) {
+					Logger.log(LEVEL.ERROR, "Error painting chart to image. Message was: "+e.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e.getStackTrace()));
+				}
+				if (!isShown) frame.dispose();
+			    	}
 			});
-		    t.start();
 
+		    t.start();
 		} catch (Exception e)
 		{
 			throw new JPARSECException("cannot write to file.", e);

@@ -236,7 +236,7 @@ public class Precession
 		 */
 		T /= 10.0; /* thousands of years */
 		p1++;
-		element1 = (double[]) v.get(0);
+		element1 = v.get(0);
 		pA = element1[p1];
 		for (i = 0; i < 9; i++)
 		{
@@ -249,7 +249,7 @@ public class Precession
 		 * Node of the moving ecliptic on the JD0 ecliptic.
 		 */
 		p2++;
-		element2 = (double[]) v.get(1);
+		element2 = v.get(1);
 		W = element2[p2];
 		for (i = 0; i < 10; i++)
 		{
@@ -262,7 +262,7 @@ public class Precession
 		 * the JD0 ecliptic.
 		 */
 		p3++;
-		element3 = (double[]) v.get(2);
+		element3 = v.get(2);
 		z = element3[p3];
 		for (i = 0; i < 10; i++)
 		{
