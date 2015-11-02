@@ -8553,7 +8553,7 @@ public class RenderSky
 			if (!rv.isEmpty()) starElem.properMotionRadialV = Float.parseFloat(rv);
 			starElem.parallax = rf.readFloat(line, "PARALLAX");
 			starElem.equinox = Constant.J2000;
-			//starElem.frame = EphemerisElement.FRAME.ICRF;
+			//star.frame = EphemerisElement.FRAME.ICRF;
 
 			// Add classical name
 			String id = rf.readString(line, "ID");
