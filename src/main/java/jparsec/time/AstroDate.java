@@ -203,12 +203,12 @@ public class AstroDate implements Serializable
 		} catch (Exception exc) {}
 
 		try {
-			Class c = Class.forName("cds.astro.Astrotime");
+			Class<?> c = Class.forName("cds.astro.Astrotime");
 			Object t = c.newInstance();
 			Method m = c.getMethod("set", String.class);
 			m.invoke(t, cdsDate);
 			m = c.getMethod("getJD");
-			Object o = m.invoke(t, null);
+			Object o = m.invoke(t);
 
 			AstroDate astro = new AstroDate((Double) o);
 			this.year = astro.year;

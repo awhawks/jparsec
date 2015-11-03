@@ -505,7 +505,7 @@ public class SpectraChart implements ActionListener, ListSelectionListener, Comp
 	            	Spectrum30m s30m = g30m.getSpectrum(list[index]);
 	            	// Header
 	            	SpectrumHeader30m sh = s30m.getHeader();
-	            	Parameter header[] = (Parameter[]) sh.getHeaderParameters();
+	            	Parameter header[] = sh.getHeaderParameters();
 
 	            	String line = header[SpectrumHeader30m.HEADER.LINE.ordinal()].value.trim();
 	            	String source = header[SpectrumHeader30m.HEADER.SOURCE.ordinal()].value.trim();
@@ -570,7 +570,7 @@ public class SpectraChart implements ActionListener, ListSelectionListener, Comp
 	            	Spectrum30m s30m = ss[index];
 	            	// Header
 	            	SpectrumHeader30m sh = s30m.getHeader();
-	            	Parameter header[] = (Parameter[]) sh.getHeaderParameters();
+	            	Parameter header[] = sh.getHeaderParameters();
 
 	            	String line = header[SpectrumHeader30m.HEADER.LINE.ordinal()].value.trim();
 	            	String source = header[SpectrumHeader30m.HEADER.SOURCE.ordinal()].value.trim();
@@ -1193,7 +1193,7 @@ class CombinedListItemElement2 implements Serializable, ActionListener, ListSele
 		JComboBox list = new JComboBox(this.values1);
 		if (this.backGround != null) list.setBackground(this.backGround);
 		list.setSelectedIndex(selectedIndex1);
-		if (!this.toolTip.equals(null)) {
+		if (this.toolTip != null) {
 			if (!this.toolTip.equals("")) list.setToolTipText(this.toolTip);
 		}
 		panel.add(list);
@@ -1203,12 +1203,12 @@ class CombinedListItemElement2 implements Serializable, ActionListener, ListSele
 		if (!this.toolTip.equals("")) label2.setToolTipText(this.toolTip);
 		panel.add(label2);
 
-		JList list2 = new JList(this.eliminateNulls((String[]) this.values2[this.selectedIndex1]));
+		JList list2 = new JList(this.eliminateNulls(this.values2[this.selectedIndex1]));
 		if (this.backGround != null) list2.setBackground(this.backGround);
 		list2.setSelectedIndices(selectedIndex2);
 		list2.setVisibleRowCount(3);
 		list2.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-		if (!this.toolTip.equals(null)) {
+		if (this.toolTip != null) {
 			if (!this.toolTip.equals("")) list2.setToolTipText(this.toolTip);
 		}
 		list2.setCellRenderer(new MyCellRenderer());

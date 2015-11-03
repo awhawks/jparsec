@@ -711,8 +711,8 @@ public class GridChartElement implements Serializable
 		ImageSplineTransform t = new ImageSplineTransform(GridChartElement.ObjectToDoubleArray(data));
 		int pointsX = this.data.length;
 		int pointsY = this.data[0].length;
-		double px = (x - this.limits[0]) * ((double) (pointsX - 1.0)) / (this.limits[1] - this.limits[0]);
-		double py = (y - this.limits[2]) * ((double) (pointsY - 1.0)) / (this.limits[3] - this.limits[2]);
+		double px = (x - this.limits[0]) * (pointsX - 1.0) / (this.limits[1] - this.limits[0]);
+		double py = (y - this.limits[2]) * (pointsY - 1.0) / (this.limits[3] - this.limits[2]);
 		double data = 0.0;
 		try {
 			data = t.interpolate(px, py);
@@ -758,7 +758,7 @@ public class GridChartElement implements Serializable
 
 				for (int k=0; k<x.length; k++)
 				{
-					if (x[k] > minX && x[k] < maxX && y[k] > minY && y[k] < maxY) data[i][ny-1-j] = new Double(z[k]);
+					if (x[k] > minX && x[k] < maxX && y[k] > minY && y[k] < maxY) data[i][ny-1-j] = z[k];
 				}
 			}
 		}
@@ -818,7 +818,7 @@ public class GridChartElement implements Serializable
 		{
 			for (int j=0; j<data[0].length; j++)
 			{
-				out[i][j] = data[i][j].doubleValue();
+				out[i][j] = data[i][j];
 			}
 		}
 		return out;
@@ -838,7 +838,7 @@ public class GridChartElement implements Serializable
 		{
 			for (int j=0; j<data[0].length; j++)
 			{
-				out[i][j] = data[i][j].doubleValue();
+				out[i][j] = data[i][j];
 				if (Double.isNaN(out[i][j]) || Double.isInfinite(out[i][j])) out[i][j] = blanking;
 			}
 		}
@@ -857,7 +857,7 @@ public class GridChartElement implements Serializable
 		{
 			for (int j=0; j<data[0].length; j++)
 			{
-				out[i][j] = new Double(data[i][j]);
+				out[i][j] = data[i][j];
 			}
 		}
 		return out;
@@ -1001,5 +1001,5 @@ public class GridChartElement implements Serializable
 		NO_BORDER,
 		/** ID constant for raised borders in levels. This is currently not working. */
 		RAISED
-	};
+	}
 }

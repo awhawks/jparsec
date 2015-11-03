@@ -161,17 +161,17 @@ public class FTP {
 	public String[] getDirectoryList(boolean raw)
 	throws JPARSECException {
 		try {
-	        Vector<Object> vv = ftp.ls(".");
+	        Vector<?> vv = ftp.ls(".");
 	        ArrayList<String> out = new ArrayList<String>();
 		    if(vv!=null){
 			      for(int ii=0; ii<vv.size(); ii++){
 
 		                Object obj=vv.elementAt(ii);
-		                if(obj instanceof com.jcraft.jsch.ChannelSftp.LsEntry){
+		                if(obj instanceof ChannelSftp.LsEntry){
 		                  if (raw) {
-		                	  out.add(((com.jcraft.jsch.ChannelSftp.LsEntry)obj).getLongname());
+		                	  out.add(((ChannelSftp.LsEntry)obj).getLongname());
 		                  } else {
-		                	  out.add(((com.jcraft.jsch.ChannelSftp.LsEntry)obj).getFilename());
+		                	  out.add(((ChannelSftp.LsEntry)obj).getFilename());
 		                  }
 		                }
 			      }
@@ -193,14 +193,14 @@ public class FTP {
 	public long[] getLastModifiedTimeOfDirectoryList()
 	throws JPARSECException {
 		try {
-	        Vector<Object> vv = ftp.ls(".");
+	        Vector<?> vv = ftp.ls(".");
 	        ArrayList<Long> out = new ArrayList<Long>();
 		    if(vv!=null){
 			      for(int ii=0; ii<vv.size(); ii++){
 
 		                Object obj=vv.elementAt(ii);
-		                if(obj instanceof com.jcraft.jsch.ChannelSftp.LsEntry){
-		                	out.add(new Long(((com.jcraft.jsch.ChannelSftp.LsEntry)obj).getAttrs().getMTime()));
+		                if(obj instanceof ChannelSftp.LsEntry){
+		                	out.add(new Long(((ChannelSftp.LsEntry)obj).getAttrs().getMTime()));
 		                }
 			      }
 			    }

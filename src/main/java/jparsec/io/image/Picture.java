@@ -2063,14 +2063,14 @@ public class Picture
 			Class c = Class.forName("org.freehep.graphicsio.svg.SVGGraphics2D");
 			Constructor cc = c.getConstructor(new Class[] {plotFile.getClass(), size.getClass()});
 			Object svgGraphics = cc.newInstance(new Object[] {plotFile, size});
-			Method m = c.getMethod("startExport", null);
-			m.invoke(svgGraphics, null);
+			Method m = c.getMethod("startExport");
+			m.invoke(svgGraphics);
 
 			Method call = instance.getClass().getMethod(method, Graphics2D.class);
 			call.invoke(instance, svgGraphics);
 
-			Method mm = c.getMethod("endExport", null);
-			mm.invoke(svgGraphics, null);
+			Method mm = c.getMethod("endExport");
+			mm.invoke(svgGraphics);
 		} catch (Exception e)
 		{
 			throw new JPARSECException("cannot write to file.", e);
@@ -2096,14 +2096,14 @@ public class Picture
 			Class c = Class.forName("org.freehep.graphicsio.ps.PSGraphics2D");
 			Constructor cc = c.getConstructor(new Class[] {plotFile.getClass(), size.getClass()});
 			Object svgGraphics = cc.newInstance(new Object[] {plotFile, size});
-			Method m = c.getMethod("startExport", null);
-			m.invoke(svgGraphics, null);
+			Method m = c.getMethod("startExport");
+			m.invoke(svgGraphics);
 
 			Method call = instance.getClass().getMethod(method, Graphics2D.class);
 			call.invoke(instance, svgGraphics);
 
-			Method mm = c.getMethod("endExport", null);
-			mm.invoke(svgGraphics, null);
+			Method mm = c.getMethod("endExport");
+			mm.invoke(svgGraphics);
 		} catch (Exception e)
 		{
 			throw new JPARSECException("cannot write to file.", e);
@@ -2129,14 +2129,14 @@ public class Picture
 			Class c = Class.forName("org.freehep.graphicsio.pdf.PDFGraphics2D");
 			Constructor cc = c.getConstructor(new Class[] {plotFile.getClass(), size.getClass()});
 			Object svgGraphics = cc.newInstance(new Object[] {plotFile, size});
-			Method m = c.getMethod("startExport", null);
-			m.invoke(svgGraphics, null);
+			Method m = c.getMethod("startExport");
+			m.invoke(svgGraphics);
 
 			Method call = instance.getClass().getMethod(method, Graphics2D.class);
 			call.invoke(instance, svgGraphics);
 
-			Method mm = c.getMethod("endExport", null);
-			mm.invoke(svgGraphics, null);
+			Method mm = c.getMethod("endExport");
+			mm.invoke(svgGraphics);
 		} catch (Exception e)
 		{
 			throw new JPARSECException("cannot write to file.", e);
@@ -2154,11 +2154,11 @@ public class Picture
 			Class c = Class.forName("org.freehep.graphicsio.svg.SVGGraphics2D");
 			Constructor cc = c.getConstructor(new Class[] {plotFile.getClass(), size.getClass()});
 			Object svgGraphics = cc.newInstance(new Object[] {plotFile, size});
-			Method m = c.getMethod("startExport", null);
-			m.invoke(svgGraphics, null);
+			Method m = c.getMethod("startExport");
+			m.invoke(svgGraphics);
 			((Graphics2D) svgGraphics).drawImage(image, new AffineTransform(), null);
-			Method mm = c.getMethod("endExport", null);
-			mm.invoke(svgGraphics, null);
+			Method mm = c.getMethod("endExport");
+			mm.invoke(svgGraphics);
 		} catch (Exception e)
 		{
 			throw new JPARSECException("cannot write to file.", e);
@@ -2176,11 +2176,11 @@ public class Picture
 			Class c = Class.forName("org.freehep.graphicsio.ps.PSGraphics2D");
 			Constructor cc = c.getConstructor(new Class[] {plotFile.getClass(), size.getClass()});
 			Object psGraphics = cc.newInstance(new Object[] {plotFile, size});
-			Method m = c.getMethod("startExport", null);
-			m.invoke(psGraphics, null);
+			Method m = c.getMethod("startExport");
+			m.invoke(psGraphics);
 			((Graphics2D) psGraphics).drawImage(image, new AffineTransform(), null);
-			Method mm = c.getMethod("endExport", null);
-			mm.invoke(psGraphics, null);
+			Method mm = c.getMethod("endExport");
+			mm.invoke(psGraphics);
 		} catch (Exception e)
 		{
 			throw new JPARSECException("cannot write to file.", e);
@@ -2198,11 +2198,11 @@ public class Picture
 			Class c = Class.forName("org.freehep.graphicsio.pdf.PDFGraphics2D");
 			Constructor cc = c.getConstructor(new Class[] {plotFile.getClass(), size.getClass()});
 			Object pdfGraphics = cc.newInstance(new Object[] {plotFile, size});
-			Method m = c.getMethod("startExport", null);
-			m.invoke(pdfGraphics, null);
+			Method m = c.getMethod("startExport");
+			m.invoke(pdfGraphics);
 			((Graphics2D) pdfGraphics).drawImage(image, new AffineTransform(), null);
-			Method mm = c.getMethod("endExport", null);
-			mm.invoke(pdfGraphics, null);
+			Method mm = c.getMethod("endExport");
+			mm.invoke(pdfGraphics);
 		} catch (Exception e)
 		{
 			throw new JPARSECException("cannot write to file.", e);

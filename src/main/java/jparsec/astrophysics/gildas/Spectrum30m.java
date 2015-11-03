@@ -104,9 +104,7 @@ public class Spectrum30m implements Serializable
 	 */
     public Spectrum30m(SpectrumHeader30m header, float[] spectrumData)
     {
-        map = new TreeMap<String,Parameter>();
-        this.header = (SpectrumHeader30m) header.clone();
-        this.data = spectrumData.clone();
+		this(new TreeMap<String,Parameter>(), header, spectrumData);
     }
 
 	/**
@@ -117,7 +115,7 @@ public class Spectrum30m implements Serializable
 	 */
     public Spectrum30m(TreeMap<String,Parameter> tmap, SpectrumHeader30m header, float[] spectrumData)
     {
-        map = (TreeMap<String,Parameter>) tmap.clone();
+        map = (TreeMap) tmap.clone();
         this.header = header.clone();
         this.data = spectrumData.clone();
     }
@@ -139,7 +137,7 @@ public class Spectrum30m implements Serializable
      */
     public Parameter get(String key)
     {
-        Parameter p = (Parameter)  map.get(key);
+        Parameter p =  map.get(key);
         if (p == null) p = new Parameter("", "");
         return p;
     }
@@ -150,7 +148,7 @@ public class Spectrum30m implements Serializable
      * @return True or false.
      */
     public boolean keyExists(String key) {
-    	return map.get(key) == null ? false : true;
+    	return map.get(key) != null;
     }
 
     /**
@@ -274,7 +272,7 @@ public class Spectrum30m implements Serializable
      */
     public void setTreeMap(TreeMap<String,Parameter> map)
     {
-    	this.map = (TreeMap<String, Parameter>) map.clone();
+    	this.map = (TreeMap) map.clone();
     }
     /**
      * Sets the header.
@@ -321,7 +319,7 @@ public class Spectrum30m implements Serializable
     	Parameter p[] = new Parameter[keys.length];
     	for (int i=0; i<keys.length; i++)
     	{
-    		p[i] = (Parameter) tm.get(keys[i]);
+    		p[i] = tm.get(keys[i]);
     	}
     	return p;
     }
@@ -344,7 +342,7 @@ public class Spectrum30m implements Serializable
 	     * This velocity is corrected considering the relativistic
 	     * effects, important in very wide spectra. */
 	    VELOCITY_KMS_CORRECTED,
-    };
+    }
 
     /**
      * Returns the non corrected (Gildas) velocity for a given channel.
@@ -354,9 +352,9 @@ public class Spectrum30m implements Serializable
     public double getVelocity(double channel) {
     	double refchan = 0.0, vref = 0.0, vres = 0.0;
     	try {
- 	    	refchan = Double.parseDouble(((Parameter) this.get(Gildas30m.REF_CHAN)).value);
-	    	vref = Double.parseDouble(((Parameter) this.get(Gildas30m.REF_VEL)).value);
-	    	vres = Double.parseDouble(((Parameter) this.get(Gildas30m.VEL_RESOL)).value);
+ 	    	refchan = Double.parseDouble((this.get(Gildas30m.REF_CHAN)).value);
+	    	vref = Double.parseDouble((this.get(Gildas30m.REF_VEL)).value);
+	    	vres = Double.parseDouble((this.get(Gildas30m.VEL_RESOL)).value);
     	} catch (Exception exc) {
     		if (Logger.reportJPARSECLogs) Logger.log(LEVEL.ERROR, "could not recover reference channel, velocity, and/or velocity resolution!");
     	}
@@ -382,9 +380,9 @@ public class Spectrum30m implements Serializable
     public double getChannel(double v) {
     	double refchan = 0.0, vref = 0.0, vres = 0.0;
     	try {
- 	    	refchan = Double.parseDouble(((Parameter) this.get(Gildas30m.REF_CHAN)).value);
-	    	vref = Double.parseDouble(((Parameter) this.get(Gildas30m.REF_VEL)).value);
-	    	vres = Double.parseDouble(((Parameter) this.get(Gildas30m.VEL_RESOL)).value);
+ 	    	refchan = Double.parseDouble((this.get(Gildas30m.REF_CHAN)).value);
+	    	vref = Double.parseDouble((this.get(Gildas30m.REF_VEL)).value);
+	    	vres = Double.parseDouble((this.get(Gildas30m.VEL_RESOL)).value);
     	} catch (Exception exc) {
     		if (Logger.reportJPARSECLogs) Logger.log(LEVEL.ERROR, "could not recover reference channel, velocity, and/or velocity resolution!");
     	}
@@ -397,7 +395,7 @@ public class Spectrum30m implements Serializable
      * @return Resolution in km/s.
      */
     public double getVelocityResolution() {
-    	double vres = Double.parseDouble(((Parameter) this.get(Gildas30m.VEL_RESOL)).value);
+    	double vres = Double.parseDouble((this.get(Gildas30m.VEL_RESOL)).value);
 	    return vres;
     }
 
@@ -407,7 +405,7 @@ public class Spectrum30m implements Serializable
      * @return Resolution in MHz.
      */
     public double getFrequencyResolution() {
-    	double vres = Double.parseDouble(((Parameter) this.get(Gildas30m.FREQ_RESOL)).value);
+    	double vres = Double.parseDouble((this.get(Gildas30m.FREQ_RESOL)).value);
 	    return vres;
     }
 
@@ -416,7 +414,7 @@ public class Spectrum30m implements Serializable
      * @return Reference velocity in km/s.
      */
     public double getReferenceVelocity() {
-    	double vref = Double.parseDouble(((Parameter) this.get(Gildas30m.REF_VEL)).value);
+    	double vref = Double.parseDouble((this.get(Gildas30m.REF_VEL)).value);
 	    return vref;
     }
 
@@ -426,7 +424,7 @@ public class Spectrum30m implements Serializable
      * @return Reference channel number.
      */
     public double getReferenceChannel() {
-    	double refchan = Double.parseDouble(((Parameter) this.get(Gildas30m.REF_CHAN)).value);
+    	double refchan = Double.parseDouble((this.get(Gildas30m.REF_CHAN)).value);
 	    return refchan;
     }
 
@@ -458,14 +456,14 @@ public class Spectrum30m implements Serializable
     public double getFrequencyForAGivenVelocity(double velocity) {
     	double vref = 0.0, vres = 0.0;
     	try {
-	    	vref = Double.parseDouble(((Parameter) this.get(Gildas30m.REF_VEL)).value);
-	    	vres = Double.parseDouble(((Parameter) this.get(Gildas30m.VEL_RESOL)).value);
+	    	vref = Double.parseDouble((this.get(Gildas30m.REF_VEL)).value);
+	    	vres = Double.parseDouble((this.get(Gildas30m.VEL_RESOL)).value);
     	} catch (Exception exc) {
     		if (Logger.reportJPARSECLogs) Logger.log(LEVEL.ERROR, "could not recover reference velocity and/or velocity resolution!");
     	}
 
     	double delta = (velocity - vref) / vres;
-    	double fref = Double.parseDouble(((Parameter) this.get(Gildas30m.REF_FREQ)).value);
+    	double fref = Double.parseDouble((this.get(Gildas30m.REF_FREQ)).value);
     	double fres = - vres * fref / (Constant.SPEED_OF_LIGHT * 0.001);
     	double freq = fref + delta * fres;
 
@@ -481,8 +479,8 @@ public class Spectrum30m implements Serializable
     public double getFrequencyForAGivenCorrectedVelocity(double velocity) {
     	double vref = 0.0, rfreq = 0.0;
     	try {
-	    	vref = Double.parseDouble(((Parameter) this.get(Gildas30m.REF_VEL)).value);
-	       	rfreq = Double.parseDouble(((Parameter) this.get(Gildas30m.REF_FREQ)).value);
+	    	vref = Double.parseDouble((this.get(Gildas30m.REF_VEL)).value);
+	       	rfreq = Double.parseDouble((this.get(Gildas30m.REF_FREQ)).value);
     	} catch (Exception exc) {}
 		double freq = rfreq * (1.0 / (1.0 - (vref - velocity) * 1000.0 / Constant.SPEED_OF_LIGHT));
 		return freq;
@@ -496,16 +494,16 @@ public class Spectrum30m implements Serializable
     public double getImageFrequencyForAGivenVelocity(double velocity) {
     	double vref = 0.0, vres = 0.0;
     	try {
-	    	vref = Double.parseDouble(((Parameter) this.get(Gildas30m.REF_VEL)).value);
-	    	vres = Double.parseDouble(((Parameter) this.get(Gildas30m.VEL_RESOL)).value);
+	    	vref = Double.parseDouble((this.get(Gildas30m.REF_VEL)).value);
+	    	vres = Double.parseDouble((this.get(Gildas30m.VEL_RESOL)).value);
     	} catch (Exception exc) {
     		if (Logger.reportJPARSECLogs) Logger.log(LEVEL.ERROR, "could not recover reference velocity and/or velocity resolution!");
     	}
-       	double imgf = Double.parseDouble(((Parameter) this.get(Gildas30m.IMAGE)).value);
+       	double imgf = Double.parseDouble((this.get(Gildas30m.IMAGE)).value);
        	if (imgf == 0) return 0;
 
     	double delta = (velocity - vref) / vres;
-    	double fref = Double.parseDouble(((Parameter) this.get(Gildas30m.REF_FREQ)).value);
+    	double fref = Double.parseDouble((this.get(Gildas30m.REF_FREQ)).value);
     	double fres = - vres * fref / (Constant.SPEED_OF_LIGHT * 0.001);
     	double freq = imgf - delta * fres;
 
@@ -529,12 +527,12 @@ public class Spectrum30m implements Serializable
     public double getVelocityForAGivenFrequency(double frequency) {
     	double vref = 0.0, vres = 0.0;
     	try {
-	    	vref = Double.parseDouble(((Parameter) this.get(Gildas30m.REF_VEL)).value);
-	    	vres = Double.parseDouble(((Parameter) this.get(Gildas30m.VEL_RESOL)).value);
+	    	vref = Double.parseDouble((this.get(Gildas30m.REF_VEL)).value);
+	    	vres = Double.parseDouble((this.get(Gildas30m.VEL_RESOL)).value);
     	} catch (Exception exc) {
     		if (Logger.reportJPARSECLogs) Logger.log(LEVEL.ERROR, "could not recover reference velocity and/or velocity resolution!");
     	}
-       	double fref = Double.parseDouble(((Parameter) this.get(Gildas30m.REF_FREQ)).value);
+       	double fref = Double.parseDouble((this.get(Gildas30m.REF_FREQ)).value);
     	double fres = - vres * fref / (Constant.SPEED_OF_LIGHT * 0.001);
     	double delta = (frequency - fref) / fres;
     	double vel = vref + delta * vres;
@@ -552,11 +550,11 @@ public class Spectrum30m implements Serializable
     public double getChannelWidth(double frequency) {
     	double vres = 0.0;
     	try {
-	    	vres = Double.parseDouble(((Parameter) this.get(Gildas30m.VEL_RESOL)).value);
+	    	vres = Double.parseDouble((this.get(Gildas30m.VEL_RESOL)).value);
     	} catch (Exception exc) {
     		if (Logger.reportJPARSECLogs) Logger.log(LEVEL.ERROR, "could not recover reference velocity and/or velocity resolution!");
     	}
-       	double fref = Double.parseDouble(((Parameter) this.get(Gildas30m.REF_FREQ)).value);
+       	double fref = Double.parseDouble((this.get(Gildas30m.REF_FREQ)).value);
     	double fres = - vres * fref / (Constant.SPEED_OF_LIGHT * 0.001);
 
     	double v0 = getCorrectedVelocityForAGivenFrequency(frequency);
@@ -572,8 +570,8 @@ public class Spectrum30m implements Serializable
     public double getCorrectedVelocityForAGivenFrequency(double frequency) {
     	double vref = 0.0, rfreq = 0.0;
     	try {
-	    	vref = Double.parseDouble(((Parameter) this.get(Gildas30m.REF_VEL)).value);
-	       	rfreq = Double.parseDouble(((Parameter) this.get(Gildas30m.REF_FREQ)).value);
+	    	vref = Double.parseDouble((this.get(Gildas30m.REF_VEL)).value);
+	       	rfreq = Double.parseDouble((this.get(Gildas30m.REF_FREQ)).value);
     	} catch (Exception exc) {}
 		double vel = vref - (1.0 - rfreq /  frequency) * Constant.SPEED_OF_LIGHT / 1000.0;
 		return vel;
@@ -611,7 +609,7 @@ public class Spectrum30m implements Serializable
 	public SpectrumLine toCorrectedVelocity(SpectrumLine line) throws JPARSECException {
     	double vres = 0.0;
     	try {
-	    	vres = Double.parseDouble(((Parameter) this.get(Gildas30m.VEL_RESOL)).value);
+	    	vres = Double.parseDouble((this.get(Gildas30m.VEL_RESOL)).value);
     	} catch (Exception exc) {
     		if (Logger.reportJPARSECLogs) Logger.log(LEVEL.ERROR, "could not recover reference velocity and/or velocity resolution!");
     	}
@@ -646,7 +644,7 @@ public class Spectrum30m implements Serializable
 	public SpectrumLine toGildasVelocity(SpectrumLine line) throws JPARSECException {
     	double vres = 0.0;
     	try {
-	    	vres = Double.parseDouble(((Parameter) this.get(Gildas30m.VEL_RESOL)).value);
+	    	vres = Double.parseDouble((this.get(Gildas30m.VEL_RESOL)).value);
     	} catch (Exception exc) {
     		if (Logger.reportJPARSECLogs) Logger.log(LEVEL.ERROR, "could not recover reference velocity and/or velocity resolution!");
     	}
@@ -676,13 +674,13 @@ public class Spectrum30m implements Serializable
     public double getVelocityForAGivenImageFrequency(double frequency) {
     	double vref = 0.0, vres = 0.0;
     	try {
-	    	vref = Double.parseDouble(((Parameter) this.get(Gildas30m.REF_VEL)).value);
-	    	vres = Double.parseDouble(((Parameter) this.get(Gildas30m.VEL_RESOL)).value);
+	    	vref = Double.parseDouble((this.get(Gildas30m.REF_VEL)).value);
+	    	vres = Double.parseDouble((this.get(Gildas30m.VEL_RESOL)).value);
     	} catch (Exception exc) {
     		if (Logger.reportJPARSECLogs) Logger.log(LEVEL.ERROR, "could not recover reference velocity and/or velocity resolution!");
     	}
-       	double fref = Double.parseDouble(((Parameter) this.get(Gildas30m.REF_FREQ)).value);
-       	double imgf = Double.parseDouble(((Parameter) this.get(Gildas30m.IMAGE)).value);
+       	double fref = Double.parseDouble((this.get(Gildas30m.REF_FREQ)).value);
+       	double imgf = Double.parseDouble((this.get(Gildas30m.IMAGE)).value);
     	double fres = - vres * fref / (Constant.SPEED_OF_LIGHT * 0.001);
     	double delta = (frequency - (imgf - fref) - fref) / fres;
     	double vel = vref - delta * vres;
@@ -708,12 +706,12 @@ public class Spectrum30m implements Serializable
     public double getVlsrForAGivenFrequency(double frequency, double fref) {
     	double vref = 0.0, vres = 0.0;
     	try {
-	    	vref = Double.parseDouble(((Parameter) this.get(Gildas30m.REF_VEL)).value);
-	    	vres = Double.parseDouble(((Parameter) this.get(Gildas30m.VEL_RESOL)).value);
+	    	vref = Double.parseDouble((this.get(Gildas30m.REF_VEL)).value);
+	    	vres = Double.parseDouble((this.get(Gildas30m.VEL_RESOL)).value);
     	} catch (Exception exc) {
     		if (Logger.reportJPARSECLogs) Logger.log(LEVEL.ERROR, "could not recover reference velocity and/or velocity resolution!");
     	}
-       	double fref0 = Double.parseDouble(((Parameter) this.get(Gildas30m.REF_FREQ)).value);
+       	double fref0 = Double.parseDouble((this.get(Gildas30m.REF_FREQ)).value);
     	double fres = - vres * fref0 / (Constant.SPEED_OF_LIGHT * 0.001);
     	double delta = (frequency - fref) / fres;
     	double vel = vref + delta * vres;
@@ -728,7 +726,7 @@ public class Spectrum30m implements Serializable
     public double getReferenceImageFrequency() {
        	double imgf = 0.0;
        	try {
-       		imgf = Double.parseDouble(((Parameter) this.get(Gildas30m.IMAGE)).value);
+       		imgf = Double.parseDouble((this.get(Gildas30m.IMAGE)).value);
        	} catch (Exception exc) {}
        	return imgf;
     }
@@ -741,7 +739,7 @@ public class Spectrum30m implements Serializable
     public double getReferenceFrequency() {
        	double fref = 0.0;
        	try {
-       		fref = Double.parseDouble(((Parameter) this.get(Gildas30m.REF_FREQ)).value);
+       		fref = Double.parseDouble((this.get(Gildas30m.REF_FREQ)).value);
        	} catch (Exception exc) {}
        	return fref;
     }
@@ -756,10 +754,10 @@ public class Spectrum30m implements Serializable
 
     	double refchan = 0.0, vref = 0.0, vres = 0.0, rfreq = 0.0;
     	try {
- 	    	refchan = Double.parseDouble(((Parameter) this.get(Gildas30m.REF_CHAN)).value);
-	    	vref = Double.parseDouble(((Parameter) this.get(Gildas30m.REF_VEL)).value);
-	    	vres = Double.parseDouble(((Parameter) this.get(Gildas30m.VEL_RESOL)).value);
-	       	rfreq = Double.parseDouble(((Parameter) this.get(Gildas30m.REF_FREQ)).value);
+ 	    	refchan = Double.parseDouble((this.get(Gildas30m.REF_CHAN)).value);
+	    	vref = Double.parseDouble((this.get(Gildas30m.REF_VEL)).value);
+	    	vres = Double.parseDouble((this.get(Gildas30m.VEL_RESOL)).value);
+	       	rfreq = Double.parseDouble((this.get(Gildas30m.REF_FREQ)).value);
     	} catch (Exception exc) {
     		if (Logger.reportJPARSECLogs) Logger.log(LEVEL.ERROR, "could not recover rest frequency, reference channel, velocity and/or velocity resolution!");
     	}
@@ -812,9 +810,9 @@ public class Spectrum30m implements Serializable
     	}
 
     	SpectrumHeader30m sh = this.getHeader();
-    	Parameter header[] = (Parameter[]) sh.getHeaderParameters();
-    	String title = ((Parameter) this.get(Gildas30m.SOURCE)).value.trim();
-    	title += " ("+header[0].value+")";
+    	Parameter header[] = sh.getHeaderParameters();
+    	String title = (this.get(Gildas30m.SOURCE)).value.trim();
+    	title += " ("+header[0].value+')';
     	String legend = header[4].value;
 		SimpleChartElement chart1 = new SimpleChartElement(ChartElement.TYPE.XY_CHART,
 				ChartElement.SUBTYPE.XY_SCATTER, x, y, title, Translate.translate(Translate.JPARSEC_VELOCITY)+" (km s^{-1})", "T_{mb} (K)", legend, true, false,
@@ -1110,17 +1108,17 @@ public class Spectrum30m implements Serializable
 	        rfreq = freqFirst;
     	}
 
-        double ut = 0.0, lst = 0.0, az = 0.0, el = 0.0, tau = 0.0, tsys = 0.0, integt = 0.0, epoch = 2000.0;
-        double lamb = 0.0, beta = 0.0, lamboff = 0.0, betaoff = 0.0, freqres = 0.0;
-        double freqoff = 0.0, bad = 0.0, beameff = 0.0, foreff = 0.0;
-        double gainim = 0.0, h2omm = 0.0, pamb = 0.0, tamb = 0.0, tatmsig = 0.0, tchop = 0.0;
+        double ut, lst = 0.0, az= 0.0, el = 0.0, tau= 0.0, tsys = 0.0, integt, epoch;
+        double lamb, beta, lamboff = 0.0, betaoff = 0.0, freqres;
+        double freqoff = 0.0, bad = 0.0, beameff, foreff = 0.0;
+        double gainim = 0.0, h2omm= 0.0, pamb = 0.0, tamb = 0.0, tatmsig = 0.0, tchop = 0.0;
         double tcold = 0.0, tausig = 0.0, tauima = 0.0, trec = 0.0, factor = 0.0, altitude = 2851.5;
         double lon = -0.05931949000000015, lat = 0.6469658600000003;
-        double c1 = 0.0, c2 = 0.0, c3 = 0.0, sigma = 0.0, swde = 0.0, swdu = 0.0, swp = 0.0;
+        double c1 = 0.0, c2 = 0.0, c3 = 0.0, sigma, swde = 0.0, swdu = 0.0, swp = 0.0;
         double swl = 0.0, swb = 0.0, todo = 0.0, doppler = 0;
         int projection = Gildas30m.PROJECTION_RADIO, nch = data.length, veltype = 1, mode = 1, otfn = 0;
         int otfh = 0, otfd = 0, otfdu = 0, nph = 0, swm = 0, version = 0, block = 0, kind = 0;
-        String source = "", line = "", teles = "";
+        String source, line, teles;
 
         integt = sp.integrationTime;
         epoch = 2000.0 + (sp.epochJD - Constant.J2000) / 365.25;
@@ -1157,7 +1155,7 @@ public class Spectrum30m implements Serializable
         map.put(new String(Gildas30m.TELES), new Parameter(teles, Gildas30m.LINE_DESC));
         map.put(new String(Gildas30m.REF_FREQ), new Parameter(rfreq, Gildas30m.REF_FREQ_DESC));
         map.put(new String(Gildas30m.NCHAN), new Parameter(nch, Gildas30m.NCHAN_DESC));
-        map.put(new String(Gildas30m.REF_CHAN), new Parameter((double)refch, Gildas30m.REF_CHAN_DESC));
+        map.put(new String(Gildas30m.REF_CHAN), new Parameter(refch, Gildas30m.REF_CHAN_DESC));
         map.put(new String(Gildas30m.FREQ_RESOL), new Parameter(freqres, Gildas30m.FREQ_RESOL_DESC));
         map.put(new String(Gildas30m.FREQ_OFF), new Parameter(freqoff, Gildas30m.FREQ_OFF_DESC));
         map.put(new String(Gildas30m.VEL_RESOL), new Parameter(velres, Gildas30m.VEL_RESOL_DESC));
@@ -1498,50 +1496,48 @@ public class Spectrum30m implements Serializable
 			        });
 				out[i] = new Spectrum30m(header, (new float[][] {sp})[0]);
 
-		        out[i].map.put(new String(Gildas30m.LDOBS), new Parameter(ConverterFactory.getGILDASdate(jdObs), Gildas30m.LDOBS_DESC));
-		        out[i].map.put(new String(Gildas30m.LDRED), new Parameter(ConverterFactory.getGILDASdate(jdRed), Gildas30m.LDRED_DESC));
-		        out[i].map.put(new String(Gildas30m.SOURCE), new Parameter(source, Gildas30m.SOURCE_DESC));
-		        out[i].map.put(new String(Gildas30m.LINE), new Parameter(line, Gildas30m.LINE_DESC));
-		        out[i].map.put(new String(Gildas30m.REF_FREQ), new Parameter(rfreq, Gildas30m.REF_FREQ_DESC));
-		        out[i].map.put(new String(Gildas30m.VEL_RESOL), new Parameter(velres, Gildas30m.VEL_RESOL_DESC));
-		        out[i].map.put(new String(Gildas30m.IMAGE), new Parameter(imgfreq, Gildas30m.IMAGE_DESC));
-		        out[i].map.put(new String(Gildas30m.REF_CHAN), new Parameter((double)refch, Gildas30m.REF_CHAN_DESC));
-		        out[i].map.put(new String(Gildas30m.NCHAN), new Parameter(out[i].getNumberOfChannels(), Gildas30m.NCHAN_DESC));
-		        out[i].map.put(new String(Gildas30m.EPOCH), new Parameter(epoch, Gildas30m.EPOCH_DESC));
-		        out[i].map.put(new String(Gildas30m.PROJECTION), new Parameter(projection, Gildas30m.PROJECTION_DESC));
-		        out[i].map.put(new String(Gildas30m.VEL_TYPE), new Parameter(veltype, Gildas30m.VEL_TYPE_DESC));
-		        out[i].map.put(new String(Gildas30m.DOPPLER), new Parameter(doppler, Gildas30m.DOPPLER_DESC));
-		        out[i].map.put(new String(Gildas30m.MODE), new Parameter(mode, Gildas30m.MODE_DESC));
-		        out[i].map.put(new String(Gildas30m.REF_VEL), new Parameter(v0, Gildas30m.REF_VEL_DESC));
-		        out[i].map.put(new String(Gildas30m.FREQ_OFF), new Parameter(freqoff, Gildas30m.FREQ_OFF_DESC));
-		        out[i].map.put(new String(Gildas30m.AZIMUTH), new Parameter(az, Gildas30m.AZIMUTH_DESC));
-		        out[i].map.put(new String(Gildas30m.ELEVATION), new Parameter(el, Gildas30m.ELEVATION_DESC));
-		        out[i].map.put(new String(Gildas30m.TAU), new Parameter(tau, Gildas30m.TAU_DESC));
-		        out[i].map.put(new String(Gildas30m.TSYS), new Parameter(tsys, Gildas30m.TSYS_DESC));
-				out[i].map.put(new String(Gildas30m.UT_TIME), new Parameter(ut, Gildas30m.UT_TIME_DESC));
-		        out[i].map.put(new String(Gildas30m.LST_TIME), new Parameter(lst, Gildas30m.LST_TIME_DESC));
-		        out[i].map.put(new String(Gildas30m.INTEG), new Parameter(time, Gildas30m.INTEG_DESC));
-		        out[i].map.put(new String(Gildas30m.BEAM_EFF), new Parameter(beameff, Gildas30m.BEAM_EFF_DESC));
-		        out[i].map.put(new String(Gildas30m.FORW_EFF), new Parameter(foreff, Gildas30m.FORW_EFF_DESC));
-		        out[i].map.put(new String(Gildas30m.GAIN_IM), new Parameter(gainimg, Gildas30m.GAIN_IM_DESC));
-		        out[i].map.put(new String(Gildas30m.H2OMM), new Parameter(h2o, Gildas30m.H2OMM_DESC));
-		        out[i].map.put(new String(Gildas30m.PAMB), new Parameter(patm, Gildas30m.PAMB_DESC));
-		        out[i].map.put(new String(Gildas30m.TAMB), new Parameter(tatm, Gildas30m.TAMB_DESC));
-		        out[i].map.put(new String(Gildas30m.TCHOP), new Parameter(tchop, Gildas30m.TCHOP_DESC));
-		        out[i].map.put(new String(Gildas30m.TCOLD), new Parameter(tcold, Gildas30m.TCOLD_DESC));
-		        out[i].map.put(new String(Gildas30m.SCAN), new Parameter(scan, Gildas30m.SCAN_DESC));
-		        out[i].map.put(new String(Gildas30m.NUM), new Parameter(observationNumber, Gildas30m.NUM_DESC));
+		        out[i].map.put(Gildas30m.LDOBS, new Parameter(ConverterFactory.getGILDASdate(jdObs), Gildas30m.LDOBS_DESC));
+		        out[i].map.put(Gildas30m.LDRED, new Parameter(ConverterFactory.getGILDASdate(jdRed), Gildas30m.LDRED_DESC));
+		        out[i].map.put(Gildas30m.SOURCE, new Parameter(source, Gildas30m.SOURCE_DESC));
+		        out[i].map.put(Gildas30m.LINE, new Parameter(line, Gildas30m.LINE_DESC));
+		        out[i].map.put(Gildas30m.REF_FREQ, new Parameter(rfreq, Gildas30m.REF_FREQ_DESC));
+		        out[i].map.put(Gildas30m.VEL_RESOL, new Parameter(velres, Gildas30m.VEL_RESOL_DESC));
+		        out[i].map.put(Gildas30m.IMAGE, new Parameter(imgfreq, Gildas30m.IMAGE_DESC));
+		        out[i].map.put(Gildas30m.REF_CHAN, new Parameter(refch, Gildas30m.REF_CHAN_DESC));
+		        out[i].map.put(Gildas30m.NCHAN, new Parameter(out[i].getNumberOfChannels(), Gildas30m.NCHAN_DESC));
+		        out[i].map.put(Gildas30m.EPOCH, new Parameter(epoch, Gildas30m.EPOCH_DESC));
+		        out[i].map.put(Gildas30m.PROJECTION, new Parameter(projection, Gildas30m.PROJECTION_DESC));
+		        out[i].map.put(Gildas30m.VEL_TYPE, new Parameter(veltype, Gildas30m.VEL_TYPE_DESC));
+		        out[i].map.put(Gildas30m.DOPPLER, new Parameter(doppler, Gildas30m.DOPPLER_DESC));
+		        out[i].map.put(Gildas30m.MODE, new Parameter(mode, Gildas30m.MODE_DESC));
+		        out[i].map.put(Gildas30m.REF_VEL, new Parameter(v0, Gildas30m.REF_VEL_DESC));
+		        out[i].map.put(Gildas30m.FREQ_OFF, new Parameter(freqoff, Gildas30m.FREQ_OFF_DESC));
+		        out[i].map.put(Gildas30m.AZIMUTH, new Parameter(az, Gildas30m.AZIMUTH_DESC));
+		        out[i].map.put(Gildas30m.ELEVATION, new Parameter(el, Gildas30m.ELEVATION_DESC));
+		        out[i].map.put(Gildas30m.TAU, new Parameter(tau, Gildas30m.TAU_DESC));
+		        out[i].map.put(Gildas30m.TSYS, new Parameter(tsys, Gildas30m.TSYS_DESC));
+				out[i].map.put(Gildas30m.UT_TIME, new Parameter(ut, Gildas30m.UT_TIME_DESC));
+		        out[i].map.put(Gildas30m.LST_TIME, new Parameter(lst, Gildas30m.LST_TIME_DESC));
+		        out[i].map.put(Gildas30m.INTEG, new Parameter(time, Gildas30m.INTEG_DESC));
+		        out[i].map.put(Gildas30m.BEAM_EFF, new Parameter(beameff, Gildas30m.BEAM_EFF_DESC));
+		        out[i].map.put(Gildas30m.FORW_EFF, new Parameter(foreff, Gildas30m.FORW_EFF_DESC));
+		        out[i].map.put(Gildas30m.GAIN_IM, new Parameter(gainimg, Gildas30m.GAIN_IM_DESC));
+		        out[i].map.put(Gildas30m.H2OMM, new Parameter(h2o, Gildas30m.H2OMM_DESC));
+		        out[i].map.put(Gildas30m.PAMB, new Parameter(patm, Gildas30m.PAMB_DESC));
+		        out[i].map.put(Gildas30m.TAMB, new Parameter(tatm, Gildas30m.TAMB_DESC));
+		        out[i].map.put(Gildas30m.TCHOP, new Parameter(tchop, Gildas30m.TCHOP_DESC));
+		        out[i].map.put(Gildas30m.TCOLD, new Parameter(tcold, Gildas30m.TCOLD_DESC));
+		        out[i].map.put(Gildas30m.SCAN, new Parameter(scan, Gildas30m.SCAN_DESC));
+		        out[i].map.put(Gildas30m.NUM, new Parameter(observationNumber, Gildas30m.NUM_DESC));
 		        out[i].map.put(Gildas30m.OFF1, new Parameter(offsetX, Gildas30m.OFF1_DESC));
 		        out[i].map.put(Gildas30m.OFF2, new Parameter(offsetY, Gildas30m.OFF2_DESC));
 		        out[i].map.put(Gildas30m.LAMBDA_OFF, new Parameter(offsetX, Gildas30m.LAMBDA_OFF_DESC));
 		        out[i].map.put(Gildas30m.BETA_OFF, new Parameter(offsetY, Gildas30m.BETA_OFF_DESC));
 
 			   	double freqres = - velres * rfreq / (Constant.SPEED_OF_LIGHT * 0.001);
-		        out[i].map.put(new String(Gildas30m.FREQ_RESOL), new Parameter(freqres, Gildas30m.FREQ_RESOL_DESC));
-
-		        //out[i].map.put(new String(Gildas30m.BAD), new Parameter(bad, Gildas30m.BAD_DESC));
+		        out[i].map.put(Gildas30m.FREQ_RESOL, new Parameter(freqres, Gildas30m.FREQ_RESOL_DESC));
+		        //out[i].map.put(Gildas30m.BAD, new Parameter(bad, Gildas30m.BAD_DESC));
 		        //out[i].map.put(Gildas30m.SIGMA, new Parameter(sigma, Gildas30m.SIGMA_DESC));
-
 		   	}
 		   	return out;
 		} catch (Exception exc) {
@@ -1646,15 +1642,15 @@ public class Spectrum30m implements Serializable
 
 		int nch = 0;
 		try { nch = Integer.parseInt((ImageHeaderElement.getByKey(head, "NAXIS1")).value); } catch (Exception exc1) { nErr ++; }
-        double ut = 0.0, lst = 0.0, az = 0.0, el = 0.0, tau = 0.0, tsys = 0.0, integt = 0.0, epoch = 2000.0;
+        double ut, lst, az = 0.0, el = 0.0, tau = 0.0, tsys = 0.0, integt = 0.0, epoch = 2000.0;
         double lamb = 0.0, beta = 0.0, lamboff = 0.0, betaoff = 0.0, rfreq = 0.0, refch = 0.0, freqres = 0.0;
         double freqoff = 0.0, velres = 0.0, v0 = 0.0, bad = 0.0, imgfreq = 0.0, beameff = 0.0, foreff = 0.0;
         double gainim = 0.0, h2omm = 0.0, pamb = 0.0, tamb = 0.0, tatmsig = 0.0, tchop = 0.0;
         double tcold = 0.0, tausig = 0.0, tauima = 0.0, trec = 0.0, factor = 0.0, altitude = 0.0;
         double c1 = 0.0, c2 = 0.0, c3 = 0.0, sigma = 0.0, swde = 0.0, swdu = 0.0, swp = 0.0;
         double swl = 0.0, swb = 0.0, todo = 0.0, lon = 0.0, lat = 0.0, doppler = 0;
-        int projection = Gildas30m.PROJECTION_RADIO, veltype = 1, mode = 1, otfn = 0;
-        int otfh = 0, otfd = 0, otfdu = 0, nph = 0, swm = 0, version = 2, block = 0, kind = 0, quality = 0;
+        int projection = Gildas30m.PROJECTION_RADIO, veltype = 1, mode = 1;
+        int nph = 0, version = 2, block = 0, kind = 0, quality = 0;
         String source = "", line = "";
         int observationNumber = 0;
         double offsetX = 0, offsetY = 0;
@@ -1755,71 +1751,71 @@ public class Spectrum30m implements Serializable
 		lst = AstroDate.getDayFraction(alst.jd()) * 24.0;
 
         map = new TreeMap<String,Parameter>();
-        map.put(new String(Gildas30m.LDOBS), new Parameter(ConverterFactory.getGILDASdate(jdObs), Gildas30m.LDOBS_DESC));
-        map.put(new String(Gildas30m.LDRED), new Parameter(ConverterFactory.getGILDASdate(jdRed), Gildas30m.LDRED_DESC));
-        map.put(new String(Gildas30m.UT_TIME), new Parameter(ut, Gildas30m.UT_TIME_DESC));
-        map.put(new String(Gildas30m.LST_TIME), new Parameter(lst, Gildas30m.LST_TIME_DESC));
-        map.put(new String(Gildas30m.AZIMUTH), new Parameter(az, Gildas30m.AZIMUTH_DESC));
-        map.put(new String(Gildas30m.ELEVATION), new Parameter(el, Gildas30m.ELEVATION_DESC));
-        map.put(new String(Gildas30m.TAU), new Parameter(tau, Gildas30m.TAU_DESC));
-        map.put(new String(Gildas30m.TSYS), new Parameter(tsys, Gildas30m.TSYS_DESC));
-        map.put(new String(Gildas30m.INTEG), new Parameter(integt, Gildas30m.INTEG_DESC));
-        map.put(new String(Gildas30m.SOURCE), new Parameter(source, Gildas30m.SOURCE_DESC));
-        map.put(new String(Gildas30m.EPOCH), new Parameter(epoch, Gildas30m.EPOCH_DESC));
-        map.put(new String(Gildas30m.LAMBDA), new Parameter(lamb, Gildas30m.LAMBDA_DESC));
-        map.put(new String(Gildas30m.BETA), new Parameter(beta, Gildas30m.BETA_DESC));
-        map.put(new String(Gildas30m.LAMBDA_OFF), new Parameter(lamboff, Gildas30m.LAMBDA_OFF_DESC));
-        map.put(new String(Gildas30m.BETA_OFF), new Parameter(betaoff, Gildas30m.BETA_OFF_DESC));
-        map.put(new String(Gildas30m.PROJECTION), new Parameter(projection, Gildas30m.PROJECTION_DESC));
-        map.put(new String(Gildas30m.LINE), new Parameter(line, Gildas30m.LINE_DESC));
-        map.put(new String(Gildas30m.REF_FREQ), new Parameter(rfreq, Gildas30m.REF_FREQ_DESC));
-        map.put(new String(Gildas30m.NCHAN), new Parameter(nch, Gildas30m.NCHAN_DESC));
-        map.put(new String(Gildas30m.REF_CHAN), new Parameter((double)refch, Gildas30m.REF_CHAN_DESC));
-        map.put(new String(Gildas30m.FREQ_RESOL), new Parameter(freqres, Gildas30m.FREQ_RESOL_DESC));
-        map.put(new String(Gildas30m.FREQ_OFF), new Parameter(freqoff, Gildas30m.FREQ_OFF_DESC));
-        map.put(new String(Gildas30m.VEL_RESOL), new Parameter(velres, Gildas30m.VEL_RESOL_DESC));
-        map.put(new String(Gildas30m.REF_VEL), new Parameter(v0, Gildas30m.REF_VEL_DESC));
-        map.put(new String(Gildas30m.BAD), new Parameter(bad, Gildas30m.BAD_DESC));
-        map.put(new String(Gildas30m.IMAGE), new Parameter(imgfreq, Gildas30m.IMAGE_DESC));
-        map.put(new String(Gildas30m.VEL_TYPE), new Parameter(veltype, Gildas30m.VEL_TYPE_DESC));
-        map.put(new String(Gildas30m.DOPPLER), new Parameter(doppler, Gildas30m.DOPPLER_DESC));
-        map.put(new String(Gildas30m.BEAM_EFF), new Parameter(beameff, Gildas30m.BEAM_EFF_DESC));
-        map.put(new String(Gildas30m.FORW_EFF), new Parameter(foreff, Gildas30m.FORW_EFF_DESC));
-        map.put(new String(Gildas30m.GAIN_IM), new Parameter(gainim, Gildas30m.GAIN_IM_DESC));
-        map.put(new String(Gildas30m.H2OMM), new Parameter(h2omm, Gildas30m.H2OMM_DESC));
-        map.put(new String(Gildas30m.PAMB), new Parameter(pamb, Gildas30m.PAMB_DESC));
-        map.put(new String(Gildas30m.TAMB), new Parameter(tamb, Gildas30m.TAMB_DESC));
-        map.put(new String(Gildas30m.TATMSIG), new Parameter(tatmsig, Gildas30m.TATMSIG_DESC));
-        map.put(new String(Gildas30m.TCHOP), new Parameter(tchop, Gildas30m.TCHOP_DESC));
-        map.put(new String(Gildas30m.TCOLD), new Parameter(tcold, Gildas30m.TCOLD_DESC));
-        map.put(new String(Gildas30m.TAUSIG), new Parameter(tausig, Gildas30m.TAUSIG_DESC));
-        map.put(new String(Gildas30m.TAUIMA), new Parameter(tauima, Gildas30m.TAUIMA_DESC));
-        map.put(new String(Gildas30m.TREC), new Parameter(trec, Gildas30m.TREC_DESC));
-        map.put(new String(Gildas30m.MODE), new Parameter(mode, Gildas30m.MODE_DESC));
-        map.put(new String(Gildas30m.FACTOR), new Parameter(factor, Gildas30m.FACTOR_DESC));
-        map.put(new String(Gildas30m.ALTITUDE), new Parameter(altitude, Gildas30m.ALTITUDE_DESC));
-        map.put(new String(Gildas30m.COUNT1), new Parameter(c1, Gildas30m.COUNT1_DESC));
-        map.put(new String(Gildas30m.COUNT2), new Parameter(c2, Gildas30m.COUNT2_DESC));
-        map.put(new String(Gildas30m.COUNT3), new Parameter(c3, Gildas30m.COUNT3_DESC));
-        map.put(new String(Gildas30m.LON), new Parameter(lon, Gildas30m.LON_DESC));
-        map.put(new String(Gildas30m.LAT), new Parameter(lat, Gildas30m.LAT_DESC));
+        map.put(Gildas30m.LDOBS, new Parameter(ConverterFactory.getGILDASdate(jdObs), Gildas30m.LDOBS_DESC));
+        map.put(Gildas30m.LDRED, new Parameter(ConverterFactory.getGILDASdate(jdRed), Gildas30m.LDRED_DESC));
+        map.put(Gildas30m.UT_TIME, new Parameter(ut, Gildas30m.UT_TIME_DESC));
+        map.put(Gildas30m.LST_TIME, new Parameter(lst, Gildas30m.LST_TIME_DESC));
+        map.put(Gildas30m.AZIMUTH, new Parameter(az, Gildas30m.AZIMUTH_DESC));
+        map.put(Gildas30m.ELEVATION, new Parameter(el, Gildas30m.ELEVATION_DESC));
+        map.put(Gildas30m.TAU, new Parameter(tau, Gildas30m.TAU_DESC));
+        map.put(Gildas30m.TSYS, new Parameter(tsys, Gildas30m.TSYS_DESC));
+        map.put(Gildas30m.INTEG, new Parameter(integt, Gildas30m.INTEG_DESC));
+        map.put(Gildas30m.SOURCE, new Parameter(source, Gildas30m.SOURCE_DESC));
+        map.put(Gildas30m.EPOCH, new Parameter(epoch, Gildas30m.EPOCH_DESC));
+        map.put(Gildas30m.LAMBDA, new Parameter(lamb, Gildas30m.LAMBDA_DESC));
+        map.put(Gildas30m.BETA, new Parameter(beta, Gildas30m.BETA_DESC));
+        map.put(Gildas30m.LAMBDA_OFF, new Parameter(lamboff, Gildas30m.LAMBDA_OFF_DESC));
+        map.put(Gildas30m.BETA_OFF, new Parameter(betaoff, Gildas30m.BETA_OFF_DESC));
+        map.put(Gildas30m.PROJECTION, new Parameter(projection, Gildas30m.PROJECTION_DESC));
+        map.put(Gildas30m.LINE, new Parameter(line, Gildas30m.LINE_DESC));
+        map.put(Gildas30m.REF_FREQ, new Parameter(rfreq, Gildas30m.REF_FREQ_DESC));
+        map.put(Gildas30m.NCHAN, new Parameter(nch, Gildas30m.NCHAN_DESC));
+        map.put(Gildas30m.REF_CHAN, new Parameter(refch, Gildas30m.REF_CHAN_DESC));
+        map.put(Gildas30m.FREQ_RESOL, new Parameter(freqres, Gildas30m.FREQ_RESOL_DESC));
+        map.put(Gildas30m.FREQ_OFF, new Parameter(freqoff, Gildas30m.FREQ_OFF_DESC));
+        map.put(Gildas30m.VEL_RESOL, new Parameter(velres, Gildas30m.VEL_RESOL_DESC));
+        map.put(Gildas30m.REF_VEL, new Parameter(v0, Gildas30m.REF_VEL_DESC));
+        map.put(Gildas30m.BAD, new Parameter(bad, Gildas30m.BAD_DESC));
+        map.put(Gildas30m.IMAGE, new Parameter(imgfreq, Gildas30m.IMAGE_DESC));
+        map.put(Gildas30m.VEL_TYPE, new Parameter(veltype, Gildas30m.VEL_TYPE_DESC));
+        map.put(Gildas30m.DOPPLER, new Parameter(doppler, Gildas30m.DOPPLER_DESC));
+        map.put(Gildas30m.BEAM_EFF, new Parameter(beameff, Gildas30m.BEAM_EFF_DESC));
+        map.put(Gildas30m.FORW_EFF, new Parameter(foreff, Gildas30m.FORW_EFF_DESC));
+        map.put(Gildas30m.GAIN_IM, new Parameter(gainim, Gildas30m.GAIN_IM_DESC));
+        map.put(Gildas30m.H2OMM, new Parameter(h2omm, Gildas30m.H2OMM_DESC));
+        map.put(Gildas30m.PAMB, new Parameter(pamb, Gildas30m.PAMB_DESC));
+        map.put(Gildas30m.TAMB, new Parameter(tamb, Gildas30m.TAMB_DESC));
+        map.put(Gildas30m.TATMSIG, new Parameter(tatmsig, Gildas30m.TATMSIG_DESC));
+        map.put(Gildas30m.TCHOP, new Parameter(tchop, Gildas30m.TCHOP_DESC));
+        map.put(Gildas30m.TCOLD, new Parameter(tcold, Gildas30m.TCOLD_DESC));
+        map.put(Gildas30m.TAUSIG, new Parameter(tausig, Gildas30m.TAUSIG_DESC));
+        map.put(Gildas30m.TAUIMA, new Parameter(tauima, Gildas30m.TAUIMA_DESC));
+        map.put(Gildas30m.TREC, new Parameter(trec, Gildas30m.TREC_DESC));
+        map.put(Gildas30m.MODE, new Parameter(mode, Gildas30m.MODE_DESC));
+        map.put(Gildas30m.FACTOR, new Parameter(factor, Gildas30m.FACTOR_DESC));
+        map.put(Gildas30m.ALTITUDE, new Parameter(altitude, Gildas30m.ALTITUDE_DESC));
+        map.put(Gildas30m.COUNT1, new Parameter(c1, Gildas30m.COUNT1_DESC));
+        map.put(Gildas30m.COUNT2, new Parameter(c2, Gildas30m.COUNT2_DESC));
+        map.put(Gildas30m.COUNT3, new Parameter(c3, Gildas30m.COUNT3_DESC));
+        map.put(Gildas30m.LON, new Parameter(lon, Gildas30m.LON_DESC));
+        map.put(Gildas30m.LAT, new Parameter(lat, Gildas30m.LAT_DESC));
         map.put(Gildas30m.OFF1, new Parameter(offsetX, Gildas30m.OFF1_DESC));
         map.put(Gildas30m.OFF2, new Parameter(offsetY, Gildas30m.OFF2_DESC));
         map.put(Gildas30m.LAMBDA_OFF, new Parameter(offsetX, Gildas30m.LAMBDA_OFF_DESC));
         map.put(Gildas30m.BETA_OFF, new Parameter(offsetY, Gildas30m.BETA_OFF_DESC));
 //        map.put(Gildas30m.OTF_NDUMPS, new Parameter(otfn, Gildas30m.OTF_NDUMPS_DESC));
-//        map.put(new String(Gildas30m.OTF_LEN_HEADER), new Parameter(otfh, Gildas30m.OTF_LEN_HEADER_DESC));
-//        map.put(new String(Gildas30m.OTF_LEN_DATA), new Parameter(otfd, Gildas30m.OTF_LEN_DATA_DESC));
-//        map.put(new String(Gildas30m.OTF_LEN_DUMP), new Parameter(otfdu, Gildas30m.OTF_LEN_DUMP_DESC));
+//        map.put(Gildas30m.OTF_LEN_HEADER, new Parameter(otfh, Gildas30m.OTF_LEN_HEADER_DESC));
+//        map.put(Gildas30m.OTF_LEN_DATA, new Parameter(otfd, Gildas30m.OTF_LEN_DATA_DESC));
+//        map.put(Gildas30m.OTF_LEN_DUMP, new Parameter(otfdu, Gildas30m.OTF_LEN_DUMP_DESC));
 //        map.put(Gildas30m.NPHASE, new Parameter(nph, Gildas30m.NPHASE_DESC));
 //        map.put(Gildas30m.SWMODE, new Parameter(swm, Gildas30m.SWMODE_DESC));
         for(int i1 = 0; i1 < nph; i1++)
         {
-            map.put(new String((new StringBuilder()).append(Gildas30m.SWDECALAGE).append(i1).toString()), new Parameter(swde, Gildas30m.SWDECALAGE_DESC));
-            map.put(new String((new StringBuilder()).append(Gildas30m.SWDURATION).append(i1).toString()), new Parameter(swdu, Gildas30m.SWDURATION_DESC));
-            map.put(new String((new StringBuilder()).append(Gildas30m.SWPOIDS).append(i1).toString()), new Parameter(swp, Gildas30m.SWPOIDS_DESC));
-            map.put(new String((new StringBuilder()).append(Gildas30m.SWLDECAL).append(i1).toString()), new Parameter(swl, Gildas30m.SWLDECAL_DESC));
-            map.put(new String((new StringBuilder()).append(Gildas30m.SWBDECAL).append(i1).toString()), new Parameter(swb, Gildas30m.SWBDECAL_DESC));
+            map.put((new StringBuilder().append(Gildas30m.SWDECALAGE).append(i1).toString()), new Parameter(swde, Gildas30m.SWDECALAGE_DESC));
+            map.put((new StringBuilder().append(Gildas30m.SWDURATION).append(i1).toString()), new Parameter(swdu, Gildas30m.SWDURATION_DESC));
+            map.put((new StringBuilder().append(Gildas30m.SWPOIDS).append(i1).toString()), new Parameter(swp, Gildas30m.SWPOIDS_DESC));
+            map.put((new StringBuilder().append(Gildas30m.SWLDECAL).append(i1).toString()), new Parameter(swl, Gildas30m.SWLDECAL_DESC));
+            map.put((new StringBuilder().append(Gildas30m.SWBDECAL).append(i1).toString()), new Parameter(swb, Gildas30m.SWBDECAL_DESC));
         }
         map.put(Gildas30m.SIGMA, new Parameter(sigma, Gildas30m.SIGMA_DESC));
 
@@ -2141,13 +2137,13 @@ public class Spectrum30m implements Serializable
 				byte b0[] = new byte[4];
 				for (int j=0; j<sp[i].data.length; j++)
 				{
-					convert.writeFloat(b0, off, (float) sp[i].data[j]);
-                	int n = j*4;
-                	b[n] = b0[0];
-                	b[n+1] = b0[1];
-                	b[n+2] = b0[2];
-                	b[n+3] = b0[3];
-//					Spectrum30m.writeBytes(file, convert, off, (float) sp[i].data[j]);
+					convert.writeFloat(b0, off, sp[i].data[j]);
+					int n = j*4;
+					b[n] = b0[0];
+					b[n+1] = b0[1];
+					b[n+2] = b0[2];
+					b[n+3] = b0[3];
+					//Spectrum30m.writeBytes(file, convert, off, sp[i].data[j]);
 				}
 				file.write(b);
 
@@ -2216,9 +2212,9 @@ public class Spectrum30m implements Serializable
 	 * @throws JPARSECException If an error occurs.
 	 */
 	public void resample(Spectrum30m s30m) throws JPARSECException {
-		double refchan = Double.parseDouble(((Parameter) s30m.get(Gildas30m.REF_CHAN)).value);
-		double vref = Double.parseDouble(((Parameter) s30m.get(Gildas30m.REF_VEL)).value);
-		double vres = Double.parseDouble(((Parameter) s30m.get(Gildas30m.VEL_RESOL)).value);
+		double refchan = Double.parseDouble((s30m.get(Gildas30m.REF_CHAN)).value);
+		double vref = Double.parseDouble((s30m.get(Gildas30m.REF_VEL)).value);
+		double vres = Double.parseDouble((s30m.get(Gildas30m.VEL_RESOL)).value);
 		int nchan = s30m.getNumberOfChannels();
 
 		float newData[] = new float[nchan];
@@ -2256,7 +2252,7 @@ public class Spectrum30m implements Serializable
 			chanf = tmp;
 		}
 		if (chan0 > 1) {
-			double refchan = Double.parseDouble(((Parameter) get(Gildas30m.REF_CHAN)).value);
+			double refchan = Double.parseDouble((get(Gildas30m.REF_CHAN)).value);
 			refchan -= (chan0 - 1.0);
 			this.put(Gildas30m.REF_CHAN, new Parameter(refchan, Gildas30m.REF_CHAN_DESC));
 		}
@@ -2271,14 +2267,14 @@ public class Spectrum30m implements Serializable
 	 * @throws JPARSECException In case the date value is not available.
 	 */
 	public AstroDate getObservationDate() throws JPARSECException {
-		String d = ((Parameter) get(Gildas30m.LDOBS)).value;
+		String d = (get(Gildas30m.LDOBS)).value;
 		if (!DataSet.isDoubleStrictCheck(d)) {
 			d = getHeader().getHeaderParameters()[6].value;
 			if (!DataSet.isDoubleStrictCheck(d))
 				throw new JPARSECException("Value for observation date is not available");
 		}
 		int date = Integer.parseInt(d);
-		double time = Double.parseDouble(((Parameter) get(Gildas30m.UT_TIME)).value);
+		double time = Double.parseDouble((get(Gildas30m.UT_TIME)).value);
 		AstroDate astro = ConverterFactory.getAstroDate(date);
 		astro.add(time / 24.0);
 		return astro;
@@ -2290,7 +2286,7 @@ public class Spectrum30m implements Serializable
 	 * @throws JPARSECException In case the spectrum has no doppler factor in its header.
 	 */
 	public void modifyRestFrequency(double freq) throws JPARSECException {
-		double restFreq = Double.parseDouble(((Parameter) get(Gildas30m.REF_FREQ)).value);
+		double restFreq = Double.parseDouble((get(Gildas30m.REF_FREQ)).value);
 		if (freq != restFreq) {
 	    	double fres = - this.getVelocityResolution() * restFreq / (Constant.SPEED_OF_LIGHT * 0.001);
 			double vres = -fres * (Constant.SPEED_OF_LIGHT * 0.001) / freq;
@@ -2301,8 +2297,8 @@ public class Spectrum30m implements Serializable
 				EphemerisElement eph = new EphemerisElement(TARGET.NOT_A_PLANET, EphemerisElement.COORDINATES_TYPE.APPARENT,
 						EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.TOPOCENTRIC, EphemerisElement.REDUCTION_METHOD.IAU_2006,
 						EphemerisElement.FRAME.DYNAMICAL_EQUINOX_J2000, EphemerisElement.ALGORITHM.MOSHIER);
-				double ra = Double.parseDouble(((Parameter) get(Gildas30m.LAMBDA)).value);
-				double dec = Double.parseDouble(((Parameter) get(Gildas30m.BETA)).value);
+				double ra = Double.parseDouble((get(Gildas30m.LAMBDA)).value);
+				double dec = Double.parseDouble((get(Gildas30m.BETA)).value);
 				LocationElement locEq = new LocationElement(ra, dec, 1);
 
 				double JD_TDB = TimeScale.getJD(time, obs, eph, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
@@ -2321,8 +2317,8 @@ public class Spectrum30m implements Serializable
 						EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.TOPOCENTRIC, EphemerisElement.REDUCTION_METHOD.IAU_2006,
 						EphemerisElement.FRAME.DYNAMICAL_EQUINOX_J2000, EphemerisElement.ALGORITHM.MOSHIER);
 
-				double ra = Double.parseDouble(((Parameter) get(Gildas30m.LAMBDA)).value);
-				double dec = Double.parseDouble(((Parameter) get(Gildas30m.BETA)).value);
+				double ra = Double.parseDouble((get(Gildas30m.LAMBDA)).value);
+				double dec = Double.parseDouble((get(Gildas30m.BETA)).value);
 				LocationElement locEq = new LocationElement(ra, dec, 1);
 				double vr = StarEphem.getRadialVelocity(time, obs, eph, locEq);
 			} catch (JPARSECException e) {
@@ -2334,14 +2330,14 @@ public class Spectrum30m implements Serializable
 	    	if (!keyExists(Gildas30m.DOPPLER)) {
 	    		JPARSECException.addWarning("Spectrum with an unknown doppler factor.");
 	    	} else {
-	    		doppler = Double.parseDouble(((Parameter) get(Gildas30m.DOPPLER)).value);
+	    		doppler = Double.parseDouble((get(Gildas30m.DOPPLER)).value);
 	    	}
 			double refchan = getReferenceChannel() + ((freq - restFreq) / fres) * (1.0 + doppler);
 
 			this.put(Gildas30m.VEL_RESOL, new Parameter(vres, Gildas30m.VEL_RESOL_DESC));
 			this.put(Gildas30m.REF_FREQ, new Parameter(freq, Gildas30m.REF_FREQ_DESC));
 			this.put(Gildas30m.REF_CHAN, new Parameter(refchan, Gildas30m.REF_CHAN_DESC));
-			double img = Double.parseDouble(((Parameter) get(Gildas30m.IMAGE)).value);
+			double img = Double.parseDouble((get(Gildas30m.IMAGE)).value);
 			this.put(Gildas30m.IMAGE, new Parameter(img+(restFreq-freq), Gildas30m.IMAGE_DESC));
 		}
 	}
@@ -2352,16 +2348,16 @@ public class Spectrum30m implements Serializable
 	 * @throws JPARSECException If an error occurs.
 	 */
 	public void modifyVelocityLSR(double vel) throws JPARSECException {
-		double vref = Double.parseDouble(((Parameter) get(Gildas30m.REF_VEL)).value);
+		double vref = Double.parseDouble((get(Gildas30m.REF_VEL)).value);
 		if (vel != vref) {
-			double restFreq = Double.parseDouble(((Parameter) get(Gildas30m.REF_FREQ)).value);
+			double restFreq = Double.parseDouble((get(Gildas30m.REF_FREQ)).value);
 	    	double fres = - this.getVelocityResolution() * restFreq / (Constant.SPEED_OF_LIGHT * 0.001);
 
 	    	double doppler0 = 0.0;
 	    	if (!keyExists(Gildas30m.DOPPLER)) {
 	    		JPARSECException.addWarning("Spectrum with an unknown doppler factor.");
 	    	} else {
-	    		doppler0 = Double.parseDouble(((Parameter) get(Gildas30m.DOPPLER)).value);
+	    		doppler0 = Double.parseDouble((get(Gildas30m.DOPPLER)).value);
 	    	}
 			double dopplerAdd = (vref - vel) / (0.001 * Constant.SPEED_OF_LIGHT);
 			double doppler = doppler0 + dopplerAdd;
@@ -2370,7 +2366,7 @@ public class Spectrum30m implements Serializable
 			this.put(Gildas30m.DOPPLER, new Parameter(doppler, Gildas30m.DOPPLER_DESC));
 			this.put(Gildas30m.REF_VEL, new Parameter(vel, Gildas30m.REF_VEL_DESC));
 			this.put(Gildas30m.REF_CHAN, new Parameter(refchan, Gildas30m.REF_CHAN_DESC));
-			double img = Double.parseDouble(((Parameter) get(Gildas30m.IMAGE)).value);
+			double img = Double.parseDouble((get(Gildas30m.IMAGE)).value);
 		    img = img * (1.0 + doppler0) / (1.0 + doppler) - restFreq * dopplerAdd / (1.0 + doppler);
 			this.put(Gildas30m.IMAGE, new Parameter(img, Gildas30m.IMAGE_DESC));
 		}

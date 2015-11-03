@@ -109,11 +109,7 @@ public class DustOpacity implements Serializable
 	 */
 	public DustOpacity(int type, double p, double max, double abundance) throws JPARSECException
 	{
-		this.grainType = type;
-		this.sizeDistributionCoefficient = p;
-		this.sizeMax = max;
-		this.grainDensity = getDustDefaultDensity();
-		this.abundanceFraction = abundance;
+		this(type, p, max, 0.0, abundance);
 	}
 
 	/**
@@ -230,7 +226,7 @@ public class DustOpacity implements Serializable
 				try {
 					grainSize = Double.parseDouble(FileIO.getField(1, line, " ", true));
 				} catch (Exception e) {	}
-				sizes.add(new Double(grainSize));
+				sizes.add(grainSize);
 
 				ArrayList<Double> rcoefs = new ArrayList<Double>();
 				ArrayList<Double> icoefs = new ArrayList<Double>();
@@ -242,10 +238,10 @@ public class DustOpacity implements Serializable
 						if (!wavelengthsRead)
 						{
 							double wave = Double.parseDouble(FileIO.getField(1, line, " ", true));
-							wavelengths.add(new Double(wave));
+							wavelengths.add(wave);
 						}
-						rcoefs.add(new Double(Double.parseDouble(FileIO.getField(4+iceWater, line, " ", true))));
-						icoefs.add(new Double(Double.parseDouble(FileIO.getField(5+iceWater, line, " ", true))));
+						rcoefs.add(Double.parseDouble(FileIO.getField(4+iceWater, line, " ", true)));
+						icoefs.add(Double.parseDouble(FileIO.getField(5+iceWater, line, " ", true)));
 					}
 					i++;
 				} while (!line.equals("") && i < v.size());
@@ -307,7 +303,7 @@ public class DustOpacity implements Serializable
 			{
 				i = i + 2;
 				double grainSize = Double.parseDouble(FileIO.getField(1, line, " ", true));
-				sizes.add(new Double(grainSize));
+				sizes.add(grainSize);
 
 				ArrayList<Double> rcoefs = new ArrayList<Double>();
 				ArrayList<Double> icoefs = new ArrayList<Double>();
@@ -319,10 +315,10 @@ public class DustOpacity implements Serializable
 						if (!wavelengthsRead)
 						{
 							double wave = Double.parseDouble(FileIO.getField(1, line, " ", true));
-							wavelengths.add(new Double(wave));
+							wavelengths.add(wave);
 						}
-						rcoefs.add(new Double(Double.parseDouble(FileIO.getField(4+iceWater, line, " ", true))));
-						icoefs.add(new Double(Double.parseDouble(FileIO.getField(5+iceWater, line, " ", true))));
+						rcoefs.add(Double.parseDouble(FileIO.getField(4+iceWater, line, " ", true)));
+						icoefs.add(Double.parseDouble(FileIO.getField(5+iceWater, line, " ", true)));
 					}
 					i++;
 				} while (!line.equals("") && i < v.size());
@@ -465,36 +461,21 @@ public class DustOpacity implements Serializable
 	 */
 	public double getDustDefaultSublimationTemperature() throws JPARSECException
 	{
-		int grain = this.grainType;
-		double Tsub = 0.0;
-		switch (grain)
+		switch (this.grainType)
 		{
-		case DustOpacity.GRAIN_ASTRONOMICAL_SILICATE:
-			Tsub = 1500.0;
-			break;
 		case DustOpacity.GRAIN_GRAPHITE:
-			Tsub = 2500.0;
-			break;
+			return 2500.0;
 		case DustOpacity.GRAIN_WATER_ICE:
-			Tsub = 150.0;
-			break;
+			return 150.0;
+		case DustOpacity.GRAIN_ASTRONOMICAL_SILICATE:
 		case DustOpacity.GRAIN_PAH_CARBONACEOUS_ION:
-			Tsub = 1500.0;
-			break;
 		case DustOpacity.GRAIN_PAH_CARBONACEOUS_NEUTRAL:
-			Tsub = 1500.0;
-			break;
 		case DustOpacity.GRAIN_SILICON_CARBIDE:
-			Tsub = 1500.0;
-			break;
 		case DustOpacity.GRAIN_SMOOTHED_UV_ASTRONOMICAL_SILICATE:
-			Tsub = 1500.0;
-			break;
+			return 1500.0;
 		default:
 			throw new JPARSECException("invalid grain.");
 		}
-
-		return Tsub;
 	}
 
 	/**
@@ -553,7 +534,7 @@ public class DustOpacity implements Serializable
 	 */
 	public double[] getMieCoefficients(double wavelength, int np) throws JPARSECException
 	{
-		double k[] = new double[] {0.0, 0.0, 0.0, 0.0, 0.0};
+		double k[];
 		if (this.grainType == DustOpacity.GRAIN_PAH_CARBONACEOUS_ION ||
 				this.grainType == DustOpacity.GRAIN_PAH_CARBONACEOUS_NEUTRAL)
 			throw new JPARSECException("cannot apply Mie theory to this grain.");
@@ -788,12 +769,12 @@ public class DustOpacity implements Serializable
 				{
 					String line = v.get(i);
 					if (!line.startsWith("!")) {
-						waves.add(new Double(Double.parseDouble(FileIO.getField(1, line, " ", true))));
-						coefs.add(new Double(Double.parseDouble(FileIO.getField(field, line, " ", true))));
-						coefs2.add(new Double(Math.pow(10.0, field-3.0)));
-						waves.add(new Double(Double.parseDouble(FileIO.getField(1, line, " ", true))));
-						coefs.add(new Double(Double.parseDouble(FileIO.getField(field2, line, " ", true))));
-						coefs2.add(new Double(Math.pow(10.0, field2-3.0)));
+						waves.add(Double.parseDouble(FileIO.getField(1, line, " ", true)));
+						coefs.add(Double.parseDouble(FileIO.getField(field, line, " ", true)));
+						coefs2.add(Math.pow(10.0, field-3.0));
+						waves.add(Double.parseDouble(FileIO.getField(1, line, " ", true)));
+						coefs.add(Double.parseDouble(FileIO.getField(field2, line, " ", true)));
+						coefs2.add(Math.pow(10.0, field2-3.0));
 					}
 				}
 				double w[] = DataSet.arrayListToDoubleArray(waves);
@@ -812,8 +793,8 @@ public class DustOpacity implements Serializable
 				{
 					String line = v.get(i);
 					if (!line.startsWith("!")) {
-						waves.add(new Double(Double.parseDouble(FileIO.getField(1, line, " ", true))));
-						coefs.add(new Double(Double.parseDouble(FileIO.getField(field, line, " ", true))));
+						waves.add(Double.parseDouble(FileIO.getField(1, line, " ", true)));
+						coefs.add(Double.parseDouble(FileIO.getField(field, line, " ", true)));
 					}
 				}
 				double w[] = DataSet.arrayListToDoubleArray(waves);
@@ -837,9 +818,9 @@ public class DustOpacity implements Serializable
 			{
 				String line = v.get(i);
 				if (!line.startsWith("!")) {
-					waves.add(new Double(Double.parseDouble(FileIO.getField(1, line, " ", true))));
-					coefs.add(new Double(Double.parseDouble(FileIO.getField(field, line, " ", true))));
-					coefs2.add(new Double(dust.sizeDistributionCoefficient));
+					waves.add(Double.parseDouble(FileIO.getField(1, line, " ", true)));
+					coefs.add(Double.parseDouble(FileIO.getField(field, line, " ", true)));
+					coefs2.add(dust.sizeDistributionCoefficient);
 				}
 			}
 
@@ -854,9 +835,9 @@ public class DustOpacity implements Serializable
 			{
 				String line = v2.get(i);
 				if (!line.startsWith("!")) {
-					waves.add(new Double(Double.parseDouble(FileIO.getField(1, line, " ", true))));
-					coefs.add(new Double(Double.parseDouble(FileIO.getField(field, line, " ", true))));
-					coefs2.add(new Double(dust.sizeDistributionCoefficient));
+					waves.add(Double.parseDouble(FileIO.getField(1, line, " ", true)));
+					coefs.add(Double.parseDouble(FileIO.getField(field, line, " ", true)));
+					coefs2.add(dust.sizeDistributionCoefficient);
 				}
 			}
 			double w[] = DataSet.arrayListToDoubleArray(waves);
@@ -942,8 +923,8 @@ public class DustOpacity implements Serializable
 		{
 			String line = v.get(i);
 			if (!line.startsWith("!")) {
-				waves.add(new Double(Double.parseDouble(FileIO.getField(1, line, " ", true))));
-				coefs.add(new Double(Double.parseDouble(FileIO.getField(field, line, " ", true))));
+				waves.add(Double.parseDouble(FileIO.getField(1, line, " ", true)));
+				coefs.add(Double.parseDouble(FileIO.getField(field, line, " ", true)));
 			}
 		}
 		double w[] = DataSet.arrayListToDoubleArray(waves);
@@ -1467,23 +1448,23 @@ public class DustOpacity implements Serializable
 
 			serie ++;
 			ChartSeriesElement chartSeries_k = new ChartSeriesElement(
-					(double[]) x.clone(),
-					(double[]) y_k.clone(), null, null,
+					x.clone(),
+					y_k.clone(), null, null,
 					"p = "+p, true, color[serie], ChartSeriesElement.SHAPE_CIRCLE,
 					ChartSeriesElement.REGRESSION.NONE);
 			chartSeries_k.showLines = true;
 			chartSeries_k.showShapes = false;
 			chartSeries_k.stroke = stroke[serie];
-			series_k[serie] = (ChartSeriesElement) chartSeries_k.clone();
+			series_k[serie] = chartSeries_k.clone();
 			ChartSeriesElement chartSeries_beta = new ChartSeriesElement(
-					(double[]) x.clone(),
-					(double[]) y_beta.clone(), null, null,
+					x.clone(),
+					y_beta.clone(), null, null,
 					"p = "+p, true, color[serie], ChartSeriesElement.SHAPE_CIRCLE,
 					ChartSeriesElement.REGRESSION.NONE);
 			chartSeries_beta.showLines = true;
 			chartSeries_beta.showShapes = false;
 			chartSeries_beta.stroke = stroke[serie];
-			series_beta[serie] = (ChartSeriesElement) chartSeries_beta.clone();
+			series_beta[serie] = chartSeries_beta.clone();
 		}
 
 		ChartElement chart_k = new ChartElement(series_k, ChartElement.TYPE.XY_CHART, ChartElement.SUBTYPE.XY_SCATTER,
@@ -1563,23 +1544,23 @@ public class DustOpacity implements Serializable
 
 			serie ++;
 			ChartSeriesElement chartSeries_k = new ChartSeriesElement(
-					(double[]) x.clone(),
-					(double[]) y_k.clone(), null, null,
+					x.clone(),
+					y_k.clone(), null, null,
 					"p = "+p, true, color[serie], ChartSeriesElement.SHAPE_CIRCLE,
 					ChartSeriesElement.REGRESSION.NONE);
 			chartSeries_k.showLines = true;
 			chartSeries_k.showShapes = false;
 			chartSeries_k.stroke = stroke[serie];
-			series_k[serie] = (ChartSeriesElement) chartSeries_k.clone();
+			series_k[serie] = chartSeries_k.clone();
 			ChartSeriesElement chartSeries_beta = new ChartSeriesElement(
-					(double[]) x.clone(),
-					(double[]) y_beta.clone(), null, null,
+					x.clone(),
+					y_beta.clone(), null, null,
 					"p = "+p, true, color[serie], ChartSeriesElement.SHAPE_CIRCLE,
 					ChartSeriesElement.REGRESSION.NONE);
 			chartSeries_beta.showLines = true;
 			chartSeries_beta.showShapes = false;
 			chartSeries_beta.stroke = stroke[serie];
-			series_beta[serie] = (ChartSeriesElement) chartSeries_beta.clone();
+			series_beta[serie] = chartSeries_beta.clone();
 		}
 
 		ChartElement chart_k = new ChartElement(series_k, ChartElement.TYPE.XY_CHART, ChartElement.SUBTYPE.XY_SCATTER,

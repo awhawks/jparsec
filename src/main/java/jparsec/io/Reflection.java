@@ -157,7 +157,7 @@ public class Reflection {
 			Class srcC = src.getClass();
 			if (dest == null) {
 				Constructor c[] = srcC.getConstructors();
-				dest = c[0].newInstance(null);
+				dest = c[0].newInstance();
 			}
 			Class destC = dest.getClass();
 			if (!srcC.getName().equals(destC.getName())) throw new JPARSECException("Source and destination objects must be instances of the same class.");

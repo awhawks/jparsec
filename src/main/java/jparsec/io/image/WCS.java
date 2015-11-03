@@ -1240,7 +1240,7 @@ public class WCS implements Serializable
 				  this.getCdelt2() * 3600.0,
 				  this.getCrpix1(), this.getCrpix2(), width,
 				  height, this.getCrota2(),
-				  (int) (this.getEquinox()), this.getEpoch(),
+				  this.getEquinox(), this.getEpoch(),
 				  this.getProjectionAsString());
 
 		  // image coords
@@ -1284,7 +1284,7 @@ public class WCS implements Serializable
 				  this.getCdelt2() * 3600.0,
 				  this.getCrpix1(), this.getCrpix2(), width,
 				  height, this.getCrota2(),
-				  (int) (this.getEquinox()), this.getEpoch(),
+				  this.getEquinox(), this.getEpoch(),
 				  this.getProjectionAsString());
 
 		  Point2D.Double p;

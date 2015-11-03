@@ -297,20 +297,18 @@ public class CreateChart implements Serializable
 		try
 		{
 			// Using reflection so that everything will work without freehep in classpath
-			Class c = Class.forName("org.freehep.graphicsio.ps.PSGraphics2D");
-			Constructor cc = c.getConstructor(new Class[] {plotFile.getClass(), size.getClass()});
-			Object psGraphics = cc.newInstance(new Object[] {plotFile, size});
-			Method m = c.getMethod("startExport", null);
-			m.invoke(psGraphics, null);
+			Class<?> c = Class.forName("org.freehep.graphicsio.ps.PSGraphics2D");
+			Constructor<?> cc = c.getConstructor(new Class[] { File.class, Dimension.class });
+			Object psGraphics = cc.newInstance(new Object[] { plotFile, size });
+			Method m = c.getMethod("startExport");
+			m.invoke(psGraphics);
 			this.paintChart((Graphics2D) psGraphics, size_x, size_y);
-			Method mm = c.getMethod("endExport", null);
-			mm.invoke(psGraphics, null);
-
+			Method mm = c.getMethod("endExport");
+			mm.invoke(psGraphics);
 		} catch (Exception e)
 		{
 			throw new JPARSECException("cannot write to file.", e);
 		}
-
 	}
 
 	private void chartAsEPSFile(SimpleChartElement chart_elem, String file_name) throws JPARSECException
@@ -415,7 +413,6 @@ public class CreateChart implements Serializable
 		{
 			throw new JPARSECException(e);
 		}
-
 	}
 
 	private void chartAsPNGFile(SimpleChartElement chart_elem, String file_name) throws JPARSECException
@@ -494,15 +491,14 @@ public class CreateChart implements Serializable
 		try
 		{
 			// Using reflection so that everything will work without freehep in classpath
-			Class c = Class.forName("org.freehep.graphicsio.ps.PSGraphics2D");
-			Constructor cc = c.getConstructor(new Class[] {plotFile.getClass(), size.getClass()});
+			Class<?> c = Class.forName("org.freehep.graphicsio.ps.PSGraphics2D");
+			Constructor<?> cc = c.getConstructor(new Class[] {plotFile.getClass(), size.getClass()});
 			Object psGraphics = cc.newInstance(new Object[] {plotFile, size});
-			Method m = c.getMethod("startExport", null);
-			m.invoke(psGraphics, null);
+			Method m = c.getMethod("startExport");
+			m.invoke(psGraphics);
 			rPlot.getChart().draw((Graphics2D) psGraphics, new Rectangle2D.Double(0, 0, chart_elem.imageWidth, chart_elem.imageHeight));
-			Method mm = c.getMethod("endExport", null);
-			mm.invoke(psGraphics, null);
-
+			Method mm = c.getMethod("endExport");
+			mm.invoke(psGraphics);
 		} catch (Exception e)
 		{
 			throw new JPARSECException("cannot write to file.", e);
@@ -537,21 +533,19 @@ public class CreateChart implements Serializable
 		try
 		{
 			// Using reflection so that everything will work without freehep in classpath (not this)
-			Class c = Class.forName("org.freehep.graphicsio.pdf.PDFGraphics2D");
-			Constructor cc = c.getConstructor(new Class[] {plotFile.getClass(), size.getClass()});
+			Class<?> c = Class.forName("org.freehep.graphicsio.pdf.PDFGraphics2D");
+			Constructor<?> cc = c.getConstructor(new Class[] {plotFile.getClass(), size.getClass()});
 			Object pdfGraphics = cc.newInstance(new Object[] {plotFile, size});
-			Method m = c.getMethod("startExport", null);
-			m.invoke(pdfGraphics, null);
+			Method m = c.getMethod("startExport");
+			m.invoke(pdfGraphics);
 			rPlot.getChart().draw((Graphics2D) pdfGraphics, new Rectangle2D.Double(0, 0, chart_elem.imageWidth, chart_elem.imageHeight));
-			Method mm = c.getMethod("endExport", null);
-			mm.invoke(pdfGraphics, null);
-
+			Method mm = c.getMethod("endExport");
+			mm.invoke(pdfGraphics);
 		} catch (Exception e)
 		{
 			throw new JPARSECException("cannot write to file.", e);
 		}
 	}
-
 
 	/**
 	 * Creates a PNG file with the chart.
@@ -614,15 +608,14 @@ public class CreateChart implements Serializable
 		try
 		{
 			// Using reflection so that everything will work without freehep in classpath
-			Class c = Class.forName("org.freehep.graphicsio.svg.SVGGraphics2D");
-			Constructor cc = c.getConstructor(new Class[] {plotFile.getClass(), size.getClass()});
-			Object svgGraphics = cc.newInstance(new Object[] {plotFile, size});
-			Method m = c.getMethod("startExport", null);
-			m.invoke(svgGraphics, null);
+			Class<?> c = Class.forName("org.freehep.graphicsio.svg.SVGGraphics2D");
+			Constructor<?> cc = c.getConstructor(new Class[] { File.class, Dimension.class });
+			Object svgGraphics = cc.newInstance(new Object[] { plotFile, size });
+			Method m = c.getMethod("startExport");
+			m.invoke(svgGraphics);
 			rPlot.getChart().draw((Graphics2D) svgGraphics, new Rectangle2D.Double(0, 0, chart_elem.imageWidth, chart_elem.imageHeight));
-			Method mm = c.getMethod("endExport", null);
-			mm.invoke(svgGraphics, null);
-
+			Method mm = c.getMethod("endExport");
+			mm.invoke(svgGraphics);
 		} catch (Exception e)
 		{
 			throw new JPARSECException("cannot write to file.", e);
@@ -643,20 +636,19 @@ public class CreateChart implements Serializable
 		if (ext > 0) file_name = file_name.substring(0, ext);
 
 		File plotFile = new File(file_name + ".svg");
-
 		final Dimension size = new Dimension(size_x, size_y);
+
 		try
 		{
 			// Using reflection so that everything will work without freehep in classpath
-			Class c = Class.forName("org.freehep.graphicsio.svg.SVGGraphics2D");
-			Constructor cc = c.getConstructor(new Class[] {plotFile.getClass(), size.getClass()});
+			Class<?> c = Class.forName("org.freehep.graphicsio.svg.SVGGraphics2D");
+			Constructor<?> cc = c.getConstructor(new Class[] {File.class, Dimension.class });
 			Object svgGraphics = cc.newInstance(new Object[] {plotFile, size});
-			Method m = c.getMethod("startExport", null);
-			m.invoke(svgGraphics, null);
+			Method m = c.getMethod("startExport");
+			m.invoke(svgGraphics);
 			this.paintChart((Graphics2D) svgGraphics, size_x, size_y);
-			Method mm = c.getMethod("endExport", null);
-			mm.invoke(svgGraphics, null);
-
+			Method mm = c.getMethod("endExport");
+			mm.invoke(svgGraphics);
 		} catch (Exception e)
 		{
 			throw new JPARSECException("cannot write to file.", e);
@@ -924,7 +916,7 @@ public class CreateChart implements Serializable
           		   try {
           			   ChartElement ce = getChartElement();
           			   for (int i=0; i<ce.series.length; i++) {
-          				   if (ce.series[i].enable == false) {
+          				   if (!ce.series[i].enable) {
           					   ce.series[i].enable = true;
           					   break;
           				   }
@@ -939,7 +931,7 @@ public class CreateChart implements Serializable
           		   try {
           			   ChartElement ce = getChartElement();
           			   for (int i=ce.series.length-1; i>=0; i--) {
-          				   if (ce.series[i].enable == true) {
+          				   if (ce.series[i].enable) {
           					   ce.series[i].enable = false;
           					   break;
           				   }
@@ -972,6 +964,7 @@ public class CreateChart implements Serializable
             }
       });
 	}
+
 	private Picture p = null;
 	private transient ChartPanel chartPanel = null;
 

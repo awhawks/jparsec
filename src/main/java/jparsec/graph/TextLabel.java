@@ -109,11 +109,10 @@ public class TextLabel extends Object {
 		ALGEBRAIC
 	};
 
-  /*
-  ** Minimum Point size allowed for script characters
-  */
-     final static int MINIMUM_SIZE  =  6;
-
+  /**
+   ** Minimum Point size allowed for script characters
+   */
+  final static int MINIMUM_SIZE  =  6;
 
   /**
    * Decrease in size of successive script levels.
@@ -243,7 +242,6 @@ public class TextLabel extends Object {
      public TextLabel(String s, Font f) {
             this(s);
             font      = new Font(f.getName(), f.getStyle(), f.getSize());
-            if(font == null) return;
             fontname  = f.getName();
             fontstyle = f.getStyle();
             fontsize  = f.getSize();
@@ -551,7 +549,7 @@ public class TextLabel extends Object {
          */
            public int getWidth(Graphics g) {
 
-	    		if (text.indexOf("@") < 0 && text.indexOf("^") < 0 && text.indexOf("_") < 0) {
+	    		if (!text.contains("@") && !text.contains("^") && !text.contains("_")) {
 	    			width = g.getFontMetrics().stringWidth(text);
 	    		} else {
 	                parseText(g.create(), true);
@@ -566,11 +564,9 @@ public class TextLabel extends Object {
          * @return The height of the parsed text.
          */
            public int getHeight(Graphics g) {
-
                parseText(g.create(), true);
 
                return height;
-
            }
 
         /**
@@ -585,6 +581,7 @@ public class TextLabel extends Object {
 
                return ascent;
            }
+
         /**
          * Returns the maximum ascent.
          * @param g Graphics context.
@@ -609,8 +606,8 @@ public class TextLabel extends Object {
                parseText(g.create(), true);
 
                return descent;
-
            }
+
         /**
          * Returns the maximum descent.
          * @param g Graphics context.
@@ -635,7 +632,6 @@ public class TextLabel extends Object {
            parseText(g.create(), true);
 
            return leading;
-
        }
 
        /**
@@ -653,16 +649,16 @@ public class TextLabel extends Object {
         * @return True or false.
         */
        public boolean containSpecialCharacter() {
-    	   boolean special = false;
-    	   if (text == null) return special;
-    	   for (int i=15; i<commands.length; i++) {
-    		   int a = text.toLowerCase().indexOf("@"+commands[i]);
-    		   if (a >= 0) {
-    			   special = true;
-    			   break;
+           if (text == null) return false;
+
+           String lower = text.toLowerCase();
+    	   for (String cmd : commands) {
+    		   if (lower.contains("@" + cmd)) {
+    			   return true;
     		   }
     	   }
-    	   return special;
+
+    	   return false;
        }
        private static final String commands[] = new String[] {
     	     "RED", "GREEN", "BLUE", "SIZE", "BOLD", "ITALIC", "PLAIN", "BLACK", "WHITE",
@@ -736,7 +732,7 @@ public class TextLabel extends Object {
     	 Stack<TextState> state = new Stack<TextState>();
          TextState current = new TextState();
          char ch;
-         int w = 0;
+         int w;
 
          if(lg != g) parse = true;
          lg = g;
@@ -863,7 +859,7 @@ public class TextLabel extends Object {
                     			  int n = -1;
                     			  do {
                     				  n ++;
-                    			  } while (n+1 < t.length() && number.indexOf(t.substring(n,n+1)) >= 0 && n < 3);
+                    			  } while (n+1 < t.length() && number.contains(t.substring(n,n+1)) && n < 3);
                     			  if (n > 0) {
                         			  i = i + 6 + n - 1;
                         			  current.angle = DataSet.parseDouble(t.substring(0, n)) * Constant.DEG_TO_RAD;
@@ -1047,7 +1043,7 @@ public class TextLabel extends Object {
                       if (!state.isEmpty()) {
                           state.pop();
                           if (!state.isEmpty()) {
-                        	  current = ((TextState)state.peek()).copyState();
+                        	  current = state.peek().copyState();
                           }
                       }
                       if (listCopy.size() > 0) {
@@ -1093,7 +1089,7 @@ public class TextLabel extends Object {
 	   }
 
          for(int i=0; i<list.size(); i++) {
-            current = ((TextState)(list.elementAt(i)));
+            current = list.elementAt(i);
             width  += current.getWidth(g);
 
             if( !current.isEmpty() ) {
@@ -1114,7 +1110,7 @@ public class TextLabel extends Object {
       * @return true if the text has never been set or is null.
       */
      public boolean isNull() {
-    	 return (text==null);
+    	 return text == null;
      }
 	  /**
 	   * Parse the text then draws it.
@@ -1126,7 +1122,7 @@ public class TextLabel extends Object {
      public void draw(Graphics g, int x, int y, ALIGN j) {
          justification = j;
 
-         if( g == null ) return;
+         if (g == null) return;
 
          drawString(g, x, y);
        }
@@ -1150,7 +1146,7 @@ public class TextLabel extends Object {
 
          String t = "";
          for(int i=0; i<list.size(); i++) {
-        	 TextState ts = ((TextState)(list.elementAt(i)));
+        	 TextState ts = list.elementAt(i);
         	 if (ts.s != null) {
         		 for (int j=0; j<ts.s.length(); j++)
         		 {
@@ -1175,7 +1171,7 @@ public class TextLabel extends Object {
 
          String t = "";
          for(int i=0; i<tl.list.size(); i++) {
-        	 TextState ts = ((TextState)(tl.list.elementAt(i)));
+        	 TextState ts = tl.list.elementAt(i);
         	 if (ts.s != null) {
         		 for (int j=0; j<ts.s.length(); j++)
         		 {
@@ -1243,12 +1239,12 @@ public class TextLabel extends Object {
          // for Greek characters instead of using images, so that they will be in vector graphics.
          String graphics = lg.getClass().getName();
          boolean toPdf = false;
-         if (!graphics.equals("sun.java2d.SunGraphics2D") && graphics.toLowerCase().indexOf("pdfgraphics2d") >= 0) {
+         if (!graphics.equals("sun.java2d.SunGraphics2D") && graphics.toLowerCase().contains("pdfgraphics2d")) {
         	 toPdf = true;
          }
 
          for(int i=0; i<list.size(); i++) {
-              ts = ((TextState)(list.elementAt(i)));
+              ts = list.elementAt(i);
               int x = ts.x + xoffset;
               if (replaceX) x = rx;
 
@@ -1425,11 +1421,9 @@ public class TextLabel extends Object {
       *        {@linkplain TextLabel#script_fraction} variable.
       */
        public Font getScriptFont(Font f) {
-            int size;
-
             if(f == null) return f;
 
-            size = f.getSize();
+           int size = f.getSize();
 
             if(size <= MINIMUM_SIZE) return f;
 

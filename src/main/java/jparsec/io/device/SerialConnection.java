@@ -44,15 +44,21 @@
  */
 package jparsec.io.device;
 
-import gnu.io.*;
-import java.io.OutputStream;
-import java.io.InputStream;
+import gnu.io.CommPortIdentifier;
+import gnu.io.CommPortOwnershipListener;
+import gnu.io.NoSuchPortException;
+import gnu.io.PortInUseException;
+import gnu.io.SerialPort;
+import gnu.io.SerialPortEvent;
+import gnu.io.SerialPortEventListener;
+import gnu.io.UnsupportedCommOperationException;
 import java.io.IOException;
-import java.util.TooManyListenersException;
-import java.util.LinkedList;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
-
+import java.util.LinkedList;
+import java.util.TooManyListenersException;
 import jparsec.util.JPARSECException;
 /**
  * A class to handle communications with a serial connection.
@@ -93,8 +99,7 @@ public class SerialConnection implements SerialPortEventListener,
     private int parity = SerialPort.PARITY_NONE;
 
     /** Flow control */
-    private int flowControl = SerialPort.FLOWCONTROL_NONE
-        | SerialPort.FLOWCONTROL_NONE;
+    private int flowControl = SerialPort.FLOWCONTROL_NONE | SerialPort.FLOWCONTROL_NONE;
 
     /** Queue for receiving characters from comm port */
     private MessageQueue messageQueue = new MessageQueue();
@@ -172,7 +177,7 @@ public class SerialConnection implements SerialPortEventListener,
 
     /**
      * Set the serial port connection parameters
-     * @throws IOException may occur
+     * @throws JPARSECException may occur
      */
     private void setSerialPortConnectionParameters() throws JPARSECException {
 
@@ -203,7 +208,6 @@ public class SerialConnection implements SerialPortEventListener,
         if (!open) {
             return;
         }
-
 
         // Close streams if serialPort not null
         if (serialPort != null) {
@@ -237,42 +241,38 @@ public class SerialConnection implements SerialPortEventListener,
     * Handle Serial Port Events.
     * @param evt SerialPortEvent
     */
-    public void serialEvent(SerialPortEvent evt) {
-        int newData = 0;
+   public void serialEvent(SerialPortEvent evt) {
+       int newData = 0;
 
-    // Determine type of event.
-    switch (evt.getEventType()) {
+       // Determine type of event.
+       switch (evt.getEventType()) {
+           // Read data until -1 is returned
+           case SerialPortEvent.DATA_AVAILABLE:
+               while (newData != -1) {
+                   try {
+                       newData = is.read();
+                       if (newData == -1) {
+                           break;
+                       }
 
-        // Read data until -1 is returned
-        case SerialPortEvent.DATA_AVAILABLE:
-            while (newData != -1) {
-                try {
-                    newData = is.read();
-                if (newData == -1) {
-                break;
-                }
+                       inputBuffer.append((char) newData);
 
-                            inputBuffer.append((char) newData);
-
-                            if (newData == '#') {
-                                char[] chars = new char[inputBuffer.length()];
-                                inputBuffer.getChars(0, inputBuffer.length(),
-                                    chars, 0);
-                                messageQueue.addChars(chars);
-                                inputBuffer.delete(0, inputBuffer.length());
-                            }
-
-
-                } catch (IOException e) {
-                    System.err.println(e);
-                    return;
-                  }
+                       if (newData == '#') {
+                           char[] chars = new char[inputBuffer.length()];
+                           inputBuffer.getChars(0, inputBuffer.length(),
+                                   chars, 0);
+                           messageQueue.addChars(chars);
+                           inputBuffer.delete(0, inputBuffer.length());
+                       }
+                   } catch (IOException e) {
+                       System.err.println(e);
+                       return;
+                   }
                }
 
-        break;
-    }
-
-    }
+               break;
+       }
+   }
 
     /**
      * Handle ownership change event.
@@ -281,9 +281,9 @@ public class SerialConnection implements SerialPortEventListener,
      * @param type Type of owernership event
      */
     public void ownershipChange(int type) {
-    if (type == CommPortOwnershipListener.PORT_OWNERSHIP_REQUESTED) {
+        if (type == CommPortOwnershipListener.PORT_OWNERSHIP_REQUESTED) {
             closeConnection();
-    }
+        }
     }
 
     /**
@@ -460,7 +460,7 @@ public class SerialConnection implements SerialPortEventListener,
         ArrayList<String> list = new ArrayList<String>();
 
         while (enume.hasMoreElements()) {
-            CommPortIdentifier comId = (CommPortIdentifier) enume.nextElement();
+            CommPortIdentifier comId = enume.nextElement();
 
             if (comId.getPortType() == CommPortIdentifier.PORT_SERIAL) {
                 list.add(comId.getName());
@@ -469,13 +469,10 @@ public class SerialConnection implements SerialPortEventListener,
 
 
         Object[] ports = list.toArray();
+        retStr = new String[ports.length];
 
-        if (ports != null) {
-            retStr = new String[ports.length];
-
-            for (int i = 0; i < ports.length; i++) {
-                retStr[i] = (String) ports[i];
-            }
+        for (int i = 0; i < ports.length; i++) {
+            retStr[i] = (String) ports[i];
         }
 
         return retStr;
@@ -486,18 +483,16 @@ public class SerialConnection implements SerialPortEventListener,
      */
     class MessageQueue {
         /** Queue containing responses */
-        private LinkedList queue = new LinkedList();
+        private final LinkedList<String> queue = new LinkedList<String>();
 
         /**
          * Add message to queue
          * @param txt The message to add
          */
         public void addMessage(String txt) {
-
             synchronized (queue) {
                 queue.addLast(txt);
             }
-
         }
 
         /**
@@ -506,7 +501,7 @@ public class SerialConnection implements SerialPortEventListener,
          */
         public void addChars(char[] chars) {
             synchronized (queue) {
-                queue.addLast(chars);
+                queue.addLast(new String(chars));
             }
         }
 
@@ -515,7 +510,7 @@ public class SerialConnection implements SerialPortEventListener,
          * @return char[]
          */
         public char[] getChars() {
-            boolean empty = true;
+            boolean empty;
             char[] chars = null;
 
             synchronized (queue) {
@@ -525,7 +520,7 @@ public class SerialConnection implements SerialPortEventListener,
             if (!empty) {
 
                 synchronized (queue) {
-                    chars = (char[]) queue.removeFirst();
+                    chars = queue.removeFirst().toCharArray();
                 }
             }
 
@@ -562,7 +557,7 @@ public class SerialConnection implements SerialPortEventListener,
 
                 if (!empty) {
                     synchronized (queue) {
-                        char[] chars = (char[]) queue.removeFirst();
+                        char[] chars = queue.removeFirst().toCharArray();
                         if (chars != null) {
                             msg = new String(chars);
                         }

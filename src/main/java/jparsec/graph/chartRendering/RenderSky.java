@@ -283,11 +283,10 @@ public class RenderSky
 
 		/** Set to true to show comet's tail in trajectories. Default value is false. */
 		public boolean showCometTail = false;
-	};
+	}
 
 	private EphemElement[] majorObjects = null;
 	private Object[] majorObjectsSats = null;
-
 
 	private static String imgs[] = new String[0];
 	private static ArrayList<Object> images = new ArrayList<Object>();
@@ -4921,7 +4920,7 @@ public class RenderSky
 					if (mag > objMagLim && maglim != render.drawStarsLimitingMagnitude && (messier.isEmpty() || !render.drawDeepSkyObjectsAllMessierAndCaldwell)) continue;
 
 					size_xy = (float[]) obj[5];
-					size0 = (float) (size_xy[0] * pixels_per_degree) + 1;
+					size0 = (size_xy[0] * pixels_per_degree) + 1;
 					pos0 = projection.projectPosition(locF, 0, false);
 					if (pos0 != null && !this.isInTheScreen(pos0[0], pos0[1], (int) (size0 * (Math.abs(type) == 3? 2:1)), minX, minY, maxX, maxY)) pos0 = null;
 
@@ -8573,7 +8572,7 @@ public class RenderSky
 			starElem.name = rf.readString(line, "NAME");
 			starElem.spectrum = rf.readString(line, "SPECTRUM");
 			starElem.type = rf.readString(line, "TYPE")+";"+rf.readString(line, "DATA");
-			starElem.magnitude = (float) rf.readFloat(line, "MAG");
+			starElem.magnitude = rf.readFloat(line, "MAG");
 			//starElem.properMotionRadialV = 0.0f;
 			String rv = rf.readString(line, "RADIAL_VELOCITY");
 			if (!rv.isEmpty()) starElem.properMotionRadialV = Float.parseFloat(rv);
@@ -12567,10 +12566,10 @@ public class RenderSky
 
 			if (check) {
 				bounds = g.getStringBounds(label);
-				w = (float) bounds.getWidth();
+				w = bounds.getWidth();
 				posx -= w/2;
 //				if (posx+w/2 > rec.getMaxX() || posx < rec.getMinX()) continue;
-				h = (float) bounds.getHeight();
+				h = bounds.getHeight();
 				int scoreR1 = 0, scoreG1 = 0, scoreB1 = 0, np = 1;
 				float rx0 = posx - w* (0.5f);
 				float ry0 = posy - h* (0.5f);
@@ -14062,7 +14061,7 @@ public class RenderSky
 				float ss[] = (float[]) obj[5];
 				loc = projection.getApparentLocationInSelectedCoordinateSystem(loc, true, false, ss[0]/pixels_per_radian);
 				if (drawAll) {
-					float size0 = (float) (ss[0] * pixels_per_degree) + 1;
+					float size0 = (ss[0] * pixels_per_degree) + 1.0f;
 					float[] pos0 = projection.projectPosition(loc, 0, false);
 					if (pos0 != null && !this.isInTheScreen((int)pos0[0], (int)pos0[1], (int)(size0 * 2))) pos0 = null;
 					if (pos0 == null) loc = null;
@@ -14071,13 +14070,12 @@ public class RenderSky
 					loc.set(DataSet.toFloatArray(loc.get())); // Reduce memory use
 					if (extinction && magnitude < 100) {
 						magnitude = (float) correctForExtinction(eq, magnitude);
-						objects.add(new Object[] {index, loc, (float)magnitude});
+						objects.add(new Object[] {index, loc, magnitude});
 					} else {
-						objects.add(new Object[] {index, loc});						
+						objects.add(new Object[] {index, loc});
 					}
 				}
 			}
-
 
 			if (render.getNumberOfExternalCatalogs() > 0) {
 				int rs = SkyRenderElement.getTotalNumberOfExternalCatalogs();

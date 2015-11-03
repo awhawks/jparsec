@@ -2814,7 +2814,7 @@ public class LMVCube implements Serializable
 		// Normalize output spectrum in each velocity channel
 		for (int iz = 0; iz < resolution; iz++)
 		{
-			out[iz] = (float) (out[iz] / factor_sum[iz]);
+			out[iz] = out[iz] / factor_sum[iz];
 			// Recover NaN value in case most of the contribution comes from a NaN point
 			if (!fixNaN && (Double.isInfinite(cube[iz][index_y_obs][index_x_obs]) || Double.isNaN(cube[iz][index_y_obs][index_x_obs])))
 				out[iz] = Float.NaN;
@@ -3321,11 +3321,11 @@ public class LMVCube implements Serializable
 		int n = cube.length;
 		double dataX[] = new double[n];
 		double dataY[] = new double[n];
-		double dx = (getvf() - getv0()) / (double) (n-1.0);
+		double dx = (getvf() - getv0()) / (n - 1.0);
 		int px = -1, py = -1;
 		ArrayList<double[]> v = new ArrayList<double[]>();
 		ChartSeriesElement.setShapeSize(2);
-		double offr0 = -1, offrf = -1, posr0 = 0;
+		double offr0 = -1, offrf = -1, posr0;
 		posr0 = cube[0].length/2.0 - 0.5;
 		boolean useOffsetR = true;
 		boolean error = false;
@@ -3450,7 +3450,7 @@ public class LMVCube implements Serializable
 			  {
 				  for (int j=0; j<chart.data[0].length; j++)
 				  {
-					  data2[i][j] = new Double((chart.data[i][chart.data[0].length-1-j]).doubleValue());
+					  data2[i][j] = chart.data[i][chart.data[0].length - 1 - j];
 				  }
 			  }
 			  chart.data = data2;

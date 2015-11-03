@@ -2696,7 +2696,6 @@ public class ReadFile implements Serializable
 		}
 	}
 
-
 	/**
 	 * Returns the input stream of a resource.
 	 *
@@ -2731,7 +2730,7 @@ public class ReadFile implements Serializable
 	{
 		// Define necessary variables
 		ArrayList<String> vec = new ArrayList<String>();
-		String file_line = "";
+		String file_line;
 
 		// Connect to the file
 		try

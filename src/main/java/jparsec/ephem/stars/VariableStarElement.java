@@ -77,22 +77,13 @@ public class VariableStarElement implements Serializable {
 	 */
 	public VariableStarElement()
 	{
-		rightAscension = 0.0;
-		declination = 0.0;
 		name = "";
 		magRange = "";
-		period = 0;
-		minimaTime = 0;
-		minimaDuration = 0;
 		type = "";
 		spectralType = "";
 		eclipsingType = "";
 		maximaDates = "";
 		minimaDates= "";
-		isEclipsing = false;
-		phase = 0;
-		nextMinima = 0;
-		onlySecondaryMinima = false;
 	}
 
 	/**
@@ -345,7 +336,6 @@ public class VariableStarElement implements Serializable {
 				EphemerisElement.FRAME.ICRF, EphemerisElement.ALGORITHM.MOSHIER);
 
 		double jul = TimeScale.getJD(time, observer, eph, SCALE.UNIVERSAL_TIME_UTC);
-
 		double helioToGeo = 0.0;
 
 		// Correct minima time from heliocentric Julian day to (geocentric) Julian day.
@@ -362,16 +352,14 @@ public class VariableStarElement implements Serializable {
 		// phase: current phase, <0.1 or >0.9 primary, >0.4 <0.6 secondary
 		double f1 = (jul - minimaTime) / period;
 		phase = f1 - Math.floor(f1);
-		onlySecondaryMinima = false;
-		if (type != null && type.toLowerCase().indexOf("sec") >= 0) onlySecondaryMinima = true;
-
+		onlySecondaryMinima = type != null && type.contains("sec");
 		double nextPhase = 1.0 - phase;
 		// Following line disabled to return always primary minima
 		//if (onlySecondaryMinima) nextPhase = 0.5 - phase;
 		if (nextPhase <= 0.0) nextPhase += 1.0;
 
 		nextMinima = jul + nextPhase * period;
-		double UTC_TO_LT = (observer.getTimeZone() + (double) TimeScale.getDST(nextMinima, observer)) / Constant.HOURS_PER_DAY;
+		double UTC_TO_LT = (observer.getTimeZone() + TimeScale.getDST(nextMinima, observer)) / Constant.HOURS_PER_DAY;
 		nextMinima += UTC_TO_LT + helioToGeo;
 	}
 

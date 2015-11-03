@@ -44,7 +44,7 @@ public class ChartSeriesElement3D implements Serializable
 	/**
 	 * Default empty constructor.
 	 */
-	public ChartSeriesElement3D()	{	}
+	public ChartSeriesElement3D() { }
 
 	/**
 	 * Simple constructor for a set of points.
@@ -183,8 +183,8 @@ public class ChartSeriesElement3D implements Serializable
 		ImageSplineTransform t = new ImageSplineTransform(GridChartElement.ObjectToDoubleArray(gridChart.data));
 		int pointsX = gridChart.data.length;
 		int pointsY = gridChart.data[0].length;
-		double px = (x - gridChart.limits[0]) * ((double) (pointsX - 1.0)) / (gridChart.limits[1] - gridChart.limits[0]);
-		double py = (y - gridChart.limits[2]) * ((double) (pointsY - 1.0)) / (gridChart.limits[3] - gridChart.limits[2]);
+		double px = (x - gridChart.limits[0]) * (pointsX - 1.0) / (gridChart.limits[1] - gridChart.limits[0]);
+		double py = (y - gridChart.limits[2]) * (pointsY - 1.0) / (gridChart.limits[3] - gridChart.limits[2]);
 		double data = t.interpolate(px, py);
 		return data;
 	}

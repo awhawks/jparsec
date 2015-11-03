@@ -131,16 +131,11 @@ public class Evaluation implements Serializable
 	public double evaluateMathExpression(String expression) throws JPARSECException
 	{
 		this.function = expression;
-		double out = 0.0;
-		try
-		{
-			out = ((Double) jsEngine.eval("var xx = " + expression + "; " + "xx;")).doubleValue();
-		} catch (ScriptException ex)
-		{
+		try {
+			return (Double) jsEngine.eval("var xx = " + expression + "; " + "xx;");
+		} catch (ScriptException ex) {
 			throw new JPARSECException(ex);
 		}
-
-		return out;
 	}
 
 	/**
@@ -153,16 +148,11 @@ public class Evaluation implements Serializable
 	public Object evaluateExpression(String expression) throws JPARSECException
 	{
 		this.function = expression;
-		Object out = null;
-		try
-		{
-			out = jsEngine.eval("var xx = " + expression + "; " + "xx;");
-		} catch (ScriptException ex)
-		{
+		try {
+			return jsEngine.eval("var xx = " + expression + "; " + "xx;");
+		} catch (ScriptException ex) {
 			throw new JPARSECException(ex);
 		}
-
-		return out;
 	}
 
 	/**
@@ -176,16 +166,11 @@ public class Evaluation implements Serializable
 	 */
 	public Object evaluatePureJavaExpression(String expression) throws JPARSECException
 	{
-		Object out = null;
-		try
-		{
-			out = jsEngine.eval(expression);
-		} catch (ScriptException ex)
-		{
+		try {
+			return jsEngine.eval(expression);
+		} catch (ScriptException ex) {
 			throw new JPARSECException(ex);
 		}
-
-		return out;
 	}
 
 	/**
@@ -201,26 +186,21 @@ public class Evaluation implements Serializable
 	{
 		this.function = expression;
 		this.variables = null;
+
 		if (variables != null) {
 			this.variables = variables.clone();
-			for (int i = 0; i < variables.length; i++)
-			{
-				String name = FileIO.getField(1, variables[i], " ", true);
-				String value = FileIO.getField(2, variables[i], " ", true);
-
+			for (String var : variables) {
+				String name = FileIO.getField(1, var, " ", true);
+				String value = FileIO.getField(2, var, " ", true);
 				jsEngine.put(name, new Double(value));
 			}
 		}
 
-		double out = 0.0;
-		try
-		{
-			out = ((Double) jsEngine.eval("var xx = " + expression + "; " + "xx;")).doubleValue();
-		} catch (ScriptException ex)
-		{
+		try {
+			return ((Double) jsEngine.eval("var xx = " + expression + "; " + "xx;")).doubleValue();
+		} catch (ScriptException ex) {
 			throw new JPARSECException(ex);
 		}
-		return out;
 	}
 
 	/**
@@ -233,7 +213,7 @@ public class Evaluation implements Serializable
 	public void resetVariable(String name, double value) {
 		int index = DataSet.getIndexStartingWith(variables, name+" ");
 		if (index >= 0) {
-			jsEngine.put(name, new Double(value));
+			jsEngine.put(name, value);
 			variables[index] = name + " " + value;
 		}
 	}
@@ -248,11 +228,9 @@ public class Evaluation implements Serializable
 		this.variables = null;
 		if (variables != null) {
 			this.variables = variables.clone();
-			for (int i = 0; i < variables.length; i++)
-			{
-				String name = FileIO.getField(1, variables[i], " ", true);
-				String value = FileIO.getField(2, variables[i], " ", true);
-
+			for (String var : variables) {
+				String name = FileIO.getField(1, var, " ", true);
+				String value = FileIO.getField(2, var, " ", true);
 				jsEngine.put(name, new Double(value));
 			}
 		}
@@ -273,19 +251,15 @@ public class Evaluation implements Serializable
 	throws JPARSECException {
 		this.function = function;
 		this.variables = new String[] {"x "+x, "y "+y, "z "+z};
-		jsEngine.put("x", new Double(x));
-		jsEngine.put("y", new Double(y));
-		jsEngine.put("z", new Double(z));
-		double out = 0.0;
-		try
-		{
-			out = ((Double) jsEngine.eval("var xx = " + function + "; " + "xx;")).doubleValue();
-		} catch (ScriptException ex)
-		{
+		jsEngine.put("x", x);
+		jsEngine.put("y", y);
+		jsEngine.put("z", z);
+
+		try {
+			return (Double) jsEngine.eval("var xx = " + function + "; " + "xx;");
+		} catch (ScriptException ex) {
 			throw new JPARSECException(ex);
 		}
-
-		return out;
 	}
 
 	/**
@@ -381,7 +355,6 @@ public class Evaluation implements Serializable
 	 */
 	public double interpolateFile(double interp_point, String dir) throws JPARSECException
 	{
-		double result = 0.0;
 		ArrayList<String> vector = new ArrayList<String>();
 
 		int file_pos = function.indexOf("/file");
@@ -418,11 +391,10 @@ public class Evaluation implements Serializable
 				separator = separator.substring(0, tag).trim();
 		}
 
-		String operation = " ";
 		int oper_pos = function.indexOf("/operation");
 		if (oper_pos < 0)
 			sep_pos = function.indexOf("/OPERATION");
-		operation = function.substring(oper_pos + 10).trim();
+		String operation = function.substring(oper_pos + 10).trim();
 		tag = operation.indexOf("/SEPARATOR");
 		if (tag < 0)
 			tag = operation.indexOf("/separator");
@@ -436,10 +408,11 @@ public class Evaluation implements Serializable
 
 		String fich = file;
 		// Lets read the entries
+		Object result;
 		try
 		{
 			// Set URL to input file
-			URL url = null;
+			URL url;
 			try
 			{
 				url = new URL(dir + fich);
@@ -448,11 +421,11 @@ public class Evaluation implements Serializable
 				throw new JPARSECException(e3);
 			}
 
-			URLConnection Connection = (URLConnection) url.openConnection();
+			URLConnection Connection = url.openConnection();
 			InputStream is = Connection.getInputStream();
 			BufferedReader dis = new BufferedReader(new InputStreamReader(is));
 
-			String line = "";
+			String line;
 			while ((line = dis.readLine()) != null)
 			{
 
@@ -462,6 +435,7 @@ public class Evaluation implements Serializable
 				}
 
 			}
+
 			dis.close();
 
 			int size = vector.size();
@@ -503,11 +477,9 @@ public class Evaluation implements Serializable
 			double ordered_y[] = v.get(1);
 
 			// Set interpolation point and obtain result
-			double x_point = interp_point;
-
-			Interpolation interp = new Interpolation((double[]) ordered_x, ordered_y, false);
-			result = interp.splineInterpolation(x_point);
-
+			//double x_point = interp_point;
+			Interpolation interp = new Interpolation(ordered_x, ordered_y, false);
+			return interp.splineInterpolation(interp_point);
 		} catch (FileNotFoundException e2)
 		{
 			throw new JPARSECException("file not found " + fich, e2);
@@ -515,8 +487,6 @@ public class Evaluation implements Serializable
 		{
 			throw new JPARSECException(e3);
 		}
-
-		return result;
 	}
 
 	/**
@@ -541,14 +511,13 @@ public class Evaluation implements Serializable
 		String file = file_and_column.substring(0, f).trim();
 		a = file_and_column.toUpperCase().lastIndexOf("COLUMN");
 
-		int read_error = 0;
 		do
 		{
 			int column = Integer.parseInt(file_and_column.substring(a + 6, a + 8).trim());
-			String line = "";
+			String line;
 
 			// Set URL to input file
-			URL url = null;
+			URL url;
 			try
 			{
 				url = new URL(dir + file);
@@ -560,7 +529,7 @@ public class Evaluation implements Serializable
 			// Lets read the catalog entries
 			try
 			{
-				URLConnection Connection = (URLConnection) url.openConnection();
+				URLConnection Connection = url.openConnection();
 				InputStream is = Connection.getInputStream();
 				BufferedReader dis = new BufferedReader(new InputStreamReader(is));
 
@@ -585,16 +554,11 @@ public class Evaluation implements Serializable
 			file_and_column = file_and_column.substring(0, a) + Double.toString(result).trim();
 			a = file_and_column.toUpperCase().lastIndexOf("COLUMN");
 
-		} while (a >= 0 && read_error == 0);
-
-		if (read_error > 0)
-			return 0.0;
+		} while (a >= 0);
 
 		String operation = file_and_column.substring(f).trim();
-
 		Evaluation eval = new Evaluation(operation, null);
-		double val = eval.evaluate();
-		return val;
+		return eval.evaluate();
 	}
 
 	/**
@@ -619,14 +583,13 @@ public class Evaluation implements Serializable
 		String file = file_and_column.substring(0, f).trim();
 		a = file_and_column.toUpperCase().lastIndexOf("COLUMN");
 
-		int read_error = 0;
 		do
 		{
 			int column = Integer.parseInt(file_and_column.substring(a + 6, a + 8).trim());
-			String line = "";
+			String line;
 
 			// Set URL to input file
-			URL url = null;
+			URL url;
 			try
 			{
 				url = new URL(file);
@@ -638,7 +601,7 @@ public class Evaluation implements Serializable
 			// Lets read the catalog entries
 			try
 			{
-				URLConnection Connection = (URLConnection) url.openConnection();
+				URLConnection Connection = url.openConnection();
 				InputStream is = Connection.getInputStream();
 				BufferedReader dis = new BufferedReader(new InputStreamReader(is));
 
@@ -646,7 +609,7 @@ public class Evaluation implements Serializable
 				while ((line = dis.readLine()) != null && done == 0)
 				{
 					line = line.trim();
-					if (comment.indexOf(line.substring(0, 1)) < 0)
+					if (!comment.contains(line.substring(0, 1)))
 					{
 						result = -Double.parseDouble(FileIO.getField(column, line, sep, true));
 						done = 1;
@@ -663,13 +626,9 @@ public class Evaluation implements Serializable
 			file_and_column = file_and_column.substring(0, a) + Double.toString(result).trim();
 			a = file_and_column.toUpperCase().lastIndexOf("COLUMN");
 
-		} while (a >= 0 && read_error == 0);
-
-		if (read_error > 0)
-			return 0.0;
+		} while (a >= 0);
 
 		String operation = file_and_column.substring(f).trim();
-
 		Evaluation eval = new Evaluation(operation, null);
 		double val = eval.evaluate();
 
@@ -691,9 +650,9 @@ public class Evaluation implements Serializable
 		if (ev == null) ev = new Evaluation();
 		ev.function = "n.length;";
 		ev.jsEngine.put("n", n);
-		double out = 0.0;
+		double out;
 		try {
-			out = ((Double) ev.jsEngine.eval(ev.function)).doubleValue();
+			out = (Double) ev.jsEngine.eval(ev.function);
 		} catch (Exception exc) {
 			throw new JPARSECException("Cannot obtain native array size", exc);
 		}
@@ -703,7 +662,7 @@ public class Evaluation implements Serializable
 		for (int i = 0; i < arr.length; i++)
 		{
 			try {
-				arr[i] = ((Double) ev.jsEngine.eval("n["+i+"];")).toString();
+				arr[i] = ev.jsEngine.eval("n["+i+"];").toString();
 			} catch (Exception exc) {
 				throw new JPARSECException("Cannot eval native array value for index "+i, exc);
 			}
@@ -725,9 +684,9 @@ public class Evaluation implements Serializable
 		if (ev == null) ev = new Evaluation();
 		ev.function = "n.length;";
 		ev.jsEngine.put("n", n);
-		double out = 0.0;
+		double out;
 		try {
-			out = ((Double) ev.jsEngine.eval(ev.function)).doubleValue();
+			out = (Double) ev.jsEngine.eval(ev.function);
 		} catch (Exception exc) {
 			throw new JPARSECException("Cannot obtain native array size", exc);
 		}
@@ -737,7 +696,7 @@ public class Evaluation implements Serializable
 		for (int i = 0; i < arr.length; i++)
 		{
 			try {
-				arr[i] = ((Double) ev.jsEngine.eval("n["+i+"];")).doubleValue();
+				arr[i] = (Double) ev.jsEngine.eval("n["+i+"];");
 			} catch (Exception exc) {
 				throw new JPARSECException("Cannot eval native array value for index "+i, exc);
 			}
