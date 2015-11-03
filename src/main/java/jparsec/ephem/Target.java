@@ -26,7 +26,6 @@ import jparsec.ephem.moons.MoonEphem;
 import jparsec.graph.DataSet;
 import jparsec.observer.ObserverElement;
 import jparsec.time.TimeElement;
-import jparsec.util.DataBase;
 import jparsec.util.JPARSECException;
 import jparsec.util.Logger;
 import jparsec.util.Logger.LEVEL;
@@ -408,6 +407,7 @@ public final class Target
 			try {
 				return Translate.getEntry(nameIndex, lang);
 			} catch (Exception exc) {
+				exc.printStackTrace();
 				String message = "Cannot translate body name " + this + " to language " + Translate.getDefaultLanguage() + ". This error should never happen!";
 				Logger.log(LEVEL.ERROR, message);
 				throw new RuntimeException(message);
@@ -446,8 +446,6 @@ public final class Target
 		}
 
 		String data[] = DataSet.arrayListToStringArray(vS);
-		String lang = language.toString();
-		DataBase.addData("targetNames"+lang, null, data, true);
 		return data;
 	}
 
@@ -457,11 +455,7 @@ public final class Target
 	 */
 	public static String[] getNames()
 	{
-		LANGUAGE language = Translate.getDefaultLanguage();
-		String lang = language.toString();
-		String vS[] = (String[]) DataBase.getData("targetNames"+lang, null, true);
-		if (vS == null) vS = populateStringArrayList(language);
-		return vS;
+		return populateStringArrayList(null);
 	}
 	
 	/**
@@ -472,10 +466,7 @@ public final class Target
 	 */
 	public static String[] getNames(LANGUAGE language)
 	{
-		String lang = language.toString();
-		String vS[] = (String[]) DataBase.getData("targetNames"+lang, null, true);
-		if (vS == null) vS = populateStringArrayList(language);
-		return vS;
+		return populateStringArrayList(language);
 	}
 
 	/**

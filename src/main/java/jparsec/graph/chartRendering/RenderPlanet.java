@@ -1174,7 +1174,7 @@ public class RenderPlanet
 		if ((field < 3600 || scale > 2) && render.textures && render.target != TARGET.SUN && renderingSky && lastRenderElement != null &&
 				similarRenders(lastRenderElement, render) &&
 				lastScale >= scale && lastScale > 2) {
-			repaint = lastScale > scale && (lastScale*2 > render.width || lastScale*2 > render.height);
+			repaint = !(lastScale > scale && (lastScale*2 > render.width || lastScale*2 > render.height));
 		}
 		scaleFactor = MAXIMUM_TEXTURE_QUALITY_FACTOR;
 		if (!hq) scaleFactor = 1;
@@ -1438,7 +1438,7 @@ public class RenderPlanet
 
 			if (planetVisible)
 			{
-				final long white = (0x0ff << 24) | (0x0ff << 16) | (0x0ff << 8) | 0x0ff; // 0xff03fc0ff00;
+				final int white = (0x0ff << 24) | (0x0ff << 16) | (0x0ff << 8) | 0x0ff; // 0xff03fc0ff00;
 				float SaturnLimbFactor = 0.95f;
 				for (float j=ly; j<=uy; j++) {
 					boolean first = true, doit = true;
@@ -1906,7 +1906,7 @@ public class RenderPlanet
 		//lastRender.disableAnaglyph();
 	}
 
-	private void setPixel(float i, float j, int c, long white,
+	private void setPixel(float i, float j, int c, int white,
 			double sun_x, double sun_y, double sun_z, double dz0, double r2, int br, int bg, int bb, Graphics g,
 			TARGET target, Object img2, int iindex, int jindex) {
 		// Treat RGB compounds of the pixel

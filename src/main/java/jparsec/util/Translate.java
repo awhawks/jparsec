@@ -42,6 +42,11 @@ public class Translate
 	// private constructor so that this class cannot be instantiated.
 	private Translate() {}
 
+	static {
+		translations = new String[2][];
+		getNumberOfEntries();
+	}
+	
 	/**
 	 * The set of languages available in JPARSEC.
 	 */
@@ -50,12 +55,30 @@ public class Translate
 		ENGLISH,
 		/** ID Constant for Spanish. */
 		SPANISH
-	};
+	}
 
 	/**
 	 * Selects default language for output.
 	 */
 	private static LANGUAGE defaultLanguage = LANGUAGE.ENGLISH;
+
+	private static String[][] translations;
+
+	/**
+	 * Returns the number of entries.
+	 * @return Number of entries.
+	 */
+	public static int getNumberOfEntries() {
+		if (translations[0] == null) {
+			try {
+				translations[0] = new String[ReadFile.readResourceGetNumberOfLines("jparsec/util/english.txt", ReadFile.ENCODING_ISO_8859)];
+				translations[1] = new String[translations[0].length];
+			} catch (Exception exc) {
+				throw new RuntimeException("Cannot read language files. This error should never happen!");
+			}
+		}
+		return translations[0].length;
+	}
 
 	/**
 	 * Translates a given value from one language to another.
@@ -66,11 +89,26 @@ public class Translate
 	 */
 	public static String translate(String value, LANGUAGE from, LANGUAGE to)
 	{
-		if (value == null) return null;
-		if (value.equals("")) return "";
- 		if (from == to) return DataSet.replaceAll(value, "\\n", FileIO.getLineSeparator(), true);
-		String out = value;
+		if (value == null || "".equals(value)) return null;
 
+ 		if (from == to) {
+			return DataSet.replaceAll(value, "\\n", FileIO.getLineSeparator(), true);
+		}
+
+		String valueFrom;
+
+		for (int id = 0; id < getNumberOfEntries(); id++) {
+			valueFrom = translations[from.ordinal()][id];
+			if (valueFrom == null) continue;
+
+			// If already read
+			if (valueFrom.equals(value)) {
+				return DataSet.replaceAll(getEntry(id, to), "\\n", FileIO.getLineSeparator(), true);
+			}
+		}
+
+		// Set as default output the same input value, in case no translation is found
+		String out = value;
 		try
 		{
 			String pathToFile = "jparsec/util/"+from.name().toLowerCase()+".txt";
@@ -106,89 +144,20 @@ public class Translate
 					if (!value.trim().toLowerCase().equals(s)) index = -1;
 				}
 			}
-			if (index >= 0) out = Translate.getEntry(index, to);
+			if (index >= 0) {
+				// Read this entry to the translations array if necessary, so there is no 
+				// need to read it again
+				out = getEntry(index, from);
+				out = getEntry(index, to);
+			}
 		} catch (Exception e1)
 		{
 			Logger.log(LEVEL.ERROR, "Cannot read language file "+from+". This error should never happen!");
 			return null;
 		}
-
+		
 		out = DataSet.replaceAll(out, "\\n", FileIO.getLineSeparator(), true);
 		return out;
-	}
-
-	/**
-	 * Translates a given value from English into another.
-	 * @param value Value to search.
-	 * @param to ID constant of the output language.
-	 * @return Output value, or empty String if not found.
-	 */
-	public static String translate(String value, LANGUAGE to)
-	{
-		if (LANGUAGE.ENGLISH == to) return value;
-		return Translate.translate(value, LANGUAGE.ENGLISH, to);
-	}
-
-	/**
-	 * Translates a given value from English into selected language.
-	 * @param value Value to search.
-	 * @return Output value, or empty String if not found.
-	 */
-	public static String translate(String value)
-	{
-		if (LANGUAGE.ENGLISH == defaultLanguage) return value;
-		return Translate.translate(value, LANGUAGE.ENGLISH, defaultLanguage);
-	}
-
-	/**
-	 * Translates a given value from English into selected language.
-	 * @param stringID ID of the String to be translated. Constants defined in this class.
-	 * @return Output value.
-	 */
-	public static String translate(int stringID)
-	{
-		try {
-			return DataSet.replaceAll(ReadFile.readResourceSomeLines("jparsec/util/"+defaultLanguage.name().toLowerCase()+".txt", ReadFile.ENCODING_ISO_8859, stringID, stringID).get(0), "\\n", FileIO.getLineSeparator(), true);
-		} catch (Exception exc) {
-			Logger.log(LEVEL.ERROR, "Cannot read line "+stringID+" of language file "+defaultLanguage+". This error should never happen!");
-			return null;
-		}
-	}
-
-	/**
-	 * Translates a given array from English into selected language.
-	 * @param values Values to be translated.
-	 * @return Output value, or empty String if not found.
-	 */
-	public static String[] translate(String[] values)
-	{
-		if (LANGUAGE.ENGLISH == defaultLanguage) return values;
-
-		String out[] = null;
-		if (values != null) {
-			out = new String[values.length];
-			for (int i=0; i<out.length; i++) {
-				out[i] = Translate.translate(values[i], LANGUAGE.ENGLISH, defaultLanguage);
-			}
-		}
-		return out;
-	}
-
-	/**
-	 * Returns default language.
-	 * @return ID constant of the language.
-	 */
-	public static LANGUAGE getDefaultLanguage()
-	{
-		return Translate.defaultLanguage;
-	}
-	/**
-	 * Sets default language.
-	 * @param language ID constant of the language.
-	 */
-	public static void setDefaultLanguage(LANGUAGE language)
-	{
-		Translate.defaultLanguage = language;
 	}
 
 	/**
@@ -200,19 +169,97 @@ public class Translate
 	 * @throws JPARSECException If the language is invalid, something
 	 * that should never happen.
 	 */
-	public static String getEntry(int id, LANGUAGE language) throws JPARSECException {
-		if (language == null) language = Translate.defaultLanguage;
-		return ReadFile.readResourceSomeLines("jparsec/util/"+language.name().toLowerCase()+".txt", ReadFile.ENCODING_ISO_8859, id, id).get(0);
+	public static String getEntry(int id, LANGUAGE language) {
+		if (language == null) language = defaultLanguage;
+		if (translations[language.ordinal()][id] == null) {
+			// Read this entry to the translations array so there is no need to read it again
+			try {
+				String out = ReadFile.readResourceSomeLines("jparsec/util/"+language.name().toLowerCase()+".txt", ReadFile.ENCODING_ISO_8859, id, id).get(0);
+				translations[language.ordinal()][id] = DataSet.replaceAll(out, "\\n", FileIO.getLineSeparator(), true);
+			} catch (Exception exc) {
+				throw new RuntimeException("Cannot read language files. This error should never happen!");
+			}
+		}
+		
+		return translations[language.ordinal()][id];
+	}
+	
+	/**
+	 * Translates a given value from English into another.
+	 * @param value Value to search.
+	 * @param to ID constant of the output language.
+	 * @return Output value, or empty String if not found.
+	 */
+	public static String translate(String value, LANGUAGE to)
+	{
+		if (to == null) to = defaultLanguage;
+		if (LANGUAGE.ENGLISH == to) return value;
+		return translate(value, LANGUAGE.ENGLISH, to);
 	}
 
 	/**
-	 * Returns the number of entries.
-	 * @return Number of entries.
-	 * @throws JPARSECException If the resource cannot be read.
+	 * Translates a given value from English into selected language.
+	 * @param value Value to search.
+	 * @return Output value, or empty String if not found.
 	 */
-	public static int getNumberOfEntries() throws JPARSECException {
-		return ReadFile.readResourceGetNumberOfLines("jparsec/util/english.txt", ReadFile.ENCODING_ISO_8859);
+	public static String translate(String value)
+	{
+		if (LANGUAGE.ENGLISH == defaultLanguage) return value;
+		return translate(value, LANGUAGE.ENGLISH, defaultLanguage);
 	}
+
+	/**
+	 * Translates a given value from English into selected language.
+	 * @param id ID of the String to be translated. Constants defined in this class.
+	 * @return Output value.
+	 */
+	public static String translate(int id)
+	{
+		if (id < 0 || id > getNumberOfEntries()) {
+			Logger.log(LEVEL.ERROR, "Cannot read line " + id + " of language file " + defaultLanguage + ". This error should never happen!");
+			return null;
+		}
+
+		return getEntry(id, defaultLanguage);
+	}
+
+	/**
+	 * Translates a given array from English into selected language.
+	 * @param values Values to be translated.
+	 * @return Output value, or empty String if not found.
+	 */
+	public static String[] translate(String[] values)
+	{
+		if (LANGUAGE.ENGLISH == defaultLanguage || values == null || values.length == 0) {
+			return values;
+		}
+
+		String out[] = new String[values.length];
+		for (int i = 0; i < out.length; i++) {
+			out[i] = translate(values[i], LANGUAGE.ENGLISH, defaultLanguage);
+		}
+
+		return out;
+	}
+
+	/**
+	 * Returns default language.
+	 * @return ID constant of the language.
+	 */
+	public static LANGUAGE getDefaultLanguage()
+	{
+		return Translate.defaultLanguage;
+	}
+
+	/**
+	 * Sets default language.
+	 * @param language ID constant of the language.
+	 */
+	public static void setDefaultLanguage(LANGUAGE language)
+	{
+		Translate.defaultLanguage = language;
+	}
+	
 	/** ID value for the corresponding String constant. */
 	public static final int JPARSEC_EQUATOR = 18;
 	/** ID value for the corresponding String constant. */
