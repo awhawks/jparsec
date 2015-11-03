@@ -34,12 +34,11 @@ import java.util.BitSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
-
 import jparsec.astronomy.Constellation;
 import jparsec.astronomy.CoordinateSystem;
+import jparsec.astronomy.CoordinateSystem.COORDINATE_SYSTEM;
 import jparsec.astronomy.Star;
 import jparsec.astronomy.TelescopeElement;
-import jparsec.astronomy.CoordinateSystem.COORDINATE_SYSTEM;
 import jparsec.ephem.Ephem;
 import jparsec.ephem.EphemerisElement;
 import jparsec.ephem.EphemerisElement.ALGORITHM;
@@ -64,10 +63,10 @@ import jparsec.ephem.planets.OrbitEphem;
 import jparsec.ephem.planets.OrbitalElement;
 import jparsec.ephem.planets.PlanetEphem;
 import jparsec.ephem.probes.SDP4_SGP4;
-import jparsec.ephem.probes.Spacecraft;
 import jparsec.ephem.probes.SatelliteEphem;
 import jparsec.ephem.probes.SatelliteEphemElement;
 import jparsec.ephem.probes.SatelliteOrbitalElement;
+import jparsec.ephem.probes.Spacecraft;
 import jparsec.ephem.stars.StarElement;
 import jparsec.ephem.stars.StarEphem;
 import jparsec.ephem.stars.StarEphemElement;
@@ -100,17 +99,17 @@ import jparsec.observer.ExtraterrestrialObserverElement;
 import jparsec.observer.LocationElement;
 import jparsec.observer.ObserverElement;
 import jparsec.time.AstroDate;
-import jparsec.time.TimeScale;
 import jparsec.time.SiderealTime;
 import jparsec.time.TimeElement;
 import jparsec.time.TimeElement.SCALE;
+import jparsec.time.TimeScale;
 import jparsec.time.calendar.Calendar;
 import jparsec.util.Configuration;
 import jparsec.util.DataBase;
 import jparsec.util.JPARSECException;
 import jparsec.util.Logger;
-import jparsec.util.Translate;
 import jparsec.util.Logger.LEVEL;
+import jparsec.util.Translate;
 import jparsec.util.Translate.LANGUAGE;
 import jparsec.vo.GeneralQuery;
 import jparsec.vo.GeneralQuery.SKYVIEW_COORDINATE;
@@ -833,14 +832,14 @@ public class RenderSky
 						dy2 = -dx1;
 						g.drawLine(x0+dx1, y0+dy1, x0-dx1, y0-dy1, dist, dist);
 						g.drawLine(x0+dx2, y0+dy2, x0-dx2, y0-dy2, dist, dist);
-						dx1 = (float) (dx1 * radiusy / (float) off);
-						dy1 = (float) (dy1 * radiusy / (float) off);
-						dx2 = (float) (dx2 * radius / (float) off);
-						dy2 = (float) (dy2 * radius / (float) off);
-						dx3 = (float) (dx1 * (radiusy+off) / radiusy);
-						dy3 = (float) (dy1 * (radiusy+off) / radiusy);
-						dx4 = (float) (dx2 * (radius+off) / radius);
-						dy4 = (float) (dy2 * (radius+off) / radius);
+						dx1 = dx1 * radiusy / (float) off;
+						dy1 = dy1 * radiusy / (float) off;
+						dx2 = dx2 * radius / (float) off;
+						dy2 = dy2 * radius / (float) off;
+						dx3 = dx1 * (radiusy+off) / radiusy;
+						dy3 = dy1 * (radiusy+off) / radiusy;
+						dx4 = dx2 * (radius+off) / radius;
+						dy4 = dy2 * (radius+off) / radius;
 						g.drawLine(x0+dx1, y0+dy1, x0+dx3, y0+dy3, dist, dist);
 						g.drawLine(x0-dx1, y0-dy1, x0-dx3, y0-dy3, dist, dist);
 						g.drawLine(x0+dx2, y0+dy2, x0+dx4, y0+dy4, dist, dist);
@@ -1039,7 +1038,7 @@ public class RenderSky
 				if (projection.obs.getMotherBody() == target && target == TARGET.SUN) continue;
 
 				projection.eph.targetBody = target;
-				EphemElement obj = (EphemElement) majorObjects[index];
+				EphemElement obj = majorObjects[index];
 				LocationElement loc0 = null;
 				if (obj == null) {
 					if (eph == null) eph = projection.eph.clone();
@@ -1592,7 +1591,7 @@ public class RenderSky
 										img = g.getRotatedAndScaledImage(img, radius_x, radius_y, angr, 1.0f, 1.0f);
 										int size[] = g.getSize(img);
 										int newH = (int)(size[1]*upperLimbFactor);
-										int displ = ((int) size[1] - newH) / 2;
+										int displ = (size[1] - newH) / 2;
 										img = g.getScaledImage(img, size[0], newH, false, false, displ);
 										img = g.getRotatedAndScaledImage(img, radius_x, radius_y, -angr, 1.0f, 1.0f);
 										g.drawImage(img, pos[0]-radius_x, pos[1]-newH/2-displ);
@@ -2042,7 +2041,7 @@ public class RenderSky
 						    	}
 			    			}
 			    		} else {
-			    			drawStar((int)tsize, pos, dist, sd.spi, g);
+			    			drawStar(tsize, pos, dist, sd.spi, g);
 			    		}
 					} else {
 						int tsize = (int) (2 * size+adds);
@@ -2933,7 +2932,7 @@ public class RenderSky
 						if ((ra == 0.0f && dec == 0.0f) || (ra == 1.0f && dec == 1.0f) || (ra == 2.0f && dec == 2.0f))
 						{
 							if (ra == 1.0f && dec == 1.0f) fillPoints = true;
-							milkyWay.add(new float[] {(float)ra, (float)dec}); //new LocationElement(ra, dec, 1.0));
+							milkyWay.add(new float[] { ra, dec }); //new LocationElement(ra, dec, 1.0));
 						} else
 						{
 							LocationElement loc = new LocationElement(ra / Constant.RAD_TO_HOUR, dec * Constant.DEG_TO_RAD, 1.0);
@@ -5747,9 +5746,9 @@ public class RenderSky
 						(pos[0] > rec.getMinX() && !render.telescope.invertHorizontal || pos[0] < widthMinus1MinusGraphMarginX && render.telescope.invertHorizontal) &&
 						(pos[0] < rec.getMaxX() && !render.telescope.invertHorizontal || pos[0] > render.width-1-rec.getMaxX() && render.telescope.invertHorizontal)) {
 					if (render.telescope.invertVertical) {
-						tol = (float) Math.abs(rec.getMaxY()-(g.getWidth()-pos[1]-1));
+						tol = Math.abs(rec.getMaxY() - (g.getWidth() - pos[1] - 1));
 					} else {
-						tol = (float) Math.abs(rec.getMaxY()-pos[1]);
+						tol = Math.abs(rec.getMaxY() - pos[1]);
 					}
 
 					if ((!labelDrawn || tol<oldTol)) {
@@ -6182,9 +6181,9 @@ public class RenderSky
 				if (render.drawCoordinateGridLabels && pos[1] > rec.getMaxY()-100 &&
 						(pos[0] > graphMarginX && !render.telescope.invertHorizontal || pos[0] < render.width-1-graphMarginX && render.telescope.invertHorizontal) && pos[0] < render.width) {
 					if (render.telescope.invertVertical) {
-						tol = (float) Math.abs(rec.getMaxY()-(g.getWidth()-pos[1]-1));
+						tol = Math.abs(rec.getMaxY() - (g.getWidth() - pos[1] - 1));
 					} else {
-						tol = (float) Math.abs(rec.getMaxY()-pos[1]);
+						tol = Math.abs(rec.getMaxY() - pos[1]);
 					}
 
 					if ((!labelDrawn || tol<oldTol) && tol < labelTolerance) {
@@ -6823,7 +6822,7 @@ public class RenderSky
 							int tsize = (int) (0.5 + (1.5f * size+adds));
 							if (tsize >= 1 && render.drawStarsRealistic != REALISTIC_STARS.NONE &&
 									render.drawStarsRealistic != REALISTIC_STARS.NONE_CUTE) {
-								this.drawStar((int)tsize, pos, getDist(refz-ephem.distance), -1, g);
+								this.drawStar(tsize, pos, getDist(refz - ephem.distance), -1, g);
 							} else {
 								tsize = (int) (2* size+adds);
 								if (render.anaglyphMode == ANAGLYPH_COLOR_MODE.NO_ANAGLYPH) {
@@ -7000,7 +6999,7 @@ public class RenderSky
 							int tsize = (int) (0.5 + (1.5f * size+adds));
 							if (tsize >= 1 && render.drawStarsRealistic != REALISTIC_STARS.NONE &&
 									render.drawStarsRealistic != REALISTIC_STARS.NONE_CUTE) {
-								this.drawStar((int)tsize, pos, getDist(refz-ephem.distance), -1, g);
+								this.drawStar(tsize, pos, getDist(refz-ephem.distance), -1, g);
 							} else {
 								tsize = (int) (2* size+adds);
 								if (render.anaglyphMode == ANAGLYPH_COLOR_MODE.NO_ANAGLYPH) {
@@ -7223,7 +7222,7 @@ public class RenderSky
 							int tsize = (int) (0.5 + (1.5f * size+adds));
 							if (tsize > 1 && render.drawStarsRealistic != REALISTIC_STARS.NONE &&
 									render.drawStarsRealistic != REALISTIC_STARS.NONE_CUTE) {
-								this.drawStar((int)tsize, pos, dist, -1, g);
+								this.drawStar(tsize, pos, dist, -1, g);
 							} else {
 								tsize = (int) (2* size+adds);
 								if (render.anaglyphMode == ANAGLYPH_COLOR_MODE.NO_ANAGLYPH) {
@@ -7482,7 +7481,7 @@ public class RenderSky
 							int tsize = (int) (0.5 + (1.5f * size+adds));
 							if (tsize >= 1 && render.drawStarsRealistic != REALISTIC_STARS.NONE &&
 									render.drawStarsRealistic != REALISTIC_STARS.NONE_CUTE) {
-								this.drawStar((int)tsize, pos, dist, -1, g);
+								this.drawStar(tsize, pos, dist, -1, g);
 							} else {
 								tsize = (int) (2* size+adds);
 								if (render.anaglyphMode == ANAGLYPH_COLOR_MODE.NO_ANAGLYPH) {
@@ -8143,7 +8142,7 @@ public class RenderSky
 					int tsize = (int) (0.5 + (1.5f * size+adds));
 					if (tsize > 1 && render.drawStarsRealistic != REALISTIC_STARS.NONE &&
 							render.drawStarsRealistic != REALISTIC_STARS.NONE_CUTE) {
-						this.drawStar((int)tsize, pos, dist, 6, g);
+						this.drawStar(tsize, pos, dist, 6, g);
 					} else {
 						tsize = (int) (2* size+adds);
 						if (render.anaglyphMode == ANAGLYPH_COLOR_MODE.NO_ANAGLYPH) {
@@ -8333,7 +8332,7 @@ public class RenderSky
 					int tsize = (int) (0.5 + (1.5f * size+adds));
 					if (tsize > 1 && render.drawStarsRealistic != REALISTIC_STARS.NONE &&
 							render.drawStarsRealistic != REALISTIC_STARS.NONE_CUTE) {
-						this.drawStar((int)tsize, pos, dist, 6, g);
+						this.drawStar(tsize, pos, dist, 6, g);
 					} else {
 						tsize = (int) (2* size+adds);
 						if (render.anaglyphMode == ANAGLYPH_COLOR_MODE.NO_ANAGLYPH) {
@@ -8910,8 +8909,8 @@ public class RenderSky
 		Object img = readImage(icon);
 
 		int size[] = g.getSize(img);
-		float radius_x = (float) (size[0] * scale / 2f);
-		float radius_y = (float) (size[1] * scale / 2f);
+		float radius_x = size[0] * scale / 2f;
+		float radius_y = size[1] * scale / 2f;
 		if (g.renderingToExternalGraphics()) {
 			if (ang != 0f) {
 				g.drawImage(g.getRotatedAndScaledImage(img, radius_x/scale, radius_y/scale, ang, 1.0f, 1.0f), px-radius_x, py-radius_y, scale, scale);
@@ -10856,7 +10855,7 @@ public class RenderSky
 						int tsize = (int) (0.5 + (1.5f * size+adds));
 						if (tsize >= 1 && render.drawStarsRealistic != REALISTIC_STARS.NONE &&
 								render.drawStarsRealistic != REALISTIC_STARS.NONE_CUTE) {
-							this.drawStar((int)tsize, pos, dist, -1, g);
+							this.drawStar(tsize, pos, dist, -1, g);
 						} else {
 							tsize = (int) (2* size+adds);
 							if (render.drawStarsRealistic == REALISTIC_STARS.NONE_CUTE) {
@@ -11032,7 +11031,7 @@ public class RenderSky
 											int tsize = (int) (0.5 + (1.5f * size+adds));
 											if (tsize >= 1 && render.drawStarsRealistic != REALISTIC_STARS.NONE &&
 													render.drawStarsRealistic != REALISTIC_STARS.NONE_CUTE) {
-												this.drawStar((int)tsize, pos, dist, -1, g);
+												this.drawStar(tsize, pos, dist, -1, g);
 											} else {
 												tsize = (int) (2* size+adds);
 												if (render.drawStarsRealistic == REALISTIC_STARS.NONE_CUTE) {
@@ -11840,7 +11839,7 @@ public class RenderSky
 			    	}
 					g.setColor(render.drawCoordinateGridColor, false);
 				} else {
-					this.drawStar((int)tsize, pos, dist, -1, g);
+					this.drawStar(tsize, pos, dist, -1, g);
 				}
 			} else {
 				tsize = (int) (2* size+adds);
@@ -11852,8 +11851,8 @@ public class RenderSky
 				label = Float.toString(m0);
 			}
 			bounds = g.getStringBounds(label);
-			w = (float) bounds.getWidth();
-			h = (float) bounds.getHeight();
+			w = bounds.getWidth();
+			h = bounds.getHeight();
 			g.setColor(render.drawCoordinateGridColor, false);
 			g.drawString(label, pos[0]-(w/2.0f), baseY2-(h/2.0f)+offset, dist);
 		}
@@ -11866,8 +11865,8 @@ public class RenderSky
 			little = 4;
 		}
 		boundssm = g.getStringBounds(labelsm);
-		w = (float) boundssm.getWidth();
-		h = (float) boundssm.getHeight();
+		w = boundssm.getWidth();
+		h = boundssm.getHeight();
 		index ++;
 		pos = new float[] {graphMarginX + (float) (index*s*0.5f), baseY1};
 		g.drawString(labelsm, pos[0]-(w/2.0f), baseY1-(h/2.0f)-little, dist);
@@ -11901,8 +11900,8 @@ public class RenderSky
 				labeld = Translate.translate(Translate.JPARSEC_DOUBLE);
 				boundsd = g.getStringBounds(labeld);
 			}
-			w = (float) boundsd.getWidth();
-			h = (float) boundsd.getHeight();
+			w = boundsd.getWidth();
+			h = boundsd.getHeight();
 			g.drawString(labeld, pos[0]-(w/2.0f), baseY2-(h/2.0f), dist);
 			index ++;
 
@@ -11916,16 +11915,16 @@ public class RenderSky
 				labelv = Translate.translate(Translate.JPARSEC_VARIABLE);
 				boundsv = g.getStringBounds(labelv);
 			}
-			w = (float) boundsv.getWidth();
-			h = (float) boundsv.getHeight();
+			w = boundsv.getWidth();
+			h = boundsv.getHeight();
 			g.drawString(labelv, pos[0]-(w/2.0f), baseY2-(h/2.0f), dist);
 
 			if (labelts==null) {
 				labelts = Translate.translate(Translate.JPARSEC_TYPES_OF_STARS);
 				boundsts = g.getStringBounds(labelts);
 			}
-			w = (float) (boundsts.getWidth()+s);
-			h = (float) boundsts.getHeight();
+			w = (float) (boundsts.getWidth() + s);
+			h = boundsts.getHeight();
 			g.drawString(labelts, pos[0]-(w/2.0f), baseY1-(h/2.0f), dist);
 
 			index ++;
@@ -11954,8 +11953,8 @@ public class RenderSky
 				labeloc = Translate.translate(Translate.JPARSEC_OPEN_CLUSTER);
 				boundsoc = g.getStringBounds(labeloc);
 			}
-			w = (float) boundsoc.getWidth();
-			h = (float) boundsoc.getHeight();
+			w = boundsoc.getWidth();
+			h = boundsoc.getHeight();
 			g.drawString(labeloc, pos[0]-(w/2.0f), baseY2-(h/2.0f), dist);
 			index ++;
 
@@ -11968,8 +11967,8 @@ public class RenderSky
 				labelgc = Translate.translate(Translate.JPARSEC_GLOBULAR);
 				boundsgc = g.getStringBounds(labelgc);
 			}
-			w = (float) boundsgc.getWidth();
-			h = (float) boundsgc.getHeight();
+			w = boundsgc.getWidth();
+			h = boundsgc.getHeight();
 			g.drawString(labelgc, pos[0]-(w/2.0f), baseY2-(h/2.0f), dist);
 			index ++;
 		}
@@ -12046,8 +12045,8 @@ public class RenderSky
 				labeln = Translate.translate(Translate.JPARSEC_NEBULOSE);
 				boundsn = g.getStringBounds(labeln);
 			}
-			w = (float) boundsn.getWidth();
-			h = (float) boundsn.getHeight();
+			w = boundsn.getWidth();
+			h = boundsn.getHeight();
 			g.drawString(labeln, pos[0]-(w/2.0f), baseY2-(h/2.0f), dist);
 			index ++;
 		}
@@ -12102,8 +12101,8 @@ public class RenderSky
 				labelm = Translate.translate(Translate.JPARSEC_MILKY_WAY);
 				boundsm = g.getStringBounds(labelm);
 			}
-			w = (float) boundsm.getWidth();
-			h = (float) boundsm.getHeight();
+			w = boundsm.getWidth();
+			h = boundsm.getHeight();
 			g.drawString(labelm, pos[0]-(w/2.0f), baseY2-(h/2.0f), dist);
 			index ++;
 		}
@@ -12122,8 +12121,8 @@ public class RenderSky
 				}
 			}
 			Rectangle boundsdso = g.getStringBounds(labeldso);
-			w = (float) (boundsdso.getWidth());
-			h = (float) boundsdso.getHeight();
+			w = (boundsdso.getWidth());
+			h = boundsdso.getHeight();
 			g.drawString(labeldso, pos[0]-(w/2.0f), baseY1-(h/2.0f), dist);
 
 		if (render.drawDeepSkyObjects) {
@@ -12139,8 +12138,8 @@ public class RenderSky
 				labelpn = Translate.translate(Translate.JPARSEC_PLAN_NEB);
 				boundspn = g.getStringBounds(labelpn);
 			}
-			w = (float) boundspn.getWidth();
-			h = (float) boundspn.getHeight();
+			w = boundspn.getWidth();
+			h = boundspn.getHeight();
 			g.drawString(labelpn, pos[0]-(w/2.0f), baseY2-(h/2.0f), dist);
 			index ++;
 
@@ -12152,8 +12151,8 @@ public class RenderSky
 				labelg = Translate.translate(Translate.JPARSEC_GALAXY);
 				boundsg = g.getStringBounds(labelg);
 			}
-			w = (float) boundsg.getWidth();
-			h = (float) boundsg.getHeight();
+			w = boundsg.getWidth();
+			h = boundsg.getHeight();
 			g.drawString(labelg, pos[0]-(w/2.0f), baseY2-(h/2.0f), dist);
 			index ++;
 		}
@@ -12168,8 +12167,8 @@ public class RenderSky
 				labelcon = Translate.translate(321);
 				boundcon = g.getStringBounds(labelcon);
 			}
-			w = (float) boundcon.getWidth();
-			h = (float) boundcon.getHeight();
+			w = boundcon.getWidth();
+			h = boundcon.getHeight();
 			g.drawString(labelcon, pos[0]-(w/2.0f), baseY2-(h/2.0f), dist);
 			index ++;
 		}
@@ -12184,8 +12183,8 @@ public class RenderSky
 				labellim = Translate.translate(1071);
 				boundlim = g.getStringBounds(labellim);
 			}
-			w = (float) boundlim.getWidth();
-			h = (float) boundlim.getHeight();
+			w = boundlim.getWidth();
+			h = boundlim.getHeight();
 			g.drawString(labellim, pos[0]-(w/2.0f), baseY2-(h/2.0f), dist);
 			index ++;
 		}
@@ -12199,8 +12198,8 @@ public class RenderSky
 				labelmet = Translate.translate(1276);
 				boundmet = g.getStringBounds(labelmet);
 			}
-			w = (float) boundmet.getWidth();
-			h = (float) boundmet.getHeight();
+			w = boundmet.getWidth();
+			h = boundmet.getHeight();
 			g.drawString(labelmet, pos[0]-(w/2.0f), baseY2-(h/2.0f), dist);
 			index ++;
 		}
@@ -12227,8 +12226,8 @@ public class RenderSky
 								label = (String) data[1];
 								Rectangle boundsg = g.getStringBounds(label);
 								g.setColor(render.drawCoordinateGridColor, 255);
-								w = (float) boundsg.getWidth();
-								h = (float) boundsg.getHeight();
+								w = boundsg.getWidth();
+								h = boundsg.getHeight();
 								g.drawString(label, pos[0]-(w/2.0f), baseY2-(h/2.0f), dist);
 						}
 					}
@@ -12343,7 +12342,7 @@ public class RenderSky
 		double overs = 1.0; //+oversampling*2.0;
 		float dangle = (float) (Constant.PI_OVER_TWO);
 		if (maglim == render.drawStarsLimitingMagnitude || !render.drawFastLabelsInWideFields)
-				dangle /= 3.0f;
+			dangle /= 3.0f;
 		if (render.drawFastLabels == SUPERIMPOSED_LABELS.AVOID_SUPERIMPOSING_VERY_ACCURATE)
 			dangle /= 3.0f;
 		int np,i,imax=labels.size();

@@ -248,12 +248,13 @@ public class AstroDate implements Serializable
 	}
 
 	/**
-	 * Convert a GregorianCalendar instance to an {@linkplain AstroDate}. <BR>
+	 * Convert a GregorianCalendar instance to an {@linkplain AstroDate}.<BR>
 	 *
 	 * @param cal An instance of java.util.GregorianCalendar.
 	 * @deprecated Dates cannot be represented in a {@linkplain GregorianCalendar}
 	 * with a precision better than 1 ms.
 	 */
+	@Deprecated
 	public AstroDate(GregorianCalendar cal)
 	{
 		this.year = cal.get(GregorianCalendar.YEAR);

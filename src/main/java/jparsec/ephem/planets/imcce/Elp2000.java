@@ -21,6 +21,10 @@
  */
 package jparsec.ephem.planets.imcce;
 
+import java.io.BufferedInputStream;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.util.zip.GZIPInputStream;
 import jparsec.astronomy.CoordinateSystem;
 import jparsec.ephem.Ephem;
 import jparsec.ephem.EphemerisElement;
@@ -64,6 +68,33 @@ import jparsec.util.JPARSECException;
  */
 public class Elp2000
 {
+	private final static Elp2000_data1 data1;
+	private final static Elp2000_data2 data2;
+
+	static {
+		data1 = (Elp2000_data1) deserialise("elp2000_data1.ser.gz");
+		data2 = (Elp2000_data2) deserialise("elp2000_data2.ser.gz");
+	}
+
+	private static Object deserialise (final String fileName) {
+		try {
+			InputStream is = Elp2000.class.getClassLoader().getResourceAsStream("jparsec/ephem/planets/imcce/" + fileName);
+			BufferedInputStream bis = new BufferedInputStream (is);
+			GZIPInputStream gis = new GZIPInputStream(bis);
+			ObjectInputStream ois = new ObjectInputStream(gis);
+			Object result = ois.readObject();
+
+			ois.close();
+			gis.close();
+			bis.close();
+			is.close();
+
+			return result;
+		} catch (Exception e) {
+			throw new RuntimeException("Could not deserialise " + fileName);
+		}
+	}
+
 	// private constructor so that this class cannot be instantiated.
 	private Elp2000() {}
 
@@ -83,8 +114,7 @@ public class Elp2000
 	 *        theory (slower).
 	 * @return An array with the geocentric rectangular positions. Units are AU.
 	 */
-	public static double[] calc(double JD, // Julian Day
-			double prec) // Truncation level
+	public static double[] calc(final double JD, final double prec)
 	{
 		double cpi, cpi2, pis2, rad, deg, c1, c2, ath, a0, am, alfa, dtasm;
 		double Zw[][] = new double[6][6];
@@ -206,253 +236,244 @@ public class Elp2000
 		// Calculate element
 		for (ific = 1; ific <= 36; ific++)
 		{
-			Elp2000Set1 elp0[] = null;
-			Elp2000Set1 elp1[] = null;
-			Elp2000Set1 elp2[] = null;
-			Elp2000Set2 elp3[] = null;
-			Elp2000Set3 elp4[] = null;
+			Elp2000Set1 elp0[];
+			Elp2000Set1 elp1[];
+			Elp2000Set1 elp2[];
+			Elp2000Set2 elp3[];
+			Elp2000Set3 elp4[];
 
-			int iv = (int) Functions.module((double) (ific - 1.0), 3.0) + 1;
+			int iv = (int) Functions.module(ific - 1.0, 3.0) + 1;
 			switch (ific)
 			{
 			case 1:
-				elp0 = elp_lon_sine_0.LonSine0;
-				ZZr[iv] += calcELEM1(elp0, ific, iv, am, pis2, cpi2, dtasm, delnp, delnu, dele, delep, delg, ZZt, del,
-						pre);
-				elp1 = elp_lon_sine_1.LonSine1;
-				ZZr[iv] += calcELEM1(elp1, ific, iv, am, pis2, cpi2, dtasm, delnp, delnu, dele, delep, delg, ZZt, del,
-						pre);
-				elp2 = elp_lon_sine_2.LonSine2;
-				ZZr[iv] += calcELEM1(elp2, ific, iv, am, pis2, cpi2, dtasm, delnp, delnu, dele, delep, delg, ZZt, del,
-						pre);
+				elp0 = data1.elp_lon_sine_0_LonSine0;
+				ZZr[iv] += calcELEM1(elp0, ific, iv, am, pis2, cpi2, dtasm, delnp, delnu, dele, delep, delg, ZZt, del, pre);
+				elp1 = data1.elp_lon_sine_1_LonSine1;
+				ZZr[iv] += calcELEM1(elp1, ific, iv, am, pis2, cpi2, dtasm, delnp, delnu, dele, delep, delg, ZZt, del, pre);
+				elp2 = data1.elp_lon_sine_2_LonSine2;
+				ZZr[iv] += calcELEM1(elp2, ific, iv, am, pis2, cpi2, dtasm, delnp, delnu, dele, delep, delg, ZZt, del, pre);
 				break;
 			case 2:
-				elp0 = elp_lat_sine_0.LatSine0;
-				ZZr[iv] += calcELEM1(elp0, ific, iv, am, pis2, cpi2, dtasm, delnp, delnu, dele, delep, delg, ZZt, del,
-						pre);
-				elp1 = elp_lat_sine_1.LatSine1;
-				ZZr[iv] += calcELEM1(elp1, ific, iv, am, pis2, cpi2, dtasm, delnp, delnu, dele, delep, delg, ZZt, del,
-						pre);
-				elp2 = elp_lat_sine_2.LatSine2;
-				ZZr[iv] += calcELEM1(elp2, ific, iv, am, pis2, cpi2, dtasm, delnp, delnu, dele, delep, delg, ZZt, del,
-						pre);
+				elp0 = data1.elp_lat_sine_0_LatSine0;
+				ZZr[iv] += calcELEM1(elp0, ific, iv, am, pis2, cpi2, dtasm, delnp, delnu, dele, delep, delg, ZZt, del, pre);
+				elp1 = data1.elp_lat_sine_1_LatSine1;
+				ZZr[iv] += calcELEM1(elp1, ific, iv, am, pis2, cpi2, dtasm, delnp, delnu, dele, delep, delg, ZZt, del, pre);
+				elp2 = data1.elp_lat_sine_2_LatSine2;
+				ZZr[iv] += calcELEM1(elp2, ific, iv, am, pis2, cpi2, dtasm, delnp, delnu, dele, delep, delg, ZZt, del, pre);
 				break;
 			case 3:
-				elp0 = elp_rad_cose_0.RadCose0;
-				ZZr[iv] += calcELEM1(elp0, ific, iv, am, pis2, cpi2, dtasm, delnp, delnu, dele, delep, delg, ZZt, del,
-						pre);
-				elp1 = elp_rad_cose_1.RadCose1;
-				ZZr[iv] += calcELEM1(elp1, ific, iv, am, pis2, cpi2, dtasm, delnp, delnu, dele, delep, delg, ZZt, del,
-						pre);
+				elp0 = data1.elp_rad_cose_0_RadCose0;
+				ZZr[iv] += calcELEM1(elp0, ific, iv, am, pis2, cpi2, dtasm, delnp, delnu, dele, delep, delg, ZZt, del, pre);
+				elp1 = data1.elp_rad_cose_1_RadCose1;
+				ZZr[iv] += calcELEM1(elp1, ific, iv, am, pis2, cpi2, dtasm, delnp, delnu, dele, delep, delg, ZZt, del, pre);
 				break;
 			case 4:
-				elp3 = elp_lon_earth_perturb.Lon;
+				elp3 = data1.elp_lon_earth_perturb_Lon;
 				ZZr[iv] += calcELEM2(elp3, ific, iv, cpi2, deg, zeta, ZZt, del, pre);
 				break;
 			case 5:
-				elp3 = elp_lat_earth_perturb.Lat;
+				elp3 = data1.elp_lat_earth_perturb_Lat;
 				ZZr[iv] += calcELEM2(elp3, ific, iv, cpi2, deg, zeta, ZZt, del, pre);
 				break;
 			case 6:
-				elp3 = elp_rad_earth_perturb.Rad;
+				elp3 = data1.elp_rad_earth_perturb_Rad;
 				ZZr[iv] += calcELEM2(elp3, ific, iv, cpi2, deg, zeta, ZZt, del, pre);
 				break;
 			case 7:
-				elp3 = elp_earth_perturb_t.Lon;
+				elp3 = data1.elp_earth_perturb_t_Lon;
 				ZZr[iv] += calcELEM2(elp3, ific, iv, cpi2, deg, zeta, ZZt, del, pre);
 				break;
 			case 8:
-				elp3 = elp_earth_perturb_t.Lat;
+				elp3 = data1.elp_earth_perturb_t_Lat;
 				ZZr[iv] += calcELEM2(elp3, ific, iv, cpi2, deg, zeta, ZZt, del, pre);
 				break;
 			case 9:
-				elp3 = elp_earth_perturb_t.Rad;
+				elp3 = data1.elp_earth_perturb_t_Rad;
 				ZZr[iv] += calcELEM2(elp3, ific, iv, cpi2, deg, zeta, ZZt, del, pre);
 				break;
 			case 10:
-				ZZr[iv] += calcELEM3(elp_plan_perturb10_0.Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb10_1.Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb10_2.Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb10_3.Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb10_4.Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb10_5.Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb10_6.Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb10_7.Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb10_8.Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb10_9.Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb10_10.Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb10_11.Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb10_12.Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb10_13.Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb10_14.Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb10_15.Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb10_16.Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb10_17.Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb10_18.Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb10_19.Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb10_20.Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb10_21.Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb10_22.Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb10_23.Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb10_24.Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb10_25.Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb10_26.Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb10_27.Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb10_28.Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb10_29.Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb10_30.Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb10_31.Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb10_32.Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb10_33.Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb10_34.Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb10_35.Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data1.elp_plan_perturb10_0_Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data1.elp_plan_perturb10_1_Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data1.elp_plan_perturb10_2_Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data1.elp_plan_perturb10_3_Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data1.elp_plan_perturb10_4_Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data1.elp_plan_perturb10_5_Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data1.elp_plan_perturb10_6_Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data1.elp_plan_perturb10_7_Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data1.elp_plan_perturb10_8_Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data1.elp_plan_perturb10_9_Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data1.elp_plan_perturb10_10_Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data1.elp_plan_perturb10_11_Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data1.elp_plan_perturb10_12_Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data1.elp_plan_perturb10_13_Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data1.elp_plan_perturb10_14_Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data1.elp_plan_perturb10_15_Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data1.elp_plan_perturb10_16_Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data1.elp_plan_perturb10_17_Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data1.elp_plan_perturb10_18_Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data1.elp_plan_perturb10_19_Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data1.elp_plan_perturb10_20_Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data1.elp_plan_perturb10_21_Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data1.elp_plan_perturb10_22_Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data1.elp_plan_perturb10_23_Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data1.elp_plan_perturb10_24_Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data1.elp_plan_perturb10_25_Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data1.elp_plan_perturb10_26_Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data1.elp_plan_perturb10_27_Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data1.elp_plan_perturb10_28_Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data1.elp_plan_perturb10_29_Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data1.elp_plan_perturb10_30_Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data1.elp_plan_perturb10_31_Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data1.elp_plan_perturb10_32_Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data1.elp_plan_perturb10_33_Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data1.elp_plan_perturb10_34_Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data1.elp_plan_perturb10_35_Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
 				break;
 			case 11:
-				ZZr[iv] += calcELEM3(elp_plan_perturb11_0.Lat, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb11_1.Lat, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb11_2.Lat, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb11_3.Lat, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb11_4.Lat, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb11_5.Lat, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb11_6.Lat, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb11_7.Lat, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb11_8.Lat, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb11_9.Lat, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb11_10.Lat, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb11_11.Lat, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb11_12.Lat, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb11_13.Lat, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data2.elp_plan_perturb11_0_Lat, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data2.elp_plan_perturb11_1_Lat, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data2.elp_plan_perturb11_2_Lat, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data2.elp_plan_perturb11_3_Lat, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data2.elp_plan_perturb11_4_Lat, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data2.elp_plan_perturb11_5_Lat, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data2.elp_plan_perturb11_6_Lat, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data2.elp_plan_perturb11_7_Lat, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data2.elp_plan_perturb11_8_Lat, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data2.elp_plan_perturb11_9_Lat, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data2.elp_plan_perturb11_10_Lat, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data2.elp_plan_perturb11_11_Lat, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data2.elp_plan_perturb11_12_Lat, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data2.elp_plan_perturb11_13_Lat, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
 				break;
 			case 12:
-				ZZr[iv] += calcELEM3(elp_plan_perturb12_0.Rad, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb12_1.Rad, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb12_2.Rad, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb12_3.Rad, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb12_4.Rad, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb12_5.Rad, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb12_6.Rad, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb12_7.Rad, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb12_8.Rad, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb12_9.Rad, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb12_10.Rad, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb12_11.Rad, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb12_12.Rad, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb12_13.Rad, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb12_14.Rad, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb12_15.Rad, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb12_16.Rad, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data2.elp_plan_perturb12_0_Rad, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data2.elp_plan_perturb12_1_Rad, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data2.elp_plan_perturb12_2_Rad, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data2.elp_plan_perturb12_3_Rad, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data2.elp_plan_perturb12_4_Rad, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data2.elp_plan_perturb12_5_Rad, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data2.elp_plan_perturb12_6_Rad, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data2.elp_plan_perturb12_7_Rad, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data2.elp_plan_perturb12_8_Rad, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data2.elp_plan_perturb12_9_Rad, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data2.elp_plan_perturb12_10_Rad, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data2.elp_plan_perturb12_11_Rad, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data2.elp_plan_perturb12_12_Rad, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data2.elp_plan_perturb12_13_Rad, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data2.elp_plan_perturb12_14_Rad, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data2.elp_plan_perturb12_15_Rad, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data2.elp_plan_perturb12_16_Rad, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
 				break;
 			case 13:
-				ZZr[iv] += calcELEM3(elp_plan_perturb13_0.Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb13_1.Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb13_2.Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb13_3.Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb13_4.Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb13_5.Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb13_6.Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb13_7.Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb13_8.Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb13_9.Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb13_10.Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data2.elp_plan_perturb13_0_Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data2.elp_plan_perturb13_1_Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data2.elp_plan_perturb13_2_Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data2.elp_plan_perturb13_3_Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data2.elp_plan_perturb13_4_Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data2.elp_plan_perturb13_5_Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data2.elp_plan_perturb13_6_Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data2.elp_plan_perturb13_7_Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data2.elp_plan_perturb13_8_Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data2.elp_plan_perturb13_9_Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data2.elp_plan_perturb13_10_Lon, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
 				break;
 			case 14:
-				ZZr[iv] += calcELEM3(elp_plan_perturb14_0.Lat, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb14_1.Lat, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb14_2.Lat, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data2.elp_plan_perturb14_0_Lat, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data2.elp_plan_perturb14_1_Lat, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data2.elp_plan_perturb14_2_Lat, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
 				break;
 			case 15:
-				ZZr[iv] += calcELEM3(elp_plan_perturb15_0.Rad, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb15_1.Rad, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb15_2.Rad, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb15_3.Rad, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
-				ZZr[iv] += calcELEM3(elp_plan_perturb15_4.Rad, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data2.elp_plan_perturb15_0_Rad, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data2.elp_plan_perturb15_1_Rad, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data2.elp_plan_perturb15_2_Rad, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data2.elp_plan_perturb15_3_Rad, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
+				ZZr[iv] += calcELEM3(data2.elp_plan_perturb15_4_Rad, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
 				break;
 			case 16:
-				elp4 = elp_plan_perturb2.Lon;
+				elp4 = data1.elp_plan_perturb2_Lon;
 				ZZr[iv] += calcELEM3(elp4, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
 				break;
 			case 17:
-				elp4 = elp_plan_perturb2.Lat;
+				elp4 = data1.elp_plan_perturb2_Lat;
 				ZZr[iv] += calcELEM3(elp4, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
 				break;
 			case 18:
-				elp4 = elp_plan_perturb2.Rad;
+				elp4 = data1.elp_plan_perturb2_Rad;
 				ZZr[iv] += calcELEM3(elp4, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
 				break;
 			case 19:
-				elp4 = elp_plan_perturb2.Lon_t;
+				elp4 = data1.elp_plan_perturb2_Lon_t;
 				ZZr[iv] += calcELEM3(elp4, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
 				break;
 			case 20:
-				elp4 = elp_plan_perturb2.Lat_t;
+				elp4 = data1.elp_plan_perturb2_Lat_t;
 				ZZr[iv] += calcELEM3(elp4, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
 				break;
 			case 21:
-				elp4 = elp_plan_perturb2.Rad_t;
+				elp4 = data1.elp_plan_perturb2_Rad_t;
 				ZZr[iv] += calcELEM3(elp4, ific, iv, cpi2, deg, ZZp, ZZt, del, pre);
 				break;
 			case 22:
-				elp3 = elp_tidal.Lon;
+				elp3 = data1.elp_tidal_Lon;
 				ZZr[iv] += calcELEM2(elp3, ific, iv, cpi2, deg, zeta, ZZt, del, pre);
 				break;
 			case 23:
-				elp3 = elp_tidal.Lat;
+				elp3 = data1.elp_tidal_Lat;
 				ZZr[iv] += calcELEM2(elp3, ific, iv, cpi2, deg, zeta, ZZt, del, pre);
 				break;
 			case 24:
-				elp3 = elp_tidal.Rad;
+				elp3 = data1.elp_tidal_Rad;
 				ZZr[iv] += calcELEM2(elp3, ific, iv, cpi2, deg, zeta, ZZt, del, pre);
 				break;
 			case 25:
-				elp3 = elp_tidal.Lon_t;
+				elp3 = data1.elp_tidal_Lon_t;
 				ZZr[iv] += calcELEM2(elp3, ific, iv, cpi2, deg, zeta, ZZt, del, pre);
 				break;
 			case 26:
-				elp3 = elp_tidal.Lat_t;
+				elp3 = data1.elp_tidal_Lat_t;
 				ZZr[iv] += calcELEM2(elp3, ific, iv, cpi2, deg, zeta, ZZt, del, pre);
 				break;
 			case 27:
-				elp3 = elp_tidal.Rad_t;
+				elp3 = data1.elp_tidal_Rad_t;
 				ZZr[iv] += calcELEM2(elp3, ific, iv, cpi2, deg, zeta, ZZt, del, pre);
 				break;
 			case 28:
-				elp3 = elp_moon.Lon;
+				elp3 = data1.elp_moon_Lon;
 				ZZr[iv] += calcELEM2(elp3, ific, iv, cpi2, deg, zeta, ZZt, del, pre);
 				break;
 			case 29:
-				elp3 = elp_moon.Lat;
+				elp3 = data1.elp_moon_Lat;
 				ZZr[iv] += calcELEM2(elp3, ific, iv, cpi2, deg, zeta, ZZt, del, pre);
 				break;
 			case 30:
-				elp3 = elp_moon.Rad;
+				elp3 = data1.elp_moon_Rad;
 				ZZr[iv] += calcELEM2(elp3, ific, iv, cpi2, deg, zeta, ZZt, del, pre);
 				break;
 			case 31:
-				elp3 = elp_rel.Lon;
+				elp3 = data1.elp_rel_Lon;
 				ZZr[iv] += calcELEM2(elp3, ific, iv, cpi2, deg, zeta, ZZt, del, pre);
 				break;
 			case 32:
-				elp3 = elp_rel.Lat;
+				elp3 = data1.elp_rel_Lat;
 				ZZr[iv] += calcELEM2(elp3, ific, iv, cpi2, deg, zeta, ZZt, del, pre);
 				break;
 			case 33:
-				elp3 = elp_rel.Rad;
+				elp3 = data1.elp_rel_Rad;
 				ZZr[iv] += calcELEM2(elp3, ific, iv, cpi2, deg, zeta, ZZt, del, pre);
 				break;
 			case 34:
-				elp3 = elp_plan.Lon;
+				elp3 = data1.elp_plan_Lon;
 				ZZr[iv] += calcELEM2(elp3, ific, iv, cpi2, deg, zeta, ZZt, del, pre);
 				break;
 			case 35:
-				elp3 = elp_plan.Lat;
+				elp3 = data1.elp_plan_Lat;
 				ZZr[iv] += calcELEM2(elp3, ific, iv, cpi2, deg, zeta, ZZt, del, pre);
 				break;
 			case 36:
-				elp3 = elp_plan.Rad;
+				elp3 = data1.elp_plan_Rad;
 				ZZr[iv] += calcELEM2(elp3, ific, iv, cpi2, deg, zeta, ZZt, del, pre);
 				break;
 			}
-			;
 		}
 
 		ZZr[1] = ZZr[1] / rad + Zw[1][1] + Zw[1][2] * ZZt[2] + Zw[1][3] * ZZt[3] + Zw[1][4] * ZZt[4] + Zw[1][5] * ZZt[5];
@@ -477,8 +498,7 @@ public class Elp2000
 		ZZr[2] = pwqw * x1 + qw2 * x2 - qw * x3;
 		ZZr[3] = -pw * x1 + qw * x2 + (pw2 + qw2 - 1.0) * x3;
 
-		return new double[]
-		{ ZZr[1] / Constant.AU, ZZr[2] / Constant.AU, ZZr[3] / Constant.AU };
+		return new double[] { ZZr[1] / Constant.AU, ZZr[2] / Constant.AU, ZZr[3] / Constant.AU };
 	}
 
 	// Main problem, files 1-3
@@ -486,7 +506,7 @@ public class Elp2000
 			double dtasm, double delnp, double delnu, double dele, double delep, double delg, double[] ZZt,
 			double[][] del, double[] pre)
 	{
-		double tgv, Zx = 0.0, Zy = 0.0, Zr = 0.0;
+		double tgv, Zx, Zy, Zr = 0.0;
 
 		for (int i = 0; i < elp.length; i++)
 		{

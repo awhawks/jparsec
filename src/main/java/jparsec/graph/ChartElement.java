@@ -878,8 +878,8 @@ public class ChartElement implements Serializable
 		if (w < 280) g.setFont(Graphics.FONT.getDerivedFont(g.getFont(), g.getFont().getSize()-2));
 		if (w >= 280 && w < 380) g.setFont(Graphics.FONT.getDerivedFont(g.getFont(), g.getFont().getSize()-1));
 		int offy = g.getFont().getSize();
-		float scaleX = -(0.7f * w) / (2f * (float) radiusX);
-		float scaleY = -(0.7f * h) / (2f * (float) radiusY);
+		float scaleX = -(0.7f * w) / (2f * radiusX);
+		float scaleY = -(0.7f * h) / (2f * radiusY);
 		float x0 = w/2+offy*2, y0 = h/2-offy;
 		int r = 3;
 		g.setColor(Color.BLACK.getRGB(), true);
