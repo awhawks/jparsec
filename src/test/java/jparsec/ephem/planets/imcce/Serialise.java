@@ -14,29 +14,12 @@ import java.util.zip.GZIPOutputStream;
 //import java.nio.file.Paths;
 
 public class Serialise {
-<<<<<<< HEAD
-    private final static Elp2000_data1 data1 = new Elp2000_data1();
-    private final static Elp2000_data2 data2 = new Elp2000_data2();
-=======
     private static Elp2000_data data = new Elp2000_data();
->>>>>>> origin/simplify-elp2000
 
     private Serialise () {
     }
 
     public static void main(final String[] args) throws Exception {
-<<<<<<< HEAD
-        long t0, t1, t2;
-
-        t0 = System.currentTimeMillis();
-        //serialiseObject(data1, "elp2000_data1.ser.gz");
-        Elp2000_data1 newData1 = (Elp2000_data1) deserialiseObject("elp2000_data1.ser.gz");
-        t1 = System.currentTimeMillis();
-        //serialiseObject(data2, "elp2000_data2.ser.gz");
-        Elp2000_data2 newData2 = (Elp2000_data2) deserialiseObject("elp2000_data2.ser.gz");
-        t2 = System.currentTimeMillis();
-        System.out.println("data1 " + (t1 - t0) + ", data2 " + (t2 - t1));
-=======
         long t0, t1;
 
         t0 = System.currentTimeMillis();
@@ -44,7 +27,6 @@ public class Serialise {
         //serialiseObject(data, "elp2000_data.ser.gz");
         t1 = System.currentTimeMillis();
         System.out.println("elp2000_data " + (t1 - t0));
->>>>>>> origin/simplify-elp2000
     }
 
     private static void serialiseObject (final Object obj, final String fileName) throws Exception {
