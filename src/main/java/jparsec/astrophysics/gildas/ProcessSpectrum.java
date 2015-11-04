@@ -1108,6 +1108,17 @@ public class ProcessSpectrum {
         map.put(new String(Gildas30m.TELES), new Parameter(t, Gildas30m.TELES_DESC));
         map.put(new String(Gildas30m.LINE), new Parameter(m, Gildas30m.LINE_DESC));
 
+        map.put(new String(Gildas30m.LAMBDA), new Parameter(sp.get(Gildas30m.LAMBDA).toDouble(), Gildas30m.LAMBDA_DESC));
+        map.put(new String(Gildas30m.BETA), new Parameter(sp.get(Gildas30m.BETA).toDouble(), Gildas30m.BETA_DESC));
+        map.put(new String(Gildas30m.LAMBDA_OFF), new Parameter(sp.get(Gildas30m.LAMBDA_OFF).toFloat(), Gildas30m.LAMBDA_OFF_DESC));
+        map.put(new String(Gildas30m.BETA_OFF), new Parameter(sp.get(Gildas30m.BETA_OFF).toFloat(), Gildas30m.BETA_OFF_DESC));
+        map.put(new String(Gildas30m.EPOCH), new Parameter(sp.get(Gildas30m.EPOCH).toFloat(), Gildas30m.EPOCH_DESC));
+        map.put(new String(Gildas30m.PROJECTION), new Parameter(sp.get(Gildas30m.PROJECTION).toInt(), Gildas30m.PROJECTION_DESC));
+        map.put(new String(Gildas30m.DOPPLER), new Parameter(sp.get(Gildas30m.DOPPLER).toDouble(), Gildas30m.DOPPLER_DESC));
+        Parameter pheader[] = sp.getHeader().getHeaderParameters();
+        map.put(new String(Gildas30m.TYPEC), pheader[10]);
+        map.put(new String(Gildas30m.KIND), pheader[11]);
+
         Parameter aobj[] = new Parameter[15];
         aobj[0] = new Parameter(num, Gildas30m.NUM_DESC);
         aobj[1] = new Parameter(0, Gildas30m.BLOCK_DESC);
@@ -1119,8 +1130,8 @@ public class ProcessSpectrum {
         aobj[7] = new Parameter(0, Gildas30m.LDRED_DESC);
         aobj[8] = new Parameter(searchOffset1 * Constant.ARCSEC_TO_RAD, Gildas30m.OFF1_DESC);
         aobj[9] = new Parameter(searchOffset2 * Constant.ARCSEC_TO_RAD, Gildas30m.OFF2_DESC);
-        aobj[10] = new Parameter(0, Gildas30m.TYPEC_DESC);
-        aobj[11] = new Parameter(0, Gildas30m.KIND_DESC);
+        aobj[10] = pheader[10];
+        aobj[11] = pheader[11];
         aobj[12] = new Parameter(0, Gildas30m.QUALITY_DESC);
         aobj[13] = new Parameter(scan, Gildas30m.SCAN_DESC);
         aobj[14] = new Parameter(0, Gildas30m.POSA_DESC);

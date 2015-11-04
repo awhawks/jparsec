@@ -1196,6 +1196,7 @@ public class Spectrum30m implements Serializable
         map.put(Gildas30m.BETA_OFF, new Parameter(sp.offsetY * Constant.ARCSEC_TO_RAD, Gildas30m.BETA_OFF_DESC));
         map.put(Gildas30m.NPHASE, new Parameter(nph, Gildas30m.NPHASE_DESC));
         map.put(Gildas30m.SWMODE, new Parameter(swm, Gildas30m.SWMODE_DESC));
+        map.put(Gildas30m.TYPEC, new Parameter(Gildas30m.COORDINATES_EQUATORIAL, Gildas30m.TYPEC_DESC));
         for(int i1 = 0; i1 < nph; i1++)
         {
             map.put(new String((new StringBuilder()).append(Gildas30m.SWDECALAGE).append(i1).toString()), new Parameter(swde, Gildas30m.SWDECALAGE_DESC));
@@ -1533,6 +1534,7 @@ public class Spectrum30m implements Serializable
 		        out[i].map.put(Gildas30m.OFF2, new Parameter(offsetY, Gildas30m.OFF2_DESC));
 		        out[i].map.put(Gildas30m.LAMBDA_OFF, new Parameter(offsetX, Gildas30m.LAMBDA_OFF_DESC));
 		        out[i].map.put(Gildas30m.BETA_OFF, new Parameter(offsetY, Gildas30m.BETA_OFF_DESC));
+		        out[i].map.put(Gildas30m.TYPEC, new Parameter(Gildas30m.COORDINATES_EQUATORIAL, Gildas30m.TYPEC_DESC));
 
 			   	double freqres = - velres * rfreq / (Constant.SPEED_OF_LIGHT * 0.001);
 		        out[i].map.put(Gildas30m.FREQ_RESOL, new Parameter(freqres, Gildas30m.FREQ_RESOL_DESC));
@@ -1803,6 +1805,7 @@ public class Spectrum30m implements Serializable
         map.put(Gildas30m.OFF2, new Parameter(offsetY, Gildas30m.OFF2_DESC));
         map.put(Gildas30m.LAMBDA_OFF, new Parameter(offsetX, Gildas30m.LAMBDA_OFF_DESC));
         map.put(Gildas30m.BETA_OFF, new Parameter(offsetY, Gildas30m.BETA_OFF_DESC));
+        map.put(Gildas30m.TYPEC, new Parameter(Gildas30m.COORDINATES_EQUATORIAL, Gildas30m.TYPEC_DESC));
 //        map.put(Gildas30m.OTF_NDUMPS, new Parameter(otfn, Gildas30m.OTF_NDUMPS_DESC));
 //        map.put(Gildas30m.OTF_LEN_HEADER, new Parameter(otfh, Gildas30m.OTF_LEN_HEADER_DESC));
 //        map.put(Gildas30m.OTF_LEN_DATA, new Parameter(otfd, Gildas30m.OTF_LEN_DATA_DESC));

@@ -285,7 +285,7 @@ public class Version
 						"Integration of orbits of comets/asteroids and light curves in the details of the objects in SkyChart.\n"+
 						"SkyChart shows the Carring rotation number and Brown lunation number in the details of the Sun and Moon.\n"+
 						"SkyChart can show trajectories of artificial satellites and the current Iridium flares.",
-				"      1.108: Code cleanup, bug fixes, and first useful version of ClearSky for desktop (Oct xx, 2015):\n"+
+				"      1.108: Code cleanup, bug fixes, and first useful version of ClearSky for desktop (Nov xx, 2015):\n"+
 						"Optimization to RenderSky to avoid creating too much arrays when projecting coordinates.\n"+
 						"StarEphem can optionally search and return ephemerides for stars up to magnitude 9.5, instead of the previous limit of 6.5.\n"+
 						"GPhotoCamera can now store photos in the SD card and correctly controls the camera in live view and bulb modes.\n"+
@@ -293,8 +293,9 @@ public class Version
 						"Precession.getAngles had a bug (EPS0 returned in arcsecs instead of radians) producing different errors in ephemerides optimized for accuracy.\n"+
 						"PlanetEphem, JPLEphemeris, and Vsop classes did not correctly manipulate offset positions for satellites.\n"+
 						"Observatory 'Pico Veleta' was 'Pico Veleto' before, name fixed.\n"+
-						"Gildas30m now supports the factor DOPPLER.\n"+
+						"Gildas30m now supports the factor DOPPLER, and properly exports the coordinate type when writting spectra.\n"+
 						"Method modifyRestFrequency in Spectrum30m fixed, with support for doppler factor. Added also modifyVelocityLSR.\n"+
+						"Carlo Dapor joined the development, contributing with many fixes and code cleanup.\n"+
 						"Code cleanup: UTF-8 conversion, hashCode implemented next to equals, mains removed, special characters in encoding-independent way, ..."
 
 				+FileIO.getLineSeparator(),
