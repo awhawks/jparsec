@@ -1,27 +1,25 @@
-/*
+/**
  * This file is part of JPARSEC library.
- *
+ * <p/>
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *
+ * <p/>
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- *
+ * <p/>
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- *
+ * <p/>
  * JPARSEC library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * <p/>
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 package jparsec.time.calendar;
-
-import java.io.Serializable;
 
 /**
  * Implements the Egyptian calendar. See Calendrical Calculations for reference.
@@ -29,129 +27,87 @@ import java.io.Serializable;
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
-public class Egyptian implements Serializable
-{
-	private static final long serialVersionUID = 1L;
+public class Egyptian extends BaseCalendar {
+    /**
+     * Calendar epoch.
+     * The Egyptian calendar year 1 started on Julian date 747/02/27
+     */
+    public static final long EPOCH = Calendar.fixedFromJD(1448638D);
+    /**
+     * Month names.
+     */
+    public static final String MONTH_NAMES[] = {
+            "Thoth", "Phaophi", "Athyr", "Choiak", "Tybi", "Mechir", "Phamenoth",
+            "Pharmuthi", "Pachon", "Payni", "Epiphi", "Mesori", "Epagomenai"
+    };
+    private static final long serialVersionUID = 6136242459594971142L;
 
-	/**
-	 * The year.
-	 */
-	public long year;
+    /**
+     * Fixed date constructor.
+     *
+     * @param fixedDate fixed date.
+     */
+    public Egyptian(final long fixedDate) {
+        super(EPOCH, fixedDate);
+    }
 
-	/**
-	 * Month.
-	 */
-	public int month;
+    Egyptian(final long epoch, final long fixedDate) {
+        super(epoch, fixedDate);
+    }
 
-	/**
-	 * Day.
-	 */
-	public int day;
+    /**
+     * Julian day constructor.
+     *
+     * @param julianDay Julian day.
+     */
+    public Egyptian(final double julianDay) {
+        super(EPOCH, julianDay);
+    }
 
-	/**
-	 * Calendar epoch.
-	 */
-	public static final long EPOCH = Calendar.fixedFromJD(1448638D);
+    Egyptian(final long epoch, final double julianDay) {
+        super(epoch, julianDay);
+    }
 
-	/**
-	 * Month names.
-	 */
-	public static final String MONTH_NAMES[] =
-	{ "Thoth", "Phaophi", "Athyr", "Choiak", "Tybi", "Mechir", "Phamenoth", "Pharmuthi", "Pachon", "Payni", "Epiphi",
-			"Mesori", "Epagomenai" };
+    /**
+     * Constructor with the date.
+     *
+     * @param year Year.
+     * @param month Month.
+     * @param day Day.
+     */
+    public Egyptian(final long year, final int month, final int day) {
+        super(EPOCH, year, month, day);
+    }
 
-	/**
-	 * Default constructor.
-	 */
-	public Egyptian() {}
+    Egyptian(final long epoch, final long year, final int month, final int day) {
+        super(epoch, year, month, day);
+    }
 
-	/**
-	 * Julian day constructor.
-	 *
-	 * @param jd Julian day.
-	 */
-	public Egyptian(int jd)
-	{
-		fromJulianDay(jd);
-	}
+    /**
+     * To fixed date...
+     *
+     * @param year Year.
+     * @param month Month.
+     * @param day Day.
+     * @return Fixed day.
+     */
+    @Override
+    long toFixed(final long year, final int month, final int day) {
+        return (this.epoch + 365L * (year - 1L) + (long) (30 * (month - 1)) + (long) day) - 1L;
+    }
 
-	/**
-	 * Constructor with the date.
-	 *
-	 * @param y Year.
-	 * @param m Month.
-	 * @param d Day.
-	 */
-	public Egyptian(long y, int m, int d)
-	{
-		year = y;
-		month = m;
-		day = d;
-	}
+    @Override
+    long yearFromFixed() {
+        return 1L + Calendar.quotient(this.fixed - this.epoch, 365D);
+    }
 
-	/**
-	 * To fixed day..
-	 *
-	 * @param year Year.
-	 * @param month Month.
-	 * @param day Day.
-	 * @return Fixed day.
-	 */
-	public static long toFixed(long year, int month, int day)
-	{
-		return (EPOCH + 365L * (year - 1L) + (long) (30 * (month - 1)) + (long) day) - 1L;
-	}
+    @Override
+    int monthFromFixed(final long year) {
+        return (int) (1L + Calendar.quotient(Calendar.mod(this.fixed - this.epoch, 365L), 30D));
+    }
 
-	/**
-	 * To fixed day.
-	 * @return The fixed day.
-	 */
-	public long toFixed()
-	{
-		return toFixed(year, month, day);
-	}
-
-	/**
-	 * Sets the date from the fixed day.
-	 *
-	 * @param l Fixed day.
-	 */
-	public void fromFixed(long l)
-	{
-		long l1 = l - EPOCH;
-		year = 1L + Calendar.quotient(l1, 365D);
-		month = (int) (1L + Calendar.quotient(Calendar.mod(l1, 365L), 30D));
-		day = (int) ((l1 - 365L * (year - 1L) - (long) (30 * (month - 1))) + 1L);
-	}
-
-	/**
-	 * Transforms a Egyptian date into a Julian day
-	 *
-	 * @param year Year.
-	 * @param month Month.
-	 * @param day Day.
-	 * @return Julian day.
-	 */
-	public static int toJulianDay(int year, int month, int day)
-	{
-		return (int) (toFixed(year, month, day) + Gregorian.EPOCH);
-	}
-
-	/**
-	 * Transforms a Egyptian date into a Julian day.
-	 * @return The Julian day.
-	 */
-	public int toJulianDay()
-	{
-		return (int) (toFixed() + Gregorian.EPOCH);
-	}
-
-	/**
-	 * Sets a Egyptian date with a given Julian day.
-	 * @param jd The Julian day.
-	 */
-	public void fromJulianDay(int jd)
-	{
-		fromFixed(jd - Gregorian.EPOCH);
-	}
+    @Override
+    int dayFromFixed(final long year, final int month) {
+        return (int) ((this.fixed - this.epoch - 365L * (year - 1L) - (long) (30 * (month - 1))) + 1L);
+    }
 }
