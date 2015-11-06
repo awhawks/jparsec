@@ -50,13 +50,14 @@ public class Armenian extends Egyptian
 		"Areg", "Ahekani", "Mareri", "Margach", "Hrotich", "Aweleach"
 	};
 
+	private static final long serialVersionUID = 2470952263348488987L;
+
 	/**
 	 * Constructor using a fixed date.
 	 *
 	 * @param fromFixed fixed date.
 	 */
-	public Armenian(final long fromFixed)
-	{
+	public Armenian(final long fromFixed) {
 		super(EPOCH, fromFixed);
 	}
 
@@ -65,8 +66,7 @@ public class Armenian extends Egyptian
 	 *
 	 * @param fromJulianDate Julian day.
 	 */
-	public Armenian(final double fromJulianDate)
-	{
+	public Armenian(final double fromJulianDate) {
 		super(EPOCH, fromJulianDate);
 	}
 
@@ -77,8 +77,7 @@ public class Armenian extends Egyptian
 	 * @param month Month.
 	 * @param day Day.
 	 */
-	public Armenian(final long year, final int month, final int day)
-	{
+	public Armenian(final long year, final int month, final int day) {
 		super(EPOCH, year, month, day);
 	}
 }

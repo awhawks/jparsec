@@ -55,6 +55,8 @@ public class Gregorian extends BaseCalendar
 		"August", "September", "October", "November", "December"
 	};
 
+	private static final long serialVersionUID = -1355689199554686175L;
+
 	/**
 	 * Create a Gregorian date from a fixed day.
 	 *

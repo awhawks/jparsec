@@ -40,18 +40,6 @@ import jparsec.util.JPARSECException;
  */
 public class Chinese extends BaseCalendar
 {
-	private static final long serialVersionUID = 1L;
-
-	/**
-	 * Cycle.
-	 */
-	public long cycle;
-
-	/**
-	 * Leap month flag.
-	 */
-	public boolean leapMonth;
-
 	/**
 	 * Calendar epoch.
 	 */
@@ -83,6 +71,18 @@ public class Chinese extends BaseCalendar
 
 	public static final CityElement TOKYO_OLD = new CityElement("Tokyo, Japan", Calendar.angle(139D, 46D, 0.0D), 35.7, 9.3177777777777777, 24);
 	public static final CityElement TOKYO_NEW = new CityElement("Tokyo, Japan", 135.0, 35.0, 9.0, 0);
+
+	private static final long serialVersionUID = -7348372384774729919L;
+
+	/**
+	 * Cycle.
+	 */
+	public long cycle;
+
+	/**
+	 * Leap month flag.
+	 */
+	public boolean leapMonth;
 
 	private transient int monthV;
 

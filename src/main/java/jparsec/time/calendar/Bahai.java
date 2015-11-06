@@ -37,8 +37,6 @@ import jparsec.observer.CityElement;
  */
 public class Bahai extends BaseCalendar
 {
-	private static final long serialVersionUID = 1L;
-
 	/**
 	 * Calendar epoch.
 	 */
@@ -81,12 +79,14 @@ public class Bahai extends BaseCalendar
 	/**
 	 * Haifa location.
 	 */
-	//public static final CityElement HAIFA = new CityElement("Haifa, Israel", 35D, 32.82, 2D, 0);
+	//public static final CityElement HAIFA = new CityElement("Haifa, Israel", 35, 32.82, 2, 0);
 
 	/**
 	 * Tehran location.
 	 */
 	public static final CityElement TEHRAN = new CityElement("Tehran, Iran", 51.43, 35.67, 3.5, 1353);
+
+	private static final long serialVersionUID = -2219563471051861858L;
 
 	/**
 	 * Major.
@@ -103,8 +103,7 @@ public class Bahai extends BaseCalendar
 	 *
 	 * @param fixedDate fixed date.
 	 */
-	public Bahai(final long fixedDate)
-	{
+	public Bahai(final long fixedDate) {
 		super(EPOCH, fixedDate);
 	}
 
@@ -113,8 +112,7 @@ public class Bahai extends BaseCalendar
 	 *
 	 * @param julianDay Julian day.
 	 */
-	public Bahai(final double julianDay)
-	{
+	public Bahai(final double julianDay) {
 		super(EPOCH, julianDay);
 	}
 
@@ -125,8 +123,7 @@ public class Bahai extends BaseCalendar
 	 * @param m Month.
 	 * @param d Day.
 	 */
-	public Bahai(final int y, final int m, final int d)
-	{
+	public Bahai(final int y, final int m, final int d) {
 		super(EPOCH, y, m, d);
 
 		yearFromFixed();
@@ -141,8 +138,7 @@ public class Bahai extends BaseCalendar
 	 * @param m Month.
 	 * @param d Day.
 	 */
-	public Bahai(final long mj, final int c, final int y, final int m, final int d)
-	{
+	public Bahai(final long mj, final int c, final int y, final int m, final int d) {
 		this((int) (((mj - 1) * 19) + c - 1) * 19 + y, m, d);
 	}
 
@@ -165,14 +161,14 @@ public class Bahai extends BaseCalendar
 			return toFixedFuture(yr, month, day);
 		}
 
-		long y = yr - 1L + Gregorian.yearFromFixed(EPOCH);
+		long y = yr - 1 + Gregorian.yearFromFixed(EPOCH);
 		long monthOffset;
 
 		if (month < 19) {
 			monthOffset = 19 * (month - 1);
 		}
 		else {
-			monthOffset = Gregorian.isLeapYear(y + 1L) ? 347 : 346;
+			monthOffset = Gregorian.isLeapYear(y + 1) ? 347 : 346;
 		}
 
 		return new Gregorian(y, 3, 20).fixed + monthOffset + (long) day;
@@ -185,8 +181,8 @@ public class Bahai extends BaseCalendar
 
 		long y = f - e + (this.fixed > new Gregorian(f, 3, 20).fixed ? 1 : 0);
 
-		this.major = 1L + y / 361;
-		this.cycle = 1 + (int) ((y - 1) % 361L) / 19;
+		this.major = 1 + y / 361;
+		this.cycle = 1 + (int) ((y - 1) % 361) / 19;
 
 		return 1 + ((y - 1) % 19);
 	}
@@ -233,11 +229,11 @@ public class Bahai extends BaseCalendar
 		double s1;
 
 		if (month < 19) {
-			s0 = (month - 1) * 19L - 1L;
+			s0 = (month - 1) * 19 - 1;
 			s1 = (double) yr - 0.5D;
 		}
 		else {
-			s0 = -21L;
+			s0 = -21;
 			s1 = (double) yr + 0.5D;
 		}
 
@@ -253,7 +249,7 @@ public class Bahai extends BaseCalendar
 	private long newYearOnOrBefore(long fixed)
 	{
 		double sunsetTime = Calendar.estimatePriorSolarLongitude(sunsetInTehran(fixed), Calendar.SPRING);
-		long l1 = (long) Math.floor(sunsetTime) - 1L;
+		long l1 = (long) Math.floor(sunsetTime) - 1;
 
 		while (Calendar.solarLongitude(sunsetInTehran(l1)) > Calendar.SPRING + 2.0) {
 			l1++;
@@ -273,7 +269,7 @@ public class Bahai extends BaseCalendar
 		try {
 			return Calendar.universalFromStandard(Calendar.sunset(fixed, TEHRAN), TEHRAN);
 		} catch (Exception ex) {
-			return 0.0D;
+			return 0.0;
 		}
 	}
 }
