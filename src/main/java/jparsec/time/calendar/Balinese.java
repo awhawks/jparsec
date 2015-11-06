@@ -25,347 +25,332 @@ import java.io.Serializable;
 
 /**
  * Implements the Balinese calendar. See Calendrical Calculations for reference.
- * <P>
- * Note that it is not possible to pass from a given date to a Julian day, since
- * no year exists in this calendar.
+ * <p>
+ * Note that it is not possible to pass from a given date to a Julian day,
+ * since no year exists in this calendar.
  *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
 public class Balinese implements Serializable
 {
-	private static final long serialVersionUID = 1L;
-
-	/**
-	 * Luang flag.
-	 */
-	public boolean luang = false;
-
-	/**
-	 * Dwiwara.
-	 */
-	public int dwiwara = 0;
-
-	/**
-	 * Triwara.
-	 */
-	public int triwara = 0;
-
-	/**
-	 * Caturwara.
-	 */
-	public int caturwara = 0;
-
-	/**
-	 * Pancawara.
-	 */
-	public int pancawara = 0;
-
-	/**
-	 * Sadwara.
-	 */
-	public int sadwara = 0;
-
-	/**
-	 * Saptawara.
-	 */
-	public int saptawara = 0;
-
-	/**
-	 * Asatawara.
-	 */
-	public int asatawara = 0;
-
-	/**
-	 * Sangawara.
-	 */
-	public int sangawara = 0;
-
-	/**
-	 * Dasawara.
-	 */
-	public int dasawara = 0;
+	private static final long serialVersionUID = -4264579975033439901L;
 
 	/**
 	 * Epoch
 	 */
 	public static final long EPOCH = Calendar.fixedFromJD(146D);
 
-	private static final int PANCAWARA_I[] =
-	{ 5, 9, 7, 4, 8 };
+	private static final int PANCAWARA_I[] = { 5, 9, 7, 4, 8 };
 
-	private static final int SAPTAWARA_J[] =
-	{ 5, 4, 3, 7, 8, 6, 9 };
+	private static final int SAPTAWARA_J[] = { 5, 4, 3, 7, 8, 6, 9 };
 
 	/**
 	 * Dwiwara names.
 	 */
-	public static final String DWIWARA_NAMES[] =
-	{ "Menga", "Pepet" };
+	public static final String DWIWARA_NAMES[] = { "Menga", "Pepet" };
 
 	/**
 	 * Triwara names.
 	 */
-	public static final String TRIWARA_NAMES[] =
-	{ "Pasah", "Beteng", "Kajeng" };
+	public static final String TRIWARA_NAMES[] = { "Pasah", "Beteng", "Kajeng" };
 
 	/**
 	 * Caturwara names.
 	 */
-	public static final String CATURWARA_NAMES[] =
-	{ "Sri", "Laba", "Jaya", "Menala" };
+	public static final String CATURWARA_NAMES[] = { "Sri", "Laba", "Jaya", "Menala" };
 
 	/**
 	 * Pancawara names.
 	 */
-	public static final String PANCAWARA_NAMES[] =
-	{ "Umanis", "Paing", "Pon", "Wage", "Keliwon" };
+	public static final String PANCAWARA_NAMES[] = { "Umanis", "Paing", "Pon", "Wage", "Keliwon" };
 
 	/**
 	 * Sadwara names.
 	 */
-	public static final String SADWARA_NAMES[] =
-	{ "Tungleh", "Aryang", "Urukung", "Paniron", "Was", "Maulu" };
+	public static final String SADWARA_NAMES[] = { "Tungleh", "Aryang", "Urukung", "Paniron", "Was", "Maulu" };
 
 	/**
 	 * Saptawara names.
 	 */
-	public static final String SAPTAWARA_NAMES[] =
-	{ "Redite", "Coma", "Anggara", "Buda", "Wraspati", "Sukra", "Saniscara" };
+	public static final String SAPTAWARA_NAMES[] = { "Redite", "Coma", "Anggara", "Buda", "Wraspati", "Sukra", "Saniscara" };
 
 	/**
 	 * Asatawara names.
 	 */
-	public static final String ASATAWARA_NAMES[] =
-	{ "Sri", "Indra", "Guru", "Yama", "Ludra", "Brahma", "Kala", "Uma" };
+	public static final String ASATAWARA_NAMES[] = { "Sri", "Indra", "Guru", "Yama", "Ludra", "Brahma", "Kala", "Uma" };
 
 	/**
 	 * Sangawara names.
 	 */
-	public static final String SANGAWARA_NAMES[] =
-	{ "Dangu", "Jangur", "Gigis", "Nohan", "Ogan", "Erangan", "Urungan", "Tulus", "Dadi" };
+	public static final String SANGAWARA_NAMES[] = { "Dangu", "Jangur", "Gigis", "Nohan", "Ogan", "Erangan", "Urungan", "Tulus", "Dadi" };
 
 	/**
 	 * Dasawara names.
 	 */
-	public static final String DASAWARA_NAMES[] =
-	{ "Pandita", "Pati", "Suka", "Duka", "Sri", "Manuh", "Manusa", "Raja", "Dewa", "Raksasa" };
+	public static final String DASAWARA_NAMES[] = { "Pandita", "Pati", "Suka", "Duka", "Sri", "Manuh", "Manusa", "Raja", "Dewa", "Raksasa" };
 
 	/**
 	 * Week names.
 	 */
-	public static final String WEEK_NAMES[] =
-	{ "Sinta", "Landep", "Ukir", "Kulantir", "Taulu", "Gumbreg", "Wariga", "Warigadian", "Jukungwangi", "Sungsang",
-			"Dunggulan", "Kuningan", "Langkir", "Medangsia", "Pujut", "Pahang", "Krulut", "Merakih", "Tambir",
-			"Medangkungan", "Matal", "Uye", "Menail", "Parangbakat", "Bala", "Ugu", "Wayang", "Kelawu", "Dukut",
-			"Watugunung" };
+	public static final String WEEK_NAMES[] = {
+		"Sinta", "Landep", "Ukir", "Kulantir", "Taulu", "Gumbreg", "Wariga", "Warigadian", "Jukungwangi", "Sungsang",
+		"Dunggulan", "Kuningan", "Langkir", "Medangsia", "Pujut", "Pahang", "Krulut", "Merakih", "Tambir",
+		"Medangkungan", "Matal", "Uye", "Menail", "Parangbakat", "Bala", "Ugu", "Wayang", "Kelawu", "Dukut",
+		"Watugunung"
+	};
 
 	/**
-	 * Empty constructor.
+	 * Luang flag.
 	 */
-	public Balinese() {}
+	public final boolean luang;
+
+	/**
+	 * Dwiwara.
+	 */
+	public final int dwiwara;
+
+	/**
+	 * Triwara.
+	 */
+	public final int triwara;
+
+	/**
+	 * Caturwara.
+	 */
+	public final int caturwara;
+
+	/**
+	 * Pancawara.
+	 */
+	public final int pancawara;
+
+	/**
+	 * Sadwara.
+	 */
+	public final int sadwara;
+
+	/**
+	 * Saptawara.
+	 */
+	public final int saptawara;
+
+	/**
+	 * Asatawara.
+	 */
+	public final int asatawara;
+
+	/**
+	 * Sangawara.
+	 */
+	public final int sangawara;
+
+	/**
+	 * Dasawara.
+	 */
+	public final int dasawara;
+
+	/**
+	 * Gets the Balinese calendar fields from the fixed day.
+	 *
+	 * @param fixed Fixed day.
+	 */
+	public Balinese (final long fixed)
+	{
+		this.luang = luangFromFixed(fixed);
+		this.dwiwara = dwiwaraFromFixed(fixed);
+		this.triwara = triwaraFromFixed(fixed);
+		this.caturwara = caturwaraFromFixed(fixed);
+		this.pancawara = pancawaraFromFixed(fixed);
+		this.sadwara = sadwaraFromFixed(fixed);
+		this.saptawara = saptawaraFromFixed(fixed);
+		this.asatawara = asatawaraFromFixed(fixed);
+		this.sangawara = sangawaraFromFixed(fixed);
+		this.dasawara = dasawaraFromFixed(fixed);
+	}
 
 	/**
 	 * Constructor from a Julian day.
 	 *
-	 * @param jd Julian day.
+	 * @param julianDay Julian day.
 	 */
-	public Balinese(int jd)
+	public Balinese(final double julianDay)
 	{
-		fromJulianDay(jd);
+		this((long) julianDay - Gregorian.EPOCH);
 	}
 
 	/**
 	 * Constructor using all fields.
 	 *
-	 * @param bluang Luang.
-	 * @param bdwiwara Dwiwara.
-	 * @param btriwara Triwara.
-	 * @param bcaturwara Caturwara.
-	 * @param bpancawara Pancawara.
-	 * @param bsadwara Sadwara.
-	 * @param bsaptawara Saptawara.
-	 * @param basatawara Asatawara.
-	 * @param bsangawara Sangawara.
-	 * @param bdasawara Dasawara.
+	 * @param luang Luang.
+	 * @param dwiwara Dwiwara.
+	 * @param triwara Triwara.
+	 * @param caturwara Caturwara.
+	 * @param pancawara Pancawara.
+	 * @param sadwara Sadwara.
+	 * @param saptawara Saptawara.
+	 * @param asatawara Asatawara.
+	 * @param sangawara Sangawara.
+	 * @param dasawara Dasawara.
 	 */
-	public Balinese(boolean bluang, int bdwiwara, int btriwara, int bcaturwara, int bpancawara, int bsadwara,
-			int bsaptawara,	int basatawara, int bsangawara, int bdasawara)
+	public Balinese(final boolean luang, final int dwiwara, final int triwara, final int caturwara, final int pancawara,
+		final int sadwara, final int saptawara, final int asatawara, final int sangawara, final int dasawara)
 	{
-		luang = bluang;
-		dwiwara = bdwiwara;
-		triwara = btriwara;
-		caturwara = bcaturwara;
-		pancawara = bpancawara;
-		sadwara = bsadwara;
-		saptawara = bsaptawara;
-		asatawara = basatawara;
-		sangawara = bsangawara;
-		dasawara = bdasawara;
-	}
-
-	/**
-	 * Gets the Balinese calendar fields from the fixed day.
-	 *
-	 * @param l Fixed day.
-	 */
-	public void fromFixed(long l)
-	{
-		luang = luangFromFixed(l);
-		dwiwara = dwiwaraFromFixed(l);
-		triwara = triwaraFromFixed(l);
-		caturwara = caturwaraFromFixed(l);
-		pancawara = pancawaraFromFixed(l);
-		sadwara = sadwaraFromFixed(l);
-		saptawara = saptawaraFromFixed(l);
-		asatawara = asatawaraFromFixed(l);
-		sangawara = sangawaraFromFixed(l);
-		dasawara = dasawaraFromFixed(l);
+		this.luang = luang;
+		this.dwiwara = dwiwara;
+		this.triwara = triwara;
+		this.caturwara = caturwara;
+		this.pancawara = pancawara;
+		this.sadwara = sadwara;
+		this.saptawara = saptawara;
+		this.asatawara = asatawara;
+		this.sangawara = sangawara;
+		this.dasawara = dasawara;
 	}
 
 	/**
 	 * Gets the day from the fixed date.
 	 *
-	 * @param l Fixed date.
+	 * @param fixed Fixed date.
 	 * @return Day.
 	 */
-	public static int dayFromFixed(long l)
+	public static int dayFromFixed(final long fixed)
 	{
-		return (int) Calendar.mod(l - EPOCH, 210L);
+		return (int) Calendar.mod(fixed - EPOCH, 210L);
 	}
 
 	/**
 	 * Gets the luang from the fixed date.
 	 *
-	 * @param l Fixed date.
+	 * @param fixed Fixed date.
 	 * @return Luang.
 	 */
-	public static boolean luangFromFixed(long l)
+	public static boolean luangFromFixed(final long fixed)
 	{
-		return Calendar.mod(dasawaraFromFixed(l), 2) == 0;
+		return Calendar.mod(dasawaraFromFixed(fixed), 2) == 0;
 	}
 
 	/**
 	 * Gets the dwiwara from the fixed date.
 	 *
-	 * @param l Fixed date.
+	 * @param fixed Fixed date.
 	 * @return Dwiwara.
 	 */
-	public static int dwiwaraFromFixed(long l)
+	public static int dwiwaraFromFixed(final long fixed)
 	{
-		return Calendar.mod(dasawaraFromFixed(l) + 1, 2) + 1;
+		return Calendar.mod(dasawaraFromFixed(fixed) + 1, 2) + 1;
 	}
 
 	/**
 	 * Gets the triwara from the fixed date.
 	 *
-	 * @param l Fixed date.
+	 * @param fixed Fixed date.
 	 * @return Triwara.
 	 */
-	public static int triwaraFromFixed(long l)
+	public static int triwaraFromFixed(final long fixed)
 	{
-		return Calendar.mod(dayFromFixed(l), 3) + 1;
+		return Calendar.mod(dayFromFixed(fixed), 3) + 1;
 	}
 
 	/**
 	 * Gets the caturwara from the fixed date.
 	 *
-	 * @param l Fixed date.
+	 * @param fixed Fixed date.
 	 * @return Caturwara.
 	 */
-	public static int caturwaraFromFixed(long l)
+	public static int caturwaraFromFixed(final long fixed)
 	{
-		return Calendar.adjustedMod(asatawaraFromFixed(l), 4);
+		return Calendar.adjustedMod(asatawaraFromFixed(fixed), 4);
 	}
 
 	/**
 	 * Gets the pancawara from the fixed date.
 	 *
-	 * @param l Fixed date.
+	 * @param fixed Fixed date.
 	 * @return Pancawara.
 	 */
-	public static int pancawaraFromFixed(long l)
+	public static int pancawaraFromFixed(final long fixed)
 	{
-		return Calendar.mod(dayFromFixed(l) + 1, 5) + 1;
+		return Calendar.mod(dayFromFixed(fixed) + 1, 5) + 1;
 	}
 
 	/**
 	 * Gets the sadwara from the fixed date.
 	 *
-	 * @param l Fixed date.
+	 * @param fixed Fixed date.
 	 * @return Sadwara.
 	 */
-	public static int sadwaraFromFixed(long l)
+	public static int sadwaraFromFixed(final long fixed)
 	{
-		return Calendar.mod(dayFromFixed(l), 6) + 1;
+		return Calendar.mod(dayFromFixed(fixed), 6) + 1;
 	}
 
 	/**
 	 * Gets the saptawara from the fixed date.
 	 *
-	 * @param l Fixed date.
+	 * @param fixed Fixed date.
 	 * @return Saptawara.
 	 */
-	public static int saptawaraFromFixed(long l)
+	public static int saptawaraFromFixed(final long fixed)
 	{
-		return Calendar.mod(dayFromFixed(l), 7) + 1;
+		return Calendar.mod(dayFromFixed(fixed), 7) + 1;
 	}
 
 	/**
 	 * Gets the asatawara from the fixed date.
 	 *
-	 * @param l Fixed date.
+	 * @param fixed Fixed date.
 	 * @return Asatawara.
 	 */
-	public static int asatawaraFromFixed(long l)
+	public static int asatawaraFromFixed(final long fixed)
 	{
-		int i = dayFromFixed(l);
+		int i = dayFromFixed(fixed);
 		return Calendar.mod(Math.max(6, 4 + Calendar.mod(i - 70, 210)), 8) + 1;
 	}
 
 	/**
 	 * Gets the sangawara from the fixed date.
 	 *
-	 * @param l Fixed date.
+	 * @param fixed Fixed date.
 	 * @return Sangawara.
 	 */
-	public static int sangawaraFromFixed(long l)
+	public static int sangawaraFromFixed(final long fixed)
 	{
-		return Calendar.mod(Math.max(0, dayFromFixed(l) - 3), 9) + 1;
+		return Calendar.mod(Math.max(0, dayFromFixed(fixed) - 3), 9) + 1;
 	}
 
 	/**
 	 * Gets the dasawara from the fixed date.
 	 *
-	 * @param l Fixed date.
+	 * @param fixed Fixed date.
 	 * @return Dasawara.
 	 */
-	public static int dasawaraFromFixed(long l)
+	public static int dasawaraFromFixed(final long fixed)
 	{
-		int i = pancawaraFromFixed(l);
-		int j = saptawaraFromFixed(l);
+		int i = pancawaraFromFixed(fixed);
+		int j = saptawaraFromFixed(fixed);
 		return Calendar.mod(PANCAWARA_I[i - 1] + SAPTAWARA_J[j - 1] + 1, 10);
 	}
 
 	/**
 	 * Gets the week from the fixed date.
 	 *
-	 * @param l Fixed date.
+	 * @param fixed Fixed date.
 	 * @return Week.
 	 */
-	public static int weekFromFixed(long l)
+	public static int weekFromFixed(final long fixed)
 	{
-		return (int) Calendar.quotient(dayFromFixed(l), 7D) + 1;
+		return (int) Calendar.quotient(dayFromFixed(fixed), 7D) + 1;
 	}
 
 	/**
 	 * Gets the interval between two dates.
 	 *
 	 * @param balinese Balinese instance.
-	 * @param l Fixed date.
+	 * @param fixed Fixed date.
 	 * @return Interval in days.
 	 */
-	public static long onOrBefore(Balinese balinese, long l)
+	public static long onOrBefore(final Balinese balinese, final long fixed)
 	{
 		int i = balinese.pancawara - 1;
 		int j = balinese.sadwara - 1;
@@ -373,7 +358,8 @@ public class Balinese implements Serializable
 		int i1 = Calendar.mod(i + 14 + 15 * (k - i), 35);
 		int j1 = j + 36 * (i1 - j);
 		int k1 = dayFromFixed(0L);
-		return l - Calendar.mod((l + (long) k1) - (long) j1, 210L);
+
+		return fixed - Calendar.mod((fixed + k1) - j1, 210L);
 	}
 
 	/**
@@ -396,13 +382,56 @@ public class Balinese implements Serializable
 		return (int) (Calendar.quotient(day() - 1, 7D) + 1L);
 	}
 
-	/**
-	 * Sets a Balinese date with a given Julian day.
-	 *
-	 * @param jd Julian day.
-	 */
-	public void fromJulianDay(int jd)
-	{
-		fromFixed(jd - Gregorian.EPOCH);
+	@Override
+	public String toString() {
+		return "Balinese {" +
+			" luang=" + luang +
+			", asatawara=" + asatawara +
+			", dwiwara=" + dwiwara +
+			", triwara=" + triwara +
+			", caturwara=" + caturwara +
+			", pancawara=" + pancawara +
+			", sadwara=" + sadwara +
+			", saptawara=" + saptawara +
+			", sangawara=" + sangawara +
+			", dasawara=" + dasawara +
+		" }";
+	}
+
+	@Override
+	public boolean equals(final Object o) {
+		if (this == o) return true;
+
+		if (!(o instanceof Balinese)) return false;
+
+		Balinese balinese = (Balinese) o;
+
+		if (luang != balinese.luang) return false;
+		if (dwiwara != balinese.dwiwara) return false;
+		if (triwara != balinese.triwara) return false;
+		if (caturwara != balinese.caturwara) return false;
+		if (pancawara != balinese.pancawara) return false;
+		if (sadwara != balinese.sadwara) return false;
+		if (saptawara != balinese.saptawara) return false;
+		if (asatawara != balinese.asatawara) return false;
+		if (sangawara != balinese.sangawara) return false;
+
+		return dasawara == balinese.dasawara;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = (luang ? 1 : 0);
+		result = 31 * result + dwiwara;
+		result = 31 * result + triwara;
+		result = 31 * result + caturwara;
+		result = 31 * result + pancawara;
+		result = 31 * result + sadwara;
+		result = 31 * result + saptawara;
+		result = 31 * result + asatawara;
+		result = 31 * result + sangawara;
+		result = 31 * result + dasawara;
+
+		return result;
 	}
 }
