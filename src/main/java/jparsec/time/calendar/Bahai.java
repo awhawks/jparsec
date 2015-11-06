@@ -21,8 +21,6 @@
  */
 package jparsec.time.calendar;
 
-import java.io.Serializable;
-
 /**
  * Implements the Bahai calendar.
  * <P>
@@ -35,34 +33,19 @@ import java.io.Serializable;
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
-public class Bahai implements Serializable
+public class Bahai extends BaseCalendar
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Major.
 	 */
-	public long major = 0;
+	public long major;
 
 	/**
 	 * Cycle number.
 	 */
-	public int cycle = 0;
-
-	/**
-	 * Year.
-	 */
-	public int year = 0;
-
-	/**
-	 * Month.
-	 */
-	public int month = 0;
-
-	/**
-	 * Day.
-	 */
-	public int day = 0;
+	public int cycle;
 
 	/**
 	 * Calendar epoch.
@@ -102,18 +85,37 @@ public class Bahai implements Serializable
 			"Vidad", "Badi'", "Bahi", "Abha", "Vahid" };
 
 	/**
-	 * Empty constructor.
+	 * Constructs a Bahai date with a fixed date.
+	 *
+	 * @param fixedDate fixed date.
 	 */
-	public Bahai() {}
+	public Bahai(final long fixedDate)
+	{
+		super(EPOCH, fixedDate);
+	}
 
 	/**
 	 * Constructs a Bahai date with a Julian day.
 	 *
-	 * @param jd Julian day.
+	 * @param julianDay Julian day.
 	 */
-	public Bahai(int jd)
+	public Bahai(final double julianDay)
 	{
-		fromJulianDay(jd);
+		super(EPOCH, julianDay);
+	}
+
+	/**
+	 * Constructor using year, month, day.
+	 *
+	 * @param y Year.
+	 * @param m Month.
+	 * @param d Day.
+	 */
+	public Bahai(final int y, final int m, final int d)
+	{
+		super(EPOCH, y, m, d);
+
+		yearFromFixed();
 	}
 
 	/**
@@ -125,113 +127,86 @@ public class Bahai implements Serializable
 	 * @param m Month.
 	 * @param d Day.
 	 */
-	public Bahai(long mj, int c, int y, int m, int d)
+	public Bahai(final long mj, final int c, final int y, final int m, final int d)
 	{
-		major = mj;
-		cycle = c;
-		year = y;
-		month = m;
-		day = d;
+		this((int) (((mj - 1) * 19) + c - 1) * 19 + y, m, d);
+	}
+
+	@Override
+	long toYear(final long year) {
+		return 1 + ((year - 1) % 19);
 	}
 
 	/**
-	 * Pass to fixed date.
+	 * To fixed day..
 	 *
-	 * @param major Major.
-	 * @param cycle Cycle.
-	 * @param year Year.
+	 * @param yr Year.
 	 * @param month Month.
 	 * @param day Day.
-	 * @return The fixed date.
+	 * @return Fixed day.
 	 */
-	public static long toFixed(long major, int cycle, int year, int month, int day)
-	{
-		long l1 = ((361L * (major - 1L) + (long) (19 * (cycle - 1)) + (long) year) - 1L) + Gregorian
-				.yearFromFixed(EPOCH);
-		long l2;
-		if (month == 0)
-			l2 = 342L;
-		else if (month == 19)
-			l2 = Gregorian.isLeapYear(l1 + 1L) ? 347 : '\u015A';
-		else
-			l2 = 19 * (month - 1);
-		return Gregorian.toFixed(l1, 3, 20) + l2 + (long) day;
+	@Override
+	long toFixed(final long yr, final int month, final int day) {
+		long y = yr - 1L + Gregorian.yearFromFixed(EPOCH);
+		long monthOffset;
+
+		if (month == 19) {
+			monthOffset = Gregorian.isLeapYear(y + 1L) ? 347 : 346;
+		}
+		else {
+			monthOffset = 19 * (month - 1);
+		}
+
+		return Gregorian.toFixed(y, 3, 20) + monthOffset + (long) day - 1L;
 	}
 
-	/**
-	 * Pass to fixed date.
-	 * @return The fixed date.
-	 */
-	public long toFixed()
-	{
-		return toFixed(major, cycle, year, month, day);
+	@Override
+	long yearFromFixed() {
+		long f = Gregorian.yearFromFixed(fixed);
+		long e = Gregorian.yearFromFixed(EPOCH);
+
+		long y = f - e + (this.fixed >= Gregorian.toFixed(f, 3, 20) ? 1 : 0);
+
+		this.major = 1L + y / 361;
+		this.cycle = 1 + (int) ((y - 1) % 361L) / 19;
+
+		return 1 + ((y - 1) % 19);
 	}
 
-	/**
-	 * Gets the major, cycle, year, month, day of the instance from the fixed
-	 * day.
-	 *
-	 * @param fixed Fixed day number.
-	 */
-	public void fromFixed(long fixed)
-	{
-		long l1 = Gregorian.yearFromFixed(fixed);
-		long l2 = Gregorian.yearFromFixed(EPOCH);
-		long l3 = l1 - l2 - (long) (fixed > Gregorian.toFixed(l1, 3, 20) ? 0 : 1);
-		major = 1L + Calendar.quotient(l3, 361D);
-		cycle = 1 + (int) Calendar.quotient(Calendar.mod(l3, 361L), 19D);
-		year = 1 + (int) Calendar.mod(l3, 19L);
-		long l4 = fixed - toFixed(major, cycle, year, 1, 1);
-		if (fixed >= toFixed(major, cycle, year, 19, 1))
-			month = 19;
-		else if (fixed >= toFixed(major, cycle, year, 0, 1))
-			month = 0;
-		else
-			month = (int) (1L + Calendar.quotient(l4, 19D));
-		day = (int) ((fixed + 1L) - toFixed(major, cycle, year, month, 1));
+	@Override
+	int monthFromFixed(final long year) {
+		long y = (((this.major - 1) * 19) + this.cycle - 1) * 19 + this.year;
+
+		if (this.fixed >= toFixed(y, 19, 1)) {
+			return 19;
+		}
+		else {
+			int daysInYear = (int) (this.fixed - toFixed(y, 1, 1)) + 1;
+			return 1 + (daysInYear / 19);
+		}
 	}
 
-	/**
-	 * Gets the new year.
-	 *
-	 * @param year Year to get its first day.
-	 * @return The fixed day of the beggining of the year.
-	 */
-	public static long newYear(long year)
-	{
-		return Gregorian.toFixed(year, 3, 21);
+	@Override
+	int dayFromFixed(final long year, final int month) {
+		long y = (((this.major - 1) * 19) + this.cycle - 1) * 19 + this.year;
+		return 1 + (int) ((fixed - toFixed(y, month, 1)) % 19);
 	}
 
-	/**
-	 * Transforms a Bahai date into a Julian day.
-	 *
-	 * @param major Major.
-	 * @param cycle Cycle.
-	 * @param year Year.
-	 * @param month Month.
-	 * @param day Day.
-	 * @return Julian day.
-	 */
-	public static int toJulianDay(long major, int cycle, int year, int month, int day)
-	{
-		return (int) (toFixed(major, cycle, year, month, day) + Gregorian.EPOCH);
-	}
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append(getClass().getSimpleName())
+				.append(' ')
+				.append(major)
+				.append('/')
+				.append(cycle)
+				.append('/')
+				.append(year)
+				.append('/')
+				.append(month)
+				.append('/')
+				.append(day);
 
-	/**
-	 * Transforms a Bahai date into a Julian day.
-	 * @return The Julian day.
-	 */
-	public int toJulianDay()
-	{
-		return (int) (toFixed() + Gregorian.EPOCH);
-	}
-
-	/**
-	 * Sets a Bahai date with a given Julian day.
-	 * @param jd The Julian day.
-	 */
-	public void fromJulianDay(int jd)
-	{
-		fromFixed(jd - Gregorian.EPOCH);
+		return builder.toString();
 	}
 }
