@@ -21,6 +21,8 @@
  */
 package jparsec.time.calendar;
 
+import jparsec.observer.CityElement;
+
 /**
  * Implements the Bahai calendar.
  * <P>
@@ -38,19 +40,9 @@ public class Bahai extends BaseCalendar
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Major.
-	 */
-	public long major;
-
-	/**
-	 * Cycle number.
-	 */
-	public int cycle;
-
-	/**
 	 * Calendar epoch.
 	 */
-	public static final long EPOCH = Gregorian.toFixed(1844L, 3, 21);
+	public static final long EPOCH = 673222; // Gregorian.toFixed(1844L, 3, 21);
 
 	/**
 	 * Ayyam I ha.
@@ -60,29 +52,51 @@ public class Bahai extends BaseCalendar
 	/**
 	 * Name of the days of the week.
 	 */
-	public static final String DAY_OF_WEEK_NAMES[] =
-	{ "Jamal", "Kamal", "Fidal", "`Idal", "Istijlal", "Istiqlal", "Jalal" };
+	public static final String DAY_OF_WEEK_NAMES[] = { "Jamal", "Kamal", "Fidal", "`Idal", "Istijlal", "Istiqlal", "Jalal" };
 
 	/**
 	 * Name of the days of the month.
 	 */
-	public static final String DAY_OF_MONTH_NAMES[] =
-	{ "Baha'", "Jalal", "Jamal", "`Azamat", "Nur", "Rahmat", "Kalimat", "Kamal", "Asma'", "`Izzat", "Mashiyyat",
-			"`Ilm", "Qudrat", "Qawl", "Masa'il", "Sharaf", "Sultan", "Mulk", "`Ala'" };
+	public static final String DAY_OF_MONTH_NAMES[] = {
+		"Baha'", "Jalal", "Jamal", "`Azamat", "Nur", "Rahmat", "Kalimat", "Kamal", "Asma'", "`Izzat",
+		"Mashiyyat", "`Ilm", "Qudrat", "Qawl", "Masa'il", "Sharaf", "Sultan", "Mulk", "`Ala'"
+	};
 
 	/**
 	 * Name of the months.
 	 */
-	public static final String MONTH_NAMES[] =
-	{ "Ayyam-i-Ha", "Baha'", "Jalal", "Jamal", "`Azamat", "Nur", "Rahmat", "Kalimat", "Kamal", "Asma'", "`Izzat",
-			"Mashiyyat", "`Ilm", "Qudrat", "Qawl", "Masa'il", "Sharaf", "Sultan", "Mulk", "`Ala'" };
+	public static final String MONTH_NAMES[] = {
+		"Ayyam-i-Ha", "Baha'", "Jalal", "Jamal", "`Azamat", "Nur", "Rahmat", "Kalimat", "Kamal", "Asma'", "`Izzat",
+		"Mashiyyat", "`Ilm", "Qudrat", "Qawl", "Masa'il", "Sharaf", "Sultan", "Mulk", "`Ala'"
+	};
 
 	/**
 	 * Name of the years.
 	 */
-	public static final String YEAR_NAMES[] =
-	{ "Alif", "Ba'", "Ab", "Dal", "Bab", "Vav", "Abad", "Jad", "Baha'", "Hubb", "Bahhaj", "Javab", "Ahad", "Vahhab",
-			"Vidad", "Badi'", "Bahi", "Abha", "Vahid" };
+	public static final String YEAR_NAMES[] = {
+		"Alif", "Ba'", "Ab", "Dal", "Bab", "Vav", "Abad", "Jad", "Baha'", "Hubb", "Bahhaj", "Javab", "Ahad", "Vahhab",
+		"Vidad", "Badi'", "Bahi", "Abha", "Vahid"
+	};
+
+	/**
+	 * Haifa location.
+	 */
+	//public static final CityElement HAIFA = new CityElement("Haifa, Israel", 35D, 32.82, 2D, 0);
+
+	/**
+	 * Tehran location.
+	 */
+	public static final CityElement TEHRAN = new CityElement("Tehran, Iran", 51.43, 35.67, 3.5, 1353);
+
+	/**
+	 * Major.
+	 */
+	public long major;
+
+	/**
+	 * Cycle number.
+	 */
+	public int cycle;
 
 	/**
 	 * Constructs a Bahai date with a fixed date.
@@ -147,17 +161,21 @@ public class Bahai extends BaseCalendar
 	 */
 	@Override
 	long toFixed(final long yr, final int month, final int day) {
+		if (yr > 171) {
+			return toFixedFuture(yr, month, day);
+		}
+
 		long y = yr - 1L + Gregorian.yearFromFixed(EPOCH);
 		long monthOffset;
 
-		if (month == 19) {
-			monthOffset = Gregorian.isLeapYear(y + 1L) ? 347 : 346;
-		}
-		else {
+		if (month < 19) {
 			monthOffset = 19 * (month - 1);
 		}
+		else {
+			monthOffset = Gregorian.isLeapYear(y + 1L) ? 347 : 346;
+		}
 
-		return Gregorian.toFixed(y, 3, 20) + monthOffset + (long) day - 1L;
+		return Gregorian.toFixed(y, 3, 20) + monthOffset + (long) day;
 	}
 
 	@Override
@@ -165,7 +183,7 @@ public class Bahai extends BaseCalendar
 		long f = Gregorian.yearFromFixed(fixed);
 		long e = Gregorian.yearFromFixed(EPOCH);
 
-		long y = f - e + (this.fixed >= Gregorian.toFixed(f, 3, 20) ? 1 : 0);
+		long y = f - e + (this.fixed > Gregorian.toFixed(f, 3, 20) ? 1 : 0);
 
 		this.major = 1L + y / 361;
 		this.cycle = 1 + (int) ((y - 1) % 361L) / 19;
@@ -208,5 +226,54 @@ public class Bahai extends BaseCalendar
 				.append(day);
 
 		return builder.toString();
+	}
+
+	private long toFixedFuture(final long yr, final int month, final int day) {
+		long s0;
+		double s1;
+
+		if (month < 19) {
+			s0 = (month - 1) * 19L - 1L;
+			s1 = (double) yr - 0.5D;
+		}
+		else {
+			s0 = -21L;
+			s1 = (double) yr + 0.5D;
+		}
+
+		return newYearOnOrBefore(Bahai.EPOCH + (long) Math.floor(365.242189D * s1)) + s0 + (long) day;
+	}
+
+	/**
+	 * New year before certain date.
+	 *
+	 * @param fixed Fixed day.
+	 * @return Previous new year.
+	 */
+	private long newYearOnOrBefore(long fixed)
+	{
+		double sunsetTime = Calendar.estimatePriorSolarLongitude(sunsetInTehran(fixed), Calendar.SPRING);
+		long l1 = (long) Math.floor(sunsetTime) - 1L;
+
+		while (Calendar.solarLongitude(sunsetInTehran(l1)) > Calendar.SPRING + 2.0) {
+			l1++;
+		}
+
+		return l1;
+	}
+
+	/**
+	 * Sunset in Haifa.
+	 *
+	 * @param fixed Fixed day.
+	 * @return Sunset time.
+	 */
+	private double sunsetInTehran(final long fixed)
+	{
+		try {
+			return Calendar.universalFromStandard(Calendar.sunset(fixed, TEHRAN), TEHRAN);
+		} catch (Exception ex) {
+			return 0.0D;
+		}
 	}
 }
