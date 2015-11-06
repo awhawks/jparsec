@@ -29,6 +29,8 @@ package jparsec.time.calendar;
  */
 public class ISO extends BaseCalendar
 {
+	private static final long serialVersionUID = -1051296989077946358L;
+
 	/**
 	 * Week.
 	 */
