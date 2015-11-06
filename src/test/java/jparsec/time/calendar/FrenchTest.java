@@ -6,13 +6,18 @@ public class FrenchTest {
      *
      * @param args Not used.
      */
-    public static void main(String args[]) {
+    public static void main(final String args[]) {
         System.out.println("French test");
-        int jd = 1757754;
-        French h = new French(jd);
-        System.out.println("JD " + jd + " = " + h.year + '/' + h.month + '/' + h.day);
+
+        double jd = Gregorian.toJulianDay(1792, 9, 22);
+        long fixed = Gregorian.toFixed(1792, 9, 22);
+
+        French h = new French(fixed);
+        System.out.println("JD " + h.julianDate + ' ' + h.fixed + " = " + h);
+
         French h2 = new French(h.year, h.month, h.day);
-        System.out.println("JD " + h2.toJulianDay() + " = " + h2.year + '/' + h2.month + '/' + h2.day);
+        System.out.println("JD " + h2.julianDate + ' ' + h2.fixed + " = " + h2);
+
         int decadi = h2.getDecadi();
 
         if (decadi != -1) {

@@ -21,198 +21,139 @@
  */
 package jparsec.time.calendar;
 
-import java.io.Serializable;
-
 import jparsec.observer.CityElement;
 
 /**
  * Implements the French revolution calendar.
- * <P>
- * This calendar was instituted by the National Convention of the French
- * Republic in 1793. It was used until the end of Gregorian year 1805.
- * <P>
+ * <p>
+ * This calendar was instituted by the National Convention of the French Republic in 1793.
+ * It was used until the end of Gregorian year 1805.
+ * <p>
  * See Calendrical Calculations for reference.
  *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
-public class French implements Serializable
+public class French extends BaseCalendar
 {
-	private static final long serialVersionUID = 1L;
-
-	/**
-	 * The year.
-	 */
-	public long year;
-
-	/**
-	 * Month.
-	 */
-	public int month;
-
-	/**
-	 * Day.
-	 */
-	public int day;
-
 	/**
 	 * Calendar epoch.
 	 */
-	public static final long EPOCH = Gregorian.toFixed(1792L, 9, 22);
+	public static final long EPOCH = Gregorian.toFixed(1792, 9, 22);
 
 	/**
 	 * Paris location.
 	 */
-	public static final CityElement PARIS = new CityElement("Paris, France", Calendar.angle(2D, 20D, 15D), Calendar
-			.angle(48D, 50D, 11D), 1.0, 27);
+	public static final CityElement PARIS = new CityElement("Paris, France", Calendar.angle(2, 20, 15), Calendar.angle(48, 50, 11), 1.0, 27);
 
 	/**
-	 * Month poetic names coined by Fabre d'Eglantine.
+	 * Month poetic names coined by Fabre day'Eglantine.
 	 */
-	public static final String MONTH_NAMES[] =
-	{ "Vendemiaire", "Brumaire", "Frimaire", "Nivose", "Pluviose", "Ventose", "Germinal", "Floreal", "Prairial",
-			"Messidor", "Thermidor", "Fructidor", "Sansculottides" };
+	public static final String MONTH_NAMES[] = {
+		"Vendemiaire", "Brumaire", "Frimaire", "Nivose", "Pluviose", "Ventose", "Germinal",
+		"Floreal", "Prairial", "Messidor", "Thermidor", "Fructidor", "Sansculottides"
+	};
 
 	/**
 	 * Day of week names.
 	 */
-	public static final String DAY_OF_WEEK_NAMES[] =
-	{ "Primidi", "Duodi", "Tridi", "Quartidi", "Quintidi", "Sextidi", "Septidi", "Octidi", "Nonidi", "Decadi" };
+	public static final String DAY_OF_WEEK_NAMES[] = {
+		"Primidi", "Duodi", "Tridi", "Quartidi", "Quintidi", "Sextidi", "Septidi", "Octidi", "Nonidi", "Decadi"
+	};
 
 	/**
 	 * Special day names.
 	 */
-	public static final String SPECIAL_DAY_NAMES[] =
-	{ "Jour de la Vertu", "Jour du Genie", "Jour du Labour", "Jour de la Raison", "Jour de la Recompense",
-			"Jour de la Revolution" };
+	public static final String SPECIAL_DAY_NAMES[] = {
+		"Jour de la Vertu", "Jour du Genie", "Jour du Labour", "Jour de la Raison", "Jour de la Recompense", "Jour de la Revolution"
+	};
 
 	/**
 	 * Decade names.
 	 */
-	public static final String DECADE_NAMES[] =
-	{ "I", "II", "III" };
+	public static final String DECADE_NAMES[] = { "I", "II", "III" };
 
-	/**
-	 * Default constructor.
-	 */
-	public French() {}
+	private static final long serialVersionUID = 6342987068941343569L;
 
-	/**
-	 * Constructs a Hebrew date with a Julian day
-	 *
-	 * @param jd Julian day
-	 */
-	public French(int jd)
-	{
-		fromJulianDay(jd);
-	}
-
-	/**
-	 * Explicit constructor.
-	 *
-	 * @param y Year.
-	 * @param m Month.
-	 * @param d Day.
-	 */
-	public French(long y, int m, int d)
-	{
-		year = y;
-		month = m;
-		day = d;
-	}
-
-	/**
-	 * To fixed day..
-	 *
-	 * @param y Year.
-	 * @param m Month.
-	 * @param d Day.
-	 * @return Fixed day.
-	 */
-	public static long toFixed(long y, int m, int d)
-	{
-		long l1 = newYearOnOrBefore((long) Math.floor((double) (EPOCH + 180L) + 365.242189D * (double) (y - 1L)));
-		return (l1 - 1L) + (long) (30 * (m - 1)) + (long) d;
-	}
-
-	/**
-	 * To fixed day.
-	 * @return The fixed day.
-	 */
-	public long toFixed()
-	{
-		return toFixed(year, month, day);
-	}
-
-	/**
-	 * Sets the date from the fixed day.
-	 *
-	 * @param l Fixed day.
-	 */
-	public void fromFixed(long l)
-	{
-		long l1 = newYearOnOrBefore(l);
-		year = Math.round((double) (l1 - EPOCH) / 365.242189D) + 1L;
-		month = 1 + (int) Calendar.quotient(l - l1, 30D);
-		day = 1 + (int) Calendar.mod(l - l1, 30L);
-	}
-
-	/**
-	 * Transforms a French date into a Julian day
-	 *
-	 * @param year Year.
-	 * @param month Month.
-	 * @param day Day.
-	 * @return Julian day.
-	 */
-	public static int toJulianDay(int year, int month, int day)
-	{
-		return (int) (toFixed(year, month, day) + Gregorian.EPOCH);
-	}
-
-	/**
-	 * Transforms a French date into a Julian day.
-	 * @return The Julian day.
-	 */
-	public int toJulianDay()
-	{
-		return (int) (toFixed() + Gregorian.EPOCH);
-	}
-
-	/**
-	 * Sets a French date with a given Julian day
-	 *
-	 * @param jd Julian day.
-	 */
-	public void fromJulianDay(int jd)
-	{
-		fromFixed(jd - Gregorian.EPOCH);
-	}
+	private transient long newYear;
 
 	/**
 	 * Midnight in Paris.
 	 *
-	 * @param l Fixed day.
+	 * @param fixed Fixed day.
 	 * @return Midnight time.
 	 */
-	public static double midnightInParis(long l)
-	{
-		return Calendar.universalFromStandard(Calendar.midnight(l + 1L, PARIS), PARIS);
+	public static double midnightInParis(final long fixed) {
+		return Calendar.universalFromStandard(Calendar.midnight(fixed + 1L, PARIS), PARIS);
 	}
 
 	/**
 	 * New year before certain fixed date.
 	 *
-	 * @param l Fixed date.
+	 * @param fixed Fixed date.
 	 * @return New year fixed date.
 	 */
-	public static long newYearOnOrBefore(long l)
-	{
-		double d = Calendar.estimatePriorSolarLongitude(midnightInParis(l), Calendar.AUTUMN);
-		long l1;
-		for (l1 = (long) (Math.floor(d) - 1.0D); Calendar.AUTUMN > Calendar.solarLongitude(midnightInParis(l1)); l1++)
-			;
-		return l1;
+	public static long newYearOnOrBefore(final long fixed) {
+		double day = Calendar.estimatePriorSolarLongitude(midnightInParis(fixed), Calendar.AUTUMN) - 1.0;
+		long newYear = (long) (Math.floor(day));
+
+		while (Calendar.AUTUMN > Calendar.solarLongitude(midnightInParis(newYear))) {
+			newYear++;
+		}
+
+		return newYear;
+	}
+
+	/**
+	 * Constructs a French date with a fixed day
+	 *
+	 * @param fixed Julian day
+	 */
+	public French(final long fixed) {
+		super(EPOCH, fixed);
+	}
+
+	/**
+	 * Constructs a French date with a Julian day
+	 *
+	 * @param julianDay Julian day
+	 */
+	public French(final double julianDay) {
+		super(EPOCH, julianDay);
+	}
+
+	/**
+	 * Explicit constructor.
+	 *
+	 * @param year Year.
+	 * @param month Month.
+	 * @param day Day.
+	 */
+	public French(final long year, final int month, final int day) {
+		super(EPOCH, year, month, day);
+	}
+
+	@Override
+	long toFixed(final long year, final int month, final int day) {
+		long l1 = newYearOnOrBefore((long) Math.floor(this.epoch + 180 + 365.242189D * (year - 1)));
+
+		return l1 - 1 + 30 * (month - 1) + day;
+	}
+
+	@Override
+	long yearFromFixed() {
+		newYear = newYearOnOrBefore(this.fixed);
+		return Math.round((newYear - this.epoch) / 365.242189D) + 1;
+	}
+
+	@Override
+	int monthFromFixed(long year) {
+		return 1 + (int) (fixed - newYear) / 30;
+	}
+
+	@Override
+	int dayFromFixed(long year, int month) {
+		return 1 + (int) (fixed - newYear) % 30;
 	}
 
 	/**
@@ -220,11 +161,10 @@ public class French implements Serializable
 	 *
 	 * @return Day of week.
 	 */
-	public int getDayOfWeek()
-	{
+	public int getDayOfWeek() {
 		int day = this.day + 9;
-        if (month < 13) day = (this.day - 1) % 10;
-        day++;
+		if (month < 13) day = (this.day - 1) % 10;
+		day++;
 		if (day > French.DAY_OF_WEEK_NAMES.length) day -= French.DAY_OF_WEEK_NAMES.length;
 		if (day < 0) day += French.DAY_OF_WEEK_NAMES.length;
 		return day;
@@ -235,11 +175,10 @@ public class French implements Serializable
 	 *
 	 * @return Decadi index (0, 1, 2), or -1 for no decadi.
 	 */
-	public int getDecadi()
-	{
+	public int getDecadi() {
 		int week = -1;
-        if (month < 13) week = (day - 1) / 10 + 1;
-        if (week > 2) week = week - 3;
+		if (month < 13) week = (day - 1) / 10 + 1;
+		if (week > 2) week = week - 3;
 		return week;
 	}
 }
