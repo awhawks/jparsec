@@ -39,7 +39,7 @@ public class French extends BaseCalendar
 	/**
 	 * Calendar epoch.
 	 */
-	public static final long EPOCH = Gregorian.toFixed(1792, 9, 22);
+	public static final long EPOCH = new Gregorian(1792, 9, 22).fixed;
 
 	/**
 	 * Paris location.

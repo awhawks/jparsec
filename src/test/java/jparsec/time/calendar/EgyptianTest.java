@@ -9,8 +9,8 @@ public class EgyptianTest {
     public static void main(final String args[]) throws Exception {
         System.out.println("Egyptian Test");
 
-        double jd = Gregorian.toJulianDay(2010, 1, 12);
-        long fixed = Gregorian.toFixed(2010, 1, 12);
+        double jd = new Gregorian(2010, 1, 12).julianDate;
+        long fixed = new Gregorian(2010, 1, 12).fixed;
 
         Egyptian h = new Egyptian(jd);
         System.out.println("JD " + h.julianDate + ' ' + h.fixed + " = " + h);

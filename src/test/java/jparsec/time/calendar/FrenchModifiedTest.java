@@ -9,8 +9,8 @@ public class FrenchModifiedTest {
     public static void main(String args[]) {
         System.out.println("FrenchModified test");
 
-        double jd = Gregorian.toJulianDay(1792, 9, 22);
-        long fixed = Gregorian.toFixed(1792, 9, 22);
+        double jd = new Gregorian(1792, 9, 22).julianDate;
+        long fixed = new Gregorian(1792, 9, 22).fixed;
 
         FrenchModified h = new FrenchModified(fixed);
         System.out.println("JD " + h.julianDate + ' ' + h.fixed + " = " + h);

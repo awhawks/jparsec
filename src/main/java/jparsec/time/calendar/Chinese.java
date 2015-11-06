@@ -55,7 +55,7 @@ public class Chinese extends BaseCalendar
 	/**
 	 * Calendar epoch.
 	 */
-	public static final long EPOCH = Gregorian.toFixed(-2636L, 2, 15);
+	public static final long EPOCH = new Gregorian(-2636L, 2, 15).fixed;
 
 	/**
 	 * Calendar day number at epoch.
@@ -367,7 +367,7 @@ public class Chinese extends BaseCalendar
 	 */
 	public static long newYear(final long fixed)
 	{
-		return newYearOnOrBefore(Gregorian.toFixed(fixed, 7, 1));
+		return newYearOnOrBefore(new Gregorian(fixed, 7, 1).fixed);
 	}
 
 	/**
@@ -393,7 +393,7 @@ public class Chinese extends BaseCalendar
 	 */
 	public static long qingMing(final long fixed)
 	{
-		return (long) Math.floor(minorSolarTermOnOrAfter(Gregorian.toFixed(fixed, 3, 30)));
+		return (long) Math.floor(minorSolarTermOnOrAfter(new Gregorian(fixed, 3, 30).fixed));
 	}
 
 	/**

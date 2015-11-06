@@ -13,6 +13,7 @@ public class ChineseTest {
 
         double jd = 2451545.5;
         long fixed = (long) jd - Gregorian.EPOCH ; //730120;
+
         Chinese h = new Chinese(fixed);
         System.out.println("JD " + h.julianDate + ' ' + h.fixed + " = " + h);
 
@@ -36,9 +37,8 @@ public class ChineseTest {
 
         // New year
         int yearN = 2012;
-        Gregorian g = new Gregorian();
-        g.fromFixed(Chinese.newYear(yearN));
-        System.out.println("New Chinese year for Gregorian year " + yearN + ": " + g.year + '/' + g.month + '/' + g.day);
+        Gregorian g = new Gregorian(Chinese.newYear(yearN));
+        System.out.println("New Chinese year for Gregorian year " + yearN + ": " + g);
 
         h2 = new Chinese(Chinese.newYear(2012));
         System.out.println(h2.getYearNumber());

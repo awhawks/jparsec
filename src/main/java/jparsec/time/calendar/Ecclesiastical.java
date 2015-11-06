@@ -73,7 +73,7 @@ public class Ecclesiastical implements Serializable
 		long l2 = Calendar.mod(((14L + 11L * Calendar.mod(l, 19L)) - Calendar.quotient(3L * l1, 4D)) + Calendar
 				.quotient(5L + 8L * l1, 25D), 30L);
 		long l3 = l2 != 0L && (l2 != 1L || Calendar.mod(l, 19L) <= 10L) ? l2 : l2 + 1L;
-		long l4 = Gregorian.toFixed(l, 4, 19) - l3;
+		long l4 = new Gregorian(l, 4, 19).fixed - l3;
 		return Calendar.kDayAfter(l4, 0);
 	}
 
@@ -85,7 +85,7 @@ public class Ecclesiastical implements Serializable
 	 */
 	public static long pentecost(long l)
 	{
-		return easter(l) + 49L;
+		return easter(l) + 49;
 	}
 
 	/**
@@ -96,7 +96,7 @@ public class Ecclesiastical implements Serializable
 	 */
 	public static long astronomicalEaster(long l)
 	{
-		long l1 = Gregorian.toFixed(l, 1, 1);
+		long l1 = new Gregorian(l, 1, 1).fixed;
 		double d = Calendar.solarLongitudeAfter(l1, Calendar.SPRING);
 		long l2 = (long) Math.floor(Calendar.apparentFromLocal(Calendar.localFromUniversal(Calendar.lunarPhaseAfter(d,
 				180.0), Calendar.JERUSALEM))); // 180 = Moon lon - Sun lon at full moon phase

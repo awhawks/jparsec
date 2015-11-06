@@ -25,35 +25,18 @@ import java.io.Serializable;
 
 /**
  * Implements the Gregorian calendar.
- * <P>
- * This solar calendar was designed by a commission assembled by Pope Gregory
- * XII in the 16th century. The main author is the astronomer Aloysius Lillius,
+ * <p>
+ * This solar calendar was designed by a commission assembled by Pope Gregory XII in the 16th century.
+ * The main author is the astronomer Aloysius Lillius,
  * who changed the rules for century leap years from the old Julian calendar.
- * <P>
+ * <p>
  * See Calendrical Calculations for reference.
  *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
-public class Gregorian implements Serializable
+public class Gregorian extends BaseCalendar
 {
-	private static final long serialVersionUID = 1L;
-
-	/**
-	 * The year.
-	 */
-	public long year;
-
-	/**
-	 * Month.
-	 */
-	public int month;
-
-	/**
-	 * Day.
-	 */
-	public int day;
-
 	/**
 	 * Gregorian epoch.
 	 */
@@ -62,132 +45,94 @@ public class Gregorian implements Serializable
 	/**
 	 * Names of the days of the week.
 	 */
-	public static final String DAY_OF_WEEK_NAMES[] =
-	{ "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
+	public static final String DAY_OF_WEEK_NAMES[] = { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
 
 	/**
 	 * Names of the months.
 	 */
-	public static final String MONTH_NAMES[] =
-	{ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November",
-			"December" };
+	public static final String MONTH_NAMES[] = {
+		"January", "February", "March", "April", "May", "June", "July",
+		"August", "September", "October", "November", "December"
+	};
 
 	/**
-	 * Default constructor.
+	 * Create a Gregorian date from a fixed day.
+	 *
+	 * @param fixed fixed day.
 	 */
-	public Gregorian() { }
+	public Gregorian(final long fixed)
+	{
+		super(EPOCH, fixed);
+	}
 
 	/**
-	 * Create a Gregorian object from a Julian day.
+	 * Create a Gregorian date from a Julian day.
 	 *
 	 * @param jd Julian day.
 	 */
-	public Gregorian(int jd)
+	public Gregorian(final double jd)
 	{
-		fromJulianDay(jd);
+		super(EPOCH, jd);
 	}
 
 	/**
 	 * Explicit constructor.
 	 *
-	 * @param y Year.
-	 * @param m Month.
-	 * @param d Day.
+	 * @param year Year.
+	 * @param month Month.
+	 * @param day Day.
 	 */
-	public Gregorian(long y, int m, int d)
-	{
-		year = y;
-		month = m;
-		day = d;
+	public Gregorian(final long year, final int month, final int day) {
+		super(EPOCH, year, month, day);
 	}
 
 	/**
 	 * To fixed date.
 	 *
-	 * @param l Year.
-	 * @param i Month.
-	 * @param j Day.
-	 * @return Fixed day.
-	 */
-	public static long toFixed(long l, int i, int j)
-	{
-		return ((365L * (l - 1L) + Calendar.quotient(l - 1L, 4D)) - Calendar.quotient(l - 1L, 100D)) + Calendar
-				.quotient(l - 1L, 400D) + Calendar.quotient(367 * i - 362, 12D) + (long) (i > 2 ? isLeapYear(l) ? -1
-				: -2 : 0) + (long) j;
-	}
-
-	/**
-	 * To fixed day.
-	 *
-	 * @return Fixed day.
-	 */
-	public long toFixed()
-	{
-		return toFixed(year, month, day);
-	}
-
-	/**
-	 * Transforms a Gregorian date into a Julian day
-	 *
 	 * @param year Year.
 	 * @param month Month.
 	 * @param day Day.
-	 * @return Julian day.
+	 * @return Fixed day.
 	 */
-	public static int toJulianDay(int year, int month, int day)
+	@Override
+	long toFixed(final long year, final int month, final int day)
 	{
-		return (int) (toFixed(year, month, day) + EPOCH);
+		long y = year - 1;
+		return 365 * y + y / 4 - y / 100 + y / 400 + (367 * month - 362) / 12 + (month > 2 ? isLeapYear(year) ? -1 : -2 : 0) + day;
 	}
 
-	/**
-	 * Transforms a Gregorian date into a Julian day.
-	 * @return The Julian day.
-	 */
-	public int toJulianDay()
-	{
-		return (int) (toFixed() + EPOCH);
+	@Override
+	long yearFromFixed() {
+		return yearFromFixed(this.fixed);
 	}
 
-	/**
-	 * Sets a Gregorian date with a given Julian day
-	 *
-	 * @param jd Julian day.
-	 */
-	public void fromJulianDay(int jd)
-	{
-		fromFixed(jd - EPOCH);
+	@Override
+	int monthFromFixed(long year) {
+		long l1 = this.fixed - toFixed(year, 1, 1);
+		int i = this.fixed >= toFixed(year, 3, 1) ? ((isLeapYear(year) ? 1 : 2)) : 0;
+
+		return (int) ((12 * (l1 + i) + 373) / 367);
 	}
 
-	/**
-	 * Sets the date from a fixed date.
-	 *
-	 * @param l Fixed day.
-	 */
-	public void fromFixed(long l)
-	{
-		year = yearFromFixed(l);
-		long l1 = l - toFixed(year, 1, 1);
-		int i = l >= toFixed(year, 3, 1) ? ((int) (isLeapYear(year) ? 1 : 2)) : 0;
-		month = (int) Calendar.quotient(12L * (l1 + (long) i) + 373L, 367D);
-		day = (int) ((l - toFixed(year, month, 1)) + 1L);
+	@Override
+	int dayFromFixed(long year, int month) {
+		return 1 + (int) (this.fixed - toFixed(year, month, 1));
 	}
 
 	/**
 	 * Is this a leap year?
 	 *
-	 * @param l Year.
+	 * @param year Year.
 	 * @return True if it is a leap year.
 	 */
-	public static boolean isLeapYear(long l)
-	{
-		boolean flag = false;
-		if (Calendar.mod(l, 4L) == 0L)
-		{
-			long l1 = Calendar.mod(l, 400L);
-			if (l1 != 100L && l1 != 200L && l1 != 300L)
-				flag = true;
+	public static boolean isLeapYear(final long year) {
+		if ((year & 4) == 0) {
+			long l1 = year % 400;
+
+			return (l1 != 100 && l1 != 200 && l1 != 300);
 		}
-		return flag;
+
+		return false;
 	}
 
 	/**
@@ -195,8 +140,7 @@ public class Gregorian implements Serializable
 	 *
 	 * @return Number of days in this month.
 	 */
-	public int lastDayOfMonth()
-	{
+	public int lastDayOfMonth() {
 		switch (month)
 		{
 		case 2: // '\002'
@@ -217,9 +161,8 @@ public class Gregorian implements Serializable
 	 *
 	 * @return Day number.
 	 */
-	public long dayNumber()
-	{
-		return Calendar.difference(toFixed(year - 1L, 12, 31), toFixed());
+	public long dayNumber() {
+		return Calendar.difference(toFixed(year - 1, 12, 31), this.fixed);
 	}
 
 	/**
@@ -227,108 +170,102 @@ public class Gregorian implements Serializable
 	 *
 	 * @return Number of days.
 	 */
-	public long daysRemaining()
-	{
-		return Calendar.difference(toFixed(), toFixed(year, 12, 31));
+	public long daysRemaining() {
+		return Calendar.difference(this.fixed, toFixed(year, 12, 31));
 	}
 
 	/**
 	 * Gets independence day.
 	 *
-	 * @param l Fixed day.
+	 * @param year Year.
 	 * @return Such date.
 	 */
-	public static long independenceDay(long l)
-	{
-		return toFixed(l, 7, 4);
+	public static long independenceDay(final long year) {
+		return new Gregorian(year, 7, 4).fixed;
 	}
 
 	/**
 	 * Gets labor day.
 	 *
-	 * @param l Fixed day.
+	 * @param year Year.
 	 * @return Such date.
 	 */
-	public static long laborDay(long l)
-	{
-		return Calendar.firstKDay(1, toFixed(l, 9, 1));
+	public static long laborDay(final long year) {
+		return Calendar.firstKDay(1, new Gregorian(year, 9, 1).fixed);
 	}
 
 	/**
 	 * Gets memorial day.
 	 *
-	 * @param l Fixed day.
+	 * @param year Year.
 	 * @return Such date.
 	 */
-	public static long memorialDay(long l)
-	{
-		return Calendar.lastKDay(1, toFixed(l, 5, 31));
+	public static long memorialDay(final long year) {
+		return Calendar.lastKDay(1, new Gregorian(year, 5, 31).fixed);
 	}
 
 	/**
 	 * Gets election day.
 	 *
-	 * @param l Fixed day.
+	 * @param year Year.
 	 * @return Such date.
 	 */
-	public static long electionDay(long l)
-	{
-		return Calendar.firstKDay(2, toFixed(l, 11, 2));
+	public static long electionDay(final long year) {
+		return Calendar.firstKDay(2, new Gregorian(year, 11, 2).fixed);
 	}
 
 	/**
 	 * Gets Christmas day.
 	 *
-	 * @param l Fixed day.
+	 * @param year Year.
 	 * @return Such date.
 	 */
-	public static long christmas(long l)
-	{
-		return toFixed(l, 12, 25);
+	public static long christmas(final long year) {
+		return new Gregorian(year, 12, 25).fixed;
 	}
 
 	/**
 	 * Gets advent day.
 	 *
-	 * @param l Fixed day.
+	 * @param year Year.
 	 * @return Such date.
 	 */
-	public static long advent(long l)
-	{
-		return Calendar.kDayNearest(toFixed(l, 11, 30), 0);
+	public static long advent(final long year) {
+		return Calendar.kDayNearest(new Gregorian(year, 11, 30).fixed, 0);
 	}
 
 	/**
 	 * Gets epiphany day.
 	 *
-	 * @param l Fixed day.
+	 * @param year Year.
 	 * @return Such date.
 	 */
-	public static long epiphany(long l)
-	{
-		return Calendar.firstKDay(0, toFixed(l, 1, 2));
+	public static long epiphany(final long year) {
+		return Calendar.firstKDay(0, new Gregorian(year, 1, 2).fixed);
 	}
 
 	/**
 	 * Gets the year from a fixed date.
 	 *
-	 * @param l Fixed date.
+	 * @param fixed Year.
 	 * @return Year.
 	 */
-	public static long yearFromFixed(long l)
-	{
-		long l1 = l - 1L;
-		long l2 = Calendar.quotient(l1, 146097D);
-		long l3 = Calendar.mod(l1, 0x23ab1L);
-		long l4 = Calendar.quotient(l3, 36524D);
-		long l5 = Calendar.mod(l3, 36524L);
-		long l6 = Calendar.quotient(l5, 1461D);
-		long l7 = Calendar.mod(l5, 1461L);
-		long l8 = Calendar.quotient(l7, 365D);
-		long l9 = 400L * l2 + 100L * l4 + 4L * l6 + l8;
-		if (l4 == 4L || l8 == 4L)
+	public static long yearFromFixed(final long fixed) {
+		long l1 = fixed - 1;
+		long l2 = l1 / 146097;
+		long l3 = l1 % 146097;
+		long l4 = l3 / 36524;
+		long l5 = l3 % 36524;
+		long l6 = l5 / 1461;
+		long l7 = l5 % 1461;
+		long l8 = l7 / 365;
+		long l9 = 400 * l2 + 100 * l4 + 4 * l6 + l8;
+
+		if (l4 == 4 || l8 == 4) {
 			return l9;
-		else
-			return l9 + 1L;
+		}
+		else {
+			return l9 + 1;
+		}
 	}
 }

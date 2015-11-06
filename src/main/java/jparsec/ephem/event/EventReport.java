@@ -1890,7 +1890,7 @@ public class EventReport {
 		MayanLongCount hNew = new MayanLongCount(h.baktun+1, 0, 0, 0, 0);
 		int lastDay = (int) (hNew.toJulianDay() + 0.5) - 1;
 		Gregorian g = new Gregorian(lastDay);
-		double jd = g.toJulianDay() + 0.5;
+		double jd = g.getJulianDate() + 0.5;
 		if (jd > jd0 && jd < jdf) {
 			String details = "baktun "+h.baktun+" "+Translate.translate("ends")+" (Mayan calendar)";
 			SimpleEventElement s = new SimpleEventElement(jd, EVENT.CALENDAR, details);

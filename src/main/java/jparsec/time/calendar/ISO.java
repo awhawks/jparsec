@@ -92,7 +92,7 @@ public class ISO implements Serializable
 	 */
 	public static long toFixed(long year, int week, int day)
 	{
-		return Calendar.nthKDay(week, 0, Gregorian.toFixed(year - 1L, 12, 28)) + (long) day;
+		return Calendar.nthKDay(week, 0, new Gregorian(year - 1, 12, 28).fixed) + day;
 	}
 
 	/**

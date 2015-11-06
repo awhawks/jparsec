@@ -303,7 +303,7 @@ public class HinduLunar implements Serializable
 	 */
 	public static long newYear(long l)
 	{
-		long l1 = Gregorian.toFixed(l, 1, 1);
+		long l1 = new Gregorian(l, 1, 1).fixed;
 		double d = HinduSolar.solarLongitudeAfter(l1, 330.0);
 		double d1 = lunarDayAfter(d, 1.0D);
 		long l2 = (long) Math.floor(d1);

@@ -354,7 +354,7 @@ public class HinduSolar implements Serializable
 	 */
 	public static double meshaSamkranti(long l)
 	{
-		long l1 = Gregorian.toFixed(l, 1, 1);
+		long l1 = new Gregorian(l, 1, 1).fixed;
 		return solarLongitudeAfter(l1, 0.0);
 	}
 

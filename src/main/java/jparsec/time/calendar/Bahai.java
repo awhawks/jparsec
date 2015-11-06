@@ -175,7 +175,7 @@ public class Bahai extends BaseCalendar
 			monthOffset = Gregorian.isLeapYear(y + 1L) ? 347 : 346;
 		}
 
-		return Gregorian.toFixed(y, 3, 20) + monthOffset + (long) day;
+		return new Gregorian(y, 3, 20).fixed + monthOffset + (long) day;
 	}
 
 	@Override
@@ -183,7 +183,7 @@ public class Bahai extends BaseCalendar
 		long f = Gregorian.yearFromFixed(fixed);
 		long e = Gregorian.yearFromFixed(EPOCH);
 
-		long y = f - e + (this.fixed > Gregorian.toFixed(f, 3, 20) ? 1 : 0);
+		long y = f - e + (this.fixed > new Gregorian(f, 3, 20).fixed ? 1 : 0);
 
 		this.major = 1L + y / 361;
 		this.cycle = 1 + (int) ((y - 1) % 361L) / 19;

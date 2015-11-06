@@ -56,7 +56,7 @@ public class Julian implements Serializable
 	/**
 	 * Calendar epoch.
 	 */
-	public static final long EPOCH = Gregorian.toFixed(0L, 12, 30);
+	public static final long EPOCH = new Gregorian(0, 12, 30).fixed;
 
 	/**
 	 * Default constructor.
