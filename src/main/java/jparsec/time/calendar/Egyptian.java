@@ -30,9 +30,10 @@ package jparsec.time.calendar;
 public class Egyptian extends BaseCalendar {
     /**
      * Calendar epoch.
-     * The Egyptian calendar year 1 started on Julian date 747/02/27
+     * The Egyptian calendar year 1 started on Julian date 747/02/26 BCE
      */
-    public static final long EPOCH = Calendar.fixedFromJD(1448638D);
+    public static final long EPOCH = Julian.toFixed(-747, 2, 26);
+
     /**
      * Month names.
      */
@@ -40,6 +41,7 @@ public class Egyptian extends BaseCalendar {
             "Thoth", "Phaophi", "Athyr", "Choiak", "Tybi", "Mechir", "Phamenoth",
             "Pharmuthi", "Pachon", "Payni", "Epiphi", "Mesori", "Epagomenai"
     };
+
     private static final long serialVersionUID = 6136242459594971142L;
 
     /**
