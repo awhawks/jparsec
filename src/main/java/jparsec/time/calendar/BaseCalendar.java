@@ -82,6 +82,26 @@ public abstract class BaseCalendar implements Serializable {
         return -1;
     }
 
+    public int getDay() {
+        return day;
+    }
+
+    public long getFixed() {
+        return fixed;
+    }
+
+    public double getJulianDate() {
+        return julianDate;
+    }
+
+    public int getMonth() {
+        return month;
+    }
+
+    public long getYear() {
+        return year;
+    }
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
