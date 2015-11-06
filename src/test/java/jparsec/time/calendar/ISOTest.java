@@ -6,12 +6,16 @@ public class ISOTest {
      *
      * @param args Not used.
      */
-    public static void main(String args[]) {
+    public static void main(final String args[]) {
         System.out.println("ISO test");
-        int jd = 2451545;
-        ISO h = new ISO(jd);
-        System.out.println("JD " + jd + " = " + h.year + '/' + h.week + '/' + h.day);
+
+        double jd = 2451545.5;
+        long fixed = 730120;
+
+        ISO h = new ISO(fixed);
+        System.out.println("JD " + h.julianDate + ' ' + h.fixed + " = " + h);
+
         ISO h2 = new ISO(h.year, h.week, h.day);
-        System.out.println("JD " + h2.toJulianDay() + " = " + h2.year + '/' + h2.week + '/' + h2.day);
+        System.out.println("JD " + h2.julianDate + ' ' + h2.fixed + " = " + h2);
     }
 }
