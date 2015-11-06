@@ -1922,8 +1922,7 @@ public class EventReport {
 			int yearTotal = h0.getYearNumber();
 			Chinese h2 = new Chinese(Chinese.newYear(year));
 			if (h2.getYearNumber() == yearTotal) h2 = new Chinese(Chinese.newYear(year+1));
-			AstroDate astro_back = new AstroDate((double)h2.toJulianDay());
-			jd = astro_back.jd();
+			jd = h2.getJulianDate();
 			if (jd > jd0 && jd < jdf) {
 				String details = Translate.translate("NEW").toLowerCase()+" "+Translate.translate("Chinese")+" "+Translate.translate("Year").toLowerCase();
 				SimpleEventElement s = new SimpleEventElement(jd, EVENT.CALENDAR, details);

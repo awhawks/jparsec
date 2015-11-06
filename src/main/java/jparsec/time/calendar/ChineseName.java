@@ -33,43 +33,32 @@ import jparsec.util.JPARSECException;
  */
 public class ChineseName implements Serializable
 {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -3639393671583969363L;
 
 	/**
 	 * Stem.
 	 */
-	public int stem = 0;
+	public int stem = 1;
 
 	/**
 	 * Branch.
 	 */
-	public int branch = 0;
+	public int branch = 1;
 
 	/**
-	 * Empty constructor.
-	 */
-	public ChineseName()
-	{
-		stem = 1;
-		branch = 1;
-	}
-
-	/**
-	 * Full constructor.
+	 * Constructor.
 	 *
 	 * @param i Stem.
 	 * @param j Branch.
+	 *
 	 * @throws JPARSECException If input is invalid.
 	 */
-	public ChineseName(int i, int j) throws JPARSECException
+	public ChineseName(final int i, final int j) throws JPARSECException
 	{
-		if (Calendar.mod(i, 2) == Calendar.mod(j, 2))
-		{
+		if ((i % 2) == (j % 2)) {
 			stem = i;
 			branch = j;
-			return;
-		} else
-		{
+		} else {
 			throw new JPARSECException("invalid input.");
 		}
 	}

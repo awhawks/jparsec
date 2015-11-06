@@ -28,45 +28,29 @@ import jparsec.util.JPARSECException;
 
 /**
  * Implements the Chinese calendar.
- * <P>
- * A lunisolar calendar based on astronomical events. Days begin at civil
- * midnight. Months begin and end with the new Moon. There are about 15 versions
- * of the Chinese calendar, the one implemented here is the latest, being used
- * since Gregorian year 1645 (Qing dinasty).
- * <P>
+ * <p>
+ * A lunisolar calendar based on astronomical events. Days begin at civil midnight.
+ * Months begin and end with the new Moon. There are about 15 versions of the Chinese calendar,
+ * the one implemented here is the latest, being used since Gregorian year 1645 (Qing dinasty).
+ * <p>
  * See Calendrical Calculations for reference.
  *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
-public class Chinese implements Serializable
+public class Chinese extends BaseCalendar
 {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Cycle.
 	 */
-	public long cycle = 0;
-
-	/**
-	 * Year.
-	 */
-	public int year = 0;
-
-	/**
-	 * Month.
-	 */
-	public int month = 0;
+	public long cycle;
 
 	/**
 	 * Leap month flag.
 	 */
-	public boolean leapMonth = false;
-
-	/**
-	 * Day.
-	 */
-	public int day = 0;
+	public boolean leapMonth;
 
 	/**
 	 * Calendar epoch.
@@ -86,218 +70,231 @@ public class Chinese implements Serializable
 	/**
 	 * Stem year names.
 	 */
-	public static final String YEAR_STEM_NAMES[] =
-	{ "Jia", "Yi", "Bing", "Ding", "Wu", "Ji", "Geng", "Xin", "Ren", "Gui" };
+	public static final String YEAR_STEM_NAMES[] = { "Jia", "Yi", "Bing", "Ding", "Wu", "Ji", "Geng", "Xin", "Ren", "Gui" };
 
 	/**
 	 * Branch year names.
 	 */
-	public static final String YEAR_BRANCH_NAMES[] =
-	{ "Zi", "Chou", "Yin", "Mao", "Chen", "Si", "Wu", "Wei", "Shen", "You", "Xu", "Hai" };
+	public static final String YEAR_BRANCH_NAMES[] = { "Zi", "Chou", "Yin", "Mao", "Chen", "Si", "Wu", "Wei", "Shen", "You", "Xu", "Hai" };
 
-	/**
-	 * Empty constructor.
-	 */
-	public Chinese() { }
+	public static final CityElement BEIJING_OLD = new CityElement("Beijing, China", Calendar.angle(116.0, 25.0, 0.0), 39.55, 7.7611111111111111, 44);
+
+	public static final CityElement BEIJING_NEW = new CityElement("Beijing, China", Calendar.angle(116.0, 25.0, 0.0), 39.55, 8.0, 44);
+
+	public static final CityElement TOKYO_OLD = new CityElement("Tokyo, Japan", Calendar.angle(139D, 46D, 0.0D), 35.7, 9.3177777777777777, 24);
+	public static final CityElement TOKYO_NEW = new CityElement("Tokyo, Japan", 135.0, 35.0, 9.0, 0);
+
+	private transient int monthV;
+
+	private transient int dayV;
 
 	/**
 	 * Constructor from a fixed epoch.
 	 *
-	 * @param l Fixed day.
+	 * @param fixed Fixed day.
 	 */
-	public Chinese(long l)
+	public Chinese(final long fixed)
 	{
-		fromFixed(l);
+		super(EPOCH, fixed);
 	}
 
 	/**
 	 * Constructor from a Julian day.
 	 *
-	 * @param jd Julian day.
+	 * @param julianDay Julian day.
 	 */
-	public Chinese(int jd)
+	public Chinese(final double julianDay)
 	{
-		fromJulianDay(jd);
+		super(EPOCH, julianDay);
 	}
 
 	/**
-	 * Full constructor.
-	 *
-	 * @param ccycle Cycle.
-	 * @param cyear Year.
-	 * @param cmonth Month.
-	 * @param cleapMonth Leap month flag.
-	 * @param cday Day.
-	 */
-	public Chinese(long ccycle, int cyear, int cmonth, boolean cleapMonth, int cday)
-	{
-		cycle = ccycle;
-		year = cyear;
-		month = cmonth;
-		leapMonth = cleapMonth;
-		day = cday;
-	}
-
-	/**
-	 * To fixed day.
+	 * Constructor.
 	 *
 	 * @param cycle Cycle.
 	 * @param year Year.
 	 * @param month Month.
 	 * @param leapMonth Leap month flag.
 	 * @param day Day.
-	 * @return Fixed day.
 	 */
-	public static long toFixed(long cycle, int year, int month, boolean leapMonth, int day)
+	public Chinese(final long cycle, final long year, final int month, final boolean leapMonth, final int day)
 	{
-		long l1 = (long) Math
-				.floor((double) EPOCH + ((double) ((cycle - 1L) * 60L + (long) (year - 1)) + 0.5D) * 365.242189D);
-		long l2 = newYearOnOrBefore(l1);
-		long l3 = newMoonOnOrAfter(l2 + (long) (29 * (month - 1)));
-		Chinese chinese = new Chinese(l3);
-		long l4 = month != chinese.month || leapMonth != chinese.leapMonth ? newMoonOnOrAfter(l3 + 1L) : l3;
-		return (l4 + (long) day) - 1L;
+		super(EPOCH, (cycle - 1) * 60 + year, month, day);
+
+		this.cycle = cycle;
+		this.leapMonth = leapMonth;
+	}
+
+	@Override
+	long yearFromFixed() {
+		long l1 = winterSolsticeOnOrBefore(this.fixed);
+		long l2 = winterSolsticeOnOrBefore(l1 + 370);
+		long l3 = newMoonOnOrAfter(l1 + 1);
+		long l4 = newMoonBefore(l2 + 1);
+		long l5 = newMoonBefore(this.fixed + 1);
+
+		boolean flag = Math.round((double) (l4 - l3) / 29.530588853000001D) == 12L;
+
+		this.monthV = (int) Calendar.adjustedMod(Math.round((double) (l5 - l3) / 29.530588853000001D) - (long) (!flag || !hasPriorLeapMonth(l3, l5) ? 0 : 1), 12L);
+
+		this.leapMonth = flag && hasNoMajorSolarTerm(l5) && !hasPriorLeapMonth(l3, newMoonBefore(l5));
+		long y = (long) Math.floor((1.5D - (double) (this.monthV / 12)) + (double) (fixed - EPOCH) / 365.242189D);
+		this.cycle = 1 + ((y - 1) / 60);
+		this.dayV = (int) ((this.fixed - l5) + 1);
+
+		return Calendar.adjustedMod(y, 60);
+	}
+
+	@Override
+	int monthFromFixed(long year) {
+		return this.monthV;
+	}
+
+	@Override
+	int dayFromFixed(long year, int month) {
+		return this.dayV;
 	}
 
 	/**
 	 * To fixed day.
 	 *
+	 * @param year Year.
+	 * @param month Month.
+	 * @param day Day.
 	 * @return Fixed day.
 	 */
-	public long toFixed()
-	{
-		return toFixed(cycle, year, month, leapMonth, day);
+	@Override
+	long toFixed(final long year, final int month, final int day) {
+		long l1 = (long) Math.floor((double) EPOCH + (year - 2 + 0.5) * 365.242189D);
+		long l2 = newYearOnOrBefore(l1);
+		long l3 = newMoonOnOrAfter(l2 + (long) (29 * (this.month - 1)));
+		Chinese chinese = new Chinese(l3);
+		long l4 = this.month != chinese.month || this.leapMonth != chinese.leapMonth ? newMoonOnOrAfter(l3 + 1) : l3;
+
+		return l4 + this.day - 1;
 	}
 
-	/**
-	 * Sets the date from a fixed day.
-	 *
-	 * @param l Fixed day.
-	 */
-	public void fromFixed(long l)
-	{
-		long l1 = winterSolsticeOnOrBefore(l);
-		long l2 = winterSolsticeOnOrBefore(l1 + 370L);
-		long l3 = newMoonOnOrAfter(l1 + 1L);
-		long l4 = newMoonBefore(l2 + 1L);
-		long l5 = newMoonBefore(l + 1L);
-		boolean flag = Math.round((double) (l4 - l3) / 29.530588853000001D) == 12L;
-		month = (int) Calendar.adjustedMod(
-				Math.round((double) (l5 - l3) / 29.530588853000001D) - (long) (!flag || !hasPriorLeapMonth(l3, l5) ? 0
-						: 1), 12L);
-		leapMonth = flag && hasNoMajorSolarTerm(l5) && !hasPriorLeapMonth(l3, newMoonBefore(l5));
-		long l6 = (long) Math.floor((1.5D - (double) month / 12D) + (double) (l - EPOCH) / 365.242189D);
-		cycle = Calendar.quotient(l6 - 1L, 60D) + 1L;
-		year = (int) Calendar.adjustedMod(l6, 60L);
-		day = (int) ((l - l5) + 1L);
+	@Override
+	long toYear(final long year) {
+		return 1 + ((year - 1) % 60);
+	}
+
+	@Override
+	public String toString() {
+		return "Chinese {" +
+				" cycle=" + this.cycle +
+				", year=" + this.year +
+				", month=" + this.month +
+				", leapMonth=" + this.leapMonth +
+				", day=" + this.day +
+				" }";
 	}
 
 	/**
 	 * Gets the time when the solar longitude is equal to some value.
 	 *
-	 * @param l Fixed day.
+	 * @param fixed Fixed day.
 	 * @param d Desired longitude of the Sun to search for.
 	 * @return Time when the Sun has this longitude in UT.
 	 */
-	private static double solarLongitudeOnOrAfter(long l, double d)
+	private static double solarLongitudeOnOrAfter(final long fixed, final double d)
 	{
-		CityElement location = beijing(l);
-		double d1 = Calendar.solarLongitudeAfter(Calendar.universalFromStandard(l, location), d);
+		CityElement location = beijing(fixed);
+		double d1 = Calendar.solarLongitudeAfter(Calendar.universalFromStandard(fixed, location), d);
+
 		return Calendar.standardFromUniversal(d1, location);
 	}
 
-	private static double midnightInChina(long l)
+	private static double midnightInChina(final long fixed)
 	{
-		return Calendar.universalFromStandard(l, beijing(l));
+		return Calendar.universalFromStandard(fixed, beijing(fixed));
 	}
 
-	private static long winterSolsticeOnOrBefore(long l)
+	private static long winterSolsticeOnOrBefore(final long fixed)
 	{
-		double d = Calendar.estimatePriorSolarLongitude(midnightInChina(l + 1L), Calendar.WINTER);
-		long l1;
-		for (l1 = (long) (Math.floor(d) - 1.0D); Calendar.WINTER > Calendar.solarLongitude(midnightInChina(l1 + 1L)); l1++)
-			;
+		double longitude = Calendar.estimatePriorSolarLongitude(midnightInChina(fixed + 1L), Calendar.WINTER);
+		long l1 = (long) (Math.floor(longitude) - 1);
+
+		while (Calendar.WINTER > Calendar.solarLongitude(midnightInChina(l1 + 1))) {
+			l1++;
+		}
+
 		return l1;
 	}
 
-	private static long newYearInSui(long l)
+	private static long newYearInSui(final long fixed)
 	{
-		long l1 = winterSolsticeOnOrBefore(l);
+		long l1 = winterSolsticeOnOrBefore(fixed);
 		long l2 = winterSolsticeOnOrBefore(l1 + 370L);
 		long l3 = newMoonOnOrAfter(l1 + 1L);
 		long l4 = newMoonOnOrAfter(l3 + 1L);
 		long l5 = newMoonBefore(l2 + 1L);
+
 		if (Math.round((double) (l5 - l3) / 29.530588853000001D) == 12L && (hasNoMajorSolarTerm(l3) || hasNoMajorSolarTerm(l4)))
 			return newMoonOnOrAfter(l4 + 1L);
 		else
 			return l4;
 	}
 
-	private static long newYearOnOrBefore(long l)
+	private static long newYearOnOrBefore(final long fixed)
 	{
-		long l1 = newYearInSui(l);
-		if (l >= l1)
+		long l1 = newYearInSui(fixed);
+
+		if (fixed >= l1)
 			return l1;
 		else
-			return newYearInSui(l - 180L);
+			return newYearInSui(fixed - 180L);
 	}
 
-	private static int currentMajorSolarTerm(long l)
+	private static int currentMajorSolarTerm(final long fixed)
 	{
-		double d = Calendar.solarLongitude(Calendar.universalFromStandard(l, beijing(l)));
+		double d = Calendar.solarLongitude(Calendar.universalFromStandard(fixed, beijing(fixed)));
 		return (int) Calendar.adjustedMod(2L + Calendar.quotient(d, 30.0), 12L);
 	}
 
-	private static double minorSolarTermOnOrAfter(long l)
+	private static double minorSolarTermOnOrAfter(final long fixed)
 	{
-		double d = Calendar.mod(30D * Math
-				.ceil((Calendar.solarLongitude(midnightInChina(l)) - 15.0) / 30D) + 15.0, 360.0);
-		return solarLongitudeOnOrAfter(l, d);
+		double d = Calendar.mod(30D * Math.ceil((Calendar.solarLongitude(midnightInChina(fixed)) - 15.0) / 30D) + 15.0, 360.0);
+		return solarLongitudeOnOrAfter(fixed, d);
 	}
 
 	/**
 	 * Returns previous new moon.
 	 *
-	 * @param l Fixed day.
+	 * @param fixed Fixed day.
 	 * @return New Moon.
 	 */
-	public static long newMoonBefore(long l)
+	public static long newMoonBefore(final long fixed)
 	{
-		double d = Calendar.newMoonBefore(midnightInChina(l));
+		double d = Calendar.newMoonBefore(midnightInChina(fixed));
 		return (long) Math.floor(Calendar.standardFromUniversal(d, beijing(d)));
 	}
 
 	/**
 	 * Returns next new moon.
 	 *
-	 * @param l Fixed day.
+	 * @param fixed Fixed day.
 	 * @return New Moon.
 	 */
-	public static long newMoonOnOrAfter(long l)
+	public static long newMoonOnOrAfter(final long fixed)
 	{
-		double d = Calendar.newMoonAfter(midnightInChina(l));
+		double d = Calendar.newMoonAfter(midnightInChina(fixed));
 		return (long) Math.floor(Calendar.standardFromUniversal(d, beijing(d)));
 	}
 
-	private static boolean hasNoMajorSolarTerm(long l)
+	private static boolean hasNoMajorSolarTerm(final long fixed)
 	{
-		return currentMajorSolarTerm(l) == currentMajorSolarTerm(newMoonOnOrAfter(l + 1L));
+		return currentMajorSolarTerm(fixed) == currentMajorSolarTerm(newMoonOnOrAfter(fixed + 1L));
 	}
 
-	private static boolean hasPriorLeapMonth(long l, long l1)
+	private static boolean hasPriorLeapMonth(final long fixed, final long l1)
 	{
-		return l1 >= l && (hasNoMajorSolarTerm(l1) || hasPriorLeapMonth(l, newMoonBefore(l1)));
+		return l1 >= fixed && (hasNoMajorSolarTerm(l1) || hasPriorLeapMonth(fixed, newMoonBefore(l1)));
 	}
 
-	private static ChineseName sexagesimalName(long l)
+	private static ChineseName sexagesimalName(final long fixed) throws JPARSECException
 	{
-		try
-		{
-			return new ChineseName((int) Calendar.adjustedMod(l, 10L), (int) Calendar.adjustedMod(l, 12L));
-		} catch (Exception _ex)
-		{
-			return new ChineseName();
-		}
+		return new ChineseName((int) Calendar.adjustedMod(fixed, 10L), (int) Calendar.adjustedMod(fixed, 12L));
 	}
 
 	/**
@@ -306,8 +303,7 @@ public class Chinese implements Serializable
 	 * @param i Fixed day.
 	 * @return Year name.
 	 */
-	public static ChineseName nameOfYear(int i)
-	{
+	public static ChineseName nameOfYear(final long i) throws JPARSECException {
 		return sexagesimalName(i);
 	}
 
@@ -318,135 +314,104 @@ public class Chinese implements Serializable
 	 * @param j month in chinese calendar.
 	 * @return Month name.
 	 */
-	public static ChineseName nameOfMonth(int i, int j)
+	public static ChineseName nameOfMonth(final long i, final int j) throws JPARSECException
 	{
-		long l = 12L * (long) (i - 1) + (long) (j - 1);
-		return sexagesimalName(l + 15L);
+		long fixed = 12L * (long) (i - 1) + (long) (j - 1);
+		return sexagesimalName(fixed + 15L);
 	}
 
 	/**
 	 * Returns name of day.
 	 *
-	 * @param l Fixed day.
+	 * @param fixed Fixed day.
 	 * @return Day name.
 	 */
-	public static ChineseName nameOfDay(long l)
+	public static ChineseName nameOfDay(final long fixed) throws JPARSECException
 	{
-		return sexagesimalName(l + 15L);
+		return sexagesimalName(fixed + 15L);
 	}
 
 	/**
-	 * Returns Beijing's city object. Note that in 1929 the official time
-	 * zone changed.
+	 * Returns Beijing's city object.
+	 * Note that in 1929 the official time zone changed.
 	 *
 	 * @param d Fixed day.
 	 * @return The adequate object.
 	 */
-	public static final CityElement beijing(double d)
+	public static final CityElement beijing(final double d)
 	{
-		long l = Gregorian.yearFromFixed((long) Math.floor(d));
-		return new CityElement("Beijing, China", Calendar.angle(116.0, 25.0, 0.0), 39.55, l >= 1929L ? 8.0: 7.7611111111111111, 44);
+		long fixed = Gregorian.yearFromFixed((long) Math.floor(d));
+
+		return fixed >= 1929L ? BEIJING_NEW : BEIJING_OLD;
 	}
 
 	/**
-	 * Returns Tokyo's city object. Note that in 1888 the official
-	 * location for Tokyo changed.
+	 * Returns Tokyo's city object.
+	 * Note that in 1888 the official location for Tokyo changed.
 	 *
 	 * @param d Fixed day.
 	 * @return The adequate object.
 	 */
-	public static final CityElement tokyo(double d)
+	public static final CityElement tokyo(final double d)
 	{
-		long l = Gregorian.yearFromFixed((long) Math.floor(d));
-		if (l < 1888L)
-			return new CityElement("Tokyo, Japan", Calendar.angle(139D, 46D, 0.0D), 35.7, 9.3177777777777777, 24);
-		else
-			return new CityElement("Tokyo, Japan", 135.0, 35.0, 9.0, 0);
+		long fixed = Gregorian.yearFromFixed((long) Math.floor(d));
+
+		return (fixed < 1888L) ? TOKYO_OLD : TOKYO_NEW;
 	}
 
 	/**
 	 * Returns new year.
 	 *
-	 * @param l Gregorian year.
+	 * @param fixed Gregorian year.
 	 * @return Fixed date of the new year for that Gregorian year.
 	 */
-	public static long newYear(long l)
+	public static long newYear(final long fixed)
 	{
-		return newYearOnOrBefore(Gregorian.toFixed(l, 7, 1));
+		return newYearOnOrBefore(Gregorian.toFixed(fixed, 7, 1));
 	}
 
 	/**
 	 * Returns dragon festival date.
 	 *
-	 * @param l Fixed day.
+	 * @param fixed Fixed day.
 	 * @return Dragon festival fixed date.
 	 */
-	public static long dragonFestival(long l)
+	public static long dragonFestival(final long fixed)
 	{
-		long l1 = (l - Gregorian.yearFromFixed(EPOCH)) + 1L;
-		long l2 = Calendar.quotient(l1 - 1L, 60D) + 1L;
-		int i = (int) Calendar.adjustedMod(l1, 60L);
-		return toFixed(l2, i, 5, false, 5);
+		long y = (fixed - Gregorian.yearFromFixed(EPOCH)) + 1;
+		long cycle = 1 + (y - 1) / 60;
+		int year = (int) Calendar.adjustedMod(y, 60);
+
+		return new Chinese(cycle, year, 5, false, 5).fixed;
 	}
 
 	/**
 	 * Returns quingMing.
 	 *
-	 * @param l Fixed day.
+	 * @param fixed Fixed day.
 	 * @return QuingMing.
 	 */
-	public static long qingMing(long l)
+	public static long qingMing(final long fixed)
 	{
-		return (long) Math.floor(minorSolarTermOnOrAfter(Gregorian.toFixed(l, 3, 30)));
+		return (long) Math.floor(minorSolarTermOnOrAfter(Gregorian.toFixed(fixed, 3, 30)));
 	}
 
 	/**
 	 * Returns chinese age.
 	 *
-	 * @param chinese Chinese instance.
-	 * @param l Fixed day.
+	 * @param c1 Chinese instance.
+	 * @param fixed Fixed day.
 	 * @return Age.
-	 * @throws JPARSECException If chinese is not larger than l.
+	 * @throws JPARSECException If chinese is not larger than fixed.
 	 */
-	public static long age(Chinese chinese, long l) throws JPARSECException
+	public static long age(final Chinese c1, final long fixed) throws JPARSECException
 	{
-		Chinese chinese1 = new Chinese(l);
-		if (l >= chinese.toFixed())
-			return 60L * (chinese1.cycle - chinese.cycle) + (long) (chinese1.year - chinese.year) + 1L;
+		Chinese c2 = new Chinese(fixed);
+
+		if (fixed >= c1.fixed)
+			return 60L * c2.cycle - c1.cycle + c2.year - c1.year + 1;
 		else
-			throw new JPARSECException("chinese chinese date, must be lower than second parameter "+l+".");
-	}
-
-	/**
-	 * Transforms a Chinese date into a Julian day.
-	 * @param cycle Cycle.
-	 * @param year Year.
-	 * @param month Month.
-	 * @param leapMonth Leap month flag.
-	 * @param day Day.
-	 * @return Julian day.
-	 */
-	public static int toJulianDay(long cycle, int year, int month, boolean leapMonth, int day)
-	{
-		return (int) (toFixed(cycle, year, month, leapMonth, day) + Gregorian.EPOCH);
-	}
-
-	/**
-	 * Transforms a Chinese date into a Julian day.
-	 * @return The Julian day.
-	 */
-	public int toJulianDay()
-	{
-		return (int) (toFixed() + Gregorian.EPOCH);
-	}
-
-	/**
-	 * Sets a Chinese date with a given Julian day.
-	 * @param jd The Julian day.
-	 */
-	public void fromJulianDay(int jd)
-	{
-		fromFixed(jd - Gregorian.EPOCH);
+			throw new JPARSECException("chinese chinese date, must be lower than second parameter "+fixed+".");
 	}
 
 	/**
@@ -454,6 +419,6 @@ public class Chinese implements Serializable
 	 * @return The year.
 	 */
 	public int getYearNumber() {
-		return 1 + (int) this.cycle * 60 + this.year;
+		return 1 + (int) (this.cycle * 60 + this.year);
 	}
 }
