@@ -60,6 +60,8 @@ public class Persian extends BaseCalendar
 		"Farvardin", "Ordibehesht", "Xordad", "Tir", "Mordad", "Shahrivar", "Mehr", "Aban", "Azar", "Dey", "Bahman", "Esfand"
 	};
 
+	private static final long serialVersionUID = 8315300467974129047L;
+
 	/**
 	 * Fixed day constructor.
 	 *

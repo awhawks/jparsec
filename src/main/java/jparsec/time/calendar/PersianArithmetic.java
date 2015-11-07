@@ -36,6 +36,8 @@ import java.io.Serializable;
  */
 public class PersianArithmetic extends Persian
 {
+	private static final long serialVersionUID = -2018929499903623808L;
+
 	/**
 	 * Constructor using a fixed day.
 	 *
