@@ -32,150 +32,96 @@ import jparsec.observer.CityElement;
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
-public class IslamicObservational implements Serializable
+public class IslamicObservational extends Islamic
 {
-	private static final long serialVersionUID = 1L;
-
-	/**
-	 * The year.
-	 */
-	public long year;
-
-	/**
-	 * Month.
-	 */
-	public int month;
-
-	/**
-	 * Day.
-	 */
-	public int day;
-
 	/**
 	 * Cairo location.
 	 */
-	public static final CityElement CAIRO = new CityElement("Cairo, Egypt", 31.3, 30.1, 2D, 200);
+	public static final CityElement CAIRO = new CityElement("Cairo, Egypt", 31.3, 30.1, 2, 200);
 
 	/**
 	 * Islamic location, currently set to Cairo.
 	 */
 	public static final CityElement ISLAMIC_LOCALE = CAIRO;
 
+	private static final long serialVersionUID = 182875218135355239L;
+
+	private transient long prevLunarPhase;
+
+	private transient long months;
+
 	/**
-	 * Default constructor.
+	 * Fixed day constructor.
+	 *
+	 * @param fixed fixed day.
 	 */
-	public IslamicObservational()
+	public IslamicObservational(final long fixed)
 	{
+		super(fixed);
 	}
 
 	/**
 	 * Julian day constructor.
 	 *
-	 * @param jd Julian day.
+	 * @param julianDay Julian day.
 	 */
-	public IslamicObservational(int jd)
+	public IslamicObservational(final double julianDay)
 	{
-		fromJulianDay(jd);
+		super(julianDay);
 	}
 
 	/**
 	 * Explicit constructor.
 	 *
-	 * @param y Year.
-	 * @param m Month.
-	 * @param d Day.
+	 * @param year Year.
+	 * @param month Month.
+	 * @param day Day.
 	 */
-	public IslamicObservational(long y, int m, int d)
+	public IslamicObservational(final long year, final int month, final int day)
 	{
-		year = y;
-		month = m;
-		day = d;
+		super(year, month, day);
 	}
 
 	/**
 	 * To fixed day.
-	 *
-	 * @param y Year.
-	 * @param m Month.
-	 * @param d Day.
-	 * @return Fixed day.
-	 */
-	public static long toFixed(long y, int m, int d)
-	{
-		long l1;
-		try
-		{
-			long l2 = Islamic.EPOCH + (long) Math
-					.floor(((double) ((y - 1L) * 12L + (long) m) - 0.5D) * 29.530588853000001D);
-			l1 = (Calendar.phasisOnOrBefore(l2, ISLAMIC_LOCALE) + (long) d) - 1L;
-		} catch (Exception ex)
-		{
-			l1 = 0L;
-		}
-		return l1;
-	}
-
-	/**
-	 * To fixed day.
-	 *
-	 * @return Fixed day.
-	 */
-	public long toFixed()
-	{
-		return toFixed(year, month, day);
-	}
-
-	/**
-	 * Sets the date from fixed day.
-	 *
-	 * @param l Fixed date.
-	 */
-	public void fromFixed(long l)
-	{
-		try
-		{
-			long l1 = Calendar.phasisOnOrBefore(l, ISLAMIC_LOCALE);
-			long l2 = Math.round((double) (l1 - Islamic.EPOCH) / 29.530588853);
-			year = Calendar.quotient(l2, 12D) + 1L;
-			month = (int) (Calendar.mod(l2, 12L) + 1L);
-			day = (int) ((l - l1) + 1L);
-			return;
-		} catch (Exception ex)
-		{
-			return;
-		}
-	}
-
-	/**
-	 * Transforms an Islamic date into a Julian day.
 	 *
 	 * @param year Year.
 	 * @param month Month.
 	 * @param day Day.
-	 * @return Julian day.
+	 * @return Fixed day.
 	 */
-	public static int toJulianDay(int year, int month, int day)
+	@Override
+	long toFixed(final long year, final int month, final int day)
 	{
-		return (int) (toFixed(year, month, day) + Gregorian.EPOCH);
+		try {
+			long l2 = Islamic.EPOCH + (long) Math.floor(((year - 1) * 12 + month - 0.5D) * 29.530588853000001D);
+			return Calendar.phasisOnOrBefore(l2, ISLAMIC_LOCALE) + day - 1;
+		} catch (Exception ex) {
+			return 0;
+		}
 	}
 
-	/**
-	 * Transforms an Islamic date into a Julian day.
-	 *
-	 * @return Julian day.
-	 */
-	public int toJulianDay()
-	{
-		return (int) (toFixed() + Gregorian.EPOCH);
+	@Override
+	long yearFromFixed() {
+		try {
+			prevLunarPhase = Calendar.phasisOnOrBefore(this.fixed, ISLAMIC_LOCALE);
+		}
+		catch (Exception ignored) {
+			return 0;
+		}
+
+		this.months = Math.round((double) (prevLunarPhase - Islamic.EPOCH) / 29.530588853);
+
+		return 1 + (this.months / 12);
 	}
 
-	/**
-	 * Sets an Islamic date with a given Julian day.
-	 *
-	 * @param jd Julian day.
-	 */
-	public void fromJulianDay(int jd)
-	{
-		fromFixed(jd - Gregorian.EPOCH);
+	@Override
+	int monthFromFixed(long year) {
+		return 1 + (int) (this.months % 12);
+	}
+
+	@Override
+	int dayFromFixed(long year, int month) {
+		return 1 + (int) (this.fixed - prevLunarPhase);
 	}
 }

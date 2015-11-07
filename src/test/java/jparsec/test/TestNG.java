@@ -907,14 +907,14 @@ public class TestNG {
             final BaseCalendar islamic,
             final BaseCalendar hinduSolar)
     {
-        assertEquals(gregorian, base);
-        assertEquals(julian, base);
-        assertEquals(hebrew, base);
-        assertEquals(coptic, base);
-        assertEquals(ethiopic, base);
-        assertEquals(persian, base);
-        assertEquals(islamic, base);
-        assertEquals(hinduSolar, base);
+        assertEquals(gregorian.getJulianDate(), base.getJulianDate());
+        assertEquals(julian.getJulianDate(), base.getJulianDate());
+        assertEquals(hebrew.getJulianDate(), base.getJulianDate());
+        assertEquals(coptic.getJulianDate(), base.getJulianDate());
+        assertEquals(ethiopic.getJulianDate(), base.getJulianDate());
+        assertEquals(persian.getJulianDate(), base.getJulianDate());
+        assertEquals(islamic.getJulianDate(), base.getJulianDate());
+        assertEquals(hinduSolar.getJulianDate(), base.getJulianDate());
     }
 
     /*
