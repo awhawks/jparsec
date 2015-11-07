@@ -32,27 +32,10 @@ import jparsec.observer.CityElement;
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
-public class HinduSolar implements Serializable
+public class HinduSolar extends HinduOldSolar
 {
-	private static final long serialVersionUID = 1L;
-
 	/**
-	 * The year.
-	 */
-	public long year;
-
-	/**
-	 * Month.
-	 */
-	public int month;
-
-	/**
-	 * Day.
-	 */
-	public int day;
-
-	/**
-	 * Sidereal year lenght.
+	 * Sidereal year length.
 	 */
 	public static final double SIDEREAL_YEAR = 365.2587564814815D;
 
@@ -74,30 +57,25 @@ public class HinduSolar implements Serializable
 	/**
 	 * Ujjain location.
 	 */
-	public static final CityElement UJJAIN = new CityElement("Ujjain, India", Calendar.angle(75D, 46D, 0.0D), Calendar
-			.angle(23D, 9D, 0.0D), 5.0512222222222221D, 0);
+	public static final CityElement UJJAIN = new CityElement("Ujjain, India", Calendar.angle(75, 46, 0),
+			Calendar.angle(23, 9, 0), 5.0512222222222221D, 0);
 
 	/**
 	 * Hindu locale site, currently equal to Ujjain.
 	 */
 	public static final CityElement HINDU_LOCALE = UJJAIN;
 
-	private static final double RS[] =
-	{ 0.92777777777777781D, 0.99722222222222223D, 1.075D, 1.075D, 0.99722222222222223D, 0.92777777777777781D };
+	private static final double RS[] = { 0.92777777777777781D, 0.99722222222222223D, 1.075D, 1.075D, 0.99722222222222223D, 0.92777777777777781D };
 
-	/**
-	 * Default constructor.
-	 */
-	public HinduSolar()	{}
+	private transient double sunrise;
 
 	/**
 	 * Fixed day constructor.
 	 *
-	 * @param l Fixed day.
+	 * @param fixed Fixed day.
 	 */
-	public HinduSolar(long l)
-	{
-		fromFixed(l);
+	public HinduSolar(final long fixed) {
+		super(fixed);
 	}
 
 	/**
@@ -105,9 +83,9 @@ public class HinduSolar implements Serializable
 	 *
 	 * @param jd Julian day.
 	 */
-	public HinduSolar(int jd)
+	public HinduSolar(final double jd)
 	{
-		fromJulianDay(jd);
+		super(jd);
 	}
 
 	/**
@@ -119,9 +97,7 @@ public class HinduSolar implements Serializable
 	 */
 	public HinduSolar(long y, int m, int d)
 	{
-		year = y;
-		month = m;
-		day = d;
+		super(y, m, d);
 	}
 
 	/**
@@ -132,9 +108,18 @@ public class HinduSolar implements Serializable
 	 * @param day Day.
 	 * @return Fixed day.
 	 */
-	public static long toFixed(long year, int month, int day)
+	public static long toFixedDay(final HinduSolar hs, final long year, final int month, final int day)
 	{
-		return (new HinduSolar(year, month, day)).toFixed();
+		long fixed = ((long) Math.floor(((year + 3179L) + (month - 1) / 12D) * 365.2587564814815D) + HinduOldSolar.EPOCH + day) - 1;
+		double d = 360.0 / 365.2587564814815D;
+		double d1 = (month - 1) * 30.0 + (day - 1) * d;
+		double d2 = ((solarLongitude(fixed + 0.25D) - d1 + 180.0) / 360.0) - 180.0;
+		long l1 = fixed - (long) Math.ceil(d2 / d);
+		long l2;
+
+		for (l2 = l1 - 2L; !onOrBefore(hs, new HinduSolar(l2)); l2++)
+			;
+		return l2;
 	}
 
 	/**
@@ -142,34 +127,34 @@ public class HinduSolar implements Serializable
 	 *
 	 * @return Fixed day.
 	 */
-	public long toFixed()
+	@Override
+	long toFixed(final long year, final int month, final int day)
 	{
-		long l = ((long) Math.floor(((double) (year + 3179L) + (double) (month - 1) / 12D) * 365.2587564814815D) + HinduOldSolar.EPOCH + (long) day) - 1L;
-		double d = 360.0 / 365.2587564814815D;
-		double d1 = (double) (month - 1) * 30.0 + (double) (day - 1) * d;
-		double d2 = Calendar.mod((solarLongitude((double) l + 0.25D) - d1) + 180.0, 360.0) - 180.0;
-		long l1 = l - (long) Math.ceil(d2 / d);
-		long l2;
-		for (l2 = l1 - 2L; !onOrBefore(this, new HinduSolar(l2)); l2++)
-			;
-		return l2;
+		return toFixedDay(this, year, month, day);
 	}
 
-	/**
-	 * Sets the date from the fixed day.
-	 *
-	 * @param l Fixed day.
-	 */
-	public void fromFixed(long l)
-	{
-		double d = sunrise(l + 1L);
-		month = zodiac(d);
-		year = calendarYear(d) - 3179L;
-		long l1 = l - 3L - (long) Calendar.mod(Math.floor(solarLongitude(d)), 30.0);
-		long l2;
-		for (l2 = l1; zodiac(sunrise(1L + l2)) != month; l2++)
-			;
-		day = (int) ((l - l2) + 1L);
+	@Override
+	long yearFromFixed() {
+		this.sunrise = sunrise(this.fixed);
+
+		return calendarYear(sunrise) - 3179;
+	}
+
+	@Override
+	int monthFromFixed(long year) {
+		return zodiac(this.sunrise);
+	}
+
+	@Override
+	int dayFromFixed(long year, int month) {
+		long l1 = fixed - 3 - (long) (Math.floor(solarLongitude(this.sunrise)) % 30.0);
+		long l2 = l1;
+
+		while (zodiac(sunrise(l2)) != this.month) {
+			l2++;
+		}
+
+		return 2 + (int) (fixed - l2);
 	}
 
 	private static double hinduSineTable(int i)
@@ -263,16 +248,16 @@ public class HinduSolar implements Serializable
 		return Math.round((d - (double) HinduOldSolar.EPOCH) / 365.2587564814815D - solarLongitude(d) / 360.0);
 	}
 
-	private static double equationOfTime(long l)
+	private static double equationOfTime(long fixed)
 	{
-		double d = hinduSine(meanPosition(l, 365.25878920258134D));
+		double d = hinduSine(meanPosition(fixed, 365.25878920258134D));
 		double d1 = ((d * 3438D) / 60D) * (Math.abs(d) / 1080D - 0.03888888888888889D);
-		return (((dailyMotion(l) / 360D) * d1) / 360D) * 365.2587564814815D;
+		return (((dailyMotion(fixed) / 360D) * d1) / 360D) * 365.2587564814815D;
 	}
 
-	private static double ascensionalDifference(long l, CityElement location)
+	private static double ascensionalDifference(long fixed, CityElement location)
 	{
-		double d = 0.40634089586969169D * hinduSine(tropicalLongitude(l));
+		double d = 0.40634089586969169D * hinduSine(tropicalLongitude(fixed));
 		double d1 = location.latitude;
 		double d2 = hinduSine(90.0 + hinduArcsin(d));
 		double d3 = hinduSine(d1) / hinduSine(90.0 + d1);
@@ -280,24 +265,24 @@ public class HinduSolar implements Serializable
 		return hinduArcsin(-(d4 / d2));
 	}
 
-	private static double tropicalLongitude(long l)
+	private static double tropicalLongitude(long fixed)
 	{
-		long l1 = (long) Math.floor(l - HinduOldSolar.EPOCH);
+		long l1 = (long) Math.floor(fixed - HinduOldSolar.EPOCH);
 		double d = 27.0 - Math.abs(54.0 - Calendar.mod(
 				27.0 + 108.0 * 3.8024793772721099E-007D * (double) l1, 108D));
-		return Calendar.mod(solarLongitude(l) - d, 360D);
+		return Calendar.mod(solarLongitude(fixed) - d, 360D);
 	}
 
-	private static double risingSign(long l)
+	private static double risingSign(long fixed)
 	{
-		int i = (int) Calendar.mod(Calendar.quotient(tropicalLongitude(l), 30.0), 6L);
+		int i = (int) Calendar.mod(Calendar.quotient(tropicalLongitude(fixed), 30.0), 6L);
 		return RS[i];
 	}
 
-	private static double dailyMotion(long l)
+	private static double dailyMotion(long fixed)
 	{
 		double d = 360.0 / 365.2587564814815;
-		double d1 = meanPosition(l, 365.25878920258134D);
+		double d1 = meanPosition(fixed, 365.25878920258134D);
 		double d2 = 0.03888888888888889D - Math.abs(hinduSine(d1)) / 1080D;
 		int i = (int) Calendar.quotient(d1, 225.0 / 60.0);
 		double d3 = hinduSineTable(i + 1) - hinduSineTable(i);
@@ -305,20 +290,20 @@ public class HinduSolar implements Serializable
 		return d * (d4 + 1.0D);
 	}
 
-	private static double solarSiderealDifference(long l)
+	private static double solarSiderealDifference(long fixed)
 	{
-		return dailyMotion(l) * risingSign(l);
+		return dailyMotion(fixed) * risingSign(fixed);
 	}
 
 	/**
 	 * Gets the sunrise time.
 	 *
-	 * @param l Fixed day.
+	 * @param fixed Fixed day.
 	 * @return Sunrise time.
 	 */
-	public static double sunrise(long l)
+	public static double sunrise(long fixed)
 	{
-		return (double) l + 0.25D + (UJJAIN.longitude - HINDU_LOCALE.longitude) / 360.0 + equationOfTime(l) + (0.99726968985094955 / 360.0) * (ascensionalDifference(l, HINDU_LOCALE) + 0.25D * solarSiderealDifference(l));
+		return (double) fixed + 0.25D + (UJJAIN.longitude - HINDU_LOCALE.longitude) / 360.0 + equationOfTime(fixed) + (0.99726968985094955 / 360.0) * (ascensionalDifference(fixed, HINDU_LOCALE) + 0.25D * solarSiderealDifference(fixed));
 	}
 
 	/**
@@ -349,46 +334,12 @@ public class HinduSolar implements Serializable
 	/**
 	 * Gets Mesha Samkranti.
 	 *
-	 * @param l Fixed day.
+	 * @param fixed Fixed day.
 	 * @return Such date.
 	 */
-	public static double meshaSamkranti(long l)
+	public static double meshaSamkranti(long fixed)
 	{
-		long l1 = new Gregorian(l, 1, 1).fixed;
+		long l1 = new Gregorian(fixed, 1, 1).fixed;
 		return solarLongitudeAfter(l1, 0.0);
-	}
-
-	/**
-	 * Transforms a Hindu date into a Julian day
-	 *
-	 * @param year Year.
-	 * @param month Month.
-	 * @param leap Leap.
-	 * @param day Day.
-	 * @return Julian day.
-	 */
-	public static int toJulianDay(int year, int month, boolean leap, int day)
-	{
-		return (int) (toFixed(year, month, day) + Gregorian.EPOCH);
-	}
-
-	/**
-	 * Transforms a Hindu date into a Julian day
-	 *
-	 * @return Julian day.
-	 */
-	public int toJulianDay()
-	{
-		return (int) (toFixed() + Gregorian.EPOCH);
-	}
-
-	/**
-	 * Sets a Hindu date with a given Julian day
-	 *
-	 * @param jd Julian day.
-	 */
-	public void fromJulianDay(int jd)
-	{
-		fromFixed(jd - Gregorian.EPOCH);
 	}
 }

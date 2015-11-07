@@ -30,25 +30,8 @@ import java.io.Serializable;
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
-public class HinduOldSolar implements Serializable
+public class HinduOldSolar extends BaseCalendar
 {
-	private static final long serialVersionUID = 1L;
-
-	/**
-	 * The year.
-	 */
-	public long year;
-
-	/**
-	 * Month.
-	 */
-	public int month;
-
-	/**
-	 * Day.
-	 */
-	public int day;
-
 	/**
 	 * Calendar epoch.
 	 */
@@ -83,33 +66,36 @@ public class HinduOldSolar implements Serializable
 		"Mesha", "Vrishabha", "Mithuna", "Karka", "Simha", "Kanya", "Tula", "Vrischika", "Dhanu", "Makara", "Kumbha", "Mina"
 	};
 
+	private transient double elapsedDays;
+
 	/**
-	 * Default constructor.
+	 * Fixed day constructor.
+	 *
+	 * @param fixed Fixed date.
 	 */
-	public HinduOldSolar() {}
+	public HinduOldSolar(final long fixed) {
+		super(EPOCH, fixed);
+	}
 
 	/**
 	 * Julian day constructor.
 	 *
-	 * @param jd Julian day.
+	 * @param julianDay Julian day.
 	 */
-	public HinduOldSolar(int jd)
-	{
-		fromJulianDay(jd);
+	public HinduOldSolar(final double julianDay) {
+		super(EPOCH, julianDay);
 	}
 
 	/**
 	 * Explicit constructor.
 	 *
-	 * @param y Year.
-	 * @param m Month.
-	 * @param d Day.
+	 * @param year Year.
+	 * @param month Month.
+	 * @param day Day.
 	 */
-	public HinduOldSolar(long y, int m, int d)
+	public HinduOldSolar(final long year, final int month, final int day)
 	{
-		year = y;
-		month = m;
-		day = d;
+		super(EPOCH, year, month, day);
 	}
 
 	/**
@@ -120,85 +106,50 @@ public class HinduOldSolar implements Serializable
 	 * @param day Day.
 	 * @return Fixed day.
 	 */
-	public static long toFixed(long year, int month, int day)
+	public static long toFixedDay(final long year, final int month, final int day)
 	{
-		return (long) Math
-				.ceil(((double) EPOCH + (double) year * 365.25868055555554D + (double) (month - 1) * 30.43822337962963D + (double) day) - 1.25D);
+		return (long) Math.ceil(EPOCH + year * 365.25868055555554D + (month - 1) * 30.43822337962963D + day - 1.25D);
 	}
 
-	/**
-	 * To fixed day.
-	 *
-	 * @return Fixed date.
-	 */
-	public long toFixed()
-	{
-		return toFixed(year, month, day);
+	@Override
+	long toFixed(final long year, final int month, final int day) {
+		return toFixedDay(year, month, day);
 	}
 
-	/**
-	 * Sets the date from fixed date.
-	 *
-	 * @param l Fixed day.
-	 */
-	public void fromFixed(long l)
-	{
-		double d = (double) dayCount(l) + 0.25D;
-		year = Calendar.quotient(d, 365.25868055555554D);
-		month = 1 + (int) Calendar.mod(Calendar.quotient(d, 30.43822337962963D), 12L);
-		day = 1 + (int) Math.floor(Calendar.mod(d, 30.43822337962963D));
+	@Override
+	long yearFromFixed() {
+		this.elapsedDays = (double) dayCount(fixed) + 0.25;
+
+		return (long) (this.elapsedDays / 365.25868055555554D);
 	}
 
-	/**
-	 * Gets days elapsed since epoch.
-	 *
-	 * @param l Fixed day.
-	 * @return Elapsed days.
-	 */
-	public static long dayCount(long l)
-	{
-		return l - EPOCH;
+	@Override
+	int monthFromFixed(final long year) {
+		return 1 + (int) ((long) (this.elapsedDays / 30.43822337962963D) % 12L);
+	}
+
+	@Override
+	int dayFromFixed(final long year, final int month) {
+		return 1 + (int) Math.floor(this.elapsedDays / 30.43822337962963D);
 	}
 
 	/**
 	 * Gets days elapsed since epoch.
 	 *
-	 * @param d Fixed day.
+	 * @param fixed Fixed day.
 	 * @return Elapsed days.
 	 */
-	public static double dayCount(double d)
-	{
-		return d - (double) EPOCH;
+	public static long dayCount(final long fixed) {
+		return fixed - EPOCH;
 	}
 
 	/**
 	 * Gets the jovian year.
 	 *
-	 * @param l Fixed day.
+	 * @param fixed Fixed day.
 	 * @return Jovian year.
 	 */
-	public static int jovianYear(long l)
-	{
-		return 1 + (int) Calendar.mod(Calendar.quotient(dayCount(l), 361.02268109734672D), 60L);
-	}
-
-	/**
-	 * Transforms a Hindu date into a Julian day.
-	 *
-	 * @return Julian day.
-	 */
-	public int toJulianDay()
-	{
-		return (int) (toFixed() + Gregorian.EPOCH);
-	}
-
-	/**
-	 * Sets a Hindu date with a given Julian day
-	 *
-	 * @param jd Julian day.
-	 */
-	public void fromJulianDay(int jd)
-	{
-		fromFixed(jd - Gregorian.EPOCH);
+	public static int jovianYear(final long fixed) {
+		return 1 + (int) ((long) (dayCount(fixed) / 361.02268109734672D) % 60);
 	}
 }
