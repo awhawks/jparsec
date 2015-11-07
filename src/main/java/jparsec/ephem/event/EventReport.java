@@ -1918,7 +1918,7 @@ public class EventReport {
 						list.add(s);
 					}
 			}
-			Chinese h0 = new Chinese((int) (jd + 0.5));
+			Chinese h0 = new Chinese(jd);
 			int yearTotal = h0.getYearNumber();
 			Chinese h2 = new Chinese(Chinese.newYear(year));
 			if (h2.getYearNumber() == yearTotal) h2 = new Chinese(Chinese.newYear(year+1));
