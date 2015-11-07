@@ -9,15 +9,19 @@ public class JulianTest {
     public static void main(final String args[]) {
         System.out.println("Julian test");
 
-        double jd = 2086491;
+        Julian h = new Julian(-3102, 2, 18);
+        //Julian h = new Julian (1999, 12, 19);
+        double julian = h.julianDate;
+        long fixed = h.fixed;
+        System.out.println("JD " + h.julianDate + ' ' + h.fixed + " = " + h);
 
-        Julian h = new Julian(jd);
+        h = new Julian(julian);
         System.out.println("JD " + h.julianDate + ' ' + h.fixed + " = " + h);
 
         Julian h2 = new Julian(h.year, h.month, h.day);
         System.out.println("JD " + h2.julianDate + ' ' + h2.fixed + " = " + h2);
 
-        //System.out.println(Calendar.nameFromMonth(h2.month, Gregorian.MONTH_NAMES));
-        //System.out.println(Calendar.nameFromDayOfWeek(Calendar.dayOfWeekFromFixed(h2.toFixed()), Gregorian.DAY_OF_WEEK_NAMES));
+        //System.out.println(Calendar.nameFromMonth(h2.month, Julian.MONTH_NAMES));
+        //System.out.println(Calendar.nameFromDayOfWeek(Calendar.dayOfWeekFromFixed(h2.toFixed()), Julian.DAY_OF_WEEK_NAMES));
     }
 }

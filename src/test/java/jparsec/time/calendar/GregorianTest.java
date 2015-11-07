@@ -9,10 +9,12 @@ public class GregorianTest {
     public static void main(final String args[]) {
         System.out.println("Gregorian test");
 
-        double jd = 2299161.5;
-        long fixed = 577736;
+        Gregorian h = new Gregorian (2000, 1, 1);
+        double julian = h.julianDate;
+        long fixed = h.fixed;
+        System.out.println("JD " + h.julianDate + ' ' + h.fixed + " = " + h);
 
-        Gregorian h = new Gregorian(fixed);
+        h = new Gregorian(julian);
         System.out.println("JD " + h.julianDate + ' ' + h.fixed + " = " + h);
 
         Gregorian h2 = new Gregorian(h.year, h.month, h.day);

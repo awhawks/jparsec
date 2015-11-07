@@ -21,8 +21,6 @@
  */
 package jparsec.time.calendar;
 
-import java.io.Serializable;
-
 /**
  * Implements the Gregorian calendar.
  * <p>
@@ -40,7 +38,7 @@ public class Gregorian extends BaseCalendar
 	/**
 	 * Gregorian epoch.
 	 */
-	public static final long EPOCH = 1721425;
+	public static final long EPOCH = 1721424;
 
 	/**
 	 * Names of the days of the week.
@@ -62,8 +60,7 @@ public class Gregorian extends BaseCalendar
 	 *
 	 * @param fixed fixed day.
 	 */
-	public Gregorian(final long fixed)
-	{
+	public Gregorian(final long fixed) {
 		super(EPOCH, fixed);
 	}
 
@@ -72,8 +69,7 @@ public class Gregorian extends BaseCalendar
 	 *
 	 * @param jd Julian day.
 	 */
-	public Gregorian(final double jd)
-	{
+	public Gregorian(final double jd) {
 		super(EPOCH, jd);
 	}
 
@@ -100,7 +96,7 @@ public class Gregorian extends BaseCalendar
 	long toFixed(final long year, final int month, final int day)
 	{
 		long y = year - 1;
-		return 365 * y + y / 4 - y / 100 + y / 400 + (367 * month - 362) / 12 + (month > 2 ? isLeapYear(year) ? -1 : -2 : 0) + day;
+		return 365 * y + (y / 4) - (y / 100) + (y / 400) + ((367 * month - 362) / 12) + (month > 2 ? isLeapYear(year) ? -1 : -2 : 0) + day;
 	}
 
 	@Override
@@ -110,10 +106,10 @@ public class Gregorian extends BaseCalendar
 
 	@Override
 	int monthFromFixed(long year) {
-		long l1 = this.fixed - toFixed(year, 1, 1);
+		long daysInYear = this.fixed - toFixed(year, 1, 1);
 		int i = this.fixed >= toFixed(year, 3, 1) ? ((isLeapYear(year) ? 1 : 2)) : 0;
 
-		return (int) ((12 * (l1 + i) + 373) / 367);
+		return (int) ((12 * (daysInYear + i) + 373) / 367);
 	}
 
 	@Override
@@ -143,19 +139,19 @@ public class Gregorian extends BaseCalendar
 	 * @return Number of days in this month.
 	 */
 	public int lastDayOfMonth() {
-		switch (month)
-		{
-		case 2: // '\002'
+		switch (month) {
+		case 2:
 			return !isLeapYear(year) ? 28 : 29;
 
-		case 4: // '\004'
-		case 6: // '\006'
-		case 9: // '\t'
-		case 11: // '\013'
+		case 4:
+		case 6:
+		case 9:
+		case 11:
 			return 30;
 
+		default:
+			return 31;
 		}
-		return 31;
 	}
 
 	/**
@@ -254,13 +250,18 @@ public class Gregorian extends BaseCalendar
 	 */
 	public static long yearFromFixed(final long fixed) {
 		long l1 = fixed - 1;
+
 		long l2 = l1 / 146097;
 		long l3 = l1 % 146097;
+
 		long l4 = l3 / 36524;
 		long l5 = l3 % 36524;
+
 		long l6 = l5 / 1461;
 		long l7 = l5 % 1461;
+
 		long l8 = l7 / 365;
+
 		long l9 = 400 * l2 + 100 * l4 + 4 * l6 + l8;
 
 		if (l4 == 4 || l8 == 4) {

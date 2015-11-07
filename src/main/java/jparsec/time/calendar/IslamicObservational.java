@@ -91,10 +91,9 @@ public class IslamicObservational extends Islamic
 	 * @return Fixed day.
 	 */
 	@Override
-	long toFixed(final long year, final int month, final int day)
-	{
+	long toFixed(final long year, final int month, final int day) {
 		try {
-			long l2 = Islamic.EPOCH + (long) Math.floor(((year - 1) * 12 + month - 0.5D) * 29.530588853000001D);
+			long l2 = Islamic.EPOCH + (long) Math.floor(((year - 1) * 12 + month - 0.5) * 29.530588853000001D);
 			return Calendar.phasisOnOrBefore(l2, ISLAMIC_LOCALE) + day - 1;
 		} catch (Exception ex) {
 			return 0;

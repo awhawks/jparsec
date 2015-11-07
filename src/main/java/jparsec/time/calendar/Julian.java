@@ -37,7 +37,7 @@ public class Julian extends BaseCalendar
 	/**
 	 * Calendar epoch.
 	 */
-	public static final long EPOCH = new Gregorian(0, 12, 30).fixed;
+	public static final long EPOCH = 0; // new Gregorian(0, 12, 30).fixed or new Julian(1,1,2).fixed
 
 	private static final long serialVersionUID = 4135806601319748936L;
 
@@ -83,7 +83,7 @@ public class Julian extends BaseCalendar
 		long l1 = year >= 0 ? year : year + 1;
 		l1--;
 
-		return EPOCH - 1 + 365 * l1 + l1 / 4 + (367 * month - 362) / 12 + (month > 2 ? isLeapYear(year) ? -1 : -2 : 0) + day;
+		return EPOCH - 2 + 365 * l1 + l1 / 4 + (367 * month - 362) / 12 + (month > 2 ? isLeapYear(year) ? -1 : -2 : 0) + day;
 	}
 
 	@Override

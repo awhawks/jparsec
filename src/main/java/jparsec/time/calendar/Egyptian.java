@@ -32,17 +32,17 @@ public class Egyptian extends BaseCalendar {
      * Calendar epoch.
      * The Egyptian calendar year 1 started on Julian date 747/02/26 BCE
      */
-    public static final long EPOCH = new Julian(-747, 2, 26).fixed;
+    public static final long EPOCH = -272786; // new Julian(-747, 2, 26).fixed;
 
     /**
      * Month names.
      */
     public static final String MONTH_NAMES[] = {
-            "Thoth", "Phaophi", "Athyr", "Choiak", "Tybi", "Mechir", "Phamenoth",
-            "Pharmuthi", "Pachon", "Payni", "Epiphi", "Mesori", "Epagomenai"
+        "Thoth", "Phaophi", "Athyr", "Choiak", "Tybi", "Mechir", "Phamenoth",
+        "Pharmuthi", "Pachon", "Payni", "Epiphi", "Mesori", "Epagomenai"
     };
 
-    private static final long serialVersionUID = 6136242459594971142L;
+    private static final long serialVersionUID = 5983944024574226461L;
 
     /**
      * Fixed date constructor.
@@ -95,21 +95,21 @@ public class Egyptian extends BaseCalendar {
      */
     @Override
     long toFixed(final long year, final int month, final int day) {
-        return (this.epoch + 365L * (year - 1L) + (long) (30 * (month - 1)) + (long) day) - 1L;
+        return this.epoch + 365 * (year - 1) + 30 * (month - 1) + day - 1;
     }
 
     @Override
     long yearFromFixed() {
-        return 1L + Calendar.quotient(this.fixed - this.epoch, 365D);
+        return 1 + (this.fixed - this.epoch) / 365;
     }
 
     @Override
     int monthFromFixed(final long year) {
-        return (int) (1L + Calendar.quotient(Calendar.mod(this.fixed - this.epoch, 365L), 30D));
+        return 1 + (int) (((this.fixed - this.epoch) % 365) / 30);
     }
 
     @Override
     int dayFromFixed(final long year, final int month) {
-        return (int) ((this.fixed - this.epoch - 365L * (year - 1L) - (long) (30 * (month - 1))) + 1L);
+        return 1 + (int) (this.fixed - this.epoch - 365 * (year - 1) - 30 * (month - 1));
     }
 }

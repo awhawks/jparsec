@@ -35,17 +35,16 @@ public abstract class BaseCalendar implements Serializable {
     protected final long year;
     protected final int month;
     protected final int day;
-    protected boolean leapMonth;
     protected final long epoch;
     protected final long fixed;
     protected final double julianDate;
 
-    BaseCalendar(final long epoch, final long y, final int month, final int day) {
+    BaseCalendar(final long epoch, final long year, final int month, final int day) {
         this.epoch = epoch;
-        this.year = toYear(y);
+        this.year = toYear(year);
         this.month = month;
         this.day = day;
-        this.fixed = toFixed(y, month, day);
+        this.fixed = toFixed(year, month, day);
         this.julianDate = toJulian(this.fixed);
     }
 
@@ -59,11 +58,11 @@ public abstract class BaseCalendar implements Serializable {
     }
 
     BaseCalendar(final long epoch, final double fromJulianDate) {
-        this(epoch, (long) fromJulianDate - Gregorian.EPOCH);
+        this(epoch, (long) (fromJulianDate) - Gregorian.EPOCH);
     }
 
     double toJulian (final long fixed) {
-        return fixed + Gregorian.EPOCH + 0.5D;
+        return fixed + Gregorian.EPOCH + 0.5;
     }
 
     long toYear(final long year) {

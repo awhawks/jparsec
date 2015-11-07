@@ -34,12 +34,10 @@ import java.io.Serializable;
  */
 public class Balinese implements Serializable
 {
-	private static final long serialVersionUID = -4264579975033439901L;
-
 	/**
 	 * Epoch
 	 */
-	public static final long EPOCH = Calendar.fixedFromJD(146D);
+	public static final long EPOCH = -1721279; // Calendar.fixedFromJD(146D);
 
 	private static final int PANCAWARA_I[] = { 5, 9, 7, 4, 8 };
 
@@ -99,6 +97,8 @@ public class Balinese implements Serializable
 		"Medangkungan", "Matal", "Uye", "Menail", "Parangbakat", "Bala", "Ugu", "Wayang", "Kelawu", "Dukut",
 		"Watugunung"
 	};
+
+	private static final long serialVersionUID = -4264579975033439901L;
 
 	/**
 	 * Luang flag.
@@ -216,7 +216,7 @@ public class Balinese implements Serializable
 	 */
 	public static int dayFromFixed(final long fixed)
 	{
-		return (int) Calendar.mod(fixed - EPOCH, 210L);
+		return (int) Calendar.mod(fixed - EPOCH, 210);
 	}
 
 	/**
@@ -329,7 +329,7 @@ public class Balinese implements Serializable
 	{
 		int i = pancawaraFromFixed(fixed);
 		int j = saptawaraFromFixed(fixed);
-		return Calendar.mod(PANCAWARA_I[i - 1] + SAPTAWARA_J[j - 1] + 1, 10);
+		return (PANCAWARA_I[i - 1] + SAPTAWARA_J[j - 1] + 1) % 10;
 	}
 
 	/**
@@ -340,7 +340,7 @@ public class Balinese implements Serializable
 	 */
 	public static int weekFromFixed(final long fixed)
 	{
-		return (int) Calendar.quotient(dayFromFixed(fixed), 7D) + 1;
+		return 1 + dayFromFixed(fixed) / 7;
 	}
 
 	/**
@@ -355,11 +355,11 @@ public class Balinese implements Serializable
 		int i = balinese.pancawara - 1;
 		int j = balinese.sadwara - 1;
 		int k = balinese.saptawara - 1;
-		int i1 = Calendar.mod(i + 14 + 15 * (k - i), 35);
+		int i1 = (i + 14 + 15 * (k - i)) % 35;
 		int j1 = j + 36 * (i1 - j);
-		int k1 = dayFromFixed(0L);
+		int k1 = dayFromFixed(0);
 
-		return fixed - Calendar.mod((fixed + k1) - j1, 210L);
+		return fixed - ((fixed + k1 - j1) % 210);
 	}
 
 	/**
@@ -369,7 +369,7 @@ public class Balinese implements Serializable
 	 */
 	public int day()
 	{
-		return (int) ((onOrBefore(this, EPOCH + 209L) - EPOCH) + 1L);
+		return (int) ((onOrBefore(this, EPOCH + 209) - EPOCH) + 1);
 	}
 
 	/**
@@ -379,7 +379,7 @@ public class Balinese implements Serializable
 	 */
 	public int week()
 	{
-		return (int) (Calendar.quotient(day() - 1, 7D) + 1L);
+		return 1 + (day() - 1) / 7;
 	}
 
 	@Override

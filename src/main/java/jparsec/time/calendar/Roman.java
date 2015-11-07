@@ -31,33 +31,6 @@ import java.io.Serializable;
  */
 public class Roman implements Serializable
 {
-	private static final long serialVersionUID = 1L;
-
-	/**
-	 * Year.
-	 */
-	public long year = 0;
-
-	/**
-	 * Month.
-	 */
-	public int month = 0;
-
-	/**
-	 * Event.
-	 */
-	public int event = 0;
-
-	/**
-	 * Count.
-	 */
-	public int count = 0;
-
-	/**
-	 * Leap day.
-	 */
-	public boolean leapDay = false;
-
 	/**
 	 * Calendar epoch.
 	 */
@@ -81,16 +54,43 @@ public class Roman implements Serializable
 	/**
 	 * Count names.
 	 */
-	public static final String COUNT_NAMES[] =
-	{ "", "pridie ", "ante diem iii ", "ante diem iv ", "ante diem v ", "ante diem vi ", "ante diem vii ",
-			"ante diem viii ", "ante diem ix ", "ante diem x ", "ante diem xi ", "ante diem xii ", "ante diem xiii ",
-			"ante diem xiv ", "ante diem xv ", "ante diem xvi ", "ante diem xvii ", "ante diem xviii ",
-			"ante diem xix " };
+	public static final String COUNT_NAMES[] = {
+		"", "pridie ", "ante diem iii ", "ante diem iv ", "ante diem v ", "ante diem vi ", "ante diem vii ",
+		"ante diem viii ", "ante diem ix ", "ante diem x ", "ante diem xi ", "ante diem xii ", "ante diem xiii ",
+		"ante diem xiv ", "ante diem xv ", "ante diem xvi ", "ante diem xvii ", "ante diem xviii ", "ante diem xix "
+	};
 
 	/**
 	 * Event names.
 	 */
 	public static final String EVENT_NAMES[] = { "Kalends", "Nones", "Ides" };
+
+	private static final long serialVersionUID = -2139264862771877008L;
+
+	/**
+	 * Year.
+	 */
+	public long year;
+
+	/**
+	 * Month.
+	 */
+	public int month;
+
+	/**
+	 * Event.
+	 */
+	public int event;
+
+	/**
+	 * Count.
+	 */
+	public int count;
+
+	/**
+	 * Leap day.
+	 */
+	public boolean leapDay;
 
 	/**
 	 * Default constructor.
@@ -100,11 +100,10 @@ public class Roman implements Serializable
 	/**
 	 * Julian day constructor.
 	 *
-	 * @param jd Julian day.
+	 * @param julianDay Julian day.
 	 */
-	public Roman(int jd)
-	{
-		fromJulianDay(jd);
+	public Roman(final double julianDay) {
+		fromJulianDay(julianDay);
 	}
 
 	/**
@@ -116,8 +115,7 @@ public class Roman implements Serializable
 	 * @param rcount Count.
 	 * @param rleapDay Leap day.
 	 */
-	public Roman(long ryear, int rmonth, int revent, int rcount, boolean rleapDay)
-	{
+	public Roman(final long ryear, final int rmonth, final int revent, final int rcount, final boolean rleapDay) {
 		year = ryear;
 		month = rmonth;
 		event = revent;
@@ -135,8 +133,7 @@ public class Roman implements Serializable
 	 * @param leapDay Leap day.
 	 * @return Fixed date.
 	 */
-	public static long toFixed(long year, int month, int event, int count, boolean leapDay)
-	{
+	public static long toFixed(final long year, final int month, final int event, final int count, final boolean leapDay) {
 		long l1 = 0;
 
 		if (event == 1)
@@ -155,8 +152,7 @@ public class Roman implements Serializable
 	 *
 	 * @return Fixed date.
 	 */
-	public long toFixed()
-	{
+	public long toFixed() {
 		return toFixed(year, month, event, count, leapDay);
 	}
 
@@ -170,9 +166,8 @@ public class Roman implements Serializable
 	 * @param leap Leap day.
 	 * @return Julian day.
 	 */
-	public static int toJulianDay(int year, int month, int event, int count, boolean leap)
-	{
-		return (int) (toFixed(year, month, event, count, leap) + Gregorian.EPOCH);
+	public static double toJulianDay(final int year, final int month, final int event, final int count, final boolean leap) {
+		return toFixed(year, month, event, count, leap) + Gregorian.EPOCH;
 	}
 
 	/**
@@ -180,29 +175,26 @@ public class Roman implements Serializable
 	 *
 	 * @return Julian day.
 	 */
-	public int toJulianDay()
-	{
-		return (int) (toFixed() + Gregorian.EPOCH);
+	public long toJulianDay() {
+		return toFixed() + Gregorian.EPOCH;
 	}
 
 	/**
 	 * Sets a Roman date with a given Julian day.
 	 *
-	 * @param jd Julian day.
+	 * @param julianDay Julian day.
 	 */
-	public void fromJulianDay(int jd)
-	{
-		fromFixed(jd - Gregorian.EPOCH);
+	public void fromJulianDay(final double julianDay) {
+		fromFixed((long) julianDay - Gregorian.EPOCH);
 	}
 
 	/**
 	 * Sets the date from fixed date.
 	 *
-	 * @param l Fixed day.
+	 * @param fixed Fixed day.
 	 */
-	public void fromFixed(long l)
-	{
-		Julian julian = new Julian(l);
+	public void fromFixed(final long fixed) {
+		Julian julian = new Julian(fixed);
 		int i = julian.month;
 		int j = julian.day;
 		long l1 = julian.year;
@@ -213,50 +205,42 @@ public class Roman implements Serializable
 		if (j == 1) {
 			year = l1;
 			month = i;
-			event = 1;
+			event = KALENDS;
 			count = 1;
 			leapDay = false;
-			return;
 		}
-
-		if (j <= nonesOfMonth(i)) {
+		else if (j <= nonesOfMonth(i)) {
 			year = l1;
 			month = i;
-			event = 2;
+			event = NONES;
 			count = (nonesOfMonth(i) - j) + 1;
 			leapDay = false;
-			return;
 		}
-
-		if (j <= idesOfMonth(i)) {
+		else if (j <= idesOfMonth(i)) {
 			year = l1;
 			month = i;
-			event = 3;
+			event = IDES;
 			count = (idesOfMonth(i) - j) + 1;
 			leapDay = false;
-			return;
 		}
-
-		if (i != 2 || !Julian.isLeapYear(l1)) {
+		else if (i != 2 || !Julian.isLeapYear(l1)) {
 			year = l2;
 			month = k;
-			event = 1;
-			count = (int) ((l3 - l) + 1L);
+			event = KALENDS;
+			count = (int) ((l3 - fixed) + 1L);
 			leapDay = false;
-			return;
 		}
-
-		if (j < 25) {
+		else if (j < 25) {
 			year = l1;
 			month = 3;
-			event = 1;
+			event = KALENDS;
 			count = 30 - j;
 			leapDay = false;
 		}
 		else {
 			year = l1;
 			month = 3;
-			event = 1;
+			event = KALENDS;
 			count = 31 - j;
 			leapDay = j == 25;
 		}
@@ -265,20 +249,20 @@ public class Roman implements Serializable
 	/**
 	 * Return ides.
 	 *
-	 * @param i Month.
+	 * @param month Month.
 	 * @return Ides, 13 if month = 3,5,7, or 10, and 15 otherwise.
 	 */
-	private static int idesOfMonth(int i) {
-		return i != 3 && i != 5 && i != 7 && i != 10 ? 13 : 15;
+	private static int idesOfMonth(final int month) {
+		return month != 3 && month != 5 && month != 7 && month != 10 ? 13 : 15;
 	}
 
 	/**
 	 * Return nones of month.
 	 *
-	 * @param i Month.
+	 * @param month Month.
 	 * @return Nones = ides - 8.
 	 */
-	private static int nonesOfMonth(int i) {
-		return idesOfMonth(i) - 8;
+	private static int nonesOfMonth(final int month) {
+		return idesOfMonth(month) - 8;
 	}
 }

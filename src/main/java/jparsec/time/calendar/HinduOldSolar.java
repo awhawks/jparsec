@@ -35,7 +35,7 @@ public class HinduOldSolar extends BaseCalendar
 	/**
 	 * Calendar epoch.
 	 */
-	public static final long EPOCH = new Julian(-3102, 2, 18).fixed;
+	public static final long EPOCH = -1132958; // new Julian(-3102, 2, 18).fixed;
 
 	/**
 	 * Arya solar year.

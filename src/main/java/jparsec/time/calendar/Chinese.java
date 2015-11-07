@@ -43,7 +43,7 @@ public class Chinese extends BaseCalendar
 	/**
 	 * Calendar epoch.
 	 */
-	public static final long EPOCH = new Gregorian(-2636L, 2, 15).fixed;
+	public static final long EPOCH = -963098; // new Gregorian(-2636L, 2, 15).fixed;
 
 	/**
 	 * Calendar day number at epoch.
