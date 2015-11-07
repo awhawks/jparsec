@@ -1,23 +1,24 @@
 package jparsec.time.calendar;
 
-import jparsec.time.AstroDate;
-
 public class HebrewTest {
     /**
      * For unit testing only.
      *
      * @param args Not used.
      */
-    public static void main(String args[]) throws Exception {
+    public static void main(final String args[]) {
         System.out.println("Hebrew test");
 
-        int jd = (int) (new AstroDate(2011, 9, 29, 12, 0, 0)).jd();
+        double jd = new Gregorian(2011, 9, 29).julianDate;
+
         Hebrew h = new Hebrew(jd);
-        System.out.println("JD " + jd + " = " + h.year + '/' + h.month + '/' + h.day);
+        System.out.println("JD " + h.julianDate + ' ' + h.fixed + " = " + h);
+
         Hebrew h2 = new Hebrew(h.year, h.month, h.day);
-        System.out.println("JD " + h2.toJulianDay() + " = " + h2.year + '/' + h2.month + '/' + h2.day);
-        System.out.println(Calendar.nameFromMonth(h2.month, Hebrew.MONTH_NAMES));
-        System.out.println(Calendar.nameFromDayOfWeek(Calendar.dayOfWeekFromFixed(h2.toFixed()), Hebrew.DAY_OF_WEEK_NAMES));
-        System.out.println("(until sunset)");
+        System.out.println("JD " + h2.julianDate + ' ' + h2.fixed + " = " + h2);
+
+        //System.out.println(Calendar.nameFromMonth(h2.month, Hebrew.MONTH_NAMES));
+        //System.out.println(Calendar.nameFromDayOfWeek(Calendar.dayOfWeekFromFixed(h2.toFixed()), Hebrew.DAY_OF_WEEK_NAMES));
+        //System.out.println("(until sunset)");
     }
 }

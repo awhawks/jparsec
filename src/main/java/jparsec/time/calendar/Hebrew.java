@@ -25,39 +25,22 @@ import java.io.Serializable;
 
 /**
  * Implements the Hebrew calendar.
- * <P>
- * This lunar calendar was promulgated by the Patriarch, Hillel II, in the
- * med-fourth century. It is attributed to Mosaic revelation by Maimonides. Days
- * begin at sunset.
- * <P>
+ * <p>
+ * This lunar calendar was promulgated by the Patriarch, Hillel II, in the mid-fourth century.
+ * It is attributed to Mosaic revelation by Maimonides.
+ * Days begin at sunset.
+ * <p>
  * See Calendrical Calculations for reference.
  *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
-public class Hebrew implements Serializable
+public class Hebrew extends BaseCalendar
 {
-	private static final long serialVersionUID = 1L;
-
-	/**
-	 * The year.
-	 */
-	public long year;
-
-	/**
-	 * Month.
-	 */
-	public int month;
-
-	/**
-	 * Day.
-	 */
-	public int day;
-
 	/**
 	 * Calendar epoch.
 	 */
-	public static final long EPOCH = new Julian(-3761, 10, 7).fixed;
+	public static final long EPOCH = new Julian(-3761, 10, 6).fixed;
 
 	/**
 	 * Day of week names.
@@ -78,119 +61,98 @@ public class Hebrew implements Serializable
 	};
 
 	/**
-	 * Default constructor.
+	 * Constructs a Hebrew date with a fixed day
+	 *
+	 * @param fixed fixed day
 	 */
-	public Hebrew() { }
+	public Hebrew(final long fixed) {
+		super(EPOCH, fixed);
+	}
 
 	/**
 	 * Constructs a Hebrew date with a Julian day
 	 *
 	 * @param jd Julian day
 	 */
-	public Hebrew(int jd)
-	{
-		fromJulianDay(jd);
+	public Hebrew(final double jd) {
+		super(EPOCH, jd);
 	}
 
 	/**
 	 * Explicit constructor.
 	 *
-	 * @param y Year.
-	 * @param m Month.
-	 * @param d Day.
+	 * @param year Year.
+	 * @param month Month.
+	 * @param day Day.
 	 */
-	public Hebrew(long y, int m, int d)
-	{
-		year = y;
-		month = m;
-		day = d;
+	public Hebrew(final long year, final int month, final int day) {
+		super(EPOCH, year, month, day);
 	}
 
 	/**
 	 * To fixed day..
 	 *
-	 * @param y Year.
-	 * @param m Month.
-	 * @param d Day.
+	 * @param year Year.
+	 * @param month Month.
+	 * @param day Day.
 	 * @return Fixed day.
 	 */
-	public static long toFixed(long y, int m, int d)
-	{
-		long l1 = (newYear(y) + (long) d) - 1L;
-		if (m < 7)
-		{
-			for (int k = 7; k <= lastMonthOfYear(y); k++)
-				l1 += lastDayOfMonth(k, y);
+	public static long toFixedDay(final long year, final int month, final int day) {
+		long l1 = newYear(year) + day - 1;
 
-			for (int j1 = 1; j1 < m; j1++)
-				l1 += lastDayOfMonth(j1, y);
+		if (month < 7) {
+			for (int k = 7; k <= lastMonthOfYear(year); k++)
+				l1 += lastDayOfMonth(k, year);
 
-		} else
-		{
-			for (int i1 = 7; i1 < m; i1++)
-				l1 += lastDayOfMonth(i1, y);
-
+			for (int j1 = 1; j1 < month; j1++)
+				l1 += lastDayOfMonth(j1, year);
 		}
+		else {
+			for (int i1 = 7; i1 < month; i1++)
+				l1 += lastDayOfMonth(i1, year);
+		}
+
 		return l1;
 	}
 
 	/**
-	 * To fixed date.
-	 *
-	 * @return Fixed day.
-	 */
-	public long toFixed()
-	{
-		return toFixed(year, month, day);
-	}
-
-	/**
-	 * Transforms a Hebrew date into a Julian day
+	 * To fixed day..
 	 *
 	 * @param year Year.
 	 * @param month Month.
 	 * @param day Day.
-	 * @return Julian day.
+	 * @return Fixed day.
 	 */
-	public static int toJulianDay(int year, int month, int day)
-	{
-		return (int) (toFixed(year, month, day) + Gregorian.EPOCH);
+	@Override
+	long toFixed(final long year, final int month, final int day) {
+		return toFixedDay(year, month, day);
 	}
 
-	/**
-	 * Transforms a Hebrew date into a Julian day.
-	 * @return The Julian day.
-	 */
-	public int toJulianDay()
-	{
-		return (int) (toFixed() + Gregorian.EPOCH);
+	@Override
+	long yearFromFixed() {
+		long y = (long) ((this.fixed - EPOCH) / 365.24682220597794D);
+
+		while (newYear(y) <= this.fixed) {
+			y++;
+		}
+
+		return --y;
 	}
 
-	/**
-	 * Sets a Hebrew date with a given Julian day
-	 *
-	 * @param jd Julian day.
-	 */
-	public void fromJulianDay(int jd)
-	{
-		fromFixed(jd - Gregorian.EPOCH);
+	@Override
+	int monthFromFixed(final long year) {
+		int m = this.fixed >= toFixed(year, 1, 1) ? 1 : 7;
+
+		while (this.fixed > toFixed(year, m, lastDayOfMonth(m, year))) {
+			m++;
+		}
+
+		return m;
 	}
 
-	/**
-	 * Sets the date from the fixed day.
-	 *
-	 * @param l Fixed day.
-	 */
-	public void fromFixed(long l)
-	{
-		long l1 = 1L + Calendar.quotient(l - EPOCH, 365.24682220597794D);
-		for (year = l1 - 1L; newYear(year) <= l; year++)
-			;
-		year--;
-		int i = l >= toFixed(year, 1, 1) ? 1 : 7;
-		for (month = i; l > toFixed(year, month, lastDayOfMonth(month, year)); month++)
-			;
-		day = (int) ((1L + l) - toFixed(year, month, 1));
+	@Override
+	int dayFromFixed(long year, int month) {
+		return 1 + (int) (this.fixed - toFixed(year, month, 1));
 	}
 
 	/**
@@ -199,7 +161,7 @@ public class Hebrew implements Serializable
 	 * @param year Year.
 	 * @return True if it is a leap year.
 	 */
-	public static boolean isLeapYear(long year)
+	public static boolean isLeapYear(final long year)
 	{
 		return Calendar.mod(1L + 7L * year, 19L) < 7L;
 	}
@@ -210,7 +172,7 @@ public class Hebrew implements Serializable
 	 * @param year Year.
 	 * @return Number of months.
 	 */
-	public static int lastMonthOfYear(long year)
+	public static int lastMonthOfYear(final long year)
 	{
 		return !isLeapYear(year) ? 12 : 13;
 	}
@@ -222,7 +184,7 @@ public class Hebrew implements Serializable
 	 * @param year Year.
 	 * @return Number of days in this month.
 	 */
-	public static int lastDayOfMonth(int month, long year)
+	public static int lastDayOfMonth(final int month, final long year)
 	{
 		return month != 2 && month != 4 && month != 6 && month != 10 && month != 13 && (month != 12 || isLeapYear(year)) && (month != 8 || hasLongMarheshvan(year)) && (month != 9 || !hasShortKislev(year))
 				? 30 : 29;
@@ -234,7 +196,7 @@ public class Hebrew implements Serializable
 	 * @param year Year.
 	 * @return Elapsed days.
 	 */
-	public static long calendarElapsedDays(long year)
+	public static long calendarElapsedDays(final long year)
 	{
 		long l1 = Calendar.quotient(235L * year - 234L, 19D);
 		double d = 12084D + 13753D * (double) l1;
@@ -251,7 +213,7 @@ public class Hebrew implements Serializable
 	 * @param year Year.
 	 * @return Next new year fixed day.
 	 */
-	public static long newYear(long year)
+	public static long newYear(final long year)
 	{
 		return EPOCH + calendarElapsedDays(year) + (long) newYearDelay(year);
 	}
@@ -262,7 +224,7 @@ public class Hebrew implements Serializable
 	 * @param year Year.
 	 * @return Delay.
 	 */
-	public static int newYearDelay(long year)
+	public static int newYearDelay(final long year)
 	{
 		long l1 = calendarElapsedDays(year - 1L);
 		long l2 = calendarElapsedDays(year);
@@ -278,9 +240,9 @@ public class Hebrew implements Serializable
 	 * @param year Year.
 	 * @return Number of days.
 	 */
-	public static int daysInYear(long year)
+	public static int daysInYear(final long year)
 	{
-		return (int) (newYear(year + 1L) - newYear(year));
+		return (int) (newYear(year + 1) - newYear(year));
 	}
 
 	/**
@@ -289,7 +251,7 @@ public class Hebrew implements Serializable
 	 * @param year Year.
 	 * @return True or false.
 	 */
-	public static boolean hasLongMarheshvan(long year)
+	public static boolean hasLongMarheshvan(final long year)
 	{
 		int i = daysInYear(year);
 		return i == 355 || i == 385;
@@ -301,7 +263,7 @@ public class Hebrew implements Serializable
 	 * @param year Year.
 	 * @return True or false.
 	 */
-	public static boolean hasShortKislev(long year)
+	public static boolean hasShortKislev(final long year)
 	{
 		int i = daysInYear(year);
 		return i == 353 || i == 383;
@@ -313,10 +275,10 @@ public class Hebrew implements Serializable
 	 * @param year Year.
 	 * @return Such date.
 	 */
-	public static long yomKippur(long year)
+	public static long yomKippur(final long year)
 	{
-		long l1 = (1L + year) - Gregorian.yearFromFixed(EPOCH);
-		return toFixed(l1, 7, 10);
+		long y = (1 + year) - Gregorian.yearFromFixed(EPOCH);
+		return toFixedDay(y, 7, 10);
 	}
 
 	/**
@@ -325,9 +287,9 @@ public class Hebrew implements Serializable
 	 * @param year Year.
 	 * @return Such date.
 	 */
-	public static long passover(long year)
+	public static long passover(final long year)
 	{
-		long l1 = year - Gregorian.yearFromFixed(EPOCH);
-		return toFixed(l1, 1, 15);
+		long y = year - Gregorian.yearFromFixed(EPOCH);
+		return toFixedDay(y, 1, 15);
 	}
 }
