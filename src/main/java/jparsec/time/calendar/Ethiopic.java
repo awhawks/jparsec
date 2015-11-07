@@ -32,7 +32,7 @@ public class Ethiopic extends Coptic
 	/**
 	 * Calendar epoch.
 	 */
-	public static final long EPOCH = Julian.toFixed(8, 8, 29);
+	public static final long EPOCH = new Julian(8, 8, 29).fixed;
 
 	/**
 	 * Day of week names.

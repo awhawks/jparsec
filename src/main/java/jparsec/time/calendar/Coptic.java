@@ -32,7 +32,7 @@ public class Coptic extends BaseCalendar
 	/**
 	 * Calendar epoch.
 	 */
-	public static final long EPOCH = Julian.toFixed(284, 8, 29);
+	public static final long EPOCH = new Julian(284, 8, 29).fixed;
 
 	/**
 	 * Week day names.

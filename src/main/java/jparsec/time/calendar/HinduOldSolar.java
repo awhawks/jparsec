@@ -52,7 +52,7 @@ public class HinduOldSolar implements Serializable
 	/**
 	 * Calendar epoch.
 	 */
-	public static final long EPOCH = Julian.toFixed(-3102L, 2, 18);
+	public static final long EPOCH = new Julian(-3102, 2, 18).fixed;
 
 	/**
 	 * Arya solar year.
@@ -72,15 +72,16 @@ public class HinduOldSolar implements Serializable
 	/**
 	 * Day of week names.
 	 */
-	public static final String DAY_OF_WEEK_NAMES[] =
-	{ "Ravivara", "Chandravara", "Mangalavara", "Buddhavara", "Brihaspatvara", "Sukravara", "Sanivara" };
+	public static final String DAY_OF_WEEK_NAMES[] = {
+		"Ravivara", "Chandravara", "Mangalavara", "Buddhavara", "Brihaspatvara", "Sukravara", "Sanivara"
+	};
 
 	/**
 	 * Month names.
 	 */
-	public static final String MONTH_NAMES[] =
-	{ "Mesha", "Vrishabha", "Mithuna", "Karka", "Simha", "Kanya", "Tula", "Vrischika", "Dhanu", "Makara", "Kumbha",
-			"Mina" };
+	public static final String MONTH_NAMES[] = {
+		"Mesha", "Vrishabha", "Mithuna", "Karka", "Simha", "Kanya", "Tula", "Vrischika", "Dhanu", "Makara", "Kumbha", "Mina"
+	};
 
 	/**
 	 * Default constructor.
@@ -179,19 +180,6 @@ public class HinduOldSolar implements Serializable
 	public static int jovianYear(long l)
 	{
 		return 1 + (int) Calendar.mod(Calendar.quotient(dayCount(l), 361.02268109734672D), 60L);
-	}
-
-	/**
-	 * Transforms a Hindu date into a Julian day.
-	 *
-	 * @param year Year.
-	 * @param month Month.
-	 * @param day Day.
-	 * @return Julian day.
-	 */
-	public static int toJulianDay(int year, int month, int day)
-	{
-		return (int) (toFixed(year, month, day) + Gregorian.EPOCH);
 	}
 
 	/**

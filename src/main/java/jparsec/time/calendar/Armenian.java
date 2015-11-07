@@ -33,7 +33,7 @@ public class Armenian extends Egyptian
 	 * Calendar epoch.
 	 * Armenian calendar year 1 started on Julian date 552/07/11
 	 */
-	public final static long EPOCH = Julian.toFixed(552, 7, 11);
+	public final static long EPOCH = new Julian(552, 7, 11).fixed;
 
 	/**
 	 * Name of days of the week.

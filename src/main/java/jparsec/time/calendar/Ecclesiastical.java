@@ -44,7 +44,7 @@ public class Ecclesiastical implements Serializable
 	{
 		long l1 = Calendar.mod(14L + 11L * Calendar.mod(l, 19L), 30L);
 		long l2 = l <= 0L ? l - 1L : l;
-		long l3 = Julian.toFixed(l2, 4, 19) - l1;
+		long l3 = new Julian(l2, 4, 19).fixed - l1;
 		return Calendar.kDayAfter(l3, 0);
 	}
 

@@ -32,7 +32,7 @@ public class Egyptian extends BaseCalendar {
      * Calendar epoch.
      * The Egyptian calendar year 1 started on Julian date 747/02/26 BCE
      */
-    public static final long EPOCH = Julian.toFixed(-747, 2, 26);
+    public static final long EPOCH = new Julian(-747, 2, 26).fixed;
 
     /**
      * Month names.

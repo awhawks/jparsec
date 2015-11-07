@@ -18,8 +18,8 @@ public class EgyptianTest {
         Egyptian h2 = new Egyptian(h.year, h.month, h.day);
         System.out.println("JD " + h2.julianDate + ' ' + h2.fixed + " = " + h2);
 
-        System.out.println(Julian.toFixed(-747, 2, 26));
-        System.out.println(Calendar.fixedFromJD(1448638D));
+        System.out.println(new Julian(-747, 2, 26).fixed);
+        System.out.println(Calendar.fixedFromJD(1448638));
 
         //System.out.println(Calendar.nameFromMonth(h2.month, Egyptian.MONTH_NAMES));
         //System.out.println(CalendarGenericConversion.getDayOfWeekName(jd, CalendarGenericConversion.EGYPTIAN));

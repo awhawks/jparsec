@@ -57,23 +57,25 @@ public class Hebrew implements Serializable
 	/**
 	 * Calendar epoch.
 	 */
-	public static final long EPOCH = Julian.toFixed(-3761, 10, 7);
+	public static final long EPOCH = new Julian(-3761, 10, 7).fixed;
 
 	/**
 	 * Day of week names.
 	 */
-	public static final String DAY_OF_WEEK_NAMES[] =
-	{ "yom rishon", "yom sheni", "yom shelishi", "yom revi`i", "yom hamishi", "yom shishi", "yom shabbat" };
+	public static final String DAY_OF_WEEK_NAMES[] = {
+		"yom rishon", "yom sheni", "yom shelishi", "yom revi`i", "yom hamishi", "yom shishi", "yom shabbat"
+	};
 
 	/**
 	 * Month names.
 	 */
-	public static final String MONTH_NAMES[] =
-	{ "Nisan", "Iyyar", "Sivan", "Tammuz", "Av", "Elul", "Tishri", "Marheshvan", "Kislev", "Tevet", "Shevat", "Adar" };
+	public static final String MONTH_NAMES[] = {
+		"Nisan", "Iyyar", "Sivan", "Tammuz", "Av", "Elul", "Tishri", "Marheshvan", "Kislev", "Tevet", "Shevat", "Adar"
+	};
 
-	public static final String LEAPYEAR_MONTH_NAMES[] =
-	{ "Nisan", "Iyyar", "Sivan", "Tammuz", "Av", "Elul", "Tishri", "Marheshvan", "Kislev", "Tevet", "Shevat", "Adar I",
-			"Adar II" };
+	public static final String LEAPYEAR_MONTH_NAMES[] = {
+		"Nisan", "Iyyar", "Sivan", "Tammuz", "Av", "Elul", "Tishri", "Marheshvan", "Kislev", "Tevet", "Shevat", "Adar I", "Adar II"
+	};
 
 	/**
 	 * Default constructor.

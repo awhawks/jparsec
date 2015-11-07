@@ -57,27 +57,29 @@ public class Islamic implements Serializable
 	/**
 	 * Calendar epoch.
 	 */
-	public static final long EPOCH = Julian.toFixed(622L, 7, 16);
+	public static final long EPOCH = new Julian(622, 7, 16).fixed;
 
 	/**
 	 * Mecca location.
 	 */
-	public static final CityElement MECCA = new CityElement("Mecca, Saudi Arabia", Calendar.angle(39D, 49D, 24D),
-			Calendar.angle(21D, 25D, 24D), 2D, 1000);
+	public static final CityElement MECCA = new CityElement("Mecca, Saudi Arabia", Calendar.angle(39, 49, 24),
+			Calendar.angle(21, 25, 24), 2, 1000);
 
 	/**
 	 * Day of week names.
 	 */
-	public static final String DAY_OF_WEEK_NAMES[] =
-	{ "yaum al-ahad", "yaum al-ithnayna", "yaum ath-thalatha'", "yaum al-arba`a'", "yaum al-hamis", "yaum al-jum`a",
-			"yaum as-sabt" };
+	public static final String DAY_OF_WEEK_NAMES[] = {
+		"yaum al-ahad", "yaum al-ithnayna", "yaum ath-thalatha'", "yaum al-arba`a'", "yaum al-hamis", "yaum al-jum`a",
+		"yaum as-sabt"
+	};
 
 	/**
 	 * Month names.
 	 */
-	public static final String MONTH_NAMES[] =
-	{ "Muharram", "Safar", "Rabi I", "Rabi II", "Jumada I", "Jumada II", "Rajab", "Sha`ban", "Ramadan", "Shawwal",
-			"Dhu al-Qa`da", "Dhu al-Hijja" };
+	public static final String MONTH_NAMES[] = {
+		"Muharram", "Safar", "Rabi I", "Rabi II", "Jumada I", "Jumada II", "Rajab", "Sha`ban", "Ramadan", "Shawwal",
+		"Dhu al-Qa`da", "Dhu al-Hijja"
+	};
 
 	/**
 	 * Default constructor.
@@ -154,19 +156,6 @@ public class Islamic implements Serializable
 	public static boolean isLeapYear(long l)
 	{
 		return Calendar.mod(11L * l + 14L, 30L) < 11L;
-	}
-
-	/**
-	 * Transforms an Islamic date into a Julian day
-	 *
-	 * @param year Year.
-	 * @param month Month.
-	 * @param day Day.
-	 * @return Julian day.
-	 */
-	public static int toJulianDay(int year, int month, int day)
-	{
-		return (int) (toFixed(year, month, day) + Gregorian.EPOCH);
 	}
 
 	/**

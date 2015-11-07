@@ -21,155 +21,97 @@
  */
 package jparsec.time.calendar;
 
-import java.io.Serializable;
-
 /**
  * Implements the Julian calendar.
- * <P>
+ * <p>
  * This solar calendar was instituted on January, 1, 709 A.U.C. (45 B.C.E.) by
  * Julius Caesar, with the help of the astronomer Sosigenes.
- * <P>
+ * <p>
  * See Calendrical Calculations for reference.
  *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
-public class Julian implements Serializable
+public class Julian extends BaseCalendar
 {
-	private static final long serialVersionUID = 1L;
-
-	/**
-	 * The year.
-	 */
-	public long year;
-
-	/**
-	 * Month.
-	 */
-	public int month;
-
-	/**
-	 * Day.
-	 */
-	public int day;
-
 	/**
 	 * Calendar epoch.
 	 */
 	public static final long EPOCH = new Gregorian(0, 12, 30).fixed;
 
+	private static final long serialVersionUID = 4135806601319748936L;
+
 	/**
-	 * Default constructor.
+	 * Fixed day constructor.
+	 *
+	 * @param fixed fixed day.
 	 */
-	public Julian()
-	{
+	public Julian(final long fixed) {
+		super(EPOCH, fixed);
 	}
 
 	/**
 	 * Julian day constructor.
 	 *
-	 * @param jd Julian day.
+	 * @param julianDay Julian day.
 	 */
-	public Julian(int jd)
-	{
-		fromJulianDay(jd);
+	public Julian(final double julianDay) {
+		super(EPOCH, julianDay);
 	}
 
 	/**
 	 * Explicit constructor.
 	 *
-	 * @param y Year.
-	 * @param m Month.
-	 * @param d Day.
+	 * @param year Year.
+	 * @param month Month.
+	 * @param day Day.
 	 */
-	public Julian(long y, int m, int d)
-	{
-		year = y;
-		month = m;
-		day = d;
+	public Julian(final long year, final int month, final int day) {
+		super(EPOCH, year, month, day);
 	}
 
 	/**
 	 * To fixed date.
-	 *
-	 * @param y Year.
-	 * @param m Month.
-	 * @param d Day.
-	 * @return Fixed date.
-	 */
-	public static long toFixed(long y, int m, int d)
-	{
-		long l1 = y >= 0L ? y : y + 1L;
-		return (EPOCH - 1L) + 365L * (l1 - 1L) + Calendar.quotient(l1 - 1L, 4D) + Calendar.quotient(367 * m - 362, 12D) + (long) (m > 2
-				? isLeapYear(y) ? -1 : -2 : 0) + (long) d;
-	}
-
-	/**
-	 * To fixed date.
-	 *
-	 * @return Fixed date.
-	 */
-	public long toFixed()
-	{
-		return toFixed(year, month, day);
-	}
-
-	/**
-	 * Transforms a Julian date into a Julian day
 	 *
 	 * @param year Year.
 	 * @param month Month.
 	 * @param day Day.
-	 * @return Julian day.
+	 * @return Fixed date.
 	 */
-	public static int toJulianDay(int year, int month, int day)
-	{
-		return (int) (toFixed(year, month, day) + Gregorian.EPOCH);
+	@Override
+	long toFixed(final long year, final int month, final int day) {
+		long l1 = year >= 0 ? year : year + 1;
+		l1--;
+
+		return EPOCH - 1 + 365 * l1 + l1 / 4 + (367 * month - 362) / 12 + (month > 2 ? isLeapYear(year) ? -1 : -2 : 0) + day;
 	}
 
-	/**
-	 * Transforms a Julian date into a Julian day
-	 *
-	 * @return Julian day.
-	 */
-	public int toJulianDay()
-	{
-		return (int) (toFixed() + Gregorian.EPOCH);
+	@Override
+	long yearFromFixed() {
+		long y = (4 * (fixed - EPOCH) + 1464) / 1461;
+
+		return y > 0 ? y : y - 1;
 	}
 
-	/**
-	 * Sets a Julian date with a given Julian day
-	 *
-	 * @param jd Julian day.
-	 */
-	public void fromJulianDay(int jd)
-	{
-		fromFixed(jd - Gregorian.EPOCH);
+	@Override
+	int monthFromFixed(final long year) {
+		long days = this.fixed - toFixed(year, 1, 1);
+		int i = this.fixed >= toFixed(year, 3, 1) ? ((isLeapYear(year) ? 1 : 2)) : 0;
+
+		return (int) ((12 * (days + i) + 373) / 367);
 	}
 
-	/**
-	 * Sets the date from a fixed date.
-	 *
-	 * @param l Fixed date.
-	 */
-	public void fromFixed(long l)
-	{
-		long l1 = Calendar.quotient(4L * (l - EPOCH) + 1464L, 1461D);
-		year = l1 > 0L ? l1 : l1 - 1L;
-		long l2 = l - toFixed(year, 1, 1);
-		int i = l >= toFixed(year, 3, 1) ? ((int) (isLeapYear(year) ? 1 : 2)) : 0;
-		month = (int) Calendar.quotient(12L * (l2 + (long) i) + 373L, 367D);
-		day = (int) ((l - toFixed(year, month, 1)) + 1L);
+	@Override
+	int dayFromFixed(final long year, final int month) {
+		return 1 + (int) (this.fixed - toFixed(year, month, 1));
 	}
 
 	/**
 	 * Gives true if the year is a leap one.
 	 *
-	 * @param l Fixed date.
-	 * @return True or false.
+	 * @param fixed Fixed date.
 	 */
-	public static boolean isLeapYear(long l)
-	{
-		return Calendar.mod(l, 4L) == (long) (l <= 0L ? 3 : 0);
+	public static boolean isLeapYear(final long fixed) {
+		return (fixed & 3) == (fixed <= 0 ? 3 : 0);
 	}
 }

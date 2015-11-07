@@ -58,25 +58,26 @@ public class Persian implements Serializable
 	/**
 	 * Calendar epoch.
 	 */
-	public static final long EPOCH = Julian.toFixed(622, 3, 19);
+	public static final long EPOCH = new Julian(622, 3, 19).fixed;
 
 	/**
 	 * Tehran location.
 	 */
-	public static final CityElement TEHRAN = new CityElement("Tehran, Iran", 51.42, 35.68, 3.5D, 1100);
+	public static final CityElement TEHRAN = new CityElement("Tehran, Iran", 51.42, 35.68, 3.5, 1100);
 
 	/**
 	 * Day of week names.
 	 */
-	public static final String DAY_OF_WEEK_NAMES[] =
-	{ "Yek-shanbeh", "Do-shanbeh", "Se-shanbeh", "Char-shanbeh", "Panj-shanbeh", "Jom`eh", "Shanbeh" };
+	public static final String DAY_OF_WEEK_NAMES[] = {
+		"Yek-shanbeh", "Do-shanbeh", "Se-shanbeh", "Char-shanbeh", "Panj-shanbeh", "Jom`eh", "Shanbeh"
+	};
 
 	/**
 	 * Month names.
 	 */
-	public static final String MONTH_NAMES[] =
-	{ "Farvardin", "Ordibehesht", "Xordad", "Tir", "Mordad", "Shahrivar", "Mehr", "Aban", "Azar", "Dey", "Bahman",
-			"Esfand" };
+	public static final String MONTH_NAMES[] = {
+		"Farvardin", "Ordibehesht", "Xordad", "Tir", "Mordad", "Shahrivar", "Mehr", "Aban", "Azar", "Dey", "Bahman", "Esfand"
+	};
 
 	/**
 	 * Default constructor.

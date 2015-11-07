@@ -137,15 +137,17 @@ public class Roman implements Serializable
 	 */
 	public static long toFixed(long year, int month, int event, int count, boolean leapDay)
 	{
-		long l1 = 0L;
+		long l1 = 0;
+
 		if (event == 1)
-			l1 = Julian.toFixed(year, month, 1);
+			l1 = new Julian(year, month, 1).fixed;
 		else if (event == 2)
-			l1 = Julian.toFixed(year, month, nonesOfMonth(month));
+			l1 = new Julian(year, month, nonesOfMonth(month)).fixed;
 		else if (event == 3)
-			l1 = Julian.toFixed(year, month, idesOfMonth(month));
-		return (l1 - (long) count) + (long) (!Julian.isLeapYear(year) || month != 3 || event != 1 || count > 16 || count < 6
-				? 1 : 0) + (long) (leapDay ? 1 : 0);
+			l1 = new Julian(year, month, idesOfMonth(month)).fixed;
+
+		return l1 - count + (!Julian.isLeapYear(year) || month != 3 || event != 1 || count > 16 || count < 6
+				? 1 : 0) + (leapDay ? 1 : 0);
 	}
 
 	/**
@@ -200,16 +202,15 @@ public class Roman implements Serializable
 	 */
 	public void fromFixed(long l)
 	{
-		Julian julian = new Julian();
-		julian.fromFixed(l);
+		Julian julian = new Julian(l);
 		int i = julian.month;
 		int j = julian.day;
 		long l1 = julian.year;
 		int k = Calendar.adjustedMod(i + 1, 12);
 		long l2 = k != 1 ? l1 : l1 + 1L;
 		long l3 = toFixed(l2, k, 1, 1, false);
-		if (j == 1)
-		{
+
+		if (j == 1) {
 			year = l1;
 			month = i;
 			event = 1;
@@ -217,8 +218,8 @@ public class Roman implements Serializable
 			leapDay = false;
 			return;
 		}
-		if (j <= nonesOfMonth(i))
-		{
+
+		if (j <= nonesOfMonth(i)) {
 			year = l1;
 			month = i;
 			event = 2;
@@ -226,8 +227,8 @@ public class Roman implements Serializable
 			leapDay = false;
 			return;
 		}
-		if (j <= idesOfMonth(i))
-		{
+
+		if (j <= idesOfMonth(i)) {
 			year = l1;
 			month = i;
 			event = 3;
@@ -235,8 +236,8 @@ public class Roman implements Serializable
 			leapDay = false;
 			return;
 		}
-		if (i != 2 || !Julian.isLeapYear(l1))
-		{
+
+		if (i != 2 || !Julian.isLeapYear(l1)) {
 			year = l2;
 			month = k;
 			event = 1;
@@ -244,22 +245,20 @@ public class Roman implements Serializable
 			leapDay = false;
 			return;
 		}
-		if (j < 25)
-		{
+
+		if (j < 25) {
 			year = l1;
 			month = 3;
 			event = 1;
 			count = 30 - j;
 			leapDay = false;
-			return;
-		} else
-		{
+		}
+		else {
 			year = l1;
 			month = 3;
 			event = 1;
 			count = 31 - j;
 			leapDay = j == 25;
-			return;
 		}
 	}
 
@@ -269,8 +268,7 @@ public class Roman implements Serializable
 	 * @param i Month.
 	 * @return Ides, 13 if month = 3,5,7, or 10, and 15 otherwise.
 	 */
-	private static int idesOfMonth(int i)
-	{
+	private static int idesOfMonth(int i) {
 		return i != 3 && i != 5 && i != 7 && i != 10 ? 13 : 15;
 	}
 
@@ -280,8 +278,7 @@ public class Roman implements Serializable
 	 * @param i Month.
 	 * @return Nones = ides - 8.
 	 */
-	private static int nonesOfMonth(int i)
-	{
+	private static int nonesOfMonth(int i) {
 		return idesOfMonth(i) - 8;
 	}
 }
