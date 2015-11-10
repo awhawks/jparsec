@@ -159,7 +159,6 @@ public class CalendarGenericConversion
 		}
 
 		double julianDay = inputCal.julianDate;
-		long fixed = inputCal.fixed;
 
 		BaseCalendar outputCal;
 
@@ -360,13 +359,14 @@ public class CalendarGenericConversion
 
 	/**
 	 * Returns the name of the day of the week for a given calendar.
-	 * @param jd The Julian day.
+	 * @param jd0 The Julian day.
 	 * @param calendar The calendar id value.
 	 * @return The name of the day.
 	 * @throws JPARSECException If the calendar or day is invalid.
 	 */
-	public static String getDayOfWeekName(int jd, CALENDAR calendar) throws JPARSECException {
+	public static String getDayOfWeekName(double jd0, CALENDAR calendar) throws JPARSECException {
 		String out;
+		long jd = (long) Math.floor(jd0 - 0.5);
 		long day = jd - Gregorian.EPOCH;
 		try {
 			switch (calendar) {

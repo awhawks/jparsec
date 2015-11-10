@@ -5083,6 +5083,18 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
   	  		EphemerisElement eph = this.eph.clone();
   	  		eph.algorithm = null;
   	  		ephem = RiseSetTransit.obtainCurrentOrNextRiseSetTransit(time, obs, eph, ephem, RiseSetTransit.TWILIGHT.HORIZON_ASTRONOMICAL_34arcmin);
+  	  		ephem = Ephem.horizontalCoordinates(time, obs, eph, ephem);
+  			try {
+				double jd = TimeScale.getJD(time, obs, eph, TimeElement.SCALE.TERRESTRIAL_TIME);
+  				ephem.constellation = Constellation.getConstellationName(ephem.rightAscension, ephem.declination, eph.getEpoch(jd), eph);
+  			} catch (Exception exc) {}
+  			if (Translate.getDefaultLanguage() == LANGUAGE.ENGLISH) ephem.constellation = Constellation.getConstellation(ephem.constellation, CONSTELLATION_NAME.ENGLISH);
+  			if (Translate.getDefaultLanguage() == LANGUAGE.SPANISH) ephem.constellation = Constellation.getConstellation(ephem.constellation, CONSTELLATION_NAME.SPANISH);
+  	  		objData = DataSet.addStringArray(objData, new String[] {
+  	  			Translate.translate(28) + ": " + Functions.formatAngle(ephem.azimuth, 1),
+	  	  		Translate.translate(29) + ": " + Functions.formatAngle(ephem.elevation, 1),
+	  	  		Translate.translate(321) + ": " + ephem.constellation
+  	  		});
   	  		if (ephem.rise != null)
 	  	  		objData = DataSet.addStringArray(objData, new String[] {
 	  	  			t295 + ": " + TimeFormat.formatJulianDayAsDateAndTime(ephem.rise[0], SCALE.LOCAL_TIME),

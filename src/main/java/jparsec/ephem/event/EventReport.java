@@ -2131,7 +2131,7 @@ public class EventReport {
 					se.endTime = me1[i].endTime;
 					se.body = me1[i].mainBody.getName();
 					se.secondaryBody = me1[i].secondaryBody.getName();
-					if (me1[i].elevation > 0) list.add(se);
+					list.add(se);
 				}
 			}
 		}
@@ -2154,7 +2154,7 @@ public class EventReport {
 					se.endTime = me2[i].endTime;
 					se.body = me2[i].mainBody.getName();
 					se.secondaryBody = me2[i].secondaryBody.getName();
-					if (me2[i].elevation > 0) list.add(se);
+					list.add(se);
 				}
 			}
 		}

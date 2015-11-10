@@ -3293,13 +3293,13 @@ public class DataSet
 	 * @return ArrayList with the objects listed in crescent order of the values.
 	 * @throws JPARSECException If an error occurs.
 	 */
-	public static ArrayList<String[]> sortInCrescent(ArrayList<String[]> list, double val[])
+	public static ArrayList sortInCrescent(ArrayList list, double val[])
 	throws JPARSECException {
 		if (val == null || list == null) return null;
-		ArrayList<String[]> out = new ArrayList<String[]> ();
+		ArrayList out = new ArrayList();
 		if (val.length == 0 || list.size() == 0) return out;
 
-		ArrayList<String[]> l = (ArrayList<String[]>) list.clone();
+		ArrayList l = (ArrayList) list.clone();
 
 		double v[] = val.clone();
 		do {

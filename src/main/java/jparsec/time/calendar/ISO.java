@@ -114,4 +114,13 @@ public class ISO extends BaseCalendar
 	public String toString() {
 		return "ISO " + this.year + "/W" + this.week + '/' + this.day;
 	}
+
+	@Override
+	public int getDayOfWeek() {
+		return day;
+	}
+	
+	public int getWeek() {
+		return week;
+	}
 }

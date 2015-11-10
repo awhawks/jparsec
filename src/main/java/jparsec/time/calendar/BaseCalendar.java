@@ -22,11 +22,9 @@
 package jparsec.time.calendar;
 
 import java.io.Serializable;
-import org.math.plot.plotObjects.Base;
 
 /**
  * Implements a base Calendar.
- * <P>
  *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
@@ -77,26 +75,63 @@ public abstract class BaseCalendar implements Serializable {
 
     abstract int dayFromFixed(final long year, final int month);
 
+    /**
+     * Returns the day of the week for ISO, Julian, and Gregorian
+     * calendars. For other calendars -1 is returned.
+     * @return Day of week (monday = 1), or -1.
+     */
     public int getDayOfWeek() {
         return -1;
     }
 
+    /**
+     * Returns the day of the month, or the day of the week for ISO
+     * calendar.
+     * @return Day of the month, or day of the week for ISO calendar.
+     */
     public int getDay() {
         return day;
     }
 
+    /**
+     * Returns the fixed date, i.e. the number of days elapsed since
+     * the epoch of the Gregorian calendar (referred to previous midnight).
+     * @return Fixed date.
+     */
     public long getFixed() {
         return fixed;
     }
 
+    /**
+     * Returns the Julian date corresponding to the previous midnight
+     * respect the instant represented by this calendar.
+     * @return The Julian date of the previous midnight.
+     */
     public double getJulianDate() {
         return julianDate;
     }
+    
+    /**
+     * Returns the epoch of this calendar. The epoch is the fixed date
+     * for the date of the beggining of this calendar.
+     * @return The epoch.
+     */
+    public double getEpoch() {
+        return epoch;
+    }
 
+    /**
+     * Returns the month number, 1 = January.
+     * @return The month, or 0 for ISO calendar.
+     */
     public int getMonth() {
         return month;
     }
 
+    /**
+     * Returns the current year.
+     * @return The year.
+     */
     public long getYear() {
         return year;
     }

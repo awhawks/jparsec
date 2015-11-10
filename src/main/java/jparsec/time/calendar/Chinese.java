@@ -21,8 +21,6 @@
  */
 package jparsec.time.calendar;
 
-import java.io.Serializable;
-
 import jparsec.observer.CityElement;
 import jparsec.util.JPARSECException;
 
