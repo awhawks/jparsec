@@ -280,7 +280,7 @@ public class Calendar
 	}
 
 	/** J2000 epoch. */
-	private static final double J2000 = hr(12) + (double) Gregorian.toFixed(2000L, 1, 1);
+	private static final double J2000 = hr(12) + (double) new Gregorian(2000, 1, 1).fixed;
 
 	/**
 	 * Difference between lunar and solar longitudes in new moon phase.
@@ -629,7 +629,7 @@ public class Calendar
 	private static double ephemerisCorrection(double d)
 	{
 		long l = Gregorian.yearFromFixed((long) Math.floor(d));
-		double d1 = (double) difference(Gregorian.toFixed(1900L, 1, 1), Gregorian.toFixed(l, 7, 1)) / Constant.JULIAN_DAYS_PER_CENTURY;
+		double d1 = (double) difference(new Gregorian(1900, 1, 1).fixed, new Gregorian(l, 7, 1).fixed) / Constant.JULIAN_DAYS_PER_CENTURY;
 		double d2;
 		if (l >= 1988L && l <= 2019L)
 			d2 = (double) (l - 1933L) / 86400.0;
@@ -644,7 +644,7 @@ public class Calendar
 			d2 = poly(l - 1600L, ec.coeff16th) / 86400.0;
 		} else
 		{
-			double d3 = hr(12) + (double) difference(Gregorian.toFixed(1810L, 1, 1), Gregorian.toFixed(l, 1, 1));
+			double d3 = hr(12) + (double) difference(new Gregorian(1810, 1, 1).fixed, new Gregorian(l, 1, 1).fixed);
 			return ((d3 * d3) / 41048480.0 - 15.0) / 86400.0;
 		}
 		return d2;

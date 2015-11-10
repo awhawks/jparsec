@@ -1890,7 +1890,7 @@ public class EventReport {
 		MayanLongCount hNew = new MayanLongCount(h.baktun+1, 0, 0, 0, 0);
 		int lastDay = (int) (hNew.toJulianDay() + 0.5) - 1;
 		Gregorian g = new Gregorian(lastDay);
-		double jd = g.toJulianDay() + 0.5;
+		double jd = g.getJulianDate() + 0.5;
 		if (jd > jd0 && jd < jdf) {
 			String details = "baktun "+h.baktun+" "+Translate.translate("ends")+" (Mayan calendar)";
 			SimpleEventElement s = new SimpleEventElement(jd, EVENT.CALENDAR, details);
@@ -1918,12 +1918,11 @@ public class EventReport {
 						list.add(s);
 					}
 			}
-			Chinese h0 = new Chinese((int) (jd + 0.5));
+			Chinese h0 = new Chinese(jd);
 			int yearTotal = h0.getYearNumber();
 			Chinese h2 = new Chinese(Chinese.newYear(year));
 			if (h2.getYearNumber() == yearTotal) h2 = new Chinese(Chinese.newYear(year+1));
-			AstroDate astro_back = new AstroDate((double)h2.toJulianDay());
-			jd = astro_back.jd();
+			jd = h2.getJulianDate();
 			if (jd > jd0 && jd < jdf) {
 				String details = Translate.translate("NEW").toLowerCase()+" "+Translate.translate("Chinese")+" "+Translate.translate("Year").toLowerCase();
 				SimpleEventElement s = new SimpleEventElement(jd, EVENT.CALENDAR, details);

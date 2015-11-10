@@ -21,144 +21,63 @@
  */
 package jparsec.time.calendar;
 
-import java.io.Serializable;
-
 /**
  * Implements the Armenian calendar. See Calendrical Calculations for reference.
  *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
-public class Armenian implements Serializable
+public class Armenian extends Egyptian
 {
-	private static final long serialVersionUID = 1L;
-
-	/**
-	 * Year.
-	 */
-	public long year;
-
-	/**
-	 * Month.
-	 */
-	public int month;
-
-	/**
-	 * Day.
-	 */
-	public int day;
-
 	/**
 	 * Calendar epoch.
+	 * Armenian calendar year 1 started on Julian date 552/07/11
 	 */
-	public static final long EPOCH = 0x312e3L;
+	public final static long EPOCH = new Julian(552, 7, 11).fixed;
 
 	/**
 	 * Name of days of the week.
 	 */
-	public static final String DAY_OF_WEEK_NAMES[] =
-	{ "Miashabathi", "Erkoushabathi", "Erekhshabathi", "Chorekhshabathi", "Hingshabathi", "Urbath", "Shabath" };
+	public static final String DAY_OF_WEEK_NAMES[] = {
+		"Miashabathi", "Erkoushabathi", "Erekhshabathi", "Chorekhshabathi", "Hingshabathi", "Urbath", "Shabath"
+	};
 
 	/**
 	 * Name of months.
 	 */
-	public static final String MONTH_NAMES[] =
-	{ "Nawasardi", "Hori", "Sahmi", "Tre", "Kaloch", "Arach", "Mehekani", "Areg", "Ahekani", "Mareri", "Margach",
-			"Hrotich", "Aweleach" };
+	public static final String MONTH_NAMES[] = {
+		"Nawasardi", "Hori", "Sahmi", "Tre", "Kaloch", "Arach", "Mehekani",
+		"Areg", "Ahekani", "Mareri", "Margach", "Hrotich", "Aweleach"
+	};
+
+	private static final long serialVersionUID = 2470952263348488987L;
 
 	/**
-	 * Empty constructor.
+	 * Constructor using a fixed date.
+	 *
+	 * @param fromFixed fixed date.
 	 */
-	public Armenian() { }
+	public Armenian(final long fromFixed) {
+		super(EPOCH, fromFixed);
+	}
 
 	/**
 	 * Constructor using a Julian day.
 	 *
-	 * @param jd Julian day.
+	 * @param fromJulianDate Julian day.
 	 */
-	public Armenian(int jd)
-	{
-		fromJulianDay(jd);
+	public Armenian(final double fromJulianDate) {
+		super(EPOCH, fromJulianDate);
 	}
 
 	/**
 	 * Constructor using year, month, day.
 	 *
-	 * @param y Year.
-	 * @param m Month.
-	 * @param d Day.
-	 */
-	public Armenian(long y, int m, int d)
-	{
-		year = y;
-		month = m;
-		day = d;
-	}
-
-	/**
-	 * Pass to fixed date.
-	 *
 	 * @param year Year.
 	 * @param month Month.
 	 * @param day Day.
-	 * @return Fixed day number.
 	 */
-	public static long toFixed(long year, int month, int day)
-	{
-		return (0x312e3L + Egyptian.toFixed(year, month, day)) - Egyptian.EPOCH;
-	}
-
-	/**
-	 * Pass to fixed date.
-	 * @return Fixed day.
-	 */
-	public long toFixed()
-	{
-		return toFixed(year, month, day);
-	}
-
-	/**
-	 * Gets the year, month, day of the instance from the fixed day.
-	 *
-	 * @param l Fixed day number.
-	 */
-	public void fromFixed(long l)
-	{
-		Egyptian egyptian = new Egyptian();
-		egyptian.fromFixed((l + Egyptian.EPOCH) - 0x312e3L);
-		year = egyptian.year;
-		month = egyptian.month;
-		day = egyptian.day;
-	}
-
-	/**
-	 * Transforms an Armenian date into a Julian day.
-	 *
-	 * @param year Year.
-	 * @param month Month.
-	 * @param day Day.
-	 * @return Julian day.
-	 */
-	public static int toJulianDay(int year, int month, int day)
-	{
-		return (int) (toFixed(year, month, day) + Gregorian.EPOCH);
-	}
-
-	/**
-	 * Transforms an Armenian date into a Julian day.
-	 * @return Julian day.
-	 */
-	public int toJulianDay()
-	{
-		return (int) (toFixed() + Gregorian.EPOCH);
-	}
-
-	/**
-	 * Sets an Armenian date with a given Julian day.
-	 * @param jd The Julian day.
-	 */
-	public void fromJulianDay(int jd)
-	{
-		fromFixed(jd - Gregorian.EPOCH);
+	public Armenian(final long year, final int month, final int day) {
+		super(EPOCH, year, month, day);
 	}
 }

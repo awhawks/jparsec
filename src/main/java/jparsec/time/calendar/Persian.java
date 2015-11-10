@@ -21,8 +21,6 @@
  */
 package jparsec.time.calendar;
 
-import java.io.Serializable;
-
 import jparsec.observer.CityElement;
 
 /**
@@ -36,169 +34,120 @@ import jparsec.observer.CityElement;
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
-public class Persian implements Serializable
+public class Persian extends BaseCalendar
 {
-	private static final long serialVersionUID = 1L;
-
-	/**
-	 * The year.
-	 */
-	public long year;
-
-	/**
-	 * Month.
-	 */
-	public int month;
-
-	/**
-	 * Day.
-	 */
-	public int day;
-
 	/**
 	 * Calendar epoch.
 	 */
-	public static final long EPOCH = Julian.toFixed(622, 3, 19);
+	public static final long EPOCH = new Julian(622, 3, 19).fixed;
 
 	/**
 	 * Tehran location.
 	 */
-	public static final CityElement TEHRAN = new CityElement("Tehran, Iran", 51.42, 35.68, 3.5D, 1100);
+	public static final CityElement TEHRAN = new CityElement("Tehran, Iran", 51.42, 35.68, 3.5, 1100);
 
 	/**
 	 * Day of week names.
 	 */
-	public static final String DAY_OF_WEEK_NAMES[] =
-	{ "Yek-shanbeh", "Do-shanbeh", "Se-shanbeh", "Char-shanbeh", "Panj-shanbeh", "Jom`eh", "Shanbeh" };
+	public static final String DAY_OF_WEEK_NAMES[] = {
+		"Yek-shanbeh", "Do-shanbeh", "Se-shanbeh", "Char-shanbeh", "Panj-shanbeh", "Jom`eh", "Shanbeh"
+	};
 
 	/**
 	 * Month names.
 	 */
-	public static final String MONTH_NAMES[] =
-	{ "Farvardin", "Ordibehesht", "Xordad", "Tir", "Mordad", "Shahrivar", "Mehr", "Aban", "Azar", "Dey", "Bahman",
-			"Esfand" };
+	public static final String MONTH_NAMES[] = {
+		"Farvardin", "Ordibehesht", "Xordad", "Tir", "Mordad", "Shahrivar", "Mehr", "Aban", "Azar", "Dey", "Bahman", "Esfand"
+	};
+
+	private static final long serialVersionUID = 8315300467974129047L;
 
 	/**
-	 * Default constructor.
+	 * Fixed day constructor.
+	 *
+	 * @param fixed fixed day.
 	 */
-	public Persian() {}
+	public Persian(final long fixed) {
+		super(EPOCH, fixed);
+	}
 
 	/**
 	 * Julian day constructor.
 	 *
-	 * @param jd Julian day.
+	 * @param julianDay Julian day.
 	 */
-	public Persian(int jd)
-	{
-		fromJulianDay(jd);
+	public Persian(final double julianDay) {
+		super(EPOCH, julianDay);
 	}
 
 	/**
 	 * Explicit constructor.
 	 *
-	 * @param y Year.
-	 * @param m Month.
-	 * @param d Day.
+	 * @param year Year.
+	 * @param month Month.
+	 * @param day Day.
 	 */
-	public Persian(long y, int m, int d)
-	{
-		year = y;
-		month = m;
-		day = d;
+	public Persian(final long year, final int month, final int day) {
+		super(EPOCH, year, month, day);
 	}
 
 	/**
 	 * To fixed day.
-	 *
-	 * @param y Year.
-	 * @param m Month.
-	 * @param d Day.
-	 * @return Fixed date.
-	 */
-	public static long toFixed(long y, int m, int d)
-	{
-		long l1 = newYearOnOrBefore(EPOCH + 180L + (long) Math.floor(365.242189D * (double) (y <= 0L ? y : y - 1L)));
-		return (l1 - 1L) + (long) (m > 7 ? 30 * (m - 1) + 6 : 31 * (m - 1)) + (long) d;
-	}
-
-	/**
-	 * To fixed day.
-	 *
-	 * @return Fixed date.
-	 */
-	public long toFixed()
-	{
-		return toFixed(year, month, day);
-	}
-
-	/**
-	 * Transforms a Persian date into a Julian day
 	 *
 	 * @param year Year.
 	 * @param month Month.
 	 * @param day Day.
-	 * @return Julian day.
+	 * @return Fixed date.
 	 */
-	public static int toJulianDay(int year, int month, int day)
+	public static long toFixedDay(final long year, final int month, final int day)
 	{
-		return (int) (toFixed(year, month, day) + Gregorian.EPOCH);
+		long l1 = newYearOnOrBefore(EPOCH + 180 + (long) Math.floor(365.242189D * (year <= 0 ? year : year - 1)));
+		return (l1 - 1) + (long) (month > 7 ? 30 * (month - 1) + 6 : 31 * (month - 1)) + day;
 	}
 
-	/**
-	 * Transforms a Persian date into a Julian day.
-	 *
-	 * @return Julian day.
-	 */
-	public int toJulianDay()
-	{
-		return (int) (toFixed() + Gregorian.EPOCH);
+	@Override
+	long toFixed(final long year, final int month, final int day) {
+		return toFixedDay(year, month, day);
 	}
 
-	/**
-	 * Sets a Persian date with a given Julian day.
-	 *
-	 * @param jd Julian day.
-	 */
-	public void fromJulianDay(int jd)
-	{
-		fromFixed(jd - Gregorian.EPOCH);
+	@Override
+	long yearFromFixed() {
+		long l1 = newYearOnOrBefore(this.fixed);
+		long l2 = 1 + Math.round((double) (l1 - EPOCH) / 365.242189D);
+
+		return l2 <= 0 ? l2 - 1 : l2;
 	}
 
-	/**
-	 * Sets the date from a fixed day.
-	 *
-	 * @param l Fixed day.
-	 */
-	public void fromFixed(long l)
-	{
-		long l1 = newYearOnOrBefore(l);
-		long l2 = 1L + Math.round((double) (l1 - EPOCH) / 365.242189D);
-		year = l2 <= 0L ? l2 - 1L : l2;
-		long l3 = (1L + l) - toFixed(year, 1, 1);
-		month = l3 >= 186L ? (int) Math.ceil((double) (l3 - 6L) / 30D) : (int) Math.ceil((double) l3 / 31D);
-		day = (int) (l - (toFixed(year, month, 1) - 1L));
+	@Override
+	int monthFromFixed(final long year) {
+		long l3 = (1 + this.fixed) - toFixed(year, 1, 1);
+
+		return l3 >= 186 ? (int) Math.ceil((double) (l3 - 6) / 30) : (int) Math.ceil((double) l3 / 31);
+	}
+
+	@Override
+	int dayFromFixed(final long year, final int month) {
+		return 1 + (int) (this.fixed - toFixed(year, month, 1));
 	}
 
 	/**
 	 * Gets the midday in Tehran.
 	 *
-	 * @param l Fixed day.
+	 * @param fixed Fixed day.
 	 * @return Midday time.
 	 */
-	public static double middayInTehran(long l)
-	{
-		return Calendar.universalFromStandard(Calendar.midday(l, TEHRAN), TEHRAN);
+	public static double middayInTehran(final long fixed) {
+		return Calendar.universalFromStandard(Calendar.midday(fixed, TEHRAN), TEHRAN);
 	}
 
 	/**
 	 * Gets previous new year.
 	 *
-	 * @param l Fixed day.
+	 * @param fixed Fixed day.
 	 * @return Last new year.
 	 */
-	public static long newYearOnOrBefore(long l)
-	{
-		double d = Calendar.estimatePriorSolarLongitude(middayInTehran(l), Calendar.SPRING);
+	public static long newYearOnOrBefore(final long fixed) {
+		double d = Calendar.estimatePriorSolarLongitude(middayInTehran(fixed), Calendar.SPRING);
 		long l1;
 		for (l1 = (long) Math.floor(d) - 1L; Calendar.solarLongitude(middayInTehran(l1)) > Calendar.SPRING + 2.0; l1++)
 			;
@@ -208,12 +157,12 @@ public class Persian implements Serializable
 	/**
 	 * Gets new year.
 	 *
-	 * @param l Fixed day.
+	 * @param fixed Fixed day.
 	 * @return New Year.
 	 */
-	public static long nawRuz(long l)
-	{
-		long l1 = (1L + l) - Gregorian.yearFromFixed(EPOCH);
-		return toFixed(l1 > 0L ? l1 : l1 - 1L, 1, 1);
+	public static long nawRuz(final long fixed) {
+		long l1 = (1 + fixed) - Gregorian.yearFromFixed(EPOCH);
+
+		return toFixedDay(l1 > 0L ? l1 : l1 - 1L, 1, 1);
 	}
 }

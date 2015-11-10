@@ -32,7 +32,27 @@ import java.io.Serializable;
  */
 public class HinduLunar implements Serializable
 {
-	private static final long serialVersionUID = 1L;
+	/**
+	 * Lunar era.
+	 */
+	public static final int LUNAR_ERA = 3044;
+
+	/**
+	 * Synodic month length in days.
+	 */
+	public static final double SYNODIC_MONTH = 29.530587946071719D;
+
+	/**
+	 * Sidereal month length in days.
+	 */
+	public static final double SIDEREAL_MONTH = 27.321674162683866D;
+
+	/**
+	 * Anomalistic month length in days.
+	 */
+	public static final double ANOMALISTIC_MONTH = 27.554597974680476D;
+
+	private static final long serialVersionUID = 8237202254694851751L;
 
 	/**
 	 * Year.
@@ -58,26 +78,6 @@ public class HinduLunar implements Serializable
 	 * Leap day?
 	 */
 	public boolean leapDay;
-
-	/**
-	 * Lunar era.
-	 */
-	public static final int LUNAR_ERA = 3044;
-
-	/**
-	 * Synodic month length in days.
-	 */
-	public static final double SYNODIC_MONTH = 29.530587946071719D;
-
-	/**
-	 * Sidereal month length in days.
-	 */
-	public static final double SIDEREAL_MONTH = 27.321674162683866D;
-
-	/**
-	 * Anomalistic month length in days.
-	 */
-	public static final double ANOMALISTIC_MONTH = 27.554597974680476D;
 
 	/**
 	 * Default constructor.
@@ -303,7 +303,7 @@ public class HinduLunar implements Serializable
 	 */
 	public static long newYear(long l)
 	{
-		long l1 = Gregorian.toFixed(l, 1, 1);
+		long l1 = new Gregorian(l, 1, 1).fixed;
 		double d = HinduSolar.solarLongitudeAfter(l1, 330.0);
 		double d1 = lunarDayAfter(d, 1.0D);
 		long l2 = (long) Math.floor(d1);

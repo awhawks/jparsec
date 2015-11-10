@@ -21,65 +21,56 @@
  */
 package jparsec.time.calendar;
 
-import java.io.Serializable;
-
 /**
  * Implements the ISO calendar. See Calendrical Calculations for reference.
  *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
-public class ISO implements Serializable
+public class ISO extends BaseCalendar
 {
-	private static final long serialVersionUID = 1L;
-
-	/**
-	 * Year.
-	 */
-	public long year = 0;
+	private static final long serialVersionUID = -1051296989077946358L;
 
 	/**
 	 * Week.
 	 */
-	public int week = 0;
-
-	/**
-	 * Day.
-	 */
-	public int day = 0;
+	protected int week;
 
 	/**
 	 * Calendar epoch.
 	 */
-	public static final long EPOCH = 1721425;
+	public static final long EPOCH = 1721425; // new Gregorian(4714, 2, 7).fixed
 
 	/**
-	 * Default constructor.
+	 * fixed day constructor.
+	 *
+	 * @param fixed Julian day.
 	 */
-	public ISO() { }
+	public ISO(final long fixed)
+	{
+		super(EPOCH, fixed);
+	}
 
 	/**
 	 * Julian day constructor.
 	 *
-	 * @param jd Julian day.
+	 * @param julianDay Julian day.
 	 */
-	public ISO(int jd)
+	public ISO(final double julianDay)
 	{
-		fromJulianDay(jd);
+		super(EPOCH, julianDay);
 	}
 
 	/**
 	 * Explicit constructor.
 	 *
-	 * @param y Year.
-	 * @param w Week.
-	 * @param d Day.
+	 * @param year Year.
+	 * @param week Week.
+	 * @param day Day.
 	 */
-	public ISO(long y, int w, int d)
+	public ISO(final long year, int week, int day)
 	{
-		year = y;
-		week = w;
-		day = d;
+		super(EPOCH, toFixedDay(year, week, day));
 	}
 
 	/**
@@ -90,64 +81,37 @@ public class ISO implements Serializable
 	 * @param day Day.
 	 * @return Fixed day.
 	 */
-	public static long toFixed(long year, int week, int day)
+	public static long toFixedDay(long year, int week, int day)
 	{
-		return Calendar.nthKDay(week, 0, Gregorian.toFixed(year - 1L, 12, 28)) + (long) day;
+		return Calendar.nthKDay(week, 0, new Gregorian(year - 1, 12, 28).fixed) + day;
 	}
 
-	/**
-	 * To fixed day.
-	 *
-	 * @return Fixed date.
-	 */
-	public long toFixed()
-	{
-		return toFixed(year, week, day);
+	@Override
+	long toFixed(final long year, final int month, final int day) {
+		return toFixedDay(year, month, day);
 	}
 
-	/**
-	 * Sets the date from a fixed day.
-	 *
-	 * @param l Fixed date.
-	 */
-	public void fromFixed(long l)
-	{
-		long l1 = Gregorian.yearFromFixed(l - 3L);
-		year = l < toFixed(l1 + 1L, 1, 1) ? l1 : l1 + 1L;
-		week = (int) Calendar.quotient(l - toFixed(year, 1, 1), 7D) + 1;
-		day = (int) Calendar.adjustedMod(l, 7L);
+	@Override
+	long yearFromFixed() {
+		long y = Gregorian.yearFromFixed(this.fixed - 3);
+		y = this.fixed < toFixed(y + 1, 1, 1) ? y : y + 1;
+		this.week = 1 + (int) ((this.fixed - toFixed(y, 1, 1)) / 7);
+
+		return y;
 	}
 
-	/**
-	 * Transforms an ISO date into a Julian day
-	 *
-	 * @param year Year.
-	 * @param week Week.
-	 * @param day Day.
-	 * @return Julian day.
-	 */
-	public static int toJulianDay(int year, int week, int day)
-	{
-		return (int) (toFixed(year, week, day) + EPOCH);
+	@Override
+	int monthFromFixed(final long year) {
+		return 0;
 	}
 
-	/**
-	 * Transforms an ISO date into a Julian day.
-	 *
-	 * @return Julian day.
-	 */
-	public int toJulianDay()
-	{
-		return (int) (toFixed() + EPOCH);
+	@Override
+	int dayFromFixed(long year, int month) {
+		return (int) Calendar.adjustedMod(this.fixed, 7);
 	}
 
-	/**
-	 * Sets an ISO date with a given Julian day.
-	 *
-	 * @param jd Julian day.
-	 */
-	public void fromJulianDay(int jd)
-	{
-		fromFixed(jd - EPOCH);
+	@Override
+	public String toString() {
+		return "ISO " + this.year + "/W" + this.week + '/' + this.day;
 	}
 }

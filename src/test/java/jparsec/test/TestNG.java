@@ -43,6 +43,7 @@ import jparsec.time.SiderealTime;
 import jparsec.time.TimeElement;
 import jparsec.time.TimeFormat;
 import jparsec.time.TimeScale;
+import jparsec.time.calendar.BaseCalendar;
 import jparsec.time.calendar.Coptic;
 import jparsec.time.calendar.Ethiopic;
 import jparsec.time.calendar.Gregorian;
@@ -55,6 +56,7 @@ import jparsec.util.Configuration;
 import jparsec.util.JPARSECException;
 import jparsec.vo.SimbadElement;
 import jparsec.vo.SimbadQuery;
+import org.math.plot.plotObjects.Base;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import static jparsec.ephem.Target.TARGET;
@@ -94,17 +96,17 @@ public class TestNG {
     @DataProvider (name = "data_atlas_chart")
     private Object[][] data_atlas_chart() {
         return new Object[][] {
-                { "0.5", "80.0", "VI-14", "1", "VI-3", "V1-2", "Rukl 4" },
-                { "0.0", "-22", "-", "18", "VII-305", "-", "Rukl 55" },
-                { "0.0", "11", "-", "17", "VII-170", "V1-81", "Rukl 33" },
-                { "3.33", "-33", "-", "18", "VII-355", "-", "Rukl 69" },
-                { "18.1", "-66", "-", "26", "VII-455", "-", "Rukl 71/VI" },
-                { "18.1", "-88", "-", "26", "VII-472", "-", "Rukl 73/VI" },
-                { "6.0", "-88", "-", "24", "VII-473", "-", "Rukl 73/V" },
-                { "0.7", "41", "VI-105", "-", "-", "V1-30", "-" },
-                { "5.6", "-5.5", "VI-278", "-", "-", "-", "-" },
-                { "20.8", "30", "VIII-1169", "-", "-", "V1-47", "-" },
-                { "8.7", "20", "VII-712", "-", "-", "-", "-" },
+            { "0.5", "80.0", "VI-14", "1", "VI-3", "V1-2", "Rukl 4" },
+            { "0.0", "-22", "-", "18", "VII-305", "-", "Rukl 55" },
+            { "0.0", "11", "-", "17", "VII-170", "V1-81", "Rukl 33" },
+            { "3.33", "-33", "-", "18", "VII-355", "-", "Rukl 69" },
+            { "18.1", "-66", "-", "26", "VII-455", "-", "Rukl 71/VI" },
+            { "18.1", "-88", "-", "26", "VII-472", "-", "Rukl 73/VI" },
+            { "6.0", "-88", "-", "24", "VII-473", "-", "Rukl 73/V" },
+            { "0.7", "41", "VI-105", "-", "-", "V1-30", "-" },
+            { "5.6", "-5.5", "VI-278", "-", "-", "-", "-" },
+            { "20.8", "30", "VIII-1169", "-", "-", "V1-47", "-" },
+            { "8.7", "20", "VII-712", "-", "-", "-", "-" },
         };
     }
 
@@ -144,14 +146,14 @@ public class TestNG {
     @DataProvider (name = "data_constellation")
     private Object[][] data_constellation() {
         return new Object[][] {
-                { "5.12", "9.12", "Orion" },
-                { "9.0", "65.0", "Ursa Major" },
-                { "23.5", "-20", "Aquarius" },
-                { "9.46", "-19.9", "Hydra" },
-                { "12.89", "22", "Coma Berenices" },
-                { "15.67", "-12.12", "Libra" },
-                { "19.0", "-40.0", "Corona Australis" },
-                { "6.22", "-81.12", "Mensa" },
+            { "5.12", "9.12", "Orion" },
+            { "9.0", "65.0", "Ursa Major" },
+            { "23.5", "-20", "Aquarius" },
+            { "9.46", "-19.9", "Hydra" },
+            { "12.89", "22", "Coma Berenices" },
+            { "15.67", "-12.12", "Libra" },
+            { "19.0", "-40.0", "Corona Australis" },
+            { "6.22", "-81.12", "Mensa" },
         };
     }
 
@@ -180,13 +182,13 @@ public class TestNG {
     @DataProvider (name = "data_coordinate_system")
     private Object[][] data_coordinate_system() {
         return new Object[][] {
-                { "0", "0.0", "Galactical", "Equatorial", "-93\u00b0 35' 42.014\"", "-28\u00b0 56' 10.221\"" },
-                { "0", "90.0", "Galactical", "Equatorial", "192\u00b0 51' 34.132\"", "27\u00b0 7' 41.704\"" },
-                { "192.8594812", "27.1282512", "Equatorial", "Galactical", "-", "90\u00b0 0' 0.000\"" },
-                { "90", "0", "Equatorial", "Ecliptical", "90\u00b0 0' 0.000\"", "-23\u00b0 26' 21.406\"" },
-                { "90", "-23.4392794", "Ecliptical", "Equatorial", "90\u00b0 0' 0.000\"", "0.000\"" },
-                { "-90", "0", "Equatorial", "Ecliptical", "-90\u00b0 0' 0.000\"", "23\u00b0 26' 21.406\"" },
-                { "-90", "23.4392794", "Ecliptical", "Equatorial", "-90\u00b0 0' 0.000\"", "0.000\"" }
+            { "0", "0.0", "Galactical", "Equatorial", "-93\u00b0 35' 42.014\"", "-28\u00b0 56' 10.221\"" },
+            { "0", "90.0", "Galactical", "Equatorial", "192\u00b0 51' 34.132\"", "27\u00b0 7' 41.704\"" },
+            { "192.8594812", "27.1282512", "Equatorial", "Galactical", "-", "90\u00b0 0' 0.000\"" },
+            { "90", "0", "Equatorial", "Ecliptical", "90\u00b0 0' 0.000\"", "-23\u00b0 26' 21.406\"" },
+            { "90", "-23.4392794", "Ecliptical", "Equatorial", "90\u00b0 0' 0.000\"", "0.000\"" },
+            { "-90", "0", "Equatorial", "Ecliptical", "-90\u00b0 0' 0.000\"", "23\u00b0 26' 21.406\"" },
+            { "-90", "23.4392794", "Ecliptical", "Equatorial", "-90\u00b0 0' 0.000\"", "0.000\"" }
         };
     }
 
@@ -227,53 +229,53 @@ public class TestNG {
     @DataProvider (name = "data_ephemerid")
     private Object[][] data_ephemerid() {
         return new Object[][] {
-                { 1802, 12, 9, 7, 36, "Mercury", "Acrab" },
-                { 1808, 12, 9, 20, 34, "Mercury", "Saturn" },
-                { 1810, 12, 22, 6, 32, "Venus", "18570149" },
-                { 1818, 1, 3, 21, 52, "Venus", "Jupiter" },
-                { 1825, 7, 11, 9, 10, "Venus", "4220123" },
-                { 1841, 5, 9, 19, 35, "Venus", "Electra" },
-                { 1850, 12, 16, 11, 28, "Mercury", "lam Sgr" },
-                { 1855, 5, 22, 5, 4, "Venus", "eps Gem" },
-                { 1857, 6, 30, 0, 25, "Saturn", "del Gem" },
-                { 1865, 12, 5, 14, 20, "Mercury", "lam Sgr" },
-                { 1876, 2, 28, 5, 13, "Jupiter", "Acrab" },
-                { 1881, 6, 7, 20, 54, "Mercury", "eps Gem" },
-                { 1906, 12, 9, 17, 40, "Venus", "Acrab" },
-                { 1910, 7, 27, 2, 53, "Venus", "eta Gem" },
-                // 14500141 = Alpha-2 Lib = Zuben El Genubi, but Alpha-1 Lib has same name and is 3' off !!!
-                { 1947, 10, 25, 1, 45, "Venus", "14500141" },
-                { 1959, 7, 7, 14, 30, "Venus", "Regulus" },
-                { 1965, 9, 27, 15, 30, "Mercury", "eta Vir" },
-                { 1971, 5, 13, 20, 0, "Jupiter", "bet Sco" },
-                { 1976, 4, 8, 1, 0, "Mars", "eps Gem" },
-                // WIKIPEDIA WAS WRONG, IS 15:27, NOT 14:27
-                { 1981, 11, 17, 15, 27, "Venus", "Nunki" },
-                // WIKIPEDIA SAYS 1:32, but 1:33 eliminates the failure
-                { 1984, 11, 19, 1, 33, "Venus", "lam Sgr" },
-                { 2035, 2, 17, 15, 19, "Venus", "19090174" },
-                { 2044, 10, 1, 22, 0, "Venus", "Regulus" },
-                { 2046, 2, 23, 19, 24, "Venus", "19210133" },
-                // 14500141 = Alpha-2 Lib = Zuben El Genubi, but Alpha-1 Lib has same name and is 3' off !!!
-                { 2052, 11, 10, 7, 20, "Mercury", "14500141" },
-                { 2065, 11, 22, 12, 45, "Venus", "Jupiter" },
-                // WIKIPEDIA SAYS 11:56, but 11:55 eliminates the failure
-                { 2067, 7, 15, 11, 55, "Mercury", "Neptune" },
-                { 2078, 10, 3, 22, 0, "Mars", "the oph" },
-                { 2079, 8, 11, 1, 30, "Mercury", "Mars" },
-                { 2088, 10, 27, 13, 43, "Mercury", "Jupiter" },
-                { 2094, 4, 7, 10, 48, "Mercury", "Jupiter" },
+            { 1802, 12, 9, 7, 36, "Mercury", "Acrab" },
+            { 1808, 12, 9, 20, 34, "Mercury", "Saturn" },
+            { 1810, 12, 22, 6, 32, "Venus", "18570149" },
+            { 1818, 1, 3, 21, 52, "Venus", "Jupiter" },
+            { 1825, 7, 11, 9, 10, "Venus", "4220123" },
+            { 1841, 5, 9, 19, 35, "Venus", "Electra" },
+            { 1850, 12, 16, 11, 28, "Mercury", "lam Sgr" },
+            { 1855, 5, 22, 5, 4, "Venus", "eps Gem" },
+            { 1857, 6, 30, 0, 25, "Saturn", "del Gem" },
+            { 1865, 12, 5, 14, 20, "Mercury", "lam Sgr" },
+            { 1876, 2, 28, 5, 13, "Jupiter", "Acrab" },
+            { 1881, 6, 7, 20, 54, "Mercury", "eps Gem" },
+            { 1906, 12, 9, 17, 40, "Venus", "Acrab" },
+            { 1910, 7, 27, 2, 53, "Venus", "eta Gem" },
+            // 14500141 = Alpha-2 Lib = Zuben El Genubi, but Alpha-1 Lib has same name and is 3' off !!!
+            { 1947, 10, 25, 1, 45, "Venus", "14500141" },
+            { 1959, 7, 7, 14, 30, "Venus", "Regulus" },
+            { 1965, 9, 27, 15, 30, "Mercury", "eta Vir" },
+            { 1971, 5, 13, 20, 0, "Jupiter", "bet Sco" },
+            { 1976, 4, 8, 1, 0, "Mars", "eps Gem" },
+            // WIKIPEDIA WAS WRONG, IS 15:27, NOT 14:27
+            { 1981, 11, 17, 15, 27, "Venus", "Nunki" },
+            // WIKIPEDIA SAYS 1:32, but 1:33 eliminates the failure
+            { 1984, 11, 19, 1, 33, "Venus", "lam Sgr" },
+            { 2035, 2, 17, 15, 19, "Venus", "19090174" },
+            { 2044, 10, 1, 22, 0, "Venus", "Regulus" },
+            { 2046, 2, 23, 19, 24, "Venus", "19210133" },
+            // 14500141 = Alpha-2 Lib = Zuben El Genubi, but Alpha-1 Lib has same name and is 3' off !!!
+            { 2052, 11, 10, 7, 20, "Mercury", "14500141" },
+            { 2065, 11, 22, 12, 45, "Venus", "Jupiter" },
+            // WIKIPEDIA SAYS 11:56, but 11:55 eliminates the failure
+            { 2067, 7, 15, 11, 55, "Mercury", "Neptune" },
+            { 2078, 10, 3, 22, 0, "Mars", "the oph" },
+            { 2079, 8, 11, 1, 30, "Mercury", "Mars" },
+            { 2088, 10, 27, 13, 43, "Mercury", "Jupiter" },
+            { 2094, 4, 7, 10, 48, "Mercury", "Jupiter" },
 
-                // These ones all fail
-                //{ 1837, 7, 11, 12, 50, "Mercury", "eta gem" },// FAILS
-                //{ 1843, 9, 27, 18, 0, "Venus", "eta Vir " },// FAILS
-                // WIKIPEDIA WAS WRONG HERE, 24-12, NOT 16-12. ELONGATION CORRECT
-                //{ 1937, 12, 24, 18, 38, "Mercury", "omi Sgr" },// FAILS
-                //{ 1940, 6, 10, 2, 21, "Mercury", "eps Gem" },// FAILS
-                // 16:15.5 seems better, but still fails
-                //{ 2015, 12, 4, 16, 14, "Mercury", "the oph" },// FAILS
-                // 20:22 seems better, but still fails
-                //{ 2069, 8, 11, 20, 25, "Venus", "Zavijava" },// FAILS
+            // These ones all fail
+            //{ 1837, 7, 11, 12, 50, "Mercury", "eta gem" },// FAILS
+            //{ 1843, 9, 27, 18, 0, "Venus", "eta Vir " },// FAILS
+            // WIKIPEDIA WAS WRONG HERE, 24-12, NOT 16-12. ELONGATION CORRECT
+            //{ 1937, 12, 24, 18, 38, "Mercury", "omi Sgr" },// FAILS
+            //{ 1940, 6, 10, 2, 21, "Mercury", "eps Gem" },// FAILS
+            // 16:15.5 seems better, but still fails
+            //{ 2015, 12, 4, 16, 14, "Mercury", "the oph" },// FAILS
+            // 20:22 seems better, but still fails
+            //{ 2069, 8, 11, 20, 25, "Venus", "Zavijava" },// FAILS
         };
     }
 
@@ -400,25 +402,25 @@ public class TestNG {
     @DataProvider (name = "data_ephemerid_satellites")
     private Object[][] data_ephemerid_satellites() {
         return new Object[][] {
-                // JUPITER
-                { 1997, 4, 24, 3, 56, 21, "Madrid", "Callisto", "Europa", "Total occ" },
-                { 1997, 4, 24, 3, 55, 59, "Bordeaux", "Callisto", "Europa", "Total occ" },
-                { 1997, 5, 12, 2, 37, 34, "Munich", "Callisto", "Ganymede", "Partial occ" },
-                { 1997, 5, 29, 1, 10, 4, "Munich", "Io", "Europa", "Partial ecl" },
-                { 1997, 5, 30, 3, 5, 15, "Paris", "Ganymede", "Io", "Total occ" },
-                { 1997, 5, 31, 0, 30, 6, "Stuttgart", "Ganymede", "Io", "Partial occ" },
-                { 1997, 6, 7, 4, 32, 29, "Tenerife", "Ganymede", "Io", "Partial occ" },
-                { 1997, 6, 18, 1, 4, 39, "Lisboa", "Europa", "Io", "Annular ecl" },
-                { 1997, 6, 25, 3, 17, 9, "Tenerife", "Europa", "Io", "Annular ecl" },
-                { 1997, 6, 30, 5, 39, 48, "New York", "Callisto", "Europa", "Partial ecl" },
-                // There are a lot more!
-                // SATURN
-                { 1995, 8, 13, 22, 14, 42, "Bucharest", "Dione", "Titan", "Partial occ" },
-                { 1995, 8, 15, 3, 25, 9, "Bordeaux", "Dione", "Titan", "Annular occ" },
-                { 1995, 8, 16, 3, 45, 16, "Bordeaux", "Enceladus", "Mimas", "Total occ" },
-                { 1995, 9, 24, 1, 15, 58, "Bordeaux", "Tethys", "Rhea", "Annular ecl" },
-                { 1995, 11, 3, 19, 39, 36, "Bordeaux", "Dione", "Tethys", "Partial ecl" },
-                { 1995, 11, 5, 18, 53, 3, "Bordeaux", "Rhea", "Tethys", "Partial ecl" }
+            // JUPITER
+            { 1997, 4, 24, 3, 56, 21, "Madrid", "Callisto", "Europa", "Total occ" },
+            { 1997, 4, 24, 3, 55, 59, "Bordeaux", "Callisto", "Europa", "Total occ" },
+            { 1997, 5, 12, 2, 37, 34, "Munich", "Callisto", "Ganymede", "Partial occ" },
+            { 1997, 5, 29, 1, 10, 4, "Munich", "Io", "Europa", "Partial ecl" },
+            { 1997, 5, 30, 3, 5, 15, "Paris", "Ganymede", "Io", "Total occ" },
+            { 1997, 5, 31, 0, 30, 6, "Stuttgart", "Ganymede", "Io", "Partial occ" },
+            { 1997, 6, 7, 4, 32, 29, "Tenerife", "Ganymede", "Io", "Partial occ" },
+            { 1997, 6, 18, 1, 4, 39, "Lisboa", "Europa", "Io", "Annular ecl" },
+            { 1997, 6, 25, 3, 17, 9, "Tenerife", "Europa", "Io", "Annular ecl" },
+            { 1997, 6, 30, 5, 39, 48, "New York", "Callisto", "Europa", "Partial ecl" },
+            // There are a lot more!
+            // SATURN
+            { 1995, 8, 13, 22, 14, 42, "Bucharest", "Dione", "Titan", "Partial occ" },
+            { 1995, 8, 15, 3, 25, 9, "Bordeaux", "Dione", "Titan", "Annular occ" },
+            { 1995, 8, 16, 3, 45, 16, "Bordeaux", "Enceladus", "Mimas", "Total occ" },
+            { 1995, 9, 24, 1, 15, 58, "Bordeaux", "Tethys", "Rhea", "Annular ecl" },
+            { 1995, 11, 3, 19, 39, 36, "Bordeaux", "Dione", "Tethys", "Partial ecl" },
+            { 1995, 11, 5, 18, 53, 3, "Bordeaux", "Rhea", "Tethys", "Partial ecl" }
         };
     }
 
@@ -512,13 +514,13 @@ public class TestNG {
     @DataProvider (name = "data_julian_date")
     private Object[][] data_julian_date() {
         return new Object[][] {
-                { 2000, 1, 1, 12, 2451545.0 },
-                { 1987, 6, 19, 12, 2446966.0 },
-                { 1900, 1, 1, 0, 2415020.5 },
-                { 1600, 12, 31, 0, 2305812.5 },
-                { 837, 4, 10, 6, 2026871.75 },
-                { -1001, 7, 12, 12, 1356001.0 },
-                { -4713, 1, 1, 12, 0.0 },
+            { 2000, 1, 1, 12, 2451545.0 },
+            { 1987, 6, 19, 12, 2446966.0 },
+            { 1900, 1, 1, 0, 2415020.5 },
+            { 1600, 12, 31, 0, 2305812.5 },
+            { 837, 4, 10, 6, 2026871.75 },
+            { -1001, 7, 12, 12, 1356001.0 },
+            { -4713, 1, 1, 12, 0.0 },
         };
     }
 
@@ -549,12 +551,12 @@ public class TestNG {
     @DataProvider (name = "data_time_scale")
     private Object[][] data_time_scale() {
         return new Object[][] {
-                //{ new AstroDate(2006, 1, 1, 0, 0, 0), "TT", 0.1 },
-                { 2453736.5d, "TT", 0.1 },
-                { 2453736.540912231, "LT", 0.1 },
-                { 2453736.499249477, "UT1", 0.1207 },
-                { 2453736.499245564, "UTC", 0.1207 },
-                { 2453736.4999999995, "TDB", 0.1 },
+            //{ new AstroDate(2006, 1, 1, 0, 0, 0), "TT", 0.1 },
+            { 2453736.5d, "TT", 0.1 },
+            { 2453736.540912231, "LT", 0.1 },
+            { 2453736.499249477, "UT1", 0.1207 },
+            { 2453736.499245564, "UTC", 0.1207 },
+            { 2453736.4999999995, "TDB", 0.1 },
         };
     }
 
@@ -599,12 +601,12 @@ public class TestNG {
     @DataProvider (name = "data_measure")
     private Object[][] data_measure() {
         return new Object[][] {
-                { 1.0d, 1.0d, "JOHNSON I", "Jy", 967.4004244449982d, 891.0087185132663d, "1000 +/- 900 Jy" },
-                { 968.4004244449982d, 891.0092796748264d, "Jy", "Jy", 968.4004244449982d, 891.0092796748264d, "1000 +/- 900 Jy" },
-                { 0.998878256198762d, 0.9989679984628773d, "JOHNSON I", "JOHNSON I", 0.998878256198762d, 0.9989679984628773d, "1.0 +/- 1.0 JOHNSON I" },
-                { 1.0d, 1.0, "JOHNSON I", "JOHNSON I", 1.0d, 1.0d, "1.0 +/- 1.0 JOHNSON I" },
-                { 968.4004244449982d, 891.0092796748264d, "Jy", "JOHNSON I", 0.998878256198762d, 0.9989679984628772d, "1.0 +/- 1.0 JOHNSON I" },
-                { 0.998878256198762d, 0.9989679984628773d, "JOHNSON I", "Jy", 968.4004244449982d, 891.0092796748264d, "1000 +/- 900 Jy" }
+            { 1.0d, 1.0d, "JOHNSON I", "Jy", 967.4004244449982d, 891.0087185132663d, "1000 +/- 900 Jy" },
+            { 968.4004244449982d, 891.0092796748264d, "Jy", "Jy", 968.4004244449982d, 891.0092796748264d, "1000 +/- 900 Jy" },
+            { 0.998878256198762d, 0.9989679984628773d, "JOHNSON I", "JOHNSON I", 0.998878256198762d, 0.9989679984628773d, "1.0 +/- 1.0 JOHNSON I" },
+            { 1.0d, 1.0, "JOHNSON I", "JOHNSON I", 1.0d, 1.0d, "1.0 +/- 1.0 JOHNSON I" },
+            { 968.4004244449982d, 891.0092796748264d, "Jy", "JOHNSON I", 0.998878256198762d, 0.9989679984628772d, "1.0 +/- 1.0 JOHNSON I" },
+            { 0.998878256198762d, 0.9989679984628773d, "JOHNSON I", "Jy", 968.4004244449982d, 891.0092796748264d, "1000 +/- 900 Jy" }
         };
     }
 
@@ -650,268 +652,292 @@ public class TestNG {
     @DataProvider (name = "data_calendar")
     private Object[][] data_calendar() {
         return new Object[][] {
-                { new Gregorian(2000, 1, 2).toJulianDay(),
-                        new Gregorian(2000, 1, 2).toJulianDay(),
-                        new Julian(1999, 12, 20).toJulianDay(),
-                        new Hebrew(5760, 10, 24).toJulianDay(),
-                        new Coptic(1716, 4, 23).toJulianDay(),
-                        new Ethiopic(1992, 4, 23).toJulianDay(),
-                        new Persian(1378, 10, 12).toJulianDay(),
-                        new Islamic(1420, 9, 25).toJulianDay(),
-                        new HinduSolar(1921, 9, 18).toJulianDay(),
+                { new Gregorian(2000, 1, 2),
+                        new Gregorian(2000, 1, 2),
+                        new Julian(1999, 12, 20),
+                        new Hebrew(5760, 10, 24),
+                        new Coptic(1716, 4, 23),
+                        new Ethiopic(1992, 4, 23),
+                        new Persian(1378, 10, 12),
+                        new Islamic(1420, 9, 25),
+                        new HinduSolar(1921, 9, 18),
                 },
-                { new Gregorian(1901, 12, 29).toJulianDay(),
-                        new Gregorian(1901, 12, 29).toJulianDay(),
-                        new Julian(1901, 12, 16).toJulianDay(),
-                        new Hebrew(5662, 10, 19).toJulianDay(),
-                        new Coptic(1618, 4, 20).toJulianDay(),
-                        new Ethiopic(1894, 4, 20).toJulianDay(),
-                        new Persian(1280, 10, 8).toJulianDay(),
-                        new Islamic(1319, 9, 18).toJulianDay(),
-                        new HinduSolar(1823, 9, 15).toJulianDay(),
+                { new Gregorian(1901, 12, 29),
+                        new Gregorian(1901, 12, 29),
+                        new Julian(1901, 12, 16),
+                        new Hebrew(5662, 10, 19),
+                        new Coptic(1618, 4, 20),
+                        new Ethiopic(1894, 4, 20),
+                        new Persian(1280, 10, 8),
+                        new Islamic(1319, 9, 18),
+                        new HinduSolar(1823, 9, 15),
                 },
-                { new Gregorian(2101, 1, 1).toJulianDay(),
-                        new Gregorian(2101, 1, 1).toJulianDay(),
-                        new Julian(2100, 12, 18).toJulianDay(),
-                        new Hebrew(5861, 9, 30).toJulianDay(),
-                        new Coptic(1817, 4, 22).toJulianDay(),
-                        new Ethiopic(2093, 4, 22).toJulianDay(),
-                        new Persian(1479, 10, 11).toJulianDay(),
-                        new Islamic(1524, 11, 1).toJulianDay(),
-                        new HinduSolar(2022, 9, 16).toJulianDay(),
+                { new Gregorian(2101, 1, 1),
+                        new Gregorian(2101, 1, 1),
+                        new Julian(2100, 12, 18),
+                        new Hebrew(5861, 9, 30),
+                        new Coptic(1817, 4, 22),
+                        new Ethiopic(2093, 4, 22),
+                        new Persian(1479, 10, 11),
+                        new Islamic(1524, 11, 1),
+                        new HinduSolar(2022, 9, 16),
                 },
-                { new Julian(1999, 12, 20).toJulianDay(),
-                        new Gregorian(2000, 1, 2).toJulianDay(),
-                        new Julian(1999, 12, 20).toJulianDay(),
-                        new Hebrew(5760, 10, 24).toJulianDay(),
-                        new Coptic(1716, 4, 23).toJulianDay(),
-                        new Ethiopic(1992, 4, 23).toJulianDay(),
-                        new Persian(1378, 10, 12).toJulianDay(),
-                        new Islamic(1420, 9, 25).toJulianDay(),
-                        new HinduSolar(1921, 9, 18).toJulianDay(),
+                { new Julian(1999, 12, 20),
+                        new Gregorian(2000, 1, 2),
+                        new Julian(1999, 12, 20),
+                        new Hebrew(5760, 10, 24),
+                        new Coptic(1716, 4, 23),
+                        new Ethiopic(1992, 4, 23),
+                        new Persian(1378, 10, 12),
+                        new Islamic(1420, 9, 25),
+                        new HinduSolar(1921, 9, 18),
                 },
-                { new Julian(1901, 12, 16).toJulianDay(),
-                        new Gregorian(1901, 12, 29).toJulianDay(),
-                        new Julian(1901, 12, 16).toJulianDay(),
-                        new Hebrew(5662, 10, 19).toJulianDay(),
-                        new Coptic(1618, 4, 20).toJulianDay(),
-                        new Ethiopic(1894, 4, 20).toJulianDay(),
-                        new Persian(1280, 10, 8).toJulianDay(),
-                        new Islamic(1319, 9, 18).toJulianDay(),
-                        new HinduSolar(1823, 9, 15).toJulianDay(),
+                { new Julian(1901, 12, 16),
+                        new Gregorian(1901, 12, 29),
+                        new Julian(1901, 12, 16),
+                        new Hebrew(5662, 10, 19),
+                        new Coptic(1618, 4, 20),
+                        new Ethiopic(1894, 4, 20),
+                        new Persian(1280, 10, 8),
+                        new Islamic(1319, 9, 18),
+                        new HinduSolar(1823, 9, 15),
                 },
-                { new Julian(2100, 12, 18).toJulianDay(),
-                        new Gregorian(2101, 1, 1).toJulianDay(),
-                        new Julian(2100, 12, 18).toJulianDay(),
-                        new Hebrew(5861, 9, 30).toJulianDay(),
-                        new Coptic(1817, 4, 22).toJulianDay(),
-                        new Ethiopic(2093, 4, 22).toJulianDay(),
-                        new Persian(1479, 10, 11).toJulianDay(),
-                        new Islamic(1524, 11, 1).toJulianDay(),
-                        new HinduSolar(2022, 9, 16).toJulianDay(),
+                { new Julian(2100, 12, 18),
+                        new Gregorian(2101, 1, 1),
+                        new Julian(2100, 12, 18),
+                        new Hebrew(5861, 9, 30),
+                        new Coptic(1817, 4, 22),
+                        new Ethiopic(2093, 4, 22),
+                        new Persian(1479, 10, 11),
+                        new Islamic(1524, 11, 1),
+                        new HinduSolar(2022, 9, 16),
                 },
-                { new Hebrew(5760, 10, 24).toJulianDay(),
-                        new Gregorian(2000, 1, 2).toJulianDay(),
-                        new Julian(1999, 12, 20).toJulianDay(),
-                        new Hebrew(5760, 10, 24).toJulianDay(),
-                        new Coptic(1716, 4, 23).toJulianDay(),
-                        new Ethiopic(1992, 4, 23).toJulianDay(),
-                        new Persian(1378, 10, 12).toJulianDay(),
-                        new Islamic(1420, 9, 25).toJulianDay(),
-                        new HinduSolar(1921, 9, 18).toJulianDay(),
+                { new Hebrew(5760, 10, 24),
+                        new Gregorian(2000, 1, 2),
+                        new Julian(1999, 12, 20),
+                        new Hebrew(5760, 10, 24),
+                        new Coptic(1716, 4, 23),
+                        new Ethiopic(1992, 4, 23),
+                        new Persian(1378, 10, 12),
+                        new Islamic(1420, 9, 25),
+                        new HinduSolar(1921, 9, 18),
                 },
-                { new Hebrew(5662, 10, 19).toJulianDay(),
-                        new Gregorian(1901, 12, 29).toJulianDay(),
-                        new Julian(1901, 12, 16).toJulianDay(),
-                        new Hebrew(5662, 10, 19).toJulianDay(),
-                        new Coptic(1618, 4, 20).toJulianDay(),
-                        new Ethiopic(1894, 4, 20).toJulianDay(),
-                        new Persian(1280, 10, 8).toJulianDay(),
-                        new Islamic(1319, 9, 18).toJulianDay(),
-                        new HinduSolar(1823, 9, 15).toJulianDay(),
+                { new Hebrew(5662, 10, 19),
+                        new Gregorian(1901, 12, 29),
+                        new Julian(1901, 12, 16),
+                        new Hebrew(5662, 10, 19),
+                        new Coptic(1618, 4, 20),
+                        new Ethiopic(1894, 4, 20),
+                        new Persian(1280, 10, 8),
+                        new Islamic(1319, 9, 18),
+                        new HinduSolar(1823, 9, 15),
                 },
-                { new Hebrew(5861, 9, 30).toJulianDay(),
-                        new Gregorian(2101, 1, 1).toJulianDay(),
-                        new Julian(2100, 12, 18).toJulianDay(),
-                        new Hebrew(5861, 9, 30).toJulianDay(),
-                        new Coptic(1817, 4, 22).toJulianDay(),
-                        new Ethiopic(2093, 4, 22).toJulianDay(),
-                        new Persian(1479, 10, 11).toJulianDay(),
-                        new Islamic(1524, 11, 1).toJulianDay(),
-                        new HinduSolar(2022, 9, 16).toJulianDay(),
+                { new Hebrew(5861, 9, 30),
+                        new Gregorian(2101, 1, 1),
+                        new Julian(2100, 12, 18),
+                        new Hebrew(5861, 9, 30),
+                        new Coptic(1817, 4, 22),
+                        new Ethiopic(2093, 4, 22),
+                        new Persian(1479, 10, 11),
+                        new Islamic(1524, 11, 1),
+                        new HinduSolar(2022, 9, 16),
                 },
-                { new Coptic(1716, 4, 23).toJulianDay(),
-                        new Gregorian(2000, 1, 2).toJulianDay(),
-                        new Julian(1999, 12, 20).toJulianDay(),
-                        new Hebrew(5760, 10, 24).toJulianDay(),
-                        new Coptic(1716, 4, 23).toJulianDay(),
-                        new Ethiopic(1992, 4, 23).toJulianDay(),
-                        new Persian(1378, 10, 12).toJulianDay(),
-                        new Islamic(1420, 9, 25).toJulianDay(),
-                        new HinduSolar(1921, 9, 18).toJulianDay(),
+                { new Coptic(1716, 4, 23),
+                        new Gregorian(2000, 1, 2),
+                        new Julian(1999, 12, 20),
+                        new Hebrew(5760, 10, 24),
+                        new Coptic(1716, 4, 23),
+                        new Ethiopic(1992, 4, 23),
+                        new Persian(1378, 10, 12),
+                        new Islamic(1420, 9, 25),
+                        new HinduSolar(1921, 9, 18),
                 },
-                { new Coptic(1618, 4, 20).toJulianDay(),
-                        new Gregorian(1901, 12, 29).toJulianDay(),
-                        new Julian(1901, 12, 16).toJulianDay(),
-                        new Hebrew(5662, 10, 19).toJulianDay(),
-                        new Coptic(1618, 4, 20).toJulianDay(),
-                        new Ethiopic(1894, 4, 20).toJulianDay(),
-                        new Persian(1280, 10, 8).toJulianDay(),
-                        new Islamic(1319, 9, 18).toJulianDay(),
-                        new HinduSolar(1823, 9, 15).toJulianDay(),
+                { new Coptic(1618, 4, 20),
+                        new Gregorian(1901, 12, 29),
+                        new Julian(1901, 12, 16),
+                        new Hebrew(5662, 10, 19),
+                        new Coptic(1618, 4, 20),
+                        new Ethiopic(1894, 4, 20),
+                        new Persian(1280, 10, 8),
+                        new Islamic(1319, 9, 18),
+                        new HinduSolar(1823, 9, 15),
                 },
-                { new Coptic(1817, 4, 22).toJulianDay(),
-                        new Gregorian(2101, 1, 1).toJulianDay(),
-                        new Julian(2100, 12, 18).toJulianDay(),
-                        new Hebrew(5861, 9, 30).toJulianDay(),
-                        new Coptic(1817, 4, 22).toJulianDay(),
-                        new Ethiopic(2093, 4, 22).toJulianDay(),
-                        new Persian(1479, 10, 11).toJulianDay(),
-                        new Islamic(1524, 11, 1).toJulianDay(),
-                        new HinduSolar(2022, 9, 16).toJulianDay(),
+                { new Coptic(1817, 4, 22),
+                        new Gregorian(2101, 1, 1),
+                        new Julian(2100, 12, 18),
+                        new Hebrew(5861, 9, 30),
+                        new Coptic(1817, 4, 22),
+                        new Ethiopic(2093, 4, 22),
+                        new Persian(1479, 10, 11),
+                        new Islamic(1524, 11, 1),
+                        new HinduSolar(2022, 9, 16),
                 },
-                { new Ethiopic(1992, 4, 23).toJulianDay(),
-                        new Gregorian(2000, 1, 2).toJulianDay(),
-                        new Julian(1999, 12, 20).toJulianDay(),
-                        new Hebrew(5760, 10, 24).toJulianDay(),
-                        new Coptic(1716, 4, 23).toJulianDay(),
-                        new Ethiopic(1992, 4, 23).toJulianDay(),
-                        new Persian(1378, 10, 12).toJulianDay(),
-                        new Islamic(1420, 9, 25).toJulianDay(),
-                        new HinduSolar(1921, 9, 18).toJulianDay(),
+                { new Ethiopic(1992, 4, 23),
+                        new Gregorian(2000, 1, 2),
+                        new Julian(1999, 12, 20),
+                        new Hebrew(5760, 10, 24),
+                        new Coptic(1716, 4, 23),
+                        new Ethiopic(1992, 4, 23),
+                        new Persian(1378, 10, 12),
+                        new Islamic(1420, 9, 25),
+                        new HinduSolar(1921, 9, 18),
                 },
-                { new Ethiopic(1894, 4, 20).toJulianDay(),
-                        new Gregorian(1901, 12, 29).toJulianDay(),
-                        new Julian(1901, 12, 16).toJulianDay(),
-                        new Hebrew(5662, 10, 19).toJulianDay(),
-                        new Coptic(1618, 4, 20).toJulianDay(),
-                        new Ethiopic(1894, 4, 20).toJulianDay(),
-                        new Persian(1280, 10, 8).toJulianDay(),
-                        new Islamic(1319, 9, 18).toJulianDay(),
-                        new HinduSolar(1823, 9, 15).toJulianDay(),
+                { new Ethiopic(1894, 4, 20),
+                        new Gregorian(1901, 12, 29),
+                        new Julian(1901, 12, 16),
+                        new Hebrew(5662, 10, 19),
+                        new Coptic(1618, 4, 20),
+                        new Ethiopic(1894, 4, 20),
+                        new Persian(1280, 10, 8),
+                        new Islamic(1319, 9, 18),
+                        new HinduSolar(1823, 9, 15),
                 },
-                { new Ethiopic(2093, 4, 22).toJulianDay(),
-                        new Gregorian(2101, 1, 1).toJulianDay(),
-                        new Julian(2100, 12, 18).toJulianDay(),
-                        new Hebrew(5861, 9, 30).toJulianDay(),
-                        new Coptic(1817, 4, 22).toJulianDay(),
-                        new Ethiopic(2093, 4, 22).toJulianDay(),
-                        new Persian(1479, 10, 11).toJulianDay(),
-                        new Islamic(1524, 11, 1).toJulianDay(),
-                        new HinduSolar(2022, 9, 16).toJulianDay(),
+                { new Ethiopic(2093, 4, 22),
+                        new Gregorian(2101, 1, 1),
+                        new Julian(2100, 12, 18),
+                        new Hebrew(5861, 9, 30),
+                        new Coptic(1817, 4, 22),
+                        new Ethiopic(2093, 4, 22),
+                        new Persian(1479, 10, 11),
+                        new Islamic(1524, 11, 1),
+                        new HinduSolar(2022, 9, 16),
                 },
-                { new Persian(1378, 10, 12).toJulianDay(),
-                        new Gregorian(2000, 1, 2).toJulianDay(),
-                        new Julian(1999, 12, 20).toJulianDay(),
-                        new Hebrew(5760, 10, 24).toJulianDay(),
-                        new Coptic(1716, 4, 23).toJulianDay(),
-                        new Ethiopic(1992, 4, 23).toJulianDay(),
-                        new Persian(1378, 10, 12).toJulianDay(),
-                        new Islamic(1420, 9, 25).toJulianDay(),
-                        new HinduSolar(1921, 9, 18).toJulianDay(),
+                { new Persian(1378, 10, 12),
+                        new Gregorian(2000, 1, 2),
+                        new Julian(1999, 12, 20),
+                        new Hebrew(5760, 10, 24),
+                        new Coptic(1716, 4, 23),
+                        new Ethiopic(1992, 4, 23),
+                        new Persian(1378, 10, 12),
+                        new Islamic(1420, 9, 25),
+                        new HinduSolar(1921, 9, 18),
                 },
-                { new Persian(1280, 10, 8).toJulianDay(),
-                        new Gregorian(1901, 12, 29).toJulianDay(),
-                        new Julian(1901, 12, 16).toJulianDay(),
-                        new Hebrew(5662, 10, 19).toJulianDay(),
-                        new Coptic(1618, 4, 20).toJulianDay(),
-                        new Ethiopic(1894, 4, 20).toJulianDay(),
-                        new Persian(1280, 10, 8).toJulianDay(),
-                        new Islamic(1319, 9, 18).toJulianDay(),
-                        new HinduSolar(1823, 9, 15).toJulianDay(),
+                { new Persian(1280, 10, 8),
+                        new Gregorian(1901, 12, 29),
+                        new Julian(1901, 12, 16),
+                        new Hebrew(5662, 10, 19),
+                        new Coptic(1618, 4, 20),
+                        new Ethiopic(1894, 4, 20),
+                        new Persian(1280, 10, 8),
+                        new Islamic(1319, 9, 18),
+                        new HinduSolar(1823, 9, 15),
                 },
-                { new Persian(1479, 10, 11).toJulianDay(),
-                        new Gregorian(2101, 1, 1).toJulianDay(),
-                        new Julian(2100, 12, 18).toJulianDay(),
-                        new Hebrew(5861, 9, 30).toJulianDay(),
-                        new Coptic(1817, 4, 22).toJulianDay(),
-                        new Ethiopic(2093, 4, 22).toJulianDay(),
-                        new Persian(1479, 10, 11).toJulianDay(),
-                        new Islamic(1524, 11, 1).toJulianDay(),
-                        new HinduSolar(2022, 9, 16).toJulianDay(),
+                { new Persian(1479, 10, 11),
+                        new Gregorian(2101, 1, 1),
+                        new Julian(2100, 12, 18),
+                        new Hebrew(5861, 9, 30),
+                        new Coptic(1817, 4, 22),
+                        new Ethiopic(2093, 4, 22),
+                        new Persian(1479, 10, 11),
+                        new Islamic(1524, 11, 1),
+                        new HinduSolar(2022, 9, 16),
                 },
-                { new Islamic(1420, 9, 25).toJulianDay(),
-                        new Gregorian(2000, 1, 2).toJulianDay(),
-                        new Julian(1999, 12, 20).toJulianDay(),
-                        new Hebrew(5760, 10, 24).toJulianDay(),
-                        new Coptic(1716, 4, 23).toJulianDay(),
-                        new Ethiopic(1992, 4, 23).toJulianDay(),
-                        new Persian(1378, 10, 12).toJulianDay(),
-                        new Islamic(1420, 9, 25).toJulianDay(),
-                        new HinduSolar(1921, 9, 18).toJulianDay(),
+                { new Islamic(1420, 9, 25),
+                        new Gregorian(2000, 1, 2),
+                        new Julian(1999, 12, 20),
+                        new Hebrew(5760, 10, 24),
+                        new Coptic(1716, 4, 23),
+                        new Ethiopic(1992, 4, 23),
+                        new Persian(1378, 10, 12),
+                        new Islamic(1420, 9, 25),
+                        new HinduSolar(1921, 9, 18),
                 },
-                { new Islamic(1319, 9, 18).toJulianDay(),
-                        new Gregorian(1901, 12, 29).toJulianDay(),
-                        new Julian(1901, 12, 16).toJulianDay(),
-                        new Hebrew(5662, 10, 19).toJulianDay(),
-                        new Coptic(1618, 4, 20).toJulianDay(),
-                        new Ethiopic(1894, 4, 20).toJulianDay(),
-                        new Persian(1280, 10, 8).toJulianDay(),
-                        new Islamic(1319, 9, 18).toJulianDay(),
-                        new HinduSolar(1823, 9, 15).toJulianDay(),
+                { new Islamic(1319, 9, 18),
+                        new Gregorian(1901, 12, 29),
+                        new Julian(1901, 12, 16),
+                        new Hebrew(5662, 10, 19),
+                        new Coptic(1618, 4, 20),
+                        new Ethiopic(1894, 4, 20),
+                        new Persian(1280, 10, 8),
+                        new Islamic(1319, 9, 18),
+                        new HinduSolar(1823, 9, 15),
                 },
-                { new Islamic(1524, 11, 1).toJulianDay(),
-                        new Gregorian(2101, 1, 1).toJulianDay(),
-                        new Julian(2100, 12, 18).toJulianDay(),
-                        new Hebrew(5861, 9, 30).toJulianDay(),
-                        new Coptic(1817, 4, 22).toJulianDay(),
-                        new Ethiopic(2093, 4, 22).toJulianDay(),
-                        new Persian(1479, 10, 11).toJulianDay(),
-                        new Islamic(1524, 11, 1).toJulianDay(),
-                        new HinduSolar(2022, 9, 16).toJulianDay(),
+                { new Islamic(1524, 11, 1),
+                        new Gregorian(2101, 1, 1),
+                        new Julian(2100, 12, 18),
+                        new Hebrew(5861, 9, 30),
+                        new Coptic(1817, 4, 22),
+                        new Ethiopic(2093, 4, 22),
+                        new Persian(1479, 10, 11),
+                        new Islamic(1524, 11, 1),
+                        new HinduSolar(2022, 9, 16),
                 },
-                { new HinduSolar(1921, 9, 18).toJulianDay(),
-                        new Gregorian(2000, 1, 2).toJulianDay(),
-                        new Julian(1999, 12, 20).toJulianDay(),
-                        new Hebrew(5760, 10, 24).toJulianDay(),
-                        new Coptic(1716, 4, 23).toJulianDay(),
-                        new Ethiopic(1992, 4, 23).toJulianDay(),
-                        new Persian(1378, 10, 12).toJulianDay(),
-                        new Islamic(1420, 9, 25).toJulianDay(),
-                        new HinduSolar(1921, 9, 18).toJulianDay(),
+                { new HinduSolar(1921, 9, 18),
+                        new Gregorian(2000, 1, 2),
+                        new Julian(1999, 12, 20),
+                        new Hebrew(5760, 10, 24),
+                        new Coptic(1716, 4, 23),
+                        new Ethiopic(1992, 4, 23),
+                        new Persian(1378, 10, 12),
+                        new Islamic(1420, 9, 25),
+                        new HinduSolar(1921, 9, 18),
                 },
-                { new HinduSolar(1823, 9, 15).toJulianDay(),
-                        new Gregorian(1901, 12, 29).toJulianDay(),
-                        new Julian(1901, 12, 16).toJulianDay(),
-                        new Hebrew(5662, 10, 19).toJulianDay(),
-                        new Coptic(1618, 4, 20).toJulianDay(),
-                        new Ethiopic(1894, 4, 20).toJulianDay(),
-                        new Persian(1280, 10, 8).toJulianDay(),
-                        new Islamic(1319, 9, 18).toJulianDay(),
-                        new HinduSolar(1823, 9, 15).toJulianDay(),
+                { new HinduSolar(1823, 9, 15),
+                        new Gregorian(1901, 12, 29),
+                        new Julian(1901, 12, 16),
+                        new Hebrew(5662, 10, 19),
+                        new Coptic(1618, 4, 20),
+                        new Ethiopic(1894, 4, 20),
+                        new Persian(1280, 10, 8),
+                        new Islamic(1319, 9, 18),
+                        new HinduSolar(1823, 9, 15),
                 },
-                { new HinduSolar(2022, 9, 16).toJulianDay(),
-                        new Gregorian(2101, 1, 1).toJulianDay(),
-                        new Julian(2100, 12, 18).toJulianDay(),
-                        new Hebrew(5861, 9, 30).toJulianDay(),
-                        new Coptic(1817, 4, 22).toJulianDay(),
-                        new Ethiopic(2093, 4, 22).toJulianDay(),
-                        new Persian(1479, 10, 11).toJulianDay(),
-                        new Islamic(1524, 11, 1).toJulianDay(),
-                        new HinduSolar(2022, 9, 16).toJulianDay(),
+                { new HinduSolar(2022, 9, 16),
+                        new Gregorian(2101, 1, 1),
+                        new Julian(2100, 12, 18),
+                        new Hebrew(5861, 9, 30),
+                        new Coptic(1817, 4, 22),
+                        new Ethiopic(2093, 4, 22),
+                        new Persian(1479, 10, 11),
+                        new Islamic(1524, 11, 1),
+                        new HinduSolar(2022, 9, 16),
                 },
         };
     }
 
     @Test (dataProvider = "data_calendar")
     public void testCalendar(
-            final int jd,
-            final int jdGregorian,
-            final int jdJulian,
-            final int jdHebrew,
-            final int jdCoptic,
-            final int jdEthiopic,
-            final int jdPersian,
-            final int jdIslamic,
-            final int jdHinduSolar) {
-        assertEquals(jdGregorian, jd);
-        assertEquals(jdJulian, jd);
-        assertEquals(jdHebrew, jd);
-        assertEquals(jdCoptic, jd);
-        assertEquals(jdEthiopic, jd);
-        assertEquals(jdPersian, jd);
-        assertEquals(jdIslamic, jd);
-        assertEquals(jdHinduSolar, jd);
+            final BaseCalendar base,
+            final BaseCalendar gregorian,
+            final BaseCalendar julian,
+            final BaseCalendar hebrew,
+            final BaseCalendar coptic,
+            final BaseCalendar ethiopic,
+            final BaseCalendar persian,
+            final BaseCalendar islamic,
+            final BaseCalendar hinduSolar)
+    {
+        assertEquals(gregorian, base);
+        //assertEquals(gregorian.getFixed(), base.getFixed());
+        //assertEquals(gregorian.getJulianDate(), base.getJulianDate());
+
+        assertEquals(julian, base);
+        //assertEquals(julian.getFixed(), base.getFixed());
+        //assertEquals(julian.getJulianDate(), base.getJulianDate());
+
+        assertEquals(hebrew, base);
+        //assertEquals(hebrew.getFixed(), base.getFixed());
+        //assertEquals(hebrew.getJulianDate(), base.getJulianDate());
+
+        assertEquals(coptic, base);
+        //assertEquals(coptic.getFixed(), base.getFixed());
+        //assertEquals(coptic.getJulianDate(), base.getJulianDate());
+
+        assertEquals(ethiopic, base);
+        //assertEquals(ethiopic.getFixed(), base.getFixed());
+        //assertEquals(ethiopic.getJulianDate(), base.getJulianDate());
+
+        assertEquals(persian, base);
+        //assertEquals(persian.getFixed(), base.getFixed());
+        //assertEquals(persian.getJulianDate(), base.getJulianDate());
+
+        assertEquals(islamic, base);
+        //assertEquals(islamic.getFixed(), base.getFixed());
+        //assertEquals(islamic.getJulianDate(), base.getJulianDate());
+
+        assertEquals(hinduSolar, base);
+        //assertEquals(hinduSolar.getFixed(), base.getFixed());
+        //assertEquals(hinduSolar.getJulianDate(), base.getJulianDate());
     }
 
     /*
@@ -927,14 +953,14 @@ public class TestNG {
     @DataProvider (name = "data_geodetic")
     private Object[][] data_geodetic() {
         return new Object[][] {
-                { 0.0d, 1000, "geodetic", ELLIPSOID.WGS84, 0.0d, 0.0d },
-                { 45.0, 1000, "geodetic", ELLIPSOID.WGS84, 0.0d, 44.8076d },
-                { 45.1921d, 1000, "geodetic", ELLIPSOID.WGS84, 0.0d, 44.9997d },
-                { 90.0d, 1000, "geodetic", ELLIPSOID.WGS84, 0.0d, 90.0d },
-                { 0.0d, 1000, "geocentric", ELLIPSOID.WGS84, 0.0d, 0.0d },
-                { 44.8076d, 1000, "geocentric", ELLIPSOID.WGS84, 0.0d, 44.9997d },
-                { 45.0d, 1000, "geocentric", ELLIPSOID.WGS84, 0.0d, 45.19207d },
-                { 90.0d, 1000, "geocentric", ELLIPSOID.WGS84, 0.0d, 90.0d },
+            { 0.0d, 1000, "geodetic", ELLIPSOID.WGS84, 0.0d, 0.0d },
+            { 45.0, 1000, "geodetic", ELLIPSOID.WGS84, 0.0d, 44.8076d },
+            { 45.1921d, 1000, "geodetic", ELLIPSOID.WGS84, 0.0d, 44.9997d },
+            { 90.0d, 1000, "geodetic", ELLIPSOID.WGS84, 0.0d, 90.0d },
+            { 0.0d, 1000, "geocentric", ELLIPSOID.WGS84, 0.0d, 0.0d },
+            { 44.8076d, 1000, "geocentric", ELLIPSOID.WGS84, 0.0d, 44.9997d },
+            { 45.0d, 1000, "geocentric", ELLIPSOID.WGS84, 0.0d, 45.19207d },
+            { 90.0d, 1000, "geocentric", ELLIPSOID.WGS84, 0.0d, 90.0d },
         };
     }
 
@@ -1122,30 +1148,30 @@ public class TestNG {
                     assertEquals(indexActual, indexExpected);
 
                     final double diffs[] = {
-                            Functions.normalizeRadians(ephems[j].longitudeOfCentralMeridian) - Functions.normalizeRadians(meridianLongitude * Constant.DEG_TO_RAD),
-                            Functions.normalizeRadians(ephems[j].positionAngleOfPole) - Functions.normalizeRadians(poleAngle * Constant.DEG_TO_RAD),
-                            Functions.normalizeRadians(ephems[j].subsolarLongitude) - Functions.normalizeRadians(subsolarLongitude * Constant.DEG_TO_RAD),
-                            Functions.normalizeRadians(ephems[j].subsolarLatitude) - Functions.normalizeRadians(subsolarLatitude * Constant.DEG_TO_RAD),
-                            ephems[j].distanceFromSun - distanceFromSun,
-                            ephems[j].distance - distance,
-                            Math.abs(ephems[j].elongation) - Math.abs(elongation) * Constant.DEG_TO_RAD,
-                            Math.abs(ephems[j].phaseAngle) - Math.abs(phaseAngle) * Constant.DEG_TO_RAD
+                        Functions.normalizeRadians(ephems[j].longitudeOfCentralMeridian) - Functions.normalizeRadians(meridianLongitude * Constant.DEG_TO_RAD),
+                        Functions.normalizeRadians(ephems[j].positionAngleOfPole) - Functions.normalizeRadians(poleAngle * Constant.DEG_TO_RAD),
+                        Functions.normalizeRadians(ephems[j].subsolarLongitude) - Functions.normalizeRadians(subsolarLongitude * Constant.DEG_TO_RAD),
+                        Functions.normalizeRadians(ephems[j].subsolarLatitude) - Functions.normalizeRadians(subsolarLatitude * Constant.DEG_TO_RAD),
+                        ephems[j].distanceFromSun - distanceFromSun,
+                        ephems[j].distance - distance,
+                        Math.abs(ephems[j].elongation) - Math.abs(elongation) * Constant.DEG_TO_RAD,
+                        Math.abs(ephems[j].phaseAngle) - Math.abs(phaseAngle) * Constant.DEG_TO_RAD
                     };
 
                     final String fields[] = {
-                            "longitude of central meridian", "position angle of pole", "subsolar longitude", "subsolar latitude",
-                            "distance from Sun", "distance to observer", "elongation", "phase angle", "constellation"
+                        "longitude of central meridian", "position angle of pole", "subsolar longitude", "subsolar latitude",
+                        "distance from Sun", "distance to observer", "elongation", "phase angle", "constellation"
                     };
 
                     final double acceptableDiffs[] = {
-                            1.0 * Constant.DEG_TO_RAD, // JPL is giving slightly wrong results ?
-                            0.05 * Constant.DEG_TO_RAD,
-                            1.0 * Constant.DEG_TO_RAD,
-                            0.05 * Constant.DEG_TO_RAD,
-                            1.0e-5,
-                            1.0e-5,
-                            0.015 * Constant.DEG_TO_RAD,
-                            0.015 * Constant.DEG_TO_RAD
+                        1.0 * Constant.DEG_TO_RAD, // JPL is giving slightly wrong results ?
+                        0.05 * Constant.DEG_TO_RAD,
+                        1.0 * Constant.DEG_TO_RAD,
+                        0.05 * Constant.DEG_TO_RAD,
+                        1.0e-5,
+                        1.0e-5,
+                        0.015 * Constant.DEG_TO_RAD,
+                        0.015 * Constant.DEG_TO_RAD
                     };
 
                     if (TARGET.SATURN == body || TARGET.Phobos == body || TARGET.Titan == body) {
@@ -1317,12 +1343,12 @@ public class TestNG {
         if ("l1".equals(theory)) {
             double e[] = L1.L1_theory(jd, which);
             foundValues = new double[] {
-                    Functions.roundToPlace(e[0], -12),
-                    Functions.roundToPlace(e[1], -12),
-                    Functions.roundToPlace(e[2], -12),
-                    Functions.roundToPlace(e[3], -12),
-                    Functions.roundToPlace(e[4], -12),
-                    Functions.roundToPlace(e[5], -12)
+                Functions.roundToPlace(e[0], -12),
+                Functions.roundToPlace(e[1], -12),
+                Functions.roundToPlace(e[2], -12),
+                Functions.roundToPlace(e[3], -12),
+                Functions.roundToPlace(e[4], -12),
+                Functions.roundToPlace(e[5], -12)
             };
 
             epsilon = 0.000000000001;
@@ -1331,12 +1357,12 @@ public class TestNG {
         if ("mars07".equals(theory)) {
             double e[] = Mars07.getMoonPosition(jd, which, true);
             foundValues = new double[] {
-                    Functions.roundToPlace(e[0], -12),
-                    Functions.roundToPlace(e[1], -12),
-                    Functions.roundToPlace(e[2], -12),
-                    Functions.roundToPlace(e[3], -12),
-                    Functions.roundToPlace(e[4], -12),
-                    Functions.roundToPlace(e[5], -12)
+                Functions.roundToPlace(e[0], -12),
+                Functions.roundToPlace(e[1], -12),
+                Functions.roundToPlace(e[2], -12),
+                Functions.roundToPlace(e[3], -12),
+                Functions.roundToPlace(e[4], -12),
+                Functions.roundToPlace(e[5], -12)
             };
             epsilon = 3.4e-5;
         }
@@ -1344,12 +1370,12 @@ public class TestNG {
         if ("gust86".equals(theory)) {
             double e[] = GUST86.GUST86_theory(jd, which, 4); // B1950
             foundValues = new double[] {
-                    Functions.roundToPlace(e[0] * Constant.AU, -3),
-                    Functions.roundToPlace(e[1] * Constant.AU, -3),
-                    Functions.roundToPlace(e[2] * Constant.AU, -3),
-                    Functions.roundToPlace(e[3] * Constant.AU / Constant.SECONDS_PER_DAY, -8),
-                    Functions.roundToPlace(e[4] * Constant.AU / Constant.SECONDS_PER_DAY, -8),
-                    Functions.roundToPlace(e[5] * Constant.AU / Constant.SECONDS_PER_DAY, -8)
+                Functions.roundToPlace(e[0] * Constant.AU, -3),
+                Functions.roundToPlace(e[1] * Constant.AU, -3),
+                Functions.roundToPlace(e[2] * Constant.AU, -3),
+                Functions.roundToPlace(e[3] * Constant.AU / Constant.SECONDS_PER_DAY, -8),
+                Functions.roundToPlace(e[4] * Constant.AU / Constant.SECONDS_PER_DAY, -8),
+                Functions.roundToPlace(e[5] * Constant.AU / Constant.SECONDS_PER_DAY, -8)
             };
             epsilon = 0.00000001;
         }
@@ -1357,12 +1383,12 @@ public class TestNG {
         if ("tass1.7".equals(theory)) {
             double e[] = TASS17.TASS17_theory(jd, which, false);
             foundValues = new double[] {
-                    Functions.roundToPlace(e[0], -12),
-                    Functions.roundToPlace(e[1], -12),
-                    Functions.roundToPlace(e[2], -12),
-                    Functions.roundToPlace(e[3] * 365.25, -9),
-                    Functions.roundToPlace(e[4] * 365.25, -9),
-                    Functions.roundToPlace(e[5] * 365.25, -9)
+                Functions.roundToPlace(e[0], -12),
+                Functions.roundToPlace(e[1], -12),
+                Functions.roundToPlace(e[2], -12),
+                Functions.roundToPlace(e[3] * 365.25, -9),
+                Functions.roundToPlace(e[4] * 365.25, -9),
+                Functions.roundToPlace(e[5] * 365.25, -9)
             };
 
             epsilon = 0.000000001;
@@ -1394,12 +1420,12 @@ public class TestNG {
             double e[] = jpl.getPositionAndVelocity(jd, TARGET.values()[which]);
 
             foundValues = new double[] {
-                    Functions.roundToPlace(e[0], -16),
-                    Functions.roundToPlace(e[1], -16),
-                    Functions.roundToPlace(e[2], -16),
-                    Functions.roundToPlace(e[3], -16),
-                    Functions.roundToPlace(e[4], -16),
-                    Functions.roundToPlace(e[5], -16)
+                Functions.roundToPlace(e[0], -16),
+                Functions.roundToPlace(e[1], -16),
+                Functions.roundToPlace(e[2], -16),
+                Functions.roundToPlace(e[3], -16),
+                Functions.roundToPlace(e[4], -16),
+                Functions.roundToPlace(e[5], -16)
             };
         }
 
@@ -1424,8 +1450,8 @@ public class TestNG {
     @DataProvider (name = "data_star_ephemerides_simbad")
     private Object[][] data_star_ephemerides_simbad() {
         return new Object[][] {
-                { new AstroDate(2011, 7, 13, 10, 22, 46), "HD259431", "06h 33m 05.19s", "10\u00b0 19' 20.0\"", "06h 33m 43.28s", "10\u00b0 18' 45.8\"", 4.27, 12.97, 12.88 },
-                { new AstroDate(2011, 7, 13, 10, 22, 46), "R Mon", "06h 39m 09.95s", "08\u00b0 44' 09.7\"", "06h 39m 47.58s", "08\u00b0 43' 29.5\"", -3.01, 6.80, 6.70 },
+            { new AstroDate(2011, 7, 13, 10, 22, 46), "HD259431", "06h 33m 05.19s", "10\u00b0 19' 20.0\"", "06h 33m 43.28s", "10\u00b0 18' 45.8\"", 4.27, 12.97, 12.88 },
+            { new AstroDate(2011, 7, 13, 10, 22, 46), "R Mon", "06h 39m 09.95s", "08\u00b0 44' 09.7\"", "06h 39m 47.58s", "08\u00b0 43' 29.5\"", -3.01, 6.80, 6.70 },
         };
     }
 
@@ -1609,17 +1635,17 @@ public class TestNG {
     private Object[][] data_eclipses() {
         return new Object[][] {
             { new AstroDate(2005, 10, 1), "solar", TimeElement.SCALE.UNIVERSAL_TIME_UT1,
-                    "03-oct-2005 07:40:13 (partial)",
-                    "03-oct-2005 08:55:55 (annular)",
-                    null, // "03-oct-2005 08:58:00 (Eclipse maximum)",
-                    null, null
+                "03-oct-2005 07:40:13 (partial)",
+                "03-oct-2005 08:55:55 (annular)",
+                null, // "03-oct-2005 08:58:00 (Eclipse maximum)",
+                null, null
             }, // within 1s with Spenak's results" },
             { new AstroDate(-1000, 3, 10), "lunar", TimeElement.SCALE.BARYCENTRIC_DYNAMICAL_TIME,
-                    "14-mar-1000 02:55:24 B.C. (penumbral)",
-                    "14-mar-1000 03:55:28 B.C. (full penumbral)",
-                    "14-mar-1000 03:54:53 B.C. (partial)",
-                    "14-mar-1000 04:58:40 B.C. (total)",
-                    "14-mar-1000 05:40:16 B.C. (Eclipse maximum)"
+                "14-mar-1000 02:55:24 B.C. (penumbral)",
+                "14-mar-1000 03:55:28 B.C. (full penumbral)",
+                "14-mar-1000 03:54:53 B.C. (partial)",
+                "14-mar-1000 04:58:40 B.C. (total)",
+                "14-mar-1000 05:40:16 B.C. (Eclipse maximum)"
             }
         };
     }

@@ -35,43 +35,49 @@ import java.io.Serializable;
  */
 public class MayanTzolkin implements Serializable
 {
-	private static final long serialVersionUID = 1L;
-
 	/**
 	 * Number.
 	 */
-	public int number = 0;
+	public final int number;
 
 	/**
 	 * Name.
 	 */
-	public int name = 0;
+	public final int name;
 
 	/**
 	 * Calendar epoch.
 	 */
-	public static final long EPOCH = MayanLongCount.EPOCH - (long) ordinal(new MayanTzolkin(4, 20));
+	public static final long EPOCH = -1137301; // MayanLongCount.EPOCH - ordinal(new MayanTzolkin(4, 20));
 
 	/**
 	 * Month names.
 	 */
-	public static final String NAMES[] =
-	{ "Imix", "Ik", "Akbal", "Kan", "Chicchan", "Cimi", "Manik", "Lamat", "Muluc", "Oc", "Chuen", "Eb", "Ben", "Ix",
-			"Men", "Cib", "Caban", "Etznab", "Cauac", "Ahau" };
+	public static final String NAMES[] = {
+		"Imix", "Ik", "Akbal", "Kan", "Chicchan", "Cimi", "Manik", "Lamat", "Muluc", "Oc", "Chuen", "Eb", "Ben", "Ix",
+		"Men", "Cib", "Caban", "Etznab", "Cauac", "Ahau"
+	};
+
+	private static final long serialVersionUID = 8836908879580577439L;
 
 	/**
-	 * Default constructor.
+	 * Fixed day constructor.
+	 *
+	 * @param fixed fixed day.
 	 */
-	public MayanTzolkin() {}
+	public MayanTzolkin(final long fixed) {
+		long l1 = (fixed - EPOCH) + 1;
+		this.number = (int) Calendar.adjustedMod(l1, 13);
+		this.name = (int) Calendar.adjustedMod(l1, 20);
+	}
 
 	/**
 	 * Julian day constructor.
 	 *
-	 * @param jd Julian day.
+	 * @param julianDay Julian day.
 	 */
-	public MayanTzolkin(int jd)
-	{
-		fromJulianDay(jd);
+	public MayanTzolkin(final double julianDay) {
+		this((long) julianDay - Gregorian.EPOCH);
 	}
 
 	/**
@@ -80,22 +86,9 @@ public class MayanTzolkin implements Serializable
 	 * @param mnumber Number.
 	 * @param mname Name.
 	 */
-	public MayanTzolkin(int mnumber, int mname)
-	{
-		number = mnumber;
-		name = mname;
-	}
-
-	/**
-	 * Sets the date from fixed day.
-	 *
-	 * @param l Fixed date.
-	 */
-	public void fromFixed(long l)
-	{
-		long l1 = (l - EPOCH) + 1L;
-		number = (int) Calendar.adjustedMod(l1, 13L);
-		name = (int) Calendar.adjustedMod(l1, 20L);
+	public MayanTzolkin(final int mnumber, final int mname) {
+		this.number = mnumber;
+		this.name = mname;
 	}
 
 	/**
@@ -104,30 +97,18 @@ public class MayanTzolkin implements Serializable
 	 * @param mayantzolkin MayanTzolkin instance.
 	 * @return Days elapsed since new year.
 	 */
-	public static int ordinal(MayanTzolkin mayantzolkin)
-	{
-		return Calendar.mod((mayantzolkin.number - 1) + 39 * (mayantzolkin.number - mayantzolkin.name), 260);
-	}
+//	private static int ordinal(final MayanTzolkin mayantzolkin) {
+//		return ((mayantzolkin.number - 1) + 39 * (mayantzolkin.number - mayantzolkin.name)) % 260;
+//	}
 
 	/**
 	 * Gets last new year.
 	 *
 	 * @param mayantzolkin MayanTzolkin instance.
-	 * @param l Fixed day.
+	 * @param fixed Fixed day.
 	 * @return Such date.
 	 */
-	public static long onOrBefore(MayanTzolkin mayantzolkin, long l)
-	{
-		return l - Calendar.mod(l - EPOCH - (long) ordinal(mayantzolkin), 260L);
-	}
-
-	/**
-	 * Sets a Mayan date with a given Julian day
-	 *
-	 * @param jd Julian day.
-	 */
-	public void fromJulianDay(int jd)
-	{
-		fromFixed(jd - Gregorian.EPOCH);
-	}
+//	private static long onOrBefore(final MayanTzolkin mayantzolkin, final long fixed) {
+//		return fixed - (fixed - EPOCH - ordinal(mayantzolkin)) % 260;
+//	}
 }

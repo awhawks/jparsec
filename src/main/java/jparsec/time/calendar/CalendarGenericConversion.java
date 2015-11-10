@@ -49,15 +49,15 @@ public class CalendarGenericConversion
 		/** ID constant for Julian calendar. */
 		JULIAN,
 		/** ID constant for Hindu (old solar) calendar. */
-		OLD_HINDU_SOLAR,
+		HINDU_OLD_SOLAR,
 		/** ID constant for Egyptian calendar. */
 		EGYPTIAN,
 		/** ID constant for French calendar. */
 		FRENCH,
 		/** ID constant for French (modified) calendar. */
-		MODIFIED_FRENCH,
+		FRENCH_MODIFIED,
 		/** ID constant for Persian arithmetic calendar. */
-		ARITH_PERSIAN,
+		PERSIAN_ARITHMETIC,
 
 		// In use
 
@@ -66,7 +66,7 @@ public class CalendarGenericConversion
 		/** ID constant for Islamic calendar. */
 		ISLAMIC,
 		/** ID constant for Islamic observational calendar. */
-		OBSERVATIONAL_ISLAMIC,
+		ISLAMIC_OBSERVATIONAL,
 		/** ID constant for Hebrew calendar. */
 		HEBREW,
 		/** ID constant for Hindu (solar) calendar. */
@@ -79,13 +79,12 @@ public class CalendarGenericConversion
 		ETHIOPIC,
 		/** ID constant for Armenian calendar. */
 		ARMENIAN
-	};
+	}
 
 	/**
 	 * Calendar names array.
 	 */
-	public static final String CALENDAR_NAMES[] =
-	{
+	public static final String CALENDAR_NAMES[] = {
 		"Julian", "Hindu solar (old)", "Egyptian", "French", "French (modified)", "Persian (old arithmetic)",
 		"Gregorian", "Islamic (arithmetic)", "Islamic (observational)", "Hebrew", "Hindu solar",
 		"Persian (astronomical)", "Coptic", "Ethiopic", "Armenian"
@@ -107,232 +106,118 @@ public class CalendarGenericConversion
 	public static int[] GenericConversion(CALENDAR input_calendar, CALENDAR output_calendar, int year, int month, int day)
 			throws JPARSECException
 	{
-		int out_year = 0, out_month = 0, out_day = 0;
-		double jd = 0.0;
+		BaseCalendar inputCal;
 
-		switch (input_calendar)
-		{
-		case ARITH_PERSIAN:
-			PersianArithmetic ap = new PersianArithmetic();
-			ap.year = year;
-			ap.month = month;
-			ap.day = day;
-			jd = ap.toJulianDay();
-			break;
+		switch (input_calendar) {
 		case ARMENIAN:
-			Armenian ar = new Armenian();
-			ar.year = year;
-			ar.month = month;
-			ar.day = day;
-			jd = ar.toJulianDay();
+			inputCal = new Armenian(year, month, day);
 			break;
 		case COPTIC:
-			Coptic co = new Coptic();
-			co.year = year;
-			co.month = month;
-			co.day = day;
-			jd = co.toJulianDay();
+			inputCal = new Coptic(year, month, day);
 			break;
 		case EGYPTIAN:
-			Egyptian eg = new Egyptian();
-			eg.year = year;
-			eg.month = month;
-			eg.day = day;
-			jd = eg.toJulianDay();
+			inputCal = new Egyptian(year, month, day);
 			break;
 		case ETHIOPIC:
-			Ethiopic et = new Ethiopic();
-			et.year = year;
-			et.month = month;
-			et.day = day;
-			jd = et.toJulianDay();
+			inputCal = new Ethiopic(year, month, day);
 			break;
 		case FRENCH:
-			French fr = new French();
-			fr.year = year;
-			fr.month = month;
-			fr.day = day;
-			jd = fr.toJulianDay();
+			inputCal = new French(year, month, day);
+			break;
+		case FRENCH_MODIFIED:
+			inputCal = new FrenchModified(year, month, day);
 			break;
 		case GREGORIAN:
-			Gregorian gr = new Gregorian();
-			gr.year = year;
-			gr.month = month;
-			gr.day = day;
-			jd = gr.toJulianDay();
+			inputCal = new Gregorian(year, month, day);
 			break;
 		case HEBREW:
-			Hebrew he = new Hebrew();
-			he.year = year;
-			he.month = month;
-			he.day = day;
-			jd = he.toJulianDay();
+			inputCal = new Hebrew(year, month, day);
+			break;
+		case HINDU_OLD_SOLAR:
+			inputCal = new HinduOldSolar(year, month, day);
 			break;
 		case HINDU_SOLAR:
-			HinduSolar hs = new HinduSolar();
-			hs.year = year;
-			hs.month = month;
-			hs.day = day;
-			jd = hs.toJulianDay();
+			inputCal = new HinduSolar(year, month, day);
 			break;
 		case ISLAMIC:
-			Islamic is = new Islamic();
-			is.year = year;
-			is.month = month;
-			is.day = day;
-			jd = is.toJulianDay();
+			inputCal = new Islamic(year, month, day);
+			break;
+		case ISLAMIC_OBSERVATIONAL:
+			inputCal = new IslamicObservational(year, month, day);
 			break;
 		case JULIAN:
-			Julian ju = new Julian();
-			ju.year = year;
-			ju.month = month;
-			ju.day = day;
-			jd = ju.toJulianDay();
-			break;
-		case MODIFIED_FRENCH:
-			FrenchModified mf = new FrenchModified();
-			mf.year = year;
-			mf.month = month;
-			mf.day = day;
-			jd = mf.toJulianDay();
-			break;
-		case OBSERVATIONAL_ISLAMIC:
-			IslamicObservational oi = new IslamicObservational();
-			oi.year = year;
-			oi.month = month;
-			oi.day = day;
-			jd = oi.toJulianDay();
-			break;
-		case OLD_HINDU_SOLAR:
-			HinduOldSolar ohs = new HinduOldSolar();
-			ohs.year = year;
-			ohs.month = month;
-			ohs.day = day;
-			jd = ohs.toJulianDay();
+			inputCal = new Julian(year, month, day);
 			break;
 		case PERSIAN:
-			Persian pe = new Persian();
-			pe.year = year;
-			pe.month = month;
-			pe.day = day;
-			jd = pe.toJulianDay();
+			inputCal = new Persian(year, month, day);
+			break;
+		case PERSIAN_ARITHMETIC:
+			inputCal = new PersianArithmetic(year, month, day);
 			break;
 		default:
-			throw new JPARSECException("input calendar is invalid.");
+			throw new JPARSECException("Invalid calendar: " + input_calendar);
 		}
 
-		switch (output_calendar)
-		{
-		case ARITH_PERSIAN:
-			PersianArithmetic ap = new PersianArithmetic();
-			ap.fromJulianDay((int) jd);
-			out_year = (int) ap.year;
-			out_month = ap.month;
-			out_day = ap.day;
-			break;
+		double julianDay = inputCal.julianDate;
+		long fixed = inputCal.fixed;
+
+		BaseCalendar outputCal;
+
+		switch (output_calendar) {
 		case ARMENIAN:
-			Armenian ar = new Armenian();
-			ar.fromJulianDay((int) jd);
-			out_year = (int) ar.year;
-			out_month = ar.month;
-			out_day = ar.day;
+			outputCal = new Armenian(julianDay);
 			break;
 		case COPTIC:
-			Coptic co = new Coptic();
-			co.fromJulianDay((int) jd);
-			out_year = (int) co.year;
-			out_month = co.month;
-			out_day = co.day;
+			outputCal = new Coptic(julianDay);
 			break;
 		case EGYPTIAN:
-			Egyptian eg = new Egyptian();
-			eg.fromJulianDay((int) jd);
-			out_year = (int) eg.year;
-			out_month = eg.month;
-			out_day = eg.day;
+			outputCal = new Egyptian(julianDay);
 			break;
 		case ETHIOPIC:
-			Ethiopic et = new Ethiopic();
-			et.fromJulianDay((int) jd);
-			out_year = (int) et.year;
-			out_month = et.month;
-			out_day = et.day;
+			outputCal = new Ethiopic(julianDay);
 			break;
 		case FRENCH:
-			French fr = new French();
-			fr.fromJulianDay((int) jd);
-			out_year = (int) fr.year;
-			out_month = fr.month;
-			out_day = fr.day;
+			outputCal = new French(julianDay);
+			break;
+		case FRENCH_MODIFIED:
+			outputCal = new FrenchModified(julianDay);
 			break;
 		case GREGORIAN:
-			Gregorian gr = new Gregorian();
-			gr.fromJulianDay((int) jd);
-			out_year = (int) gr.year;
-			out_month = gr.month;
-			out_day = gr.day;
+			outputCal = new Gregorian(julianDay);
 			break;
 		case HEBREW:
-			Hebrew he = new Hebrew();
-			he.fromJulianDay((int) jd);
-			out_year = (int) he.year;
-			out_month = he.month;
-			out_day = he.day;
+			outputCal = new Hebrew(julianDay);
+			break;
+		case HINDU_OLD_SOLAR:
+			outputCal = new HinduOldSolar(julianDay);
 			break;
 		case HINDU_SOLAR:
-			HinduSolar hs = new HinduSolar();
-			hs.fromJulianDay((int) jd);
-			out_year = (int) hs.year;
-			out_month = hs.month;
-			out_day = hs.day;
+			outputCal = new HinduSolar(julianDay);
 			break;
 		case ISLAMIC:
-			Islamic is = new Islamic();
-			is.fromJulianDay((int) jd);
-			out_year = (int) is.year;
-			out_month = is.month;
-			out_day = is.day;
+			outputCal = new Islamic(julianDay);
+			break;
+		case ISLAMIC_OBSERVATIONAL:
+			outputCal = new IslamicObservational(julianDay);
 			break;
 		case JULIAN:
-			Julian ju = new Julian();
-			ju.fromJulianDay((int) jd);
-			out_year = (int) ju.year;
-			out_month = ju.month;
-			out_day = ju.day;
-			break;
-		case MODIFIED_FRENCH:
-			FrenchModified mf = new FrenchModified();
-			mf.fromJulianDay((int) jd);
-			out_year = (int) mf.year;
-			out_month = mf.month;
-			out_day = mf.day;
-			break;
-		case OBSERVATIONAL_ISLAMIC:
-			IslamicObservational oi = new IslamicObservational();
-			oi.fromJulianDay((int) jd);
-			out_year = (int) oi.year;
-			out_month = oi.month;
-			out_day = oi.day;
-			break;
-		case OLD_HINDU_SOLAR:
-			HinduOldSolar ohs = new HinduOldSolar();
-			ohs.fromJulianDay((int) jd);
-			out_year = (int) ohs.year;
-			out_month = ohs.month;
-			out_day = ohs.day;
+			outputCal = new Julian(julianDay);
 			break;
 		case PERSIAN:
-			Persian pe = new Persian();
-			pe.fromJulianDay((int) jd);
-			out_year = (int) pe.year;
-			out_month = pe.month;
-			out_day = pe.day;
+			outputCal = new Persian(julianDay);
+			break;
+		case PERSIAN_ARITHMETIC:
+			outputCal = new PersianArithmetic(julianDay);
 			break;
 		default:
-			throw new JPARSECException("output calendar is invalid.");
+			throw new JPARSECException("Invalid calendar: " + output_calendar);
 		}
 
-		return new int[] { out_year, out_month, out_day };
+		return new int[] {
+			(int) outputCal.getYear(),
+			outputCal.getMonth(),
+			outputCal.getDay()
+		};
 	}
 
 	/**
@@ -344,12 +229,9 @@ public class CalendarGenericConversion
 	 */
 	public static String getMonthName(int month, CALENDAR calendar) throws JPARSECException {
 		try {
-			String out = "";
-			switch (calendar)
-			{
-			case ARITH_PERSIAN:
-				out = Calendar.nameFromMonth(month, Persian.MONTH_NAMES);
-				break;
+			String out;
+
+			switch (calendar) {
 			case ARMENIAN:
 				out = Calendar.nameFromMonth(month, Armenian.MONTH_NAMES);
 				break;
@@ -365,11 +247,17 @@ public class CalendarGenericConversion
 			case FRENCH:
 				out = Calendar.nameFromMonth(month, French.MONTH_NAMES);
 				break;
+			case FRENCH_MODIFIED:
+				out = Calendar.nameFromMonth(month, French.MONTH_NAMES);
+				break;
 			case GREGORIAN:
 				out = Calendar.nameFromMonth(month, Gregorian.MONTH_NAMES);
 				break;
 			case HEBREW:
 				out = Calendar.nameFromMonth(month, Hebrew.MONTH_NAMES);
+				break;
+			case HINDU_OLD_SOLAR:
+				out = Calendar.nameFromMonth(month, HinduOldSolar.MONTH_NAMES);
 				break;
 			case HINDU_SOLAR:
 				out = Calendar.nameFromMonth(Calendar.adjustedMod(month + 1, 12), HinduOldLunar.MONTH_NAMES);
@@ -377,23 +265,20 @@ public class CalendarGenericConversion
 			case ISLAMIC:
 				out = Calendar.nameFromMonth(month, Islamic.MONTH_NAMES);
 				break;
-			case JULIAN:
-				out = Calendar.nameFromMonth(month, Gregorian.MONTH_NAMES);
-				break;
-			case MODIFIED_FRENCH:
-				out = Calendar.nameFromMonth(month, French.MONTH_NAMES);
-				break;
-			case OBSERVATIONAL_ISLAMIC:
+			case ISLAMIC_OBSERVATIONAL:
 				out = Calendar.nameFromMonth(month, Islamic.MONTH_NAMES);
 				break;
-			case OLD_HINDU_SOLAR:
-				out = Calendar.nameFromMonth(month, HinduOldSolar.MONTH_NAMES);
+			case JULIAN:
+				out = Calendar.nameFromMonth(month, Gregorian.MONTH_NAMES);
 				break;
 			case PERSIAN:
 				out = Calendar.nameFromMonth(month, Persian.MONTH_NAMES);
 				break;
+			case PERSIAN_ARITHMETIC:
+				out = Calendar.nameFromMonth(month, Persian.MONTH_NAMES);
+				break;
 			default:
-				throw new JPARSECException("calendar is invalid.");
+				throw new JPARSECException("Invalid calendar: " + calendar);
 			}
 			out = Translate.translate(out);
 			if (out.toLowerCase().equals("may") && Translate.getDefaultLanguage() == LANGUAGE.SPANISH) out += "o";
@@ -401,7 +286,7 @@ public class CalendarGenericConversion
 		} catch (JPARSECException e) {
 			throw e;
 		} catch (Exception exc) {
-			throw new JPARSECException("month is invalid.");
+			throw new JPARSECException("In valid month " + month + " in calendar " + calendar);
 		}
 	}
 
@@ -414,12 +299,9 @@ public class CalendarGenericConversion
 	 */
 	public static int getMonthNumber(String month, CALENDAR calendar) throws JPARSECException {
 		try {
-			int out = -1;
-			switch (calendar)
-			{
-			case ARITH_PERSIAN:
-				out = Calendar.indexFromName(month, Persian.MONTH_NAMES);
-				break;
+			int out;
+
+			switch (calendar) {
 			case ARMENIAN:
 				out = Calendar.indexFromName(month, Armenian.MONTH_NAMES);
 				break;
@@ -435,11 +317,17 @@ public class CalendarGenericConversion
 			case FRENCH:
 				out = Calendar.indexFromName(month, French.MONTH_NAMES);
 				break;
+			case FRENCH_MODIFIED:
+				out = Calendar.indexFromName(month, French.MONTH_NAMES);
+				break;
 			case GREGORIAN:
 				out = Calendar.indexFromName(month, Gregorian.MONTH_NAMES);
 				break;
 			case HEBREW:
 				out = Calendar.indexFromName(month, Hebrew.MONTH_NAMES);
+				break;
+			case HINDU_OLD_SOLAR:
+				out = Calendar.indexFromName(month, HinduOldSolar.MONTH_NAMES);
 				break;
 			case HINDU_SOLAR:
 				out = Calendar.indexFromName(month, HinduOldLunar.MONTH_NAMES);
@@ -447,29 +335,26 @@ public class CalendarGenericConversion
 			case ISLAMIC:
 				out = Calendar.indexFromName(month, Islamic.MONTH_NAMES);
 				break;
-			case JULIAN:
-				out = Calendar.indexFromName(month, Gregorian.MONTH_NAMES);
-				break;
-			case MODIFIED_FRENCH:
-				out = Calendar.indexFromName(month, French.MONTH_NAMES);
-				break;
-			case OBSERVATIONAL_ISLAMIC:
+			case ISLAMIC_OBSERVATIONAL:
 				out = Calendar.indexFromName(month, Islamic.MONTH_NAMES);
 				break;
-			case OLD_HINDU_SOLAR:
-				out = Calendar.indexFromName(month, HinduOldSolar.MONTH_NAMES);
+			case JULIAN:
+				out = Calendar.indexFromName(month, Gregorian.MONTH_NAMES);
 				break;
 			case PERSIAN:
 				out = Calendar.indexFromName(month, Persian.MONTH_NAMES);
 				break;
+			case PERSIAN_ARITHMETIC:
+				out = Calendar.indexFromName(month, Persian.MONTH_NAMES);
+				break;
 			default:
-				throw new JPARSECException("calendar is invalid.");
+				throw new JPARSECException("Invalid calendar: " + calendar);
 			}
 			return out;
 		} catch (JPARSECException e) {
 			throw e;
 		} catch (Exception exc) {
-			throw new JPARSECException("month is invalid.");
+			throw new JPARSECException("Invalid month " + month + " in calendar " + calendar);
 		}
 	}
 
@@ -481,14 +366,10 @@ public class CalendarGenericConversion
 	 * @throws JPARSECException If the calendar or day is invalid.
 	 */
 	public static String getDayOfWeekName(int jd, CALENDAR calendar) throws JPARSECException {
-		String out = "";
+		String out;
 		long day = jd - Gregorian.EPOCH;
 		try {
-			switch (calendar)
-			{
-			case ARITH_PERSIAN:
-				out =  Calendar.nameFromDayOfWeek(Calendar.dayOfWeekFromFixed(day), Persian.DAY_OF_WEEK_NAMES);
-				break;
+			switch (calendar) {
 			case ARMENIAN:
 				out = Calendar.nameFromDayOfWeek(Calendar.dayOfWeekFromFixed(day), Armenian.DAY_OF_WEEK_NAMES);
 				break;
@@ -501,11 +382,17 @@ public class CalendarGenericConversion
 			case FRENCH:
 				out = Calendar.nameFromNumber(new French(jd).getDayOfWeek(), French.DAY_OF_WEEK_NAMES);
 				break;
+			case FRENCH_MODIFIED:
+				out = Calendar.nameFromNumber(new French(jd).getDayOfWeek(), French.DAY_OF_WEEK_NAMES);
+				break;
 			case GREGORIAN:
 				out = Calendar.nameFromDayOfWeek(Calendar.dayOfWeekFromFixed(day), Gregorian.DAY_OF_WEEK_NAMES);
 				break;
 			case HEBREW:
 				out = Calendar.nameFromDayOfWeek(Calendar.dayOfWeekFromFixed(day), Hebrew.DAY_OF_WEEK_NAMES);
+				break;
+			case HINDU_OLD_SOLAR:
+				out = Calendar.nameFromDayOfWeek(Calendar.dayOfWeekFromFixed(day), HinduOldSolar.DAY_OF_WEEK_NAMES);
 				break;
 			case HINDU_SOLAR:
 				out = Calendar.nameFromDayOfWeek(Calendar.dayOfWeekFromFixed(day), HinduOldSolar.DAY_OF_WEEK_NAMES);
@@ -513,30 +400,28 @@ public class CalendarGenericConversion
 			case ISLAMIC:
 				out = Calendar.nameFromDayOfWeek(Calendar.dayOfWeekFromFixed(day), Islamic.DAY_OF_WEEK_NAMES);
 				break;
-			case JULIAN:
-				out = Calendar.nameFromDayOfWeek(Calendar.dayOfWeekFromFixed(day), Gregorian.DAY_OF_WEEK_NAMES);
-				break;
-			case MODIFIED_FRENCH:
-				out = Calendar.nameFromNumber(new French(jd).getDayOfWeek(), French.DAY_OF_WEEK_NAMES);
-				break;
-			case OBSERVATIONAL_ISLAMIC:
+			case ISLAMIC_OBSERVATIONAL:
 				out = Calendar.nameFromDayOfWeek(Calendar.dayOfWeekFromFixed(day), Islamic.DAY_OF_WEEK_NAMES);
 				break;
-			case OLD_HINDU_SOLAR:
-				out = Calendar.nameFromDayOfWeek(Calendar.dayOfWeekFromFixed(day), HinduOldSolar.DAY_OF_WEEK_NAMES);
+			case JULIAN:
+				out = Calendar.nameFromDayOfWeek(Calendar.dayOfWeekFromFixed(day), Gregorian.DAY_OF_WEEK_NAMES);
 				break;
 			case PERSIAN:
 				out = Calendar.nameFromDayOfWeek(Calendar.dayOfWeekFromFixed(day), Persian.DAY_OF_WEEK_NAMES);
 				break;
+			case PERSIAN_ARITHMETIC:
+				out =  Calendar.nameFromDayOfWeek(Calendar.dayOfWeekFromFixed(day), Persian.DAY_OF_WEEK_NAMES);
+				break;
 			default:
-				throw new JPARSECException("calendar is invalid.");
+				throw new JPARSECException("Invalid calendar: " + calendar);
 			}
+
 			out = Translate.translate(out);
 			return out;
 		} catch (JPARSECException e) {
 			throw e;
 		} catch (Exception exc) {
-			throw new JPARSECException("month is invalid.");
+			throw new JPARSECException("Invalid month for julian day " + jd);
 		}
 	}
 
@@ -549,13 +434,9 @@ public class CalendarGenericConversion
 	 * @throws JPARSECException If the calendar or day is invalid.
 	 */
 	public static int getDayOfWeekNumber(String day, CALENDAR calendar) throws JPARSECException {
-		int out = -1;
+		int out;
 		try {
-			switch (calendar)
-			{
-			case ARITH_PERSIAN:
-				out =  Calendar.indexFromName(day, Persian.DAY_OF_WEEK_NAMES);
-				break;
+			switch (calendar) {
 			case ARMENIAN:
 				out = Calendar.indexFromName(day, Armenian.DAY_OF_WEEK_NAMES);
 				break;
@@ -568,11 +449,17 @@ public class CalendarGenericConversion
 			case FRENCH:
 				out = Calendar.indexFromName(day, French.DAY_OF_WEEK_NAMES);
 				break;
+			case FRENCH_MODIFIED:
+				out = Calendar.indexFromName(day, French.DAY_OF_WEEK_NAMES);
+				break;
 			case GREGORIAN:
 				out = Calendar.indexFromName(day, Gregorian.DAY_OF_WEEK_NAMES);
 				break;
 			case HEBREW:
 				out = Calendar.indexFromName(day, Hebrew.DAY_OF_WEEK_NAMES);
+				break;
+			case HINDU_OLD_SOLAR:
+				out = Calendar.indexFromName(day, HinduOldSolar.DAY_OF_WEEK_NAMES);
 				break;
 			case HINDU_SOLAR:
 				out = Calendar.indexFromName(day, HinduOldSolar.DAY_OF_WEEK_NAMES);
@@ -580,29 +467,27 @@ public class CalendarGenericConversion
 			case ISLAMIC:
 				out = Calendar.indexFromName(day, Islamic.DAY_OF_WEEK_NAMES);
 				break;
-			case JULIAN:
-				out = Calendar.indexFromName(day, Gregorian.DAY_OF_WEEK_NAMES);
-				break;
-			case MODIFIED_FRENCH:
-				out = Calendar.indexFromName(day, French.DAY_OF_WEEK_NAMES);
-				break;
-			case OBSERVATIONAL_ISLAMIC:
+			case ISLAMIC_OBSERVATIONAL:
 				out = Calendar.indexFromName(day, Islamic.DAY_OF_WEEK_NAMES);
 				break;
-			case OLD_HINDU_SOLAR:
-				out = Calendar.indexFromName(day, HinduOldSolar.DAY_OF_WEEK_NAMES);
+			case JULIAN:
+				out = Calendar.indexFromName(day, Gregorian.DAY_OF_WEEK_NAMES);
 				break;
 			case PERSIAN:
 				out = Calendar.indexFromName(day, Persian.DAY_OF_WEEK_NAMES);
 				break;
+			case PERSIAN_ARITHMETIC:
+				out =  Calendar.indexFromName(day, Persian.DAY_OF_WEEK_NAMES);
+				break;
 			default:
-				throw new JPARSECException("calendar is invalid.");
+				throw new JPARSECException("Invalid calendar: " + calendar);
 			}
+
 			return out;
 		} catch (JPARSECException e) {
 			throw e;
 		} catch (Exception exc) {
-			throw new JPARSECException("month is invalid.");
+			throw new JPARSECException("Invalid day" + day + " in calendar " + calendar);
 		}
 	}
 }

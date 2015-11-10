@@ -21,113 +21,103 @@
  */
 package jparsec.time.calendar;
 
-import java.io.Serializable;
-
 /**
  * Implements the Coptic calendar. See Calendrical Calculations for reference.
  *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
-public class Coptic implements Serializable
+public class Coptic extends BaseCalendar
 {
-	private static final long serialVersionUID = 1L;
-
-	/**
-	 * The year.
-	 */
-	public long year;
-
-	/**
-	 * Month.
-	 */
-	public int month;
-
-	/**
-	 * Day.
-	 */
-	public int day;
-
 	/**
 	 * Calendar epoch.
 	 */
-	public static final long EPOCH = Julian.toFixed(284, 8, 29);
+	public static final long EPOCH = 103605; // new Julian(284, 8, 29).fixed;
 
 	/**
 	 * Week day names.
 	 */
-	public static final String DAY_OF_WEEK_NAMES[] =
-	{ "Tkyriaka", "Pesnau", "Pshoment", "Peftoou", "Ptiou", "Psoou", "Psabbaton" };
+	public static final String DAY_OF_WEEK_NAMES[] = {
+		"Tkyriaka", "Pesnau", "Pshoment", "Peftoou", "Ptiou", "Psoou", "Psabbaton"
+	};
 
 	/**
 	 * Month names.
 	 */
-	public static final String MONTH_NAMES[] =
-	{ "Tut", "Babah", "Hatur", "Kiyahk", "Tubah", "Amshir", "Baramhat", "Baramundah", "Bashans", "Ba'unah", "Abib",
-			"Misra", "al-Nasi" };
+	public static final String MONTH_NAMES[] = {
+		"Tut", "Babah", "Hatur", "Kiyahk", "Tubah", "Amshir", "Baramhat",
+		"Baramundah", "Bashans", "Ba'unah", "Abib", "Misra", "al-Nasi"
+	};
+
+	private static final long serialVersionUID = 3103648666347143692L;
 
 	/**
-	 * Empty constructor.
+	 * Fixed day constructor.
+	 *
+	 * @param fixed Julian day.
 	 */
-	public Coptic() {}
+	public Coptic(final long fixed) {
+		super(EPOCH, fixed);
+	}
+
+	Coptic(final long epoch, final long fixed) {
+		super(epoch, fixed);
+	}
 
 	/**
 	 * Julian day constructor.
 	 *
-	 * @param jd Julian day.
+	 * @param julianDay Julian day.
 	 */
-	public Coptic(int jd)
-	{
-		fromJulianDay(jd);
+	public Coptic(final double julianDay) {
+		super(EPOCH, julianDay);
+	}
+
+	Coptic(final long epoch, final double julianDay) {
+		super(epoch, julianDay);
 	}
 
 	/**
 	 * Explicit constructor.
 	 *
-	 * @param y Year.
-	 * @param m Month.
-	 * @param d Day.
+	 * @param year Year.
+	 * @param month Month.
+	 * @param day Day.
 	 */
-	public Coptic(long y, int m, int d)
-	{
-		year = y;
-		month = m;
-		day = d;
+	public Coptic(final long year, final int month, final int day) {
+		super (EPOCH, year, month, day);
+	}
+
+	Coptic(final long epoch, final long year, final int month, final int day) {
+		super (epoch, year, month, day);
 	}
 
 	/**
 	 * To fixed day..
 	 *
-	 * @param y Year.
-	 * @param m Month.
-	 * @param d Day.
+	 * @param year Year.
+	 * @param month Month.
+	 * @param day Day.
 	 * @return Fixed day.
 	 */
-	public static long toFixed(long y, int m, int d)
-	{
-		return (EPOCH - 1L) + 365L * (y - 1L) + Calendar.quotient(y, 4D) + (long) (30 * (m - 1)) + (long) d;
+	@Override
+	long toFixed(final long year, final int month, final int day) {
+		return (this.epoch - 1) + 365 * (year - 1) + (year / 4) + 30 * (month - 1) + day;
 	}
 
-	/**
-	 * To fixed day.
-	 *
-	 * @return Fixed day.
-	 */
-	public long toFixed()
-	{
-		return toFixed(year, month, day);
+	@Override
+	long yearFromFixed() {
+		return (4 * (this.fixed - this.epoch) + 1463) / 1461;
 	}
 
-	/**
-	 * Sets the date from the fixed day.
-	 *
-	 * @param l Fixed day.
-	 */
-	public void fromFixed(long l)
-	{
-		year = Calendar.quotient(4L * (l - EPOCH) + 1463L, 1461D);
-		month = 1 + (int) Calendar.quotient(l - toFixed(year, 1, 1), 30D);
-		day = (int) ((l + 1L) - toFixed(year, month, 1));
+	@Override
+	int monthFromFixed(final long year) {
+		return 1 + (int) ((this.fixed - toFixed(year, 1, 1)) / 30);
+	}
+
+	@Override
+	int dayFromFixed(final long year, final int month) {
+		return 1 + (int) (this.fixed - toFixed(year, month, 1));
 	}
 
 	/**
@@ -136,39 +126,7 @@ public class Coptic implements Serializable
 	 * @param year Year.
 	 * @return True if it is a leap year.
 	 */
-	public static boolean isLeapYear(long year)
-	{
-		return Calendar.mod(year, 4L) == 3L;
-	}
-
-	/**
-	 * Transforms a Coptic date into a Julian day
-	 *
-	 * @param year Year.
-	 * @param month Month.
-	 * @param day Day.
-	 * @return Julian day.
-	 */
-	public static int toJulianDay(int year, int month, int day)
-	{
-		return (int) (toFixed(year, month, day) + Gregorian.EPOCH);
-	}
-
-	/**
-	 * Transforms a Coptic date into a Julian day
-	 * @return The Julian day.
-	 */
-	public int toJulianDay()
-	{
-		return (int) (toFixed() + Gregorian.EPOCH);
-	}
-
-	/**
-	 * Sets a Coptic date with a given Julian day
-	 * @param jd The Julian day.
-	 */
-	public void fromJulianDay(int jd)
-	{
-		fromFixed(jd - Gregorian.EPOCH);
+	public static boolean isLeapYear(final long year) {
+		return (year & 3) == 3L;
 	}
 }

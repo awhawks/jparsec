@@ -34,52 +34,40 @@ import java.io.Serializable;
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
-public class PersianArithmetic implements Serializable
+public class PersianArithmetic extends Persian
 {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -2018929499903623808L;
 
 	/**
-	 * Year.
+	 * Constructor using a fixed day.
+	 *
+	 * @param fixed fixed day.
 	 */
-	public long year;
-
-	/**
-	 * Month.
-	 */
-	public int month;
-
-	/**
-	 * Day.
-	 */
-	public int day;
-
-	/**
-	 * Empty constructor.
-	 */
-	public PersianArithmetic() { }
+	public PersianArithmetic(final long fixed)
+	{
+		super(fixed);
+	}
 
 	/**
 	 * Constructor using a Julian day.
 	 *
-	 * @param jd Julian day.
+	 * @param julianDay Julian day.
 	 */
-	public PersianArithmetic(int jd)
+	public PersianArithmetic(final double julianDay)
 	{
-		fromJulianDay(jd);
+		super(julianDay);
 	}
 
 	/**
 	 * Constructor using year, month, day.
 	 *
-	 * @param y Year.
-	 * @param m Month.
-	 * @param d Day.
+	 * @param year Year.
+	 * @param month Month.
+	 * @param day Day.
 	 */
-	public PersianArithmetic(long y, int m, int d)
+	public PersianArithmetic(final long year, final int month, final int day)
 	{
-		year = y;
-		month = m;
-		day = d;
+		super(year, month, day);
 	}
 
 	/**
@@ -90,34 +78,38 @@ public class PersianArithmetic implements Serializable
 	 * @param day Day.
 	 * @return Fixed day number.
 	 */
-	public static long toFixed(long year, int month, int day)
+	public static long toFixedDay(final long year, final int month, final int day)
 	{
-		long l1 = year <= 0L ? year - 473L : year - 474L;
-		long l2 = Calendar.mod(l1, 2820L) + 474L;
-		return (Persian.EPOCH - 1L) + 0xfb75fL * Calendar.quotient(l1, 2820D) + 365L * (l2 - 1L) + Calendar.quotient(
-				682L * l2 - 110L, 2816D) + (long) (month > 7 ? 30 * (month - 1) + 6 : 31 * (month - 1)) + (long) day;
+		long l1 = year <= 0L ? year - 473 : year - 474;
+		long l2 = (l1 % 2820) + 474;
+
+		return (Persian.EPOCH - 1) + 0xfb75fL * (l1 / 2820) + 365 * (l2 - 1) + (682 * l2 - 110) / 2816 + (month > 7 ? 30 * (month - 1) + 6 : 31 * (month - 1)) + day;
 	}
 
-	/**
-	 * Pass to fixed date.
-	 * @return Fixed date.
-	 */
-	public long toFixed()
-	{
-		return toFixed(year, month, day);
+	@Override
+	long toFixed(final long year, final int month, final int day) {
+		return toFixedDay(year, month, day);
+	}
+
+	@Override
+	long yearFromFixed() {
+		return yearFromFixed(this.fixed);
+	}
+
+	@Override
+	int monthFromFixed(final long year) {
+		long days = 1 + this.fixed - toFixed(year, 1, 1);
+
+		return (int) (days >= 186 ? Math.ceil((double) (days - 6) / 30D) : Math.ceil((double) days / 31D));
 	}
 
 	/**
 	 * Gets the year, month, day of the instance from the fixed day.
 	 *
-	 * @param l Fixed day number.
+	 * @param fixed Fixed day number.
 	 */
-	public void fromFixed(long l)
+	public void fromFixed(final long fixed)
 	{
-		year = yearFromFixed(l);
-		long l1 = (1L + l) - toFixed(year, 1, 1);
-		month = (int) (l1 >= 186L ? Math.ceil((double) (l1 - 6L) / 30D) : Math.ceil((double) l1 / 31D));
-		day = (int) (l - (toFixed(year, month, 1) - 1L));
 	}
 
 	/**
@@ -126,7 +118,7 @@ public class PersianArithmetic implements Serializable
 	 * @param year Year.
 	 * @return True or false.
 	 */
-	public static boolean isLeapYear(long year)
+	public static boolean isLeapYear(final long year)
 	{
 		long l1 = year <= 0L ? year - 473L : year - 474L;
 		long l2 = Calendar.mod(l1, 2820L) + 474L;
@@ -136,50 +128,20 @@ public class PersianArithmetic implements Serializable
 	/**
 	 * Gets the year from a fixed date.
 	 *
-	 * @param l Fixed day number.
+	 * @param fixed Fixed day number.
 	 * @return Current year.
 	 */
-	public static long yearFromFixed(long l)
+	public static long yearFromFixed(final long fixed)
 	{
-		long l1 = l - toFixed(475L, 1, 1);
-		long l2 = Calendar.quotient(l1, 1029983D);
-		long l3 = Calendar.mod(l1, 0xfb75fL);
-		long l4 = l3 != 0xfb75eL ? Calendar.quotient(2816D * (double) l3 + 1031337D, 1028522D) : 2820L;
-		long l5 = 474L + 2820L * l2 + l4;
-		if (l5 > 0L)
+		long l1 = fixed - toFixedDay(475, 1, 1);
+		long l2 = l1 / 1029983L;
+		long l3 = Calendar.mod(l1, 1029983L);
+		long l4 = l3 != 1029982L ? (2816 * l3 + 1031337L) / 1028522L : 2820;
+		long l5 = 474 + 2820 * l2 + l4;
+
+		if (l5 > 0)
 			return l5;
 		else
-			return l5 - 1L;
-	}
-
-	/**
-	 * Transforms a Persian date into a Julian day.
-	 *
-	 * @param year Year.
-	 * @param month Month.
-	 * @param day Day.
-	 * @return Julian day.
-	 */
-	public static int toJulianDay(int year, int month, int day)
-	{
-		return (int) (toFixed(year, month, day) + Gregorian.EPOCH);
-	}
-
-	/**
-	 * Transforms a Persian date into a Julian day.
-	 * @return The Julian day.
-	 */
-	public int toJulianDay()
-	{
-		return (int) (toFixed() + Gregorian.EPOCH);
-	}
-
-	/**
-	 * Sets a Persian date with a given Julian day.
-	 * @param jd Julian day.
-	 */
-	public void fromJulianDay(int jd)
-	{
-		fromFixed(jd - Gregorian.EPOCH);
+			return l5 - 1;
 	}
 }

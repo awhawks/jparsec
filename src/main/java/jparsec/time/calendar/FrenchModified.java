@@ -21,8 +21,6 @@
  */
 package jparsec.time.calendar;
 
-import java.io.Serializable;
-
 /**
  * Implements the Modified French calendar.
  * <P>
@@ -33,38 +31,26 @@ import java.io.Serializable;
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
-public class FrenchModified implements Serializable
+public class FrenchModified extends French
 {
-	private static final long serialVersionUID = 1L;
-
-	/**
-	 * The year.
-	 */
-	public long year;
-
-	/**
-	 * Month.
-	 */
-	public int month;
-
-	/**
-	 * Day.
-	 */
-	public int day;
-
-	/**
-	 * Default constructor.
-	 */
-	public FrenchModified() {}
+	private static final long serialVersionUID = 8486808378839034546L;
 
 	/**
 	 * Julian day constructor.
 	 *
 	 * @param jd Julian day.
 	 */
-	public FrenchModified(int jd)
-	{
-		fromJulianDay(jd);
+	public FrenchModified(final double jd) {
+		super(jd);
+	}
+
+	/**
+	 * Fixed day constructor.
+	 *
+	 * @param fixed fixed day.
+	 */
+	public FrenchModified(final long fixed) {
+		super(fixed);
 	}
 
 	/**
@@ -74,99 +60,57 @@ public class FrenchModified implements Serializable
 	 * @param m Month.
 	 * @param d Day.
 	 */
-	public FrenchModified(long y, int m, int d)
-	{
-		year = y;
-		month = m;
-		day = d;
+	public FrenchModified(final long y, final int m, final int d) {
+		super(y, m, d);
 	}
 
 	/**
 	 * To fixed day.
 	 *
-	 * @param y Year.
-	 * @param m Month.
-	 * @param d Day.
-	 * @return Fixed day.
+	 * @param year Year.
+	 * @param month Month.
+	 * @param day Day.
 	 */
-	public static long toFixed(long y, int m, int d)
-	{
-		return (((((French.EPOCH - 1L) + 365L * (y - 1L) + Calendar.quotient(y - 1L, 4D)) - Calendar.quotient(y - 1L,
-				100D)) + Calendar.quotient(y - 1L, 400D)) - Calendar.quotient(y - 1L, 4000D)) + (long) (30 * (m - 1)) + (long) d;
+	@Override
+	long toFixed(final long year, final int month, final int day) {
+		long y = year - 1;
+
+		return French.EPOCH - 1 + 365L * y + (y / 4) - (y / 100) + (y / 400) - (y / 4000) + 30 * (month - 1) + day;
 	}
 
-	/**
-	 * To fixed day.
-	 *
-	 * @return Fixed day.
-	 */
-	public long toFixed()
-	{
-		return toFixed(year, month, day);
+	@Override
+	long yearFromFixed() {
+		long y = 1 + (long) ((this.fixed - French.EPOCH + 2) / 365.24225000000001D);
+
+		return this.fixed >= toFixed(y, 1, 1) ? y : y - 1;
 	}
 
-	/**
-	 * Sets the date from fixed day.
-	 *
-	 * @param l Fixed day.
-	 */
-	public void fromFixed(long l)
-	{
-		long l1 = 1L + Calendar.quotient((l - French.EPOCH) + 2L, 365.24225000000001D);
-		year = l >= toFixed(l1, 1, 1) ? l1 : l1 - 1L;
-		month = 1 + (int) Calendar.quotient(l - toFixed(year, 1, 1), 30D);
-		day = (int) ((l - toFixed(year, month, 1)) + 1L);
+	@Override
+	int monthFromFixed(long year) {
+		return 1 + (int) ((this.fixed - toFixed(year, 1, 1)) / 30);
+	}
+
+	@Override
+	int dayFromFixed(long year, int month) {
+		return 1 + (int) (this.fixed - toFixed(year, month, 1));
 	}
 
 	/**
 	 * Gets if the current year is a leap one.
 	 *
-	 * @param l Fixed day.
+	 * @param year Fixed day.
 	 * @return True or false.
 	 */
-	public static boolean isLeapYear(long l)
-	{
-		boolean flag = false;
-		if (Calendar.mod(l, 4L) == 0L)
-		{
-			long l1 = Calendar.mod(l, 400L);
-			if (l1 != 100L && l1 != 200L && l1 != 300L && Calendar.mod(l, 4000L) != 0L)
-				flag = true;
+	public static boolean isLeapYear(final long year) {
+		if ((year & 3) == 0) {
+			long l1 = year % 400;
+
+			if (l1 != 100 && l1 != 200 && l1 != 300 && (year % 4000) != 0) {
+				return true;
+			}
 		}
-		return flag;
-	}
 
-	/**
-	 * Transforms a French date into a Julian day
-	 *
-	 * @param year Year.
-	 * @param month Month.
-	 * @param day Day.
-	 * @return Julian day.
-	 */
-	public static int toJulianDay(int year, int month, int day)
-	{
-		return (int) (toFixed(year, month, day) + Gregorian.EPOCH);
-	}
-
-	/**
-	 * Transforms a French date into a Julian day.
-	 *
-	 * @return Julian day.
-	 */
-	public int toJulianDay()
-	{
-		return (int) (toFixed() + Gregorian.EPOCH);
-	}
-
-	/**
-	 * Sets a French date with a given Julian day.
-	 *
-	 * @param jd Julian day.
-	 */
-	public void fromJulianDay(int jd)
-	{
-		fromFixed(jd - Gregorian.EPOCH);
+		return false;
 	}
 
 	/**
@@ -174,13 +118,23 @@ public class FrenchModified implements Serializable
 	 *
 	 * @return Day of week.
 	 */
-	public int getDayOfWeek()
-	{
+	public int getDayOfWeek() {
 		int day = this.day + 9;
-        if (month < 13) day = (this.day - 1) % 10;
-        day++;
-		if (day > French.DAY_OF_WEEK_NAMES.length) day -= French.DAY_OF_WEEK_NAMES.length;
-		if (day < 0) day += French.DAY_OF_WEEK_NAMES.length;
+
+		if (this.month < 13) {
+			day = (this.day - 1) % 10;
+		}
+
+		day++;
+
+		if (day > French.DAY_OF_WEEK_NAMES.length) {
+			day -= French.DAY_OF_WEEK_NAMES.length;
+		}
+
+		if (day < 0) {
+			day += French.DAY_OF_WEEK_NAMES.length;
+		}
+
 		return day;
 	}
 
@@ -189,11 +143,17 @@ public class FrenchModified implements Serializable
 	 *
 	 * @return Decadi index (0, 1, 2), or -1 for no decadi.
 	 */
-	public int getDecadi()
-	{
+	public int getDecadi() {
 		int week = -1;
-        if (month < 13) week = (day - 1) / 10 + 1;
-        if (week > 2) week = week - 3;
+
+		if (this.month < 13) {
+			week = (this.day - 1) / 10 + 1;
+		}
+
+		if (week > 2) {
+			week -= 3;
+		}
+
 		return week;
 	}
 }
