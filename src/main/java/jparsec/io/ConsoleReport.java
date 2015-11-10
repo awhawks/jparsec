@@ -131,7 +131,7 @@ public class ConsoleReport
 			for (int i=0; i<l; i++) {
 				if (ephem.rise != null && ephem.rise.length > i) out += name + Translate.translate(Translate.JPARSEC_RISE)+": " + TimeFormat.formatJulianDayAsDateAndTime(ephem.rise[i], SCALE.LOCAL_TIME) + sep;
 				if (ephem.transit != null && ephem.transit.length > i) out += name + Translate.translate(Translate.JPARSEC_TRANSIT)+": " + TimeFormat.formatJulianDayAsDateAndTime(ephem.transit[i], SCALE.LOCAL_TIME) + sep;
-				if (ephem.transitElevation != null && ephem.transitElevation.length > i) out += name + Translate.translate(Translate.JPARSEC_TRANSIT_ELEVATION)+": " + Functions.formatAngle(ephem.transitElevation[i], 3) + sep;
+				if (ephem.transitElevation != null && ephem.transitElevation.length > i) out += name + Translate.translate(Translate.JPARSEC_TRANSIT_ELEVATION)+": " + Functions.formatAngle(ephem.transitElevation[i], 1) + sep;
 				if (ephem.set != null && ephem.set.length > i) out += name + Translate.translate(Translate.JPARSEC_SET)+": " + TimeFormat.formatJulianDayAsDateAndTime(ephem.set[i], SCALE.LOCAL_TIME) + sep;
 			}
 		}

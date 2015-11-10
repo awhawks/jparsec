@@ -999,7 +999,8 @@ public class RiseSetTransit
 						eph.algorithm != null && eph.algorithm != EphemerisElement.ALGORITHM.STAR && (i == EVENT.RISE.ordinal() || i == EVENT.SET.ordinal())) {
 					dt = 2.0 * precision_in_seconds / Constant.SECONDS_PER_DAY;
 					if (triedBefore) {
-						dt = 0.0;
+						dt = not_yet_calculated;
+						break;
 					} else {
 						triedBefore = true;
 
@@ -1033,7 +1034,7 @@ public class RiseSetTransit
 			if (i == EVENT.SET.ordinal())
 				ephem_elem.set[index] = timeLT;
 
-			if (n_iter == n_iter_max || dt == 0) {
+			if (n_iter == n_iter_max || dt == not_yet_calculated) {
 				if (i == EVENT.RISE.ordinal()) ephem_elem.rise[index] = NO_RISE_SET_TRANSIT;
 				if (i == EVENT.SET.ordinal()) ephem_elem.set[index] = NO_RISE_SET_TRANSIT;
 				if (i == EVENT.TRANSIT.ordinal()) {
@@ -1041,7 +1042,7 @@ public class RiseSetTransit
 					ephem_elem.transitElevation[index] = 0.0f;
 				}
 			}
-			if (how == OBTAIN_CURRENT_EVENTS && (n_iter != n_iter_max && dt != 0)) {
+			if (how == OBTAIN_CURRENT_EVENTS && (n_iter != n_iter_max && dt != not_yet_calculated)) {
 				double jd = TimeScale.getJD(time, obs, eph, SCALE.LOCAL_TIME);
 				double jdToday = Math.floor(jd - 0.5) + 0.5;
 				if (i == EVENT.RISE.ordinal()) {
@@ -1061,12 +1062,10 @@ public class RiseSetTransit
 				}
 			}
 		}
-
 		ephem_obj.rise = ephem_elem.rise;
 		ephem_obj.set = ephem_elem.set;
 		ephem_obj.transit = ephem_elem.transit;
 		ephem_obj.transitElevation = ephem_elem.transitElevation;
-
 		return ephem_obj;
 	}
 }

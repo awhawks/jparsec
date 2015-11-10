@@ -5101,7 +5101,8 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 	  	  		});
   	  		if (ephem.transit != null)
 	  	  		objData = DataSet.addStringArray(objData, new String[] {
-	  	  			t297 + ": " + TimeFormat.formatJulianDayAsDateAndTime(ephem.transit[0], SCALE.LOCAL_TIME)
+	  	  			t297 + ": " + TimeFormat.formatJulianDayAsDateAndTime(ephem.transit[0], SCALE.LOCAL_TIME),
+	  	  			Translate.translate(298) + ": " + Functions.formatAngle(ephem.transitElevation[0], 1)
 	  	  		});
   	  		if (ephem.set != null)
 	  	  		objData = DataSet.addStringArray(objData, new String[] {
