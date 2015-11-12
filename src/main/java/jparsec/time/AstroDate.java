@@ -1056,13 +1056,13 @@ public class AstroDate implements Serializable
 	 * Names of the days of the week.
 	 */
 	public static final String DAY_OF_WEEK_NAMES[] =
-	{ "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
+		{ "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
 
 	/**
 	 * Names of the months.
 	 */
 	public static final String MONTH_NAMES[] =
-	{ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November",
+		{ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November",
 			"December" };
 
 	/**

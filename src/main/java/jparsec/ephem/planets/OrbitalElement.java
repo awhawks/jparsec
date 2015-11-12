@@ -1073,6 +1073,7 @@ public class OrbitalElement implements Serializable
 			jd += step;
 		}
 
+		// FIXME: '^{m}-' should be replaced by 'm -' in the Android version
 		String title = Translate.translate(159) + " (" + Functions.formatValue(magMax, 1)+"^{m}- "+(new AstroDate(jdMax).toStringDate(false)+")");
 		// title = Translate.translate(159)+" "+Translate.translate(160)+" "+orbit.name;
 
@@ -1140,6 +1141,7 @@ public class OrbitalElement implements Serializable
 
 		String title = Translate.translate(1303);
 		title = title.substring(0, title.lastIndexOf(" "));
+		// FIXME: @BLUE and @BLACK should be removed in the Android version
 		title += " (@BLUE"+Functions.formatValue(minDist, 3)+au+"@BLACK - "+(new AstroDate(jdMin).toStringDate(false))+")";
 		//title = Translate.translate(1303)+" "+orbit.name;
 		ChartElement chart = new ChartElement(new ChartSeriesElement[] {series1, series2}, ChartElement.TYPE.XY_CHART, ChartElement.SUBTYPE.XY_TIME,

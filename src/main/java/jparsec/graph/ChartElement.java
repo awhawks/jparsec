@@ -858,8 +858,6 @@ public class ChartElement implements Serializable
 			throw new JPARSECException("Unsupported chart type.");
 
 		int w = chart.imageWidth, h = chart.imageHeight;
-		w = 200;
-		h = 200;
 		Graphics g = new AWTGraphics(w, h, false, false);
 		g.setColor(Color.WHITE.getRGB(), true);
 		g.fillRect(0, 0, w, h);

@@ -15,10 +15,12 @@ public class AstroDateTest {
 
         try {
             AstroDate astro = new AstroDate(-12000, 1, 1);
-            System.out.println(astro.jd() + '/' + astro.toStandarizedString(null) + '/' + astro.toString(0));
+            System.out.println(astro.jd() + " / " + astro.toStandarizedString(null) + " / " + astro.toString(0));
             AstroDate astro2 = new AstroDate(astro.toStandarizedString(null));
-            System.out.println(astro2.jd() + '/' + astro2.toStandarizedString(null) + '/' + astro2.toString(0));
-            System.out.println(astro.getYear() + '/' + astro.getAstronomicalYear());
+            System.out.println(astro2.jd() + " / " + astro2.toStandarizedString(null) + " / " + astro2.toString(0));
+            System.out.println(astro.getYear() + " / " + astro.getAstronomicalYear());
+            
+            System.out.println("Today is "+(new AstroDate()).getDayOfWeekName());
         } catch (JPARSECException ve) {
             //JPARSECException.showException(ve);
             System.out.println(ve.getStackTraceDetails());

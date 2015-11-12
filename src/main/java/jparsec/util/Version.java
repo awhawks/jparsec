@@ -290,12 +290,13 @@ public class Version
 						"StarEphem can optionally search and return ephemerides for stars up to magnitude 9.5, instead of the previous limit of 6.5.\n"+
 						"GPhotoCamera can now store photos in the SD card and correctly controls the camera in live view and bulb modes.\n"+
 						"RiseSetTransit class had a bug that produced wrong rise/set values for objects always below the horizon.\n"+
+						"RiseSetTransit class had a bug that produced a lack of rise/set values when used directly for static objects, and not through Ephem class.\n"+
 						"Precession.getAngles had a bug (EPS0 returned in arcsecs instead of radians) producing different errors in ephemerides optimized for accuracy.\n"+
 						"PlanetEphem, JPLEphemeris, and Vsop classes did not correctly manipulate offset positions for satellites.\n"+
 						"Observatory 'Pico Veleta' was 'Pico Veleto' before, name fixed.\n"+
 						"Gildas30m now supports the factor DOPPLER, and properly exports the coordinate type when writting spectra.\n"+
 						"Method modifyRestFrequency in Spectrum30m fixed, with support for doppler factor. Added also modifyVelocityLSR.\n"+
-						"Carlo Dapor joined the development, contributing with many fixes and code cleanup.\n"+
+						"Carlo Dapor joined the development, contributing with many fixes and code cleanup, including a rework of jparsec.time.calendar package.\n"+
 						"Code cleanup: UTF-8 conversion, hashCode implemented next to equals, mains removed, special characters in encoding-independent way, ..."
 
 				+FileIO.getLineSeparator(),
