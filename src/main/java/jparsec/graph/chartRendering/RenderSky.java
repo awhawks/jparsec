@@ -34,6 +34,7 @@ import java.util.BitSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
+
 import jparsec.astronomy.Constellation;
 import jparsec.astronomy.CoordinateSystem;
 import jparsec.astronomy.CoordinateSystem.COORDINATE_SYSTEM;
@@ -12964,7 +12965,7 @@ public class RenderSky
 							ephem = ((EphemElement) data[2]).clone();
 						}
 						if (fullDataAndPrecision) {
-							EphemElement fullEphem = this.getFullEphemerisOfMinorObject(ephem.name, type);
+							EphemElement fullEphem = this.getEphemerisOfMinorObject(ephem.name, type, fullDataAndPrecision);
 							if (fullEphem != null) {
 								ephem.rise = fullEphem.rise;
 								ephem.set = fullEphem.set;
@@ -13019,13 +13020,15 @@ public class RenderSky
 	 * object shown in the rendering.
 	 * @param objName Name of the object.
 	 * @param objType Type of object. Constants defined in this class.
+	 * @param fullEphem True to return full ephemerides include rise, set, transit.
 	 * @return Object with the ephemeris. For some situations only certain fields of the object
 	 * take sense, like name, RA, DEC, rise, set, transit, azimuth, elevation, and maybe some other.
 	 * If the object name is not found null is returned.
 	 * @throws JPARSECException If the object type is set to an invalid value, like stars, planets,
 	 * or any other unrecognized value.
 	 */
-	public EphemElement getFullEphemerisOfMinorObject(String objName, OBJECT objType)
+	public EphemElement getEphemerisOfMinorObject(String objName, OBJECT objType, 
+			boolean fullEphem)
 	throws JPARSECException {
 		EphemerisElement eph = projection.eph.clone();
 		EphemElement ephem = null;
@@ -13038,7 +13041,7 @@ public class RenderSky
 			if (index >= 0) {
 				OrbitalElement orbit = OrbitEphem.getOrbitalElementsOfTransNeptunian(index);
 				eph.orbit = orbit;
-				ephem = Ephem.getEphemeris(projection.time, projection.obs, eph, true); // To get rise, set, transit
+				ephem = Ephem.getEphemeris(projection.time, projection.obs, eph, fullEphem); // To get rise, set, transit
 			}
 			break;
 		case ASTEROID:
@@ -13048,7 +13051,7 @@ public class RenderSky
 			if (index >= 0) {
 				OrbitalElement orbit = OrbitEphem.getOrbitalElementsOfAsteroid(index);
 				eph.orbit = orbit;
-				ephem = Ephem.getEphemeris(projection.time, projection.obs, eph, true); // To get rise, set, transit
+				ephem = Ephem.getEphemeris(projection.time, projection.obs, eph, fullEphem); // To get rise, set, transit
 			}
 			break;
 		case COMET:
@@ -13058,7 +13061,7 @@ public class RenderSky
 			if (index >= 0) {
 				OrbitalElement orbit = OrbitEphem.getOrbitalElementsOfComet(index);
 				eph.orbit = orbit;
-				ephem = Ephem.getEphemeris(projection.time, projection.obs, eph, true); // To get rise, set, transit
+				ephem = Ephem.getEphemeris(projection.time, projection.obs, eph, fullEphem); // To get rise, set, transit
 				int b1 = ephem.name.indexOf("  ");
 				if (b1 > 0) ephem.name = ephem.name.substring(0, b1).trim();
 			}
@@ -13080,7 +13083,7 @@ public class RenderSky
 					}
 				}
 				if (index >= 0) {
-					ephem = Ephem.getEphemeris(projection.time, projection.obs, eph, true); // To get rise, set, transit
+					ephem = Ephem.getEphemeris(projection.time, projection.obs, eph, fullEphem); // To get rise, set, transit
 					int b1 = ephem.name.indexOf("  ");
 					if (b1 > 0) ephem.name = ephem.name.substring(0, b1).trim();
 				}
@@ -13091,7 +13094,7 @@ public class RenderSky
 			index = Spacecraft.getIndex(objName);
 			if (index >= 0) {
 				eph.orbit = Spacecraft.getProbeElement(index);
-				try { ephem = Ephem.getEphemeris(projection.time, projection.obs, eph, true); // To get rise, set, transit
+				try { ephem = Ephem.getEphemeris(projection.time, projection.obs, eph, fullEphem); // To get rise, set, transit
 				} catch (Exception exc) {}
 			}
 			break;
@@ -13101,7 +13104,7 @@ public class RenderSky
 			if (index >= 0) {
 				eph.targetBody = TARGET.NOT_A_PLANET;
 				eph.targetBody.setIndex(index);
-				ephem = Ephem.getEphemeris(projection.time, projection.obs, eph, true);
+				ephem = Ephem.getEphemeris(projection.time, projection.obs, eph, fullEphem);
 			}
 			break;
 		case SUPERNOVA:
@@ -13200,27 +13203,27 @@ public class RenderSky
 					if (star != null) loc = new LocationElement(star.rightAscension, star.declination, 1.0);
 				}
 				if (loc == null) {
-					EphemElement ephem = getFullEphemerisOfMinorObject(s, RenderSky.OBJECT.ASTEROID);
+					EphemElement ephem = getEphemerisOfMinorObject(s, RenderSky.OBJECT.ASTEROID, false);
 					if (ephem != null) loc = new LocationElement(ephem.rightAscension, ephem.declination, 1.0);
 				}
 				if (loc == null) {
-					EphemElement ephem = getFullEphemerisOfMinorObject(s, RenderSky.OBJECT.COMET);
+					EphemElement ephem = getEphemerisOfMinorObject(s, RenderSky.OBJECT.COMET, false);
 					if (ephem != null) loc = new LocationElement(ephem.rightAscension, ephem.declination, 1.0);
 				}
 				if (loc == null) {
-					EphemElement ephem = getFullEphemerisOfMinorObject(s, RenderSky.OBJECT.NEO);
+					EphemElement ephem = getEphemerisOfMinorObject(s, RenderSky.OBJECT.NEO, false);
 					if (ephem != null) loc = new LocationElement(ephem.rightAscension, ephem.declination, 1.0);
 				}
 				if (loc == null) {
-					EphemElement ephem = getFullEphemerisOfMinorObject(s, RenderSky.OBJECT.ARTIFICIAL_SATELLITE);
+					EphemElement ephem = getEphemerisOfMinorObject(s, RenderSky.OBJECT.ARTIFICIAL_SATELLITE, false);
 					if (ephem != null) loc = new LocationElement(ephem.rightAscension, ephem.declination, 1.0);
 				}
 				if (loc == null) {
-					EphemElement ephem = getFullEphemerisOfMinorObject(s, RenderSky.OBJECT.PROBE);
+					EphemElement ephem = getEphemerisOfMinorObject(s, RenderSky.OBJECT.PROBE, false);
 					if (ephem != null) loc = new LocationElement(ephem.rightAscension, ephem.declination, 1.0);
 				}
 				if (loc == null) {
-					EphemElement ephem = getFullEphemerisOfMinorObject(s, RenderSky.OBJECT.TRANSNEPTUNIAN);
+					EphemElement ephem = getEphemerisOfMinorObject(s, RenderSky.OBJECT.TRANSNEPTUNIAN, false);
 					if (ephem != null) loc = new LocationElement(ephem.rightAscension, ephem.declination, 1.0);
 				}
 				if (loc == null) {
@@ -13293,23 +13296,23 @@ public class RenderSky
 					if (ephem != null) loc = new LocationElement(ephem.rightAscension, ephem.declination, 1.0);
 				}
 				if (loc == null) {
-					EphemElement ephem = getFullEphemerisOfMinorObject(s, RenderSky.OBJECT.ASTEROID);
+					EphemElement ephem = getEphemerisOfMinorObject(s, RenderSky.OBJECT.ASTEROID, false);
 					if (ephem != null) loc = new LocationElement(ephem.rightAscension, ephem.declination, 1.0);
 				}
 				if (loc == null) {
-					EphemElement ephem = getFullEphemerisOfMinorObject(s, RenderSky.OBJECT.COMET);
+					EphemElement ephem = getEphemerisOfMinorObject(s, RenderSky.OBJECT.COMET, false);
 					if (ephem != null) loc = new LocationElement(ephem.rightAscension, ephem.declination, 1.0);
 				}
 				if (loc == null) {
-					EphemElement ephem = getFullEphemerisOfMinorObject(s, RenderSky.OBJECT.NEO);
+					EphemElement ephem = getEphemerisOfMinorObject(s, RenderSky.OBJECT.NEO, false);
 					if (ephem != null) loc = new LocationElement(ephem.rightAscension, ephem.declination, 1.0);
 				}
 				if (loc == null) {
-					EphemElement ephem = getFullEphemerisOfMinorObject(s, RenderSky.OBJECT.PROBE);
+					EphemElement ephem = getEphemerisOfMinorObject(s, RenderSky.OBJECT.PROBE, false);
 					if (ephem != null) loc = new LocationElement(ephem.rightAscension, ephem.declination, 1.0);
 				}
 				if (loc == null) {
-					EphemElement ephem = getFullEphemerisOfMinorObject(s, RenderSky.OBJECT.TRANSNEPTUNIAN);
+					EphemElement ephem = getEphemerisOfMinorObject(s, RenderSky.OBJECT.TRANSNEPTUNIAN, false);
 					if (ephem != null) loc = new LocationElement(ephem.rightAscension, ephem.declination, 1.0);
 				}
 				return loc;
@@ -13344,29 +13347,30 @@ public class RenderSky
 				}
 				if (loc == null && type == OBJECT.DEEPSKY) loc = searchDeepSkyObject(s);
 				if (loc == null && type == OBJECT.ASTEROID) {
-					EphemElement ephem = getFullEphemerisOfMinorObject(s, RenderSky.OBJECT.ASTEROID);
+					EphemElement ephem = getEphemerisOfMinorObject(s, RenderSky.OBJECT.ASTEROID, false);
 					if (ephem != null) loc = new LocationElement(ephem.rightAscension, ephem.declination, 1.0);
 				}
 				if (loc == null && type == OBJECT.COMET) {
-					EphemElement ephem = getFullEphemerisOfMinorObject(s, RenderSky.OBJECT.COMET);
+					EphemElement ephem = getEphemerisOfMinorObject(s, RenderSky.OBJECT.COMET, false);
 					if (ephem != null) loc = new LocationElement(ephem.rightAscension, ephem.declination, 1.0);
 				}
 				if (loc == null && type == OBJECT.NEO) {
-					EphemElement ephem = getFullEphemerisOfMinorObject(s, RenderSky.OBJECT.NEO);
+					EphemElement ephem = getEphemerisOfMinorObject(s, RenderSky.OBJECT.NEO, false);
 					if (ephem != null) loc = new LocationElement(ephem.rightAscension, ephem.declination, 1.0);
 				}
 				if (loc == null && type == OBJECT.ARTIFICIAL_SATELLITE) {
-					EphemElement ephem = getFullEphemerisOfMinorObject(s, RenderSky.OBJECT.ARTIFICIAL_SATELLITE);
+					EphemElement ephem = getEphemerisOfMinorObject(s, RenderSky.OBJECT.ARTIFICIAL_SATELLITE, false);
 					if (ephem != null) loc = new LocationElement(ephem.rightAscension, ephem.declination, 1.0);
 				}
 				if (loc == null && type == OBJECT.PROBE) {
-					EphemElement ephem = getFullEphemerisOfMinorObject(s, RenderSky.OBJECT.PROBE);
+					EphemElement ephem = getEphemerisOfMinorObject(s, RenderSky.OBJECT.PROBE, false);
 					if (ephem != null) loc = new LocationElement(ephem.rightAscension, ephem.declination, 1.0);
 				}
 				if (loc == null && type == OBJECT.TRANSNEPTUNIAN) {
-					EphemElement ephem = getFullEphemerisOfMinorObject(s, RenderSky.OBJECT.TRANSNEPTUNIAN);
+					EphemElement ephem = getEphemerisOfMinorObject(s, RenderSky.OBJECT.TRANSNEPTUNIAN, false);
 					if (ephem != null) loc = new LocationElement(ephem.rightAscension, ephem.declination, 1.0);
 				}
+
 				if (loc == null && type == OBJECT.SUPERNOVA) {
 					ArrayList<Object> sncat = null;
 					Object oo = null;
