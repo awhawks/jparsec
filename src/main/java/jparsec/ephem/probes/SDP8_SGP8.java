@@ -927,12 +927,9 @@ public class SDP8_SGP8
 	 * satellite will be probably too faint.
 	 * <P>
 	 * The pass is a search iteration with a precision of 1 minute of time. If
-	 * the satellite appears too quickly or just below minimum elevation only
+	 * the satellite appears too quickly or just above minimum elevation only
 	 * for a few seconds, then the search could fail. Another possible cause
 	 * of fail is for geostationary satellites.
-	 * <P>
-	 * The execution of this method is a low computer could last for quite a long
-	 * time.
 	 *
 	 * @param time Time object.
 	 * @param obs Observer object.
