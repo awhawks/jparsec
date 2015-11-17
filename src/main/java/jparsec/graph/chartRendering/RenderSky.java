@@ -516,7 +516,8 @@ public class RenderSky
 						projection.jd = jd_TDB;
         			}
 
-        			render.trajectory[i].loc_path[j] = projection.getApparentLocationInSelectedCoordinateSystem(render.trajectory[i].loc_path[j], true, true, 0);
+        			if (render.trajectory[i].loc_path[j] != null) 
+        				render.trajectory[i].loc_path[j] = projection.getApparentLocationInSelectedCoordinateSystem(render.trajectory[i].loc_path[j], true, true, 0);
         			if (i == 0 && render.trajectory[i].loc_path[j] != null) {
         				double lon = render.trajectory[i].loc_path[j].getLongitude();
 	        			if (j == 0 && lon < ra_min) ra_min = lon;
@@ -10113,16 +10114,20 @@ public class RenderSky
 							double stepTime = render.trajectory[index].stepTimeJD * render.trajectory[index].labelsSteps;
 							if (render.trajectory[index].showTime && (stepTime < 1.0 || (//stepTime < 15 &&
 									(jd-0.5) != (int)(jd-0.5)))) {
-								AstroDate astro2 = new AstroDate(jd + 0.5 / 1440.0);
-								String label2 = Functions.fmt(astro2.getHour(), 2, ':')+Functions.fmt(astro2.getMinute(), 2, ' ');
-								if (render.trajectory[index].stepTimeJD * render.trajectory[index].labelsSteps * 1440.0 < 1.0) {
-									label = label2;
-									if (render.trajectory[index].stepTimeJD * render.trajectory[index].labelsSteps * 1440.0 < 0.5) {
-										label = label.trim()+":"+Functions.formatValue(astro.getSeconds(), 1);
+								AstroDate astro2 = new AstroDate(jd);
+								if (stepTime * 1440.0 < 2.0) {
+									if (stepTime * 1440.0 <= 0.1) {
+										String sec = Functions.formatValue(astro.getSeconds(), 1);
+										if (sec.indexOf(".") == 1) sec = "0" + sec;
+										label = Functions.fmt(astro2.getHour(), 2, ':')+Functions.fmt(astro2.getMinute(), 2, ' ')+":"+sec;
 									} else {
-										label = label.trim()+":"+Functions.fmt((int)astro.getSeconds(), 2, ' ');
+										label = Functions.fmt(astro2.getHour(), 2, ':')+Functions.fmt(astro2.getMinute(), 2, ' ');
+										String sec = Functions.fmt(astro.getRoundedSecond(), 2, ' ').trim();
+										if (!sec.equals("00")) label += ":" + sec;
 									}
 								} else {
+									astro2.add(0.5 / 1440.0);
+									String label2 = Functions.fmt(astro2.getHour(), 2, ':')+Functions.fmt(astro2.getMinute(), 2, ' ');
 									if (label2.trim().endsWith("00:00")) label2 = DataSet.replaceAll(label2, "00:00", "0h", true);
 									label += " "+label2;
 								}
