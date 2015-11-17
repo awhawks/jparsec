@@ -1190,7 +1190,7 @@ public class SDP4_SGP4
 			ephem = s.calcSatellite(new_time, obs, eph, false);
 		}
 
-		double next_pass = TimeScale.getJD(time, obs, eph, SCALE.LOCAL_TIME) + nstep * time_step;
+		double next_pass = JD_LT + nstep * time_step;
 
 		if (next_pass >= JD_LT + maxDays) {
 //			JPARSECException.addWarning("could not find next pass time during next "+maxDays+" days.");

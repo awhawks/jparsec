@@ -876,7 +876,7 @@ public class SatelliteEphem
 			ephem = SatelliteEphem.calcSatellite(new_time, obs, eph, sat, false);
 		}
 
-		double next_pass = TimeScale.getJD(time, obs, eph, SCALE.LOCAL_TIME) + nstep * time_step;
+		double next_pass = JD_LT + nstep * time_step;
 
 		FAST_MODE = oldf;
 		if (next_pass >= JD_LT + maxDays) {
