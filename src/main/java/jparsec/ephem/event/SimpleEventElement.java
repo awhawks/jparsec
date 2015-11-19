@@ -30,6 +30,7 @@ import jparsec.observer.*;
 import jparsec.astronomy.CoordinateSystem;
 import jparsec.ephem.*;
 import jparsec.ephem.EphemerisElement.ALGORITHM;
+import jparsec.ephem.EphemerisElement.COORDINATES_TYPE;
 import jparsec.ephem.Target.TARGET;
 import jparsec.ephem.planets.EphemElement;
 import jparsec.graph.DataSet;
@@ -253,7 +254,7 @@ public class SimpleEventElement implements Serializable {
 		String obj = null;
 		try {
 			TARGET t = Target.getID(body);
-			if (!t.isPlanet()) {
+			if (t != TARGET.Moon && !t.isPlanet()) {
 				t = Target.getID(secondaryBody);
 				if (t.isPlanet()) {
 					obj = secondaryBody;
@@ -265,6 +266,12 @@ public class SimpleEventElement implements Serializable {
 			}
 		} catch (Exception exc) {}
 
+		if (obj == null && body != null && eventLocation == null) {
+			try {
+				LocationElement loc = new LocationElement(body, eph.ephemType == COORDINATES_TYPE.APPARENT);
+				eventLocation = loc;
+			} catch (Exception exc) {}
+		}
 		if (obj == null && eventLocation == null) return -1;
 		double et = this.time;
 		if (endTime > this.time) et = (et + this.endTime) * 0.5;
