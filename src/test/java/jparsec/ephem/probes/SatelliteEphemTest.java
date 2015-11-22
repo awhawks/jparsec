@@ -1,10 +1,12 @@
 package jparsec.ephem.probes;
 
 import java.util.ArrayList;
+
 import jparsec.astronomy.Constellation;
 import jparsec.ephem.EphemerisElement;
 import jparsec.ephem.Functions;
 import jparsec.ephem.Target;
+import jparsec.ephem.event.SimpleEventElement;
 import jparsec.graph.DataSet;
 import jparsec.io.ReadFile;
 import jparsec.math.Constant;
@@ -55,7 +57,8 @@ public class SatelliteEphemTest {
                     EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.TOPOCENTRIC, EphemerisElement.REDUCTION_METHOD.IAU_2006,
                     EphemerisElement.FRAME.ICRF);
             eph.algorithm = EphemerisElement.ALGORITHM.ARTIFICIAL_SATELLITE;
-
+            eph.optimizeForSpeed();
+            
             //for (int i=0; i<readFile.getNumberOfObjects(); i++) {
             //    index = i;
 
@@ -63,8 +66,21 @@ public class SatelliteEphemTest {
             //EphemElement ephem = jparsec.ephem.Ephem.getEphemeris(time, observer, eph, false);
             SatelliteEphemElement ephem = SatelliteEphem.satEphemeris(time, observer, eph, false);
 
-            ephem.nextPass = SDP4_SGP4.getNextPass(time, observer, eph, SatelliteEphem.getArtificialSatelliteOrbitalElement(index), 15 * Constant.DEG_TO_RAD, 7, true);
+            SatelliteOrbitalElement soe = SatelliteEphem.getArtificialSatelliteOrbitalElement(index);
+            double minElev = 15 * Constant.DEG_TO_RAD;
+            ephem.nextPass = SDP4_SGP4.getNextPass(time, observer, eph, soe, minElev, 7, true);
 
+            // TODO: Test method (Internet)
+            time = new TimeElement();
+            double maxDays = 100;
+            double t0 = System.currentTimeMillis();
+            ArrayList<SimpleEventElement> transits = SDP4_SGP4.getNextSunOrMoonTransits(time, observer, eph, soe, maxDays);
+            double t1 = System.currentTimeMillis();
+            for (int i=0; i<transits.size(); i++) {
+            	System.out.println(transits.get(i).toString());
+            }
+            System.out.println("Computed in "+(float) ((t1-t0)*0.001)+" s");
+            
             /*
             // To calculate the next rise, set, transit after the next one
             TimeElement newTime = new TimeElement(ephem.set[0] + 5.0 / 1440.0, SCALE.LOCAL_TIME);
@@ -196,16 +212,17 @@ public class SatelliteEphemTest {
             SatelliteEphem.setSatellitesFromExternalFile(null);
             //if (!Configuration.isAcceptableDateForArtificialSatellites(time.astroDate))
             //    Configuration.updateArtificialSatellitesInTempDir(time.astroDate);
-            double min_elevation = 0.0, maxDays = 2.0;
+            double min_elevation = 0.0;
+            maxDays = 2.0;
             int precision = 5;
             boolean current = true;
-            long t0 = System.currentTimeMillis();
+            t0 = System.currentTimeMillis();
             int nmax = SatelliteEphem.getArtificialSatelliteCount();
             eph.correctForEOP = false;
 
             for (int n = 0; n < nmax; n++) {
                 eph.targetBody.setIndex(n);
-                SatelliteOrbitalElement soe = SatelliteEphem.getArtificialSatelliteOrbitalElement(n);
+                soe = SatelliteEphem.getArtificialSatelliteOrbitalElement(n);
                 if (soe.getStatus() == SatelliteOrbitalElement.STATUS.FAILED || soe.getStatus() == SatelliteOrbitalElement.STATUS.UNKNOWN)
                     continue;
 
@@ -229,7 +246,7 @@ public class SatelliteEphemTest {
                 }
             }
 
-            long t1 = System.currentTimeMillis();
+            t1 = System.currentTimeMillis();
             System.out.println("Done in " + (float) ((t1 - t0) / 1000.0) + "s");
 
             /*

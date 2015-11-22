@@ -439,10 +439,18 @@ public class SimpleEventElement implements Serializable {
 				}
 			}
 			timeE = new TimeElement(this.getEventTime(obs, eph, timeScale), timeScale);
-			out += ": "+timeE.toMinString();
+			if (Math.abs(endTime-time) < 3.0 / 1440.0) {
+				out += ": "+timeE.toString();				
+			} else {
+				out += ": "+timeE.toMinString();
+			}
 			if (this.endTime > -1E100) {
 				TimeElement timeEE = new TimeElement(this.getEventEndTime(obs, eph, timeScale), timeScale);
-				out += " -> "+timeEE.toMinString();
+				if (Math.abs(endTime-time) < 3.0 / 1440.0) {
+					out += " -> "+timeEE.toString();				
+				} else {
+					out += " -> "+timeEE.toMinString();
+				}
 			}
 		} catch (Exception e) { }
 		boolean translateIt = false;
@@ -522,11 +530,19 @@ public class SimpleEventElement implements Serializable {
 							if (details.equals("DST1")) details = Translate.translate(1273);
 							if (details.equals("DST2")) details = Translate.translate(1274);
 						}
-						out = details + ": " + timeE.toMinString();
+						if (Math.abs(endTime-time) < 3.0 / 1440.0) {
+							out = details + ": " + timeE.toString();				
+						} else {
+							out = details + ": " + timeE.toMinString();
+						}
 						if (this.endTime > -1E100) {
 							try {
 								timeE = new TimeElement(this.getEventEndTime(obs, eph, timeScale), timeScale);
-								out += " -> "+timeE.toMinString();
+								if (Math.abs(endTime-time) < 3.0 / 1440.0) {
+									out += " -> "+timeE.toString();				
+								} else {
+									out += " -> "+timeE.toMinString();
+								}
 							} catch (Exception exc) {}
 						}
 					}

@@ -268,4 +268,15 @@ public class SatelliteOrbitalElement implements Serializable
 		if (status > 0) return name.substring(0, status).trim();
 		return name;
 	}
+	
+	/**
+	 * Returns if this satellite is an Iridium satellite or not.
+	 * This method only checks for the name of the satellite, it 
+	 * returns true if the name contains the string 'Iridium'.
+	 * @return True or false.
+	 */
+	public boolean isIridium() {
+		int i = name.toLowerCase().indexOf("iridium");
+		return i >= 0;
+	}
 }

@@ -33,9 +33,12 @@ import jparsec.astronomy.Star;
 import jparsec.ephem.EphemerisElement;
 import jparsec.ephem.Functions;
 import jparsec.ephem.Nutation;
+import jparsec.ephem.Obliquity;
 import jparsec.ephem.Precession;
 import jparsec.ephem.Target.TARGET;
 import jparsec.ephem.event.Saros;
+import jparsec.ephem.event.SimpleEventElement;
+import jparsec.ephem.event.SimpleEventElement.EVENT;
 import jparsec.graph.DataSet;
 import jparsec.io.FileIO;
 import jparsec.io.ReadFile;
@@ -110,6 +113,12 @@ public class SatelliteEphem
 	 * for the full Moon (!).
 	 */
 	public static double MAXIMUM_IRIDIUM_ANGLE_FOR_LUNAR_FLARES = 0.25;
+
+	/**
+	 * Value for an Iridium angle not valid, for instance when computing ephemerides
+	 * for non Iridium satellites.
+	 */
+	public static double IRIDIUM_ANGLE_NOT_APPLICABLE = 100;
 
 	/**
 	 * Sets the list of orbital elements of satellite to that of an
@@ -511,25 +520,27 @@ public class SatelliteEphem
 		if ((SEL * Constant.RAD_TO_DEG < -10.0) && !(ECL.equals("Eclipsed")))
 			ECL = "Possibly visible";
 
-		double iridiumAngle = SatelliteEphem.iridiumAngle(new double[] {Sx, Sy, Sz}, new double[] {Vx, Vy, Vz},
-				new double[] {Sx - Ox, Sy - Oy, Sz - Oz}, new double[] {Hx, Hy, Hz});
-
-		// Obtain Moon iridium angle
-		double jdTT = TimeScale.getJD(time, obs, eph, SCALE.TERRESTRIAL_TIME);
-		double pos[] = Saros.getMoonPosition(jdTT);
-		double iridiumAngleMoon = 100;
-		if (pos[3] < 29.5306-3.0 && pos[3] > 3.0) {
-			double toIlluminatedDiskCenter = 0.25 * Constant.DEG_TO_RAD * (pos[3] - 29.53 * 0.5) / 15.0;
-			LocationElement locMoon = CoordinateSystem.eclipticToEquatorial(
-					new LocationElement(pos[0] + toIlluminatedDiskCenter, pos[1], 1.0), INS, true);
-			double locM[] = locMoon.getRectangularCoordinates();
-			double MOONx = locM[0], MOONy = locM[1], MOONz = locM[2];
-
-			double Mx = MOONx * C - MOONy * S;
-			double My = MOONx * S + MOONy * C;
-			double Mz = MOONz;
-			iridiumAngleMoon = SatelliteEphem.iridiumAngle(new double[] {Sx, Sy, Sz}, new double[] {Vx, Vy, Vz},
-					new double[] {Sx - Ox, Sy - Oy, Sz - Oz}, new double[] {Mx, My, Mz});
+		double iridiumAngle = SatelliteEphem.IRIDIUM_ANGLE_NOT_APPLICABLE, iridiumAngleMoon = iridiumAngle;
+		if (sat.isIridium()) {
+			iridiumAngle = SatelliteEphem.iridiumAngle(new double[] {Sx, Sy, Sz}, new double[] {Vx, Vy, Vz},
+					new double[] {Sx - Ox, Sy - Oy, Sz - Oz}, new double[] {Hx, Hy, Hz});
+	
+			// Obtain Moon iridium angle
+			double jdTT = TimeScale.getJD(time, obs, eph, SCALE.TERRESTRIAL_TIME);
+			double pos[] = Saros.getMoonPosition(jdTT);
+			if (pos[3] < 29.5306-3.0 && pos[3] > 3.0) {
+				double toIlluminatedDiskCenter = 0.25 * Constant.DEG_TO_RAD * (pos[3] - 29.53 * 0.5) / 15.0;
+				LocationElement locMoon = CoordinateSystem.eclipticToEquatorial(
+						new LocationElement(pos[0] + toIlluminatedDiskCenter, pos[1], 1.0), INS, true);
+				double locM[] = locMoon.getRectangularCoordinates();
+				double MOONx = locM[0], MOONy = locM[1], MOONz = locM[2];
+	
+				double Mx = MOONx * C - MOONy * S;
+				double My = MOONx * S + MOONy * C;
+				double Mz = MOONz;
+				iridiumAngleMoon = SatelliteEphem.iridiumAngle(new double[] {Sx, Sy, Sz}, new double[] {Vx, Vy, Vz},
+						new double[] {Sx - Ox, Sy - Oy, Sz - Oz}, new double[] {Mx, My, Mz});
+			}
 		}
 
 		// Obtain Sun unit vector in EQ coordinates
@@ -889,6 +900,114 @@ public class SatelliteEphem
 		return next_pass;
 	}
 
+	/**
+	 * Obtain all transits of a given satellite on top of the Sun or the Moon.
+	 *
+	 * @param time Time object.
+	 * @param obs Observer object.
+	 * @param eph Ephemeris object.
+	 * @param sat Satellite orbital elements.
+	 * @param maxDays Maximum number of days to search for a next pass.
+	 * @return An array of event objects with the type of transit (on the Sun or the
+	 * Moon) using the secondary object field, and with the initial and ending transit times.
+	 * The details field will contain the elevation above the horizon, always >= 0. 
+	 * Precision is 0.5s.
+	 * @throws JPARSECException If the method fails, for example because of an
+	 *         invalid date.
+	 */
+	public static ArrayList<SimpleEventElement> getNextSunOrMoonTransits(TimeElement time, ObserverElement obs, EphemerisElement eph,
+			SatelliteOrbitalElement sat, double maxDays) throws JPARSECException
+	{
+		// Check Ephemeris object
+		if (!EphemerisElement.checkEphemeris(eph))
+			throw new JPARSECException("invalid ephemeris object.");
+
+		double min_elevation = 0;
+		boolean current = true;
+		ArrayList<SimpleEventElement> out = new ArrayList<SimpleEventElement>();
+		double JD = TimeScale.getJD(time, obs, eph, SCALE.UNIVERSAL_TIME_UTC);
+		TimeElement new_time = new TimeElement(JD, SCALE.UNIVERSAL_TIME_UTC);
+		double jdF = maxDays + JD;
+		double time_step = 0.5 / Constant.SECONDS_PER_DAY;
+
+		while (true) {
+			maxDays = jdF - new_time.astroDate.jd();
+			double next_pass = getNextPass(new_time, obs, eph, sat, min_elevation, maxDays, current);
+			if (next_pass == 0) break;
+			current = false;
+			
+			// Obtain ephemeris
+			FAST_MODE = true;
+			SatelliteEphemElement ephem = calcSatellite(time, obs, eph, sat, false);
+	
+			// Obtain Julian day in reference scale
+			new_time = new TimeElement(Math.abs(next_pass), SCALE.LOCAL_TIME);
+			JD = TimeScale.getJD(new_time, obs, eph, SCALE.UNIVERSAL_TIME_UTC);
+			double JD_TT = TimeScale.getJD(new_time, obs, eph, SCALE.TERRESTRIAL_TIME);
+			new_time = new TimeElement(JD, SCALE.UNIVERSAL_TIME_UTC);
+			
+			int nstep = 0;
+			boolean insideSun = false, insideMoon = false;
+			double obl = Obliquity.meanObliquity(Functions.toCenturies(JD_TT), eph) + 
+					Nutation.getFastNutation(JD_TT)[1];
+			
+			while (ephem.elevation > min_elevation || nstep == 0)
+			{
+				nstep ++;
+				double new_JD = JD + (double) nstep * time_step;
+	
+				AstroDate astro = new AstroDate(new_JD);
+				new_time = new TimeElement(astro, SCALE.UNIVERSAL_TIME_UTC);
+	
+				ephem = calcSatellite(new_time, obs, eph, sat, false);
+				
+				LocationElement loc = CoordinateSystem.equatorialToEcliptic(ephem.getEquatorialLocation(), obl, true);
+				double sun[] = Saros.getSunPosition(JD_TT + (double) nstep * time_step);
+				double moon[] = Saros.getMoonPosition(JD_TT + (double) nstep * time_step);
+				
+				double dSun = LocationElement.getAngularDistance(loc, new LocationElement(sun[0], sun[1], 1.0)) * Constant.RAD_TO_DEG;
+				double dMoon = LocationElement.getAngularDistance(loc, new LocationElement(moon[0], moon[1], 1.0)) * Constant.RAD_TO_DEG;
+				
+				if (dSun < 0.25 && !insideSun) {
+					String det = Functions.formatAngleAsDegrees(ephem.elevation, 1);
+					SimpleEventElement see = new SimpleEventElement(JD_TT + (double) nstep * time_step, EVENT.TRANSIT, det);
+					see.body = sat.name;
+					see.secondaryBody = TARGET.SUN.getName();
+					see.eventLocation = ephem.getEquatorialLocation();
+					out.add(see);
+					insideSun = true;
+				} else {
+					if (insideSun && dSun >= 0.25) {
+						insideSun = false;
+						SimpleEventElement see = out.get(out.size()-1);
+						if (see.secondaryBody.equals(TARGET.SUN.getName())) 
+							see.endTime = JD_TT + (nstep - 1.0) * time_step;
+					}
+				}
+				if (dMoon < 0.25 && !insideMoon) {
+					String det = Functions.formatAngleAsDegrees(ephem.elevation, 1);
+					SimpleEventElement see = new SimpleEventElement(JD_TT + (double) nstep * time_step, EVENT.TRANSIT, det);
+					see.body = sat.name;
+					see.secondaryBody = TARGET.Moon.getName();
+					see.eventLocation = ephem.getEquatorialLocation();
+					out.add(see);
+					insideMoon = true;
+				} else {
+					if (insideMoon && dMoon >= 0.25) {
+						insideMoon = false;
+						SimpleEventElement see = out.get(out.size()-1);
+						if (see.secondaryBody.equals(TARGET.Moon.getName())) 
+							see.endTime = JD_TT + (nstep - 1.0) * time_step;
+					}
+				}
+				double min = Math.min(dMoon, dSun);
+				if (min > 5) nstep += (int) (min / (time_step * Constant.SECONDS_PER_DAY));
+			}
+		}
+		
+		return out;
+	}
+	
 	/**
 	 * Returns the magnitude of an iridium flare based on the panel angle.
 	 * The function 2.1013871 * Math.log(angle) - 1.6738664 is used here,
