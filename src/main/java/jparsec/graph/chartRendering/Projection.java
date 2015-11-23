@@ -240,7 +240,7 @@ public class Projection
 	{
 		return FastMath.acos(FastMath.sin(loc.getLatitude()) * sin_lat0 + FastMath.cos(loc.getLatitude()) * cos_lat0 * FastMath.cos(loc.getLongitude()-loc0.getLongitude()));
 	}
-	
+
 	/**
 	 * Returns the distance to the current central position of rendering.
 	 * better than 0.2 deg of precision.
@@ -570,7 +570,7 @@ public class Projection
 
 		return pos;
 	}
-	
+
 	/**
 	 * Obtains position of an object using the current sky projection and
 	 * coordinate system, without transforming them to equatorial.
@@ -1545,7 +1545,7 @@ public class Projection
 		createNewArrayWhenProjecting = newArray;
 		return ang;
 	}
-	
+
 	/**
 	 * Sets a new direction for the pole in the current projection.
 	 * This overrides the initial value in the {@linkplain SkyRenderElement} object.

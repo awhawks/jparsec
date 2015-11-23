@@ -930,7 +930,7 @@ public class Country
 				return DST_RULE.S1;
 
 			JPARSECException
-					.addWarning(Translate.translate(Translate.JPARSEC_NO_INFORMATION_ABOUT_DAYLIGHT_SAVING_TIME_EXISTS_FOR_COUNTRY)+" " + this.name()+".");
+					.addWarning(Translate.translate(274)+" " + this.name()+".");
 			return DST_RULE.NONE;
 		}
 	};

@@ -21,7 +21,7 @@
  */
 package jparsec.vo;
 
-import javax.mail.*; 
+import javax.mail.*;
 import javax.mail.internet.*;
 import java.util.Properties;
 import javax.activation.*;

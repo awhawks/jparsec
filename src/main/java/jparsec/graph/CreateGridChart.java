@@ -1266,7 +1266,7 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 		        	{
 						JOptionPane.showMessageDialog(null,
 								Translate.translate(229),
-								Translate.translate(Translate.JPARSEC_ERROR), JOptionPane.ERROR_MESSAGE);
+								Translate.translate(230), JOptionPane.ERROR_MESSAGE);
 		        	}
 		        }
 			}

@@ -385,8 +385,8 @@ public class SolarEclipse
 	 */
 	public MoonEventElement[] getEvents()
 	{
-		String e[] = new String[] {Translate.translate(Translate.JPARSEC_PARTIAL), Translate.translate(Translate.JPARSEC_TOTAL)};
-		if (this.type == ECLIPSE_TYPE.ANNULAR) e[1] = Translate.translate(Translate.JPARSEC_ANNULAR);
+		String e[] = new String[] {Translate.translate(169), Translate.translate(400)};
+		if (this.type == ECLIPSE_TYPE.ANNULAR) e[1] = Translate.translate(167);
 		int count = 0;
 		MoonEventElement event[] = new MoonEventElement[2];
 		for (int i=0; i<2; i++)

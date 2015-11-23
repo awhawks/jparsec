@@ -55,7 +55,7 @@ public class DustOpacityTest {
             // Construct the new chart
             ChartElement chart = new ChartElement(series, ChartElement.TYPE.XY_CHART, ChartElement.SUBTYPE.XY_SCATTER,
                     "Opacity of a mixture of grains for different grain size distributions",
-                    Translate.translate(Translate.JPARSEC_WAVELENGTH) + " (@mum)", Translate.translate(Translate.JPARSEC_OPACITY) + " (cm^{2} g^{-1})", false,
+                    Translate.translate(419) + " (@mum)", Translate.translate(339) + " (cm^{2} g^{-1})", false,
                     600, 600);
             chart.showErrorBars = false;
             chart.xTickLabels = ChartElement.TICK_LABELS.LOGARITHM_VALUES;

@@ -990,7 +990,7 @@ public class ObserverElement implements Serializable {
 			obs.dstCode = Country.getID(city.country).getDSTCode();
 		} catch (JPARSECException e) {
 			obs.dstCode = DST_RULE.NONE;
-			JPARSECException.addWarning(Translate.translate(Translate.JPARSEC_UNKNOWN_DAYLIGHT_SAVING_TIME_RULE));
+			JPARSECException.addWarning(Translate.translate(273));
 		}
 
 		obs.isAnObservatory = false;
@@ -1021,7 +1021,7 @@ public class ObserverElement implements Serializable {
 			obs.dstCode = Country.getID(observatory.country).getDSTCode();
 		} catch (Exception e) {
 			obs.dstCode = DST_RULE.NONE;
-			JPARSECException.addWarning(Translate.translate(Translate.JPARSEC_UNKNOWN_DAYLIGHT_SAVING_TIME_RULE));
+			JPARSECException.addWarning(Translate.translate(273));
 		}
 
 		obs.isAnObservatory = true;
@@ -1144,7 +1144,7 @@ public class ObserverElement implements Serializable {
 			dstCode = Country.getID(country).getDSTCode();
 		} catch (JPARSECException e) {
 			dstCode = DST_RULE.NONE;
-			JPARSECException.addWarning(Translate.translate(Translate.JPARSEC_UNKNOWN_DAYLIGHT_SAVING_TIME_RULE));
+			JPARSECException.addWarning(Translate.translate(273));
 		}
 
 		obtainElevation(false);
@@ -1233,7 +1233,7 @@ public class ObserverElement implements Serializable {
 					dstCode = Country.getID(cc.country).getDSTCode();
 				} catch (JPARSECException e) {
 					dstCode = DST_RULE.NONE;
-					JPARSECException.addWarning(Translate.translate(Translate.JPARSEC_UNKNOWN_DAYLIGHT_SAVING_TIME_RULE));
+					JPARSECException.addWarning(Translate.translate(273));
 				}
 			} catch (Exception e3) {
 				// throw new JPARSECException("error while reading texture file " + FileIO.DATA_TEXTURES_DIRECTORY + s + "." , e3);

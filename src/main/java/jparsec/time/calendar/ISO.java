@@ -119,7 +119,7 @@ public class ISO extends BaseCalendar
 	public int getDayOfWeek() {
 		return day;
 	}
-	
+
 	public int getWeek() {
 		return week;
 	}

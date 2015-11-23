@@ -1116,18 +1116,18 @@ public class Picture
 	throws JPARSECException {
 		frame = new javax.swing.JFrame(title);
 		JMenuBar menuBar = new JMenuBar();
-        JMenu menu = new JMenu(Translate.translate(Translate.JPARSEC_FILE));
+        JMenu menu = new JMenu(Translate.translate(260));
         menuBar.add(menu);
 	    MyAction myAction = new MyAction(this);
-        saveAs = new JMenuItem(" "+Translate.translate(Translate.JPARSEC_SAVE)+"...   ");
+        saveAs = new JMenuItem(" "+Translate.translate(261)+"...   ");
 	    saveAs.addActionListener(myAction);
 	    saveAs.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S,
                                  Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
-        print = new JMenuItem(" "+Translate.translate(Translate.JPARSEC_PRINT)+"...   ");
+        print = new JMenuItem(" "+Translate.translate(262)+"...   ");
         print.addActionListener(myAction);
         print.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P,
                                  Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
-        close = new JMenuItem(" "+Translate.translate(Translate.JPARSEC_CLOSE)+"...   ");
+        close = new JMenuItem(" "+Translate.translate(263)+"...   ");
         close.addActionListener(myAction);
         close.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q,
                                  Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
@@ -2574,7 +2574,7 @@ public class Picture
 							Translate.translate(
 									"Could not save the chart. Please enter the full\n" +
 									"file name including one of these extensions:\n" +
-									"jpg, png, bmp, gif."), Translate.translate(Translate.JPARSEC_ERROR), JOptionPane.ERROR_MESSAGE);
+									"jpg, png, bmp, gif."), Translate.translate(230), JOptionPane.ERROR_MESSAGE);
 	        	}
 			}
 			if (obj == print)
@@ -2584,7 +2584,7 @@ public class Picture
 	        	} catch (JPARSECException e)
 	        	{
 					JOptionPane.showMessageDialog(null,
-							Translate.translate(Translate.JPARSEC_COULD_NOT_PRINT_THE_CHART), Translate.translate(Translate.JPARSEC_ERROR), JOptionPane.ERROR_MESSAGE);
+							Translate.translate(243), Translate.translate(230), JOptionPane.ERROR_MESSAGE);
 	        	}
 			}
 			if (obj == close) frame.dispose();

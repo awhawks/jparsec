@@ -5,14 +5,13 @@ import jparsec.ephem.EphemerisElement;
 import jparsec.ephem.Functions;
 import jparsec.ephem.Target;
 import jparsec.ephem.planets.EphemElement;
-import jparsec.io.FileIO;
+import jparsec.io.ConsoleReport;
 import jparsec.observer.City;
 import jparsec.observer.CityElement;
 import jparsec.observer.ObserverElement;
 import jparsec.time.AstroDate;
 import jparsec.time.TimeElement;
 import jparsec.util.JPARSECException;
-import jparsec.util.Translate;
 
 public class VsopTest {
     /**
@@ -40,23 +39,8 @@ public class VsopTest {
 
             EphemElement ephem = Ephem.getEphemeris(time, observer, eph, true);
             String name = ephem.name;
-            String sep = FileIO.getLineSeparator(), out = sep + "VSOP87" + sep;
-            out += name + " " + Translate.translate(Translate.JPARSEC_RIGHT_ASCENSION) + ": " + Functions.formatRA(ephem.rightAscension, 5) + sep;
-            out += name + " " + Translate.translate(Translate.JPARSEC_DECLINATION) + ": " + Functions.formatDEC(ephem.declination, 4) + sep;
-            out += name + " " + Translate.translate(Translate.JPARSEC_DISTANCE) + ": " + Functions.formatValue(ephem.distance, 12) + sep;
-            out += name + " " + Translate.translate(Translate.JPARSEC_ELONGATION) + ": " + Functions.formatAngleAsDegrees(ephem.elongation, 8) + sep;
-            out += name + " " + Translate.translate(Translate.JPARSEC_PHASE_ANGLE) + ": " + Functions.formatAngleAsDegrees(ephem.phaseAngle, 8) + sep;
-            out += name + " " + Translate.translate(Translate.JPARSEC_PHASE) + ": " + Functions.formatValue(ephem.phase, 8) + sep;
-            out += name + " " + Translate.translate(Translate.JPARSEC_HELIOCENTRIC_ECLIPTIC_LONGITUDE) + ": " + Functions.formatAngleAsDegrees(ephem.heliocentricEclipticLongitude, 8) + sep;
-            out += name + " " + Translate.translate(Translate.JPARSEC_HELIOCENTRIC_ECLIPTIC_LATITUDE) + ": " + Functions.formatAngleAsDegrees(ephem.heliocentricEclipticLatitude, 8) + sep;
-            out += name + " " + Translate.translate(Translate.JPARSEC_HELIOCENTRIC_DISTANCE) + ": " + Functions.formatValue(ephem.distanceFromSun, 8) + sep;
-            out += name + " " + Translate.translate(Translate.JPARSEC_SUBSOLAR_LONGITUDE) + ": " + Functions.formatAngleAsDegrees(ephem.subsolarLongitude, 6) + sep;
-            out += name + " " + Translate.translate(Translate.JPARSEC_SUBSOLAR_LATITUDE) + ": " + Functions.formatAngleAsDegrees(ephem.subsolarLatitude, 6) + sep;
-            out += name + " " + Translate.translate(Translate.JPARSEC_POSITION_ANGLE_OF_AXIS) + ": " + Functions.formatAngleAsDegrees(ephem.positionAngleOfAxis, 6) + sep;
-            out += name + " " + Translate.translate(Translate.JPARSEC_POSITION_ANGLE_OF_POLE) + ": " + Functions.formatAngleAsDegrees(ephem.positionAngleOfPole, 6) + sep;
-            out += name + " " + Translate.translate(Translate.JPARSEC_LONGITUDE_OF_CENTRAL_MERIDIAN) + ": " + Functions.formatAngleAsDegrees(ephem.longitudeOfCentralMeridian, 6) + sep;
-
-            System.out.println(out);
+            System.out.println("VSOP87");
+            ConsoleReport.fullEphemReportToConsole(ephem);
             System.out.println("DE200");
             eph.algorithm = EphemerisElement.ALGORITHM.JPL_DE405;
             ephem = Ephem.getEphemeris(time, observer, eph, false);

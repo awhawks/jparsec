@@ -120,58 +120,58 @@ public class ConsoleReport
 		String name = ephem.name + " ";
 		if (!showName) name = "";
 		String out = "", sep = FileIO.getLineSeparator();
-		out += name + Translate.translate(Translate.JPARSEC_RIGHT_ASCENSION)+": " + Functions.formatRA(ephem.rightAscension, 1+decimalArcsec) + sep;
-		out += name + Translate.translate(Translate.JPARSEC_DECLINATION)+": " + Functions.formatDEC(ephem.declination, decimalArcsec) + sep;
-		out += name + Translate.translate(Translate.JPARSEC_DISTANCE)+": " + Functions.formatValue(ephem.distance*factor1, n) + " " + unit1 + sep;
+		out += name + Translate.translate(21)+": " + Functions.formatRA(ephem.rightAscension, 1+decimalArcsec) + sep;
+		out += name + Translate.translate(22)+": " + Functions.formatDEC(ephem.declination, decimalArcsec) + sep;
+		out += name + Translate.translate(299)+": " + Functions.formatValue(ephem.distance*factor1, n) + " " + unit1 + sep;
 		if (ephem.rise != null || ephem.transit != null || ephem.set != null) {
 			int l = 0;
 			if (ephem.rise != null) l = ephem.rise.length;
 			if (ephem.set != null && ephem.set.length > l) l = ephem.set.length;
 			if (ephem.transit != null && ephem.transit.length > l) l = ephem.transit.length;
 			for (int i=0; i<l; i++) {
-				if (ephem.rise != null && ephem.rise.length > i) out += name + Translate.translate(Translate.JPARSEC_RISE)+": " + TimeFormat.formatJulianDayAsDateAndTime(ephem.rise[i], SCALE.LOCAL_TIME) + sep;
-				if (ephem.transit != null && ephem.transit.length > i) out += name + Translate.translate(Translate.JPARSEC_TRANSIT)+": " + TimeFormat.formatJulianDayAsDateAndTime(ephem.transit[i], SCALE.LOCAL_TIME) + sep;
-				if (ephem.transitElevation != null && ephem.transitElevation.length > i) out += name + Translate.translate(Translate.JPARSEC_TRANSIT_ELEVATION)+": " + Functions.formatAngle(ephem.transitElevation[i], 1) + sep;
-				if (ephem.set != null && ephem.set.length > i) out += name + Translate.translate(Translate.JPARSEC_SET)+": " + TimeFormat.formatJulianDayAsDateAndTime(ephem.set[i], SCALE.LOCAL_TIME) + sep;
+				if (ephem.rise != null && ephem.rise.length > i) out += name + Translate.translate(295)+": " + TimeFormat.formatJulianDayAsDateAndTime(ephem.rise[i], SCALE.LOCAL_TIME) + sep;
+				if (ephem.transit != null && ephem.transit.length > i) out += name + Translate.translate(297)+": " + TimeFormat.formatJulianDayAsDateAndTime(ephem.transit[i], SCALE.LOCAL_TIME) + sep;
+				if (ephem.transitElevation != null && ephem.transitElevation.length > i) out += name + Translate.translate(298)+": " + Functions.formatAngle(ephem.transitElevation[i], 1) + sep;
+				if (ephem.set != null && ephem.set.length > i) out += name + Translate.translate(296)+": " + TimeFormat.formatJulianDayAsDateAndTime(ephem.set[i], SCALE.LOCAL_TIME) + sep;
 			}
 		}
-		out += name + Translate.translate(Translate.JPARSEC_LIGHT_TIME)+": " + (float) (ephem.lightTime * factor2) + " " + unit2 + sep;
-		out += name + Translate.translate(Translate.JPARSEC_CONSTELLATION)+": " + ephem.constellation + sep;
-		if (!isStar) out += name + Translate.translate(Translate.JPARSEC_ELONGATION)+": " + Functions.formatAngle(ephem.elongation, decimalArcsec) + sep;
-		if (!isStar) out += name + Translate.translate(Translate.JPARSEC_PHASE_ANGLE)+": " + Functions.formatAngle(ephem.phaseAngle, decimalArcsec) + sep;
-		if (!isStar) out += name + Translate.translate(Translate.JPARSEC_PHASE)+": " + Functions.formatValue(ephem.phase, 3) + sep;
-		if (!isStar) out += name + Translate.translate(Translate.JPARSEC_HELIOCENTRIC_ECLIPTIC_LONGITUDE)+": " + Functions.formatAngle(ephem.heliocentricEclipticLongitude, decimalArcsec) + sep;
-		if (!isStar) out += name + Translate.translate(Translate.JPARSEC_HELIOCENTRIC_ECLIPTIC_LATITUDE)+": " + Functions.formatAngle(ephem.heliocentricEclipticLatitude, decimalArcsec) + sep;
-		if (!isStar) out += name + Translate.translate(Translate.JPARSEC_HELIOCENTRIC_DISTANCE)+": " + Functions.formatValue(ephem.distanceFromSun, 5) + sep;
-		out += name + Translate.translate(Translate.JPARSEC_AZIMUTH)+": " + Functions.formatAngle(ephem.azimuth, decimalArcsec) + sep;
-		out += name + Translate.translate(Translate.JPARSEC_ELEVATION)+": " + Functions.formatAngle(ephem.elevation, decimalArcsec) + sep;
-		if (!isStar) out += name + Translate.translate(Translate.JPARSEC_DEFECT_OF_ILLUMINATION)+": " + Functions.formatAngle(ephem.defectOfIllumination, 3) + sep;
-		out += name + Translate.translate(Translate.JPARSEC_ANGULAR_RADIUS)+": " + Functions.formatAngle(ephem.angularRadius, 3) + sep;
-		out += name + Translate.translate(Translate.JPARSEC_MAGNITUDE)+": " + (ephem.magnitude > 99 ? "-" : Functions.formatValue(ephem.magnitude, 3)) + sep;
-		if (!isStar) out += name + Translate.translate(Translate.JPARSEC_SURFACE_BRIGHTNESS)+": " + Functions.formatValue(ephem.surfaceBrightness, 3) + sep;
-		out += name + Translate.translate(Translate.JPARSEC_POLE_RIGHT_ASCENSION)+": " + Functions.formatAngle(ephem.northPoleRA, decimalArcsec) + sep;
-		out += name + Translate.translate(Translate.JPARSEC_POLE_DECLINATION)+": " + Functions.formatAngle(ephem.northPoleDEC, decimalArcsec) + sep;
-		if (!isStar) out += name + Translate.translate(Translate.JPARSEC_SUBSOLAR_LONGITUDE)+": " + Functions.formatAngle(ephem.subsolarLongitude, decimalArcsec) + sep;
-		if (!isStar) out += name + Translate.translate(Translate.JPARSEC_SUBSOLAR_LATITUDE)+": " + Functions.formatAngle(ephem.subsolarLatitude, decimalArcsec) + sep;
-		out += name + Translate.translate(Translate.JPARSEC_PARALACTIC_ANGLE)+": " + Functions.formatAngle(ephem.paralacticAngle, decimalArcsec) + sep;
-		if (!isStar) out += name + Translate.translate(Translate.JPARSEC_BRIGHT_LIMB_ANGLE)+": " + Functions.formatAngle(ephem.brightLimbAngle, decimalArcsec) + sep;
-		out += name + Translate.translate(Translate.JPARSEC_POSITION_ANGLE_OF_AXIS)+": " + Functions.formatAngle(ephem.positionAngleOfAxis, decimalArcsec) + sep;
-		out += name + Translate.translate(Translate.JPARSEC_POSITION_ANGLE_OF_POLE)+": " + Functions.formatAngle(ephem.positionAngleOfPole, decimalArcsec) + sep;
+		out += name + Translate.translate(300)+": " + (float) (ephem.lightTime * factor2) + " " + unit2 + sep;
+		out += name + Translate.translate(321)+": " + ephem.constellation + sep;
+		if (!isStar) out += name + Translate.translate(301)+": " + Functions.formatAngle(ephem.elongation, decimalArcsec) + sep;
+		if (!isStar) out += name + Translate.translate(302)+": " + Functions.formatAngle(ephem.phaseAngle, decimalArcsec) + sep;
+		if (!isStar) out += name + Translate.translate(303)+": " + Functions.formatValue(ephem.phase, 3) + sep;
+		if (!isStar) out += name + Translate.translate(304)+": " + Functions.formatAngle(ephem.heliocentricEclipticLongitude, decimalArcsec) + sep;
+		if (!isStar) out += name + Translate.translate(305)+": " + Functions.formatAngle(ephem.heliocentricEclipticLatitude, decimalArcsec) + sep;
+		if (!isStar) out += name + Translate.translate(306)+": " + Functions.formatValue(ephem.distanceFromSun, 5) + sep;
+		out += name + Translate.translate(28)+": " + Functions.formatAngle(ephem.azimuth, decimalArcsec) + sep;
+		out += name + Translate.translate(29)+": " + Functions.formatAngle(ephem.elevation, decimalArcsec) + sep;
+		if (!isStar) out += name + Translate.translate(307)+": " + Functions.formatAngle(ephem.defectOfIllumination, 3) + sep;
+		out += name + Translate.translate(308)+": " + Functions.formatAngle(ephem.angularRadius, 3) + sep;
+		out += name + Translate.translate(157)+": " + (ephem.magnitude > 99 ? "-" : Functions.formatValue(ephem.magnitude, 3)) + sep;
+		if (!isStar) out += name + Translate.translate(309)+": " + Functions.formatValue(ephem.surfaceBrightness, 3) + sep;
+		out += name + Translate.translate(319)+": " + Functions.formatAngle(ephem.northPoleRA, decimalArcsec) + sep;
+		out += name + Translate.translate(320)+": " + Functions.formatAngle(ephem.northPoleDEC, decimalArcsec) + sep;
+		if (!isStar) out += name + Translate.translate(311)+": " + Functions.formatAngle(ephem.subsolarLongitude, decimalArcsec) + sep;
+		if (!isStar) out += name + Translate.translate(312)+": " + Functions.formatAngle(ephem.subsolarLatitude, decimalArcsec) + sep;
+		out += name + Translate.translate(313)+": " + Functions.formatAngle(ephem.paralacticAngle, decimalArcsec) + sep;
+		if (!isStar) out += name + Translate.translate(314)+": " + Functions.formatAngle(ephem.brightLimbAngle, decimalArcsec) + sep;
+		out += name + Translate.translate(315)+": " + Functions.formatAngle(ephem.positionAngleOfAxis, decimalArcsec) + sep;
+		out += name + Translate.translate(316)+": " + Functions.formatAngle(ephem.positionAngleOfPole, decimalArcsec) + sep;
 
 		TARGET t = Target.getID(ephem.name);
 		if (t == TARGET.JUPITER || t == TARGET.SATURN || t == TARGET.URANUS || t == TARGET.NEPTUNE) {
 			if (t == TARGET.JUPITER || t == TARGET.SATURN) {
-				out += name + Translate.translate(Translate.JPARSEC_LONGITUDE_OF_CENTRAL_MERIDIAN)+" "+Translate.translate(Translate.JPARSEC_SYSTEM).toLowerCase()+" I: " + Functions.formatAngle(
+				out += name + Translate.translate(318)+" "+Translate.translate(317).toLowerCase()+" I: " + Functions.formatAngle(
 					ephem.longitudeOfCentralMeridianSystemI, decimalArcsec) + sep;
 			}
 			if (t == TARGET.JUPITER) {
-				out += name + Translate.translate(Translate.JPARSEC_LONGITUDE_OF_CENTRAL_MERIDIAN)+" "+Translate.translate(Translate.JPARSEC_SYSTEM).toLowerCase()+" II: " + Functions.formatAngle(
+				out += name + Translate.translate(318)+" "+Translate.translate(317).toLowerCase()+" II: " + Functions.formatAngle(
 					ephem.longitudeOfCentralMeridianSystemII, decimalArcsec) + sep;
 			}
-			out += name + Translate.translate(Translate.JPARSEC_LONGITUDE_OF_CENTRAL_MERIDIAN)+" "+Translate.translate(Translate.JPARSEC_SYSTEM).toLowerCase()+" III: " + Functions.formatAngle(
+			out += name + Translate.translate(318)+" "+Translate.translate(317).toLowerCase()+" III: " + Functions.formatAngle(
 					ephem.longitudeOfCentralMeridianSystemIII, decimalArcsec) + sep;
 		} else {
-			out += name + Translate.translate(Translate.JPARSEC_LONGITUDE_OF_CENTRAL_MERIDIAN)+": " + Functions.formatAngle(ephem.longitudeOfCentralMeridian, decimalArcsec) + sep;
+			out += name + Translate.translate(318)+": " + Functions.formatAngle(ephem.longitudeOfCentralMeridian, decimalArcsec) + sep;
 		}
 		return out;
 	}
@@ -244,18 +244,18 @@ public class ConsoleReport
 		String name = ephem.name + " ";
 		if (!showName) name = "";
 		String out = "", sep = FileIO.getLineSeparator();
-		out += name + Translate.translate(Translate.JPARSEC_RIGHT_ASCENSION)+": " + Functions.formatRA(ephem.rightAscension, 1+decimalArcsec) + sep;
-		out += name + Translate.translate(Translate.JPARSEC_DECLINATION)+": " + Functions.formatDEC(ephem.declination, decimalArcsec) + sep;
-		out += name + Translate.translate(Translate.JPARSEC_DISTANCE)+": " + Functions.formatValue(ephem.distance * factor, n) + " " + unit + sep;
-		if (ephem.rise != null) out += name + Translate.translate(Translate.JPARSEC_RISE)+": " + TimeFormat.formatJulianDayAsDateAndTime(ephem.rise[0], SCALE.LOCAL_TIME) + sep;
-		if (ephem.transit != null) out += name + Translate.translate(Translate.JPARSEC_TRANSIT)+": " + TimeFormat.formatJulianDayAsDateAndTime(ephem.transit[0], SCALE.LOCAL_TIME) + sep;
-		if (ephem.set != null) out += name + Translate.translate(Translate.JPARSEC_SET)+": " + TimeFormat.formatJulianDayAsDateAndTime(ephem.set[0], SCALE.LOCAL_TIME) + sep;
-		if (!isStar) out += name + Translate.translate(Translate.JPARSEC_ELONGATION)+": " + Functions.formatAngle(ephem.elongation, decimalArcsec) + sep;
-		if (!isStar) out += name + Translate.translate(Translate.JPARSEC_PHASE_ANGLE)+": " + Functions.formatAngle(ephem.phaseAngle, decimalArcsec) + sep;
-		out += name + Translate.translate(Translate.JPARSEC_CONSTELLATION)+": " + ephem.constellation + sep;
-		out += name + Translate.translate(Translate.JPARSEC_AZIMUTH)+": " + Functions.formatAngle(ephem.azimuth, decimalArcsec) + sep;
-		out += name + Translate.translate(Translate.JPARSEC_ELEVATION)+": " + Functions.formatAngle(ephem.elevation, decimalArcsec) + sep;
-		out += name + Translate.translate(Translate.JPARSEC_MAGNITUDE)+": " + (ephem.magnitude > 99 ? "-" : Functions.formatValue(ephem.magnitude, 3)) + sep;
+		out += name + Translate.translate(21)+": " + Functions.formatRA(ephem.rightAscension, 1+decimalArcsec) + sep;
+		out += name + Translate.translate(22)+": " + Functions.formatDEC(ephem.declination, decimalArcsec) + sep;
+		out += name + Translate.translate(299)+": " + Functions.formatValue(ephem.distance * factor, n) + " " + unit + sep;
+		if (ephem.rise != null) out += name + Translate.translate(295)+": " + TimeFormat.formatJulianDayAsDateAndTime(ephem.rise[0], SCALE.LOCAL_TIME) + sep;
+		if (ephem.transit != null) out += name + Translate.translate(297)+": " + TimeFormat.formatJulianDayAsDateAndTime(ephem.transit[0], SCALE.LOCAL_TIME) + sep;
+		if (ephem.set != null) out += name + Translate.translate(296)+": " + TimeFormat.formatJulianDayAsDateAndTime(ephem.set[0], SCALE.LOCAL_TIME) + sep;
+		if (!isStar) out += name + Translate.translate(301)+": " + Functions.formatAngle(ephem.elongation, decimalArcsec) + sep;
+		if (!isStar) out += name + Translate.translate(302)+": " + Functions.formatAngle(ephem.phaseAngle, decimalArcsec) + sep;
+		out += name + Translate.translate(321)+": " + ephem.constellation + sep;
+		out += name + Translate.translate(28)+": " + Functions.formatAngle(ephem.azimuth, decimalArcsec) + sep;
+		out += name + Translate.translate(29)+": " + Functions.formatAngle(ephem.elevation, decimalArcsec) + sep;
+		out += name + Translate.translate(157)+": " + (ephem.magnitude > 99 ? "-" : Functions.formatValue(ephem.magnitude, 3)) + sep;
 
 		return out;
 	}

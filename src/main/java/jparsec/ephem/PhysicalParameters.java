@@ -533,7 +533,7 @@ public class PhysicalParameters
 	 * resolutions.
 	 * @param target Target body.
 	 * @param JD Julian day in dynamical time.
-	 * @param rr Distance parameter of the body: distance (to Earth) * distance from Sun. 
+	 * @param rr Distance parameter of the body: distance (to Earth) * distance from Sun.
 	 * For the Sun this value is its distance.
 	 * @param PH Phase angle in degrees, as a positive value. Both this value and the previous
 	 * one affects only the returned magnitude (first value).
@@ -746,7 +746,7 @@ public class PhysicalParameters
 	 * resolutions.
 	 * @param target Target body.
 	 * @param JD Julian day in dynamical time.
-	 * @param rr Distance parameter of the body: distance (to Earth) * distance from Sun. 
+	 * @param rr Distance parameter of the body: distance (to Earth) * distance from Sun.
 	 * For the Sun this value is its distance.
 	 * @param PH Phase angle in degrees, as a positive value. Both this value and the previous
 	 * one affects only the returned magnitude (first value).
@@ -926,7 +926,7 @@ public class PhysicalParameters
 	 * resolutions.
 	 * @param target Target body.
 	 * @param JD Julian day in dynamical time.
-	 * @param rr Distance parameter of the body: distance (to Earth) * distance from Sun. 
+	 * @param rr Distance parameter of the body: distance (to Earth) * distance from Sun.
 	 * For the Sun this value is its distance.
 	 * @param PH Phase angle in degrees, as a positive value. Both this value and the previous
 	 * one affects only the returned magnitude (first value).

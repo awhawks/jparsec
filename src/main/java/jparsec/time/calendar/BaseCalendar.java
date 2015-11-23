@@ -110,7 +110,7 @@ public abstract class BaseCalendar implements Serializable {
     public double getJulianDate() {
         return julianDate;
     }
-    
+
     /**
      * Returns the epoch of this calendar. The epoch is the fixed date
      * for the date of the beggining of this calendar.

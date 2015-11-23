@@ -24,7 +24,7 @@ package jparsec.graph.chartRendering;
 /**
  * A simple Rectangle class to mimic the AWT one. Note this class cannot extends
  * the AWT one since it is used in both AWT and Android.
- * 
+ *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */

@@ -1363,7 +1363,7 @@ public class OrbitEphem
 
 	/**
 	 * Geocentric rectangular coordinates of the Sun. Mean equinox and ecliptic
-	 * of date. Adequate for fast and low precission ephemeris. Ecliptic latitude 
+	 * of date. Adequate for fast and low precission ephemeris. Ecliptic latitude
 	 * is supossed to be 0.0.
 	 * <P>
 	 * Expansion is from "Planetary Programs and Tables" by Pierre Bretagnon and

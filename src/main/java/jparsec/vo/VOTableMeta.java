@@ -192,7 +192,7 @@ public class VOTableMeta implements Serializable {
 
 		return !(ref != null ? !ref.equals(that.ref) : that.ref != null);
 	}
-	
+
 	@Override
 	public int hashCode() {
 		int result = name != null ? name.hashCode() : 0;
@@ -207,7 +207,7 @@ public class VOTableMeta implements Serializable {
 		result = 31 * result + (ref != null ? ref.hashCode() : 0);
 		return result;
 	}
-	
+
 	/**
 	 * Clones this instance.
 	 */

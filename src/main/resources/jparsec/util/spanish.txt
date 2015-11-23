@@ -1316,3 +1316,7 @@ Itokawa
 Nutación
 Libración
 Baricentro del Sistema Solar
+Fogonazo de Iridium
+inicio
+final
+máximo

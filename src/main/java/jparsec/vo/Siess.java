@@ -320,7 +320,7 @@ public class Siess {
 		}
 
 		ChartElement chart = new ChartElement(series, ChartElement.TYPE.XY_CHART, ChartElement.SUBTYPE.XY_SCATTER,
-				Translate.translate(Translate.JPARSEC_SIESS_TRACKS), Translate.translate(Siess.FIELD_LABELS[xField]), Translate.translate(Siess.FIELD_LABELS[yField]), false, width, height);
+				Translate.translate(415), Translate.translate(Siess.FIELD_LABELS[xField]), Translate.translate(Siess.FIELD_LABELS[yField]), false, width, height);
 		chart.showErrorBars = false;
 		chart.xTickLabels = ChartElement.TICK_LABELS.LOGARITHM_VALUES;
 		chart.yTickLabels = ChartElement.TICK_LABELS.LOGARITHM_VALUES;
@@ -427,7 +427,7 @@ public class Siess {
 		}
 
 		ChartElement chart = new ChartElement(series, ChartElement.TYPE.XY_CHART, ChartElement.SUBTYPE.XY_SCATTER,
-				Translate.translate(Translate.JPARSEC_SIESS_TRACKS), Translate.translate(Siess.FIELD_LABELS[xField]), Translate.translate(Siess.FIELD_LABELS[yField]), false, width, height);
+				Translate.translate(415), Translate.translate(Siess.FIELD_LABELS[xField]), Translate.translate(Siess.FIELD_LABELS[yField]), false, width, height);
 		chart.showErrorBars = false;
 		chart.xTickLabels = ChartElement.TICK_LABELS.LOGARITHM_VALUES;
 		chart.yTickLabels = ChartElement.TICK_LABELS.LOGARITHM_VALUES;

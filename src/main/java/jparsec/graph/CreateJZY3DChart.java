@@ -1,10 +1,10 @@
 /*
  * This file is part of JPARSEC library.
- * 
+ *
  * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
- *  
+ *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
- * 
+ *
  * JPARSEC library is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -106,7 +106,7 @@ public class CreateJZY3DChart {
 		this.n = n;
 		init(fxy, min, max, n);
 	}
-	
+
 	private void init(final ChartElement3D chart3d) throws JPARSECException {
         chart = new AWTChart(Quality.Advanced, "awt");
 		int size = 0;
@@ -137,7 +137,7 @@ public class CreateJZY3DChart {
 		                return gridChart.getIntensityAt(x, y);
 		            }
 		        };
-		        
+
 		        // Create the object to represent the function over the given range.
 		        final Shape surface = Builder.buildOrthonormal(new OrthonormalGrid(range, steps, range, steps), mapper);
 	        	surface.setColorMapper(new ColorMapper(new ColorMapRainbow(), surface.getBounds().getZmin(), surface.getBounds().getZmax(), new Color(1, 1, 1, .5f)));
@@ -154,7 +154,7 @@ public class CreateJZY3DChart {
 			    	        if (chart3d.zLabel != null && chart3d.zLabel.length() > 0) {
 			        			g.setColor(java.awt.Color.BLACK);
 			        			tl = new TextLabel(chart3d.zLabel);
-			        			tl.draw(g, chart.getView().getCanvas().getRendererWidth(), chart.getView().getCanvas().getRendererHeight()-10, ALIGN.RIGHT);    	        	
+			        			tl.draw(g, chart.getView().getCanvas().getRendererWidth(), chart.getView().getCanvas().getRendererHeight()-10, ALIGN.RIGHT);
 			    	        }
 			        	}
 			        };
@@ -162,15 +162,15 @@ public class CreateJZY3DChart {
 		        }
 
 		        if (chart3d.xLabel != null && chart3d.xLabel.length() > 0 && chart3d.xLabel.indexOf("@") < 0)
-		        	chart.getView().getAxe().getLayout().setXAxeLabel(chart3d.xLabel); 
+		        	chart.getView().getAxe().getLayout().setXAxeLabel(chart3d.xLabel);
 		        if (chart3d.yLabel != null && chart3d.yLabel.length() > 0 && chart3d.yLabel.indexOf("@") < 0)
-		        	chart.getView().getAxe().getLayout().setYAxeLabel(chart3d.yLabel); 
+		        	chart.getView().getAxe().getLayout().setYAxeLabel(chart3d.yLabel);
 		        if (chart3d.zLabel != null && chart3d.zLabel.length() > 0 && chart3d.zLabel.indexOf("@") < 0)
 		        	chart.getView().getAxe().getLayout().setZAxeLabel(chart3d.zLabel);
-		        
+
 		        if (chart3d.showLegend) {
-		    		surface.setLegend(new AWTColorbarLegend(surface, 
-							chart.getView().getAxe().getLayout().getZTickProvider(), 
+		    		surface.setLegend(new AWTColorbarLegend(surface,
+							chart.getView().getAxe().getLayout().getZTickProvider(),
 							chart.getView().getAxe().getLayout().getZTickRenderer()));
 		        }
 
@@ -237,16 +237,16 @@ public class CreateJZY3DChart {
                 return gridChart.getIntensityAt(x, y);
             }
         };
-        
+
         // Create the object to represent the function over the given range.
         final Shape surface = Builder.buildOrthonormal(new OrthonormalGrid(range, steps, range, steps), mapper);
-        if (gridChart.colorModel == COLOR_MODEL.BLUE_TO_RED || gridChart.colorModel == COLOR_MODEL.RED_TO_BLUE) 
+        if (gridChart.colorModel == COLOR_MODEL.BLUE_TO_RED || gridChart.colorModel == COLOR_MODEL.RED_TO_BLUE)
         	surface.setColorMapper(new ColorMapper(new ColorMapRainbow(), surface.getBounds().getZmin(), surface.getBounds().getZmax(), new Color(1, 1, 1, .5f)));
-        if (gridChart.colorModel == COLOR_MODEL.BLACK_TO_WHITE || gridChart.colorModel == COLOR_MODEL.WHITE_TO_BLACK) 
+        if (gridChart.colorModel == COLOR_MODEL.BLACK_TO_WHITE || gridChart.colorModel == COLOR_MODEL.WHITE_TO_BLACK)
         	surface.setColorMapper(new ColorMapper(new ColorMapGrayscale(), surface.getBounds().getZmin(), surface.getBounds().getZmax(), new Color(1, 1, 1, .5f)));
         surface.setFaceDisplayed(true);
         surface.setWireframeDisplayed(true);
-        surface.setWireframeColor(Color.BLACK);	
+        surface.setWireframeColor(Color.BLACK);
 
         if (!gridChart.ocultLevels && gridChart.levels != null && gridChart.levels.length > 0) {
 /*    		MapperContourPictureGenerator contour = new MapperContourPictureGenerator(mapper, range, range);
@@ -260,7 +260,7 @@ public class CreateJZY3DChart {
     			for (int y = 0; y < nPoints; y++) {
         			double py = range.getMin() + step * y;
     				if (contours[x][y]>-Double.MAX_VALUE){ // Non contours points are -Double.MAX_VALUE and are not painted
-    					points[x*nPoints+y] = new Coord3d((float) px, (float) py, (float)contours[x][y]);									
+    					points[x*nPoints+y] = new Coord3d((float) px, (float) py, (float)contours[x][y]);
     				} else {
     					points[x*nPoints+y] = new Coord3d((float)px, (float) py, (float)0.0);
     				}
@@ -269,7 +269,7 @@ public class CreateJZY3DChart {
     		MultiColorScatter scatter = new MultiColorScatter(points, surface.getColorMapper());
 	        chart.getScene().add(scatter);
 */
-	        
+
 			// Another, less brute force, but buggy way (and also slow). At least levels can be defined ...
             MapperContourMeshGenerator contour = new MapperContourMeshGenerator(mapper, range, range);
             ContourAxeBox cab = new ContourAxeBox(chart.getView().getBounds());
@@ -279,8 +279,8 @@ public class CreateJZY3DChart {
         }
 
         if (gridChart.legend != null && gridChart.legend.length() > 0) {
-    		surface.setLegend(new AWTColorbarLegend(surface, 
-					chart.getView().getAxe().getLayout().getZTickProvider(), 
+    		surface.setLegend(new AWTColorbarLegend(surface,
+					chart.getView().getAxe().getLayout().getZTickProvider(),
 					chart.getView().getAxe().getLayout().getZTickRenderer()));
         }
 
@@ -292,16 +292,16 @@ public class CreateJZY3DChart {
     	        if (gridChart.legend != null && gridChart.legend.length() > 0) {
         			g.setColor(java.awt.Color.BLACK);
         			tl = new TextLabel(gridChart.legend);
-        			tl.draw(g, chart.getView().getCanvas().getRendererWidth(), chart.getView().getCanvas().getRendererHeight()-10, ALIGN.RIGHT);    	        	
+        			tl.draw(g, chart.getView().getCanvas().getRendererWidth(), chart.getView().getCanvas().getRendererHeight()-10, ALIGN.RIGHT);
     	        }
         	}
         };
         chart.addRenderer(title);
 
         if (gridChart.xLabel != null && gridChart.xLabel.length() > 0 && gridChart.xLabel.indexOf("@") < 0)
-        	chart.getView().getAxe().getLayout().setXAxeLabel(gridChart.xLabel); 
+        	chart.getView().getAxe().getLayout().setXAxeLabel(gridChart.xLabel);
         if (gridChart.yLabel != null && gridChart.yLabel.length() > 0 && gridChart.yLabel.indexOf("@") < 0)
-        	chart.getView().getAxe().getLayout().setYAxeLabel(gridChart.yLabel); 
+        	chart.getView().getAxe().getLayout().setYAxeLabel(gridChart.yLabel);
         if (gridChart.legend != null && gridChart.legend.length() > 0 && gridChart.legend.indexOf("@") < 0)
         	chart.getView().getAxe().getLayout().setZAxeLabel(gridChart.legend);
 
@@ -328,16 +328,16 @@ public class CreateJZY3DChart {
 				}
             }
         };
-        
+
         // Create the object to represent the function over the given range.
         final Shape surface = Builder.buildOrthonormal(new OrthonormalGrid(range, steps, range, steps), mapper);
        	surface.setColorMapper(new ColorMapper(new ColorMapRainbow(), surface.getBounds().getZmin(), surface.getBounds().getZmax(), new Color(1, 1, 1, .5f)));
         surface.setFaceDisplayed(true);
         surface.setWireframeDisplayed(true);
-        surface.setWireframeColor(Color.BLACK);		
-        
-		surface.setLegend(new AWTColorbarLegend(surface, 
-				chart.getView().getAxe().getLayout().getZTickProvider(), 
+        surface.setWireframeColor(Color.BLACK);
+
+		surface.setLegend(new AWTColorbarLegend(surface,
+				chart.getView().getAxe().getLayout().getZTickProvider(),
 				chart.getView().getAxe().getLayout().getZTickRenderer()));
 
 		Renderer2d title = new Renderer2d(){
@@ -348,7 +348,7 @@ public class CreateJZY3DChart {
         	}
         };
         chart.addRenderer(title);
-        
+
         chart.getScene().add(surface);
         chart.addController(new AWTCameraKeyController());
         chart.addController(new AWTCameraMouseController());
@@ -379,7 +379,7 @@ public class CreateJZY3DChart {
 	{
 		return this.chart_elem;
 	}
-	
+
 	private void writeObject(ObjectOutputStream out)
 	throws IOException {
 		out.writeObject(this.chart_elem);
@@ -413,10 +413,10 @@ public class CreateJZY3DChart {
 			} catch (Exception exc) {}
 		}
  	}
-	
+
 	/**
 	 * Exports the chart as an PNG file.
-	 * 
+	 *
 	 * @param file_name File name without extension.
 	 * @throws JPARSECException If an error occurs.
 	 */
@@ -429,7 +429,7 @@ public class CreateJZY3DChart {
 		Picture p = new Picture(this.chartAsBufferedImage());
 		p.write(file_name);
 	}
-	
+
 	/**
 	 * Returns a BufferedImage instance with the current chart, adequate to
 	 * write an image to disk.

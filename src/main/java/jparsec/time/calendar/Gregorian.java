@@ -121,7 +121,7 @@ public class Gregorian extends BaseCalendar
 	public int getDayOfWeek() {
 		return (int) Calendar.dayOfWeekFromFixed(fixed);
 	}
-	
+
 	/**
 	 * Is this a leap year?
 	 *

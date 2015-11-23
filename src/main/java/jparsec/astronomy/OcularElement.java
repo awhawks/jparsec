@@ -52,7 +52,7 @@ public class OcularElement implements Serializable {
 		focalLength = 20;
 		fieldOfView = 50.0 * Constant.DEG_TO_RAD;
 		reticleSize = 32;
-		name = Translate.translate(Translate.JPARSEC_DEFAULT_OCULAR)+" 1-1/4, 20mm, 50\u00b0";
+		name = Translate.translate(64)+" 1-1/4, 20mm, 50\u00b0";
 	}
 
 	/**

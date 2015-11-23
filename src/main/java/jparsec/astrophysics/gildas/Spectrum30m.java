@@ -815,15 +815,15 @@ public class Spectrum30m implements Serializable
     	title += " ("+header[0].value+')';
     	String legend = header[4].value;
 		SimpleChartElement chart1 = new SimpleChartElement(ChartElement.TYPE.XY_CHART,
-				ChartElement.SUBTYPE.XY_SCATTER, x, y, title, Translate.translate(Translate.JPARSEC_VELOCITY)+" (km s^{-1})", "T_{mb} (K)", legend, true, false,
+				ChartElement.SUBTYPE.XY_SCATTER, x, y, title, Translate.translate(292)+" (km s^{-1})", "T_{mb} (K)", legend, true, false,
 				width, height);
 		switch (xUnit)
 		{
 		case CHANNEL_NUMBER:
-			chart1.xLabel = Translate.translate(Translate.JPARSEC_CHANNEL_NUMBER);
+			chart1.xLabel = Translate.translate(293);
 			break;
 		case FREQUENCY_MHZ:
-			chart1.xLabel = Translate.translate(Translate.JPARSEC_FREQUENCY)+" (MHz)";
+			chart1.xLabel = Translate.translate(294)+" (MHz)";
 			break;
 		default:
 			break;

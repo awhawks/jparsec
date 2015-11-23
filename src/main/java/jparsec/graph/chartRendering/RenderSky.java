@@ -516,7 +516,7 @@ public class RenderSky
 						projection.jd = jd_TDB;
         			}
 
-        			if (render.trajectory[i].loc_path[j] != null) 
+        			if (render.trajectory[i].loc_path[j] != null)
         				render.trajectory[i].loc_path[j] = projection.getApparentLocationInSelectedCoordinateSystem(render.trajectory[i].loc_path[j], true, true, 0);
         			if (i == 0 && render.trajectory[i].loc_path[j] != null) {
         				double lon = render.trajectory[i].loc_path[j].getLongitude();
@@ -4315,7 +4315,7 @@ public class RenderSky
 						g.generalPathMoveTo(pathConLim, pos0[0], pos0[1]);
 						start = true;
 					} else {
-						if (oldpos0 != null && (this.isInTheScreen((int)pos0[0], (int)pos0[1], size) || 
+						if (oldpos0 != null && (this.isInTheScreen((int)pos0[0], (int)pos0[1], size) ||
 								render.telescope.invertHorizontal || render.telescope.invertVertical ||
 								rec.isLineIntersectingRectangle(oldpos0[0], oldpos0[1], pos0[0], pos0[1]))) {
 							g.generalPathLineTo(pathConLim, pos0[0], pos0[1]);
@@ -4848,11 +4848,11 @@ public class RenderSky
 			if (obj.length <= 3) {
 				locF = ((LocationElement) obj[1]);
 				if (obj.length == 3) {
-					mag = (Float) obj[2];					
+					mag = (Float) obj[2];
 					obj = (Object[]) objectsJ2000.get((Integer) obj[0]);
 				} else {
 					obj = (Object[]) objectsJ2000.get((Integer) obj[0]);
-					mag = (Float) obj[4];					
+					mag = (Float) obj[4];
 				}
 			} else {
 				mag = (Float) obj[4];
@@ -4953,9 +4953,9 @@ public class RenderSky
 							if (file.equals("m42.jpg")) file = "m42.png";
 							if (file.equals("m37.jpg")) file = "m37.png";
 							String file0 = file;
-							if (	(file0.equals("m43.jpg") && fieldDeg > 0.25) 
+							if (	(file0.equals("m43.jpg") && fieldDeg > 0.25)
 									|| (file0.equals("ngc 2244.jpg") && fieldDeg > 0.44)
-									|| ((file0.equals("m110.jpg") || file0.equals("m32.jpg")) && fieldDeg > 1.3) 
+									|| ((file0.equals("m110.jpg") || file0.equals("m32.jpg")) && fieldDeg > 1.3)
 									|| (file0.equals("ngc 5195.jpg") && fieldDeg > 0.04)
 //									|| (Math.abs(jd-Constant.J2000) > 365250 && (Math.abs(type) == 2 || Math.abs(type) == 4))
 								    // In epochs far from J2000 stars in clusters/nebula will appear moved due to proper motions
@@ -8702,7 +8702,7 @@ public class RenderSky
 			if (eph.correctForExtinction) {
 				sd.mag = new float[] {starElem.magnitude, (float) correctForExtinction(locStar0, starElem.magnitude)};
 			} else {
-				sd.mag = new float[] {starElem.magnitude};				
+				sd.mag = new float[] {starElem.magnitude};
 			}
 
 			String spectrum = "OBAFGKM";
@@ -9006,7 +9006,7 @@ public class RenderSky
 			o = DataBase.getData(db_objects);
 		} else {
 			o = DataBase.getData("objects", threadID, true);
-		} 
+		}
 //		if (o == null) o = populate();
 		if (o != null) objects = new ArrayList<Object>(Arrays.asList((Object[]) o));
 		if (objects == null) return null;
@@ -9026,7 +9026,7 @@ public class RenderSky
 				locF = (LocationElement) obj[1];
 				obj = (Object[]) objectsJ2000.get((Integer) obj[0]);
 			} else {
-				locF = (LocationElement) obj[3];				
+				locF = (LocationElement) obj[3];
 			}
 
 			String messier = (String) obj[1];
@@ -9062,7 +9062,7 @@ public class RenderSky
 					locF = (LocationElement) obj[1];
 					obj = (Object[]) objectsJ2000.get((Integer) obj[0]);
 				} else {
-					locF = (LocationElement) obj[3];				
+					locF = (LocationElement) obj[3];
 				}
 
 				String com = "";
@@ -9462,21 +9462,21 @@ public class RenderSky
 		for (int type = 0; type <= 7; type ++) {
 			objt[type] = Translate.translate(types2Int[type]).toLowerCase();
 		}
-		t19 = Translate.translate(Translate.JPARSEC_ECLIPTIC);
-		t18 = Translate.translate(Translate.JPARSEC_EQUATOR);
-		t20 = Translate.translate(Translate.JPARSEC_GALACTIC_PLANE);
-		t23 = Translate.translate(Translate.JPARSEC_HORIZON);
+		t19 = Translate.translate(19);
+		t18 = Translate.translate(18);
+		t20 = Translate.translate(20);
+		t23 = Translate.translate(23);
 		for (int type = 0; type <= 11; type ++) {
 			mont[type] = Translate.translate(41 + type);
 		}
-		t21 = Translate.translate(Translate.JPARSEC_RIGHT_ASCENSION);
-		t24 = Translate.translate(Translate.JPARSEC_ECLIPTIC_LONGITUDE);
-		t26 = Translate.translate(Translate.JPARSEC_GALACTIC_LONGITUDE);
-		t28 = Translate.translate(Translate.JPARSEC_AZIMUTH);
-		t22 = Translate.translate(Translate.JPARSEC_DECLINATION);
-		t25 = Translate.translate(Translate.JPARSEC_ECLIPTIC_LATITUDE);
-		t27 = Translate.translate(Translate.JPARSEC_GALACTIC_LATITUDE);
-		t29 = Translate.translate(Translate.JPARSEC_ELEVATION);
+		t21 = Translate.translate(21);
+		t24 = Translate.translate(24);
+		t26 = Translate.translate(26);
+		t28 = Translate.translate(28);
+		t22 = Translate.translate(22);
+		t25 = Translate.translate(25);
+		t27 = Translate.translate(27);
+		t29 = Translate.translate(29);
 		t38 = Translate.translate(38);
 		t1072 = Translate.translate(1072);
 		t1073 = Translate.translate(1073);
@@ -11862,7 +11862,7 @@ public class RenderSky
 			g.drawString(label, pos[0]-(w/2.0f), baseY2-(h/2.0f)+offset, dist);
 		}
 		Graphics.FONT f = g.getFont();
-		if (labelsm == null) labelsm = Translate.translate(Translate.JPARSEC_STELLAR_MAGNITUDES);
+		if (labelsm == null) labelsm = Translate.translate(30);
 		int little = 0;
 		if (g.getStringWidth(labelsm) > s*(index+1)) {
 			Graphics.FONT ff = FONT.getDerivedFont(f, f.getSize()*2/3);
@@ -11902,7 +11902,7 @@ public class RenderSky
 			g.drawStraightLine(pos[0] + size, pos[1], pos[0] + size + size + 1, pos[1], dist, dist);
 
 			if (labeld == null) {
-				labeld = Translate.translate(Translate.JPARSEC_DOUBLE);
+				labeld = Translate.translate(32);
 				boundsd = g.getStringBounds(labeld);
 			}
 			w = boundsd.getWidth();
@@ -11917,7 +11917,7 @@ public class RenderSky
 			g.drawOval(pos[0] - size, pos[1] - size, 2 * size, 2 * size, dist);
 
 			if (labelv == null) {
-				labelv = Translate.translate(Translate.JPARSEC_VARIABLE);
+				labelv = Translate.translate(33);
 				boundsv = g.getStringBounds(labelv);
 			}
 			w = boundsv.getWidth();
@@ -11925,7 +11925,7 @@ public class RenderSky
 			g.drawString(labelv, pos[0]-(w/2.0f), baseY2-(h/2.0f), dist);
 
 			if (labelts==null) {
-				labelts = Translate.translate(Translate.JPARSEC_TYPES_OF_STARS);
+				labelts = Translate.translate(31);
 				boundsts = g.getStringBounds(labelts);
 			}
 			w = (float) (boundsts.getWidth() + s);
@@ -11955,7 +11955,7 @@ public class RenderSky
 			drawOpenCluster(pos, starMaxSize, dist, g);
 			g.setColor(render.drawCoordinateGridColor, 255);
 			if (labeloc == null) {
-				labeloc = Translate.translate(Translate.JPARSEC_OPEN_CLUSTER);
+				labeloc = Translate.translate(34);
 				boundsoc = g.getStringBounds(labeloc);
 			}
 			w = boundsoc.getWidth();
@@ -11969,7 +11969,7 @@ public class RenderSky
 			drawGlobularCluster(poss, starMaxSize, dist, g, fast);
 			g.setColor(render.drawCoordinateGridColor, 255);
 			if (labelgc == null) {
-				labelgc = Translate.translate(Translate.JPARSEC_GLOBULAR);
+				labelgc = Translate.translate(35);
 				boundsgc = g.getStringBounds(labelgc);
 			}
 			w = boundsgc.getWidth();
@@ -12047,7 +12047,7 @@ public class RenderSky
 
 			g.setColor(render.drawCoordinateGridColor, 255);
 			if (labeln==null) {
-				labeln = Translate.translate(Translate.JPARSEC_NEBULOSE);
+				labeln = Translate.translate(36);
 				boundsn = g.getStringBounds(labeln);
 			}
 			w = boundsn.getWidth();
@@ -12103,7 +12103,7 @@ public class RenderSky
 
 			g.setColor(render.drawCoordinateGridColor, 255);
 			if (labelm==null) {
-				labelm = Translate.translate(Translate.JPARSEC_MILKY_WAY);
+				labelm = Translate.translate(37);
 				boundsm = g.getStringBounds(labelm);
 			}
 			w = boundsm.getWidth();
@@ -12140,7 +12140,7 @@ public class RenderSky
 			pos = new float[] {graphMarginX + (float) (index*s), baseY};
 			g.setColor(render.drawCoordinateGridColor, 255);
 			if (labelpn==null) {
-				labelpn = Translate.translate(Translate.JPARSEC_PLAN_NEB);
+				labelpn = Translate.translate(39);
 				boundspn = g.getStringBounds(labelpn);
 			}
 			w = boundspn.getWidth();
@@ -12153,7 +12153,7 @@ public class RenderSky
 			drawGalaxy(poss, starMaxSize, dist, false, g, render.drawDeepSkyObjectsColor, render.fillGalaxyColor);
 			g.setColor(render.drawCoordinateGridColor, 255);
 			if (labelg==null) {
-				labelg = Translate.translate(Translate.JPARSEC_GALAXY);
+				labelg = Translate.translate(40);
 				boundsg = g.getStringBounds(labelg);
 			}
 			w = boundsg.getWidth();
@@ -13032,7 +13032,7 @@ public class RenderSky
 	 * @throws JPARSECException If the object type is set to an invalid value, like stars, planets,
 	 * or any other unrecognized value.
 	 */
-	public EphemElement getEphemerisOfMinorObject(String objName, OBJECT objType, 
+	public EphemElement getEphemerisOfMinorObject(String objName, OBJECT objType,
 			boolean fullEphem)
 	throws JPARSECException {
 		EphemerisElement eph = projection.eph.clone();
@@ -13695,7 +13695,7 @@ public class RenderSky
 		if (out == null) {
 			ArrayList<Object[]> outObj = new ArrayList<Object[]>();
 			String nodraw[] = new String[] {"LMC", "292", "1976", "1982", "6995", "6979", "I.1287", "I.4601", "6514", "6526", "3324", "896"};
-			
+
 			// Connect to the file
 			try
 			{

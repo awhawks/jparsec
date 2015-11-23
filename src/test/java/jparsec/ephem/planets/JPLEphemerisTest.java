@@ -1,11 +1,9 @@
 package jparsec.ephem.planets;
 
 import jparsec.ephem.EphemerisElement;
-import jparsec.ephem.Functions;
 import jparsec.ephem.Target;
 import jparsec.graph.DataSet;
 import jparsec.io.ConsoleReport;
-import jparsec.io.FileIO;
 import jparsec.math.Constant;
 import jparsec.math.matrix.Matrix;
 import jparsec.observer.City;
@@ -13,7 +11,6 @@ import jparsec.observer.CityElement;
 import jparsec.observer.ObserverElement;
 import jparsec.time.AstroDate;
 import jparsec.time.TimeElement;
-import jparsec.util.Translate;
 
 public class JPLEphemerisTest {
     /**
@@ -39,33 +36,16 @@ public class JPLEphemerisTest {
         eph.algorithm = jpl.getJPLVersionID();
         ObserverElement observer = ObserverElement.parseCity(city);
         EphemElement ephem = jpl.getJPLEphemeris(time, observer, eph);
-        String name = ephem.name;
-        String out = "", sep = FileIO.getLineSeparator();
-        out += name + " " + Translate.translate(Translate.JPARSEC_RIGHT_ASCENSION) + ": " + Functions.formatRA(ephem.rightAscension, 5) + sep;
-        out += name + " " + Translate.translate(Translate.JPARSEC_DECLINATION) + ": " + Functions.formatDEC(ephem.declination, 4) + sep;
-        out += name + " " + Translate.translate(Translate.JPARSEC_DISTANCE) + ": " + Functions.formatValue(ephem.distance, 12) + sep;
+        System.out.println("JPL DE430");
+        ConsoleReport.basicEphemReportToConsole(ephem);
 
         jpl = new JPLEphemeris(EphemerisElement.ALGORITHM.JPL_DE405);
         ephem = jpl.getJPLEphemeris(time, observer, eph);
 
-        out += name + " " + Translate.translate(Translate.JPARSEC_RIGHT_ASCENSION) + ": " + Functions.formatRA(ephem.rightAscension, 5) + sep;
-        out += name + " " + Translate.translate(Translate.JPARSEC_DECLINATION) + ": " + Functions.formatDEC(ephem.declination, 4) + sep;
-        out += name + " " + Translate.translate(Translate.JPARSEC_DISTANCE) + ": " + Functions.formatValue(ephem.distance, 12) + sep;
-        out += name + " " + Translate.translate(Translate.JPARSEC_ELONGATION) + ": " + Functions.formatAngleAsDegrees(ephem.elongation, 8) + sep;
-        out += name + " " + Translate.translate(Translate.JPARSEC_PHASE_ANGLE) + ": " + Functions.formatAngleAsDegrees(ephem.phaseAngle, 8) + sep;
-        out += name + " " + Translate.translate(Translate.JPARSEC_PHASE) + ": " + Functions.formatValue(ephem.phase, 8) + sep;
-        out += name + " " + Translate.translate(Translate.JPARSEC_HELIOCENTRIC_ECLIPTIC_LONGITUDE) + ": " + Functions.formatAngleAsDegrees(ephem.heliocentricEclipticLongitude, 8) + sep;
-        out += name + " " + Translate.translate(Translate.JPARSEC_HELIOCENTRIC_ECLIPTIC_LATITUDE) + ": " + Functions.formatAngleAsDegrees(ephem.heliocentricEclipticLatitude, 8) + sep;
-        out += name + " " + Translate.translate(Translate.JPARSEC_HELIOCENTRIC_DISTANCE) + ": " + Functions.formatValue(ephem.distanceFromSun, 8) + sep;
-        out += name + " " + Translate.translate(Translate.JPARSEC_SUBSOLAR_LONGITUDE) + ": " + Functions.formatAngleAsDegrees(ephem.subsolarLongitude, 6) + sep;
-        out += name + " " + Translate.translate(Translate.JPARSEC_SUBSOLAR_LATITUDE) + ": " + Functions.formatAngleAsDegrees(ephem.subsolarLatitude, 6) + sep;
-        out += name + " " + Translate.translate(Translate.JPARSEC_POSITION_ANGLE_OF_AXIS) + ": " + Functions.formatAngleAsDegrees(ephem.positionAngleOfAxis, 6) + sep;
-        out += name + " " + Translate.translate(Translate.JPARSEC_POSITION_ANGLE_OF_POLE) + ": " + Functions.formatAngleAsDegrees(ephem.positionAngleOfPole, 6) + sep;
-        out += name + " " + Translate.translate(Translate.JPARSEC_LONGITUDE_OF_CENTRAL_MERIDIAN) + ": " + Functions.formatAngleAsDegrees(ephem.longitudeOfCentralMeridian, 6) + sep;
-        out += name + " " + Translate.translate(Translate.JPARSEC_LIGHT_TIME) + ": " + Functions.formatValue(ephem.lightTime, 18) + sep;
+        System.out.println("JPL DE405");
+        ConsoleReport.fullEphemReportToConsole(ephem);
 
-        System.out.println(ephem.distance * Constant.AU);
-        System.out.println(out + "*********" + sep + "Series96");
+        System.out.println("Series96");
         ephem = jparsec.ephem.planets.imcce.Series96.series96Ephemeris(time, observer, eph);
         jparsec.io.ConsoleReport.fullEphemReportToConsole(ephem);
 

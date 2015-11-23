@@ -375,7 +375,7 @@ public class MoonEvent {
 		myjd = myjd - mystep;
 		double jd = myjd;
 		double endTime = 1.0;
-		String by = Translate.translate(Translate.JPARSEC_BY)+" ";
+		String by = Translate.translate(161)+" ";
 		String target = eph.targetBody.getName();
 		for (myjd = jd; myjd < jd + endTime; myjd = myjd + step)
 		{
@@ -513,7 +513,7 @@ public class MoonEvent {
 			for (int i = 0; i<ephem.length; i++)
 			{
 				if (!ephem[i].mutualPhenomena.equals("") && ephem[i].name.equals(event.mainBody.getName())) {
-					String by = Translate.translate(Translate.JPARSEC_BY)+" ";
+					String by = Translate.translate(161)+" ";
 					String second = ephem[i].mutualPhenomena.substring(ephem[i].mutualPhenomena.toLowerCase().indexOf(by)+by.length()).trim();
 					String per = second.substring(second.indexOf("(") + 1, second.indexOf("%"));
 					double fraction = 1.0 - Double.parseDouble(per) / 100.0;
@@ -557,18 +557,18 @@ public class MoonEvent {
 			dy[i] = 0.005;
 		}
 		ChartSeriesElement chartSeries = new ChartSeriesElement(x, y, null, dy,
-				Translate.translate(Translate.JPARSEC_VISIBLE_DISK_FRACTION), false, Color.BLACK, ChartSeriesElement.SHAPE_CIRCLE,
+				Translate.translate(155), false, Color.BLACK, ChartSeriesElement.SHAPE_CIRCLE,
 				ChartSeriesElement.REGRESSION.NONE);
 		chartSeries.showLines = true;
 		chartSeries.showErrorBars = false;
 		ChartSeriesElement series[] = new ChartSeriesElement[] {chartSeries};
 		ChartElement chart = new ChartElement(series, ChartElement.TYPE.XY_CHART, ChartElement.SUBTYPE.XY_TIME,
-				event.mainBody.getName()+" "+Translate.translate(MoonEventElement.EVENTS[event.eventType.ordinal()])+" "+Translate.translate(Translate.JPARSEC_BY)+" "+event.secondaryBody.getName()+". "+Translate.translate(Translate.JPARSEC_LIGHT_CURVE),
-				Translate.translate("Time")+" ("+TimeElement.getTimeScaleAbbreviation(outputTimeScale)+")", Translate.translate(Translate.JPARSEC_VISIBLE_DISK_FRACTION)+" "+Translate.translate(Translate.JPARSEC_OF)+
+				event.mainBody.getName()+" "+Translate.translate(MoonEventElement.EVENTS[event.eventType.ordinal()])+" "+Translate.translate(161)+" "+event.secondaryBody.getName()+". "+Translate.translate(159),
+				Translate.translate("Time")+" ("+TimeElement.getTimeScaleAbbreviation(outputTimeScale)+")", Translate.translate(155)+" "+Translate.translate(160)+
 				" "+event.mainBody.getName(), false, 400, 400);
 
-		if (magnitude) chart.yLabel = Translate.translate(Translate.JPARSEC_MAGNITUDE)+" "+Translate.translate(Translate.JPARSEC_OF)+" "+event.mainBody.getName();
-		if (magnitude && combined) chart.yLabel = Translate.translate(Translate.JPARSEC_COMBINED_MAGNITUDE)+" "+Translate.translate(Translate.JPARSEC_OF)+" "+event.mainBody.getName()+" and "+event.secondaryBody.getName();
+		if (magnitude) chart.yLabel = Translate.translate(157)+" "+Translate.translate(160)+" "+event.mainBody.getName();
+		if (magnitude && combined) chart.yLabel = Translate.translate(158)+" "+Translate.translate(160)+" "+event.mainBody.getName()+" and "+event.secondaryBody.getName();
 
 		return new CreateChart(chart);
 	}

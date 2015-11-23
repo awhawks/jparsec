@@ -46,6 +46,10 @@ import jparsec.ephem.planets.EphemElement;
 import jparsec.ephem.planets.OrbitEphem;
 import jparsec.ephem.planets.OrbitalElement;
 import jparsec.ephem.planets.PlanetEphem;
+import jparsec.ephem.probes.SDP4_SGP4;
+import jparsec.ephem.probes.SatelliteEphem;
+import jparsec.ephem.probes.SatelliteEphemElement;
+import jparsec.ephem.probes.SatelliteOrbitalElement;
 import jparsec.ephem.stars.StarElement;
 import jparsec.ephem.stars.VariableStarElement;
 import jparsec.graph.DataSet;
@@ -61,6 +65,7 @@ import jparsec.observer.CityElement;
 import jparsec.observer.LocationElement;
 import jparsec.observer.ObserverElement;
 import jparsec.time.AstroDate;
+import jparsec.time.DateTimeOps;
 import jparsec.time.SiderealTime;
 import jparsec.time.TimeElement;
 import jparsec.time.TimeScale;
@@ -72,6 +77,7 @@ import jparsec.time.calendar.Ecclesiastical;
 import jparsec.time.calendar.Gregorian;
 import jparsec.time.calendar.MayanLongCount;
 import jparsec.time.calendar.CalendarGenericConversion.CALENDAR;
+import jparsec.util.Configuration;
 import jparsec.util.JPARSECException;
 import jparsec.util.Logger;
 import jparsec.util.Translate;
@@ -97,7 +103,7 @@ public class EventReport {
 		lunarPerigeeApogee = true, EarthPerihelionAphelion = true, occultationAndConjunctions = true,
 		occultationsConjunctionsAddCometsAsteroids = false, moonEvents = true, moonEventsOnlySeveralNonMutualAtSameTime = true, moonEventsAlsoMutualEvents = true,
 		includePlutoAsPlanet = true, cometAsteroidVisibleNakedEye = true, cratersOnlyLunarX = false, NEOs = true,
-		lunarMaxMinDeclination = true, calendarDST = true;
+		lunarMaxMinDeclination = true, calendarDST = true, artSatTransits = true, artSatTransitsSunMoon = true, artSatIridium = true;
 	/**
 	 * Maximum accuracy or not for planetary events. True means a few minutes of error at most, false a few hours.
 	 */
@@ -109,6 +115,12 @@ public class EventReport {
 	 */
 	public static float occultationsConjunctionsStarMaglim = 5f, occultationsConjunctionsObjectMaglim = 10f,
 		occultationsConjunctionsPlanetMaglim = 9f;
+
+	/**
+	 * A set of artificial satellites names, separated by ',', to compute transit events.
+	 * Default value includes ISS, HST, and TIANGONG 1.
+	 */
+	public static String artificialSatellites = "ISS, HST, TIANGONG 1";
 
 	/**
 	 * Set all static flags in this class to a given value.
@@ -138,6 +150,9 @@ public class EventReport {
 		cratersOnlyLunarX = a;
 		NEOs = a;
 		calendarDST = a;
+		artSatTransits = a;
+		artSatTransitsSunMoon = a;
+		artSatIridium = a;
 	}
 
 	/**
@@ -191,7 +206,7 @@ public class EventReport {
 		int year0 = al0.getYear(), yearf = alf.getYear();
 
 		// Calculate events
-		for (int event = 0; event <= 54; event ++) {
+		for (int event = 0; event <= 57; event ++) {
 			double jd = jd0;
 			SimpleEventElement s = null, sold = null;
 			do {
@@ -644,6 +659,156 @@ public class EventReport {
 						}
 					}
 					s = null;
+					break;
+				case 55:
+					if (artSatTransits) {
+						SatelliteEphem.USE_IRIDIUM_SATELLITES = false;
+						SatelliteEphem.setSatellitesFromExternalFile(null);
+	    				boolean withSats = false;
+	    				AstroDate astroUT = new AstroDate(TimeScale.getJD(init, obs, eph, SCALE.UNIVERSAL_TIME_UTC));
+	    				try {
+		    				if (Configuration.isAcceptableDateForArtificialSatellites(astroUT)) {
+		    					withSats = true;
+		    				} else {
+		    					String pt = Configuration.updateArtificialSatellitesInTempDir(astroUT);
+		    					if (pt != null) withSats = true;
+		    				}
+	    				} catch (Exception exc) {}
+	    				if (withSats) {
+							String name[] = DataSet.toStringArray(artificialSatellites, ",");
+		    				SatelliteOrbitalElement sat[] = new SatelliteOrbitalElement[name.length];
+		    				for (int i=0; i<name.length; i++) {
+		    					name[i] = name[i].trim();
+			    				sat[i] = SatelliteEphem.getArtificialSatelliteOrbitalElement(SatelliteEphem.getArtificialSatelliteTargetIndex(name[i]));
+		    				}
+		    				double min_elevation = 15 * Constant.DEG_TO_RAD, maxDays = jdf - jd0;
+
+		    				ArrayList<SimpleEventElement> newEvents = new ArrayList<SimpleEventElement>();
+		    				for (int i=0; i<name.length; i++) {
+		    					TimeElement initTime = init.clone();
+
+		    					while (true) {
+			    					double initJD = initTime.astroDate.jd();
+			    					if (initJD > jdf) break;
+			    					maxDays = jdf - initJD;
+			    					double jdNext = SDP4_SGP4.getNextPass(initTime, obs, eph, sat[i], min_elevation, maxDays, true);
+			    					if (Math.abs(jdNext) > jdf || jdNext == 0) break;
+		    						initTime.astroDate = new AstroDate(Math.abs(jdNext) + 30.0 / 1440.0);
+			    					eph.targetBody = TARGET.NOT_A_PLANET;
+			    					eph.targetBody.setIndex(SatelliteEphem.getArtificialSatelliteTargetIndex(name[i]));
+			    					double jdNextTT = TimeScale.getJD(new TimeElement(Math.abs(jdNext), SCALE.LOCAL_TIME), obs, eph, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
+			    					SatelliteEphemElement sephem = SDP4_SGP4.satEphemeris(new TimeElement(jdNextTT, SCALE.TERRESTRIAL_TIME), obs, eph, false);
+			    					String ecl = "E";
+			    					if (jdNext > 0) ecl = Functions.formatValue(sephem.magnitude, 1)+"m";
+			    					SimpleEventElement newEvent = new SimpleEventElement(jdNextTT, SimpleEventElement.EVENT.ARTIFICIAL_SATELLITES_TRANSITS, ecl);
+			    					newEvent.body = sat[i].name;
+			    					newEvent.eventLocation = sephem.getEquatorialLocation();
+			    					newEvents.add(newEvent);
+		    					}
+		    				}
+		    				list.addAll(newEvents);
+	    				}
+					}
+					break;
+				case 56:
+					if (artSatTransitsSunMoon) {
+						SatelliteEphem.USE_IRIDIUM_SATELLITES = false;
+						SatelliteEphem.setSatellitesFromExternalFile(null);
+	    				boolean withSats = false;
+	    				AstroDate astroUT = new AstroDate(TimeScale.getJD(init, obs, eph, SCALE.UNIVERSAL_TIME_UTC));
+	    				try {
+		    				if (Configuration.isAcceptableDateForArtificialSatellites(astroUT)) {
+		    					withSats = true;
+		    				} else {
+		    					String pt = Configuration.updateArtificialSatellitesInTempDir(astroUT);
+		    					if (pt != null) withSats = true;
+		    				}
+	    				} catch (Exception exc) {}
+	    				if (withSats) {
+							String satNames[] = DataSet.toStringArray(artificialSatellites, ",");
+							for (int i=0; i<satNames.length; i++) {
+								int index = SatelliteEphem.getArtificialSatelliteTargetIndex(satNames[i]);
+								if (index >= 0) {
+									SatelliteOrbitalElement sat = SatelliteEphem.getArtificialSatelliteOrbitalElement(index);
+									ArrayList<SimpleEventElement> more = SDP4_SGP4.getNextSunOrMoonTransits(new TimeElement(jd0, SCALE.TERRESTRIAL_TIME),
+										obs, eph, sat, jdf-jd0);
+									if (more != null || more.size() > 0)
+										list.addAll(more);
+								}
+							}
+	    				}
+					}
+					break;
+				case 57:
+					if (artSatIridium) {
+						SatelliteEphem.USE_IRIDIUM_SATELLITES = true;
+						SatelliteEphem.setSatellitesFromExternalFile(null);
+	    				boolean withSats = false;
+	    				AstroDate astroUT = new AstroDate(TimeScale.getJD(init, obs, eph, SCALE.UNIVERSAL_TIME_UTC));
+	    				try {
+		    				if (Configuration.isAcceptableDateForArtificialSatellites(astroUT)) {
+		    					withSats = true;
+		    				} else {
+		    					String pt = Configuration.updateArtificialSatellitesInTempDir(astroUT);
+		    					if (pt != null) withSats = true;
+		    				}
+	    				} catch (Exception exc) {}
+	    				if (withSats) {
+		    				double min_elevation = 15 * Constant.DEG_TO_RAD, maxDays = jdf - jd0;
+
+		    				ArrayList<SimpleEventElement> newEvents = new ArrayList<SimpleEventElement>();
+	        				String sstart = "start", send = "end", smax = "max";
+	        				if (Translate.getDefaultLanguage() == LANGUAGE.SPANISH) {
+	        					sstart = "inicio";
+	        					send = "final";
+	        					smax = "m�ximo";
+	        				}
+	        				String mag = Translate.translate(157).toLowerCase();
+	        				String az = Translate.translate(28).toLowerCase();
+	        				String el = Translate.translate(29).toLowerCase();
+	        				int n = SatelliteEphem.getArtificialSatelliteCount();
+	        				int precision = 5;
+		    				for (int i=0; i<n; i++) {
+		    	                eph.targetBody.setIndex(i);
+		    	                SatelliteOrbitalElement soe = SatelliteEphem.getArtificialSatelliteOrbitalElement(i);
+		    	                if (soe.getStatus() == SatelliteOrbitalElement.STATUS.FAILED || soe.getStatus() == SatelliteOrbitalElement.STATUS.UNKNOWN)
+		    	                    continue;
+		    	                soe.name = DataSet.replaceAll(soe.name, " [+]", "", true);
+		    					ArrayList<Object[]> flares = SatelliteEphem.getNextIridiumFlares(init, obs, eph, soe, min_elevation, maxDays, true, precision);
+		    					if (flares == null) continue;
+		    					for (int j=0;j<flares.size(); j++) {
+		    						Object data[] = flares.get(j);
+			    					double jdNext = (Double) data[0];
+			    					double jdEnd = (Double) data[1];
+			    					double jdMax = (Double) data[2];
+			    					SatelliteEphemElement satInit = (SatelliteEphemElement) data[4];
+			    					SatelliteEphemElement satEnd = (SatelliteEphemElement) data[5];
+			    					SatelliteEphemElement satMax = (SatelliteEphemElement) data[6];
+
+			    					AstroDate ainit = new AstroDate(jdNext);
+			    					AstroDate aend = new AstroDate(jdEnd);
+			    					AstroDate amax = new AstroDate(jdMax);
+			    					String det = sstart + " ("+DateTimeOps.twoDigits(ainit.getHour())+":"+DateTimeOps.twoDigits(ainit.getMinute()) + ":" + DateTimeOps.twoDigits((int) ainit.getSeconds()) + "): ";
+			    					det += az + " " +Functions.formatAngleAsDegrees(satInit.azimuth, 1)+", "+el+" "+Functions.formatAngleAsDegrees(satInit.elevation, 1) + ", "+mag+" "+Functions.formatValue(satInit.magnitude, 1)+ "; ";
+			    					det += send + " ("+DateTimeOps.twoDigits(aend.getHour())+":"+DateTimeOps.twoDigits(aend.getMinute()) + ":" + DateTimeOps.twoDigits((int) aend.getSeconds()) + "): ";
+			    					det += Functions.formatAngleAsDegrees(satEnd.azimuth, 1)+", "+Functions.formatAngleAsDegrees(satEnd.elevation, 1) + ", "+Functions.formatValue(satEnd.magnitude, 1)+"; ";
+			    					det += smax + " ("+DateTimeOps.twoDigits(amax.getHour())+":"+DateTimeOps.twoDigits(amax.getMinute()) + ":" + DateTimeOps.twoDigits((int) amax.getSeconds()) + "): ";
+			    					det += Functions.formatAngleAsDegrees(satMax.azimuth, 1)+", "+Functions.formatAngleAsDegrees(satMax.elevation, 1) + ", "+Functions.formatValue(satMax.magnitude, 1);
+			    					double jdNextTT = TimeScale.getJD(new TimeElement(jdNext, SCALE.LOCAL_TIME), obs, eph, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
+			    					double jdEndTT = TimeScale.getJD(new TimeElement(jdEnd, SCALE.LOCAL_TIME), obs, eph, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
+			    					SimpleEventElement newEvent = new SimpleEventElement(jdNextTT, SimpleEventElement.EVENT.ARTIFICIAL_SATELLITES_IRIDIUM_FLARES,
+			    							det);
+			    					newEvent.endTime = jdEndTT;
+			    					newEvent.body = soe.name;
+			    					newEvent.eventLocation = satInit.getEquatorialLocation();
+			    					newEvents.add(newEvent);
+		    					}
+		    				}
+		    				list.addAll(newEvents);
+	    				}
+						SatelliteEphem.USE_IRIDIUM_SATELLITES = false;
+						SatelliteEphem.setSatellitesFromExternalFile(null);
+					}
 					break;
 				default:
 					s = null;

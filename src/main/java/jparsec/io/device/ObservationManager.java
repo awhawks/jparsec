@@ -115,7 +115,7 @@ import jparsec.vo.SExtractor;
  */
 public class ObservationManager extends JPanel implements MouseListener, ActionListener, MouseMotionListener, ComponentListener {
 	private static final long serialVersionUID = 1L;
-	
+
 	private TELESCOPE_MODEL telescope;
 	private CAMERA_MODEL cameras[];
 	private DOME_MODEL dome;

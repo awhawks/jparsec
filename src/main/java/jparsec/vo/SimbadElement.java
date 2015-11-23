@@ -353,7 +353,7 @@ public class SimbadElement implements Serializable
 					String min = FileIO.getField(7, line, " ", true);
 					String pa = FileIO.getField(8, line, " ", true);
 					String com = FileIO.getRestAfterField(8, line, " ", true);
-	
+
 					LocationElement loc = new LocationElement(Double.parseDouble(ra)/Constant.RAD_TO_HOUR, Double.parseDouble(dec)*Constant.DEG_TO_RAD, 1.0);
 	//				if (jd != Constant.J2000)
 	//					loc = LocationElement.parseRectangularCoordinates(Precession.precess(Constant.J2000, jd,
@@ -384,7 +384,7 @@ public class SimbadElement implements Serializable
 								if (end2 > 0 && end2 < end) messier = messier.substring(0, end2);
 							}
 						}
-	
+
 						float maxSize = Float.parseFloat(max), minSize = Float.parseFloat(min);
 						if (tt == 6 && maxSize == 0.0) maxSize = minSize = 0.5f/60.0f;
 						float paf = -1;

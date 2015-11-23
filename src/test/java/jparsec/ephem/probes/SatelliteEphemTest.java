@@ -6,6 +6,7 @@ import jparsec.astronomy.Constellation;
 import jparsec.ephem.EphemerisElement;
 import jparsec.ephem.Functions;
 import jparsec.ephem.Target;
+import jparsec.ephem.event.EventReport;
 import jparsec.ephem.event.SimpleEventElement;
 import jparsec.graph.DataSet;
 import jparsec.io.ReadFile;
@@ -20,6 +21,8 @@ import jparsec.time.TimeFormat;
 import jparsec.time.TimeScale;
 import jparsec.util.Configuration;
 import jparsec.util.JPARSECException;
+import jparsec.util.Translate;
+import jparsec.util.Translate.LANGUAGE;
 
 public class SatelliteEphemTest {
 
@@ -59,9 +62,21 @@ public class SatelliteEphemTest {
             eph.algorithm = EphemerisElement.ALGORITHM.ARTIFICIAL_SATELLITE;
             eph.optimizeForSpeed();
             
-            //for (int i=0; i<readFile.getNumberOfObjects(); i++) {
-            //    index = i;
+            // Test of EventReport with events of artificial satellites
+            EventReport.setEverythingTo(false);
+            EventReport.artSatIridium = EventReport.artSatTransitsSunMoon = EventReport.artSatTransits = true;
+            TimeElement tinit = new TimeElement();
+            TimeElement tend = tinit.clone();
+            tend.add(3.0);
+            ArrayList<SimpleEventElement> list = EventReport.getEvents(tinit, tend, observer, eph);
+            // Change language to check output in Spanish
+            Translate.setDefaultLanguage(LANGUAGE.SPANISH);
+            for (int i=0; i<list.size(); i++) {
+            	System.out.println(list.get(i).toString());
+            }
+            
 
+            // Test of ephemerides
             eph.targetBody.setIndex(index);
             //EphemElement ephem = jparsec.ephem.Ephem.getEphemeris(time, observer, eph, false);
             SatelliteEphemElement ephem = SatelliteEphem.satEphemeris(time, observer, eph, false);
@@ -70,7 +85,6 @@ public class SatelliteEphemTest {
             double minElev = 15 * Constant.DEG_TO_RAD;
             ephem.nextPass = SDP4_SGP4.getNextPass(time, observer, eph, soe, minElev, 7, true);
 
-            // TODO: Test method (Internet)
             time = new TimeElement();
             double maxDays = 100;
             double t0 = System.currentTimeMillis();

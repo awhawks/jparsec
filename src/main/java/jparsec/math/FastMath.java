@@ -783,7 +783,7 @@ public class FastMath
         }
 
         if (sin == null) initialize();
-        
+
         if (x <= -1.0 || x >= 1.0) {
             // If not between +/- 1.0
             //return exp(x) - 1.0;
@@ -1000,7 +1000,7 @@ public class FastMath
      */
     private static double exp(double x, double extra, double[] hiPrec) {
     	if (sin == null) initialize();
-    	
+
         double intPartA;
         double intPartB;
         int intVal;

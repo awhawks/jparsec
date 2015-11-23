@@ -299,15 +299,15 @@ public class CreateDitaaChart {
 		Color col = new Color(background.getRed(), background.getGreen(), background.getBlue(), background.getAlpha());
 		if (transparent) col = new Color(background.getRed(), background.getGreen(), background.getBlue(), 0);
 		//co.renderingOptions.setBackgroundColor(col);
-		
+
 		ProcessingOptions pr = new ProcessingOptions();
 		pr.setAllCornersAreRound(this.round);
 		pr.setPerformSeparationOfCommonEdges(this.separateCommonEdges);
 		pr.setCharacterEncoding(encoding);
-		
+
 		Diagram diagram = new Diagram(grid, co, pr);
-		
-		BufferedImage image = new BufferedImage(diagram.getWidth(), diagram.getHeight(), 
+
+		BufferedImage image = new BufferedImage(diagram.getWidth(), diagram.getHeight(),
 				transparent ? BufferedImage.TYPE_INT_ARGB : BufferedImage.TYPE_INT_RGB);
 		Graphics2D g = image.createGraphics();
 		g.setColor(col);

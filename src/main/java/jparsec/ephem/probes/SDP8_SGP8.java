@@ -724,7 +724,7 @@ public class SDP8_SGP8
 	if (sat.isIridium()) {
 		iridiumAngle = SatelliteEphem.iridiumAngle(new double[] {Sx, Sy, Sz}, new double[] {Vx, Vy, Vz},
 				new double[] {Sx - Ox, Sy - Oy, Sz - Oz}, new double[] {Hx, Hy, Hz});
-	
+
 		// Obtain Moon iridium angle
 		double jdTT = TimeScale.getJD(time, obs, eph, SCALE.TERRESTRIAL_TIME);
 		double pos[] = Saros.getMoonPosition(jdTT);
@@ -734,7 +734,7 @@ public class SDP8_SGP8
 					new LocationElement(pos[0] + toIlluminatedDiskCenter, pos[1], 1.0), INS, true);
 			double locM[] = locMoon.getRectangularCoordinates();
 			double MOONx = locM[0], MOONy = locM[1], MOONz = locM[2];
-	
+
 			double Mx = MOONx * C - MOONy * S;
 			double My = MOONx * S + MOONy * C;
 			double Mz = MOONz;
@@ -742,7 +742,7 @@ public class SDP8_SGP8
 					new double[] {Sx - Ox, Sy - Oy, Sz - Oz}, new double[] {Mx, My, Mz});
 		}
 	}
-	
+
 	// Obtain Sun unit vector in EQ coordinates
 //	Hx =  SUNx*CXx + SUNy*CYx + SUNz*CZx;
 //	Hy =  SUNx*CXy + SUNy*CYy + SUNz*CZy;
@@ -1053,7 +1053,7 @@ public class SDP8_SGP8
 	 * @param maxDays Maximum number of days to search for a next pass.
 	 * @return An array of event objects with the type of transit (on the Sun or the
 	 * Moon) using the secondary object field, and with the initial and ending transit times.
-	 * The details field will contain the elevation above the horizon, always >= 0. 
+	 * The details field will contain the elevation above the horizon, always >= 0.
 	 * Precision is 0.5s.
 	 * @throws JPARSECException If the method fails, for example because of an
 	 *         invalid date.
@@ -1078,40 +1078,40 @@ public class SDP8_SGP8
 			double next_pass = getNextPass(new_time, obs, eph, sat, min_elevation, maxDays, current);
 			if (next_pass == 0) break;
 			current = false;
-			
+
 			// Obtain ephemeris
 			SDP8_SGP8 s = new SDP8_SGP8(sat);
 			s.FAST_MODE = true;
 			SatelliteEphemElement ephem = s.calcSatellite(time, obs, eph, false);
-	
+
 			// Obtain Julian day in reference scale
 			new_time = new TimeElement(Math.abs(next_pass), SCALE.LOCAL_TIME);
 			JD = TimeScale.getJD(new_time, obs, eph, SCALE.UNIVERSAL_TIME_UTC);
 			double JD_TT = TimeScale.getJD(new_time, obs, eph, SCALE.TERRESTRIAL_TIME);
 			new_time = new TimeElement(JD, SCALE.UNIVERSAL_TIME_UTC);
-			
+
 			int nstep = 0;
 			boolean insideSun = false, insideMoon = false;
-			double obl = Obliquity.meanObliquity(Functions.toCenturies(JD_TT), eph) + 
+			double obl = Obliquity.meanObliquity(Functions.toCenturies(JD_TT), eph) +
 					Nutation.getFastNutation(JD_TT)[1];
-			
+
 			while (ephem.elevation > min_elevation || nstep == 0)
 			{
 				nstep ++;
 				double new_JD = JD + (double) nstep * time_step;
-	
+
 				AstroDate astro = new AstroDate(new_JD);
 				new_time = new TimeElement(astro, SCALE.UNIVERSAL_TIME_UTC);
-	
+
 				ephem = s.calcSatellite(new_time, obs, eph, false);
-				
+
 				LocationElement loc = CoordinateSystem.equatorialToEcliptic(ephem.getEquatorialLocation(), obl, true);
 				double sun[] = Saros.getSunPosition(JD_TT + (double) nstep * time_step);
 				double moon[] = Saros.getMoonPosition(JD_TT + (double) nstep * time_step);
-				
+
 				double dSun = LocationElement.getAngularDistance(loc, new LocationElement(sun[0], sun[1], 1.0)) * Constant.RAD_TO_DEG;
 				double dMoon = LocationElement.getAngularDistance(loc, new LocationElement(moon[0], moon[1], 1.0)) * Constant.RAD_TO_DEG;
-				
+
 				if (dSun < 0.25 && !insideSun) {
 					String det = Functions.formatAngleAsDegrees(ephem.elevation, 1);
 					SimpleEventElement see = new SimpleEventElement(JD_TT + (double) nstep * time_step, EVENT.TRANSIT, det);
@@ -1124,7 +1124,7 @@ public class SDP8_SGP8
 					if (insideSun && dSun >= 0.25) {
 						insideSun = false;
 						SimpleEventElement see = out.get(out.size()-1);
-						if (see.secondaryBody.equals(TARGET.SUN.getName())) 
+						if (see.secondaryBody.equals(TARGET.SUN.getName()))
 							see.endTime = JD_TT + (nstep - 1.0) * time_step;
 					}
 				}
@@ -1140,7 +1140,7 @@ public class SDP8_SGP8
 					if (insideMoon && dMoon >= 0.25) {
 						insideMoon = false;
 						SimpleEventElement see = out.get(out.size()-1);
-						if (see.secondaryBody.equals(TARGET.Moon.getName())) 
+						if (see.secondaryBody.equals(TARGET.Moon.getName()))
 							see.endTime = JD_TT + (nstep - 1.0) * time_step;
 					}
 				}
@@ -1148,10 +1148,10 @@ public class SDP8_SGP8
 				if (min > 5) nstep += (int) (min / (time_step * Constant.SECONDS_PER_DAY));
 			}
 		}
-		
+
 		return out;
 	}
-	
+
 	/**
 	 * Obtain the time of the next flares of the satellite above observer. This
 	 * method calls {@linkplain SDP8_SGP8#getNextPass(TimeElement, ObserverElement, EphemerisElement, SatelliteOrbitalElement, double, double, boolean)}

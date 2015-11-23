@@ -110,7 +110,7 @@ public class Julian extends BaseCalendar
 	public int getDayOfWeek() {
 		return (int) Calendar.dayOfWeekFromFixed(fixed);
 	}
-	
+
 	/**
 	 * Gives true if the year is a leap one.
 	 *

@@ -150,7 +150,7 @@ public class LocationElement implements Serializable
 		EphemElement ephem = Ephem.getEphemeris(body, time, observer, eph0, false);
 		set(new double[] {ephem.rightAscension, ephem.declination, ephem.distance});
 	}
-	
+
 	/**
 	 * Vector constructor.
 	 *
@@ -173,7 +173,7 @@ public class LocationElement implements Serializable
 	{
 		set(lon, lat, rad);
 	}
-	
+
 	/**
 	 * Vector constructor using floats.
 	 * The instance will use float internally to reduce memory use.
@@ -184,7 +184,7 @@ public class LocationElement implements Serializable
 	{
 		set(vector);
 	}
-	
+
 	/**
 	 * Gets the latitude.
 	 *
@@ -301,7 +301,7 @@ public class LocationElement implements Serializable
 		lonLatRad = new double[] {lon, lat, rad};
 		lonLatRadF = null;
 	}
-	
+
 	/**
 	 * Set all members of this instance from a vector. <P>
 	 * The vector is an array of three doubles, longitude, latitude, radius, in

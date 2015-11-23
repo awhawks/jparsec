@@ -420,16 +420,16 @@ public class FitsBinaryTable
 			h.addValue("", "", "");
 			return;
 		}
-		
+
 		String comment = "";
 		String key = FileIO.getField(1, s, "=", false).trim();
 		String val = FileIO.getField(2, s, "=", false).trim();
 		if (val.indexOf("/") > 0) comment = val.substring(val.indexOf("/")+1);
 		if (val.indexOf("'") >= 0) val = val.substring(val.indexOf("'")+1, val.lastIndexOf("'"));
-		
+
 		h.addValue(key, val, comment);
 	}
-	
+
 	/**
 	 * Creates an HDU with an Ascii table.
 	 * @param header The header for the table, excluding

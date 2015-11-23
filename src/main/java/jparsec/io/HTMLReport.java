@@ -50,8 +50,8 @@ public class HTMLReport implements Serializable {
 	private String textColor = COLOR_BLACK;
 
 	private String sep = FileIO.getLineSeparator();
-	private String msg = Translate.translate(Translate.JPARSEC_AUTOMATICALLY_GENERATED)+" "+Translate.translate(Translate.JPARSEC_BY)+" "+Version.PACKAGE_NAME+" v"+Version.VERSION_ID+
-	" "+Translate.translate(Translate.JPARSEC_ON) + " ";
+	private String msg = Translate.translate(257)+" "+Translate.translate(161)+" "+Version.PACKAGE_NAME+" v"+Version.VERSION_ID+
+	" "+Translate.translate(259) + " ";
 
 	private boolean header = false, body = false, document = true;
 

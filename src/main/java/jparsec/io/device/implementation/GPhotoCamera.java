@@ -1001,7 +1001,7 @@ public class GPhotoCamera {
 		return newFile.substring(0, begin).trim();
 	}
 */
-	
+
 	/**
 	 * Returns if the camera is still connected to the same port.
 	 * @param fix True to fix the port value in case the camera is attached to the

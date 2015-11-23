@@ -363,13 +363,13 @@ public class LMVCube implements Serializable
             byte abyte0[] = new byte[512];
             bis.read(abyte0);
             c = '\f';
-            //int imageFormat = 
+            //int imageFormat =
             	convert.readInt(abyte0, c);
-            //int numberOfBlocksOfImage = 
+            //int numberOfBlocksOfImage =
             		convert.readInt(abyte0, c + 4);
             //boolean isBig = (numberOfBlocksOfImage + 1) % 16 == 0;
             c = '(';
-            //int lengthOfGeneralSection = 
+            //int lengthOfGeneralSection =
             	convert.readInt(abyte0, c);
             numberOfAxes = convert.readInt(abyte0, c + 4);
             axis1Dim = convert.readInt(abyte0, c + 4 + 4);
@@ -384,11 +384,11 @@ public class LMVCube implements Serializable
             }
 
             c = '\240';
-            //int lengthOfBlankingSection = 
+            //int lengthOfBlankingSection =
             		convert.readInt(abyte0, c);
             blanking = convert.readFloat(abyte0, c + 4);
             blankingTolerance = convert.readFloat(abyte0, c + 4 + 4);
-            //int lengthOfExtremaSection = 
+            //int lengthOfExtremaSection =
             	convert.readInt(abyte0, c + 4 + 4 + 4);
             minimumFlux = convert.readFloat(abyte0, c + 4 + 4 + 4 + 4);
             maximumFlux = convert.readFloat(abyte0, c + 4 + 4 + 4 + 4 + 4);
@@ -400,7 +400,7 @@ public class LMVCube implements Serializable
             }
 
             c = '\330';
-            //int lengthOfDescriptionSection = 
+            //int lengthOfDescriptionSection =
             	convert.readInt(abyte0, c);
             fluxUnit = new String(abyte0, c + 4, 12);
             axis1Label = new String(abyte0, c + 4 + 12, 12);
@@ -409,7 +409,7 @@ public class LMVCube implements Serializable
             axis4Label = new String(abyte0, c + 4 + 12 + 12 + 12 + 12, 12);
             coordinateSystem = new String(abyte0, c + 4 + 48 + 12, 12);
             c = '\u0124';
-            //int lengthOfPositionSection = 
+            //int lengthOfPositionSection =
             	convert.readInt(abyte0, c);
             sourceName = new String(abyte0, c + 4, 12);
             c = '\u0134';
@@ -419,7 +419,7 @@ public class LMVCube implements Serializable
             sourceGLat = convert.readDouble(abyte0, c + 8 + 8 + 8);
             c = '\u0154';
             epoch = convert.readFloat(abyte0, c);
-            //int lengthOfProjectionSection = 
+            //int lengthOfProjectionSection =
             	convert.readInt(abyte0, c + 4);
             projectionType = PROJECTION.values()[convert.readInt(abyte0, c + 4 + 4)];
             axis1Pos = convert.readDouble(abyte0, c + 4 + 4 + 4);
@@ -428,7 +428,7 @@ public class LMVCube implements Serializable
             c = '\u0178';
             xAxisID = convert.readInt(abyte0, c);
             yAxisID = convert.readInt(abyte0, c + 4);
-            //int lengthOfSpectroscopySection = 
+            //int lengthOfSpectroscopySection =
             	convert.readInt(abyte0, c + 4 + 4);
             line = new String(abyte0, c + 4 + 4 + 4, 12);
             c = '\u0190';
@@ -438,16 +438,16 @@ public class LMVCube implements Serializable
             velResolution = convert.readFloat(abyte0, c + 8 + 8 + 8);
             velOffset = convert.readFloat(abyte0, c + 8 + 8 + 8 + 4);
             zAxisID = convert.readInt(abyte0, c + 8 + 8 + 8 + 4 + 4);
-            //int lengthOfResolutionSection = 
+            //int lengthOfResolutionSection =
             	convert.readInt(abyte0, c + 8 + 8 + 8 + 4 + 4 + 4);
             beamMajor = convert.readFloat(abyte0, c + 8 + 8 + 8 + 4 + 4 + 4 + 4);
             beamMinor = convert.readFloat(abyte0, c + 8 + 8 + 8 + 4 + 4 + 4 + 4 + 4);
             beamPA = convert.readFloat(abyte0, c + 8 + 8 + 8 + 4 + 4 + 4 + 4 + 4 + 4);
-            //int lengthOfNoiseSection = 
+            //int lengthOfNoiseSection =
             	convert.readInt(abyte0, c + 48 + 4);
             noise = convert.readFloat(abyte0, c + 48 + 8);
             rms = convert.readFloat(abyte0, c + 48 + 12);
-            //int lengthOfProperMotionSection = 
+            //int lengthOfProperMotionSection =
             	convert.readInt(abyte0, c + 48 + 16);
             sourceProperMotionRA = convert.readFloat(abyte0, c + 48 + 20);
             sourceProperMotionDEC = convert.readFloat(abyte0, c + 48 + 24);
@@ -2487,17 +2487,17 @@ public class LMVCube implements Serializable
     	String title = this.sourceName;
     	String legend = this.line;
 		SimpleChartElement chart1 = new SimpleChartElement(ChartElement.TYPE.XY_CHART,
-				ChartElement.SUBTYPE.XY_SCATTER, x, y, title, Translate.translate(Translate.JPARSEC_VELOCITY)+" (km s^{-1})",
+				ChartElement.SUBTYPE.XY_SCATTER, x, y, title, Translate.translate(292)+" (km s^{-1})",
 				"T_{mb} ("+this.fluxUnit.trim()+")", legend, true, false,
 				width, height);
 		switch (xUnit)
 		{
 		case CHANNEL_NUMBER:
-			chart1.xLabel = Translate.translate(Translate.JPARSEC_CHANNEL_NUMBER);
+			chart1.xLabel = Translate.translate(293);
 			break;
 		case FREQUENCY_MHZ:
 //		case GILDAS_FREQUENCY_MHZ:
-			chart1.xLabel = Translate.translate(Translate.JPARSEC_FREQUENCY)+" (MHz)";
+			chart1.xLabel = Translate.translate(294)+" (MHz)";
 			break;
 		default:
 			break;

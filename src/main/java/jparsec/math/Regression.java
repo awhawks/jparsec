@@ -728,7 +728,7 @@ public class Regression {
 
 			this.covar = new double[this.nTerms][this.nTerms];
 			this.corrCoeff = new double[this.nTerms][this.nTerms];
-			
+
 			for (int i = 0; i < this.nTerms; i++) {
 				this.bestSd[i] = Double.NaN;
 				this.pseudoSd[i] = Double.NaN;

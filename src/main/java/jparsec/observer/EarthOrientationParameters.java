@@ -329,13 +329,13 @@ public class EarthOrientationParameters
 					new double[] {jd0 - 2.0, jd0 - 1.0, jd0, jd0 + 1.0, jd0 + 2.0}, new int[] {7, 9, 10, 5, 6}, jd_UTC);
 			} catch (JPARSECException exc) {
 				// Thrown when interpolating in the future (interpolation out of range)
-				JPARSECException.addWarning(Translate.translate(Translate.JPARSEC_UT1_UTC_NOT_AVAILABLE));
+				JPARSECException.addWarning(Translate.translate(275));
 				calcPM = false;
 			}
 		} else
 		{
 			JPARSECException
-					.addWarning(Translate.translate(Translate.JPARSEC_UT1_UTC_NOT_AVAILABLE));
+					.addWarning(Translate.translate(275));
 			calcPM = false;
 		}
 

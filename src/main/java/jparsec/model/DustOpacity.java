@@ -391,10 +391,10 @@ public class DustOpacity implements Serializable
 			name = Translate.translate(DustOpacity.AVAILABLE_GRAINS[grain]);
 			break;
 		case DustOpacity.GRAIN_PAH_CARBONACEOUS_ION:
-			name = Translate.translate(Translate.JPARSEC_PAH_CARBONACEUS_ION);
+			name = Translate.translate(407);
 			break;
 		case DustOpacity.GRAIN_PAH_CARBONACEOUS_NEUTRAL:
-			name = Translate.translate(Translate.JPARSEC_PAH_CARBONACEOUS_NEUTRAL);
+			name = Translate.translate(809);
 			break;
 		case DustOpacity.GRAIN_SILICON_CARBIDE:
 			name = Translate.translate(DustOpacity.AVAILABLE_GRAINS[grain]);
@@ -403,7 +403,7 @@ public class DustOpacity implements Serializable
 			name = Translate.translate(DustOpacity.AVAILABLE_GRAINS[grain]);
 			break;
 		case DustOpacity.GRAIN_MIXTURE:
-			name = Translate.translate(Translate.JPARSEC_MIXTURE);
+			name = Translate.translate(409);
 			break;
 		default:
 			throw new JPARSECException("invalid grain.");
@@ -1063,8 +1063,8 @@ public class DustOpacity implements Serializable
 		String name = getDustName();
 
 		CreateChart ch = CreateChart.createSimpleChart(waves, opacities,
-				Translate.translate(Translate.JPARSEC_OPACITY_OF)+" " + name + " ("+Translate.translate(Translate.JPARSEC_MAXIMUM_SIZE_OF)+" "+this.sizeMax+" @mum)", Translate.translate(Translate.JPARSEC_WAVELENGTH)+" (@mum)", Translate.translate(Translate.JPARSEC_OPACITY)+" (cm^{2} g^{-1})",
-				Translate.translate(Translate.JPARSEC_OPACITY_OF)+" " + name, true);
+				Translate.translate(447)+" " + name + " ("+Translate.translate(448)+" "+this.sizeMax+" @mum)", Translate.translate(419)+" (@mum)", Translate.translate(339)+" (cm^{2} g^{-1})",
+				Translate.translate(447)+" " + name, true);
 
 		// Beta chart
 		int interpOrder = 3;
@@ -1088,7 +1088,7 @@ public class DustOpacity implements Serializable
 		}
 
 		CreateChart ch2 = CreateChart.createSimpleChart(betawaves, betas,
-				Translate.translate(Translate.JPARSEC_SPECTRAL_INDEX_OF)+" " + name + " ("+Translate.translate(Translate.JPARSEC_MAXIMUM_SIZE_OF)+" "+this.sizeMax+" @mum)", Translate.translate(Translate.JPARSEC_WAVELENGTH)+" (@mum)", Translate.translate(Translate.JPARSEC_SPECTRAL_INDEX), name + " "+Translate.translate(Translate.JPARSEC_SPECTRAL_INDEX).toLowerCase(), true);
+				Translate.translate(449)+" " + name + " ("+Translate.translate(448)+" "+this.sizeMax+" @mum)", Translate.translate(419)+" (@mum)", Translate.translate(450), name + " "+Translate.translate(450).toLowerCase(), true);
 		return new CreateChart[] {ch, ch2};
 	}
 
@@ -1140,12 +1140,12 @@ public class DustOpacity implements Serializable
 		CreateChart ch = null;
 		if (showMixture) {
 			ch = DustOpacity.getChartWithThreeDataSets(waves, opacities1, waves,
-				opacities2, waves, total, name1, name2, Translate.translate(Translate.JPARSEC_TOTAL), Translate.translate(Translate.JPARSEC_OPACITY_FOR_MAXIMUM_SIZE_OF)+" "+dust1.sizeMax+" @mum",
-				Translate.translate(Translate.JPARSEC_WAVELENGTH)+" (@mum)", Translate.translate(Translate.JPARSEC_OPACITY)+" (cm^{2} g^{-1})", true, true, 600, 600);
+				opacities2, waves, total, name1, name2, Translate.translate(400), Translate.translate(451)+" "+dust1.sizeMax+" @mum",
+				Translate.translate(419)+" (@mum)", Translate.translate(339)+" (cm^{2} g^{-1})", true, true, 600, 600);
 		} else {
 			ch = DustOpacity.getChartWithTwoDataSets(waves, opacities1, waves,
-					opacities2, name1, name2, Translate.translate(Translate.JPARSEC_OPACITY_FOR_MAXIMUM_SIZE_OF)+" "+dust1.sizeMax+" @mum",
-					Translate.translate(Translate.JPARSEC_WAVELENGTH)+" (@mum)", Translate.translate(Translate.JPARSEC_OPACITY)+" (cm^{2} g^{-1})", true, true, 600, 600);
+					opacities2, name1, name2, Translate.translate(451)+" "+dust1.sizeMax+" @mum",
+					Translate.translate(419)+" (@mum)", Translate.translate(339)+" (cm^{2} g^{-1})", true, true, 600, 600);
 		}
 
 		// Beta chart
@@ -1186,12 +1186,12 @@ public class DustOpacity implements Serializable
 		CreateChart ch2 = null;
 		if (showMixture) {
 			ch2 = DustOpacity.getChartWithThreeDataSets(betawaves, betas1, betawaves,
-				betas2, betawaves, betasT, name1, name2, Translate.translate(Translate.JPARSEC_TOTAL), Translate.translate(Translate.JPARSEC_SPECTRAL_INDEX_FOR_MAXIMUM_SIZE_OF)+" "+dust1.sizeMax+" @mum",
-				Translate.translate(Translate.JPARSEC_WAVELENGTH)+" (@mum)", Translate.translate(Translate.JPARSEC_SPECTRAL_INDEX), true, true, 600, 600);
+				betas2, betawaves, betasT, name1, name2, Translate.translate(400), Translate.translate(452)+" "+dust1.sizeMax+" @mum",
+				Translate.translate(419)+" (@mum)", Translate.translate(450), true, true, 600, 600);
 		} else {
 			ch2 = DustOpacity.getChartWithTwoDataSets(betawaves, betas1, betawaves,
-					betas2, name1, name2, Translate.translate(Translate.JPARSEC_SPECTRAL_INDEX_FOR_MAXIMUM_SIZE_OF)+" "+dust1.sizeMax+" @mum",
-					Translate.translate(Translate.JPARSEC_WAVELENGTH)+" (@mum)", Translate.translate(Translate.JPARSEC_SPECTRAL_INDEX), true, true, 600, 600);
+					betas2, name1, name2, Translate.translate(452)+" "+dust1.sizeMax+" @mum",
+					Translate.translate(419)+" (@mum)", Translate.translate(450), true, true, 600, 600);
 		}
 
 		return new CreateChart[] {ch, ch2};
@@ -1468,11 +1468,11 @@ public class DustOpacity implements Serializable
 		}
 
 		ChartElement chart_k = new ChartElement(series_k, ChartElement.TYPE.XY_CHART, ChartElement.SUBTYPE.XY_SCATTER,
-				Translate.translate(Translate.JPARSEC_OPACITY_OF)+" "+grainName.toLowerCase(), "a_{max} (@mum)",
+				Translate.translate(447)+" "+grainName.toLowerCase(), "a_{max} (@mum)",
 				"k_{@nu} (cm^{2} g^{-1})", false, 500, 550);
 		chart_k.xAxisInLogScale = true;
 		ChartElement chart_beta = new ChartElement(series_beta, ChartElement.TYPE.XY_CHART, ChartElement.SUBTYPE.XY_SCATTER,
-				Translate.translate(Translate.JPARSEC_SPECTRAL_INDEX_OF)+" "+grainName.toLowerCase(), "a_{max} (@mum)",
+				Translate.translate(449)+" "+grainName.toLowerCase(), "a_{max} (@mum)",
 				"@beta", false, 500, 550);
 		chart_beta.xAxisInLogScale = true;
 		CreateChart ch[] = new CreateChart[] {new CreateChart(chart_k), new CreateChart(chart_beta)};
@@ -1564,11 +1564,11 @@ public class DustOpacity implements Serializable
 		}
 
 		ChartElement chart_k = new ChartElement(series_k, ChartElement.TYPE.XY_CHART, ChartElement.SUBTYPE.XY_SCATTER,
-				Translate.translate(Translate.JPARSEC_OPACITY_OF)+" "+grainName, "a_{max} (@mum)",
+				Translate.translate(447)+" "+grainName, "a_{max} (@mum)",
 				"k_{@nu} (cm^{2} g^{-1})", false, 500, 550);
 		chart_k.xAxisInLogScale = true;
 		ChartElement chart_beta = new ChartElement(series_beta, ChartElement.TYPE.XY_CHART, ChartElement.SUBTYPE.XY_SCATTER,
-				Translate.translate(Translate.JPARSEC_SPECTRAL_INDEX_OF)+" "+grainName, "a_{max} (@mum)",
+				Translate.translate(449)+" "+grainName, "a_{max} (@mum)",
 				"@beta", false, 500, 550);
 		chart_beta.xAxisInLogScale = true;
 		CreateChart ch[] = new CreateChart[] {new CreateChart(chart_k), new CreateChart(chart_beta)};

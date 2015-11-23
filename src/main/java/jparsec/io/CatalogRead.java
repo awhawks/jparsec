@@ -196,7 +196,7 @@ public class CatalogRead
 
 			if (ncat == maxTransitions)
 				JPARSECException
-						.addWarning(Translate.translate(Translate.JPARSEC_SOME_OF_THE_TRANSITIONS_COULD_NOT_BE_READ_DUE_TO_A_MEMORY_LIMIT));
+						.addWarning(Translate.translate(256));
 		} catch (FileNotFoundException e2)
 		{
 			throw new JPARSECException("file not found " + fich+".", e2);
@@ -353,7 +353,7 @@ public class CatalogRead
 
 			if (ncat == maxTransitions)
 				JPARSECException
-						.addWarning(Translate.translate(Translate.JPARSEC_SOME_OF_THE_TRANSITIONS_COULD_NOT_BE_READ_DUE_TO_A_MEMORY_LIMIT));
+						.addWarning(Translate.translate(256));
 
 		} catch (FileNotFoundException e2)
 		{

@@ -36,7 +36,7 @@ public class L1
 {
 	// private constructor so that this class cannot be instantiated.
 	private L1() {}
-	
+
 	private static final double MU[] = new double[]
 		{ 0.0, 2.82489428433814E-07, 2.82483274392893E-07, 2.82498184184723E-07, 2.82492144889909E-07 };
 
@@ -1184,7 +1184,7 @@ public class L1
 			new double[] {0.0, 0.0, 0.0, 0.0, 0.0},
 		},
 	};
-		
+
 	/**
 	 * L1 Ephemerides v1.2. Output vector is in equatorial coordinates, in
 	 * AU and AU/day. Tchebycheff polynomials are used to represent very long
@@ -1348,9 +1348,9 @@ public class L1
 
 		return XV;
 	}
-	
+
 	// FIXME: Remove everything below for the Android version
-	
+
 	/**
 	 * L1 Ephemerides v1.1. Output vector is in equatorial coordinates, in
 	 * AU and AU/day.

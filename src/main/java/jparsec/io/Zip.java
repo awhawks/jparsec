@@ -294,7 +294,7 @@ public class Zip
 	    try {
 	    	File file = new File(path);
 	    	if (!file.isDirectory()) throw new JPARSECException(path+" is not a directory.");
-	    	
+
 	    	FileOutputStream dest = new FileOutputStream(new File(fileName));
 
 	    	CheckedOutputStream checksum = new CheckedOutputStream(dest, new Adler32());

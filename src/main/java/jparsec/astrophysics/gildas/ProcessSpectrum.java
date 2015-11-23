@@ -1368,7 +1368,7 @@ public class ProcessSpectrum {
         };
         return out;
 	}
-	
+
 	/**
 	 * Performs a quick and simple gaussian fit to a set of data.
 	 * @param x The x values.

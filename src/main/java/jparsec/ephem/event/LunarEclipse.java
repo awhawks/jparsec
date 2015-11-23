@@ -423,7 +423,7 @@ public class LunarEclipse
 	public MoonEventElement[] getEvents()
 	{
 		String e[] = new String[] {Translate.translate(1271), Translate.translate(1272),
-			Translate.translate(Translate.JPARSEC_PARTIAL), Translate.translate(Translate.JPARSEC_TOTAL)};
+			Translate.translate(169), Translate.translate(400)};
 		int count = 0;
 		MoonEventElement event[] = new MoonEventElement[4];
 		for (int i=0; i<4; i++)

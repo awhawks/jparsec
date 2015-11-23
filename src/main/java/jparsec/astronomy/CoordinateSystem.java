@@ -309,7 +309,7 @@ public class CoordinateSystem
 		if (eph.ephemType == EphemerisElement.COORDINATES_TYPE.APPARENT) {
 			obliquity = Obliquity.trueObliquity(Functions.toCenturies(equinox), eph);
 		} else {
-			obliquity = Obliquity.meanObliquity(Functions.toCenturies(equinox), eph);			
+			obliquity = Obliquity.meanObliquity(Functions.toCenturies(equinox), eph);
 		}
 		RotateTo rot = new RotateTo(-Constant.PI_OVER_TWO, Constant.PI_OVER_TWO - obliquity, 0.0, loc.getLongitude(), loc
 				.getLatitude());
@@ -343,7 +343,7 @@ public class CoordinateSystem
 		if (eph.ephemType == EphemerisElement.COORDINATES_TYPE.APPARENT) {
 			obliquity = Obliquity.trueObliquity(Functions.toCenturies(equinox), eph);
 		} else {
-			obliquity = Obliquity.meanObliquity(Functions.toCenturies(equinox), eph);			
+			obliquity = Obliquity.meanObliquity(Functions.toCenturies(equinox), eph);
 		}
 		RotateFrom rot = new RotateFrom(Constant.PI_OVER_TWO, Constant.PI_OVER_TWO + obliquity, 0.0, loc.getLongitude(), loc
 				.getLatitude());

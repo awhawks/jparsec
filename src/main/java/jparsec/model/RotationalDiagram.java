@@ -1000,7 +1000,7 @@ public class RotationalDiagram implements Serializable
 		if (logScaleY) labelY = "Nu/gu";
 		if (this.chartYLabel != null) labelY = chartYLabel;
 
-		String labelX = Translate.translate(Translate.JPARSEC_TEMPERATURE)+" (K)";
+		String labelX = Translate.translate(414)+" (K)";
 		if (this.chartXLabel != null) labelX = chartXLabel;
 
 		ChartElement chart = new ChartElement(this.getSeries(logScaleY), ChartElement.TYPE.XY_CHART, ChartElement.SUBTYPE.XY_SCATTER,
