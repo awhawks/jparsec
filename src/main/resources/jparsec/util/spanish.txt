@@ -1116,7 +1116,7 @@ Fin de fase penumbral
 Elevación de la Luna
 Próximo eclipse de Sol
 Próximo eclipse de Luna
-SIN SALIDA/PUESTA
+SIN SALIDA/PUESTA/CULMINACIÓN
 Eclipse completo visible
 Eclipse no visible
 Primer contacto visible tras la salida (derecha) / antes de la puesta (izquierda) del Sol
@@ -1316,7 +1316,7 @@ Itokawa
 Nutación
 Libración
 Baricentro del Sistema Solar
-Fogonazo de Iridium
+Destello de Iridium
 inicio
 final
 máximo

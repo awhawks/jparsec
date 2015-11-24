@@ -490,12 +490,7 @@ public class CreateGridChart implements Serializable, ComponentListener, Propert
 
 			    try {
 			    	DefaultContourLineAttribute dcla = gridAttr_.getContourLevels().getDefaultContourLineAttribute();
-			    	int n = 0;
-			    	for (int i=0; i<chart.levels.length; i++) {
-			    		String label = ""+(float) chart.levels[i];
-			    		if (label.length() > n) n = label.length();
-			    	}
-			    	dcla.setSignificantDigits(n);
+			    	dcla.setSignificantDigits(chart.significantDigits);
 			    	dcla.setLabelEnabled(!chart.ocultLevelLabels);
 			    	gridAttr_.getContourLevels().setDefaultContourLineAttribute(dcla);
 			    } catch (Exception exc) {}

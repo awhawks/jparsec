@@ -1116,7 +1116,7 @@ Penumbra phase ends
 Moon elevation
 Next solar eclipse
 Next lunar eclipse
-NO RISE/SET
+NO RISE/SET/TRANSIT
 Complete eclipse visible
 Eclipse not visible
 First contact visible after sunrise (right) / before sunset (left)
@@ -1316,7 +1316,7 @@ Itokawa
 Nutation
 Libration
 Solar system barycenter
-Iridium flare
+Flare of Iridium
 start
 end
 max

@@ -195,7 +195,7 @@ public class SimpleEventElement implements Serializable {
 		"Calendar", "Crater",
 		"Conjunction", "Occultation", "Transit", "Eclipse", "Shadow transit", "Opposition", "Conjunction",
 		"Saturn rings edge-on", "Saturn rings in maximum aperture",
-		"Transit", "Transit", "Iridium flare",
+		"Transit", "Transit", "Flare of Iridium",
 		"Other", "Inexistent"
 	};
 
@@ -447,7 +447,15 @@ public class SimpleEventElement implements Serializable {
 					}
 				} else {
 					if (eventType == EVENT.ARTIFICIAL_SATELLITES_TRANSITS) tevent += " " + tof;
-					out = tevent + " " + tbody;
+					if (eventType == EVENT.ARTIFICIAL_SATELLITES_TRANSITS || 
+							eventType == EVENT.ARTIFICIAL_SATELLITES_IRIDIUM_FLARES) {
+						int iri = tbody.toLowerCase().indexOf("iridium");
+						if (iri >= 0) {
+							out = tevent + " " + tbody.substring(iri+7).trim();							
+						} else {
+							out = tevent + " " + tbody;
+						}
+					}
 				}
 			}
 			timeE = new TimeElement(this.getEventTime(obs, eph, timeScale), timeScale);

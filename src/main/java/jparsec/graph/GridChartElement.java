@@ -357,6 +357,7 @@ public class GridChartElement implements Serializable
 		c.ocultLevels = this.ocultLevels;
 		c.levelsBorderStyle = this.levelsBorderStyle;
 		c.ocultLevelLabels = this.ocultLevelLabels;
+		c.significantDigits = this.significantDigits;
 		if (this.pointers != null) c.pointers = this.pointers.clone();
 		return c;
 	}
@@ -395,6 +396,7 @@ public class GridChartElement implements Serializable
 		// Probably incorrect - comparing Object[] arrays with Arrays.equals
 		if (!Arrays.equals(pointers, that.pointers)) return false;
 		if (levelsOrientation != that.levelsOrientation) return false;
+		if (significantDigits != that.significantDigits) return false;
 
 		return levelsBorderStyle == that.levelsBorderStyle;
 	}
@@ -423,6 +425,7 @@ public class GridChartElement implements Serializable
 		result = 31 * result + (pointers != null ? Arrays.hashCode(pointers) : 0);
 		result = 31 * result + (ocultLevels ? 1 : 0);
 		result = 31 * result + (ocultLevelLabels ? 1 : 0);
+		result = 31 * result + significantDigits;
 		result = 31 * result + (levelsOrientation != null ? levelsOrientation.hashCode() : 0);
 		result = 31 * result + (levelsBorderStyle != null ? levelsBorderStyle.hashCode() : 0);
 		return result;
@@ -970,6 +973,13 @@ public class GridChartElement implements Serializable
 	 * Set to true to ocultate the level labels inside the chart.
 	 */
 	public boolean ocultLevelLabels = false;
+	
+	/**
+	 * The number of significant digits in the labels of the levels for
+	 * raster contour charts. Default is 3.
+	 */
+	public int significantDigits = 3;
+	
 	/**
 	 * Set wedge orientation.
 	 */
