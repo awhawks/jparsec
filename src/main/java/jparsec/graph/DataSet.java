@@ -3893,8 +3893,8 @@ public class DataSet
 	}
 
 	/**
-	 * Converts an array of Doubles to a double[] (primitive array).
-	 * @param d The array of Doubles.
+	 * Converts an array of Floats to a float[] (primitive array).
+	 * @param d The array of Floats.
 	 * @return Its primitive array.
 	 */
 	public static float[] toPrimitiveArrayFloat(Object[] d) {
@@ -3906,8 +3906,8 @@ public class DataSet
 	}
 
 	/**
-	 * Converts an array of Doubles to a double[] (primitive array).
-	 * @param d The array of Doubles.
+	 * Converts an array of Integers to an int[] (primitive array).
+	 * @param d The array of Integers.
 	 * @return Its primitive array.
 	 */
 	public static int[] toPrimitiveArrayInteger(Object[] d) {

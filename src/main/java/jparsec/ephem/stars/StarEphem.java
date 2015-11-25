@@ -113,6 +113,36 @@ public class StarEphem
 		int index = readFile.searchByName(StarEphem.getCatalogNameFromProperName(name));
 		return index;
 	}
+	
+	/**
+	 * Searchs for a given star in SkyMaster 2000 catalogue and returns the index.
+	 * @param loc Location of the object to search for. Note this location should be usually
+	 * mean J2000 equatorial coordinates.
+	 * @param radius Radius in radians around the given position to search for an object.
+	 * @return index Indexes of the objects close to the given location, if any, at a distance
+	 * lower than radius, ordered by radius in crescent order. null is returned if no match is found.
+	 * @throws JPARSECException If an error occurs.
+	 */
+	public static int[] getStarTargetIndex(LocationElement loc, double radius)
+	throws JPARSECException {
+		if (readFile == null) {
+			ReadFile re = new ReadFile();
+			re.setPath(StarEphem.PATH_TO_SkyMaster2000_JPARSEC_FILE);
+			re.setFormat(ReadFile.FORMAT.JPARSEC_SKY2000);
+			re.readFileOfStars();
+			readFile = re;
+
+			if (READ_STARS_BEYOND_MAG_6_5) {
+				ReadFile re2 = new ReadFile();
+				re2.setPath(StarEphem.PATH_TO_SkyMaster2000_JPARSEC_FILE_BEYOND6_5mag);
+				re2.setFormat(ReadFile.FORMAT.JPARSEC_SKY2000);
+				re2.readFileOfStars();
+				readFile.setReadElementsFromArray(DataSet.addObjectArray(re.getReadElements(), re2.getReadElements()));
+			}
+		}
+		return readFile.searchByPositionGetAll(loc, radius);
+	}
+	
 	/**
 	 * Returns the name of a star from the index in SkyMaster 2000 catalogue.
 	 * @param index Index for the star as sorted in the file.

@@ -1972,7 +1972,7 @@ public class ReadFile implements Serializable
 	 * @param radius Radius in radians around the given position to search for an object.
 	 * @return index Index of the closest object to the given location, if any, at a distance
 	 * lower than radius. -1 is returned if no match is found.
-	 * @throws JPARSECException Thrown if the index is not valid.
+	 * @throws JPARSECException Thrown if the object is not supported.
 	 */
 	public int searchByPosition(LocationElement loc, double radius) throws JPARSECException
 	{
@@ -1996,6 +1996,39 @@ public class ReadFile implements Serializable
 		return index;
 	}
 
+	/**
+	 * Search for an object by it's position. This method is not supported for orbital elements
+	 * (comets, asteroids, transneptunians, artificial satellites). It is only supported for stars.
+	 *
+	 * @param loc Location of the object to search for. Note this location should be usually
+	 * mean J2000 equatorial coordinates.
+	 * @param radius Radius in radians around the given position to search for an object.
+	 * @return index Indexes of the objects close to the given location, if any, at a distance
+	 * lower than radius, ordered by radius in crescent order. null is returned if no match is found.
+	 * @throws JPARSECException Thrown if the object is not supported.
+	 */
+	public int[] searchByPositionGetAll(LocationElement loc, double radius) throws JPARSECException
+	{
+		// Search object
+		Integer index[] = null;
+		Object o[] = this.getReadElements();
+		if (o == null) return null;
+		index = new Integer[0];
+		double dist[] = new double[0];
+		for (int i = 0; i < o.length; i++)
+		{
+			LocationElement l = obtainPos(i, o);
+			double d = LocationElement.getApproximateAngularDistance(loc, l);
+			if (d < radius) {
+				index = (Integer[]) DataSet.addObjectArray(index, new Integer[] {new Integer(i)});
+				dist = DataSet.addDoubleArray(dist, new double[] {d});
+			}
+		}
+		index = (Integer[]) DataSet.sortInCrescent(index, dist);
+		if (index.length == 0) return null;
+		return DataSet.toPrimitiveArrayInteger(index);
+	}
+	
 	private String obtainName(int index, Object obj[]) throws JPARSECException
 	{
 		if (index < 0 || index >= obj.length)
