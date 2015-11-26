@@ -1669,6 +1669,7 @@ public class EventReport {
 		    if (ephem0 == null || ephem1 == null) break;
 
 		    double d = LocationElement.getApproximateAngularDistance(ephem0.getEquatorialLocation(), ephem1.getEquatorialLocation()) * Constant.RAD_TO_DEG;
+		    if (d < 1.0) d = LocationElement.getAngularDistance(ephem0.getEquatorialLocation(), ephem1.getEquatorialLocation()) * Constant.RAD_TO_DEG;
 		    x.add(jd);
 		    y.add(d);
 		    yra.add(ephem0.getEquatorialLocation().getLongitude());
@@ -1806,6 +1807,7 @@ public class EventReport {
 		    if (ephem0 == null) break;
 
 		    double d = LocationElement.getApproximateAngularDistance(ephem0.getEquatorialLocation(), loc1) * Constant.RAD_TO_DEG;
+		    if (d < 1.0) d = LocationElement.getAngularDistance(ephem0.getEquatorialLocation(), loc1) * Constant.RAD_TO_DEG;
 		    x.add(jd);
 		    y.add(d);
 		    yra.add(ephem0.getEquatorialLocation().getLongitude());

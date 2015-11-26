@@ -1120,8 +1120,14 @@ public class VirtualCamera implements GenericCamera {
 			star.declination = star.declination * Constant.DEG_TO_RAD;
 
 			LocationElement locStar0 = new LocationElement(star.rightAscension, star.declination, 1.0);
-			double approxAngDist = LocationElement.getApproximateAngularDistance(loc0J2000, locStar0);
-			if (approxAngDist > field) return null;
+			double angDist = 0;
+			if (field > Constant.DEG_TO_RAD) {
+				angDist = LocationElement.getApproximateAngularDistance(loc0J2000, locStar0);
+				if (angDist > field) return null;
+			} else {
+				angDist = LocationElement.getAngularDistance(loc0J2000, locStar0);
+				if (angDist > field) return null;				
+			}
 
 			star.properMotionRA = (float) (rf.readDouble(line, "RA_PM") * 15.0 * Constant.ARCSEC_TO_RAD);
 			star.properMotionDEC = (float) (rf.readDouble(line, "DEC_PM") * Constant.ARCSEC_TO_RAD);
@@ -1187,7 +1193,7 @@ public class VirtualCamera implements GenericCamera {
 			LocationElement l = locStar0.clone();
 
 			/* space motion */
-			if (properM > 0 && approxAngDist < (fieldLimit + properM * jYearsFromJ2000 + cte11) && eph.ephemType != COORDINATES_TYPE.GEOMETRIC)
+			if (properM > 0 && angDist < (fieldLimit + properM * jYearsFromJ2000 + cte11) && eph.ephemType != COORDINATES_TYPE.GEOMETRIC)
 			{
 				double q[] = LocationElement.parseLocationElement(l), p[] = new double[3];
 				double relativisticFactor = 1.0 / (1.0 - star.properMotionRadialV / Constant.SPEED_OF_LIGHT);

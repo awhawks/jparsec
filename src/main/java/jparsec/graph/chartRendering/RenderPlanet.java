@@ -3193,6 +3193,7 @@ public class RenderPlanet
 
 				LocationElement loc0 = new LocationElement(lonp*Constant.DEG_TO_RAD,latp*Constant.DEG_TO_RAD,1.0);
 				double dist = LocationElement.getApproximateAngularDistance(loc, loc0);
+				if (dist < 0.5) dist = LocationElement.getAngularDistance(loc, loc0);
 				if (dist < minDist || minDist == -1) {
 					minDist = dist;
 					String name = FileIO.getField(1, line, sep, true);

@@ -460,7 +460,7 @@ public class RenderSatellite
 				if (d < (ephemSun.angularRadius + ephemMoon.angularRadius)) {
 					brightness -= 10;
 					double h = ephemMoon.angularRadius - ephemSun.angularRadius;
-					if (h > 0.0 && d < h) brightness -= 100;
+					if (h > 0.0 && LocationElement.getAngularDistance(locSun, locMoon) < h) brightness -= 100;
 				}
 			}
 			if (brightness == 0 && render.planetMap == PLANET_MAP.MAP_SPHERICAL) continue;
