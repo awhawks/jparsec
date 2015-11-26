@@ -1984,7 +1984,7 @@ public class ReadFile implements Serializable
 		for (int i = 0; i < o.length; i++)
 		{
 			LocationElement l = obtainPos(i, o);
-			double d = LocationElement.getApproximateAngularDistance(loc, l);
+			double d = LocationElement.getAngularDistance(loc, l);
 			if (d < radius) {
 				if (d < minDist || minDist == -1) {
 					index = i;
@@ -2018,7 +2018,7 @@ public class ReadFile implements Serializable
 		for (int i = 0; i < o.length; i++)
 		{
 			LocationElement l = obtainPos(i, o);
-			double d = LocationElement.getApproximateAngularDistance(loc, l);
+			double d = LocationElement.getAngularDistance(loc, l);
 			if (d < radius) {
 				index = (Integer[]) DataSet.addObjectArray(index, new Integer[] {new Integer(i)});
 				dist = DataSet.addDoubleArray(dist, new double[] {d});
@@ -3301,7 +3301,7 @@ public class ReadFile implements Serializable
 			if (name.indexOf(consName) < 0) return false;
 		}
 		if (loc != null && consLoc != null && consRadius > 0) {
-			double d = LocationElement.getApproximateAngularDistance(loc, consLoc);
+			double d = LocationElement.getAngularDistance(loc, consLoc);
 			if (d > consRadius) return false;
 		}
 		return true;

@@ -757,11 +757,13 @@ public class Star
 	 * Following this lunacy for 334 variable stars, they are simply labelled
 	 * "V335", "V336", etc.
 	 *
-	 * @param designation String representation of the variable.
+	 * @param name String representation of the variable.
 	 * @return Integer value with the variable number.
 	 */
-	public static int getVariableStarNumber(String designation)
+	public static int getVariableStarNumber(String name)
 	{
+		String designation = name.trim();
+		designation = FileIO.getField(1, designation, " ", true);
 		if (designation.startsWith("V")) {
 			try {
 				int n = Integer.parseInt(designation.substring(1));

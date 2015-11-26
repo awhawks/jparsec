@@ -88,6 +88,41 @@ public class StarEphem
 	public static boolean READ_STARS_BEYOND_MAG_6_5 = false;
 
 	/**
+	 * An array holding the indexes of around 100 famous double stars. No guarantee is 
+	 * given about including all interesting stars in this list. It comes from the catalog
+	 * <i>110 Best Double Stars</i> by the Saguaro Astronomy Club. Some indexes will be 
+	 * equal or greater to 8884, requiring to set the flag {@linkplain #READ_STARS_BEYOND_MAG_6_5}
+	 * to true to read them.
+	 */
+	public static final int[] MAIN_DOUBLE_STARS = new int[] {
+		62, 8770, 6098, 6582, 347, 4164, 457, 1042, 8399, 399, 93, 1098, 2326, 14116, 3307, 6019, 530, 
+		3468, 150, 0, 1306, 806, 318, 73, 271, 9333, 1040, 1412, 1717, 214, 3597, 812, 564, 3383, 274, 
+		1600, 650, 2994, 164, 1991, 8859, 185, 18305, 17881, 415, 2059, 1234, 682, 1780, 3029, 1375, 11035, 902, 
+		211, 1194, 1149, 824, 1549, 23, 247, 195, 1424, 3355, 3654, 21, 70, 6761, 4779, 1727, 324, 122, 
+		1388, 418, 3, 1646, 292, 1051, 746, 537, 6, 251, 125, 408, 31, 89553, 83, 384, 2614, 2040, 417, 
+		852, 5279, 616, 103, 600, 14, 2643, 350, 4152, 1023, 5588, 7652, 1963, 5097, 1920, 344, 67, 48, 
+		279, 799
+	};
+	
+	/**
+	 * An array holding the indexes of 100 famous variable stars. No guarantee is 
+	 * given about including all interesting stars in this list. It comes from the book 
+	 * <i>Observing Variable Stars - a guide for the beginner</i>, by David H. Levy. The 
+	 * original list was filtered to reduce the number of stars to 100. Some indexes will be 
+	 * equal or greater to 8884, requiring to set the flag {@linkplain #READ_STARS_BEYOND_MAG_6_5}
+	 * to true to read them.
+	 */
+	public static final int[] MAIN_VARIABLE_STARS = new int[] {
+		22918, 17802, 6167, 32513, 14961, 58503, 51480, 15104, 18849, 20844, 7632, 11973, 2228, 4266, 
+		25848, 69267, 35452, 12635, 8158, 42373, 29790, 43814, 55574, 40713, 12124, 75406, 1525, 33125, 
+		14273, 55338, 68218, 75151, 36899, 76672, 55292, 5061, 6237, 12752, 3532, 3799, 2622, 178, 3671, 
+		11311, 229, 523, 27477, 55993, 12489, 6682, 11823, 13336, 47627, 916, 51545, 38198, 17247, 18286, 
+		47317, 24059, 23016, 27385, 247, 77877, 60483, 628, 5849, 15861, 52118, 5610, 7737, 31908, 21599, 
+		29895, 8961, 20206, 18300, 52760, 8667, 77202, 33753, 47406, 21396, 15012, 14234, 6048, 1262, 
+		24335, 76444, 12823, 73336, 42644, 66828, 57600, 22800, 2399, 38306, 23059, 14100, 40432
+	};
+	
+	/**
 	 * Searchs for a given star in SkyMaster 2000 catalogue and returns the index.
 	 * @param name Star name.
 	 * @return The index, or -1 if no match is found.
