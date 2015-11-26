@@ -60,8 +60,6 @@ import jparsec.io.ReadFile.FORMAT;
 import jparsec.math.Constant;
 import jparsec.math.FastMath;
 import jparsec.math.Interpolation;
-import jparsec.observer.City;
-import jparsec.observer.CityElement;
 import jparsec.observer.LocationElement;
 import jparsec.observer.ObserverElement;
 import jparsec.time.AstroDate;

@@ -10595,9 +10595,10 @@ public class RenderSky
 	 * @param y Horizontal position in the rendering in pixels.
 	 * @param consider_satellites True to consider possible transiting
 	 *        satellites, false to ignore them.
-	 * @return A array with two values (null if no object is found):<BR>
+	 * @return A array with three values (null if no object is found):<BR>
 	 * ID value (TARGET) of the object.<BR>
-	 * Minimum distance (Double) to the input position in pixels.
+	 * Minimum distance (Double) to the input position in pixels.<BR>
+	 * Radius in pixels (Double) of the planet at input coordinates.
 	 * @throws JPARSECException If an error occurs.
 	 */
 	public Object[] getClosestPlanetInScreenCoordinates(double x, double y, boolean consider_satellites) throws JPARSECException
@@ -10605,7 +10606,7 @@ public class RenderSky
 		if (render.telescope.invertHorizontal) x = render.width-1-x;
 		if (render.telescope.invertVertical) y = render.height-1-y;
 
-		double minDist = -1, minDist2 = -1;
+		double minDist = -1, minDist2 = -1, psize = -1;
 		TARGET object = TARGET.NOT_A_PLANET;
 		if (planets == null) return null;
 		boolean mouseInsidePlanet = false;
@@ -10677,12 +10678,13 @@ public class RenderSky
 					object = target;
 					minDist = position[3];
 					minDist2 = rr;
+					psize = r;
 					if (tmp <= 1.0) mouseInsidePlanet = true;
 				}
 			}
 		}
 		if (object == TARGET.NOT_A_PLANET) return null;
-		return new Object[] {object, minDist2};
+		return new Object[] {object, minDist2, psize};
 	}
 
 	/**

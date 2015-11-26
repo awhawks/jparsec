@@ -2969,9 +2969,10 @@ public class RenderPlanet
 	 * @param y Horizontal position in the rendering in pixels.
 	 * @param considerSatellites True to consider possible transiting
 	 *        satellites, false to ignore them.
-	 * @return A array with two values (null if no object is found):<BR>
+	 * @return A array with three values (null if no object is found):<BR>
 	 * ID value (TARGET) of the object.<BR>
-	 * Minimum distance (Double) to the input position in pixels.
+	 * Minimum distance (Double) to the input position in pixels.<BR>
+	 * Radius in pixels (Double) of the planet at input coordinates.
 	 * @throws JPARSECException If an error occurs.
 	 */
 	public Object[] getClosestPlanetInScreenCoordinates(int x, int y, boolean considerSatellites) throws JPARSECException
@@ -3151,12 +3152,32 @@ public class RenderPlanet
 	 * @param target Target body.
 	 * @param maxDist Maximum distance to the feature in degrees. In case no
 	 * feature is closer to the input position than this value, null will be
-	 * returned. Set to 0 (or a very high value) to disable this limitation.
+	 * returned. Set to 0 or lower (or a very high value) to disable this limitation.
 	 * @return Name of the most closer feature, or null if none can be found.
 	 * The name is returned as the feature name and some data between brackets,
 	 * like feature type, longitude, and latitude (deg), size (km), and details.
 	 */
 	public static String identifyFeature(LocationElement loc, TARGET target, double maxDist)
+	{
+		return identifyFeature(loc, target, maxDist, 0);
+	}
+	
+	/**
+	 * Identifies a feature in the current rendered body. GRS in Jupiter is not
+	 * identified in this method.
+	 * @param loc Planetographic/selenographic/satellitographic position.
+	 * @param target Target body.
+	 * @param maxDist Maximum distance to the feature in degrees. In case no
+	 * feature is closer to the input position than this value, null will be
+	 * returned. Set to 0 or lower (or a very high value) to disable this limitation.
+	 * @param minDiameter Minimum diameter in km of the feature identified. Set
+	 * to 0 or lower to disable this condition.
+	 * @return Name of the most closer feature, or null if none can be found.
+	 * The name is returned as the feature name and some data between brackets,
+	 * like feature type, longitude, and latitude (deg), size (km), and details.
+	 */
+	public static String identifyFeature(LocationElement loc, TARGET target, double maxDist,
+			double minDiameter)
 	{
 		if (target == TARGET.EARTH) {
 			try {
@@ -3195,10 +3216,14 @@ public class RenderPlanet
 				double dist = LocationElement.getApproximateAngularDistance(loc, loc0);
 				if (dist < 0.5) dist = LocationElement.getAngularDistance(loc, loc0);
 				if (dist < minDist || minDist == -1) {
+					String size = FileIO.getField(5, line, sep, true);
+					if (minDiameter > 0 && DataSet.isDoubleStrictCheck(size)) {
+						double s = Double.parseDouble(size);
+						if (s < minDiameter) continue;
+					}
 					minDist = dist;
 					String name = FileIO.getField(1, line, sep, true);
 					String type = FileIO.getField(2, line, sep, true);
-					String size = FileIO.getField(5, line, sep, true);
 					String detail = FileIO.getField(6, line, sep, true);
 					detail += ", "+FileIO.getField(7, line, sep, true);
 					feature = name + " ("+type+") ("+lonp+"\u00b0) ("+lat+"\u00b0) ("+size+" km) ("+detail+")";

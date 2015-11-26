@@ -1114,7 +1114,7 @@ public class SDP8_SGP8
 
 				if (dSun < 0.25 && !insideSun) {
 					String det = Functions.formatAngleAsDegrees(ephem.elevation, 1);
-					SimpleEventElement see = new SimpleEventElement(JD_TT + (double) nstep * time_step, EVENT.TRANSIT, det);
+					SimpleEventElement see = new SimpleEventElement(JD_TT + (double) nstep * time_step, EVENT.ARTIFICIAL_SATELLITES_TRANSITS_SUN_MOON, det);
 					see.body = sat.name;
 					see.secondaryBody = TARGET.SUN.getName();
 					see.eventLocation = ephem.getEquatorialLocation();
@@ -1130,7 +1130,7 @@ public class SDP8_SGP8
 				}
 				if (dMoon < 0.25 && !insideMoon) {
 					String det = Functions.formatAngleAsDegrees(ephem.elevation, 1);
-					SimpleEventElement see = new SimpleEventElement(JD_TT + (double) nstep * time_step, EVENT.TRANSIT, det);
+					SimpleEventElement see = new SimpleEventElement(JD_TT + (double) nstep * time_step, EVENT.ARTIFICIAL_SATELLITES_TRANSITS_SUN_MOON, det);
 					see.body = sat.name;
 					see.secondaryBody = TARGET.Moon.getName();
 					see.eventLocation = ephem.getEquatorialLocation();
