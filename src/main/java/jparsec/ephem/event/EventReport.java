@@ -2278,6 +2278,9 @@ public class EventReport {
 		ArrayList<SimpleEventElement> list = new ArrayList<SimpleEventElement>();
 		TimeElement timei = new TimeElement(jd0, SCALE.TERRESTRIAL_TIME);
 		TimeElement timef = new TimeElement(jdf, SCALE.TERRESTRIAL_TIME);
+		if (ephIn.algorithm == ALGORITHM.ARTIFICIAL_SATELLITE || 
+				ephIn.algorithm == ALGORITHM.NEWCOMB || ephIn.algorithm == ALGORITHM.PROBE ||
+				ephIn.algorithm == ALGORITHM.STAR) ephIn.algorithm = ALGORITHM.MOSHIER;
 
 		// Return only several events at the same time for non-mutual phenomena
 		boolean onlySimultaneousEvents = moonEventsOnlySeveralNonMutualAtSameTime;

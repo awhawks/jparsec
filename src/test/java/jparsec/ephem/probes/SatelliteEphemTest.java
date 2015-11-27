@@ -69,6 +69,7 @@ public class SatelliteEphemTest {
             TimeElement tend = tinit.clone();
             tend.add(3.0);
             ArrayList<SimpleEventElement> list = EventReport.getEvents(tinit, tend, observer, eph);
+            System.out.println("found "+list.size());
             // Change language to check output in Spanish
             Translate.setDefaultLanguage(LANGUAGE.SPANISH);
             for (int i=0; i<list.size(); i++) {

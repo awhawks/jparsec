@@ -440,9 +440,10 @@ public class SimpleEventElement implements Serializable {
 			} else {
 				if (secondaryBody != null) {
 					if (eventType == EVENT.OCCULTATION || eventType == EVENT.ECLIPSE) {
-						out = tevent + " "+ tbody+" " + Translate.translate(161) + " " + tsecondaryBody;
+						out = tevent + " "+ tof + " " + tbody+" " + Translate.translate(161) + " " + tsecondaryBody;
 					} else {
-						if (eventType == EVENT.ARTIFICIAL_SATELLITES_TRANSITS_SUN_MOON) tevent += " " + tof;
+						if (eventType == EVENT.ARTIFICIAL_SATELLITES_TRANSITS_SUN_MOON 
+								|| eventType == EVENT.TRANSIT || eventType == EVENT.SHADOW_TRANSIT) tevent += " " + tof;
 						out = tevent + " "+ tbody+" " + Translate.translate(1020) + " " + tsecondaryBody;
 					}
 				} else {

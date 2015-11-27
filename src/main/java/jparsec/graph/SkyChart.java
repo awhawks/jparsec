@@ -41,6 +41,7 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -189,6 +190,11 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
     public SkyRenderElement chartForDragging;
 
     /**
+     * Controls the size of the font used for the popup menu.
+     */
+	public float menuFontSize = 15f;
+
+    /**
      * Set to false to avoid displaying events in the popup menu. Default
      * is true.
      */
@@ -212,6 +218,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
  	private GenericTelescope telescopeControl[] = new GenericTelescope[0];
  	private LocationElement lastLoc;
  	private static final int drawLeyendMinimumWidth = 750, minimumSize = 15;
+
  	private int imageType = BufferedImage.TYPE_INT_RGB;
 
 	/**
@@ -2155,7 +2162,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 	  		if (spaces > 0) s = s.substring(0, spaces).trim();
   		}
   		menu = new JPopupMenu();
-		menu.setFont(menu.getFont().deriveFont(18f));
+		menu.setFont(menu.getFont().deriveFont(menuFontSize));
 
   		final String obj = s;
   		// Center
@@ -4240,7 +4247,10 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 			//    new float[] {(float) maxSize, (float) minSize}, paf, com});
 			Object o =  DataBase.getDataForAnyThread("objects", true);
 			if (o == null) return;
+			Object o2000 =  DataBase.getDataForAnyThread("objectsJ2000", true);
+			if (o2000 == null) return;
 			ArrayList<Object> objects = new ArrayList<Object>(Arrays.asList((Object[]) o));
+			ArrayList<Object> objectsJ2000 = new ArrayList<Object>(Arrays.asList((Object[]) o2000));
 			String stable[][] = new String[objects.size()][7];
 			String types[] = new String[] {DataSet.capitalize(Translate.translate(819).toLowerCase(), false), DataSet.capitalize(Translate.translate(40), false),
 					DataSet.capitalize(Translate.translate(959), false), DataSet.capitalize(Translate.translate(960), false), DataSet.capitalize(Translate.translate(1297), false),
@@ -4250,6 +4260,16 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 			for (int i=0; i<objects.size(); i++)
 			{
 				Object[] obj = (Object[]) objects.get(i);
+				if (obj.length <= 3) {
+					int index2000 = (Integer) obj[0];
+					LocationElement locF = (LocationElement) obj[1];
+					obj = (Object[]) objectsJ2000.get(index2000);
+					obj[3] = locF;
+					if (obj.length == 3) {
+						float mag = (Float) obj[2];
+						obj[4] = mag;
+					}
+				}
 
 				LocationElement loc = (LocationElement) obj[3];
 				float s[] = (float[]) obj[5];
@@ -5322,6 +5342,7 @@ private class thread0 implements Runnable {
 				EventReport.EarthPerihelionAphelion = true;
 				EventReport.lunarPerigeeApogee = true;
 				EventReport.NEOs = true;
+				EventReport.lunarMaxMinDeclination = true;
 				//if (chart.drawComets || chart.drawAsteroids)
 					EventReport.cometAsteroidVisibleNakedEye = true;
 
