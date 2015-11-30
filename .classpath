@@ -172,5 +172,7 @@
 	<classpathentry kind="lib" path="lib/visad.jar"/>
 	<classpathentry kind="lib" path="lib/vsop87.jar"/>
 	<classpathentry kind="var" path="M2_REPO"/>
+	<classpathentry kind="lib" path="lib/dust.jar"/>
+	<classpathentry kind="lib" path="lib/series96.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

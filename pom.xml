@@ -104,8 +104,8 @@
                                 <mkdir dir='${project.basedir}/lib' />
 
                                 <get src='${conga.url}/cds/cds.astro.jar'    dest='${project.basedir}/lib/' usetimestamp='true' />
-                                <get src='${conga.url}/series96.jar'          dest='${project.basedir}/lib/' usetimestamp='true' />
                                 <get src='${conga.url}/sgt_v30.jar'          dest='${project.basedir}/lib/' usetimestamp='true' />
+                                <get src='${conga.url}/series96.jar'         dest='${project.basedir}/lib/' usetimestamp='true' />
                                 <get src='${conga.url}/skyViewWCS.jar'       dest='${project.basedir}/lib/' usetimestamp='true' />
                                 <get src='${conga.url}/visad.jar'            dest='${project.basedir}/lib/' usetimestamp='true' />
                             </target>
@@ -125,6 +125,8 @@
                                 <get src='${conga.url}/eop.jar'              dest='${project.basedir}/lib/' usetimestamp='true' />
                                 <get src='${conga.url}/images.jar'           dest='${project.basedir}/lib/' usetimestamp='true' />
                                 <get src='${conga.url}/jpl_ephem.jar'        dest='${project.basedir}/lib/' usetimestamp='true' />
+                                <get src='${conga.url}/series96.jar'         dest='${project.basedir}/lib/' usetimestamp='true' />
+                                <get src='${conga.url}/dust.jar'             dest='${project.basedir}/lib/' usetimestamp='true' />
                                 <get src='${conga.url}/orbital_elements.jar' dest='${project.basedir}/lib/' usetimestamp='true' />
                                 <get src='${conga.url}/radex.jar'            dest='${project.basedir}/lib/' usetimestamp='true' />
                                 <get src='${conga.url}/sky.jar'              dest='${project.basedir}/lib/' usetimestamp='true' />

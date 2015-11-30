@@ -1068,4 +1068,34 @@ public class RiseSetTransit
 		ephem_obj.transitElevation = ephem_elem.transitElevation;
 		return ephem_obj;
 	}
+	
+    /**
+     * Transforms an input time object to the closest time when the object passes at maximum or 
+     * minimum elevation.
+     * @param time Input time object. It will be modified when the method returns.
+     * @param observer The observer.
+     * @param eph The ephemeris properties containing the input body.
+     * @param inferior True for inferior transit (minimum elevation), false for superior transit 
+     * (maximum elevation).
+     * @return The ephemerides of the object at maximum or minimum elevation.
+     * @throws JPARSECException For an invalid date.
+     */
+    public static EphemElement toTransitTime(TimeElement time, ObserverElement observer, EphemerisElement eph,
+    		boolean inferior) throws JPARSECException {
+    	double precision = 1.0 / Constant.SECONDS_PER_DAY;
+		double celestialHoursToEarthTime = Constant.RAD_TO_DAY / Constant.SIDEREAL_DAY_LENGTH;
+		EphemElement ephem = null;
+		int iter = 0;
+    	while (iter < 10) {
+	        ephem = Ephem.getEphemeris(time, observer, eph, false);
+			double offFromTransit = Functions.normalizeRadians(ephem.rightAscension - SiderealTime.apparentSiderealTime(time, observer, eph) + 
+					(inferior ? Math.PI : 0));
+			if (offFromTransit > Math.PI) offFromTransit -= Constant.TWO_PI;
+	    	double transitTime = celestialHoursToEarthTime * offFromTransit;
+	    	time.add(transitTime);
+	    	if (Math.abs(transitTime) < precision) break;
+	    	iter ++;
+    	}
+    	return ephem;
+    }
 }
