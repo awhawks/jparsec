@@ -533,7 +533,7 @@ public class SimpleEventElement implements Serializable {
 						out += " ("+Functions.formatValue(Double.parseDouble(details), 2)+"\u00b0)";
 					} else {
 						if (eventType == EVENT.ARTIFICIAL_SATELLITES_TRANSITS_SUN_MOON) {
-							out += " ("+Translate.translate(29).toLowerCase()+" "+tof+" " +details+"\u00b0)";
+							out += " ("+Translate.translate(29).toLowerCase()+" "+tof+" " +details+")";
 						} else {
 							out += " ("+details+")";
 						}
@@ -588,9 +588,12 @@ public class SimpleEventElement implements Serializable {
 			}
 		} else {
 			if (translateIt && Translate.getDefaultLanguage() != Translate.LANGUAGE.ENGLISH) {
-				int translate[] = new int[] {1085, 1086, 1087, 301, 73, 74, 963, 964, 161, 164, 167, 168, 169, 829, 830, 831, 832, 839, 840, 841, 842, 843, 844, 962, 965, 966, 1007, 1008, 1009, 1010, 1021, 1022, 1023, 1077, 1078, 1080};
+				int translate[] = new int[] {1085, 1086, 1087, 301, 73, 74, 963, 964, 161, 164, 167, 168, 
+						169, 829, 830, 831, 832, 839, 840, 841, 842, 843, 844, 962, 965, 966, 1007, 1008, 
+						1009, 1010, 1021, 1022, 1023, 1077, 1078, 1080, 163};
 				if (eventType == EVENT.MOON_LUNAR_ECLIPSE || eventType == EVENT.MOON_SOLAR_ECLIPSE)
-					translate = new int[] {963, 964, 161, 164, 167, 168, 169, 829, 830, 831, 832, 839, 840, 841, 842, 843, 844, 962, 966, 1007, 1008, 1009, 1010, 1021, 1022, 1023};
+					translate = new int[] {963, 964, 161, 164, 167, 168, 169, 829, 830, 831, 832, 839, 840, 
+						841, 842, 843, 844, 962, 966, 1007, 1008, 1009, 1010, 1021, 1022, 1023};
 				int from = 1025, to = 1067;
 				int translateLC[] = new int[] {1022, 1024};
 				if (eventType != EVENT.OTHER) {
@@ -613,7 +616,7 @@ public class SimpleEventElement implements Serializable {
 							in1 = in1.substring(0, in1.indexOf("(")).trim();
 							in2 = in2.substring(0, in2.indexOf("(")).trim();
 						}
-						if (translate[i] == 301) {
+						if (translate[i] == 301 || translate[i] == 163) {
 							in1 = in1.toLowerCase();
 							in2 = in2.toLowerCase();
 						}

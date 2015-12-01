@@ -4586,6 +4586,32 @@ public class CreateChart implements Serializable
 	}
 
 	/**
+	 * Returns the chart limits in x axis. The chart must be of type XY.
+	 * @return Minimum and maximum x values in the chart area.
+	 */
+	public double[] getChartLimitsX() {
+		XYPlot plot = (XYPlot) chart.getPlot();
+		ValueAxis x_axis = plot.getDomainAxis();
+		//x_axis.setAutoRange(false);
+		return new double[] {
+			x_axis.getLowerBound(), x_axis.getUpperBound()
+		};
+	}
+
+	/**
+	 * Returns the chart limits in y axis. The chart must be of type XY.
+	 * @return Minimum and maximum y values in the chart area.
+	 */
+	public double[] getChartLimitsY() {
+		XYPlot plot = (XYPlot) chart.getPlot();
+		ValueAxis y_axis = plot.getRangeAxis();
+		//y_axis.setAutoRange(false);
+		return new double[] {
+			y_axis.getLowerBound(), y_axis.getUpperBound()
+		};
+	}
+	
+	/**
 	 * 'Prepares' a Graphics context so that it can be used to draw on a JFreeChart using
 	 * physical and not Java coordinates.
 	 * @param g The Graphic instance corresponding to an image created using this class.

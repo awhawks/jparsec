@@ -49,6 +49,7 @@ import jparsec.time.TimeElement.SCALE;
 import jparsec.time.TimeScale;
 import jparsec.util.DataBase;
 import jparsec.util.JPARSECException;
+import jparsec.util.Translate;
 
 /**
 <p>The <code>SDP8_SGP8</code> class is a base class to calculate ephemeris for
@@ -1073,6 +1074,7 @@ public class SDP8_SGP8
 		double jdF = maxDays + JD;
 		double time_step = 0.5 / Constant.SECONDS_PER_DAY;
 
+		String eclipsed = Translate.translate(163).toLowerCase();
 		while (true) {
 			maxDays = jdF - new_time.astroDate.jd();
 			double next_pass = getNextPass(new_time, obs, eph, sat, min_elevation, maxDays, current);
@@ -1113,7 +1115,8 @@ public class SDP8_SGP8
 				double dMoon = LocationElement.getAngularDistance(loc, new LocationElement(moon[0], moon[1], 1.0)) * Constant.RAD_TO_DEG;
 
 				if (dSun < 0.25 && !insideSun) {
-					String det = Functions.formatAngleAsDegrees(ephem.elevation, 1);
+					String det = Functions.formatAngleAsDegrees(ephem.elevation, 1)+"\u00b0";
+					if (ephem.isEclipsed) det += ", "+eclipsed;
 					SimpleEventElement see = new SimpleEventElement(JD_TT + (double) nstep * time_step, EVENT.ARTIFICIAL_SATELLITES_TRANSITS_SUN_MOON, det);
 					see.body = sat.name;
 					see.secondaryBody = TARGET.SUN.getName();
@@ -1129,7 +1132,8 @@ public class SDP8_SGP8
 					}
 				}
 				if (dMoon < 0.25 && !insideMoon) {
-					String det = Functions.formatAngleAsDegrees(ephem.elevation, 1);
+					String det = Functions.formatAngleAsDegrees(ephem.elevation, 1)+"\u00b0";
+					if (ephem.isEclipsed) det += ", "+eclipsed;
 					SimpleEventElement see = new SimpleEventElement(JD_TT + (double) nstep * time_step, EVENT.ARTIFICIAL_SATELLITES_TRANSITS_SUN_MOON, det);
 					see.body = sat.name;
 					see.secondaryBody = TARGET.Moon.getName();
