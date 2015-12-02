@@ -9,22 +9,22 @@ public class HinduOldSolarTest {
     public static void main(String args[]) {
         System.out.println("HinduOldSolar Test");
 
-        Gregorian g = new Gregorian(2000, 1, 1);
-        System.out.println("julian " + g.julianDate + ", fixed " + g.fixed + " = " + g);
+        Gregorian g = new Gregorian(2015, 12, 2);
+        System.out.println("julian " + g.getJulianDate() + ", fixed " + g.getFixed() + " = " + g);
 
-        HinduOldSolar h = new HinduOldSolar (1921, 9, 17);
-        double julian = h.julianDate;
-        long fixed = h.fixed;
-        System.out.println("julian " + h.julianDate + ", fixed " + h.fixed + " = " + h);
+        HinduOldSolar h = new HinduOldSolar (g.getFixed());
+        double julian = h.getJulianDate();
+        long fixed = h.getFixed();
+        System.out.println("julian " + h.getJulianDate() + ", fixed " + h.getFixed() + " = " + h);
 
         h = new HinduOldSolar(julian);
-        System.out.println("julian " + h.julianDate + ", fixed " + h.fixed + " = " + h);
+        System.out.println("julian " + h.getJulianDate() + ", fixed " + h.getFixed() + " = " + h);
 
         h = new HinduOldSolar(fixed);
-        System.out.println("julian " + h.julianDate + ", fixed " + h.fixed + " = " + h);
+        System.out.println("julian " + h.getJulianDate() + ", fixed " + h.getFixed() + " = " + h);
 
         HinduOldSolar h2 = new HinduOldSolar(h.year, h.month, h.day);
-        System.out.println("julian " + h2.julianDate + ", fixed " + h2.fixed + " = " + h2);
+        System.out.println("julian " + h2.getJulianDate() + ", fixed " + h2.getFixed() + " = " + h2);
 
         //System.out.println(Calendar.nameFromMonth(h2.month, HinduOldSolar.MONTH_NAMES));
         //System.out.println(Calendar.nameFromDayOfWeek(Calendar.dayOfWeekFromFixed(h2.toFixed()), HinduOldSolar.DAY_OF_WEEK_NAMES));

@@ -35,12 +35,12 @@ import java.io.Serializable;
  */
 public class MayanLongCount implements Serializable
 {
+	private static final long serialVersionUID = 2050528164648687620L;
+	
 	/**
 	 * Calendar epoch.
 	 */
 	public static final long EPOCH = -1137142; // Calendar.fixedFromJD(584283D);
-
-	private static final long serialVersionUID = 2050528164648687620L;
 
 	/**
 	 * 144 000 days.
@@ -160,7 +160,7 @@ public class MayanLongCount implements Serializable
 	 * @return Julian day.
 	 */
 	public double toJulianDay() {
-		return toFixed() + Gregorian.EPOCH;
+		return toFixed() + Gregorian.EPOCH + 0.5;
 	}
 
 	/**
@@ -169,6 +169,6 @@ public class MayanLongCount implements Serializable
 	 * @param julianDay Julian day.
 	 */
 	public void fromJulianDay(final double julianDay) {
-		fromFixed((long) julianDay - Gregorian.EPOCH);
+		fromFixed((long) Math.floor(julianDay - 0.5) - Gregorian.EPOCH);
 	}
 }

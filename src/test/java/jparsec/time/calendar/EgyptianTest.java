@@ -9,13 +9,16 @@ public class EgyptianTest {
     public static void main(final String args[]) throws Exception {
         System.out.println("Egyptian Test");
 
-        double jd = new Gregorian(2010, 1, 12).julianDate;
+        double jd = new Gregorian(2015, 12, 2).julianDate;
 
         Egyptian h = new Egyptian(jd);
-        System.out.println("JD " + h.julianDate + ' ' + h.fixed + " = " + h);
+        System.out.println("JD " + h.getJulianDate() + ' ' + h.getFixed() + " = " + h);
+
+        Egyptian h1 = new Egyptian(h.getFixed());
+        System.out.println("JD " + h1.getJulianDate() + ' ' + h1.getFixed() + " = " + h1);
 
         Egyptian h2 = new Egyptian(h.year, h.month, h.day);
-        System.out.println("JD " + h2.julianDate + ' ' + h2.fixed + " = " + h2);
+        System.out.println("JD " + h2.getJulianDate() + ' ' + h2.getFixed() + " = " + h2);
 
         System.out.println(new Julian(-747, 2, 26).fixed);
         System.out.println(Calendar.fixedFromJD(1448638.5));

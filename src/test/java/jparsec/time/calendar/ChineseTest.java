@@ -11,10 +11,10 @@ public class ChineseTest {
     public static void main(String args[]) throws JPARSECException {
         System.out.println("Chinese test");
 
-        double jd = 2451545.5;
+        double jd = 2457359; //2451545.5;
         long fixed = (long) jd - Gregorian.EPOCH ; //730120;
 
-        Chinese h = new Chinese(fixed);
+        Chinese h = new Chinese(jd);
         System.out.println("JD " + h.julianDate + ' ' + h.fixed + " = " + h);
 
         Chinese h2 = new Chinese(h.cycle, h.year, h.month, h.leapMonth, h.day);

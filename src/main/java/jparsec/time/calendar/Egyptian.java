@@ -95,7 +95,7 @@ public class Egyptian extends BaseCalendar {
      */
     @Override
     long toFixed(final long year, final int month, final int day) {
-        return this.epoch + 365 * (year - 1) + 30 * (month - 1) + day - 1;
+        return this.epoch + 365 * (year - 1) + 30 * (month - 1) + day - 2;
     }
 
     @Override
@@ -110,6 +110,6 @@ public class Egyptian extends BaseCalendar {
 
     @Override
     int dayFromFixed(final long year, final int month) {
-        return 1 + (int) (this.fixed - this.epoch - 365 * (year - 1) - 30 * (month - 1));
+        return 2 + (int) (this.fixed - this.epoch - 365 * (year - 1) - 30 * (month - 1));
     }
 }

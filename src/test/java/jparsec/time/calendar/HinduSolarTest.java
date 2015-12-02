@@ -1,5 +1,8 @@
 package jparsec.time.calendar;
 
+import jparsec.time.calendar.CalendarGenericConversion.CALENDAR;
+import jparsec.util.JPARSECException;
+
 public class HinduSolarTest {
     /**
      * For unit testing only.
@@ -9,25 +12,35 @@ public class HinduSolarTest {
     public static void main(String args[]) {
         System.out.println("HinduSolar test");
 
-        Gregorian g = new Gregorian(2000, 1, 1);
-        System.out.println("julian " + g.julianDate + ", fixed " + g.fixed + " = " + g);
+        Gregorian g = new Gregorian(2015, 12, 2);
+        System.out.println("julian " + g.getJulianDate() + ", fixed " + g.getFixed() + " = " + g);
 
-        HinduSolar h = new HinduSolar (1921, 9, 17);
-        double julian = h.julianDate;
-        long fixed = h.fixed;
-        System.out.println("julian " + h.julianDate + ", fixed " + h.fixed + " = " + h);
+        HinduSolar h = new HinduSolar (g.getFixed());
+        double julian = h.getJulianDate();
+        long fixed = h.getFixed();
+        System.out.println("julian " + h.getJulianDate() + ", fixed " + h.getFixed() + " = " + h);
 
         h = new HinduSolar(julian);
-        System.out.println("julian " + h.julianDate + ", fixed " + h.fixed + " = " + h);
+        System.out.println("julian " + h.getJulianDate() + ", fixed " + h.getFixed() + " = " + h);
 
         h = new HinduSolar(fixed);
-        System.out.println("julian " + h.julianDate + ", fixed " + h.fixed + " = " + h);
+        System.out.println("julian " + h.getJulianDate() + ", fixed " + h.getFixed() + " = " + h);
 
         HinduSolar h2 = new HinduSolar(h.year, h.month, h.day);
-        System.out.println("julian " + h2.julianDate + ", fixed " + h2.fixed + " = " + h2);
+        System.out.println("julian " + h2.getJulianDate() + ", fixed " + h2.getFixed() + " = " + h2);
 
+        try {
+        	int out[] = CalendarGenericConversion.GenericConversion(CALENDAR.GREGORIAN, CALENDAR.HINDU_SOLAR, 2015, 12, 2);
+        	System.out.println(out[0]+"/"+out[1]+"/"+out[2]);
+		} catch (JPARSECException e) {
+			e.printStackTrace();
+		}
         //System.out.println(Calendar.nameFromMonth(Calendar.adjustedMod(h2.month + 1, 12), HinduLunar.MONTH_NAMES));
         //System.out.println(Calendar.nameFromDayOfWeek(Calendar.dayOfWeekFromFixed(h2.toFixed()), HinduSolar.DAY_OF_WEEK_NAMES));
         //System.out.println("(from sunrise)");
+        
+        h = new HinduSolar(h.year+1, 1, 1);
+        g = new Gregorian(h.getJulianDate());
+        System.out.println(g.toString());
     }
 }

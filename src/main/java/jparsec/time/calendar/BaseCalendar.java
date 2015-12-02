@@ -56,7 +56,7 @@ public abstract class BaseCalendar implements Serializable {
     }
 
     BaseCalendar(final long epoch, final double fromJulianDate) {
-        this(epoch, (long) (fromJulianDate) - Gregorian.EPOCH);
+        this(epoch, (long) (Math.floor(fromJulianDate - 0.5) + 0.5) - Gregorian.EPOCH);
     }
 
     double toJulian (final long fixed) {

@@ -29,6 +29,8 @@ package jparsec.time.calendar;
  */
 public class Armenian extends Egyptian
 {
+	private static final long serialVersionUID = 2470952263348488987L;
+	
 	/**
 	 * Calendar epoch.
 	 * Armenian calendar year 1 started on Julian date 552/07/11
@@ -49,8 +51,6 @@ public class Armenian extends Egyptian
 		"Nawasardi", "Hori", "Sahmi", "Tre", "Kaloch", "Arach", "Mehekani",
 		"Areg", "Ahekani", "Mareri", "Margach", "Hrotich", "Aweleach"
 	};
-
-	private static final long serialVersionUID = 2470952263348488987L;
 
 	/**
 	 * Constructor using a fixed date.
@@ -80,4 +80,14 @@ public class Armenian extends Egyptian
 	public Armenian(final long year, final int month, final int day) {
 		super(EPOCH, year, month, day);
 	}
+	
+    @Override
+    long toFixed(final long year, final int month, final int day) {
+        return this.epoch + 365 * (year - 1) + 30 * (month - 1) + day - 1;
+    }
+
+    @Override
+    int dayFromFixed(final long year, final int month) {
+        return 1 + (int) (this.fixed - this.epoch - 365 * (year - 1) - 30 * (month - 1));
+    }
 }

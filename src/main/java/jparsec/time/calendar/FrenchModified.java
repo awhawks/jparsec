@@ -119,22 +119,10 @@ public class FrenchModified extends French
 	 * @return Day of week.
 	 */
 	public int getDayOfWeek() {
-		int day = this.day + 9;
-
-		if (this.month < 13) {
-			day = (this.day - 1) % 10;
-		}
-
-		day++;
-
-		if (day > French.DAY_OF_WEEK_NAMES.length) {
-			day -= French.DAY_OF_WEEK_NAMES.length;
-		}
-
-		if (day < 0) {
-			day += French.DAY_OF_WEEK_NAMES.length;
-		}
-
+		String days[] = month == 13 ? French.SPECIAL_DAY_NAMES : French.DAY_OF_WEEK_NAMES;
+		int day = this.day % days.length;
+		if (day > days.length) day -= days.length;
+		if (day < 0) day += days.length;
 		return day;
 	}
 
@@ -145,15 +133,8 @@ public class FrenchModified extends French
 	 */
 	public int getDecadi() {
 		int week = -1;
-
-		if (this.month < 13) {
-			week = (this.day - 1) / 10 + 1;
-		}
-
-		if (week > 2) {
-			week -= 3;
-		}
-
+		if (month < 13) week = (day - 1) / 10 + 1;
+		if (week > 2) week = week - 3;
 		return week;
 	}
 }

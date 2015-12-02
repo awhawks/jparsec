@@ -108,7 +108,7 @@ public class HinduOldSolar extends BaseCalendar
 	 */
 	public static long toFixedDay(final long year, final int month, final int day)
 	{
-		return (long) Math.ceil(EPOCH + year * 365.25868055555554D + (month - 1) * 30.43822337962963D + day - 1.25D);
+		return (long) Math.ceil(EPOCH + year * 365.25868055555554D + (month - 1) * 30.43822337962963D + day - 2.25D);
 	}
 
 	@Override
@@ -125,14 +125,14 @@ public class HinduOldSolar extends BaseCalendar
 
 	@Override
 	int monthFromFixed(final long year) {
-		return 1 + (int) ((long) (this.elapsedDays / 30.43822337962963D) % 12L);
+		return 1 + (int) Calendar.mod(Calendar.quotient(elapsedDays, 30.43822337962963D), 12L);
 	}
 
 	@Override
 	int dayFromFixed(final long year, final int month) {
-		return 1 + (int) Math.floor(this.elapsedDays / 30.43822337962963D);
+		return 2 + (int) Math.floor(Calendar.mod(this.elapsedDays, 30.43822337962963D));
 	}
-
+	
 	/**
 	 * Gets days elapsed since epoch.
 	 *
