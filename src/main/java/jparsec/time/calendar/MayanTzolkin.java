@@ -35,15 +35,17 @@ import java.io.Serializable;
  */
 public class MayanTzolkin implements Serializable
 {
+	private static final long serialVersionUID = 8836908879580577439L;
+	
 	/**
-	 * Number.
+	 * Day number.
 	 */
-	public final int number;
+	public final int day;
 
 	/**
-	 * Name.
+	 * Month number. 1 is Imix, index 0 in the months array.
 	 */
-	public final int name;
+	public final int month;
 
 	/**
 	 * Calendar epoch.
@@ -53,12 +55,10 @@ public class MayanTzolkin implements Serializable
 	/**
 	 * Month names.
 	 */
-	public static final String NAMES[] = {
+	public static final String MONTH_NAMES[] = {
 		"Imix", "Ik", "Akbal", "Kan", "Chicchan", "Cimi", "Manik", "Lamat", "Muluc", "Oc", "Chuen", "Eb", "Ben", "Ix",
 		"Men", "Cib", "Caban", "Etznab", "Cauac", "Ahau"
 	};
-
-	private static final long serialVersionUID = 8836908879580577439L;
 
 	/**
 	 * Fixed day constructor.
@@ -67,8 +67,8 @@ public class MayanTzolkin implements Serializable
 	 */
 	public MayanTzolkin(final long fixed) {
 		long l1 = (fixed - EPOCH) + 1;
-		this.number = (int) Calendar.adjustedMod(l1, 13);
-		this.name = (int) Calendar.adjustedMod(l1, 20);
+		this.day = (int) Calendar.adjustedMod(l1, 13);
+		this.month = (int) Calendar.adjustedMod(l1, 20);
 	}
 
 	/**
@@ -77,18 +77,18 @@ public class MayanTzolkin implements Serializable
 	 * @param julianDay Julian day.
 	 */
 	public MayanTzolkin(final double julianDay) {
-		this((long) julianDay - Gregorian.EPOCH);
+		this((long) Math.floor(julianDay - 0.5) - Gregorian.EPOCH);
 	}
 
 	/**
 	 * Explicit constructor.
 	 *
-	 * @param mnumber Number.
-	 * @param mname Name.
+	 * @param month Month.
+	 * @param day Day.
 	 */
-	public MayanTzolkin(final int mnumber, final int mname) {
-		this.number = mnumber;
-		this.name = mname;
+	public MayanTzolkin(final int month, final int day) {
+		this.day = day;
+		this.month = month;
 	}
 
 	/**
@@ -98,7 +98,7 @@ public class MayanTzolkin implements Serializable
 	 * @return Days elapsed since new year.
 	 */
 //	private static int ordinal(final MayanTzolkin mayantzolkin) {
-//		return ((mayantzolkin.number - 1) + 39 * (mayantzolkin.number - mayantzolkin.name)) % 260;
+//		return ((mayantzolkin.day - 1) + 39 * (mayantzolkin.day - mayantzolkin.month)) % 260;
 //	}
 
 	/**

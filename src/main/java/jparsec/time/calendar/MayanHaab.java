@@ -51,12 +51,12 @@ public class MayanHaab implements Serializable
 	private static final long serialVersionUID = -2455524153259697510L;
 
 	/**
-	 * Month
+	 * Month number. 1 is Pop, index 0 in the months array.
 	 */
 	public int month;
 
 	/**
-	 * Day.
+	 * Day number.
 	 */
 	public int day;
 
@@ -111,7 +111,7 @@ public class MayanHaab implements Serializable
 	 * @param julianDay Julian day.
 	 */
 	public void fromJulianDay(final double julianDay) {
-		fromFixed((long) julianDay - Gregorian.EPOCH);
+		fromFixed((long) Math.floor(julianDay - 0.5) - Gregorian.EPOCH);
 	}
 
 	/**

@@ -175,8 +175,8 @@ public class Roman implements Serializable
 	 *
 	 * @return Julian day.
 	 */
-	public long toJulianDay() {
-		return toFixed() + Gregorian.EPOCH;
+	public double toJulianDay() {
+		return toFixed() + Gregorian.EPOCH + 0.5;
 	}
 
 	/**
@@ -185,7 +185,7 @@ public class Roman implements Serializable
 	 * @param julianDay Julian day.
 	 */
 	public void fromJulianDay(final double julianDay) {
-		fromFixed((long) julianDay - Gregorian.EPOCH);
+		fromFixed((long) Math.floor(julianDay - 0.5) - Gregorian.EPOCH);
 	}
 
 	/**

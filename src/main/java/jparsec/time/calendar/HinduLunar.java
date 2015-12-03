@@ -99,7 +99,7 @@ public class HinduLunar implements Serializable
 	 *
 	 * @param jd Julian day.
 	 */
-	public HinduLunar(int jd)
+	public HinduLunar(double jd)
 	{
 		fromJulianDay(jd);
 	}
@@ -144,6 +144,7 @@ public class HinduLunar implements Serializable
 	 */
 	public long toFixed()
 	{
+		int day = this.day - 1;
 		double d = (double) HinduOldSolar.EPOCH + 365.2587564814815D * ((double) (year + 3044L) + (double) (month - 1) / 12D);
 		long l = (long) Math.floor(d - (1.0 / 360.0) * 365.2587564814815 * (Calendar
 				.mod((HinduSolar.solarLongitude(d) - (double) (month - 1) * 30.0) + 180.0,
@@ -185,6 +186,7 @@ public class HinduLunar implements Serializable
 		leapMonth = i == HinduSolar.zodiac(d2);
 		month = Calendar.adjustedMod(i + 1, 12);
 		year = HinduSolar.calendarYear(d2) - 3044L - (long) (!leapMonth || month != 1 ? 0 : -1);
+		day ++;
 	}
 
 	/**
@@ -358,9 +360,9 @@ public class HinduLunar implements Serializable
 	 *
 	 * @return Julian day.
 	 */
-	public int toJulianDay()
+	public double toJulianDay()
 	{
-		return (int) (toFixed() + Gregorian.EPOCH);
+		return 0.5 + (int) (toFixed() + Gregorian.EPOCH);
 	}
 
 	/**
@@ -368,8 +370,8 @@ public class HinduLunar implements Serializable
 	 *
 	 * @param jd Julian day.
 	 */
-	public void fromJulianDay(int jd)
+	public void fromJulianDay(double jd)
 	{
-		fromFixed(jd - Gregorian.EPOCH);
+		fromFixed((long) Math.floor(jd - 0.5) - Gregorian.EPOCH);
 	}
 }

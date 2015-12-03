@@ -176,7 +176,7 @@ public class Balinese implements Serializable
 	 */
 	public Balinese(final double julianDay)
 	{
-		this((long) julianDay - Gregorian.EPOCH);
+		this((long) Math.floor(julianDay - 0.5) - Gregorian.EPOCH);
 	}
 
 	/**

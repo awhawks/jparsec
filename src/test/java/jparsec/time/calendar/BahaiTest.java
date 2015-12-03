@@ -7,7 +7,8 @@ public class BahaiTest {
         new Gregorian(2015,  3, 20).julianDate, // Julian day 2457101.5 is Bahai 1/9/19/19/19 (VE - 1 day)
         new Gregorian(2015,  3, 21).julianDate, // Julian day 2457102.5 is Bahai 1/10/1/1/1 (Vernal Equinox)
         new Gregorian(2015,  4,  9).julianDate, // Julian day 2457121.5 is Bahai 1/10/1/2/1 (VE + 1 Vahid)
-        new Gregorian(2205,  3, 21).julianDate, // Julian day 2526498.5 is Bahai 2/1/1/1/1
+        new Gregorian(2205,  3, 1).julianDate, // Julian day 2526498.5 is Bahai 2/1/1/1/1
+        new Gregorian(2015,  12, 3).julianDate,
     };
 
     private final static long[] fixedDates = {
@@ -16,7 +17,8 @@ public class BahaiTest {
         new Gregorian(2015,  3, 20).fixed, // Fixed day 735677 is Bahai 1/9/19/19/19 (VE - 1 day)
         new Gregorian(2015,  3, 21).fixed, // Fixed day 735678 is Bahai 1/10/1/1/1 (Vernal Equinox)
         new Gregorian(2015,  4,  9).fixed, // Fixed day 735697 is Bahai 1/10/1/2/1 (VE + 1 Vahid)
-        new Gregorian(2205,  3, 21).fixed, // Fixed day 805074 is Bahai 2/1/1/1/1
+        new Gregorian(2205,  3, 1).fixed, // Fixed day 805074 is Bahai 2/1/1/1/1
+        new Gregorian(2015,  12, 3).fixed,
     };
 
     /**
@@ -37,6 +39,11 @@ public class BahaiTest {
             Bahai bj = new Bahai(julian);
             System.out.println("JD " + bj.julianDate + ", fixed " + bj.fixed + "; " + bj);
 
+            System.out.println(Calendar.nameFromNumber(bj.year, Bahai.YEAR_NAMES));
+            System.out.println(Calendar.nameFromMonth(bj.day, Bahai.DAY_OF_MONTH_NAMES) + " " + 
+            		Calendar.nameFromMonth(bj.day, Bahai.MONTH_NAMES));
+            System.out.println(Calendar.nameFromDayOfWeek(bj.fixed, Bahai.DAY_OF_WEEK_NAMES));
+            
 //            Bahai bf2 = new Bahai(bf.major, bf.cycle, (int) bf.year, bf.month, bf.day);
 //            System.out.println("JD " + bf2.julianDate + ", fixed " + bf2.fixed + "; " + bf2);
 //            Bahai bj2 = new Bahai(bj.major, bj.cycle, (int) bj.year, bj.month, bj.day);

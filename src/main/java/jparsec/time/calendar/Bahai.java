@@ -27,8 +27,8 @@ import jparsec.observer.CityElement;
  * Implements the Bahai calendar.
  * <P>
  * A calendar based on the 19 year cycle 1844-1863 of the B&aacute;b, the martyred
- * forerunner of Bah&aacute;'u'l&aacute;lh and co-founder of the Bah&aacute;'&iacute; faith. Days begin at
- * sunset.
+ * forerunner of Bah&aacute;'u'l&aacute;lh and co-founder of the Bah&aacute;'&iacute; faith. 
+ * Days begin at sunset.
  * <P>
  * See Calendrical Calculations for reference.
  *
@@ -37,6 +37,8 @@ import jparsec.observer.CityElement;
  */
 public class Bahai extends BaseCalendar
 {
+	private static final long serialVersionUID = -2219563471051861858L;
+	
 	/**
 	 * Calendar epoch.
 	 */
@@ -85,8 +87,6 @@ public class Bahai extends BaseCalendar
 	 * Tehran location.
 	 */
 	public static final CityElement TEHRAN = new CityElement("Tehran, Iran", 51.43, 35.67, 3.5, 1353);
-
-	private static final long serialVersionUID = -2219563471051861858L;
 
 	/**
 	 * Major.
@@ -179,12 +179,12 @@ public class Bahai extends BaseCalendar
 		long f = Gregorian.yearFromFixed(fixed);
 		long e = Gregorian.yearFromFixed(EPOCH);
 
-		long y = f - e + (this.fixed > new Gregorian(f, 3, 20).fixed ? 1 : 0);
+		long y = f - e - (this.fixed > new Gregorian(f, 3, 20).fixed ? 0 : 1);
 
 		this.major = 1 + y / 361;
-		this.cycle = 1 + (int) ((y - 1) % 361) / 19;
+		this.cycle = 1 + (int) (y % 361) / 19;
 
-		return 1 + ((y - 1) % 19);
+		return 1 + (y % 19);
 	}
 
 	@Override

@@ -38,6 +38,8 @@ import jparsec.util.JPARSECException;
  */
 public class Chinese extends BaseCalendar
 {
+	private static final long serialVersionUID = -7348372384774729919L;
+	
 	/**
 	 * Calendar epoch.
 	 */
@@ -63,15 +65,6 @@ public class Chinese extends BaseCalendar
 	 */
 	public static final String YEAR_BRANCH_NAMES[] = { "Zi", "Chou", "Yin", "Mao", "Chen", "Si", "Wu", "Wei", "Shen", "You", "Xu", "Hai" };
 
-	public static final CityElement BEIJING_OLD = new CityElement("Beijing, China", Calendar.angle(116.0, 25.0, 0.0), 39.55, 7.7611111111111111, 44);
-
-	public static final CityElement BEIJING_NEW = new CityElement("Beijing, China", Calendar.angle(116.0, 25.0, 0.0), 39.55, 8.0, 44);
-
-	public static final CityElement TOKYO_OLD = new CityElement("Tokyo, Japan", Calendar.angle(139D, 46D, 0.0D), 35.7, 9.3177777777777777, 24);
-	public static final CityElement TOKYO_NEW = new CityElement("Tokyo, Japan", 135.0, 35.0, 9.0, 0);
-
-	private static final long serialVersionUID = -7348372384774729919L;
-
 	/**
 	 * Cycle.
 	 */
@@ -83,7 +76,6 @@ public class Chinese extends BaseCalendar
 	public boolean leapMonth;
 
 	private transient int monthV;
-
 	private transient int dayV;
 
 	/**
@@ -117,7 +109,7 @@ public class Chinese extends BaseCalendar
 	 */
 	public Chinese(final long cycle, final long year, final int month, final boolean leapMonth, final int day)
 	{
-		super(EPOCH, (cycle - 1) * 60 + year, month, day);
+		super(EPOCH, cycle * 60 + year, month, day);
 
 		this.cycle = cycle;
 		this.leapMonth = leapMonth;
@@ -136,7 +128,7 @@ public class Chinese extends BaseCalendar
 		this.monthV = (int) Calendar.adjustedMod(Math.round((double) (l5 - l3) / 29.530588853000001D) - (long) (!flag || !hasPriorLeapMonth(l3, l5) ? 0 : 1), 12L);
 
 		this.leapMonth = flag && hasNoMajorSolarTerm(l5) && !hasPriorLeapMonth(l3, newMoonBefore(l5));
-		long y = (long) Math.floor((1.5D - (double) (this.monthV / 12)) + (double) (fixed - EPOCH) / 365.242189D);
+		long y = (long) Math.floor((1.5 - (this.monthV / 12.0)) + (double) (fixed - EPOCH) / 365.242189D);
 		this.cycle = 1 + ((y - 1) / 60);
 		this.dayV = (int) ((this.fixed - l5) + 1);
 
@@ -163,7 +155,7 @@ public class Chinese extends BaseCalendar
 	 */
 	@Override
 	long toFixed(final long year, final int month, final int day) {
-		long l1 = (long) Math.floor((double) EPOCH + (year - 2 + 0.5) * 365.242189D);
+		long l1 = (long) Math.floor((double) EPOCH + ((double) ((cycle - 1L) * 60L + (long) (year - 1)) + 0.5D) * 365.242189D);
 		long l2 = newYearOnOrBefore(l1);
 		long l3 = newMoonOnOrAfter(l2 + (long) (29 * (this.month - 1)));
 		Chinese chinese = new Chinese(l3);
@@ -340,7 +332,8 @@ public class Chinese extends BaseCalendar
 	{
 		long fixed = Gregorian.yearFromFixed((long) Math.floor(d));
 
-		return fixed >= 1929L ? BEIJING_NEW : BEIJING_OLD;
+		return new CityElement("Beijing, China", Calendar.angle(116.0, 25.0, 0.0), 39.55, 
+				fixed >= 1929L ? 8.0: 7.7611111111111111, 44);
 	}
 
 	/**
@@ -354,7 +347,9 @@ public class Chinese extends BaseCalendar
 	{
 		long fixed = Gregorian.yearFromFixed((long) Math.floor(d));
 
-		return (fixed < 1888L) ? TOKYO_OLD : TOKYO_NEW;
+		return (fixed < 1888L) ? 
+			new CityElement("Tokyo, Japan", Calendar.angle(139D, 46D, 0.0D), 35.7, 9.3177777777777777, 24) : 
+			new CityElement("Tokyo, Japan", 135.0, 35.0, 9.0, 0);
 	}
 
 	/**

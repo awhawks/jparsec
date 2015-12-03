@@ -9,9 +9,12 @@ public class BalineseTest {
     public static void main(final String args[]) {
         System.out.println("Balinese test");
 
-        double jd = 2451545;
+        double jd = 2457359.5;
         Balinese h = new Balinese(jd);
         System.out.println("JD " + jd + " = " + h);
+
+        Balinese h1 = new Balinese(735935);
+        System.out.println("JD " + jd + " = " + h1);
 
         Balinese h2 = new Balinese(h.luang, h.dwiwara, h.triwara, h.caturwara, h.pancawara, h.sadwara, h.saptawara, h.asatawara, h.sangawara, h.dasawara);
         System.out.println("JD " + jd + " = " + h2);

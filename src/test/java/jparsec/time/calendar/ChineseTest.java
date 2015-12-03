@@ -11,10 +11,15 @@ public class ChineseTest {
     public static void main(String args[]) throws JPARSECException {
         System.out.println("Chinese test");
 
-        double jd = 2457359; //2451545.5;
+        // Calendario Chino: ciclo 78, año 32 (4713, Yi-Wei), mes 10 (Ji-Hai), mes bisiesto no, día 22. 
+        // Próximo año nuevo el lunes, 8 de febrero de 2016.
+        double jd = 2457359.5; //2451545.5;
         long fixed = (long) jd - Gregorian.EPOCH ; //730120;
 
         Chinese h = new Chinese(jd);
+        System.out.println("JD " + h.julianDate + ' ' + fixed + " = " + h);
+
+        h = new Chinese(h.getFixed());
         System.out.println("JD " + h.julianDate + ' ' + h.fixed + " = " + h);
 
         Chinese h2 = new Chinese(h.cycle, h.year, h.month, h.leapMonth, h.day);
@@ -23,6 +28,7 @@ public class ChineseTest {
 
         ChineseName name = Chinese.nameOfYear(h2.year);
         String year = Calendar.nameFromMonth(name.stem, Chinese.YEAR_STEM_NAMES) + '-' + Calendar.nameFromMonth(name.branch, Chinese.YEAR_BRANCH_NAMES);
+        System.out.println(h2.getYearNumber());
         System.out.println(year);
 
         name = Chinese.nameOfMonth(h2.year, h2.month);
@@ -36,12 +42,8 @@ public class ChineseTest {
         System.out.println(day);
 
         // New year
-        int yearN = 2012;
+        int yearN = 2016;
         Gregorian g = new Gregorian(Chinese.newYear(yearN));
         System.out.println("New Chinese year for Gregorian year " + yearN + ": " + g);
-
-        h2 = new Chinese(Chinese.newYear(2012));
-        System.out.println(h2.getYearNumber());
-        System.out.println("JD " + h2.julianDate + " = " + h2);
     }
 }
