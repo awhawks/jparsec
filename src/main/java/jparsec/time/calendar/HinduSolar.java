@@ -101,8 +101,9 @@ public class HinduSolar extends HinduOldSolar
 	}
 
 	private final static double d = 360.0 / 365.2587564814815D;
+	
 	/**
-	 * To fixed day..
+	 * To fixed day.
 	 *
 	 * @param year Year.
 	 * @param month Month.
@@ -111,8 +112,8 @@ public class HinduSolar extends HinduOldSolar
 	 */
 	public static long toFixedDay(final HinduSolar hs, final long year, final int month, final int day)
 	{
-		long fixed = ((long) Math.floor((year + 3179 + (month - 1) / 12) * 365.2587564814815D)) + HinduOldSolar.EPOCH + day - 1;
-		double d1 = (month - 1) * 30 + (day - 1) * d;
+		long fixed = ((long) Math.floor((year + 3179 + (month - 1.0) / 12.0) * 365.2587564814815D)) + EPOCH + day - 2;
+		double d1 = (month - 1) * 30 + (day - 2) * d;
 		double d2 = Calendar.mod((solarLongitude(fixed + 0.25) - d1) + 180.0, 360.0) - 180.0;
 		long l1 = fixed - (long) Math.ceil(d2 / d) - 2;
 
@@ -136,7 +137,7 @@ public class HinduSolar extends HinduOldSolar
 
 	@Override
 	long yearFromFixed() {
-		this.sunrise = sunrise(this.fixed + 1);
+		this.sunrise = sunrise(this.fixed + 2);
 
 		return calendarYear(sunrise) - 3179;
 	}

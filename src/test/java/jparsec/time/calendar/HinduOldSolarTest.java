@@ -26,6 +26,10 @@ public class HinduOldSolarTest {
         HinduOldSolar h2 = new HinduOldSolar(h.year, h.month, h.day);
         System.out.println("julian " + h2.getJulianDate() + ", fixed " + h2.getFixed() + " = " + h2);
 
+        h2 = new HinduOldSolar(h.year+1, 1, 1);
+        g = new Gregorian(h2.getJulianDate());
+        System.out.println("NEXT NEW YEAR: julian " + g.getJulianDate() + ", fixed " + g.getFixed() + " = " + g);
+
         //System.out.println(Calendar.nameFromMonth(h2.month, HinduOldSolar.MONTH_NAMES));
         //System.out.println(Calendar.nameFromDayOfWeek(Calendar.dayOfWeekFromFixed(h2.toFixed()), HinduOldSolar.DAY_OF_WEEK_NAMES));
         //System.out.println("(from sunrise)");

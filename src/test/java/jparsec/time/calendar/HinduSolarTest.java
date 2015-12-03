@@ -12,7 +12,7 @@ public class HinduSolarTest {
     public static void main(String args[]) {
         System.out.println("HinduSolar test");
 
-        Gregorian g = new Gregorian(2015, 12, 2);
+        Gregorian g = new Gregorian(2015, 12, 3);
         System.out.println("julian " + g.getJulianDate() + ", fixed " + g.getFixed() + " = " + g);
 
         HinduSolar h = new HinduSolar (g.getFixed());
@@ -30,7 +30,7 @@ public class HinduSolarTest {
         System.out.println("julian " + h2.getJulianDate() + ", fixed " + h2.getFixed() + " = " + h2);
 
         try {
-        	int out[] = CalendarGenericConversion.GenericConversion(CALENDAR.GREGORIAN, CALENDAR.HINDU_SOLAR, 2015, 12, 2);
+        	int out[] = CalendarGenericConversion.GenericConversion(CALENDAR.GREGORIAN, CALENDAR.HINDU_SOLAR, 2015, 12, 3);
         	System.out.println(out[0]+"/"+out[1]+"/"+out[2]);
 		} catch (JPARSECException e) {
 			e.printStackTrace();
@@ -40,7 +40,8 @@ public class HinduSolarTest {
         //System.out.println("(from sunrise)");
         
         h = new HinduSolar(h.year+1, 1, 1);
-        g = new Gregorian(h.getJulianDate());
-        System.out.println(g.toString());
+        g = new Gregorian(h.julianDate);
+        h = new HinduSolar(g.julianDate);
+        System.out.println(h.julianDate+"/"+h.fixed+"/"+g.toString()+"/"+h.toString());
     }
 }
