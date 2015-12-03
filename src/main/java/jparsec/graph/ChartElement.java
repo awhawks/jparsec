@@ -22,6 +22,7 @@
 package jparsec.graph;
 
 import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.Paint;
 import java.awt.Image;
 import java.awt.Point;
@@ -987,5 +988,97 @@ public class ChartElement implements Serializable
 		}
 
 		return (BufferedImage) g.getRendering();
+	}
+	
+	/**
+	 * Prepares a given image to be resized and cropped properly to use it as 
+	 * background image for the resulting chart within the data area. The resulting
+	 * image is set as the background image field of the chart object, replaced the
+	 * original one.
+	 * @param cchart The chart object including the image as background.
+	 * @param minX Minimum value of x in physical units for the limit of the background image.
+	 * @param minY Minimum value of y in physical units for the limit of the background image.
+	 * @param maxX Maximum value of x in physical units for the limit of the background image.
+	 * @param maxY Maximum value of y in physical units for the limit of the background image.
+	 * @throws JPARSECException If an error occurs.
+	 */
+	public static void prepareBackgroundImage(ChartElement cchart,
+			double minX, double minY, double maxX, double maxY) throws JPARSECException {
+		BufferedImage bi = Picture.toBufferedImage(cchart.backgroundImage);
+		Picture picb = new Picture(bi);
+		picb.flip(false, true);
+		bi = picb.getImage();
+		CreateChart ch = new CreateChart(cchart);
+		
+		double[] limX = ch.getChartLimitsX(), limY = ch.getChartLimitsY();
+		double lx = maxX - minX, ly = maxY - minY;;
+		double sx = (bi.getWidth()-1.0) / lx;
+		double sy = (bi.getHeight()-1.0) / ly;
+		int px0 = (int) Math.floor(0.5 + sx * (limX[0] - minX));
+		int pxf = (int) Math.floor(0.5 + sx * (limX[1] - minX));
+		int py0 = (int) Math.floor(0.5 + sy * (limY[0] - minY));
+		int pyf = (int) Math.floor(0.5 + sy * (limY[1] - minY));
+		
+		if (px0 < 0) {
+			BufferedImage newbi = new BufferedImage(bi.getWidth() - px0, bi.getHeight(), BufferedImage.TYPE_INT_ARGB);
+			Graphics2D ng = newbi.createGraphics();
+			ng.setColor(new Color(0, 0, 0, 0));
+			ng.fillRect(0, 0, newbi.getWidth(), newbi.getHeight());
+			ng.drawImage(bi, -px0, 0, null);
+			pxf -= px0;
+			px0 = 0;
+			bi = newbi;
+		} else {
+			if (px0 > 0) {
+				bi = bi.getSubimage(px0, 0, bi.getWidth()-px0, bi.getHeight());
+				pxf -= px0;
+				px0 = 0;
+			}
+		}
+		if (py0 < 0) {
+			BufferedImage newbi = new BufferedImage(bi.getWidth(), bi.getHeight() - py0, BufferedImage.TYPE_INT_ARGB);
+			Graphics2D ng = newbi.createGraphics();
+			ng.setColor(new Color(0, 0, 0, 0));
+			ng.fillRect(0, 0, newbi.getWidth(), newbi.getHeight());
+			ng.drawImage(bi, 0, -py0, null);
+			pyf -= py0;
+			py0 = 0;
+			bi = newbi;
+		} else {
+			if (py0 > 0) {
+				bi = bi.getSubimage(0, py0, bi.getWidth(), bi.getHeight()-py0);
+				pyf -= py0;
+				py0 = 0;
+			}
+		}
+		if (pxf < bi.getWidth()) {
+			bi = bi.getSubimage(0, 0, pxf, bi.getHeight());
+		} else {
+			if (pxf > bi.getWidth()) {
+				BufferedImage newbi = new BufferedImage(pxf, bi.getHeight(), BufferedImage.TYPE_INT_ARGB);
+				Graphics2D ng = newbi.createGraphics();
+				ng.setColor(new Color(0, 0, 0, 0));
+				ng.fillRect(0, 0, newbi.getWidth(), newbi.getHeight());
+				ng.drawImage(bi, 0, 0, null);
+				bi = newbi;
+			}					
+		}
+		if (pyf < bi.getHeight()) {
+			bi = bi.getSubimage(0, 0, bi.getWidth(), pyf);
+		} else {
+			if (pyf > bi.getHeight()) {
+				BufferedImage newbi = new BufferedImage(bi.getWidth(), pyf, BufferedImage.TYPE_INT_ARGB);
+				Graphics2D ng = newbi.createGraphics();
+				ng.setColor(new Color(0, 0, 0, 0));
+				ng.fillRect(0, 0, newbi.getWidth(), newbi.getHeight());
+				ng.drawImage(bi, 0, 0, null);
+				bi = newbi;
+			}					
+		}
+		
+		picb = new Picture(bi);
+		picb.flip(false, true);
+		bi = picb.getImage();
+		cchart.backgroundImage = bi;
 	}
 }

@@ -24,10 +24,12 @@ package jparsec.graph;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 import java.io.Serializable;
 import java.util.Arrays;
 
 import jparsec.astrophysics.MeasureElement;
+import jparsec.io.image.Picture;
 import jparsec.math.GenericFit;
 import jparsec.math.LinearFit;
 import jparsec.math.Polynomial;
