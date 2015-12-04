@@ -8,7 +8,7 @@ public class BahaiTest {
         new Gregorian(2015,  3, 21).julianDate, // Julian day 2457102.5 is Bahai 1/10/1/1/1 (Vernal Equinox)
         new Gregorian(2015,  4,  9).julianDate, // Julian day 2457121.5 is Bahai 1/10/1/2/1 (VE + 1 Vahid)
         new Gregorian(2205,  3, 21).julianDate, // Julian day 2526498.5 is Bahai 2/1/1/1/1
-        new Gregorian(2015,  12, 3).julianDate,
+        new Gregorian(2015,  12, 3).julianDate, // Julian day 2457359.5 is Bahai 1/10/1/14/11
     };
 
     private final static long[] fixedDates = {
@@ -18,7 +18,7 @@ public class BahaiTest {
         new Gregorian(2015,  3, 21).fixed, // Fixed day 735678 is Bahai 1/10/1/1/1 (Vernal Equinox)
         new Gregorian(2015,  4,  9).fixed, // Fixed day 735697 is Bahai 1/10/1/2/1 (VE + 1 Vahid)
         new Gregorian(2205,  3, 21).fixed, // Fixed day 805074 is Bahai 2/1/1/1/1
-        new Gregorian(2015,  12, 3).fixed,
+        new Gregorian(2015,  12, 3).fixed, // Fixed day 735935 is Bahai 1/10/1/14/11
     };
 
     /**

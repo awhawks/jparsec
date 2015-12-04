@@ -284,6 +284,21 @@ public class RenderSky
 
 		/** Set to true to show comet's tail in trajectories. Default value is false. */
 		public boolean showCometTail = false;
+		
+		/**
+		 * Indexes for translating the different enum values to string.
+		 */
+		private static final int[] TRANS = new int[] {
+	    	79, 878, 74, 1275, 73, 1003, 972, 76, 78, 877, 1304
+	    };
+
+		/**
+		 * A string representation of the object type for the current language.
+		 * @return String representation.
+		 */
+		public String toStringTranslated() {
+			return Translate.translate(TRANS[this.ordinal()]);
+		}
 	}
 
 	private EphemElement[] majorObjects = null;
@@ -9097,7 +9112,7 @@ public class RenderSky
 	 * @return The main name in the catalog, NGC or IC name almost always.
 	 * @throws JPARSECException If the method fails.
 	 */
-	public String searchDeepSkyObjectReturnMainName(String obj_name)
+	public static String searchDeepSkyObjectReturnMainName(String obj_name)
 			throws JPARSECException
 	{
 		if (obj_name.toUpperCase().equals("M1") || obj_name.toUpperCase().equals("M 1")) obj_name = "NGC 1952";
