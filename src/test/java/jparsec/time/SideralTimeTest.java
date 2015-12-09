@@ -44,7 +44,7 @@ public class SideralTimeTest {
             System.out.println("GMST: " + Functions.formatRA(gmst, 8));
             System.out.println("AST: " + Functions.formatRA(ast, 8));
             System.out.println("ECEQ: " + Functions.formatRA(eceq, 8));
-            System.out.println("ECTime: " + Functions.formatRAWithNegativeTime(eqTime, 8));
+            System.out.println("ECTime: " + Functions.formatRAWithNegativeTime(eqTime, 8, false));
             eph.preferPrecisionInEphemerides = false;
             eceq = SiderealTime.equationOfEquinoxes(time, observer, eph);
             System.out.println("ECEQ: " + Functions.formatRA(eceq, 8));

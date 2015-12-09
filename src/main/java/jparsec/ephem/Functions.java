@@ -275,25 +275,30 @@ public class Functions
 	 * ephemeris precision. In case the RA is negative a minus sign is used.
 	 *
 	 * @param ra0 Right ascension in radians.
-	 * @param nsec Number of decimal places in seconds of time.
+	 * @param ndec Number of decimal places in minutes or seconds of time.
+	 * @param onlyMinutes True to use only minutes in the formatted text.
 	 * @return String with the format ##h ##m ##.##...s.
 	 */
-	public static String formatRAWithNegativeTime(double ra0, int nsec)
+	public static String formatRAWithNegativeTime(double ra0, int ndec, boolean onlyMinutes)
 	{
 		DecimalFormat formatter = new DecimalFormat("00");
-		if (nsec > 0) {
-			String dec = DataSet.repeatString("0", nsec);
+		if (ndec > 0) {
+			String dec = DataSet.repeatString("0", ndec);
 			formatter = new DecimalFormat("00." + dec);
 		}
 		DecimalFormat formatter0 = new DecimalFormat("00");
 		double ra = Math.abs(ra0);
 		double ra_h = ra * Constant.RAD_TO_HOUR;
 		double ra_m = (ra_h - Math.floor(ra_h)) * 60.0;
-		double ra_s = (ra_m - Math.floor(ra_m)) * 60.0;
 		ra_h = Math.floor(ra_h);
-		ra_m = Math.floor(ra_m);
-
-		String out = "" + formatter0.format(ra_h) + "h " + formatter0.format(ra_m) + "m " + formatter.format(ra_s) + "s";
+		String out;
+		if (!onlyMinutes) {
+			double ra_s = (ra_m - Math.floor(ra_m)) * 60.0;
+			ra_m = Math.floor(ra_m);
+			out = "" + formatter0.format(ra_h) + "h " + formatter0.format(ra_m) + "m " + formatter.format(ra_s) + "s";
+		} else {
+			out = "" + formatter0.format(ra_h) + "h " + formatter.format(ra_m) + "m";
+		}
 		out = DataSet.replaceAll(out, ",", ".", false);
 		if (ra0 < 0) out = "-"+out;
 		return out;

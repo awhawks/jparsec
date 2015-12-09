@@ -9295,6 +9295,7 @@ public class RenderSky
 			throws JPARSECException
 	{
 		Object readStars[] = re_star.getReadElements();
+		if (my_star > readStars.length) return null;
 		StarData star = (StarData) readStars[my_star];
 		if (star == null || star.loc == null) return null;
 		float p = 0;
@@ -9341,7 +9342,9 @@ public class RenderSky
 			throws JPARSECException
 	{
 		Object readStars[] = re_star.getReadElements();
+		if (my_star > readStars.length) return null;
 		StarData sd = (StarData) readStars[my_star];
+		if (sd == null || sd.loc == null) return null;
 		String name = ""+sd.sky2000;
 		if (sd.nom2 != null) name += " ("+sd.nom2+")";
 		if (sd.greek != '\u0000') name += " ("+sd.greek+")";

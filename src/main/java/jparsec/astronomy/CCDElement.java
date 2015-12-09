@@ -165,7 +165,19 @@ public class CCDElement implements Serializable {
 		return !(name != null ? !name.equals(that.name) : that.name != null);
 	}
 
-
+	@Override
+	public int hashCode() {
+		int result = name != null ? name.hashCode() : 0;
+		result = 31 * result + chipSizeX;
+		result = 31 * result + chipSizeY;
+		result = 31 * result + (pixelSizeX != +0.0f ? Float.floatToIntBits(pixelSizeX) : 0);
+		result = 31 * result + (pixelSizeY != +0.0f ? Float.floatToIntBits(pixelSizeY) : 0);
+		result = 31 * result + (cameraPA != +0.0f ? Float.floatToIntBits(cameraPA) : 0);
+		result = 31 * result + binningFactor;
+		result = 31 * result + (zoomFactor != +0.0f ? Float.floatToIntBits(zoomFactor) : 0);
+		return result;
+	}
+	
 	/**
 	 * Return all available intrinsic CCD cameras.
 	 * @return The cameras.
