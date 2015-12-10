@@ -229,7 +229,7 @@ public class TimeElement implements Serializable
 	 */
 	public String getTimeScale() {
 		if (timeScale == null) return "";
-		return Translate.translate(TIME_SCALES[timeScale.ordinal()]);
+		return Translate.translate(268 + timeScale.ordinal());
 	}
 
 	/**

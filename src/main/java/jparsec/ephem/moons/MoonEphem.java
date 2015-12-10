@@ -606,11 +606,13 @@ public class MoonEphem
 				moon = null;
 				if (ephem != null) {
 					moon = MoonEphemElement.parseEphemElement(ephem);
-					moon.name = Translate.translate(orbit.name);
 					try {
 						new_eph_moon.targetBody = Target.getIDFromEnglishName(orbit.name);
+						moon.name = new_eph_moon.targetBody.getName();
 						moon = MoonPhysicalParameters.physicalParameters(JD, ephem_sun, moon, obs, new_eph_moon);
-					} catch (Exception exc) {}
+					} catch (Exception exc) {
+						moon.name = Translate.translate(orbit.name);						
+					}
 					moon = MoonEphem.satellitePhenomena(moon, ephem_plan, central_body);
 				}
 

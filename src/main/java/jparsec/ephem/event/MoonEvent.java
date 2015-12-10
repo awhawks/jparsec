@@ -563,8 +563,8 @@ public class MoonEvent {
 		chartSeries.showErrorBars = false;
 		ChartSeriesElement series[] = new ChartSeriesElement[] {chartSeries};
 		ChartElement chart = new ChartElement(series, ChartElement.TYPE.XY_CHART, ChartElement.SUBTYPE.XY_TIME,
-				event.mainBody.getName()+" "+Translate.translate(MoonEventElement.EVENTS[event.eventType.ordinal()])+" "+Translate.translate(161)+" "+event.secondaryBody.getName()+". "+Translate.translate(159),
-				Translate.translate("Time")+" ("+TimeElement.getTimeScaleAbbreviation(outputTimeScale)+")", Translate.translate(155)+" "+Translate.translate(160)+
+				event.mainBody.getName()+" "+Translate.translate(163 + event.eventType.ordinal())+" "+Translate.translate(161)+" "+event.secondaryBody.getName()+". "+Translate.translate(159),
+				Translate.translate(180)+" ("+TimeElement.getTimeScaleAbbreviation(outputTimeScale)+")", Translate.translate(155)+" "+Translate.translate(160)+
 				" "+event.mainBody.getName(), false, 400, 400);
 
 		if (magnitude) chart.yLabel = Translate.translate(157)+" "+Translate.translate(160)+" "+event.mainBody.getName();
@@ -902,7 +902,7 @@ public class MoonEvent {
 
 		// Create chart
 		String motherBody = targetBodies[0].getCentralBody().getName();
-		String title = Translate.translate("Satellites of") + " " + motherBody;
+		String title = Translate.translate(853) + " " + motherBody;
 		ChartSeriesElement series[] = new ChartSeriesElement[targetBodies.length];
 		Color[] col = new Color[] {Color.RED, Color.GREEN, Color.BLUE, Color.BLACK, Color.MAGENTA,
 				Color.ORANGE};
@@ -930,8 +930,8 @@ public class MoonEvent {
 		}
 		ChartSeriesElement.setShapeSize(1);
 		ChartElement chart = new ChartElement(series, ChartElement.TYPE.XY_CHART,
-				ChartElement.SUBTYPE.XY_TIME, title, Translate.translate("Day"), Translate.translate("Separation")+" (\")", false, 900, 300);
-		if (!arcseconds) chart.yLabel = Translate.translate("Separation")+ " (" + Translate.translate("radii")+")";
+				ChartElement.SUBTYPE.XY_TIME, title, Translate.translate(851), Translate.translate(852)+" (\")", false, 900, 300);
+		if (!arcseconds) chart.yLabel = Translate.translate(852)+ " (" + Translate.translate(854)+")";
 		CreateChart ch = new CreateChart(chart);
 
 		return ch;

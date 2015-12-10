@@ -13144,14 +13144,20 @@ public class RenderSky
 	}
 
 	/**
-	 * Returns the proper name of a star given its catalogue name.
-	 * @param catalogName Catalogue name.
+	 * Returns the proper name of a star given its catalog name.
+	 * @param catalogName Catalog name.
 	 * @return Proper name, or null if the star has no proper name.
 	 * @throws JPARSECException If an error occurs.
 	 */
 	public String getStarProperName(String catalogName)
 	throws JPARSECException {
 		Object o2 = null, o = null;
+		catalogName = DataSet.replaceOne(catalogName, "Alp1 ", "Alp ", 1);
+		catalogName = DataSet.replaceOne(catalogName, "Bet1 ", "Bet ", 1);
+		catalogName = DataSet.replaceOne(catalogName, "Gam1 ", "Gam ", 1);
+		catalogName = DataSet.replaceOne(catalogName, "The1 ", "The ", 1);
+		catalogName = DataSet.replaceOne(catalogName, "Psi1 ", "Psi ", 1);
+
 		if (db_starNames >= 0) {
 			o2 = DataBase.getData(db_starNames2);
 			o = DataBase.getData(db_starNames);

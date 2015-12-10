@@ -51,6 +51,8 @@ import jparsec.time.TimeScale;
 import jparsec.util.Configuration;
 import jparsec.util.DataBase;
 import jparsec.util.JPARSECException;
+import jparsec.util.Translate;
+import jparsec.util.Translate.LANGUAGE;
 
 /**
  * A class to obtain accurate ephemerides of stars.
@@ -1115,6 +1117,65 @@ public class StarEphem
 		return star_name;
 	}
 
+	/**
+	 * Returns the proper name of a star given its catalog name.
+	 * @param catalogName Catalog name.
+	 * @return Proper name, or null if the star has no proper name.
+	 * @throws JPARSECException If an error occurs.
+	 */
+	public static String getStarProperNameFromCatalogName(String catalogName)
+	throws JPARSECException {
+		Object o2 = null, o = null;
+		o2 = DataBase.getDataForAnyThread("starNames2", true);
+		o = DataBase.getDataForAnyThread("starNames", true);
+		String[] names2 = null, names = null;
+		if (o2 == null) {
+			String data[] = DataSet.arrayListToStringArray(ReadFile.readResource(FileIO.DATA_SKY_DIRECTORY + "star_names.txt"));
+			names2 = DataSet.extractColumnFromTable(data, ";", 0);
+			if (Translate.getDefaultLanguage() == LANGUAGE.SPANISH) {
+				names = DataSet.extractColumnFromTable(data, ";", 2);
+			} else {
+				names = DataSet.extractColumnFromTable(data, ";", 1);
+			}
+		} else {
+			names2 = (String[]) o2;
+			names = (String[]) o;
+		}
+
+		String properName = catalogName;
+
+		catalogName = DataSet.replaceOne(catalogName, "Alp1 ", "Alp ", 1);
+		catalogName = DataSet.replaceOne(catalogName, "Bet1 ", "Bet ", 1);
+		catalogName = DataSet.replaceOne(catalogName, "Gam1 ", "Gam ", 1);
+		catalogName = DataSet.replaceOne(catalogName, "The1 ", "The ", 1);
+		catalogName = DataSet.replaceOne(catalogName, "Psi1 ", "Psi ", 1);
+		
+		int bracket1 = catalogName.indexOf("(");
+		int bracket2 = catalogName.indexOf(")");
+		if (bracket1 >= 0 && bracket2 >= 0)
+		{
+			properName = catalogName.substring(bracket1 + 1, bracket2);
+		} else {
+			try {
+				int i = Integer.parseInt(catalogName); // Ensure is an int
+				properName = Integer.toString(i);
+			} catch (Exception exc) {
+				//return null;
+			}
+		}
+
+		for (int n = 0; n < names2.length; n++)
+		{
+			String line = names2[n];
+			int aa = line.toLowerCase().indexOf(properName.toLowerCase());
+			if (aa >= 0)
+			{
+				return names[n];
+			}
+		}
+		return null;
+	}
+	
 	/**
 	 * Location of the LSR in J2000, 18h 03m 50.2s, 30&deg; 00' 16.8", and
 	 * 19.5 km/s of speed set as radius.

@@ -1034,10 +1034,11 @@ public class AstroDate implements Serializable
 	 * @return Month name.
 	 */
 	public String getMonthName() {
+		if (month < 5) return DataSet.capitalize(Translate.translate(52 + month), false);
+		if (month > 5) return DataSet.capitalize(Translate.translate(51 + month), false);
 		String out = MONTH_NAMES[month-1];
-		out = Translate.translate(out);
-		if (out.toLowerCase().equals("may") && Translate.getDefaultLanguage() == LANGUAGE.SPANISH) out += "o";
-		return DataSet.capitalize(out, false);
+		if (Translate.getDefaultLanguage() == LANGUAGE.SPANISH) out += "o";
+		return out;
 	}
 
 	/**
@@ -1048,9 +1049,35 @@ public class AstroDate implements Serializable
 	public String getDayOfWeekName() throws JPARSECException {
 		int n = ((int) (jd() + 0.5) % 7);
 		if (n < 0) n += 7;
-		return DataSet.capitalize(Translate.translate(DAY_OF_WEEK_NAMES[n]), false);
+		if (n == 6) n -= 7;
+		return Translate.translate(823 + n);
 	}
 
+	/**
+	 * Returns the month name.
+	 * @param month Month number, January is 1.
+	 * @return Month name.
+	 */
+	public static String getMonthName(int month) {
+		if (month < 5) return DataSet.capitalize(Translate.translate(52 + month), false);
+		if (month > 5) return DataSet.capitalize(Translate.translate(51 + month), false);
+		String out = MONTH_NAMES[month-1];
+		if (Translate.getDefaultLanguage() == LANGUAGE.SPANISH) out += "o";
+		return out;
+	}
+
+	/**
+	 * Returns the day of week name.
+	 * @param jd Julian day.
+	 * @return Day of week name.
+	 * @throws JPARSECException If the date is invalid.
+	 */
+	public static String getDayOfWeekName(double jd) throws JPARSECException {
+		int n = ((int) (jd + 0.5) % 7);
+		if (n < 0) n += 7;
+		if (n == 6) n -= 7;
+		return Translate.translate(823 + n);
+	}
 
 	/**
 	 * Names of the days of the week.

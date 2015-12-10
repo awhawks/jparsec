@@ -356,24 +356,7 @@ public class SolarEclipse
 	 */
 	public String getEclipseType()
 	{
-		String type = "";
-		switch (this.type)
-		{
-		case ANNULAR:
-			type = "annular";
-			break;
-		case PARTIAL:
-			type = "partial";
-			break;
-		case TOTAL:
-			type = "total";
-			break;
-		case NO_ECLIPSE:
-			type = "no eclipse";
-			break;
-		}
-
-		return Translate.translate(type);
+		return Saros.getEclipseTypeAsString(type);
 	}
 
 	/**

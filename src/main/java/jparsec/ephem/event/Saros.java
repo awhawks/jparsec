@@ -434,15 +434,11 @@ public class Saros
 	 */
 	public static String getEclipseTypeAsString(SolarEclipse.ECLIPSE_TYPE type)
 	{
-		String subtype = "total";
-		if (type == SolarEclipse.ECLIPSE_TYPE.ANNULAR)
-			subtype = "annular";
-		if (type == SolarEclipse.ECLIPSE_TYPE.PARTIAL)
-			subtype = "partial";
-		if (type == SolarEclipse.ECLIPSE_TYPE.NO_ECLIPSE)
-			subtype = "penumbral";
+		if (type == SolarEclipse.ECLIPSE_TYPE.ANNULAR) return Translate.translate(167);
+		if (type == SolarEclipse.ECLIPSE_TYPE.PARTIAL) return Translate.translate(169);
+		if (type == SolarEclipse.ECLIPSE_TYPE.NO_ECLIPSE) return Translate.translate(170);
 
-		return Translate.translate(subtype);
+		return Translate.translate(168); // total
 	}
 
 	/**

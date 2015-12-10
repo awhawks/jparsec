@@ -363,9 +363,9 @@ public class MainEvents
 		} while (eclipse && !eclipseFound);
 
 		if (Translate.getDefaultLanguage() != Translate.LANGUAGE.ENGLISH) {
-			String annular = Translate.translate(annular0);
-			String hybrid = Translate.translate(hybrid0);
-			String partial = Translate.translate(partial0);
+			String annular = Translate.translate(167); // annular
+			String hybrid = Translate.translate(962); // hybrid
+			String partial = Translate.translate(169); // partial
 			String umbra = Translate.getEntry(965, null); // umbra
 			String psd = Translate.getEntry(963, null); // partial phase semi-duration
 			String tsd = Translate.getEntry(964, null); // total phase semi-duration

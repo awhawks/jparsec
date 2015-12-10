@@ -21,6 +21,7 @@
  */
 package jparsec.time.calendar;
 
+import jparsec.time.AstroDate;
 import jparsec.util.JPARSECException;
 import jparsec.util.Translate;
 import jparsec.util.Translate.LANGUAGE;
@@ -250,8 +251,8 @@ public class CalendarGenericConversion
 				out = Calendar.nameFromMonth(month, French.MONTH_NAMES);
 				break;
 			case GREGORIAN:
-				out = Calendar.nameFromMonth(month, Gregorian.MONTH_NAMES);
-				break;
+				return AstroDate.getMonthName(month);
+				//out = Calendar.nameFromMonth(month, Gregorian.MONTH_NAMES);
 			case HEBREW:
 				out = Calendar.nameFromMonth(month, Hebrew.MONTH_NAMES);
 				break;
@@ -268,8 +269,8 @@ public class CalendarGenericConversion
 				out = Calendar.nameFromMonth(month, Islamic.MONTH_NAMES);
 				break;
 			case JULIAN:
-				out = Calendar.nameFromMonth(month, Gregorian.MONTH_NAMES);
-				break;
+				return AstroDate.getMonthName(month);
+				//out = Calendar.nameFromMonth(month, Gregorian.MONTH_NAMES);
 			case PERSIAN:
 				out = Calendar.nameFromMonth(month, Persian.MONTH_NAMES);
 				break;
@@ -386,8 +387,8 @@ public class CalendarGenericConversion
 				out = Calendar.nameFromNumber(new FrenchModified(jd).getDayOfWeek(), French.DAY_OF_WEEK_NAMES);
 				break;
 			case GREGORIAN:
-				out = Calendar.nameFromDayOfWeek(Calendar.dayOfWeekFromFixed(day), Gregorian.DAY_OF_WEEK_NAMES);
-				break;
+				return AstroDate.getDayOfWeekName(jd);
+				//out = Calendar.nameFromDayOfWeek(Calendar.dayOfWeekFromFixed(day), Gregorian.DAY_OF_WEEK_NAMES);
 			case HEBREW:
 				out = Calendar.nameFromDayOfWeek(Calendar.dayOfWeekFromFixed(day), Hebrew.DAY_OF_WEEK_NAMES);
 				break;
@@ -404,8 +405,8 @@ public class CalendarGenericConversion
 				out = Calendar.nameFromDayOfWeek(Calendar.dayOfWeekFromFixed(day), Islamic.DAY_OF_WEEK_NAMES);
 				break;
 			case JULIAN:
-				out = Calendar.nameFromDayOfWeek(Calendar.dayOfWeekFromFixed(day), Gregorian.DAY_OF_WEEK_NAMES);
-				break;
+				return AstroDate.getDayOfWeekName(jd);
+				//out = Calendar.nameFromDayOfWeek(Calendar.dayOfWeekFromFixed(day), Gregorian.DAY_OF_WEEK_NAMES);
 			case PERSIAN:
 				out = Calendar.nameFromDayOfWeek(Calendar.dayOfWeekFromFixed(day), Persian.DAY_OF_WEEK_NAMES);
 				break;

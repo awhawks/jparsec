@@ -407,12 +407,9 @@ public class LunarEclipse
 	 */
 	public String getEclipseType()
 	{
-		String type = "penumbral";
-		if (events[2] != 0.0)
-			type = "partial";
-		if (events[3] != 0.0)
-			type = "total";
-		return Translate.translate(type);
+		if (events[3] != 0.0) return Translate.translate(168); // total
+		if (events[2] != 0.0) return Translate.translate(169); // partial
+		return Translate.translate(1271).toLowerCase(); // penumbral
 	}
 
 	/**

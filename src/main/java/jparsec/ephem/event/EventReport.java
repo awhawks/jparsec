@@ -300,7 +300,7 @@ public class EventReport {
 									ss[si].body = Translate.translate(1027);
 									String shower = f[1];
 									if (Translate.getDefaultLanguage() == LANGUAGE.SPANISH) shower = f[0];
-									d = Translate.translate(1022)+" "+Translate.translate("of")+" "+shower+" ("+Translate.translate(1024).toLowerCase()+", "+Translate.translate(1023)+" "+f[3]+")";
+									d = Translate.translate(1022)+" "+Translate.translate(160)+" "+shower+" ("+Translate.translate(1024).toLowerCase()+", "+Translate.translate(1023)+" "+f[3]+")";
 									ss[si].details = d;
 									list.add(ss[si]);
 								}
