@@ -797,7 +797,7 @@ public class GeneralQuery implements Serializable {
     /**
      * The set of surveys for Skyview queries.
      */
-     public enum SKYVIEW_SURVEY {
+     public static enum SKYVIEW_SURVEY {
     	/** Bonn 1420 MHz Survey survey for SkyView. */
     	BONN_1420MHZ,
     	/** HI All-Sky Continuum Survey survey for SkyView. */

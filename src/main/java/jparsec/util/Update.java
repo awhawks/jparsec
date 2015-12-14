@@ -21,17 +21,6 @@
  */
 package jparsec.util;
 
-// Jupiter GRS - Sky & Telescope, or directly at http://jupos.privat.t-online.de/rGrs.htm
-// TT-UT1: http://maia.usno.navy.mil/
-// bulletins with predictions for variable stars:
-//    Mira: http://www.aavso.org/sites/default/files/bulletin/, http://www.aavso.org/aavso-bulletin, fichero csv
-//    E: http://www.as.up.krakow.pl/ephem/allstars-cat.txt
-// IRAM catalog: http://www.iram.es/IRAMES/documents/ncs30mPako/Current/Demo/iram-J2000.sou
-// Query for extrasolar planets file:
-//    http://exoplanetarchive.ipac.caltech.edu/cgi-bin/nstedAPI/nph-nstedAPI?table=exoplanets&select=pl_hostname,ra,dec,st_dist,st_mass,pl_masse,pl_rade,pl_trandur,pl_trandep,pl_orbeccen,pl_orbincl,pl_orblper,pl_orbsmax,pl_orbtper,pl_pelink,pl_name,st_vj&order=pl_masse&format=ascii
-// Space probes
-// Other: Planetary features, SkyViewData
-
 import jparsec.ephem.Target.TARGET;
 import jparsec.ephem.moons.MoonEphem;
 import jparsec.ephem.planets.OrbitEphem;

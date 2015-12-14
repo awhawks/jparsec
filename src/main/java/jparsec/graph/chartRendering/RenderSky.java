@@ -9243,10 +9243,18 @@ public class RenderSky
 			Object o = DataBase.getData("starNames0", true);
 			if (o == null) {
 				names = ReadFile.readResource(FileIO.DATA_SKY_DIRECTORY + "star_names.txt");
-				DataBase.addData("starNames0", ApplicationLauncher.getProcessID(), DataSet.arrayListToStringArray(names), true);
+				DataBase.addData("starNames0", Thread.currentThread().getName(), DataSet.arrayListToStringArray(names), true);
 			} else {
 				names = new ArrayList<String>(Arrays.asList((String[])o));
 			}
+
+			// Correct for double stars
+			String wrongNames[] = new String [] {
+					"Alp Cen","The Eri","Alp Cru","Alp Cru","Gam And","Gam Leo","Bet Sco","Alp Lib","Alp CVn","Bet Cyg","Bet Cap","Alp Her","Alp Cap","Psi Dra","Gam Ari"
+			};
+			String okNames[] = new String[] {
+					"Alp1 Cen","The1 Eri","Alp1 Cru","Alp1 Cru","Gam1 And","Gam1 Leo","Bet1 Sco","Alp1 Lib","Alp1 CVn","Bet1 Cyg","Bet1 Cap","Alp1 Her","Alp1 Cap","Psi1 Dra","Gam1 Ari"
+			};
 
 			// Support for proper star names
 			for (int n = 0; n < names.size(); n++)
@@ -9256,6 +9264,11 @@ public class RenderSky
 				if (aa >= 0)
 				{
 					String proper_name = FileIO.getField(1, line, ";", true);
+					
+					// Correct for double stars
+					int index = DataSet.getIndex(wrongNames, proper_name);
+					if (index >= 0) proper_name = okNames[index];
+					
 					my_star = searchStar(proper_name, re);
 					if (FileIO.getField(2, line, ";", true).toLowerCase().equals(object.toLowerCase())) break;
 					if (FileIO.getField(3, line, ";", true).toLowerCase().equals(object.toLowerCase())) break;
@@ -9295,7 +9308,7 @@ public class RenderSky
 			throws JPARSECException
 	{
 		Object readStars[] = re_star.getReadElements();
-		if (my_star > readStars.length) return null;
+		if (my_star >= readStars.length) return null;
 		StarData star = (StarData) readStars[my_star];
 		if (star == null || star.loc == null) return null;
 		float p = 0;
@@ -9342,7 +9355,7 @@ public class RenderSky
 			throws JPARSECException
 	{
 		Object readStars[] = re_star.getReadElements();
-		if (my_star > readStars.length) return null;
+		if (my_star >= readStars.length) return null;
 		StarData sd = (StarData) readStars[my_star];
 		if (sd == null || sd.loc == null) return null;
 		String name = ""+sd.sky2000;
