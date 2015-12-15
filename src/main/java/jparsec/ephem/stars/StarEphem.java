@@ -107,21 +107,25 @@ public class StarEphem
 	};
 	
 	/**
-	 * An array holding the indexes of 100 famous variable stars. No guarantee is 
-	 * given about including all interesting stars in this list. It comes from the book 
+	 * An array holding the indexes of 109 famous variable stars. No guarantee is 
+	 * given about including all interesting stars in this list. It comes mainly from the book 
 	 * <i>Observing Variable Stars - a guide for the beginner</i>, by David H. Levy. The 
-	 * original list was filtered to reduce the number of stars to 100. Some indexes will be 
+	 * original list was filtered to reduce the number of stars to 109. Some indexes will be 
 	 * equal or greater to 8884, requiring to set the flag {@linkplain #READ_STARS_BEYOND_MAG_6_5}
-	 * to true to read them.
+	 * to true to read them. The first 12 values in the array are the top 12 naked eye variables 
+	 * stars given by Sky & Telescope (http://www.skyandtelescope.com/observing/celestial-objects-to-watch/the-top-12-naked-eye-variable-stars/),
+	 * then the list is completed up to 25 with the ones visible to naked eye in H. Levy's book.
 	 */
 	public static final int[] MAIN_VARIABLE_STARS = new int[] {
-		22918, 17802, 6167, 32513, 14961, 58503, 51480, 15104, 18849, 20844, 7632, 11973, 2228, 4266, 
-		25848, 69267, 35452, 12635, 8158, 42373, 29790, 43814, 55574, 40713, 12124, 75406, 1525, 33125, 
-		14273, 55338, 68218, 75151, 36899, 76672, 55292, 5061, 6237, 12752, 3532, 3799, 2622, 178, 3671, 
-		11311, 229, 523, 27477, 55993, 12489, 6682, 11823, 13336, 47627, 916, 51545, 38198, 17247, 18286, 
-		47317, 24059, 23016, 27385, 247, 77877, 60483, 628, 5849, 15861, 52118, 5610, 7737, 31908, 21599, 
-		29895, 8961, 20206, 18300, 52760, 8667, 77202, 33753, 47406, 21396, 15012, 14234, 6048, 1262, 
-		24335, 76444, 12823, 73336, 42644, 66828, 57600, 22800, 2399, 38306, 23059, 14100, 40432
+		59, 259, 292, 564, 523, 454, 534, 247, 229, 1516, 63, 9, 628, 1262, 916, 178, 1525, 
+		2228, 4266, 3532, 3799, 2622, 3671, 2399, 5849, 
+		22918, 17802, 6167, 32513, 14961, 58503, 51480, 15104, 18849, 20844, 7632, 11973, 
+		25848, 69267, 35452, 12635, 8158, 42373, 29790, 43814, 55574, 40713, 12124, 75406, 
+		33125, 14273, 55338, 68218, 75151, 36899, 76672, 55292, 5061, 6237, 12752, 11311, 
+		27477, 55993, 12489, 6682, 11823, 13336, 47627, 51545, 38198, 17247, 18286, 47317, 
+		24059, 23016, 27385, 77877, 60483, 15861, 52118, 5610, 7737, 31908, 21599, 29895, 
+		8961, 20206, 18300, 52760, 8667, 77202, 33753, 47406, 21396, 15012, 14234, 6048, 
+		24335, 76444, 12823, 73336, 42644, 66828, 57600, 22800, 38306, 23059, 14100, 40432
 	};
 	
 	/**
