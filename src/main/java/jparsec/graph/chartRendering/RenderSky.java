@@ -9909,7 +9909,7 @@ public class RenderSky
 		render.planetRender.height = render.height;
 		render.planetRender.telescope = render.telescope;
 		render.planetRender.ephemSun = null;
-		baryc = null;
+		baryc = Ephem.eclipticToEquatorial(PlanetEphem.getGeocentricPosition(equinox, TARGET.Solar_System_Barycenter, 0.0, false, projection.obs), Constant.J2000, projection.eph);
 		equinox = projection.eph.equinox;
 		if (equinox == EphemerisElement.EQUINOX_OF_DATE)
 			equinox = jd;
