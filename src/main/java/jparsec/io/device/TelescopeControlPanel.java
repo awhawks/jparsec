@@ -67,9 +67,7 @@ import jparsec.graph.chartRendering.SkyRenderElement.MILKY_WAY_TEXTURE;
 import jparsec.graph.chartRendering.SkyRenderElement.REALISTIC_STARS;
 import jparsec.graph.chartRendering.SkyRenderElement.SUPERIMPOSED_LABELS;
 import jparsec.graph.chartRendering.frame.SkyRendering;
-import jparsec.io.FileFormatElement;
 import jparsec.io.FileIO;
-import jparsec.io.ReadFile;
 import jparsec.io.device.GenericCamera.CAMERA_MODEL;
 import jparsec.io.device.GenericCamera.FILTER;
 import jparsec.io.device.GenericCamera.IMAGE_ID;
@@ -1419,20 +1417,6 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 
 		try
 		{
-    		try {
-    			String contents[] = DataSet.arrayListToStringArray(ReadFile.readResource(FileIO.DATA_SKY_DIRECTORY + "iram-J2000.sou"));
-    			sky.addExternalCatalog(Translate.translate("IRAM catalog"), Translate.translate("Radiosource"), Color.RED.getRGB(), contents, FileFormatElement.IRAM_SOU_FORMAT);
-    		} catch (Exception exc) {}
-    		try {
-    			String contents[] = DataSet.arrayListToStringArray(ReadFile.readResource(FileIO.DATA_ORBITAL_ELEMENTS_DIRECTORY + "extrasolarPlanets.txt"));
-    			sky.addExternalCatalog(Translate.translate("Extrasolar planets"), Translate.translate("Extrasolar planets"), Color.CYAN.getRGB(), contents, FileFormatElement.EXTRASOLAR_PLANETS);
-    		} catch (Exception exc) {
-    			exc.printStackTrace();
-    		}
-    		for (int i=0; i<sky.getNumberOfExternalCatalogs(); i++) {
-    			sky.drawExternalCatalogs[i] = false;
-    		}
-
 			SkyRendering skyRender = new SkyRendering(time, obs, eph, sky, "Sky render", 0);
 			sc = new SkyChart(w, h, skyRender, true, false, updateTime/1000, true);
 

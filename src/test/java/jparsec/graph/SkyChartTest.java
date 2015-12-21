@@ -231,14 +231,18 @@ public class SkyChartTest {
 			//sky.poleAngle = (float) Constant.PI_OVER_FOUR;
 */
 
-/*        String contents[] = DataSet.arrayListToStringArray(ReadFile.readResource(FileIO.DATA_SKY_DIRECTORY + "iram-J2000.sou"));
+/*        try {
+        String contents[] = DataSet.arrayListToStringArray(ReadFile.readResource(FileIO.DATA_SKY_DIRECTORY + "iram-J2000.sou"));
         sky.addExternalCatalog(Translate.translate("IRAM catalog"), Translate.translate("Radiosource"), Color.RED.getRGB(), contents, FileFormatElement.IRAM_SOU_FORMAT);
 
         contents = DataSet.arrayListToStringArray(ReadFile.readResource(FileIO.DATA_ORBITAL_ELEMENTS_DIRECTORY + "extrasolarPlanets.txt"));
-        sky.addExternalCatalog(Translate.translate("Extrasolar planets"), Translate.translate("Extrasolar planets"), Color.CYAN.getRGB(), contents, FileFormatElement.EXTRASOLAR_PLANETS);
+        sky.addExternalCatalog(Translate.translate("Extrasolar planets"), Translate.translate("Extrasolar planets"), Color.CYAN.getRGB(), contents, "  ", true);
 
         for (int i = 0; i < sky.getNumberOfExternalCatalogs(); i++) {
             sky.drawExternalCatalogs[i] = false;
+        }
+        } catch (Exception exc) {
+        	exc.printStackTrace();
         }
 */
 /*

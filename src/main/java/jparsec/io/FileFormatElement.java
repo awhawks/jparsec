@@ -546,31 +546,6 @@ public class FileFormatElement implements Serializable
 	};
 
 	/**
-	 * The format to read the .txt file of extrasolar planets, using the constants for
-	 * external catalogs defined in {@linkplain SkyRenderElement}.
-	 */
-	public static final FileFormatElement[] EXTRASOLAR_PLANETS = new FileFormatElement[] {
-			new FileFormatElement(1, 43, "SKIP_LINES"), // Skip first 41 lines
-			new FileFormatElement(1, 101, "STAR_NAME"),
-			new FileFormatElement(108, 117, SkyRenderElement.EXTERNAL_CATALOG_FIELD_RA_DEG_WITH_DECIMALS),
-			new FileFormatElement(124, 133, SkyRenderElement.EXTERNAL_CATALOG_FIELD_DEC_DEG_WITH_DECIMALS),
-			new FileFormatElement(136, 143, "DISTANCE"), // pc
-			new FileFormatElement(146, 151, "STAR_MASS"), // Msun
-			new FileFormatElement(154, 163, "PLANET_MASS_EARTH"), // SkyRenderElement.EXTERNAL_CATALOG_FIELD_FLUX), // Mearth
-			new FileFormatElement(166, 172, "PLANET_RADIUS_EARTH"), // Rearth
-			new FileFormatElement(174, 183, "TRANSIT_DURATION_DAYS"), // days
-			new FileFormatElement(186, 194, "TRANSIT_DEPTH_PERCENT"), // %
-			new FileFormatElement(199, 206, "ECCENTRICITY"),
-			new FileFormatElement(212, 217, "INCLINATION"), // deg
-			new FileFormatElement(221, 228, "PERIHELION_LONGITUDE"), // deg
-			new FileFormatElement(231, 241, "SEMIMAJOR_AXIS"), // UA
-			new FileFormatElement(243, 256, "PERIHELION_TIME"), // JD
-			new FileFormatElement(350, 457, SkyRenderElement.EXTERNAL_CATALOG_FIELD_DETAILS), // link to extrasolar planets enciclopedia
-			new FileFormatElement(460, 558, SkyRenderElement.EXTERNAL_CATALOG_FIELD_NAME1), // Planet name
-			new FileFormatElement(562, 567, SkyRenderElement.EXTERNAL_CATALOG_FIELD_MAG) // Star magnitude
-	};
-
-	/**
 	 * The format of the orbital elements or double stars by Hartkopf 2010.
 	 */
 	public static final FileFormatElement DOUBLE_STARS_HARTKPF_2010[] = new FileFormatElement[] {

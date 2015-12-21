@@ -36,6 +36,7 @@ import jparsec.graph.DataSet;
 import jparsec.graph.JPARSECStroke;
 import jparsec.graph.chartRendering.Graphics.ANAGLYPH_COLOR_MODE;
 import jparsec.io.FileFormatElement;
+import jparsec.io.FileIO;
 import jparsec.io.ReadFile;
 import jparsec.io.ReadFormat;
 import jparsec.math.Constant;
@@ -1109,7 +1110,7 @@ public class SkyRenderElement implements Serializable
 		double jd = Constant.J2000;
 		for (int i=line0; i<contents.size(); i++) {
 			String line = contents.get(i);
-			if (!line.startsWith("!") && !line.startsWith("#") && !line.startsWith("*")) { // IRAM/JCMT comments
+			if (!line.startsWith("|") && !line.startsWith("!") && !line.startsWith("#") && !line.startsWith("*")) { // IRAM/JCMT comments
 				float pa = -1, maxSize = 0, minSize = 0;
 				String com = "", name1 = "", name2 = objType, mag = "0", ctype = "EQ";
 				int tt = 100;
@@ -1309,7 +1310,7 @@ public class SkyRenderElement implements Serializable
 		double equinox = 2000, lastEquinox = equinox;
 		double jd = Constant.J2000;
 		for (int i=line0; i<contents.length; i++) {
-			if (!contents[i].startsWith("!") && !contents[i].startsWith("#") && !contents[i].startsWith("*")) { // IRAM/JCMT comments
+			if (!contents[i].startsWith("|") && !contents[i].startsWith("!") && !contents[i].startsWith("#") && !contents[i].startsWith("*")) { // IRAM/JCMT comments
 				float pa = -1, maxSize = 0, minSize = 0;
 				String com = "", name1 = "", name2 = objType, mag = "0", ctype = "EQ";
 				int tt = 100;
@@ -1327,11 +1328,11 @@ public class SkyRenderElement implements Serializable
 				if (s != null) equinox = Double.parseDouble(s);
 
 				s = getField(contents[i], rf, SkyRenderElement.EXTERNAL_CATALOG_FIELD_MAG);
-				if (s != null) {
+				if (s != null && !s.equals("")) {
 					mag = s;
 				} else {
 					s = getField(contents[i], rf, SkyRenderElement.EXTERNAL_CATALOG_FIELD_FLUX);
-					if (s != null) {
+					if (s != null && !s.equals("")) {
 						mag = s;
 						fluxMode = true;
 						listFlux.add(Double.parseDouble(mag));
@@ -1479,12 +1480,249 @@ public class SkyRenderElement implements Serializable
 		//return id;
 	}
 
+	/**
+	 * Adds an external catalog to render objects. Since the sky rendering class already takes into account main
+	 * astronomical objects, the catalog is added as a subset of deep sky objects.<P>
+	 * This methods requires no input format, but a separator. Earch element in the input array of contents must
+	 * contain the required columns in the following order, separated by the input separator:
+	 * name, ra (deg), dec (deg), mag, details.<P>
+	 * This method is adequate to read the extrasolar planets file using two spaces as separator.
+	 * @param name An identifier or name for this catalog.
+	 * @param objType The global name for the type of objects in this catalog.
+	 * @param rgb The rgb color to show the objects in this catalog.
+	 * @param contents The contents of the file.
+	 * @param separator The separator for the columns.
+	 * @param inMemory True to hold the catalog in memory, false for disk. True is strongly recommended for better
+	 * performance.
+	 * @throws JPARSECException If an error occurs.
+	 */
+	public synchronized void addExternalCatalog(String name, String objType, int rgb, String[] contents, 
+			String separator, boolean inMemory) throws JPARSECException {
+		ArrayList<Object> list = new ArrayList<Object>();
+
+		boolean fluxMode = false;
+		ArrayList<Double> listFlux = new ArrayList<Double>();
+		int line0 = 0;
+		double equinox = 2000, lastEquinox = equinox;
+		double jd = Constant.J2000;
+		for (int i=line0; i<contents.length; i++) {
+			if (!contents[i].startsWith("\\") && !contents[i].startsWith("|") && !contents[i].startsWith("!") && !contents[i].startsWith("#") && !contents[i].startsWith("*")) { // IRAM/JCMT comments
+				float pa = -1, maxSize = 0, minSize = 0;
+				String com = "", name1 = "", name2 = objType, mag = "0", ctype = "EQ";
+				int tt = 100;
+
+				String s = FileIO.getField(1, contents[i], separator, true);
+				if (s != null && !s.equals("") && !s.startsWith("null")) 
+					name1 = s;
+
+				s = FileIO.getField(5, contents[i], separator, true);
+				if (s != null && !s.equals("") && !s.startsWith("null")) 
+					com = s;
+
+				s = FileIO.getField(4, contents[i], separator, true);
+				if (s != null && !s.equals("") && !s.startsWith("null")) 
+					mag = s;
+
+				double ra = 0, dec = 0, r = 1.0;
+				s = FileIO.getField(2, contents[i], separator, true);
+				if (s != null && !s.equals("") && !s.startsWith("null")) 
+					ra = Double.parseDouble(s) * Constant.DEG_TO_RAD;
+				s = FileIO.getField(3, contents[i], separator, true);
+				if (s != null && !s.equals("") && !s.startsWith("null")) 
+					dec = Double.parseDouble(s) * Constant.DEG_TO_RAD;
+
+				LocationElement loc = new LocationElement(ra, dec, r);
+
+				if (lastEquinox != equinox) {
+					jd = (new AstroDate((int)equinox, 1, 1, 12, 0, 0)).jd();
+					lastEquinox = equinox;
+				}
+				if (!ctype.startsWith("EQ")) {
+					boolean fast = false;
+					double t = (equinox - 2000.0) / 100.0;
+					if (ctype.startsWith("EC")) {
+						EphemerisElement eph = new EphemerisElement();
+						eph.ephemMethod = REDUCTION_METHOD.IAU_2009;
+						double obliquity = Obliquity.meanObliquity(t, eph);
+						loc = CoordinateSystem.eclipticToEquatorial(loc, obliquity, fast);
+					}
+					if (ctype.startsWith("GA")) {
+						loc = CoordinateSystem.galacticToEquatorial(loc, jd, fast);
+					}
+				}
+				if (jd != Constant.J2000) {
+					EphemerisElement eph = new EphemerisElement();
+					eph.ephemMethod = REDUCTION_METHOD.IAU_2009;
+					loc = LocationElement.parseRectangularCoordinates(Precession.precess(jd, Constant.J2000,
+							LocationElement.parseLocationElement(loc), eph));
+				}
+
+				list.add(new Object[] {name1, name2, tt, loc, (float)Double.parseDouble(mag),
+						new float[] {maxSize, minSize}, pa, com, rgb});
+			}
+		}
+
+		if (fluxMode) {
+			double flux[] = DataSet.arrayListToDoubleArray(listFlux);
+			double max = DataSet.getMaximumValue(flux), min = DataSet.getMinimumValue(flux);
+			double minMag = 6.5, maxMag = 0;
+			for (int i=0; i<list.size(); i++) {
+				Object o[] = (Object[]) list.get(i);
+				double mag = (Float) o[4];
+
+				mag = 1.0 + (mag - min) / (max - min); // 1 to 2. Note log(1) = 0
+				mag = Math.log(mag) / Math.log(2.0); // 0 to 1, in log scale
+				mag = minMag - mag * (minMag - maxMag);
+
+				o[4] = (float)mag;
+				list.set(i, o);
+			}
+		}
+
+		String id = "RenderSkyExternalCatalog"+externalCatalogCounter;
+		DataBase.addData(id, list.toArray(), inMemory);
+		if (!this.externalCatalogAvailable(id)) {
+			externalCatalogs = DataSet.addStringArray(externalCatalogs, new String[] {id});
+			externalCatalogNames = DataSet.addStringArray(externalCatalogNames, new String[] {name});
+			externalCatalogCounter ++;
+		} else {
+			externalCatalogNames[DataSet.getIndex(externalCatalogs, id)] = name;
+		}
+		if (this.drawExternalCatalogs == null && externalCatalogs.length == 1) {
+			drawExternalCatalogs = new boolean[externalCatalogs.length];
+			drawExternalCatalogs[0] = true;
+		} else {
+			if (drawExternalCatalogs != null && externalCatalogs.length == 1+drawExternalCatalogs.length)
+				drawExternalCatalogs = DataSet.addBooleanArray(drawExternalCatalogs, new boolean[] {true});
+		}
+		//return id;
+	}
+	
+	/**
+	 * Adds an external catalog to render objects. Since the sky rendering class already takes into account main
+	 * astronomical objects, the catalog is added as a subset of deep sky objects.<P>
+	 * This methods requires no input format, but a separator. Earch element in the input array of contents must
+	 * contain the required columns in the following order, separated by the input separator:
+	 * name, ra (deg), dec (deg), mag, details.<P>
+	 * This method is adequate to read the extrasolar planets file using two spaces as separator.
+	 * @param name An identifier or name for this catalog.
+	 * @param objType The global name for the type of objects in this catalog.
+	 * @param rgb The rgb color to show the objects in this catalog.
+	 * @param contents The contents of the file.
+	 * @param separator The separator for the columns.
+	 * @param inMemory True to hold the catalog in memory, false for disk. True is strongly recommended for better
+	 * performance.
+	 * @throws JPARSECException If an error occurs.
+	 */
+	public synchronized void addExternalCatalog(String name, String objType, int rgb, ArrayList<String> contents, 
+			String separator, boolean inMemory) throws JPARSECException {
+		ArrayList<Object> list = new ArrayList<Object>();
+
+		boolean fluxMode = false;
+		ArrayList<Double> listFlux = new ArrayList<Double>();
+		int line0 = 0;
+		double equinox = 2000, lastEquinox = equinox;
+		double jd = Constant.J2000;
+		for (int i=line0; i<contents.size(); i++) {
+			String line = contents.get(i);
+			if (!line.startsWith("\\") && !line.startsWith("|") && !line.startsWith("!") && !line.startsWith("#") && !line.startsWith("*")) { // IRAM/JCMT comments
+				float pa = -1, maxSize = 0, minSize = 0;
+				String com = "", name1 = "", name2 = objType, mag = "0", ctype = "EQ";
+				int tt = 100;
+
+				String s = FileIO.getField(1, line, separator, true);
+				if (s != null && !s.equals("") && !s.startsWith("null")) 
+					name1 = s;
+
+				s = FileIO.getField(5, line, separator, true);
+				if (s != null && !s.equals("") && !s.startsWith("null")) 
+					com = s;
+
+				s = FileIO.getField(4, line, separator, true);
+				if (s != null && !s.equals("") && !s.startsWith("null")) 
+					mag = s;
+
+				double ra = 0, dec = 0, r = 1.0;
+				s = FileIO.getField(2, line, separator, true);
+				if (s != null && !s.equals("") && !s.startsWith("null")) 
+					ra = Double.parseDouble(s) * Constant.DEG_TO_RAD;
+				s = FileIO.getField(3, line, separator, true);
+				if (s != null && !s.equals("") && !s.startsWith("null")) 
+					dec = Double.parseDouble(s) * Constant.DEG_TO_RAD;
+
+				LocationElement loc = new LocationElement(ra, dec, r);
+
+				if (lastEquinox != equinox) {
+					jd = (new AstroDate((int)equinox, 1, 1, 12, 0, 0)).jd();
+					lastEquinox = equinox;
+				}
+				if (!ctype.startsWith("EQ")) {
+					boolean fast = false;
+					double t = (equinox - 2000.0) / 100.0;
+					if (ctype.startsWith("EC")) {
+						EphemerisElement eph = new EphemerisElement();
+						eph.ephemMethod = REDUCTION_METHOD.IAU_2009;
+						double obliquity = Obliquity.meanObliquity(t, eph);
+						loc = CoordinateSystem.eclipticToEquatorial(loc, obliquity, fast);
+					}
+					if (ctype.startsWith("GA")) {
+						loc = CoordinateSystem.galacticToEquatorial(loc, jd, fast);
+					}
+				}
+				if (jd != Constant.J2000) {
+					EphemerisElement eph = new EphemerisElement();
+					eph.ephemMethod = REDUCTION_METHOD.IAU_2009;
+					loc = LocationElement.parseRectangularCoordinates(Precession.precess(jd, Constant.J2000,
+							LocationElement.parseLocationElement(loc), eph));
+				}
+
+				list.add(new Object[] {name1, name2, tt, loc, (float)Double.parseDouble(mag),
+						new float[] {maxSize, minSize}, pa, com, rgb});
+			}
+		}
+
+		if (fluxMode) {
+			double flux[] = DataSet.arrayListToDoubleArray(listFlux);
+			double max = DataSet.getMaximumValue(flux), min = DataSet.getMinimumValue(flux);
+			double minMag = 6.5, maxMag = 0;
+			for (int i=0; i<list.size(); i++) {
+				Object o[] = (Object[]) list.get(i);
+				double mag = (Float) o[4];
+
+				mag = 1.0 + (mag - min) / (max - min); // 1 to 2. Note log(1) = 0
+				mag = Math.log(mag) / Math.log(2.0); // 0 to 1, in log scale
+				mag = minMag - mag * (minMag - maxMag);
+
+				o[4] = (float)mag;
+				list.set(i, o);
+			}
+		}
+
+		String id = "RenderSkyExternalCatalog"+externalCatalogCounter;
+		DataBase.addData(id, list.toArray(), inMemory);
+		if (!this.externalCatalogAvailable(id)) {
+			externalCatalogs = DataSet.addStringArray(externalCatalogs, new String[] {id});
+			externalCatalogNames = DataSet.addStringArray(externalCatalogNames, new String[] {name});
+			externalCatalogCounter ++;
+		} else {
+			externalCatalogNames[DataSet.getIndex(externalCatalogs, id)] = name;
+		}
+		if (this.drawExternalCatalogs == null && externalCatalogs.length == 1) {
+			drawExternalCatalogs = new boolean[externalCatalogs.length];
+			drawExternalCatalogs[0] = true;
+		} else {
+			if (drawExternalCatalogs != null && externalCatalogs.length == 1+drawExternalCatalogs.length)
+				drawExternalCatalogs = DataSet.addBooleanArray(drawExternalCatalogs, new boolean[] {true});
+		}
+		//return id;
+	}
+	
 	private String getField(String line, ReadFormat rf, String fieldName) {
 		try {
 			if (!rf.fieldExists(fieldName)) return null;
 			FileFormatElement format = rf.getField(fieldName);
 			String out = ReadFormat.readField(line, format).trim();
-			if (out.equals("null")) out = null;
+			if (out.startsWith("null")) out = null;
 			return out;
 		} catch (Exception exc) {
 			exc.printStackTrace();
