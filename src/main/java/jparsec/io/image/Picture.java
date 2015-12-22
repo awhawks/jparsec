@@ -202,7 +202,7 @@ public class Picture
 	private void check() {
 		if (image == null) return;
 		int dt = image.getRaster().getDataBuffer().getDataType();
-		if (dt != DataBuffer.TYPE_INT && dt != DataBuffer.TYPE_BYTE)
+		if (image.getType() == BufferedImage.TYPE_CUSTOM || dt != DataBuffer.TYPE_INT && dt != DataBuffer.TYPE_BYTE)
 			image = Picture.copyWithTransparency(image);
 	}
 
@@ -1903,9 +1903,11 @@ public class Picture
     /**
      * Returns a clone copy of the input image.
      * @param img The image.
-     * @return The copy.
+     * @return The copy. In case the input image is of an undefined or
+     * custom type, a copy with transparency is returned.
      */
     public static BufferedImage copy(BufferedImage img) {
+    	if (img.getType() == BufferedImage.TYPE_CUSTOM) return copyWithTransparency(img);
     	BufferedImage bimage = new BufferedImage(img.getWidth(null), img.getHeight(null), img.getType());
 
 	    // Copy image to buffered image

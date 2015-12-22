@@ -102,7 +102,7 @@ public class RenderEclipseTest {
 
         // Chart all solar/lunar eclipses for a given year
         RenderSatellite.ALLOW_SPLINE_RESIZING = false; // Improve performance
-        int year = 2015;
+        int year = 2016;
         String locName = "Madrid";
         boolean onlyVisibleFromSpain = false;
         boolean horiz = true;
@@ -154,7 +154,7 @@ public class RenderEclipseTest {
         do {
             boolean found = true;
             do {
-                SimpleEventElement s = MainEvents.MoonPhaseOrEclipse(newTime.astroDate.jd(), SimpleEventElement.EVENT.MOON_LUNAR_ECLIPSE, MainEvents.EVENT_TIME.NEXT);
+                SimpleEventElement s = MainEvents.MoonPhaseOrEclipse(newTime.astroDate.jd(), SimpleEventElement.EVENT.MOON_SOLAR_ECLIPSE, MainEvents.EVENT_TIME.NEXT);
                 newTime = new TimeElement(s.time, TimeElement.SCALE.TERRESTRIAL_TIME);
 
                 if (onlyVisibleFromSpain) {
@@ -167,8 +167,14 @@ public class RenderEclipseTest {
 
             if (newTime.astroDate.getYear() > year) break;
             g = new AWTGraphics(w, h, false, false);
-            RenderEclipse re = new RenderEclipse(newTime.astroDate);
-            re.renderSolarEclipse(TimeElement.SCALE.LOCAL_TIME, observer, eph, g, horiz, map);
+            try {
+            	RenderEclipse re = new RenderEclipse(newTime.astroDate);
+                re.renderSolarEclipse(TimeElement.SCALE.LOCAL_TIME, observer, eph, g, horiz, map);
+            } catch (Exception exc) {
+            	System.out.println("No eclipse on "+newTime.astroDate.toString()+" ?");
+            	newTime.add(20);
+            	continue;
+            }
             pic = new Picture((java.awt.image.BufferedImage) g.getRendering());
             String date = newTime.astroDate.toString();
             date = date.substring(0, date.indexOf(" "));
