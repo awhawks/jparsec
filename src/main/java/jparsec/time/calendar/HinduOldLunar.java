@@ -32,7 +32,7 @@ import java.io.Serializable;
  */
 public class HinduOldLunar implements Serializable
 {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 5553870750103742268L;
 
 	/**
 	 * Year.

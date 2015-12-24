@@ -36,6 +36,8 @@ import jparsec.observer.CityElement;
  */
 public class French extends BaseCalendar
 {
+	private static final long serialVersionUID = 6342987068941343569L;
+	
 	/**
 	 * Calendar epoch.
 	 */
@@ -72,8 +74,6 @@ public class French extends BaseCalendar
 	 * Decade names.
 	 */
 	public static final String DECADE_NAMES[] = { "I", "II", "III" };
-
-	private static final long serialVersionUID = 6342987068941343569L;
 
 	private transient long newYear;
 

@@ -29,6 +29,8 @@ package jparsec.time.calendar;
  */
 public class Ethiopic extends Coptic
 {
+	private static final long serialVersionUID = 4298274021293834199L;
+	
 	/**
 	 * Calendar epoch.
 	 */
@@ -46,8 +48,6 @@ public class Ethiopic extends Coptic
 		"Maskaram", "Teqemt", "Kehdar", "Takhsas", "Ter", "Yakatit", "Magabit",
 		"Miyazya", "Genbot", "Sane", "Hamle", "Nahase", "Paguemen"
 	};
-
-	private static final long serialVersionUID = 4298274021293834199L;
 
 	/**
 	 * Fixed day constructor.

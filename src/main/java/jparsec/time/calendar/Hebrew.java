@@ -35,6 +35,8 @@ package jparsec.time.calendar;
  */
 public class Hebrew extends BaseCalendar
 {
+	private static final long serialVersionUID = 7665359541472029309L;
+
 	/**
 	 * Calendar epoch.
 	 */

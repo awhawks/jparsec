@@ -21,8 +21,6 @@
  */
 package jparsec.time.calendar;
 
-import java.io.Serializable;
-
 import jparsec.observer.CityElement;
 
 /**
@@ -34,6 +32,8 @@ import jparsec.observer.CityElement;
  */
 public class IslamicObservational extends Islamic
 {
+	private static final long serialVersionUID = 182875218135355239L;
+	
 	/**
 	 * Cairo location.
 	 */
@@ -43,8 +43,6 @@ public class IslamicObservational extends Islamic
 	 * Islamic location, currently set to Cairo.
 	 */
 	public static final CityElement ISLAMIC_LOCALE = CAIRO;
-
-	private static final long serialVersionUID = 182875218135355239L;
 
 	private transient long prevLunarPhase;
 

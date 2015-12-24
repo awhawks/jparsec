@@ -21,8 +21,6 @@
  */
 package jparsec.time.calendar;
 
-import java.io.Serializable;
-
 import jparsec.observer.CityElement;
 
 /**
@@ -34,6 +32,8 @@ import jparsec.observer.CityElement;
  */
 public class HinduSolar extends HinduOldSolar
 {
+	private static final long serialVersionUID = -8096198193668204567L;
+
 	/**
 	 * Sidereal year length.
 	 */

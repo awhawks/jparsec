@@ -35,6 +35,8 @@ import java.io.Serializable;
  */
 public class MayanHaab implements Serializable
 {
+	private static final long serialVersionUID = -2455524153259697510L;
+	
 	/**
 	 * Calendar epoch.
 	 */
@@ -47,8 +49,6 @@ public class MayanHaab implements Serializable
 		"Pop", "Uo", "Zip", "Zotz", "Tzec", "Xul", "Yaxkin", "Mol", "Chen", "Yax", "Zac", "Ceh", "Mac", "Kankin", "Muan",
 		"Pax", "Kayab", "Cumku", "Uayeb"
 	};
-
-	private static final long serialVersionUID = -2455524153259697510L;
 
 	/**
 	 * Month number. 1 is Pop, index 0 in the months array.

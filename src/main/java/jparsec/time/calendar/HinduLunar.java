@@ -32,6 +32,8 @@ import java.io.Serializable;
  */
 public class HinduLunar implements Serializable
 {
+	private static final long serialVersionUID = 8237202254694851751L;
+	
 	/**
 	 * Lunar era.
 	 */
@@ -51,8 +53,6 @@ public class HinduLunar implements Serializable
 	 * Anomalistic month length in days.
 	 */
 	public static final double ANOMALISTIC_MONTH = 27.554597974680476D;
-
-	private static final long serialVersionUID = 8237202254694851751L;
 
 	/**
 	 * Year.

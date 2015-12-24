@@ -27,7 +27,10 @@ package jparsec.time.calendar;
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */
-public class Egyptian extends BaseCalendar {
+public class Egyptian extends BaseCalendar 
+{
+    private static final long serialVersionUID = 5983944024574226461L;
+    
     /**
      * Calendar epoch.
      * The Egyptian calendar year 1 started on Julian date 747/02/26 BCE
@@ -41,8 +44,6 @@ public class Egyptian extends BaseCalendar {
         "Thoth", "Phaophi", "Athyr", "Choiak", "Tybi", "Mechir", "Phamenoth",
         "Pharmuthi", "Pachon", "Payni", "Epiphi", "Mesori", "Epagomenai"
     };
-
-    private static final long serialVersionUID = 5983944024574226461L;
 
     /**
      * Fixed date constructor.

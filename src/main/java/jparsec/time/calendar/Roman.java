@@ -31,6 +31,8 @@ import java.io.Serializable;
  */
 public class Roman implements Serializable
 {
+	private static final long serialVersionUID = -2139264862771877008L;
+	
 	/**
 	 * Calendar epoch.
 	 */
@@ -64,8 +66,6 @@ public class Roman implements Serializable
 	 * Event names.
 	 */
 	public static final String EVENT_NAMES[] = { "Kalends", "Nones", "Ides" };
-
-	private static final long serialVersionUID = -2139264862771877008L;
 
 	/**
 	 * Year.

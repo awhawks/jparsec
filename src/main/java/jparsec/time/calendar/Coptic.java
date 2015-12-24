@@ -29,6 +29,8 @@ package jparsec.time.calendar;
  */
 public class Coptic extends BaseCalendar
 {
+	private static final long serialVersionUID = 3103648666347143692L;
+	
 	/**
 	 * Calendar epoch.
 	 */
@@ -48,8 +50,6 @@ public class Coptic extends BaseCalendar
 		"Tut", "Babah", "Hatur", "Kiyahk", "Tubah", "Amshir", "Baramhat",
 		"Baramundah", "Bashans", "Ba'unah", "Abib", "Misra", "al-Nasi"
 	};
-
-	private static final long serialVersionUID = 3103648666347143692L;
 
 	/**
 	 * Fixed day constructor.

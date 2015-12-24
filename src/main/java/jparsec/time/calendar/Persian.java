@@ -36,6 +36,8 @@ import jparsec.observer.CityElement;
  */
 public class Persian extends BaseCalendar
 {
+	private static final long serialVersionUID = 8315300467974129047L;
+	
 	/**
 	 * Calendar epoch.
 	 */
@@ -59,8 +61,6 @@ public class Persian extends BaseCalendar
 	public static final String MONTH_NAMES[] = {
 		"Farvardin", "Ordibehesht", "Xordad", "Tir", "Mordad", "Shahrivar", "Mehr", "Aban", "Azar", "Dey", "Bahman", "Esfand"
 	};
-
-	private static final long serialVersionUID = 8315300467974129047L;
 
 	/**
 	 * Fixed day constructor.

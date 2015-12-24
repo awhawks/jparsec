@@ -34,12 +34,12 @@ package jparsec.time.calendar;
  */
 public class Julian extends BaseCalendar
 {
+	private static final long serialVersionUID = 4135806601319748936L;
+	
 	/**
 	 * Calendar epoch.
 	 */
 	public static final long EPOCH = 0; // new Gregorian(0, 12, 30).fixed or new Julian(1,1,2).fixed
-
-	private static final long serialVersionUID = 4135806601319748936L;
 
 	/**
 	 * Fixed day constructor.

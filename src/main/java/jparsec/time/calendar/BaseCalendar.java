@@ -30,7 +30,9 @@ import java.io.Serializable;
  * @version 1.0
  */
 public abstract class BaseCalendar implements Serializable {
-    protected final long year;
+	private static final long serialVersionUID = 1L;
+	
+	protected final long year;
     protected final int month;
     protected final int day;
     protected final long epoch;

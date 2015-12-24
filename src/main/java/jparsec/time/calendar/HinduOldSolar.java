@@ -21,8 +21,6 @@
  */
 package jparsec.time.calendar;
 
-import java.io.Serializable;
-
 /**
  * Implements the Old Hindu Solar calendar. See Calendrical Calculations for
  * reference.
@@ -32,6 +30,8 @@ import java.io.Serializable;
  */
 public class HinduOldSolar extends BaseCalendar
 {
+	private static final long serialVersionUID = 3611438619478769275L;
+
 	/**
 	 * Calendar epoch.
 	 */

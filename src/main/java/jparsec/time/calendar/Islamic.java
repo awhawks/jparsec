@@ -35,6 +35,8 @@ import jparsec.observer.CityElement;
  */
 public class Islamic extends BaseCalendar
 {
+	private static final long serialVersionUID = -4912008118083746225L;
+	
 	/**
 	 * Calendar epoch.
 	 */
@@ -61,8 +63,6 @@ public class Islamic extends BaseCalendar
 		"Muharram", "Safar", "Rabi I", "Rabi II", "Jumada I", "Jumada II", "Rajab", "Sha`ban", "Ramadan", "Shawwal",
 		"Dhu al-Qa`da", "Dhu al-Hijja"
 	};
-
-	private static final long serialVersionUID = -4912008118083746225L;
 
 	/**
 	 * Fixed day constructor.
