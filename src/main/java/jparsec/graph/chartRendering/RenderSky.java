@@ -4608,9 +4608,8 @@ public class RenderSky
 			}
 			img = g.getRotatedAndScaledImage(img, radius_x, radius_y, ang, 1, 1);
 
-
 			if (render.drawSkyCorrectingLocalHorizon && projection.obs.getMotherBody() == TARGET.EARTH && projection.eph.isTopocentric
-					&& projection.eph.targetBody != TARGET.SUN) {
+					&& (projection.eph.targetBody != TARGET.SUN || !render.planetRender.axes)) {
 				LocationElement locEq = projection.toEquatorialPosition(loc, true);
 				LocationElement locH = projection.getApparentLocationInSelectedCoordinateSystem(locEq, false, true, COORDINATE_SYSTEM.HORIZONTAL, (float) (sc * Constant.DEG_TO_RAD / 120.0));
 				double elev = locH.getLatitude(), angrad = Constant.DEG_TO_RAD * sc / 120.0;
@@ -10253,7 +10252,7 @@ public class RenderSky
 		} else {
 			o = DataBase.getData("sunSpot", threadID, true);
 		}
-//		if (o != null) sunSpot = new ArrayList<Object>(Arrays.asList((Object[]) o));
+		if (o != null) sunSpot = new ArrayList<Object>(Arrays.asList((Object[]) o));
 		if (sunSpot == null) {
 			try
 			{
@@ -10267,6 +10266,11 @@ public class RenderSky
 			} catch (Exception e)
 			{
 				// File not available
+				AstroDate astro = new AstroDate();
+				if (jd_ut - astro.jd() > 3) {
+					DataBase.addData("sunSpot", threadID, new Object[] {}, true);
+					db_sunSpot = DataBase.getIndex("sunSpot", threadID);
+				}
 			}
 		}
 		if (sunSpot != null) {

@@ -24,6 +24,7 @@ package jparsec.graph.chartRendering;
 import java.util.ArrayList;
 
 import jparsec.astronomy.Difraction;
+import jparsec.astronomy.CoordinateSystem.COORDINATE_SYSTEM;
 import jparsec.ephem.Ephem;
 import jparsec.ephem.EphemerisElement;
 import jparsec.ephem.EphemerisElement.ALGORITHM;
@@ -1331,7 +1332,7 @@ public class RenderPlanet
 				e.printStackTrace();
 			}
 
-			this.renderAxes(gg, posx, posy, r, incl_north, incl_up, refz, 1);
+//			this.renderAxes(gg, posx, posy, r, incl_north, incl_up, refz, 1);
 
 			return;
 		}
@@ -1827,23 +1828,34 @@ public class RenderPlanet
 					de = (int)((posy-rec[1])*(1.0/upperLimbFactor - 1.0));
 					rec[1] += de;
 
-					lastRender.setColor(backgroundCol, 255);
 					gg.setColor(backgroundCol, 255);
-					lastRender.disableInversion();
-					lastRender.fillRect(0, 0, lastRender.getWidth(), lastRender.getHeight());
 					gg.fillRect(posx-scale*2, posy-scale*2, scale*4, scale*4);
-					lastRender.enableInversion();
-					if (dubois && o2 != null) {
-						sizeo = g.getSize(o);
-						int sizeo2[] = g.getSize(o2);
-						o = g.getScaledImage(o, (int)(sizeo[0] / sf), (int)(sizeo[1] / sf), true, RenderPlanet.ALLOW_SPLINE_RESIZING);
-						o2 = g.getScaledImage(o2, (int)(sizeo2[0] / sf), (int)(sizeo2[1] / sf), true, RenderPlanet.ALLOW_SPLINE_RESIZING);
-						//imgResized = true; // sf == 1!
-						lastRender.setAnaglyph(o, o2, rec[0], rec[1]);
+					if (lastRender == null) {
+						if (dubois && o2 != null) {
+							sizeo = g.getSize(o);
+							int sizeo2[] = g.getSize(o2);
+							o = g.getScaledImage(o, (int)(sizeo[0] / sf), (int)(sizeo[1] / sf), true, RenderPlanet.ALLOW_SPLINE_RESIZING);
+							o2 = g.getScaledImage(o2, (int)(sizeo2[0] / sf), (int)(sizeo2[1] / sf), true, RenderPlanet.ALLOW_SPLINE_RESIZING);
+							gg.setAnaglyph(o, o2, rec[0], rec[1]);
+						} else {
+							gg.drawImage(o, rec[0], rec[1], 1.0f / sf, 1.0f / sf);
+						}
 					} else {
-						lastRender.drawImage(o, rec[0], rec[1], 1.0f / sf, 1.0f / sf);
+						lastRender.setColor(backgroundCol, 255);
+						lastRender.disableInversion();
+						lastRender.fillRect(0, 0, lastRender.getWidth(), lastRender.getHeight());
+						lastRender.enableInversion();
+						if (dubois && o2 != null) {
+							sizeo = g.getSize(o);
+							int sizeo2[] = g.getSize(o2);
+							o = g.getScaledImage(o, (int)(sizeo[0] / sf), (int)(sizeo[1] / sf), true, RenderPlanet.ALLOW_SPLINE_RESIZING);
+							o2 = g.getScaledImage(o2, (int)(sizeo2[0] / sf), (int)(sizeo2[1] / sf), true, RenderPlanet.ALLOW_SPLINE_RESIZING);
+							lastRender.setAnaglyph(o, o2, rec[0], rec[1]);
+						} else {
+							lastRender.drawImage(o, rec[0], rec[1], 1.0f / sf, 1.0f / sf);
+						}
+						if (lastRenderElement != null) lastRenderElement.textures = render.textures;
 					}
-					if (lastRenderElement != null) lastRenderElement.textures = render.textures;
 				} catch (Exception exc) {}
 			}
 		}
@@ -2006,12 +2018,13 @@ public class RenderPlanet
 
 	boolean isInTheScreen(double x, double y, int size)
 	{
-		boolean isVisible = false;
+		if (x > 0 && x < ((render.width-1)*scaleFactor) && y > size && y < ((render.height-1)*scaleFactor))
+			return true;
 
 		if (x > size && x < ((render.width-1)*scaleFactor - size) && y > size && y < ((render.height-1)*scaleFactor - size))
-			isVisible = true;
+			return true;
 
-		return isVisible;
+		return false;
 	}
 
 	void drawPoint(double dx, double dy, double dz, boolean duboisBigger, Graphics g, boolean dubois)
