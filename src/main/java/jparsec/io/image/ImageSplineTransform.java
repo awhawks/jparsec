@@ -1191,4 +1191,49 @@ public class ImageSplineTransform implements Serializable {
 	   }
 	   return img;
    }
+   
+   /**
+    * Interpolation at a given position calculated more accurately
+    * respect the method with a single point. Recommended quality
+    * value is 3, which means that 3 points will be averaged inside
+    * the provided cell position to obtain the final interpolated value.
+    * This value will represent better the flux at that position
+    * averaged within one cell, and hence it is much better to maintain
+    * the total flux.
+    * @param newX Interpolation x position.
+    * @param newY Interpolation y position.
+    * @param quality Quality value, odd number greater than one. 1 or 
+    * below will return the normal interpolated value.
+    * @return The interpolated value.
+    * @throws JPARSECException If an error occurs.
+    */
+   public double interpolate(double newX, double newY, int quality) throws JPARSECException {
+	   double w0 = imgWidth-1.0;
+	   double h0 = imgHeight-1.0;
+	   if (quality <= 1) {
+		   return this.interpolate(newX, newY);
+	   } else {
+		   int rn = quality;
+		   double newZ = 0.0;
+		   int nc = 0;
+		   double ws0 = 1.0 / (rn - 1.0);
+		   double ws1 = newX - 0.5;
+		   double hs1 = newY - 0.5;
+		   for (int ri=0; ri<rn; ri++)
+		   {
+			   for (int rj=0; rj<rn; rj++)
+			   {
+				   double nX = ws1 + ws0 * ri;
+				   double nY = hs1 + ws0 * rj;
+				   if (nX >= 0 && nY >= 0 && nX <= w0 && nY <= h0) {
+					   double v = this.interpolate(nX, nY);
+
+					   newZ += v;
+					   nc ++;
+				   }
+			   }
+		   }
+		   return newZ / (double) nc;
+	   }
+   }
 }

@@ -1489,13 +1489,13 @@ public class Table {
  		}
 
  		int prev = (int) z;
- 		double prevVal = ist[prev].interpolate(y, x);
- 		double prevErr = istErr[prev].interpolate(y, x);
+ 		double prevVal = ist[prev].interpolate(y, x, 3);
+ 		double prevErr = istErr[prev].interpolate(y, x, 3);
  		if (z == (int) z)
  			return new MeasureElement(prevVal, prevErr, data[0][0][0].unit);
  		int next = prev + 1;
- 		double nextVal = ist[next].interpolate(y, x);
- 		double nextErr = istErr[next].interpolate(y, x);
+ 		double nextVal = ist[next].interpolate(y, x, 3);
+ 		double nextErr = istErr[next].interpolate(y, x, 3);
  		return new MeasureElement(prevVal + (nextVal-prevVal)*(z-prev), prevErr + (nextErr-prevErr)*(z-prev), data[0][0][0].unit);
  	}
 }
