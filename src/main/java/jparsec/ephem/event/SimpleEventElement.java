@@ -23,6 +23,7 @@ package jparsec.ephem.event;
 
 import jparsec.time.*;
 import jparsec.time.TimeElement.SCALE;
+import jparsec.time.calendar.CalendarGenericConversion;
 import jparsec.util.*;
 import jparsec.util.Translate.LANGUAGE;
 import jparsec.math.Constant;
@@ -398,6 +399,8 @@ public class SimpleEventElement implements Serializable {
 		TARGET mainBody = null, secBody = null;
 		try {
 			secBody = Target.getIDFromEnglishName(secondaryBody);
+			if (secBody == TARGET.NOT_A_PLANET)
+				secBody = Target.getID(secondaryBody);
 			secondaryIsNaturalSatellite = secBody.isNaturalSatellite();
 		} catch (Exception exc) { }
 		try {
@@ -555,6 +558,14 @@ public class SimpleEventElement implements Serializable {
 							if (details.equals("DST1")) details = Translate.translate(1273);
 							if (details.equals("DST2")) details = Translate.translate(1274);
 						}
+						if (this.eventType == EVENT.CALENDAR && Translate.getDefaultLanguage() != LANGUAGE.ENGLISH) {
+							for (int k=732; k<=746; k++) {
+								details = DataSet.replaceAll(details, Translate.getEntry(k, LANGUAGE.ENGLISH), Translate.translate(k), true);
+							}
+							for (int k=1299; k<=1300; k++) {
+								details = DataSet.replaceAll(details, Translate.getEntry(k, LANGUAGE.ENGLISH), Translate.translate(k), true);
+							}
+						}
 						if (Math.abs(endTime-time) < 3.0 / 1440.0) {
 							out = details + ": " + timeE.toString();
 						} else {
@@ -587,16 +598,19 @@ public class SimpleEventElement implements Serializable {
 				out = DataSet.replaceAll(out, "magnitude", Translate.translate(157).toLowerCase(), true);
 			}
 		} else {
-			if (translateIt && Translate.getDefaultLanguage() != Translate.LANGUAGE.ENGLISH) {
-				int translate[] = new int[] {1085, 1086, 1087, 301, 73, 74, 963, 964, 161, 164, 167, 168, 
-						169, 829, 830, 831, 832, 839, 840, 841, 842, 843, 844, 962, 965, 966, 1007, 1008, 
+			if (translateIt) {
+				LANGUAGE lang = LANGUAGE.SPANISH;
+				if (Translate.getDefaultLanguage() == LANGUAGE.SPANISH) lang = LANGUAGE.ENGLISH;
+				int translate[] = new int[] {
+						829, 830, 831, 832, 839, 840, 841, 842, 843, 844, 1085, 1086, 1087, 301, 73, 74, 963, 964, 161, 164, 167, 168, 
+						169, 962, 965, 966, 1007, 1008, 
 						1009, 1010, 1021, 1022, 1023, 1077, 1078, 1080, 163};
 				if (eventType == EVENT.MOON_LUNAR_ECLIPSE || eventType == EVENT.MOON_SOLAR_ECLIPSE)
 					translate = new int[] {963, 964, 161, 164, 167, 168, 169, 829, 830, 831, 832, 839, 840, 
 						841, 842, 843, 844, 962, 966, 1007, 1008, 1009, 1010, 1021, 1022, 1023};
 				int from = 1025, to = 1067;
 				int translateLC[] = new int[] {1022, 1024};
-				if (eventType != EVENT.OTHER) {
+				if (eventType != EVENT.OTHER && Translate.getDefaultLanguage() == Translate.LANGUAGE.SPANISH) {
 					String translateS[] = new String[] {"ends", "new", "year"};
 					int translateI[] = new int[] {1005, 535, 454};
 					for (int i=0; i<translateS.length; i++) {
@@ -610,7 +624,7 @@ public class SimpleEventElement implements Serializable {
 				}
 				for (int i=0; i<translate.length; i++) {
 					try {
-						String in1 = Translate.getEntry(translate[i], LANGUAGE.ENGLISH);
+						String in1 = Translate.getEntry(translate[i], lang);
 						String in2 = Translate.translate(translate[i]);
 						if (translate[i] == 1087) {
 							in1 = in1.substring(0, in1.indexOf("(")).trim();
@@ -625,27 +639,34 @@ public class SimpleEventElement implements Serializable {
 				}
 				for (int i=from; i<=to; i++) {
 					try {
-						out = DataSet.replaceAll(out, Translate.getEntry(i, LANGUAGE.ENGLISH), Translate.translate(i), true);
+						out = DataSet.replaceAll(out, Translate.getEntry(i, lang), Translate.translate(i), true);
 					} catch (Exception exc) {}
 				}
 				for (int i=0; i<translateLC.length; i++) {
 					try {
-						out = DataSet.replaceAll(out, Translate.getEntry(translateLC[i], LANGUAGE.ENGLISH).toLowerCase(), Translate.translate(translateLC[i]).toLowerCase(), true);
+						out = DataSet.replaceAll(out, Translate.getEntry(translateLC[i], lang).toLowerCase(), Translate.translate(translateLC[i]).toLowerCase(), true);
 					} catch (Exception exc) {}
 				}
-				for (int i=0; i<11; i++) {
-					if (i == 3) continue;
-					try {
-						String s = Translate.getEntry(i, LANGUAGE.ENGLISH);
-						out = DataSet.replaceAll(out, s, Translate.translate(i), true);
-					} catch (Exception exc) {}
+				if (eventType != EVENT.OTHER) {
+					for (int i=0; i<11; i++) {
+						if (i == 3) continue;
+						if (i == 4 && eventType == EVENT.CRATER) continue;
+						if ((i == 0 || i == 4) && (eventType == EVENT.MOON_LUNAR_ECLIPSE || eventType == EVENT.MOON_SOLAR_ECLIPSE)) continue;
+						try {
+							String s = Translate.getEntry(i, lang);
+							out = DataSet.replaceAll(out, s, Translate.translate(i), true);
+						} catch (Exception exc) {}
+					}
 				}
-				out = DataSet.replaceAll(out, "Saturnoo", "Saturno", true);
-				out = DataSet.replaceAll(out, "Asteroidee", "Asteroide", true);
-				out = DataSet.replaceAll(out, "Cometaa", "Cometa", true);
-				out = DataSet.replaceAll(out, "star", Translate.translate(79).toLowerCase(), true);
-				out = DataSet.replaceAll(out, "Chinese", Translate.translate(1006), true);
-				out = DataSet.replaceAll(out, " of ", " "+tof+" ", true);
+
+				if (Translate.getDefaultLanguage() != Translate.LANGUAGE.ENGLISH) {
+					out = DataSet.replaceAll(out, "Saturnoo", "Saturno", true);
+					out = DataSet.replaceAll(out, "Asteroidee", "Asteroide", true);
+					out = DataSet.replaceAll(out, "Cometaa", "Cometa", true);
+					out = DataSet.replaceAll(out, "star", Translate.translate(79).toLowerCase(), true);
+					out = DataSet.replaceAll(out, "Chinese", Translate.translate(1006), true);
+					out = DataSet.replaceAll(out, " of ", " "+tof+" ", true);
+				}
 			}
 		}
 

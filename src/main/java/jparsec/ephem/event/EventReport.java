@@ -276,14 +276,14 @@ public class EventReport {
 				case 10:
 					if (MercuryVenusTransits) s = MainEvents.getMercuryOrVenusTransit(TARGET.MERCURY, jd, jdf, maximumAccuracy);
 					if (s != null) {
-						s.details = Translate.translate(841)+" "+DataSet.replaceAll(s.details.substring(1), ",", "\u00b0,", true);
+						s.details = Translate.getEntry(841, LANGUAGE.ENGLISH)+" "+DataSet.replaceAll(s.details.substring(1), ",", "\u00b0,", true);
 						jd = s.time + 30;
 					}
 					break;
 				case 11:
 					if (MercuryVenusTransits) s = MainEvents.getMercuryOrVenusTransit(TARGET.VENUS, jd, jdf, maximumAccuracy);
 					if (s != null) {
-						s.details = Translate.translate(841)+" "+DataSet.replaceAll(s.details.substring(1), ",", "\u00b0,", true);
+						s.details = Translate.getEntry(841, LANGUAGE.ENGLISH)+" "+DataSet.replaceAll(s.details.substring(1), ",", "\u00b0,", true);
 						jd = s.time + 30;
 					}
 					break;
@@ -297,10 +297,10 @@ public class EventReport {
 									String f[] = DataSet.toStringArray(d, "|", true);
 									ss[si].eventLocation = new LocationElement(Functions.parseRightAscension(f[2].substring(0, f[2].indexOf(",")).trim()),
 											Functions.parseDeclination(f[2].substring(f[2].indexOf(",") + 1)), 1.0);
-									ss[si].body = Translate.translate(1027);
+									ss[si].body = Translate.getEntry(1027, LANGUAGE.ENGLISH);
 									String shower = f[1];
-									if (Translate.getDefaultLanguage() == LANGUAGE.SPANISH) shower = f[0];
-									d = Translate.translate(1022)+" "+Translate.translate(160)+" "+shower+" ("+Translate.translate(1024).toLowerCase()+", "+Translate.translate(1023)+" "+f[3]+")";
+									//if (Translate.getDefaultLanguage() == LANGUAGE.SPANISH) shower = f[0];
+									d = Translate.getEntry(1022, LANGUAGE.ENGLISH)+" "+Translate.getEntry(160, LANGUAGE.ENGLISH)+" "+shower+" ("+Translate.getEntry(1024, LANGUAGE.ENGLISH).toLowerCase()+", "+Translate.getEntry(1023, LANGUAGE.ENGLISH)+" "+f[3]+")";
 									ss[si].details = d;
 									list.add(ss[si]);
 								}
@@ -499,12 +499,12 @@ public class EventReport {
 										if (jde > jd0 && jde < jdf) {
 											if (d[0].equals("MIRA")) {
 												// mag range, jd of next maxima, jd of next minima
-												String details = Translate.translate(1025)+" "+Translate.translate("of")+" "+d[1]+" (mag "+d[4]+")";
+												String details = Translate.getEntry(1025, LANGUAGE.ENGLISH)+" of "+d[1]+" (mag "+d[4]+")";
 												//d[4]+", "+d[6].substring(0, d[6].indexOf(";")).trim()+", "+d[6].substring(d[6].indexOf(";")+1).trim();
 												s = new SimpleEventElement(jde, EVENT.VARIABLE_STAR_MIRA, details);
 											} else {
 												// mag range, phase, jd of next minima
-												String details = Translate.translate(1025)+" "+Translate.translate("of")+" "+d[1]+" (mag "+d[4]+")";
+												String details = Translate.getEntry(1025, LANGUAGE.ENGLISH)+" of "+d[1]+" (mag "+d[4]+")";
 												//d[4]+", "+d[5].substring(0, d[5].indexOf(";")).trim()+", "+d[6];
 												s = new SimpleEventElement(jde, EVENT.VARIABLE_STAR_ECLIPSING, details);
 											}
@@ -513,7 +513,7 @@ public class EventReport {
 											list.add(s);
 											if (d[0].equals("MIRA")) {
 												SimpleEventElement s2 = s.clone();
-												s2.details = Translate.translate(1026)+" "+Translate.translate("of")+" "+d[1]+" (mag "+d[4]+")";
+												s2.details = Translate.getEntry(1026, LANGUAGE.ENGLISH)+" of "+d[1]+" (mag "+d[4]+")";
 												s2.time = Double.parseDouble(d[6].substring(0, d[6].indexOf(";")).trim());
 												list.add(s2);
 											}
@@ -756,14 +756,14 @@ public class EventReport {
 
 		    				ArrayList<SimpleEventElement> newEvents = new ArrayList<SimpleEventElement>();
 	        				String sstart = "start", send = "end", smax = "max";
-	        				if (Translate.getDefaultLanguage() == LANGUAGE.SPANISH) {
+	        				/*if (Translate.getDefaultLanguage() == LANGUAGE.SPANISH) {
 	        					sstart = "inicio";
 	        					send = "final";
-	        					smax = "m�ximo";
-	        				}
-	        				String mag = Translate.translate(157).toLowerCase();
-	        				String az = Translate.translate(28).toLowerCase();
-	        				String el = Translate.translate(29).toLowerCase();
+	        					smax = Translate.translate(1321);
+	        				}*/
+	        				String mag = Translate.getEntry(157, LANGUAGE.ENGLISH).toLowerCase();
+	        				String az = Translate.getEntry(28, LANGUAGE.ENGLISH).toLowerCase();
+	        				String el = Translate.getEntry(29, LANGUAGE.ENGLISH).toLowerCase();
 	        				int n = SatelliteEphem.getArtificialSatelliteCount();
 	        				int precision = 5;
 		    				for (int i=0; i<n; i++) {
@@ -838,7 +838,7 @@ public class EventReport {
 									if (!re.isVisible(obs)) solarEclipseNotVisible = true;
 							}
 							if (ephemSun.elevation < 0 || solarEclipseNotVisible)
-								s.details += ". "+Translate.translate(1021)+" "+obs.getName();
+								s.details += ". "+Translate.getEntry(1021, LANGUAGE.ENGLISH)+" "+obs.getName();
 						}
 						list.add(s);
 					} else {
@@ -1360,7 +1360,7 @@ public class EventReport {
 
 
 		String type = "";
-		String comet = Translate.translate(74), asteroid = Translate.translate(73);
+		String comet = Translate.getEntry(74, LANGUAGE.ENGLISH), asteroid = Translate.getEntry(73, LANGUAGE.ENGLISH);
 		for (int i=0; i<events.length; i++) {
 			SimpleEventElement s = null;
 			type = "";
@@ -1368,7 +1368,7 @@ public class EventReport {
 			if (events[i].startsWith(asteroidVisible)) type = asteroid;
 			if (!type.equals("")) {
 				String name = FileIO.getRestAfterField(1, events[i], " ", true);
-				s = new SimpleEventElement(times[i], EVENT.OTHER, type+" "+name+" "+Translate.translate(1085));
+				s = new SimpleEventElement(times[i], EVENT.OTHER, type+" "+name+" "+Translate.getEntry(1085, LANGUAGE.ENGLISH));
 				s.body = name;
 				if (obj[i] != null) {
 					LocationElement loc = (LocationElement) obj[i];
@@ -1380,7 +1380,7 @@ public class EventReport {
 				if (events[i].startsWith(asteroidUnvisible)) type = asteroid;
 				if (!type.equals("")) {
 					String name = FileIO.getRestAfterField(1, events[i], " ", true);
-					s = new SimpleEventElement(times[i], EVENT.OTHER, type+" "+name+" "+Translate.translate(1086));
+					s = new SimpleEventElement(times[i], EVENT.OTHER, type+" "+name+" "+Translate.getEntry(1086, LANGUAGE.ENGLISH));
 					s.body = name;
 					if (obj[i] != null) {
 						LocationElement loc = (LocationElement) obj[i];
@@ -1392,7 +1392,7 @@ public class EventReport {
 					if (events[i].indexOf(" "+asteroidMaxMag) > 0) type = asteroid;
 					if (!type.equals("")) {
 						String name = FileIO.getRestAfterField(3, events[i], " ", true);
-						s = new SimpleEventElement(times[i], EVENT.OTHER, type+" "+name+" "+Translate.translate(1087));
+						s = new SimpleEventElement(times[i], EVENT.OTHER, type+" "+name+" "+Translate.getEntry(1087, LANGUAGE.ENGLISH));
 						s.body = name;
 						s.details = DataSet.replaceAll(s.details, "%mag", Functions.formatValue(Double.parseDouble(FileIO.getField(1, events[i], " ", true)), 2), true);
 						s.details = DataSet.replaceAll(s.details, "%elong", Functions.formatValue(Constant.RAD_TO_DEG*Double.parseDouble(FileIO.getField(2, events[i], " ", true)), 2), true);
@@ -1485,7 +1485,7 @@ public class EventReport {
 						sourceEphem.add(ephem);
 					} else {
 						eph.targetBody = TARGET.values()[target];
-						int si = source.indexOf(eph.targetBody.getName());
+						int si = source.indexOf(eph.targetBody.getEnglishName());
 						EphemElement ephem = Ephem.getEphemeris(time, obs, eph, false);
 						sourceEphem.set(si, ephem);
 					}
@@ -1721,14 +1721,14 @@ public class EventReport {
 							EVENT event = EVENT.CONJUNCTION;
 							String details = "";
 							if (limitD == -1) {
-								details = b1+" "+Translate.translate(1009)+" "+b0;
+								details = b1+" "+Translate.getEntry(1009, LANGUAGE.ENGLISH)+" "+b0;
 								event = EVENT.TRANSIT;
 							}
 							if (limitD == -2) {
-								details = b1+" "+Translate.translate(1010)+" "+b0;
+								details = b1+" "+Translate.getEntry(1010, LANGUAGE.ENGLISH)+" "+b0;
 								event = EVENT.OCCULTATION;
 							}
-							if (limitD > 0) details = Translate.translate(1008)+" "+b0+"-"+b1;
+							if (limitD > 0) details = Translate.getEntry(1008, LANGUAGE.ENGLISH)+" "+b0+"-"+b1;
 							String add = " (d = "+Functions.formatValue(p.getY(), 1)+"\u00b0)";
 							double init = -1, end = -1;
 							if (event != EVENT.CONJUNCTION) {
@@ -1760,7 +1760,7 @@ public class EventReport {
 								if (init != -1 && end != -1 && init != end) {
 									TimeElement timeE = new TimeElement(p.getX(), SCALE.TERRESTRIAL_TIME);
 									add = " (d = "+Functions.formatValue(p.getY(), 1)+"\u00b0, "+
-										Translate.translate(1022).toLowerCase()+" "+timeE.toMinString()+")";
+										Translate.getEntry(1022, LANGUAGE.ENGLISH).toLowerCase()+" "+timeE.toMinString()+")";
 								}
 							}
 							details += add;
@@ -1771,7 +1771,7 @@ public class EventReport {
 								s.body = b0;
 								TimeElement time = new TimeElement(s.time, SCALE.TERRESTRIAL_TIME);
 								LocationElement locH = CoordinateSystem.equatorialToHorizontal(s.eventLocation, time, obs, eph);
-								if (locH.getLatitude() < 0.0) s.details += ". "+Translate.translate(1021)+" "+obs.getName();
+								if (locH.getLatitude() < 0.0) s.details += ". "+Translate.getEntry(1021, LANGUAGE.ENGLISH)+" "+obs.getName();
 								if (init != -1 && end != -1 && init != end) {
 									s.time = init;
 									s.endTime = end;
@@ -1857,16 +1857,16 @@ public class EventReport {
 							String details = "";
 							if (limitD == -1) {
 								event = EVENT.TRANSIT;
-								details = b1+" "+Translate.translate(1009)+" "+b0;
+								details = b1+" "+Translate.getEntry(1009, LANGUAGE.ENGLISH)+" "+b0;
 							}
 							if (limitD == -2) {
 								event = EVENT.OCCULTATION;
-								details = b1+" "+Translate.translate(1010)+" "+b0;
+								details = b1+" "+Translate.getEntry(1010, LANGUAGE.ENGLISH)+" "+b0;
 							}
 							if (limitD > 0) {
-								details = Translate.translate(1008)+" "+b0+"-"+b1;
+								details = Translate.getEntry(1008, LANGUAGE.ENGLISH)+" "+b0+"-"+b1;
 								if (p.getY() < z.get(meani))
-									details = b1+" "+Translate.translate(164).toLowerCase()+" "+Translate.translate(161)+" "+b0;
+									details = b1+" "+Translate.getEntry(164, LANGUAGE.ENGLISH).toLowerCase()+" "+Translate.getEntry(161, LANGUAGE.ENGLISH)+" "+b0;
 							}
 							String add = " (d = "+Functions.formatValue(p.getY(), 1)+"\u00b0";
 							if (magStar > -100) add += ", mag = "+Functions.formatValue(magStar, 2);
@@ -1901,7 +1901,7 @@ public class EventReport {
 								if (init != -1 && end != -1 && init != end) {
 									TimeElement timeE = new TimeElement(p.getX(), SCALE.TERRESTRIAL_TIME);
 									add = " (d = "+Functions.formatValue(p.getY(), 1)+"\u00b0, "+
-										Translate.translate(1022).toLowerCase()+" "+timeE.toMinString();
+										Translate.getEntry(1022, LANGUAGE.ENGLISH).toLowerCase()+" "+timeE.toMinString();
 									if (magStar > -100) add += ", mag = "+Functions.formatValue(magStar, 2);
 									add += ")";
 								}
@@ -1913,7 +1913,7 @@ public class EventReport {
 								s.body = b0;
 								TimeElement time = new TimeElement(s.time, SCALE.TERRESTRIAL_TIME);
 								LocationElement locH = CoordinateSystem.equatorialToHorizontal(s.eventLocation, time, obs, eph);
-								if (locH.getLatitude() < 0.0) s.details += ". "+Translate.translate(1021)+" "+obs.getName();
+								if (locH.getLatitude() < 0.0) s.details += ". "+Translate.getEntry(1021, LANGUAGE.ENGLISH)+" "+obs.getName();
 								if (init != -1 && end != -1 && init != end) {
 									s.time = init;
 									s.endTime = end;
@@ -2024,10 +2024,10 @@ public class EventReport {
 				if (Math.abs(sunElev+offset) < maxDif) {
 					if (!event[i]) {
 						if (fast) ephem = Ephem.getEphemeris(time, obs, eph, false);
-						String details = Translate.translate(1007)+" "+name;
-						if (!name.equals("Lunar-X")) details = Translate.translate(1078)+" "+name;
+						String details = Translate.getEntry(1007, LANGUAGE.ENGLISH)+" "+name;
+						if (!name.equals("Lunar-X")) details = Translate.getEntry(1078, LANGUAGE.ENGLISH)+" "+name;
 						SimpleEventElement s = new SimpleEventElement(jd, EVENT.CRATER, details);
-						s.body = TARGET.Moon.getName();
+						s.body = TARGET.Moon.getEnglishName();
 						s.eventLocation = ephem.getEquatorialLocation();
 						list.add(s);
 						event[i] = true;
@@ -2057,7 +2057,7 @@ public class EventReport {
 		Gregorian g = new Gregorian(lastDay);
 		double jd = g.getJulianDate() + 0.5;
 		if (jd > jd0 && jd < jdf) {
-			String details = "baktun "+h.baktun+" "+Translate.translate("ends")+" (Mayan calendar)";
+			String details = "baktun "+h.baktun+" ends (Mayan calendar)";
 			SimpleEventElement s = new SimpleEventElement(jd, EVENT.CALENDAR, details);
 			list.add(s);
 		}
@@ -2078,7 +2078,7 @@ public class EventReport {
 
 					jd = astro_back.jd();
 					if (jd > jd0 && jd < jdf) {
-						String details = Translate.translate("NEW").toLowerCase()+" "+Translate.translate(CalendarGenericConversion.CALENDAR_NAMES[i])+" "+Translate.translate("Year").toLowerCase();
+						String details = "new "+CalendarGenericConversion.CALENDAR_NAMES[i]+" year";
 						SimpleEventElement s = new SimpleEventElement(jd, EVENT.CALENDAR, details);
 						list.add(s);
 					}
@@ -2089,7 +2089,7 @@ public class EventReport {
 			if (h2.getYearNumber() == yearTotal) h2 = new Chinese(Chinese.newYear(year+1));
 			jd = h2.getJulianDate();
 			if (jd > jd0 && jd < jdf) {
-				String details = Translate.translate("NEW").toLowerCase()+" "+Translate.translate("Chinese")+" "+Translate.translate("Year").toLowerCase();
+				String details = "new Chinese year";
 				SimpleEventElement s = new SimpleEventElement(jd, EVENT.CALENDAR, details);
 				list.add(s);
 			}
@@ -2101,18 +2101,18 @@ public class EventReport {
 			AstroDate astro_p1 = new AstroDate(Calendar.jdFromFixed(Ecclesiastical.easter(year)));
 			AstroDate astro_p2 = new AstroDate(Calendar.jdFromFixed(Ecclesiastical.pentecost(year)));
 
-			SimpleEventElement s1 = new SimpleEventElement(astro_p1.jd(), EVENT.CALENDAR, Translate.translate(1299));
+			SimpleEventElement s1 = new SimpleEventElement(astro_p1.jd(), EVENT.CALENDAR, Translate.getEntry(1299, LANGUAGE.ENGLISH));
 			list.add(s1);
-			SimpleEventElement s2 = new SimpleEventElement(astro_p2.jd(), EVENT.CALENDAR, Translate.translate(1300));
+			SimpleEventElement s2 = new SimpleEventElement(astro_p2.jd(), EVENT.CALENDAR, Translate.getEntry(1300, LANGUAGE.ENGLISH));
 			list.add(s2);
 
 			double times[] = TimeScale.getDSTStartEnd((new AstroDate(year1, 6, 1)).jd(), observer);
-			double dst1 = (new AstroDate(TimeScale.getJD(new TimeElement(times[0], SCALE.UNIVERSAL_TIME_UTC), observer, eph, SCALE.LOCAL_TIME))).jd();
-			double dst2 = (new AstroDate(1.0/24.0 + TimeScale.getJD(new TimeElement(times[1], SCALE.UNIVERSAL_TIME_UTC), observer, eph, SCALE.LOCAL_TIME))).jd();
+			double dst1 = (new AstroDate(TimeScale.getJD(new TimeElement(times[0], SCALE.UNIVERSAL_TIME_UTC), observer, eph, SCALE.TERRESTRIAL_TIME))).jd();
+			double dst2 = (new AstroDate(1.0/24.0 + TimeScale.getJD(new TimeElement(times[1], SCALE.UNIVERSAL_TIME_UTC), observer, eph, SCALE.TERRESTRIAL_TIME))).jd();
 
-			SimpleEventElement s3 = new SimpleEventElement(dst1, EVENT.CALENDAR, Translate.translate(1273));
+			SimpleEventElement s3 = new SimpleEventElement(dst1, EVENT.CALENDAR, "DST1");
 			list.add(s3);
-			SimpleEventElement s4 = new SimpleEventElement(dst2, EVENT.CALENDAR, Translate.translate(1274));
+			SimpleEventElement s4 = new SimpleEventElement(dst2, EVENT.CALENDAR, "DST2");
 			list.add(s4);
 		}
 
@@ -2187,7 +2187,7 @@ public class EventReport {
 							String date1 = "-";
 							if (jd != 0.0) {
 								astro = new AstroDate(jd);
-								String l = "%day "+Translate.translate("of")+" %month, %hour:%minute LT";
+								String l = "%day of %month, %hour:%minute LT";
 								date1 = replaceVars(l, new String[] {"year", "month", "day", "hour", "minute"}, new String[] {""+astro.getYear(), CalendarGenericConversion.getMonthName(astro.getMonth(), CalendarGenericConversion.CALENDAR.GREGORIAN), ""+astro.getDay(), ""+astro.getHour(), ""+astro.getMinute()});
 							}
 
@@ -2297,8 +2297,8 @@ public class EventReport {
 					if (me1[i].eventType == MoonEventElement.EVENT.TRANSIT) se.eventType = SimpleEventElement.EVENT.TRANSIT;
 					if (me1[i].eventType == MoonEventElement.EVENT.SHADOW_TRANSIT) se.eventType = SimpleEventElement.EVENT.SHADOW_TRANSIT;
 					se.endTime = me1[i].endTime;
-					se.body = me1[i].mainBody.getName();
-					se.secondaryBody = me1[i].secondaryBody.getName();
+					se.body = me1[i].mainBody.getEnglishName();
+					se.secondaryBody = me1[i].secondaryBody.getEnglishName();
 					list.add(se);
 				}
 			}
@@ -2320,8 +2320,8 @@ public class EventReport {
 					if (me2[i].eventType == MoonEventElement.EVENT.TRANSIT) se.eventType = SimpleEventElement.EVENT.TRANSIT;
 					if (me2[i].eventType == MoonEventElement.EVENT.SHADOW_TRANSIT) se.eventType = SimpleEventElement.EVENT.SHADOW_TRANSIT;
 					se.endTime = me2[i].endTime;
-					se.body = me2[i].mainBody.getName();
-					se.secondaryBody = me2[i].secondaryBody.getName();
+					se.body = me2[i].mainBody.getEnglishName();
+					se.secondaryBody = me2[i].secondaryBody.getEnglishName();
 					list.add(se);
 				}
 			}

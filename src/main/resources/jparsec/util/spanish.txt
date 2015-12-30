@@ -880,7 +880,7 @@ Objeto del Sistema Solar
 Tipo de objeto
 posición en pantalla
 Nombre propio
-Tipo;Doble [sep ("), magA-B, periodo (años), AP (º)];Variable [magMax, magMin, periodo (días), tipo]
+Tipo;Doble [sep ("), magA-B, periodo (años), AP (\u00b0)];Variable [magMax, magMin, periodo (días), tipo]
 Encontrada característica '%feature' sobre %object en la posición %x/%y (posición planetográfica %lon, %lat)
 Posición del ratón %x, %y. Posición planetográfica: %lon, %lat
 Por favor, introduzca el nombre de un objeto a buscar.
@@ -1085,7 +1085,7 @@ Polo norte eclíptico, 1 UA desde el Sol
 Eclipse anular
 comienza a ser visible a simple vista
 deja de ser visible a simple vista
-en magnitud máxima (%mag, elongación %elongº)
+en magnitud máxima (%mag, elongación %elong\u00b0)
 Anillos de Saturno en apertura máxima
 No hay eclipse
 desde
@@ -1179,7 +1179,7 @@ No se pudo obtener la foto. Detalles:
 sin refracción
 Las condiciones metereológicas son inadecuadas para continuar las observaciones.\nEl observatorio ha sido parado indefinidamente.
 Bombilla
-Campo de visión (º)
+Campo de visión (\u00b0)
 Exoplanetas
 Radiofuentes
 Catálogo IRAM
@@ -1258,7 +1258,7 @@ Sigma
 Mín valor tipo objeto
 Máx número fuentes
 Opciones de la cámara #
-Error de posición (º)
+Error de posición (\u00b0)
 Tiempo entre disparos (s)
 Directorio darks
 Directorio flats
