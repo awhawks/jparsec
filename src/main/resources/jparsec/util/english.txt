@@ -874,7 +874,7 @@ Draw nebula/Milky way
 Draw labels
 Set limiting magnitude for stars
 Set limiting magnitude for objects
-%obj not found. Please insert the correct name of a visible object
+%obj not found above the horizon
 Supernova
 Solar system object
 Object type

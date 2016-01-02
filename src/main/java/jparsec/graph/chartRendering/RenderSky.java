@@ -10177,15 +10177,30 @@ public class RenderSky
 							}
 							*/
 							point_size = 3;
+							if (g.renderingToAndroid()) point_size ++;
 							drawString(col, render.trajectory[index].drawPathFont, label, pos[0], pos[1], -render.trajectory[index].drawPathFont.getSize()-point_size, true);
 							col = render.trajectory[index].drawPathColor2;
-						}
-						int point2 = 2*point_size+1;
-						g.setColor(col, true);
-						if (render.anaglyphMode == ANAGLYPH_COLOR_MODE.NO_ANAGLYPH) {
-							g.fillOval((int)pos[0] - point_size, (int)pos[1] - point_size, point2, point2, this.fast);
+							
+							int point2 = 2*point_size;
+							g.setColor(col, true);
+							if (render.anaglyphMode == ANAGLYPH_COLOR_MODE.NO_ANAGLYPH) {
+								g.fillOval((int)pos[0] - point_size, (int)pos[1] - point_size, point2, point2, this.fast);
+							} else {
+								g.fillOval((int)pos[0] - point_size, (int)pos[1] - point_size, point2, point2, dist);
+							}
 						} else {
-							g.fillOval((int)pos[0] - point_size, (int)pos[1] - point_size, point2, point2, dist);
+							if (g.renderingToAndroid()) point_size ++;
+							int point2 = 2*point_size;
+							g.setColor(col, true);
+							if (render.anaglyphMode == ANAGLYPH_COLOR_MODE.NO_ANAGLYPH) {
+								g.fillOval(pos[0] - point_size, pos[1] - point_size, point2, point2, this.fast);
+								g.drawLine(pos[0] - point2*2, pos[1], pos[0] + point2*2, pos[1], this.fast);
+								g.drawLine(pos[0], pos[1] - point2*2, pos[0], pos[1] + point2*2, this.fast);
+							} else {
+								g.fillOval((int)pos[0] - point_size, (int)pos[1] - point_size, point2, point2, dist);
+								g.drawLine(pos[0] - point2*2, pos[1], (int)pos[0] + point2*2, (int)pos[1], dist, dist);
+								g.drawLine(pos[0], pos[1] - point2*2, pos[0], (int)pos[1] + point2*2, dist, dist);
+							}
 						}
 
 						if (render.trajectory[index].objectType == OBJECT.COMET && render.trajectory[index].objectType.showCometTail && i < loc_path.length-1 && step == 0.0) {

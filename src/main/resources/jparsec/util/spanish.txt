@@ -874,7 +874,7 @@ Dibujar nebulosas/Vía Láctea
 Dibujar rótulos
 Establecer magnitud límite para estrellas
 Establecer magnitud límite para objetos
-%obj no encontrado. Por favor, introduzca el nombre correcto de un objeto visible
+%obj no encontrado sobre el horizonte
 Supernova
 Objeto del Sistema Solar
 Tipo de objeto
