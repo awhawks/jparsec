@@ -9002,6 +9002,10 @@ public class RenderSky
 	public LocationElement searchDeepSkyObject(String obj_name)
 			throws JPARSECException
 	{
+		boolean isMessier = false;
+		if (!obj_name.equals("") && obj_name.length() > 1)
+			isMessier = obj_name.startsWith("M") && DataSet.isDoubleStrictCheck(obj_name.substring(1).trim());
+
 		if (obj_name.toUpperCase().equals("M1") || obj_name.toUpperCase().equals("M 1")) obj_name = "NGC 1952";
 		int cal = obj_name.toUpperCase().indexOf("CALDWELL");
 		if (cal >= 0) {
@@ -9009,9 +9013,12 @@ public class RenderSky
 			cal = obj_name.indexOf(" ");
 			if (cal > 0) obj_name = obj_name.substring(0, cal);
 			obj_name = "CALDWELL"+obj_name;
+			isMessier = true;
 		} else {
-			if (obj_name.toUpperCase().startsWith("C") && DataSet.isDoubleStrictCheck(obj_name.substring(1).trim()))
+			if (obj_name.toUpperCase().startsWith("C") && DataSet.isDoubleStrictCheck(obj_name.substring(1).trim())) {
 				obj_name = "CALDWELL"+obj_name.substring(1).trim();
+				isMessier = true;
+			}
 		}
 
 		ArrayList<Object> objects = null;
@@ -9044,28 +9051,36 @@ public class RenderSky
 			}
 
 			String messier = (String) obj[1];
-			String name = (String) obj[0];
 			messier = DataSet.replaceAll(messier, " ", "", true);
-			if (DataSet.isDoubleStrictCheck(name) || (name.length() > 4 && DataSet.isDoubleStrictCheck(name.substring(0, 4)))) {
-				name = "NGC " + name;
+			if (isMessier) {
+				if (obj_name.equals(messier.trim())) {
+					LocationElement loc = projection.toEquatorialPosition(locF, false);
+					ephem = loc.clone();
+					break;
+				}
 			} else {
-				try {
-					if (name.startsWith("I.")) name = "IC "+name.substring(2);
-				} catch (Exception exc2) {	}
-			}
-
-			String com = "";
-			String comments = (String) obj[7];
-			int pp = comments.indexOf("Popular name:");
-			if (pp>=0) com = comments.substring(pp+14).trim();
-			if (!messier.equals("")) messier = " "+messier;
-
-			if (obj_name2.equals(name.toLowerCase()) || obj_name.equals(messier.trim()) || obj_name.equals(name+messier) ||
-					obj_name.equals(name+messier+" - "+com) ||
-					(name.indexOf(" ") > 0 && (name.substring(name.indexOf(" ")).trim()+messier+" - "+com).indexOf(obj_name) == 0)) {
-				LocationElement loc = projection.toEquatorialPosition(locF, false);
-				ephem = loc.clone();
-				break;
+				String name = (String) obj[0];
+				if (DataSet.isDoubleStrictCheck(name) || (name.length() > 4 && DataSet.isDoubleStrictCheck(name.substring(0, 4)))) {
+					name = "NGC " + name;
+				} else {
+					try {
+						if (name.startsWith("I.")) name = "IC "+name.substring(2);
+					} catch (Exception exc2) {	}
+				}
+	
+				String com = "";
+				String comments = (String) obj[7];
+				int pp = comments.indexOf("Popular name:");
+				if (pp>=0) com = comments.substring(pp+14).trim();
+				if (!messier.equals("")) messier = " "+messier;
+	
+				if (obj_name2.equals(name.toLowerCase()) || obj_name.equals(messier.trim()) || obj_name.equals(name+messier) ||
+						obj_name.equals(name+messier+" - "+com) ||
+						(name.indexOf(" ") > 0 && (name.substring(name.indexOf(" ")).trim()+messier+" - "+com).indexOf(obj_name) == 0)) {
+					LocationElement loc = projection.toEquatorialPosition(locF, false);
+					ephem = loc.clone();
+					break;
+				}
 			}
 		}
 		if (ephem == null) {
