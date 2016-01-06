@@ -785,7 +785,8 @@ public class RenderSky
 		g.setStroke(JPARSECStroke.STROKE_DEFAULT_LINE_THIN);
         drawConstelNames();
 
-		if (jd > 625296.5 && jd < 2817057.5)
+		if ((jd > 1228000.5 || (jd > 625296.5 && !projection.eph.preferPrecisionInEphemerides)) 
+				&& jd < 2817057.5)
 		{
 			if (labels.size() > 0) {
 				drawLabels();
