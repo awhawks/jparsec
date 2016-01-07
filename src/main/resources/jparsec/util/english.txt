@@ -880,7 +880,7 @@ Solar system object
 Object type
 screen position
 Proper name
-Type;Double [sep ("), magA-B, period (yr), PA (\u00b0)];Variable [maxMag, minMag, period (days), type]
+Type;Double [sep ("), magA-B, period (yr), PA (°)];Variable [maxMag, minMag, period (days), type]
 Found feature '%feature' on %object in position %x/%y (planetographic position %lon, %lat)
 Mouse position %x, %y. Planetographic position: %lon, %lat
 Please enter the name of the object to search for.
@@ -1085,7 +1085,7 @@ Ecliptic north pole, a AU from Sun
 Annular eclipse
 starts to be visible to naked eye
 ends to be visible to naked eye
-with maximum magnitude (%mag, elongation %elong\u00b0)
+with maximum magnitude (%mag, elongation %elong°)
 Saturn rings in maximum aperture
 No eclipse
 from
@@ -1179,7 +1179,7 @@ Could not shot the photo. Details:
 unrefracted
 Weather conditions are inadequate to continue observations.\nThe observatory has been turned off indefinitely.
 Bulb
-Field of view (\u00b0)
+Field of view (°)
 Extrasolar planets
 Radiosource
 IRAM catalog
@@ -1258,7 +1258,7 @@ Sigma
 Min object type
 Max sources
 Camera # options
-Position error (\u00b0)
+Position error (°)
 Interval between shots (s)
 Dark dir
 Flat dir

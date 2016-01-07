@@ -24,8 +24,11 @@ package jparsec.ephem.stars;
 import java.io.Serializable;
 
 import jparsec.ephem.EphemerisElement;
+import jparsec.io.FileIO;
 import jparsec.math.Constant;
 import jparsec.observer.LocationElement;
+import jparsec.util.Translate;
+import jparsec.util.Translate.LANGUAGE;
 import jparsec.vo.SimbadElement;
 
 /**
@@ -272,5 +275,81 @@ public class StarElement implements Serializable
 	 */
 	public LocationElement getEquatorialPosition() {
 		return new LocationElement(rightAscension, declination, getDistance());
+	}
+	
+	/**
+	 * Returns a string representation of the type of variable star this star is,
+	 * or null if it is not a variable or of an unknown type.
+	 * @return String representation of the variable star type.
+	 */
+	public String getVariableType() {
+		if (type == null) return null;
+		int nf = FileIO.getNumberOfFields(type, ";", false);
+		if (nf < 3) return null;
+		String vdata = FileIO.getField(3, type, ";", false);
+		nf = FileIO.getNumberOfFields(vdata, ",", false);
+		if (nf < 4) return null;
+		String vt = FileIO.getField(4, vdata, ",", false);
+		if (!vt.equals("")) return getVariableType(Integer.parseInt(vt));
+		return null;
+	}
+	
+	/**
+	 * Returns a string representation of the type of variable star this star is,
+	 * or null if it is not a variable or of an unknown type.
+	 * @param var Integer identifier of the variable star as given in the Sky 2000 
+	 * Master Catalog.
+	 * @return String representation of the variable star type.
+	 */
+	public static String getVariableType(int var) {
+		String v = ""+var;
+		//if (v.length() < 2) return null;
+		int n1 = Integer.parseInt(v.substring(0, 1));
+		if (n1 < 1 || n1 > 4) return null;
+		int n2 = -1;
+		if (v.length() > 1) n2 = Integer.parseInt(v.substring(1, 2));
+		String mainType = null;
+		if (Translate.getDefaultLanguage() == LANGUAGE.SPANISH) {
+			String TYPES_SPA[] = new String[] {"Pulsante", "Eruptiva", "Eclipsante", "Rotante"};
+			mainType = TYPES_SPA[n1-1];
+			if (n1 == 3 && n2 == 5) mainType = TYPES_SPA[1];			
+		} else {
+			String TYPES[] = new String[] {"Pulsating", "Eruptive", "Eclipsing", "Rotating"};
+			mainType = TYPES[n1-1];
+			if (n1 == 3 && n2 == 5) mainType = TYPES[1];
+		}
+		String out = null;
+		switch (n1) {
+		case 1: // Pulsing
+			String PULSATING[] = new String[] {
+					"Del Cep", "Del Cep", "RR Lyr", "Bet Cep (Bet CMa)", "Del Scu", "Alf CVn", "Irr", "Irr Superg", "Mira", "Semi-irr" 
+			};
+			if (n2 >= 0 && n2 < PULSATING.length) out = PULSATING[n2];
+			break;
+		case 2:
+			String ERUPTIVE[] = new String[] {
+					"Irr", "T Tau", "UV Cet", "R CrB", "U Gem", null, "Nova", "Irr" 
+			};
+			if (n2 >= 0 && n2 < ERUPTIVE.length) out = ERUPTIVE[n2];
+			break;
+		case 3:
+			String ECLIPSING[] = new String[] {
+					null, "Algol", "Bet Lyr", "W UMa", "Ellip", "S Dor" 
+			};
+			if (n2 >= 0 && n2 < ECLIPSING.length) out = ECLIPSING[n2];
+			break;
+		case 4:
+			String ROTATING[] = new String[] {
+					null, "FK Com", "SX Ari", "Ellip", "BY Dra" 
+			};
+			if (n2 >= 0 && n2 < ROTATING.length) out = ROTATING[n2];
+			break;
+		}
+		if (out != null) {
+			out = " ("+out+")";
+		} else {
+			out = "";
+		}
+		return mainType + out;
 	}
 }

@@ -5142,8 +5142,19 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
   	  		String stype2[] = new String[] {Translate.translate(181), Translate.translate(32), Translate.translate(33), Translate.translate(32)+" "+Translate.translate(162)+" "+Translate.translate(33).toLowerCase()};
   	  		doubleVariableData[0] = stype2[DataSet.getIndex(stype, doubleVariableData[0])];
   	  		for (int i=0; i<doubleVariableData.length; i++) {
-  	  			if (!doubleVariableData[i].trim().equals(""))
-  	  				out += doubleVariableTitles[i]+": "+doubleVariableData[i] + FileIO.getLineSeparator();
+  	  			if (!doubleVariableData[i].trim().equals("")) {
+  	  				if (i == 2) {
+  	  					String vtype = star.getVariableType();
+  	  					if (vtype != null) {
+  	  						vtype = " ("+vtype+")";
+  	  					} else {
+  	  						vtype = "";
+  	  					}
+  	  					out += doubleVariableTitles[i]+": "+doubleVariableData[i] + vtype + FileIO.getLineSeparator();
+  	  				} else {
+  	  					out += doubleVariableTitles[i]+": "+doubleVariableData[i] + FileIO.getLineSeparator();
+  	  				}
+  	  			}
   	  		}
   		}
 
