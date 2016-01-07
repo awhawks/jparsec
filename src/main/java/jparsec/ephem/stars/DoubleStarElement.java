@@ -285,8 +285,8 @@ public class DoubleStarElement implements Serializable {
 	public void calcEphemeris(TimeElement time, ObserverElement observer) throws JPARSECException {
 		if (this.orbit == null) throw new JPARSECException("this double star has no set of orbital elements!");
 		EphemerisElement eph = new EphemerisElement(TARGET.NOT_A_PLANET, EphemerisElement.COORDINATES_TYPE.APPARENT,
-				EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.TOPOCENTRIC, EphemerisElement.REDUCTION_METHOD.IAU_2006,
-				EphemerisElement.FRAME.ICRF, EphemerisElement.ALGORITHM.ORBIT, this.orbit);
+				EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.GEOCENTRIC, EphemerisElement.REDUCTION_METHOD.IAU_2006,
+				EphemerisElement.FRAME.DYNAMICAL_EQUINOX_J2000, EphemerisElement.ALGORITHM.ORBIT, this.orbit);
 		double pos[] = OrbitEphem.obtainPosition(time, observer, eph);
 
 		rho = Math.sqrt(pos[0]*pos[0]+pos[1]*pos[1]);

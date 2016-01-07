@@ -379,7 +379,7 @@
 ! expected are the phase and next minima for variable (eclipsing binary) stars, and the separation (") and 
 ! PA (deg) for double stars.
 15; 2011, 7, 14, 14, 0, 0, variable, AN And; 0.81, 15-jul-2011 04:21
-15; 2011, 7, 14, 14, 0, 0, double, STF  60AB; 13.2, -36.3
+15; 2011, 7, 14, 14, 0, 0, double, STF  60AB; 13.2, -37.2
 !
 ! ***
 ! Test for eclipses. Input is date (eclipse search starts from this date in TDB), eclipse type (solar, lunar), 

@@ -556,7 +556,7 @@ public class Precession
 	 * @param JD Equinox of the output in Julian day (TT).
 	 * @param R Array with x, y, z.
 	 * @param eph Ephemeris properties.
-	 * @return Array with corected x, y, z.
+	 * @return Array with corrected x, y, z.
 	 * @throws JPARSECException If an error occurs.
 	 */
 	public static double[] precessFromJ2000(double JD, double[] R, EphemerisElement eph) throws JPARSECException
@@ -659,7 +659,7 @@ public class Precession
 	 * @param JD Equinox of the input in Julian day (TT).
 	 * @param R Array with x, y, z.
 	 * @param eph The ephemeris properties.
-	 * @return Array with corected x, y, z.
+	 * @return Array with corrected x, y, z.
 	 * @throws JPARSECException If an error occurs.
 	 */
 	public static double[] precessToJ2000(double JD, double[] R, EphemerisElement eph) throws JPARSECException
@@ -763,7 +763,7 @@ public class Precession
 	 * @param JD Equinox of the output in Julian day (TT).
 	 * @param R Array with x, y, z.
 	 * @param eph Ephemeris properties.
-	 * @return Array with corected x, y, z.
+	 * @return Array with corrected x, y, z.
 	 * @throws JPARSECException If an error occurs.
 	 */
 	public static double[] precess(double JD0, double JD, double[] R, EphemerisElement eph) throws JPARSECException

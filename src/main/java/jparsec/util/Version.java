@@ -285,7 +285,7 @@ public class Version
 						"Integration of orbits of comets/asteroids and light curves in the details of the objects in SkyChart.\n"+
 						"SkyChart shows the Carring rotation number and Brown lunation number in the details of the Sun and Moon.\n"+
 						"SkyChart can show trajectories of artificial satellites and the current Iridium flares.",
-				"      1.108: Code cleanup, bug fixes, and first useful version of ClearSky for desktop (Nov xx, 2015):\n"+
+				"      1.108: Code cleanup, bug fixes, and first useful version of ClearSky for desktop (Jan 7, 2016):\n"+
 						"Optimization to RenderSky to avoid creating too much arrays when projecting coordinates.\n"+
 						"StarEphem can optionally search and return ephemerides for stars up to magnitude 9.5, instead of the previous limit of 6.5.\n"+
 						"GPhotoCamera can now store photos in the SD card and correctly controls the camera in live view and bulb modes.\n"+
