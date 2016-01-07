@@ -1,1 +1,2 @@
-catull
+Tomás Alonso Albi   main contributor (science, algorithms)
+Carlo Dapor         mvn, testNG
