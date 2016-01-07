@@ -1574,7 +1574,7 @@ public class TestNG {
     private Object[][] data_double_variable_stars() {
         return new Object[][] {
             { new AstroDate(2011, 7, 14, 14, 0, 0), "variable", "AN And", "0.81", "15-jul-2011 04:21" },
-            { new AstroDate(2011, 7, 14, 14, 0, 0), "double", "STF  60AB", "13.2", "-36.3" },
+            { new AstroDate(2011, 7, 14, 14, 0, 0), "double", "STF  60AB", "13.2", "-37.2" },
         };
     }
 
