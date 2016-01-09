@@ -115,6 +115,11 @@ public class ConsoleReport
 			factor1 = 1.0;
 			factor2 = Constant.SECONDS_PER_DAY;
 			n = 6;
+			if (ephem.distance * factor1 < 0.01) {
+				unit1 = "km";
+				factor1 = Constant.AU;
+				n = 0;
+			}
 		}
 
 		String name = ephem.name + " ";
@@ -122,7 +127,12 @@ public class ConsoleReport
 		String out = "", sep = FileIO.getLineSeparator();
 		out += name + Translate.translate(21)+": " + Functions.formatRA(ephem.rightAscension, 1+decimalArcsec) + sep;
 		out += name + Translate.translate(22)+": " + Functions.formatDEC(ephem.declination, decimalArcsec) + sep;
-		out += name + Translate.translate(299)+": " + Functions.formatValue(ephem.distance*factor1, n) + " " + unit1 + sep;
+		if (unit1.equals("pc") && isStar) {
+			out += name + Translate.translate(299)+": " + Functions.formatValue(ephem.distance * factor1, n) + " " + unit1 + 
+					" ("+Functions.formatValue(ephem.distance * factor1 * Constant.PARSEC / Constant.LIGHT_YEAR, 0)+" "+Translate.translate(1322)+")" + sep;			
+		} else {
+			out += name + Translate.translate(299)+": " + Functions.formatValue(ephem.distance*factor1, n) + " " + unit1 + sep;
+		}
 		if (ephem.rise != null || ephem.transit != null || ephem.set != null) {
 			int l = 0;
 			if (ephem.rise != null) l = ephem.rise.length;
@@ -239,6 +249,11 @@ public class ConsoleReport
 			if (Translate.getDefaultLanguage() == Translate.LANGUAGE.SPANISH) unit = "UA";
 			factor = 1.0;
 			n = 6;
+			if (ephem.distance * factor < 0.01) {
+				unit = "km";
+				factor = Constant.AU;
+				n = 0;
+			}
 		}
 
 		String name = ephem.name + " ";
@@ -246,7 +261,12 @@ public class ConsoleReport
 		String out = "", sep = FileIO.getLineSeparator();
 		out += name + Translate.translate(21)+": " + Functions.formatRA(ephem.rightAscension, 1+decimalArcsec) + sep;
 		out += name + Translate.translate(22)+": " + Functions.formatDEC(ephem.declination, decimalArcsec) + sep;
-		out += name + Translate.translate(299)+": " + Functions.formatValue(ephem.distance * factor, n) + " " + unit + sep;
+		if (unit.equals("pc") && isStar) {
+			out += name + Translate.translate(299)+": " + Functions.formatValue(ephem.distance * factor, n) + " " + unit + 
+					" ("+Functions.formatValue(ephem.distance * factor * Constant.PARSEC / Constant.LIGHT_YEAR, 0)+" "+Translate.translate(1322)+")" + sep;			
+		} else {
+			out += name + Translate.translate(299)+": " + Functions.formatValue(ephem.distance * factor, n) + " " + unit + sep;
+		}
 		if (ephem.rise != null) out += name + Translate.translate(295)+": " + TimeFormat.formatJulianDayAsDateAndTime(ephem.rise[0], SCALE.LOCAL_TIME) + sep;
 		if (ephem.transit != null) out += name + Translate.translate(297)+": " + TimeFormat.formatJulianDayAsDateAndTime(ephem.transit[0], SCALE.LOCAL_TIME) + sep;
 		if (ephem.set != null) out += name + Translate.translate(296)+": " + TimeFormat.formatJulianDayAsDateAndTime(ephem.set[0], SCALE.LOCAL_TIME) + sep;

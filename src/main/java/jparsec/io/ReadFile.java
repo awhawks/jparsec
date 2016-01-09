@@ -672,8 +672,8 @@ public class ReadFile implements Serializable
 			int ram = Integer.parseInt(ra.substring(2, 4));
 			int deg = Integer.parseInt(dec.substring(1, 3));
 			int dem = Integer.parseInt(dec.substring(3, 5));
-			double ras = Float.parseFloat(ra.substring(4));
-			double decs = Float.parseFloat(dec.substring(5));
+			double ras = Double.parseDouble(ra.substring(4));
+			double decs = Double.parseDouble(dec.substring(5));
 			double rap = (rah + (ram / 60.0 + ras / 3600.0)) / Constant.RAD_TO_HOUR;
 			double decp = (deg + (dem / 60.0 + decs / 3600.0)) * Constant.DEG_TO_RAD;
 			if (dec.startsWith("-")) decp = -decp;
@@ -682,14 +682,14 @@ public class ReadFile implements Serializable
 			orbit.declination = decp;
 
 			String aunit = rf.readString(dstar, "A_UNIT");
-			double sma = Float.parseFloat(rf.readString(dstar, "A"));
+			double sma = Double.parseDouble(rf.readString(dstar, "A"));
 			if (aunit.equals("m")) sma = sma / 1000.0;
 
-			double ecc = Float.parseFloat(rf.readString(dstar, "EXC"));
-			double perih_lon = Float.parseFloat(rf.readString(dstar, "LP")) * Constant.DEG_TO_RAD;
-			double asc_node_lon = Float.parseFloat(rf.readString(dstar, "NODE")) * Constant.DEG_TO_RAD;
-			double incl = Float.parseFloat(rf.readString(dstar, "INCL")) * Constant.DEG_TO_RAD;
-			double ref_time = Float.parseFloat(rf.readString(dstar, "TP"));
+			double ecc = Double.parseDouble(rf.readString(dstar, "EXC"));
+			double perih_lon = Double.parseDouble(rf.readString(dstar, "LP")) * Constant.DEG_TO_RAD;
+			double asc_node_lon = Double.parseDouble(rf.readString(dstar, "NODE")) * Constant.DEG_TO_RAD;
+			double incl = Double.parseDouble(rf.readString(dstar, "INCL")) * Constant.DEG_TO_RAD;
+			double ref_time = Double.parseDouble(rf.readString(dstar, "TP"));
 			String tunit = rf.readString(dstar, "TP_UNIT");
 			if (tunit.equals("d")) {
 				ref_time += 2400000.0;
@@ -697,7 +697,7 @@ public class ReadFile implements Serializable
 				ref_time = (ref_time - 2000.0) * 365.242189 + 2451544.53;
 			}
 			String punit = rf.readString(dstar, "P_UNIT");
-			double period = Float.parseFloat(rf.readString(dstar, "P"));
+			double period = Double.parseDouble(rf.readString(dstar, "P"));
 			if (punit.equals("y")) period *= 365.25;
 			if (punit.equals("c")) period *= Constant.JULIAN_DAYS_PER_CENTURY;
 			double motion = Constant.TWO_PI / period;

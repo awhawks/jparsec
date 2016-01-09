@@ -1320,3 +1320,4 @@ Flare of Iridium
 start
 end
 max
+light-years

@@ -1320,3 +1320,4 @@ Destello de Iridium
 inicio
 final
 máximo
+años-luz
