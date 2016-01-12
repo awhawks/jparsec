@@ -89,7 +89,7 @@ public class SatelliteEphemTest {
             time = new TimeElement();
             double maxDays = 100;
             double t0 = System.currentTimeMillis();
-            ArrayList<SimpleEventElement> transits = SDP4_SGP4.getNextSunOrMoonTransits(time, observer, eph, soe, maxDays);
+            ArrayList<SimpleEventElement> transits = SDP4_SGP4.getNextSunOrMoonTransits(time, observer, eph, soe, maxDays, 0.25);
             double t1 = System.currentTimeMillis();
             for (int i=0; i<transits.size(); i++) {
             	System.out.println(transits.get(i).toString());

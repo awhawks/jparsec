@@ -729,7 +729,7 @@ public class EventReport {
 								if (index >= 0) {
 									SatelliteOrbitalElement sat = SatelliteEphem.getArtificialSatelliteOrbitalElement(index);
 									ArrayList<SimpleEventElement> more = SDP4_SGP4.getNextSunOrMoonTransits(new TimeElement(jd0, SCALE.TERRESTRIAL_TIME),
-										obs, eph, sat, jdf-jd0);
+										obs, eph, sat, jdf-jd0, 0.25);
 									if (more != null || more.size() > 0)
 										list.addAll(more);
 								}

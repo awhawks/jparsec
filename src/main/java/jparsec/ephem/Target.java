@@ -490,7 +490,7 @@ public final class Target
 
 		String names[] = Target.getNames();
 		int index = DataSet.getIndex(names, name);
-		if (index < 0) index = DataSet.getIndexStartingWith(names, name);
+		//if (index < 0) index = DataSet.getIndexStartingWith(names, name);
 		if (index >= 0) return TARGET.values()[index];
 
 		return TARGET.NOT_A_PLANET;
@@ -515,7 +515,7 @@ public final class Target
 
 		String names[] = Target.getNames(LANGUAGE.ENGLISH);
 		int index = DataSet.getIndex(names, name);
-		if (index < 0) index = DataSet.getIndexStartingWith(names, name);
+		//if (index < 0) index = DataSet.getIndexStartingWith(names, name);
 		if (index >= 0) return TARGET.values()[index];
 
 		return TARGET.NOT_A_PLANET;

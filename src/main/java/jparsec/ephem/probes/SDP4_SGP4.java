@@ -1216,6 +1216,10 @@ public class SDP4_SGP4
 	 * @param eph Ephemeris object.
 	 * @param sat Satellite orbital elements.
 	 * @param maxDays Maximum number of days to search for a next pass.
+	 * @param minDist Minimum distance in degrees to consider that there is a transit
+	 * on top of the Sun or Moon. Typical value is 0.25 degrees, but you can set it to a
+	 * higher value to return more transits (although you will have to move from the 
+	 * observing site set to have a change to see it).
 	 * @return An array of event objects with the type of transit (on the Sun or the
 	 * Moon) using the secondary object field, and with the initial and ending transit times.
 	 * The details field will contain the elevation above the horizon, always >= 0.
@@ -1224,7 +1228,7 @@ public class SDP4_SGP4
 	 *         invalid date.
 	 */
 	public static ArrayList<SimpleEventElement> getNextSunOrMoonTransits(TimeElement time, ObserverElement obs, EphemerisElement eph,
-			SatelliteOrbitalElement sat, double maxDays) throws JPARSECException
+			SatelliteOrbitalElement sat, double maxDays, double minDist) throws JPARSECException
 	{
 		// Check Ephemeris object
 		if (!EphemerisElement.checkEphemeris(eph))
@@ -1278,7 +1282,7 @@ public class SDP4_SGP4
 				double dSun = LocationElement.getAngularDistance(loc, new LocationElement(sun[0], sun[1], 1.0)) * Constant.RAD_TO_DEG;
 				double dMoon = LocationElement.getAngularDistance(loc, new LocationElement(moon[0], moon[1], 1.0)) * Constant.RAD_TO_DEG;
 
-				if (dSun < 0.25 && !insideSun) {
+				if (dSun < minDist && !insideSun) {
 					String det = Functions.formatAngleAsDegrees(ephem.elevation, 1)+"\u00b0";
 					if (ephem.isEclipsed) det += ", "+eclipsed;
 					SimpleEventElement see = new SimpleEventElement(JD_TT + (double) nstep * time_step,
@@ -1289,14 +1293,14 @@ public class SDP4_SGP4
 					out.add(see);
 					insideSun = true;
 				} else {
-					if (insideSun && dSun >= 0.25) {
+					if (insideSun && dSun >= minDist) {
 						insideSun = false;
 						SimpleEventElement see = out.get(out.size()-1);
 						if (see.secondaryBody.equals(TARGET.SUN.getName()))
 							see.endTime = JD_TT + (nstep - 1.0) * time_step;
 					}
 				}
-				if (dMoon < 0.25 && !insideMoon) {
+				if (dMoon < minDist && !insideMoon) {
 					String det = Functions.formatAngleAsDegrees(ephem.elevation, 1)+"\u00b0";
 					if (ephem.isEclipsed) det += ", "+eclipsed;
 					SimpleEventElement see = new SimpleEventElement(JD_TT + (double) nstep * time_step,
@@ -1307,7 +1311,7 @@ public class SDP4_SGP4
 					out.add(see);
 					insideMoon = true;
 				} else {
-					if (insideMoon && dMoon >= 0.25) {
+					if (insideMoon && dMoon >= minDist) {
 						insideMoon = false;
 						SimpleEventElement see = out.get(out.size()-1);
 						if (see.secondaryBody.equals(TARGET.Moon.getName()))
