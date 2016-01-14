@@ -3707,6 +3707,8 @@ public class DataSet
    * @return The capitalized string.
    */
   public static String capitalize(String s, boolean all) {
+	  if (s == null || s.equals("")) return s;
+	  if (s.length() == 1) return s.toUpperCase();
 	  if (!all) {
 		  String f = FileIO.getField(1, s, " ", true);
 		  f = f.substring(0, 1).toUpperCase() + f.substring(1);

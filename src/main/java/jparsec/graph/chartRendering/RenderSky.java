@@ -7303,6 +7303,7 @@ public class RenderSky
 			angle += plus;
 			int step = (int) (Math.sqrt(tail * cte2));
 			if (step < 1) step = 1;
+			if (tail/step > 30) step = (int) (tail/30);
 			g.setStroke(JPARSECStroke.STROKE_DEFAULT_LINE); //.STROKE_POINTS_LOW_SPACE);
 			if (projection.obs.getMotherBody() != TARGET.SUN) {
 				for (int i = 0; i < tail; i = i + step*3)
