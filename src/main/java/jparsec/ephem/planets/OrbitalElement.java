@@ -46,6 +46,7 @@ import jparsec.graph.chartRendering.Graphics.FONT;
 import jparsec.io.FileIO;
 import jparsec.math.Constant;
 import jparsec.math.FastMath;
+import jparsec.math.Interpolation;
 import jparsec.observer.City;
 import jparsec.observer.CityElement;
 import jparsec.observer.ObserverElement;
@@ -1054,14 +1055,25 @@ public class OrbitalElement implements Serializable
 		orbit.changeToEquinox(Constant.J2000);
 		double jd = jd0;
 		double jdMax = -1, magMax = -1;
+		int indexMax = -1;
 		for (int i=0; i<npoints; i++) {
 			double plane_orbit_coords[] = OrbitEphem.orbitPlane(orbit, jd);
 			double coords[] = OrbitEphem.toEclipticPlane(orbit, plane_orbit_coords);
 			double sun[] = PlanetEphem.getGeocentricPosition(jd, TARGET.SUN, 0.0, false, obs);
 
-			double RO = Functions.getNorm(new double[] {sun[0] + coords[0], sun[1] + coords[1], sun[2] + coords[2]});
 			double RP = Functions.getNorm(coords);
+			double RO = Functions.getNorm(new double[] {sun[0] + coords[0], sun[1] + coords[1], sun[2] + coords[2]});
 			double RE = Functions.getNorm(sun);
+			if (eph.preferPrecisionInEphemerides) {
+				double ltSun = RE * Constant.LIGHT_TIME_DAYS_PER_AU;
+				double ltObj = RO * Constant.LIGHT_TIME_DAYS_PER_AU;
+				plane_orbit_coords = OrbitEphem.orbitPlane(orbit, jd - ltObj);
+				coords = OrbitEphem.toEclipticPlane(orbit, plane_orbit_coords);
+				sun = PlanetEphem.getGeocentricPosition(jd - ltSun, TARGET.SUN, 0.0, false, obs);
+				RP = Functions.getNorm(coords);
+				RO = Functions.getNorm(new double[] {sun[0] + coords[0], sun[1] + coords[1], sun[2] + coords[2]});
+				RE = Functions.getNorm(sun);
+			}
 			double DPH = ((RP * RP + RO * RO - RE * RE) / (2.0 * RP * RO));
 
 			x[i] = TimeScale.getJD(new TimeElement(jd, SCALE.BARYCENTRIC_DYNAMICAL_TIME), obs, eph, init.timeScale);
@@ -1069,10 +1081,17 @@ public class OrbitalElement implements Serializable
 			if (magMax == -1 || y[i] < magMax) {
 				magMax = y[i];
 				jdMax = x[i];
+				indexMax = i;
 			}
 			jd += step;
 		}
 
+		if (indexMax > 0 && indexMax < y.length-1) {
+			Interpolation interp = new Interpolation(DataSet.getSubArray(x, indexMax-1, indexMax+1), DataSet.getSubArray(y, indexMax-1, indexMax+1), false);
+			jdMax = interp.MeeusExtremum().getX();
+			magMax = interp.MeeusInterpolation(jdMax);
+		}
+		
 		// FIXME: '^{m}-' should be replaced by 'm -' in the Android version
 		String title = Translate.translate(159) + " (" + Functions.formatValue(magMax, 1)+"^{m}- "+(new AstroDate(jdMax).toStringDate(false)+")");
 		// title = Translate.translate(159)+" "+Translate.translate(160)+" "+orbit.name;
@@ -1114,24 +1133,41 @@ public class OrbitalElement implements Serializable
 		orbit.changeToEquinox(Constant.J2000);
 		double jd = jd0;
 		double minDist = -1, jdMin = -1;
+		int indexMin = -1;
 		for (int i=0; i<npoints; i++) {
 			double plane_orbit_coords[] = OrbitEphem.orbitPlane(orbit, jd);
 			double coords[] = OrbitEphem.toEclipticPlane(orbit, plane_orbit_coords);
 			double sun[] = PlanetEphem.getGeocentricPosition(jd, TARGET.SUN, 0.0, false, obs);
 
-			double RO = Functions.getNorm(new double[] {sun[0] + coords[0], sun[1] + coords[1], sun[2] + coords[2]});
 			double RP = Functions.getNorm(coords);
-
+			double RO = Functions.getNorm(new double[] {sun[0] + coords[0], sun[1] + coords[1], sun[2] + coords[2]});
+			if (eph.preferPrecisionInEphemerides) {
+				double ltSun = Functions.getNorm(sun) * Constant.LIGHT_TIME_DAYS_PER_AU;
+				double ltObj = RO * Constant.LIGHT_TIME_DAYS_PER_AU;
+				plane_orbit_coords = OrbitEphem.orbitPlane(orbit, jd - ltObj);
+				coords = OrbitEphem.toEclipticPlane(orbit, plane_orbit_coords);
+				sun = PlanetEphem.getGeocentricPosition(jd - ltSun, TARGET.SUN, 0.0, false, obs);
+				RP = Functions.getNorm(coords);
+				RO = Functions.getNorm(new double[] {sun[0] + coords[0], sun[1] + coords[1], sun[2] + coords[2]});
+			}
+			
 			x[i] = TimeScale.getJD(new TimeElement(jd, SCALE.BARYCENTRIC_DYNAMICAL_TIME), obs, eph, init.timeScale);
 			y1[i] = RO;
 			y2[i] = RP;
 			if (minDist == -1 || y1[i] < minDist) {
 				minDist = y1[i];
 				jdMin = jd;
+				indexMin = i;
 			}
 			jd += step;
 		}
 
+		if (indexMin > 0 && indexMin < y1.length-1) {
+			Interpolation interp = new Interpolation(DataSet.getSubArray(x, indexMin-1, indexMin+1), DataSet.getSubArray(y1, indexMin-1, indexMin+1), false);
+			jdMin = interp.MeeusExtremum().getX();
+			minDist = interp.MeeusInterpolation(jdMin);
+		}
+		
 		ChartSeriesElement series1 = new ChartSeriesElement(x, y1, null, null, Translate.translate(299)+" "+Translate.translate(3)+"-"+orbit.name, true, Color.BLUE, ChartSeriesElement.SHAPE_POINT, null);
 		ChartSeriesElement series2 = new ChartSeriesElement(x, y2, null, null, Translate.translate(299)+" "+Translate.translate(0)+"-"+orbit.name, true, Color.RED, ChartSeriesElement.SHAPE_POINT, null);
 		series1.showLines = true;

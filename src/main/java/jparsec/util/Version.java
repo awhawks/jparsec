@@ -297,7 +297,11 @@ public class Version
 						"Gildas30m now supports the factor DOPPLER, and properly exports the coordinate type when writting spectra.\n"+
 						"Method modifyRestFrequency in Spectrum30m fixed, with support for doppler factor. Added also modifyVelocityLSR.\n"+
 						"Carlo Dapor joined the development, contributing with many fixes and code cleanup, including a rework of jparsec.time.calendar package.\n"+
-						"Code cleanup: UTF-8 conversion, hashCode implemented next to equals, mains removed, special characters in encoding-independent way, ..."
+						"Code cleanup: UTF-8 conversion, hashCode implemented next to equals, mains removed, special characters in encoding-independent way, ...",
+				"      1.109: More bug fixes (Feb XX, 2016):\n"+
+						"In critical cases the computation of transits of artificial satellites on top of the Sun/Moon showed false and repeated events.\n"+
+						"Little bug in RenderPlanet in the position of the natural satellites as drawn without textures.\n"+
+						"The output charts for light and distance curves in OrbitalElement class have now better accuracy."
 
 				+FileIO.getLineSeparator(),
 		};

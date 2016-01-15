@@ -2428,8 +2428,9 @@ public class RenderPlanet
 								}
 							}
 							if (!render.textures || r <= 2) {
-								int fs = (int) (1.5 * size+adds);
-								if (size == 0 && (scaleFactor > 1 || g.renderingToAndroid())) size = 0.125f*(scaleFactor>1? scaleFactor:1) * (g.renderingToAndroid() ? 2:1);
+								if (size == 0 && (scaleFactor > 1 || g.renderingToAndroid())) size = 0.125f*(scaleFactor>1? scaleFactor:1);
+								if (g.renderingToAndroid()) size = 2*size+1;
+								int fs = (int) (2*size+1);
 								g.fillOval((posx - size), (posy - size), fs, fs, zpos);
 							}
 						}

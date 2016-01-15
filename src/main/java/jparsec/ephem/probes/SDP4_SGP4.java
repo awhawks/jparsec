@@ -1319,7 +1319,8 @@ public class SDP4_SGP4
 					}
 				}
 				double min = Math.min(dMoon, dSun);
-				if (min > 5) nstep += (int) (min / (time_step * Constant.SECONDS_PER_DAY));
+				if (min > 5 && !insideMoon && !insideSun) nstep += (int) (min / (time_step * Constant.SECONDS_PER_DAY));
+				if ((insideSun || insideMoon) && ephem.elevation <= min_elevation && out.size() > 0) out.remove(out.size()-1);
 			}
 		}
 
