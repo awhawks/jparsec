@@ -46,8 +46,7 @@ public class ProcessORB {
     /**
      * The url used to update orbital elements of visual binary stars.
      */
-    //public static final String UPDATE_URL_ORBITS_VISUAL_BINARY_STARS = "http://ad.usno.navy.mil/wds/orb6/orb6orbits.txt";
-    public static final String URL_ORBITS_VISUAL_BINARY_STARS = "http://www.stsci.edu/~mperrin/software/gpidata/downloads/config/orb6orbits.txt";
+    public static final String URL_ORBITS_VISUAL_BINARY_STARS = "http://ad.usno.navy.mil/wds/orb6/orb6orbits.txt";
     /**
      * The url used to update the official list of observatories.
      */
@@ -82,8 +81,8 @@ public class ProcessORB {
         retrieveFileFromURL(hc, targetDir, URL_VISUAL_ARTIFICIAL_SATELLITES, "ArtificialSatellites.txt");
         retrieveFileFromURL(hc, targetDir, URL_VISUAL_ARTIFICIAL_SATELLITES_IRIDIUM, "iridium.txt");
         retrieveFileFromURL(hc, targetDir, URL_ORBITS_VISUAL_BINARY_STARS, "orb6orbits.txt");
-        //retrieveFileFromURL(hc, targetDir, "http://maia.usno.navy.mil/ser7/tai-utc.dat", "tai-utc.dat");
-        //retrieveFileFromURL(hc, targetDir, "http://maia.usno.navy.mil/ser7/leapsec.dat", "leapSeconds.txt");
+        retrieveFileFromURL(hc, targetDir, "http://maia.usno.navy.mil/ser7/tai-utc.dat", "tai-utc.dat");
+        retrieveFileFromURL(hc, targetDir, "http://maia.usno.navy.mil/ser7/leapsec.dat", "leapSeconds.txt");
 
         retrieveBrightAsteroids(hc, targetDir, "MPC_asteroids_bright.txt");
         retrieveObservatories(hc, targetDir, URL_OBSERVATORIES, "MPC_observatories.txt");
