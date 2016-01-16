@@ -1641,11 +1641,11 @@ public class TestNG {
                 null, null
             }, // within 1s with Spenak's results" },
             { new AstroDate(-1000, 3, 10), "lunar", TimeElement.SCALE.BARYCENTRIC_DYNAMICAL_TIME,
-                "14-mar-1000 02:55:24 B.C. (penumbral)",
-                "14-mar-1000 03:55:28 B.C. (full penumbral)",
+                "14-mar-1000 02:55:24 B.C. (Penumbral)",
+                "14-mar-1000 03:55:28 B.C. (Full penumbral)",
                 "14-mar-1000 03:54:53 B.C. (partial)",
-                "14-mar-1000 04:58:40 B.C. (total)",
-                "14-mar-1000 05:40:16 B.C. (Eclipse maximum)"
+                "14-mar-1000 04:58:40 B.C. (Total)",
+                null //"14-mar-1000 05:40:16 B.C. (Eclipse maximum)"
             }
         };
     }
