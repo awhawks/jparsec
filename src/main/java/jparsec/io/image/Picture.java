@@ -882,7 +882,6 @@ public class Picture
 		getScaledInstance(width, height, false);
 	}
 
-
 	/**
 	 * Scales the image to another size using the multi-step technique described in
 	 * http://today.java.net/pub/a/today/2007/04/03/perils-of-image-getscaledinstance.html.
@@ -894,6 +893,22 @@ public class Picture
 	 * with the provided width and height).
 	 */
 	public void getScaledInstance(int width, int height, boolean sameRatio) {
+		getScaledInstance(width, height, sameRatio, true);
+	}
+
+	/**
+	 * Scales the image to another size using the multi-step technique described in
+	 * http://today.java.net/pub/a/today/2007/04/03/perils-of-image-getscaledinstance.html.
+	 * Width or height can be set to 0 to calculate automatic value assuming
+	 * that the same width/height ratio must be preserved.
+	 * @param width Width. Set to 0 or negative to calculate value automatically.
+	 * @param height Height. Set to 0 or negative to calculate value automatically.
+	 * @param sameRatio True to maintain image ratio (maximum size that fits the rectangle
+	 * with the provided width and height).
+	 * @param bicubic True for bicubic interpolation quality, slower. It will not be used 
+	 * to upscale an image.
+	 */
+	public void getScaledInstance(int width, int height, boolean sameRatio, boolean bicubic) {
 		// Flip in case of negative size
 		if (width < 0 || height < 0) {
 			boolean h = false, v = false;
@@ -948,7 +963,6 @@ public class Picture
         // until the target size is reached
         int w = image.getWidth();
         int h = image.getHeight();
-        boolean bicubic = true;
 
 	       do {
 	            if (w > width) {

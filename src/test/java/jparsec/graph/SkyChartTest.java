@@ -2,13 +2,16 @@ package jparsec.graph;
 
 import java.awt.Color;
 import java.awt.Dimension;
+
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
+
 import jparsec.astronomy.Constellation;
 import jparsec.astronomy.CoordinateSystem;
 import jparsec.astronomy.TelescopeElement;
 import jparsec.ephem.EphemerisElement;
 import jparsec.ephem.Target;
+import jparsec.graph.chartRendering.Graphics;
 import jparsec.graph.chartRendering.PlanetRenderElement;
 import jparsec.graph.chartRendering.Projection;
 import jparsec.graph.chartRendering.RenderPlanet;
@@ -84,7 +87,7 @@ public class SkyChartTest {
         SkyRenderElement sky = new SkyRenderElement(CoordinateSystem.COORDINATE_SYSTEM.HORIZONTAL,
                 Projection.PROJECTION.STEREOGRAPHICAL, 0, 0.0, (int) values[5], (int) values[6], render, telescope);
 
-        //sky.anaglyphMode = ANAGLYPH_COLOR_MODE.DUBOIS_RED_CYAN;
+        //sky.anaglyphMode = Graphics.ANAGLYPH_COLOR_MODE.TRUE_3D_MODE_LEFT_RIGHT_HALF_WIDTH;
         sky.setColorMode(SkyRenderElement.COLOR_MODE.BLACK_BACKGROUND); //.WHITE_BACKGROUND_SIMPLE_GREEN_RED_OR_RED_CYAN_ANAGLYPH);
 
 //		sky.drawOcularFieldOfView = false;

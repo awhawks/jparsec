@@ -327,17 +327,12 @@ public class JPLEphemeris {
 			filename += ""+year+"."+this.getJPLVersion();
 
 			String filePath = FileIO.DATA_JPL_EPHEM_DIRECTORY+"de"+this.getJPLVersion()+Zip.ZIP_SEPARATOR;
-			if (externalPath != null) filePath = externalPath;
-			filename = filePath + filename;
-
-			if (externalPath == null) {
-				return ReadFile.resourceAvailable(filename);
-			} else {
-				return (new File(filename)).exists();
-			}
-		} catch (Exception exc) {
-			return false;
-		}
+			if (ReadFile.resourceAvailable(filePath + filename)) return true;
+			
+			if (externalPath != null)
+				return (new File(externalPath + filename)).exists();
+		} catch (Exception exc) { }
+		return false;
 	}
 	private void readHeader()
 	throws JPARSECException {
@@ -1243,7 +1238,7 @@ public class JPLEphemeris {
 
 			String filePath = FileIO.DATA_JPL_EPHEM_DIRECTORY+"de"+this.getJPLVersion()+Zip.ZIP_SEPARATOR;
 			if (externalPath != null) filePath = externalPath;
-			filename = filePath + filename;
+			filename = filePath + JPLfilename;
 
 			int seriesApprox = (int) (2.0 + 367.0 * (double) this.yearsPerFile / this.jds);
 			ephemerisCoefficients = new double[numbers_per_interval*seriesApprox+1];

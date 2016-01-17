@@ -2489,10 +2489,10 @@ public class AWTGraphics implements Graphics {
 			try {
 				p.getScaledInstanceUsingSplines(w, h, sameRatio);
 			} catch (Exception e) {
-				p.getScaledInstance(w, h, sameRatio);
+				p.getScaledInstance(w, h, sameRatio, true);
 			}
 		} else {
-			p.getScaledInstance(w, h, sameRatio);
+			p.getScaledInstance(w, h, sameRatio, false);
 		}
 
 		if (dy == 0) return p.getImage();

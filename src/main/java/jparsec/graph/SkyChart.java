@@ -1166,6 +1166,8 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 				x = me.getX();
 				y = me.getY();
 			}
+			if (skyRender.getRenderSkyObject().render.anaglyphMode == ANAGLYPH_COLOR_MODE.TRUE_3D_MODE_LEFT_RIGHT_HALF_WIDTH)
+				x *= 2;
 
 			Graphics g = panel.getGraphics();
 			String msg1 = "";
@@ -1462,6 +1464,8 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
  		if (nc <= 2 && !MouseEvent.getModifiersExText(m.getModifiersEx()).equals("Ctrl")) {
  			try {
 	 			int x = m.getX(), y = m.getY();
+				if (skyRender.getRenderSkyObject().render.anaglyphMode == ANAGLYPH_COLOR_MODE.TRUE_3D_MODE_LEFT_RIGHT_HALF_WIDTH)
+					x *= 2;
 	 	    	String s = null;
  				if (b == MouseEvent.BUTTON1) {
 		 	  		Object data[] = skyRender.getRenderSkyObject().getClosestObjectData(x, y, false, false);
@@ -1584,7 +1588,10 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
   				draggingLock = false;
   			} else {
   				try {
-  					this.modifyRendering(m.getX(), m.getY());
+  					int px = m.getX();
+  					if (skyRender.getRenderSkyObject().render.anaglyphMode == ANAGLYPH_COLOR_MODE.TRUE_3D_MODE_LEFT_RIGHT_HALF_WIDTH)
+  						px *= 2;
+  					this.modifyRendering(px, m.getY());
   				} catch (Exception exc) {
      				Logger.log(LEVEL.ERROR, "Error editing the rendering values. Message was: "+exc.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(exc.getStackTrace()));
   				}
@@ -1617,6 +1624,8 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 
 				LocationElement loc = null;
 				int x = m.getX(), y = m.getY();
+				if (skyRender.getRenderSkyObject().render.anaglyphMode == ANAGLYPH_COLOR_MODE.TRUE_3D_MODE_LEFT_RIGHT_HALF_WIDTH)
+					x *= 2;
 				try {
 					loc = skyRender.getRenderSkyObject().getPlanetographicPosition(x, y, 3, true);
 				} catch (Exception exc) {}
@@ -4235,7 +4244,12 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
   				}
   			}
   		}
-  		menu.show(panel, x, y);
+		if (skyRender.getRenderSkyObject().render.anaglyphMode == ANAGLYPH_COLOR_MODE.TRUE_3D_MODE_LEFT_RIGHT_HALF_WIDTH)
+		{
+	  		menu.show(panel, x/2, y);			
+		} else {
+	  		menu.show(panel, x, y);			
+		}
     }
 
     private void updateObjTable() {
@@ -5177,6 +5191,8 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 	  		int size = 5;
 	  		Graphics g = panel.getGraphics();
 	  		g.setColor(Color.RED);
+			if (skyRender.getRenderSkyObject().render.anaglyphMode == ANAGLYPH_COLOR_MODE.TRUE_3D_MODE_LEFT_RIGHT_HALF_WIDTH)
+				pos[0] /= 2;
 	  		g.drawOval((int) pos[0] - size, (int) pos[1] - size, 2*size, 2*size);
   		}
 
