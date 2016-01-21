@@ -2369,7 +2369,9 @@ public class RenderSky
 	    		if (ww == 1) {
 	        		g.fillOval(x, y, 1, 1);
 	    		} else {
-*/	    			g.drawImage(starImg[(int)ww][colIndex], x, y);
+*/	    			
+		   	if (colIndex >= starImg[(int) ww].length) colIndex = 0;
+		   	g.drawImage(starImg[(int)ww][colIndex], x, y);
 /*	    		}
 	    	} else {
 	    		if (ww == 1) {
@@ -2826,6 +2828,7 @@ public class RenderSky
  			int sizei[] = g.getSize(milkyWayTexture);
 			int imax = sizei[0], jmax = sizei[1];
 			double step0 = (imax / 360.0) / pixels_per_degree;
+			if (g.renderingToAndroid()) step0 *= 2;
 			int step = (int) (step0+0.5);
 			if (step < 1) step = 1;
 			if (RenderPlanet.MAXIMUM_TEXTURE_QUALITY_FACTOR < 1f) step += (int) (1.0 / RenderPlanet.MAXIMUM_TEXTURE_QUALITY_FACTOR);
@@ -2850,12 +2853,12 @@ public class RenderSky
 
 			float d = getDist(milkywayDist);
 
-			float scale = 1;
+			float scale = g.renderingToAndroid() ? 0.25f : 1.0f;
 			boolean isWMAP = false;
 			if (render.drawMilkyWayContoursWithTextures == MILKY_WAY_TEXTURE.WMAP) isWMAP = true;
 			if (render.anaglyphMode == ANAGLYPH_COLOR_MODE.NO_ANAGLYPH && ((render.planetRender.highQuality
 					 && RenderPlanet.MAXIMUM_TEXTURE_QUALITY_FACTOR > 1) || g.renderingToExternalGraphics())) {
-				if (render.planetRender.highQuality && RenderPlanet.MAXIMUM_TEXTURE_QUALITY_FACTOR > 1) {
+				if (!g.renderingToAndroid() && render.planetRender.highQuality && RenderPlanet.MAXIMUM_TEXTURE_QUALITY_FACTOR > 1) {
 					scale = 1.5f;
 					if (RenderPlanet.MAXIMUM_TEXTURE_QUALITY_FACTOR > 2) scale = RenderPlanet.MAXIMUM_TEXTURE_QUALITY_FACTOR * 1.5f / 2f;
 					step /= scale;
@@ -2876,13 +2879,10 @@ public class RenderSky
 					// 1955, 1100 -> 2000, 1135 (SMC)
 					this.drawMilkyWayTexture2((int) (0.5 + imax * 1955.0 / 3000.0), (int) (0.5 + imax * 2000.0 / 3000.0), (int) (0.5 + imax * 1100.0 / 3000.0), (int) (0.5 + imax * 1135.0 / 3000.0), step, size, imax, im2, jm2, d, milkyWayTexture, g2, scale);
 				}
-				Object pathMilkyWay = g2.getRendering();
-				if (scale > 1) pathMilkyWay = g2.getScaledImage(pathMilkyWay, g.getWidth(), g.getHeight(), true, false); //RenderPlanet.ALLOW_SPLINE_RESIZING); // Frequent out of memory errors here in old PCs
-
 				if (render.anaglyphMode == ANAGLYPH_COLOR_MODE.NO_ANAGLYPH) {
-					g.drawImage(g.makeColorTransparent(pathMilkyWay, render.background, false, false, 0), 0, 0);
+					g.drawImage(g2.getRendering(), 0, 0, 1.0f/scale, 1.0f/scale);
 				} else {
-					g.drawImage(g.makeColorTransparent(pathMilkyWay, render.background, false, false, 0), 0, 0, getDist(milkywayDist));
+					g.drawImage(g2.getRendering(), 0, 0, getDist(milkywayDist), 1.0f/scale, 1.0f/scale);
 				}
 				drawHorizon();
 
@@ -3414,7 +3414,7 @@ public class RenderSky
 		if (fill) {
 			g.enableInversion();
 
-			g.setStroke(JPARSECStroke.STROKE_DEFAULT_LINE_THIN);
+			g.setStroke(JPARSECStroke.STROKE_DEFAULT_LINE);
 			g.setColor(render.fillMilkyWayColor, true);
 			int col = g.getColor();
 			if (x != null) {
@@ -3500,7 +3500,8 @@ public class RenderSky
 				}
 			}
 			this.g.enableInversion();
-			if (!render.drawMilkyWayStroke.equals(JPARSECStroke.STROKE_DEFAULT_LINE_THIN) ||
+			if ((!render.drawMilkyWayStroke.equals(JPARSECStroke.STROKE_DEFAULT_LINE) && 
+					!render.drawMilkyWayStroke.equals(JPARSECStroke.STROKE_DEFAULT_LINE_THIN)) ||
 					render.drawMilkyWayContoursColor != render.fillMilkyWayColor) {
 				this.g.setStroke(render.drawMilkyWayStroke);
 				this.g.setColor(render.drawMilkyWayContoursColor, true);
