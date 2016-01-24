@@ -243,6 +243,8 @@ public class Nutation
 	/**
 	 * Nutates equatorial coordinates from mean dynamical equator and equinox of date to true
 	 * equator and equinox, or the opposite. See AA Explanatory Supplement, page 114-115.
+	 * For dates between 1900 and 2100 and the flag to prefer precision in the ephemeris
+	 * object set to false, the approximate code by Peter Duffet for nutation is used.
 	 * @param jd_tt Julian day in TT.
 	 * @param eph Ephemeris properties.
 	 * @param in Input equatorial coordinates.
@@ -254,7 +256,8 @@ public class Nutation
 	public static double[] nutateInEquatorialCoordinates(double jd_tt, EphemerisElement eph,
 			double[] in, boolean meanToTrue) throws JPARSECException {
 		double t = Functions.toCenturies(jd_tt);
-		double nut[] = Nutation.calcNutation(t, eph);
+		double nut[] = (eph.preferPrecisionInEphemerides || t > 1) ? 
+				Nutation.calcNutation(t, eph) : getFastNutation(jd_tt);
 		double oblm = Obliquity.meanObliquity(t, eph);
 		double oblt = oblm + nut[1];
 		double dpsi = nut[0];

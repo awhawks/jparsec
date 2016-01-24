@@ -121,7 +121,8 @@ public class EventReport {
 	public static String artificialSatellites = "ISS, HST, TIANGONG 1";
 
 	/**
-	 * Set all static flags in this class to a given value.
+	 * Set all static flags in this class to a given value, except the 
+	 * flag {@linkplain #maximumAccuracy}.
 	 * @param a The value.
 	 */
 	public static void setEverythingTo(boolean a) {
@@ -143,7 +144,7 @@ public class EventReport {
 		moonEventsOnlySeveralNonMutualAtSameTime = a;
 		moonEventsAlsoMutualEvents = a;
 		includePlutoAsPlanet = a;
-		maximumAccuracy = a;
+		//maximumAccuracy = a;
 		cometAsteroidVisibleNakedEye = a;
 		cratersOnlyLunarX = a;
 		NEOs = a;
@@ -310,13 +311,13 @@ public class EventReport {
 					s = null;
 					break;
 				case 13:
-					if (EarthPerihelionAphelion) s = MainEvents.PerihelionAndAphelion(TARGET.EARTH, jd, EVENT.PLANET_MAXIMUM_DISTANCE_FROM_SUN, EVENT_TIME.NEXT);
-					//s = MainEvents.getPlanetaryEvent(TARGET.EARTH, jd, EVENT.PLANET_MAXIMUM_DISTANCE_FROM_SUN, EVENT_TIME.NEXT);
+					if (EarthPerihelionAphelion) //s = MainEvents.PerihelionAndAphelion(TARGET.EARTH, jd, EVENT.PLANET_MAXIMUM_DISTANCE_FROM_SUN, EVENT_TIME.NEXT);
+						s = MainEvents.getPlanetaryEvent(TARGET.EARTH, jd, EVENT.PLANET_MAXIMUM_DISTANCE_FROM_SUN, EVENT_TIME.NEXT, maximumAccuracy);
 					if (s != null) jd = s.time + 30;
 					break;
 				case 14:
-					if (EarthPerihelionAphelion) s = MainEvents.PerihelionAndAphelion(TARGET.EARTH, jd, EVENT.PLANET_MINIMUM_DISTANCE_FROM_SUN, EVENT_TIME.NEXT);
-					//s = MainEvents.getPlanetaryEvent(TARGET.EARTH, jd, EVENT.PLANET_MINIMUM_DISTANCE_FROM_SUN, EVENT_TIME.NEXT);
+					if (EarthPerihelionAphelion) //s = MainEvents.PerihelionAndAphelion(TARGET.EARTH, jd, EVENT.PLANET_MINIMUM_DISTANCE_FROM_SUN, EVENT_TIME.NEXT);
+						s = MainEvents.getPlanetaryEvent(TARGET.EARTH, jd, EVENT.PLANET_MINIMUM_DISTANCE_FROM_SUN, EVENT_TIME.NEXT, maximumAccuracy);
 					if (s != null) jd = s.time + 30;
 					break;
 				case 15:

@@ -6,6 +6,7 @@ import jparsec.astronomy.Constellation;
 import jparsec.ephem.EphemerisElement;
 import jparsec.ephem.Functions;
 import jparsec.ephem.Target;
+import jparsec.ephem.Target.TARGET;
 import jparsec.ephem.event.EventReport;
 import jparsec.ephem.event.SimpleEventElement;
 import jparsec.graph.DataSet;
@@ -19,6 +20,7 @@ import jparsec.time.SiderealTime;
 import jparsec.time.TimeElement;
 import jparsec.time.TimeFormat;
 import jparsec.time.TimeScale;
+import jparsec.time.TimeElement.SCALE;
 import jparsec.util.Configuration;
 import jparsec.util.JPARSECException;
 import jparsec.util.Translate;
@@ -26,12 +28,88 @@ import jparsec.util.Translate.LANGUAGE;
 
 public class SatelliteEphemTest {
 
+	// ANDROID test
+	public static void main(String args[]) {
+		try {
+            ObserverElement obs = ObserverElement.parseCity(City.findCity("Madrid"));
+			EphemerisElement eph = new EphemerisElement(TARGET.NOT_A_PLANET, EphemerisElement.COORDINATES_TYPE.APPARENT,
+					EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.TOPOCENTRIC, EphemerisElement.REDUCTION_METHOD.IAU_2006,
+					EphemerisElement.FRAME.DYNAMICAL_EQUINOX_J2000);
+			eph.optimizeForSpeed();
+			AstroDate astro = new AstroDate(2016, 1, 20, 18, 20, 0);
+			double startJD = astro.jd();
+			double tranMag = 6;
+			double howLong = 0.5;
+			double jdf = startJD + howLong;
+			int previousEvents = -1;
+			
+			TimeElement init = new TimeElement(startJD - 2.0/24.0, SCALE.LOCAL_TIME);
+			howLong += 2.0/24.0;
+
+			String name[] = new String[] {"ISS", "HST", "TIANGONG 1"};
+			double min_elevation = 15 * Constant.DEG_TO_RAD, maxDays = howLong;
+			    		    				
+			ArrayList<SimpleEventElement> newEvents = new ArrayList<SimpleEventElement>(); //EventReport.getEvents(init, end, obs.clone(), eph);
+			String sevent = "Next pass of ";
+			if (Translate.getDefaultLanguage() == LANGUAGE.SPANISH) sevent = "Próximo paso de ";
+			int nsat = name.length;
+			if (tranMag >= 0) nsat = SatelliteEphem.getArtificialSatelliteCount();
+			for (int i=0; i<nsat; i++) {
+				System.out.println((i+1)+"/"+nsat);
+				TimeElement initTime = init.clone();
+				
+				while (true) {
+					double initJD = initTime.astroDate.jd();
+					if (initJD > jdf) break;
+					maxDays = jdf - initJD;
+    				SatelliteOrbitalElement sat = null;
+    				if (tranMag >= 0) {
+    					sat = SatelliteEphem.getArtificialSatelliteOrbitalElement(i);		    					
+    				} else {
+    					sat = SatelliteEphem.getArtificialSatelliteOrbitalElement(SatelliteEphem.getArtificialSatelliteTargetIndex(name[i]));
+    				}
+					double jdNext = SatelliteEphem.getNextPass(initTime, obs, eph, sat, min_elevation, maxDays, previousEvents <= 0);
+					if (Math.abs(jdNext) > jdf || jdNext == 0) break;
+					initTime.astroDate = new AstroDate(Math.abs(jdNext) + 45.0 / 1440.0);
+					//if (jdNext < 0) continue;
+					eph.targetBody = TARGET.NOT_A_PLANET;
+    				if (tranMag >= 0) {
+    					eph.targetBody.setIndex(i);
+    				} else {
+    					eph.targetBody.setIndex(SatelliteEphem.getArtificialSatelliteTargetIndex(name[i]));
+    				}
+					double jdNextTT = TimeScale.getJD(new TimeElement(Math.abs(jdNext), SCALE.LOCAL_TIME), obs, eph, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
+					SatelliteEphemElement sephem = SatelliteEphem.satEphemeris(new TimeElement(jdNextTT, SCALE.TERRESTRIAL_TIME), obs, eph, false);
+					if (tranMag >= 0 && sephem.magnitude > tranMag) continue;
+					String ecl = "";
+					if (jdNext < 0) {
+						ecl = " (eclipsed)";
+						if (Translate.getDefaultLanguage() == LANGUAGE.SPANISH) ecl = " (eclipsado)";
+					} else {
+						ecl = " (mag "+Functions.formatValue(sephem.magnitude, 1)+")";
+					}
+					SimpleEventElement event = new SimpleEventElement(jdNextTT, SimpleEventElement.EVENT.TRANSIT, 
+							sevent + sat.name+ecl+": "+new AstroDate(Math.abs(jdNext)).toString(-1));
+					event.body = sat.name;
+					event.eventLocation = sephem.getEquatorialLocation();
+					newEvents.add(event);
+				}
+			}			
+			
+			for (int i=0; i<newEvents.size(); i++) {
+				System.out.println(newEvents.get(i).toString());
+			}
+		} catch (Exception exc) {
+			exc.printStackTrace();
+		}
+	}
+	
     /**
      * For unit testing only.
      *
      * @param args Not used.
      */
-    public static void main(String args[]) {
+    public static void main1(String args[]) {
         System.out.println("SatelliteEphem test");
 
         try {

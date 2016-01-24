@@ -1151,8 +1151,7 @@ public class SDP4_SGP4
 			nstep++;
 			double new_JD = JD + (double) nstep * time_step;
 
-			AstroDate astro = new AstroDate(new_JD);
-			TimeElement new_time = new TimeElement(astro, refScale);
+			TimeElement new_time = new TimeElement(new_JD, refScale);
 
 			ephem = s.calcSatellite(new_time, obs, eph, false);
 		}
@@ -1179,8 +1178,7 @@ public class SDP4_SGP4
 			}
 			double new_JD = JD + (double) nstep * time_step;
 
-			AstroDate astro = new AstroDate(new_JD);
-			TimeElement new_time = new TimeElement(astro, refScale);
+			TimeElement new_time = new TimeElement(new_JD, refScale);
 
 			ephem = s.calcSatellite(new_time, obs, eph, false);
 		}
@@ -1190,8 +1188,7 @@ public class SDP4_SGP4
 			nstep--;
 			double new_JD = JD + (double) nstep * time_step;
 
-			AstroDate astro = new AstroDate(new_JD);
-			TimeElement new_time = new TimeElement(astro, refScale);
+			TimeElement new_time = new TimeElement(new_JD, refScale);
 
 			ephem = s.calcSatellite(new_time, obs, eph, false);
 		}
@@ -1270,8 +1267,7 @@ public class SDP4_SGP4
 				nstep ++;
 				double new_JD = JD + (double) nstep * time_step;
 
-				AstroDate astro = new AstroDate(new_JD);
-				new_time = new TimeElement(astro, SCALE.UNIVERSAL_TIME_UTC);
+				new_time = new TimeElement(new_JD, SCALE.UNIVERSAL_TIME_UTC);
 
 				ephem = s.calcSatellite(new_time, obs, eph, false);
 
@@ -1685,7 +1681,7 @@ public class SDP4_SGP4
 				//throw new JPARSECException("satellite below horizon and no next pass could be obtained.");
 				return sat;
 			}
-			timeEphem = new TimeElement(new AstroDate(Math.abs(sat.nextPass)), SCALE.LOCAL_TIME);
+			timeEphem = new TimeElement(Math.abs(sat.nextPass), SCALE.LOCAL_TIME);
 			sat = SDP4_SGP4.satEphemeris(timeEphem, obs, eph, false, false);
 		}
 		double jdref = TimeScale.getJD(timeEphem, obs, eph, SCALE.LOCAL_TIME);
@@ -1697,7 +1693,7 @@ public class SDP4_SGP4
 		do {
 			iter++;
 			jd = jd - precission / Constant.SECONDS_PER_DAY;
-			timeEphem = new TimeElement(new AstroDate(jd), SCALE.LOCAL_TIME);
+			timeEphem = new TimeElement(jd, SCALE.LOCAL_TIME);
 			sat = SDP4_SGP4.satEphemeris(timeEphem, obs, eph, false, false);
 			if (sat.elevation > maxElev) {
 				maxElev = sat.elevation;
@@ -1712,7 +1708,7 @@ public class SDP4_SGP4
 		do {
 			iter ++;
 			jd = jd + precission / Constant.SECONDS_PER_DAY;
-			timeEphem = new TimeElement(new AstroDate(jd), SCALE.LOCAL_TIME);
+			timeEphem = new TimeElement(jd, SCALE.LOCAL_TIME);
 			sat = SDP4_SGP4.satEphemeris(timeEphem, obs, eph, false, false);
 			if (sat.elevation > maxElev) {
 				maxElev = sat.elevation;
@@ -3034,15 +3030,14 @@ public class SDP4_SGP4
 	    return gst;
 */
 	  try {
-			AstroDate astro = new AstroDate(EP);
-			TimeElement time = new TimeElement(astro, SCALE.UNIVERSAL_TIME_UTC);
+			TimeElement time = new TimeElement(EP, SCALE.UNIVERSAL_TIME_UTC);
 			CityElement city = City.findCity("Madrid");
 			ObserverElement observer = ObserverElement.parseCity(city);
 			EphemerisElement eph = new EphemerisElement(TARGET.NOT_A_PLANET, EphemerisElement.COORDINATES_TYPE.APPARENT,
 					EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.GEOCENTRIC, EphemerisElement.REDUCTION_METHOD.IAU_2006,
 					EphemerisElement.FRAME.ICRF, EphemerisElement.ALGORITHM.JPL_DE405);
 			eph.correctForEOP = false;
-			E1_DS50 = astro.jd() - new AstroDate(1950, 1, 0).jd();
+			E1_DS50 = EP - 2433281.5; // new AstroDate(1950, 1, 0).jd();
 			return SiderealTime.greenwichMeanSiderealTime(time, observer, eph);
 	  } catch (Exception exc) {
 		  throw new JPARSECException("Invalid epoch");

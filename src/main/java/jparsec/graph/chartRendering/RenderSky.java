@@ -821,7 +821,8 @@ public class RenderSky
 				double sf1 = field0, sf2 = field0;
 				if (//render.telescope.ocular == null &&
 						render.telescope.ccd != null) {
-					s += " + "+render.telescope.ccd.name;
+					if (render.telescope.ccd.name != null && !render.telescope.ccd.name.equals("")) 
+						s += " + "+render.telescope.ccd.name;
 					TelescopeElement tel = render.telescope.clone();
 					tel.ocular = null;
 					radius = (float) (pixels_per_radian * 0.5 * render.telescope.ccd.getFieldX(tel));
@@ -864,7 +865,9 @@ public class RenderSky
 					}
 					if (render.telescope.ccd.cameraPA == 0) radius = radiusy;
 				} else {
-					if (render.telescope.ocular != null) s += " + "+render.telescope.ocular.name;
+					if (render.telescope.ocular != null && 
+							render.telescope.ocular.name != null && 
+							!render.telescope.ocular.equals("")) s += " + "+render.telescope.ocular.name;
 					g.drawOval(x0-radius, y0 - radius, 2*radius+1, 2*radius+1, dist);
 					int off = (int) (24f * (2f * radius / (float) render.width));
 					g.drawLine(x0-off, y0, x0+off, y0, dist, dist);
@@ -3035,13 +3038,16 @@ public class RenderSky
 			}
 		}
 
-		boolean fastMode = render.drawFastLinesMode.fastMilkyWay();
-		if (render.drawFastLinesMode == FAST_LINES.NONE && render.planetRender.highQuality) fastMode = true;
-		if (fastMode) {
-			if (!render.drawMilkyWayStroke.isContinuousLine()) fastMode = false;
-			if (render.drawMilkyWayStroke.getLineWidth() >= 2) fastMode = false;
-			if (g.renderingToExternalGraphics()) fastMode = false;
-//			if (render.anaglyphMode != ANAGLYPH_COLOR_MODE.NO_ANAGLYPH) fastMode = false;
+		boolean fastMode = false;
+		if (!g.renderingToAndroid()) {
+			fastMode = render.drawFastLinesMode.fastMilkyWay();
+			if (render.drawFastLinesMode == FAST_LINES.NONE && render.planetRender.highQuality) fastMode = true;
+			if (fastMode) {
+				if (!render.drawMilkyWayStroke.isContinuousLine()) fastMode = false;
+				if (render.drawMilkyWayStroke.getLineWidth() >= 2) fastMode = false;
+				if (g.renderingToExternalGraphics()) fastMode = false;
+	//			if (render.anaglyphMode != ANAGLYPH_COLOR_MODE.NO_ANAGLYPH) fastMode = false;
+			}
 		}
 		Object pathMilkyWay = null, pathMilkyWay1 = null;
 		boolean starting = true, startup = true;

@@ -1001,7 +1001,7 @@ public class OrbitalElement implements Serializable
 			}
 			break;
 		};
-		s = Functions.formatValue(factor, 2);
+		s = Functions.formatValue(factor, 3);
 		if (showPlanets) {
 			if (Translate.getDefaultLanguage() == LANGUAGE.SPANISH) {
 				s += " UA";

@@ -606,6 +606,7 @@ public class SatelliteEphem
 		return ephem;
 	}
 
+	private static String lastSatN = null, lastSatMag = null, lastSatSize = null;
 	/**
 	 * Gets the apparent magnitude and angular size of a satellite if this
 	 * information is known. Information is taken from Mike McCants,
@@ -621,64 +622,72 @@ public class SatelliteEphem
 	public static SatelliteEphemElement getMagnitudeAndAngularSize(SatelliteEphemElement sat_ephem,
 			SatelliteOrbitalElement sat_orb) throws JPARSECException
 	{
-		String satN = ""+sat_orb.satelliteNumber;
-		satN = DataSet.repeatString("0", 5-satN.length()) + satN + " ";
-		String pathToFile = FileIO.DATA_ORBITAL_ELEMENTS_DIRECTORY + "sat_mag.txt";
-
 		sat_ephem.magnitude = SatelliteEphemElement.UNKNOWN_MAGNITUDE;
 		sat_ephem.angularRadius = SatelliteEphemElement.UNKNOWN_ANGULAR_SIZE;
-		try
-		{
-			InputStream is = SatelliteEphem.class.getClassLoader().getResourceAsStream(pathToFile);
-			BufferedReader dis = new BufferedReader(new InputStreamReader(is, ReadFile.ENCODING_ISO_8859));
+		
+		String satN = ""+sat_orb.satelliteNumber;
+		satN = DataSet.repeatString("0", 5-satN.length()) + satN + " ";
 
-			String line = "";
-			while ((line = dis.readLine()) != null)
+		if (lastSatN == null || !satN.equals(lastSatN)) {
+			lastSatN = satN;
+			lastSatMag = null;
+			lastSatSize = null;
+			
+			String pathToFile = FileIO.DATA_ORBITAL_ELEMENTS_DIRECTORY + "sat_mag.txt";
+			try
 			{
-				if (line.startsWith(satN)) {
-					try {
-						String mag = line.substring(33, 38).trim();
-						if (!mag.equals("") && !sat_ephem.isEclipsed) {
-							sat_ephem.magnitude = (float) DataSet.parseDouble(mag);
-							// Apply McCants's algorithm
-							sat_ephem.magnitude = (float) (sat_ephem.magnitude - 15.75 + 2.5 * Math.log10(sat_ephem.distance * sat_ephem.distance / sat_ephem.illumination));
-						}
-					} catch (Exception exc) {}
-
-					double sat_size = 0.0;
-					try {
-						String end_line = "";
-						if (line.length() > 53) {
-							end_line = line.substring(38, 53).trim();
-						} else if (line.length() > 51) {
-							end_line = line.substring(38, 51).trim();
-						}
-
-						if (!end_line.equals(""))
-							sat_size = DataSet.parseDouble(FileIO.getField(1, end_line, " ", true));
-						if (sat_size > 0.0)
-						{
-							sat_ephem.angularRadius = (float) (0.5 * Math.atan2(sat_size, sat_ephem.distance * 1000.0));
-						}
-					} catch (Exception exc) {}
-					return sat_ephem;
-
+				InputStream is = SatelliteEphem.class.getClassLoader().getResourceAsStream(pathToFile);
+				BufferedReader dis = new BufferedReader(new InputStreamReader(is, ReadFile.ENCODING_ISO_8859));
+	
+				String line = "";
+				while ((line = dis.readLine()) != null)
+				{
+					if (line.startsWith(satN)) {
+						try {
+							String mag = line.substring(33, 38).trim();
+							lastSatMag = mag;
+						} catch (Exception exc) {}
+	
+						try {
+							String end_line = "";
+							if (line.length() > 53) {
+								end_line = line.substring(38, 53).trim();
+							} else if (line.length() > 51) {
+								end_line = line.substring(38, 51).trim();
+							}
+	
+							if (!end_line.equals(""))
+								lastSatSize = FileIO.getField(1, end_line, " ", true);
+						} catch (Exception exc) {}
+						break;
+					}
 				}
+	
+				// Close file
+				dis.close();
+				is.close();
+	
+			} catch (FileNotFoundException e1)
+			{
+				throw new JPARSECException("file not found in path " + pathToFile+".", e1);
+			} catch (IOException e2)
+			{
+				throw new JPARSECException(
+						"error while reading file " + pathToFile + ".", e2);
 			}
-
-			// Close file
-			dis.close();
-			is.close();
-
-		} catch (FileNotFoundException e1)
-		{
-			throw new JPARSECException("file not found in path " + pathToFile+".", e1);
-		} catch (IOException e2)
-		{
-			throw new JPARSECException(
-					"error while reading file " + pathToFile + ".", e2);
 		}
 
+		if (lastSatMag != null && !lastSatMag.equals("") && !sat_ephem.isEclipsed) {
+			sat_ephem.magnitude = (float) DataSet.parseDouble(lastSatMag);
+			// Apply McCants's algorithm
+			sat_ephem.magnitude = (float) (sat_ephem.magnitude - 15.75 + 2.5 * Math.log10(sat_ephem.distance * sat_ephem.distance / sat_ephem.illumination));
+		}
+		if (lastSatSize != null) {
+			double sat_size = DataSet.parseDouble(lastSatSize);
+			if (sat_size > 0.0)
+				sat_ephem.angularRadius = (float) (0.5 * Math.atan2(sat_size, sat_ephem.distance * 1000.0));
+		}
+		
 		return sat_ephem;
 	}
 
@@ -842,8 +851,7 @@ public class SatelliteEphem
 			nstep++;
 			double new_JD = JD + (double) nstep * time_step;
 
-			AstroDate astro = new AstroDate(new_JD);
-			TimeElement new_time = new TimeElement(astro, refScale);
+			TimeElement new_time = new TimeElement(new_JD, refScale);
 
 			ephem = SatelliteEphem.calcSatellite(new_time, obs, eph, sat, false);
 		}
@@ -871,8 +879,7 @@ public class SatelliteEphem
 			}
 			double new_JD = JD + (double) nstep * time_step;
 
-			AstroDate astro = new AstroDate(new_JD);
-			TimeElement new_time = new TimeElement(astro, refScale);
+			TimeElement new_time = new TimeElement(new_JD, refScale);
 
 			ephem = SatelliteEphem.calcSatellite(new_time, obs, eph, sat, false);
 		}
@@ -882,8 +889,7 @@ public class SatelliteEphem
 			nstep--;
 			double new_JD = JD + (double) nstep * time_step;
 
-			AstroDate astro = new AstroDate(new_JD);
-			TimeElement new_time = new TimeElement(astro, refScale);
+			TimeElement new_time = new TimeElement(new_JD, refScale);
 
 			ephem = SatelliteEphem.calcSatellite(new_time, obs, eph, sat, false);
 		}
@@ -962,8 +968,7 @@ public class SatelliteEphem
 				nstep ++;
 				double new_JD = JD + (double) nstep * time_step;
 
-				AstroDate astro = new AstroDate(new_JD);
-				new_time = new TimeElement(astro, SCALE.UNIVERSAL_TIME_UTC);
+				new_time = new TimeElement(new_JD, SCALE.UNIVERSAL_TIME_UTC);
 
 				ephem = calcSatellite(new_time, obs, eph, sat, false);
 
@@ -1442,7 +1447,7 @@ public class SatelliteEphem
 				//throw new JPARSECException("satellite below horizon and no next pass could be obtained.");
 				return sat;
 			}
-			timeEphem = new TimeElement(new AstroDate(Math.abs(sat.nextPass)), SCALE.LOCAL_TIME);
+			timeEphem = new TimeElement(Math.abs(sat.nextPass), SCALE.LOCAL_TIME);
 			sat = SatelliteEphem.satEphemeris(timeEphem, obs, eph, false);
 		}
 		double jdref = TimeScale.getJD(timeEphem, obs, eph, SCALE.LOCAL_TIME);
@@ -1454,7 +1459,7 @@ public class SatelliteEphem
 		do {
 			iter++;
 			jd = jd - precission / Constant.SECONDS_PER_DAY;
-			timeEphem = new TimeElement(new AstroDate(jd), SCALE.LOCAL_TIME);
+			timeEphem = new TimeElement(jd, SCALE.LOCAL_TIME);
 			sat = SatelliteEphem.satEphemeris(timeEphem, obs, eph, false);
 			if (sat.elevation > maxElev) {
 				maxElev = sat.elevation;
@@ -1469,7 +1474,7 @@ public class SatelliteEphem
 		do {
 			iter ++;
 			jd = jd + precission / Constant.SECONDS_PER_DAY;
-			timeEphem = new TimeElement(new AstroDate(jd), SCALE.LOCAL_TIME);
+			timeEphem = new TimeElement(jd, SCALE.LOCAL_TIME);
 			sat = SatelliteEphem.satEphemeris(timeEphem, obs, eph, false);
 			if (sat.elevation > maxElev) {
 				maxElev = sat.elevation;

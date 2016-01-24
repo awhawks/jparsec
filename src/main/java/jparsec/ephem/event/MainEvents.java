@@ -413,8 +413,7 @@ public class MainEvents
 		EphemerisElement eph = new EphemerisElement(TARGET.SUN, EphemerisElement.COORDINATES_TYPE.APPARENT,
 				EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.GEOCENTRIC, EphemerisElement.REDUCTION_METHOD.IAU_2006,
 				EphemerisElement.FRAME.ICRF, EphemerisElement.ALGORITHM.MOSHIER);
-		eph.correctForEOP = false;
-		eph.correctForPolarMotion = false;
+		eph.optimizeForSpeed();
 
 		double delta = 1.0, precision = 0.1 / (24.0 * 3600.0);
 		do {
@@ -463,8 +462,7 @@ public class MainEvents
 		EphemerisElement eph = new EphemerisElement(TARGET.SUN, EphemerisElement.COORDINATES_TYPE.APPARENT,
 				EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.GEOCENTRIC, EphemerisElement.REDUCTION_METHOD.IAU_2006,
 				EphemerisElement.FRAME.ICRF, EphemerisElement.ALGORITHM.MOSHIER);
-		eph.correctForEOP = false;
-		eph.correctForPolarMotion = false;
+		eph.optimizeForSpeed();
 		String months[] = new String[] {"Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"};
 		for (int i=1;i<meteor.size(); i++) {
 			String li = meteor.get(i);
@@ -535,8 +533,7 @@ public class MainEvents
 		EphemerisElement eph = new EphemerisElement(TARGET.SATURN, EphemerisElement.COORDINATES_TYPE.APPARENT,
 				EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.GEOCENTRIC, EphemerisElement.REDUCTION_METHOD.IAU_2009,
 				EphemerisElement.FRAME.DYNAMICAL_EQUINOX_J2000, EphemerisElement.ALGORITHM.MOSHIER);
-		eph.correctForEOP = false;
-		eph.correctForPolarMotion = false;
+		eph.optimizeForSpeed();
 		double step = 365, precision = 1.0 / (60.0 * 24.0);
 		if (eventType == EVENT_TIME.CLOSEST) {
 			time.add(-step);
@@ -589,8 +586,7 @@ public class MainEvents
 		EphemerisElement eph = new EphemerisElement(TARGET.SATURN, EphemerisElement.COORDINATES_TYPE.APPARENT,
 				EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.GEOCENTRIC, EphemerisElement.REDUCTION_METHOD.IAU_2009,
 				EphemerisElement.FRAME.DYNAMICAL_EQUINOX_J2000, EphemerisElement.ALGORITHM.MOSHIER);
-		eph.correctForEOP = false;
-		eph.correctForPolarMotion = false;
+		eph.optimizeForSpeed();
 		double step = 365, precision = 1.0 / (60.0 * 24.0);
 		if (eventType == EVENT_TIME.CLOSEST) {
 			time.add(-step);
@@ -877,8 +873,7 @@ public class MainEvents
 		EphemerisElement eph = new EphemerisElement(target, EphemerisElement.COORDINATES_TYPE.APPARENT,
 				EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.GEOCENTRIC, EphemerisElement.REDUCTION_METHOD.IAU_2009,
 				EphemerisElement.FRAME.DYNAMICAL_EQUINOX_J2000, EphemerisElement.ALGORITHM.MOSHIER);
-		eph.correctForEOP = false;
-		eph.correctForPolarMotion = false;
+		eph.optimizeForSpeed();
 		if (eph.targetBody == TARGET.EARTH) eph.targetBody = TARGET.SUN;
 		EphemElement ephem = Ephem.getEphemeris(time, observer, eph, false);
 		String details = "";
@@ -1440,8 +1435,7 @@ public class MainEvents
 		EphemerisElement eph = new EphemerisElement(target, EphemerisElement.COORDINATES_TYPE.APPARENT,
 				EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.GEOCENTRIC, EphemerisElement.REDUCTION_METHOD.IAU_2006,
 				EphemerisElement.FRAME.ICRF, EphemerisElement.ALGORITHM.MOSHIER);
-		eph.correctForEOP = false;
-		eph.correctForPolarMotion = false;
+		eph.optimizeForSpeed();
 
 		EphemElement ephem = null;
 		boolean inferior = true;
@@ -1672,10 +1666,8 @@ public class MainEvents
 		EphemerisElement eph2 = new EphemerisElement(target, EphemerisElement.COORDINATES_TYPE.APPARENT,
 				EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.GEOCENTRIC, EphemerisElement.REDUCTION_METHOD.IAU_2006,
 				EphemerisElement.FRAME.ICRF, EphemerisElement.ALGORITHM.MOSHIER);
-		eph.correctForEOP = false;
-		eph2.correctForEOP = false;
-		eph.correctForPolarMotion = false;
-		eph2.correctForPolarMotion = false;
+		eph.optimizeForSpeed();
+		eph2.optimizeForSpeed();
 
 		SimpleEventElement.EVENT event = SimpleEventElement.EVENT.PLANET_MINIMUM_ELONGATION;
 		double minElong = 0, sunRadius = 0.25, dist = 1.5, sunDist = 1;
@@ -1765,8 +1757,7 @@ public class MainEvents
 				EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.GEOCENTRIC, EphemerisElement.REDUCTION_METHOD.IAU_2006,
 				EphemerisElement.FRAME.ICRF);
 		eph.algorithm = EphemerisElement.ALGORITHM.MOSHIER;
-		eph.correctForEOP = false;
-		eph.correctForPolarMotion = false;
+		eph.optimizeForSpeed();
 
 		double prec = 1.0 / Constant.SECONDS_PER_DAY;
 		double jd;
