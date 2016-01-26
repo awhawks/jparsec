@@ -829,8 +829,34 @@ public class RenderSky
 					float radiusy = (float) (pixels_per_radian * 0.5 * render.telescope.ccd.getFieldY(tel));
 					sf1 = render.telescope.ccd.getFieldX(tel);
 					sf2 = render.telescope.ccd.getFieldY(tel);
+					float drs = pixels_per_degree;
+					if (radius / drs < 2) drs /= 6;
+					if (radius / drs < 2) drs /= 10;
+					if (radius / drs < 2) drs /= 6;
+					if (radius / drs < 2) drs /= 10;
+					int nmarksX = (int) (radius / drs);
+					int nmarksY = (int) (radiusy / drs);
+					int off = (int) (24f * (2f * radius / (float) render.width));
 					if (render.telescope.ccd.cameraPA == 0) {
 						g.drawRect(x0-radius, y0-radiusy, 2*radius, 2*radiusy, dist);
+						for (int i=0; i<=nmarksX; i++) {
+							float dri = drs * i;
+							g.drawLine(x0-dri, y0+radiusy, x0-dri, y0+radiusy+off, dist, dist);
+							g.drawLine(x0-dri, y0-radiusy, x0-dri, y0-radiusy-off, dist, dist);
+							if (i > 0) {
+								g.drawLine(x0+dri, y0+radiusy, x0+dri, y0+radiusy+off, dist, dist);
+								g.drawLine(x0+dri, y0-radiusy, x0+dri, y0-radiusy-off, dist, dist);
+							}
+						}
+						for (int i=0; i<=nmarksY; i++) {
+							float dri = drs * i;
+							g.drawLine(x0+radius, y0-dri, x0+radius+off, y0-dri, dist, dist);
+							g.drawLine(x0-radius, y0-dri, x0-radius-off, y0-dri, dist, dist);
+							if (i > 0) {
+								g.drawLine(x0+radius, y0+dri, x0+radius+off, y0+dri, dist, dist);
+								g.drawLine(x0-radius, y0+dri, x0-radius-off, y0+dri, dist, dist);
+							}
+						}
 					} else {
 						double dr = FastMath.hypot(radius, radiusy), ang0 = FastMath.atan2(radiusy, radius);
 						float ang = -render.telescope.ccd.cameraPA;
@@ -843,7 +869,6 @@ public class RenderSky
 						g.drawLine(x0+dx2, y0+dy2, x0+dx3, y0+dy3, dist, dist);
 						g.drawLine(x0+dx3, y0+dy3, x0+dx4, y0+dy4, dist, dist);
 						g.drawLine(x0+dx4, y0+dy4, x0+dx1, y0+dy1, dist, dist);
-						int off = (int) (24f * (2f * radius / (float) render.width));
 						dx1 = (float) (off * FastMath.cos(Constant.PI_OVER_TWO+ang));
 						dy1 = (float) (-off * FastMath.sin(Constant.PI_OVER_TWO+ang));
 						dx2 = dy1;
@@ -862,6 +887,36 @@ public class RenderSky
 						g.drawLine(x0-dx1, y0-dy1, x0-dx3, y0-dy3, dist, dist);
 						g.drawLine(x0+dx2, y0+dy2, x0+dx4, y0+dy4, dist, dist);
 						g.drawLine(x0-dx2, y0-dy2, x0-dx4, y0-dy4, dist, dist);
+						for (int i=-nmarksX; i<=nmarksX; i++) {
+							if (i == 0) continue;
+							float dri = drs * i;
+							ang0 = FastMath.atan2(radiusy, dri);
+							dri = (float) FastMath.hypot(dri, radiusy);
+							float drix = (float) (dri * FastMath.cos(ang0+ang));
+							float driy = (float) (-dri * FastMath.sin(ang0+ang));
+							ang0 = FastMath.atan2(radiusy + off, drs * i);
+							dri = (float) FastMath.hypot(drs * i, radiusy+off);
+							float drix2 = (float) (dri * FastMath.cos(ang0+ang));
+							float driy2 = (float) (-dri * FastMath.sin(ang0+ang));
+							g.drawLine(x0-drix, y0-driy, x0-drix2, y0-driy2, dist, dist);
+							g.drawLine(x0+drix, y0+driy, x0+drix2, y0+driy2, dist, dist);
+						}
+						for (int i=-nmarksY; i<=nmarksY; i++) {
+							if (i == 0) continue;
+							float dri = drs * i;
+							ang0 = FastMath.atan2(dri, radius);
+							dri = (float) FastMath.hypot(dri, radius);
+							float drix = (float) (dri * FastMath.cos(ang0+ang));
+							float driy = (float) (-dri * FastMath.sin(ang0+ang));
+							ang0 = FastMath.atan2(drs * i, radius + off);
+							dri = (float) FastMath.hypot(drs * i, radius+off);
+							float drix2 = (float) (dri * FastMath.cos(ang0+ang));
+							float driy2 = (float) (-dri * FastMath.sin(ang0+ang));
+//							g.drawLine(x0-drix, y0+driy, x0-drix2, y0+driy2, dist, dist);
+							g.drawLine(x0-drix, y0-driy, x0-drix2, y0-driy2, dist, dist);
+							g.drawLine(x0+drix, y0+driy, x0+drix2, y0+driy2, dist, dist);
+//							g.drawLine(x0+drix, y0-driy, x0+drix2, y0-driy2, dist, dist);
+						}
 					}
 					if (render.telescope.ccd.cameraPA == 0) radius = radiusy;
 				} else {
@@ -1053,6 +1108,7 @@ public class RenderSky
 
 			for (int index = 0; index < planetsOrdered.length; index++)
 			{
+				if (majorObjects == null) break;
 				TARGET target = planetsOrdered[index];
 				if (projection.obs.getMotherBody() == target && target == TARGET.SUN) continue;
 
@@ -11936,6 +11992,7 @@ public class RenderSky
 			g.setColor(render.drawCoordinateGridColor, false);
 			g.drawString(label, pos[0]-(w/2.0f), baseY2-(h/2.0f)+offset, dist);
 		}
+		if (g.renderingToAndroid()) baseY2 -= 2;
 		Graphics.FONT f = g.getFont();
 		if (labelsm == null) labelsm = Translate.translate(30);
 		int little = 0;
@@ -12975,6 +13032,7 @@ public class RenderSky
 		Object data[] = null;
 		if (!rec.contains(x, y)) return data;
 
+		boolean noFaintStar = false;
 		double star[] = this.getClosestStarInScreenCoordinates(x, y, considerMagLim);
 		if (star != null) {
 			if (star[1] < minDist || minDist == -1.0) {
@@ -12984,6 +13042,7 @@ public class RenderSky
 						RenderSky.OBJECT.STAR, pos, EphemElement.parseStarEphemElement(ephem), this.getStar((int) star[0])
 				};
 				minDist = star[1];
+//				if (ephem.magnitude > maglim - 2) noFaintStar = true;
 			}
 		}
 
@@ -12991,7 +13050,7 @@ public class RenderSky
 		Object planet[] = this.getClosestPlanetInScreenCoordinates(x, y, consider_satellites);
 		if (planet != null) {
 			double d = (Double) planet[1];
-			if (d < minDist || minDist == -1) {
+			if (d < minDist || minDist == -1 || (noFaintStar && d < 60)) {
 				TARGET p = (TARGET) planet[0];
 				EphemElement ephem = this.calcPlanet(p, true, fullDataAndPrecision);
 				boolean isPlanet = p.isPlanet();
@@ -13007,6 +13066,7 @@ public class RenderSky
 							RenderSky.OBJECT.PLANET, pos, ephem
 					};
 					minDist = (Double) planet[1];
+					noFaintStar = false;
 				}
 			}
 		}
@@ -13029,7 +13089,8 @@ public class RenderSky
 	 			float pos[] = (float[]) d[1];
 				double dx = pos[0] - x, dy = pos[1] - y;
 				double dist = (dx*dx+dy*dy);
-				if (rec.contains(pos[0], pos[1]) && dist < minDist2 || minDist == -1.0) {
+				if (rec.contains(pos[0], pos[1]) && dist < minDist2 || minDist == -1.0|| (noFaintStar && dist < 3600)) {
+					noFaintStar = false;
 					minDist = Math.sqrt(dist);
 					minDist2 = dist;
 					data = d;
