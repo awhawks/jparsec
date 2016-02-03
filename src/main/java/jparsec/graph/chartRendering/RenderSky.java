@@ -5468,14 +5468,12 @@ public class RenderSky
 		g.setFont(render.drawCoordinateGridFont);
 		int radius = -16;
 		int increment = 1;
-		double step = 10;
 		int eclStep = 2;
 		int pxSize = 3;
 		if (g.renderingToExternalGraphics()) pxSize = 4;
 		if (pixels_per_degree < 10 && !g.renderingToExternalGraphics()) { // Reduce sampling
 			increment = 3;
 			eclStep = 5;
-			step = 30;
 		}
 		if (lastIncrement > 0 && lastIncrement != increment) {
 			DataBase.addData("eclipticLine", threadID, null, true);
@@ -5495,8 +5493,10 @@ public class RenderSky
 		if (eclipticLine == null) {
 			eclipticLine = new ArrayList<Object>();
 			LocationElement old_loc = null;
+			int n = eclStep == 6 ? 4 : 5, index = -1;
 			for (double i = 360; i >= 0; i = i - eclStep)
 			{
+				index ++;
 				LocationElement loc = new LocationElement(i * Constant.DEG_TO_RAD, 0.0, 1.0);
 				loc = CoordinateSystem.eclipticToEquatorial(loc, projection.obliquity, true);
 				if (projection.obs.getMotherBody() != TARGET.EARTH && projection.obs.getMotherBody() != TARGET.NOT_A_PLANET) {
@@ -5505,7 +5505,11 @@ public class RenderSky
 				loc = projection.getApparentLocationInSelectedCoordinateSystem(loc, true, false, 0);
 				if (loc != null || old_loc != null) {
 					if (loc != null) {
-						eclipticLine.add(new float[] {(float)loc.getLongitude(), (float)loc.getLatitude()});
+						if (index % n == 0) {
+							eclipticLine.add(new float[] {(float)loc.getLongitude(), (float)loc.getLatitude(), (float) (i == 360 ? 0 : i)});							
+						} else {
+							eclipticLine.add(new float[] {(float)loc.getLongitude(), (float)loc.getLatitude()});
+						}
 					} else {
 						eclipticLine.add(null);
 					}
@@ -5515,17 +5519,13 @@ public class RenderSky
 			DataBase.addData("eclipticLine", threadID, eclipticLine.toArray(), true);
 			db_eclipticLine = DataBase.getIndex("eclipticLine", threadID);
 		}
-		int n = (int)(step / eclStep + 0.5);
-		if (n == 0) n = 1;
 		if (ecl0 == null) ecl0 = t19;
 		boolean eclipticDrawn = false;
 		float dist = getDist(this.axesDist);
-		int graphMarginY = this.graphMarginY+(leyendMargin-(int)rec.getMinY());
 		if (render.drawCoordinateGridEcliptic && coordinate_system != CoordinateSystem.COORDINATE_SYSTEM.ECLIPTIC)
 		{
 			float old_pos[] = null; //Projection.INVALID_POSITION;
-			float prev_pos1[] = null, prev_pos2[] = null, pos[], val;
-			boolean label = true;
+			float prev_pos1[] = null, prev_pos2[] = null, pos[];
 			float[] loc;
 			int steppix = (int) (20 + eclStep * pixels_per_degree);
 			int rs = eclipticLine.size();
@@ -5570,7 +5570,7 @@ public class RenderSky
 							old_pos = pos;
 						}
 					}
-					if (render.drawCoordinateGridEclipticLabels && label && i % n == 0 && i > 0)
+					if (render.drawCoordinateGridEclipticLabels && i > 0 && loc.length > 2)
 					{
 						if (render.anaglyphMode == ANAGLYPH_COLOR_MODE.NO_ANAGLYPH) {
 							g.fillOval(pos[0] - 1.5f, pos[1] - 1.5f, pxSize, pxSize, false);
@@ -5579,9 +5579,9 @@ public class RenderSky
 						}
 						if (render.drawCoordinateGridLabels)
 						{
-							val = (float) (360.0 - i * eclStep);
-							if (val < 0) val = (float) Functions.normalizeDegrees(val);
-							drawString(render.drawCoordinateGridEclipticColor, render.drawCoordinateGridFont, Integer.toString((int) (val+0.5))+"\u00b0", pos[0], pos[1], -radius, false);
+							int val = (int) (loc[2]+0.5);
+							if (fieldDeg < 30 || eclStep == 5 || (eclStep == 2 && val % 20 == 0))
+								drawString(render.drawCoordinateGridEclipticColor, render.drawCoordinateGridFont, Integer.toString(val)+"\u00b0", pos[0], pos[1], -radius, false);
 						}
 					} else {
 						if (!eclipticDrawn && render.drawCoordinateGridLabels && isInTheScreen((int)pos[0], (int)pos[1], -(int)g.getStringWidth(ecl0))) {
@@ -5603,8 +5603,6 @@ public class RenderSky
 					}
 					old_pos = null;
 				}
-
-				label = !label;
 			}
 		}
 		if (!fast) {

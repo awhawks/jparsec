@@ -460,8 +460,8 @@ public class EphemElement implements Serializable
 	public String constellation;
 
 	/**
-	 * Surface brightness if mag/arcsecond^2, or 0 if the object is a point
-	 * source or has no clear angular size.
+	 * Surface brightness in mag/arcsecond^2, or 0 if the angular radius 
+	 * of the object is lower than 0.5 arcseconds.
 	 */
 	public float surfaceBrightness;
 
