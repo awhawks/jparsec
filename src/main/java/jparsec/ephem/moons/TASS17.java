@@ -104,6 +104,7 @@ public class TASS17
 	private static double AIA;
 	private static double OMA;
 	private static double GK1;
+	private static boolean computing = false;
 	private static boolean seriesRead = false;
 	private static boolean seriesTruncated = false;
 
@@ -122,6 +123,46 @@ public class TASS17
 	private static double FRZT[] = new double[NTZT + 1];
 	private static double NBTP, NBTQ, NBTZ, NBTZT, T0, CSTP, CSTQ, AMM7;
 
+	/**
+	 * Returns if the computation of Saturn moons is currently running
+	 * in any thread or not.
+	 * @return True or false.
+	 */
+	public static boolean running() {
+		return computing;
+	}
+	
+	/**
+	 * Removes the static TASS data from memory. You will likely only need 
+	 * to call this function in Android to save about 1.5 MB of heap. It will
+	 * have no effect in case the computation of Saturn moons is currently
+	 * running.
+	 */
+	public static void clearDataTASS() {
+		if (computing) return;
+		seriesRead = false;
+		seriesTruncated = false;		
+		SERIES = new double[NTMX + 1][4][5][9];
+		IKS = new double[NTMX + 1][5][9][9];
+		NTR = new int[6][9];
+		AL0 = new double[9];
+		AN0 = new double[9];
+		AAM = new double[10];
+		TMAS = new double[10];
+		SERP = new double[NTP + 1];
+		SERQ = new double[NTQ + 1];
+		SERZ = new double[NTZ + 1];
+		SERZT = new double[NTZT + 1];
+		FAP = new double[NTP + 1];
+		FAQ = new double[NTQ + 1];
+		FAZ = new double[NTZ + 1];
+		FAZT = new double[NTZT + 1];
+		FRP = new double[NTP + 1];
+		FRQ = new double[NTQ + 1];
+		FRZ = new double[NTZ + 1];
+		FRZT = new double[NTZT + 1];
+	}
+	
 	/**
 	 * Path to redtass7.txt file
 	 */

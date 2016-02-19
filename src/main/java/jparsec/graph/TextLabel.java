@@ -806,6 +806,7 @@ public class TextLabel extends Object {
                     				  break;
                     			  }
                     		  }
+                    		  if (end == -1) end = t.length();
                     		  String f = t.substring(0, end);
                      		  i = i + 6 + end;
 

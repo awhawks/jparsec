@@ -556,7 +556,7 @@ public class RenderSatellite
 				if (px > render.width) px -= render.width * render.planetMap.zoomFactor;
 				if (px < 0) px += render.width * render.planetMap.zoomFactor;
 				if (px < 0 || px > render.width) continue;
-				g.drawLine(px, 0, px, render.height, true);
+				g.drawLine(px, 0, px, render.height-1, true);
 				int lon = -180 + 30 * i * increment;
 				if (lon < -180) lon = lon + 360;
 				s = ""+lon+"\u00b0";

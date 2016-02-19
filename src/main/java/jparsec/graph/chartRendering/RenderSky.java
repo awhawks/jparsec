@@ -2992,10 +2992,12 @@ public class RenderSky
 			LocationElement old_loc = null, old_loc2 = null;
 			if (baryc == null) baryc = Ephem.eclipticToEquatorial(PlanetEphem.getGeocentricPosition(equinox, TARGET.Solar_System_Barycenter, 0.0, false, projection.obs), Constant.J2000, projection.eph);
 
+			InputStream is = null;
+			BufferedReader dis = null;
 			try
 			{
-				InputStream is = getClass().getClassLoader().getResourceAsStream(FileIO.DATA_SKY_DIRECTORY + "milkyway.txt");
-				BufferedReader dis = new BufferedReader(new InputStreamReader(is, ReadFile.ENCODING_ISO_8859));
+				is = getClass().getClassLoader().getResourceAsStream(FileIO.DATA_SKY_DIRECTORY + "milkyway.txt");
+				dis = new BufferedReader(new InputStreamReader(is, ReadFile.ENCODING_ISO_8859));
 				String line = "";
 				boolean starting = true, fillPoints = false;
 				while ((line = dis.readLine()) != null)
@@ -3082,13 +3084,17 @@ public class RenderSky
 				}
 				// Close file
 				dis.close();
+				is.close();
+				is = null;
 				DataBase.addData("milkyWay", threadID, milkyWay.toArray(), true);
 				db_milkyWay = DataBase.getIndex("milkyWay", threadID);
-			} catch (FileNotFoundException e1)
+			} catch (Exception e2)
 			{
-				throw new JPARSECException("milky way file not found.", e1);
-			} catch (IOException e2)
-			{
+				try {
+					if (dis != null) dis.close();
+					if (is != null) is.close();
+					is = null;
+				} catch (Exception exc) {}
 				throw new JPARSECException(
 						"error while reading milky way file.", e2);
 			}
@@ -4066,10 +4072,12 @@ public class RenderSky
 			boolean skip = false;
 			if (baryc == null) baryc = Ephem.eclipticToEquatorial(PlanetEphem.getGeocentricPosition(equinox, TARGET.Solar_System_Barycenter, 0.0, false, projection.obs), Constant.J2000, projection.eph);
 
+			InputStream is = null;
+			BufferedReader dis = null;
 			try
 			{
-				InputStream is = getClass().getClassLoader().getResourceAsStream(FileIO.DATA_SKY_DIRECTORY + "shapes.txt");
-				BufferedReader dis = new BufferedReader(new InputStreamReader(is, ReadFile.ENCODING_ISO_8859));
+				is = getClass().getClassLoader().getResourceAsStream(FileIO.DATA_SKY_DIRECTORY + "shapes.txt");
+				dis = new BufferedReader(new InputStreamReader(is, ReadFile.ENCODING_ISO_8859));
 				String line = "";
 				while ((line = dis.readLine()) != null)
 				{
@@ -4116,14 +4124,17 @@ public class RenderSky
 				}
 				// Close file
 				dis.close();
-
+				is.close();
+				is = null;
 				DataBase.addData("nebula", threadID, nebula.toArray(), true);
 				db_nebula = DataBase.getIndex("nebula", threadID);
-			} catch (FileNotFoundException e1)
+			} catch (Exception e2)
 			{
-				throw new JPARSECException("objects file not found.", e1);
-			} catch (IOException e2)
-			{
+				try {
+					if (dis != null) dis.close();
+					if (is != null) is.close();
+					is = null;
+				} catch (Exception exc) {}
 				throw new JPARSECException(
 						"error while reading objects file.", e2);
 			}
@@ -4288,10 +4299,12 @@ public class RenderSky
 			conlim = new ArrayList<Object>();
 			double ra1 = 0.0, dec1 = 0.0;
 
+			InputStream is = null;
+			BufferedReader dis = null;
 			try
 			{
-				InputStream is = getClass().getClassLoader().getResourceAsStream(FileIO.DATA_SKY_DIRECTORY + "conlim.txt");
-				BufferedReader dis = new BufferedReader(new InputStreamReader(is, ReadFile.ENCODING_ISO_8859));
+				is = getClass().getClassLoader().getResourceAsStream(FileIO.DATA_SKY_DIRECTORY + "conlim.txt");
+				dis = new BufferedReader(new InputStreamReader(is, ReadFile.ENCODING_ISO_8859));
 				String line = "";
 				while ((line = dis.readLine()) != null)
 				{
@@ -4361,14 +4374,17 @@ public class RenderSky
 				}
 				// Close file
 				dis.close();
-
+				is.close();
+				is = null;
 				DataBase.addData("conlim", threadID, conlim.toArray(), true);
 				db_conlim = DataBase.getIndex("conlim", threadID);
-			} catch (FileNotFoundException e1)
+			} catch (Exception e2)
 			{
-				throw new JPARSECException("constellation limits file not found.", e1);
-			} catch (IOException e2)
-			{
+				try {
+					if (dis != null) dis.close();
+					if (is != null) is.close();
+					is = null;
+				} catch (Exception exc) {}
 				throw new JPARSECException(
 						"error while reading constellation limits file.", e2);
 			}
@@ -8030,9 +8046,10 @@ public class RenderSky
 			rf.setFormatToRead(format_Padova_Asiago_SN_cat);
 			String months = "JanFebMarAprMayJunJulAugSepOctNovDec";
 
+			InputStream is = null;
+			BufferedReader dis = null;
 			try
 			{
-				InputStream is = null;
 				double jd = TimeScale.getJD(projection.time, projection.obs, projection.eph, SCALE.UNIVERSAL_TIME_UTC);
 				AstroDate astro = new AstroDate(jd);
 				String p = null;
@@ -8042,7 +8059,7 @@ public class RenderSky
 				} catch (Exception exc) {}
 				if (is == null) is = getClass().getClassLoader().getResourceAsStream(FileIO.DATA_SKY_DIRECTORY + "Padova-Asiago sn cat.txt");
 
-				BufferedReader dis = new BufferedReader(new InputStreamReader(is, ReadFile.ENCODING_ISO_8859));
+				dis = new BufferedReader(new InputStreamReader(is, ReadFile.ENCODING_ISO_8859));
 				String line = dis.readLine();
 				if (baryc == null) baryc = Ephem.eclipticToEquatorial(PlanetEphem.getGeocentricPosition(equinox, TARGET.Solar_System_Barycenter, 0.0, false, projection.obs), Constant.J2000, projection.eph);
 				while ((line = dis.readLine()) != null)
@@ -8176,16 +8193,19 @@ public class RenderSky
 				}
 				// Close file
 				dis.close();
-
+				is.close();
+				is = null;
 				DataBase.addData("sncat", threadID, sncat.toArray(), true);
 				db_sncat = DataBase.getIndex("sncat", threadID);
-			} catch (FileNotFoundException e1)
+			} catch (Exception e2)
 			{
-				throw new JPARSECException("objects file not found.", e1);
-			} catch (IOException e2)
-			{
+				try {
+					if (dis != null) dis.close();
+					if (is != null) is.close();
+					is = null;
+				} catch (Exception exc) {}
 				throw new JPARSECException(
-						"error while reading objects file.", e2);
+						"error while reading SN file.", e2);
 			}
 		}
 
@@ -8284,9 +8304,10 @@ public class RenderSky
 			ReadFormat rf = new ReadFormat();
 			rf.setFormatToRead(novaeFormat);
 
+			InputStream is = null;
+			BufferedReader dis = null;
 			try
 			{
-				InputStream is = null;
 				double jd = TimeScale.getJD(projection.time, projection.obs, projection.eph, SCALE.UNIVERSAL_TIME_UTC);
 				AstroDate astro = new AstroDate(jd);
 				String p = null;
@@ -8296,7 +8317,7 @@ public class RenderSky
 				} catch (Exception exc) {}
 				if (is == null) is = getClass().getClassLoader().getResourceAsStream(FileIO.DATA_SKY_DIRECTORY + "galnovae.txt");
 
-				BufferedReader dis = new BufferedReader(new InputStreamReader(is, ReadFile.ENCODING_ISO_8859));
+				dis = new BufferedReader(new InputStreamReader(is, ReadFile.ENCODING_ISO_8859));
 				String line = dis.readLine();
 				if (baryc == null) baryc = Ephem.eclipticToEquatorial(PlanetEphem.getGeocentricPosition(equinox, TARGET.Solar_System_Barycenter, 0.0, false, projection.obs), Constant.J2000, projection.eph);
 				while ((line = dis.readLine()) != null)
@@ -8366,16 +8387,19 @@ public class RenderSky
 				}
 				// Close file
 				dis.close();
-
+				is.close();
+				is = null;
 				DataBase.addData("novae", threadID, novae.toArray(), true);
 				db_novae = DataBase.getIndex("novae", threadID);
-			} catch (FileNotFoundException e1)
+			} catch (Exception e2)
 			{
-				throw new JPARSECException("objects file not found.", e1);
-			} catch (IOException e2)
-			{
+				try {
+					if (dis != null) dis.close();
+					if (is != null) is.close();
+					is = null;
+				} catch (Exception exc) {}
 				throw new JPARSECException(
-						"error while reading objects file.", e2);
+						"error while reading novae file.", e2);
 			}
 		}
 
@@ -8518,10 +8542,12 @@ public class RenderSky
 		double jYearsFromJ2000 = Math.abs(jd - Constant.J2000) / 365.25;
 
 		// Connect to the file
+		InputStream is = null;
+		BufferedReader dis = null;
 		try
 		{
-			InputStream is = getClass().getClassLoader().getResourceAsStream(path);
-			BufferedReader dis = new BufferedReader(new InputStreamReader(is));
+			is = getClass().getClassLoader().getResourceAsStream(path);
+			dis = new BufferedReader(new InputStreamReader(is));
 
 			while ((file_line = dis.readLine()) != null)
 			{
@@ -8540,6 +8566,8 @@ public class RenderSky
 
 			// Close file
 			dis.close();
+			is.close();
+			is = null;
 
 			if (o == null) {
 				re.setReadElements(list);
@@ -8584,6 +8612,11 @@ public class RenderSky
 */
 		} catch (Exception e2)
 		{
+			try {
+				if (dis != null) dis.close();
+				if (is != null) is.close();
+				is = null;
+			} catch (Exception exc) {}
 			throw new JPARSECException(
 					"error while reading file " + re.pathToFile, e2);
 		}
@@ -8605,7 +8638,7 @@ public class RenderSky
 		public short spi;
 
 		public StarData(LocationElement loc, float mag, String sp, String type) {
-			loc.set(DataSet.toFloatArray(loc.get())); // Reduce memory use
+			if (loc != null) loc.set(DataSet.toFloatArray(loc.get())); // Reduce memory use
 			this.loc = loc;
 			this.mag = new float[] {mag};
 			this.sp = sp;
@@ -13837,10 +13870,12 @@ public class RenderSky
 			String nodraw[] = new String[] {"LMC", "292", "1976", "1982", "6995", "6979", "I.1287", "I.4601", "6514", "6526", "3324", "896"};
 
 			// Connect to the file
+			InputStream is = null;
+			BufferedReader dis = null;
 			try
 			{
-				InputStream is = RenderSky.class.getClassLoader().getResourceAsStream(FileIO.DATA_SKY_DIRECTORY + "objects.txt");
-				BufferedReader dis = new BufferedReader(new InputStreamReader(is));
+				is = RenderSky.class.getClassLoader().getResourceAsStream(FileIO.DATA_SKY_DIRECTORY + "objects.txt");
+				dis = new BufferedReader(new InputStreamReader(is));
 				String line;
 				while ((line = dis.readLine()) != null)
 				{
@@ -13919,9 +13954,15 @@ public class RenderSky
 
 				// Close file
 				dis.close();
-
+				is.close();
+				is = null;
 			} catch (Exception e2)
 			{
+				try {
+					if (dis != null) dis.close();
+					if (is != null) is.close();
+					is = null;
+				} catch (Exception exc) {}
 				throw new JPARSECException(
 						"error while reading objects file", e2);
 			}

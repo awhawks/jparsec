@@ -24,8 +24,6 @@ package jparsec.io;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Serializable;
@@ -39,8 +37,8 @@ import jparsec.astronomy.Constellation;
 import jparsec.astronomy.Constellation.CONSTELLATION_NAME;
 import jparsec.ephem.Ephem;
 import jparsec.ephem.EphemerisElement;
-import jparsec.ephem.Functions;
 import jparsec.ephem.EphemerisElement.REDUCTION_METHOD;
+import jparsec.ephem.Functions;
 import jparsec.ephem.Target.TARGET;
 import jparsec.ephem.moons.MoonOrbitalElement;
 import jparsec.ephem.planets.EphemElement;
@@ -181,7 +179,7 @@ public class ReadFile implements Serializable
 		};
 		if (index >= Configuration.MAX_CACHE_SIZE) {
 			index = 0;
-			if (threadName == null) threadName = ApplicationLauncher.getProcessID();
+			if (threadName == null) threadName = Thread.currentThread().getName();
 
 			id = pathToFile+"_"+encoding+"_0";
 			DataBase.addData(this.getDataBaseID(), threadName, null, inMemory);
@@ -672,8 +670,8 @@ public class ReadFile implements Serializable
 			int ram = Integer.parseInt(ra.substring(2, 4));
 			int deg = Integer.parseInt(dec.substring(1, 3));
 			int dem = Integer.parseInt(dec.substring(3, 5));
-			double ras = Double.parseDouble(ra.substring(4));
-			double decs = Double.parseDouble(dec.substring(5));
+			double ras = Float.parseFloat(ra.substring(4));
+			double decs = Float.parseFloat(dec.substring(5));
 			double rap = (rah + (ram / 60.0 + ras / 3600.0)) / Constant.RAD_TO_HOUR;
 			double decp = (deg + (dem / 60.0 + decs / 3600.0)) * Constant.DEG_TO_RAD;
 			if (dec.startsWith("-")) decp = -decp;
@@ -682,14 +680,14 @@ public class ReadFile implements Serializable
 			orbit.declination = decp;
 
 			String aunit = rf.readString(dstar, "A_UNIT");
-			double sma = Double.parseDouble(rf.readString(dstar, "A"));
+			double sma = Float.parseFloat(rf.readString(dstar, "A"));
 			if (aunit.equals("m")) sma = sma / 1000.0;
 
-			double ecc = Double.parseDouble(rf.readString(dstar, "EXC"));
-			double perih_lon = Double.parseDouble(rf.readString(dstar, "LP")) * Constant.DEG_TO_RAD;
-			double asc_node_lon = Double.parseDouble(rf.readString(dstar, "NODE")) * Constant.DEG_TO_RAD;
-			double incl = Double.parseDouble(rf.readString(dstar, "INCL")) * Constant.DEG_TO_RAD;
-			double ref_time = Double.parseDouble(rf.readString(dstar, "TP"));
+			double ecc = Float.parseFloat(rf.readString(dstar, "EXC"));
+			double perih_lon = Float.parseFloat(rf.readString(dstar, "LP")) * Constant.DEG_TO_RAD;
+			double asc_node_lon = Float.parseFloat(rf.readString(dstar, "NODE")) * Constant.DEG_TO_RAD;
+			double incl = Float.parseFloat(rf.readString(dstar, "INCL")) * Constant.DEG_TO_RAD;
+			double ref_time = Float.parseFloat(rf.readString(dstar, "TP"));
 			String tunit = rf.readString(dstar, "TP_UNIT");
 			if (tunit.equals("d")) {
 				ref_time += 2400000.0;
@@ -697,7 +695,7 @@ public class ReadFile implements Serializable
 				ref_time = (ref_time - 2000.0) * 365.242189 + 2451544.53;
 			}
 			String punit = rf.readString(dstar, "P_UNIT");
-			double period = Double.parseDouble(rf.readString(dstar, "P"));
+			double period = Float.parseFloat(rf.readString(dstar, "P"));
 			if (punit.equals("y")) period *= 365.25;
 			if (punit.equals("c")) period *= Constant.JULIAN_DAYS_PER_CENTURY;
 			double motion = Constant.TWO_PI / period;
@@ -904,7 +902,7 @@ public class ReadFile implements Serializable
 		}
 		return var;
 	}
-
+	
 	/**
 	 * Sets the path to the file of objects elements. Full path required in case
 	 * of external files.
@@ -1010,7 +1008,7 @@ public class ReadFile implements Serializable
 	 * @param a The list of objects.
 	 */
 	public void setReadElements(ArrayList a) {
-		if (threadName == null) threadName = ApplicationLauncher.getProcessID();
+		if (threadName == null) threadName = Thread.currentThread().getName();
 
 		if (a == null) {
 			DataBase.addData(getDataBaseID(), threadName, null, inMemory);
@@ -1026,7 +1024,7 @@ public class ReadFile implements Serializable
 	 * @param o The array of objects.
 	 */
 	public void setReadElementsFromArray(Object o[]) {
-		if (threadName == null) threadName = ApplicationLauncher.getProcessID();
+		if (threadName == null) threadName = Thread.currentThread().getName();
 
 		if (o == null) {
 			DataBase.addData(getDataBaseID(), threadName, null, inMemory);
@@ -1053,7 +1051,7 @@ public class ReadFile implements Serializable
 	 * @return The list of objects.
 	 */
 	public Object[] getReadElements() {
-		if (threadName == null) threadName = ApplicationLauncher.getProcessID();
+		if (threadName == null) threadName = Thread.currentThread().getName();
 		Object o = DataBase.getData(getDataBaseID(), threadName, inMemory);
 		if (o == null) return null;
 		return (Object[]) o;
@@ -1103,10 +1101,12 @@ public class ReadFile implements Serializable
 		String file_line = "";
 
 		// Connect to the file
+		InputStream is = null;
+		BufferedReader dis = null;
 		try
 		{
-			InputStream is = getClass().getClassLoader().getResourceAsStream(pathToFile);
-			BufferedReader dis = new BufferedReader(new InputStreamReader(is, encoding));
+			is = getClass().getClassLoader().getResourceAsStream(pathToFile);
+			dis = new BufferedReader(new InputStreamReader(is, encoding));
 
 			while ((file_line = dis.readLine()) != null)
 			{
@@ -1119,13 +1119,17 @@ public class ReadFile implements Serializable
 
 			// Close file
 			dis.close();
+			is.close();
+			is = null;
 
 			this.setReadElements(vec);
-		} catch (FileNotFoundException e1)
+		} catch (Exception e2)
 		{
-			throw new JPARSECException("file not found in path " + pathToFile+".", e1);
-		} catch (IOException e2)
-		{
+			try {
+				if (dis != null) dis.close();
+				if (is != null) is.close();
+				is = null;
+			} catch (Exception exc) {}
 			throw new JPARSECException(
 					"error while reading file " + pathToFile + ".", e2);
 		}
@@ -1165,10 +1169,12 @@ public class ReadFile implements Serializable
 		String file_line = "";
 
 		// Connect to the file
+		InputStream is = null;
+		BufferedReader dis = null;
 		try
 		{
-			InputStream is = getClass().getClassLoader().getResourceAsStream(pathToFile);
-			BufferedReader dis = new BufferedReader(new InputStreamReader(is, encoding));
+			is = getClass().getClassLoader().getResourceAsStream(pathToFile);
+			dis = new BufferedReader(new InputStreamReader(is, encoding));
 
 			while ((file_line = dis.readLine()) != null)
 			{
@@ -1182,13 +1188,17 @@ public class ReadFile implements Serializable
 
 			// Close file
 			dis.close();
+			is.close();
+			is = null;
 
 			this.setReadElements(vec);
-		} catch (FileNotFoundException e1)
+		} catch (Exception e2)
 		{
-			throw new JPARSECException("file not found in path " + pathToFile+".", e1);
-		} catch (IOException e2)
-		{
+			try {
+				if (dis != null) dis.close();
+				if (is != null) is.close();
+				is = null;
+			} catch (Exception exc) {}
 			throw new JPARSECException(
 					"error while reading file " + pathToFile + ".", e2);
 		}
@@ -1218,10 +1228,12 @@ public class ReadFile implements Serializable
 		this.formatOfFile = FORMAT.MPC;
 
 		// Connect to the file
+		InputStream is = null;
+		BufferedReader dis = null;
 		try
 		{
-			InputStream is = getClass().getClassLoader().getResourceAsStream(pathToFile);
-			BufferedReader dis = new BufferedReader(new InputStreamReader(is, encoding));
+			is = getClass().getClassLoader().getResourceAsStream(pathToFile);
+			dis = new BufferedReader(new InputStreamReader(is, encoding));
 
 			while ((file_line = dis.readLine()) != null)
 			{
@@ -1244,13 +1256,17 @@ public class ReadFile implements Serializable
 
 			// Close file
 			dis.close();
+			is.close();
+			is = null;
 
 			this.setReadElements(vec);
-		} catch (FileNotFoundException e1)
+		} catch (Exception e2)
 		{
-			throw new JPARSECException("file not found in path " + pathToFile+".", e1);
-		} catch (IOException e2)
-		{
+			try {
+				if (dis != null) dis.close();
+				if (is != null) is.close();
+				is = null;
+			} catch (Exception exc) {}
 			throw new JPARSECException(
 					"error while reading file " + pathToFile + ".", e2);
 		}
@@ -1274,10 +1290,12 @@ public class ReadFile implements Serializable
 		if (astro != null) jd = astro.jd();
 
 		// Connect to the file
+		InputStream is = null;
+		BufferedReader dis = null;
 		try
 		{
-			InputStream is = ReadFile.class.getClassLoader().getResourceAsStream(OrbitEphem.PATH_TO_OLD_COMETS_FILE);
-			BufferedReader dis = new BufferedReader(new InputStreamReader(is));
+			is = ReadFile.class.getClassLoader().getResourceAsStream(OrbitEphem.PATH_TO_OLD_COMETS_FILE);
+			dis = new BufferedReader(new InputStreamReader(is));
 
 			file_line = dis.readLine();
 			file_line = dis.readLine();
@@ -1348,15 +1366,19 @@ public class ReadFile implements Serializable
 
 			// Close file
 			dis.close();
+			is.close();
+			is = null;
 
 			if (out.size() == 0) return null;
 
 			return out;
-		} catch (FileNotFoundException e1)
+		} catch (Exception e2)
 		{
-			throw new JPARSECException("file of old comets not found in path.", e1);
-		} catch (IOException e2)
-		{
+			try {
+				if (dis != null) dis.close();
+				if (is != null) is.close();
+				is = null;
+			} catch (Exception exc) {}
 			throw new JPARSECException(
 					"error while reading old comets file.", e2);
 		}
@@ -1386,10 +1408,12 @@ public class ReadFile implements Serializable
 		String file_line = "";
 
 		// Connect to the file
+		InputStream is = null;
+		BufferedReader dis = null;
 		try
 		{
-			InputStream is = getClass().getClassLoader().getResourceAsStream(pathToFile);
-			BufferedReader dis = new BufferedReader(new InputStreamReader(is, encoding));
+			is = getClass().getClassLoader().getResourceAsStream(pathToFile);
+			dis = new BufferedReader(new InputStreamReader(is, encoding));
 
 			while ((file_line = dis.readLine()) != null)
 			{
@@ -1402,13 +1426,17 @@ public class ReadFile implements Serializable
 
 			// Close file
 			dis.close();
+			is.close();
+			is = null;
 
 			this.setReadElements(vec);
-		} catch (FileNotFoundException e1)
+		} catch (Exception e2)
 		{
-			throw new JPARSECException("file not found in path " + pathToFile+".", e1);
-		} catch (IOException e2)
-		{
+			try {
+				if (dis != null) dis.close();
+				if (is != null) is.close();
+				is = null;
+			} catch (Exception exc) {}
 			throw new JPARSECException(
 					"error while reading file " + pathToFile + ".", e2);
 		}
@@ -1430,10 +1458,12 @@ public class ReadFile implements Serializable
 		String file_line = "";
 
 		// Connect to the file
+		InputStream is = null;
+		BufferedReader dis = null;
 		try
 		{
-			InputStream is = getClass().getClassLoader().getResourceAsStream(pathToFile);
-			BufferedReader dis = new BufferedReader(new InputStreamReader(is, encoding));
+			is = getClass().getClassLoader().getResourceAsStream(pathToFile);
+			dis = new BufferedReader(new InputStreamReader(is, encoding));
 
 			while ((file_line = dis.readLine()) != null)
 			{
@@ -1461,13 +1491,17 @@ public class ReadFile implements Serializable
 
 			// Close file
 			dis.close();
+			is.close();
+			is = null;
 
 			this.setReadElements(vec);
-		} catch (FileNotFoundException e1)
+		} catch (Exception e2)
 		{
-			throw new JPARSECException("file not found in path " + pathToFile+".", e1);
-		} catch (IOException e2)
-		{
+			try {
+				if (dis != null) dis.close();
+				if (is != null) is.close();
+				is = null;
+			} catch (Exception exc) {}
 			throw new JPARSECException(
 					"error while reading file " + pathToFile + ".", e2);
 		}
@@ -1724,10 +1758,12 @@ public class ReadFile implements Serializable
 		ArrayList<String> names = new ArrayList<String>();
 
 		// Connect to the file
+		InputStream is = null;
+		BufferedReader dis = null;
 		try
 		{
-			InputStream is = getClass().getClassLoader().getResourceAsStream(pathToFile);
-			BufferedReader dis = new BufferedReader(new InputStreamReader(is, encoding));
+			is = getClass().getClassLoader().getResourceAsStream(pathToFile);
+			dis = new BufferedReader(new InputStreamReader(is, encoding));
 
 			while ((line0 = dis.readLine()) != null)
 			{
@@ -1786,17 +1822,18 @@ public class ReadFile implements Serializable
 
 			// Close file
 			dis.close();
+			is.close();
+			is = null;
 
 			this.setReadElements(vec);
-		} catch (FileNotFoundException e1)
+		} catch (Exception e2)
 		{
-			throw new JPARSECException("file not found in path " + pathToFile+".", e1);
-		} catch (IOException e2)
-		{
-			throw new JPARSECException(
-					"error while reading file " + pathToFile + ".", e2);
-		} catch (Exception exc) {
-			throw new JPARSECException("Error reading file, line: "+FileIO.getLineSeparator()+line1+FileIO.getLineSeparator()+line2, exc);
+			try {
+				if (dis != null) dis.close();
+				if (is != null) is.close();
+				is = null;
+			} catch (Exception exc) {}
+			throw new JPARSECException("Error reading file "+pathToFile+", line: "+FileIO.getLineSeparator()+line1+FileIO.getLineSeparator()+line2, e2);
 		}
 	}
 
@@ -1931,7 +1968,7 @@ public class ReadFile implements Serializable
 
 		return star;
 	}
-
+	
 	/**
 	 * Search for an object by it's name.
 	 *
@@ -2132,10 +2169,12 @@ public class ReadFile implements Serializable
 		String path = FileIO.DATA_ORBITAL_ELEMENTS_DIRECTORY + "JPL_natural_satellites.txt";
 
 		// Connect to the file
+		InputStream is = null;
+		BufferedReader dis = null;
 		try
 		{
-			InputStream is = getClass().getClassLoader().getResourceAsStream(path);
-			BufferedReader dis = new BufferedReader(new InputStreamReader(is, encoding));
+			is = getClass().getClassLoader().getResourceAsStream(path);
+			dis = new BufferedReader(new InputStreamReader(is, encoding));
 
 			while ((file_line = dis.readLine()) != null)
 			{
@@ -2219,18 +2258,17 @@ public class ReadFile implements Serializable
 
 			// Close file
 			dis.close();
-		} catch (FileNotFoundException e1)
+			is.close();
+			is = null;
+		} catch (Exception e2)
 		{
-			throw new JPARSECException("file not found in path: " + path+".", e1);
-		} catch (IOException e2)
-		{
+			try {
+				if (dis != null) dis.close();
+				if (is != null) is.close();
+				is = null;
+			} catch (Exception exc) {}
 			throw new JPARSECException(
 					"error while reading path " + path + "." , e2);
-		} catch (JPARSECException ve)
-		{
-			throw ve;
-		} catch (Exception exc) {
-			throw new JPARSECException(exc);
 		}
 
 		this.setReadElements(v);
@@ -2414,11 +2452,13 @@ public class ReadFile implements Serializable
 		String path = pathToFile;
 
 		// Connect to the file
+		InputStream is = null;
+		BufferedReader dis = null;
 		try
 		{
 			URLConnection Connection = ((new File(path)).toURI().toURL()).openConnection();
-			InputStream is = Connection.getInputStream();
-			BufferedReader dis = new BufferedReader(new InputStreamReader(is, charset));
+			is = Connection.getInputStream();
+			dis = new BufferedReader(new InputStreamReader(is, charset));
 
 			while ((file_line = dis.readLine()) != null)
 			{
@@ -2429,13 +2469,15 @@ public class ReadFile implements Serializable
 			// Close file
 			dis.close();
 			is.close();
-
+			is = null;
 			return vec;
-		} catch (FileNotFoundException e1)
+		} catch (Exception e2)
 		{
-			throw new JPARSECException("file not found in path " + pathToFile+".", e1);
-		} catch (IOException e2)
-		{
+			try {
+				if (dis != null) dis.close();
+				if (is != null) is.close();
+				is = null;
+			} catch (Exception exc) {}
 			throw new JPARSECException(
 					"error while reading file " + pathToFile + ".", e2);
 		}
@@ -2457,9 +2499,7 @@ public class ReadFile implements Serializable
 			InputStream is = Connection.getInputStream();
 			BufferedReader dis = new BufferedReader(new InputStreamReader(is, charset));
 			return dis;
-		} catch (FileNotFoundException e1) {
-			throw new JPARSECException("file not found in path " + pathToFile+".", e1);
-		} catch (IOException e2) {
+		} catch (Exception e2) {
 			throw new JPARSECException("error while reading file " + pathToFile + ".", e2);
 		}
 	}
@@ -2477,11 +2517,13 @@ public class ReadFile implements Serializable
 		int n = 0;
 
 		// Connect to the file
+		InputStream is = null;
+		BufferedReader dis = null;
 		try
 		{
 			URLConnection Connection = ((new File(path)).toURI().toURL()).openConnection();
-			InputStream is = Connection.getInputStream();
-			BufferedReader dis = new BufferedReader(new InputStreamReader(is));
+			is = Connection.getInputStream();
+			dis = new BufferedReader(new InputStreamReader(is));
 
 			while ((dis.readLine()) != null)
 			{
@@ -2491,13 +2533,16 @@ public class ReadFile implements Serializable
 			// Close file
 			dis.close();
 			is.close();
+			is = null;
 
 			return n;
-		} catch (FileNotFoundException e1)
+		} catch (Exception e2)
 		{
-			throw new JPARSECException("file not found in path " + path+".", e1);
-		} catch (IOException e2)
-		{
+			try {
+				if (dis != null) dis.close();
+				if (is != null) is.close();
+				is = null;
+			} catch (Exception exc) {}
 			throw new JPARSECException(
 					"error while reading file " + path + ".", e2);
 		}
@@ -2520,11 +2565,13 @@ public class ReadFile implements Serializable
 		String file_line = "";
 
 		// Connect to the file
+		InputStream is = null;
+		BufferedReader dis = null;
 		try
 		{
 			URLConnection Connection = ((new File(path)).toURI().toURL()).openConnection();
-			InputStream is = Connection.getInputStream();
-			BufferedReader dis = new BufferedReader(new InputStreamReader(is, encoding));
+			is = Connection.getInputStream();
+			dis = new BufferedReader(new InputStreamReader(is, encoding));
 
 			while ((file_line = dis.readLine()) != null)
 			{
@@ -2536,13 +2583,16 @@ public class ReadFile implements Serializable
 			// Close file
 			dis.close();
 			is.close();
+			is = null;
 
 			return vec;
-		} catch (FileNotFoundException e1)
+		} catch (Exception e2)
 		{
-			throw new JPARSECException("file not found in path " + path+".", e1);
-		} catch (IOException e2)
-		{
+			try {
+				if (dis != null) dis.close();
+				if (is != null) is.close();
+				is = null;
+			} catch (Exception exc) {}
 			throw new JPARSECException(
 					"error while reading file " + path + ".", e2);
 		}
@@ -2565,11 +2615,13 @@ public class ReadFile implements Serializable
 		String file_line = "";
 
 		// Connect to the file
+		InputStream is = null;
+		BufferedReader dis = null;
 		try
 		{
 			URLConnection Connection = ((new File(path)).toURI().toURL()).openConnection();
-			InputStream is = Connection.getInputStream();
-			BufferedReader dis = new BufferedReader(new InputStreamReader(is, encoding));
+			is = Connection.getInputStream();
+			dis = new BufferedReader(new InputStreamReader(is, encoding));
 
 			while ((file_line = dis.readLine()) != null)
 			{
@@ -2581,13 +2633,16 @@ public class ReadFile implements Serializable
 			// Close file
 			dis.close();
 			is.close();
+			is = null;
 
 			return vec;
-		} catch (FileNotFoundException e1)
+		} catch (Exception e2)
 		{
-			throw new JPARSECException("file not found in path " + path+".", e1);
-		} catch (IOException e2)
-		{
+			try {
+				if (dis != null) dis.close();
+				if (is != null) is.close();
+				is = null;
+			} catch (Exception exc) {}
 			throw new JPARSECException(
 					"error while reading file " + path + ".", e2);
 		}
@@ -2612,11 +2667,13 @@ public class ReadFile implements Serializable
 		String file_line = "";
 
 		// Connect to the file
+		InputStream is = null;
+		BufferedReader dis = null;
 		try
 		{
 			URLConnection Connection = ((new File(path)).toURI().toURL()).openConnection();
-			InputStream is = Connection.getInputStream();
-			BufferedReader dis = new BufferedReader(new InputStreamReader(is, encoding));
+			is = Connection.getInputStream();
+			dis = new BufferedReader(new InputStreamReader(is, encoding));
 
 			for (int i=0; i<i0; i++) {
 				file_line = dis.readLine();
@@ -2631,13 +2688,16 @@ public class ReadFile implements Serializable
 			// Close file
 			dis.close();
 			is.close();
+			is = null;
 
 			return vec;
-		} catch (FileNotFoundException e1)
+		} catch (Exception e2)
 		{
-			throw new JPARSECException("file not found in path " + path+".", e1);
-		} catch (IOException e2)
-		{
+			try {
+				if (dis != null) dis.close();
+				if (is != null) is.close();
+				is = null;
+			} catch (Exception exc) {}
 			throw new JPARSECException(
 					"error while reading file " + path + ".", e2);
 		}
@@ -2660,11 +2720,13 @@ public class ReadFile implements Serializable
 		String file_line = "";
 
 		// Connect to the file
+		InputStream is = null;
+		BufferedReader dis = null;
 		try
 		{
 			URLConnection Connection = ((new File(path)).toURI().toURL()).openConnection();
-			InputStream is = Connection.getInputStream();
-			BufferedReader dis = new BufferedReader(new InputStreamReader(is, encoding));
+			is = Connection.getInputStream();
+			dis = new BufferedReader(new InputStreamReader(is, encoding));
 
 			while ((file_line = dis.readLine()) != null)
 			{
@@ -2675,13 +2737,16 @@ public class ReadFile implements Serializable
 			// Close file
 			dis.close();
 			is.close();
+			is = null;
 
 			return vec;
-		} catch (FileNotFoundException e1)
+		} catch (Exception e2)
 		{
-			throw new JPARSECException("file not found in path " + path+".", e1);
-		} catch (IOException e2)
-		{
+			try {
+				if (dis != null) dis.close();
+				if (is != null) is.close();
+				is = null;
+			} catch (Exception exc) {}
 			throw new JPARSECException(
 					"error while reading file " + path + ".", e2);
 		}
@@ -2702,11 +2767,13 @@ public class ReadFile implements Serializable
 		String file_line;
 
 		// Connect to the file
+		InputStream is = null;
+		BufferedReader dis = null;
 		try
 		{
 			URLConnection Connection = pathToFile.openConnection();
-			InputStream is = Connection.getInputStream();
-			BufferedReader dis = new BufferedReader(new InputStreamReader(is, charset));
+			is = Connection.getInputStream();
+			dis = new BufferedReader(new InputStreamReader(is, charset));
 
 			while ((file_line = dis.readLine()) != null)
 			{
@@ -2717,13 +2784,16 @@ public class ReadFile implements Serializable
 			// Close file
 			dis.close();
 			is.close();
+			is = null;
 
 			return vec;
-		} catch (FileNotFoundException e1)
+		} catch (Exception e2)
 		{
-			throw new JPARSECException("file not found in path " + pathToFile+".", e1);
-		} catch (IOException e2)
-		{
+			try {
+				if (dis != null) dis.close();
+				if (is != null) is.close();
+				is = null;
+			} catch (Exception exc) {}
 			throw new JPARSECException(
 					"error while reading file " + pathToFile + ".", e2);
 		}
@@ -2766,10 +2836,12 @@ public class ReadFile implements Serializable
 		String file_line;
 
 		// Connect to the file
+		InputStream is = null;
+		BufferedReader dis = null;
 		try
 		{
-			InputStream is = getClass().getClassLoader().getResourceAsStream(pathToFile);
-			BufferedReader dis = new BufferedReader(new InputStreamReader(is, encoding));
+			is = getClass().getClassLoader().getResourceAsStream(pathToFile);
+			dis = new BufferedReader(new InputStreamReader(is, encoding));
 
 			while ((file_line = dis.readLine()) != null)
 			{
@@ -2780,13 +2852,16 @@ public class ReadFile implements Serializable
 			// Close file
 			dis.close();
 			is.close();
+			is = null;
 
 			return vec;
-		} catch (FileNotFoundException e1)
+		} catch (Exception e2)
 		{
-			throw new JPARSECException("file not found in path " + pathToFile+".", e1);
-		} catch (IOException e2)
-		{
+			try {
+				if (dis != null) dis.close();
+				if (is != null) is.close();
+				is = null;
+			} catch (Exception exc) {}
 			throw new JPARSECException(
 					"error while reading file " + pathToFile + ".", e2);
 		}
@@ -2803,9 +2878,10 @@ public class ReadFile implements Serializable
 		// Define necessary variables
 		int n = 0;
 
+		InputStream is = null;
 		try
 		{
-			InputStream is = getClass().getClassLoader().getResourceAsStream(pathToFile);
+			is = getClass().getClassLoader().getResourceAsStream(pathToFile);
 		    byte[] buffer = new byte[8 * 1024]; // BUFFER_SIZE = 8 * 1024
 		    int read;
 		    char sep = FileIO.getLineSeparator().charAt(0);
@@ -2817,6 +2893,7 @@ public class ReadFile implements Serializable
 		    }
 
 		    is.close();
+			is = null;
 
 /*
 			// Connect to the file
@@ -2834,11 +2911,12 @@ public class ReadFile implements Serializable
 */
 			return n;
 
-		} catch (FileNotFoundException e1)
+		} catch (Exception e2)
 		{
-			throw new JPARSECException("file not found in path " + pathToFile+".", e1);
-		} catch (IOException e2)
-		{
+			try {
+				if (is != null) is.close();
+				is = null;
+			} catch (Exception exc) {}
 			throw new JPARSECException(
 					"error while reading file " + pathToFile + ".", e2);
 		}
@@ -2860,10 +2938,12 @@ public class ReadFile implements Serializable
 		String file_line = "";
 
 		// Connect to the file
+		InputStream is = null;
+		BufferedReader dis = null;
 		try
 		{
-			InputStream is = getClass().getClassLoader().getResourceAsStream(pathToFile);
-			BufferedReader dis = new BufferedReader(new InputStreamReader(is, encoding));
+			is = getClass().getClassLoader().getResourceAsStream(pathToFile);
+			dis = new BufferedReader(new InputStreamReader(is, encoding));
 
 			while ((file_line = dis.readLine()) != null)
 			{
@@ -2875,13 +2955,16 @@ public class ReadFile implements Serializable
 			// Close file
 			dis.close();
 			is.close();
+			is = null;
 
 			return vec;
-		} catch (FileNotFoundException e1)
+		} catch (Exception e2)
 		{
-			throw new JPARSECException("file not found in path " + pathToFile+".", e1);
-		} catch (IOException e2)
-		{
+			try {
+				if (dis != null) dis.close();
+				if (is != null) is.close();
+				is = null;
+			} catch (Exception exc) {}
 			throw new JPARSECException(
 					"error while reading file " + pathToFile + ".", e2);
 		}
@@ -2919,10 +3002,12 @@ public class ReadFile implements Serializable
 		String file_line = "";
 
 		// Connect to the file
+		InputStream is = null;
+		BufferedReader dis = null;
 		try
 		{
-			InputStream is = getClass().getClassLoader().getResourceAsStream(pathToFile);
-			BufferedReader dis = new BufferedReader(new InputStreamReader(is, encoding));
+			is = getClass().getClassLoader().getResourceAsStream(pathToFile);
+			dis = new BufferedReader(new InputStreamReader(is, encoding));
 
 			for (int i=0; i<i0; i++) {
 				file_line = dis.readLine();
@@ -2941,13 +3026,16 @@ public class ReadFile implements Serializable
 			// Close file
 			dis.close();
 			is.close();
+			is = null;
 
 			return vec;
-		} catch (FileNotFoundException e1)
+		} catch (Exception e2)
 		{
-			throw new JPARSECException("file not found in path " + pathToFile+".", e1);
-		} catch (IOException e2)
-		{
+			try {
+				if (dis != null) dis.close();
+				if (is != null) is.close();
+				is = null;
+			} catch (Exception exc) {}
 			throw new JPARSECException(
 					"error while reading file " + pathToFile + ".", e2);
 		}
@@ -2969,10 +3057,12 @@ public class ReadFile implements Serializable
 		String file_line = "";
 
 		// Connect to the file
+		InputStream is = null;
+		BufferedReader dis = null;
 		try
 		{
-			InputStream is = getClass().getClassLoader().getResourceAsStream(pathToFile);
-			BufferedReader dis = new BufferedReader(new InputStreamReader(is, encoding));
+			is = getClass().getClassLoader().getResourceAsStream(pathToFile);
+			dis = new BufferedReader(new InputStreamReader(is, encoding));
 
 			while ((file_line = dis.readLine()) != null)
 			{
@@ -2983,13 +3073,16 @@ public class ReadFile implements Serializable
 			// Close file
 			dis.close();
 			is.close();
+			is = null;
 
 			return vec;
-		} catch (FileNotFoundException e1)
+		} catch (Exception e2)
 		{
-			throw new JPARSECException("file not found in path " + pathToFile+".", e1);
-		} catch (IOException e2)
-		{
+			try {
+				if (dis != null) dis.close();
+				if (is != null) is.close();
+				is = null;
+			} catch (Exception exc) {}
 			throw new JPARSECException(
 					"error while reading file " + pathToFile + ".", e2);
 		}
@@ -3159,10 +3252,12 @@ public class ReadFile implements Serializable
 		String file_line = "";
 
 		// Connect to the file
+		InputStream is = null;
+		BufferedReader dis = null;
 		try
 		{
-			InputStream is = getClass().getClassLoader().getResourceAsStream(pathToFile);
-			BufferedReader dis = new BufferedReader(new InputStreamReader(is, encoding));
+			is = getClass().getClassLoader().getResourceAsStream(pathToFile);
+			dis = new BufferedReader(new InputStreamReader(is, encoding));
 
 			for (int i = 0; i < 7; i++) {
 				file_line = dis.readLine();
@@ -3179,13 +3274,16 @@ public class ReadFile implements Serializable
 			// Close file
 			dis.close();
 			is.close();
+			is = null;
 
 			this.setReadElements(vec);
-		} catch (FileNotFoundException e1)
+		} catch (Exception e2)
 		{
-			throw new JPARSECException("file not found in path " + pathToFile+".", e1);
-		} catch (IOException e2)
-		{
+			try {
+				if (dis != null) dis.close();
+				if (is != null) is.close();
+				is = null;
+			} catch (Exception exc) {}
 			throw new JPARSECException(
 					"error while reading file " + pathToFile + ".", e2);
 		}
@@ -3206,10 +3304,12 @@ public class ReadFile implements Serializable
 		String file_line = "";
 
 		// Connect to the file
+		InputStream is = null;
+		BufferedReader dis = null;
 		try
 		{
-			InputStream is = getClass().getClassLoader().getResourceAsStream(pathToFile);
-			BufferedReader dis = new BufferedReader(new InputStreamReader(is, encoding));
+			is = getClass().getClassLoader().getResourceAsStream(pathToFile);
+			dis = new BufferedReader(new InputStreamReader(is, encoding));
 
 			while ((file_line = dis.readLine()) != null)
 			{
@@ -3223,13 +3323,16 @@ public class ReadFile implements Serializable
 			// Close file
 			dis.close();
 			is.close();
+			is = null;
 
 			this.setReadElements(vec);
-		} catch (FileNotFoundException e1)
+		} catch (Exception e2)
 		{
-			throw new JPARSECException("file not found in path " + pathToFile+".", e1);
-		} catch (IOException e2)
-		{
+			try {
+				if (dis != null) dis.close();
+				if (is != null) is.close();
+				is = null;
+			} catch (Exception exc) {}
 			throw new JPARSECException(
 					"error while reading file " + pathToFile + ".", e2);
 		}
@@ -3259,10 +3362,12 @@ public class ReadFile implements Serializable
 			year = Integer.parseInt(pathToFile.substring(i0 + 8, i1));
 		}
 
+		InputStream is = null;
+		BufferedReader dis = null;
 		try
 		{
-			InputStream is = getClass().getClassLoader().getResourceAsStream(pathToFile);
-			BufferedReader dis = new BufferedReader(new InputStreamReader(is, encoding));
+			is = getClass().getClassLoader().getResourceAsStream(pathToFile);
+			dis = new BufferedReader(new InputStreamReader(is, encoding));
 
 			int imax = 1;
 			if (!aavso) imax = 15;
@@ -3283,18 +3388,21 @@ public class ReadFile implements Serializable
 			// Close file
 			dis.close();
 			is.close();
+			is = null;
 
 			this.setReadElements(vec);
-		} catch (FileNotFoundException e1)
+		} catch (Exception e2)
 		{
-			throw new JPARSECException("file not found in path " + pathToFile+".", e1);
-		} catch (IOException e2)
-		{
+			try {
+				if (dis != null) dis.close();
+				if (is != null) is.close();
+				is = null;
+			} catch (Exception exc) {}
 			throw new JPARSECException(
 					"error while reading file " + pathToFile + ".", e2);
 		}
 	}
-
+	
 	private boolean satisfyConstraints(String name, LocationElement loc) {
 		if (consName == null && consLoc == null) return true;
 		if (name != null && consName != null) {
