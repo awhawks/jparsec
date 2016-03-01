@@ -1608,10 +1608,12 @@ public class RenderPlanet
 			}
 		} else
 		{
-			posx = posx / scaleFactor;
-			posy = posy / scaleFactor;
-			scaleFactor = 1;
-
+			if (r < 2) {
+				posx = posx / scaleFactor;
+				posy = posy / scaleFactor;
+				scaleFactor = 1;
+			}
+			
 			// Minimum size of 30 pixels for grid (planet without textures)
 			if (planetVisible) {
 				float dpi = 1;
@@ -3196,7 +3198,8 @@ public class RenderPlanet
 		if (target == TARGET.EARTH) {
 			try {
 				CityElement c = City.findNearestCity(loc, null, maxDist * Constant.DEG_TO_RAD);
-				String feature = c.name + " ("+Translate.translate(1082).toLowerCase()+") ("+c.longitude+"\u00b0) ("+c.latitude+"\u00b0) (0 km) ("+c.country+", "+c.height+", "+c.timeZone+")";
+				String feature = c.name + " ("+Translate.translate(1082).toLowerCase()+
+						") ("+Functions.formatValue(c.longitude, 2)+"\u00b0) ("+Functions.formatValue(c.latitude, 2)+"\u00b0) (0 km) ("+c.country+", "+c.height+", "+Functions.formatValue(c.timeZone, 1)+")";
 				return feature;
 			} catch (Exception e) {
 				return null;
@@ -3212,7 +3215,7 @@ public class RenderPlanet
 					ReadFile.ENCODING_UTF_8);
 			double lon0 = loc.getLongitude() * Constant.RAD_TO_DEG;
 			double lat0 = loc.getLatitude() * Constant.RAD_TO_DEG;
-			String sep = UnixSpecialCharacter.UNIX_SPECIAL_CHARACTER.TAB.value;
+			String sep = "\t";
 			for (int i=0; i<v.size(); i++)
 			{
 				String line = v.get(i);
@@ -3240,7 +3243,7 @@ public class RenderPlanet
 					String type = FileIO.getField(2, line, sep, true);
 					String detail = FileIO.getField(6, line, sep, true);
 					detail += ", "+FileIO.getField(7, line, sep, true);
-					feature = name + " ("+type+") ("+lonp+"\u00b0) ("+lat+"\u00b0) ("+size+" km) ("+detail+")";
+					feature = name + " ("+type+") ("+Functions.formatValue(lonp, 2)+"\u00b0) ("+Functions.formatValue(latp, 2)+"\u00b0) ("+size+" km) ("+detail+")";
 				}
 			}
 		} catch (Exception exc) { }

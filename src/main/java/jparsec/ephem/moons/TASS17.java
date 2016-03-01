@@ -69,6 +69,7 @@ public class TASS17
 	 */
 	public static double[] TASS17_theory(double JD, int nsat, boolean truncate) throws JPARSECException
 	{
+		computing = true;
 		if (!seriesRead || truncate != seriesTruncated) {
 			int icrt = 0;
 			if (truncate) icrt = 1;
@@ -89,18 +90,19 @@ public class TASS17
 		}
 
 		double pos[] = EDERED(ELEM, nsat);
+		computing = false;
 		return pos;
 	}
 
 	// Define global parameters of TASS 1.7
 	private static final int NTMX = 250;
-	private static double SERIES[][][][] = new double[NTMX + 1][4][5][9];
-	private static double IKS[][][][] = new double[NTMX + 1][5][9][9];
-	private static int NTR[][] = new int[6][9];
-	private static double AL0[] = new double[9];
-	private static double AN0[] = new double[9];
-	private static double AAM[] = new double[10];
-	private static double TMAS[] = new double[10];
+	private static double SERIES[][][][] = null;
+	private static double IKS[][][][] = null;
+	private static int NTR[][] = null;
+	private static double AL0[] = null;
+	private static double AN0[] = null;
+	private static double AAM[] = null;
+	private static double TMAS[] = null;
 	private static double AIA;
 	private static double OMA;
 	private static double GK1;
@@ -109,18 +111,18 @@ public class TASS17
 	private static boolean seriesTruncated = false;
 
 	private static final int NTP = 120, NTQ = 240, NTZ = 200, NTZT = 65;
-	private static double SERP[] = new double[NTP + 1];
-	private static double SERQ[] = new double[NTQ + 1];
-	private static double SERZ[] = new double[NTZ + 1];
-	private static double SERZT[] = new double[NTZT + 1];
-	private static double FAP[] = new double[NTP + 1];
-	private static double FAQ[] = new double[NTQ + 1];
-	private static double FAZ[] = new double[NTZ + 1];
-	private static double FAZT[] = new double[NTZT + 1];
-	private static double FRP[] = new double[NTP + 1];
-	private static double FRQ[] = new double[NTQ + 1];
-	private static double FRZ[] = new double[NTZ + 1];
-	private static double FRZT[] = new double[NTZT + 1];
+	private static double SERP[] = null;
+	private static double SERQ[] = null;
+	private static double SERZ[] = null;
+	private static double SERZT[] = null;
+	private static double FAP[] = null;
+	private static double FAQ[] = null;
+	private static double FAZ[] = null;
+	private static double FAZT[] = null;
+	private static double FRP[] = null;
+	private static double FRQ[] = null;
+	private static double FRZ[] = null;
+	private static double FRZT[] = null;
 	private static double NBTP, NBTQ, NBTZ, NBTZT, T0, CSTP, CSTQ, AMM7;
 
 	/**
@@ -142,27 +144,27 @@ public class TASS17
 		if (computing) return;
 		seriesRead = false;
 		seriesTruncated = false;		
-		SERIES = new double[NTMX + 1][4][5][9];
-		IKS = new double[NTMX + 1][5][9][9];
-		NTR = new int[6][9];
-		AL0 = new double[9];
-		AN0 = new double[9];
-		AAM = new double[10];
-		TMAS = new double[10];
-		SERP = new double[NTP + 1];
-		SERQ = new double[NTQ + 1];
-		SERZ = new double[NTZ + 1];
-		SERZT = new double[NTZT + 1];
-		FAP = new double[NTP + 1];
-		FAQ = new double[NTQ + 1];
-		FAZ = new double[NTZ + 1];
-		FAZT = new double[NTZT + 1];
-		FRP = new double[NTP + 1];
-		FRQ = new double[NTQ + 1];
-		FRZ = new double[NTZ + 1];
-		FRZT = new double[NTZT + 1];
+		SERIES = null;
+		IKS = null;
+		NTR = null;
+		AL0 = null;
+		AN0 = null;
+		AAM = null;
+		TMAS = null;
+		SERP = null;
+		SERQ = null;
+		SERZ = null;
+		SERZT = null;
+		FAP = null;
+		FAQ = null;
+		FAZ = null;
+		FAZT = null;
+		FRP = null;
+		FRQ = null;
+		FRZ = null;
+		FRZT = null;
 	}
-	
+
 	/**
 	 * Path to redtass7.txt file
 	 */
@@ -255,6 +257,26 @@ public class TASS17
 
 	private static void LECSER(int ICRT) throws JPARSECException
 	{
+		SERIES = new double[NTMX + 1][4][5][9];
+		IKS = new double[NTMX + 1][5][9][9];
+		NTR = new int[6][9];
+		AL0 = new double[9];
+		AN0 = new double[9];
+		AAM = new double[10];
+		TMAS = new double[10];
+		SERP = new double[NTP + 1];
+		SERQ = new double[NTQ + 1];
+		SERZ = new double[NTZ + 1];
+		SERZT = new double[NTZT + 1];
+		FAP = new double[NTP + 1];
+		FAQ = new double[NTQ + 1];
+		FAZ = new double[NTZ + 1];
+		FAZT = new double[NTZT + 1];
+		FRP = new double[NTP + 1];
+		FRQ = new double[NTQ + 1];
+		FRZ = new double[NTZ + 1];
+		FRZT = new double[NTZT + 1];
+		
 		double AM[] = new double[10];
 		double TAM[] = new double[10];
 		int IK[] = new int[9];

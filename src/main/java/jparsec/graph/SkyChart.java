@@ -2796,8 +2796,10 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 		  									String val[] = DataSet.toStringArray(s, ",");
 			  								observer2 = new ObserverElement();
 			  								observer2.setName(val[0]);
+			  								double lat = Double.parseDouble(val[2]);
+			  								if (Math.abs(lat) > 89.999) lat = 89.999 * FastMath.sign(lat);
 			  								observer2.setLongitudeRad(Double.parseDouble(val[1])*Constant.DEG_TO_RAD);
-			  								observer2.setLatitudeRad(Double.parseDouble(val[2])*Constant.DEG_TO_RAD);
+			  								observer2.setLatitudeRad(lat*Constant.DEG_TO_RAD);
 			  								observer2.setHeight((int) Double.parseDouble(val[3]), true);
 			  								observer2.setTimeZone(Double.parseDouble(val[4]));
 			  								observer2.setDSTCode(DST_RULE.NONE);

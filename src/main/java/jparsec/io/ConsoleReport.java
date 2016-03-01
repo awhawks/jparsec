@@ -141,7 +141,7 @@ public class ConsoleReport
 			for (int i=0; i<l; i++) {
 				if (ephem.rise != null && ephem.rise.length > i) out += name + Translate.translate(295)+": " + TimeFormat.formatJulianDayAsDateAndTime(ephem.rise[i], SCALE.LOCAL_TIME) + sep;
 				if (ephem.transit != null && ephem.transit.length > i) out += name + Translate.translate(297)+": " + TimeFormat.formatJulianDayAsDateAndTime(ephem.transit[i], SCALE.LOCAL_TIME) + sep;
-				if (ephem.transitElevation != null && ephem.transitElevation.length > i) out += name + Translate.translate(298)+": " + Functions.formatAngle(ephem.transitElevation[i], 1) + sep;
+				if (ephem.transitElevation != null && ephem.transitElevation.length > i && ephem.transit[i] > 0) out += name + Translate.translate(298)+": " + Functions.formatAngle(ephem.transitElevation[i], 1) + sep;
 				if (ephem.set != null && ephem.set.length > i) out += name + Translate.translate(296)+": " + TimeFormat.formatJulianDayAsDateAndTime(ephem.set[i], SCALE.LOCAL_TIME) + sep;
 			}
 		}
@@ -269,6 +269,7 @@ public class ConsoleReport
 		}
 		if (ephem.rise != null) out += name + Translate.translate(295)+": " + TimeFormat.formatJulianDayAsDateAndTime(ephem.rise[0], SCALE.LOCAL_TIME) + sep;
 		if (ephem.transit != null) out += name + Translate.translate(297)+": " + TimeFormat.formatJulianDayAsDateAndTime(ephem.transit[0], SCALE.LOCAL_TIME) + sep;
+		if (ephem.transitElevation != null && ephem.transit[0] > 0) out += name + Translate.translate(298)+": " + Functions.formatAngle(ephem.transitElevation[0], 1) + sep;
 		if (ephem.set != null) out += name + Translate.translate(296)+": " + TimeFormat.formatJulianDayAsDateAndTime(ephem.set[0], SCALE.LOCAL_TIME) + sep;
 		if (!isStar) out += name + Translate.translate(301)+": " + Functions.formatAngle(ephem.elongation, decimalArcsec) + sep;
 		if (!isStar) out += name + Translate.translate(302)+": " + Functions.formatAngle(ephem.phaseAngle, decimalArcsec) + sep;
