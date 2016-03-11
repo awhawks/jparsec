@@ -544,25 +544,25 @@ public class RenderSatellite
 				if (py < 0 || py > render.height) continue;
 				g.drawLine(0, py, render.width, py, true);
 				if (i==0) py += 10 + g.getFont().getSize();
-				int lat = 90 - 30 * i;
-				s = ""+lat+"\u00b0";
-				g.drawString(s, 15, py-5);
+				//int lat = 90 - 30 * i;
+				//s = ""+lat+"\u00b0";
+				//g.drawString(s, 15, py-5);
 			}
 			//int p0[] = this.getTexturePosition(new LocationElement(-Math.PI, 0.0, 1.0));
-			int increment = 1;
-			if (obs.getMotherBody().compareTo(TARGET.EARTH) > 0 && obs.getMotherBody() != TARGET.Moon) increment = -1;
+			//int increment = 1;
+			//if (obs.getMotherBody().compareTo(TARGET.EARTH) > 0 && obs.getMotherBody() != TARGET.Moon) increment = -1;
 			for (int i=0; i<13; i++) {
 				int px = (int) (pos[0] + deg30 * i); //p0[0]+(int)(i*(render.width-1.0)/12.0+0.5);
 				if (px > render.width) px -= render.width * render.planetMap.zoomFactor;
 				if (px < 0) px += render.width * render.planetMap.zoomFactor;
 				if (px < 0 || px > render.width) continue;
 				g.drawLine(px, 0, px, render.height-1, true);
-				int lon = -180 + 30 * i * increment;
-				if (lon < -180) lon = lon + 360;
-				s = ""+lon+"\u00b0";
-				int dx = 5;
-				if (px > render.width/2) dx = (int) (-5-g.getStringWidth(s));
-				g.drawString(s, px+dx, render.height-5-g.getFont().getSize());
+				//int lon = -180 + 30 * i * increment;
+				//if (lon < -180) lon = lon + 360;
+				//s = ""+lon+"\u00b0";
+				//int dx = 5;
+				//if (px > render.width/2) dx = (int) (-5-g.getStringWidth(s));
+				//g.drawString(s, px+dx, render.height-5-g.getFont().getSize());
 			}
 		}
 		if (render.showOrbits) {
@@ -732,6 +732,40 @@ public class RenderSatellite
 					g.drawImage(sat[j], sat_pos[j][0] + satx - (int) (0.5 * size[0]), sat_pos[j][1] + saty - (int) (0.5 * size[1]), refz/1.1f);
 				}
 			}
+		}
+		
+		if (render.planetMap.showGrid && render.planetMap == PLANET_MAP.MAP_FLAT) {
+			g.setFont(g.getFont().getDerivedFont(g.getFont(), g.getFont().getSize() + 5, 1));
+			int over = g.getFont().getSize() * 4;
+			Graphics g2 = g.getGraphics(g.getWidth() + over, g.getHeight() + over);
+			g2.setFont(g.getFont());
+			g2.setColor(0, 0, 0, 0);
+			g2.fillRect(0, 0, g2.getWidth(), g2.getHeight());
+			int px0 = over/2+over/6, py0 = over/2-over/6;
+			g2.drawImage(g.getRendering(), px0, py0);
+			g2.setColor(render.planetMap.showGridColor, true);
+
+			int pos[] = this.getPosition(new LocationElement(-Math.PI, Constant.PI_OVER_TWO, 1));
+			double deg30 = (render.width-1) * render.planetMap.zoomFactor / 12.0;
+			for (int i=0; i<7; i++) {
+				int py = (int) (pos[1] + deg30 * i) + py0 + over/4;
+				int lat = 90 - 30 * i;
+				s = ""+lat+"\u00b0";
+				g2.drawString(s, px0-2-g.getStringWidth(s), py-over/8);
+			}
+			//int p0[] = this.getTexturePosition(new LocationElement(-Math.PI, 0.0, 1.0));
+			int increment = 1;
+			if (obs.getMotherBody().compareTo(TARGET.EARTH) > 0 && obs.getMotherBody() != TARGET.Moon) increment = -1;
+			for (int i=0; i<13; i++) {
+				int px = (int) (pos[0] + deg30 * i); //p0[0]+(int)(i*(render.width-1.0)/12.0+0.5);
+				if (px > render.width) px -= render.width * render.planetMap.zoomFactor;
+				if (px < 0) px += render.width * render.planetMap.zoomFactor;
+				int lon = -180 + 30 * i * increment;
+				if (lon < -180) lon = lon + 360;
+				s = ""+lon+"\u00b0";
+				g2.drawString(s, px-g2.getStringWidth(s)/2+px0, g2.getHeight()-over/4);
+			}
+			g.drawImage(g.getScaledImage(g2.getRendering(), g.getWidth(), g.getHeight(), false, false), 0, 0);
 		}
 	}
 

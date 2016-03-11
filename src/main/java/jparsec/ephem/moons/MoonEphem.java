@@ -474,7 +474,8 @@ public class MoonEphem
 		moon = MoonEphemElement.parseEphemElement(ephem);
 		try {
 			new_eph_moon.targetBody = Target.getIDFromEnglishName(orbit.name);
-			moon.name = new_eph_moon.targetBody.getName();
+			moon.name = orbit.name;
+			if (new_eph_moon.targetBody != TARGET.NOT_A_PLANET) moon.name = new_eph_moon.targetBody.getName();
 			moon = MoonPhysicalParameters.physicalParameters(JD, ephem_sun, moon, obs, new_eph_moon);
 		} catch (Exception exc) {
 			moon.name = Translate.translate(orbit.name);
@@ -608,7 +609,8 @@ public class MoonEphem
 					moon = MoonEphemElement.parseEphemElement(ephem);
 					try {
 						new_eph_moon.targetBody = Target.getIDFromEnglishName(orbit.name);
-						moon.name = new_eph_moon.targetBody.getName();
+						moon.name = orbit.name;
+						if (new_eph_moon.targetBody != TARGET.NOT_A_PLANET) moon.name = new_eph_moon.targetBody.getName();
 						moon = MoonPhysicalParameters.physicalParameters(JD, ephem_sun, moon, obs, new_eph_moon);
 					} catch (Exception exc) {
 						moon.name = Translate.translate(orbit.name);						

@@ -3215,7 +3215,7 @@ public class RenderPlanet
 					ReadFile.ENCODING_UTF_8);
 			double lon0 = loc.getLongitude() * Constant.RAD_TO_DEG;
 			double lat0 = loc.getLatitude() * Constant.RAD_TO_DEG;
-			String sep = "\t";
+			String sep = UnixSpecialCharacter.UNIX_SPECIAL_CHARACTER.TAB.value;
 			for (int i=0; i<v.size(); i++)
 			{
 				String line = v.get(i);
