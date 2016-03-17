@@ -445,8 +445,10 @@ public class RenderSatellite
 					}
 				}
 			}
+			int max = -Math.max(blue, Math.max(red, green)), delta = (factor*2)/3;
+			if (brightness < max) brightness = max;
 			for (int j=0; j<locSatel.length; j++) {
-				if (alt_sat[j] > 0.0 && showSatellite) brightness += factor;
+				if (alt_sat[j] > 0.0 && showSatellite) brightness += delta;
 			}
 			if (render.showDayAndNight && solarEclipse &&
 					alt_sun > (-0.5*Constant.DEG_TO_RAD) ) {
