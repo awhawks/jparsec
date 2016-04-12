@@ -1196,6 +1196,10 @@ public class RenderPlanet
 			} else {
 				g = gg.getGraphics();
 				g.setFont(gg.getFont());
+				g.setColor(render.background, true);
+				g.disableInversion();
+				g.fillRect(0, 0, g.getWidth(), g.getHeight());
+				g.enableInversion();
 			}
 		}
 		if (!repaint && !fastGridAndBye && scale > 2) { // *
