@@ -3122,6 +3122,7 @@ public class RenderSky
 			soft = false;
 			if (render.coordinateSystem == CoordinateSystem.COORDINATE_SYSTEM.HORIZONTAL && !render.drawSkyBelowHorizon && projection.obs.getMotherBody() != TARGET.NOT_A_PLANET) step = 1;
 		}
+		if (g.renderingToAndroid()) soft = false;
 
 		int cte = (int) (pixels_per_degree * 10);
 		float loc[]; //[];
@@ -3167,7 +3168,8 @@ public class RenderSky
 						startup = true;
 					} else
 					{
-						pos0 = projection.projectPosition(loc, cte, !fill);
+						pos0 = projection.projectPosition(loc, 200, true);
+						//pos0 = projection.projectPosition(loc, cte, !fill);
 						if (!projection.isInvalid(pos0) && (render.projection == Projection.PROJECTION.CYLINDRICAL_EQUIDISTANT || render.projection == Projection.PROJECTION.CYLINDRICAL || projection.isCylindricalForced()) && !starting) {
 							if ((FastMath.pow(pos0[0] - pos1[0], 2.0) + FastMath.pow(pos0[1] - pos1[1], 2.0)) > width2)
 								pos0 = Projection.INVALID_POSITION;
@@ -3184,7 +3186,8 @@ public class RenderSky
 								y[index] = (int)(pos0[1]+0.5);
 								if (startup) {
 									loc = (float[]) milkyWay.get(i+1);
-									pos0 = projection.projectPosition(loc, cte, !fill);
+									pos0 = projection.projectPosition(loc, 200, true);
+									//pos0 = projection.projectPosition(loc, cte, !fill);
 								}
 								starting = false;
 								startup = false;
@@ -3282,7 +3285,8 @@ public class RenderSky
 						}
 					} else
 					{
-						pos0 = projection.projectPosition(loc, cte, !fill);
+						pos0 = projection.projectPosition(loc, 200, true);
+						//pos0 = projection.projectPosition(loc, cte, !fill);
 						if (!projection.isInvalid(pos0) && (render.projection == Projection.PROJECTION.CYLINDRICAL_EQUIDISTANT || render.projection == Projection.PROJECTION.CYLINDRICAL || projection.isCylindricalForced()) && !starting) {
 							if ((FastMath.pow(pos0[0] - pos1[0], 2.0) + FastMath.pow(pos0[1] - pos1[1], 2.0)) > width2)
 								pos0 = Projection.INVALID_POSITION;
@@ -3294,7 +3298,8 @@ public class RenderSky
 								g.generalPathMoveTo(pathMilkyWay, pos0[0],pos0[1]);
 								if (startup) {
 									loc = (float[]) milkyWay.get(i+1);
-									pos0 = projection.projectPosition(loc, cte, !fill);
+									pos0 = projection.projectPosition(loc, 200, true);
+									//pos0 = projection.projectPosition(loc, cte, !fill);
 								}
 								starting = false;
 								startup = false;
@@ -5396,8 +5401,8 @@ public class RenderSky
 		}
 	}
 	private static final JPARSECStroke STROKE2 = new JPARSECStroke(JPARSECStroke.STROKE_POINTS_LOW_SPACE, 2);
-	private static final JPARSECStroke STROKE13 = new JPARSECStroke(JPARSECStroke.STROKE_POINTS_LOW_SPACE, new float[] {1, 3}, 0);
-	private static final JPARSECStroke STROKE12 = new JPARSECStroke(JPARSECStroke.STROKE_POINTS_LOW_SPACE, new float[] {1, 2}, 0);
+	private static final JPARSECStroke STROKE13 = new JPARSECStroke(JPARSECStroke.STROKE_POINTS_LOW_SPACE, new float[] {1, 5}, 0);
+	private static final JPARSECStroke STROKE12 = new JPARSECStroke(JPARSECStroke.STROKE_POINTS_LOW_SPACE, new float[] {1, 3}, 0);
 	private void drawOpenCluster(float[] pos0, float size, float dist, Graphics g)
 	{
 		size = (int)size;
@@ -5416,7 +5421,7 @@ public class RenderSky
 				g.setColor(render.fillOpenColor, true);
 				g.fillOval((int)pos0[0] - size, (int)pos0[1] - size, size2, size2, this.fast);
 				g.setColor(render.drawDeepSkyObjectsColor, true);
-				if (render.drawFastLinesMode.fastOvals()) {
+				if (!g.renderingToAndroid() && render.drawFastLinesMode.fastOvals()) {
 					this.drawOval(g, (int)pos0[0] - size, (int)pos0[1] - size, size2, size2);
 				} else {
 					g.drawOval((int)pos0[0] - size, (int)pos0[1] - size, size2, size2, false);
