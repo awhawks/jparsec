@@ -5098,12 +5098,18 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 	  						objData[5] = Functions.formatValue(s1, ndec)+"x"+Functions.formatValue(s2, ndec);
 	  					} else {
 	  						objData[5] = Functions.formatValue(s1, 2)+"x"+Functions.formatValue(s2, 2);
-	  					}
+	  						if (objData[5].equals("0.00x0.00")) objData[5] = "-";
+	  					}	  					
 	  				}
 	  			} catch (Exception exc) {}
-	  			objData[5] = Translate.translate(308) + ": " + objData[5] + unit;
+	  			if (!objData[5].equals("-")) {
+		  			objData[5] = Translate.translate(308) + ": " + objData[5] + unit;
+	  			} else {
+		  			objData[5] = Translate.translate(308) + ": " + objData[5];
+	  			}
 	  			if (Translate.getDefaultLanguage() != LANGUAGE.ENGLISH && objData.length > 6)
 	  				objData[6] = DataSet.replaceAll(objData[6], "Type", Translate.translate(1296), true);
+	  			if (objData.length > 6 && objData[4].indexOf(Translate.translate(1182)) >= 0) objData = DataSet.eliminateRowFromTable(objData, 7);
   	  		} else {
   	  			if (id == OBJECT.NOVA) {
   	  				objData[4] = Translate.translate(462) + " "+Translate.translate(1304).toLowerCase()+": " + objData[4];

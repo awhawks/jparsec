@@ -11378,9 +11378,17 @@ public class RenderSky
 			int py = render.height-this.graphMarginY;
 			LocationElement loc = this.getSkyLocation(cx, py);
 			if (loc != null) {
-				String labelRA = Functions.formatRA(loc.getLongitude(), ndec+1); //render.centralLongitude, ndec+1);
+				String labelRA = null;
 				if (render.coordinateSystem != COORDINATE_SYSTEM.EQUATORIAL) {
-					labelRA = Functions.formatAngle(loc.getLongitude(), ndec+1); //render.centralLongitude, ndec+1);
+					if (pixels_per_degree < 1000) {						
+						if (pixels_per_degree < 100) {
+							labelRA = Functions.formatAngleAsDegrees(loc.getLongitude(), 1) + "\u00b0"; //render.centralLongitude, ndec+1);												
+						} else {
+							labelRA = Functions.formatDECOnlyMinutes(loc.getLongitude(), 1); //render.centralLongitude, ndec+1);						
+						}
+					} else {
+						labelRA = Functions.formatAngle(loc.getLongitude(), ndec+1); //render.centralLongitude, ndec+1);
+					}
 					if (render.coordinateSystem == COORDINATE_SYSTEM.HORIZONTAL) {
 						double cl = Functions.normalizeRadians(loc.getLongitude());
 						if (cl < deg_10 || cl > Constant.TWO_PI - deg_10) labelRA += " (N)";
@@ -11410,6 +11418,8 @@ public class RenderSky
 							}
 						}
 					}
+				} else {
+					labelRA = Functions.formatRA(loc.getLongitude(), ndec+1); //render.centralLongitude, ndec+1);
 				}
 				float w = g.getStringWidth(labelRA);
 				g.drawString(labelRA, graphMarginX+(render.width-graphMarginX-w)/2f, (int) (rec.getMaxY()+fs*1.7), dist);
@@ -11424,7 +11434,16 @@ public class RenderSky
 		}
 
 		if (labelsAxesY.size() == 0) {
-			String labelDEC = Functions.formatAngle(render.centralLatitude, ndec);
+			String labelDEC = null;
+			if (pixels_per_degree < 1000) {						
+				if (pixels_per_degree < 100) {
+					labelDEC = Functions.formatAngleAsDegrees(render.centralLatitude, 1) + "\u00b0"; //render.centralLongitude, ndec+1);												
+				} else {
+					labelDEC = Functions.formatDECOnlyMinutes(render.centralLatitude, 1); //render.centralLongitude, ndec+1);						
+				}
+			} else {
+				labelDEC = Functions.formatAngle(render.centralLatitude, ndec); //render.centralLongitude, ndec+1);
+			}
 			float w = g.getStringWidth(labelDEC);
 			float dy = rec.getMinX()-render.drawCoordinateGridFont.getSize();
 			g.drawRotatedString(labelDEC, dy, (render.height+w)/2f, (float)Constant.PI_OVER_TWO, dist);

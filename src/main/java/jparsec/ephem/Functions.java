@@ -251,10 +251,12 @@ public class Functions
 	 */
 	public static String formatRA(double ra, int nsec)
 	{
-		DecimalFormat formatter = new DecimalFormat("00");
+		DecimalFormat formatter;
 		if (nsec > 0) {
 			String dec = DataSet.repeatString("0", nsec);
 			formatter = new DecimalFormat("00." + dec);
+		} else {
+			formatter = new DecimalFormat("00");
 		}
 		DecimalFormat formatter0 = new DecimalFormat("00");
 		ra = Functions.normalizeRadians(ra);
@@ -281,12 +283,15 @@ public class Functions
 	 */
 	public static String formatRAWithNegativeTime(double ra0, int ndec, boolean onlyMinutes)
 	{
-		DecimalFormat formatter = new DecimalFormat("00");
+		DecimalFormat formatter, formatter0;
 		if (ndec > 0) {
 			String dec = DataSet.repeatString("0", ndec);
 			formatter = new DecimalFormat("00." + dec);
+			formatter0 = new DecimalFormat("00");			
+		} else {
+			formatter = new DecimalFormat("00");
+			formatter0 = formatter;
 		}
-		DecimalFormat formatter0 = new DecimalFormat("00");
 		double ra = Math.abs(ra0);
 		double ra_h = ra * Constant.RAD_TO_HOUR;
 		double ra_m = (ra_h - Math.floor(ra_h)) * 60.0;
@@ -313,12 +318,15 @@ public class Functions
 	 */
 	public static String formatRAOnlyMinutes(double ra, int nmin)
 	{
-		DecimalFormat formatter = new DecimalFormat("00");
+		DecimalFormat formatter, formatter0;
 		if (nmin > 0) {
 			String dec = DataSet.repeatString("0", nmin);
 			formatter = new DecimalFormat("00." + dec);
+			formatter0 = new DecimalFormat("00");			
+		} else {
+			formatter = new DecimalFormat("00");
+			formatter0 = formatter;
 		}
-		DecimalFormat formatter0 = new DecimalFormat("00");
 		ra = Functions.normalizeRadians(ra);
 		double ra_h = ra * Constant.RAD_TO_HOUR;
 		double ra_m = (ra_h - Math.floor(ra_h)) * 60.0;
@@ -339,12 +347,15 @@ public class Functions
 	 */
 	public static String formatDEC(double dec, int nsec)
 	{
-		DecimalFormat formatter = new DecimalFormat("00");
+		DecimalFormat formatter, formatter0;
 		if (nsec > 0) {
 			String decimal = DataSet.repeatString("0", nsec);
 			formatter = new DecimalFormat("00." + decimal);
+			formatter0 = new DecimalFormat("00");			
+		} else {
+			formatter = new DecimalFormat("00");
+			formatter0 = formatter;
 		}
-		DecimalFormat formatter0 = new DecimalFormat("00");
 		double dec_d = Math.abs(dec) * Constant.RAD_TO_DEG;
 		double dec_m = (dec_d - Math.floor(dec_d)) * 60.0;
 		double dec_s = (dec_m - Math.floor(dec_m)) * 60.0;
@@ -368,12 +379,15 @@ public class Functions
 	 */
 	public static String formatDECOnlyMinutes(double dec, int nmin)
 	{
-		DecimalFormat formatter = new DecimalFormat("00");
+		DecimalFormat formatter, formatter0;
 		if (nmin > 0) {
 			String decimal = DataSet.repeatString("0", nmin);
 			formatter = new DecimalFormat("00." + decimal);
+			formatter0 = new DecimalFormat("00");			
+		} else {
+			formatter = new DecimalFormat("00");
+			formatter0 = formatter;
 		}
-		DecimalFormat formatter0 = new DecimalFormat("00");
 		double dec_d = Math.abs(dec) * Constant.RAD_TO_DEG;
 		double dec_m = (dec_d - Math.floor(dec_d)) * 60.0;
 		dec_d = Math.floor(dec_d);
@@ -395,11 +409,12 @@ public class Functions
 	 */
 	public static String formatValue(double val, int decimals)
 	{
-		DecimalFormat formatter = new DecimalFormat("##0");
-
+		DecimalFormat formatter;
 		if (decimals > 0) {
 			String out = DataSet.repeatString("0", decimals);
 			formatter = new DecimalFormat("##0." + out);
+		} else {
+			formatter = new DecimalFormat("##0");
 		}
 
 		String out = formatter.format(val);
@@ -434,10 +449,12 @@ public class Functions
 			val = v;
 		}
 
-		DecimalFormat formatter = new DecimalFormat(in);
+		DecimalFormat formatter;
 		if (decimals > 0) {
 			String out = DataSet.repeatString("0", decimals);
 			formatter = new DecimalFormat(in + "." + out);
+		} else {
+			formatter = new DecimalFormat(in);
 		}
 
 		String out = formatter.format(val);
@@ -463,10 +480,12 @@ public class Functions
 		if (val > 260.0)
 			val = val - 360.0;
 
-		DecimalFormat formatter = new DecimalFormat("###");
+		DecimalFormat formatter;
 		if (secDecimals > 0) {
 			out = DataSet.repeatString("0", secDecimals);
 			formatter = new DecimalFormat("##0." + out);
+		} else {
+			formatter = new DecimalFormat("###");
 		}
 
 		double val_d = Math.abs(val);
@@ -526,10 +545,12 @@ public class Functions
 		if (val > 260.0)
 			val = val - 360.0;
 
-		DecimalFormat formatter = new DecimalFormat("##0");
+		DecimalFormat formatter;
 		if (decimals > 0) {
 			String out = DataSet.repeatString("0", decimals);
 			formatter = new DecimalFormat("##0." + out);
+		} else {
+			formatter = new DecimalFormat("##0");
 		}
 
 		double val_d = Math.abs(val);

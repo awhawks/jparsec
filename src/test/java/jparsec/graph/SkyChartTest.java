@@ -234,7 +234,7 @@ public class SkyChartTest {
 			//sky.poleAngle = (float) Constant.PI_OVER_FOUR;
 */
 
-/*        try {
+        try {
         String contents[] = DataSet.arrayListToStringArray(ReadFile.readResource(FileIO.DATA_SKY_DIRECTORY + "iram-J2000.sou"));
         sky.addExternalCatalog(Translate.translate("IRAM catalog"), Translate.translate("Radiosource"), Color.RED.getRGB(), contents, FileFormatElement.IRAM_SOU_FORMAT);
 
@@ -247,7 +247,7 @@ public class SkyChartTest {
         } catch (Exception exc) {
         	exc.printStackTrace();
         }
-*/
+
 /*
 			skyFast.drawExternalCatalogs = true;
 			skyFast.addExternalCatalog("IRAM catalog", "Radiosource", Color.RED.getRGB(), "/home/alonso/colaboraciones/Pablo/2007/wp5000/catalogs/iram-J2000.sou",
