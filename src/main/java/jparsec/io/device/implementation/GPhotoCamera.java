@@ -25,6 +25,7 @@ import java.awt.image.BufferedImage;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.Method;
@@ -84,11 +85,13 @@ public class GPhotoCamera {
 		/** Read only property to return focal length. */
 		FOCAL_LENGTH (true),
 		/** Read only property to return battery level. */
-		BATTERY_LEVEL (true);
+		BATTERY_LEVEL (true),
+		/** Quality (JPEG, RAW) in Nikons is separated from resolution. */
+		NIKON_QUALITY;
 
 		private boolean readOnly = false;
 		private Boolean isRange = null;
-		private int maxRange, minRange, stepRange;
+		private float maxRange, minRange, stepRange;
 
 		/**
 		 * Returns if this property is read only or not.
@@ -110,7 +113,7 @@ public class GPhotoCamera {
 		 * Returns the minimum value of this property if it is of type range.
 		 * @return Minimum possible value.
 		 */
-		public int minimum() {
+		public float minimum() {
 			return minRange;
 		}
 
@@ -118,7 +121,7 @@ public class GPhotoCamera {
 		 * Returns the maximum value of this property if it is of type range.
 		 * @return Maximum possible value.
 		 */
-		public int maximum() {
+		public float maximum() {
 			return maxRange;
 		}
 
@@ -126,7 +129,7 @@ public class GPhotoCamera {
 		 * Returns the step value of this property if it is of type range.
 		 * @return Step value.
 		 */
-		public int step() {
+		public float step() {
 			return stepRange;
 		}
 
@@ -146,8 +149,8 @@ public class GPhotoCamera {
 		private String configParams[] = new String[] {
 			"iso",
 			"shutterspeed",
-			"aperture",
-			"resolution,imageformat", // resolution used in old versions of gphoto2/old EOS cameras
+			"aperture,f-number",
+			"resolution,imageformat,imagesize", // resolution used in old versions of gphoto2/old EOS cameras
 			"capturetarget",
 			"manualfocusdrive",
 			"eosviewfinder,viewfinder",
@@ -155,7 +158,8 @@ public class GPhotoCamera {
 			"eoszoomposition",
 			"bulb",
 			"focallength",
-			"batterylevel"
+			"batterylevel",
+			"imagequality"
 		};
 
 		/** The resolution of the images in x axis. */
@@ -238,6 +242,8 @@ public class GPhotoCamera {
 	private boolean isShooting = false;
 	/** True to use mirror lock up when shooting. */
 	private boolean mirrorLockUp = false;
+	/** True to write gphoto2 commands to console. */
+	private boolean debug = false;
 	/** Detected configuration parameters. */
 	private String cameraConfigs[];
 	/** Values of the parameters. */
@@ -289,6 +295,50 @@ public class GPhotoCamera {
 		this.workingDir = workingDir;
 	}
 
+	/**
+	 * Constructor for a camera with a Bayer matrix RGBG.
+	 * @param id The camera identifier to adjust the internal commands for gphoto to operate with it.
+	 * @param name The name of the camera, or null to take the first available one.
+	 * @param workingDir The working directory to download images to.
+	 * @param copyInCamera True to maintain a copy of the image in the camera. False
+	 * is strongly recommended.
+	 * @param debug True to write gphoto2 commands to the console.
+	 * @throws JPARSECException If an error occurs.
+	 */
+	public GPhotoCamera(CAMERA_ID id, String name, String workingDir, boolean copyInCamera, boolean debug)
+	throws JPARSECException {
+		this.debug = debug;
+		this.id = id;
+		if (id == null) this.id = CAMERA_ID.EOS40D;
+		DEFAULT_CONFIGS = this.id.configParams;
+		cameraConfigs = new String[DEFAULT_CONFIGS.length];
+		cameraConfigsValues = new String[DEFAULT_CONFIGS.length];
+		cameraPossibleConfigsValues = new String[DEFAULT_CONFIGS.length][];
+		for (int i=0; i<DEFAULT_CONFIGS.length; i++) {
+			cameraConfigs[i] = "";
+			cameraConfigsValues[i] = "0";
+		}
+		if (!workingDir.endsWith(FileIO.getFileSeparator())) workingDir += FileIO.getFileSeparator();
+
+		String cameras[] = GPhotoCamera.autoDetect(debug);
+		boolean ok = false;
+		for (int i=0; i<cameras.length; i++)
+		{
+			int usb = cameras[i].indexOf("usb:");
+			String model = cameras[i].substring(0, usb).trim();
+			String port = cameras[i].substring(usb);
+			if (name == null || name.equals("") || cameras[i].indexOf(name)>=0) {
+				this.model = model;
+				this.port = port;
+				ok = this.checkConfig();
+				if (ok) break;
+			}
+		}
+		if (!ok) throw new JPARSECException("The camera cannot be found or initialized properly. \nPlease check you have gphoto2 installed, and it is in manual (M) mode. \nTurn it off/on and check again.");
+		maintainCopyInCamera = copyInCamera;
+		this.workingDir = workingDir;
+	}
+	
 	/**
 	 * Constructor for a camera in a given port.
 	 * @param id The camera identifier to adjust the internal commands for gphoto to operate with it.
@@ -355,9 +405,10 @@ public class GPhotoCamera {
 		return id;
 	}
 
-	private static void getVersion()
+	private static void getVersion(boolean debug)
 	throws JPARSECException {
 		Process p = ApplicationLauncher.executeCommand("gphoto2 --version");
+		if (debug) System.out.println("Executing command: gphoto2 --version");
 		String out = ApplicationLauncher.getConsoleOutputFromProcess(p);
 		String array[] = DataSet.toStringArray(out, FileIO.getLineSeparator());
 		gphotoVersion = FileIO.getField(2, array[0], " ", true);
@@ -410,7 +461,7 @@ public class GPhotoCamera {
 	}
 
 	/**
-	 * Returns the lath to the last shot.
+	 * Returns the path to the last shot/s.
 	 * @return Last shot path.
 	 */
 	public String getLastShotPath() {
@@ -418,14 +469,35 @@ public class GPhotoCamera {
 	}
 
 	/**
+	 * Sets the lath to the last shot/s. This method should 
+	 * not be used unless you immediately change the output 
+	 * name of the last taken shot externally.
+	 * @param path Last shot path.
+	 */
+	public void setLastShotPath(String path) {
+		lastShotPath = path;
+	}
+
+	/**
 	 * Auto detect current connected cameras.
 	 * @return The list of cameras and ports available.
 	 * @throws JPARSECException If an error occurs.
 	 */
-	public static String[] autoDetect()
+	public static String[] autoDetect() throws JPARSECException {
+		return autoDetect(false);
+	}
+	
+	/**
+	 * Auto detect current connected cameras.
+	 * @param debug True to write gphoto2 commands to console.
+	 * @return The list of cameras and ports available.
+	 * @throws JPARSECException If an error occurs.
+	 */
+	public static String[] autoDetect(boolean debug)
 	throws JPARSECException {
-		if (gphotoVersion.equals("")) getVersion();
+		if (gphotoVersion.equals("")) getVersion(debug);
 		Process p = ApplicationLauncher.executeCommand("gphoto2 --auto-detect");
+		if (debug) System.out.println("Executing command: gphoto2 --auto-detect");
 		String out = ApplicationLauncher.getConsoleOutputFromProcess(p);
 		String array[] = DataSet.toStringArray(out, FileIO.getLineSeparator());
 		String cameras = "";
@@ -441,6 +513,8 @@ public class GPhotoCamera {
 		return DataSet.toStringArray(cameras, FileIO.getLineSeparator());
 	}
 
+	private static long lastCheck = -1;
+	
 	/**
 	 * Checks the camera by retrieving the list of possible configuration parameters
 	 * and checking that list against the configuration parameters that should be available
@@ -450,8 +524,16 @@ public class GPhotoCamera {
 	 */
 	public boolean checkConfig()
 	throws JPARSECException {
+		if (isShooting || liveView) return true;
+		if (lastCheck > 0) {
+			double elapsed = (System.currentTimeMillis()-lastCheck)*0.001;
+			if (elapsed < 5) return true;
+		}
+		lastCheck = System.currentTimeMillis();
+		
 		String command = "gphoto2 --camera \""+this.model+"\" --port "+this.port+" --list-config";
 		Process p = ApplicationLauncher.executeCommand(command);
+		if (debug) System.out.println("Executing command: "+command);
 		try {
 			p.waitFor();
 		} catch (InterruptedException e) {
@@ -512,6 +594,7 @@ public class GPhotoCamera {
 	throws JPARSECException {
 		String command = "gphoto2 --camera \""+this.model+"\" --port "+this.port+" --list-config";
 		Process p = ApplicationLauncher.executeCommand(command);
+		if (debug) System.out.println("Executing command: "+command);
 		String out = ApplicationLauncher.getConsoleOutputFromProcess(p);
 		return DataSet.toStringArray(out, FileIO.getLineSeparator(), false);
 	}
@@ -525,6 +608,7 @@ public class GPhotoCamera {
 	public String[] reset() throws JPARSECException {
 		String command = "gphoto2 --camera \""+this.model+"\" --port "+this.port+" --reset";
 		Process p = ApplicationLauncher.executeCommand(command);
+		if (debug) System.out.println("Executing command: "+command);
 		String out = ApplicationLauncher.getConsoleOutputFromProcess(p);
 		return DataSet.toStringArray(out, FileIO.getLineSeparator(), false);
 	}
@@ -547,6 +631,7 @@ public class GPhotoCamera {
 
 		String command = "gphoto2 --camera \""+this.model+"\" --port "+this.port+" --get-config "+cameraConfigs[config.ordinal()];
 		Process p = ApplicationLauncher.executeCommand(command);
+		if (debug) System.out.println("Executing command: "+command);
 		String out = ApplicationLauncher.getConsoleOutputFromProcess(p);
 		String array[] = DataSet.toStringArray(out, FileIO.getLineSeparator());
 
@@ -560,11 +645,27 @@ public class GPhotoCamera {
 					config.isRange = true;
 					for (int j = i + 1; j < array.length; j ++) {
 						c = array[j].toLowerCase().indexOf("bottom:");
-						if (c >= 0) config.minRange = Integer.parseInt(array[j].substring(c+7).trim());
+						if (c >= 0) config.minRange = Float.parseFloat(DataSet.replaceAll(array[j].substring(c+7).trim(), ",", ".", true));
 						c = array[j].toLowerCase().indexOf("top:");
-						if (c >= 0) config.maxRange = Integer.parseInt(array[j].substring(c+4).trim());
+						if (c >= 0) config.maxRange = Float.parseFloat(DataSet.replaceAll(array[j].substring(c+4).trim(), ",", ".", true));
 						c = array[j].toLowerCase().indexOf("step:");
-						if (c >= 0) config.stepRange = Integer.parseInt(array[j].substring(c+5).trim());
+						if (c >= 0) config.stepRange = Float.parseFloat(DataSet.replaceAll(array[j].substring(c+5).trim(), ",", ".", true));
+					}
+					if (config == CAMERA_PARAMETER.FOCUS) {
+						int val[] = new int[] {200, 1000, 5000};
+						for (int n=0; n<3; n++) {
+							if (!choices.equals("")) choices.append(FileIO.getLineSeparator());
+							choices.append(""+(int)(val[n]*config.stepRange));
+							choices.append(FileIO.getLineSeparator());
+							choices.append("-"+(int)(val[n]*config.stepRange));						
+						}
+					} else {
+						for (int n=1; n<=3; n++) {
+							if (!choices.equals("")) choices.append(FileIO.getLineSeparator());
+							choices.append(""+(n*config.stepRange));
+							choices.append(FileIO.getLineSeparator());
+							choices.append("-"+(n*config.stepRange));						
+						}
 					}
 				}
 			}
@@ -578,21 +679,20 @@ public class GPhotoCamera {
 			}
 		}
 		String data = choices.toString();
-		if ((data == null || data.equals("")) && (config.isRange() != null && config.isRange())) {
-			int step = config.stepRange;
-			int nstep = ((config.maxRange - config.minRange) / config.stepRange);
-			if (nstep > 12) step *= (nstep / 12);
-			double val[] = DataSet.getSetOfValues(config.minRange, config.maxRange, step, false);
+/*		if ((data == null || data.equals("")) && (config.isRange() != null && config.isRange())) {
+			int nstep = (int) (1 + (config.maxRange - config.minRange) / config.stepRange);
+			double val[] = DataSet.getSetOfValues(config.minRange, config.maxRange, nstep, false);
 			int ival[] = DataSet.toIntArray(val);
 			String sval[] = DataSet.toStringValues(ival);
 			sval = DataSet.addStringArray(sval, new String[] {"+"+config.stepRange, "-"+config.stepRange});
 			if (nstep / 12 > 4) {
-				sval = DataSet.addStringArray(sval, new String[] {"+"+(3*config.stepRange), "-"+(3*config.stepRange)});
+				sval = DataSet.addStringArray(sval, new String[] {"+"+(2*config.stepRange), "-"+(2*config.stepRange)});
 				if (nstep / 12 > 11)
-					sval = DataSet.addStringArray(sval, new String[] {"+"+(6*config.stepRange), "-"+(6*config.stepRange)});
+					sval = DataSet.addStringArray(sval, new String[] {"+"+(3*config.stepRange), "-"+(3*config.stepRange)});
 			}
 			return sval;
 		}
+*/		
 		return DataSet.toStringArray(data, FileIO.getLineSeparator());
 	}
 
@@ -621,6 +721,7 @@ public class GPhotoCamera {
 		if (c.isReadOnly()) return;
 		if (c == CAMERA_PARAMETER.FOCUS && (value == null || value.equals(""))) {
 			cameraConfigsValues[c.ordinal()] = null;
+			foc = null;
 			return;
 		}
 		if (c.isRange != null && c.isRange) {
@@ -635,11 +736,12 @@ public class GPhotoCamera {
 				if (c == CAMERA_PARAMETER.SHUTTER_SPEED) ss = ""+value;
 				if (c == CAMERA_PARAMETER.APERTURE) aper = ""+value;
 				if (c == CAMERA_PARAMETER.RESOLUTION) res = ""+value;
+				if (c == CAMERA_PARAMETER.NIKON_QUALITY) res2 = ""+value;
 				if (c == CAMERA_PARAMETER.CAPTURE_TARGET) tar = ""+value;
-				if (c == CAMERA_PARAMETER.FOCUS) foc = ""+value;
 				if (c == CAMERA_PARAMETER.ZOOM) zoo = ""+value;
 				if (c == CAMERA_PARAMETER.ZOOM_POSITION) zoo_pos = ""+value;
 			}
+			if (c == CAMERA_PARAMETER.FOCUS) foc = ""+value;
 		} else {
 			int cv = DataSet.getIndex(this.cameraPossibleConfigsValues[c.ordinal()], value);
 			if (c != CAMERA_PARAMETER.ZOOM_POSITION && cv == -1) throw new JPARSECException("Value "+value+" for parameter "+c.name()+" is not available.");
@@ -649,11 +751,12 @@ public class GPhotoCamera {
 				if (c == CAMERA_PARAMETER.SHUTTER_SPEED) ss = ""+value;
 				if (c == CAMERA_PARAMETER.APERTURE) aper = ""+value;
 				if (c == CAMERA_PARAMETER.RESOLUTION) res = ""+value;
+				if (c == CAMERA_PARAMETER.NIKON_QUALITY) res2 = ""+value;
 				if (c == CAMERA_PARAMETER.CAPTURE_TARGET) tar = ""+value;
-				if (c == CAMERA_PARAMETER.FOCUS) foc = ""+cv;
 				if (c == CAMERA_PARAMETER.ZOOM) zoo = ""+value;
 				if (c == CAMERA_PARAMETER.ZOOM_POSITION) zoo_pos = ""+value;
 			}
+			if (c == CAMERA_PARAMETER.FOCUS) foc = ""+cv;
 		}
 	}
 
@@ -676,9 +779,14 @@ public class GPhotoCamera {
 	 * @throws JPARSECException If an error occurs.
 	 */
 	public String getParameterFromCamera(CAMERA_PARAMETER config) throws JPARSECException {
-		if (liveView) return null;
+		if (liveView) {
+			if (config == CAMERA_PARAMETER.FOCAL_LENGTH && liveFocalLength != null)
+				return liveFocalLength;
+			return null;
+		}
 		String command = "gphoto2 --camera \""+this.model+"\" --port "+this.port+" --get-config "+cameraConfigs[config.ordinal()];
 		Process p = ApplicationLauncher.executeCommand(command);
+		if (debug) System.out.println("Executing command: "+command);
 		String out = ApplicationLauncher.getConsoleOutputFromProcess(p);
 		String array[] = DataSet.toStringArray(out, FileIO.getLineSeparator());
 		String current = null;
@@ -691,11 +799,11 @@ public class GPhotoCamera {
 					config.isRange = true;
 					for (int j = i + 1; j < array.length; j ++) {
 						c = array[j].toLowerCase().indexOf("bottom:");
-						if (c >= 0) config.minRange = Integer.parseInt(array[j].substring(c+7).trim());
+						if (c >= 0) config.minRange = Float.parseFloat(DataSet.replaceAll(array[j].substring(c+7).trim(), ",", ".", true));
 						c = array[j].toLowerCase().indexOf("top:");
-						if (c >= 0) config.maxRange = Integer.parseInt(array[j].substring(c+4).trim());
+						if (c >= 0) config.maxRange = Float.parseFloat(DataSet.replaceAll(array[j].substring(c+4).trim(), ",", ".", true));
 						c = array[j].toLowerCase().indexOf("step:");
-						if (c >= 0) config.stepRange = Integer.parseInt(array[j].substring(c+5).trim());
+						if (c >= 0) config.stepRange = Float.parseFloat(DataSet.replaceAll(array[j].substring(c+5).trim(), ",", ".", true));
 					}
 				}
 			}
@@ -742,6 +850,22 @@ public class GPhotoCamera {
 		this.mirrorLockUp = lock;
 	}
 
+	/**
+	 * Returns if debug is enabled or not. Debug will write gphoto2 commands to console.
+	 * @return True or false.
+	 */
+	public boolean isDebug() {
+		return debug;
+	}
+
+	/**
+	 * Sets the debug flag option. Debug will write gphoto2 commands to console.
+	 * @param b True or false.
+	 */
+	public void setDebug(boolean b) {
+		this.debug = b;
+	}
+	
 	/**
 	 * Set the exposition time for bulb mode.
 	 * @param seconds Time in seconds.
@@ -875,15 +999,26 @@ public class GPhotoCamera {
 							cameraConfigsValues[i] != null && !cameraConfigsValues[i].equals(""))
 						configCommand += "--set-config-index "+cameraConfigs[i]+"="+cameraConfigsValues[i]+" ";
 				}
+				if (getModel().toLowerCase().indexOf("nikon") >= 0) {
+					if (cameraConfigs[12] != null && !cameraConfigs[12].equals("") &&
+							cameraConfigsValues[12] != null && !cameraConfigsValues[12].equals(""))
+								configCommand += "--set-config-index "+cameraConfigs[12]+"="+cameraConfigsValues[12]+" ";
+				}
 				cameraConfigsValues[CAMERA_PARAMETER.FOCUS.ordinal()] = null;
 
 				String filesBefore[] = FileIO.getFiles(workingDir);
 				boolean bulbMode = isBulbMode();
 				String command = "";
+				String focus = "", wtime = "1";
+				if (foc != null) {
+					wtime = "0.5";
+					focus = "--set-config-index "+cameraConfigs[CAMERA_PARAMETER.FOCUS.ordinal()]+"="+foc+" --wait-event="+wtime+"s ";
+					foc = null;
+				}
 				if (bulbMode) {
 					command = "";
-					if (mirrorLockUp) command = "--set-config "+cameraConfigs[CAMERA_PARAMETER.VIEWFINDER.ordinal()]+"="+id.viewfinderUp+" --wait-event=1s";
-					command = "gphoto2 --camera \""+model+"\" --port "+port+" "+configCommand+command+" --set-config "+cameraConfigs[CAMERA_PARAMETER.BULB.ordinal()]+"="+id.bulbModeEnabled+" --wait-event="+bulbTime+"s --set-config "+cameraConfigs[CAMERA_PARAMETER.BULB.ordinal()]+"="+id.bulbModeDisabled+" --wait-event-and-download";
+					if (mirrorLockUp) command = "--set-config "+cameraConfigs[CAMERA_PARAMETER.VIEWFINDER.ordinal()]+"="+id.viewfinderUp+" --wait-event="+wtime+"s";
+					command = "gphoto2 --camera \""+model+"\" --port "+port+" "+configCommand+command+" --set-config "+focus+cameraConfigs[CAMERA_PARAMETER.BULB.ordinal()]+"="+id.bulbModeEnabled+" --wait-event="+bulbTime+"s --set-config "+cameraConfigs[CAMERA_PARAMETER.BULB.ordinal()]+"="+id.bulbModeDisabled+" --wait-event-and-download";
 					command += "=5s";
 					if (maintainCopyInCamera) {
 						command +=" --keep";
@@ -892,8 +1027,8 @@ public class GPhotoCamera {
 					}
 				} else {
 					command = "";
-					if (mirrorLockUp) command = "--set-config "+cameraConfigs[CAMERA_PARAMETER.VIEWFINDER.ordinal()]+"="+id.viewfinderUp+" --wait-event=1s";
-					command = "gphoto2 --camera \""+model+"\" --port "+port+" -F "+frames+" -I 1 "+configCommand+command+" --capture-image-and-download";
+					if (mirrorLockUp) command = "--set-config "+cameraConfigs[CAMERA_PARAMETER.VIEWFINDER.ordinal()]+"="+id.viewfinderUp+" --wait-event="+wtime+"s";
+					command = "gphoto2 --camera \""+model+"\" --port "+port+" -F "+frames+" -I 1 "+configCommand+command+" "+focus+"--capture-image-and-download";
 					if (maintainCopyInCamera) {
 						command +=" --keep";
 					} else {
@@ -901,6 +1036,7 @@ public class GPhotoCamera {
 					}
 				}
 				Process p = ApplicationLauncher.executeCommand(command, null, new File(workingDir));
+				if (debug) System.out.println("Executing command (from dir "+workingDir+"): "+command);
 				p.waitFor();
 /*				String out = ApplicationLauncher.getConsoleOutputFromProcess(p);
 				String array[] = DataSet.toStringArray(out, FileIO.getLineSeparator());
@@ -1011,7 +1147,7 @@ public class GPhotoCamera {
 	 * @throws JPARSECException If an error occurs.
 	 */
 	public boolean isStillConnected(boolean fix) throws JPARSECException {
-		String cameras[] = GPhotoCamera.autoDetect();
+		String cameras[] = GPhotoCamera.autoDetect(debug);
 		boolean ok = false;
 		String newPort = null;
 		for (int i=0; i<cameras.length; i++)
@@ -1118,7 +1254,8 @@ public class GPhotoCamera {
 	}
 
 	private boolean liveView = false;
-	private String foc = null, zoo = null, zoo_pos = null, iso = null, aper = null, ss = null, res = null, tar = null;
+	private String foc = null, zoo = null, zoo_pos = null, iso = null, aper = null, ss = null, 
+			res = null, res2 = null, tar = null, liveFocalLength = null;
 	private int fps, liveMaxTime = 0;
 	private long timeLimit;
 	class live implements Runnable {
@@ -1130,6 +1267,7 @@ public class GPhotoCamera {
 			Process p = null;
 			BufferedWriter writer = null;
 			liveView = true;
+			liveFocalLength = null;
 			try {
 				String shell[] = ApplicationLauncher.getShell();
 		        ProcessBuilder builder = null;
@@ -1141,22 +1279,27 @@ public class GPhotoCamera {
 		        builder.directory(new File(workingDir));
 		        builder.redirectErrorStream();
 		        p = builder.start();
+				if (debug) System.out.println("Entering shell (from dir "+workingDir+"): "+DataSet.toString(shell, " "));
 
 		        OutputStream stdin = p.getOutputStream();
-		        //InputStream stdout = p.getInputStream();
+		        InputStream stdout = p.getInputStream();
 
 		        writer = new BufferedWriter(new OutputStreamWriter(stdin));
 
 				String fileName = "capture_preview.jpg";
 				command = "gphoto2 --camera \""+getModel()+"\" --port "+getPort()+" --quiet --shell"+FileIO.getLineSeparator();
+				if (debug) System.out.println("Executing shell command: "+command);
 		        writer.write(command);
 	        	writer.flush();
 				Thread.sleep(250);
 
-				command = "set-config "+cameraConfigs[CAMERA_PARAMETER.VIEWFINDER.ordinal()]+"="+id.viewfinderUp+FileIO.getLineSeparator();
-		        writer.write(command);
-	        	writer.flush();
-				Thread.sleep(250);
+				if (model.toLowerCase().indexOf("canon") >= 0) {
+					command = "set-config "+cameraConfigs[CAMERA_PARAMETER.VIEWFINDER.ordinal()]+"="+id.viewfinderUp+FileIO.getLineSeparator();
+					if (debug) System.out.println("Executing shell command: "+command);
+			        writer.write(command);
+		        	writer.flush();
+					Thread.sleep(250);
+				}
 				started = true;
 
 		    	//byte[] b = new byte[1024*10];
@@ -1168,6 +1311,7 @@ public class GPhotoCamera {
 				Thread.sleep(2000);
 
 				command = "capture-preview"+FileIO.getLineSeparator();
+				if (debug) System.out.println("Executing shell command: "+command);
 				writer.write(command);
 				writer.flush();
 				Thread.sleep(2000);
@@ -1175,9 +1319,33 @@ public class GPhotoCamera {
 				Method m = updatePanel.getClass().getDeclaredMethod("repaint", new Class[] {BufferedImage.class});
 				m.setAccessible(true);
 				long t0 = System.nanoTime()/1000000;
+				long lastFL = -1;
 				while (liveView && (timeLimit == -1 || System.nanoTime()/1000000 < timeLimit)) {
+					if (isParameterAvailable(CAMERA_PARAMETER.FOCAL_LENGTH)) {
+						long now = System.currentTimeMillis();
+						double elapsed = (now - lastFL) * 0.001;
+						if (lastFL < 0 || elapsed > 3) {
+							lastFL = now;
+					    	byte[] b = new byte[1024*10];
+				        	stdout.read(b);
+							command = "get-config "+cameraConfigs[CAMERA_PARAMETER.FOCAL_LENGTH.ordinal()]+FileIO.getLineSeparator();
+							if (debug) System.out.println("Executing shell command: "+command);
+							writer.write(command);
+							writer.flush();
+							Thread.sleep(125);
+				        	b = new byte[1024*10];
+				        	stdout.read(b);
+				        	String s = new String(b).trim();
+				        	int ci = s.indexOf("Current: ");
+				        	if (ci >= 0) s = s.substring(ci + 9).trim();
+				        	ci = s.indexOf("Bottom");
+				        	if (ci >= 0) s = s.substring(0, ci).trim();
+				        	liveFocalLength = s;
+						}
+					}
 					if (foc != null) {
 						command = "set-config-index "+cameraConfigs[CAMERA_PARAMETER.FOCUS.ordinal()]+"="+foc+FileIO.getLineSeparator();
+						if (debug) System.out.println("Executing shell command: "+command);
 						writer.write(command);
 						writer.flush();
 						Thread.sleep(250);
@@ -1185,6 +1353,7 @@ public class GPhotoCamera {
 					}
 					if (zoo != null) {
 						command = "set-config "+cameraConfigs[CAMERA_PARAMETER.ZOOM.ordinal()]+"="+zoo+FileIO.getLineSeparator();
+						if (debug) System.out.println("Executing shell command: "+command);
 						writer.write(command);
 						writer.flush();
 						Thread.sleep(250);
@@ -1192,6 +1361,7 @@ public class GPhotoCamera {
 					}
 					if (zoo_pos != null) {
 						command = "set-config "+cameraConfigs[CAMERA_PARAMETER.ZOOM_POSITION.ordinal()]+"="+zoo_pos+FileIO.getLineSeparator();
+						if (debug) System.out.println("Executing shell command: "+command);
 						writer.write(command);
 						writer.flush();
 						Thread.sleep(250);
@@ -1199,6 +1369,7 @@ public class GPhotoCamera {
 					}
 					if (iso != null) {
 						command = "set-config "+cameraConfigs[CAMERA_PARAMETER.ISO.ordinal()]+"="+iso+FileIO.getLineSeparator();
+						if (debug) System.out.println("Executing shell command: "+command);
 						writer.write(command);
 						writer.flush();
 						Thread.sleep(250);
@@ -1206,6 +1377,7 @@ public class GPhotoCamera {
 					}
 					if (aper != null) {
 						command = "set-config "+cameraConfigs[CAMERA_PARAMETER.APERTURE.ordinal()]+"="+aper+FileIO.getLineSeparator();
+						if (debug) System.out.println("Executing shell command: "+command);
 						writer.write(command);
 						writer.flush();
 						Thread.sleep(250);
@@ -1220,13 +1392,23 @@ public class GPhotoCamera {
 					}
 					if (res != null) {
 						command = "set-config "+cameraConfigs[CAMERA_PARAMETER.RESOLUTION.ordinal()]+"="+res+FileIO.getLineSeparator();
+						if (debug) System.out.println("Executing shell command: "+command);
 						writer.write(command);
 						writer.flush();
 						Thread.sleep(250);
 						res = null;
 					}
+					if (res2 != null) {
+						command = "set-config "+cameraConfigs[CAMERA_PARAMETER.NIKON_QUALITY.ordinal()]+"="+res2+FileIO.getLineSeparator();
+						if (debug) System.out.println("Executing shell command: "+command);
+						writer.write(command);
+						writer.flush();
+						Thread.sleep(250);
+						res2 = null;
+					}
 					if (tar != null) {
 						command = "set-config "+cameraConfigs[CAMERA_PARAMETER.CAPTURE_TARGET.ordinal()]+"="+tar+FileIO.getLineSeparator();
+						if (debug) System.out.println("Executing shell command: "+command);
 						writer.write(command);
 						writer.flush();
 						Thread.sleep(250);
@@ -1234,6 +1416,7 @@ public class GPhotoCamera {
 					}
 					FileIO.deleteFile(workingDir + fileName);
 					command = "capture-preview"+FileIO.getLineSeparator();
+					if (debug) System.out.println("Executing shell command: "+command);
 					writer.write(command);
 					writer.flush();
 					long t1 = System.nanoTime()/1000000, dt;
@@ -1275,6 +1458,7 @@ public class GPhotoCamera {
 			if (started) {
 				command = "set-config "+cameraConfigs[CAMERA_PARAMETER.VIEWFINDER.ordinal()]+"="+id.viewfinderDown+FileIO.getLineSeparator();
 				try {
+					if (debug) System.out.println("Executing shell command: "+command);
 					writer.write(command);
 					writer.flush();
 				} catch (IOException e) {
@@ -1289,6 +1473,7 @@ public class GPhotoCamera {
 
 				command = "exit"+FileIO.getLineSeparator();
 				try {
+					if (debug) System.out.println("Finishing shell");
 					writer.write(command);
 					writer.flush();
 				} catch (IOException e) {
@@ -1311,6 +1496,7 @@ public class GPhotoCamera {
 				e1.printStackTrace();
 			}
 			if (p != null) p.destroy();
+			stopLiveView();
 		}
 	}
 
@@ -1334,6 +1520,11 @@ public class GPhotoCamera {
 							cameraConfigsValues[i] != null && !cameraConfigsValues[i].equals(""))
 						configCommand += "--set-config-index "+cameraConfigs[i]+"="+cameraConfigsValues[i]+" ";
 				}
+				if (getModel().toLowerCase().indexOf("nikon") >= 0) {
+					if (cameraConfigs[12] != null && !cameraConfigs[12].equals("") &&
+							cameraConfigsValues[12] != null && !cameraConfigsValues[12].equals(""))
+								configCommand += "--set-config-index "+cameraConfigs[12]+"="+cameraConfigsValues[12]+" ";
+				}
 				cameraConfigsValues[CAMERA_PARAMETER.FOCUS.ordinal()] = null;
 
 				String shell[] = ApplicationLauncher.getShell();
@@ -1346,6 +1537,7 @@ public class GPhotoCamera {
 		        builder.directory(new File(workingDir));
 		        builder.redirectErrorStream();
 		        p = builder.start();
+				if (debug) System.out.println("Entering shell (from dir "+workingDir+"): "+DataSet.toString(shell, " "));
 
 		        OutputStream stdin = p.getOutputStream();
 		        //InputStream stdout = p.getInputStream();
@@ -1359,15 +1551,21 @@ public class GPhotoCamera {
 					command ="--no-keep --filename "+fileName;
 				}
 				command = "gphoto2 --camera \""+getModel()+"\" --port "+getPort()+" "+command+" --quiet "+configCommand+" --shell"+FileIO.getLineSeparator();
+				if (debug) System.out.println("Executing shell command: "+command);
 		        writer.write(command);
 	        	writer.flush();
 				Thread.sleep(250);
 
-				command = "set-config "+cameraConfigs[CAMERA_PARAMETER.VIEWFINDER.ordinal()]+"="+id.viewfinderUp+FileIO.getLineSeparator();
-		        writer.write(command);
-	        	writer.flush();
-				Thread.sleep(250);
+				if (model.toLowerCase().indexOf("canon") >= 0) {
+					command = "set-config "+cameraConfigs[CAMERA_PARAMETER.VIEWFINDER.ordinal()]+"="+id.viewfinderUp+FileIO.getLineSeparator();
+					if (debug) System.out.println("Executing shell command: "+command);
+			        writer.write(command);
+		        	writer.flush();
+					Thread.sleep(250);
+				}
+				
 				command = "no-keep"+FileIO.getLineSeparator();
+				if (debug) System.out.println("Executing shell command: "+command);
 		        writer.write(command);
 	        	writer.flush();
 				Thread.sleep(250);
@@ -1377,6 +1575,7 @@ public class GPhotoCamera {
 				Thread.sleep(2000);
 
 				command = "capture-preview"+FileIO.getLineSeparator();
+				if (debug) System.out.println("Executing shell command: "+command);
 				writer.write(command);
 				writer.flush();
 				Thread.sleep(2000);
@@ -1388,6 +1587,7 @@ public class GPhotoCamera {
 					if (!maintainCopyInCamera) FileIO.deleteFile(workingDir + fileName);
 					if (foc != null) {
 						command = "set-config-index "+cameraConfigs[CAMERA_PARAMETER.FOCUS.ordinal()]+"="+foc+FileIO.getLineSeparator();
+						if (debug) System.out.println("Executing shell command: "+command);
 						writer.write(command);
 						writer.flush();
 						Thread.sleep(250);
@@ -1397,6 +1597,7 @@ public class GPhotoCamera {
 					if (zoo_pos != null) zoo_pos = null;
 					if (iso != null) {
 						command = "set-config "+cameraConfigs[CAMERA_PARAMETER.ISO.ordinal()]+"="+iso+FileIO.getLineSeparator();
+						if (debug) System.out.println("Executing shell command: "+command);
 						writer.write(command);
 						writer.flush();
 						Thread.sleep(250);
@@ -1404,6 +1605,7 @@ public class GPhotoCamera {
 					}
 					if (aper != null) {
 						command = "set-config "+cameraConfigs[CAMERA_PARAMETER.APERTURE.ordinal()]+"="+aper+FileIO.getLineSeparator();
+						if (debug) System.out.println("Executing shell command: "+command);
 						writer.write(command);
 						writer.flush();
 						Thread.sleep(250);
@@ -1411,6 +1613,7 @@ public class GPhotoCamera {
 					}
 					if (ss != null) {
 						command = "set-config "+cameraConfigs[CAMERA_PARAMETER.SHUTTER_SPEED.ordinal()]+"="+ss+FileIO.getLineSeparator();
+						if (debug) System.out.println("Executing shell command: "+command);
 						writer.write(command);
 						writer.flush();
 						Thread.sleep(250);
@@ -1418,13 +1621,23 @@ public class GPhotoCamera {
 					}
 					if (res != null) {
 						command = "set-config "+cameraConfigs[CAMERA_PARAMETER.RESOLUTION.ordinal()]+"="+res+FileIO.getLineSeparator();
+						if (debug) System.out.println("Executing shell command: "+command);
 						writer.write(command);
 						writer.flush();
 						Thread.sleep(250);
 						res = null;
 					}
+					if (res2 != null) {
+						command = "set-config "+cameraConfigs[CAMERA_PARAMETER.NIKON_QUALITY.ordinal()]+"="+res2+FileIO.getLineSeparator();
+						if (debug) System.out.println("Executing shell command: "+command);
+						writer.write(command);
+						writer.flush();
+						Thread.sleep(250);
+						res2 = null;
+					}
 					if (tar != null) {
 						command = "set-config "+cameraConfigs[CAMERA_PARAMETER.CAPTURE_TARGET.ordinal()]+"="+tar+FileIO.getLineSeparator();
+						if (debug) System.out.println("Executing shell command: "+command);
 						writer.write(command);
 						writer.flush();
 						Thread.sleep(250);
@@ -1434,19 +1647,23 @@ public class GPhotoCamera {
 					if (maintainCopyInCamera) filesBefore = FileIO.getFiles(workingDir);
 					if (isBulbMode()) {
 						command = "set-config "+cameraConfigs[CAMERA_PARAMETER.BULB.ordinal()]+"="+id.bulbModeEnabled+FileIO.getLineSeparator();
+						if (debug) System.out.println("Executing shell command: "+command);
 						writer.write(command);
 						writer.flush();
 						Thread.sleep(bulbTime*1000l);
 						command = "set-config "+cameraConfigs[CAMERA_PARAMETER.BULB.ordinal()]+"="+id.bulbModeDisabled+FileIO.getLineSeparator();
+						if (debug) System.out.println("Executing shell command: "+command);
 						writer.write(command);
 						writer.flush();
 						Thread.sleep(250);
 						command = "wait-event-and-download 3s"+FileIO.getLineSeparator();
+						if (debug) System.out.println("Executing shell command: "+command);
 						writer.write(command);
 						writer.flush();
 					} else {
 						command = "capture-image-and-download"+FileIO.getLineSeparator();
 					}
+					if (debug) System.out.println("Executing shell command: "+command);
 					writer.write(command);
 					writer.flush();
 					double texp = bulbTime;
@@ -1513,6 +1730,7 @@ public class GPhotoCamera {
 			if (started) {
 				command = "set-config "+cameraConfigs[CAMERA_PARAMETER.VIEWFINDER.ordinal()]+"="+id.viewfinderDown+FileIO.getLineSeparator();
 				try {
+					if (debug) System.out.println("Executing shell command: "+command);
 					writer.write(command);
 					writer.flush();
 				} catch (IOException e) {
@@ -1527,6 +1745,7 @@ public class GPhotoCamera {
 
 				command = "exit"+FileIO.getLineSeparator();
 				try {
+					if (debug) System.out.println("Finishing shell");
 					writer.write(command);
 					writer.flush();
 				} catch (IOException e) {
@@ -1549,6 +1768,7 @@ public class GPhotoCamera {
 				e1.printStackTrace();
 			}
 			if (p != null) p.destroy();
+			stopLiveView();
 		}
 	}
 }

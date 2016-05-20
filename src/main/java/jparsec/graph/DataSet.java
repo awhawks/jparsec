@@ -2508,6 +2508,7 @@ public class DataSet
 	 */
 	public static String replaceAll(String table, String symbol, String replacement, boolean hasStrangeSymbols)
 	{
+		if (table == null) return null;
 		if (table.indexOf(symbol) < 0) return table;
 		if (replacement == null) replacement = "";
 		if (!hasStrangeSymbols) {

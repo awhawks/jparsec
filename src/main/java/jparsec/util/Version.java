@@ -298,9 +298,12 @@ public class Version
 						"Method modifyRestFrequency in Spectrum30m fixed, with support for doppler factor. Added also modifyVelocityLSR.\n"+
 						"Carlo Dapor joined the development, contributing with many fixes and code cleanup, including a rework of jparsec.time.calendar package.\n"+
 						"Code cleanup: UTF-8 conversion, hashCode implemented next to equals, mains removed, special characters in encoding-independent way, ...",
-				"      1.109: More bug fixes (Feb XX, 2016):\n"+
+				"      1.109: Few bug fixes and first version of ClearSky for desktop suitable for astrophotography (May 20, 2016):\n"+
+						"GPhotoCamera now supports (partially) some Nikon models, D3200 among others.\n",
 						"In critical cases the computation of transits of artificial satellites on top of the Sun/Moon showed false and repeated events.\n"+
 						"Little bug in RenderPlanet in the position of the natural satellites as drawn without textures.\n"+
+						"There was a bug in the labels for the ecliptic axis when rendering the sky.\n"+
+						"Some general cosmetic and performance fixes in sky rendering, mainly for Android.\n"+
 						"The output charts for light and distance curves in OrbitalElement class have now better accuracy."
 
 				+FileIO.getLineSeparator(),
@@ -310,7 +313,7 @@ public class Version
 		// Dependencies for JPARSEC programs and models
 		String library[] = new String[] {
 			// Dependency name                             Version
-			"jparsec.jar                                   1.108",
+			"jparsec.jar                                   1.109",
 
 			"sky.jar                                       1.36",
 			"orbital_elements.jar                          1.23",
