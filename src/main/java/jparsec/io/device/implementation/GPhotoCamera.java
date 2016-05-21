@@ -513,7 +513,7 @@ public class GPhotoCamera {
 		return DataSet.toStringArray(cameras, FileIO.getLineSeparator());
 	}
 
-	private static long lastCheck = -1;
+	private long lastCheck = -1;
 	
 	/**
 	 * Checks the camera by retrieving the list of possible configuration parameters
@@ -1240,7 +1240,7 @@ public class GPhotoCamera {
 	 * @return True or false.
 	 */
 	public boolean isLive() {
-		return liveView;
+		return liveView | liveViewRunning;
 	}
 
 	/**
@@ -1253,7 +1253,7 @@ public class GPhotoCamera {
 		liveMaxTime = seconds;
 	}
 
-	private boolean liveView = false;
+	private boolean liveView = false, liveViewRunning = false;
 	private String foc = null, zoo = null, zoo_pos = null, iso = null, aper = null, ss = null, 
 			res = null, res2 = null, tar = null, liveFocalLength = null;
 	private int fps, liveMaxTime = 0;
@@ -1268,6 +1268,7 @@ public class GPhotoCamera {
 			BufferedWriter writer = null;
 			liveView = true;
 			liveFocalLength = null;
+			liveViewRunning = true;
 			try {
 				String shell[] = ApplicationLauncher.getShell();
 		        ProcessBuilder builder = null;
@@ -1497,6 +1498,7 @@ public class GPhotoCamera {
 			}
 			if (p != null) p.destroy();
 			stopLiveView();
+			liveViewRunning = false;
 		}
 	}
 
@@ -1507,6 +1509,7 @@ public class GPhotoCamera {
 			Process p = null;
 			BufferedWriter writer = null;
 			liveView = true;
+			liveViewRunning = true;
 			timeLimit = -1;
 			if (liveMaxTime > 0) timeLimit = System.nanoTime()/1000000 + liveMaxTime * 1000;
 			try {
@@ -1769,6 +1772,7 @@ public class GPhotoCamera {
 			}
 			if (p != null) p.destroy();
 			stopLiveView();
+			liveViewRunning = false;
 		}
 	}
 }
