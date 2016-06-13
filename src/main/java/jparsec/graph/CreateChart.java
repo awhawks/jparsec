@@ -1214,10 +1214,12 @@ public class CreateChart implements Serializable
 				double y_val[] = (double[]) DataSet.getDoubleValuesIncludingLimits(chart_elem.series[nser].yValues)
 						.get(0);
 
-				double thisymin = DataSet.getMinimumValue(y_val);
-
-				if (nser == 0 || thisymin < y_min)
-					y_min = thisymin;
+				try {
+					double thisymin = DataSet.getMinimumValue(y_val);
+	
+					if (nser == 0 || thisymin < y_min)
+						y_min = thisymin;
+				} catch (Exception exc) {}
 
 				double dx_val[] = chart_elem.series[nser].dxValues;
 				double dy_val[] = chart_elem.series[nser].dyValues;

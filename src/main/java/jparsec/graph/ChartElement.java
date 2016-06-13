@@ -400,7 +400,7 @@ public class ChartElement implements Serializable
 				sc.subType == ChartElement.SUBTYPE.XY_STEP)) series[0].showLines = true;
 		series[0].stroke = JPARSECStroke.STROKE_DEFAULT_LINE;
 		series[0].showShapes = true;
-		series[0].yMinimumValue = DataSet.getMinimumValue(sc.yValues);
+		if (sc.yValues.length > 0) series[0].yMinimumValue = DataSet.getMinimumValue(sc.yValues);
 
 		ChartElement c = new ChartElement(series, sc.chartType, sc.subType, sc.title, sc.xLabel,
 				sc.yLabel, sc.changeOrientationToHorizontal, sc.imageWidth, sc.imageHeight);

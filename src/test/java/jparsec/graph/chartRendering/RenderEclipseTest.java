@@ -10,6 +10,7 @@ import jparsec.observer.ObserverElement;
 import jparsec.time.AstroDate;
 import jparsec.time.TimeElement;
 import jparsec.time.TimeScale;
+import jparsec.time.TimeElement.SCALE;
 import jparsec.util.Translate;
 
 public class RenderEclipseTest {
@@ -34,6 +35,7 @@ public class RenderEclipseTest {
 
         TimeElement time = new TimeElement(astro, TimeElement.SCALE.LOCAL_TIME);
         ObserverElement observer = ObserverElement.parseCity(City.findCity("Madrid"));
+        
         EphemerisElement eph = new EphemerisElement(
             Target.TARGET.SUN,
             EphemerisElement.COORDINATES_TYPE.APPARENT,
@@ -104,6 +106,13 @@ public class RenderEclipseTest {
         RenderSatellite.ALLOW_SPLINE_RESIZING = false; // Improve performance
         int year = 2016;
         String locName = "Madrid";
+        
+        //observer.setName("Burgeo");
+        //observer.setLongitudeDeg(-57.61);
+        //observer.setLatitudeDeg(47.65);
+        //observer.setHeight(0, true);
+        observer = ObserverElement.parseCity(City.findCity(locName));
+        
         boolean onlyVisibleFromSpain = false;
         boolean horiz = true;
         int w = 600, h = 800;
@@ -115,9 +124,9 @@ public class RenderEclipseTest {
         // Lunar eclipses
         String addName = "";
         if (!horiz) addName = "_eq";
-        observer = ObserverElement.parseCity(City.findCity(locName));
         astro = new AstroDate(year, 1, 1);
-        TimeElement newTime = new TimeElement(astro, TimeElement.SCALE.LOCAL_TIME);
+        SCALE sc = SCALE.UNIVERSAL_TIME_UTC;
+        TimeElement newTime = new TimeElement(astro, sc);
         w = 600;
         h = 800;
         RenderEclipse.ShowWithoutLT = true;
@@ -133,7 +142,7 @@ public class RenderEclipseTest {
             } while (!found);
 
             if (newTime.astroDate.getYear() > year) break;
-            newTime = new TimeElement(TimeScale.getJD(newTime, observer, eph, TimeElement.SCALE.LOCAL_TIME), TimeElement.SCALE.LOCAL_TIME);
+            newTime = new TimeElement(TimeScale.getJD(newTime, observer, eph, sc), sc);
             g = new AWTGraphics(w, h, false, false);
             RenderEclipse.renderLunarEclipse(newTime, observer, eph, g, horiz, map);
             pic = new Picture((java.awt.image.BufferedImage) g.getRendering());
@@ -149,7 +158,7 @@ public class RenderEclipseTest {
         map.clear();
         map.zoomFactor = 0.9f;
         map.EarthMapSource = SatelliteRenderElement.PLANET_MAP.EARTH_MAP_POLITICAL;
-        newTime = new TimeElement(astro, TimeElement.SCALE.LOCAL_TIME);
+        newTime = new TimeElement(astro, sc);
 
         do {
             boolean found = true;
@@ -169,7 +178,7 @@ public class RenderEclipseTest {
             g = new AWTGraphics(w, h, false, false);
             try {
             	RenderEclipse re = new RenderEclipse(newTime.astroDate);
-                re.renderSolarEclipse(TimeElement.SCALE.LOCAL_TIME, observer, eph, g, horiz, map);
+                re.renderSolarEclipse(sc, observer, eph, g, horiz, map);
             } catch (Exception exc) {
             	System.out.println("No eclipse on "+newTime.astroDate.toString()+" ?");
             	newTime.add(20);

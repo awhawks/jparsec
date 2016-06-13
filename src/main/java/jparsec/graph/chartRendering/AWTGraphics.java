@@ -3351,6 +3351,8 @@ public class AWTGraphics implements Graphics {
 		if (i+w > image.getWidth()) w = image.getWidth()-i;
 		if (j+h > image.getHeight()) h = image.getHeight()-j;
 
+		if (w <= 0 || h <= 0) return null;
+		
 		if (rasterData != null) {
 			int rgb[] = new int[w*h];
 			for (int y=j; y<j+h; y++) {

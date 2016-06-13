@@ -344,10 +344,12 @@ public class GridChartElement implements Serializable
 			Double da[][] = data;
 			if (data != null) da = data.clone();
 
-		c = new GridChartElement(this.title, this.xLabel,
+			c = new GridChartElement(this.title, this.xLabel,
 			this.yLabel, this.legend, this.colorModel, this.colorModelResolution,
 			this.type, li, da, le, this.imageWidth);
-		} catch (Exception e) {}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		c.subTitle = this.subTitle;
 		c.imageHeight = this.imageHeight;
 		c.invertXaxis = this.invertXaxis;

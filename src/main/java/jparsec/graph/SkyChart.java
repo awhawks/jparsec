@@ -805,6 +805,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 	 * started since another previous one is still going on.
 	 */
 	public boolean update(int w, int h) {
+		if (w0 == w && h0 == h) return false;
 		if (panel.isVisible() && !updating) {
 			updating = true;
 			Dimension d = new Dimension(w, h);

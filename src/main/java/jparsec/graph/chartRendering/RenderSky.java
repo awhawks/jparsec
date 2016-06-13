@@ -9560,6 +9560,23 @@ public class RenderSky
 	 */
 	public double[] getClosestStarInScreenCoordinates(int x, int y, boolean considerMagLim) throws JPARSECException
 	{
+		return getClosestStarInScreenCoordinates(x, y, considerMagLim ? maglim : 100);
+	}
+
+	/**
+	 * Obtain ID constant of the closest star to certain screen position. For a valid
+	 * output it is previously necessary to render the sky.
+	 *
+	 * @param x Horizontal position in the rendering in pixels.
+	 * @param y Horizontal position in the rendering in pixels.
+	 * @param maglim Limiting magnitude up-to identify a star.
+	 * @return A array with two values (null if no object is found):<BR>
+	 * ID value (integer) of the star.<BR>
+	 * Minimum distance to the input position in pixels.
+	 * @throws JPARSECException If an error occurs.
+	 */
+	public double[] getClosestStarInScreenCoordinates(int x, int y, double maglim) throws JPARSECException
+	{
 		if (re_star == null) return null;
 		Object[] stars = re_star.getReadElements();
 		if (stars == null) return null;
@@ -9581,7 +9598,7 @@ public class RenderSky
 			double dist = (dx*dx+dy*dy);
 			if (rec.contains(pos[0], pos[1]) && (dist < minDist || minDist == -1.0)) {
 				int element = i;
-				if (considerMagLim) {
+				if (maglim < 100) {
 					double mag = sd.mag[sd.mag.length-1];
 
  					if (mag <= maglim) {
@@ -9598,7 +9615,7 @@ public class RenderSky
  		if (closest == -1) return null;
 		return new double[] {closest, Math.sqrt(minDist)};
 	}
-
+	
 	private String t163, t164, t19, t18, t20, t23, t21, t24, t26, t28, t22, t25, t27, t29, t38, t1072, t1073;
 	private String objt[] = new String[8], mont[] = new String[12];
 	private void setDefaultStrings() {
@@ -13083,125 +13100,164 @@ public class RenderSky
 	 */
 	public Object[] getClosestObjectData(int x, int y, boolean considerMagLim, boolean fullDataAndPrecision)
 	throws JPARSECException {
+		return getClosestObjectData(x, y, true, true, true, 100, considerMagLim, fullDataAndPrecision);
+	}
+	
+	/**
+	 * Returns data for the object closest to certain screen coordinates. The data returned
+	 * is an array of objects with the following information:<P>
+	 * - Integer ID constant for the object type. Constants defined in this class (enum OBJECT).<BR>
+	 * - Integer array with the position in the screen x and y.<BR>
+	 * - Information for the object. For stars, planets, natural or artificial satellites, comets, asteroids and probes
+	 * an object of type {@linkplain EphemElement} is returned, for deep sky objects a String array
+	 * (with name, RA, DEC, magnitude, subtype, size in degrees, and comments), and for supernovae a
+	 * String array (with name, RA, DEC, magnitude, and date of explosion).<BR>
+	 * - Star additional data from catalogue (only for stars).
+	 * @param x X position in pixels.
+	 * @param y Y position in pixels.
+	 * @param stars True to search for stars.
+	 * @param plan True to search for planets.
+	 * @param dso True to search for deep sky objects.
+	 * @param starMaglim Limiting magnitude for the stars to search, set to a high value to avoid this 
+	 * optional limitation, and set the next parameter to false.
+	 * @param considerMagLim True to consider the limiting magnitude (recommended) to identify the
+	 * object closest to the given position. This is done only for planets and stars. If false the previous 
+	 * customized limiting magnitude will be used for stars.
+	 * @param fullDataAndPrecision True to return also rise, set, transit times for the closets object. Note
+	 * this will be much slower in some cases.
+	 * @return Object data, or null if no object is found or the position is outside the visible map.
+	 * @throws JPARSECException If an error occurs.
+	 */
+	public Object[] getClosestObjectData(int x, int y, boolean stars, 
+			boolean plan, boolean dso, float starMaglim, boolean considerMagLim, boolean fullDataAndPrecision)
+	throws JPARSECException {
 		double minDist = -1;
 		Object data[] = null;
 		if (!rec.contains(x, y)) return data;
 
 		boolean noFaintStar = false;
-		double star[] = this.getClosestStarInScreenCoordinates(x, y, considerMagLim);
-		if (star != null) {
-			if (star[1] < minDist || minDist == -1.0) {
-				StarEphemElement ephem = this.calcStar((int) star[0], fullDataAndPrecision);
-				float[] pos = projection.project(new LocationElement(ephem.rightAscension, ephem.declination, 1.0), 0, true);
-				data = new Object[] {
-						RenderSky.OBJECT.STAR, pos, EphemElement.parseStarEphemElement(ephem), this.getStar((int) star[0])
-				};
-				minDist = star[1];
-//				if (ephem.magnitude > maglim - 2) noFaintStar = true;
-			}
-		}
-
-		boolean consider_satellites = true;
-		Object planet[] = this.getClosestPlanetInScreenCoordinates(x, y, consider_satellites);
-		if (planet != null) {
-			double d = (Double) planet[1];
-			if (d < minDist || minDist == -1 || (noFaintStar && d < 60)) {
-				TARGET p = (TARGET) planet[0];
-				EphemElement ephem = this.calcPlanet(p, true, fullDataAndPrecision);
-				boolean isPlanet = p.isPlanet();
-				if (p == TARGET.SUN || p == TARGET.Moon || p == TARGET.Pluto) isPlanet = true;
-				if (!isPlanet && considerMagLim && ephem.magnitude > maglim) {
-					planet = this.getClosestPlanetInScreenCoordinates(x, y, false);
-					ephem = this.calcPlanet((TARGET) planet[0], true, fullDataAndPrecision);
-					if (considerMagLim && ephem.magnitude > maglim) ephem = null;
-				}
-				if (ephem != null) {
-					float[] pos = projection.project(new LocationElement(ephem.rightAscension, ephem.declination, 1.0), 0, false);
-					data = new Object[] {
-							RenderSky.OBJECT.PLANET, pos, ephem
-					};
-					minDist = (Double) planet[1];
-					noFaintStar = false;
+		if (stars) {
+			double star[] = this.getClosestStarInScreenCoordinates(x, y, considerMagLim ? maglim : starMaglim);
+			if (star != null) {
+				if (star[1] < minDist || minDist == -1.0) {
+					StarEphemElement ephem = this.calcStar((int) star[0], fullDataAndPrecision);
+					if (ephem.magnitude < starMaglim) {
+						float[] pos = projection.project(new LocationElement(ephem.rightAscension, ephem.declination, 1.0), 0, true);
+						data = new Object[] {
+								RenderSky.OBJECT.STAR, pos, EphemElement.parseStarEphemElement(ephem), this.getStar((int) star[0])
+						};
+						minDist = star[1];
+		//				if (ephem.magnitude > maglim - 2) noFaintStar = true;
+					}
 				}
 			}
 		}
 
-		ArrayList<Object> minorObjects = new ArrayList<Object>();
-		Object o = null;
-		if (db_minorObjects >= 0) {
-			o = DataBase.getData(db_minorObjects);
-		} else {
-			o = DataBase.getData("minorObjects", threadID, true);
+		if (plan) {
+			boolean consider_satellites = true;
+			Object planet[] = this.getClosestPlanetInScreenCoordinates(x, y, consider_satellites);
+			if (planet != null) {
+				double d = (Double) planet[1];
+				if (d < minDist || minDist == -1 || (noFaintStar && d < 60)) {
+					TARGET p = (TARGET) planet[0];
+					EphemElement ephem = this.calcPlanet(p, true, fullDataAndPrecision);
+					boolean isPlanet = p.isPlanet();
+					if (p == TARGET.SUN || p == TARGET.Moon || p == TARGET.Pluto) isPlanet = true;
+					if (!isPlanet && considerMagLim && ephem.magnitude > maglim) {
+						planet = this.getClosestPlanetInScreenCoordinates(x, y, false);
+						ephem = this.calcPlanet((TARGET) planet[0], true, fullDataAndPrecision);
+						if (considerMagLim && ephem.magnitude > maglim) ephem = null;
+					}
+					if (ephem != null) {
+						float[] pos = projection.project(new LocationElement(ephem.rightAscension, ephem.declination, 1.0), 0, false);
+						data = new Object[] {
+								RenderSky.OBJECT.PLANET, pos, ephem
+						};
+						minDist = (Double) planet[1];
+						noFaintStar = false;
+					}
+				}
+			}
 		}
-		if (o != null) minorObjects = new ArrayList<Object>(Arrays.asList((Object[]) o));
-		if (minorObjects != null && minorObjects.size() > 0) {
-			if (render.telescope.invertHorizontal) x = render.width-1-x;
-			if (render.telescope.invertVertical) y = render.height-1-y;
-			double minDist2 = minDist * minDist;
-			for (int i=0; i<minorObjects.size(); i++)
-			{
-	 			Object d[] = ((Object[]) minorObjects.get(i)).clone();
-	 			float pos[] = (float[]) d[1];
-				double dx = pos[0] - x, dy = pos[1] - y;
-				double dist = (dx*dx+dy*dy);
-				if (rec.contains(pos[0], pos[1]) && dist < minDist2 || minDist == -1.0|| (noFaintStar && dist < 3600)) {
-					noFaintStar = false;
-					minDist = Math.sqrt(dist);
-					minDist2 = dist;
-					data = d;
-					OBJECT type = (OBJECT) d[0];
-					if (type != RenderSky.OBJECT.DEEPSKY &&
-							type != RenderSky.OBJECT.SUPERNOVA && type != OBJECT.NOVA) {
-						EphemElement ephem = null;
-						if (type == RenderSky.OBJECT.ARTIFICIAL_SATELLITE) {
-							SatelliteEphemElement satEp = (SatelliteEphemElement) data[2];
-							ephem = EphemElement.parseSatelliteEphemElement(satEp, projection.eph.getEpoch(jd));
+		
+		if (dso) {
+			ArrayList<Object> minorObjects = new ArrayList<Object>();
+			Object o = null;
+			if (db_minorObjects >= 0) {
+				o = DataBase.getData(db_minorObjects);
+			} else {
+				o = DataBase.getData("minorObjects", threadID, true);
+			}
+			if (o != null) minorObjects = new ArrayList<Object>(Arrays.asList((Object[]) o));
+			if (minorObjects != null && minorObjects.size() > 0) {
+				if (render.telescope.invertHorizontal) x = render.width-1-x;
+				if (render.telescope.invertVertical) y = render.height-1-y;
+				double minDist2 = minDist * minDist;
+				for (int i=0; i<minorObjects.size(); i++)
+				{
+		 			Object d[] = ((Object[]) minorObjects.get(i)).clone();
+		 			float pos[] = (float[]) d[1];
+					double dx = pos[0] - x, dy = pos[1] - y;
+					double dist = (dx*dx+dy*dy);
+					if (rec.contains(pos[0], pos[1]) && dist < minDist2 || minDist == -1.0|| (noFaintStar && dist < 3600)) {
+						noFaintStar = false;
+						minDist = Math.sqrt(dist);
+						minDist2 = dist;
+						data = d;
+						OBJECT type = (OBJECT) d[0];
+						if (type != RenderSky.OBJECT.DEEPSKY &&
+								type != RenderSky.OBJECT.SUPERNOVA && type != OBJECT.NOVA) {
+							EphemElement ephem = null;
+							if (type == RenderSky.OBJECT.ARTIFICIAL_SATELLITE) {
+								SatelliteEphemElement satEp = (SatelliteEphemElement) data[2];
+								ephem = EphemElement.parseSatelliteEphemElement(satEp, projection.eph.getEpoch(jd));
+								data[2] = ephem;
+							} else {
+								ephem = ((EphemElement) data[2]).clone();
+							}
+							if (fullDataAndPrecision) {
+								EphemElement fullEphem = this.getEphemerisOfMinorObject(ephem.name, type, fullDataAndPrecision);
+								if (fullEphem != null) {
+									ephem.rise = fullEphem.rise;
+									ephem.set = fullEphem.set;
+									ephem.transit = fullEphem.transit;
+									ephem.transitElevation = fullEphem.transitElevation;
+									ephem.name = fullEphem.name;
+								}
+							}
 							data[2] = ephem;
 						} else {
-							ephem = ((EphemElement) data[2]).clone();
-						}
-						if (fullDataAndPrecision) {
-							EphemElement fullEphem = this.getEphemerisOfMinorObject(ephem.name, type, fullDataAndPrecision);
-							if (fullEphem != null) {
-								ephem.rise = fullEphem.rise;
-								ephem.set = fullEphem.set;
-								ephem.transit = fullEphem.transit;
-								ephem.transitElevation = fullEphem.transitElevation;
-								ephem.name = fullEphem.name;
-							}
-						}
-						data[2] = ephem;
-					} else {
-						String objData[] = ((String[]) data[2]).clone();
-						LocationElement loc = new LocationElement(Double.parseDouble(objData[1]),
-								Double.parseDouble(objData[2]), 1.0);
-						loc = projection.toEquatorialPosition(loc, false);
-						objData[1] = Functions.formatRA(loc.getLongitude(), 2);
-						objData[2] = Functions.formatDEC(loc.getLatitude(), 1);
-						if (type == RenderSky.OBJECT.DEEPSKY) {
-							String name = objData[0];
-							if (name.startsWith("I."))
-								name = DataSet.replaceAll(name, "I.", "IC ", true);
-							try {
-								String name2 = FileIO.getField(1, name, " ", true);
-								if (DataSet.isDoubleStrictCheck(name2) || (name2.length() > 4 && DataSet.isDoubleStrictCheck(name2.substring(0, 4)))) {
-									boolean ok = true;
-									String f2 = FileIO.getField(2, name, " ", true);
-									if (f2 != null && f2.length() > 0 && !f2.equals("-")) {
-										ok = false;
-										if (f2.startsWith("M")) {
-											try {
-												int mn = Integer.parseInt(f2.substring(1));
-												ok = true;
-											} catch (Exception exc2) {}
+							String objData[] = ((String[]) data[2]).clone();
+							LocationElement loc = new LocationElement(Double.parseDouble(objData[1]),
+									Double.parseDouble(objData[2]), 1.0);
+							loc = projection.toEquatorialPosition(loc, false);
+							objData[1] = Functions.formatRA(loc.getLongitude(), 2);
+							objData[2] = Functions.formatDEC(loc.getLatitude(), 1);
+							if (type == RenderSky.OBJECT.DEEPSKY) {
+								String name = objData[0];
+								if (name.startsWith("I."))
+									name = DataSet.replaceAll(name, "I.", "IC ", true);
+								try {
+									String name2 = FileIO.getField(1, name, " ", true);
+									if (DataSet.isDoubleStrictCheck(name2) || (name2.length() > 4 && DataSet.isDoubleStrictCheck(name2.substring(0, 4)))) {
+										boolean ok = true;
+										String f2 = FileIO.getField(2, name, " ", true);
+										if (f2 != null && f2.length() > 0 && !f2.equals("-")) {
+											ok = false;
+											if (f2.startsWith("M")) {
+												try {
+													int mn = Integer.parseInt(f2.substring(1));
+													ok = true;
+												} catch (Exception exc2) {}
+											}
 										}
+										if (ok) name = "NGC " + name;
 									}
-									if (ok) name = "NGC " + name;
-								}
-							} catch (Exception exc) {}
-							objData[0] = name;
+								} catch (Exception exc) {}
+								objData[0] = name;
+							}
+							data[2] = objData;
 						}
-						data[2] = objData;
 					}
 				}
 			}
@@ -13209,7 +13265,7 @@ public class RenderSky
 
 		return data;
 	}
-
+	
 	/**
 	 * Obtains full ephemeris (including rise, set, transit times) of a 'minor' body, which is any
 	 * asteroid, comet, probe, transneptunian object, artificial satellite, supernova, or deep sky

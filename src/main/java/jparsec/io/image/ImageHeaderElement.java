@@ -189,6 +189,30 @@ public class ImageHeaderElement implements Serializable {
 		}
 		return p;
 	}
+	
+	/**
+	 * Searches for a given {@linkplain ImageHeaderElement} by its key.
+	 * @param param The array of {@linkplain ImageHeaderElement}.
+	 * @param d The key to search for.
+	 * @return The value of the header parameter as a double value.
+	 * @throws JPARSECException In case the header key is not found or is not a number.
+	 */
+	public static double getByKeyAsDouble(ImageHeaderElement param[], String d) throws JPARSECException
+	{
+		try {
+			ImageHeaderElement p = null;
+			for (int i=0; i<param.length; i++)
+			{
+				if (param[i].key.trim().equals(d.trim())) {
+					p = param[i].clone();
+					break;
+				}
+			}
+			return Double.parseDouble(p.value.trim());
+		} catch (Exception exc) {
+			throw new JPARSECException("Key "+d+" does not exists or is not a number", exc);
+		}
+	}
 
 	/**
 	 * Clones this instance.

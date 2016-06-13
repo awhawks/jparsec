@@ -3196,6 +3196,28 @@ public class DataSet
 	}
 
 	/**
+	 * Obtains an adequate set of values between two points.
+	 * @param x0 Initial value.
+	 * @param xf Final value.
+	 * @param step Step between points.
+	 * @return Array with the values.
+	 */
+	public static double[] getSetOfValues(double x0, double xf, double step)
+	{
+		int npoints = (int) ((xf - x0) / step + 1);
+		double w[] = new double[npoints];
+		double lambda = x0;
+		int i = -1;
+		do
+		{
+			i++;
+			w[i] = lambda;
+			lambda = lambda + step;
+		} while (i < (npoints - 1));
+		return w;
+	}
+	
+	/**
 	 * Removes an index from an array.
 	 * @param input The array.
 	 * @param index The index to remove.
@@ -3220,6 +3242,21 @@ public class DataSet
 	{
 		if (index < 0 || index >= input.length) return input.clone();
 		int out[] = new int[input.length-1];
+		if (index > 0) System.arraycopy(input, 0, out, 0, index);
+		if (index < input.length - 1) System.arraycopy(input, index + 1, out, index, input.length - 1 - index);
+		return out;
+	}
+
+	/**
+	 * Removes an index from an array.
+	 * @param input The array.
+	 * @param index The index to remove.
+	 * @return The new array or a copy of the input if the index is invalid.
+	 */
+	public static long[] deleteIndex(long[] input, int index)
+	{
+		if (index < 0 || index >= input.length) return input.clone();
+		long out[] = new long[input.length-1];
 		if (index > 0) System.arraycopy(input, 0, out, 0, index);
 		if (index < input.length - 1) System.arraycopy(input, index + 1, out, index, input.length - 1 - index);
 		return out;

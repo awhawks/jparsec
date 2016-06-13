@@ -1526,8 +1526,8 @@ public class LMVCube implements Serializable
     private void setWCS() throws JPARSECException
     {
     	wcs = new WCS();
-        double crpix1 = axis1Dim / 2.0 - 0.5;
-        double crpix2 = axis2Dim / 2.0 - 0.5;
+        double crpix1 = conversionFormula[0] - 1.0 - conversionFormula[1] / conversionFormula[2];
+        double crpix2 = conversionFormula[3] - 1.0 - conversionFormula[4] / conversionFormula[5];
         wcs.setCrpix1(crpix1);
         wcs.setCrpix2(crpix2);
         double crval1 = axis1Pos * Constant.RAD_TO_DEG;

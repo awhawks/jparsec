@@ -304,7 +304,10 @@ public class Version
 						"Little bug in RenderPlanet in the position of the natural satellites as drawn without textures.\n"+
 						"There was a bug in the labels for the ecliptic axis when rendering the sky.\n"+
 						"Some general cosmetic and performance fixes in sky rendering, mainly for Android.\n"+
-						"The output charts for light and distance curves in OrbitalElement class have now better accuracy."
+						"The output charts for light and distance curves in OrbitalElement class have now better accuracy.",
+				"      1.110: Few bug fixes and improved astrophotography (Jul XX, 2016):\n"+
+						"There was a bug in the WCS coordinates returned in LMVCube.\n",
+						"XXX."
 
 				+FileIO.getLineSeparator(),
 		};
@@ -313,7 +316,7 @@ public class Version
 		// Dependencies for JPARSEC programs and models
 		String library[] = new String[] {
 			// Dependency name                             Version
-			"jparsec.jar                                   1.109",
+			"jparsec.jar                                   1.110",
 
 			"sky.jar                                       1.36",
 			"orbital_elements.jar                          1.23",
