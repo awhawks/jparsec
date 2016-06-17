@@ -745,18 +745,19 @@ public class SExtractor {
 		if (nsources < 4 && !sameImageOrientationAndField) throw new JPARSECException("Cannot use less than 4 sources in this case");
 		if (nsources == 0 || sex.sources == null || sex.getNumberOfSources() == 0) return null;
 
-		int id[] = new int[nsources]; // Identify index id[...] with catalog
-		for (int i = 0; i < id.length; i++) { id[i] = -1; }
-
 		int n = sex.getNumberOfSources();
+		n = Math.min(n, getNumberOfSources());
+		if (nsources > 0) n = Math.min(n, nsources);
 		double x[] = new double[n], y[] = new double[n];
 		for (int i=0; i<n; i++) {
 			x[i] = sex.getX(i).getValue();
 			y[i] = sex.getY(i).getValue();
 		}
+		int id[] = new int[n]; // Identify index id[...] with catalog
+		for (int i = 0; i < id.length; i++) { id[i] = -1; }
 
 		if (sameImageOrientationAndField) {
-			for (int i = 0; i < id.length; i++) {
+			for (int i = 0; i < id.length; i++) {				
 				id[i] = identifyStar(this, x, y, i, maxError);
 			}
 			return id;
