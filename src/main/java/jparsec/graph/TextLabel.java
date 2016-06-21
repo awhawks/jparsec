@@ -706,10 +706,10 @@ public class TextLabel extends Object {
        // To be used with font Symbol when exporting to PDF
        private static final char[] greekPDF = new char[] {'a', 'b', 'g', 'd', 'e',
     		'z', 'h', 'q', 'i', 'k', 'l', 'm', 'n', 'x', 'o',
-    		'p', 'r', 's', 't', 'u', 'f', 'c', 'y', 'w'}; //, '\u2022', '\t', '¬'}; // '\u2022','',''
+    		'p', 'r', 's', 't', 'u', 'f', 'c', 'y', 'w'}; //, '\u2022', '\t', '\u00ac'}; // '\u2022','',''
        private static final char[] greekCapitalPDF = new char[] {'A', 'B', 'G', 'D', 'E',
     		'Z', 'H', 'Q', 'I', 'K', 'L', 'M', 'N', 'X', 'O',
-    		'P', 'R', 'S', 'T', 'U', 'F', 'C', 'Y', 'W'}; //, '\u2022', '\t', '¬'};
+    		'P', 'R', 'S', 'T', 'U', 'F', 'C', 'Y', 'W'}; //, '\u2022', '\t', '\u00ac'};
 
        /**
         * Clears the list of text states.

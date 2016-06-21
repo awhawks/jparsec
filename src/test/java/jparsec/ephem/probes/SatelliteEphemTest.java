@@ -51,7 +51,7 @@ public class SatelliteEphemTest {
 			    		    				
 			ArrayList<SimpleEventElement> newEvents = new ArrayList<SimpleEventElement>(); //EventReport.getEvents(init, end, obs.clone(), eph);
 			String sevent = "Next pass of ";
-			if (Translate.getDefaultLanguage() == LANGUAGE.SPANISH) sevent = "Próximo paso de ";
+			if (Translate.getDefaultLanguage() == LANGUAGE.SPANISH) sevent = "Pr\u00f3ximo paso de ";
 			int nsat = name.length;
 			if (tranMag >= 0) nsat = SatelliteEphem.getArtificialSatelliteCount();
 			for (int i=0; i<nsat; i++) {

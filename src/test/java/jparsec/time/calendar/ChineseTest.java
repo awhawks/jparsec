@@ -11,8 +11,8 @@ public class ChineseTest {
     public static void main(String args[]) throws JPARSECException {
         System.out.println("Chinese test");
 
-        // Calendario Chino: ciclo 78, año 32 (4713, Yi-Wei), mes 10 (Ji-Hai), mes bisiesto no, día 22. 
-        // Próximo año nuevo el lunes, 8 de febrero de 2016.
+        // Calendario Chino: ciclo 78, a\u00f1o 32 (4713, Yi-Wei), mes 10 (Ji-Hai), mes bisiesto no, d\u00eda 22. 
+        // Pr\u00f3ximo a\u00f1o nuevo el lunes, 8 de febrero de 2016.
         double jd = 2457359.5; //2451545.5;
         long fixed = (long) jd - Gregorian.EPOCH ; //730120;
 

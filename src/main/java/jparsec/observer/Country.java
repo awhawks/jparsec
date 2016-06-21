@@ -409,7 +409,7 @@ public class Country
 		Samoa,
 		/** Constant ID for San Marino. */
 		San_Marino,
-		/** Constant ID for São Tom&eacute; and Pr&iacute;ncipe. */
+		/** Constant ID for S&atilde;o Tom&eacute; and Pr&iacute;ncipe. */
 		Sao_Tome_and_Principe,
 		/** Constant ID for Saudi Arabia. */
 		Saudi_Arabia,
@@ -651,7 +651,7 @@ public class Country
 				return "San Marino";
 
 			if (this == COUNTRY.Sao_Tome_and_Principe)
-				return "São Tom\u00e9 and Pr\u00edncipe";
+				return "S\u00e3o Tom\u00e9 and Pr\u00edncipe";
 
 			if (this == COUNTRY.Saudi_Arabia)
 				return "Saudi Arabia";
@@ -1500,7 +1500,7 @@ public class Country
 		if (country.equals("San Marino"))
 			c = COUNTRY.San_Marino;
 
-		if (country.equals("São Tom\u00e9 and Pr\u00edncipe"))
+		if (country.equals("S\u00e3o Tom\u00e9 and Pr\u00edncipe"))
 			c = COUNTRY.Sao_Tome_and_Principe;
 
 		if (country.equals("Saudi Arabia"))
