@@ -738,7 +738,7 @@ public class HTMLReport implements Serializable {
 		input = DataSet.replaceAll(input, "\u00f1", "&ntilde;", true);
 		input = DataSet.replaceAll(input, "\u00d1", "&Ntilde;", true);
 		input = DataSet.replaceAll(input, "\u00b0", "&deg;", true);
-		input = DataSet.replaceAll(input, "º", "&deg;", true);
+		input = DataSet.replaceAll(input, "\u00ba", "&deg;", true);
 		input = DataSet.replaceAll(input, "\\mu", "&micro;", true);
 		input = DataSet.replaceAll(input, "+/-", "&plusmn;", true);
 		return input;
