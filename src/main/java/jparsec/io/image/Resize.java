@@ -176,6 +176,58 @@ public class Resize
 		return r.computeZoom(image, false, analyDegree, syntheDegree, interpDegree, zoomY, zoomX, shiftY, shiftX);
   }
 
+  /**
+   * Resizes a 2d array data [x][y], using internally a value of -1 for analyDegree to eliminate banding in noisy
+   * images, like astronomical ones.
+   * @param image The input image.
+   * @param width The new width. Set to 0 to calculate automatically.
+   * @param height The new height. Set to 0 to calculate automatically.
+   * Width and height cannot be both 0.
+   * @param sameRatio True to maintain original image ratio.
+   * @return The output data.
+   * @throws JPARSECException If an error occurs.
+   */
+  public static double[][] resizeNoBanding(double[][] image, int width, int height, boolean sameRatio) throws JPARSECException {
+	  if (width < 1 && height < 1) return image;
+
+		int origWidth = image.length;
+		int origHeight = image[0].length;
+
+		if (width < 1 && height > 1)
+		{
+			double scale = (double) height / (double) origHeight;
+			width = (int) (scale * origWidth + 0.5);
+		} else {
+			if (width > 1 && height < 1)
+			{
+				double scale = (double) width / (double) origWidth;
+				height = (int) (scale * origHeight + 0.5);
+			} else {
+				if (width > 1 && height > 1 && sameRatio) {
+					double scaleW = (double) width / (double) origWidth;
+					double scaleH = (double) height / (double) origHeight;
+					double scale = scaleW;
+					if (scaleH < scaleW) {
+						scale = scaleH;
+						width = (int) (scale * origWidth + 0.5);
+					} else {
+						height = (int) (scale * origHeight + 0.5);
+					}
+				}
+			}
+		}
+
+		if (origWidth == width && sameRatio || origHeight == height && sameRatio ||
+				origWidth == width && origHeight == height) return image;
+
+		int analyDegree = -1, syntheDegree = 3, interpDegree = 3;
+		double shiftY = 0.0, shiftX = 0.0;
+		double zoomX = (double) width / (double) image.length;
+		double zoomY = (double) height / (double) image[0].length;
+		Resize r = new Resize();
+		return r.computeZoom(image, false, analyDegree, syntheDegree, interpDegree, zoomY, zoomX, shiftY, shiftX);
+  }
+  
   private BufferedImage computeZoom(BufferedImage input, boolean inversable, int analyDegree, int syntheDegree, int interpDegree, double zoomY, double zoomX, double shiftY,
 		  double shiftX) throws JPARSECException
   {

@@ -152,7 +152,10 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 	}
 
 	/**
-	 * Sets the colors for the rows.
+	 * Sets the colors for the rows. Color can be changed according to the value of 
+	 * the cell or to the row index. In the second case, set column as a negative value 
+	 * (-2 to alternate colors, -3 to change the color or one row per 3, etc), the 
+	 * values array to null, and the col array to just one color.
 	 * @param column The column to use to select the color based on its value.
 	 * @param values A set of possible values to select a different color from default.
 	 * @param col The set of colors so that in row 'row' col[i] is used when table[row][column] = values[i].
@@ -263,6 +266,14 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 						return c;
 					}
 				}
+				if (colColumn < 0 && colVal == null && colCol != null && colCol.length > 0) {
+					int n = rowIndex % Math.abs(colColumn);
+					if (n < colCol.length) {
+						c.setBackground(colCol[n]);
+						return c;
+					}
+				}
+				
 				if (isCellSelected(rowIndex, vColIndex)) {
 					c.setBackground(getSelectionBackground());
 				} else {

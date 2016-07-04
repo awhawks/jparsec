@@ -24,12 +24,17 @@ package jparsec.io;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Serializable;
+import java.net.JarURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 import javax.imageio.ImageIO;
 
@@ -2274,6 +2279,30 @@ public class ReadFile implements Serializable
 		this.setReadElements(v);
 	}
 
+	/**
+	 * Returns all the resources contained in a given path inside the classpath.
+	 * @param path An existing path inside the classpath.
+	 * @return The set of files inside that path.
+	 * @throws IOException In case of problems opening or reading the provided path.
+	 */
+	public static ArrayList<String> getResourceFiles(String path) throws IOException {
+		  
+		ArrayList<String> filenames = new ArrayList<String>();
+		Enumeration<URL> en = ReadFile.class.getClassLoader().getResources(path);
+		if (en.hasMoreElements()) {
+			URL url = en.nextElement();
+			JarURLConnection urlcon = (JarURLConnection) (url.openConnection());
+			JarFile jar = urlcon.getJarFile(); 
+			Enumeration<JarEntry> entries = jar.entries();
+			while (entries.hasMoreElements()) {
+				String entry = entries.nextElement().getName();
+				filenames.add(entry);
+			}
+		}
+		    		    
+		return filenames;
+	}
+	
 	/**
 	 * Reads a file in the classpath and returns it contents as an array of strings.
 	 * Default encoding is ISO-8859-1.

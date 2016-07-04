@@ -1113,7 +1113,24 @@ public class ImageSplineTransform implements Serializable {
 	   return Resize.resize(this.getImage(), w, h, false);
    }
 
-
+   /**
+    * Resizes the image data to another size using the method
+    * Least-Squares Image Resizing Using Finite Differences. This method is
+    * faster and more accurate than the method using spline interpolation.<P>
+    * This call use an specific method to eliminate possible banding when 
+    * resizing noisy astronomical images.
+    * <P>
+    * A. Mu&ntilde;oz Barrutia, T. Blu, M. Unser, "Least-Squares Image Resizing Using Finite Differences,"
+    * IEEE Transactions on Image Processing, vol. 10, no. 9, pp. 1365-1378, September 2001.
+    * @param w New width.
+    * @param h New height.
+    * @return The image data.
+    * @throws JPARSECException If an error occurs.
+    */
+   public double[][] getResizedDataNoBanding(int w, int h) throws JPARSECException {
+	   return Resize.resizeNoBanding(this.getImage(), w, h, false);
+   }
+   
    /**
     * Resizes the image to another size using P. Th&eacute;venaz interpolation.
     * This method is generally slower and less accurate, but sometimes
