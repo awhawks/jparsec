@@ -2650,7 +2650,7 @@ public class LMVCube implements Serializable
  	 * Since cube and kernel coordinates are mapped by indexes, the resolution of the
  	 * kernel must be the same of that of the cube to convolve.
  	 * @param samplingFactor The radius of the kernel relative to the beam size (HPBW).
- 	 * Recomended value is around 4 for an accurate convolution, and should never be below 0.5.
+ 	 * Recommended value is around 4 for an accurate convolution, and should never be below 0.5.
  	 * @return The kernel. Values outside the sampled region are filled with 0.
  	 */
  	public static double[][] convolveGetGaussianKernel(double beam_x, double beam_y, double beam_pa, double spatialResolution,

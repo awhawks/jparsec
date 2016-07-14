@@ -307,7 +307,8 @@ public class Version
 						"The output charts for light and distance curves in OrbitalElement class have now better accuracy.",
 				"      1.110: Few bug fixes and improved astrophotography (Jul XX, 2016):\n"+
 						"There was a bug in the WCS coordinates returned in LMVCube.\n",
-						"XXX."
+						"Latex compilation now done in batchmode instead of nonstopmode to avoid so many warning messages blocking the compilation.\n",
+						"AWTDrawer - fillOval replaced with an image in JMathPlot library to improve performance."
 
 				+FileIO.getLineSeparator(),
 		};
@@ -337,7 +338,7 @@ public class Version
 
 			"skyViewWCS.jar                                1.00",
 			"jsky-coords.jar                               1.00",
-			"jmathplot.jar                                 1.02",
+			"jmathplot.jar                                 1.03",
 			"visad.jar                                     1.00",
 			"JMathTeX-0.7pre.jar                           1.00",
 			"jdom-1.0.jar                                  1.00",

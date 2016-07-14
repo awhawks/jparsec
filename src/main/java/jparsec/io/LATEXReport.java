@@ -1650,11 +1650,11 @@ public class LATEXReport implements Serializable
 
 		String out = "";
 		try {
-			Process p = ApplicationLauncher.executeCommand("latex "+outputDir+" -interaction=nonstopmode " + path, null, new File(od));
+			Process p = ApplicationLauncher.executeCommand("latex "+outputDir+" -interaction=batchmode " + path, null, new File(od));
 			p.waitFor();
-			p = ApplicationLauncher.executeCommand("latex "+outputDir+" -interaction=nonstopmode " + path, null, new File(od));
+			p = ApplicationLauncher.executeCommand("latex "+outputDir+" -interaction=batchmode " + path, null, new File(od));
 			p.waitFor();
-			p = ApplicationLauncher.executeCommand("latex "+outputDir+" -interaction=nonstopmode " + path, null, new File(od));
+			p = ApplicationLauncher.executeCommand("latex "+outputDir+" -interaction=batchmode " + path, null, new File(od));
 			p.waitFor();
 			out = ApplicationLauncher.getConsoleOutputFromProcess(p);
 		} catch (Exception exc) {}
@@ -1722,11 +1722,11 @@ public class LATEXReport implements Serializable
 
 		//String out = "";
 		try {
-			Process p = ApplicationLauncher.executeCommand("pdflatex "+outputDir+" -interaction=nonstopmode " + path, null, new File(od));
+			Process p = ApplicationLauncher.executeCommand("pdflatex "+outputDir+" -interaction=batchmode " + path, null, new File(od));
 			p.waitFor();
-			p = ApplicationLauncher.executeCommand("pdflatex "+outputDir+" -interaction=nonstopmode " + path, null, new File(od));
+			p = ApplicationLauncher.executeCommand("pdflatex "+outputDir+" -interaction=batchmode " + path, null, new File(od));
 			p.waitFor();
-			p = ApplicationLauncher.executeCommand("pdflatex "+outputDir+" -interaction=nonstopmode " + path, null, new File(od));
+			p = ApplicationLauncher.executeCommand("pdflatex "+outputDir+" -interaction=batchmode " + path, null, new File(od));
 			p.waitFor();
 			//out = ApplicationLauncher.getConsoleOutputFromProcess(p);
 			LATEXReport.deleteTemporalFiles(path);
