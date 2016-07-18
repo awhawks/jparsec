@@ -5,7 +5,7 @@
     <groupId>es.oan.conga</groupId>
     <artifactId>jparsec</artifactId>
     <packaging>jar</packaging>
-    <version>0.108</version>
+    <version>1.110</version>
     <name>jparsec</name>
     <url>http://maven.apache.org</url>
 
@@ -21,21 +21,21 @@
         <jar.useDefaultManifestFile>true</jar.useDefaultManifestFile>
 
         <conga.url>http://conga.oan.es/~alonso/jparsec/lib</conga.url>
-        <version.jparsec>0.108</version.jparsec>
-        <version.testng>6.8.21</version.testng>
-        <version.checkstyle>6.8.1</version.checkstyle>
-        <version.nrjavaserial>3.9.3.1</version.nrjavaserial>
+        <version.jparsec>1.110</version.jparsec>
+        <version.testng>6.9.10</version.testng>
+        <version.checkstyle>7.0</version.checkstyle>
+        <version.nrjavaserial>3.12.0</version.nrjavaserial>
         <version.jsch>0.1.53</version.jsch>
         <version.surfaceplotter>2.0.1</version.surfaceplotter>
-        <version.javax.mail-api>1.5.4</version.javax.mail-api>
+        <version.javax.mail-api>1.5.5</version.javax.mail-api>
         <version.miglayout-swing>5.0</version.miglayout-swing>
         <version.jfree>1.0.19</version.jfree>
         <version.junit>4.12</version.junit>
         <version.jz3d>0.9.1</version.jz3d>
-        <version.nom-tam-fits>1.13.0</version.nom-tam-fits>
+        <version.nom-tam-fits>1.14.3</version.nom-tam-fits>
         <version.jmathplot>1.0.1</version.jmathplot>
-        <version.plantuml>8028</version.plantuml>
-        <version.rhino>1.7R4</version.rhino>
+        <version.plantuml>8045</version.plantuml>
+        <version.rhino>1.7.7.1</version.rhino>
         <version.SGT_toolkit>3.0</version.SGT_toolkit>
         <version.cds.savot>2.6</version.cds.savot>
         <version.exec-maven-plugin>1.4.0</version.exec-maven-plugin>
@@ -43,7 +43,7 @@
         <maven-antrun-plugin.version>1.7</maven-antrun-plugin.version>
         <maven-assembly-plugin.version>2.5.5</maven-assembly-plugin.version>
         <maven-changes-plugin.version>2.11</maven-changes-plugin.version>
-        <maven-checkstyle-plugin.version>2.16</maven-checkstyle-plugin.version>
+        <maven-checkstyle-plugin.version>2.17</maven-checkstyle-plugin.version>
         <maven-clean-plugin.version>2.6.1</maven-clean-plugin.version>
         <maven-compiler-plugin.version>3.3</maven-compiler-plugin.version>
         <maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
@@ -575,7 +575,7 @@
         <dependency>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-checkstyle-plugin</artifactId>
-            <version>2.16</version>
+            <version>${maven-checkstyle-plugin.version}</version>
         </dependency>
     </dependencies>
 
