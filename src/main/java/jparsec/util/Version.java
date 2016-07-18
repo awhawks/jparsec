@@ -305,7 +305,7 @@ public class Version
 						"There was a bug in the labels for the ecliptic axis when rendering the sky.\n"+
 						"Some general cosmetic and performance fixes in sky rendering, mainly for Android.\n"+
 						"The output charts for light and distance curves in OrbitalElement class have now better accuracy.",
-				"      1.110: Few bug fixes and improved astrophotography (Jul XX, 2016):\n"+
+				"      1.110: Few bug fixes and improved astrophotography (Jul 18, 2016):\n"+
 						"There was a bug in the WCS coordinates returned in LMVCube.\n",
 						"Latex compilation now done in batchmode instead of nonstopmode to avoid so many warning messages blocking the compilation.\n",
 						"AWTDrawer - fillOval replaced with an image in JMathPlot library to improve performance."

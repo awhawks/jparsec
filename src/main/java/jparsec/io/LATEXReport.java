@@ -68,7 +68,7 @@ public class LATEXReport implements Serializable
 	private String avoidFormatting = "\\{}~";
 	private boolean fixFigures = false;
 
-	private boolean insideTable = false;
+	private boolean insideTable = false, tableFirstLine = false;
 	private boolean header = false, document = true, beamer = false, justify = false, firstJustify = true;
 
 	/**
@@ -918,6 +918,7 @@ public class LATEXReport implements Serializable
 		latexCode.append(sep + "\\begin{table}[h]" + sep);
 		latexCode.append("\\begin{tabular*}{1.0\\textwidth}");
 		insideTable = true;
+		tableFirstLine = false;
 	}
 	/**
 	 * Writes the header of a table.
@@ -934,6 +935,7 @@ public class LATEXReport implements Serializable
 		}
 		latexCode.append("\\begin{tabular*}{1.0\\textwidth}" + sep);
 		insideTable = true;
+		tableFirstLine = false;
 	}
 	/**
 	 * Writes the header of a long table.
@@ -952,6 +954,7 @@ public class LATEXReport implements Serializable
 		}
 		latexCode.append("\\hline\\noalign{\\smallskip}" + sep);
 		insideTable = true;
+		tableFirstLine = true;
 	}
 	/**
 	 * Ends a table tag.
@@ -963,6 +966,7 @@ public class LATEXReport implements Serializable
 		latexCode.append("\\end{tabular*}" + sep);
 		latexCode.append("\\end{table}" + sep + sep);
 		insideTable = false;
+		tableFirstLine = false;
 	}
 	/**
 	 * Ends a table tag adding a label.
@@ -977,6 +981,7 @@ public class LATEXReport implements Serializable
 		if (label != null) latexCode.append("\\label{"+label+"}" + sep);
 		latexCode.append("\\end{table}" + sep + sep);
 		insideTable = false;
+		tableFirstLine = false;
 	}
 
 	/**
@@ -999,6 +1004,7 @@ public class LATEXReport implements Serializable
 		if (label != null) latexCode.append("\\label{"+label+"}" + sep);
 		latexCode.append("\\end{longtable}" + sep + sep);
 		insideTable = false;
+		tableFirstLine = false;
 	}
 	/**
 	 * Write a row in a table.<P>
@@ -1067,12 +1073,17 @@ public class LATEXReport implements Serializable
 		{
 			cols += align;
 		}
-		int begin = latexCode.lastIndexOf("begin{tabular*}");
-		int end = latexCode.lastIndexOf("\\\\");
-		if (end < begin) {
+		if (!tableFirstLine) {
 			latexCode.append("{@{\\extracolsep{\\fill}}"+cols+"}" + sep);
 			latexCode.append("\\hline\\noalign{\\smallskip}" + sep);
+			tableFirstLine = true;
 		}
+//		int begin = latexCode.lastIndexOf("begin{tabular*}");
+//		int end = latexCode.lastIndexOf("\\\\");
+//		if (end < begin) {
+//			latexCode.append("{@{\\extracolsep{\\fill}}"+cols+"}" + sep);
+//			latexCode.append("\\hline\\noalign{\\smallskip}" + sep);
+//		}
 
 		for (int i=0; i<columns.length; i++)
 		{
