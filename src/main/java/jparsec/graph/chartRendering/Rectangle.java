@@ -116,8 +116,10 @@ public class Rectangle {
     /**
      * Check if a specified line intersects a specified rectangle.
      *
-     * @param lx0, ly0        1st end point of line
-     * @param lx1, ly1        2nd end point of line
+     * @param lx0        X coordinate of 1st end point of line
+     * @param ly0        Y coordinate of 1st end point of line
+     * @param lx1        X coordinate of 2nd end point of line
+     * @param ly1        Y coordinate of 2nd end point of line
      * @return True if the line intersects the rectangle,
      * false otherwise.
      */
