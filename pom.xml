@@ -40,6 +40,11 @@
         <version.cds.savot>2.6</version.cds.savot>
         <version.exec-maven-plugin>1.4.0</version.exec-maven-plugin>
 
+        <!-- base URL for CDS Savot 2.6 -->
+        <!-- cds.url>http://cds.u-strasbg.fr/cdsdevcorner/savot${version.cds.savot}/</cds.url -->
+        <!-- base URL for CDS Savot 3.0 -->
+        <cds.url>http://cds.u-strasbg.fr/resources/lib/exe/fetch.php?media=</cds.url>
+
         <maven-antrun-plugin.version>1.7</maven-antrun-plugin.version>
         <maven-assembly-plugin.version>2.5.5</maven-assembly-plugin.version>
         <maven-changes-plugin.version>2.11</maven-changes-plugin.version>
@@ -109,6 +114,14 @@
                                 <get src='${conga.url}/series96.jar'         dest='${project.basedir}/lib/' usetimestamp='true' />
                                 <get src='${conga.url}/skyViewWCS.jar'       dest='${project.basedir}/lib/' usetimestamp='true' />
                                 <get src='${conga.url}/visad.jar'            dest='${project.basedir}/lib/' usetimestamp='true' />
+
+                                <!--
+                                <get src='${cds.url}cds.savot.common.jar'    dest='${project.basedir}/lib/cds.savot.common.jar' usetimestamp='true' />
+                                <get src='${cds.url}cds.savot.model.jar'     dest='${project.basedir}/lib/cds.savot.model.jar' usetimestamp='true' />
+                                <get src='${cds.url}cds.savot.pull.jar'      dest='${project.basedir}/lib/cds.savot.pull.jar' usetimestamp='true' />
+                                <get src='${cds.url}cds.savot.sax.jar'       dest='${project.basedir}/lib/cds.savot.sax.jar' usetimestamp='true' />
+                                <get src='${cds.url}cds.savot.writer.jar'    dest='${project.basedir}/lib/cds.savot.writer.jar' usetimestamp='true' />
+                                -->
                             </target>
                         </configuration>
                     </execution>
@@ -126,7 +139,6 @@
                                 <get src='${conga.url}/eop.jar'              dest='${project.basedir}/lib/' usetimestamp='true' />
                                 <get src='${conga.url}/images.jar'           dest='${project.basedir}/lib/' usetimestamp='true' />
                                 <get src='${conga.url}/jpl_ephem.jar'        dest='${project.basedir}/lib/' usetimestamp='true' />
-                                <get src='${conga.url}/series96.jar'         dest='${project.basedir}/lib/' usetimestamp='true' />
                                 <get src='${conga.url}/dust.jar'             dest='${project.basedir}/lib/' usetimestamp='true' />
                                 <get src='${conga.url}/orbital_elements.jar' dest='${project.basedir}/lib/' usetimestamp='true' />
                                 <get src='${conga.url}/radex.jar'            dest='${project.basedir}/lib/' usetimestamp='true' />
@@ -448,39 +460,6 @@
     </build>
 
     <dependencies>
-        <!-- SAVOT -->
-        <!-- http://cdsweb.u-strasbg.fr/cdsdevcorner/savot2.6.gml -->
-
-        <dependency>
-            <groupId>cds.savot</groupId>
-            <artifactId>savot-model</artifactId>
-            <version>${version.cds.savot}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>cds.savot</groupId>
-            <artifactId>savot-common</artifactId>
-            <version>${version.cds.savot}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>cds.savot</groupId>
-            <artifactId>savot-pullengine</artifactId>
-            <version>${version.cds.savot}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>cds.savot</groupId>
-            <artifactId>savot-saxengine</artifactId>
-            <version>${version.cds.savot}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>cds.savot</groupId>
-            <artifactId>savot-writer</artifactId>
-            <version>${version.cds.savot}</version>
-        </dependency>
-
         <dependency>
             <groupId>com.puppycrawl.tools</groupId>
             <artifactId>checkstyle</artifactId>
@@ -678,10 +657,6 @@
         <repository>
             <id>itest-legacy-mvn-repo</id>
             <url>https://raw.github.com/iTest-UCM/itest-legacy/mvn-repo/mvn-repo/</url>
-        </repository>
-        <repository>
-            <id>savot</id>
-            <url>http://maven.mse.jhu.edu/m2repository/</url>
         </repository>
     </repositories>
 </project>
