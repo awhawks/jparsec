@@ -328,7 +328,7 @@ public class JPLEphemeris {
 
 			String filePath = FileIO.DATA_JPL_EPHEM_DIRECTORY+"de"+this.getJPLVersion()+Zip.ZIP_SEPARATOR;
 			if (ReadFile.resourceAvailable(filePath + filename)) return true;
-			
+
 			if (externalPath != null)
 				return (new File(externalPath + filename)).exists();
 		} catch (Exception exc) { }
@@ -1246,7 +1246,7 @@ public class JPLEphemeris {
 
 			InputStream is = null;
 			if (externalPath != null && new File(filename).exists()) {
-				URLConnection Connection = (URLConnection) ((new File(filename)).toURI().toURL()).openConnection();
+				URLConnection Connection = new File(filename).toURI().toURL().openConnection();
 				is = Connection.getInputStream();
 			} else {
 				filePath = FileIO.DATA_JPL_EPHEM_DIRECTORY+"de"+this.getJPLVersion()+Zip.ZIP_SEPARATOR;
