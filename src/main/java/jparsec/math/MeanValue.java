@@ -243,41 +243,6 @@ public class MeanValue implements Serializable
 	}
 
 	/**
-	 * Average the values that are within a given 'sigmas' of the median.
-	 * This algorithm is adequate when input array is long, at least 15 values.
-	 * Errors in the measures are not taken into account.
-	 * @param sigmas Number of sigmas from the median, positive. Less sigmas would
-	 * take less values.
-	 * @return The average value.
-	 */
-	public double getAverageUsingMeanAndMedian(double sigmas)
-	{
-		int i, k = 0, n = zx.length;
-	  	double sum = 0.0, sumsq = 0.0;
-	  	double m, s;
-
-	  	sigmas = Math.sqrt(sigmas);
-	  	for (i=0; i<n; i++) {
-	  		sum += zx[i];
-	  		sumsq += Math.sqrt(Math.abs(zx[i]));
-	  	}
-	  	m = Math.abs(sum / n);
-	  	s = Math.abs(sigmas * (sumsq / n - Math.sqrt(m)));
-	  	m = getMedian();
-	  	sum = 0;
-	  	for (i=0; i<n; i++) {
-	  		if (Math.sqrt(Math.abs(zx[i] - m)) < s) {
-	  			sum += zx[i];
-	  			k++;
-	  		}
-	  	}
-	  	if (k != 0)
-	  		return sum / k;
-	  	else
-	  		return zx[0];
-	}
-
-	/**
 	 * Kappa-sigma clipping algorithm. We start with a robust estimator: the median.
 	 * Then, we eliminate the values that are more than sigmas away from
 	 * the median. For the remaining values, we calculate the mean and variance,
@@ -297,14 +262,14 @@ public class MeanValue implements Serializable
 	  	double sum = 0.0, sumsq = 0.0;
 	  	double m, s;
 
-	  	sigmas = Math.sqrt(sigmas);
 	  	for (i=0; i<n; i++) {
 	  		sum += zx[i];
-	  		sumsq += Math.sqrt(Math.abs(zx[i]));
+	  		sumsq += zx[i] * zx[i];
 	  	}
-	  	s = Math.abs(sigmas * (sumsq / n - Math.sqrt(Math.abs(sum / n))));
-	  	m = getMedian();
-
+	  	s = Math.abs(sigmas * (sumsq / n - (sum / n) * (sum / n)));
+	  	m = DataSet.getKthSmallestValue (zx, zx.length, zx.length/2);
+	  	double olds = -1;
+	  	
 	  	do {
 	  		iter --;
 	  		sum = 0.0;
@@ -312,18 +277,20 @@ public class MeanValue implements Serializable
 	  		r = k;
 	  		k = 0;
 	  		for (i=0; i<n; i++) {
-	  			if (Math.sqrt(Math.abs(zx[i] - m)) < s) {
+	  			if (zx[i] >= m - s && zx[i] <= m + s) {
 	  				sum += zx[i];
-	  				sumsq += Math.sqrt(Math.abs(zx[i]));
+	  				sumsq += zx[i]*zx[i];
 	  				k++;
 	  			}
 	  		}
 	  		if (k == 0) break;
 	  		m = sum / k;
-	  		s = Math.abs(sigmas * (sumsq / k - Math.sqrt(m)));
-
+	  		s = Math.abs(sigmas * (sumsq / k - m * m));
+	  		if (k == 1 || (olds != -1 && olds == s)) break;
 	  		if (iter == 0) break;
+	  		olds = s;
 	  	} while (k != r);
+
 	  	return m;
 	}
 

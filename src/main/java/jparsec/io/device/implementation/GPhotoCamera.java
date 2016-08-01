@@ -183,6 +183,9 @@ public class GPhotoCamera {
 		/** The possible zoom values, hardcoded here since --get-config cannot provide these values.
 		 * Set to null in case gphoto provides the values. */
 		public String zoomValues[] = new String[] {"1", "5"};
+		/** Bits per pixel. */
+		public int bpp = 14;
+		
 		/**
 		 * Sets the configuration values for a specific camera model.
 		 * This method has no effect for the 40D.
@@ -286,7 +289,7 @@ public class GPhotoCamera {
 			if (name == null || name.equals("") || cameras[i].indexOf(name)>=0) {
 				this.model = model;
 				this.port = port;
-				ok = this.checkConfig();
+				ok = this.checkConfig(false);
 				if (ok) break;
 			}
 		}
@@ -330,7 +333,7 @@ public class GPhotoCamera {
 			if (name == null || name.equals("") || cameras[i].indexOf(name)>=0) {
 				this.model = model;
 				this.port = port;
-				ok = this.checkConfig();
+				ok = this.checkConfig(false);
 				if (ok) break;
 			}
 		}
@@ -387,7 +390,7 @@ public class GPhotoCamera {
 			if (portOK && cameraOK) {
 				this.model = model;
 				this.port = cport;
-				ok = checkConfig();
+				ok = checkConfig(false);
 				if (ok) break;
 			}
 		}
@@ -519,52 +522,65 @@ public class GPhotoCamera {
 	 * Checks the camera by retrieving the list of possible configuration parameters
 	 * and checking that list against the configuration parameters that should be available
 	 * for configuration to do astronomical imaging.
+	 * @param checkCameraStatus True to check camera status (if it is on), false to assume 
+	 * it is one and only check for possible new configuration values (apertures in case a new 
+	 * lens was attached and so on). Note some cameras seem to get blocked in case true is used 
+	 * here too often.
 	 * @return True is everything is fine.
 	 * @throws JPARSECException If an error occurs.
 	 */
-	public boolean checkConfig()
+	public boolean checkConfig(boolean checkCameraStatus)
 	throws JPARSECException {
-		if (isShooting || liveView) return true;
+		boolean all = checkCameraStatus;
+		if (isShooting || liveView) {
+			lastCheck = System.currentTimeMillis();
+			all = false;
+		}
 		if (lastCheck > 0) {
 			double elapsed = (System.currentTimeMillis()-lastCheck)*0.001;
-			if (elapsed < 5) return true;
+			if (elapsed < 5) all = false;
 		}
 		lastCheck = System.currentTimeMillis();
-		
-		String command = "gphoto2 --camera \""+this.model+"\" --port "+this.port+" --list-config";
-		Process p = ApplicationLauncher.executeCommand(command);
-		if (debug) System.out.println("Executing command: "+command);
-		try {
-			p.waitFor();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		String out = ApplicationLauncher.getConsoleOutputFromProcess(p);
-		String array[] = DataSet.toStringArray(out, FileIO.getLineSeparator());
+		boolean autoDetectionOfParametersSuccesful = true;
 
-		CAMERA_PARAMETER configParams[] = CAMERA_PARAMETER.values();
-		configParamFound = new boolean[configParams.length];
-		for (int i=0; i<array.length; i++)
-		{
-			for (int j=0; j<configParamFound.length; j++) {
-				if (configParamFound[j]) continue;
-				configParamFound[j] = endsWith(array[i], configParams[j]);
-				if (configParamFound[j]) {
-					break;
+		if (all) {
+			String command = "gphoto2 --camera \""+this.model+"\" --port "+this.port+" --list-config";
+			Process p = ApplicationLauncher.executeCommand(command);
+			if (debug) System.out.println("Executing command: "+command);
+			try {
+				p.waitFor();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			String out = ApplicationLauncher.getConsoleOutputFromProcess(p);
+			String array[] = DataSet.toStringArray(out, FileIO.getLineSeparator());
+	
+			CAMERA_PARAMETER configParams[] = CAMERA_PARAMETER.values();
+			configParamFound = new boolean[configParams.length];
+			for (int i=0; i<array.length; i++)
+			{
+				for (int j=0; j<configParamFound.length; j++) {
+					if (configParamFound[j]) continue;
+					configParamFound[j] = endsWith(array[i], configParams[j]);
+					if (configParamFound[j]) {
+						break;
+					}
 				}
 			}
+			autoDetectionOfParametersSuccesful = false;
+			// ISO and shutter speed must be available. aperture is not required so that
+			// direct focus photography is possible
+			if (configParamFound[CAMERA_PARAMETER.ISO.ordinal()] && configParamFound[CAMERA_PARAMETER.SHUTTER_SPEED.ordinal()])
+				autoDetectionOfParametersSuccesful = true;
 		}
-		boolean autoDetectionOfParametersSuccesful = false;
-		// ISO and shutter speed must be available. aperture is not required so that
-		// direct focus photography is possible
-		if (configParamFound[CAMERA_PARAMETER.ISO.ordinal()] && configParamFound[CAMERA_PARAMETER.SHUTTER_SPEED.ordinal()]) {
-			autoDetectionOfParametersSuccesful = true;
-			for (int i=0; i<configParams.length; i++)
-			{
-				String values[] = getConfig(configParams[i]);
-				cameraPossibleConfigsValues[i] = values;
-			}
+		
+		CAMERA_PARAMETER configParams[] = CAMERA_PARAMETER.values();
+		for (int i=0; i<configParams.length; i++)
+		{
+			String values[] = getConfig(configParams[i]);
+			cameraPossibleConfigsValues[i] = values;
 		}
+		
 		return autoDetectionOfParametersSuccesful;
 	}
 
@@ -975,7 +991,7 @@ public class GPhotoCamera {
 		public void run() {
 			isShooting = true;
 			try {
-				if (!isStillConnected(true)) throw new JPARSECException("Camera "+model+" is no longer detected on port "+port.trim()+"!");
+				//if (!isStillConnected(true)) throw new JPARSECException("Camera "+model+" is no longer detected on port "+port.trim()+"!");
 
 				if (lastShotPath != null) {
 					String val[] = DataSet.toStringArray(lastShotPath, ",");
@@ -1187,6 +1203,7 @@ public class GPhotoCamera {
 	 */
 	public void startLiveView(Object panel, int fps) {
 		if (!liveView) {
+			liveView = true;
 			Thread thread = new Thread(new live());
 			thread.start();
 			updatePanel = panel;
@@ -1208,6 +1225,7 @@ public class GPhotoCamera {
 	 */
 	public void startLiveShot(Object panel, int fps) {
 		if (!liveView) {
+			liveView = true;
 			Thread thread = new Thread(new liveShot());
 			thread.start();
 			updatePanel = panel;
@@ -1260,15 +1278,15 @@ public class GPhotoCamera {
 	private long timeLimit;
 	class live implements Runnable {
 		public void run() {
+			liveView = true;
+			liveViewRunning = true;
 			timeLimit = -1;
 			if (liveMaxTime > 0) timeLimit = System.nanoTime()/1000000 + liveMaxTime * 1000;
 			boolean started = false;
 			String command = null; //, line;
 			Process p = null;
 			BufferedWriter writer = null;
-			liveView = true;
 			liveFocalLength = null;
-			liveViewRunning = true;
 			try {
 				String shell[] = ApplicationLauncher.getShell();
 		        ProcessBuilder builder = null;
@@ -1504,12 +1522,12 @@ public class GPhotoCamera {
 
 	class liveShot implements Runnable {
 		public void run() {
+			liveView = true;
+			liveViewRunning = true;
 			boolean started = false;
 			String command = null; //, line;
 			Process p = null;
 			BufferedWriter writer = null;
-			liveView = true;
-			liveViewRunning = true;
 			timeLimit = -1;
 			if (liveMaxTime > 0) timeLimit = System.nanoTime()/1000000 + liveMaxTime * 1000;
 			try {

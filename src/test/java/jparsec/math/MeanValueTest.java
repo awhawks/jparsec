@@ -27,7 +27,6 @@ public class MeanValueTest {
             System.out.println("Arithmetic mean: " + mv.getMeanArithmeticValue());
             System.out.println("Median:          " + mv.getMedian());
             System.out.println("Average:         " + mv.getAverageValue());
-            System.out.println("Average median:  " + mv.getAverageUsingMeanAndMedian(sigmas));
             System.out.println("Average sigma-cl:" + mv.getAverageUsingKappaSigmaClipping(sigmas, iter));
 
             JPARSECException.showWarnings();

@@ -3324,6 +3324,7 @@ public class ObservationManager extends JPanel implements MouseListener, ActionL
 		// -w -> white balance from camera
 		// -t 0, -W, -j, -f -> no flip, autobrighten, rotate pixels, RGGB as 4 colors
 		String flags = "-w -H 0 -o 0 -q 3 -t 0 -j -f -W -r 1 1 1 1 -D "; // -f => RGBG as 4 colors. -H 0 no estoy seguro, puede que no afecte
+		flags = "-D -4 -t 0 -o 0 ";
 
 		Process p = ApplicationLauncher.executeCommand("dcraw "+flags+file);
 		try {
