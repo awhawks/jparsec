@@ -115,13 +115,11 @@
                                 <get src='${conga.url}/skyViewWCS.jar'       dest='${project.basedir}/lib/' usetimestamp='true' />
                                 <get src='${conga.url}/visad.jar'            dest='${project.basedir}/lib/' usetimestamp='true' />
 
-                                <!--
                                 <get src='${cds.url}cds.savot.common.jar'    dest='${project.basedir}/lib/cds.savot.common.jar' usetimestamp='true' />
                                 <get src='${cds.url}cds.savot.model.jar'     dest='${project.basedir}/lib/cds.savot.model.jar' usetimestamp='true' />
                                 <get src='${cds.url}cds.savot.pull.jar'      dest='${project.basedir}/lib/cds.savot.pull.jar' usetimestamp='true' />
                                 <get src='${cds.url}cds.savot.sax.jar'       dest='${project.basedir}/lib/cds.savot.sax.jar' usetimestamp='true' />
                                 <get src='${cds.url}cds.savot.writer.jar'    dest='${project.basedir}/lib/cds.savot.writer.jar' usetimestamp='true' />
-                                -->
                             </target>
                         </configuration>
                     </execution>
