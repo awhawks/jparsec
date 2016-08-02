@@ -264,7 +264,7 @@ public class CreateVISADChart implements DisplayListener, Serializable {
     cursorDataRef.setData( cursorCoords );
 
     // More Data: create a Cube object and get its data
-    cubeFF = (FlatField) cube.getData();
+    cubeFF = cube.getData();
 
     cubeDataRef = new DataReferenceImpl("cubeDataRef");
     cubeDataRef.setData(cubeFF);
@@ -280,7 +280,7 @@ public class CreateVISADChart implements DisplayListener, Serializable {
 
     // we really want to simplify and tak the root of numberOfPoints
     // this is then the number per dimension:
-    greyPlane = (Set) makePlaneSet(initVelocity, numberOfPoints*numberOfPoints, cube.initY*cube.overScanZ, cube.finalY*cube.overScanZ);
+    greyPlane = makePlaneSet(initVelocity, numberOfPoints*numberOfPoints, cube.initY*cube.overScanZ, cube.finalY*cube.overScanZ);
 
     // Create the line's data ref and set data
     greyPlaneRef = new DataReferenceImpl("greyPlaneRef");
@@ -316,7 +316,7 @@ public class CreateVISADChart implements DisplayListener, Serializable {
         double latValue = lat.getValue();
         // make a new line for display 1: will have only 2 points
         int nOfPoints = 100;
-        greyPlane = (Set) makePlaneSet(latValue, nOfPoints*nOfPoints, cube.initY*cube.overScanZ, cube.finalY*cube.overScanZ);
+        greyPlane = makePlaneSet(latValue, nOfPoints*nOfPoints, cube.initY*cube.overScanZ, cube.finalY*cube.overScanZ);
 
         // Re-set Data, will update display
         greyPlaneRef.setData(greyPlane);
@@ -325,7 +325,7 @@ public class CreateVISADChart implements DisplayListener, Serializable {
         nOfPoints = (int) ((Real) nPointsRef.getData()).getValue();
         nOfPoints = (int) Math.sqrt((double)nOfPoints);
 
-        greyPlane = (Set) makePlaneSet(latValue, nOfPoints*nOfPoints, cube.initX*cube.overScanZ, cube.finalX*cube.overScanZ);
+        greyPlane = makePlaneSet(latValue, nOfPoints*nOfPoints, cube.initX*cube.overScanZ, cube.finalX*cube.overScanZ);
 
         // function will have this type
         String funcStr = "( ("+rightAscension.getName()+", "+declination.getName()+", "+velocity.getName()+") -> "+flux.getName()+" )";
@@ -370,7 +370,7 @@ public class CreateVISADChart implements DisplayListener, Serializable {
 
     // Get display's graphics mode control draw scales
     for( int i = 0; i<2;i++){
-      GraphicsModeControl dispGMC = (GraphicsModeControl) displays[i].getGraphicsModeControl();
+      GraphicsModeControl dispGMC = displays[i].getGraphicsModeControl();
       dispGMC.setScaleEnable(true);
     }
 
@@ -670,7 +670,7 @@ public class CreateVISADChart implements DisplayListener, Serializable {
 			  displays[0] = new DisplayImplJ3D("display1");
 
 			  // Get display's graphics mode control and draw scales
-			  GraphicsModeControl dispGMC = (GraphicsModeControl)  displays[0].getGraphicsModeControl();
+			  GraphicsModeControl dispGMC = displays[0].getGraphicsModeControl();
 			  dispGMC.setScaleEnable(true);
 
 			  // Also enable Texture
@@ -758,7 +758,7 @@ public class CreateVISADChart implements DisplayListener, Serializable {
   cursorDataRef.setData( cursorCoords );
 
   // More Data: create a Cube object and get its data
-  cubeFF = (FlatField) cube.getData();
+  cubeFF = cube.getData();
 
   cubeDataRef = new DataReferenceImpl("cubeDataRef");
   cubeDataRef.setData(cubeFF);
@@ -774,7 +774,7 @@ public class CreateVISADChart implements DisplayListener, Serializable {
 
   // we really want to simplify and tak the root of numberOfPoints
   // this is then the number per dimension:
-  greyPlane = (Set) makePlaneSet(initVelocity, numberOfPoints*numberOfPoints, cube.initY*cube.overScanZ, cube.finalY*cube.overScanZ);
+  greyPlane = makePlaneSet(initVelocity, numberOfPoints*numberOfPoints, cube.initY*cube.overScanZ, cube.finalY*cube.overScanZ);
 
   // Create the line's data ref and set data
   greyPlaneRef = new DataReferenceImpl("greyPlaneRef");
@@ -810,7 +810,7 @@ public class CreateVISADChart implements DisplayListener, Serializable {
       double latValue = lat.getValue();
       // make a new line for display 1: will have only 2 points
       int nOfPoints = 100;
-      greyPlane = (Set) makePlaneSet(latValue, nOfPoints*nOfPoints, cube.initY*cube.overScanZ, cube.finalY*cube.overScanZ);
+      greyPlane = makePlaneSet(latValue, nOfPoints*nOfPoints, cube.initY*cube.overScanZ, cube.finalY*cube.overScanZ);
 
       // Re-set Data, will update display
       greyPlaneRef.setData(greyPlane);
@@ -819,7 +819,7 @@ public class CreateVISADChart implements DisplayListener, Serializable {
       nOfPoints = (int) ((Real) nPointsRef.getData()).getValue();
       nOfPoints = (int) Math.sqrt((double)nOfPoints);
 
-      greyPlane = (Set) makePlaneSet(latValue, nOfPoints*nOfPoints, cube.initX*cube.overScanZ, cube.finalX*cube.overScanZ);
+      greyPlane = makePlaneSet(latValue, nOfPoints*nOfPoints, cube.initX*cube.overScanZ, cube.finalX*cube.overScanZ);
 
       // function will have this type
       String funcStr = "( ("+rightAscension.getName()+", "+declination.getName()+", "+velocity.getName()+") -> "+flux.getName()+" )";
@@ -862,7 +862,7 @@ public class CreateVISADChart implements DisplayListener, Serializable {
 
   // Get display's graphics mode control draw scales
   for( int i = 0; i<displays.length;i++){
-    GraphicsModeControl dispGMC = (GraphicsModeControl) displays[i].getGraphicsModeControl();
+    GraphicsModeControl dispGMC = displays[i].getGraphicsModeControl();
     dispGMC.setScaleEnable(true);
   }
 
