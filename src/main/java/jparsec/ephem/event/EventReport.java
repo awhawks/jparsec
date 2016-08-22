@@ -833,9 +833,11 @@ public class EventReport {
 								try {
 									re = new RenderEclipse(new AstroDate(s.time-0.25));
 								} catch (Exception exc) {
-									re = new RenderEclipse(new AstroDate(s.time+0.25));
+									try {
+										re = new RenderEclipse(new AstroDate(s.time+0.25));
+									} catch (Exception exc2) {	}
 								}
-								if (Math.abs(re.getEclipseDate().jd()-s.time) < 3)
+								if (re != null && Math.abs(re.getEclipseDate().jd()-s.time) < 3)
 									if (!re.isVisible(obs)) solarEclipseNotVisible = true;
 							}
 							if (ephemSun.elevation < 0 || solarEclipseNotVisible)

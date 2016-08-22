@@ -3809,7 +3809,7 @@ public class DataSet
    * @param in Values.
    * @param n Number of values to consider, this will be
    * usually the length of the array in.
-   * @param k kth smallest value to return.
+   * @param k kth smallest value to return, 0 = first.
    * @return The kth smallest value in array in.
    */
   public static double getKthSmallestValue(double in[], int n, int k)

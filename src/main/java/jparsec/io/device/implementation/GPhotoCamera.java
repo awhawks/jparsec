@@ -289,7 +289,7 @@ public class GPhotoCamera {
 			if (name == null || name.equals("") || cameras[i].indexOf(name)>=0) {
 				this.model = model;
 				this.port = port;
-				ok = this.checkConfig(false);
+				ok = this.checkConfig(true);
 				if (ok) break;
 			}
 		}
@@ -333,7 +333,7 @@ public class GPhotoCamera {
 			if (name == null || name.equals("") || cameras[i].indexOf(name)>=0) {
 				this.model = model;
 				this.port = port;
-				ok = this.checkConfig(false);
+				ok = this.checkConfig(true);
 				if (ok) break;
 			}
 		}
@@ -390,7 +390,7 @@ public class GPhotoCamera {
 			if (portOK && cameraOK) {
 				this.model = model;
 				this.port = cport;
-				ok = checkConfig(false);
+				ok = checkConfig(true);
 				if (ok) break;
 			}
 		}
@@ -523,10 +523,12 @@ public class GPhotoCamera {
 	 * and checking that list against the configuration parameters that should be available
 	 * for configuration to do astronomical imaging.
 	 * @param checkCameraStatus True to check camera status (if it is on), false to assume 
-	 * it is one and only check for possible new configuration values (apertures in case a new 
-	 * lens was attached and so on). Note some cameras seem to get blocked in case true is used 
-	 * here too often.
-	 * @return True is everything is fine.
+	 * it is on and only check for possible new configuration values (apertures in case a new 
+	 * lens was attached without switching off the camera, and so on). Note some cameras seem 
+	 * to get blocked in case true is used here too often.
+	 * @return True if everything is fine, and the basics parameters to do imaging (iso and 
+	 * shutter) are available. False otherwise. In case the check camera flag is set to false, true 
+	 * is always returned.
 	 * @throws JPARSECException If an error occurs.
 	 */
 	public boolean checkConfig(boolean checkCameraStatus)

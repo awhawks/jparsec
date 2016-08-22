@@ -445,16 +445,14 @@ public class WCS implements Serializable
 	   */
 	  private boolean setCtype1(String ctype1)
 	  {
-	    if (ctype1.length() != 8)
-	    {
-	    	return false;
-	    }
-	    else
-	    {
-	      this.ctype1 = ctype1;
-	      wcs = null;
-	      return true;
-	    }
+		  if (ctype1.endsWith("-SIP")) ctype1 = ctype1.substring(0, ctype1.length()-4);
+		  if (ctype1.length() != 8) {
+			  return false;
+		  } else {
+			  this.ctype1 = ctype1;
+			  wcs = null;
+			  return true;
+		  }
 	  }
 
 
@@ -468,16 +466,14 @@ public class WCS implements Serializable
 	   */
 	  private boolean setCtype2(String ctype2)
 	  {
-	    if (ctype2.length() != 8)
-	    {
-	    	return false;
-	    }
-	    else
-	    {
-	      this.ctype2 = ctype2;
-	      wcs = null;
-	      return true;
-	    }
+		  if (ctype2.endsWith("-SIP")) ctype2 = ctype2.substring(0, ctype2.length()-4);
+		  if (ctype2.length() != 8) {
+			  return false;
+		  } else {
+			  this.ctype2 = ctype2;
+			  wcs = null;
+			  return true;
+		  }
 	  }
 
 
