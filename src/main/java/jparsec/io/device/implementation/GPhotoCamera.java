@@ -642,11 +642,11 @@ public class GPhotoCamera {
 	 */
 	public String[] getConfig(CAMERA_PARAMETER config)
 	throws JPARSECException {
-		if (liveView) return null;
 		if (config == CAMERA_PARAMETER.ZOOM && id.zoomValues != null) return id.zoomValues;
 		String[] values = cameraPossibleConfigsValues[config.ordinal()];
 		if (values != null) return values;
 
+		if (liveView) return null;
 		String command = "gphoto2 --camera \""+this.model+"\" --port "+this.port+" --get-config "+cameraConfigs[config.ordinal()];
 		Process p = ApplicationLauncher.executeCommand(command);
 		if (debug) System.out.println("Executing command: "+command);

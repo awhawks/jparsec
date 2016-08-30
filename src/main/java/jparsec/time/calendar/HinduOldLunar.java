@@ -23,6 +23,9 @@ package jparsec.time.calendar;
 
 import java.io.Serializable;
 
+import static jparsec.time.calendar.HinduOldSolar.ARYA_SOLAR_MONTH;
+import static jparsec.time.calendar.HinduOldSolar.ARYA_SOLAR_YEAR;
+
 /**
  * Implements the Old Hindu Lunar calendar. See Calendrical Calculations for
  * reference.
@@ -68,14 +71,14 @@ public class HinduOldLunar implements Serializable
 	 * Day of week names.
 	 */
 	public static final String DAY_OF_WEEK_NAMES[] =
-	{ "Ravivara", "Chandravara", "Mangalavara", "Buddhavara", "Brihaspatvara", "Sukravara", "Sanivara" };
+			{ "Ravivara", "Chandravara", "Mangalavara", "Buddhavara", "Brihaspatvara", "Sukravara", "Sanivara" };
 
 	/**
 	 * Month names.
 	 */
 	public static final String MONTH_NAMES[] =
-	{ "Chaitra", "Vaisakha", "Jyaishtha", "Ashadha", "Sravana", "Bhadrapada", "Asvina", "Kartika", "Margasirsha",
-			"Pausha", "Magha", "Phalguna" };
+			{ "Chaitra", "Vaisakha", "Jyaishtha", "Ashadha", "Sravana", "Bhadrapada", "Asvina", "Kartika", "Margasirsha",
+					"Pausha", "Magha", "Phalguna" };
 
 	/**
 	 * Default constructor.
@@ -119,12 +122,16 @@ public class HinduOldLunar implements Serializable
 	 */
 	public static long toFixed(long year, int month, boolean leap, int day)
 	{
-		day --;
-		double d = (double) (12L * year - 1L) * 30.43822337962963D;
-		double d1 = 29.530581807581694D * (double) (Calendar.quotient(d, 29.530581807581694D) + 1L);
-		return (long) Math
-				.floor((double) HinduOldSolar.EPOCH + d1 + 29.530581807581694D * (double) (leap || Math
-						.ceil((d1 - d) / 0.90764157204793605D) > (double) month ? month - 1 : month) + (double) (day - 1) * 0.9843527269193898D + 0.75D);
+		day--;
+		double mina = (double) (12L * year - 1L) * ARYA_SOLAR_MONTH;
+		double lunarNewYear = ARYA_LUNAR_MONTH * (double) (Calendar.quotient(mina, ARYA_LUNAR_MONTH) + 1L);
+		long temp = leap || Math.ceil((lunarNewYear - mina) / ARYA_LUNAR_DAY) > month ? month - 1L : month;
+
+		return (long) Math.floor(
+				(double) HinduOldSolar.EPOCH +
+						lunarNewYear +
+						ARYA_LUNAR_MONTH * temp +
+						(double) (day - 1) * ARYA_LUNAR_DAY + 0.75D);
 	}
 
 	/**
@@ -145,13 +152,13 @@ public class HinduOldLunar implements Serializable
 	public void fromFixed(long l)
 	{
 		double d = (double) HinduOldSolar.dayCount(l) + 0.25D;
-		double d1 = d - Calendar.mod(d, 29.530581807581694D);
-		leapMonth = Calendar.mod(d1, 30.43822337962963D) <= 0.90764157204793605D && Calendar
-				.mod(d1, 30.43822337962963D) > 0.0D;
-		month = 1 + (int) Calendar.mod(Math.ceil(d1 / 30.43822337962963D), 12D);
-		day = 1 + (int) Calendar.mod(Calendar.quotient(d, 0.9843527269193898D), 30L);
-		year = (long) Math.ceil((d1 + 30.43822337962963D) / 365.25868055555554D) - 1L;
-		day ++;
+		double d1 = d - Calendar.mod(d, ARYA_LUNAR_MONTH);
+		leapMonth = Calendar.mod(d1, ARYA_SOLAR_MONTH) <= 0.90764157204793605D &&
+				Calendar.mod(d1, ARYA_SOLAR_MONTH) > 0.0D;
+		month = 1 + (int) Calendar.mod(Math.ceil(d1 / ARYA_SOLAR_MONTH), 12D);
+		day = 1 + (int) Calendar.mod(Calendar.quotient(d, ARYA_LUNAR_DAY), 30L);
+		year = (long) Math.ceil((d1 + ARYA_SOLAR_MONTH) / ARYA_SOLAR_YEAR) - 1L;
+		day++;
 	}
 
 	/**
@@ -162,7 +169,7 @@ public class HinduOldLunar implements Serializable
 	 */
 	public static boolean isLeapYear(long y)
 	{
-		return Calendar.mod((double) y * 365.25868055555554D - 30.43822337962963D, 29.530581807581694D) >= 18.638882943006465D;
+		return Calendar.mod((double) y * ARYA_SOLAR_YEAR - ARYA_SOLAR_MONTH, ARYA_LUNAR_MONTH) >= 18.638882943006465D;
 	}
 
 	/**

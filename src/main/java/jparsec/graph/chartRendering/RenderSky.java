@@ -977,7 +977,7 @@ public class RenderSky
 			}
 		}
 
-		if (render.drawCentralCrux && fieldDeg > 1) {
+		if (render.drawCentralCrux) {
 			float radius = (float) (render.width / 5.0);
 			float x0 = this.getXCenter(), y0 = this.getYCenter();
 			g.setColor(render.drawOcularFieldOfViewColor, true);
@@ -6548,7 +6548,7 @@ public class RenderSky
 			if (fieldDeg < 150) {
 				LocationElement locH = projection.getApparentLocationInSelectedCoordinateSystem(loc0Date, //projection.getEquatorialPositionOfRendering(),
 						false, true, COORDINATE_SYSTEM.HORIZONTAL, 0);
-				if (Math.abs(locH.getLatitude()) > field*0.85) return;
+				if (Math.abs(locH.getLatitude()) > field) return;
 			}
 
 			if (render.drawCoordinateGridCardinalPoints && projection.obs.getMotherBody() != TARGET.NOT_A_PLANET) {
@@ -11397,43 +11397,43 @@ public class RenderSky
 			if (loc != null) {
 				String labelRA = null;
 				if (render.coordinateSystem != COORDINATE_SYSTEM.EQUATORIAL) {
-					if (pixels_per_degree < 1000) {						
+					if (pixels_per_degree < 1000) {		
 						if (pixels_per_degree < 100) {
 							labelRA = Functions.formatAngleAsDegrees(loc.getLongitude(), 1) + "\u00b0"; //render.centralLongitude, ndec+1);												
 						} else {
 							labelRA = Functions.formatDECOnlyMinutes(loc.getLongitude(), 1); //render.centralLongitude, ndec+1);						
 						}
+						if (render.coordinateSystem == COORDINATE_SYSTEM.HORIZONTAL) {
+							double cl = Functions.normalizeRadians(loc.getLongitude());
+							if (cl < deg_10 || cl > Constant.TWO_PI - deg_10) labelRA += " (N)";
+							if (cl < Math.PI + deg_10 && cl > Math.PI - deg_10) labelRA += " (S)";
+							if (cl < Constant.PI_OVER_TWO + deg_10 && cl > Constant.PI_OVER_TWO - deg_10) labelRA += " (E)";
+							if (cl < 3*Constant.PI_OVER_TWO + deg_10 && cl > 3*Constant.PI_OVER_TWO - deg_10) {
+								if (Translate.getDefaultLanguage() == LANGUAGE.SPANISH) {
+									labelRA += " (O)";
+								} else {
+									labelRA += " (W)";
+								}
+							}
+							if (cl < Constant.PI_OVER_FOUR + deg_10 && cl > Constant.PI_OVER_FOUR - deg_10) labelRA += " (NE)";
+							if (cl < Math.PI - Constant.PI_OVER_FOUR + deg_10 && cl > Math.PI - Constant.PI_OVER_FOUR - deg_10) labelRA += " (SE)";
+							if (cl < Constant.TWO_PI - Constant.PI_OVER_FOUR + deg_10 && cl > Constant.TWO_PI - Constant.PI_OVER_FOUR - deg_10) {
+								if (Translate.getDefaultLanguage() == LANGUAGE.SPANISH) {
+									labelRA += " (NO)";
+								} else {
+									labelRA += " (NW)";
+								}
+							}
+							if (cl < Math.PI + Constant.PI_OVER_FOUR + deg_10 && cl > Math.PI + Constant.PI_OVER_FOUR - deg_10) {
+								if (Translate.getDefaultLanguage() == LANGUAGE.SPANISH) {
+									labelRA += " (SO)";
+								} else {
+									labelRA += " (SW)";
+								}
+							}
+						}
 					} else {
 						labelRA = Functions.formatAngle(loc.getLongitude(), ndec+1); //render.centralLongitude, ndec+1);
-					}
-					if (render.coordinateSystem == COORDINATE_SYSTEM.HORIZONTAL) {
-						double cl = Functions.normalizeRadians(loc.getLongitude());
-						if (cl < deg_10 || cl > Constant.TWO_PI - deg_10) labelRA += " (N)";
-						if (cl < Math.PI + deg_10 && cl > Math.PI - deg_10) labelRA += " (S)";
-						if (cl < Constant.PI_OVER_TWO + deg_10 && cl > Constant.PI_OVER_TWO - deg_10) labelRA += " (E)";
-						if (cl < 3*Constant.PI_OVER_TWO + deg_10 && cl > 3*Constant.PI_OVER_TWO - deg_10) {
-							if (Translate.getDefaultLanguage() == LANGUAGE.SPANISH) {
-								labelRA += " (O)";
-							} else {
-								labelRA += " (W)";
-							}
-						}
-						if (cl < Constant.PI_OVER_FOUR + deg_10 && cl > Constant.PI_OVER_FOUR - deg_10) labelRA += " (NE)";
-						if (cl < Math.PI - Constant.PI_OVER_FOUR + deg_10 && cl > Math.PI - Constant.PI_OVER_FOUR - deg_10) labelRA += " (SE)";
-						if (cl < Constant.TWO_PI - Constant.PI_OVER_FOUR + deg_10 && cl > Constant.TWO_PI - Constant.PI_OVER_FOUR - deg_10) {
-							if (Translate.getDefaultLanguage() == LANGUAGE.SPANISH) {
-								labelRA += " (NO)";
-							} else {
-								labelRA += " (NW)";
-							}
-						}
-						if (cl < Math.PI + Constant.PI_OVER_FOUR + deg_10 && cl > Math.PI + Constant.PI_OVER_FOUR - deg_10) {
-							if (Translate.getDefaultLanguage() == LANGUAGE.SPANISH) {
-								labelRA += " (SO)";
-							} else {
-								labelRA += " (SW)";
-							}
-						}
 					}
 				} else {
 					labelRA = Functions.formatRA(loc.getLongitude(), ndec+1); //render.centralLongitude, ndec+1);
@@ -11911,7 +11911,10 @@ public class RenderSky
 		}
 
 		int fs = render.drawCoordinateGridFont.getSize();
-		if (render.width < 850 && render.drawCoordinateGridFont.getSize() >= 15) fs = 14;
+		if (render.width < 850 && fs >= 15) fs = 14;
+		if (render.width < 1200 && fs > 18) fs = 18;
+		if (render.width < 1600 && fs > 21) fs = 21;
+		if (render.width < 2000 && fs > 24) fs = 24;
 		g.setFont(FONT.getDerivedFont(render.drawCoordinateGridFont, fs));
 
 		if (sizes == null) setSizes();
@@ -11922,6 +11925,7 @@ public class RenderSky
 		int add = (fs-15)/4;
 		if (add > 0) {
 			baseY += add;
+			if (g.renderingToAndroid()) add -= 2;
 			baseY1 += add;
 			baseY2 += add;
 		}
@@ -11999,7 +12003,7 @@ public class RenderSky
 			fs = 22 + (hugeFactor-1)*3;
 			if (fs > 35) fs = 35;
 			g.setFont(FONT.getDerivedFont(g.getFont(), fs));
-			baseY1 = recy+44;
+			baseY1 = recy+50;
 			baseY2 = recy+leyendMargin;
 		} else {
 			int fontS = g.getFont().getSize();
