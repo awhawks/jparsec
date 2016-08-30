@@ -433,10 +433,11 @@ public class RenderPlanet
 			dy = (r + 25*scaleFactor) * FastMath.sin((Constant.PI_OVER_TWO + incl_north));
 			if (render.telescope.invertVertical) posy -= g.getFont().getSize() - 2;
 			if (render.showLabels) {
-				g.drawString("N", posx - 4 - (int) dx, posy + 4 - (int) dy, getDist(0, refz));
-				g.drawString("S", posx - 4 + (int) dx, posy + 4 + (int) dy, getDist(0, refz));
-				g.drawString("E", posx - 3 - (int) dy, posy + 5 + (int) dx, getDist(0, refz));
-				g.drawString("W", posx - 3 + (int) dy, posy + 5 - (int) dx, getDist(0, refz));
+				int fs = (g.getFont().getSize() * 4) / 10;
+				g.drawString("N", posx - fs - (int) dx, posy + fs - (int) dy, getDist(0, refz));
+				g.drawString("S", posx - fs + (int) dx, posy + fs + (int) dy, getDist(0, refz));
+				g.drawString("E", posx - fs - (int) dy, posy + fs + (int) dx, getDist(0, refz));
+				g.drawString("W", posx - fs + (int) dy, posy + fs - (int) dx, getDist(0, refz));
 			}
 		}
 	}
