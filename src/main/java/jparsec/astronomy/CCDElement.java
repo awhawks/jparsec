@@ -222,8 +222,11 @@ public class CCDElement implements Serializable {
 	}
 
 	/**
-	 * Return all available intrinsic CCD cameras.
-	 * @return The cameras.
+	 * Return if a given CCD camera exits or not.
+	 * @param name The camera name.
+	 * @param caseSensitive Select if the name is case sensitive.
+	 * @param partialName Select if input string should be treated strictly or if it is part of the camera name.
+	 * @return True or false.
 	 * @throws JPARSECException If an error occurs.
 	 */
 	public static boolean CCDexits(String name, boolean caseSensitive, boolean partialName) throws JPARSECException

@@ -353,6 +353,8 @@ public class RenderSky
     		render.drawObjectsLimitingMagnitude = drawObjectsLimitingMagnitude;
     		drawAll = false;
 
+    		DataBase.addData("objects", threadID, null, true);
+    		DataBase.addData("objectsJ2000", null, null, true);
     		DataBase.addData("satEphem", threadID, null, true);
     		DataBase.addData("probeEphem", threadID, null, true);
     		DataBase.addData("asterEphem", threadID, null, true);
@@ -361,8 +363,8 @@ public class RenderSky
     		DataBase.addData("transEphem", threadID, null, true);
     		DataBase.addData("sncat", threadID, null, true);
     		DataBase.addData("novae", threadID, null, true);
-    		DataBase.addData("objects", threadID, null, true);
 
+    		db_objects = -1;
     		db_satEphem = -1;
     		db_probeEphem = -1;
     		db_asterEphem = -1;
@@ -384,13 +386,15 @@ public class RenderSky
 		setStarsLimitingMagnitude();
 
 		drawObjectsLimitingMagnitude = render.drawObjectsLimitingMagnitude;
-		render.drawObjectsLimitingMagnitude = maglim + 3;
-		if (render.drawObjectsLimitingMagnitude > 16) render.drawObjectsLimitingMagnitude = 16;
-		if (render.drawObjectsLimitingMagnitude <= drawObjectsLimitingMagnitude) {
-			render.drawObjectsLimitingMagnitude = drawObjectsLimitingMagnitude;
-			return true;
-		}
+		render.drawObjectsLimitingMagnitude = 16.5f; //maglim + 3;
+		//if (render.drawObjectsLimitingMagnitude > 16) render.drawObjectsLimitingMagnitude = 16;
+		//if (render.drawObjectsLimitingMagnitude <= drawObjectsLimitingMagnitude) {
+		//	render.drawObjectsLimitingMagnitude = drawObjectsLimitingMagnitude;
+		//	return true;
+		//}
 
+		DataBase.addData("objects", threadID, null, true);
+		DataBase.addData("objectsJ2000", null, null, true);
 		DataBase.addData("satEphem", threadID, null, true);
 		DataBase.addData("probeEphem", threadID, null, true);
 		DataBase.addData("asterEphem", threadID, null, true);
@@ -400,6 +404,7 @@ public class RenderSky
 		DataBase.addData("sncat", threadID, null, true);
 		DataBase.addData("novae", threadID, null, true);
 
+		db_objects = -1;
 		db_satEphem = -1;
 		db_probeEphem = -1;
 		db_asterEphem = -1;
@@ -732,6 +737,35 @@ public class RenderSky
 			}
 		}
 
+		if (faintStars != null && faintStarsLoc != null) {
+			double fdist = LocationElement.getApproximateAngularDistance(loc0J2000, faintStarsLoc) * Constant.RAD_TO_DEG;
+			if (fdist > 1.75) {
+				faintStars = null;
+				if (render.drawFaintStars) {
+		    		DataBase.addData("objects", threadID, null, true);
+		    		DataBase.addData("satEphem", threadID, null, true);
+		    		DataBase.addData("probeEphem", threadID, null, true);
+		    		DataBase.addData("asterEphem", threadID, null, true);
+		    		DataBase.addData("cometEphem", threadID, null, true);
+		    		DataBase.addData("neoEphem", threadID, null, true);
+		    		DataBase.addData("transEphem", threadID, null, true);
+		    		DataBase.addData("sncat", threadID, null, true);
+		    		DataBase.addData("novae", threadID, null, true);
+
+		    		db_objects = -1;
+		    		db_satEphem = -1;
+		    		db_probeEphem = -1;
+		    		db_asterEphem = -1;
+		    		db_cometEphem = -1;
+		    		db_neoEphem = -1;
+		    		db_transEphem = -1;
+		    		db_sncat = -1;
+		    		db_objects = -1;
+		    		db_novae = -1;
+				}
+			}
+		}
+		
 		projection.createNewArrayWhenProjecting = false;
 		drawHorizon();
 		drawMilkyWay();
@@ -4584,7 +4618,7 @@ public class RenderSky
 
 		if (recovered) {
 			double ds = Math.abs(radius_x*2-sizei[0]);
-			if (ds > 3) { // size different by > 3 px => reload again
+			if (file != null && ds > 3) { // size different by > 3 px => reload again
 				img = g.getImage(file);
 				g.waitUntilImagesAreRead(new Object[] {img});
 				recovered = false;
@@ -4619,7 +4653,7 @@ public class RenderSky
 						render.getColorMode() == COLOR_MODE.WHITE_BACKGROUND_SIMPLE_GREEN_RED_OR_RED_CYAN_ANAGLYPH))
 					nn = 80;
 				g.setColor(nn, nn, nn, 255);
-				if (!file.equals("SUN")) img = g.makeColorTransparent(img, g.getColor(), true, false, 0);
+				if (file != null && !file.equals("SUN")) img = g.makeColorTransparent(img, g.getColor(), true, false, 0);
 				g.setColor(col, true);
 
 				if (render.telescope.invertHorizontal || render.telescope.invertVertical) {
@@ -4688,9 +4722,9 @@ public class RenderSky
 			//ang -= Constant.PI_OVER_FOUR; //Constant.TWO_PI * ((jd - Constant.J2000) / 365.25) / 25800.0;
 			if (g.renderingToAndroid() || !recovered || w == -1 || h == -1) {
 				img = g.getScaledImage(img, w*(int)(2*radius_x+0.5), h*(int)(2*radius_y+0.5), true, false);
-				if (!g.renderingToAndroid()) g.addToDataBase(img, file+render.getColorMode().name(), 100);
+				if (file != null && !g.renderingToAndroid()) g.addToDataBase(img, file+render.getColorMode().name(), 100);
 			}
-			img = g.getRotatedAndScaledImage(img, radius_x, radius_y, ang, 1, 1);
+			img = g.getRotatedAndScaledImage(img, radius_x-0.5f, radius_y-0.5f, ang, 1, 1);
 
 			if (render.drawSkyCorrectingLocalHorizon && projection.obs.getMotherBody() == TARGET.EARTH && projection.eph.isTopocentric
 					&& (projection.eph.targetBody != TARGET.SUN || !render.planetRender.axes)) {
@@ -4705,11 +4739,11 @@ public class RenderSky
 				int de = (int) (radius_x * (1.0 - upperLimbFactor) + 0.5);
 				if (de > 1) {
 					float angr = (float) (projection.getCenitAngleAt(locEq, true) - Constant.PI_OVER_TWO);
-					img = g.getRotatedAndScaledImage(img, radius_x, radius_y, angr, 1.0f, 1.0f);
+					img = g.getRotatedAndScaledImage(img, radius_x-0.5f, radius_y-0.5f, angr, 1.0f, 1.0f);
 					int newH = (int)(2*radius_y*upperLimbFactor+0.5);
 					int displ = ((int) (2*radius_y) - newH) / 2;
 					img = g.getScaledImage(img, (int)(2*radius_x+0.5), newH, false, false, displ);
-					img = g.getRotatedAndScaledImage(img, radius_x, radius_y, -angr, 1.0f, 1.0f);
+					img = g.getRotatedAndScaledImage(img, radius_x-0.5f, radius_y-0.5f, -angr, 1.0f, 1.0f);
 
 					g.drawImage(img, pos00[0]-radius_x, pos00[1]-newH/2-displ);
 				} else {
@@ -11011,10 +11045,6 @@ public class RenderSky
 		float dist = getDist(-refz);
 		int halo = 2, halo2 = 2*halo;
 
-		if (faintStars != null && faintStarsLoc != null) {
-			double fdist = LocationElement.getApproximateAngularDistance(loc0J2000, faintStarsLoc) * Constant.RAD_TO_DEG;
-			if (fdist > 1.75) faintStars = null;
-		}
 		int fontSize = render.drawStarsNamesFont.getSize();
 		if (faintStars != null) {
 			LocationElement loc;
@@ -11206,7 +11236,7 @@ public class RenderSky
 									ephem.magnitude = star.magnitude;
 								}
 
-								loc = projection.getApparentLocationInSelectedCoordinateSystem(new LocationElement(ephem.rightAscension, ephem.declination, 1.0), true, true, 0);
+								loc = projection.getApparentLocationInSelectedCoordinateSystem(new LocationElement(ephem.rightAscension, ephem.declination, 1.0), true, false, 0);
 								if (loc != null) {
 									if (faintStars.size() == 0) faintStars.add(new float[] {(float) loc.getLongitude(), (float) loc.getLatitude(), (float) ephem.distance, ephem.magnitude});
 									faintStarsList.add(new float[] {(float) loc.getLongitude(), (float) loc.getLatitude(), (float) ephem.distance, ephem.magnitude});
@@ -11436,7 +11466,15 @@ public class RenderSky
 						labelRA = Functions.formatAngle(loc.getLongitude(), ndec+1); //render.centralLongitude, ndec+1);
 					}
 				} else {
-					labelRA = Functions.formatRA(loc.getLongitude(), ndec+1); //render.centralLongitude, ndec+1);
+					if (pixels_per_degree < 1000) {						
+						if (pixels_per_degree < 100) {
+							labelRA = Functions.formatRAOnlyMinutes(loc.getLongitude(), 1);
+						} else {
+							labelRA = Functions.formatRAOnlyMinutes(loc.getLongitude(), 2);
+						}
+					} else {
+						labelRA = Functions.formatRA(loc.getLongitude(), ndec+1); //render.centralLongitude, ndec+1);
+					}
 				}
 				float w = g.getStringWidth(labelRA);
 				g.drawString(labelRA, graphMarginX+(render.width-graphMarginX-w)/2f, (int) (rec.getMaxY()+fs*1.7), dist);
@@ -11923,7 +11961,7 @@ public class RenderSky
 		int baseY2 = recy+leyendMargin + 5;
 		if (baseY < 0) return;
 		int add = (fs-15)/4;
-		if (add > 0) {
+		if (add >= 0) {
 			baseY += add;
 			if (g.renderingToAndroid()) add -= 2;
 			baseY1 += add;

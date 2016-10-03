@@ -498,6 +498,7 @@ public class RenderPlanet
 
 			// Draw the shadow of the rings on the surface of Saturn
 			Object screenCopy = g.cloneImage(g.getImage(0,0,g.getWidth(),g.getHeight())); //(int)(posx-r), (int)(posy-r), (int)(2*r+1), (int)(2*r+1)));
+			if (screenCopy == null) return;
 			boolean visible = true;
 			double oblateness2 = oblateness * oblateness;
 			double oblatenessSun = 1.0 + Math.abs(FastMath.pow(FastMath.cos(render.ephem.subsolarLatitude), 2)) * (render.target.polarRadius / render.target.equatorialRadius - 1.0);
@@ -1115,10 +1116,22 @@ public class RenderPlanet
 		//if (ere.satellitesAll != ere2.satellitesAll) equals = false;
 		if (ere.difraction != ere2.difraction) equals = false;
 		if (ere.northUp != ere2.northUp) equals = false;
-		if (ere.target != ere2.target) equals = false;
+		if (ere.target == null || ere2.target == null) {
+			if (ere.target != null || ere2.target != null) equals = false;
+		} else {
+			if (ere.target != ere2.target) equals = false;
+		}
 		//if (!ere.telescope.equals(ere2.telescope)) equals = false;
-		if (!ere.ephemSun.equals(ere2.ephemSun)) equals = false;
-		if (!ere.ephem.equals(ere2.ephem)) equals = false;
+		if (ere.ephemSun == null || ere2.ephemSun == null) {
+			if (ere.ephemSun != null || ere2.ephemSun != null) equals = false;
+		} else {
+			if (!ere.ephemSun.equals(ere2.ephemSun)) equals = false;
+		}
+		if (ere.ephem == null || ere2.ephem == null) {
+			if (ere.ephem != null || ere2.ephem != null) equals = false;
+		} else {
+			if (!ere.ephem.equals(ere2.ephem)) equals = false;
+		}
 		if (ere.background != ere2.background) equals = false;
 		if (ere.foreground != ere2.foreground) equals = false;
 		if (ere.anaglyphMode != ere2.anaglyphMode) equals = false;

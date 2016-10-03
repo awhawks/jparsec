@@ -714,7 +714,6 @@ public class ChartElement implements Serializable
 		ArrayList<String> v = new ArrayList<String>();
 		for (int i=0; i<this.series.length; i++)
 		{
-			series[i].showLines = true;
 			if (!ChartSeriesElement.equalShapes(series[i].shape, ChartSeriesElement.SHAPE_EMPTY)) series[i].showShapes = true;
 
 			for (int j=0; j<this.series[i].xValues.length; j++)

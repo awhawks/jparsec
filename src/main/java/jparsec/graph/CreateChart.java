@@ -2008,6 +2008,7 @@ public class CreateChart implements Serializable
 					bar_render.setSeriesPaint(i, chart_elem.series[serieID[i]].color);
 					bar_render.setSeriesShape(i, chart_elem.series[serieID[i]].shape);
 					bar_render.setSeriesStroke(i, AWTGraphics.getStroke(chart_elem.series[serieID[i]].stroke));
+					bar_render.setSeriesVisible(i, new Boolean(chart_elem.series[serieID[i]].enable));
 					bar_render.setSeriesVisibleInLegend(i, new Boolean(false));
 					boolean legend = false;
 					if (i > 1) {
@@ -2029,6 +2030,7 @@ public class CreateChart implements Serializable
 						bar_render.setSeriesPaint(i, chart_elem.series[serieID[i]].color);
 						bar_render.setSeriesShape(i, chart_elem.series[serieID[i]].shape);
 						bar_render.setSeriesStroke(i, AWTGraphics.getStroke(chart_elem.series[serieID[i]].stroke));
+						bar_render.setSeriesVisible(i, new Boolean(chart_elem.series[serieID[i]].enable));
 						bar_render.setSeriesVisibleInLegend(i, new Boolean(false));
 						boolean legend = false;
 						if (i > 1) {
@@ -2055,6 +2057,7 @@ public class CreateChart implements Serializable
 							bar_render.setSeriesVisibleInLegend(i, new Boolean(false));
 							bar_render.setSeriesShapesVisible(i, chart_elem.series[serieID[i]].showShapes);
 							bar_render.setSeriesLinesVisible(i, chart_elem.series[serieID[i]].showLines);
+							bar_render.setSeriesVisible(i, new Boolean(chart_elem.series[serieID[i]].enable));
 							boolean legend = false;
 							if (i > 1) {
 								if (serieID[i] != serieID[i-1]) legend = true;
@@ -2080,6 +2083,7 @@ public class CreateChart implements Serializable
 								bar_render.setSeriesVisibleInLegend(i, new Boolean(false));
 								bar_render.setSeriesShapesVisible(i, chart_elem.series[serieID[i]].showShapes);
 								bar_render.setSeriesLinesVisible(i, chart_elem.series[serieID[i]].showLines);
+								bar_render.setSeriesVisible(i, new Boolean(chart_elem.series[serieID[i]].enable));
 								boolean legend = false;
 								if (i > 1) {
 									if (serieID[i] != serieID[i-1]) legend = true;
@@ -2099,6 +2103,7 @@ public class CreateChart implements Serializable
 								bar_render.setSeriesShape(i, chart_elem.series[serieID[i]].shape);
 								bar_render.setSeriesStroke(i, AWTGraphics.getStroke(chart_elem.series[serieID[i]].stroke));
 								bar_render.setSeriesVisibleInLegend(i, new Boolean(false));
+								bar_render.setSeriesVisible(i, new Boolean(chart_elem.series[serieID[i]].enable));
 								boolean legend = false;
 								if (i > 1) {
 									if (serieID[i] != serieID[i-1]) legend = true;
