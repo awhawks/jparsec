@@ -4599,11 +4599,11 @@ public class RenderSky
 			double[] baryc, float pos00[], Object[] obj, int type, double sph) throws JPARSECException {
 		if (img == null) return null;
 
-		int imgMaxWidth = (int) (render.width*0.7);
-		int imgMaxHeight = (int) (render.height*0.7);
+		int imgMaxWidth = (int) (render.width);
+		int imgMaxHeight = (int) (render.height);
 		if (!g.renderingToAndroid()) {
-			imgMaxWidth *= 4;
-			imgMaxHeight *= 4;
+			imgMaxWidth *= 3;
+			imgMaxHeight *= 3;
 		}
 
 		/// sc = size in arcmin
@@ -5062,7 +5062,7 @@ public class RenderSky
 					{
 						name = (String) obj[0];
 						comments = (String) obj[7];
-						size = Math.max(size0, 3);
+						size = Math.max(size0, g.renderingToAndroid() ? 6 : 3);
 						if (projection.isCylindricalForced() && (fieldDeg < 60 || hugeFactor >= 1) && !external && size > 15 && render.drawDeepSkyObjectsTextures && !imagesNotFound.contains(name)) {
 							String file = name.toLowerCase() + ".jpg";
 							if (file.indexOf("caldwell")>=0) {
@@ -11045,6 +11045,18 @@ public class RenderSky
 		float dist = getDist(-refz);
 		int halo = 2, halo2 = 2*halo;
 
+		ArrayList<Object> minorObjects = null;
+		if (SaveObjectsToAllowSearch) {
+			minorObjects = new ArrayList<Object>();
+			Object o = null;
+			if (db_minorObjects >= 0) {
+				o = DataBase.getData(db_minorObjects);
+			} else {
+				o = DataBase.getData("minorObjects", threadID, true);
+			}
+			if (o != null) minorObjects = new ArrayList<Object>(Arrays.asList(((Object[]) o)));
+		}
+
 		int fontSize = render.drawStarsNamesFont.getSize();
 		if (faintStars != null) {
 			LocationElement loc;
@@ -11059,10 +11071,13 @@ public class RenderSky
 				o = DataBase.getData("faintStars", threadID, true);
 			}
 			if (o != null) faintStarsList = new ArrayList<Object>(Arrays.asList(((Object[]) o)));
+			Object o2 = DataBase.getData("faintStarsNames", threadID, true);
+			ArrayList<Object> faintStarsNames = new ArrayList<Object>();
+			if (o2 != null) faintStarsNames = new ArrayList<Object>(Arrays.asList(((Object[]) o2)));
 
-			for (Iterator<Object> itr = faintStarsList.iterator();itr.hasNext();)
+			for (int index = 0; index < faintStarsList.size(); index ++)
 			{
-				d = (float[]) itr.next();
+				d = (float[]) faintStarsList.get(index);
 				loc = new LocationElement(d[0], d[1], d[2]);
 
 		    	if (d[3] < maglim) {
@@ -11101,9 +11116,27 @@ public class RenderSky
 		 					float position = Math.max(size * 3, size+fontSize);
 							drawString(render.drawStarsColor, render.drawStarsNamesFont, Functions.formatValue(d[3], 1), pos[0], pos[1], -position, false);
 		 				}
+		 				
+		 				if (SaveObjectsToAllowSearch) {
+/*					    	String name2print = "";
+					    	if (data.length() > 64) {
+					    		name2print = data.substring(63).trim();
+					    		name2print = DataSet.replaceAll(name2print, "  ", ",", true);
+					    		name2print = DataSet.replaceAll(name2print, ",,", ",", true);
+					    	}
+*/							minorObjects.add(new Object[] {
+									RenderSky.OBJECT.DEEPSKY, pos.clone(),
+									new String[] {(String) faintStarsNames.get(index), ""+loc.getLongitude(), ""+loc.getLatitude(), ""+d[3]}
+							});
+		 				}		 				
 					}
 				}
 			}
+
+			if (SaveObjectsToAllowSearch) {
+				DataBase.addData("minorObjects", threadID, minorObjects.toArray(), true);
+				if (db_minorObjects < 0) db_minorObjects = DataBase.getIndex("minorObjects", threadID);
+			}			
 		} else {
 			LocationElement locEq;
 	 		String ra0 = Functions.formatRA(loc0J2000.getLongitude());
@@ -11118,7 +11151,7 @@ public class RenderSky
 			String field = Functions.formatValue(2, 1);
 			String datas = getOldUCAC4(loc0J2000, field, limmag0, limmag);
 			if (datas == null) {
-				String query = "http://vizier.u-strasbg.fr/cgi-bin/VizieR?-source=UCAC4&-c="+name+"&-c.rd="+field+"&-mime=ascii&-out.form=csv&-oc.form=dec&-out.max=20000&-out=RAJ2000,DEJ2000,f.mag,a.mag,pmRA,pmDE&f.mag="+limmag0+".."+limmag;
+				String query = "http://vizier.u-strasbg.fr/cgi-bin/VizieR?-source=UCAC4&-c="+name+"&-c.rd="+field+"&-mime=ascii&-out.form=csv&-oc.form=dec&-out.max=20000&-out=RAJ2000,DEJ2000,f.mag,a.mag,pmRA,pmDE,UCAC4,Tycho-2&f.mag="+limmag0+".."+limmag;
 				try {
 					datas = GeneralQuery.query(query, render.drawFaintStarsTimeOut*1000);
 					String out = FileIO.getTemporalDirectory() + "ucac4_"+field+"_"+limmag0+"_"+limmag+"_"+(float)loc0J2000.getLongitude()+"_"+(float)loc0J2000.getLatitude()+".txt";
@@ -11141,6 +11174,7 @@ public class RenderSky
 			    	String ra = "", dec = "", pmRA = "", pmDEC = "", mag1 = "", mag2 = "";
 			    	double magV = -100.0;
 			    	faintStars = new ArrayList<float[]>();
+			    	ArrayList<String> faintStarsNames = new ArrayList<String>();
 			    	double cte = Constant.RAD_TO_ARCSEC * 1000.0;
 			    	float[] pos;
 			    	float size;
@@ -11187,12 +11221,22 @@ public class RenderSky
 					    		pmRA = data.substring(47, 51).trim();
 						    	pmDEC = data.substring(58, 62).trim();
 					    	}
+					    	
+					    	String name2print = "UCAC ?";
+					    	if (data.length() > 64) {
+					    		name2print = data.substring(63).trim();
+					    		String ucac = FileIO.getField(1, name2print, "  ", true);
+					    		String tycho = FileIO.getField(2, name2print, "  ", true);
+					    		name2print = "UCAC4 "+ucac;
+					    		if (!tycho.equals("")) name2print += ", Tycho-2 "+tycho;
+					    	}
+					    	faintStarsNames.add(name2print);
+
 					    	if (mag2.isEmpty()) {
 					    		if (!mag1.isEmpty()) magV = Double.parseDouble(mag1);
 					    	} else {
 					    		magV = Double.parseDouble(mag2);
 					    	}
-
 					    	if (magV != -100 && !ra.isEmpty() && !dec.isEmpty())
 					    	{
 					    		StarEphemElement ephem = new StarEphemElement();
@@ -11277,6 +11321,13 @@ public class RenderSky
 							 					float position = Math.max(size * 3, size+fontSize);
 												drawString(render.drawStarsColor, render.drawStarsNamesFont, Functions.formatValue(ephem.magnitude, 1), pos[0], pos[1], -position, false);
 							 				}
+							 				
+							 				if (SaveObjectsToAllowSearch) {
+												minorObjects.add(new Object[] {
+														RenderSky.OBJECT.DEEPSKY, pos.clone(),
+														new String[] {name2print, ""+loc.getLongitude(), ""+loc.getLatitude(), ""+ephem.magnitude}
+												});
+							 				}
 										}
 									}
 						    	}
@@ -11285,6 +11336,7 @@ public class RenderSky
 				    }
 
 				    DataBase.addData("faintStars", threadID, faintStarsList.toArray(), true);
+				    DataBase.addData("faintStarsNames", threadID, faintStarsNames.toArray(), true);
 				    db_faintStars = DataBase.getIndex("faintStars", threadID);
 				}
 			}
@@ -11419,6 +11471,7 @@ public class RenderSky
 		int ndec = 0;
 		if (fieldDeg < 0.5) ndec = 1;
 		if (fieldDeg < 0.05) ndec = 2;
+		int ls = g.renderingToAndroid() ? 8 : 4;
 		if (labelsAxesX.size() == 0) {
 			int cx = this.getXCenter();
 			if (render.telescope.invertHorizontal) cx = render.width-1-cx;
@@ -11482,9 +11535,9 @@ public class RenderSky
 			if (render.drawLeyend == LEYEND_POSITION.BOTTOM) py -= this.leyendMargin;
 
 			if (fast && thin) {
-				g.drawStraightLine(cx, py, cx, py+3);
+				g.drawStraightLine(cx, py, cx, py+ls);
 			} else {
-				g.drawLine(cx, py, cx, py+3, dist, dist);
+				g.drawLine(cx, py, cx, py+ls, dist, dist);
 			}
 		}
 
@@ -11504,9 +11557,9 @@ public class RenderSky
 			g.drawRotatedString(labelDEC, dy, (render.height+w)/2f, (float)Constant.PI_OVER_TWO, dist);
 			int cy = this.getYCenter();
 			if (fast && thin) {
-				g.drawStraightLine(this.graphMarginX, cy, this.graphMarginX-3, cy, dist, dist);
+				g.drawStraightLine(this.graphMarginX, cy, this.graphMarginX-ls, cy, dist, dist);
 			} else {
-				g.drawLine(this.graphMarginX, cy, this.graphMarginX-3, cy, dist, dist);
+				g.drawLine(this.graphMarginX, cy, this.graphMarginX-ls, cy, dist, dist);
 			}
 		}
 
@@ -11525,18 +11578,18 @@ public class RenderSky
 				step = 60;
 				if (render.coordinateSystem == COORDINATE_SYSTEM.EQUATORIAL) step = 75;
 			}
-			int l = 5;
+			int l = g.renderingToAndroid() ? 10 : 6;
 			if (fieldDeg < 5) {
 				step = 30;
-				l = 3;
+				l = g.renderingToAndroid() ? 8 : 4;
 			}
 			if (fieldDeg < 1*FastMath.cos(render.centralLatitude)) {
 				step = 5;
-				l = 2;
+				l = g.renderingToAndroid() ? 6 : 3;
 			}
 			if (fieldDeg < 0.2*FastMath.cos(render.centralLatitude)) {
 				step = 1;
-				l = 2;
+				l = g.renderingToAndroid() ? 6 : 3;
 			}
 
 			double step2 = step * deg_0_017;
@@ -11705,18 +11758,18 @@ public class RenderSky
 
 			g.enableInversion(false, invertV);
 			step = 60; // arcmin
-			l = 5;
+			l = g.renderingToAndroid() ? 10 : 6;
 			if (fieldDeg < 5) {
 				step = 30;
-				l = 3;
+				l = g.renderingToAndroid() ? 8 : 4;
 			}
 			if (fieldDeg < 1) {
 				step = 5;
-				l = 2;
+				l = g.renderingToAndroid() ? 6 : 3;
 			}
 			if (fieldDeg < 0.2) {
 				step = 1;
-				l = 2;
+				l = g.renderingToAndroid() ? 6 : 3;
 			}
 
 			step2 = step * deg_0_017;

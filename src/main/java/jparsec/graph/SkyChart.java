@@ -1226,7 +1226,8 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 							if (type == OBJECT.DEEPSKY) {
 								msg1 += " ("+Functions.formatValue(Double.parseDouble(d[3]), 1)+"m)";
 								t = Translate.translate(972);
-							}
+					  			if (d.length <= 4) t = Translate.translate(79);
+							} 
 							if (type == OBJECT.NOVA) t = Translate.translate(1304);
 							msg1 = msg1 + " - " + t.toLowerCase();
 						} else {
@@ -4994,6 +4995,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
   		if (id == RenderSky.OBJECT.DEEPSKY) {
   			type = Translate.translate(972);
   			objData = ((String[]) data[2]).clone();
+  			if (objData.length <= 4) type = Translate.translate(79);
   		} else {
   			if (id == RenderSky.OBJECT.SUPERNOVA || id == OBJECT.NOVA) {
   				type = Translate.translate(877); // SN
@@ -5064,6 +5066,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 			} catch (Exception exc) {}
   			objData[3] = Translate.translate(157) + ": " + objData[3];
   	  		if (id == RenderSky.OBJECT.DEEPSKY) {
+  	  			if (objData.length > 4) {
 	  			objData[4] = Translate.translate(486) + ": " + objData[4];
 	  			String unit = "\u00b0";
 	  			int ndec = 1;
@@ -5111,6 +5114,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 	  			if (Translate.getDefaultLanguage() != LANGUAGE.ENGLISH && objData.length > 6)
 	  				objData[6] = DataSet.replaceAll(objData[6], "Type", Translate.translate(1296), true);
 	  			if (objData.length > 6 && objData[4].indexOf(Translate.translate(1182)) >= 0) objData = DataSet.eliminateRowFromTable(objData, 7);
+  	  			}
   	  		} else {
   	  			if (id == OBJECT.NOVA) {
   	  				objData[4] = Translate.translate(462) + " "+Translate.translate(1304).toLowerCase()+": " + objData[4];

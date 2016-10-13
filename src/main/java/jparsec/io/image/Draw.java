@@ -239,8 +239,8 @@ public class Draw {
    // helper functions that scale from user coordinates to screen coordinates and back
    private double  scaleX(double x) { return (width - 1)  * (x - xmin) / (xmax - xmin); }
    private double  scaleY(double y) { return (height - 1) * (ymax - y) / (ymax - ymin); }
-   private double factorX(double w) { return w * width  / Math.abs(xmax - xmin - 1);  }
-   private double factorY(double h) { return h * height / Math.abs(ymax - ymin - 1);  }
+   private double factorX(double w) { return w * width  / Math.abs(xmax - xmin);  }
+   private double factorY(double h) { return h * height / Math.abs(ymax - ymin);  }
 
 
    /**

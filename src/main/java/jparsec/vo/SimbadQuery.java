@@ -69,7 +69,8 @@ public class SimbadQuery implements Serializable {
 	public static SimbadElement query(String name)
 	throws JPARSECException {
 		try {
-			return parsePlainTextFromSimbad(GeneralQuery.query("http://cdsweb.u-strasbg.fr/cgi-bin/nph-sesame/?"+URLEncoder.encode(name, ReadFile.ENCODING_UTF_8)));
+			return parsePlainTextFromSimbad(GeneralQuery.query("http://cdsweb.u-strasbg.fr/cgi-bin/nph-sesame/?"+URLEncoder.encode(name, ReadFile.ENCODING_UTF_8), 
+					jparsec.util.Configuration.QUERY_TIMEOUT));
 		} catch (Exception e)
 		{
 			e.printStackTrace();

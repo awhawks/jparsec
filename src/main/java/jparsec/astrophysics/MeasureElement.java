@@ -375,7 +375,7 @@ public class MeasureElement implements Serializable
 	 */
 	public MeasureElement get(String newUnit)
 	throws JPARSECException {
-		if (this.unit.equals(newUnit)) return this.clone();
+		if ((unit == null && newUnit == null) || this.unit.equals(newUnit)) return this.clone();
 
 		PhotometricBandElement pb1 = PhotometricBandElement.getPhotometricBand(this.unit);
 		PhotometricBandElement pb2 = PhotometricBandElement.getPhotometricBand(newUnit);
@@ -448,8 +448,9 @@ public class MeasureElement implements Serializable
 	public void multiply(MeasureElement me)
 	throws JPARSECException {
 		MeasureElement m = me.clone();
-		if (!this.unit.equals(m.unit))
-			m.convert(this.unit);
+		if (unit != null || m.unit != null) {
+			if (!this.unit.equals(m.unit)) m.convert(this.unit);
+		}
 		double v1 = DataSet.getDoubleValueWithoutLimit(this.value);
 		String l1 = DataSet.getLimit(this.value);
 		double v2 = DataSet.getDoubleValueWithoutLimit(m.value);
@@ -498,8 +499,9 @@ public class MeasureElement implements Serializable
 	public void divide(MeasureElement me)
 	throws JPARSECException {
 		MeasureElement m = me.clone();
-		if (!this.unit.equals(m.unit))
-			m.convert(this.unit);
+		if (unit != null || m.unit != null) {
+			if (!this.unit.equals(m.unit)) m.convert(this.unit);
+		}
 		double v1 = DataSet.getDoubleValueWithoutLimit(this.value);
 		String l1 = DataSet.getLimit(this.value);
 		double v2 = DataSet.getDoubleValueWithoutLimit(m.value);
@@ -546,9 +548,10 @@ public class MeasureElement implements Serializable
 	public void add(MeasureElement me)
 	throws JPARSECException {
 		MeasureElement m = me.clone();
-		if (!this.unit.equals(m.unit))
-			m.convert(this.unit);
-		if (!m.unit.equals(this.unit)) throw new JPARSECException("Cannot add values in different units.");
+		if (unit != null || m.unit != null) {
+			if (!this.unit.equals(m.unit)) m.convert(this.unit);
+			if (!m.unit.equals(this.unit)) throw new JPARSECException("Cannot add values in different units.");
+		}
 		double v1 = DataSet.getDoubleValueWithoutLimit(this.value);
 		String l1 = DataSet.getLimit(this.value);
 		double v2 = DataSet.getDoubleValueWithoutLimit(m.value);
@@ -563,9 +566,10 @@ public class MeasureElement implements Serializable
 	public void subtract(MeasureElement me)
 	throws JPARSECException {
 		MeasureElement m = me.clone();
-		if (!this.unit.equals(m.unit))
-			m.convert(this.unit);
-		if (!m.unit.equals(this.unit)) throw new JPARSECException("Cannot substract values in different units.");
+		if (unit != null || m.unit != null) {
+			if (!this.unit.equals(m.unit)) m.convert(this.unit);
+			if (!m.unit.equals(this.unit)) throw new JPARSECException("Cannot substract values in different units.");
+		}
 		double v1 = DataSet.getDoubleValueWithoutLimit(this.value);
 		String l1 = DataSet.getLimit(this.value);
 		double v2 = DataSet.getDoubleValueWithoutLimit(m.value);
@@ -580,9 +584,10 @@ public class MeasureElement implements Serializable
 	public void pow(MeasureElement me)
 	throws JPARSECException {
 		MeasureElement m = me.clone();
-		if (!this.unit.equals(m.unit))
-			m.convert(this.unit);
-		if (me.unit != null && !me.unit.equals("")) throw new JPARSECException("Cannot apply pow operation using a measure with units as exponent.");
+		if (unit != null || m.unit != null) {
+			if (!this.unit.equals(m.unit)) m.convert(this.unit);
+			if (me.unit != null && !me.unit.equals("")) throw new JPARSECException("Cannot apply pow operation using a measure with units as exponent.");
+		}
 		double v1 = DataSet.getDoubleValueWithoutLimit(this.value);
 		String l1 = DataSet.getLimit(this.value);
 		double v2 = DataSet.getDoubleValueWithoutLimit(m.value);

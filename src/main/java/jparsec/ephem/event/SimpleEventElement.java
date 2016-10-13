@@ -509,6 +509,8 @@ public class SimpleEventElement implements Serializable {
 						eventType == EVENT.PLANET_MAXIMUM_ELONGATION || eventType == EVENT.PLANET_MINIMUM_ELONGATION
 						|| eventType == EVENT.PLANET_CONJUNCTION || eventType == EVENT.PLANET_OPPOSITION) {
 					d += "\u00b0";
+					if (eventType == EVENT.PLANET_CONJUNCTION || eventType == EVENT.PLANET_OPPOSITION)
+						d = Translate.translate(301) + " " + d;
 					if (eventType == EVENT.PLANET_MAXIMUM_ELONGATION && (mainBody == TARGET.MERCURY ||
 									mainBody == TARGET.VENUS)) {
 						int c = details.indexOf(",");
