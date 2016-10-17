@@ -5,7 +5,7 @@
     <groupId>es.oan.conga</groupId>
     <artifactId>jparsec</artifactId>
     <packaging>jar</packaging>
-    <version>1.110</version>
+    <version>1.111</version>
     <name>jparsec</name>
     <url>http://maven.apache.org</url>
 

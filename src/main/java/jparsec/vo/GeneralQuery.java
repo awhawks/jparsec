@@ -808,6 +808,8 @@ public class GeneralQuery implements Serializable {
     	CDFSLESS,
     	/** CO Galactic Plane Survey survey for SkyView. */
     	CO2D,
+    	/** Effelsberg-Bonn HI Survey survey for SkyView. */
+    	EBHIS,
     	/** FIRST survey for SkyView. */
     	FIRST,
     	/** GOODS North Observations with the VLA survey for SkyView. */
@@ -822,34 +824,44 @@ public class GeneralQuery implements Serializable {
     	STRIPE82VLA,
     	/** Sydney University Molonglo Sky Survey survey for SkyView. */
     	SUMSS,
+    	/** GMRT 150 MHz All-sky Radio Survey: First Alternative Data Release survey for SkyView. */
+    	TGSS,
     	/** VLA Low-frequency Sky Survey survey for SkyView. */
     	VLSSR,
     	/** Westerbork Northern Sky Survey survey for SkyView. */
     	WENSS,
-    	/** Planck 030 GHz Survey survey for SkyView. */
-    	PLANCK030,
-    	/** Planck 044 GHz Survey survey for SkyView. */
-    	PLANCK044,
-    	/** Planck 070 GHz Survey survey for SkyView. */
-    	PLANCK070,
-    	/** Planck 100 GHz Survey survey for SkyView. */
-    	PLANCK100,
-    	/** Planck 143 GHz Survey survey for SkyView. */
-    	PLANCK143,
-    	/** Planck 217 GHz Survey survey for SkyView. */
-    	PLANCK217,
     	/** Planck 353 GHz Survey survey for SkyView. */
     	PLANCK353,
+    	/** Planck 217 GHz Survey survey for SkyView. */
+    	PLANCK217,
+    	/** Planck 143 GHz Survey survey for SkyView. */
+    	PLANCK143,
     	/** Planck 545 GHz Survey survey for SkyView. */
     	PLANCK545,
+    	/** Planck 030 GHz Survey survey for SkyView. */
+    	PLANCK030,
+    	/** Planck 100 GHz Survey survey for SkyView. */
+    	PLANCK100,
+    	/** Planck 070 GHz Survey survey for SkyView. */
+    	PLANCK070,
     	/** Planck 857 GHz Survey survey for SkyView. */
     	PLANCK857,
+    	/** Planck 044 GHz Survey survey for SkyView. */
+    	PLANCK044,
     	/** Two Micron All Sky Survey (H-Band) survey for SkyView. */
     	H_2MASS,
     	/** Two Micron All Sky Survey (J-Band) survey for SkyView. */
     	J_2MASS,
     	/** Two Micron All Sky Survey (K-Band) survey for SkyView. */
     	K_2MASS,
+    	/** AKARI N160  survey for SkyView. */
+    	AKARIN160,
+    	/** AKARI N60  survey for SkyView. */
+    	AKARIN60,
+    	/** AKARI WIDE-L  survey for SkyView. */
+    	AKARIWIDE_L,
+    	/** AKARI WIDE-S  survey for SkyView. */
+    	AKARIWIDE_S,
     	/** Cosmic Background Explorer DIRBE Annual Average Map survey for SkyView. */
     	COBEAAM,
     	/** Cosmic Background Explorer DIRBE Zodi-Subtracted Mission Average survey for SkyView. */
@@ -976,15 +988,15 @@ public class GeneralQuery implements Serializable {
     	MELLINGER_R,
     	/** Near-Earth Asteriod Tracking System Archive survey for SkyView. */
     	NEAT,
-    	/** Sloan Digitized Sky Survey 567-750-band survey for SkyView. */
+    	/** Sloan Digitized Sky Survey g-band survey for SkyView. */
     	SDSSG,
-    	/** Sloan Digitized Sky Survey 372-439-band survey for SkyView. */
+    	/** Sloan Digitized Sky Survey i-band survey for SkyView. */
     	SDSSI,
-    	/** Sloan Digitized Sky Survey 448-540-band survey for SkyView. */
+    	/** Sloan Digitized Sky Survey r-band survey for SkyView. */
     	SDSSR,
-    	/** Sloan Digitized Sky Survey 772-934-band survey for SkyView. */
+    	/** Sloan Digitized Sky Survey u-band survey for SkyView. */
     	SDSSU,
-    	/** Sloan Digitized Sky Survey 327-348-band survey for SkyView. */
+    	/** Sloan Digitized Sky Survey z-band survey for SkyView. */
     	SDSSZ,
     	/** Sloan Digitized Sky Survey g-band survey for SkyView. */
     	SDSSDR7G,
@@ -1136,18 +1148,18 @@ public class GeneralQuery implements Serializable {
     	RASSBCK6,
     	/** ROSAT All-Sky X-ray Background Survey: Band 7 survey for SkyView. */
     	RASSBCK7,
-    	/** RXTE Allsky 3-20 keV Flux survey for SkyView. */
-    	RXTE3_20K_FLUX,
     	/** RXTE Allsky 3-8 keV Flux survey for SkyView. */
     	RXTE3_8K_FLUX,
-    	/** RXTE Allsky 8-20 keV Flux survey for SkyView. */
-    	RXTE8_20K_FLUX,
-    	/** RXTE Allsky 3-20 keV Significance survey for SkyView. */
-    	RXTE3_20K_SIG,
     	/** RXTE Allsky 3-8 keV Significance survey for SkyView. */
     	RXTE3_8K_SIG,
+    	/** RXTE Allsky 8-20 keV Flux survey for SkyView. */
+    	RXTE8_20K_FLUX,
     	/** RXTE Allsky 8-20 keV Significance survey for SkyView. */
     	RXTE8_20K_SIG,
+    	/** RXTE Allsky 3-20 keV Flux survey for SkyView. */
+    	RXTE3_20K_FLUX,
+    	/** RXTE Allsky 3-20 keV Significance survey for SkyView. */
+    	RXTE3_20K_SIG,
     	/** CGRO Compton Telescope: 3 channel data survey for SkyView. */
     	COMPTEL,
     	/** Energetic Gamma-Ray Event Telescope: Hard survey for SkyView. */
@@ -1156,21 +1168,21 @@ public class GeneralQuery implements Serializable {
     	EGRETSOFT,
     	/** Energetic Gamma-Ray Event Telescope: 10 channel data survey for SkyView. */
     	EGRET3D,
-    	/** Fermi Counts Map: Band 1 survey for SkyView. */
+    	/** Fermi Map: Band 1 survey for SkyView. */
     	FERMI1,
-    	/** Fermi Counts Map: Band 2 survey for SkyView. */
+    	/** Fermi Map: Band 2 survey for SkyView. */
     	FERMI2,
-    	/** Fermi Counts Map: Band 3 survey for SkyView. */
+    	/** Fermi Map: Band 3 survey for SkyView. */
     	FERMI3,
-    	/** Fermi Counts Map: Band 4 survey for SkyView. */
+    	/** Fermi Map: Band 4 survey for SkyView. */
     	FERMI4,
-    	/** Fermi Counts Map: Band 5 survey for SkyView. */
+    	/** Fermi Map: Band 5 survey for SkyView. */
     	FERMI5,
      };
     /**
      * Surveys for SkyView.
      */
-     public static final String[] SKYVIEW_SURVEYS = new String[] {"BONN_1420MHZ", "HI_480MHZ", "GB6_4850MHZ", "CDFSLESS", "CO2D", "FIRST", "GOODSNVLA", "GTEE_0035MHZ", "NH", "NVSS", "STRIPE82VLA", "SUMSS", "VLSSR", "WENSS", "PLANCK030", "PLANCK044", "PLANCK070", "PLANCK100", "PLANCK143", "PLANCK217", "PLANCK353", "PLANCK545", "PLANCK857", "H_2MASS", "J_2MASS", "K_2MASS", "COBEAAM", "COBEZSMA", "DSS2IR", "GOODSHERSCHEL1", "GOODSHERSCHEL2", "GOODSHERSCHEL3", "GOODSHERSCHEL4", "GOODSHERSCHEL5", "GOODSIRAC1", "GOODSIRAC2", "GOODSIRAC3", "GOODSIRAC4", "GOODSISAACH", "GOODSISAACJ", "GOODSISAACKS", "GOODSMIPS", "GOODSNICMOS", "HAWAIIHDFI", "HAWAIIHDFZ", "HUDFISAAC", "IRAS100", "IRAS12", "IRAS25", "IRAS60", "IRIS100", "IRIS12", "IRIS25", "IRIS60", "SFD100M", "SFDDUST", "UKIDSS_H", "UKIDSS_J", "UKIDSS_K", "UKIDSS_Y", "WISEW1", "WISEW2", "WISEW3", "WISEW4", "WMAPK", "WMAPKA", "WMAPQ", "WMAPV", "WMAPW", "WMAPILC", "DSSOLD", "DSS1B", "DSS1R", "DSS2B", "DSS2R", "GOODSACSB", "GOODSACSI", "GOODSACSV", "GOODSACSZ", "GOODSVIMOSR", "HALPHA", "HAWAIIHDFB", "HAWAIIHDFR", "HAWAIIHDFV0201", "HAWAIIHDFV0401", "MELLINGER_B", "MELLINGER_G", "MELLINGER_R", "NEAT", "SDSSG", "SDSSI", "SDSSR", "SDSSU", "SDSSZ", "SDSSDR7G", "SDSSDR7I", "SDSSDR7R", "SDSSDR7U", "SDSSDR7Z", "SHASSA_C", "SHASSA_CC", "SHASSA_H", "SHASSA_SM", "EUVE171", "EUVE405", "EUVE555", "EUVE83", "GALEXFAR", "GALEXNEAR", "GOODSVIMOSU", "HAWAIIHDFU", "WFCF1", "WFCF2", "BAT_FLUX_1", "BAT_SNR_1", "BAT_FLUX_2", "BAT_SNR_2", "BAT_FLUX_3", "BAT_SNR_3", "BAT_FLUX_4", "BAT_SNR_4", "BAT_FLUX_5", "BAT_SNR_5", "BAT_FLUX_6", "BAT_SNR_6", "BAT_FLUX_7", "BAT_SNR_7", "BAT_FLUX_8", "BAT_SNR_8", "BAT_SNR_SUM", "GOODSACISFB", "GOODSACISHB", "GOODSACISSB", "GRANAT_SIGMA_FLUX", "GRANAT_SIGMA_SIG", "HEAO1A", "HRIINT", "INTEGRALSPI_GC", "INTGAL17_35EXP", "INTGAL17_35FLUX", "INTGAL17_35SIG", "INTGAL17_60EXP", "INTGAL17_60FLUX", "INTGAL17_60SIG", "INTGAL35_80EXP", "INTGAL35_80FLUX", "INTGAL35_80SIG", "PSPC1CNT", "PSPC1EXP", "PSPC1INT", "PSPC2CNT", "PSPC2EXP", "PSPC2INT", "PSPC0_6CNT", "PSPC0_6EXP", "PSPC0_6INT", "RASSHBC", "RASSBBC", "RASSSBC", "RASSHBI", "RASSBBI", "RASSSBI", "RASSBCK1", "RASSBCK2", "RASSBCK3", "RASSBCK4", "RASSBCK5", "RASSBCK6", "RASSBCK7", "RXTE3_20K_FLUX", "RXTE3_8K_FLUX", "RXTE8_20K_FLUX", "RXTE3_20K_SIG", "RXTE3_8K_SIG", "RXTE8_20K_SIG", "COMPTEL", "EGRETHARD", "EGRETSOFT", "EGRET3D", "FERMI1", "FERMI2", "FERMI3", "FERMI4", "FERMI5", };
+     public static final String[] SKYVIEW_SURVEYS = new String[] {"BONN_1420MHZ", "HI_480MHZ", "GB6_4850MHZ", "CDFSLESS", "CO2D", "EBHIS", "FIRST", "GOODSNVLA", "GTEE_0035MHZ", "NH", "NVSS", "STRIPE82VLA", "SUMSS", "TGSS", "VLSSR", "WENSS", "PLANCK353", "PLANCK217", "PLANCK143", "PLANCK545", "PLANCK030", "PLANCK100", "PLANCK070", "PLANCK857", "PLANCK044", "H_2MASS", "J_2MASS", "K_2MASS", "AKARIN160", "AKARIN60", "AKARIWIDE_L", "AKARIWIDE_S", "COBEAAM", "COBEZSMA", "DSS2IR", "GOODSHERSCHEL1", "GOODSHERSCHEL2", "GOODSHERSCHEL3", "GOODSHERSCHEL4", "GOODSHERSCHEL5", "GOODSIRAC1", "GOODSIRAC2", "GOODSIRAC3", "GOODSIRAC4", "GOODSISAACH", "GOODSISAACJ", "GOODSISAACKS", "GOODSMIPS", "GOODSNICMOS", "HAWAIIHDFI", "HAWAIIHDFZ", "HUDFISAAC", "IRAS100", "IRAS12", "IRAS25", "IRAS60", "IRIS100", "IRIS12", "IRIS25", "IRIS60", "SFD100M", "SFDDUST", "UKIDSS_H", "UKIDSS_J", "UKIDSS_K", "UKIDSS_Y", "WISEW1", "WISEW2", "WISEW3", "WISEW4", "WMAPK", "WMAPKA", "WMAPQ", "WMAPV", "WMAPW", "WMAPILC", "DSSOLD", "DSS1B", "DSS1R", "DSS2B", "DSS2R", "GOODSACSB", "GOODSACSI", "GOODSACSV", "GOODSACSZ", "GOODSVIMOSR", "HALPHA", "HAWAIIHDFB", "HAWAIIHDFR", "HAWAIIHDFV0201", "HAWAIIHDFV0401", "MELLINGER_B", "MELLINGER_G", "MELLINGER_R", "NEAT", "SDSSG", "SDSSI", "SDSSR", "SDSSU", "SDSSZ", "SDSSDR7G", "SDSSDR7I", "SDSSDR7R", "SDSSDR7U", "SDSSDR7Z", "SHASSA_C", "SHASSA_CC", "SHASSA_H", "SHASSA_SM", "EUVE171", "EUVE405", "EUVE555", "EUVE83", "GALEXFAR", "GALEXNEAR", "GOODSVIMOSU", "HAWAIIHDFU", "WFCF1", "WFCF2", "BAT_FLUX_1", "BAT_SNR_1", "BAT_FLUX_2", "BAT_SNR_2", "BAT_FLUX_3", "BAT_SNR_3", "BAT_FLUX_4", "BAT_SNR_4", "BAT_FLUX_5", "BAT_SNR_5", "BAT_FLUX_6", "BAT_SNR_6", "BAT_FLUX_7", "BAT_SNR_7", "BAT_FLUX_8", "BAT_SNR_8", "BAT_SNR_SUM", "GOODSACISFB", "GOODSACISHB", "GOODSACISSB", "GRANAT_SIGMA_FLUX", "GRANAT_SIGMA_SIG", "HEAO1A", "HRIINT", "INTEGRALSPI_GC", "INTGAL17_35EXP", "INTGAL17_35FLUX", "INTGAL17_35SIG", "INTGAL17_60EXP", "INTGAL17_60FLUX", "INTGAL17_60SIG", "INTGAL35_80EXP", "INTGAL35_80FLUX", "INTGAL35_80SIG", "PSPC1CNT", "PSPC1EXP", "PSPC1INT", "PSPC2CNT", "PSPC2EXP", "PSPC2INT", "PSPC0_6CNT", "PSPC0_6EXP", "PSPC0_6INT", "RASSHBC", "RASSBBC", "RASSSBC", "RASSHBI", "RASSBBI", "RASSSBI", "RASSBCK1", "RASSBCK2", "RASSBCK3", "RASSBCK4", "RASSBCK5", "RASSBCK6", "RASSBCK7", "RXTE3_8K_FLUX", "RXTE3_8K_SIG", "RXTE8_20K_FLUX", "RXTE8_20K_SIG", "RXTE3_20K_FLUX", "RXTE3_20K_SIG", "COMPTEL", "EGRETHARD", "EGRETSOFT", "EGRET3D", "FERMI1", "FERMI2", "FERMI3", "FERMI4", "FERMI5", };
 
      /**
       * Main suggested surveys for SkyView as an array of length 6: Gamma rays, X Rays, UV, optical, IR, Radio.

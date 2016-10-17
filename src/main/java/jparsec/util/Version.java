@@ -308,7 +308,12 @@ public class Version
 				"      1.110: Few bug fixes and improved astrophotography (Jul 18, 2016):\n"+
 						"There was a bug in the WCS coordinates returned in LMVCube.\n",
 						"Latex compilation now done in batchmode instead of nonstopmode to avoid so many warning messages blocking the compilation.\n",
-						"AWTDrawer - fillOval replaced with an image in JMathPlot library to improve performance."
+						"AWTDrawer - fillOval replaced with an image in JMathPlot library to improve performance.",
+				"      1.111: Important bug fix in Windows systems, Android and astrophotography fixes (Oct XX, 2016):\n"+
+						"The method ReadFile.readResourceAndReturnNumberOfLines didn't work on Windows, producing errors when executing anything on this platform. Thanks to Volker Hören for reporting.\n",
+						"Some fixes to ClearSky for desktop (astrophotography), and a more robust camera detection.\n",
+						"Sky rendering with some fixes and improvements for Android.\n",
+						"Update of orbital elements.\n"
 
 				+FileIO.getLineSeparator(),
 		};
@@ -317,12 +322,12 @@ public class Version
 		// Dependencies for JPARSEC programs and models
 		String library[] = new String[] {
 			// Dependency name                             Version
-			"jparsec.jar                                   1.110",
+			"jparsec.jar                                   1.111",
 
-			"sky.jar                                       1.36",
-			"orbital_elements.jar                          1.23",
-			"sunspot.jar                                   1.14",
-			"eop.jar                                       1.13",
+			"sky.jar                                       1.37",
+			"orbital_elements.jar                          1.24",
+			"sunspot.jar                                   1.15",
+			"eop.jar                                       1.14",
 
 			"sgt_v30.jar                                   1.06",
 			"jcommon-1.0.16.jar                            1.03",
