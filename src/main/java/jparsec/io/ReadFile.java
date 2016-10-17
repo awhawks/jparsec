@@ -2552,16 +2552,16 @@ public class ReadFile implements Serializable
 		{
 			URLConnection Connection = ((new File(path)).toURI().toURL()).openConnection();
 			is = Connection.getInputStream();
-			dis = new BufferedReader(new InputStreamReader(is));
+		    byte[] buffer = new byte[8 * 1024]; // BUFFER_SIZE = 8 * 1024
+		    int read;
+		    char sep = '\n';
+		    while ((read = is.read(buffer)) != -1) {
+		        for (int i = 0; i < read; i++) {
+		            if (buffer[i] == sep) n++;
+		        }
+		    }
 
-			while ((dis.readLine()) != null)
-			{
-				n++;
-			}
-
-			// Close file
-			dis.close();
-			is.close();
+		    is.close();
 			is = null;
 
 			return n;
@@ -2913,7 +2913,7 @@ public class ReadFile implements Serializable
 			is = getClass().getClassLoader().getResourceAsStream(pathToFile);
 		    byte[] buffer = new byte[8 * 1024]; // BUFFER_SIZE = 8 * 1024
 		    int read;
-		    char sep = FileIO.getLineSeparator().charAt(0);
+		    char sep = '\n';
 
 		    while ((read = is.read(buffer)) != -1) {
 		        for (int i = 0; i < read; i++) {
@@ -2924,20 +2924,6 @@ public class ReadFile implements Serializable
 		    is.close();
 			is = null;
 
-/*
-			// Connect to the file
-			InputStream is = getClass().getClassLoader().getResourceAsStream(pathToFile);
-			BufferedReader dis = new BufferedReader(new InputStreamReader(is, encoding));
-
-			while ((dis.readLine()) != null)
-			{
-				n++;
-			}
-
-			// Close file
-			dis.close();
-			is.close();
-*/
 			return n;
 
 		} catch (Exception e2)
