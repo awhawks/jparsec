@@ -718,7 +718,7 @@ public class GPhotoCamera {
 	 * Returns  if a given configuration parameter is available or not in the current
 	 * camera. Note all parameters except the aperture must be available, otherwise the
 	 * instance cannot be used. This should be the case when using the manual model. The
-	 * availability of the parameters are updated after calling {@linkplain #checkConfig()},
+	 * availability of the parameters are updated after calling {@linkplain #checkConfig(boolean)},
 	 * that will make the aperture available again if that method is called after attaching
 	 * an objective to the camera.
 	 * @param c The configuration parameter.
