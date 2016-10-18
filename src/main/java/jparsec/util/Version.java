@@ -309,7 +309,7 @@ public class Version
 						"There was a bug in the WCS coordinates returned in LMVCube.\n",
 						"Latex compilation now done in batchmode instead of nonstopmode to avoid so many warning messages blocking the compilation.\n",
 						"AWTDrawer - fillOval replaced with an image in JMathPlot library to improve performance.",
-				"      1.111: Important bug fix in Windows systems, Android and astrophotography fixes (Oct XX, 2016):\n"+
+				"      1.111: Important bug fix in Windows systems, Android and astrophotography fixes (Oct 18, 2016):\n"+
 						"The method ReadFile.readResourceAndReturnNumberOfLines didn't work on Windows, producing errors when executing anything on this platform. Thanks to Volker Hören for reporting.\n",
 						"Some fixes to ClearSky for desktop (astrophotography), and a more robust camera detection.\n",
 						"Sky rendering with some fixes and improvements for Android.\n",
