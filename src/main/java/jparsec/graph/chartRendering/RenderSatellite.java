@@ -204,7 +204,7 @@ public class RenderSatellite
 				sat_icon[i] = "iss";
 			if (sat_name.toLowerCase().indexOf("hst") >= 0)
 				sat_icon[i] = "hst";
-			if (sat_name.toLowerCase().indexOf("tiangong 1") >= 0)
+			if (sat_name.toLowerCase().indexOf("tiangong") >= 0)
 				sat_icon[i] = "tiangong1";
 			sat[i] = g.getImage(FileIO.DATA_ICONS_DIRECTORY + sat_icon[i] + ".png");
 		}

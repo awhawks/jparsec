@@ -2887,7 +2887,7 @@ public class RenderPlanet
 			EVENT_DEFINITION ed = MoonEvent.getEventDefinition();
 			MoonEvent.setEventDefinition(EVENT_DEFINITION.AUTOMATIC_FOR_DRAWING);
 
-			if ((render.satellitesAll || eph.targetBody == TARGET.NEPTUNE || eph.targetBody == TARGET.Pluto) && render.satellitesMain)
+			if (render.satellitesAll && render.satellitesMain)
 			{
 				render.moonephem = MoonEphem.calcAllSatellites(time, obs, eph, true);
 			} else

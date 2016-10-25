@@ -1017,6 +1017,7 @@ public class RenderSky
 			g.setColor(render.drawOcularFieldOfViewColor, true);
 			float dist = getDist(foregroundDist);
 			int off = (int) (24f * (2f * radius / (float) render.width));
+			if (g.renderingToAndroid()) g.setStroke(JPARSECStroke.STROKE_DEFAULT_LINE);
 			g.drawLine(x0-off, y0, x0+off, y0, dist, dist);
 			g.drawLine(x0, y0-off, x0, y0+off, dist, dist);
 		}
@@ -1862,6 +1863,7 @@ public class RenderSky
 	}
 
 	private LocationElement loc0Date = null, loc0J2000 = null;
+	private static int maxStars = -1;
 	// To be called whenever the field increases or the time changes
 	private void drawConstelAndStars() throws JPARSECException
 	{
@@ -1884,7 +1886,7 @@ public class RenderSky
 			if (fieldDeg > 1 && render.drawConstellationContours != CONSTELLATION_CONTOUR.NONE)
 				deg30 = (int)(30 * pixels_per_degree);
 
-			int maxStars = -1;
+			maxStars = -1;
 			float minX = rec.getMinX(), minY = rec.getMinY(), maxX = rec.getMaxX(), maxY = rec.getMaxY();
 			for (int iii = 0; iii < indexf; iii++)
 			{
@@ -7970,7 +7972,7 @@ public class RenderSky
 							icon = "hst.png";
 						if (ephem.name.toLowerCase().indexOf("iss") >= 0)
 							icon = "iss.png";
-						if (ephem.name.toLowerCase().indexOf("tiangong 1") >= 0)
+						if (ephem.name.toLowerCase().indexOf("tiangong") >= 0)
 							icon = "tiangong1.png";
 						drawIcon(icon, pos[0], pos[1], 0.0f, 1.0f);
 
@@ -9459,6 +9461,7 @@ public class RenderSky
 		if (my_star >= readStars.length) return null;
 		StarData star = (StarData) readStars[my_star];
 		if (star == null || star.loc == null) return null;
+		if (maxStars > -1 && my_star >= maxStars) return null;
 		float p = 0;
 		double az = 0, el = 0;
 		StarEphemElement se = new StarEphemElement(star.ra, star.dec, star.loc.getRadius(), star.mag[star.mag.length-1], p, az, el);
@@ -9506,6 +9509,7 @@ public class RenderSky
 		if (my_star >= readStars.length) return null;
 		StarData sd = (StarData) readStars[my_star];
 		if (sd == null || sd.loc == null) return null;
+		if (maxStars > -1 && my_star >= maxStars) return null;
 		String name = ""+sd.sky2000;
 		if (sd.nom2 != null) name += " ("+sd.nom2+")";
 		if (sd.greek != '\u0000') name += " ("+sd.greek+")";
@@ -9616,6 +9620,7 @@ public class RenderSky
 		if (stars == null) return null;
 
 		int n = stars.length;
+		if (maxStars != -1) n = maxStars;
 		double minDist = -1;
 		int closest = -1;
 		if (render.telescope.invertHorizontal) x = render.width-1-x;
