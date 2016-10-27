@@ -5550,7 +5550,7 @@ public class RenderSky
 		if (eclipticLine == null) {
 			eclipticLine = new ArrayList<Object>();
 			LocationElement old_loc = null;
-			int n = eclStep == 6 ? 4 : 5, index = -1;
+			int n = eclStep == 5 ? 6 : 5, index = -1;
 			for (double i = 360; i >= 0; i = i - eclStep)
 			{
 				index ++;
