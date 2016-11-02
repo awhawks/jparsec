@@ -76,7 +76,7 @@ public class Zip
 	        		String path = DataSet.replaceAll(entry.getName(), Zip.ZIP_SEPARATOR, SEPARATOR, true);
 	            	File file = new File(destDir+path);
 	            	String dir = destDir + path;
-	            	dir = dir.substring(0, dir.lastIndexOf(Zip.ZIP_SEPARATOR));
+	            	dir = dir.substring(0, dir.lastIndexOf(SEPARATOR));
 	            	File dirf = new File(dir);
 	            	if (!dirf.exists() && createNecessarySubdirs) FileIO.createDirectories(dirf.getAbsolutePath());
 	            	if (dirf.exists())
