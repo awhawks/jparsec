@@ -5231,7 +5231,49 @@ public class RenderSky
 									g.fillOval((pos0[0] - size0), (pos0[1] - size0), size02, size02, distGal);
 								}
 							} else {
-								drawGalaxy(pos0, size*2, distGal, render.drawStarsRealistic != REALISTIC_STARS.NONE_CUTE, g, render.drawDeepSkyObjectsColor, g.getColor());
+								pa = (Float) obj[6];
+								size2 = Math.max((int) (size_xy[1] * pixels_per_degree) + 1, 1);
+								if (size > 3 && size2 != size && pa != -1f)
+								{
+									double add = projection.getNorthAngleAt(locF, false, true);
+									double ang0 = -pa + add + sph;
+									int jmax = 20;
+									if (size > 27.5) jmax = (int)(4*Math.sqrt(size));
+									Object path = g.generalPathInitialize();
+									double ang, px0, py0, r, px, py;
+									int j;
+									for (j = 0; j < jmax; j++)
+									{
+										ang = j * (Constant.TWO_PI / jmax);
+										px0 = (size * FastMath.cos(ang));
+										py0 = (size2 * FastMath.sin(ang));
+
+										r = FastMath.hypot(px0, py0);
+										ang = FastMath.atan2(py0, px0);
+										px = (r * FastMath.cos(ang + ang0));
+										py = (r * FastMath.sin(ang + ang0));
+
+										if (j > 0) {
+											g.generalPathLineTo(path, (float)(pos0[0] + px), (float)(pos0[1] + py));
+										} else {
+											g.generalPathMoveTo(path, (float)(pos0[0] + px), (float)(pos0[1] + py));
+										}
+									}
+									g.generalPathClosePath(path);
+									if (render.drawStarsRealistic == REALISTIC_STARS.NONE_CUTE)
+										g.setColor(render.drawDeepSkyObjectsColor, true);
+									g.fill(path, distGal);
+									g.setColor(render.drawDeepSkyObjectsColor, true);
+									g.setStroke(new JPARSECStroke(render.drawDeepSkyObjectsStroke, render.drawDeepSkyObjectsStroke.getLineWidth()+0.25f));
+									if (render.anaglyphMode == ANAGLYPH_COLOR_MODE.NO_ANAGLYPH) {
+										g.draw(path);
+									} else {
+										g.draw(path, distGal);
+									}
+									g.setStroke(render.drawDeepSkyObjectsStroke);
+								} else {
+									drawGalaxy(pos0, size*2, distGal, render.drawStarsRealistic != REALISTIC_STARS.NONE_CUTE, g, render.drawDeepSkyObjectsColor, g.getColor());
+								}
 							}
 							g.setColor(render.drawDeepSkyObjectsColor, true);
 								break;
@@ -5278,6 +5320,7 @@ public class RenderSky
 						if (SaveObjectsToAllowSearch) {
 							String objType = messier;
 							if (type <= 7) objType = objt[type];
+							if (external && comments != null && !comments.equals("")) comments = "Type: " + comments;
 							minorObjects.add(new Object[] {
 									RenderSky.OBJECT.DEEPSKY, pos0.clone(),
 									new String[] {name2print, ""+locF.getLongitude(), ""+locF.getLatitude(), Double.toString(Math.abs(mag)), objType, ""+size_xy[0]+"x"+size_xy[1], comments}
@@ -12531,6 +12574,7 @@ public class RenderSky
 								pos = new float[] {graphMarginX + (float) (index*s), baseY};
 								float[] poss = new float[] {(float) (graphMarginX + (index*s)), baseY-1};
 								g.setColor((Integer)data[8], true);
+								if (render.getColorMode() == COLOR_MODE.NIGHT_MODE) g.setColor(render.drawDeepSkyObjectsColor, true);
 								drawGalaxy(poss, starMaxSize, dist, render.drawStarsRealistic != REALISTIC_STARS.NONE_CUTE, g, render.drawDeepSkyObjectsColor, g.getColor());
 								label = (String) data[1];
 								Rectangle boundsg = g.getStringBounds(label);

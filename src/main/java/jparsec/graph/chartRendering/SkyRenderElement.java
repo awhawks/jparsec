@@ -1261,7 +1261,11 @@ public class SkyRenderElement implements Serializable
 			}
 		}
 
-		String id = "RenderSkyExternalCatalog"+externalCatalogCounter;
+		int newCount = externalCatalogCounter;
+		int oldCount = DataSet.getIndex(externalCatalogNames, name);
+		if (oldCount >= 0) newCount = oldCount;
+		String id = "RenderSkyExternalCatalog"+newCount;
+
 		DataBase.addData(id, list.toArray(), inMemory);
 		if (!this.externalCatalogAvailable(id)) {
 			externalCatalogs = DataSet.addStringArray(externalCatalogs, new String[] {id});
@@ -1461,7 +1465,11 @@ public class SkyRenderElement implements Serializable
 			}
 		}
 
-		String id = "RenderSkyExternalCatalog"+externalCatalogCounter;
+		int newCount = externalCatalogCounter;
+		int oldCount = DataSet.getIndex(externalCatalogNames, name);
+		if (oldCount >= 0) newCount = oldCount;
+		String id = "RenderSkyExternalCatalog"+newCount;
+
 		DataBase.addData(id, list.toArray(), inMemory);
 		if (!this.externalCatalogAvailable(id)) {
 			externalCatalogs = DataSet.addStringArray(externalCatalogs, new String[] {id});
@@ -1515,10 +1523,31 @@ public class SkyRenderElement implements Serializable
 				if (s != null && !s.equals("") && !s.startsWith("null")) 
 					name1 = s;
 
-				s = FileIO.getField(5, contents[i], separator, true);
-				if (s != null && !s.equals("") && !s.startsWith("null")) 
-					com = s;
-
+				int n = FileIO.getNumberOfFields(contents[i], separator, true);
+				if (n == 7) {
+					s = FileIO.getField(7, contents[i], separator, true);
+					if (s != null && !s.equals("") && !s.startsWith("null")) 
+						com = s;
+					s = FileIO.getField(6, contents[i], separator, true);
+					if (s != null && !s.equals("") && !s.startsWith("null")) 
+						pa = (float) (Double.parseDouble(s) * Constant.DEG_TO_RAD);
+					s = FileIO.getField(5, contents[i], separator, true);
+					if (s != null && !s.equals("") && !s.startsWith("null")) { 
+						int crux = s.indexOf("x");
+						if (crux < 0) {
+							maxSize = (float) Double.parseDouble(s);
+							minSize = maxSize;
+						} else {
+							maxSize = (float) Double.parseDouble(FileIO.getField(1, s, "x", false));
+							minSize = (float) Double.parseDouble(FileIO.getField(2, s, "x", false));
+						}
+					}
+				} else {
+					s = FileIO.getField(5, contents[i], separator, true);
+					if (s != null && !s.equals("") && !s.startsWith("null")) 
+						com = s;
+				}
+				
 				s = FileIO.getField(4, contents[i], separator, true);
 				if (s != null && !s.equals("") && !s.startsWith("null")) 
 					mag = s;
@@ -1579,7 +1608,11 @@ public class SkyRenderElement implements Serializable
 			}
 		}
 
-		String id = "RenderSkyExternalCatalog"+externalCatalogCounter;
+		int newCount = externalCatalogCounter;
+		int oldCount = DataSet.getIndex(externalCatalogNames, name);
+		if (oldCount >= 0) newCount = oldCount;
+		String id = "RenderSkyExternalCatalog"+newCount;
+
 		DataBase.addData(id, list.toArray(), inMemory);
 		if (!this.externalCatalogAvailable(id)) {
 			externalCatalogs = DataSet.addStringArray(externalCatalogs, new String[] {id});
@@ -1634,9 +1667,30 @@ public class SkyRenderElement implements Serializable
 				if (s != null && !s.equals("") && !s.startsWith("null")) 
 					name1 = s;
 
-				s = FileIO.getField(5, line, separator, true);
-				if (s != null && !s.equals("") && !s.startsWith("null")) 
-					com = s;
+				int n = FileIO.getNumberOfFields(line, separator, true);
+				if (n == 7) {
+					s = FileIO.getField(7, line, separator, true);
+					if (s != null && !s.equals("") && !s.startsWith("null")) 
+						com = s;
+					s = FileIO.getField(6, line, separator, true);
+					if (s != null && !s.equals("") && !s.startsWith("null")) 
+						pa = (float) (Double.parseDouble(s) * Constant.DEG_TO_RAD);
+					s = FileIO.getField(5, line, separator, true);
+					if (s != null && !s.equals("") && !s.startsWith("null")) { 
+						int crux = s.indexOf("x");
+						if (crux < 0) {
+							maxSize = (float) Double.parseDouble(s);
+							minSize = maxSize;
+						} else {
+							maxSize = (float) Double.parseDouble(FileIO.getField(1, s, "x", false));
+							minSize = (float) Double.parseDouble(FileIO.getField(2, s, "x", false));
+						}
+					}
+				} else {
+					s = FileIO.getField(5, line, separator, true);
+					if (s != null && !s.equals("") && !s.startsWith("null")) 
+						com = s;
+				}
 
 				s = FileIO.getField(4, line, separator, true);
 				if (s != null && !s.equals("") && !s.startsWith("null")) 
@@ -1698,7 +1752,11 @@ public class SkyRenderElement implements Serializable
 			}
 		}
 
-		String id = "RenderSkyExternalCatalog"+externalCatalogCounter;
+		int newCount = externalCatalogCounter;
+		int oldCount = DataSet.getIndex(externalCatalogNames, name);
+		if (oldCount >= 0) newCount = oldCount;
+		String id = "RenderSkyExternalCatalog"+newCount;
+
 		DataBase.addData(id, list.toArray(), inMemory);
 		if (!this.externalCatalogAvailable(id)) {
 			externalCatalogs = DataSet.addStringArray(externalCatalogs, new String[] {id});
@@ -1772,16 +1830,31 @@ public class SkyRenderElement implements Serializable
 	}
 
 	/**
-	 * Returns if a given catalog id is available for this instance.
+	 * Returns if a given catalog id is available for any instance.
 	 * @param id The id of the external catalog.
 	 * @return True or false.
 	 */
-	public boolean externalCatalogAvailable(String id) {
-		if (externalCatalogs == null || externalCatalogs.length == 0) return false;
-		boolean out = false;
-		int index = DataSet.getIndex(externalCatalogs, id);
-		if (index >= 0) out = true;
-		return out;
+	public static boolean externalCatalogAvailable(String id) {
+		for (int i=0;i<externalCatalogCounter; i++) {
+			String dbid = "RenderSkyExternalCatalog"+i;
+			if (dbid.equals(id)) return true;
+		}
+		return false;
+//		if (externalCatalogs == null || externalCatalogs.length == 0) return false;
+//		boolean out = false;
+//		int index = DataSet.getIndex(externalCatalogs, id);
+//		if (index >= 0) out = true;
+//		return out;
+	}
+	
+	/**
+	 * Removes the references to the external catalogs in this instance. Note 
+	 * the possible external catalogs loaded themselves are not removed from memory.
+	 */
+	public void removeExternalCatalogs() {
+		drawExternalCatalogs = null;
+		externalCatalogs = new String[0];
+		externalCatalogNames = new String[0];
 	}
 
 	/**
