@@ -568,10 +568,16 @@ public class AWTGraphics implements Graphics {
 		}
 		if (g2 != null) {
 			if (externalGraphics) { // Improve quality (sub-pixel rendering) for external graphics
-				GeneralPath path = new GeneralPath();
-				path.moveTo(i,  j);
-				path.lineTo(k, l);
-				g2.draw(path);
+				if (i == k && j == l) {
+					g2.translate(i, j);
+					g2.fillOval(0, 0, 1, 1);
+					g2.translate(-i, -j);					
+				} else {
+					GeneralPath path = new GeneralPath();
+					path.moveTo(i,  j);
+					path.lineTo(k, l);
+					g2.draw(path);
+				}
 			} else {
 				g2.drawLine((int)i, (int)j, (int)k, (int)l);
 			}
@@ -2713,36 +2719,7 @@ public class AWTGraphics implements Graphics {
 		}
 		if (g2 != null) {
 			g2.translate(i, j);
-			if (externalGraphics) {
-				if (k != (int) k || l != (int) l) {
-					GeneralPath path = new GeneralPath();
-					double jmax = 8 * Math.sqrt(Math.max(k, l));
-					double ang, px0, py0;
-					for (int jj = 0; jj < jmax; jj++)
-					{
-						ang = jj * (Constant.TWO_PI / jmax);
-						px0 = ((k-0.5) * 0.5 * FastMath.cos(ang));
-						py0 = ((l-0.5) * 0.5 * FastMath.sin(ang));
-
-						if (jj > 0) {
-							path.lineTo((k-1)*0.5+px0, (l-1)*0.5+py0);
-						} else {
-							path.moveTo((k-1)*0.5+px0, (l-1)*0.5+py0);
-						}
-					}
-					path.closePath();
-					g2.fill(path);
-				} else {
-					// XXX - Pdf output fix with iText
-					if (k > 1.5 && l > 1.5) {
-						k -= 1f;
-						l -= 1f;
-					}
-					g2.fillOval(0, 0, (int) (k+0.5), (int) (l+0.5));
-				}
-			} else {
-				g2.fillOval(0, 0, (int) (k+0.5), (int) (l+0.5));
-			}
+			g2.fillOval(0, 0, (int) (k+0.5), (int) (l+0.5));
 			g2.translate(-i, -j);
 		}
 	}
@@ -2859,41 +2836,21 @@ public class AWTGraphics implements Graphics {
 
 		if (!externalGraphics && ((i == (int)(i) && j == (int) j) || fast)) {
 			if (fast) {
-				drawFastOval((int)i, (int)j, (int)k - 1, (int)l - 1, this.getClip());
+				drawFastOval((int)i, (int)j, (int)k, (int)l, this.getClip());
 			} else {
-				if (g != null) g.drawOval((int)i, (int)j, (int) (k-0.5), (int) (l-0.5));
-				if (g2 != null) g2.drawOval((int)i, (int)j, (int) (k-0.5), (int) (l-0.5));
+				if (g != null) g.drawOval((int)i, (int)j, (int) (k+0.5), (int) (l+0.5));
+				if (g2 != null) g2.drawOval((int)i, (int)j, (int) (k+0.5), (int) (l+0.5));
 			}
 			return;
 		}
 		if (g != null) {
 			g.translate(i, j);
-			g.drawOval(0, 0, (int)(k-0.5), (int)(l-0.5));
+			g.drawOval(0, 0, (int)(k+0.5), (int)(l+0.5));
 			g.translate(-i, -j);
 		}
 		if (g2 != null) {
 			g2.translate(i, j);
-			if (externalGraphics && (k != (int) k || l != (int) l)) {
-				GeneralPath path = new GeneralPath();
-				double jmax = 8 * Math.sqrt(Math.max(k, l));
-				double ang, px0, py0;
-				for (int jj = 0; jj < jmax; jj++)
-				{
-					ang = jj * (Constant.TWO_PI / jmax);
-					px0 = ((k-0.5) * 0.5 * FastMath.cos(ang));
-					py0 = ((l-0.5) * 0.5 * FastMath.sin(ang));
-
-					if (jj > 0) {
-						path.lineTo((k-1)*0.5+px0, (l-1)*0.5+py0);
-					} else {
-						path.moveTo((k-1)*0.5+px0, (l-1)*0.5+py0);
-					}
-				}
-				path.closePath();
-				g2.draw(path);
-			} else {
-				g2.drawOval(0, 0, (int)(k-0.5), (int)(l-0.5));
-			}
+			g2.drawOval(0, 0, (int)(k+0.5), (int)(l+0.5));
 			g2.translate(-i, -j);
 		}
 	}

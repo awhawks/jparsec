@@ -33,6 +33,7 @@ import jparsec.io.HTMLReport.SIZE;
 import jparsec.time.TimeFormat;
 import jparsec.util.*;
 import jparsec.util.Logger.LEVEL;
+import jparsec.util.Translate.LANGUAGE;
 import jparsec.vo.ADSElement;
 
 /**
@@ -126,7 +127,8 @@ public class LATEXReport implements Serializable
 		//latexCode.append("\\usepackage{txfonts}" + sep);
 		latexCode.append("\\usepackage{verbatim}" + sep);
 		latexCode.append("\\usepackage{hyperref}" + sep);
-		latexCode.append("\\usepackage[spanish]{babel}" + sep);
+		if (Translate.getDefaultLanguage() == LANGUAGE.SPANISH)
+			latexCode.append("\\usepackage[spanish]{babel}" + sep);
 		latexCode.append("\\usepackage{longtable}" + sep);
 		latexCode.append("\\usepackage{ragged2e}" + sep);
 		latexCode.append("\\usepackage{setspace}" + sep);
@@ -175,7 +177,8 @@ public class LATEXReport implements Serializable
 		//latexCode.append("\\usepackage{txfonts}" + sep);
 		latexCode.append("\\usepackage{verbatim}" + sep);
 		latexCode.append("\\usepackage{hyperref}" + sep);
-		latexCode.append("\\usepackage[spanish]{babel}" + sep);
+		if (Translate.getDefaultLanguage() == LANGUAGE.SPANISH)
+			latexCode.append("\\usepackage[spanish]{babel}" + sep);
 		latexCode.append("\\usepackage{longtable}" + sep);
 		latexCode.append("\\usepackage{ragged2e}" + sep);
 		latexCode.append("\\usepackage{setspace}" + sep);
@@ -227,7 +230,8 @@ public class LATEXReport implements Serializable
 		latexCode.append("\\usepackage{txfonts}" + sep);
 		latexCode.append("\\usepackage{verbatim}" + sep);
 		latexCode.append("\\usepackage{hyperref}" + sep);
-		latexCode.append("\\usepackage[spanish]{babel}" + sep);
+		if (Translate.getDefaultLanguage() == LANGUAGE.SPANISH)
+			latexCode.append("\\usepackage[spanish]{babel}" + sep);
 		latexCode.append("\\usepackage{longtable}" + sep);
 		latexCode.append("\\usepackage{ragged2e}" + sep);
 		latexCode.append("\\usepackage{setspace}" + sep);
@@ -305,7 +309,8 @@ public class LATEXReport implements Serializable
 		latexCode.append("\\usepackage{txfonts}" + sep);
 		latexCode.append("\\usepackage{verbatim}" + sep);
 		latexCode.append("\\usepackage{hyperref}" + sep);
-		latexCode.append("\\usepackage[spanish]{babel}" + sep);
+		if (Translate.getDefaultLanguage() == LANGUAGE.SPANISH)
+			latexCode.append("\\usepackage[spanish]{babel}" + sep);
 		latexCode.append("\\usepackage{longtable}" + sep);
 		latexCode.append("\\usepackage{ragged2e}" + sep);
 		latexCode.append("\\usepackage{setspace}" + sep);

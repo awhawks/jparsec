@@ -1657,6 +1657,7 @@ public class MainEvents
 			boolean maximumAccuracy) throws JPARSECException
 	{
 		if (target != TARGET.MERCURY && target != TARGET.VENUS) throw new JPARSECException("invalid object.");
+		if (jd_limit < jd) return null;
 
 		CityElement city = City.findCity("Madrid");
 		ObserverElement obs = ObserverElement.parseCity(city);

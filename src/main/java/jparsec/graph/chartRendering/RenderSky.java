@@ -2171,7 +2171,7 @@ public class RenderSky
 						float tx = (pos[0]) - size;
 						float ty = (pos[1]) - size;
 
-						if (render.drawStarsSymbols && size > 0 && sd.doub != null) //(type.equals("D") || type.equals("B") || type.equals("V")))
+						if (render.drawStarsSymbols && size > 1 && (maglim-mag) > 2 && sd.doub != null) //(type.equals("D") || type.equals("B") || type.equals("V")))
 						{
 							sep = pa = 0;
 							if (sd.doub != null) {
