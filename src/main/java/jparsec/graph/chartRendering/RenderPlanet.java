@@ -895,7 +895,8 @@ public class RenderPlanet
 		// Planetary rings without textures
 		// Note I draw Neptune's rings always in this way. I have no information
 		// about Neptune's rings, which are not continuous and very faint
-		if (r > 0 && ((render.target == TARGET.SATURN || render.target == TARGET.URANUS) && !render.textures || render.target == TARGET.NEPTUNE))
+		if (r > 0 && ((render.target == TARGET.SATURN || render.target == TARGET.URANUS) && !render.textures || 
+				(r > 5 && render.target == TARGET.NEPTUNE)))
 		{
 			g.setColor(128, 128, 0, 255); // In yellow
 			int pz = 4;

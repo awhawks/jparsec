@@ -1795,6 +1795,7 @@ public class CreateChart implements Serializable
 						chart_elem.series[i].regressionType.setEquationValues(null, null);
 						XYIntervalSeries series = new XYIntervalSeries(chart_elem.series[i].regressionType.getEquation());
 						int n = chart_elem.series[i].xValues.length;
+						if (chart_elem.series[i].regressionType == ChartSeriesElement.REGRESSION.SPLINE_INTERPOLATION) n *= 5;
 						if (n < 100) n = 100;
 						double step = Math.abs(xmax - xmin) / (n-1);
 						ArrayList<double[]> v = DataSet.sortInCrescent(x_val, y_val, true);
