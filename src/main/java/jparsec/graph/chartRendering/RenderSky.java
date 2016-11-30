@@ -2156,14 +2156,14 @@ public class RenderSky
 			    		}
 					} else {
 						int tsize = (int) (2 * size+adds);
-						size = (tsize-adds)/2f;
+						size = tsize/2f-0.5f; //(tsize-adds)/2f;
 						colIndex = 2;
 						if (render.getColorMode() == COLOR_MODE.NIGHT_MODE) colIndex = 6;
 
 						if (render.drawStarsColors && !sd.sp.isEmpty())
 						{
 							if (sd.spi >= 0) {
-								g.setColor(col[sd.spi], true);
+								g.setColor(col[sd.spi], false);
 								colIndex = sd.spi;
 							}
 						}
@@ -2193,7 +2193,7 @@ public class RenderSky
 										mag-maxMag > render.limitOfDifferenceOfMagnitudesForVariableStars) {
 									int c = g.getColor();
 									g.setColor(render.background, false);
-									int tsize2 = (int)(2 * newSize)+adds+halo2;
+									int tsize2 = (int)(2 * newSize + halo) + 1;
 									if (render.anaglyphMode == ANAGLYPH_COLOR_MODE.NO_ANAGLYPH) {
 										if (!g.renderingToExternalGraphics()) {
 											this.fillOval(g, (pos[0]) - newSize-halo, (pos[1]) - newSize-halo, tsize2, tsize2, 7);
@@ -2213,7 +2213,7 @@ public class RenderSky
 								if (render.anaglyphMode == ANAGLYPH_COLOR_MODE.NO_ANAGLYPH) {
 									fillOval(g, tx, ty, tsize, tsize, colIndex);
 
-									tsize = (int)(2 * newSize + (g.renderingToAndroid() ? adds : 1));
+									tsize = (int)(2 * newSize + 1);
 									tx = (pos[0]) - newSize;
 									ty = (pos[1]) - newSize;
 
@@ -2233,7 +2233,7 @@ public class RenderSky
 								} else {
 									g.fillOval(tx, ty, tsize, tsize, dist);
 
-									tsize = (int)(2 * newSize+adds);
+									tsize = (int)(2 * newSize+1);
 									tx = (pos[0]) - newSize;
 									ty = (pos[1]) - newSize;
 
@@ -5168,6 +5168,7 @@ public class RenderSky
 										g.generalPathLineTo(path, (float)(pos0[0] + px), (float)(pos0[1] + py));
 									} else {
 										g.generalPathMoveTo(path, (float)(pos0[0] + px), (float)(pos0[1] + py));
+										g.generalPathLineTo(path, (float)(pos0[0] + px), (float)(pos0[1] + py + 0.1));
 									}
 								}
 								g.generalPathClosePath(path);
@@ -5379,9 +5380,8 @@ public class RenderSky
 		}
 		size = (int) (size);
 		//fast = false;
-		float size2 = 2*size;
+		float size2 = 2*size+1;
 		if (render.anaglyphMode == ANAGLYPH_COLOR_MODE.NO_ANAGLYPH) {
-			size2 ++;
 			drawOval(g, pos0[0] - size, pos0[1] - size, size2, size2);
 			if (fast) {
 				g.drawStraightLine(pos0[0] - size, pos0[1], pos0[0] - size2, pos0[1]);
@@ -5395,7 +5395,7 @@ public class RenderSky
 				g.drawLine(pos0[0], pos0[1] + size, pos0[0], pos0[1] + size2, false);
 			}
 		} else {
-			g.drawOval(pos0[0] - size, pos0[1] - size, size2+1, size2+1, distCl);
+			g.drawOval(pos0[0] - size, pos0[1] - size, size2, size2, distCl);
 			g.drawLine(pos0[0] - size, pos0[1], pos0[0] - size2, pos0[1], distCl, distCl);
 			g.drawLine(pos0[0] + size, pos0[1], pos0[0] + size2, pos0[1], distCl, distCl);
 			g.drawLine(pos0[0], pos0[1] - size, pos0[0], pos0[1] - size2, distCl, distCl);
@@ -5854,8 +5854,8 @@ public class RenderSky
 		int graphMarginY = this.graphMarginY+(leyendMargin-(int)rec.getMinY());
 		int nmax = 100, nin = -1;
 		int x[] = new int[nmax], y[] = new int[nmax];
-		float maxYminus100 = rec.getMaxY()-100;
-		float heightPlus100MinusMaxY = g.getHeight()-rec.getMaxY()+100;
+		float maxYminus50 = rec.getMaxY()-50;
+		float heightPlus50MinusMaxY = g.getHeight()-rec.getMaxY()+50;
 		float widthMinus1MinusGraphMarginX = render.width-1-rec.getMinX();
 		float maxYPlusFontSize3Over2 = rec.getMaxY()+ (fontSize*3)/2;
 		boolean fastMode = render.drawFastLinesMode.fastGrid();
@@ -5917,7 +5917,7 @@ public class RenderSky
 				}
 
 				if (render.drawCoordinateGridLabels &&
-						(pos[1] > maxYminus100 && !render.telescope.invertVertical || pos[1] < heightPlus100MinusMaxY && render.telescope.invertVertical)
+						(pos[1] > maxYminus50 && !render.telescope.invertVertical || pos[1] < heightPlus50MinusMaxY && render.telescope.invertVertical)
 						&&
 						(pos[0] > rec.getMinX() && !render.telescope.invertHorizontal || pos[0] < widthMinus1MinusGraphMarginX && render.telescope.invertHorizontal) &&
 						(pos[0] < rec.getMaxX() && !render.telescope.invertHorizontal || pos[0] > render.width-1-rec.getMaxX() && render.telescope.invertHorizontal)) {
@@ -6354,7 +6354,7 @@ public class RenderSky
 					}
 				}
 
-				if (render.drawCoordinateGridLabels && pos[1] > rec.getMaxY()-100 &&
+				if (render.drawCoordinateGridLabels && pos[1] > rec.getMaxY()-50 &&
 						(pos[0] > graphMarginX && !render.telescope.invertHorizontal || pos[0] < render.width-1-graphMarginX && render.telescope.invertHorizontal) && pos[0] < render.width) {
 					if (render.telescope.invertVertical) {
 						tol = Math.abs(rec.getMaxY() - (g.getWidth() - pos[1] - 1));

@@ -2712,6 +2712,11 @@ public class AWTGraphics implements Graphics {
 			return;
 		}
 
+		if (externalGraphics) {
+			k--;
+			l--;
+		}
+
 		if (g != null) {
 			g.translate(i, j);
 			g.fillOval(0, 0, (int) (k+0.5), (int) (l+0.5));
@@ -2834,14 +2839,19 @@ public class AWTGraphics implements Graphics {
 			return;
 		}
 
-		if (!externalGraphics && ((i == (int)(i) && j == (int) j) || fast)) {
+		if (!externalGraphics && ((i == (int)(i) && j == (int) j))) {
 			if (fast) {
-				drawFastOval((int)i, (int)j, (int)k, (int)l, this.getClip());
+				drawFastOval((int)i, (int)j, (int)k-1, (int)l-1, this.getClip());
 			} else {
-				if (g != null) g.drawOval((int)i, (int)j, (int) (k+0.5), (int) (l+0.5));
-				if (g2 != null) g2.drawOval((int)i, (int)j, (int) (k+0.5), (int) (l+0.5));
+				if (g != null) g.drawOval((int)i, (int)j, (int) (k-0.5), (int) (l-0.5));
+				if (g2 != null) g2.drawOval((int)i, (int)j, (int) (k-0.5), (int) (l-0.5));
 			}
 			return;
+		}
+		
+		if (externalGraphics) {
+			k--;
+			l--;
 		}
 		if (g != null) {
 			g.translate(i, j);

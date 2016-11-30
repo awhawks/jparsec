@@ -4484,10 +4484,10 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 			String type = data[typeIndex];
  			type = type.substring(type.lastIndexOf(":")+1);
 			if (type.toLowerCase().indexOf(Translate.translate(32).toLowerCase()) >= 0) {
-				String pos[] = DataSet.getSubArray(data, 1, 10);
+				String pos[] = DataSet.getSubArray(data, 1, 11);
 				String ra = pos[0].substring(pos[0].lastIndexOf(":")+1).trim();
 				String dec = pos[1].substring(pos[1].lastIndexOf(":")+1).trim();
-				double mag = Double.parseDouble(pos[9].substring(pos[9].lastIndexOf(":")+1).trim());
+				double mag = Double.parseDouble(pos[10].substring(pos[10].lastIndexOf(":")+1).trim());
 				LocationElement loc = new LocationElement(Functions.parseRightAscension(ra), Functions.parseDeclination(dec), 1.0);
 				if (skyRender.getRenderSkyObject().render.drawSkyCorrectingLocalHorizon && (obs.getMotherBody() == null || obs.getMotherBody() == TARGET.EARTH))
 					loc = Ephem.removeRefractionCorrectionFromEquatorialCoordinates(time, obs, eph, loc);

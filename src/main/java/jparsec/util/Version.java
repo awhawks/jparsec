@@ -324,7 +324,7 @@ public class Version
 			// Dependency name                             Version
 			"jparsec.jar                                   1.111",
 
-			"sky.jar                                       1.37",
+			"sky.jar                                       1.38",
 			"orbital_elements.jar                          1.24",
 			"sunspot.jar                                   1.15",
 			"eop.jar                                       1.14",
