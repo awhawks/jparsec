@@ -121,6 +121,53 @@ public class SatelliteEphem
 	 */
 	public static double IRIDIUM_ANGLE_NOT_APPLICABLE = 100;
 
+	private static String defaultData[] = null, defaultDataIridium[] = null;
+
+	/**
+	 * Sets the list of orbital elements of satellite to that of an
+	 * external file.
+	 * @param file The read file, in the three-line format
+	 * (name and two-line elements) used by NORAD, or null to use the
+	 * internal file in orbital_elements.jar.
+	 * @param asDefaultData True to set the input array as the default set, 
+	 * overriding the file in orbital_elements.jar.
+	 * @throws JPARSECException If an error occurs.
+	 */
+	public static void setSatellitesFromExternalFile(String file[], boolean asDefaultData) throws JPARSECException {
+		if (asDefaultData) {
+			if (USE_IRIDIUM_SATELLITES) {
+				defaultDataIridium = file;
+			} else {
+				defaultData = file;
+			}
+		}
+
+		if (file == null) {
+			readFile = null;
+			return;
+		}
+
+		readFile = new ReadFile();
+		readFile.readFileOfArtificialSatellitesFromExternalFile(file);
+	}
+	private static void readData() throws JPARSECException {
+		if (readFile == null) {
+			ReadFile re = new ReadFile();
+			if (USE_IRIDIUM_SATELLITES && defaultDataIridium != null) {
+				re.readFileOfArtificialSatellitesFromExternalFile(defaultDataIridium);
+			} else {
+				if (!USE_IRIDIUM_SATELLITES && defaultData != null) {
+					re.readFileOfArtificialSatellitesFromExternalFile(defaultData);
+				} else {
+					re.setPath(PATH_TO_SATELLITES_FILE);
+					if (USE_IRIDIUM_SATELLITES) re.setPath(PATH_TO_SATELLITES_IRIDIUM_FILE);
+					re.readFileOfArtificialSatellites();
+				}
+			}
+			readFile = re;
+		}
+	}
+
 	/**
 	 * Sets the list of orbital elements of satellite to that of an
 	 * external file.
@@ -147,13 +194,7 @@ public class SatelliteEphem
 	 */
 	public static int getArtificialSatelliteTargetIndex(String name)
 	throws JPARSECException {
-		if (readFile == null) {
-			ReadFile re = new ReadFile();
-			re.setPath(PATH_TO_SATELLITES_FILE);
-			if (USE_IRIDIUM_SATELLITES) re.setPath(PATH_TO_SATELLITES_IRIDIUM_FILE);
-			re.readFileOfArtificialSatellites();
-			readFile = re;
-		}
+		readData();
 		int index = readFile.searchByName(name);
 		return index;
 	}
@@ -165,13 +206,7 @@ public class SatelliteEphem
 	 */
 	public static String getArtificialSatelliteName(int index)
 	throws JPARSECException {
-		if (readFile == null) {
-			ReadFile re = new ReadFile();
-			re.setPath(PATH_TO_SATELLITES_FILE);
-			if (USE_IRIDIUM_SATELLITES) re.setPath(PATH_TO_SATELLITES_IRIDIUM_FILE);
-			re.readFileOfArtificialSatellites();
-			readFile = re;
-		}
+		readData();
 		String name = readFile.getObjectName(index);
 		return name;
 	}
@@ -183,13 +218,7 @@ public class SatelliteEphem
 	 */
 	public static SatelliteOrbitalElement getArtificialSatelliteOrbitalElement(int index)
 	throws JPARSECException {
-		if (readFile == null) {
-			ReadFile re = new ReadFile();
-			re.setPath(PATH_TO_SATELLITES_FILE);
-			if (USE_IRIDIUM_SATELLITES) re.setPath(PATH_TO_SATELLITES_IRIDIUM_FILE);
-			re.readFileOfArtificialSatellites();
-			readFile = re;
-		}
+		readData();
 		SatelliteOrbitalElement sat = readFile.getSatelliteOrbitalElement(index);
 		return sat;
 	}
@@ -200,13 +229,7 @@ public class SatelliteEphem
 	 */
 	public static int getArtificialSatelliteCount()
 	throws JPARSECException {
-		if (readFile == null) {
-			ReadFile re = new ReadFile();
-			re.setPath(PATH_TO_SATELLITES_FILE);
-			if (USE_IRIDIUM_SATELLITES) re.setPath(PATH_TO_SATELLITES_IRIDIUM_FILE);
-			re.readFileOfArtificialSatellites();
-			readFile = re;
-		}
+		readData();
 		int n = readFile.getNumberOfObjects();
 		return n;
 	}
@@ -725,13 +748,7 @@ public class SatelliteEphem
 	public static SatelliteEphemElement satEphemeris(TimeElement time, ObserverElement obs, EphemerisElement eph,
 			boolean fullEphemeris) throws JPARSECException
 	{
-		if (readFile == null) {
-			ReadFile re = new ReadFile();
-			re.setPath(SatelliteEphem.PATH_TO_SATELLITES_FILE);
-			if (USE_IRIDIUM_SATELLITES) re.setPath(PATH_TO_SATELLITES_IRIDIUM_FILE);
-			re.readFileOfArtificialSatellites();
-			readFile = re;
-		}
+		readData();
 
 		// Check Ephemeris object
 		if (!EphemerisElement.checkEphemeris(eph))
@@ -1421,13 +1438,7 @@ public class SatelliteEphem
 		// Obtain next pass time, when the satellite is at least 15 degrees
 		// above horizon
 		if (sat.nextPass == 0.0) {
-			if (readFile == null) {
-				ReadFile re = new ReadFile();
-				re.setPath(SatelliteEphem.PATH_TO_SATELLITES_FILE);
-				if (USE_IRIDIUM_SATELLITES) re.setPath(PATH_TO_SATELLITES_IRIDIUM_FILE);
-				re.readFileOfArtificialSatellites();
-				readFile = re;
-			}
+			readData();
 
 			// Check Ephemeris object
 			if (!EphemerisElement.checkEphemeris(eph))

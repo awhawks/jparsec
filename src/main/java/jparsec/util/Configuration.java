@@ -321,7 +321,7 @@ public class Configuration
 	 * @throws JPARSECException If an error occurs.
 	 */
 	public static synchronized String updateArtificialSatellitesInTempDir(AstroDate astro) throws JPARSECException {
-		SatelliteEphem.setSatellitesFromExternalFile(null);
+		SatelliteEphem.setSatellitesFromExternalFile(null, true);
 
 		if (isAcceptableDateForArtificialSatellites(astro)) return null;
 
@@ -331,7 +331,7 @@ public class Configuration
 			if (dt < -MAXIMUM_DAYS_FROM_ELEMENTS_ARTIFICIAL_SATELLITES_SHOW || dt > MAXIMUM_DAYS_FROM_ELEMENTS_ARTIFICIAL_SATELLITES_SHOW) {
 				return null;
 			} else {
-				SatelliteEphem.setSatellitesFromExternalFile(null);
+				SatelliteEphem.setSatellitesFromExternalFile(null, true);
 				return "DEFAULT_FILE";
 			}
 		}
@@ -355,7 +355,7 @@ public class Configuration
 				file = file1; //DataSet.addStringArray(file2, file1);
 			}
 			try {
-				SatelliteEphem.setSatellitesFromExternalFile(file);
+				SatelliteEphem.setSatellitesFromExternalFile(file, true);
 				appletOnLineModeArtSat = true;
 				return "APPLET_MODE";
 			} catch (Exception exc) {
@@ -371,7 +371,7 @@ public class Configuration
 			double dtElapsedFromLastDownload = getdt(System.currentTimeMillis(), f.lastModified());
 			if (Math.abs(newdt) <= Math.abs(dt) || Math.abs(dtElapsedFromLastDownload) < MAXIMUM_DAYS_FROM_ELEMENTS_ARTIFICIAL_SATELLITES) {
 				String file[] = DataSet.arrayListToStringArray(ReadFile.readAnyExternalFile(p));
-				SatelliteEphem.setSatellitesFromExternalFile(file);
+				SatelliteEphem.setSatellitesFromExternalFile(file, true);
 				return p;
 			}
 		}
@@ -391,7 +391,7 @@ public class Configuration
 		// Check the format
 		try {
 			String file[] = DataSet.arrayListToStringArray(ReadFile.readAnyExternalFile(p));
-			SatelliteEphem.setSatellitesFromExternalFile(file);
+			SatelliteEphem.setSatellitesFromExternalFile(file, true);
 		} catch (Exception exc) {
 			FileIO.deleteFile(p);
 			return null;

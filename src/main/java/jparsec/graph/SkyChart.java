@@ -1232,7 +1232,8 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 							msg1 = msg1 + " - " + t.toLowerCase();
 						} else {
 							EphemElement ephem = (EphemElement) data[2];
-							msg1 = ephem.name+" ("+Functions.formatValue(ephem.magnitude, 1)+"m)";
+							msg1 = ephem.name;
+							if (type != OBJECT.PROBE) msg1 += " ("+Functions.formatValue(ephem.magnitude, 1)+"m)";
 							if (type == OBJECT.STAR) {
 								String n = null;
 								try {
@@ -4914,7 +4915,9 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
     	if (s.toLowerCase().startsWith("m") && DataSet.isDoubleStrictCheck(s.substring(1).trim())) s = "M"+s.substring(1).trim();
     	if (s.toLowerCase().startsWith("ngc")) {
     		String number = s.substring(3);
-    		if (DataSet.isDoubleStrictCheck(number) || (number.length() > 4 && DataSet.isDoubleStrictCheck(number.substring(0, 4)))) s = "NGC "+s.substring(3).trim();
+    		if (DataSet.isDoubleStrictCheck(number) || (number.length() > 4 && DataSet.isDoubleStrictCheck(number.substring(0, 4)))) {
+    			if (s.length() < 8) s = "NGC "+s.substring(3).trim();
+    		}
     	}
     	if (s.toLowerCase().startsWith("ic")) s = "IC "+s.substring(2).trim();
 

@@ -104,7 +104,7 @@ public class RenderEclipseTest {
 
         // Chart all solar/lunar eclipses for a given year
         RenderSatellite.ALLOW_SPLINE_RESIZING = false; // Improve performance
-        int year = 2016;
+        int year = 2017;
         String locName = "Madrid";
         
         //observer.setName("Burgeo");
@@ -125,7 +125,7 @@ public class RenderEclipseTest {
         String addName = "";
         if (!horiz) addName = "_eq";
         astro = new AstroDate(year, 1, 1);
-        SCALE sc = SCALE.UNIVERSAL_TIME_UTC;
+        SCALE sc = SCALE.LOCAL_TIME;
         TimeElement newTime = new TimeElement(astro, sc);
         w = 600;
         h = 800;

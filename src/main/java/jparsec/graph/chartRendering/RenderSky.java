@@ -7899,7 +7899,7 @@ public class RenderSky
 							continue;
 						}
 						LocationElement loc = new LocationElement(satEphem[index2].rightAscension, satEphem[index2].declination, 1.0);
-						loc = projection.getApparentLocationInSelectedCoordinateSystem(loc, true, true, satEphem[index2].angularRadius);
+						loc = projection.getApparentLocationInSelectedCoordinateSystem(loc, true, false, satEphem[index2].angularRadius);
 						if (loc != null) {
 							loc.setRadius(index);
 							satEphem[index2].setLocation(loc);
@@ -7948,21 +7948,21 @@ public class RenderSky
 										Object data[] = events.get(i);
 
 										SatelliteEphemElement satEphemObj4 = (SatelliteEphemElement) data[4];
-										LocationElement loc4 = projection.getApparentLocationInSelectedCoordinateSystem(satEphemObj4.getEquatorialLocation(), true, true, 0);
+										LocationElement loc4 = projection.getApparentLocationInSelectedCoordinateSystem(satEphemObj4.getEquatorialLocation(), true, false, 0);
 										if (loc4 != null) {
 											loc4.setRadius(index);
 											satEphemObj4.setLocation(loc4);
 											satEphemObj4.name = sat.name;
 										}
 										SatelliteEphemElement satEphemObj5 = (SatelliteEphemElement) data[5];
-										LocationElement loc5 = projection.getApparentLocationInSelectedCoordinateSystem(satEphemObj5.getEquatorialLocation(), true, true, 0);
+										LocationElement loc5 = projection.getApparentLocationInSelectedCoordinateSystem(satEphemObj5.getEquatorialLocation(), true, false, 0);
 										if (loc5 != null) {
 											loc5.setRadius(index);
 											satEphemObj5.setLocation(loc5);
 											satEphemObj5.name = sat.name;
 										}
 										SatelliteEphemElement satEphemObj6 = (SatelliteEphemElement) data[6];
-										LocationElement loc6 = projection.getApparentLocationInSelectedCoordinateSystem(satEphemObj6.getEquatorialLocation(), true, true, 0);
+										LocationElement loc6 = projection.getApparentLocationInSelectedCoordinateSystem(satEphemObj6.getEquatorialLocation(), true, false, 0);
 										if (loc6 != null) {
 											loc6.setRadius(index);
 											satEphemObj6.setLocation(loc6);
@@ -9240,7 +9240,7 @@ public class RenderSky
 			} else {
 				String name = (String) obj[0];
 				if (DataSet.isDoubleStrictCheck(name) || (name.length() > 4 && DataSet.isDoubleStrictCheck(name.substring(0, 4)))) {
-					name = "NGC " + name;
+					if (name.length() < 8 || name.indexOf(" ") > 0) name = "NGC " + name;
 				} else {
 					try {
 						if (name.startsWith("I.")) name = "IC "+name.substring(2);
@@ -9335,7 +9335,7 @@ public class RenderSky
 			String name = (String) obj[0];
 			messier = DataSet.replaceAll(messier, " ", "", true);
 			if (DataSet.isDoubleStrictCheck(name) || (name.length() > 4 && DataSet.isDoubleStrictCheck(name.substring(0, 4)))) {
-				name = "NGC " + name;
+				if (name.length() < 8 || name.indexOf(" ") > 0) name = "NGC " + name;
 			} else {
 				try {
 					if (name.startsWith("I.")) name = "IC "+name.substring(2);
@@ -9368,7 +9368,7 @@ public class RenderSky
 				if (com.toLowerCase().indexOf(obj_name2) >= 0) {
 					String name = (String) obj[0];
 					if (DataSet.isDoubleStrictCheck(name) || (name.length() > 4 && DataSet.isDoubleStrictCheck(name.substring(0, 4)))) {
-						name = "NGC " + name;
+						if (name.length() < 8 || name.indexOf(" ") > 0) name = "NGC " + name;
 					} else {
 						try {
 							if (name.startsWith("I.")) name = "IC "+name.substring(2);
@@ -10407,13 +10407,13 @@ public class RenderSky
 							int point2 = 2*point_size;
 							g.setColor(col, true);
 							if (render.anaglyphMode == ANAGLYPH_COLOR_MODE.NO_ANAGLYPH) {
-								g.fillOval(pos[0] - point_size, pos[1] - point_size, point2, point2, this.fast);
-								g.drawLine(pos[0] - point2*2, pos[1], pos[0] + point2*2, pos[1], this.fast);
-								g.drawLine(pos[0], pos[1] - point2*2, pos[0], pos[1] + point2*2, this.fast);
+								g.fillOval(pos[0] - point_size, pos[1] - point_size, point2+1, point2+1, this.fast);
+								//g.drawLine(pos[0] - point2*2, pos[1], pos[0] + point2*2, pos[1], this.fast);
+								//g.drawLine(pos[0], pos[1] - point2*2, pos[0], pos[1] + point2*2, this.fast);
 							} else {
-								g.fillOval((int)pos[0] - point_size, (int)pos[1] - point_size, point2, point2, dist);
-								g.drawLine(pos[0] - point2*2, pos[1], (int)pos[0] + point2*2, (int)pos[1], dist, dist);
-								g.drawLine(pos[0], pos[1] - point2*2, pos[0], (int)pos[1] + point2*2, dist, dist);
+								g.fillOval((int)pos[0] - point_size, (int)pos[1] - point_size, point2+1, point2+1, dist);
+								//g.drawLine(pos[0] - point2*2, pos[1], (int)pos[0] + point2*2, (int)pos[1], dist, dist);
+								//g.drawLine(pos[0], pos[1] - point2*2, pos[0], (int)pos[1] + point2*2, dist, dist);
 							}
 						}
 
@@ -13395,7 +13395,7 @@ public class RenderSky
 												} catch (Exception exc2) {}
 											}
 										}
-										if (ok) name = "NGC " + name;
+										if (ok && (name.length() < 8 || name.indexOf(" ") > 0)) name = "NGC " + name;
 									}
 								} catch (Exception exc) {}
 								objData[0] = name;
@@ -13645,7 +13645,7 @@ public class RenderSky
 							if (n.toLowerCase().equals(s.toLowerCase())) {
 								loc = (LocationElement) obj[0];
 								loc = projection.toEquatorialPosition(loc, false);
-								loc = Ephem.removeRefractionCorrectionFromEquatorialCoordinates(projection.time, projection.obs, projection.eph, loc);
+								//loc = Ephem.removeRefractionCorrectionFromEquatorialCoordinates(projection.time, projection.obs, projection.eph, loc);
 								break;
 							}
 						}
@@ -13668,7 +13668,7 @@ public class RenderSky
 							if (n.toLowerCase().equals(s.toLowerCase())) {
 								loc = (LocationElement) obj[0];
 								loc = projection.toEquatorialPosition(loc, false);
-								loc = Ephem.removeRefractionCorrectionFromEquatorialCoordinates(projection.time, projection.obs, projection.eph, loc);
+								//loc = Ephem.removeRefractionCorrectionFromEquatorialCoordinates(projection.time, projection.obs, projection.eph, loc);
 								break;
 							}
 						}
@@ -13790,7 +13790,7 @@ public class RenderSky
 							if (n.toLowerCase().equals(s.toLowerCase())) {
 								loc = (LocationElement) obj[0];
 								loc = projection.toEquatorialPosition(loc, false);
-								loc = Ephem.removeRefractionCorrectionFromEquatorialCoordinates(projection.time, projection.obs, projection.eph, loc);
+								//loc = Ephem.removeRefractionCorrectionFromEquatorialCoordinates(projection.time, projection.obs, projection.eph, loc);
 								break;
 							}
 						}
@@ -13813,7 +13813,7 @@ public class RenderSky
 							if (n.toLowerCase().equals(s.toLowerCase())) {
 								loc = (LocationElement) obj[0];
 								loc = projection.toEquatorialPosition(loc, false);
-								loc = Ephem.removeRefractionCorrectionFromEquatorialCoordinates(projection.time, projection.obs, projection.eph, loc);
+								//loc = Ephem.removeRefractionCorrectionFromEquatorialCoordinates(projection.time, projection.obs, projection.eph, loc);
 								break;
 							}
 						}
@@ -14030,7 +14030,7 @@ public class RenderSky
 							} catch (Exception exc2) {}
 						}
 					}
-					if (ok) name = "NGC " + name;
+					if (ok && (name.length() < 8 || name.indexOf(" ") > 0)) name = "NGC " + name;
 				}
 			} catch (Exception exc) {}
 

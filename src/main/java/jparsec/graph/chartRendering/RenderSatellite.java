@@ -301,10 +301,11 @@ public class RenderSatellite
 		double initLightAtElevation = -0.5 * Constant.DEG_TO_RAD, endLightAtElevation = -6.0 * Constant.DEG_TO_RAD;
 		double altMoonLimit = 5.0 * Constant.DEG_TO_RAD;
 		float ps = (int)(render.planetMap.zoomFactor-1+0.5);
+		if (g.renderingToAndroid()) ps += 1f;
 //		if (render.planetMap == PLANET_MAP.MAP_SPHERICAL) ps += 1.5f;
 		float ps2 = 2*ps+1;
-		double t[] = g.getTranslation();
-		int tx = (int) t[0], ty = (int) t[1];
+		//double t[] = g.getTranslation();
+		int tx = 0, ty = 0; //(int) t[0], ty = (int) t[1];
 		boolean solarEclipse = false;
 		EphemerisElement ephEcl = null;
 		EphemElement ephemMoon = null, ephemSun = null;
