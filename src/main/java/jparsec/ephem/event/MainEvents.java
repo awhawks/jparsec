@@ -541,10 +541,30 @@ public class MainEvents
 			time.add(2*step);
 			EphemElement ephem2 = Ephem.getEphemeris(time, observer, eph, false);
 			time.add(-step);
-			if (Math.abs(ephem1.positionAngleOfPole) < Math.abs(ephem2.positionAngleOfPole)) step = -step;
+			if (Math.abs(ephem1.subsolarLatitude) < Math.abs(ephem2.subsolarLatitude)) step = -step;
 		} else {
 			if (eventType == EVENT_TIME.PREVIOUS) step = -step;
 		}
+		
+		// First the minimum inclination as seen from Sun
+		do {
+			EphemElement ephem0 = Ephem.getEphemeris(time, observer, eph, false);
+			double pa0 = ephem0.subsolarLatitude, pa1 = pa0;
+			if (pa0 == 0.0) break;
+			do {
+				time.add(step);
+				EphemElement ephem1 = Ephem.getEphemeris(time, observer, eph, false);
+				pa1 = ephem1.subsolarLatitude;
+
+				if (pa1 == 0.0) break;
+			} while (FastMath.sign(pa0) == FastMath.sign(pa1));
+			if (pa1 == 0.0) break;
+			time.add(-step);
+			step = step / 2.0;
+		} while (Math.abs(step) > precision);
+		
+		step = 10;
+		// Now as seen from Earth
 		do {
 			EphemElement ephem0 = Ephem.getEphemeris(time, observer, eph, false);
 			double pa0 = ephem0.positionAngleOfPole, pa1 = pa0;
@@ -553,6 +573,8 @@ public class MainEvents
 				time.add(step);
 				EphemElement ephem1 = Ephem.getEphemeris(time, observer, eph, false);
 				pa1 = ephem1.positionAngleOfPole;
+				if (FastMath.sign(pa0) == FastMath.sign(pa1) && Math.abs(pa1) > Math.abs(pa0))
+					step = -step;
 
 				if (pa1 == 0.0) break;
 			} while (FastMath.sign(pa0) == FastMath.sign(pa1));
@@ -594,7 +616,7 @@ public class MainEvents
 			time.add(2*step);
 			EphemElement ephem2 = Ephem.getEphemeris(time, observer, eph, false);
 			time.add(-step);
-			if (Math.abs(ephem1.positionAngleOfPole) > Math.abs(ephem2.positionAngleOfPole)) step = -step;
+			if (Math.abs(ephem1.subsolarLatitude) > Math.abs(ephem2.subsolarLatitude)) step = -step;
 		} else {
 			if (eventType == EVENT_TIME.PREVIOUS) step = -step;
 		}
@@ -610,6 +632,23 @@ public class MainEvents
 			time = new TimeElement(s.time + step, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
 		}
 
+		// First the maximum inclination as seen from Sun
+		do {
+			ephem0 = Ephem.getEphemeris(time, observer, eph, false);
+			dif = 1.0;
+			double oldpa = ephem0.subsolarLatitude;
+			do {
+				time.add(step);
+				ephem1 = Ephem.getEphemeris(time, observer, eph, false);
+				dif = Math.abs(ephem1.subsolarLatitude) - Math.abs(oldpa);
+				oldpa = ephem1.subsolarLatitude;
+			} while (dif > 0);
+			time.add(-step);
+			step = step / 2.0;
+		} while (Math.abs(step) > precision);
+
+		step = 10;
+		// Now as seen from Earth
 		do {
 			ephem0 = Ephem.getEphemeris(time, observer, eph, false);
 			dif = 1.0;
