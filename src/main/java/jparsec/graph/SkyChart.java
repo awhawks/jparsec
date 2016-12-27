@@ -216,7 +216,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
  	private String lastObj, telescopeName[] = new String[0], telescopePort[] = new String[0];
  	private GenericTelescope telescopeControl[] = new GenericTelescope[0];
  	private LocationElement lastLoc;
- 	private static final int drawLeyendMinimumWidth = 750, minimumSize = 15;
+ 	private static final int drawLeyendMinimumWidth = 700, minimumSize = 15;
 
  	private int imageType = BufferedImage.TYPE_INT_RGB;
 

@@ -1321,3 +1321,4 @@ inicio
 final
 máximo
 años-luz
+superluna

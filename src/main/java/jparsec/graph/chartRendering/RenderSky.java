@@ -12001,7 +12001,7 @@ public class RenderSky
 		float w, h;
         int oldGraphM = graphMarginX;
         float dist = getDist(this.foregroundDist);
-        int minWidth = 750;
+        int minWidth = 699;
 
 		int recy = g.getWidth()/2, recx = graphMarginX;
 		if (render.drawLeyend == LEYEND_POSITION.RIGHT || render.drawLeyend == LEYEND_POSITION.LEFT) recx = graphMarginY;

@@ -101,7 +101,8 @@ public class EventReport {
 		lunarPerigeeApogee = true, EarthPerihelionAphelion = true, occultationAndConjunctions = true,
 		occultationsConjunctionsAddCometsAsteroids = false, moonEvents = true, moonEventsOnlySeveralNonMutualAtSameTime = true, moonEventsAlsoMutualEvents = true,
 		includePlutoAsPlanet = true, cometAsteroidVisibleNakedEye = true, cratersOnlyLunarX = false, NEOs = true,
-		lunarMaxMinDeclination = true, calendarDST = true, artSatTransits = true, artSatTransitsSunMoon = true, artSatIridium = true;
+		lunarMaxMinDeclination = true, calendarDST = true, artSatTransits = true, artSatTransitsSunMoon = true, artSatIridium = true,
+		lunarNeomenia = true;
 	/**
 	 * Maximum accuracy or not for planetary events. True means a few minutes of error at most, false a few hours.
 	 */
@@ -137,6 +138,7 @@ public class EventReport {
 		craters = a;
 		lunarPerigeeApogee = a;
 		lunarMaxMinDeclination = a;
+		lunarNeomenia = a;
 		EarthPerihelionAphelion = a;
 		occultationAndConjunctions = a;
 		occultationsConjunctionsAddCometsAsteroids = a;
@@ -205,7 +207,7 @@ public class EventReport {
 		int year0 = al0.getYear(), yearf = alf.getYear();
 
 		// Calculate events
-		for (int event = 0; event <= 57; event ++) {
+		for (int event = 0; event <= 58; event ++) {
 			double jd = jd0;
 			SimpleEventElement s = null, sold = null;
 			do {
@@ -807,6 +809,19 @@ public class EventReport {
 	    				}
 						SatelliteEphem.USE_IRIDIUM_SATELLITES = false;
 						SatelliteEphem.setSatellitesFromExternalFile(null);
+					}
+					break;
+				case 58:
+					if (lunarNeomenia) {
+						s = null;
+						while (s == null && jd < jdf) {
+							s = LunarEvent.Neomenia(new TimeElement(jd, SCALE.TERRESTRIAL_TIME), obs, eph);
+							if (s != null) {
+								jd = s.time + 15;
+							} else {
+								jd = jd + 15;
+							}
+						}
 					}
 					break;
 				default:

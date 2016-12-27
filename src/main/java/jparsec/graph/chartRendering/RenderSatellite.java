@@ -301,7 +301,10 @@ public class RenderSatellite
 		double initLightAtElevation = -0.5 * Constant.DEG_TO_RAD, endLightAtElevation = -6.0 * Constant.DEG_TO_RAD;
 		double altMoonLimit = 5.0 * Constant.DEG_TO_RAD;
 		float ps = (int)(render.planetMap.zoomFactor-1+0.5);
-		if (g.renderingToAndroid()) ps += 1f;
+		if (g.renderingToAndroid()) {
+			ps += 1.5f;
+			if (RenderPlanet.MAXIMUM_TEXTURE_QUALITY_FACTOR < 1) ps += 1f;
+		}
 //		if (render.planetMap == PLANET_MAP.MAP_SPHERICAL) ps += 1.5f;
 		float ps2 = 2*ps+1;
 		//double t[] = g.getTranslation();

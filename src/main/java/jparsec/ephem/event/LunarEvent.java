@@ -29,8 +29,10 @@ import jparsec.ephem.Functions;
 import jparsec.ephem.IAU2006;
 import jparsec.ephem.Nutation;
 import jparsec.ephem.Obliquity;
+import jparsec.ephem.RiseSetTransit;
 import jparsec.ephem.Target.TARGET;
 import jparsec.ephem.event.MainEvents.EVENT_TIME;
+import jparsec.ephem.event.SimpleEventElement.EVENT;
 import jparsec.ephem.planets.EphemElement;
 import jparsec.ephem.planets.JPLEphemeris;
 import jparsec.ephem.planets.PlanetEphem;
@@ -44,6 +46,8 @@ import jparsec.time.TimeElement;
 import jparsec.time.TimeElement.SCALE;
 import jparsec.time.TimeScale;
 import jparsec.util.JPARSECException;
+import jparsec.util.Translate;
+import jparsec.util.Translate.LANGUAGE;
 
 /**
  * A class to calculate lunar events.
@@ -1186,5 +1190,64 @@ public class LunarEvent
 	 */
 	public static int getBrownLunationNumber(double jd) {
 		return Star.getBrownLunationNumber(jd);
+	}
+
+	/**
+	 * Checks if a Neomenia could be visible right after the next new Moon. A Neomenia is 
+	 * a Moon with less than 24 hrs of age, visible only right after sunset.
+	 * @param time The time object used as reference to check for the next new Moon.
+	 * @param obs The observer.
+	 * @param eph The ephemeris properties to obtain the position of the Moon. This input object 
+	 * is not changed.
+	 * @return The event, or null in case no Neomenia will be visible by the observer in the 
+	 * next new Moon.
+	 * @throws JPARSECException If an error occurs.
+	 */
+	public static SimpleEventElement Neomenia(TimeElement time, ObserverElement obs, EphemerisElement eph)
+	throws JPARSECException {
+		double jd = TimeScale.getJD(time, obs, eph, SCALE.TERRESTRIAL_TIME);
+		SimpleEventElement s = MainEvents.MoonPhaseOrEclipse(jd, SimpleEventElement.EVENT.MOON_NEW, MainEvents.EVENT_TIME.NEXT);
+		if (s == null) return s;
+		
+		EphemerisElement eph0 = eph.clone();
+		eph0.targetBody = TARGET.SUN;
+		eph0.isTopocentric = true;
+		eph0.optimizeForSpeed();
+		TimeElement time0 = new TimeElement(s.time, SCALE.TERRESTRIAL_TIME);
+		EphemElement ephem = Ephem.getEphemeris(time0, obs, eph0, false);
+		double jdLocal = TimeScale.getJD(time0, obs, eph0, SCALE.LOCAL_TIME);
+		int niter = 0;
+		while (niter < 3 && ephem.set == null) {
+			ephem = RiseSetTransit.obtainNextRiseSetTransit(time0, obs, eph0, ephem,
+				RiseSetTransit.TWILIGHT.HORIZON_ASTRONOMICAL_34arcmin);
+			time0.add(0.5);
+			niter ++;
+		}
+		
+		if (ephem.set == null || ephem.set[0] < jdLocal) return null;
+
+		double elapsedHrs0 = (ephem.set[0] - jdLocal) * 24;
+		if (elapsedHrs0 < 12 || elapsedHrs0 > 24) return null;
+		
+		time0 = new TimeElement(ephem.set[0], SCALE.LOCAL_TIME);
+		eph0.targetBody = TARGET.Moon;
+		EphemElement ephemMoon = Ephem.getEphemeris(time0, obs, eph0, false);
+		if (ephemMoon.elevation < 0) return null;
+		RiseSetTransit.TWILIGHT tw = RiseSetTransit.TWILIGHT.CUSTOM;
+		tw.considerObjectAngularRadius = false;
+		tw.horizonElevation = Constant.DEG_TO_RAD * 0.5;
+		ephemMoon = RiseSetTransit.obtainNextRiseSetTransit(time0, obs, eph0, ephemMoon, tw);
+		if (ephemMoon.set[0] > ephem.set[0]) {
+			double elapsedHrs1 = (ephemMoon.set[0] - jdLocal) * 24;
+			boolean spa = Translate.getDefaultLanguage() == LANGUAGE.SPANISH;
+			String details = "Neomenia ("+(spa ? "edad luna " : "Moon age ");
+			details += Functions.formatValue(elapsedHrs0, 1)+" - "+Functions.formatValue(elapsedHrs1, 1)+" hr)";
+			s = new SimpleEventElement(TimeScale.getJD(new TimeElement(ephem.set[0], SCALE.LOCAL_TIME), obs, eph0, SCALE.TERRESTRIAL_TIME), EVENT.OTHER, details);
+			s.endTime = TimeScale.getJD(new TimeElement(ephemMoon.set[0], SCALE.LOCAL_TIME), obs, eph0, SCALE.TERRESTRIAL_TIME);
+			s.body = TARGET.Moon.getName();
+			return s;
+		}
+		
+		return null;
 	}
 }

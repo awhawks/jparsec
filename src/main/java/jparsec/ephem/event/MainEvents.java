@@ -384,6 +384,20 @@ public class MainEvents
 		double deltaT = Elp2000.timeCorrectionForSecularAcceleration(jde) - jde;
 		jde -= deltaT;
 
+		// Supermoon ?
+		if (event == EVENT.MOON_FULL) {
+			TimeElement mtime = new TimeElement(jde, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
+			EphemerisElement eph = new EphemerisElement(TARGET.Moon, EphemerisElement.COORDINATES_TYPE.APPARENT,
+					EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.GEOCENTRIC, EphemerisElement.REDUCTION_METHOD.IAU_2006,
+					EphemerisElement.FRAME.DYNAMICAL_EQUINOX_J2000, EphemerisElement.ALGORITHM.MOSHIER); 
+			eph.optimizeForSpeed();
+			CityElement city = City.findCity("Madrid");
+			ObserverElement observer = ObserverElement.parseCity(city);
+			EphemElement mephem = Ephem.getEphemeris(mtime, observer, eph, false);
+			boolean superMoon = (mephem.distance * Constant.AU) < 360000;
+			if (superMoon) type = Translate.translate(1323);
+		}
+
 		SimpleEventElement see = new SimpleEventElement(jde, inputEvent, type);
 		see.body = TARGET.Moon.getName();
 		return see;
