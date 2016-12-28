@@ -299,21 +299,30 @@ public class Version
 						"Carlo Dapor joined the development, contributing with many fixes and code cleanup, including a rework of jparsec.time.calendar package.\n"+
 						"Code cleanup: UTF-8 conversion, hashCode implemented next to equals, mains removed, special characters in encoding-independent way, ...",
 				"      1.109: Few bug fixes and first version of ClearSky for desktop suitable for astrophotography (May 22, 2016):\n"+
-						"GPhotoCamera now supports (partially) some Nikon models, D3200 among others.\n",
+						"GPhotoCamera now supports (partially) some Nikon models, D3200 among others.\n"+
 						"In critical cases the computation of transits of artificial satellites on top of the Sun/Moon showed false and repeated events.\n"+
 						"Little bug in RenderPlanet in the position of the natural satellites as drawn without textures.\n"+
 						"There was a bug in the labels for the ecliptic axis when rendering the sky.\n"+
 						"Some general cosmetic and performance fixes in sky rendering, mainly for Android.\n"+
 						"The output charts for light and distance curves in OrbitalElement class have now better accuracy.",
 				"      1.110: Few bug fixes and improved astrophotography (Jul 18, 2016):\n"+
-						"There was a bug in the WCS coordinates returned in LMVCube.\n",
-						"Latex compilation now done in batchmode instead of nonstopmode to avoid so many warning messages blocking the compilation.\n",
+						"There was a bug in the WCS coordinates returned in LMVCube.\n"+
+						"Latex compilation now done in batchmode instead of nonstopmode to avoid so many warning messages blocking the compilation.\n"+
 						"AWTDrawer - fillOval replaced with an image in JMathPlot library to improve performance.",
 				"      1.111: Important bug fix in Windows systems, Android and astrophotography fixes (Oct 18, 2016):\n"+
-						"The method ReadFile.readResourceAndReturnNumberOfLines didn't work on Windows, producing errors when executing anything on this platform. Thanks to Volker Hören for reporting.\n",
-						"Some fixes to ClearSky for desktop (astrophotography), and a more robust camera detection.\n",
-						"Sky rendering with some fixes and improvements for Android.\n",
-						"Update of orbital elements.\n"
+						"The method ReadFile.readResourceAndReturnNumberOfLines didn't work on Windows, producing errors when executing anything on this platform. Thanks to Volker Hören for reporting.\n"+
+						"Some fixes to ClearSky for desktop (astrophotography), and a more robust camera detection.\n"+
+						"Sky rendering with some fixes and improvements for Android.\n"+
+						"Update of orbital elements.\n",
+				"      1.112: Bug fixes to reach the (possibly) final version of ClearSky for Android (Jan xx, 2017):\n"+
+						"The Zip class had a bug when used on Windows systems, so the updating of internal files didn't work on Windows. Thanks to Volker Hören for reporting.\n"+
+						"Bug fix when computing planetary transits on the Sun in MainEvents class. In some cases the method caused a hang.\n"+
+						"Fix in the logic of reading the internal or an external file for elements of artificial satellites. After a few changes the default internal one (almost always outdated) was always used.\n"+
+						"The leyend in sky rendering is now shown in lower resolutions, up to 720 pixels in horizontal.\n"+
+						"Symbols for double and variable stars are no longer off-center neither in sky rendering now in PDF exports.\n"+
+						"Improved support for external catalogs in sky rendering.\n"+
+						"Fix when computing when the rings of Saturn reach the maximum aperture.\n"+
+						"New events computed: supermoon, Neomenia.\n"
 
 				+FileIO.getLineSeparator(),
 		};
@@ -322,7 +331,7 @@ public class Version
 		// Dependencies for JPARSEC programs and models
 		String library[] = new String[] {
 			// Dependency name                             Version
-			"jparsec.jar                                   1.111",
+			"jparsec.jar                                   1.112",
 
 			"sky.jar                                       1.38",
 			"orbital_elements.jar                          1.25",

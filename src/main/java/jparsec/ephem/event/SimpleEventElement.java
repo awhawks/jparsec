@@ -662,6 +662,7 @@ public class SimpleEventElement implements Serializable {
 				}
 
 				if (Translate.getDefaultLanguage() != Translate.LANGUAGE.ENGLISH) {
+					out = DataSet.replaceAll(out, "Moon age", "edad Luna", true);
 					out = DataSet.replaceAll(out, "Saturnoo", "Saturno", true);
 					out = DataSet.replaceAll(out, "Asteroidee", "Asteroide", true);
 					out = DataSet.replaceAll(out, "Cometaa", "Cometa", true);
