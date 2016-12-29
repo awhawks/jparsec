@@ -750,6 +750,8 @@ public class RenderSatellite
 			int px0 = over/2+over/6, py0 = over/2-over/6;
 			g2.drawImage(g.getRendering(), px0, py0);
 			g2.setColor(render.planetMap.showGridColor, true);
+			double tr[] = g.getTranslation();
+			g2.traslate(tr[0], tr[1]);
 
 			int pos[] = this.getPosition(new LocationElement(-Math.PI, Constant.PI_OVER_TWO, 1));
 			double deg30 = (render.width-1) * render.planetMap.zoomFactor / 12.0;

@@ -1112,6 +1112,7 @@ public class AWTGraphics implements Graphics {
     }
 
     private int getImageRGB(int x, int y) {
+    	if (x+tx < 0 || x+tx >= image.getWidth() || y+ty < 0 || y+ty >= image.getHeight()) return 0;
     	if (tx == 0 && ty == 0) {
         	if (rasterData == null) return image.getRGB(x, y);
         	return (255<<24) | rasterData[x + y * image.getWidth()];
@@ -1121,7 +1122,7 @@ public class AWTGraphics implements Graphics {
     }
 
     private void setImageRGB(int x, int y, int color) {
-    	if (x < 0 || x >= image.getWidth() || y < 0 || y >= image.getHeight()) return;
+    	if (x+tx < 0 || x+tx >= image.getWidth() || y+ty < 0 || y+ty >= image.getHeight()) return;
     	if (tx == 0 && ty == 0) {
         	if (rasterData == null) {
         		image.setRGB(x, y, color);
@@ -1139,7 +1140,7 @@ public class AWTGraphics implements Graphics {
 
     private void setImageRGB2(int x, int y, int color) {
     	if (image2 == null) return;
-    	if (x < 0 || x >= image2.getWidth() || y < 0 || y >= image2.getHeight()) return;
+    	if (x+tx < 0 || x+tx >= image2.getWidth() || y+ty < 0 || y+ty >= image2.getHeight()) return;
     	if (tx == 0 && ty == 0) {
         	if (rasterData == null) {
         		image2.setRGB(x, y, color);
@@ -1159,6 +1160,7 @@ public class AWTGraphics implements Graphics {
      * Plots a single pixel.
      */
     protected void plot(int x, int y) {
+    	if (x+tx < 0 || x+tx >= image.getWidth() || y+ty < 0 || y+ty >= image.getHeight()) return;
         int p = getImageRGB(x,  y);
         if (p != previousIn) {
             previousIn = p;
