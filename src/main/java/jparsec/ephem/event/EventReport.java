@@ -119,7 +119,7 @@ public class EventReport {
 	 * A set of artificial satellites names, separated by ',', to compute transit events.
 	 * Default value includes ISS, HST, and TIANGONG.
 	 */
-	public static String artificialSatellites = "ISS, HST, TIANGONG";
+	public static String artificialSatellites = "ISS,HST,TIANGONG";
 
 	/**
 	 * Set all static flags in this class to a given value, except the 
