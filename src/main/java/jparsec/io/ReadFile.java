@@ -3220,7 +3220,8 @@ public class ReadFile implements Serializable
 
 						for (int i=inum+1; i<lines.length; i++) {
 							String fields[] = DataSet.toStringArray(lines[i], " ", true);
-
+							if (fields.length < 8) continue;
+							
 							String group = "NOAA" + fields[0];
 							String type = fields[7];
 							double area = Double.parseDouble(fields[3]) / 1000000.0;

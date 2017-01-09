@@ -314,15 +314,16 @@ public class Version
 						"Some fixes to ClearSky for desktop (astrophotography), and a more robust camera detection.\n"+
 						"Sky rendering with some fixes and improvements for Android.\n"+
 						"Update of orbital elements.\n",
-				"      1.112: Bug fixes to reach the (possibly) final version of ClearSky for Android (Jan xx, 2017):\n"+
+				"      1.112: Bug fixes to reach the (possibly) final version of ClearSky for Android (Jan 9, 2017):\n"+
 						"The Zip class had a bug when used on Windows systems, so the updating of internal files didn't work on Windows. Thanks to Volker Hören for reporting.\n"+
 						"Bug fix when computing planetary transits on the Sun in MainEvents class. In some cases the method caused a hang.\n"+
 						"Fix in the logic of reading the internal or an external file for elements of artificial satellites. After a few changes the default internal one (almost always outdated) was always used.\n"+
 						"The leyend in sky rendering is now shown in lower resolutions, up to 720 pixels in horizontal.\n"+
 						"Symbols for double and variable stars are no longer off-center neither in sky rendering now in PDF exports.\n"+
+						"It is now possible to identify and search for meteor showers.\n"+
 						"Improved support for external catalogs in sky rendering.\n"+
 						"Fix when computing when the rings of Saturn reach the maximum aperture.\n"+
-						"New events computed: supermoon, Neomenia.\n"
+						"New events computed: supermoon, Neomenia, transits of satellites on top of planets.\n"
 
 				+FileIO.getLineSeparator(),
 		};
