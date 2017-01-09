@@ -30,15 +30,18 @@ import java.util.ArrayList;
 
 import jparsec.astronomy.CoordinateSystem;
 import jparsec.astronomy.Star;
+import jparsec.ephem.Ephem;
 import jparsec.ephem.EphemerisElement;
 import jparsec.ephem.Functions;
 import jparsec.ephem.Nutation;
 import jparsec.ephem.Obliquity;
 import jparsec.ephem.Precession;
+import jparsec.ephem.EphemerisElement.ALGORITHM;
 import jparsec.ephem.Target.TARGET;
 import jparsec.ephem.event.Saros;
 import jparsec.ephem.event.SimpleEventElement;
 import jparsec.ephem.event.SimpleEventElement.EVENT;
+import jparsec.ephem.planets.EphemElement;
 import jparsec.graph.DataSet;
 import jparsec.io.FileIO;
 import jparsec.io.ReadFile;
@@ -143,6 +146,7 @@ public class SatelliteEphem
 		}
 
 		if (file == null) {
+			if (readFile != null) readFile.setReadElements(null);
 			readFile = null;
 			return;
 		}
@@ -178,6 +182,7 @@ public class SatelliteEphem
 	 */
 	public static void setSatellitesFromExternalFile(String file[]) throws JPARSECException {
 		if (file == null) {
+			if (readFile != null) readFile.setReadElements(null);
 			readFile = null;
 			return;
 		}
@@ -1038,7 +1043,122 @@ public class SatelliteEphem
 
 		return out;
 	}
+	
+	/**
+	 * Obtain all transits of a given satellite on top of any planet (Sun or Moon excluded).
+	 *
+	 * @param time Time object.
+	 * @param obs Observer object.
+	 * @param eph Ephemeris object.
+	 * @param sat Satellite orbital elements.
+	 * @param maxDays Maximum number of days to search for a next pass.
+	 * @param minDist Minimum distance in degrees, in addition to the radius of the planet, 
+	 * to consider that there is a transit on top of the planet. Strict value should be 0.
+	 * @return An array of event objects with the type of transit (target body)
+	 * set as the secondary object field, and with the initial and ending transit times.
+	 * The details field will contain the elevation above the horizon, always >= 0.
+	 * Precision is 0.5s.
+	 * @throws JPARSECException If the method fails, for example because of an
+	 *         invalid date.
+	 */
+	public static ArrayList<SimpleEventElement> getNextPlanetTransits(TimeElement time, ObserverElement obs, EphemerisElement eph,
+			SatelliteOrbitalElement sat, double maxDays, double minDist) throws JPARSECException
+	{
+		// Check Ephemeris object
+		if (!EphemerisElement.checkEphemeris(eph))
+			throw new JPARSECException("invalid ephemeris object.");
 
+		double min_elevation = 0;
+		boolean current = true;
+		ArrayList<SimpleEventElement> out = new ArrayList<SimpleEventElement>();
+		double JD = TimeScale.getJD(time, obs, eph, SCALE.UNIVERSAL_TIME_UTC);
+		TimeElement new_time = new TimeElement(JD, SCALE.UNIVERSAL_TIME_UTC);
+		double jdF = maxDays + JD;
+		double time_step = 0.5 / Constant.SECONDS_PER_DAY;
+
+		String eclipsed = Translate.translate(163).toLowerCase();
+		EphemElement pephem[] = new EphemElement[7];
+		double pephemDate[] = new double[7];
+		TARGET ptar[] = new TARGET[] {TARGET.MERCURY, TARGET.VENUS, TARGET.MARS, 
+				TARGET.JUPITER, TARGET.SATURN, TARGET.URANUS, TARGET.NEPTUNE};
+		double ptol[] = new double[] {20/Constant.SECONDS_PER_DAY, 60/Constant.SECONDS_PER_DAY, 
+				160/Constant.SECONDS_PER_DAY, 900/Constant.SECONDS_PER_DAY, 2500/Constant.SECONDS_PER_DAY, 
+				4000/Constant.SECONDS_PER_DAY, 7000/Constant.SECONDS_PER_DAY};
+		double dplan[] = new double[7];
+		boolean pinside[] = new boolean[7];
+		EphemerisElement peph = eph.clone();
+		if (peph.algorithm == ALGORITHM.ARTIFICIAL_SATELLITE) peph.algorithm = ALGORITHM.MOSHIER;
+		peph.optimizeForSpeed();
+		
+		while (true) {
+			maxDays = jdF - new_time.astroDate.jd();
+			double next_pass = getNextPass(new_time, obs, eph, sat, min_elevation, maxDays, current);
+			if (next_pass == 0) break;
+			current = false;
+
+			// Obtain ephemeris
+			FAST_MODE = true;
+			SatelliteEphemElement ephem = calcSatellite(time, obs, eph, sat, false);
+
+			// Obtain Julian day in reference scale
+			new_time = new TimeElement(Math.abs(next_pass), SCALE.LOCAL_TIME);
+			JD = TimeScale.getJD(new_time, obs, eph, SCALE.UNIVERSAL_TIME_UTC);
+			double JD_TT = TimeScale.getJD(new_time, obs, eph, SCALE.TERRESTRIAL_TIME);
+			new_time = new TimeElement(JD, SCALE.UNIVERSAL_TIME_UTC);
+
+			int nstep = 0;
+			boolean insidePlan = false;
+			for (int t=0; t<ptar.length; t++) {	pinside[t] = false; }
+
+			while (ephem.elevation > min_elevation || nstep == 0)
+			{
+				nstep ++;
+				double new_JD = JD + (double) nstep * time_step;
+
+				new_time = new TimeElement(new_JD, SCALE.UNIVERSAL_TIME_UTC);
+
+				ephem = calcSatellite(new_time, obs, eph, sat, false);
+
+				LocationElement loc = ephem.getEquatorialLocation();
+				for (int t=0; t<ptar.length; t++) {
+					if (pephem[t] == null || Math.abs(pephemDate[t]-new_JD) > ptol[t]) {
+						peph.targetBody = ptar[t];
+						pephem[t] = Ephem.getEphemeris(new_time, obs, peph, false);
+						pephemDate[t] = new_JD;
+					}
+					dplan[t] = LocationElement.getAngularDistance(loc, pephem[t].getEquatorialLocation()) * Constant.RAD_TO_DEG;
+					
+					double md = pephem[t].angularRadius * Constant.RAD_TO_DEG + minDist;
+					if (dplan[t] < md && !pinside[t]) {
+						String det = Functions.formatAngleAsDegrees(ephem.elevation, 1)+"\u00b0";
+						if (ephem.isEclipsed) det += ", "+eclipsed;
+						SimpleEventElement see = new SimpleEventElement(JD_TT + (double) nstep * time_step, 
+								EVENT.ARTIFICIAL_SATELLITES_TRANSITS, det);
+						see.body = sat.name;
+						see.secondaryBody = ptar[t].getName();
+						see.eventLocation = ephem.getEquatorialLocation();
+						out.add(see);
+						pinside[t] = true;
+					} else {
+						if (pinside[t] && dplan[t] >= md) {
+							pinside[t] = false;
+							SimpleEventElement see = out.get(out.size()-1);
+							if (see.secondaryBody.equals(ptar[t].getName()))
+								see.endTime = JD_TT + (nstep - 1.0) * time_step;
+						}
+					}
+				}
+				insidePlan = false;
+				for (int t=0; t<ptar.length; t++) {	if (pinside[t]) insidePlan = true; }
+				double min = DataSet.getMinimumValue(dplan);
+				if (min > 5 && !insidePlan) nstep += (int) (min / (time_step * Constant.SECONDS_PER_DAY));
+				if (insidePlan && ephem.elevation <= min_elevation && out.size() > 0) out.remove(out.size()-1);
+			}
+		}
+
+		return out;
+	}
+	
 	/**
 	 * Returns the magnitude of an iridium flare based on the panel angle.
 	 * The function 2.1013871 * Math.log(angle) - 1.6738664 is used here,

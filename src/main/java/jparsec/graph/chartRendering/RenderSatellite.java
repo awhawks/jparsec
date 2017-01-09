@@ -579,6 +579,11 @@ public class RenderSatellite
 					int sizeo = 3, sizeo2 = 2*sizeo+1;
 					int oldpos[] = null;
 					for (int j=0; j<loc.length; j++) {
+						if (g.renderingToAndroid()) {
+							int alpha = (int)(255*(1.0-(4.0*j)/(loc.length-1.0)));
+							if (alpha < 0) alpha = 0;
+							g.setColor(render.showOrbitsColor, alpha);
+						}
 						if (loc[j] == null) break;
 						int satpos[] = this.getPosition(loc[j]);
 						if (satpos == null) continue;

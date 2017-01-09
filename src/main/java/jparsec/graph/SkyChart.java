@@ -1219,15 +1219,26 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 					} catch (Exception exc) {}
 					if (data != null) {
 						RenderSky.OBJECT type = (OBJECT) data[0];
-						if (type == OBJECT.DEEPSKY || type == OBJECT.SUPERNOVA || type == OBJECT.NOVA) {
+						if (type == OBJECT.DEEPSKY || type == OBJECT.SUPERNOVA || type == OBJECT.NOVA 
+								|| type == OBJECT.METEOR_SHOWER) {
 							String d[] = (String[]) data[2];
 							msg1 = d[0];
 							String t = Translate.translate(877);
+							if (type == OBJECT.METEOR_SHOWER) t = Translate.translate(1024);
 							if (type == OBJECT.DEEPSKY) {
-								msg1 += " ("+Functions.formatValue(Double.parseDouble(d[3]), 1)+"m)";
 								t = Translate.translate(972);
 					  			if (d.length <= 4) t = Translate.translate(79);
 							} 
+							if (DataSet.isDoubleStrictCheck(d[3])) {
+								double mag = Double.parseDouble(d[3]);
+								if (type == OBJECT.METEOR_SHOWER) {
+									String rate = "var";
+									if (mag > 0) rate = ""+(int) mag;
+									msg1 += " ("+Translate.translate(1023)+" "+rate+")";							 
+								} else {
+									if (mag < 99) msg1 += " ("+Functions.formatValue(mag, 1)+"m)";
+								}
+							}
 							if (type == OBJECT.NOVA) t = Translate.translate(1304);
 							msg1 = msg1 + " - " + t.toLowerCase();
 						} else {
@@ -1248,6 +1259,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 								msg1 += " ("+Functions.formatValue(ephem.magnitude, 1)+"m) - "+Translate.translate(79).toLowerCase();
 							} else {
 								String st = Translate.translate(878); // SS Obj
+								if (type == RenderSky.OBJECT.ARTIFICIAL_SATELLITE) st = Translate.translate(78);
 		  	  					if (type == RenderSky.OBJECT.ASTEROID) st = Translate.translate(73);
 		  	  					if (type == RenderSky.OBJECT.COMET) st = Translate.translate(74);
 		  	  					if (type == RenderSky.OBJECT.NEO) st = Translate.translate(1275);
@@ -1483,7 +1495,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 		 			  		if (id == RenderSky.OBJECT.DEEPSKY) {
 		 			  			s = ((String[]) data[2])[0];
 		 			  		} else {
-		 			  			if (id == RenderSky.OBJECT.SUPERNOVA || id == OBJECT.NOVA) {
+		 			  			if (id == RenderSky.OBJECT.SUPERNOVA || id == OBJECT.NOVA || id == OBJECT.METEOR_SHOWER) {
 			 			  			s = ((String[]) data[2])[0];
 		 			  			} else {
 		 			  				ephem = (EphemElement) data[2];
@@ -2152,7 +2164,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 		  			objData = (String[]) data[2];
 		  			s = objData[0];
 		  		} else {
-		  			if (id == RenderSky.OBJECT.SUPERNOVA || id == OBJECT.NOVA) {
+		  			if (id == RenderSky.OBJECT.SUPERNOVA || id == OBJECT.NOVA || id == OBJECT.METEOR_SHOWER) {
 		  				objData = (String[]) data[2];
 		  	  			s = objData[0];
 		  			} else {
@@ -2222,7 +2234,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 	  		final RenderSky.OBJECT id = (RenderSky.OBJECT) data0[0];
 	  		TARGET target = Target.getID(s);
 	  		if (//id != OBJECT.ARTIFICIAL_SATELLITE &&
-	  				id != OBJECT.NOVA && id != OBJECT.SUPERNOVA && id != OBJECT.DEEPSKY
+	  				id != OBJECT.METEOR_SHOWER && id != OBJECT.NOVA && id != OBJECT.SUPERNOVA && id != OBJECT.DEEPSKY
 	  				&& (!target.isNaturalSatellite() || (target.isNaturalSatellite() && target.getCentralBody() == obs.getMotherBody() &&
 	  						target.ordinal() >= TARGET.Phobos.ordinal() && target.ordinal() <= TARGET.Oberon.ordinal()))) {
 		  		JMenuItem traj = new JMenuItem(Translate.translate(967)+" "+s);
@@ -4949,7 +4961,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 				try {
 					if (data != null) {
 	            		RenderSky.OBJECT id = (RenderSky.OBJECT) data[0];
-	          			if (id == RenderSky.OBJECT.SUPERNOVA || id == OBJECT.NOVA) {
+	          			if (id == RenderSky.OBJECT.SUPERNOVA || id == OBJECT.NOVA || id == OBJECT.METEOR_SHOWER) {
 	          				String[] objData = (String[]) data[2];
 	          				double ra = Functions.parseRightAscension(objData[1]) * Constant.RAD_TO_DEG;
 	          				double dec = Functions.parseDeclination(objData[2]) * Constant.RAD_TO_DEG;
@@ -5000,8 +5012,9 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
   			objData = ((String[]) data[2]).clone();
   			if (objData.length <= 4) type = Translate.translate(79);
   		} else {
-  			if (id == RenderSky.OBJECT.SUPERNOVA || id == OBJECT.NOVA) {
+  			if (id == RenderSky.OBJECT.SUPERNOVA || id == OBJECT.NOVA || id == OBJECT.METEOR_SHOWER) {
   				type = Translate.translate(877); // SN
+  				if (id == OBJECT.METEOR_SHOWER) type = Translate.translate(1024);
 				if (id == OBJECT.NOVA) type = Translate.translate(1304);
   				objData = ((String[]) data[2]).clone();
   			} else {
@@ -5050,7 +5063,8 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
   				out += ConsoleReport.getBasicEphemReport(ephem, isStar, true, 1);
   			}
   		}
-  		if (id == RenderSky.OBJECT.DEEPSKY || id == RenderSky.OBJECT.SUPERNOVA || id == OBJECT.NOVA) {
+  		if (id == RenderSky.OBJECT.DEEPSKY || id == RenderSky.OBJECT.SUPERNOVA || id == OBJECT.NOVA || 
+  				id == OBJECT.METEOR_SHOWER) {
   			objData[0] = Translate.translate(506)+ ": " + objData[0];
   			int cal = objData[0].indexOf("CALDWELL");
   			if (id == RenderSky.OBJECT.DEEPSKY && cal >= 0) {
@@ -5060,14 +5074,23 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
   			objData[1] = Translate.translate(21) + ": " + objData[1];
   			objData[2] = Translate.translate(22) + ": " + objData[2];
 			try {
-				double mag = DataSet.parseDouble(objData[3]);
-				if (mag > 99) {
-					objData[3] = "-";
-				} else {
-					objData[3] = Functions.formatValue(Double.parseDouble(objData[3]), 1);
+				if (id != OBJECT.METEOR_SHOWER && id != OBJECT.PLANET) {
+					double mag = DataSet.parseDouble(objData[3]);
+					if (mag > 99) {
+						objData[3] = "-";
+					} else {
+						objData[3] = Functions.formatValue(Double.parseDouble(objData[3]), 1);
+					}
 				}
 			} catch (Exception exc) {}
-  			objData[3] = Translate.translate(157) + ": " + objData[3];
+			if (id == OBJECT.METEOR_SHOWER) {
+				double mag = DataSet.parseDouble(objData[3]);
+				String rate = "var";
+				if (mag > 0) rate = ""+(int) mag;
+				objData[3] = Translate.translate(1023) + ": " + rate;				
+			} else {
+				objData[3] = Translate.translate(157) + ": " + objData[3];
+			}
   	  		if (id == RenderSky.OBJECT.DEEPSKY) {
   	  			if (objData.length > 4) {
 	  			objData[4] = Translate.translate(486) + ": " + objData[4];
@@ -5122,7 +5145,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
   	  			if (id == OBJECT.NOVA) {
   	  				objData[4] = Translate.translate(462) + " "+Translate.translate(1304).toLowerCase()+": " + objData[4];
   	  			} else {
-  	  				objData[4] = Translate.translate(462) + " SN: " + objData[4];
+  	  				if (id == OBJECT.SUPERNOVA) objData[4] = Translate.translate(462) + " SN: " + objData[4];
   	  			}
   	  		}
   	  		ephem = new EphemElement();

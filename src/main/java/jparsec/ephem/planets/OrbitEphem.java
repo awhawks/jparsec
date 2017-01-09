@@ -120,6 +120,7 @@ public class OrbitEphem
 	 * @throws JPARSECException If an error occurs.
 	 */
 	public static void setAsteroidsFromExternalFile(String file[]) throws JPARSECException {
+		if (readFile_asteroids != null) readFile_asteroids.setReadElements(null);
 		if (file == null) {
 			readFile_asteroids = null;
 /*			ReadFile re = new ReadFile();
@@ -142,6 +143,7 @@ public class OrbitEphem
 	 * @throws JPARSECException If an error occurs.
 	 */
 	public static void setCometsFromExternalFile(String file[]) throws JPARSECException {
+		if (readFile_comets != null) readFile_comets.setReadElements(null);
 		if (file == null) {
 			readFile_comets = null;
 /*			ReadFile re = new ReadFile();
@@ -164,6 +166,7 @@ public class OrbitEphem
 	 * @throws JPARSECException If an error occurs.
 	 */
 	public static void setCometsFromElements(ArrayList<OrbitalElement> list) throws JPARSECException {
+		if (readFile_comets != null) readFile_comets.setReadElements(null);
 		if (list == null) {
 			readFile_comets = null;
 /*			ReadFile re = new ReadFile();
@@ -186,6 +189,7 @@ public class OrbitEphem
 	 * @throws JPARSECException If an error occurs.
 	 */
 	public static void setTransNeptuniansFromExternalFile(String file[]) throws JPARSECException {
+		if (readFile_transNeptunians != null) readFile_transNeptunians.setReadElements(null);
 		if (file == null) {
 			readFile_transNeptunians = null;
 /*			ReadFile re = new ReadFile();
@@ -799,6 +803,14 @@ public class OrbitEphem
 		// Obtain object position
 		double plane_orbit_coords[] = orbitPlane(orbit, JD);
 		double coords[] = toEclipticPlane(orbit, plane_orbit_coords);
+		double[] planetocentricPositionOfTargetSatellite = null;
+		try {
+			Object o = DataBase.getData("offsetPosition", true);
+			if (o != null) {
+				planetocentricPositionOfTargetSatellite = (double[]) o;
+				coords = Functions.sumVectors(coords, planetocentricPositionOfTargetSatellite);
+			}
+		} catch (Exception exc) {}
 		double sun[] = null;
 		if (lastTDB == JD && lastSun0 != null) {
 			sun = lastSun0;
@@ -845,6 +857,8 @@ public class OrbitEphem
 				light_time = Ephem.getTopocentricLightTime(geo, topo, eph);
 				plane_orbit_coords = orbitPlane(orbit, JD - light_time);
 				coords = toEclipticPlane(orbit, plane_orbit_coords);
+				if (planetocentricPositionOfTargetSatellite != null)
+					coords = Functions.sumVectors(coords, planetocentricPositionOfTargetSatellite);
 				coords = Ephem.eclipticToEquatorial(coords, orbit.referenceEquinox, eph);
 				if (orbit.referenceEquinox != Constant.J2000) coords = Precession.precessPosAndVelInEquatorial(orbit.referenceEquinox, Constant.J2000, coords,
 						eph);

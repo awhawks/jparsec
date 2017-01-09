@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import jparsec.astronomy.CoordinateSystem;
 import jparsec.ephem.Ephem;
 import jparsec.ephem.EphemerisElement;
+import jparsec.ephem.EphemerisElement.ALGORITHM;
 import jparsec.ephem.EphemerisElement.COORDINATES_TYPE;
 import jparsec.ephem.Functions;
 import jparsec.ephem.PhysicalParameters;
@@ -34,8 +35,11 @@ import jparsec.ephem.Target;
 import jparsec.ephem.Target.TARGET;
 import jparsec.ephem.event.MoonEvent;
 import jparsec.ephem.event.MoonEvent.EVENT_DEFINITION;
+import jparsec.ephem.event.Saros;
 import jparsec.ephem.moons.MoonOrbitalElement.REFERENCE_PLANE;
 import jparsec.ephem.planets.EphemElement;
+import jparsec.ephem.planets.OrbitEphem;
+import jparsec.ephem.planets.OrbitalElement;
 import jparsec.ephem.planets.PlanetEphem;
 import jparsec.graph.DataSet;
 import jparsec.io.FileIO;
@@ -113,7 +117,15 @@ public class MoonEphem
 
 		MoonEphem.setEphemerisOffset(eph, offset, JD);
 
-		EphemElement ephem_plan = Ephem.getEphemeris(time, obs, eph, false);
+		EphemElement ephem_plan = null;
+		if (eph.targetBody == TARGET.SUN && !eph.preferPrecisionInEphemerides) {
+			ephem_plan = new EphemElement();
+			double sun[] = Saros.getSunPosition(JD);
+			LocationElement eqloc = CoordinateSystem.eclipticToEquatorial(new LocationElement(sun[0], sun[1], sun[2]), time, obs, eph);
+			ephem_plan.setEquatorialLocation(eqloc);
+		} else {
+			ephem_plan = Ephem.getEphemeris(time, obs, eph, false);
+		}
 
 		if (!offset.equals(OFFSET0)) MoonEphem.setEphemerisOffset(eph, OFFSET0, JD);
 
@@ -145,6 +157,7 @@ public class MoonEphem
 				eq = Ephem.DynamicaltoICRSFrame(eq);
 				eq = Ephem.equatorialToEcliptic(eq, Constant.J2000, eph);
 				break;
+			case ORBIT:
 			case VSOP87_ELP2000ForMoon:
 				eq = Ephem.equatorialToEcliptic(eq, Constant.J2000, eph);
 				break;
@@ -831,6 +844,15 @@ public class MoonEphem
 
 			// Obtain position of planet
 			new_eph.targetBody = TARGET.MARS;
+			if (!eph.preferPrecisionInEphemerides) {
+				new_eph.algorithm = ALGORITHM.ORBIT;
+				if (eph.orbit != null) {
+					new_eph.orbit = eph.orbit;
+				} else {
+					new_eph.orbit = OrbitEphem.getOrbitalElements(new_eph.targetBody, JD, ALGORITHM.MOSHIER);
+					eph.orbit = new_eph.orbit;
+				}
+			}
 			EphemElement ephem_mars = MoonEphem.getBodyEphem(time, obs, new_eph, OFFSET0, JD);
 
 			EphemElement ephem[] = new EphemElement[2];
@@ -936,6 +958,15 @@ public class MoonEphem
 
 			// Obtain position of planet
 			new_eph.targetBody = TARGET.JUPITER;
+			if (!eph.preferPrecisionInEphemerides) {
+				new_eph.algorithm = ALGORITHM.ORBIT;
+				if (eph.orbit != null) {
+					new_eph.orbit = eph.orbit;
+				} else {
+					new_eph.orbit = OrbitEphem.getOrbitalElements(new_eph.targetBody, JD, ALGORITHM.MOSHIER);
+					eph.orbit = new_eph.orbit;
+				}
+			}
 			EphemElement ephem_jup = MoonEphem.getBodyEphem(time, obs, new_eph, OFFSET0, JD);
 
 			EphemElement ephem[] = new EphemElement[4];
@@ -1047,6 +1078,15 @@ public class MoonEphem
 
 			// Obtain position of planet
 			new_eph.targetBody = TARGET.SATURN;
+			if (!eph.preferPrecisionInEphemerides) {
+				new_eph.algorithm = ALGORITHM.ORBIT;
+				if (eph.orbit != null) {
+					new_eph.orbit = eph.orbit;
+				} else {
+					new_eph.orbit = OrbitEphem.getOrbitalElements(new_eph.targetBody, JD, ALGORITHM.MOSHIER);
+					eph.orbit = new_eph.orbit;
+				}
+			}
 			EphemElement ephem_sat = MoonEphem.getBodyEphem(time, obs, new_eph, OFFSET0, JD);
 
 			EphemElement ephem[] = new EphemElement[8];
@@ -1159,6 +1199,15 @@ public class MoonEphem
 
 			// Obtain position of planet
 			new_eph.targetBody = TARGET.URANUS;
+			if (!eph.preferPrecisionInEphemerides) {
+				new_eph.algorithm = ALGORITHM.ORBIT;
+				if (eph.orbit != null) {
+					new_eph.orbit = eph.orbit;
+				} else {
+					new_eph.orbit = OrbitEphem.getOrbitalElements(new_eph.targetBody, JD, ALGORITHM.MOSHIER);
+					eph.orbit = new_eph.orbit;
+				}
+			}
 			EphemElement ephem_ura = MoonEphem.getBodyEphem(time, obs, new_eph, OFFSET0, JD);
 
 			EphemElement ephem[] = new EphemElement[5];

@@ -280,7 +280,9 @@ public class RenderSky
 		/** ID constant for a supernova in a search. */
 		SUPERNOVA,
 		/** ID constant for a nova in a search. */
-		NOVA;
+		NOVA,
+		/** ID constant for a meteor shower in a search. */
+		METEOR_SHOWER;
 
 		/** Set to true to show comet's tail in trajectories. Default value is false. */
 		public boolean showCometTail = false;
@@ -289,7 +291,7 @@ public class RenderSky
 		 * Indexes for translating the different enum values to string.
 		 */
 		private static final int[] TRANS = new int[] {
-	    	79, 878, 74, 1275, 73, 1003, 972, 76, 78, 877, 1304
+	    	79, 878, 74, 1275, 73, 1003, 972, 76, 78, 877, 1304, 1024
 	    };
 
 		/**
@@ -1806,6 +1808,7 @@ public class RenderSky
 
 	private void renderDisk(double size) throws Exception {
 		rp.render = render.planetRender;
+		render.planetRender.foreground = render.getColorMode() == COLOR_MODE.NIGHT_MODE ? 255<<24 | 255<<16 | 0<<8 | 0 : 255<<24 | 255<<16 | 255<<8 | 255;
 		render.planetRender.width = render.width;
 		render.planetRender.height = render.height;
 		render.planetRender.northUp = false;
@@ -4025,6 +4028,17 @@ public class RenderSky
 		int radius2 = 8;
 		FONT f = render.drawMinorObjectsNamesFont;
 		f = FONT.getDerivedFont(f, f.getSize(), 0);
+		ArrayList<Object> minorObjects = null;
+		if (SaveObjectsToAllowSearch) {
+			minorObjects = new ArrayList<Object>();
+			Object oo = null;
+			if (db_minorObjects >= 0) {
+				oo = DataBase.getData(db_minorObjects);
+			} else {
+				oo = DataBase.getData("minorObjects", threadID, true);
+			}
+			if (oo != null) minorObjects = new ArrayList<Object>(Arrays.asList(((Object[]) oo)));
+		}
 		for (Iterator<Object> itr = meteors.iterator();itr.hasNext();)
 		{
 			obj = (Object[]) itr.next();
@@ -4043,6 +4057,16 @@ public class RenderSky
 
 			drawMS(g, pos0, active, thz);
 			if (render.drawMinorObjectsLabels) drawString(g.getColor(), ff, name, pos0[0], pos0[1], -(radius2+f.getSize()), false);
+			if (SaveObjectsToAllowSearch) {
+				minorObjects.add(new Object[] {
+						RenderSky.OBJECT.METEOR_SHOWER, pos0.clone(),
+						new String[] {name, ""+loc.getLongitude(), ""+loc.getLatitude(), Double.toString(thz), "", "", ""}
+				});
+			}
+		}
+		if (SaveObjectsToAllowSearch) {
+			DataBase.addData("minorObjects", threadID, minorObjects.toArray(), true);
+			if (db_minorObjects < 0) db_minorObjects = DataBase.getIndex("minorObjects", threadID);
 		}
 	}
 
@@ -7831,7 +7855,7 @@ public class RenderSky
 	{
 		if (render.drawArtificialSatellites)
 		{
-			if (neverWaitS || pixels_per_degree < 5.0 && render.drawClever && render.drawArtificialSatellitesOnlyThese == null)
+			if (projection.obs.getMotherBody() != TARGET.EARTH || neverWaitS || pixels_per_degree < 5.0 && render.drawClever && render.drawArtificialSatellitesOnlyThese == null)
 				return;
 
 			g.setColor(render.drawStarsColor, true);
@@ -13350,7 +13374,7 @@ public class RenderSky
 						data = d;
 						OBJECT type = (OBJECT) d[0];
 						if (type != RenderSky.OBJECT.DEEPSKY &&
-								type != RenderSky.OBJECT.SUPERNOVA && type != OBJECT.NOVA) {
+								type != RenderSky.OBJECT.SUPERNOVA && type != OBJECT.NOVA && type != OBJECT.METEOR_SHOWER) {
 							EphemElement ephem = null;
 							if (type == RenderSky.OBJECT.ARTIFICIAL_SATELLITE) {
 								SatelliteEphemElement satEp = (SatelliteEphemElement) data[2];
@@ -13674,6 +13698,29 @@ public class RenderSky
 						}
 					}
 				}
+				if (loc == null) {
+					ArrayList<Object> met = null;
+					Object oo = null;
+					if (db_meteor >= 0) {
+						oo = DataBase.getData(db_meteor);
+					} else {
+						oo = DataBase.getData("meteor", threadID, true);
+					}
+					if (oo != null && s.length() > 4) {
+						met = new ArrayList<Object>(Arrays.asList((Object[]) oo));
+						for (Iterator<Object> itr = met.iterator();itr.hasNext();)
+						{
+							Object obj[] = (Object[]) itr.next();
+							String n = (String) obj[0];
+							if (n.toLowerCase().startsWith(s.toLowerCase())) {
+								loc = (LocationElement) obj[2];
+								loc = projection.toEquatorialPosition(loc, false);
+								//loc = Ephem.removeRefractionCorrectionFromEquatorialCoordinates(projection.time, projection.obs, projection.eph, loc);
+								break;
+							}
+						}
+					}
+				}
 				return loc;
 			} catch (Exception exc) {
 				Logger.log(LEVEL.ERROR, "Error searching for object "+s+". Message was: "+exc.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(exc.getStackTrace()));
@@ -13812,6 +13859,29 @@ public class RenderSky
 							String n = (String) obj[1];
 							if (n.toLowerCase().equals(s.toLowerCase())) {
 								loc = (LocationElement) obj[0];
+								loc = projection.toEquatorialPosition(loc, false);
+								//loc = Ephem.removeRefractionCorrectionFromEquatorialCoordinates(projection.time, projection.obs, projection.eph, loc);
+								break;
+							}
+						}
+					}
+				}
+				if (loc == null && type == OBJECT.METEOR_SHOWER) {
+					ArrayList<Object> met = null;
+					Object oo = null;
+					if (db_meteor >= 0) {
+						oo = DataBase.getData(db_meteor);
+					} else {
+						oo = DataBase.getData("meteor", threadID, true);
+					}
+					if (oo != null && s.length() > 4) {
+						met = new ArrayList<Object>(Arrays.asList((Object[]) oo));
+						for (Iterator<Object> itr = met.iterator();itr.hasNext();)
+						{
+							Object obj[] = (Object[]) itr.next();
+							String n = (String) obj[0];
+							if (n.toLowerCase().startsWith(s.toLowerCase())) {
+								loc = (LocationElement) obj[2];
 								loc = projection.toEquatorialPosition(loc, false);
 								//loc = Ephem.removeRefractionCorrectionFromEquatorialCoordinates(projection.time, projection.obs, projection.eph, loc);
 								break;

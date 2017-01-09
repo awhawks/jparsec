@@ -70,7 +70,8 @@ public class RenderSatelliteTest {
             int max = 7; // 7 days of search
             int sources[] = new int[] {
                     index,
-                    SatelliteEphem.getArtificialSatelliteTargetIndex(name[1])
+                    SatelliteEphem.getArtificialSatelliteTargetIndex(name[1]),
+                    SatelliteEphem.getArtificialSatelliteTargetIndex(name[2])
             };
             long t0 = System.currentTimeMillis();
             if (satRender.getSatelliteEphem() != null && satRender.getSatelliteEphem().length > 0) {
