@@ -21,6 +21,7 @@
  */
 package jparsec.astrophysics;
 
+import jparsec.math.CGSConstant;
 import jparsec.math.Constant;
 import jparsec.util.JPARSECException;
 
@@ -184,8 +185,13 @@ public class IRAMPdBI {
 	 */
 	public static double getFactorKToJy(double lambda, double bmajor, double bminor)
 	{
-		double factor = 265.0 * (bmajor * bminor / 3600.0) / (lambda * lambda);
-		return factor;
+		double nu = Constant.SPEED_OF_LIGHT / (lambda * 0.001);
+		double factor = 1.0E-26 * CGSConstant.SPEED_OF_LIGHT * CGSConstant.SPEED_OF_LIGHT / 
+				(2.0 * CGSConstant.BOLTZMANN_CONSTANT * nu * nu);
+		factor = factor / ((bmajor * bminor) * Constant.ARCSEC_TO_RAD * Constant.ARCSEC_TO_RAD);
+		return 0.001 / factor;
+		//double factor = 265.0 * (bmajor * bminor / 3600.0) / (lambda * lambda);
+		//return factor;
 	}
 
 	/**

@@ -349,7 +349,7 @@ public class SpectraChart implements ActionListener, ListSelectionListener, Comp
 
           	   if (e.getKeyCode() == KeyEvent.VK_DOWN) {
          		   try {
-         			   CreateChart.increaseFontSize(-1);
+         			   CreateChart.decreaseFontSize();
          		   } catch (Exception e1) {
          				Logger.log(LEVEL.ERROR, "Error increasing font size. Message was: "+e1.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e1.getStackTrace()));
          		   }
@@ -361,7 +361,7 @@ public class SpectraChart implements ActionListener, ListSelectionListener, Comp
          	   }
          	   if (e.getKeyCode() == KeyEvent.VK_UP) {
      			   try {
-        			   CreateChart.increaseFontSize(1);
+        			   CreateChart.increaseFontSize();
          		   } catch (Exception e1) { }
 	   				SwingUtilities.invokeLater(new Runnable() {
 				        public void run() {
@@ -469,7 +469,7 @@ public class SpectraChart implements ActionListener, ListSelectionListener, Comp
 
      		   if (e.getKeyCode() == KeyEvent.VK_DOWN) {
          		   try {
-         			   CreateChart.increaseFontSize(-1);
+         			   CreateChart.decreaseFontSize();
          		   } catch (Exception e1) {
         				Logger.log(LEVEL.ERROR, "Error increasing font size. Message was: "+e1.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(e1.getStackTrace()));
          		   }
@@ -481,7 +481,7 @@ public class SpectraChart implements ActionListener, ListSelectionListener, Comp
          	   }
          	   if (e.getKeyCode() == KeyEvent.VK_UP) {
      			   try {
-        			   CreateChart.increaseFontSize(1);
+        			   CreateChart.increaseFontSize();
          		   } catch (Exception e1) { }
 	   				SwingUtilities.invokeLater(new Runnable() {
 				        public void run() {

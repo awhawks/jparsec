@@ -580,7 +580,7 @@ public class RenderSatellite
 					int oldpos[] = null;
 					for (int j=0; j<loc.length; j++) {
 						if (g.renderingToAndroid()) {
-							int alpha = (int)(255*(1.0-(4.0*j)/(loc.length-1.0)));
+							int alpha = (int)(255*(1.0-(4.5*j)/(loc.length-1.0)));
 							if (alpha < 0) alpha = 0;
 							g.setColor(render.showOrbitsColor, alpha);
 						}

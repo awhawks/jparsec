@@ -63,6 +63,7 @@ import org.jfree.chart.axis.ColorBar;
 import org.jfree.chart.axis.LogarithmicAxis;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.ValueAxis;
+import org.jfree.chart.block.BlockBorder;
 import org.jfree.chart.entity.StandardEntityCollection;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.ContourPlot;
@@ -4415,30 +4416,38 @@ public class CreateChart implements Serializable
 	}
 
 	/**
+	 * Removes the border of the leyend. Should be the last call
+	 * in case text font is also modified.
+	 */
+	public void removeLeyendBorder() {
+		chart.getLegend().setFrame(BlockBorder.NONE);
+	}
+
+	/**
+	 * Increases the sizes of the fonts in the chart.
+	 * @param n The amount of pixel units.
+	 * @throws JPARSECException If an error occurs.
+	 */
+	public void increaseFontSize(int n) throws JPARSECException {
+		increaseFontSize += n;
+		JFreeChart chart = createChart(chart_elem);
+		this.setChart(chart);
+		increaseFontSize -= n;
+	}
+
+	/**
 	 * Increases the sizes of the fonts in the chart.
 	 * @throws JPARSECException If an error occurs.
 	 */
-	public void increaseFontSize() throws JPARSECException {
+	public static void increaseFontSize() throws JPARSECException {
 		increaseFontSize ++;
-		JFreeChart chart = createChart(chart_elem);
-		this.setChart(chart);
 	}
 	/**
 	 * Decreases the sizes of the fonts in the chart.
 	 * @throws JPARSECException If an error occurs.
 	 */
-	public void decreaseFontSize() throws JPARSECException {
+	public static void decreaseFontSize() throws JPARSECException {
 		increaseFontSize --;
-		JFreeChart chart = createChart(chart_elem);
-		this.setChart(chart);
-	}
-
-	/**
-	 * Changes the font size by a given amount.
-	 * @param n Positive or negative.
-	 */
-	public static void increaseFontSize(int n) {
-		increaseFontSize += n;
 	}
 
 	/**

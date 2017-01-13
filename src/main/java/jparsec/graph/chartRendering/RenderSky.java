@@ -5318,19 +5318,16 @@ public class RenderSky
 							{
 								if (!external && !messier.isEmpty()) {
 									name2print = name2print+" "+messier;
-									if (pixels_per_degree <= 30) { // && render.drawClever) {
+									if (pixels_per_degree <= 30 || name2print.startsWith("CALDWELL")) { // && render.drawClever) {
 										name2print = messier;
 										if (external) name2print = name;
 									}
 								}
 							}
 
-							if (pixels_per_degree > 30) { // && render.drawClever) {
-								pp = comments.indexOf("Popular name:");
-								if (pp>=0) name2print += " - "+comments.substring(pp+14).trim();
-							}
 							if (labels) {
 								if (Math.abs(type) == 3) size *= 2f;
+								if (size/pixels_per_degree > 3) size = pixels_per_degree;
 								if (type == 6 || mag < objMagLim-1) {
 									if (type == 6) font = secondaryFont;
 									displacement = -size - font.getSize();
@@ -5339,6 +5336,18 @@ public class RenderSky
 								}
 
 								drawString(render.drawDeepSkyObjectsColor, font, DataSet.replaceAll(name2print, "CALDWELL ", "C", true), pos0[0], pos0[1],  displacement, false);
+								if (pixels_per_degree > 30) { // && render.drawClever) {
+									pp = comments.indexOf("Popular name:");
+									if (pp>=0) {
+										String pn = comments.substring(pp+14).trim();
+										if (render.drawFastLabels == SUPERIMPOSED_LABELS.FAST || pixels_per_degree < 5 && render.drawClever && render.drawFastLabelsInWideFields) {
+											drawString(render.drawDeepSkyObjectsColor, font, pn, pos0[0], pos0[1],  displacement+FastMath.sign(displacement)*font.getSize(), false);											
+										} else {
+											drawString(render.drawDeepSkyObjectsColor, font, pn, pos0[0], pos0[1],  displacement, false);
+										}
+										name2print += " - "+pn;
+									}
+								}
 							}
 						}
 
