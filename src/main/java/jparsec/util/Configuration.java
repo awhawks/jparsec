@@ -597,7 +597,7 @@ public class Configuration
 
 			//GeneralQuery.queryFile(query, p, QUERY_TIMEOUT);
 		} catch (Exception exc) {
-			if (astro.getMonth() == 1) {
+			if (astro.getMonth() < 3) {
 				query = Update.UPDATE_URL_BRIGHT_ASTEROIDS;
 				query = DataSet.replaceAll(query, "2007", ""+(astro.getYear()-1), false);
 

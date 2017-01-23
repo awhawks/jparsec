@@ -302,8 +302,9 @@ public class RenderSatellite
 		double altMoonLimit = 5.0 * Constant.DEG_TO_RAD;
 		float ps = (int)(render.planetMap.zoomFactor-1+0.5);
 		if (g.renderingToAndroid()) {
-			ps += 1.5f;
-			if (RenderPlanet.MAXIMUM_TEXTURE_QUALITY_FACTOR < 1) ps += 1f;
+			ps = Math.max(ps, (float) targetW / texturax - 1.25f);
+			//ps += 1.5f;
+			//if (RenderPlanet.MAXIMUM_TEXTURE_QUALITY_FACTOR < 1) ps += 1f;
 		}
 //		if (render.planetMap == PLANET_MAP.MAP_SPHERICAL) ps += 1.5f;
 		float ps2 = 2*ps+1;
@@ -329,15 +330,29 @@ public class RenderSatellite
 			} catch (Exception exc) {}
 		}
 
+		if (render.planetMap == PLANET_MAP.MAP_FLAT) {
+			if (texturax != targetW) {
+				g.drawImage(img, satx, saty, (float) (targetW / texturax), (float) (targetH / texturay));				
+			} else {
+				g.drawImage(img, satx, saty);
+			}
+		}
+		int deltaSat = (factor*2)/3;
+		double alt_sat[] = new double[locSatel.length];
+		double endInit = endLightAtElevation - initLightAtElevation;
+		int pos[];
 		for (int i = 0; i < (texturax * texturay); i++)
 		{
 			int posj = i / texturax;
 			int posi = i - posj * texturax;
 
 			LocationElement loc = this.getGeographicalPosition(i, texturax, texturay);
-			int pos[] = this.getPosition(loc);
-			if (pos == null) continue;
-			if (pos[0] < tx || pos[0] >= g.getWidth()+tx || pos[1] < ty || pos[1] >= g.getHeight()+ty) continue;
+			pos = null;
+			if (img == null || render.planetMap == PLANET_MAP.MAP_SPHERICAL) {
+				pos = this.getPosition(loc);
+				if (pos == null) continue;
+				if (pos[0] < tx || pos[0] >= g.getWidth()+tx || pos[1] < ty || pos[1] >= g.getHeight()+ty) continue;
+			}
 
 			// Obtain RGB compounds
 			int red = 255, green = 255, blue = 0;
@@ -354,11 +369,11 @@ public class RenderSatellite
 					red = 0xff & (jj >> 16);
 					green = 0xff & (jj >> 8);
 					blue = 0xff & jj;
-					if (target == TARGET.EARTH && render.planetMap.EarthMapSource == null) {
-						red *= 2;
-						green *= 2;
-						blue *= 2;
-					}
+//					if (target == TARGET.EARTH && render.planetMap.EarthMapSource == null) {
+//						red *= 2;
+//						green *= 2;
+//						blue *= 2;
+//					}
 				}
 			} else {
 				g.setColor(red, green, blue, 255);
@@ -374,11 +389,10 @@ public class RenderSatellite
 
 			// Obtain elevation of the satellite and the Sun from the current
 			// geographical position loc
-			double new_pos[] = LocationElement.parseLocationElementFast(loc);
 			double alt_sun = Constant.PI_OVER_TWO - LocationElement.getApproximateAngularDistance(loc, locSun);
 
-			double alt_sat[] = new double[locSatel.length];
 			if (showSatellite) {
+				double new_pos[] = LocationElement.parseLocationElementFast(loc);
 				for (int j=0; j<locSatel.length; j++) {
 					double final_pos[] = Functions.substract(LocationElement.parseLocationElementFast(locSatel[j]), new_pos);
 					LocationElement new_loc_sat = LocationElement.parseRectangularCoordinatesFast(final_pos);
@@ -394,7 +408,7 @@ public class RenderSatellite
 				if (alt_moon > 0) brightness = 30;
 			}
 			if (render.showDayAndNight && render.planetMap == PLANET_MAP.MAP_FLAT) {
-				if (alt_sun < initLightAtElevation && target == TARGET.EARTH) {
+				if (alt_sun > endLightAtElevation && alt_sun < initLightAtElevation && target == TARGET.EARTH) {
 					double delta = 5;
 					double alt_moon = Constant.PI_OVER_TWO - LocationElement.getApproximateAngularDistance(loc, locMoon[0]);
 					if (satn == 4) {
@@ -443,16 +457,18 @@ public class RenderSatellite
 						green = green2;
 						blue = blue2;
 					} else {
-						red = red + (int) ((red2 - red) * (alt_sun-initLightAtElevation) / (endLightAtElevation-initLightAtElevation));
-						green = green + (int) ((green2 - green) * (alt_sun-initLightAtElevation) / (endLightAtElevation-initLightAtElevation));
-						blue = blue + (int) ((blue2 - blue) * (alt_sun-initLightAtElevation) / (endLightAtElevation-initLightAtElevation));
+						red = red + (int) ((red2 - red) * (alt_sun-initLightAtElevation) / endInit);
+						green = green + (int) ((green2 - green) * (alt_sun-initLightAtElevation) / endInit);
+						blue = blue + (int) ((blue2 - blue) * (alt_sun-initLightAtElevation) / endInit);
 					}
 				}
 			}
-			int max = -Math.max(blue, Math.max(red, green)), delta = (factor*2)/3;
-			if (brightness < max) brightness = max;
+			if (brightness < 0) {
+				int max = -Math.max(blue, Math.max(red, green));
+				if (brightness < max) brightness = max;
+			}
 			for (int j=0; j<locSatel.length; j++) {
-				if (alt_sat[j] > 0.0 && showSatellite) brightness += delta;
+				if (alt_sat[j] > 0.0 && showSatellite) brightness += deltaSat;
 			}
 			if (render.showDayAndNight && solarEclipse &&
 					alt_sun > (-0.5*Constant.DEG_TO_RAD) ) {
@@ -470,22 +486,20 @@ public class RenderSatellite
 				}
 			}
 			if (brightness == 0 && render.planetMap == PLANET_MAP.MAP_SPHERICAL) continue;
-
-			red = red + brightness;
-			green = green + brightness;
-			blue = blue + brightness;
-			if (red < 0)
-				red = 0;
-			if (green < 0)
-				green = 0;
-			if (blue < 0)
-				blue = 0;
-			if (red > 255)
-				red = 255;
-			if (green > 255)
-				green = 255;
-			if (blue > 255)
-				blue = 255;
+			if (alt_sun > initLightAtElevation && brightness == 0 && render.planetMap == PLANET_MAP.MAP_FLAT)
+				continue;
+			
+			if (brightness != 0) {
+				red += brightness;
+				green += brightness;
+				blue += brightness;
+				if (red < 0) red = 0;
+				if (green < 0) green = 0;
+				if (blue < 0) blue = 0;
+				if (red > 255) red = 255;
+				if (green > 255) green = 255;
+				if (blue > 255) blue = 255;
+			}
 
 			g.setColor(red, green, blue, 255);
 			if (render.planetMap == PLANET_MAP.MAP_SPHERICAL) {
@@ -524,6 +538,7 @@ public class RenderSatellite
 					}
 				}
 			} else {
+				if (pos == null) pos = this.getPosition(loc);
 				if (ps2 <= 1) {
 					g.fillOval(pos[0] + satx-ps, pos[1] + saty-ps, ps2, ps2, false);
 				} else {
@@ -543,7 +558,7 @@ public class RenderSatellite
 		if (render.planetMap.showGrid && render.planetMap == PLANET_MAP.MAP_FLAT) {
 			g.setColor(render.planetMap.showGridColor, true);
 
-			int pos[] = this.getPosition(new LocationElement(-Math.PI, Constant.PI_OVER_TWO, 1));
+			pos = this.getPosition(new LocationElement(-Math.PI, Constant.PI_OVER_TWO, 1));
 			double deg30 = (render.width-1) * render.planetMap.zoomFactor / 12.0;
 			for (int i=0; i<7; i++) {
 				int py = (int) (pos[1] + deg30 * i); //(i*(render.height-1.0)/6.0+0.5);
@@ -617,7 +632,7 @@ public class RenderSatellite
 			LocationElement loc = unfixLoc(new LocationElement(obs.getLongitudeRad(), obs.getLatitudeRad(), 1.0));
 			if (render.planetMap == PLANET_MAP.MAP_SPHERICAL && rp.render.target != TARGET.Moon && rp.render.target != TARGET.MERCURY && rp.render.target != TARGET.VENUS && rp.render.target != TARGET.EARTH)
 				loc.setLongitude(-loc.getLongitude());
-			int pos[] = getPosition(loc);
+			pos = getPosition(loc);
 			g.setColor(render.showObserverColor, true);
 			double alt_sun = Constant.PI_OVER_TWO - LocationElement.getApproximateAngularDistance(loc, locSun);
 			if (render.observerInRedAtNight && alt_sun < -0.75*Constant.DEG_TO_RAD) g.setColor(255, 0, 0, 255);
@@ -699,7 +714,7 @@ public class RenderSatellite
 
 					double maxr = -1, mindx = 0, mindy = 0;
 					LocationElement loc = unfixLoc(new LocationElement(obs.getLongitudeRad(), obs.getLatitudeRad(), 1.0));
-					int pos[] = getPosition(loc);
+					pos = getPosition(loc);
 					for (double ang = Math.PI/4.0; ang<Math.PI+Math.PI*3.0/4.0; ang=ang+Math.PI/20.0) {
 						if (ang < Math.PI*3.0/4.0 || ang > Math.PI+Math.PI/4.0) {
 							for (double dr = 40; dr >= 20; dr = dr - 10) {
@@ -758,7 +773,7 @@ public class RenderSatellite
 			double tr[] = g.getTranslation();
 			g2.traslate(tr[0], tr[1]);
 
-			int pos[] = this.getPosition(new LocationElement(-Math.PI, Constant.PI_OVER_TWO, 1));
+			pos = this.getPosition(new LocationElement(-Math.PI, Constant.PI_OVER_TWO, 1));
 			double deg30 = (render.width-1) * render.planetMap.zoomFactor / 12.0;
 			for (int i=0; i<7; i++) {
 				int py = (int) (pos[1] + deg30 * i) + py0 + over/4;

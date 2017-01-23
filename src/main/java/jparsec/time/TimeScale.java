@@ -92,7 +92,11 @@ public class TimeScale
 	{
 		double JD = time.astroDate.jd();
 
-		if (time.timeScale == type && !eph.correctForEOP) return JD;
+		if (!eph.correctForEOP) {
+			if (time.timeScale == type) return JD;
+			if (time.timeScale == SCALE.UNIVERSAL_TIME_UT1 && type == SCALE.UNIVERSAL_TIME_UTC) return JD;
+			if (time.timeScale == SCALE.UNIVERSAL_TIME_UTC && type == SCALE.UNIVERSAL_TIME_UT1) return JD;
+		}
 
 		// Compute time scale transform values
 		double TT2TDB = 0.0;
@@ -225,7 +229,11 @@ public class TimeScale
 	{
 		BigDecimal JD = time.astroDate.exactJD();
 
-		if (time.timeScale == type && !eph.correctForEOP) return JD;
+		if (!eph.correctForEOP) {
+			if (time.timeScale == type) return JD;
+			if (time.timeScale == SCALE.UNIVERSAL_TIME_UT1 && type == SCALE.UNIVERSAL_TIME_UTC) return JD;
+			if (time.timeScale == SCALE.UNIVERSAL_TIME_UTC && type == SCALE.UNIVERSAL_TIME_UT1) return JD;
+		}
 
 		// Compute time scale transform values
 		BigDecimal TT2TDB = new BigDecimal(0.0);

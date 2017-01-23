@@ -60,7 +60,10 @@ public class RenderSatelliteTest {
             satRender.addSatellite(name[1]);
             satRender.addSatellite(name[2]);
             Graphics g = new AWTGraphics(render.width, render.height, render.anaglyphMode, false, false);
+            long t0 = System.currentTimeMillis();
             satRender.renderize(g);
+            double dt = (System.currentTimeMillis() - t0) / 1000.0;
+            System.out.println("Time: "+dt);
 
             Picture pic = new Picture((BufferedImage) g.getRendering());
             pic.show("");
@@ -73,13 +76,13 @@ public class RenderSatelliteTest {
                     SatelliteEphem.getArtificialSatelliteTargetIndex(name[1]),
                     SatelliteEphem.getArtificialSatelliteTargetIndex(name[2])
             };
-            long t0 = System.currentTimeMillis();
+            t0 = System.currentTimeMillis();
             if (satRender.getSatelliteEphem() != null && satRender.getSatelliteEphem().length > 0) {
                 for (int i = 0; i < satRender.getSatelliteEphem().length; i++) {
                     if (satRender.getSatelliteEphem()[i] != null) {
                         SatelliteOrbitalElement sat = SatelliteEphem.getArtificialSatelliteOrbitalElement(sources[i]);
                         satRender.getSatelliteEphem()[i].nextPass = SatelliteEphem.getNextPass(time, observer, eph, sat, min_elevation, max, true);
-                        double dt = (System.currentTimeMillis() - t0) / 1000.0;
+                        dt = (System.currentTimeMillis() - t0) / 1000.0;
                         if (satRender.getSatelliteEphem()[i].nextPass != 0.0) {
                             System.out.println(satRender.getSatelliteEphem()[i].name + ": " + dt + "/" + TimeFormat.formatJulianDayAsDateAndTime(Math.abs(satRender.getSatelliteEphem()[i].nextPass), TimeElement.SCALE.LOCAL_TIME));
                         } else {

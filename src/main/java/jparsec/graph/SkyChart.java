@@ -4842,7 +4842,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 	            LocationElement loc = Constellation.getConstellationPosition(object, time.astroDate.jd(), chart.drawConstellationNamesType);
 	            if (loc != null) {
 	    			if (obs.getMotherBody() != TARGET.EARTH && obs.getMotherBody() != TARGET.NOT_A_PLANET) {
-	    				loc = Ephem.getPositionFromEarth(loc, time, obs, eph);
+	    				loc = Ephem.getPositionFromBody(loc, time, obs, eph);
 	    			}
 	            	loc = RenderSky.getPositionInSelectedCoordinateSystem(loc, time, obs, eph, chart, fast);
 	                chart.centralLongitude = loc.getLongitude();
@@ -4861,10 +4861,10 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 		            		SimbadElement simbad = SimbadElement.searchDeepSkyObject(object);
 		            		if (simbad == null) throw new Exception("Cannot find object '"+object+"'");
 		            		loc = new LocationElement(simbad.rightAscension, simbad.declination, 1.0);
+			    			loc = Ephem.fromJ2000ToApparentGeocentricEquatorial(loc, time, obs, eph);
 			    			if (obs.getMotherBody() != TARGET.EARTH && obs.getMotherBody() != TARGET.NOT_A_PLANET) {
 			    				loc = Ephem.getPositionFromBody(loc, time, obs, eph);
 			    			}
-			    			loc = Ephem.fromJ2000ToApparentGeocentricEquatorial(loc, time, obs, eph);
 		                	loc = RenderSky.getPositionInSelectedCoordinateSystem(loc, time, obs, eph, chart, fast);
 		                    chart.centralLongitude = loc.getLongitude();
 		                    chart.centralLatitude = loc.getLatitude();
@@ -5137,6 +5137,7 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 	  			} else {
 		  			objData[5] = Translate.translate(308) + ": " + objData[5];
 	  			}
+	  			if (objData.length > 6) objData[6] = Translate.translate(241) + ": "+objData[6];
 	  			if (Translate.getDefaultLanguage() != LANGUAGE.ENGLISH && objData.length > 6)
 	  				objData[6] = DataSet.replaceAll(objData[6], "Type", Translate.translate(1296), true);
 	  			if (objData.length > 6 && objData[4].indexOf(Translate.translate(1182)) >= 0) objData = DataSet.eliminateRowFromTable(objData, 7);

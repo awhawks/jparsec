@@ -1235,20 +1235,22 @@ public class RenderSky
 							for (int i = 0; i < render.planetRender.moonephem.length; i++)
 							{
 								loc0 = ((LocationElement[]) objS[1])[i];
-								pos0 = projection.projectPosition(loc0, 0, false).clone();
+								float poss[] = projection.projectPosition(loc0, 0, false);
+								if (!projection.isInvalid(poss)) poss = poss.clone();
+								
 								// Uncommenting this will not allow satellite shadows to be rendered when satellite is not visible
-								//if (pos0 != null && !this.isInTheScreen((int)pos0[0], (int)pos0[1])) pos0 = null;
+								//if (poss != null && !this.isInTheScreen((int)poss[0], (int)poss[1])) poss = null;
 
-								if (!projection.isInvalid(pos0) && !render.planetRender.moonephem[i].occulted && !render.planetRender.moonephem[i].eclipsed)
+								if (!projection.isInvalid(poss) && !render.planetRender.moonephem[i].occulted && !render.planetRender.moonephem[i].eclipsed)
 								{
 									planet_v.add(new float[]
-									{ pos0[0], pos0[1],
+									{ poss[0], poss[1],
 											-pixels_per_radian * render.planetRender.moonephem[i].angularRadius,
 											(float) render.planetRender.moonephem[i].distance, i });
 									planet_v.add(render.planetRender.clone());
 								}
 
-								v.add(pos0);
+								v.add(poss);
 							}
 						}
 						// In RenderPlanet satellite positions are drawn as RA vs DEC in cilyndrical projection, here
@@ -4662,10 +4664,28 @@ public class RenderSky
 			}
 		}
 
+		if (sc <= 180 && (radius_x > imgMaxWidth || radius_y > imgMaxHeight) && 
+				radius_x < render.width * 5 && radius_y < render.height * 5) {
+			int w0 = imgMaxWidth, h0 = imgMaxHeight;
+			int x0 = sizei[0]/2-w0/2, y0 = sizei[1]/2-h0/2;
+			if (x0 < 0) {
+				x0 = 0;
+				w0 = sizei[0];
+			}
+			if (y0 < 0) {
+				y0 = 0;
+				h0 = sizei[1];
+			}
+			img = g.getImage(img, x0, y0, w0, h0);
+			sizei = g.getSize(img);
+			radius_x = sizei[0] * scale * 0.5f;
+			radius_y = sizei[1] * scale * 0.5f;
+		}
+		
 		double factor = 1;
 		if (sc > 180) factor = 2; // Images covering large fields (>3\u00b0) should disappear faster
 		int w = 1, h = 1;
-		if (radius_x*factor < imgMaxWidth || radius_y*factor < imgMaxHeight) {
+		if (radius_x*factor <= imgMaxWidth || radius_y*factor <= imgMaxHeight) {
 			if (!recovered) {
 				int col = g.getColor();
 				int nn = 20;
@@ -7043,7 +7063,7 @@ public class RenderSky
 
 							if (SaveObjectsToAllowSearch) {
 								minorObjects.add(new Object[] {
-										RenderSky.OBJECT.TRANSNEPTUNIAN, pos.clone(),
+										RenderSky.OBJECT.TRANSNEPTUNIAN, pos,
 										ephem
 								});
 								save = true;
@@ -7220,7 +7240,7 @@ public class RenderSky
 
 							if (SaveObjectsToAllowSearch) {
 								minorObjects.add(new Object[] {
-										RenderSky.OBJECT.ASTEROID, pos.clone(),
+										RenderSky.OBJECT.ASTEROID, pos,
 										ephem
 								});
 								save = true;
@@ -7443,7 +7463,7 @@ public class RenderSky
 
 							if (SaveObjectsToAllowSearch) {
 								minorObjects.add(new Object[] {
-										RenderSky.OBJECT.COMET, pos.clone(),
+										RenderSky.OBJECT.COMET, pos,
 										ephem
 								});
 								save = true;
@@ -7703,7 +7723,7 @@ public class RenderSky
 
 							if (SaveObjectsToAllowSearch) {
 								minorObjects.add(new Object[] {
-										RenderSky.OBJECT.NEO, pos.clone(),
+										RenderSky.OBJECT.NEO, pos,
 										ephem
 								});
 								save = true;
@@ -7822,7 +7842,7 @@ public class RenderSky
 
 						if (SaveObjectsToAllowSearch) {
 							minorObjects.add(new Object[] {
-									RenderSky.OBJECT.PROBE, pos.clone(),
+									RenderSky.OBJECT.PROBE, pos,
 									ephem
 							});
 							save = true;
@@ -8054,7 +8074,7 @@ public class RenderSky
 
 						if (SaveObjectsToAllowSearch) {
 							minorObjects.add(new Object[] {
-									RenderSky.OBJECT.ARTIFICIAL_SATELLITE, pos.clone(),
+									RenderSky.OBJECT.ARTIFICIAL_SATELLITE, pos,
 									ephem
 							});
 							save = true;
@@ -8093,7 +8113,7 @@ public class RenderSky
 
 						if (SaveObjectsToAllowSearch) {
 							minorObjects.add(new Object[] {
-									RenderSky.OBJECT.ARTIFICIAL_SATELLITE, pos.clone(),
+									RenderSky.OBJECT.ARTIFICIAL_SATELLITE, pos,
 									ephem
 							});
 							save = true;
@@ -8368,7 +8388,7 @@ public class RenderSky
 
 					if (SaveObjectsToAllowSearch) {
 						minorObjects.add(new Object[] {
-								RenderSky.OBJECT.SUPERNOVA, pos.clone(),
+								RenderSky.OBJECT.SUPERNOVA, pos,
 								new String[] {(String) obj[1], ""+loc.getLongitude(), ""+loc.getLatitude(), (String) obj[4], (String) obj[3]}
 						});
 						save = true;
@@ -8562,7 +8582,7 @@ public class RenderSky
 
 					if (SaveObjectsToAllowSearch) {
 						minorObjects.add(new Object[] {
-								RenderSky.OBJECT.NOVA, pos.clone(),
+								RenderSky.OBJECT.NOVA, pos,
 								new String[] {(String) obj[1], ""+loc.getLongitude(), ""+loc.getLatitude(), (String) obj[4], (String) obj[3]}
 						});
 						save = true;
@@ -10217,8 +10237,8 @@ public class RenderSky
 			float old_pos[] = Projection.INVALID_POSITION;
 			col = render.trajectory[index].drawPathColor1;
 			int point_size = 1;
-			LocationElement[] loc_path = render.trajectory[index].loc_path.clone();
-			if (loc_path != null) {
+			if (render.trajectory[index].loc_path != null) {
+				LocationElement[] loc_path = render.trajectory[index].loc_path.clone();
 /*
 				// THIS ALGORITHM USING GENERALPATH IS NOT WORKING SINCE THE PATH IN THIS OBJECT
 				// IS NOT GUARRANTEED TO PASS EXACTLY ACROSS ALL POINTS UNLESS ONLY LINETO IS USED
@@ -11229,7 +11249,7 @@ public class RenderSky
 
 			String limmag0 = "9.5", limmag = Functions.formatValue(render.drawStarsLimitingMagnitude,1);
 			if (g.renderingToAndroid()) limmag0 = "8.5";
-			String field = Functions.formatValue(2, 1);
+			String field = "1.6"; //Functions.formatValue(2, 1);
 			String datas = getOldUCAC4(loc0J2000, field, limmag0, limmag);
 			if (datas == null) {
 				String query = "http://vizier.u-strasbg.fr/cgi-bin/VizieR?-source=UCAC4&-c="+name+"&-c.rd="+field+"&-mime=ascii&-out.form=csv&-oc.form=dec&-out.max=20000&-out=RAJ2000,DEJ2000,f.mag,a.mag,pmRA,pmDE,UCAC4,Tycho-2&f.mag="+limmag0+".."+limmag;
@@ -11436,7 +11456,7 @@ public class RenderSky
 				double lat = Double.parseDouble(FileIO.getField(6, s, "_", true));
 				LocationElement l = new LocationElement(lon, lat, 1);
 				double dist = LocationElement.getApproximateAngularDistance(l, loc) * Constant.RAD_TO_DEG;
-				if (dist < 1.75) {
+				if (dist < 1.5) {
 					if (dist < minDist || minDist == -1) {
 						minDist = dist;
 						out = DataSet.arrayListToString(ReadFile.readAnyExternalFile(f[i]));

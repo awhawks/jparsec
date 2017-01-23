@@ -3307,6 +3307,18 @@ public class AWTGraphics implements Graphics {
 	}
 
 	@Override
+	public int[] getRGBs(Object s, int i, int j, int w, int h) {
+		BufferedImage image = toImage(s);
+
+		if (i+w > image.getWidth()) w = image.getWidth()-i;
+		if (j+h > image.getHeight()) h = image.getHeight()-j;
+
+		if (w <= 0 || h <= 0) return null;
+		
+		return image.getRGB(i, j, w, h, null, 0, w);
+	}
+	
+	@Override
 	public int[] getRGBs(int i, int j, int w, int h) {
 		if (this.invertEnabled) {
 			if (this.invertH) {

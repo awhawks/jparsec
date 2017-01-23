@@ -2458,7 +2458,7 @@ public class SkyRenderElement implements Serializable
 			drawConstellationLimitsStroke = new JPARSECStroke(JPARSECStroke.STROKE_LINES_LARGE, new float[] {8, 3}, 0);
 			drawCoordinateGridStroke = JPARSECStroke.STROKE_DEFAULT_LINE;
 			drawStarsRealistic = REALISTIC_STARS.SPIKED;
-			drawDeepSkyObjectsTextures = false;
+			//drawDeepSkyObjectsTextures = false;
 			break;
 		case WHITE_BACKGROUND_SIMPLE_GREEN_RED_OR_RED_CYAN_ANAGLYPH:
 			this.colorModel = id;

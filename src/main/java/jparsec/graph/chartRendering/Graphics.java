@@ -894,6 +894,17 @@ public interface Graphics {
 	int[] getRGBs(int i, int j, int w, int h);
 
 	/**
+	 * Returns the RGB colors at a given rectangle in an image.
+	 * @param s The image object.
+	 * @param i x.
+	 * @param j y.
+	 * @param w width.
+	 * @param h height.
+	 * @return The colors at (x, y) -&gt; (w, h).
+	 */
+	int[] getRGBs(Object s, int i, int j, int w, int h);
+	
+	/**
 	 * Returns the RGB color at a given position for the right view
 	 * of a Dubois anaglyph.
 	 * @param i x.

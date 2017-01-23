@@ -970,8 +970,8 @@ public class SDP8_SGP8
 		double JD = TimeScale.getJD(time, obs, eph, refScale);
 		double JD_LT = TimeScale.getJD(time, obs, eph, SCALE.LOCAL_TIME);
 
-		// Set time step to 1 minute
-		double time_step = 1.0 / (Constant.MINUTES_PER_HOUR * Constant.HOURS_PER_DAY);
+		// Set time step to 0.5 minutes
+		double time_step = 0.5 / (Constant.MINUTES_PER_HOUR * Constant.HOURS_PER_DAY);
 		int nstep = 0;
 		int max_step = (int) Math.floor(maxDays / time_step);
 		double qs = getBestQuickSearch(sat, min_elevation) / time_step;
@@ -1008,7 +1008,7 @@ public class SDP8_SGP8
 					nstep = nstep + bqs;
 				} else {
 					int bqs = quickSearch / 4;
-					if (bqs < 1) bqs = 1;
+					if (bqs < 1 || ephem.elevation > 0) bqs = 1;
 					nstep = nstep + bqs;
 				}
 			}
