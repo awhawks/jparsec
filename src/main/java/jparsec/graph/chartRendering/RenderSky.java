@@ -21,6 +21,9 @@
  */
 package jparsec.graph.chartRendering;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -2912,7 +2915,8 @@ public class RenderSky
 			return;
 		}
 
-		if (render.drawMilkyWayContoursWithTextures != MILKY_WAY_TEXTURE.NO_TEXTURE && render.getColorMode() == COLOR_MODE.BLACK_BACKGROUND) {
+		if (render.drawMilkyWayContoursWithTextures != MILKY_WAY_TEXTURE.NO_TEXTURE && 
+				(render.getColorMode() == COLOR_MODE.NIGHT_MODE || render.getColorMode() == COLOR_MODE.BLACK_BACKGROUND)) {
 			if (fieldDeg < 1) return;
 // 			if (milkyWayTexture == null) {
 			Object	milkyWayTexture = g.getImage(FileIO.DATA_TEXTURES_DIRECTORY + "deepsky/"+SkyRenderElement.MILKY_WAY_TEXTURE_FILENAME[render.drawMilkyWayContoursWithTextures.ordinal()]);
@@ -2928,7 +2932,7 @@ public class RenderSky
  			int sizei[] = g.getSize(milkyWayTexture);
 			int imax = sizei[0], jmax = sizei[1];
 			double step0 = (imax / 360.0) / pixels_per_degree;
-			if (g.renderingToAndroid()) step0 *= 2;
+			//if (g.renderingToAndroid()) step0 *= 2;
 			int step = (int) (step0+0.5);
 			if (step < 1) step = 1;
 			if (RenderPlanet.MAXIMUM_TEXTURE_QUALITY_FACTOR < 1f) step += (int) (1.0 / RenderPlanet.MAXIMUM_TEXTURE_QUALITY_FACTOR);
@@ -3826,6 +3830,7 @@ public class RenderSky
 		if (iend < init) iend += imax;
 		float size2s = size2*scale;
 		float sizes = size*scale;
+		boolean useRGB = (render.getColorMode() != COLOR_MODE.NIGHT_MODE);
 		for (int j=jnit0; j<jend0; j = j + step) {
 			for (int ii=init; ii<iend; ii = ii + step) {
 				int i = ii; //(int) Functions.module(ii, imax);
@@ -3855,6 +3860,7 @@ public class RenderSky
 						int rgb = g.getRGB(milkyWayTexture, i, j);
 						int alpha = 16 + (((rgb>>16)&255) + ((rgb>>8)&255) + (rgb&255)) / 3;
 						if (alpha > 254) alpha = 254;
+						if (!useRGB) rgb = ((rgb>>16)&255) << 16;
 						g.setColor(rgb, alpha);
 						loc.setRadius(g.getColor());
 //						mw.set(mwi, new MilkyWayData((float)loc.getLongitude(), (float)loc.getLatitude(), g.getColor()));
@@ -3911,6 +3917,7 @@ public class RenderSky
 		if (iend < init) iend += imax;
 		float size2s = size2*scale;
 		float sizes = size*scale;
+		boolean useRGB = (render.getColorMode() != COLOR_MODE.NIGHT_MODE);
 		for (int j=jnit; j<jend; j = j + step) {
 			for (int ii=init; ii<iend; ii = ii + step) {
 				i = ii;
@@ -3930,6 +3937,7 @@ public class RenderSky
 					g.enableInversion();
 					int alpha = 16 + (((rgb>>16)&255) + ((rgb>>8)&255) + (rgb&255)) / 3;
 					if (alpha > 255) alpha = 255;
+					if (!useRGB) rgb = ((rgb>>16)&255) << 16;
 
 					g.setColor(rgb, alpha);
 					if (render.anaglyphMode == ANAGLYPH_COLOR_MODE.NO_ANAGLYPH) {
@@ -4771,7 +4779,15 @@ public class RenderSky
 				if (file != null && !g.renderingToAndroid()) g.addToDataBase(img, file+render.getColorMode().name(), 100);
 			}
 			img = g.getRotatedAndScaledImage(img, radius_x-0.5f, radius_y-0.5f, ang, 1, 1);
-
+			if (render.getColorMode() == COLOR_MODE.NIGHT_MODE) {
+				int arr[] = g.getImageAsPixels(img), s[] = g.getSize(img);
+				for (int i=0; i<arr.length; i++) {
+					int r = (arr[i]>>16)&255;
+					arr[i] = 255<<24 | r<<16;
+				}
+				img = g.getImage(s[0], s[1], arr);
+			}
+			
 			if (render.drawSkyCorrectingLocalHorizon && projection.obs.getMotherBody() == TARGET.EARTH && projection.eph.isTopocentric
 					&& (projection.eph.targetBody != TARGET.SUN || !render.planetRender.axes)) {
 				LocationElement locEq = projection.toEquatorialPosition(loc, true);

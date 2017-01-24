@@ -112,20 +112,20 @@ public class TextLabel extends Object {
   /**
    ** Minimum Point size allowed for script characters
    */
-  final static int MINIMUM_SIZE  =  6;
+  final static int MINIMUM_SIZE  =  2;
 
   /**
    * Decrease in size of successive script levels.
    */
-     private double script_fraction = 0.6;
+     private double script_fraction = 0.55;
   /**
    * Superscript offset.
    */
-     private double sup_offset      = 0.65;
+     private double sup_offset      = 0.6;
   /**
    * Subscript offset.
    */
-     private double sub_offset      = 1.5;
+     private double sub_offset      = 1.1;
   /**
    * Font to use for text.
    */
@@ -1456,8 +1456,6 @@ class TextState extends Object {
       Color col      = null;
       // Rotation angle
       double angle = 0;
-      private FontMetrics fontMetric = null;
-      private Font fontMetricFont;
 
       /**
        * Constructor.
@@ -1539,11 +1537,7 @@ class TextState extends Object {
           String ss = s.toString();
           if (ss.startsWith("@FORMULA")) ss = s.substring(8);
           if (ss.startsWith("@CLOCK")) ss = s.substring(6);
-          if (fontMetric == null || g.getFont() != fontMetricFont) {
-        	  fontMetric = g.getFontMetrics();
-        	  fontMetricFont = g.getFont();
-          }
-          return fontMetric.stringWidth(ss);
+          return g.getFontMetrics().stringWidth(ss);
       }
 
       /**
@@ -1553,12 +1547,8 @@ class TextState extends Object {
        */
       public int getHeight(Graphics g) {
            if (g == null || f == null ) return 0;
-           if (fontMetric == null || g.getFont() != f) {
-         	  fontMetric = g.getFontMetrics();
-         	  fontMetricFont = f;
-           }
 
-           return fontMetric.getHeight();
+           return g.getFontMetrics().getHeight();
 	 }
       /**
        * Text ascent.
@@ -1567,12 +1557,8 @@ class TextState extends Object {
        */
       public int getAscent(Graphics g) {
            if(g == null || f == null ) return 0;
-           if (fontMetric == null || g.getFont() != f) {
-          	  fontMetric = g.getFontMetrics();
-          	  fontMetricFont = f;
-            }
 
-            return fontMetric.getAscent();
+            return g.getFontMetrics().getAscent();
 	 }
       /**
        * Text descent.
@@ -1581,12 +1567,8 @@ class TextState extends Object {
        */
       public int getDescent(Graphics g) {
            if(g == null || f == null ) return 0;
-           if (fontMetric == null || g.getFont() != f) {
-          	  fontMetric = g.getFontMetrics();
-          	  fontMetricFont = f;
-            }
 
-            return fontMetric.getDescent();
+            return g.getFontMetrics().getDescent();
       }
       /**
        * Text maximum ascent.
@@ -1595,12 +1577,8 @@ class TextState extends Object {
        */
       public int getMaxAscent(Graphics g) {
            if(g == null || f == null ) return 0;
-           if (fontMetric == null || g.getFont() != f) {
-          	  fontMetric = g.getFontMetrics();
-          	  fontMetricFont = f;
-            }
 
-            return fontMetric.getMaxAscent();
+            return g.getFontMetrics().getMaxAscent();
       }
       /**
        * Text maximum descent.
@@ -1609,12 +1587,8 @@ class TextState extends Object {
        */
       public int getMaxDescent(Graphics g) {
            if(g == null || f == null ) return 0;
-           if (fontMetric == null || g.getFont() != f) {
-          	  fontMetric = g.getFontMetrics();
-          	  fontMetricFont = f;
-            }
 
-            return fontMetric.getMaxDescent();
+            return g.getFontMetrics().getMaxDescent();
       }
       /**
        * Text leading.
@@ -1623,12 +1597,8 @@ class TextState extends Object {
        */
       public int getLeading(Graphics g) {
            if(g == null || f == null ) return 0;
-           if (fontMetric == null || g.getFont() != f) {
-          	  fontMetric = g.getFontMetrics();
-          	  fontMetricFont = f;
-            }
 
-            return fontMetric.getLeading();
+            return g.getFontMetrics().getLeading();
       }
 }
 

@@ -446,6 +446,7 @@ public class RenderPlanet
 			double refz, int backgroundCol, double posx, double posy, double subslat,
 			double dlon, double incl_up, double incl_pole, double distCenter, double timesOut,
 			boolean onPlanet, boolean behindPlanet, boolean shadow) {
+		boolean useRGB = ((0xff & (render.foreground >> 16)) <= (0xff & (render.foreground >> 8)));
 		// Draw planetary rings with textures
 		if ((render.target == TARGET.SATURN || render.target == TARGET.URANUS) && render.textures && r > 0)
 		{
@@ -563,28 +564,32 @@ public class RenderPlanet
 									// Get RGB compounds of the background
 									// (planet)
 									int red3 = 0xff & (my_color_old >> 16);
-									int green3 = 0xff & (my_color_old >> 8);
-									int blue3 = 0xff & my_color_old;
-
-/*									if (render.target == TARGET.SATURN && rr3 < rrDispersion) {
-										float brightnessFactor = 0.25f + (red3 + green3 + blue3) / (255f);
-										red3 += (int) (projectionDist * 36.0 * brightnessFactor);
-										green3 += (int) (projectionDist * 18.0 * brightnessFactor);
-										blue3 += (int) (projectionDist * 64.0 * brightnessFactor);
-										if (red3 > 255) red3 = 255;
-										if (green3 > 255) green3 = 255;
-										if (blue3 > 255) blue3 = 255;
+									if (useRGB) {
+										int green3 = 0xff & (my_color_old >> 8);
+										int blue3 = 0xff & my_color_old;
+	
+	/*									if (render.target == TARGET.SATURN && rr3 < rrDispersion) {
+											float brightnessFactor = 0.25f + (red3 + green3 + blue3) / (255f);
+											red3 += (int) (projectionDist * 36.0 * brightnessFactor);
+											green3 += (int) (projectionDist * 18.0 * brightnessFactor);
+											blue3 += (int) (projectionDist * 64.0 * brightnessFactor);
+											if (red3 > 255) red3 = 255;
+											if (green3 > 255) green3 = 255;
+											if (blue3 > 255) blue3 = 255;
+										}
+	*/
+										// Apply simple illumination model: final
+										// planet color = original background *
+										// transparency
+										int red4 = (int) (red3 * (1.0 - transp2));
+										int green4 = (int) (green3 * (1.0 - transp2));
+										int blue4 = (int) (blue3 * (1.0 - transp2));
+	
+										// Compound RGB color
+										g.setColor(red4, green4, blue4, 255);
+									} else {
+										g.setColor((int) (red3 * (1.0 - transp2)), 0, 0, 255);										
 									}
-*/
-									// Apply simple illumination model: final
-									// planet color = original background *
-									// transparency
-									int red4 = (int) (red3 * (1.0 - transp2));
-									int green4 = (int) (green3 * (1.0 - transp2));
-									int blue4 = (int) (blue3 * (1.0 - transp2));
-
-									// Compound RGB color
-									g.setColor(red4, green4, blue4, 255);
 									drawPoint(dx, dy, dist, true, g, dubois);
 								} else {
 									// Get color of the planet at this position
@@ -609,27 +614,31 @@ public class RenderPlanet
 										// Get RGB compounds of the background
 										// (planet)
 										int red3 = 0xff & (my_color_old >> 16);
-										int green3 = 0xff & (my_color_old >> 8);
-										int blue3 = 0xff & my_color_old;
-
-/*										if (render.target == TARGET.SATURN && rr3 < rrDispersion) {
-											red3 += (int) (projectionDist * 36.0);
-											green3 += (int) (projectionDist * 18.0);
-											blue3 += (int) (projectionDist * 64.0);
-											if (red3 > 255) red3 = 255;
-											if (green3 > 255) green3 = 255;
-											if (blue3 > 255) blue3 = 255;
+										if (useRGB) {
+											int green3 = 0xff & (my_color_old >> 8);
+											int blue3 = 0xff & my_color_old;
+	
+	/*										if (render.target == TARGET.SATURN && rr3 < rrDispersion) {
+												red3 += (int) (projectionDist * 36.0);
+												green3 += (int) (projectionDist * 18.0);
+												blue3 += (int) (projectionDist * 64.0);
+												if (red3 > 255) red3 = 255;
+												if (green3 > 255) green3 = 255;
+												if (blue3 > 255) blue3 = 255;
+											}
+	*/
+											// Apply simple illumination model: final
+											// planet color = original background *
+											// transparency
+											int red4 = (int) (red3 * (1.0 - transp2));
+											int green4 = (int) (green3 * (1.0 - transp2));
+											int blue4 = (int) (blue3 * (1.0 - transp2));
+	
+											// Compound RGB color
+											g.setColor(red4, green4, blue4, 255);
+										} else {
+											g.setColor((int) (red3 * (1.0 - transp2)), 0, 0, 255);										
 										}
-*/
-										// Apply simple illumination model: final
-										// planet color = original background *
-										// transparency
-										int red4 = (int) (red3 * (1.0 - transp2));
-										int green4 = (int) (green3 * (1.0 - transp2));
-										int blue4 = (int) (blue3 * (1.0 - transp2));
-
-										// Compound RGB color
-										g.setColor(red4, green4, blue4, 255);
 										drawPoint(dx, dy, dist, true, g, dubois);
 									}
 								}
@@ -829,23 +838,27 @@ public class RenderPlanet
 								// Background compounds (planet with
 								// transparency applied)
 								red3 = 0xff & (my_color >> 16);
-								green3 = 0xff & (my_color >> 8);
-								blue3 = 0xff & my_color;
-
-								// Apply illumination model for rings:
-								// final color = ring color * opacity +
-								// background * transparency
-								// I also add a term which computes the sun
-								// inclination above rings
-								int red4 = (int) ((red * transp2 + red3 * (1.0 - transp2)));
-								int green4 = (int) ((green * transp2 + green3 * (1.0 - transp2)));
-								int blue4 = (int) ((blue * transp2 + blue3 * (1.0 - transp2)));
-								if (red4 > 254) red4 = 254;
-								if (green4 > 254) green4 = 254;
-								if (blue4 > 254) blue4 = 254;
-
-								// Draw
-								g.setColor(red4, green4, blue4, 255); //190 + (int)(transp2 * 64));
+								if (useRGB) {
+									green3 = 0xff & (my_color >> 8);
+									blue3 = 0xff & my_color;
+	
+									// Apply illumination model for rings:
+									// final color = ring color * opacity +
+									// background * transparency
+									// I also add a term which computes the sun
+									// inclination above rings
+									int red4 = (int) ((red * transp2 + red3 * (1.0 - transp2)));
+									int green4 = (int) ((green * transp2 + green3 * (1.0 - transp2)));
+									int blue4 = (int) ((blue * transp2 + blue3 * (1.0 - transp2)));
+									if (red4 > 254) red4 = 254;
+									if (green4 > 254) green4 = 254;
+									if (blue4 > 254) blue4 = 254;
+	
+									// Draw
+									g.setColor(red4, green4, blue4, 255); //190 + (int)(transp2 * 64));
+								} else {
+									g.setColor((int) ((red * transp2 + red3 * (1.0 - transp2))), 0, 0, 255);
+								}
 								if (dubois) {
 									g.fillOvalAnaglyphLeft((float)dx, (float)dy, 1.1f, 1.1f, dist);
 								} else {
@@ -857,23 +870,27 @@ public class RenderPlanet
 								// Background compounds (planet with
 								// transparency applied)
 								red3 = 0xff & (my_color2 >> 16);
-								green3 = 0xff & (my_color2 >> 8);
-								blue3 = 0xff & my_color2;
-
-								// Apply illumination model for rings:
-								// final color = ring color * opacity +
-								// background * transparency
-								// I also add a term which computes the sun
-								// inclination above rings
-								int red4 = (int) ((red * transp2 + red3 * (1.0 - transp2)));
-								int green4 = (int) ((green * transp2 + green3 * (1.0 - transp2)));
-								int blue4 = (int) ((blue * transp2 + blue3 * (1.0 - transp2)));
-								if (red4 > 254) red4 = 254;
-								if (green4 > 254) green4 = 254;
-								if (blue4 > 254) blue4 = 254;
-
-								// Draw
-								g.setColor(red4, green4, blue4, 255);
+								if (useRGB) {
+									green3 = 0xff & (my_color2 >> 8);
+									blue3 = 0xff & my_color2;
+	
+									// Apply illumination model for rings:
+									// final color = ring color * opacity +
+									// background * transparency
+									// I also add a term which computes the sun
+									// inclination above rings
+									int red4 = (int) ((red * transp2 + red3 * (1.0 - transp2)));
+									int green4 = (int) ((green * transp2 + green3 * (1.0 - transp2)));
+									int blue4 = (int) ((blue * transp2 + blue3 * (1.0 - transp2)));
+									if (red4 > 254) red4 = 254;
+									if (green4 > 254) green4 = 254;
+									if (blue4 > 254) blue4 = 254;
+	
+									// Draw
+									g.setColor(red4, green4, blue4, 255);
+								} else {
+									g.setColor((int) ((red * transp2 + red3 * (1.0 - transp2))), 0, 0, 255);									
+								}
 								g.fillOvalAnaglyphRight((float)dx, (float)dy, 1.1f, 1.1f, dist);
 							}
 						} else {
@@ -898,7 +915,7 @@ public class RenderPlanet
 		if (r > 0 && ((render.target == TARGET.SATURN || render.target == TARGET.URANUS) && !render.textures || 
 				(r > 5 && render.target == TARGET.NEPTUNE)))
 		{
-			g.setColor(128, 128, 0, 255); // In yellow
+			g.setColor(useRGB ? 128 : 255, useRGB ? 128 : 0, 0, 255); // In yellow
 			int pz = 4;
 			if (render.target == TARGET.SATURN) pz = 7;
 			// Approximate y/x relative factor
@@ -1944,8 +1961,12 @@ public class RenderPlanet
 			TARGET target, Object img2, int iindex, int jindex) {
 		// Treat RGB compounds of the pixel
 		int red = 0xff & (c >> 16);
-		int green = 0xff & (c >> 8);
-		int blue = 0xff & c;
+		boolean rgb = ((0xff & (render.foreground >> 16)) <= (0xff & (render.foreground >> 8)));
+		int green = 0, blue = 0;
+		if (rgb) {
+			green = 0xff & (c >> 8);
+			blue = 0xff & c;
+		}
 
 		if (target != TARGET.SUN && this.showDayAndNight) {
 			double ry = 1.0;
@@ -1976,33 +1997,39 @@ public class RenderPlanet
 
 			// Decrease/Increase brightness carefully
 			red = (red - (int) (red * ry));
-			green = (green - (int) (green * ry));
+			if (rgb) green = (green - (int) (green * ry));
 			if (target != null && (target == TARGET.SATURN || target == TARGET.URANUS || target == TARGET.NEPTUNE)) ry = ry * 0.95;
 			if (target != null && target == TARGET.JUPITER) ry = ry * 0.85; // 15% more blue in the edge of Jupiter, see HST images
-			blue = (blue - (int) (blue * ry));
+			if (rgb) blue = (blue - (int) (blue * ry));
 
 			if (target == TARGET.EARTH && (earthMap == null || earthMap.EarthMapSource == null)) {
 				red *= 2;
-				green *= 2;
-				blue *= 2;
+				if (rgb) {
+					green *= 2;
+					blue *= 2;
+				}
 			}
 			// Add Earth lights at night in dark side
 			if (img2 != null) {
-				int rgb = g.getRGB(img2, iindex, jindex);
-				int red2 = 0xff & (rgb >> 16);
-				int green2 = 0xff & (rgb >> 8);
-				int blue2 = 0xff & rgb;
+				int rgbc = g.getRGB(img2, iindex, jindex);
+				int red2 = 0xff & (rgbc >> 16);
 				red = (int)(red + Math.pow(red2, ry+.5) * ry * 0.5 / 10.0);
-				green = (int)(green + Math.pow(green2, ry+.5) * ry * 0.5 / 10.0);
-				blue = (int)(blue + Math.pow(blue2, ry+.5) * ry * 0.5 / 10.0);
+				if (rgb) {
+					int green2 = 0xff & (rgbc >> 8);
+					int blue2 = 0xff & rgbc;
+					green = (int)(green + Math.pow(green2, ry+.5) * ry * 0.5 / 10.0);
+					blue = (int)(blue + Math.pow(blue2, ry+.5) * ry * 0.5 / 10.0);
+				}
 			}
 
 			if (red < 1) red = 1;
-			if (green < 1) green = 1;
-			if (blue < 1) blue = 1;
 			if (red > 254) red = 254;
-			if (green > 254) green = 254;
-			if (blue > 254) blue = 254;
+			if (rgb) {
+				if (green < 1) green = 1;
+				if (blue < 1) blue = 1;
+				if (green > 254) green = 254;
+				if (blue > 254) blue = 254;
+			}
 		}
 
 		if (red == br && green == bg && blue == bb) blue ++;
