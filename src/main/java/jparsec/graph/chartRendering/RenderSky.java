@@ -7079,7 +7079,7 @@ public class RenderSky
 
 							if (SaveObjectsToAllowSearch) {
 								minorObjects.add(new Object[] {
-										RenderSky.OBJECT.TRANSNEPTUNIAN, pos,
+										RenderSky.OBJECT.TRANSNEPTUNIAN, pos.clone(),
 										ephem
 								});
 								save = true;
@@ -7256,7 +7256,7 @@ public class RenderSky
 
 							if (SaveObjectsToAllowSearch) {
 								minorObjects.add(new Object[] {
-										RenderSky.OBJECT.ASTEROID, pos,
+										RenderSky.OBJECT.ASTEROID, pos.clone(),
 										ephem
 								});
 								save = true;
@@ -7479,7 +7479,7 @@ public class RenderSky
 
 							if (SaveObjectsToAllowSearch) {
 								minorObjects.add(new Object[] {
-										RenderSky.OBJECT.COMET, pos,
+										RenderSky.OBJECT.COMET, pos.clone(),
 										ephem
 								});
 								save = true;
@@ -7739,7 +7739,7 @@ public class RenderSky
 
 							if (SaveObjectsToAllowSearch) {
 								minorObjects.add(new Object[] {
-										RenderSky.OBJECT.NEO, pos,
+										RenderSky.OBJECT.NEO, pos.clone(),
 										ephem
 								});
 								save = true;
@@ -7858,7 +7858,7 @@ public class RenderSky
 
 						if (SaveObjectsToAllowSearch) {
 							minorObjects.add(new Object[] {
-									RenderSky.OBJECT.PROBE, pos,
+									RenderSky.OBJECT.PROBE, pos.clone(),
 									ephem
 							});
 							save = true;
@@ -8090,7 +8090,7 @@ public class RenderSky
 
 						if (SaveObjectsToAllowSearch) {
 							minorObjects.add(new Object[] {
-									RenderSky.OBJECT.ARTIFICIAL_SATELLITE, pos,
+									RenderSky.OBJECT.ARTIFICIAL_SATELLITE, pos.clone(),
 									ephem
 							});
 							save = true;
@@ -8129,7 +8129,7 @@ public class RenderSky
 
 						if (SaveObjectsToAllowSearch) {
 							minorObjects.add(new Object[] {
-									RenderSky.OBJECT.ARTIFICIAL_SATELLITE, pos,
+									RenderSky.OBJECT.ARTIFICIAL_SATELLITE, pos.clone(),
 									ephem
 							});
 							save = true;
@@ -8404,7 +8404,7 @@ public class RenderSky
 
 					if (SaveObjectsToAllowSearch) {
 						minorObjects.add(new Object[] {
-								RenderSky.OBJECT.SUPERNOVA, pos,
+								RenderSky.OBJECT.SUPERNOVA, pos.clone(),
 								new String[] {(String) obj[1], ""+loc.getLongitude(), ""+loc.getLatitude(), (String) obj[4], (String) obj[3]}
 						});
 						save = true;
@@ -8598,7 +8598,7 @@ public class RenderSky
 
 					if (SaveObjectsToAllowSearch) {
 						minorObjects.add(new Object[] {
-								RenderSky.OBJECT.NOVA, pos,
+								RenderSky.OBJECT.NOVA, pos.clone(),
 								new String[] {(String) obj[1], ""+loc.getLongitude(), ""+loc.getLatitude(), (String) obj[4], (String) obj[3]}
 						});
 						save = true;
