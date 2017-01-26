@@ -279,14 +279,14 @@ public class EventReport {
 				case 10:
 					if (MercuryVenusTransits) s = MainEvents.getMercuryOrVenusTransit(TARGET.MERCURY, jd, jdf, maximumAccuracy);
 					if (s != null) {
-						s.details = Translate.getEntry(841, LANGUAGE.ENGLISH)+" "+DataSet.replaceAll(s.details.substring(1), ",", "\u00b0,", true);
+						s.details = Translate.getEntry(841, LANGUAGE.ENGLISH).toLowerCase()+" "+DataSet.replaceAll(s.details.toLowerCase(), ",", "\u00b0,", true);
 						jd = s.time + 30;
 					}
 					break;
 				case 11:
 					if (MercuryVenusTransits) s = MainEvents.getMercuryOrVenusTransit(TARGET.VENUS, jd, jdf, maximumAccuracy);
 					if (s != null) {
-						s.details = Translate.getEntry(841, LANGUAGE.ENGLISH)+" "+DataSet.replaceAll(s.details.substring(1), ",", "\u00b0,", true);
+						s.details = Translate.getEntry(841, LANGUAGE.ENGLISH).toLowerCase()+" "+DataSet.replaceAll(s.details.toLowerCase(), ",", "\u00b0,", true);
 						jd = s.time + 30;
 					}
 					break;

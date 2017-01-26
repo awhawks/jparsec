@@ -2660,6 +2660,21 @@ public class DataSet
      * @param indexf The final index.
      * @return The sub-array.
      */
+    public static int[] getSubArray(int[] v, int index0, int indexf)
+    {
+    	int l = indexf - index0 + 1;
+    	int o[] = new int[l];
+    	System.arraycopy(v, index0, o, 0, l);
+    	return o;
+    }
+
+    /**
+     * Obtains a sub-dataset.
+     * @param v The array of values.
+     * @param index0 The starting index.
+     * @param indexf The final index.
+     * @return The sub-array.
+     */
     public static float[] getSubArray(float[] v, int index0, int indexf)
     {
     	int l = indexf - index0 + 1;

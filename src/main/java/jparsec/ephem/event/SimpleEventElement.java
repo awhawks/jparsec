@@ -510,7 +510,7 @@ public class SimpleEventElement implements Serializable {
 						|| eventType == EVENT.PLANET_CONJUNCTION || eventType == EVENT.PLANET_OPPOSITION) {
 					d += "\u00b0";
 					if (eventType == EVENT.PLANET_CONJUNCTION || eventType == EVENT.PLANET_OPPOSITION)
-						d = Translate.translate(301) + " " + d;
+						d = Translate.translate(301).toLowerCase() + " " + d;
 					if (eventType == EVENT.PLANET_MAXIMUM_ELONGATION && (mainBody == TARGET.MERCURY ||
 									mainBody == TARGET.VENUS)) {
 						int c = details.indexOf(",");
@@ -632,7 +632,7 @@ public class SimpleEventElement implements Serializable {
 							in1 = in1.substring(0, in1.indexOf("(")).trim();
 							in2 = in2.substring(0, in2.indexOf("(")).trim();
 						}
-						if (translate[i] == 301 || translate[i] == 163) {
+						if (translate[i] == 301 || translate[i] == 163 || translate[i] == 841) {
 							in1 = in1.toLowerCase();
 							in2 = in2.toLowerCase();
 						}
