@@ -1862,11 +1862,13 @@ public class RenderSky
 	private boolean isVisible(EphemElement ephem, EphemElement sun, EphemElement moon) {
 		boolean visible = true;
 
-		if (ephem.elongation < sun.angularRadius + ephem.angularRadius && ephem.distance > sun.distance) visible = false;
-		if (visible) {
-			double elong = LocationElement.getApproximateAngularDistance(ephem.getEquatorialLocation(), moon.getEquatorialLocation());
-			if (elong < moon.angularRadius + ephem.angularRadius && ephem.distance > moon.distance) visible = false;
-		}
+		try {
+			if (ephem.elongation < sun.angularRadius + ephem.angularRadius && ephem.distance > sun.distance) visible = false;
+			if (visible) {
+				double elong = LocationElement.getApproximateAngularDistance(ephem.getEquatorialLocation(), moon.getEquatorialLocation());
+				if (elong < moon.angularRadius + ephem.angularRadius && ephem.distance > moon.distance) visible = false;
+			}
+		} catch (Exception exc) {}
 		return visible;
 	}
 
@@ -2947,6 +2949,8 @@ public class RenderSky
 			double i0 = -im2*(-1.0+loc0.getLongitude()/Math.PI);
 			double j0 = -jm2*(-1.0+loc0.getLatitude()/Constant.PI_OVER_TWO);
 			double s = field * 0.75 * imax / Constant.TWO_PI;
+			float vs = ((float) render.height / render.width) * 1.125f;
+			if (vs > 1) s = s * vs;
 			if (s > imax/2) s = imax/2;
 			int init = (int) (i0 - s), iend = (int) (i0 + s);
 			int jnit = (int) (j0 - s), jend = (int) (j0 + s);
@@ -5149,7 +5153,7 @@ public class RenderSky
 							String file0 = file;
 							if (	(file0.equals("m43.jpg") && fieldDeg > 0.25)
 									|| (file0.equals("ngc 2244.jpg") && fieldDeg > 0.44)
-									|| ((file0.equals("m110.jpg") || file0.equals("m32.jpg")) && fieldDeg > 1.3)
+									|| ((file0.equals("m110.jpg") || file0.equals("m32.jpg")) && fieldDeg > 3)
 									|| (file0.equals("ngc 5195.jpg") && fieldDeg > 0.04)
 //									|| (Math.abs(jd-Constant.J2000) > 365250 && (Math.abs(type) == 2 || Math.abs(type) == 4))
 								    // In epochs far from J2000 stars in clusters/nebula will appear moved due to proper motions
