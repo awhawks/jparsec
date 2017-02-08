@@ -1100,6 +1100,7 @@ public class SkyRenderElement implements Serializable
 	public synchronized void addExternalCatalog(String name, String objType, int rgb, ArrayList<String> contents, FileFormatElement[] format,
 			boolean inMemory) throws JPARSECException {
 		ArrayList<Object> list = new ArrayList<Object>();
+		String types[] = new String[] {"unk", "gal", "neb", "pneb", "ocl", "gcl", "galpart", "qua", "duplicate", "duplicateInNGC", "star/s", "notFound"};
 
 		ReadFormat rf = new ReadFormat(format);
 		boolean fluxMode = false;
@@ -1119,7 +1120,14 @@ public class SkyRenderElement implements Serializable
 				if (s != null) name1 = s;
 
 				s = getField(line, rf, SkyRenderElement.EXTERNAL_CATALOG_FIELD_DETAILS);
-				if (s != null) com = s;
+				if (s != null) {
+					com = s;
+					if (!s.equals("")) {
+						for (int j=0;j<types.length;j++) {
+							if (com.startsWith(types[j])) tt = j;
+						}
+					}
+				}
 
 				s = getField(line, rf, SkyRenderElement.EXTERNAL_CATALOG_FIELD_COORDINATES_TYPE);
 				if (s != null) ctype = s.toUpperCase();
@@ -1305,6 +1313,7 @@ public class SkyRenderElement implements Serializable
 	public synchronized void addExternalCatalog(String name, String objType, int rgb, String[] contents, FileFormatElement[] format,
 			boolean inMemory) throws JPARSECException {
 		ArrayList<Object> list = new ArrayList<Object>();
+		String types[] = new String[] {"unk", "gal", "neb", "pneb", "ocl", "gcl", "galpart", "qua", "duplicate", "duplicateInNGC", "star/s", "notFound"};
 
 		ReadFormat rf = new ReadFormat(format);
 		boolean fluxMode = false;
@@ -1323,7 +1332,14 @@ public class SkyRenderElement implements Serializable
 				if (s != null) name1 = s;
 
 				s = getField(contents[i], rf, SkyRenderElement.EXTERNAL_CATALOG_FIELD_DETAILS);
-				if (s != null) com = s;
+				if (s != null) {
+					com = s;
+					if (!s.equals("")) {
+						for (int j=0;j<types.length;j++) {
+							if (com.startsWith(types[j])) tt = j;
+						}
+					}
+				}
 
 				s = getField(contents[i], rf, SkyRenderElement.EXTERNAL_CATALOG_FIELD_COORDINATES_TYPE);
 				if (s != null) ctype = s.toUpperCase();
@@ -1507,6 +1523,7 @@ public class SkyRenderElement implements Serializable
 	public synchronized void addExternalCatalog(String name, String objType, int rgb, String[] contents, 
 			String separator, boolean inMemory) throws JPARSECException {
 		ArrayList<Object> list = new ArrayList<Object>();
+		String types[] = new String[] {"unk", "gal", "neb", "pneb", "ocl", "gcl", "galpart", "qua", "duplicate", "duplicateInNGC", "star/s", "notFound"};
 
 		boolean fluxMode = false;
 		ArrayList<Double> listFlux = new ArrayList<Double>();
@@ -1546,6 +1563,11 @@ public class SkyRenderElement implements Serializable
 					s = FileIO.getField(5, contents[i], separator, true);
 					if (s != null && !s.equals("") && !s.startsWith("null")) 
 						com = s;
+				}
+				if (!com.equals("")) {
+					for (int j=0;j<types.length;j++) {
+						if (com.startsWith(types[j])) tt = j;
+					}
 				}
 				
 				s = FileIO.getField(4, contents[i], separator, true);
@@ -1650,6 +1672,7 @@ public class SkyRenderElement implements Serializable
 	public synchronized void addExternalCatalog(String name, String objType, int rgb, ArrayList<String> contents, 
 			String separator, boolean inMemory) throws JPARSECException {
 		ArrayList<Object> list = new ArrayList<Object>();
+		String types[] = new String[] {"unk", "gal", "neb", "pneb", "ocl", "gcl", "galpart", "qua", "duplicate", "duplicateInNGC", "star/s", "notFound"};
 
 		boolean fluxMode = false;
 		ArrayList<Double> listFlux = new ArrayList<Double>();
@@ -1691,7 +1714,12 @@ public class SkyRenderElement implements Serializable
 					if (s != null && !s.equals("") && !s.startsWith("null")) 
 						com = s;
 				}
-
+				if (!com.equals("")) {
+					for (int j=0;j<types.length;j++) {
+						if (com.startsWith(types[j])) tt = j;
+					}
+				}
+				
 				s = FileIO.getField(4, line, separator, true);
 				if (s != null && !s.equals("") && !s.startsWith("null")) 
 					mag = s;
@@ -1846,7 +1874,7 @@ public class SkyRenderElement implements Serializable
 //		if (index >= 0) out = true;
 //		return out;
 	}
-	
+
 	/**
 	 * Removes the references to the external catalogs in this instance. Note 
 	 * the possible external catalogs loaded themselves are not removed from memory.

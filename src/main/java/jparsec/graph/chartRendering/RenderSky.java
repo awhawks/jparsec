@@ -5242,7 +5242,7 @@ public class RenderSky
 										g.fill(path, distGal);
 										g.setColor(render.fillGalaxyColor, true);
 									} else {
-										g.setColor(render.fillGalaxyColor, true);
+										if (!external) g.setColor(render.fillGalaxyColor, true);
 									}
 									g.fill(path, distGal);
 									g.setColor(render.drawDeepSkyObjectsColor, true);
@@ -9150,6 +9150,15 @@ public class RenderSky
 				} catch (Exception exc) {
 					Logger.log(LEVEL.ERROR, "Error processing icon "+icon+". Message was: "+exc.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(exc.getStackTrace()));
 				}
+			}
+
+			if (render.getColorMode() == COLOR_MODE.NIGHT_MODE && (icon.startsWith("moon") || icon.toLowerCase().startsWith("sun"))) {
+				int arr[] = g.getImageAsPixels(img), s[] = g.getSize(img);
+				for (int i=0; i<arr.length; i++) {
+					int r = (arr[i]>>16)&255;
+					arr[i] = 255<<24 | r<<16;
+				}
+				img = g.getImage(s[0], s[1], arr);
 			}
 
 			if (render.telescope.invertHorizontal || render.telescope.invertVertical) { // || scale != 1) {

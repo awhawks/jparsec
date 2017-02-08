@@ -888,7 +888,7 @@ Seleccione objeto
 Por favor, introduzca la nueva fecha en el formato siguiente:\naño, mes, día, hora, minuto, segundo, escala tiempo.\nLa fecha actual es %date.\nTambién puede introducir 'ahora' para el instante actual,\no '+10m' o '-10h' para añadir o sustraer días (d),\nhoras (h), minutos (m), o segundos (s). Las posibles\nescalas de tiempo son TL, TUC, TU1, TT, TDB. Para años\nanteriores a Cristo introduzca, por ejemplo, -10 para\nel año 10 a.C. (el año cero no se considera).
 Seleccione nueva fecha
 ahora
-La localidad actual es %loc. Por favor, introduzca el nombre de la nueva localidad, o\nla posición geográfica como 5 valores (nombre, longitud, latitud, altura, zona horaria)
+La localidad actual es %loc. Por favor, introduzca el nombre de la nueva localidad, o\nla posición geográfica como 5 valores (nombre, longitud, latitud (°), altura (m), zona horaria (h))
 Selecciona la nueva localidad
 La localidad seleccionada '%loc' no pudo ser encontrada.
 No fue posible encontrar la localidad

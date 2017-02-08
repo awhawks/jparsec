@@ -888,7 +888,7 @@ Select object
 Please enter the new date in the following format:\nyear, month, day, hour, minute, second, time scale.\nCurrent date is %date.\nInsert 'now' for current instant, or '+10m'\nor '-10h' to add/sustract days (d), hours (h),\nminutes (m), or seconds (s). Possible time scales are\nLT, UTC, UT1, TT, TDB. For years B.C. insert for\ninstance -10 for year 10 B.C. (without year 0).
 Select new date
 now
-Current location is %loc. Please enter the name of the new location, or the\ngeographical location as 5 values (name, longitude, latitude, height, time zone)
+Current location is %loc. Please enter the name of the new location, or the\ngeographical location as 5 values (name, longitude, latitude (°), height (m), time zone (h))
 Select new location
 The selected location '%loc' could not be found.
 Could not find location
