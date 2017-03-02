@@ -10462,6 +10462,9 @@ public class RenderSky
 									label += " "+TimeElement.getTimeScaleAbbreviation(render.trajectory[index].timeScaleForLabels);
 							}
 
+							if (render.trajectory[index].addLabel != null && render.trajectory[index].addLabel.length > i) 
+								label += render.trajectory[index].addLabel[i];
+
 							/*
 							int position = 1; // down
 							if (i>0 && loc_path[i-1] != null) {

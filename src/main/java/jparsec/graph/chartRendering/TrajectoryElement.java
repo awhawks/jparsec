@@ -33,7 +33,6 @@ import jparsec.ephem.moons.MoonEphem;
 import jparsec.ephem.planets.EphemElement;
 import jparsec.ephem.planets.OrbitEphem;
 import jparsec.ephem.planets.OrbitalElement;
-import jparsec.ephem.probes.SDP4_SGP4;
 import jparsec.ephem.probes.SatelliteEphem;
 import jparsec.ephem.probes.Spacecraft;
 import jparsec.ephem.stars.StarElement;
@@ -185,6 +184,11 @@ public class TrajectoryElement implements Serializable
 	 * Set apparent object name to be shown when rendering the sky.
 	 */
 	public String apparentObjectName;
+	
+	/**
+	 * Text to add to each position as a label.
+	 */
+	public String addLabel[];
 
 	/**
 	 * Initial Julian day of calculations in Barycentric dynamical time.
@@ -296,6 +300,7 @@ public class TrajectoryElement implements Serializable
 		t.labelsSteps = this.labelsSteps;
 		t.objectName = this.objectName;
 		t.apparentObjectName = this.apparentObjectName;
+		t.addLabel = this.addLabel;
 		t.objectType = this.objectType;
 		t.startTimeJD = this.startTimeJD;
 		t.stepTimeJD = this.stepTimeJD;
@@ -311,6 +316,14 @@ public class TrajectoryElement implements Serializable
 			for (int i=0; i<t.loc_path.length; i++) {
 				t.loc_path[i] = null;
 				if (loc_path[i] != null) t.loc_path[i] = loc_path[i].clone();
+			}
+		}
+		t.loc_path2 = null;
+		if (this.loc_path2 != null) {
+			t.loc_path2 = new LocationElement[this.loc_path2.length];
+			for (int i=0; i<t.loc_path2.length; i++) {
+				t.loc_path2[i] = null;
+				if (loc_path2[i] != null) t.loc_path2[i] = loc_path2[i].clone();
 			}
 		}
 		return t;
@@ -346,6 +359,8 @@ public class TrajectoryElement implements Serializable
 		if (drawPathFont != that.drawPathFont) return false;
 		// Probably incorrect - comparing Object[] arrays with Arrays.equals
 		if (!Arrays.equals(loc_path, that.loc_path)) return false;
+		if (!Arrays.equals(loc_path2, that.loc_path2)) return false;
+		if (!Arrays.equals(addLabel, that.addLabel)) return false;
 		if (central_loc != null ? !central_loc.equals(that.central_loc) : that.central_loc != null) return false;
 
 		return !(star != null ? !star.equals(that.star) : that.star != null);
@@ -376,6 +391,8 @@ public class TrajectoryElement implements Serializable
 		result = 31 * result + (showTimeScale ? 1 : 0);
 		result = 31 * result + (showTime ? 1 : 0);
 		result = 31 * result + (loc_path != null ? Arrays.hashCode(loc_path) : 0);
+		result = 31 * result + (loc_path2 != null ? Arrays.hashCode(loc_path2) : 0);
+		result = 31 * result + (addLabel != null ? Arrays.hashCode(addLabel) : 0);
 		result = 31 * result + (central_loc != null ? central_loc.hashCode() : 0);
 		result = 31 * result + (star != null ? star.hashCode() : 0);
 		return result;
@@ -385,6 +402,8 @@ public class TrajectoryElement implements Serializable
 	 * An array to store the equatorial positions of the object along the path.
 	 */
 	public LocationElement[] loc_path = null;
+	private LocationElement[] loc_path2 = null;
+	
 	/**
 	 * Position at the center of the trajectory.
 	 */
@@ -400,6 +419,10 @@ public class TrajectoryElement implements Serializable
 	 */
 	public void populateTrajectoryPath(ObserverElement obs, EphemerisElement eph)
 	throws JPARSECException {
+		if (loc_path2 != null) {
+			loc_path = loc_path2.clone();
+			return;
+		}
 		if (loc_path != null) return;
 		if (this.objectType != null)
 		{
@@ -651,7 +674,7 @@ public class TrajectoryElement implements Serializable
 						this.loc_path[step] = new LocationElement(ephem.rightAscension, ephem.declination, 1.0);
 						break;
 					case ARTIFICIAL_SATELLITE:
-						ephem = EphemElement.parseSatelliteEphemElement(SDP4_SGP4.satEphemeris(time_path, obs, eph_path, false, false), time_path.astroDate.jd());
+						ephem = EphemElement.parseSatelliteEphemElement(SatelliteEphem.satEphemeris(time_path, obs, eph_path, false), time_path.astroDate.jd());
 						this.loc_path[step] = new LocationElement(ephem.rightAscension, ephem.declination, 1.0);
 						break;
 					default:
@@ -699,9 +722,35 @@ public class TrajectoryElement implements Serializable
 		}
 		this.central_loc = loc_path[max_steps/2];
 		if (objName != null) this.apparentObjectName = objName;
+		loc_path2 = loc_path.clone();
 		return;
 	}
 
+	/**
+	 * Populates {@linkplain TrajectoryElement#loc_path} with the equatorial positions
+	 * provided as input, forcing the position of the object. This method is useful when
+	 * you have ephemerides obtained with other tools.
+	 * @param positions An array of positions. Its size should be equal at least
+	 * to {@linkplain #getNumberofPointsInTrajectory()}.
+	 * @param addLabel Text to add to the label in each position.
+	 * @param objName The name for the object when showing the label, or null to maintain
+	 * the default one.
+	 * @throws JPARSECException If an error occurs.
+	 */
+	public void populateTrajectoryPath(LocationElement positions[], String addLabel[], String objName)
+	throws JPARSECException {
+		int max_steps = 1 + (int) ((this.endTimeJD - this.startTimeJD) / this.stepTimeJD);
+		this.loc_path = new LocationElement[max_steps];
+		for (int i=0; i<max_steps; i++) {
+			loc_path[i] = positions[i];
+		}
+		this.central_loc = loc_path[max_steps/2];
+		if (addLabel != null) this.addLabel = addLabel;
+		if (objName != null) this.apparentObjectName = objName;
+		loc_path2 = loc_path.clone();
+		return;
+	}
+	
 	/**
 	 * Returns the number of points to be calculated for the trajectory.
 	 * @return Number of points.

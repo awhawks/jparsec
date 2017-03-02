@@ -73,7 +73,7 @@ public class Update
 	/**
 	 * The url used to update the galactic novae SN catalogue.
 	 */
-	public static final String UPDATE_URL_NOVAE = "http://projectpluto.com/galnovae/galnovae.txt";
+	public static final String UPDATE_URL_NOVAE = "https://projectpluto.com/galnovae/galnovae.txt";
 	/**
 	 * The url used to update sizes and magnitudes or artificial satellites.
 	 */
