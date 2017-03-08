@@ -5145,11 +5145,11 @@ public class RenderSky
 							if (name.startsWith("QSO")) file = name.toLowerCase()+".png";
 							if (!messier.isEmpty() && !messier.startsWith("C")) file = messier.toLowerCase()+".jpg";
 							//if (file.equals("ic 434.jpg")) file = "ic434.png";
-							if (file.equals("ngc 1499.jpg")) file = "ngc 1499.png";
+							//if (file.equals("ngc 1499.jpg")) file = "ngc 1499.png";
 							if (file.equals("m27.jpg")) file = "m27.png";
 							if (file.equals("m57.jpg")) file = "m57.png";
 							if (file.equals("m42.jpg")) file = "m42.png";
-							if (file.equals("m37.jpg")) file = "m37.png";
+							//if (file.equals("m37.jpg")) file = "m37.png";
 							String file0 = file;
 							if (	(file0.equals("m43.jpg") && fieldDeg > 0.25)
 									|| (file0.equals("ngc 2244.jpg") && fieldDeg > 0.44)
