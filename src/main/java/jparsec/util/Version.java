@@ -323,7 +323,12 @@ public class Version
 						"It is now possible to identify and search for meteor showers.\n"+
 						"Improved support for external catalogs in sky rendering.\n"+
 						"Fix when computing when the rings of Saturn reach the maximum aperture.\n"+
-						"New events computed: supermoon, Neomenia, transits of satellites on top of planets.\n"
+						"New events computed: supermoon, Neomenia, transits of satellites on top of planets.\n",
+				"      1.113:  (Apr XX, 2017):\n"+
+						"Complete support for night mode in planetaary rendering, icons, and deeps sky textures.\n"+
+						"Fixed 60 textures for deep sky objects.\n"+
+						"Trajectories for bodies can now include custom labels in each point, and the trajectory can be set from an array of external positions for objects not supported (transient NEOs).\n"+
+						"Fixed some problems with the position of subscripts and superscripts in TextLabel class.\n"
 
 				+FileIO.getLineSeparator(),
 		};
@@ -332,7 +337,7 @@ public class Version
 		// Dependencies for JPARSEC programs and models
 		String library[] = new String[] {
 			// Dependency name                             Version
-			"jparsec.jar                                   1.112",
+			"jparsec.jar                                   1.113",
 
 			"sky.jar                                       1.39",
 			"orbital_elements.jar                          1.25",
@@ -345,7 +350,7 @@ public class Version
 			"radex.jar                                     1.03",
 			"jfreechart-1.0.13.jar                         1.00",
 			"series96.jar                                  1.02",
-			"textures.jar                                  1.10",
+			"textures.jar                                  1.11",
 			"surfacePlotter2.0.jar                         1.00",
 			"miglayout-4.0-swing.jar                       1.00",
 			"nrjavaserial-3.8.8.jar                        1.00",

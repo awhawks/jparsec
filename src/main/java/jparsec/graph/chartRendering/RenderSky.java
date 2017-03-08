@@ -14200,11 +14200,11 @@ public class RenderSky
 			String comments = (String) obj[7];
 			int pp = comments.indexOf("Popular name:");
 			if (pp>=0) comments = comments.substring(pp+14).trim();
-			double mg = (Double) obj[4];
+			float mg = (Float) obj[4];
 			if (mag != -1 && mg > mag) break;
-			double s[] = (double[]) obj[5];
+			float s[] = (float[]) obj[5];
 			int type = (Integer) obj[2];
-			String pa = (String) obj[6];
+			float pa = (Float) obj[6];
 
 			if (name.startsWith("I.")) name = DataSet.replaceAll(name, "I.", "IC ", true);
 			LocationElement loc = (LocationElement) obj[3];
