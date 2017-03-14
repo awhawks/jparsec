@@ -586,7 +586,7 @@ public class RenderSatellite
 				//g.drawString(s, px+dx, render.height-5-g.getFont().getSize());
 			}
 		}
-		if (render.showOrbits) {
+		if (render.showOrbits && showSatellite) {
 			g.setColor(render.showOrbitsColor, true);
 			if (locSat != null) {
 				for (int i=0; i<locSat.size(); i++) {

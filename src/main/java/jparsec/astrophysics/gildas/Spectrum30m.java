@@ -2220,15 +2220,19 @@ public class Spectrum30m implements Serializable
 		double vres = Double.parseDouble((s30m.get(Gildas30m.VEL_RESOL)).value);
 		int nchan = s30m.getNumberOfChannels();
 
+    	double refchan0 = Double.parseDouble((this.get(Gildas30m.REF_CHAN)).value);
+    	double vref0 = Double.parseDouble((this.get(Gildas30m.REF_VEL)).value);
+    	double vres0 = Double.parseDouble((this.get(Gildas30m.VEL_RESOL)).value);
+
 		float newData[] = new float[nchan];
 		int nchanOld = this.getNumberOfChannels();
 		Interpolation interp = new Interpolation(
 				DataSet.getSetOfValues(1, nchanOld, nchanOld, false),
 				DataSet.toDoubleArray(this.getSpectrumData()), false);
 		for (int i=0; i<nchan; i++) {
-			double v = s30m.getVelocity(i+1);
-			double n = this.getChannel(v);
 			newData[i] = 0;
+			double v = vref + ((i+1) - refchan) * vres; // s30m.getVelocity(i+1)
+			double n = (v - vref0) / vres0 + refchan0; // this.getChannel(v);
 			if (n >= 1 && n <= nchanOld) newData[i] = (float) interp.splineInterpolation(n);
 		}
 
@@ -2243,6 +2247,61 @@ public class Spectrum30m implements Serializable
 		this.put(Gildas30m.IMAGE, new Parameter(imgFreq, Gildas30m.IMAGE_DESC));
 	}
 
+	/**
+	 * Resamples this spectrum to the resolution and velocity range of another one.
+	 * All new values outside the velocity window currently covered are set to 0.
+	 * This methods allows to set a more restricted velocity interval to speedup the 
+	 * resampling when the spectra has many channels and only some of them will be 
+	 * later useful. The velocity interval corresponds to the input spectrum used as 
+	 * reference.
+	 * @param s30m The reference spectrum to resample to.
+	 * @param v0 Lower limit for the velocity interval.
+	 * @param vf Upper limit for the velocity interval.
+	 * @param spline True to use spline interpolation in the resampling, false for linear 
+	 * interpolation.
+	 * @throws JPARSECException If an error occurs.
+	 */
+	public void resampleInVelocityInterval(Spectrum30m s30m, double v0, double vf, 
+			boolean spline) throws JPARSECException {
+		double refchan = Double.parseDouble((s30m.get(Gildas30m.REF_CHAN)).value);
+		double vref = Double.parseDouble((s30m.get(Gildas30m.REF_VEL)).value);
+		double vres = Double.parseDouble((s30m.get(Gildas30m.VEL_RESOL)).value);
+		int nchan = s30m.getNumberOfChannels();
+
+    	double refchan0 = Double.parseDouble((this.get(Gildas30m.REF_CHAN)).value);
+    	double vref0 = Double.parseDouble((this.get(Gildas30m.REF_VEL)).value);
+    	double vres0 = Double.parseDouble((this.get(Gildas30m.VEL_RESOL)).value);
+
+		float newData[] = new float[nchan];
+		int nchanOld = this.getNumberOfChannels();
+		Interpolation interp = new Interpolation(
+				DataSet.getSetOfValues(1, nchanOld, nchanOld, false),
+				DataSet.toDoubleArray(this.getSpectrumData()), false);
+		for (int i=0; i<nchan; i++) {
+			newData[i] = 0;
+			double v = vref + ((i+1) - refchan) * vres; // s30m.getVelocity(i+1)
+			if (v < v0 || v > vf) continue;
+			double n = (v - vref0) / vres0 + refchan0; // this.getChannel(v);
+			if (n >= 1 && n <= nchanOld) {
+				if (!spline) {
+					newData[i] = (float) interp.linearInterpolation(n);
+				} else {
+					newData[i] = (float) interp.splineInterpolation(n);
+				}
+			}
+		}
+
+		double freq = this.getFrequencyForAGivenVelocity(vref);
+		double imgFreq = this.getImageFrequencyForAGivenVelocity(vref);
+
+		this.setSpectrumData(newData);
+		this.put(Gildas30m.REF_CHAN, new Parameter(refchan, Gildas30m.REF_CHAN_DESC));
+		this.put(Gildas30m.REF_VEL, new Parameter(vref, Gildas30m.REF_VEL_DESC));
+		this.put(Gildas30m.VEL_RESOL, new Parameter(vres, Gildas30m.VEL_RESOL_DESC));
+		this.put(Gildas30m.REF_FREQ, new Parameter(freq, Gildas30m.REF_FREQ_DESC));
+		this.put(Gildas30m.IMAGE, new Parameter(imgFreq, Gildas30m.IMAGE_DESC));
+	}
+	
 	/**
 	 * Crops the spectrum and leaves only the data in a given channel range.
 	 * @param chan0 Initial channel, first is 1.
