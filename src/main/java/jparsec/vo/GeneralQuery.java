@@ -1255,7 +1255,7 @@ public class GeneralQuery implements Serializable {
     	String con = "";
     	if (contours != null && !contours.equals("")) con = "contour="+contours+"&";
 
-		String query = "http://skyview.gsfc.nasa.gov/cgi-bin/images?";
+		String query = "https://skyview.gsfc.nasa.gov/cgi-bin/images?";
 		query += position+"&"+s+"&"+coordinates+projection+retur+scaling+rgb+inver+lu+gri+cat+con+fieldView+size;
 		return query;
     }

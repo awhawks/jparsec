@@ -328,6 +328,7 @@ public class Version
 						"Complete support for night mode in planetaary rendering, icons, and deeps sky textures.\n"+
 						"Fixed 60 textures for deep sky objects.\n"+
 						"Trajectories for bodies can now include custom labels in each point, and the trajectory can be set from an array of external positions for objects not supported (transient NEOs).\n"+
+						"When rendering the Earth map with artificial satellites and their elements cannot be updated the satellites do not appear, but the trajectories computed with outdated elements did.\n"+
 						"Fixed some problems with the position of subscripts and superscripts in TextLabel class.\n"
 
 				+FileIO.getLineSeparator(),

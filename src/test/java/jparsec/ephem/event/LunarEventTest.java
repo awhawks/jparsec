@@ -7,7 +7,10 @@ import jparsec.observer.CityElement;
 import jparsec.observer.ObserverElement;
 import jparsec.time.AstroDate;
 import jparsec.time.TimeElement;
+import jparsec.time.TimeElement.SCALE;
 import jparsec.util.JPARSECException;
+import jparsec.util.Translate;
+import jparsec.util.Translate.LANGUAGE;
 
 public class LunarEventTest {
     /**
@@ -77,6 +80,15 @@ public class LunarEventTest {
             s = LunarEvent.MoonMaximumDeclination(astro.jd(), MainEvents.EVENT_TIME.CLOSEST);
             System.out.println(s.toString());
             // Meeus: 16 mar -5 15h, 28.9739
+            
+            Translate.setDefaultLanguage(LANGUAGE.SPANISH);
+            for (int month=1;month<=12;month++) {
+	            astro = new AstroDate(2018, month, 15);
+	            s = LunarEvent.MoonMaximumDeclination(astro.jd(), MainEvents.EVENT_TIME.CLOSEST);
+	            System.out.println(s.toString(obs, eph, SCALE.LOCAL_TIME));
+	            s = LunarEvent.MoonMinimumDeclination(astro.jd(), MainEvents.EVENT_TIME.CLOSEST);
+	            System.out.println(s.toString(obs, eph, SCALE.LOCAL_TIME));
+            }
         } catch (JPARSECException e) {
             e.showException();
         }
