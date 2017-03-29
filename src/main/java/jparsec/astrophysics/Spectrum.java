@@ -138,7 +138,7 @@ public class Spectrum implements Serializable
 
 	/**
 	 * Constructor for a set of values representing the spectrum,
-	 * as intensities as function of channel number channel >= 1.
+	 * as intensities as function of channel number channel &gt;= 1.
 	 * @param m The intensities.
 	 * @throws JPARSECException If an error occurs.
 	 */
@@ -148,7 +148,7 @@ public class Spectrum implements Serializable
 
 	/**
 	 * Constructor for a Table object. Intensities are taken from the
-	 * Table object, while channel number >= 1 (ordered as in the Table
+	 * Table object, while channel number &gt;= 1 (ordered as in the Table
 	 * following the indexes) is taken as x coordinate.
 	 * @param table The table.
 	 * @throws JPARSECException If it has more than 1 dimension.

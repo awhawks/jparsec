@@ -73,10 +73,10 @@ import jparsec.util.*;
  * fully accurate, so it's serves only as an approximation supposing a perfect
  * aligned telescope and a very clear atmosphere.
  * <P>
- * Models comes from Bj&ouml;rn J&oacute;nsson & David Seal <A target="_blank" href = "
- * http://maps.jpl.nasa.gov">http://maps.jpl.nasa.gov</A>. The model for
- * Mercury is from James Hastings <A target="_blank" href = "
- * http://gw.marketingden.com/planets/planets.html">http://gw.marketingden.com/planets/planets.html</A>.
+ * Models comes from Bj&ouml;rn J&oacute;nsson &amp; David Seal <A target="_blank" 
+ * href="http://maps.jpl.nasa.gov">http://maps.jpl.nasa.gov</A>. The model for
+ * Mercury is from James Hastings <A target="_blank" 
+ * href="http://gw.marketingden.com/planets/planets.html">http://gw.marketingden.com/planets/planets.html</A>.
  * Some models for the moons comes from Celestia software.
  * <P>
  *

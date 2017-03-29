@@ -61,8 +61,8 @@ import jparsec.util.Translate;
 
 /**
  * This class implements a very simple theory of the motion of artificial
- * satellites. They are modeled mainly as precessing ellipses. <P>
- * To obtain ephemeris follow these simple steps: <P>
+ * satellites. They are modeled mainly as precessing ellipses. <BR>
+ * To obtain ephemeris follow these simple steps: <BR>
  * <pre>
  *
  * // Search an object.
@@ -243,13 +243,13 @@ public class SatelliteEphem
 
 	/**
 	 * Calculate the ephemeris of a satellite.
-	 * <P>
+	 * <BR>
 	 * This method is not designed for precise ephemeris, although is gives
 	 * correct positions.
 	 * The ephemerisElement object is used when transforming to apparent
 	 * coordinates. In any other case output position is the same
 	 * (geometric = astrometric).
-	 * <P>
+	 * <BR>
 	 * Based on the work by James Miller, PLAN-13 program,
 	 * http://www.amsat.org/amsat/articles/g3ruh/111.html.
 	 *
@@ -731,12 +731,12 @@ public class SatelliteEphem
 	/**
 	 * Calculate the ephemeris of a satellite using the method by James Miller,
 	 * PLAN-13 program, http://www.amsat.org/amsat/articles/g3ruh/111.html.
-	 * <P>
+	 * <BR>
 	 * The ephemerisElement object is used when transforming to apparent
 	 * coordinates. In any other case output position is the same
 	 * (geometric = astrometric). Results are referred to mean equinox
 	 * of date.
-	 * <P>
+	 * <BR>
 	 * A pass is defined as the instant when the satellite is more then 15
 	 * degrees above the horizon of the observer. A search for the next pass up
 	 * to 7 days after calculation time will be done.
@@ -800,12 +800,12 @@ public class SatelliteEphem
 	/**
 	 * Obtain the time of the next pass of the satellite above observer. It can be used
 	 * as an starting point prior to obtain rise, set, transit times.
-	 * <P>
+	 * <BR>
 	 * A pass is defined as an instant when the elevation of the satellite is
 	 * greater than certain minimum value. If the observer has a perfect sight
 	 * of the horizon, it is possible to set a value equal to zero, but the
 	 * satellite will be probably too faint.
-	 * <P>
+	 * <BR>
 	 * The pass is a search iteration with a precision of 1 minute of time. If
 	 * the satellite appears too quickly or just above minimum elevation only
 	 * for a few seconds, then the search could fail. Another possible cause
@@ -943,7 +943,7 @@ public class SatelliteEphem
 	 * observing site set to have a change to see it).
 	 * @return An array of event objects with the type of transit (on the Sun or the
 	 * Moon) using the secondary object field, and with the initial and ending transit times.
-	 * The details field will contain the elevation above the horizon, always >= 0.
+	 * The details field will contain the elevation above the horizon, always &gt;= 0.
 	 * Precision is 0.5s.
 	 * @throws JPARSECException If the method fails, for example because of an
 	 *         invalid date.
@@ -1056,7 +1056,7 @@ public class SatelliteEphem
 	 * to consider that there is a transit on top of the planet. Strict value should be 0.
 	 * @return An array of event objects with the type of transit (target body)
 	 * set as the secondary object field, and with the initial and ending transit times.
-	 * The details field will contain the elevation above the horizon, always >= 0.
+	 * The details field will contain the elevation above the horizon, always &gt;= 0.
 	 * Precision is 0.5s.
 	 * @throws JPARSECException If the method fails, for example because of an
 	 *         invalid date.
@@ -1684,7 +1684,7 @@ public class SatelliteEphem
 	 * corresponds to about 0 mag, 0.5&deg; to -3 mag. The brightest flares are
 	 * -8 or -9 mag (visible during day), and can last from 10 to 30s. This
 	 * code comes from Horst Meyerdierks (Sputnik library).
-	 * <P>
+	 * <BR>
 	 * This method also returns the reflector that produces the minimum angle.
 	 * It is not used inside JPARSEC.
 	 * @param itsR The geocentric position (x, y, z) of the satellite in arbitrary units.
@@ -1737,7 +1737,7 @@ public class SatelliteEphem
 	   * Calculate where the reflection of the observer's gaze would point to.
 	   * Code from Horst Meyerdierks (Sputnik library).
 	   *
-	   * <p>Assume that a mirror is attached to the satellite and is pointing
+	   * <BR>Assume that a mirror is attached to the satellite and is pointing
 	   * into the direction of motion.  It is now swiveled in the
 	   * orbit plane (like an altitude axis, towards earth is negative) and
 	   * then again about the (almost) earth-sat direction (like an azimuth
@@ -1745,19 +1745,19 @@ public class SatelliteEphem
 	   * moving North).  By "almost" I [Randy John] really mean about the in-plane
 	   * vector normal to motion).
 	   *
-	   * <p>This routine is ported from Pascal code from Randy John's SKYSAT
+	   * <BR>This routine is ported from Pascal code from Randy John's SKYSAT
 	   * programme
 	   * (Randy John, 2002, SKYSAT v0.64, <a href="http://home.comcast.net/~skysat/">http://home.comcast.net/~skysat/</a>).
 	   * The interface is different here in that the angles must be given in radian
 	   * rather than degrees and that the Sun has to be given as vector rather than
 	   * right ascension and declination.
 	   *
-	   * <p>The routine is used for Iridium satellites.  A flash occurs when
+	   * <BR>The routine is used for Iridium satellites.  A flash occurs when
 	   * the returned angle is small.  From John's plot such a satellite is
 	   * brighter than -3&nbsp;mag (0&nbsp;mag) when the angle is smaller than
 	   * 0.5&deg; (2&deg;).  The brightest flashes are -8 or -9&nbsp;mag.
 	   *
-	   * <p>The Iridium satellite main body is a long triangular prism that is kept
+	   * <BR>The Iridium satellite main body is a long triangular prism that is kept
 	   * vertical (in fact perpendicular to the orbital velocity).  Each of the
 	   * three sides has a large flat'ish antenna pointing 40&deg; down from the
 	   * "horizontal".  One of these is pointing forward, the other two

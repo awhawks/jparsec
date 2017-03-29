@@ -42,7 +42,7 @@ import jparsec.util.Logger;
 import jparsec.util.Logger.LEVEL;
 
 /**
- * Creates a chart element to be later drawn by JFreeChart.<P>
+ * Creates a chart element to be later drawn by JFreeChart.<BR>
  *
  * In this object the labels for x and y axes, as well as the title can be
  * encoded following the instructions given in {@linkplain TextLabel} class. This

@@ -175,7 +175,7 @@ public class pyGildas {
 	 * only if necessary) and are saved in the working directory during the execution.
 	 * After that they are deleted.
 	 * @param s The script.
-	 * @param params Parameters of the input script, from &1 to &xx.
+	 * @param params Parameters of the input script, starting from '&amp;1'.
 	 * @param variables Names of the variables to be retrieved.
 	 * @return The contents of the output and error streams, followed by the values
 	 * of the desired variables, if any. Note there are additional methods to handle the

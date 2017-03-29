@@ -84,7 +84,7 @@ public class Functions
 	}
 
 	/**
-	 * Reduce an angle in degrees to the range (0 <= deg < 360).
+	 * Reduce an angle in degrees to the range (0 &lt;= &lt; 360).
 	 *
 	 * @param d Value in degrees.
 	 * @return The reduced degree value.
@@ -146,7 +146,7 @@ public class Functions
 
 	/**
 	 * Returns the quadrant (0, 1, 2, or 3) of the specified angle.
-	 * <P>
+	 * <BR>
 	 * This function is useful in figuring out dates of lunar phases and
 	 * solstices/equinoxes. If the solar longitude is in one quadrant at the
 	 * start of a day, but in a different quadrant at the end of a day, then we
@@ -1051,7 +1051,7 @@ public class Functions
 	/**
 	*  Rounds a floating point number up to the desired decimal place.
 	*  Example:  1346.4667 rounded up to the 2nd place = 1400.
-	* <P>Method by Joseph A. Huwaldt.
+	* <BR>Method by Joseph A. Huwaldt.
 	*
 	*  @param  value  The value to be rounded up.
 	*  @param  place  Number of decimal places to round value to.
@@ -1080,7 +1080,7 @@ public class Functions
 	/**
 	*  Rounds a floating point number to the desired decimal place.
 	*  Example:  1346.4667 rounded to the 2nd place = 1300.
-	* <P>Method by Joseph A. Huwaldt.
+	* <BR>Method by Joseph A. Huwaldt.
 	*
 	*  @param  value  The value to be rounded.
 	*  @param  place  Number of decimal places to round value to.
@@ -1138,7 +1138,7 @@ public class Functions
 
 /**
    * Rounds a double and converts it into String.
-   * <P>Method by Joseph A. Huwaldt.
+   * <BR>Method by Joseph A. Huwaldt.
    *
    * @param value the double value
    * @param afterDecimalPoint the (maximum) number of digits permitted
@@ -1196,7 +1196,7 @@ public class Functions
 /**
    * Rounds a double and converts it into a formatted decimal-justified String.
    * Trailing 0's are replaced with spaces.
-   * <P>Method by Joseph A. Huwaldt.
+   * <BR>Method by Joseph A. Huwaldt.
    *
    * @param value the double value
    * @param width the width of the string
@@ -1378,7 +1378,7 @@ public class Functions
 	/**
 	 * Format a String representation of an integer at the specified
 	 * width.
-	 * <P>
+	 * <BR>
 	 * Note that this function will return an incorrect representation if the
 	 * integer is wider than the specified width. For example:<BR>
 	 *  fmt( 1, 3 ) will return "001".<BR>
@@ -1404,7 +1404,7 @@ public class Functions
 	/**
 	 * Format a String representation of an integer at the specified
 	 * width, and add the specified suffix.
-	 * <P>
+	 * <BR>
 	 * Note that this will return an incorrect representation if the integer is
 	 * wider than the specified width. For example:<BR>
 	 *  fmt( 1, 3, ':' ) will return "001:".<BR>

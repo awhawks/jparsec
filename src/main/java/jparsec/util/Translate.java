@@ -166,7 +166,7 @@ public class Translate
 	 * @param language The language to retrieve the entry in, or null
 	 * to use the current default language.
 	 * @return The entry.
-	 * @throws JPARSECException If the language is invalid, something
+	 * @throws RuntimeException If the language is invalid, something
 	 * that should never happen.
 	 */
 	public static String getEntry(int id, LANGUAGE language) {

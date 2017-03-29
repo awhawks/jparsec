@@ -608,8 +608,8 @@ public class FileIO
 	 * Determine if the specified file exists and is readable.
 	 *
 	 * @param filespec the file name to test.
-	 * @return <TT>true</TT> if the specified file exists and is readable,
-	 *         <TT>false</TT> otherwise.
+	 * @return true if the specified file exists and is readable,
+	 *         false otherwise.
 	 */
 	public static boolean isReadable(String filespec)
 	{
@@ -620,8 +620,8 @@ public class FileIO
 	 * Determine if the specified file/directory exists.
 	 *
 	 * @param filespec the file name to test.
-	 * @return <TT>true</TT> if the specified file/directory exists,
-	 *         <TT>false</TT> otherwise.
+	 * @return true if the specified file/directory exists,
+	 *         false otherwise.
 	 */
 	public static boolean exists(String filespec)
 	{

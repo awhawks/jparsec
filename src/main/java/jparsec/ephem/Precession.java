@@ -315,7 +315,7 @@ public class Precession
 			new double[] {490.00, 110.512834, 142.525186}
 	};
 	/**
-	 * Precession following Vondrak et al. 2011. See A&A 534, A22.
+	 * Precession following Vondrak et al. 2011. See A&amp;A 534, A22.
 	 *
 	 * @param JD0 Julian day of input vector (equatorial rectangular).
 	 * @param JD Julian day of output. Either JD or JD0 must be equal to

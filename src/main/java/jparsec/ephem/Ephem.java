@@ -880,7 +880,7 @@ public class Ephem
 
 	/**
 	 * Transform coordinates from ICRS to FK5 frame. Based on Hilton
-	 * and Honenkerk 2004, <I>Astronomy & Astrophysics 413, 765-770.</I>.
+	 * and Honenkerk 2004, <I>Astronomy &amp; Astrophysics 413, 765-770.</I>.
 	 *
 	 * @param geo_eq Geocentric rectangular equatorial coordinates of the
 	 *        object, ICRS.

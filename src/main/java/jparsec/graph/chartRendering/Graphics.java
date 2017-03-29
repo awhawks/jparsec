@@ -1460,7 +1460,7 @@ public interface Graphics {
 	 * the file or doing some image processing. Not recommended in Android.
 	 * @param img The image/object to save.
 	 * @param id The identifier. Use the path set in getImage.
-	 * @param life Life time in seconds in the database. <= 0 to keep it
+	 * @param life Life time in seconds in the database. &lt;= 0 to keep it
 	 * forever.
 	 */
 	void addToDataBase(Object img, String id, int life);

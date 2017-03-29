@@ -65,13 +65,13 @@ import jparsec.util.JPARSECException;
 * printing matrices are also included.  All the operations in this version of
 * the Matrix Class involve real matrices.  Complex matrices may be handled in a
 * future version.
-* <P>
+* <BR>
 * Five fundamental matrix decompositions, which consist of pairs or triples of
 * matrices, permutation vectors, and the like, produce results in five
 * decomposition classes.  These decompositions are accessed by the Matrix class
 * to compute solutions of simultaneous linear equations, determinants, inverses
 * and other matrix functions.  The five decompositions are:
-* <P>
+* <BR>
 * <UL>
 *    <LI>Cholesky Decomposition of symmetric, positive definite matrices.
 *    <LI>LU Decomposition of rectangular matrices.
@@ -81,9 +81,8 @@ import jparsec.util.JPARSECException;
 * </UL>
 * <DL>
 * <DT><B>Example of use:</B></DT>
-* <P>
 * <DD>Solve a linear system A x = b and compute the residual norm, ||b - A x||.
-* <P><PRE>
+* <BR><PRE>
 *       double[][] vals = {{1.,2.,3},{4.,5.,6.},{7.,8.,10.}};
 *       Matrix A = new Matrix(vals);
 *       Matrix b = Matrix.random(3,1);
@@ -92,7 +91,7 @@ import jparsec.util.JPARSECException;
 *       double rnorm = r.normInf();
 * </PRE></DD>
 * </DL>
- * <p/>
+ * <BR>
  * Adapted from the <a href="http://math.nist.gov/javanumerics/jama/" target="_blank">JAMA</a> package. Additional methods are tagged with the
  * <code>@author</code> tag.
  *
@@ -1045,21 +1044,21 @@ public class Matrix
 
   /**
    * Returns the square root of the matrix, i.e., X from the equation
-   * X*X = A.<br/>
-   * Steps in the Calculation (see <a href="http://www.mathworks.com/access/helpdesk/help/techdoc/ref/sqrtm.html" target="blank"><code>sqrtm</code></a> in Matlab):<br/>
+   * X*X = A.<BR>
+   * Steps in the Calculation (see <a href="http://www.mathworks.com/access/helpdesk/help/techdoc/ref/sqrtm.html" target="blank"><code>sqrtm</code></a> in Matlab):<BR>
    * <ol>
-   *   <li>perform eigenvalue decomposition<br/>[V,D]=eig(A)</li>
+   *   <li>perform eigenvalue decomposition<BR>[V,D]=eig(A)</li>
    *   <li>take the square root of all elements in D (only the ones with
-   *       positive sign are considered for further computation)<br/>
+   *       positive sign are considered for further computation)<BR>
    *       S=sqrt(D)</li>
-   *   <li>calculate the root<br/>
+   *   <li>calculate the root<BR>
    *       X=V*S/V, which can be also written as X=(V'\(V*S)')'</li>
    * </ol>
-   * <p/>
+   * <BR>
    * <b>Note:</b> since this method uses other high-level methods, it generates
    * several instances of matrices. This can be problematic with large
    * matrices.
-   * <p/>
+   * <BR>
    * Examples:
    * <ol>
    *   <li>
@@ -1306,7 +1305,7 @@ public class Matrix
    * US Locale).  Elements are separated by
    * whitespace, all the elements for each row appear on a single line,
    * the last row is followed by a blank line.
-   * <p/>
+   * <BR>
    * Note: This format differs from the one that can be read via the
    * Matrix(Reader) constructor! For that format, the write(Writer) method
    * is used (from the original weka.core.Matrix class).

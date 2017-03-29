@@ -37,8 +37,8 @@ import jparsec.util.Logger.LEVEL;
 
 /**
  * This is an implementation of the TASS 1.7 theory of the motion of the
- * satellites of Saturn. For reference see A. Vienne \& L. Duriez, A\&A 297,
- * 588-605 (1995), and A\&A 324, 366 (1997). Objects are Mimas, Enceladus,
+ * satellites of Saturn. For reference see A. Vienne &amp; L. Duriez, A&amp;A 297,
+ * 588-605 (1995), and A&amp;A 324, 366 (1997). Objects are Mimas, Enceladus,
  * Tethys, Dione, Rhea, Titan, Hyperion, and Iapetus.
  *
  * @author T. Alonso Albi - OAN (Spain)

@@ -292,6 +292,7 @@ public class Chinese extends BaseCalendar
 	 *
 	 * @param i Fixed day.
 	 * @return Year name.
+	 * @throws JPARSECException If an error occurs.
 	 */
 	public static ChineseName nameOfYear(final long i) throws JPARSECException {
 		return sexagesimalName(i);
@@ -303,6 +304,7 @@ public class Chinese extends BaseCalendar
 	 * @param i year in chinese calendar.
 	 * @param j month in chinese calendar.
 	 * @return Month name.
+	 * @throws JPARSECException If an error occurs.
 	 */
 	public static ChineseName nameOfMonth(final long i, final int j) throws JPARSECException
 	{
@@ -315,6 +317,7 @@ public class Chinese extends BaseCalendar
 	 *
 	 * @param fixed Fixed day.
 	 * @return Day name.
+	 * @throws JPARSECException If an error occurs.
 	 */
 	public static ChineseName nameOfDay(final long fixed) throws JPARSECException
 	{

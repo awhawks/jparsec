@@ -781,6 +781,7 @@ public class ChartSeriesElement implements Serializable
 
 	/**
 	 * Returns the current size of the shapes.
+	 * @return The shape size.
 	 */
 	public static int getShapeSize()
 	{

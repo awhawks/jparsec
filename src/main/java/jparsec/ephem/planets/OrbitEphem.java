@@ -58,23 +58,23 @@ import jparsec.util.JPARSECException;
  * Provides method for calculating ephemeris of planets, comets, and asteroids,
  * using orbital elements, as well as for obtaining data of the orbital
  * elements.
- * <P>
+ * <BR>
  * Orbital elements for comets, asteroids, and other related objects
  * (trans-Neptunian, Centaurs, Trojans, ...) can be read in two formats: the
  * official format of the Minor Planet Center, or the format of the commercial
  * program SkyMap.
- * <P>
+ * <BR>
  * Orbital elements of planets were taken from the IMCCE's VSOP87 theory. They
  * cover the time span 1000 B.C. to 5000 A.D., in intervals of 1 year for
  * current epochs and 5 years in the remote past or future. Elements are refered
  * to mean equinox and ecliptic of J2000 epoch. All planets except Earth are
  * available.
- * <P>
+ * <BR>
  * These orbital elements are suitable for accurate ephemeris, with errors well
  * below the arcsecond level when comparing to the full VSOP87 theory. An
- * additional advantage is the calculation speed.<P>
+ * additional advantage is the calculation speed.<BR>
  *
- * Example of use applying the main Ephem class:<P>
+ * Example of use applying the main Ephem class:<BR>
  * <pre>
  * try
  * {
@@ -94,9 +94,9 @@ import jparsec.util.JPARSECException;
  * {
  *		ve.showException();
  * }
- * </pre><P>
+ * </pre><BR>
  * It is recommended to use the particular method for this class instead of the main Ephem
- * class. The process is the same as in the {@linkplain Spacecraft} class, changing Probe by Comet or Asteroid.<P>
+ * class. The process is the same as in the {@linkplain Spacecraft} class, changing Probe by Comet or Asteroid.
  *
  * @see OrbitalElement
  * @see ReadFile
@@ -214,11 +214,11 @@ public class OrbitEphem
 	 * A.D.), in intervals of about 5 years except years 1700-2100, where the
 	 * interval is 1 year. They are refered to dynamical equinox and ecliptic of
 	 * J2000 epoch.
-	 * <P>
+	 * <BR>
 	 * These orbital elements are suitable for fast ephemeris calculations, with
 	 * accuracy better than 1 arcsecond when compared to the full VSOP87
 	 * Theory.
-	 * <P>
+	 * <BR>
 	 * For Pluto an approximate set of elements (fit to DE102 ephemerides done
 	 * by S. Moshier) will be returned. Accuracy of some minutes of arc between
 	 * 1400 B.C. to 3000 A.D.
@@ -311,7 +311,7 @@ public class OrbitEphem
 	 * Math.sqrt(sma), assuming a massless object in heliocentric orbit. No full
 	 * check has been made about which process is more accurate, but it seems to
 	 * give almost identical results.
-	 * <P>
+	 * <BR>
 	 * Orbital elements comes from a fit to JPL DE102 ephemeris made by S. L.
 	 * Moshier. Elements are valid from 1400 B.C. (JD 1206200.5) to 3000 A.D.
 	 * Errors should be below 5 arcminutes respect to DE102 in this time spand.
@@ -386,9 +386,9 @@ public class OrbitEphem
 	 * Pluto), using certain algorithm. Considerations about time span validity
 	 * and object disponibility in each algorithm should be taken into account
 	 * before calling this method.
-	 * <P>
+	 * <BR>
 	 * The orbital element set is adequate for fast and accurate ephemeris
-	 * calculations in dates around the calculation time (< few days), with initial errors in
+	 * calculations in dates around the calculation time (few days), with initial errors in
 	 * the milliarcsecond level comparing with the corresponding full theories,
 	 * except with Moshier and VSOP algorithms. For orbital elements adequate for
 	 * a longer time span use the method that returns the orbital elements from VSOP theory.
@@ -761,11 +761,11 @@ public class OrbitEphem
 	 * between 1000 B.C. to 5000 A.D, comparing to VSOP87 solution or JPL DE200
 	 * Ephemeris. Results for dwarf planet Pluto should be accurate to within 5
 	 * arcminutes.
-	 * <P>
+	 * <BR>
 	 * To correct for aberration and transform to geocentric the Series96 theory
 	 * is used for the position and velocity of the Earth in the 20th and 21st
 	 * centuries, otherwise the full VSOP solution.
-	 * <P>
+	 * <BR>
 	 * For comets and asteroids, this method returns the angular size of the
 	 * body by assuming an albedo of 0.5 and 0.25, respectively.
 	 *
@@ -1379,13 +1379,13 @@ public class OrbitEphem
 	 * Geocentric rectangular coordinates of the Sun. Mean equinox and ecliptic
 	 * of date. Adequate for fast and low precission ephemeris. Ecliptic latitude
 	 * is supossed to be 0.0.
-	 * <P>
+	 * <BR>
 	 * Expansion is from "Planetary Programs and Tables" by Pierre Bretagnon and
 	 * Jean-Louis Simon, Willman-Bell, 1986.
-	 * <P>
+	 * <BR>
 	 * The expansion is valid from 4000 B.C. to 8000 A.D. Stated peak error of
 	 * longitude is as follows (tested by Steve L. Moshier against JPL DE200):
-	 * <P>
+	 * <BR>
 	 *
 	 * <pre>
 	 *      years       degrees
@@ -1399,11 +1399,11 @@ public class OrbitEphem
 	 *  1600 to 2800    .0006
 	 * <BR>
 	 *  2800 to 8000    .0009
-	 * <P>
+	 * <BR>
 	 *</pre>
 	 *
 	 * Accuracy said by 1986 Astronomical Almanac is 0.1s R.A., 0.8" Dec.
-	 * <P>
+	 * <BR>
 	 * This implementation uses the {@linkplain FastMath} class for fast sin/cos
 	 * operations, introducing an additional error of the same level as above.
 	 *
@@ -1501,12 +1501,12 @@ public class OrbitEphem
 	/**
 	 * Obtain probable diameter of a dwarf object knowing the absolute magnitude
 	 * and the albedo.
-	 * <P>
+	 * <BR>
 	 * The value is given by evaluating a function that was obtained after a fit
 	 * from a tabulated table from the Minor Planet Center, called <I>Conversion
 	 * of Absolute Magnitude to Diameter</I>. The fit found is excelent in the
 	 * albedo interval of the table, 0.05 to 0.5.
-	 * <P>
+	 * <BR>
 	 * Typical icy objects in the outer Solar System will have an albedo of 0.5.
 	 * Rocky objects lies between 0.25 and 0.05.
 	 *
@@ -1524,7 +1524,7 @@ public class OrbitEphem
 	/**
 	 * Obtain probable albedo of a dwarf object knowing the absolute magnitude
 	 * and the radius.
-	 * <P>
+	 * <BR>
 	 * The value is given by evaluating a function that was obtained after a fit
 	 * from a tabulated table from the Minor Planet Center, called <I>Conversion
 	 * of Absolute Magnitude to Diameter</I>. The fit found is excelent in the
@@ -1582,10 +1582,10 @@ public class OrbitEphem
 	 * Solves an orbit from 3 observations, returning the approximate orbital elements of the body.
 	 * This method is adequate for short time spands in the observations, so that perturbations
 	 * are not very important, but not very short, since the orbit should be sampled enough.
-	 * Observations must be sorted by date.<P>
+	 * Observations must be sorted by date.<BR>
 	 *
 	 * This implementations follows <i>Astronomy on the Personal Computer</i>,
-	 * by Oliver Montenbruck.<P>
+	 * by Oliver Montenbruck.<BR>
 	 *
 	 * To use this method adequately with topocentric observations the flag topocentric should
 	 * be enabled in each of the ephemeris input objects, otherwise the observations will be
@@ -1882,7 +1882,7 @@ public class OrbitEphem
 	 * Obtain a set of orbital elements knowing the position and velocity
 	 * vectors in certain instant, according to the classical theory of the two
 	 * body motion.
-	 * <P>
+	 * <BR>
 	 * For reference see Practical Ephemeris Calculations, by Oliver
 	 * Montenbruck, chapter 3.
 	 *

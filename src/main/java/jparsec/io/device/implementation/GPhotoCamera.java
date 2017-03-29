@@ -443,6 +443,7 @@ public class GPhotoCamera {
 
 	/**
 	 * Take n shots and download them.
+	 * @param frames Number of shots to take.
 	 * @throws JPARSECException If an error occurs.
 	 * @return Name of downloaded image. The path to the n files
 	 * is returned, separated by ,.
@@ -1267,7 +1268,7 @@ public class GPhotoCamera {
 	 * Sets a time limit for live view and continuous shot modes. Default
 	 * value is 0, so that there is no time limit. When live view is used
 	 * for too long some cameras could end locked.
-	 * @param seconds Maximum time in seconds. Set to <=0 for no limit.
+	 * @param seconds Maximum time in seconds. Set to &lt;=0 for no limit.
 	 */
 	public void setTimeLimitForLiveView(int seconds) {
 		liveMaxTime = seconds;

@@ -1042,8 +1042,8 @@ public class MoonEphem
 
 	/**
 	 * Calculate position of Saturn satellites, providing full data. This method
-	 * uses TASS1.7 theory from the IMCCE. For reference see A&A 297, 588-605
-	 * (1995), and A&A 324, 366 (1997). Objects are Mimas, Enceladus, Tethys,
+	 * uses TASS1.7 theory from the IMCCE. For reference see A&amp;A 297, 588-605
+	 * (1995), and A&amp;A 324, 366 (1997). Objects are Mimas, Enceladus, Tethys,
 	 * Dione, Rhea, Titan, Hyperion, Iapetus.
 	 * <P>
 	 * Satellites are positioned respect to Saturn. For Saturn coordinates, the

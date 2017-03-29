@@ -65,18 +65,18 @@ public class CreateDitaaChart {
 	 * and the connection lines between them. These connection lines
 	 * should also be defined (from where they start respect the box, N
 	 * for north, S for South, E for left, and so on) in the corresponding
-	 * {@linkplain DitaaBoxElement} object. A layout example is given next:<P>
+	 * {@linkplain DitaaBoxElement} object. A layout example is given next:<BR>
 	 * <pre>
 	 *     0-------|
 	 *   |-----v   1-
 	 *   2-3-4-5-6-||7
-	 *     |-=-<--=--
+	 *     |-=-&lt;--=--
 	 *             89
 	 * </pre>
 	 * The numbers represents the box locations. The lines represents the
-	 * connections between the boxes. The symbols < > ^ v can be used to force
+	 * connections between the boxes. The symbols &lt; &gt; ^ v can be used to force
 	 * the position of an arrow mark. The symbol = can be used to show a dashed
-	 * line in horizontal orientation, in vertical it would be :.<P>
+	 * line in horizontal orientation, in vertical it would be :.<BR>
 	 * A box can also be a single text message without a box around. In this
 	 * case the N S E and W attributes for the connection lines starting from
 	 * that box will be interpreted as the desired alignment for the text.

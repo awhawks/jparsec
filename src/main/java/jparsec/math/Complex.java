@@ -253,37 +253,32 @@ public class Complex implements Serializable {
 	}
 
 	/**
-	 * Returns the <i>principal</i> angle of a <tt>Complex</tt> number, in
+	 * Returns the <i>principal</i> angle of a Complex number, in
 	 * radians, measured counter-clockwise from the real axis. (Think of the
 	 * reals as the x-axis, and the imaginaries as the y-axis.)
 	 *
-	 * <p>
+	 * <BR>
 	 * There are infinitely many solutions, besides the principal solution. If
 	 * <b>A</b> is the principal solution of <i>arg(z)</i>, the others are of
 	 * the form:
-	 * <p>
+	 * <BR>
 	 *
 	 * <pre>
 	 *     <b>A</b> + 2*k*<b>PI</b>
 	 * </pre>
-	 * <p>
+	 * <BR>
 	 * where k is any integer.
-	 * <p>
-	 * <tt>arg()</tt> always returns a <tt>double</tt> between -
-	 * <tt><b>PI</b></tt> and +<tt><b>PI</b></tt>.
-	 * <p>
-	 * <i><b>Note:</b>
-	 * <ul>
-	 * 2*<tt><b>PI</b></tt> radians is the same as 360 degrees.
-	 * </ul>
-	 * </i>
-	 * <p>
-	 * <i><b>Domain Restrictions:</b>
-	 * <ul>
+	 * <BR>
+	 * arg() always returns a double between -
+	 * <b>PI</b> and +<b>PI</b>.
+	 * <BR>
+	 * <b>Note:</b>
+	 * <BR>
+	 * 2*PI radians is the same as 360 degrees.
+	 * <BR>
+	 * <b>Domain Restrictions:</b>
+	 * <BR>
 	 * There are no restrictions: the class defines arg(0) to be 0
-	 * </ul>
-	 * </i>
-	 * <p>
 	 *
 	 * @return Principal angle (in radians)
 	 **/
@@ -292,16 +287,14 @@ public class Complex implements Serializable {
 	}
 
 	/**
-	 * Returns the sine of a <tt>Complex</tt> number.
+	 * Returns the sine of a Complex number.
 	 *
-	 * <p>
+	 * <BR>
 	 * <pre>
 	 *     sin(z)  =  ( exp(<i><b>i</b></i>*z) - exp(-<i><b>i</b></i>*z) ) / (2*<i><b>i</b></i>)
 	 * </pre>
-	 * <p>
 	 *
-	 * @return The <tt>Complex</tt> sine
-	 *         <p>
+	 * @return The Complex sine
 	 * @see Complex#asin()
 	 * @see Complex#sinh()
 	 * @see Complex#cosec()
@@ -342,16 +335,14 @@ public class Complex implements Serializable {
 	}
 
 	/**
-	 * Returns the cosine of a <tt>Complex</tt> number.
+	 * Returns the cosine of a Complex number.
 	 *
-	 * <p>
+	 * <BR>
 	 * <pre>
 	 *     cos(z)  =  ( exp(<i><b>i</b></i>*z) + exp(-<i><b>i</b></i>*z) ) / 2
 	 * </pre>
-	 * <p>
 	 *
-	 * @return The <tt>Complex</tt> cosine
-	 *         <p>
+	 * @return The Complex cosine
 	 * @see Complex#acos()
 	 * @see Complex#cosh()
 	 * @see Complex#sec()
@@ -391,23 +382,19 @@ public class Complex implements Serializable {
 	}
 
 	/**
-	 * Returns the tangent of a <tt>Complex</tt> number.
+	 * Returns the tangent of a Complex number.
 	 *
-	 * <p>
+	 * <BR>
 	 * <pre>
 	 * tan(z) = sin(z) / cos(z)
 	 * </pre>
-	 * <p>
-	 * <i><b>Domain Restrictions:</b>
-	 * <ul>
-	 * tan(z) is undefined whenever z = (k + 1/2) * <tt><b>PI</b></tt><br>
+	 * <BR>
+	 * <b>Domain Restrictions:</b>
+	 * <BR>
+	 * tan(z) is undefined whenever z = (k + 1/2) * <b>PI</b><br>
 	 * where k is any integer
-	 * </ul>
-	 * </i>
-	 * <p>
 	 *
-	 * @return The <tt>Complex</tt> tangent
-	 *         <p>
+	 * @return The Complex tangent
 	 * @see Complex#atan()
 	 * @see Complex#tanh()
 	 * @see Complex#cot()
@@ -465,23 +452,19 @@ public class Complex implements Serializable {
 	}
 
 	/**
-	 * Returns the cosecant of a <tt>Complex</tt> number.
+	 * Returns the cosecant of a Complex number.
 	 *
-	 * <p>
+	 * <BR>
 	 * <pre>
 	 * cosec(z) = 1 / sin(z)
 	 * </pre>
-	 * <p>
-	 * <i><b>Domain Restrictions:</b>
-	 * <ul>
-	 * cosec(z) is undefined whenever z = k * <tt><b>PI</b></tt><br>
+	 * <BR>
+	 * <b>Domain Restrictions:</b>
+	 * <BR>
+	 * cosec(z) is undefined whenever z = k * <b>PI</b><br>
 	 * where k is any integer
-	 * </ul>
-	 * </i>
-	 * <p>
 	 *
-	 * @return The <tt>Complex</tt> cosecant
-	 *         <p>
+	 * @return The Complex cosecant
 	 * @see Complex#sin()
 	 * @see Complex#sec()
 	 * @see Complex#cot()
@@ -522,23 +505,19 @@ public class Complex implements Serializable {
 	}
 
 	/**
-	 * Returns the secant of a <tt>Complex</tt> number.
+	 * Returns the secant of a Complex number.
 	 *
-	 * <p>
+	 * <BR>
 	 * <pre>
 	 * sec(z) = 1 / cos(z)
 	 * </pre>
-	 * <p>
-	 * <i><b>Domain Restrictions:</b>
-	 * <ul>
-	 * sec(z) is undefined whenever z = (k + 1/2) * <tt><b>PI</b></tt><br>
+	 * <BR>
+	 * <b>Domain Restrictions:</b>
+	 * <BR>
+	 * sec(z) is undefined whenever z = (k + 1/2) * <b>PI</b>
 	 * where k is any integer
-	 * </ul>
-	 * </i>
-	 * <p>
 	 *
-	 * @return The <tt>Complex</tt> secant
-	 *         <p>
+	 * @return The Complex secant
 	 * @see Complex#cos()
 	 * @see Complex#cosec()
 	 * @see Complex#cot()
@@ -579,23 +558,19 @@ public class Complex implements Serializable {
 	}
 
 	/**
-	 * Returns the cotangent of a <tt>Complex</tt> number.
+	 * Returns the cotangent of a Complex number.
 	 *
-	 * <p>
+	 * <BR>
 	 * <pre>
 	 * cot(z) = 1 / tan(z)
 	 * </pre>
-	 * <p>
-	 * <i><b>Domain Restrictions:</b>
-	 * <ul>
-	 * cot(z) is undefined whenever z = k * <tt><b>PI</b></tt><br>
+	 * <BR>
+	 * <b>Domain Restrictions:</b>
+	 * <BR>
+	 * cot(z) is undefined whenever z = k * <b>PI</b><br>
 	 * where k is any integer
-	 * </ul>
-	 * </i>
-	 * <p>
 	 *
-	 * @return The <tt>Complex</tt> cotangent
-	 *         <p>
+	 * @return The Complex cotangent
 	 * @see Complex#tan()
 	 * @see Complex#cosec()
 	 * @see Complex#sec()
@@ -651,16 +626,14 @@ public class Complex implements Serializable {
 	}
 
 	/**
-	 * Returns the hyperbolic sine of a <tt>Complex</tt> number.
+	 * Returns the hyperbolic sine of a Complex number.
 	 *
-	 * <p>
+	 * <BR>
 	 * <pre>
 	 * sinh(z) = (exp(z) - exp(-z)) / 2
 	 * </pre>
-	 * <p>
 	 *
-	 * @return The <tt>Complex</tt> hyperbolic sine
-	 *         <p>
+	 * @return The Complex hyperbolic sine
 	 * @see Complex#sin()
 	 * @see Complex#asinh()
 	 **/
@@ -692,16 +665,14 @@ public class Complex implements Serializable {
 	}
 
 	/**
-	 * Returns the hyperbolic cosine of a <tt>Complex</tt> number.
+	 * Returns the hyperbolic cosine of a Complex number.
 	 *
-	 * <p>
+	 * <BR>
 	 * <pre>
 	 * cosh(z) = (exp(z) + exp(-z)) / 2
 	 * </pre>
-	 * <p>
 	 *
-	 * @return The <tt>Complex</tt> hyperbolic cosine
-	 *         <p>
+	 * @return The Complex hyperbolic cosine
 	 * @see Complex#cos()
 	 * @see Complex#acosh()
 	 **/
@@ -733,16 +704,14 @@ public class Complex implements Serializable {
 	}
 
 	/**
-	 * Returns the hyperbolic tangent of a <tt>Complex</tt> number.
+	 * Returns the hyperbolic tangent of a Complex number.
 	 *
-	 * <p>
+	 * <BR>
 	 * <pre>
 	 * tanh(z) = sinh(z) / cosh(z)
 	 * </pre>
-	 * <p>
 	 *
-	 * @return The <tt>Complex</tt> hyperbolic tangent
-	 *         <p>
+	 * @return The Complex hyperbolic tangent
 	 * @see Complex#tan()
 	 * @see Complex#atanh()
 	 **/
@@ -792,27 +761,23 @@ public class Complex implements Serializable {
 	}
 
 	/**
-	 * Returns the <i>principal</i> arc sine of a <tt>Complex</tt> number.
+	 * Returns the <i>principal</i> arc sine of a Complex number.
 	 *
-	 * <p>
+	 * <BR>
 	 * <pre>
 	 *     asin(z)  =  -<i><b>i</b></i> * log(<i><b>i</b></i>*z + sqrt(1 - z*z))
 	 * </pre>
-	 * <p>
+	 * <BR>
 	 * There are infinitely many solutions, besides the principal solution. If
 	 * <b>A</b> is the principal solution of <i>asin(z)</i>, the others are of
 	 * the form:
-	 * <p>
+	 * <BR>
 	 *
-	 * <pre>
-	 *     k*<b>PI</b> + (-1)<sup><font size=-1>k</font></sup>  * <b>A</b>
-	 * </pre>
-	 * <p>
+	 *     k*<b>PI</b> + (-1)<sup>k</sup>  * <b>A</b>
+	 * <BR>
 	 * where k is any integer.
-	 * <p>
 	 *
-	 * @return Principal <tt>Complex</tt> arc sine
-	 *         <p>
+	 * @return Principal Complex arc sine
 	 * @see Complex#sin()
 	 * @see Complex#sinh()
 	 **/
@@ -849,27 +814,25 @@ public class Complex implements Serializable {
 	}
 
 	/**
-	 * Returns the <i>principal</i> arc cosine of a <tt>Complex</tt> number.
+	 * Returns the <i>principal</i> arc cosine of a Complex number.
 	 *
-	 * <p>
+	 * <BR>
 	 * <pre>
 	 *     acos(z)  =  -<i><b>i</b></i> * log( z + <i><b>i</b></i> * sqrt(1 - z*z) )
 	 * </pre>
-	 * <p>
+	 * <BR>
 	 * There are infinitely many solutions, besides the principal solution. If
 	 * <b>A</b> is the principal solution of <i>acos(z)</i>, the others are of
 	 * the form:
-	 * <p>
+	 * <BR>
 	 *
 	 * <pre>
 	 *     2*k*<b>PI</b> +/- <b>A</b>
 	 * </pre>
-	 * <p>
+	 * <BR>
 	 * where k is any integer.
-	 * <p>
 	 *
-	 * @return Principal <tt>Complex</tt> arc cosine
-	 *         <p>
+	 * @return Principal Complex arc cosine
 	 * @see Complex#cos()
 	 * @see Complex#cosh()
 	 **/
@@ -906,32 +869,28 @@ public class Complex implements Serializable {
 	}
 
 	/**
-	 * Returns the <i>principal</i> arc tangent of a <tt>Complex</tt> number.
+	 * Returns the <i>principal</i> arc tangent of a Complex number.
 	 *
-	 * <p>
+	 * <BR>
 	 * <pre>
 	 *     atan(z)  =  -<i><b>i</b></i>/2 * log( (<i><b>i</b></i>-z)/(<i><b>i</b></i>+z) )
 	 * </pre>
-	 * <p>
+	 * <BR>
 	 * There are infinitely many solutions, besides the principal solution. If
 	 * <b>A</b> is the principal solution of <i>atan(z)</i>, the others are of
 	 * the form:
-	 * <p>
+	 * <BR>
 	 * <pre>
 	 *     <b>A</b> + k*<b>PI</b>
 	 * </pre>
-	 * <p>
+	 * <BR>
 	 * where k is any integer.
-	 * <p>
-	 * <i><b>Domain Restrictions:</b>
-	 * <ul>
+	 * <BR>
+	 * <b>Domain Restrictions:</b>
+	 * <BR>
 	 * atan(z) is undefined for z = + <b>i</b> or z = - <b>i</b>
-	 * </ul>
-	 * </i>
-	 * <p>
 	 *
-	 * @return Principal <tt>Complex</tt> arc tangent
-	 *         <p>
+	 * @return Principal Complex arc tangent
 	 * @see Complex#tan()
 	 * @see Complex#tanh()
 	 **/
@@ -963,26 +922,22 @@ public class Complex implements Serializable {
 
 	/**
 	 * Returns the <i>principal</i> inverse hyperbolic sine of a
-	 * <tt>Complex</tt> number.
+	 * Complex number.
 	 *
-	 * <p>
+	 * <BR>
 	 * <pre>
 	 * asinh(z) = log(z + sqrt(z * z + 1))
 	 * </pre>
-	 * <p>
+	 * <BR>
 	 * There are infinitely many solutions, besides the principal solution. If
 	 * <b>A</b> is the principal solution of <i>asinh(z)</i>, the others are of
 	 * the form:
-	 * <p>
-	 * <pre>
-	 *     k*<b>PI</b>*<b><i>i</i></b> + (-1)<sup><font size=-1>k</font></sup>  * <b>A</b>
-	 * </pre>
-	 * <p>
+	 * <BR>
+	 *     k*<b>PI</b>*<b><i>i</i></b> + (-1)<sup>k</sup>  * <b>A</b>
+	 * <BR>
 	 * where k is any integer.
-	 * <p>
 	 *
-	 * @return Principal <tt>Complex</tt> inverse hyperbolic sine
-	 *         <p>
+	 * @return Principal Complex inverse hyperbolic sine
 	 * @see Complex#sinh()
 	 **/
 	public Complex asinh() {
@@ -1015,26 +970,24 @@ public class Complex implements Serializable {
 
 	/**
 	 * Returns the <i>principal</i> inverse hyperbolic cosine of a
-	 * <tt>Complex</tt> number.
+	 * Complex number.
 	 *
-	 * <p>
+	 * <BR>
 	 * <pre>
 	 * acosh(z) = log(z + sqrt(z * z - 1))
 	 * </pre>
-	 * <p>
+	 * <BR>
 	 * There are infinitely many solutions, besides the principal solution. If
 	 * <b>A</b> is the principal solution of <i>acosh(z)</i>, the others are of
 	 * the form:
-	 * <p>
+	 * <BR>
 	 * <pre>
 	 *     2*k*<b>PI</b>*<b><i>i</i></b> +/- <b>A</b>
 	 * </pre>
-	 * <p>
+	 * <BR>
 	 * where k is any integer.
-	 * <p>
 	 *
-	 * @return Principal <tt>Complex</tt> inverse hyperbolic cosine
-	 *         <p>
+	 * @return Principal Complex inverse hyperbolic cosine
 	 * @see Complex#cosh()
 	 **/
 	public Complex acosh() {
@@ -1067,32 +1020,28 @@ public class Complex implements Serializable {
 
 	/**
 	 * Returns the <i>principal</i> inverse hyperbolic tangent of a
-	 * <tt>Complex</tt> number.
+	 * Complex number.
 	 *
-	 * <p>
+	 * <BR>
 	 * <pre>
 	 * atanh(z) = 1 / 2 * log((1 + z) / (1 - z))
 	 * </pre>
-	 * <p>
+	 * <BR>
 	 * There are infinitely many solutions, besides the principal solution. If
 	 * <b>A</b> is the principal solution of <i>atanh(z)</i>, the others are of
 	 * the form:
-	 * <p>
+	 * <BR>
 	 * <pre>
 	 *     <b>A</b> + k*<b>PI</b>*<b><i>i</i></b>
 	 * </pre>
-	 * <p>
+	 * <BR>
 	 * where k is any integer.
-	 * <p>
-	 * <i><b>Domain Restrictions:</b>
-	 * <ul>
+	 * <BR>
+	 * <b>Domain Restrictions:</b>
+	 * <BR>
 	 * atanh(z) is undefined for z = + 1 or z = - 1
-	 * </ul>
-	 * </i>
-	 * <p>
 	 *
-	 * @return Principal <tt>Complex</tt> inverse hyperbolic tangent
-	 *         <p>
+	 * @return Principal Complex inverse hyperbolic tangent
 	 * @see Complex#tanh()
 	 **/
 	public Complex atanh() {
@@ -1122,12 +1071,12 @@ public class Complex implements Serializable {
 	}
 
 	/**
-	 * Converts a <tt>Complex</tt> into a <tt>String</tt> of the form <tt>(</tt>
-	 * <i>a</i><tt> + </tt><i>b</i><tt>i)</tt>.
+	 * Converts a Complex into a String of the form (
+	 * <i>a</i> + <i>b</i>i).
 	 *
-	 * <p>
-	 * This enables the <tt>Complex</tt> to be easily printed. For example, if
-	 * <tt>z</tt> was <i>2 - 5<b>i</b></i>, then
+	 * <BR>
+	 * This enables the Complex to be easily printed. For example, if
+	 * z was <i>2 - 5<b>i</b></i>, then
 	 *
 	 * <pre>
 	 * System.out.println(&quot;z = &quot; + z);
@@ -1141,16 +1090,14 @@ public class Complex implements Serializable {
 	 *
 	 * <!-- <i><b>Note:</b>
 	 * <ul>
-	 * Concatenating <tt>String</tt>s, using a system overloaded meaning of the
-	 * "<tt>+</tt>" operator, in fact causes the <tt>toString()</tt> method to
-	 * be invoked on the object <tt>z</tt> at runtime.
+	 * Concatenating Strings, using a system overloaded meaning of the
+	 * "+" operator, in fact causes the toString() method to
+	 * be invoked on the object z at runtime.
 	 * </ul>
-	 * </i> -->
-	 * <p>
+	 * -->
 	 *
-	 * @return <tt>String</tt> containing the cartesian coordinate
+	 * @return String containing the cartesian coordinate
 	 *         representation
-	 *         <p>
 	 **/
 	@Override
 	public String toString() {

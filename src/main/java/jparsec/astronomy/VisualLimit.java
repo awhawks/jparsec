@@ -33,9 +33,9 @@ import jparsec.util.JPARSECException;
 /**
  * Calculates sky brightness and limiting magnitude. <BR>
  * Based on C code by Bill Gray (www.projectpluto.com), which was in turn based
- * on Brad Schaefer's article and code on pages 57-60, May 1998 <I>Sky &
+ * on Brad Schaefer's article and code on pages 57-60, May 1998 <I>Sky &amp;
  * Telescope</I>, "To the Visual Limits".
- * <P>
+ * <BR>
  * The computations for sky brightness and limiting magnitude can be broken up
  * into several pieces. Some computations depend on things that are constant for
  * a given observing site and time: the lunar and solar zenith distances, the
@@ -588,7 +588,6 @@ public class VisualLimit
 
 /**
  * A support class for VisualLimit.
- * <P>
  * Holds values which vary across the sky.
  *
  * @author T. Alonso Albi - OAN (Spain)

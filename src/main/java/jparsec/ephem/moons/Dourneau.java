@@ -68,7 +68,7 @@ public class Dourneau
 	 * <P>
 	 * For reference see G. Dourneau, <I>Orbital elements of the eight major
 	 * satellites of Saturn determined from a fit of their theories of motion to
-	 * observations from 1886 to 1985</I>, A&A 267, 292 (1993).
+	 * observations from 1886 to 1985</I>, A&amp;A 267, 292 (1993).
 	 *
 	 * @param time Time object.
 	 * @param obs Observer object.

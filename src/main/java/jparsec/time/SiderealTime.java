@@ -172,7 +172,7 @@ public class SiderealTime
 	 * <P>
 	 * SOFA subroutine GMST2000.f.
 	 * <P>
-	 * Capitaine et al., Astronomy & Astrophysics 412, 567-586, EQ. (42).
+	 * Capitaine et al., Astronomy &amp; Astrophysics 412, 567-586, EQ. (42).
 	 * <P>
 	 * James G. Williams, "Contributions to the Earth's obliquity rate,
 	 * precession, and nutation," Astron. J. 108, 711-724 (1994).

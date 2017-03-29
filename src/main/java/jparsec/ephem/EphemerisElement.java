@@ -282,7 +282,7 @@ public class EphemerisElement implements Serializable
 		/**
 		 * Constant ID for selecting IAU 2006 formulae of obliquity, nutation, and
 		 * Greenwich mean sidereal time. Note that the precession algorithm is from
-		 * Capitaine et al. 2003 (Astronomy & Astrophysics 412, 567-586, 2003), officially
+		 * Capitaine et al. 2003 (Astronomy &amp; Astrophysics 412, 567-586, 2003), officially
 		 * adopted by the IAU as a replacement of the precession part of IAU2000A
 		 * precession-nutation model. See also Hilton et al. 2006. Pole movement is
 		 * considered when possible. Should be used by default for better precission
@@ -564,7 +564,7 @@ public class EphemerisElement implements Serializable
 		 * ALMA Memorandum 366. Frequency range is from the GHz regime
 		 * to the THz. Maximum error comparing with the atmospheric model by
 		 * Liebe (1996) for ALMA site is 2% at 500 GHz, and it is
-		 * around 1% for nu > 300 GHz. Between 100 and 300 GHz the
+		 * around 1% for nu &gt; 300 GHz. Between 100 and 300 GHz the
 		 * error is only 0.5%. This formula is used for observed elevations between
 		 * -1 and 90 deg.  */
 		RADIO_YAN,
@@ -620,7 +620,7 @@ public class EphemerisElement implements Serializable
 	public boolean correctForExtinction = false;
 
 	/**
-	 * Sets the precession model to that of Vondr&aacute;k et al. 2011 (see A&A 534, A22)
+	 * Sets the precession model to that of Vondr&aacute;k et al. 2011 (see A&amp;A 534, A22)
 	 * instead of the original IAU2006 model by Capitaine et al. 2003. This affects the
 	 * calculation of precession for reduction algorithms IAU2006 and IAU2009. The effect
 	 * is a correct output for dates very far from J2000 epoch. IAU model should not be used
@@ -665,7 +665,7 @@ public class EphemerisElement implements Serializable
 	 * is set to true, although Moshier method is forced when JPL
 	 * ephemeris files cannot be found and Series96 cannot be applied, so no
 	 * dependency problems will appear, although the theory used could be
-	 * different from the one selected in the ephemeris object.<P>
+	 * different from the one selected in the ephemeris object.<BR>
 	 * When this flag is set to false Moshier ephemerides can be used between
 	 * years -3000 to +3000, with true the lower limit for inner planets is -1350.
 	 */

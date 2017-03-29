@@ -32,9 +32,9 @@ import jparsec.util.*;
 
 /**
  * A class to manipulate Kurucz models of star atmospheres. Only those
- * models with solar metallicity are supported. <P>
+ * models with solar metallicity are supported. <BR>
  *
- * Reference: Buser, R., Kurucz, R. L., A&A 264, 557-591 (1992).
+ * Reference: Buser, R., Kurucz, R. L., A&amp;A 264, 557-591 (1992).
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */

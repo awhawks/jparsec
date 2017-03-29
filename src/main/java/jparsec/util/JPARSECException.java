@@ -125,6 +125,7 @@ public class JPARSECException extends Exception implements Serializable
 
 	/**
 	 * Returns whether warnings are considered as errors or not.
+	 * @return True or false.
 	 */
 	public static boolean isTreatWarningsAsErrors()
 	{

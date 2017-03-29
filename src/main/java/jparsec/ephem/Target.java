@@ -310,7 +310,7 @@ public final class Target
 		 * Sets the index of a body, used to select a minor body
 		 * when reading asteroids/comets. Default initial value
 		 * for index is -1.
-		 * @param i The index of the body. Should be >= 0.
+		 * @param i The index of the body. Should be &gt;= 0.
 		 */
 		public void setIndex(int i) {
 			id = i;

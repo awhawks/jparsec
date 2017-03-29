@@ -1764,7 +1764,7 @@ public class MainEvents
 	/**
 	 * Returns the longitude of the Great Red Spot (GRS), using historical observations.
 	 * Data available only since 1969. For previous dates and dates after last update a
-	 * linear extrapolation is used. Data is regularly updated from Sky & Telescope and ALPO.
+	 * linear extrapolation is used. Data is regularly updated from Sky &amp; Telescope and ALPO.
 	 * @param JD_TDB Julian day.
 	 * @return GRS longitude (system II), in radians.
 	 * @throws JPARSECException If an error occurs.

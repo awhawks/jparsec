@@ -52,16 +52,16 @@ import jparsec.util.JPARSECException;
 
 /**
  * This class implements the Lunar Solution ELP2000 from the IMCCE. The entire
- * theory is applied. <P>
+ * theory is applied. <BR>
  * Reference frame is mean dynamical ecliptic and inertial equinox of J2000
- * epoch.<P>
- * References: <P>
+ * epoch.<BR>
+ * References: <BR>
  * 1. <I>ELP 2000-85: a semi-analytical lunar ephemeris adequate for historical
- * times</I>, Chapront-Touze M., Chapront J., Astron. & Astrophys. 190, 342
+ * times</I>, Chapront-Touze M., Chapront J., Astron. &amp; Astrophys. 190, 342
  * (1988).
- * <P>
+ * <BR>
  * 2. <I>The Lunar Ephemeris ELP 2000</I>, Chapront-Touze M., Chapront J.,
- * Astron. & Astrophys. 124, 50 (1983).
+ * Astron. &amp; Astrophys. 124, 50 (1983).
  *
  * @see Ephem
  * @author T. Alonso Albi - OAN (Spain)
@@ -97,10 +97,10 @@ public class Elp2000
      * Computation of geocentric lunar coordinates from ELP 2000-82 and
      * ELP2000-85 theories (M. Chapront-Touze and J. Chapront). Constants fitted
      * to JPL's ephemerides DE200/LE200.
-     * <P>
+     * <BR>
      * Reference frame in mean dynamical ecliptic and inertial equinox of J2000
      * epoch.
-     * <P>
+     * <BR>
      * Files, series, constants and coordinate systems are described in the
      * notice LUNAR SOLUTION ELP 2000-82B, available from the IMCCE.
      *
@@ -665,7 +665,7 @@ public class Elp2000
      * Corrects Julian day of calculations of ELP2000 theory for secular
      * acceleration of the Moon. This method uses the current value of static
      * variable {@linkplain Elp2000#MOON_SECULAR_ACCELERATION}.
-     * <P>
+     * <BR>
      * Correction should be performed to standard dynamical time of calculations
      * (Barycentric Dynamical Time), as obtained by using the corresponding methods.
      * {@linkplain Elp2000#elp2000Ephemeris(TimeElement, ObserverElement, EphemerisElement)}
@@ -674,7 +674,7 @@ public class Elp2000
      * little error (well below the uncertainty in TT-UT correction) could exist
      * if this correction is applied to LT or UT, before the correction to TDB
      * which is performed in {@linkplain Elp2000#elp2000Ephemeris(TimeElement, ObserverElement, EphemerisElement)}.
-     * <P>
+     * <BR>
      * Correction for different years (using the default value) are as follows:
      *
      * <pre>
@@ -707,18 +707,17 @@ public class Elp2000
      * uncertainty with Moon secular acceleration in JPL DE200 integration. So
      * this theory was not accurate outside period 1900-2100, although it can be
      * improved by correcting for Moon secular acceleration.
-     * <P>
+     * <BR>
      * The time correction for Moon secular acceleration is automatically done, which means that
      * this implementation will match JPLDE405 up to the arcsecond level during several millenia.
      * So the results cannot be compared directly with DE200 due to this time correction (well,
      * only around year 1955). Another possible
      * correction you may want to apply is from center of mass to geometric center by means of
      * {@linkplain Elp2000#fromMoonBarycenterToGeometricCenter(TimeElement, ObserverElement, EphemerisElement, EphemElement)}.
-     * <P>
+     * <BR>
      * This method also uses Series96 theory for the position of the Earth
      * between 1900 and 2100, and VSOP87A theory outside this interval. This could
      * affect the heliocentric position and physical ephemeris.
-     * <P>
      *
      * @param time Time object containing the date.
      * @param obs Observer object containing the observer position.

@@ -106,7 +106,7 @@ import net.miginfocom.swing.MigLayout;
 
 /**
  * A control panel to send/receive commands from the telescope. For
- * a successfully connection, take into account the following points.<P>
+ * a successfully connection, take into account the following points.<BR>
  * <pre>
  * CONTROL TELESCOPE FROM JPARSEC
  *
@@ -121,7 +121,7 @@ import net.miginfocom.swing.MigLayout;
  * YOU WILL PROBABLY HAVE NO PROBLEMS WITH ANY GENERIC ADAPTER.
  *
  * THE AUTOSTAR HANDBOX WILL WORK CORRECTLY ONLY IF YOU HAVE THE TELESCOPE
- * ENOUGH POWERED. USE BATTERIES OR CHECK YOUR AC ADAPTER IS CORRECT (>=1.5 A).
+ * ENOUGH POWERED. USE BATTERIES OR CHECK YOUR AC ADAPTER IS CORRECT (&gt;=1.5 A).
  *
  * CELESTRON WARNING
  *
@@ -1571,7 +1571,7 @@ public final class TelescopeControlPanel extends JPanel implements ActionListene
 	 * MAXTEMP       maximum temperature in C allowed before a weather alarm. Default is 50
 	 * MINTEMP       minimum temperature in C allowed before a weather alarm. Default is -20
 	 * CAMERA        from 1 to the number of cameras (selects a camera). Default value is 1
-	 * SHIFT         value in degrees representing the position shift between the telescope and the selected camera. 0 for primary focus, >0 for piggy back camera
+	 * SHIFT         value in degrees representing the position shift between the telescope and the selected camera. 0 for primary focus, &gt;0 for piggy back camera
 	 * GOTO          object name (internal databases in JPARSEC or a valid Simbad identifier). Offset from current position is also allowed
 	 * PARK          Nothing. Parks the telescope.
 	 * UNPARK        Nothing. Unparks the telescope.

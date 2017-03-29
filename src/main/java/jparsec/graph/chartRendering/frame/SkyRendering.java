@@ -153,7 +153,7 @@ public class SkyRendering implements Serializable
 	 * @param time A new time object, or null to keep the current one.
 	 * @param obs A new observer, or null to keep the current one.
 	 * @param eph A new ephemeris object, or null to keep the current one.
-	 * @throws JPARSECException
+	 * @throws JPARSECException If an error occurs.
 	 */
 	public void update(SkyRenderElement sky, TimeElement time, ObserverElement obs, EphemerisElement eph) throws JPARSECException {
 		if (time != null || obs != null || eph != null) {
@@ -243,7 +243,7 @@ public class SkyRendering implements Serializable
 
 	/**
 	 * Sets the longitude of Jupiter's Great Red Spot.
-	 * <P>
+	 * <BR>
 	 * Please note that the rendering will use the default value of the
 	 * longitude of central meridian for rendering. This value is refered to
 	 * System III for giant planets (rotation of the magnetic field), so the
@@ -334,6 +334,8 @@ public class SkyRendering implements Serializable
 	/**
 	 * Reads the object.
 	 * @param in Input stream.
+	 * @throws IOException I/O error.
+	 * @throws ClassNotFoundException Class not found error.
 	 */
 	private void readObject(ObjectInputStream in)
 	throws IOException, ClassNotFoundException {

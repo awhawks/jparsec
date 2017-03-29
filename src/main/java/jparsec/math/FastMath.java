@@ -562,7 +562,7 @@ public class FastMath
 	/**
 	 * Returns the sign of the argument.
 	 * @param n A value.
-	 * @return 0 if value = 0, 1 if value > 0, -1 if value < 0.
+	 * @return 0 if value = 0, 1 if value &gt; 0, -1 if value &lt; 0.
 	 */
 	public static int sign(double n) {
 		if (n == 0) return 0;

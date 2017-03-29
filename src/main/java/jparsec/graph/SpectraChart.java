@@ -200,6 +200,8 @@ public class SpectraChart implements ActionListener, ListSelectionListener, Comp
 	/**
 	 * Reads the object.
 	 * @param in Input stream.
+	 * @throws IOException I/O error.
+	 * @throws ClassNotFoundException Class not found error.
 	 */
 	private void readObject(ObjectInputStream in)
 	throws IOException, ClassNotFoundException {

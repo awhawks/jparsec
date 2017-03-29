@@ -41,29 +41,28 @@ import jparsec.util.Logger.LEVEL;
 
 /**
  * A convenient class for city data management.
- * <P>
+ * <BR>
  * <I><B>Description</B></I>
- * <P>
+ * <BR>
  * This class contains full data of about 4200 cities/places around the world,
  * providing a suitable way of getting coordinates of certain location to
  * calculate ephemeris. Methods starting with 'get' perform the search for
  * the main database of cities around the world, methods starting with 'find'
  * extend the search for 8000 additional locations in Spain.
- * <P>
+ * <BR>
  * <I><B>Format</B></I>
- * <P>
+ * <BR>
  * Data is organized in arrays of type {@linkplain CityElement} for each
  * country, containing data objets with the convenient fields.
- * <P>
+ * <BR>
  * <I><B>Reference</B></I>
- * <P>
+ * <BR>
  * Data has been compiled using different sources and medias. Different catalogs
  * have been used, and a lot of changes and updates were made manually. The
  * height above see level was computed using the 4k elevation image at <A
- * target="_blank" href = "
- * http://www.space-graphics.com/e43_elevation1.htm">space-graphics.com</A>. See
+ * target="_blank" href="http://www.space-graphics.com/e43_elevation1.htm">space-graphics.com</A>. See
  * it for details. The calculation made is an averaged measure of the altitude
- * in a circle of radius r <= 5 km (5 km for the equator). In plane terrains
+ * in a circle of radius r &lt;= 5 km (5 km for the equator). In plane terrains
  * maximum theoretical error is 15m. Typical errors will be about 50m.
  *
  * @see CityElement

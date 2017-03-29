@@ -150,7 +150,6 @@ public class ImageSplineTransform implements Serializable {
 	/**
 	 * Constructor for a given image and degree = 3.
 	 * @param image The image as a 2d array [x][y].
-	 * @throws JPARSECException If the degree is invalid.
 	 */
 	public ImageSplineTransform(double[][] image)
 	{

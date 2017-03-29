@@ -50,10 +50,10 @@ public class TimeFormat
 	private TimeFormat() {}
 
 	/**
-	 * Return 'now' as a date <TT>String</TT> using the default Locale.
+	 * Return 'now' as a date String using the default Locale.
 	 *
-	 * @param dateFmt The java.text.DateFormat constant to use (<TT>FULL</TT>,
-	 *        <TT>LONG</TT>, <TT>MEDIUM</TT>, or <TT>SHORT</TT>).
+	 * @param dateFmt The java.text.DateFormat constant to use (FULL,
+	 *        LONG, MEDIUM, or SHORT).
 	 * @return The current, formatted, date as a String.
 	 */
 	public static String dateNow(int dateFmt)
@@ -62,10 +62,10 @@ public class TimeFormat
 	}
 
 	/**
-	 * Return 'now' as a date <TT>String</TT> using the default Locale and the
-	 * <TT>DateFormat.MEDIUM</TT> size.
+	 * Return 'now' as a date String using the default Locale and the
+	 * DateFormat.MEDIUM size.
 	 *
-	 * @return The current formatted date as a <TT>String</TT>.
+	 * @return The current formatted date as a String.
 	 */
 	public static String dateNow()
 	{
@@ -73,8 +73,8 @@ public class TimeFormat
 	}
 
 	/**
-	 * Return 'now' as a date and time <TT>String</TT> using the default
-	 * Locale and the <TT>DateFormat.MEDIUM</TT> size.
+	 * Return 'now' as a date and time String using the default
+	 * Locale and the DateFormat.MEDIUM size.
 	 *
 	 * @return The current, formatted, date and time as a String.
 	 */
@@ -84,12 +84,12 @@ public class TimeFormat
 	}
 
 	/**
-	 * Convert a <TT>Date</TT> into a date <TT>String</TT> using the default
+	 * Convert a Date into a date String using the default
 	 * Locale.
 	 *
 	 * @param d The java.util.Date to convert.
-	 * @param dateFmt The <TT>java.text.DateFormat</TT> constant to use (<TT>FULL</TT>,
-	 *        <TT>LONG</TT>, <TT>MEDIUM</TT>, or <TT>SHORT</TT>).
+	 * @param dateFmt The java.text.DateFormat constant to use (FULL,
+	 *        LONG, MEDIUM, or SHORT).
 	 * @return The date formatted as a String.
 	 */
 	public static String date(Date d, int dateFmt)
@@ -98,11 +98,11 @@ public class TimeFormat
 	}
 
 	/**
-	 * Convert a <TT>Date</TT> into a date <TT>String</TT> using the default
-	 * Locale and the <TT>DateFormat.MEDIUM</TT> size.
+	 * Convert a Date into a date String using the default
+	 * Locale and the DateFormat.MEDIUM size.
 	 *
-	 * @param d The <TT>java.util.Date</TT> to convert.
-	 * @return The date formatted as a <TT>String</TT>.
+	 * @param d The java.util.Date to convert.
+	 * @return The date formatted as a String.
 	 */
 	public static String date(Date d)
 	{
@@ -110,13 +110,13 @@ public class TimeFormat
 	}
 
 	/**
-	 * Convert a <TT>Date</TT> into a time <TT>String</TT> using the default
+	 * Convert a Date into a time String using the default
 	 * Locale.
 	 *
-	 * @param d The <TT>java.util.Date</TT> to convert.
-	 * @param dateFmt The <TT>java.text.DateFormat</TT> constant to use (<TT>FULL</TT>,
-	 *        <TT>LONG</TT>, <TT>MEDIUM</TT>, or <TT>SHORT</TT>).
-	 * @return The time formatted as a <TT>String</TT>.
+	 * @param d The java.util.Date to convert.
+	 * @param dateFmt The java.text.DateFormat constant to use (FULL,
+	 *        LONG, MEDIUM, or SHORT).
+	 * @return The time formatted as a String.
 	 */
 	public static String time(Date d, int dateFmt)
 	{
@@ -124,11 +124,11 @@ public class TimeFormat
 	}
 
 	/**
-	 * Convert a <TT>Date</TT> into a time <TT>String</TT> using the default
-	 * Locale and the <TT>DateFormat.MEDIUM</TT> size.
+	 * Convert a Date into a time String using the default
+	 * Locale and the DateFormat.MEDIUM size.
 	 *
-	 * @param d The <TT>java.util.Date</TT> to convert.
-	 * @return The time formatted as a <TT>String</TT>.
+	 * @param d The java.util.Date to convert.
+	 * @return The time formatted as a String.
 	 */
 	public static String time(Date d)
 	{
@@ -136,13 +136,13 @@ public class TimeFormat
 	}
 
 	/**
-	 * Convert a <TT>Date</TT> into a date and time <TT>String</TT> using
+	 * Convert a Date into a date and time String using
 	 * the default Locale.
 	 *
-	 * @param d The <TT>java.util.Date</TT> to convert.
-	 * @param dtFmt The <TT>java.text.DateFormat</TT> constant to use (<TT>FULL</TT>,
-	 *        <TT>LONG</TT>, <TT>MEDIUM</TT>, or <TT>SHORT</TT>).
-	 * @return The date and time formatted as a <TT>String</TT>.
+	 * @param d The java.util.Date to convert.
+	 * @param dtFmt The java.text.DateFormat constant to use (FULL,
+	 *        LONG, MEDIUM, or SHORT).
+	 * @return The date and time formatted as a String.
 	 */
 	public static String dateTime(Date d, int dtFmt)
 	{
@@ -163,14 +163,14 @@ public class TimeFormat
 	}
 
 	/**
-	 * Convert a <TT>Date</TT> into a date and time <TT>String</TT> using
+	 * Convert a Date into a date and time String using
 	 * the default Locale.
 	 *
-	 * @param d The <TT>java.util.Date</TT> to convert.
-	 * @param dtFmt The <TT>java.text.DateFormat</TT> constant to use (<TT>FULL</TT>,
-	 *        <TT>LONG</TT>, <TT>MEDIUM</TT>, or <TT>SHORT</TT>).
+	 * @param d The java.util.Date to convert.
+	 * @param dtFmt The java.text.DateFormat constant to use (FULL,
+	 *        LONG, MEDIUM, or SHORT).
 	 * @param locale The Locale to use.
-	 * @return The date and time formatted as a <TT>String</TT>.
+	 * @return The date and time formatted as a String.
 	 */
 	public static String dateTime(Date d, int dtFmt, Locale locale)
 	{
@@ -191,11 +191,11 @@ public class TimeFormat
 	}
 
 	/**
-	 * Convert a <TT>Date</TT> into a date and time <TT>String</TT> using
-	 * the default Locale and the <TT>DateFormat.MEDIUM</TT> size.
+	 * Convert a Date into a date and time String using
+	 * the default Locale and the DateFormat.MEDIUM size.
 	 *
-	 * @param d The <TT>java.util.Date</TT> to convert.
-	 * @return The date and time formatted as a <TT>String</TT>.
+	 * @param d The java.util.Date to convert.
+	 * @return The date and time formatted as a String.
 	 */
 	public static String dateTime(Date d)
 	{
@@ -203,11 +203,11 @@ public class TimeFormat
 	}
 
 	/**
-	 * Convert a <TT>Calendar</TT> into a date and time <TT>String</TT>
-	 * using the default Locale and the <TT>DateFormat.MEDIUM</TT> size.
+	 * Convert a Calendar into a date and time String
+	 * using the default Locale and the DateFormat.MEDIUM size.
 	 *
-	 * @param c The <TT>java.util.Calendar</TT> to convert.
-	 * @return The date and time formatted as a <TT>String</TT>.
+	 * @param c The java.util.Calendar to convert.
+	 * @return The date and time formatted as a String.
 	 */
 	public static String dateTime(Calendar c)
 	{
@@ -219,11 +219,11 @@ public class TimeFormat
 	}
 
 	/**
-	 * Converts a julian day into a date and time <TT>String</TT>.
+	 * Converts a julian day into a date and time String.
 	 *
 	 * @param jd The julian day. Must be greater than 0.
 	 * @param scale The time scale to add its abbreviation at the end, or null to avoid it.
-	 * @return The date and time formatted as a <TT>String</TT>.
+	 * @return The date and time formatted as a String.
 	 * @throws JPARSECException If the Julian day is invalid.
 	 */
 	public static String formatJulianDayAsDateAndTime(double jd, SCALE scale) throws JPARSECException
@@ -245,12 +245,12 @@ public class TimeFormat
 	}
 
 	/**
-	 * Converts a julian day into a date and time <TT>String</TT>.
+	 * Converts a julian day into a date and time String.
 	 *
 	 * @param time Time object.
 	 * @param dmy True to format as day-month-year, false for year-month-day.
 	 * @param monthAsString True to write the month as a string.
-	 * @return The date and time formatted as a <TT>String</TT>.
+	 * @return The date and time formatted as a String.
 	 * @throws JPARSECException If the Julian day is invalid.
 	 */
 	public static String formatJulianDayAsDateAndTime(TimeElement time, boolean dmy, boolean monthAsString) throws JPARSECException
@@ -309,11 +309,11 @@ public class TimeFormat
 	}
 
 	/**
-	 * Converts a julian day into a date and time <TT>String</TT>.
+	 * Converts a julian day into a date and time String.
 	 *
 	 * @param jd The julian day.
 	 * @param scale The time scale to add its abbreviation at the end, or null to avoid it.
-	 * @return The date and time formatted as a <TT>String</TT>.
+	 * @return The date and time formatted as a String.
 	 * @throws JPARSECException If the Julian day is invalid.
 	 */
 	public static String formatJulianDayAsDateAndTimeOnlyMinutes(double jd, SCALE scale) throws JPARSECException
@@ -329,12 +329,12 @@ public class TimeFormat
 	}
 
 	/**
-	 * Converts a julian day into a date and time <TT>String</TT>.
+	 * Converts a julian day into a date and time String.
 	 *
 	 * @param time Time object.
 	 * @param dmy True to format as day-month-year, false for year-month-day.
 	 * @param monthAsString True to write the month as a string.
-	 * @return The date and time formatted as a <TT>String</TT>.
+	 * @return The date and time formatted as a String.
 	 * @throws JPARSECException If the Julian day is invalid.
 	 */
 	public static String formatJulianDayAsDateAndTimeOnlyMinutes(TimeElement time, boolean dmy, boolean monthAsString) throws JPARSECException
@@ -350,10 +350,10 @@ public class TimeFormat
 	}
 
 	/**
-	 * Converts a julian day into a date <TT>String</TT>.
+	 * Converts a julian day into a date String.
 	 *
 	 * @param jd The julian day.
-	 * @return The date formatted as a <TT>String</TT>.
+	 * @return The date formatted as a String.
 	 * @throws JPARSECException If the Julian day is invalid.
 	 */
 	public static String formatJulianDayAsDate(double jd) throws JPARSECException
@@ -374,10 +374,10 @@ public class TimeFormat
 	}
 
 	/**
-	 * Converts a {@linkplain TimeElement} object into a date and time <TT>String</TT>.
+	 * Converts a {@linkplain TimeElement} object into a date and time String.
 	 *
 	 * @param time {@linkplain TimeElement} object.
-	 * @return The date and time formatted as a <TT>String</TT>.
+	 * @return The date and time formatted as a String.
 	 * @throws JPARSECException  If the Julian day is invalid.
 	 */
 	public static String formatTime(TimeElement time) throws JPARSECException

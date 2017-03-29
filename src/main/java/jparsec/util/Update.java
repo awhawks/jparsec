@@ -52,8 +52,8 @@ import jparsec.vo.GeneralQuery;
  * 2. Orbital elements of space probes in orbital_elements.jar, taken from Horizons.
  * Last full update in October, 2011.<BR>
  * 3. Values of the Great Red Spot longitudes, in orbital_elements.jar, to be updated
- * each three months from the ALPO website or Sky&Telescope.
- * This file is the same as that used by Kerry Shetline in Sky View Cafe.<P>
+ * each three months from the ALPO website or Sky &amp; Telescope.
+ * This file is the same as that used by Kerry Shetline in Sky View Cafe.<BR>
  *
  * Some processing is needed to update the list of observatories and
  * the COLOGNE database, due to the usage of HTML format instead of a more

@@ -160,27 +160,27 @@ public class EventReport {
 	 * Returns the set of astronomical events between two given dates. Events are
 	 * sorted in crescent order of date. Note this method requires a few hours in a
 	 * reasonably fast computer to complete if everything is activated. The events calculated are:
-	 * <P>Solar and lunar eclipses.
-	 * <P>Moon phases, perigee and apogee, maximum/minimum declination.
-	 * <P>Equinoxes and solstices, Earth's perihelion and aphelion.
-	 * <P>Mercury and Venus transits on the Sun.
-	 * <P>Meteor showers.
-	 * <P>Planetary perihelions, aphelions, oppositions (or maximum elongations), and conjunctions. Mercury and Venus perigee.
-	 * <P>Minima/maxima of variable stars.
-	 * <P>New year in different calendars.
-	 * <P>(*) Sunrise/sunset in lunar craters Ptolemaeus, Gassendi, Plato, and Alphonsus (times of frequent Lunar Transient Phenomena) + Lunar-X phenomena.
-	 * <P>(*) Occultation of planets, stars, deep sky objects, comets and asteroids by the Moon.
-	 * <P>(*) Transits of comets or asteroids in front of the Sun.
-	 * <P>(*) Comets/asteroids visible to the naked eye.
-	 * <P>(*) Close-approach of NEOs.
-	 * <P>(*) Time change due to DST.
-	 * <P>(*) Conjunctions between outer planets, comets, and asteroids, between Moon and planets, between planets/Moon and stars, and between deep sky objects and outer planets, comets, or asteroids.
-	 * <P>(*) Eclipses, transits, shadow transits, and occultations of natural satellites in Jupiter, Saturn, and Uranus.
-	 * <P>(*) Mutual events for the satellites of Jupiter, Saturn, and Uranus.
-	 * <P>
-	 * <P>(*) Events calculated considering the location of the observer, the other events are 'geocentric'.
-	 * <P>
-	 * <P>In the last two cases calculations are performed with the 'optimize' flag enabled in the constructor of the
+	 * <BR>Solar and lunar eclipses.
+	 * <BR>Moon phases, perigee and apogee, maximum/minimum declination.
+	 * <BR>Equinoxes and solstices, Earth's perihelion and aphelion.
+	 * <BR>Mercury and Venus transits on the Sun.
+	 * <BR>Meteor showers.
+	 * <BR>Planetary perihelions, aphelions, oppositions (or maximum elongations), and conjunctions. Mercury and Venus perigee.
+	 * <BR>Minima/maxima of variable stars.
+	 * <BR>New year in different calendars.
+	 * <BR>(*) Sunrise/sunset in lunar craters Ptolemaeus, Gassendi, Plato, and Alphonsus (times of frequent Lunar Transient Phenomena) + Lunar-X phenomena.
+	 * <BR>(*) Occultation of planets, stars, deep sky objects, comets and asteroids by the Moon.
+	 * <BR>(*) Transits of comets or asteroids in front of the Sun.
+	 * <BR>(*) Comets/asteroids visible to the naked eye.
+	 * <BR>(*) Close-approach of NEOs.
+	 * <BR>(*) Time change due to DST.
+	 * <BR>(*) Conjunctions between outer planets, comets, and asteroids, between Moon and planets, between planets/Moon and stars, and between deep sky objects and outer planets, comets, or asteroids.
+	 * <BR>(*) Eclipses, transits, shadow transits, and occultations of natural satellites in Jupiter, Saturn, and Uranus.
+	 * <BR>(*) Mutual events for the satellites of Jupiter, Saturn, and Uranus.
+	 * <BR>
+	 * <BR>(*) Events calculated considering the location of the observer, the other events are 'geocentric'.
+	 * <BR>
+	 * <BR>In the last two cases calculations are performed with the 'optimize' flag enabled in the constructor of the
 	 * {@linkplain MoonEvent} object. Values for precision and accuracy are 300 and 30 for normal events and
 	 * 100 and 30 for mutual events, respectively.
 	 *

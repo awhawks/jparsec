@@ -105,6 +105,7 @@ public class HinduSolar extends HinduOldSolar
 	/**
 	 * To fixed day.
 	 *
+	 * @param hs The instance of HinduSolar.
 	 * @param year Year.
 	 * @param month Month.
 	 * @param day Day.

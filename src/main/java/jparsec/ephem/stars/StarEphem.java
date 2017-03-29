@@ -56,12 +56,12 @@ import jparsec.util.Translate.LANGUAGE;
 
 /**
  * A class to obtain accurate ephemerides of stars.
- * <P>
+ * <BR>
  * To obtain star ephemeris follow these simple steps:
- * <P>
+ * <BR>
  *
  * <pre>
- * // Read BSC5 or SKYMASTER 2000 catalogue
+ * // Read BSC5 or SKYMASTER 2000 catalog
  * ReadElement roe = new ReadElement();
  * roe.setPath(PATH_TO_BSC5_FILE);
  * roe.setFormat(ReadElement.format_BSC5);
@@ -113,7 +113,7 @@ public class StarEphem
 	 * original list was filtered to reduce the number of stars to 109. Some indexes will be 
 	 * equal or greater to 8884, requiring to set the flag {@linkplain #READ_STARS_BEYOND_MAG_6_5}
 	 * to true to read them. The first 12 values in the array are the top 12 naked eye variables 
-	 * stars given by Sky & Telescope (http://www.skyandtelescope.com/observing/celestial-objects-to-watch/the-top-12-naked-eye-variable-stars/),
+	 * stars given by Sky &amp; Telescope (http://www.skyandtelescope.com/observing/celestial-objects-to-watch/the-top-12-naked-eye-variable-stars/),
 	 * then the list is completed up to 25 with the ones visible to naked eye in H. Levy's book.
 	 */
 	public static final int[] MAIN_VARIABLE_STARS = new int[] {
@@ -129,7 +129,7 @@ public class StarEphem
 	};
 	
 	/**
-	 * Searchs for a given star in SkyMaster 2000 catalogue and returns the index.
+	 * Searchs for a given star in SkyMaster 2000 catalog and returns the index.
 	 * @param name Star name.
 	 * @return The index, or -1 if no match is found.
 	 * @throws JPARSECException If an error occurs.
@@ -156,7 +156,7 @@ public class StarEphem
 	}
 	
 	/**
-	 * Searchs for a given star in SkyMaster 2000 catalogue and returns the index.
+	 * Search for a given star in SkyMaster 2000 catalog and returns the index.
 	 * @param loc Location of the object to search for. Note this location should be usually
 	 * mean J2000 equatorial coordinates.
 	 * @param radius Radius in radians around the given position to search for an object.
@@ -185,7 +185,7 @@ public class StarEphem
 	}
 	
 	/**
-	 * Returns the name of a star from the index in SkyMaster 2000 catalogue.
+	 * Returns the name of a star from the index in SkyMaster 2000 catalog.
 	 * @param index Index for the star as sorted in the file.
 	 * @return The name.
 	 * @throws JPARSECException If an error occurs.
@@ -211,7 +211,7 @@ public class StarEphem
 		return name;
 	}
 	/**
-	 * Returns the star element set for a given star using SkyMaster 2000 catalogue.
+	 * Returns the star element set for a given star using SkyMaster 2000 catalog.
 	 * @param index Index for the star.
 	 * @return The star element set.
 	 * @throws JPARSECException if an error occurs.
@@ -237,7 +237,7 @@ public class StarEphem
 		return sat;
 	}
 	/**
-	 * Returns the number of stars in SkyMaster 2000 catalogue.
+	 * Returns the number of stars in SkyMaster 2000 catalog.
 	 * @return The number of objects.
 	 * @throws JPARSECException If an error occurs.
 	 */
@@ -341,13 +341,13 @@ public class StarEphem
 	/**
 	 * Converts FK5 J2000.0 catalog coordinates to FK4 B1950.0 coordinates. AA
 	 * page B58. Radial movement is considered only when distance is not zero.
-	 * <P>
+	 * <BR>
 	 * Note systematic corrections FK5-FK4 are not considered (see Fricke 1988
 	 * to correct for this), and the input J2000 position is precessed to J2000
 	 * if the input equinox is different (i.e. equinox is considered to be
 	 * the epoch of the observation, which for example corresponds to 1983.5 for
 	 * IRAS data).
-	 * <P>
+	 * <BR>
 	 * Conversion between B1950 and J2000 coordinates is not a standard procedure
 	 * done exactly in the same way in any library. However, this method gives
 	 * almost exactly the same conversion as that provided by the CDS web service
@@ -357,7 +357,7 @@ public class StarEphem
 	 * inconsistencies close to the milliarcsecond, since radial velocity is supposed
 	 * constant between 1950 and 2000 in the conversion methods usually described in
 	 * the literature.
-	 * <P>
+	 * <BR>
 	 * Main part of the method taken from C code by S. L. Moshier.
 	 *
 	 * @param s Star input object. Must be FK5, but not necessarily J2000 (automatically corrected).
@@ -498,13 +498,13 @@ public class StarEphem
 	/**
 	 * Converts FK4 B1950.0 catalog coordinates to FK5 J2000.0 coordinates. AA
 	 * page B58. Radial movement is considered only when distance is not zero.
-	 * <P>
+	 * <BR>
 	 * Note systematic corrections FK5-FK4 are not considered (see Fricke 1988
 	 * to correct for this), and the input B1950 position is precessed to B1950
 	 * if the input equinox is different (i.e. equinox is considered to be
 	 * the epoch of the observation, which for example corresponds to 1983.5 for
 	 * IRAS data).
-	 * <P>
+	 * <BR>
 	 * Conversion between B1950 and J2000 coordinates is not a standard procedure
 	 * done exactly in the same way in any library. However, this method gives
 	 * almost exactly the same conversion as that provided by the CDS web service
@@ -514,7 +514,7 @@ public class StarEphem
 	 * inconsistencies close to the milliarcsecond, since radial velocity is supposed
 	 * constant between 1950 and 2000 in the conversion methods usually described in
 	 * the literature.
-	 * <P>
+	 * <BR>
 	 * Main part of the method taken from C code by S. L. Moshier.
 	 *
 	 * @param s Star input object. Must be FK4, but not necessarily B1950 (automatically corrected).
@@ -660,13 +660,13 @@ public class StarEphem
 	 * data to old FK4 frame is not directly supported, but you can use this method to go to FK5 J2000 and then
 	 * another method provided to go to FK4 B1950. IAU2006 algorithms are used for precession when changing
 	 * the equinox.
-	 * <P>
+	 * <BR>
 	 * In case you want to transform Hipparcos data to FK5/ICRF J2000, select as input values for this method
 	 * FK5/ICRF frame, J2000 epoch, and J1991.25 equinox. In case you want to obtain the data for FK4 B1950,
 	 * use this method with previous values (and FK5 frame) to go to FK5, then force equinox to be J2000 in the
 	 * {@linkplain StarElement} object, and then call {@linkplain StarEphem#transform_FK5_J2000_to_FK4_B1950(StarElement, EphemerisElement)}
 	 * using IAU1976 algorithms.
-	 * <P>
+	 * <BR>
 	 * Main part of the method taken from C code by S. L. Moshier.
 	 *
 	 * @param s Star input object.
@@ -794,10 +794,10 @@ public class StarEphem
 	 * velocity is much lower than the speed of the light. This is a valid
 	 * approximation for any star in our Galaxy, since velocities are below 1000
 	 * km/s.
-	 * <P>
+	 * <BR>
 	 * It is not recommended to use this method if the speed of the star is
 	 * above 25% of the speed of light.
-	 * <P>
+	 * <BR>
 	 * This method takes the star object from the integer number defined
 	 * in {@linkplain EphemerisElement#targetBody}.
 	 *
@@ -822,7 +822,7 @@ public class StarEphem
 	 * velocity is much lower than the speed of the light. This is a valid
 	 * approximation for any star in our Galaxy, since velocities are below 1000
 	 * km/s.
-	 * <P>
+	 * <BR>
 	 * It is not recommended to use this method if the speed of the star is
 	 * above 25% of the speed of light.
 	 *
@@ -1191,7 +1191,7 @@ public class StarEphem
 
 	/**
 	 * Transforms radial velocity from heliocentric to LSR.
-	 * <P>
+	 * <BR>
 	 * The sun has a systematic motion relative to nearby stars, the mean
 	 * depending on the spectral type of the stars used for comparison. The
 	 * standard solar motion is defined to be the average velocity of spectral
@@ -1203,7 +1203,7 @@ public class StarEphem
 	 * heavily by the radial velocities of stars of the most common spectral
 	 * types (A, gK, dM) in the solar vicinity. In this system, the sun moves at
 	 * 15.4 km/s toward l=51&deg;, b=23&deg;.
-	 * <P>
+	 * <BR>
 	 * The conventional local standard of rest used for galactic studies is
 	 * essentially based on the standard solar motion. It assumes the sun to
 	 * move at the rounded velocity of 20.0 km/s toward 18 hrs right ascension
@@ -1241,10 +1241,10 @@ public class StarEphem
 
 	/**
 	 * Computes the galactic motion of an object. Method taken from program
-	 * http://idlastro.gsfc.nasa.gov/ftp/pro/astro/gal_uvw.pro.<P>
-	 * Follows the general outline of Johnson & Soderblom (1987, AJ, 93,864)
+	 * http://idlastro.gsfc.nasa.gov/ftp/pro/astro/gal_uvw.pro.<BR>
+	 * Follows the general outline of Johnson &amp; Soderblom (1987, AJ, 93,864)
 	 * except that the J2000 transformation matrix to Galactic coordinates is
-	 * taken from the introduction to the Hipparcos catalog.<P>
+	 * taken from the introduction to the Hipparcos catalog.<BR>
 	 * Authors: W. Landsman and Sergey Koposov.
 	 * @param star The star object containing J2000 object position of proper motions.
 	 * @param toLSR True to return the motion respect the LSR instead of respect the Sun.
@@ -1433,11 +1433,11 @@ public class StarEphem
 	 * high precision at {@linkplain EphemerisElement#preferPrecisionInEphemerides}), Sun position (using Moshier algorihtms)
 	 * is used instead of the Solar System barycenter. In that case precision
 	 * will be +/- 4s or better (obviously these values are relative between computations,
-	 * not absolute since stellar distances are not known to such level of precision).<P>
+	 * not absolute since stellar distances are not known to such level of precision).<BR>
 	 * The difference between the light-time from SSB and from Earth (calculated from the
 	 * distance of the star to the observer) allows to correct time events observed from Earth
 	 * and refer them to an uniform time scale defined by the movement of the barycenter
-	 * of the Solar System in the space.<P>
+	 * of the Solar System in the space.<BR>
 	 * Note that the difference between JPL DE406 and DE422 is of a few us, so precision can never be
 	 * better than that.
 	 * @param time The time.
@@ -1512,11 +1512,11 @@ public class StarEphem
 	 * high precision at {@linkplain EphemerisElement#preferPrecisionInEphemerides}), Sun position (using Moshier algorihtms)
 	 * is used instead of the Solar System barycenter. In that case precision
 	 * will be +/- 4s or better (obviously these values are relative between computations,
-	 * not absolute since stellar distances are not known to such level of precision).<P>
+	 * not absolute since stellar distances are not known to such level of precision).<BR>
 	 * The difference between the light-time from SSB and from Earth (calculated from the
 	 * distance of the star to the observer) allows to correct time events observed from Earth
 	 * and refer them to an uniform time scale defined by the movement of the barycenter
-	 * of the Solar System in the space.<P>
+	 * of the Solar System in the space.<BR>
 	 * Note that the difference between JPL DE406 and DE422 is of a few us, so precision can never be
 	 * better than that.
 	 * @param time The time.

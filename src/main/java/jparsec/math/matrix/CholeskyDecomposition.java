@@ -39,14 +39,14 @@ import java.io.Serializable;
 
 /**
  * Cholesky Decomposition.
- * <P>
+ * <BR>
  * For a symmetric, positive definite matrix A, the Cholesky decomposition is
  * an lower triangular matrix L so that A = L*L'.
- * <P>
+ * <BR>
  * If the matrix is not symmetric or positive definite, the constructor
  * returns a partial decomposition and sets an internal flag that may
  * be queried by the isSPD() method.
- * <p/>
+ * <BR>
  * Adapted from the <a href="http://math.nist.gov/javanumerics/jama/" target="_blank">JAMA</a> package.
  *
  * @author The Mathworks and NIST

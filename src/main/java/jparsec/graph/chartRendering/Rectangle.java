@@ -63,6 +63,7 @@ public class Rectangle {
 
     /**
      * Returns x.
+     * @return Minimum x;
      */
     public float getMinX() {
         return x;
@@ -70,6 +71,7 @@ public class Rectangle {
 
     /**
      * Returns x + width.
+     * @return Maximum x;
      */
     public float getMaxX() {
         return maxx;
@@ -77,6 +79,7 @@ public class Rectangle {
 
     /**
      * Returns y.
+     * @return Minimum y.
      */
     public float getMinY() {
         return y;
@@ -84,6 +87,7 @@ public class Rectangle {
 
     /**
      * Returns y + height.
+     * @return Maximum y.
      */
     public float getMaxY() {
         return maxy;
@@ -91,6 +95,7 @@ public class Rectangle {
 
     /**
      * Returns width.
+     * @return The width.
      */
     public float getWidth() {
         return width;
@@ -98,6 +103,7 @@ public class Rectangle {
 
     /**
      * Returns height.
+     * @return The height.
      */
     public float getHeight() {
         return height;
@@ -105,6 +111,9 @@ public class Rectangle {
 
     /**
      * Returns if this rectangle contains a given point.
+     * @param x The x position.
+     * @param y The y position.
+     * @return True or false.
      */
     public boolean contains(float x, float y) {
         return (x >= this.x) &&

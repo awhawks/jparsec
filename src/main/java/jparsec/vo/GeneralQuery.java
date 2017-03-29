@@ -44,7 +44,7 @@ import jparsec.observer.LocationElement;
 import jparsec.util.JPARSECException;
 
 /**
- * A class to send queries to any web service.<P>
+ * A class to send queries to any web service.
  *
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
@@ -234,10 +234,10 @@ public class GeneralQuery implements Serializable {
 	}
 
 	/**
-	 * Returns a query suitable for obtaining pre-main sequence star properties using Siess models.<P>
-	 * Reference:<P>
-	 * Siess et al. 1997, A&A 324, 556.
-	 * Siess L., Dufour E., Forestini M. 2000, A&A, 358, 593.
+	 * Returns a query suitable for obtaining pre-main sequence star properties using Siess models.<BR>
+	 * Reference:<BR>
+	 * Siess et al. 1997, A&amp;A 324, 556.
+	 * Siess L., Dufour E., Forestini M. 2000, A&amp;A, 358, 593.
 	 *
 	 * @param metallicity Star metallicity. Valid values are 0.01, 0.02, 0.03, and 0.04,
 	 * being 0.02 the solar metallicity.
@@ -361,7 +361,7 @@ public class GeneralQuery implements Serializable {
 	 * @param charset The charset to use to interpret the response.
 	 * @param timeout Timeout in milliseconds. If the connection waits
 	 * for data for more than this time an exception will be thrown.
-	 * A timeout of <=0 disables any possible download and raises an error.
+	 * A timeout of &lt;=0 disables any possible download and raises an error.
 	 * @return Response from server.
 	 * @throws JPARSECException If an error occurs.
 	 */
@@ -441,7 +441,7 @@ public class GeneralQuery implements Serializable {
 	 * @param fileName Path of the file to create. If null no file will be created.
 	 * @param timeout Timeout in milliseconds. If the connection waits
 	 * for data for more than this time an exception will be thrown.
-	 * A timeout of <=0 disables any possible download and raises an error.
+	 * A timeout of &lt;=0 disables any possible download and raises an error.
 	 * @return The content type header of the file.
 	 * @throws JPARSECException If an error occurs.
 	 */
@@ -498,7 +498,7 @@ public class GeneralQuery implements Serializable {
 	 * @param query Query to call.
 	 * @param timeout Timeout in milliseconds. If the connection waits
 	 * for data for more than this time an exception will be thrown.
-	 * A timeout of <=0 disables any possible download and raises an error.
+	 * A timeout of &lt;=0 disables any possible download and raises an error.
 	 * @return The content of the file.
 	 * @throws JPARSECException If an error occurs.
 	 */
@@ -547,7 +547,7 @@ public class GeneralQuery implements Serializable {
 	 * @param encoding The charset.
 	 * @param timeout Timeout in milliseconds. If the connection waits
 	 * for data for more than this time an exception will be thrown.
-	 * A timeout of <=0 disables any possible download and raises an error.
+	 * A timeout of &lt;=0 disables any possible download and raises an error.
 	 * @return The text file, or null if nothing is read.
 	 * @throws JPARSECException If an error occurs.
 	 */
@@ -613,7 +613,7 @@ public class GeneralQuery implements Serializable {
 	 * @param query Query to call.
 	 * @param timeout Timeout in milliseconds. If the connection waits
 	 * for data for more than this time an exception will be thrown.
-	 * A timeout of <=0 disables any possible download and raises an error.
+	 * A timeout of &lt;=0 disables any possible download and raises an error.
 	 * @return The object
 	 * @throws JPARSECException If an error occurs.
 	 */
@@ -682,7 +682,7 @@ public class GeneralQuery implements Serializable {
 	 * @param query Query to call.
 	 * @param timeout Timeout in milliseconds. If the connection waits
 	 * for data for more than this time an exception will be thrown.
-	 * A timeout of <=0 disables any possible download and raises an error.
+	 * A timeout of &lt;=0 disables any possible download and raises an error.
 	 * @return Image from server.
 	 * @throws JPARSECException If an error occurs.
 	 */
@@ -930,13 +930,13 @@ public class GeneralQuery implements Serializable {
     	UKIDSS_K,
     	/** UKIRT Infrared Deep Survey Y-band survey for SkyView. */
     	UKIDSS_Y,
-    	/** WISE 3.4 Micron All-Sky Survey>: All-WISE data release survey for SkyView. */
+    	/** WISE 3.4 Micron All-Sky Survey: All-WISE data release survey for SkyView. */
     	WISEW1,
-    	/** WISE 4.6 Micron All-Sky Survey>: All-WISE data release survey for SkyView. */
+    	/** WISE 4.6 Micron All-Sky Survey: All-WISE data release survey for SkyView. */
     	WISEW2,
-    	/** WISE 12 Micron All-Sky Survey>: All-WISE data release survey for SkyView. */
+    	/** WISE 12 Micron All-Sky Survey: All-WISE data release survey for SkyView. */
     	WISEW3,
-    	/** WISE 22 Micron All-Sky Survey>: All-WISE data release survey for SkyView. */
+    	/** WISE 22 Micron All-Sky Survey: All-WISE data release survey for SkyView. */
     	WISEW4,
     	/** WMAP Nine Year K-Band survey for SkyView. */
     	WMAPK,

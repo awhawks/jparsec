@@ -28,7 +28,7 @@ import jparsec.util.*;
 
 /**
  * A class to perform unit conversions.<P>
- * A simple example is:<P>
+ * A simple example is:<BR>
  * <pre>
  * try {
  * 		Converter c = new Converter("pc", "AU");

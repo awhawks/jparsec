@@ -109,7 +109,7 @@ public class FileFormatElement implements Serializable
 	/**
 	 * A {@linkplain FileFormatElement} object suitable for reading asteroids in the MPC format.
 	 * During the reading process angles are adequate transfomed to radians.
-	 * <P>
+	 * <BR>
 	 *
 	 * <pre>
 	 * <B>
@@ -214,7 +214,7 @@ public class FileFormatElement implements Serializable
 
 	/**
 	 * A {@linkplain FileFormatElement} object suitable for reading comets in the MPC format.
-	 * <p>
+	 * <BR>
 	 *
 	 * <pre>
 	 * <B>
@@ -253,7 +253,7 @@ public class FileFormatElement implements Serializable
 	/**
 	 * A {@linkplain FileFormatElement} object suitable for reading natural satellites in the MPC
 	 * format.
-	 * <p>
+	 * <BR>
 	 *
 	 * <PRE><B>
 	 * Columns     Field Name                 Meaning</B>
@@ -304,7 +304,6 @@ public class FileFormatElement implements Serializable
 
 	/**
 	 * A {@linkplain FileFormatElement} object suitable for reading comets in the SkyMap format.
-	 * <p>
 	 */
 	public static final FileFormatElement SKYMAP_COMETS_FORMAT[] =
 	{ new FileFormatElement(1, 47, "NAME"), new FileFormatElement(48, 51, "PERIHELION_YEAR"),
@@ -316,7 +315,6 @@ public class FileFormatElement implements Serializable
 
 	/**
 	 * A {@linkplain FileFormatElement} object suitable for reading asteroids in the SkyMap format.
-	 * <p>
 	 */
 	public static final FileFormatElement SKYMAP_ASTEROIDS_FORMAT[] =
 	{ new FileFormatElement(1, 47, "NAME"), new FileFormatElement(48, 51, "PERIHELION_YEAR"),
@@ -330,7 +328,6 @@ public class FileFormatElement implements Serializable
 	 * A {@linkplain FileFormatElement} object suitable for reading stars in the BSC5 format
 	 * (Hoffleit et al. 1991). This is and old catalogue, still useful, but the
 	 * accuracy is improved in newer catalogues.
-	 * <p>
 	 */
 	public static final FileFormatElement BSC5_STARS_FORMAT[] =
 	{ new FileFormatElement(1, 4, "HR"), new FileFormatElement(5, 14, "NAME"), new FileFormatElement(26, 31, "HD"),
@@ -350,7 +347,6 @@ public class FileFormatElement implements Serializable
 	 * magnitude 10, without wasting a lot of memory. Recommended for general
 	 * use. The catalogue is complete up to magnitude 9.5. For magnitude 10 the estimate
 	 * is 80% complete.
-	 * <p>
 	 */
 	public static final FileFormatElement JPARSEC_SKY2000_FORMAT[] =
 	{ new FileFormatElement(1, 8, "NAME"), new FileFormatElement(10, 20, "RA"), new FileFormatElement(22, 32, "DEC"),
@@ -363,7 +359,6 @@ public class FileFormatElement implements Serializable
 	 * A {@linkplain FileFormatElement} object suitable for reading stars in the original Sky2000
 	 * Master Catalog format, versions 2-5 (Myers et al. 2002, 2006). Highly
 	 * recomendable, but ocupes a lot of memory.
-	 * <p>
 	 */
 	public static final FileFormatElement SKY2000_STARS_FORMAT[] =
 	{
@@ -411,7 +406,6 @@ public class FileFormatElement implements Serializable
 	 * A {@linkplain FileFormatElement} object suitable for reading stars in the FK6 format (Wielen
 	 * et al. 2000). This catalogue is not recommended for general use, since
 	 * misses a lot of stars.
-	 * <p>
 	 */
 	public static final FileFormatElement FK6_STARS_FORMAT[] =
 	{ new FileFormatElement(2, 6, "FK6"), new FileFormatElement(10, 15, "H"), new FileFormatElement(24, 42, "NAME"),
@@ -425,7 +419,6 @@ public class FileFormatElement implements Serializable
 	 * A {@linkplain FileFormatElement} object suitable for reading basic star information in the
 	 * Hipparcos format (ESA, 1997). Note there is no information about radial
 	 * velocity, so it is not recommended.
-	 * <p>
 	 */
 	public static final FileFormatElement HIPPARCOS_STARS_FORMAT[] =
 	{ new FileFormatElement(9, 14, "H"), new FileFormatElement(436, 447, "SPECTRAL_TYPE"), new FileFormatElement(246, 251, "B-V"),
@@ -437,7 +430,6 @@ public class FileFormatElement implements Serializable
 	 * A {@linkplain FileFormatElement} object suitable for reading basic star information in the
 	 * IRS format (Corbin et al. 1991). Note there is no information about
 	 * radial velocity nor parallax, so it is not recommended.
-	 * <p>
 	 */
 	public static final FileFormatElement IRS_STARS_FORMAT[] =
 	{ new FileFormatElement(2, 7, "IRS"), new FileFormatElement(87, 89, "SPECTRAL_TYPE"), new FileFormatElement(151, 152, "RA_HOUR_J2000"),
@@ -449,7 +441,7 @@ public class FileFormatElement implements Serializable
 	/**
 	 * An adequate {@linkplain FileFormatElement} object to read line 1 of TLE (two line element)
 	 * data.
-	 * <P>
+	 * <BR>
 	 *
      * <PRE>
      * Line 1
@@ -457,10 +449,10 @@ public class FileFormatElement implements Serializable
      * 01                             Line Number of Element Data
      * 03-07  SAT_NUMBER              Satellite Number
      * 08     CLASSIFICATION          Classification (U=Unclassified)
-     * 10-11  INTERNATIONAL_ID_YEAR   International Designator, last two digits of launch year,  2000+ if < 57.
+     * 10-11  INTERNATIONAL_ID_YEAR   International Designator, last two digits of launch year,  2000+ if below 57.
      * 12-14  INTERNATIONAL_ID_NUMBER International Designator, launch number of the year
      * 15-17  INTERNATIONAL_ID_PIECE  International Designator, piece of the launch
-     * 19-20  EPOCH_YEAR_LAST2DIGITS  Epoch Year, last two digits of year,  2000+ if < 57
+     * 19-20  EPOCH_YEAR_LAST2DIGITS  Epoch Year, last two digits of year,  2000+ if below 57
      * 21-32  EPOCH_DAY               Epoch Day of the year and fractional portion of the day
      * 34-43  FIRST_DERIVATIVE        First Time Derivative of the Mean Motion (rev/day^2)
      * 45-52  SECOND_DERIVATIVE       Second Time Derivative of Mean Motion (decimal point assumed)
@@ -482,7 +474,7 @@ public class FileFormatElement implements Serializable
 	/**
 	 * An adequate {@linkplain FileFormatElement} object to read line 2 of TLE (two line element)
 	 * data.
-	 * <P>
+	 * <BR>
 	 *
  	 * <PRE>
      * Line 2
@@ -576,9 +568,9 @@ public class FileFormatElement implements Serializable
 
 	/**
 	 * An object defining the format for space probes in the JPARSEC database.
-	 * <P>
+	 * <BR>
 	 * The meaning of the columns are as follows:
-	 * <P>
+	 * <BR>
 	 *
 	 * <pre>
 	 * - Name of probe. A &quot;-&quot; and a number means the phase of the probe, which changes

@@ -181,7 +181,7 @@ public class DataSet
 	 *
 	 * @param data Array.
 	 * @return The index of the maximum for the first and second dimensions
-	 * of the array. input[x][y] -> (x, y).
+	 * of the array. input[x][y] -&gt; (x, y).
 	 * @throws JPARSECException If an error occurs.
 	 */
 	public static int[] getIndexOfMaximum(double data[][])
@@ -228,7 +228,7 @@ public class DataSet
 	 *
 	 * @param data Array.
 	 * @return The index of the minimum for the first and second dimensions
-	 * of the array. input[x][y] -> (x, y).
+	 * of the array. input[x][y] -&gt; (x, y).
 	 * @throws JPARSECException If an error occurs.
 	 */
 	public static int[] getIndexOfMinimum(double data[][])
@@ -559,7 +559,7 @@ public class DataSet
 
 	/**
 	 * Obtain double precision values of an array of strings, including
-	 * possible upper and lower limits, such as "<5" or ">5". Math operations
+	 * possible upper and lower limits, such as "&lt;5" or "&gt;5". Math operations
 	 * are allowed, for example "5*3" in any component.
 	 *
 	 * @param arg Array of strings.
@@ -593,7 +593,7 @@ public class DataSet
 
 	/**
 	 * Obtain double precision values of an array of strings, excluding
-	 * possible upper and lower limits, such as "<5" or ">5". Math operations
+	 * possible upper and lower limits, such as "&lt;5" or "&gt;5". Math operations
 	 * are allowed, for example "5*3" in any component.
 	 *
 	 * @param arg Array of strings.
@@ -629,7 +629,7 @@ public class DataSet
 
 	/**
 	 * Obtain double precision values of an array of strings, excluding
-	 * possible upper and lower limits, such as "<5" or ">5". Math operations
+	 * possible upper and lower limits, such as "&lt;5" or "&gt;5". Math operations
 	 * are allowed, for example "5*3" in any component.
 	 *
 	 * @param arg Array of strings, with numbers or math operations, and with or
@@ -908,7 +908,7 @@ public class DataSet
 	}
 
 	/**
-	 * Return double value without a possible limit. For "5" returns 5, for "<5"
+	 * Return double value without a possible limit. For "5" returns 5, for "&lt;5"
 	 * returns also 5.
 	 *
 	 * @param arg String value.
@@ -925,7 +925,7 @@ public class DataSet
 
 	/**
 	 * Obtain string values of an array of strings, including possible upper and
-	 * lower limits, such as "<5" or ">5".
+	 * lower limits, such as "&lt;5" or "&gt;5".
 	 *
 	 * @param arg Array of strings.
 	 * @return A ArrayList with two components, the array of strings without
@@ -958,7 +958,7 @@ public class DataSet
 
 	/**
 	 * Obtain string values of two array of x and y values, excluding points
-	 * with upper and lower limits, such as "<5" or ">5".
+	 * with upper and lower limits, such as "&lt;5" or "&gt;5".
 	 *
 	 * @param argx Array of x strings.
 	 * @param argy Array of y strings.
@@ -1001,7 +1001,7 @@ public class DataSet
 
 	/**
 	 * Obtain string values of two array of x and y values, excluding points
-	 * with upper and lower limits, such as "<5" or ">5".
+	 * with upper and lower limits, such as "&lt;5" or "&gt;5".
 	 *
 	 * @param argx Array of x strings.
 	 * @param argy Array of y strings.
@@ -1062,7 +1062,7 @@ public class DataSet
 
 	/**
 	 * Obtain string values of an array of strings, excluding possible upper and
-	 * lower limits, such as "<5" or ">5".
+	 * lower limits, such as "&lt;5" or "&gt;5".
 	 *
 	 * @param arg Array of strings.
 	 * @return The array of string values.
@@ -1096,7 +1096,7 @@ public class DataSet
 
 	/**
 	 * Obtain string values of an array of strings, excluding possible upper and
-	 * lower limits, such as "<5" or ">5".
+	 * lower limits, such as "&lt;5" or "&gt;5".
 	 *
 	 * @param arg Array of strings.
 	 * @param limit_arg Array of strings to be also checked, if, for example,
@@ -2198,7 +2198,7 @@ public class DataSet
      * and maintaining the length of each column.
      * @param table Table to format.
      * @param separator Separator used in the table.
-     * @param order Field number to order (>= 1). If positive, that field will be
+     * @param order Field number to order (1 or greater). If positive, that field will be
      * ordered in crescent. If negative, in descent. Set to 0 to maintain
      * ordering as input.
      * @return Formatted table.
@@ -2714,7 +2714,7 @@ public class DataSet
     }
 
     /**
-     * Returns the limit '<' or '>'.
+     * Returns the limit '&lt;' or '&gt;'.
      * @param val The value.
      * @return The limit, or an empty String if it does not exist.
      */
@@ -3708,7 +3708,7 @@ public class DataSet
   /**
    * Checks if a given String is a double number or not, using a 'fast
    * check'. Fast check just checks if the String contains some invalid
-   * characters, any of these: ABCDFGHIJKLNOPQRSTUVWXYZ/*+()%&<>?abcdeghijklmnopqrstuvwxyz.
+   * characters, any of these: ABCDFGHIJKLNOPQRSTUVWXYZ/*+()%&amp;&lt;&gt;?abcdeghijklmnopqrstuvwxyz.
    * @param s The string.
    * @return True or false. Note a double string can be valid while starting with a +.
    */
@@ -3977,7 +3977,7 @@ public class DataSet
 	 * Returns the number of dimensions in an array.
 	 * @param o An object representing and array with an
 	 * unknown number of dimensions.
-	 * @return The number of dimensions, >= 0.
+	 * @return The number of dimensions, 0 or greater.
 	 */
     public static int getNumberOfDimensions(Object o) {
     	return getNumberOfDimensions(o.getClass());
@@ -3987,7 +3987,7 @@ public class DataSet
 	 * Returns the number of dimensions in an array.
 	 * @param type An object representing and array with an
 	 * unknown number of dimensions.
-	 * @return The number of dimensions, >= 0.
+	 * @return The number of dimensions, 0 or greater.
 	 */
     public static int getNumberOfDimensions(Class<?> type) {
         if (type.getComponentType() == null) {

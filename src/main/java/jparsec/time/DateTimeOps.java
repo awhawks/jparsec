@@ -46,9 +46,9 @@ public class DateTimeOps
 	 * Calculate the current Daylight Time offset ( 0 or -1 ). <BR>
 	 * Add the result of this function to the current time to adjust.
 	 *
-	 * @param cal A <TT>java.util.Calendar</TT> object which is used to get
-	 *        the <TT>DST_OFFSET</TT> from (e.g., <TT>java.util.GregorianCalendar</TT>).
-	 * @return <TT>DST_OFFSET</TT> in hours if Daylight time is in effect, 0
+	 * @param cal A java.util.Calendar object which is used to get
+	 *        the DST_OFFSET from (e.g., java.util.GregorianCalendar).
+	 * @return DST_OFFSET in hours if Daylight time is in effect, 0
 	 *         otherwise.
 	 */
 	public static float dstOffset(Calendar cal)
@@ -59,9 +59,9 @@ public class DateTimeOps
 	/**
 	 * Calculate the current Daylight Time offset. <BR>
 	 * Add the result of this function to the current time to adjust.<BR>
-	 * This function uses a <TT>GregorianCalendar</TT> object.
+	 * This function uses a GregorianCalendar object.
 	 *
-	 * @return <TT>DST_OFFSET</TT> in hours if Daylight time is in effect, 0
+	 * @return DST_OFFSET in hours if Daylight time is in effect, 0
 	 *         otherwise.
 	 */
 	public static float dstOffset()
@@ -73,9 +73,9 @@ public class DateTimeOps
 	 * Calculate the current Daylight Time offset in fractional days. <BR>
 	 * Add the result of this function to the current time to adjust.
 	 *
-	 * @param cal A <TT>java.util.Calendar</TT> object which is used to get
-	 *        the <TT>DST_OFFSET</TT>.
-	 * @return <TT>DST_OFFSET</TT> in days if Daylight time is in effect, 0
+	 * @param cal A java.util.Calendar object which is used to get
+	 *        the DST_OFFSET.
+	 * @return DST_OFFSET in days if Daylight time is in effect, 0
 	 *         otherwise.
 	 */
 	public static double dstOffsetInDays(Calendar cal)
@@ -86,9 +86,9 @@ public class DateTimeOps
 	/**
 	 * Calculate the current Daylight Time offset in fractional days. <BR>
 	 * Add the result of this function to the current time to adjust.<BR>
-	 * This function uses a <TT>GregorianCalendar</TT> object.
+	 * This function uses a GregorianCalendar object.
 	 *
-	 * @return <TT>DST_OFFSET</TT> in days if Daylight time is in effect, 0
+	 * @return DST_OFFSET in days if Daylight time is in effect, 0
 	 *         otherwise.
 	 */
 	public static double dstOffsetInDays()
@@ -143,7 +143,7 @@ public class DateTimeOps
 	}
 
 	/**
-	 * Format a time as a <TT>String</TT> using the format <TT>HH:MM</TT>.
+	 * Format a time as a String using the format HH:MM.
 	 * <BR>
 	 * The returned string will be "--:--" if the time is invalid.
 	 *
@@ -197,7 +197,7 @@ public class DateTimeOps
 	/**
 	 * Returns true if the year is a leap year in the Gregorian Calendar.
 	 *
-	 * @param year Year value, as it is given by an <TT>AstroDate</TT> instance
+	 * @param year Year value, as it is given by an AstroDate instance
 	 * (-2 = 2 B.C. not the 'astronomical' year).
 	 * @return true if it is a leap year, false otherwise.
 	 */
@@ -228,7 +228,7 @@ public class DateTimeOps
 
 	/**
 	 * Returns the number of days in a given month in the Gregorian calendar.
-	 * @param year Year value, as it is given by an <TT>AstroDate</TT> instance
+	 * @param year Year value, as it is given by an AstroDate instance
 	 * (-2 = 2 B.C. not the 'astronomical' year).
 	 * @param month Month.
 	 * @return Days in month.

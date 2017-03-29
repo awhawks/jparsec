@@ -244,6 +244,8 @@ public class EclipseRendering  implements Serializable
 	/**
 	 * Reads the object.
 	 * @param in Input stream.
+	 * @throws IOException I/O error.
+	 * @throws ClassNotFoundException Class not found error.
 	 */
 	private void readObject(ObjectInputStream in)
 	throws IOException, ClassNotFoundException {

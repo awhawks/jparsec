@@ -32,7 +32,7 @@ import jparsec.util.JPARSECException;
 
 /**
  * A class to process plate photographs/CCD images and perform astrometry.
- * Based on the program appeared in Sky & Telescopy, July 1990, by Jordan D. Marche.<P>
+ * Based on the program appeared in Sky &amp; Telescope, July 1990, by Jordan D. Marche.<BR>
  * It is recommended to use the position (1, 1) for the center of the first pixel
  * when giving the location of the stars in the constructor. This (1, 1) is the first
  * pixel for SExtractor, so the positions given by SExtractor can be used directly with

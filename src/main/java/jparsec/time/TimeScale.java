@@ -1137,7 +1137,7 @@ public class TimeScale
 	 * {@linkplain Elp2000#MOON_SECULAR_ACCELERATION}). This correction is used
 	 * in JPARSEC although its magnitude is below the uncertainty in TT-UT, you will only
 	 * notice some difference when studying eclipses in ancient times. Correction
-	 * for different years are as follows:<P>
+	 * for different years are as follows:<BR>
 	 * <pre>
 	 * Year       Correction (seconds)
 	 * -2000      -202
@@ -1200,12 +1200,12 @@ public class TimeScale
 	 * such drift is unlikely to exceed 1 nanosecond per century.
 	 * <P>
 	 * The geocentric TDB-TT model used in the present routine is that of
-	 * Fairhead & Bretagnon (1990), in its full form.  It was originally
+	 * Fairhead &amp; Bretagnon (1990), in its full form.  It was originally
 	 * supplied by Fairhead (private communications with P.T.Wallace,
 	 * 1990) as a Fortran subroutine.  The present routine contains an
 	 * adaptation of the Fairhead code.  The numerical results are
 	 * essentially unaffected by the changes, the differences with
-	 * respect to the Fairhead & Bretagnon original being at the 1D-20 s
+	 * respect to the Fairhead &amp; Bretagnon original being at the 1D-20 s
 	 * level.
 	 * <P>
 	 * The topocentric part of the model is from Moyer (1981) and
@@ -1227,7 +1227,7 @@ public class TimeScale
 	 * <P>
 	 * References:
 	 * <P>
-	 * Fairhead,L., & Bretagnon,P., Astron.Astrophys., 229, 240-247 (1990).
+	 * Fairhead,L., &amp; Bretagnon,P., Astron.Astrophys., 229, 240-247 (1990).
 	 * <P>
 	 * IAU 2006 Resolution 3.
 	 * <P>
@@ -1240,7 +1240,7 @@ public class TimeScale
 	 * Seidelmann,P.K. et al., Explanatory Supplement to the Astronomical
 	 * Almanac, Chapter 2, University Science Books (1992).
 	 * <P>
-	 * Simon J.L., Bretagnon P., Chapront J., Chapront-Touze M., Francou G. &
+	 * Simon J.L., Bretagnon P., Chapront J., Chapront-Touze M., Francou G. &amp;
 	 * Laskar J., 1994, Astron.Astrophys., 282, 663-683.
 	 * <P>
 	 * This revision: 2005 August 26

@@ -41,7 +41,7 @@ import jparsec.util.Translate;
  * 'brute-force' method that does not require Bessel elements and is
  * independent from the ephemerides theory. It is very fast if used
  * correctly. The effect of the mountains on lunar limb is ignored.
- * <P>
+ * <BR>
  * One advantage of this pure geometric approach is the possibility
  * of calculating eclipses by other satellites (not the Moon).
  *
@@ -211,24 +211,24 @@ public class LunarEclipse
 	 * Comparisons with NASA published values (calculations by Fred Spenak) show
 	 * a mean difference of 2 seconds (sometimes a little more due to possibly
 	 * different dynamical time corrections).
-	 * <P>
+	 * <BR>
 	 * The origin of this minimum discrepancy is probably due to the fact that here
 	 * the difference between the Moon center of mass and its geometric center
 	 * is not corrected.
 	 * Otherwise, the irregular limb profile of the Moon (not taken into account
 	 * here nor in Spenak's calculations) produces more effects than this
 	 * negligible discrepancy.
-	 * <P>
+	 * <BR>
 	 * Events are:
-	 * <P> - Penumbra ingress start.
-	 * <P> - Penumbra total ingress.
-	 * <P> - Shadow ingress.
-	 * <P> - Shadow total ingress.
-	 * <P> - Shadow total egress.
-	 * <P> - Shadow egress.
-	 * <P> - Penumbra total egress.
-	 * <P> - Penumbra egress.
-	 * <P>
+	 * <BR> - Penumbra ingress start.
+	 * <BR> - Penumbra total ingress.
+	 * <BR> - Shadow ingress.
+	 * <BR> - Shadow total ingress.
+	 * <BR> - Shadow total egress.
+	 * <BR> - Shadow egress.
+	 * <BR> - Penumbra total egress.
+	 * <BR> - Penumbra egress.
+	 * <BR>
 	 * If you are calculation eclipses for current dates the Moshier algorithm will give a
 	 * good performance. For better precision in ancient times use ELP2000.
 	 *
@@ -253,17 +253,17 @@ public class LunarEclipse
 	 * it is intended to be used to calculate eclipses produced by other
 	 * satellites, not the Moon. So it adds an accuracy parameter to control
 	 * the sensitivity of the search.
-	 * <P>
+	 * <BR>
 	 * Events are:
-	 * <P> - Penumbra ingress start.
-	 * <P> - Penumbra total ingress.
-	 * <P> - Shadow ingress.
-	 * <P> - Shadow total ingress.
-	 * <P> - Shadow total egress.
-	 * <P> - Shadow egress.
-	 * <P> - Penumbra total egress.
-	 * <P> - Penumbra egress.
-	 * <P>
+	 * <BR> - Penumbra ingress start.
+	 * <BR> - Penumbra total ingress.
+	 * <BR> - Shadow ingress.
+	 * <BR> - Shadow total ingress.
+	 * <BR> - Shadow total egress.
+	 * <BR> - Shadow egress.
+	 * <BR> - Penumbra total egress.
+	 * <BR> - Penumbra egress.
+	 * <BR>
 	 * Moon/Sun elevation above local horizon is not considered in this method, so output
 	 * events can be not visible by the input observer.
 	 * @param time Time object with the date of the eclipse before it starts, but as close
@@ -271,7 +271,7 @@ public class LunarEclipse
 	 * @param obs Observer object.
 	 * @param eph Ephemeris properties.
 	 * @param accuracy Accuracy of the iterative search in seconds for eclipses produced by
-	 * any moon besides the Moon. In case of lunar eclipses or input values <= 0 this value
+	 * any moon besides the Moon. In case of lunar eclipses or input values &lt;= 0 this value
 	 * will have no effect. Default value is 1s (for lunar eclipses is irrelevant, it is set
 	 * automatically).
 	 * @throws JPARSECException Thrown if the calculation fails.

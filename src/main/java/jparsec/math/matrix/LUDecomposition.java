@@ -41,17 +41,17 @@ import jparsec.util.JPARSECException;
 
 /**
  * LU Decomposition.
- * <P>
+ * <BR>
  * For an m-by-n matrix A with m &gt;= n, the LU decomposition is an m-by-n
  * unit lower triangular matrix L, an n-by-n upper triangular matrix U, and a
  * permutation vector piv of length m so that A(piv,:) = L*U.  If m &lt; n,
  * then L is m-by-m and U is m-by-n.
- * <P>
+ * <BR>
  * The LU decompostion with pivoting always exists, even if the matrix is
  * singular, so the constructor will never fail.  The primary use of the LU
  * decomposition is in the solution of square systems of simultaneous linear
  * equations.  This will fail if isNonsingular() returns false.
- * <p/>
+ * <BR>
  * Adapted from the <a href="http://math.nist.gov/javanumerics/jama/" target="_blank">JAMA</a> package.
  *
  * @author The Mathworks and NIST

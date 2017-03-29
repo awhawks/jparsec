@@ -526,7 +526,7 @@ public class LATEXReport implements Serializable
 	}
 	/**
 	 * Ends the Latex document adding the bibliography commands.
-	 * @param style Style name. Can be null to use default A\&A.
+	 * @param style Style name. Can be null to use default A&amp;A.
 	 * @param bibFileName Name of the bibliographic file.
 	 */
 	public void endDocumentWithBibliography(String style, String bibFileName)
@@ -1804,8 +1804,8 @@ public class LATEXReport implements Serializable
 	}
 
 	/**
-	 * Replaces normal symbols by it's Latex representation. Currently only for <, >,
-	 * &aacute;, &eacute;, &iacute;, &oacute;, &uacute;, +/-, {, }, _, ^, ~, \, $, #, %, &, &deg;, &ntilde;. Any of them can be preserved in the
+	 * Replaces normal symbols by it's Latex representation. Currently only for &lt;, &gt;,
+	 * &aacute;, &eacute;, &iacute;, &oacute;, &uacute;, +/-, {, }, _, ^, ~, \, $, #, %, &amp;, &deg;, &ntilde;. Any of them can be preserved in the
 	 * input by adding the character to {@linkplain LATEXReport#setAvoidFormatting(String)}.
 	 * Default symbols to avoid formatting are \{}~.
 	 *
@@ -1882,8 +1882,8 @@ public class LATEXReport implements Serializable
 	}
 
 	/**
-	 * Replaces normal symbols by it's Latex representation. Currently only for <, >,
-	 * &aacute;, &eacute;, &iacute;, &oacute;, &uacute;, +/-, {, }, _, ^, ~, \, $, #, %, &, &deg;, &ntilde;. Default symbols to avoid
+	 * Replaces normal symbols by it's Latex representation. Currently only for &lt;, &gt;,
+	 * &aacute;, &eacute;, &iacute;, &oacute;, &uacute;, +/-, {, }, _, ^, ~, \, $, #, %, &amp;, &deg;, &ntilde;. Default symbols to avoid
 	 * formatting are \{}~.
 	 *
 	 * @param text Input text.

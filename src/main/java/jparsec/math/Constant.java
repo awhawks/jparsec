@@ -226,7 +226,7 @@ public class Constant
 	/** Stefan-Boltzmann en W/(m^2 K^4). Value from CODATA 2010. */
 	public static final double STEFAN_BOLTZMANN_CONSTANT = .00000005670373;
 
-	/** Electron charge in C (=> J/eV). Value from CODATA 2010. */
+	/** Electron charge in C (J/eV). Value from CODATA 2010. */
 	public static final double ELECTRON_CHARGE = 1.602176565E-19;
 
 	/** Avogadro number in mol^-1. CODATA 2010. */

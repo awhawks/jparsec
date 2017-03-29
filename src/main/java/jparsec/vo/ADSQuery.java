@@ -34,14 +34,14 @@ import jparsec.io.ReadFile;
 import jparsec.util.JPARSECException;
 
 /**
- * A class to send queries to ADS abstracts service.<P>
+ * A class to send queries to ADS abstracts service.<BR>
  *
- * A simple example to retrieve a bibtex entry is:<P>
+ * A simple example to retrieve a bibtex entry is:<BR>
  *
  *     	try {<BR>
  *     		query = ADSQuery.ADS_HARVARD_URL;<BR>
- *    		query += ADSQuery.addParameter(ADSQuery.PARAMETER.BIBCODE, "2007A&A...470..625D");<BR>
- *    		query += "&" +ADSQuery.addParameter(ADSQuery.PARAMETER.DATATYPE, ADSQuery.DATATYPE.BIBTEX.getType());<BR>
+ *    		query += ADSQuery.addParameter(ADSQuery.PARAMETER.BIBCODE, "2007A&amp;A...470..625D");<BR>
+ *    		query += "&amp;" +ADSQuery.addParameter(ADSQuery.PARAMETER.DATATYPE, ADSQuery.DATATYPE.BIBTEX.getType());<BR>
  *<BR>
  *    		String out = ADSQuery.query(query);<BR>
  *    		System.out.println(out);<BR>
@@ -229,8 +229,8 @@ public class ADSQuery implements Serializable {
 	};
 
 	/**
-	 * Allows to add a parameter to the query.<P>
-	 * From the second parameter in necessary to add the ampersand '&' to separate
+	 * Allows to add a parameter to the query.<BR>
+	 * From the second parameter in necessary to add the ampersand '&amp;' to separate
 	 * the different parameters.
 	 * @param parameter Parameter ID.
 	 * @param value Parameter value.

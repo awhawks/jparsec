@@ -61,7 +61,7 @@ public class Obliquity
 	 * will be calculated using the formulae by Vondrak. Time span in Julian centuries
 	 * from J2000 can be expanded in this case from +/- 100 to +/- 2000.<P>
 	 * References:<P>
-	 * Vondrak et al. 2011, A&A 534, A22.
+	 * Vondrak et al. 2011, A&amp;A 534, A22.
 	 * <P>
 	 * Capitaine et al., Astronomy and Astrophysics 412, 567-586, (2003).
 	 * <P>

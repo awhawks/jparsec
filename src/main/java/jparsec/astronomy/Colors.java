@@ -211,7 +211,7 @@ public class Colors
 	 * Obtains approximate B-V from Bt-Vt in the Tycho system.
 	 * @param b_v_t Bt-Vt color index.
 	 * @return B-V color index.
-	 * @throws JPARSECException If input is out of range (<-0.2 or >1.8).
+	 * @throws JPARSECException If input is out of range (&lt;-0.2 or &gt;1.8).
 	 */
 	public static double bvTychoTobvJohnson(double b_v_t)
 	throws JPARSECException {
@@ -235,7 +235,7 @@ public class Colors
 	 * @param b_v_t Bt-Vt color index.
 	 * @param vt Vt magnitude.
 	 * @return V magnitude.
-	 * @throws JPARSECException If input is out of range (<-0.2 or >1.8).
+	 * @throws JPARSECException If input is out of range (&lt;-0.2 or &gt;1.8).
 	 */
 	public static double vTychoTovJohnson(double b_v_t, double vt)
 	throws JPARSECException {
@@ -279,7 +279,7 @@ public class Colors
 	 * V-Hp: difference between Johnson V and Hipparcos magnitude.
 	 * @param bt_minus_vt B-V in the Tycho magnitude system.
 	 * @return Array of three values.
-	 * @throws JPARSECException If input is out of range: Bt-Vt < -0.25 or > 2.
+	 * @throws JPARSECException If input is out of range: Bt-Vt &lt; -0.25 or &gt; 2.
 	 */
 	public static double[]  bvTychoToJohnson(double bt_minus_vt)
 	throws JPARSECException {

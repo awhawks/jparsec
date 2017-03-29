@@ -34,7 +34,7 @@ import jparsec.time.TimeElement;
 import jparsec.util.JPARSECException;
 
 /**
- * Convenient class for double stars ephemerides. Example:<P>
+ * Convenient class for double stars ephemerides. Example:<BR>
  * <pre>
  * try {
  * 		ReadFile re = new ReadFile();

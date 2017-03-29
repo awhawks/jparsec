@@ -43,7 +43,7 @@ public class Difraction
 	 *
 	 * @param diam_obj Diameter of the objective (supposed circular) in cm.
 	 * @param lambda Wave length in cm. Use 0.000056 (5600 angstrom) for visible light.
-	 * @param field Field of view of the pattern in arcseconds. In case is <1 it will
+	 * @param field Field of view of the pattern in arcseconds. In case is &lt;1 it will
 	 * be set to 1.
 	 * @param obstruc Diameter of the central obstruction of the telescope in cm. For
 	 * 	      Schmidth-Cassegrain or Newton instruments, otherwise set to 0.0.

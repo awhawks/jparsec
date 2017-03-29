@@ -52,12 +52,12 @@ import jparsec.util.JPARSECException;
  * educational purposes. These calculations require a set of orbital elements for
  * each spacecraft at different times, which is available as a dependency for
  * the JPARSEC library, usually named orbital_elements.jar.
- * <P>
+ * <BR>
  * The orbital elements come from the JPL and are suitable for low precision
  * ephemeris. For high precision ephemeris please use the JPL Horizons
  * System.
- * <P>
- * To use this class follow these simple steps: <P>
+ * <BR>
+ * To use this class follow these simple steps: <BR>
  *
  * <pre>
  * // Search one probe.
@@ -425,9 +425,9 @@ public class Spacecraft
 	 * Transforms JPL Horizons format of orbital elements to JPARSEC format.
 	 * Elements are supposed to be refered to J2000 epoch and calculated in
 	 * certain date at 00:00 TT.
-	 * <P>
+	 * <BR>
 	 * Example of input format (taken from JPL Horizons system):
-	 * <P>
+	 * <BR>
 	 *
 	 * <pre>
 	 * 2453795.500000000 = A.D. 2006-Mar-01 00:00:00.0000 (CT)
@@ -437,11 +437,10 @@ public class Spacecraft
 	 * A = 1.346507653092158E+00 AD= 1.680136985464930E+00 PR= 5.707049850388993E+02
 	 * </pre>
 	 *
-	 * <P>
+	 * <BR>
 	 * Output will be, if name set to MRO:
-	 * <P>
+	 * <BR>
 	 * MRO e 3.063986 319.340296 358.4021022 1.3465077 0.6307988 0.2477738 127.65794096 03/01.0/2006 2000 0 0
-	 * <P>
 	 *
 	 * @param horizons String array of length 5, in the previous format.
 	 * @param probe_name Name of the probe.
@@ -458,9 +457,9 @@ public class Spacecraft
 
 	/**
 	 * Transforms JPL Horizons format of orbital elements to an OrbitalElement object.
-	 * <P>
+	 * <BR>
 	 * Example of input format (taken from JPL Horizons system):
-	 * <P>
+	 * <BR>
 	 *
 	 * <pre>
 	 * 2453795.500000000 = A.D. 2006-Mar-01 00:00:00.0000 (CT)
@@ -498,7 +497,6 @@ public class Spacecraft
 	/**
 	 * Transforms an orbital element set to JPARSEC format of probes.
 	 * The invert transformation is provided by {@linkplain ReadFile#parseProbe(String)}.
-	 * <P>
 	 *
 	 * @param orbit OrbitalElement set.
 	 * @return JPARSEC format.
@@ -648,7 +646,7 @@ public class Spacecraft
 	/**
 	 * Calculates probes positions, providing full data. This method uses
 	 * orbital elements.
-	 * <P>
+	 * <BR>
 	 * The orbital element is automatically obtained by this method if the input
 	 * orbital element set in the ephemeris object is null, and its target body
 	 * number is the desired probe. In this case the target can be set to any

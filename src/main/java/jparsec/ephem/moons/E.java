@@ -53,7 +53,7 @@ public class E
 	/**
 	 * This is an implementation of the E2x3 Jovian satellite theory by Jay
 	 * Lieske, as presented by Jean Meeus, Astronomical Algorithms, 2nd Ed., pp.
-	 * 285-299. Based on Lieske, Astronomy & Astrophysics 176, 146-158 (1987).
+	 * 285-299. Based on Lieske, Astronomy &amp; Astrophysics 176, 146-158 (1987).
 	 * Objects are Io, Europa, Ganymede, and Callisto.
 	 * <P>
 	 * Satellites are positioned respect to the mother planet. For this purpose
@@ -329,7 +329,7 @@ public class E
 	 * Lieske, as presented by Jean Meeus. Code adapted from Kerry Shetline. It
 	 * has not been extensively checked, although it seems to be ok, with
 	 * improvements in the 0.01 arcsecond level compared to E2x3. For reference
-	 * see J. Lieske, Galilean Satellite Ephemerides E5, A&A 129, 205-217
+	 * see J. Lieske, Galilean Satellite Ephemerides E5, A&amp;A 129, 205-217
 	 * (1998). Objects are Io, Europa, Ganymede, and Callisto.
 	 * <P>
 	 * Satellites are positioned respect to the mother planet. For this purpose

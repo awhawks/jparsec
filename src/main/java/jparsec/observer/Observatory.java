@@ -51,7 +51,7 @@ import jparsec.util.Logger.LEVEL;
  * <P>
  * <I><B>Description of Sveshnikov catalog</B></I>
  * <P>
- * ATTENTION! These coordinates may be used for reduction of routinal
+ * ATTENTION! These coordinates may be used for reduction of 
  * observations with standard accuracy. For reduction of high accuracy
  * observations (CCD, meridian obs., NEO objects) should be used more exact
  * coordinates of instrument.
@@ -72,8 +72,8 @@ import jparsec.util.Logger.LEVEL;
  * <P>
  * <I><B>Format</B></I>
  * <P>
- * Data is organised in arrays of type {@linkplain ObservatoryElement} for each country,
- * containing data objets with the convenient fields. Note that no information
+ * Data is organized in arrays of type {@linkplain ObservatoryElement} for each country,
+ * containing data objects with the convenient fields. Note that no information
  * about time zone offset exists, so it is set a value of zero as default. So it
  * is not recommended to use local time in ephemeris calculations as time scale.
  * <P>
@@ -574,7 +574,7 @@ public final class Observatory
 
 	/**
 	 * Reads an example file with the observatories formatted in the standard
-	 * way, stablished by the Minor Planet Center. This method should be the
+	 * way, established by the Minor Planet Center. This method should be the
 	 * first to be called.
 	 * <P>
 	 * An example of MPC format is:
@@ -584,7 +584,7 @@ public final class Observatory
 	 * <P>
 	 * </pre>
 	 *
-	 * After the file is succesfully read, the elements are store in
+	 * After the file is successfully read, the elements are store in
 	 * {@linkplain Observatory#observatories} vector. Note this array is
 	 * static and not thread-safe.
 	 *
@@ -628,17 +628,17 @@ public final class Observatory
 
 	/**
 	 * Reads an external file with the observatories formatted in the standard
-	 * way, stablished by the Minor Planet Center. This method should be the
+	 * way, established by the Minor Planet Center. This method should be the
 	 * first to be called.
-	 * <P>
+	 * <BR>
 	 * An example of MPC format is:
-	 * <P>
 	 * <pre>
+	 * <BR>
 	 * 000   0.0000 0.62411 +0.77873 Greenwich
-	 * <P>
+	 * <BR>
 	 * </pre>
 	 *
-	 * After the file is succesfully read, the elements are store in
+	 * After the file is successfully read, the elements are store in
 	 * {@linkplain Observatory#observatories} vector. Note this array is static
 	 * and not thread-safe.
 	 *

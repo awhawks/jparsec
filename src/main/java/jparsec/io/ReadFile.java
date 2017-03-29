@@ -82,7 +82,7 @@ import jparsec.graph.DataSet;
  * ...) corrsponding to the 3 most recent renderings are in memory using the
  * {@linkplain DataBase} class. This value (3) is the value of {@linkplain Configuration#MAX_CACHE_SIZE},
  * and can be changed, but it is not recommended to increase it.
- * <P>
+ * <BR>
  * NOTE: The availability of the SkyMap format is only for our practical
  * purposes, since it is a popular commercial program used by astronomers. This
  * does not mean any particular interest at all.
@@ -303,7 +303,7 @@ public class ReadFile implements Serializable
 	/**
 	 * Obtain an {@linkplain OrbitalElement} object from a line of a file of orbital elements
 	 * of asteroids, in a format defined by the user.
-	 * <P>
+	 * <BR>
 	 * This should be used with caution, since the fields not present in the
 	 * {@linkplain FileFormatElement} array object will be set to zero. Also note that the library uses
 	 * argument of perihelion and mean anomaly as input, instead of longitude of
@@ -1076,23 +1076,23 @@ public class ReadFile implements Serializable
 	 * standard way, established by the Minor Planet Center or either the
 	 * commercial program SkyMap. The format is the same for trans-Neptunian or
 	 * Centaur objects.
-	 * <P>
+	 * <BR>
 	 * An example of MPC format is:
-	 * <P>
+	 * <BR>
 	 *
 	 * <pre>
 	 * 00001    3.34  0.12 K0636 129.98342   73.23162   80.40970   10.58687  0.0800102  0.21432279   2.7653949    MPC 24219  4676  62 1839-1994 0.54 M-v 30  Bowell     0000             (1) Ceres
 	 * </pre>
 	 *
-	 * <P>
+	 * <BR>
 	 * An example of SkyMap format is:
-	 * <P>
+	 * <BR>
 	 *
 	 * <pre>
 	 *       1 Ceres                                  2005 08 18.0  86.9545  2.765979 0.080014  73.3924  80.4097  10.5860   3.34  0.12
 	 * </pre>
 	 *
-	 * <P>
+	 * <BR>
 	 * After the file is successfully read, the objects are stored using
 	 * {@linkplain DataBase} with the identifier returned by
 	 * {@linkplain #getDataBaseID()}.
@@ -1144,23 +1144,23 @@ public class ReadFile implements Serializable
 	 * Reads an example file with orbital elements of comets formatted in the
 	 * standard way, established by the Minor Planet Center or either the
 	 * commercial program SkyMap.
-	 * <P>
+	 * <BR>
 	 * An example of MPC format is:
-	 * <P>
+	 * <BR>
 	 *
 	 * <pre>
 	 * 0002P         2007 04 19.3070  0.339201  0.847059  186.5211  334.5780   11.7556  20060922  11.5  6.0  2P/Encke
 	 * </pre>
 	 *
-	 * <P>
+	 * <BR>
 	 * An example of SkyMap format is:
-	 * <P>
+	 * <BR>
 	 *
 	 * <pre>
 	 * 2P Encke                                       2003 12 29.8945  0.338844       0.847212 186.5134 334.5891  11.7634  11.5   6.0
 	 * </pre>
 	 *
-	 * <P>
+	 * <BR>
 	 * After the file is successfully read, the objects are stored using
 	 * {@linkplain DataBase} with the identifier returned by
 	 * {@linkplain #getDataBaseID()}.
@@ -1212,7 +1212,7 @@ public class ReadFile implements Serializable
 	/**
 	 * Reads the file of Near Earth Objects, with orbital elements formatted in the
 	 * standard way, established by the Minor Planet Center,
-	 * <P>
+	 * <BR>
 	 * After the file is successfully read, the objects are stored using
 	 * {@linkplain DataBase} with the identifier returned by
 	 * {@linkplain #getDataBaseID()}.
@@ -1391,15 +1391,15 @@ public class ReadFile implements Serializable
 
 	/**
 	 * Reads a file with orbital elements of probes in the JPARSEC format.
-	 * <P>
+	 * <BR>
 	 * An example of such format is:
-	 * <P>
+	 * <BR>
 	 *
 	 * <pre>
 	 * Galileo-1       e 4.3224100 24.682800 -175.312000 0.8323240 1.2979700 0.19785000 -158.241000 11/09.0/1989   1950    0 0 1989 11 9.690 1990 02 10.26
 	 * </pre>
 	 *
-	 * <P>
+	 * <BR>
 	 * After the file is successfully read, the objects are stored using
 	 * {@linkplain DataBase} with the identifier returned by
 	 * {@linkplain #getDataBaseID()}.
@@ -1449,7 +1449,7 @@ public class ReadFile implements Serializable
 
 	/**
 	 * Reads a file of stars, formatted in any of the available formats.
-	 * <P>
+	 * <BR>
 	 * After the file is successfully read, the objects are stored using
 	 * {@linkplain DataBase} with the identifier returned by
 	 * {@linkplain #getDataBaseID()}.
@@ -1517,23 +1517,23 @@ public class ReadFile implements Serializable
 	 * the standard way, established by the Minor Planet Center or either the
 	 * commercial program SkyMap. The format is the same for trans-Neptunian or
 	 * Centaur objects.
-	 * <P>
+	 * <BR>
 	 * An example of MPC format is:
-	 * <P>
+	 * <BR>
 	 *
 	 * <pre>
 	 * 00001    3.34  0.12 K0636 129.98342   73.23162   80.40970   10.58687  0.0800102  0.21432279   2.7653949    MPC 24219  4676  62 1839-1994 0.54 M-v 30  Bowell     0000             (1) Ceres
 	 * </pre>
 	 *
-	 * <P>
+	 * <BR>
 	 * An example of SkyMap format is:
-	 * <P>
+	 * <BR>
 	 *
 	 * <pre>
 	 *       1 Ceres                                  2005 08 18.0  86.9545  2.765979 0.080014  73.3924  80.4097  10.5860   3.34  0.12
 	 * </pre>
 	 *
-	 * <P>
+	 * <BR>
 	 * After the file is successfully read, the objects are stored using
 	 * {@linkplain DataBase} with the identifier returned by
 	 * {@linkplain #getDataBaseID()}.
@@ -1571,23 +1571,23 @@ public class ReadFile implements Serializable
 	 * Reads an external file with orbital elements of comets formatted in the
 	 * standard way, established by the Minor Planet Center or either the
 	 * commercial program SkyMap.
-	 * <P>
+	 * <BR>
 	 * An example of MPC format is:
-	 * <P>
+	 * <BR>
 	 *
 	 * <pre>
 	 * 0002P         2007 04 19.3070  0.339201  0.847059  186.5211  334.5780   11.7556  20060922  11.5  6.0  2P/Encke
 	 * </pre>
 	 *
-	 * <P>
+	 * <BR>
 	 * An example of SkyMap format is:
-	 * <P>
+	 * <BR>
 	 *
 	 * <pre>
 	 * 2P Encke                                       2003 12 29.8945  0.338844       0.847212 186.5134 334.5891  11.7634  11.5   6.0
 	 * </pre>
 	 *
-	 * <P>
+	 * <BR>
 	 * After the file is successfully read, the objects are stored using
 	 * {@linkplain DataBase} with the identifier returned by
 	 * {@linkplain #getDataBaseID()}.
@@ -1624,9 +1624,9 @@ public class ReadFile implements Serializable
 	/**
 	 * Reads an external file with satellites elements formatted in the standard
 	 * way, used by the comunity. Results are copied to {@linkplain DataBase}.
-	 * <P>
+	 * <BR>
 	 * An example of such format is:
-	 * <P>
+	 * <BR>
 	 *
 	 * <pre>
 	 * HST
@@ -1728,9 +1728,9 @@ public class ReadFile implements Serializable
 	/**
 	 * Reads the example file with satellites elements formatted in the standard
 	 * way, used by the community. Results are copied to {@linkplain DataBase}.
-	 * <P>
+	 * <BR>
 	 * An example of such format is:
-	 * <P>
+	 * <BR>
 	 *
 	 * <pre>
 	 * HST
@@ -2148,11 +2148,11 @@ public class ReadFile implements Serializable
 	 * Reads a file with orbital elements of natural satellites formatted in a
 	 * way defined by the JPL. See <A target="_blank" href="http://ssd.jpl.nasa.gov/?sat_elem">http://ssd.jpl.nasa.gov/?sat_elem</A>
 	 * for more information. Results are copied to {@linkplain DataBase}.
-	 * <P>
+	 * <BR>
 	 * An example of such format is given next. Note the column positions are
 	 * not taken into account, only the order where the elements are given and
 	 * the overall format. See example files, named like JPL_natural_satellites.txt.
-	 * <P>
+	 * <BR>
 	 *
 	 * <pre>
 	 * Mars
@@ -2306,7 +2306,6 @@ public class ReadFile implements Serializable
 	/**
 	 * Reads a file in the classpath and returns it contents as an array of strings.
 	 * Default encoding is ISO-8859-1.
-	 * <P>
 	 * @param jarpath Path inside .jar file of the file to read.
 	 * @return Array of strings.
 	 * @throws JPARSECException If an error occurs accessing the resource.
@@ -2319,7 +2318,6 @@ public class ReadFile implements Serializable
 
 	/**
 	 * Returns if a resource file is available in the classpath.
-
 	 * @param jarpath Path inside .jar file of the file to read.
 	 * @return True or false.
 	 * @throws JPARSECException In case the path is null.
@@ -3120,7 +3118,7 @@ public class ReadFile implements Serializable
 	 * Reads GREENWICH - NOAA solar spots database. A ArrayList with string arrays
 	 * is returned, with the following fields: group number, group type,
 	 * heliographic longitude, latitude, and area in solar disk units. Position
-	 * is in radians.<P>
+	 * is in radians.
 	 * In case no data is found in the database the method will attempt to download
 	 * updated data for the spots currently visible from the URL
 	 * http://services.swpc.noaa.gov/text/solar-regions.txt. In case this fails it will

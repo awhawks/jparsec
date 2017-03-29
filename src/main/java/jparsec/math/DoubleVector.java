@@ -481,7 +481,6 @@ public class  DoubleVector implements Cloneable {
   /** Multiply a vector by a scalar in place, u = s * u
    *  @param s    scalar
    *  @return     replace u by s * u
-   *  @return The same vector of the instance.
   */
   public DoubleVector  timesEquals( double s ) {
     for (int i = 0; i < size(); i++) {

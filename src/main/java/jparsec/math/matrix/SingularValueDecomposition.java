@@ -41,18 +41,18 @@ import jparsec.graph.DataSet;
 
 /**
  * Singular Value Decomposition.
- * <P>
+ * <BR>
  * For an m-by-n matrix A with m &gt;= n, the singular value decomposition is an
  * m-by-n orthogonal matrix U, an n-by-n diagonal matrix S, and an n-by-n
  * orthogonal matrix V so that A = U*S*V'.
- * <P>
+ * <BR>
  * The singular values, sigma[k] = S[k][k], are ordered so that sigma[0] &gt;=
  * sigma[1] &gt;= ... &gt;= sigma[n-1].
- * <P>
+ * <BR>
  * The singular value decompostion always exists, so the constructor will never
  * fail.  The matrix condition number and the effective numerical rank can be
  * computed from this decomposition.
- * <p/>
+ * <BR>
  * Adapted from the <a href="http://math.nist.gov/javanumerics/jama/" target="_blank">JAMA</a> package.
  *
  * @author The Mathworks and NIST

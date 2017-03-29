@@ -63,7 +63,7 @@ public class Country
 		Anguilla,
 		/** Constant ID for Antarctica. */
 		Antarctica,
-		/** Constant ID for Antigua & Barbuda. */
+		/** Constant ID for Antigua &amp; Barbuda. */
 		Antigua_and_Barbuda,
 		/** Constant ID for Argentina. */
 		Argentina,
@@ -401,7 +401,7 @@ public class Country
 		Saint_Kitts_and_Nevis,
 		/** Constant ID for Saint Lucia. */
 		Saint_Lucia,
-		/** Constant ID for Saint Pierre & Miquelon. */
+		/** Constant ID for Saint Pierre &amp; Miquelon. */
 		Saint_Pierre_and_Miquelon,
 		/** Constant ID for Saint Vincent and the Grenadines. */
 		Saint_Vincent_and_the_Grenadines,
@@ -505,7 +505,7 @@ public class Country
 		Virgin_Islands_of_the_UK,
 		/** Constant ID for Virgin Islands of the United States. */
 		Virgin_Islands_of_the_United_States,
-		/** Constant ID for Wallis & Futuna. */
+		/** Constant ID for Wallis &amp; Futuna. */
 		Wallis_and_Futuna,
 		/** Constant ID for Yemen. */
 		Yemen,

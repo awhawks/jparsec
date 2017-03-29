@@ -346,7 +346,6 @@ public class SExtractor {
 	 * Return the width of some source.
 	 * @param s The source index, starting from 0.
 	 * @return The width in pixels.
-	 * @throws JPARSECException If an error occurs.
 	 */
 	public double getWidth(int s)
 	{
@@ -356,7 +355,6 @@ public class SExtractor {
 	 * Return the height of some source.
 	 * @param s The source index, starting from 0.
 	 * @return The height in pixels.
-	 * @throws JPARSECException If an error occurs.
 	 */
 	public double getHeight(int s)
 	{
@@ -367,7 +365,6 @@ public class SExtractor {
 	 * where there is detection.
 	 * @param s The source index, starting from 0.
 	 * @return The width in pixels.
-	 * @throws JPARSECException If an error occurs.
 	 */
 	public int getDetectionWidth(int s)
 	{
@@ -378,7 +375,6 @@ public class SExtractor {
 	 * where there is detection.
 	 * @param s The source index, starting from 0.
 	 * @return The height in pixels.
-	 * @throws JPARSECException If an error occurs.
 	 */
 	public int getDetectionHeight(int s)
 	{
@@ -409,7 +405,6 @@ public class SExtractor {
 	 * Return the object class of some source.
 	 * @param s The source index, starting from 0.
 	 * @return The class: close to 1 for point-like (star), close to 0 for extended.
-	 * @throws JPARSECException If an error occurs.
 	 */
 	public double getClass(int s)
 	{
@@ -419,7 +414,6 @@ public class SExtractor {
 	 * Return the object's peak intensity of some source.
 	 * @param s The source index, starting from 0.
 	 * @return The peak intensity.
-	 * @throws JPARSECException If an error occurs.
 	 */
 	public double getPeakIntensity(int s)
 	{

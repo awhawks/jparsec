@@ -891,7 +891,7 @@ public class WCS implements Serializable
 	  }
 
 	 /**
-	  * Serialize this <tt>WCS</tt> instance.
+	  * Serialize this WCS instance.
 	  *
 	  * @throws IOException Throws an exception if something goes wrong with the
 	  *                      serialization.

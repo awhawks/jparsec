@@ -60,12 +60,12 @@ import jparsec.vo.GeneralQuery;
 
 /**
  * An adequate class for storing the position of an observer as a previous step
- * to calculate ephemerides. <P>
+ * to calculate ephemerides. <BR>
  * This class is suitable for storing data from the city and observatory
  * classes. It contains some methods to parse a {@linkplain CityElement} or an
  * {@linkplain ObservatoryElement} object. It is possible to store atmospheric
  * conditions like pressure and temperature, values that will be used when
- * obtaining the apparent elevation of an object.<P>
+ * obtaining the apparent elevation of an object.<BR>
  * A special feature is to set the location of the observer to a given point
  * located in another planet or within the Solar System, using the class
  * {@linkplain ExtraterrestrialObserverElement}.
@@ -487,7 +487,7 @@ public class ObserverElement implements Serializable {
 	 * spring and autumn in the north hemisphere. The rule applied in each case when
 	 * the time used for calculations reaches the 'limit' is as follows:
 	 * <BR>1. In case of changing 2h LT to 3h LT in spring (DST changes from 0 to 1), 2h LT to 3h LT does not exists, but you can access this range in JPARSEC and resulting UT is correct (DST still 0).
-	 * <BR>2. In case of changing 2h LT to 1h LT in autumn (DST changes from 1 to 0), 1h LT to 2h LT for DST 0 cannot be accessed. >=2h LT will be available for DST 0.
+	 * <BR>2. In case of changing 2h LT to 1h LT in autumn (DST changes from 1 to 0), 1h LT to 2h LT for DST 0 cannot be accessed. &gt;=2h LT will be available for DST 0.
 	 * <BR>DST is obtained using UT in {@linkplain TimeScale#getDST(double, ObserverElement)}.
 	 */
 	public enum DST_RULE {

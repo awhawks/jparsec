@@ -1219,7 +1219,7 @@ public class SDP4_SGP4
 	 * observing site set to have a change to see it).
 	 * @return An array of event objects with the type of transit (on the Sun or the
 	 * Moon) using the secondary object field, and with the initial and ending transit times.
-	 * The details field will contain the elevation above the horizon, always >= 0.
+	 * The details field will contain the elevation above the horizon, always &gt;= 0.
 	 * Precision is 0.5s.
 	 * @throws JPARSECException If the method fails, for example because of an
 	 *         invalid date.

@@ -43,7 +43,7 @@ import jparsec.util.Translate;
  * 'brute-force' method that does not require Bessel elements and is
  * independent from the ephemerides theory. It is quite fast if used
  * correctly. The effect of the mountains on lunar limb is ignored.
- * <P>
+ * <BR>
  * One advantage of this pure geometric approach is the possibility
  * of calculating solar eclipses from other satellites (not the Moon).
  *
@@ -190,10 +190,10 @@ public class SolarEclipse
 	 * limb profile of the Moon (not taken into account here nor in Spenak's
 	 * calculations) produces more effects than this negligible discrepancy.
 	 *
-	 * Events are:<P>
-	 * - Shadow ingress.<P>
-	 * - Shadow total/annular ingress.<P>
-	 * - Shadow total/annular egress.<P>
+	 * Events are:<BR>
+	 * - Shadow ingress.<BR>
+	 * - Shadow total/annular ingress.<BR>
+	 * - Shadow total/annular egress.<BR>
 	 * - Shadow egress.
 	 *
 	 * Eclipse type (total, partial, annular) is set in static variable type.
@@ -226,10 +226,10 @@ public class SolarEclipse
 	 * satellites, not the Moon. So it adds an accuracy parameter to control
 	 * the sensitivity of the search.
 	 *
-	 * Events are:<P>
-	 * - Shadow ingress.<P>
-	 * - Shadow total/annular ingress.<P>
-	 * - Shadow total/annular egress.<P>
+	 * Events are:<BR>
+	 * - Shadow ingress.<BR>
+	 * - Shadow total/annular ingress.<BR>
+	 * - Shadow total/annular egress.<BR>
 	 * - Shadow egress.
 	 *
 	 * Eclipse type (total, partial, annular) is set in static variable type.
@@ -242,7 +242,7 @@ public class SolarEclipse
 	 * @param obs Observer object.
 	 * @param eph Ephemeris properties.
 	 * @param accuracy Accuracy of the iterative search in seconds for eclipses produced by
-	 * any moon besides the Moon. In case of solar eclipses from Earth or input values <= 0 this value
+	 * any moon besides the Moon. In case of solar eclipses from Earth or input values of 0 or lower, this value
 	 * will have no effect. Default value is 1s (for solar eclipses from Earth is irrelevant, it is set
 	 * automatically).
 	 * @throws JPARSECException Thrown if the calculation fails.

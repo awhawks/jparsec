@@ -57,7 +57,7 @@ import jparsec.util.*;
  * using the method that reduces the resolution of the cube.
  * In the second case the cube must be explicitly inserted in the constructor
  * or the {@link #cube} property. It is supposed that enough memory
- * is available to hold the instance in this case.  In large files (>20 MB)
+ * is available to hold the instance in this case.  In large files (&gt;20 MB)
  * to previously smooth the datacube to a lower resolution level could be
  * required.
  * @author T. Alonso Albi - OAN (Spain)
@@ -2587,7 +2587,7 @@ public class LMVCube implements Serializable
 	/**
 	 * Convolves the current map with a given beam profile and at a given position in the grid.
      * A Gaussian convolution kernel is used, and points outside the map
-     * are considered. All posible NaNs are removed.<P>
+     * are considered. All posible NaNs are removed.<BR>
      *
      * Note the backend is named to CONVOLVED, but should be named correctly for Doppler corrections.
      * One of these: 'BURE','PDBI','NOEMA','PICOVELETA','VELETA', 'ACA','ALMA','APEX','ATF','CARMA',
@@ -3090,9 +3090,9 @@ public class LMVCube implements Serializable
 
 	/**
 	 * Corrects the cube for primary beam.
-	 * @param pbeam The primary beam to use in arcsec, or <= 0 to calculate it
+	 * @param pbeam The primary beam to use in arcsec, or 0 or lower to calculate it
 	 * automatically for PdBI.
-	 * @param pradius The radius of the region to modify in arcsec, or <= 0 to
+	 * @param pradius The radius of the region to modify in arcsec, or &lt;= 0 to
 	 * apply the primary beam correction to the entire spatial region covered by
 	 * the cube.
 	 * @throws JPARSECException If an error occurs.

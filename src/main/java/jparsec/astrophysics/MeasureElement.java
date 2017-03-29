@@ -35,7 +35,7 @@ import jparsec.util.JPARSECException;
 /**
  * The most simple representation of a measure: a value, its error, and the unit.<P>
  * A value can be defined as an upper or lower limit if desired. To
- * do that use the prefix '<' or '>' respectively.<P>
+ * do that use the prefix '&lt;' or '&gt;' respectively.<BR>
  * Common operations are allowed with two measures. If the units are different,
  * the unit of the second measure is transformed to the unit of the main one. Error
  * calculations are based on standard procedures, using derivatives.
@@ -408,7 +408,7 @@ public class MeasureElement implements Serializable
 	}
 
 	/**
-	 * Returns the limit '<' or '>'.
+	 * Returns the limit '&lt;' or '&gt;'.
 	 * @return The limit, or empty String if it does not exist.
 	 */
 	public String getLimit()
@@ -786,7 +786,7 @@ public class MeasureElement implements Serializable
 	public static final MeasureElement BOLTZMANN_CONSTANT = new MeasureElement(1.3806488E-23, 0.0000013E-23, "J/K");
 	/** Stefan-Boltzmann en W/(m^2 K^4). Value from CODATA 2010. */
 	public static final MeasureElement STEFAN_BOLTZMANN_CONSTANT = new MeasureElement(0.00000005670373, 0.00000000000021, "W/m2/K4)");
-	/** Electron charge in C (=> J/eV). Value from CODATA 2010. */
+	/** Electron charge in C (J/eV). Value from CODATA 2010. */
 	public static final MeasureElement ELECTRON_CHARGE = new MeasureElement(1.602176565E-19, 0.000000035E-19, "C");
 	/** Gravitational constant in m^3/(kg s^2). Value from CODATA 2010. */
 	public static final MeasureElement GRAVITATIONAL_CONSTANT = new MeasureElement(6.67384E-11, 0.00080E-11, "m3/kg/s2)");

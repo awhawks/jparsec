@@ -45,11 +45,11 @@ import jparsec.util.Translate.LANGUAGE;
 
 /**
  * Obtain Saros data for certain eclipse.
- * <P>
+ * <BR>
  * This class provides methods for obtaining a list of eclipses and their Saros
  * data. Here is a possible output data from results taken exclusively from this
  * class.
- * <P>
+ * <BR>
  *
  * <pre>
  * SAROS CYCLE EXAMPLE, from date  01-jan-2007
@@ -260,18 +260,17 @@ public class Saros
 	 * @param jd_final Final jd to search in TT.
 	 * @return A set of double precission arrays, with the following
 	 *         information ordered:
-	 *         <P> - Julian day of the eclipse in TT (maximum, with an accuracy up to
+	 *         <BR> - Julian day of the eclipse in TT (maximum, with an accuracy up to
 	 *         one or two minutes).
-	 *         <P> - Eclipse type, solar or lunar. The value is the ordinal of the
+	 *         <BR> - Eclipse type, solar or lunar. The value is the ordinal of the
 	 *         eclipse type enumeration defined in SimpleEventElement class.
-	 *         <P> - Eclipse subtype, ID constants defined in
+	 *         <BR> - Eclipse subtype, ID constants defined in
 	 *         SolarEclipse class (even for lunar eclipses). For penumbral lunar
 	 *         eclipses, the constant type_no_eclipse is used.
-	 *         <P> - Saros series.
-	 *         <P> - Inex number.
-	 *         <P> - Eclipse number in the current saros series.
-	 *         <P> - Number of the last eclipse in the current saros series.
-	 *         <P>
+	 *         <BR> - Saros series.
+	 *         <BR> - Inex number.
+	 *         <BR> - Eclipse number in the current saros series.
+	 *         <BR> - Number of the last eclipse in the current saros series.
 	 * @throws JPARSECException If an error occurs.
 	 * @deprecated The methods in {@linkplain MainEvents} should be used instead.
 	 */

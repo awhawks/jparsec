@@ -739,7 +739,7 @@ public class RotationalDiagram implements Serializable
 	 * Returns the maximum frequency in this rotational diagram. When
 	 * beam filling factor is applied, the area in each point is
 	 * multiplied by (freq/max)^2, where freq is the frequency at that
-	 * transition and max is the maximum frequency (=> x (minimum beam/beam)^2).
+	 * transition and max is the maximum frequency (=&gt; x (minimum beam/beam)^2).
 	 * @return Maximum frequency in GHz.
 	 */
 	public double getMaximumFrequency() {

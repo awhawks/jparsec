@@ -51,9 +51,9 @@ import jparsec.util.JPARSECException;
 import jparsec.util.Version;
 
 /**
- * Contains methods to read and write Virtual Observatory (VO) tables.<P>
+ * Contains methods to read and write Virtual Observatory (VO) tables.<BR>
  *
- * Here is an example of how to create a VO table.<P>
+ * Here is an example of how to create a VO table.<BR>
  *
  * <pre>
  * // Metadata for the fields

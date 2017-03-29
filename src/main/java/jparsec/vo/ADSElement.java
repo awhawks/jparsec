@@ -255,7 +255,7 @@ public class ADSElement implements Serializable {
 	}
 
 	/**
-	 * ID constant for A&A journal.
+	 * ID constant for A&amp;A journal.
 	 */
 	public static final String JOURNAL_ASTRONOMY_AND_ASTROPHYSICS = "A&A";
 	/**
@@ -275,7 +275,7 @@ public class ADSElement implements Serializable {
 	 */
 	public static final String JOURNAL_MNRAS = "MNRAS";
 	/**
-	 * ID constant for Ap&SS journal.
+	 * ID constant for Ap&amp;SS journal.
 	 */
 	public static final String JOURNAL_ASTRPHYSICS_AND_SPACE_SCIENCE = "Ap&SS";
 

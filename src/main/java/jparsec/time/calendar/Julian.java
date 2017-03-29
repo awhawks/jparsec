@@ -115,6 +115,7 @@ public class Julian extends BaseCalendar
 	 * Gives true if the year is a leap one.
 	 *
 	 * @param fixed Fixed date.
+	 * @return True or false.
 	 */
 	public static boolean isLeapYear(final long fixed) {
 		return (fixed & 3) == (fixed <= 0 ? 3 : 0);

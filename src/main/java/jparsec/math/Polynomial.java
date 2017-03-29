@@ -300,7 +300,7 @@ public class Polynomial implements Cloneable, java.io.Serializable {
 	*  Finds all the roots or zeros of this polynomial.  Zeros may be
 	*  real or complex.
 	*
-	*  Uses the standard black-box method of Jenkins & Traub.
+	*  Uses the standard black-box method of Jenkins &amp; Traub.
 	*  This method finds the polynomial zeros one
 	*  at a time in roughly increasing order of modulus.  The algorithm
 	*  is extremely fast and is relatively insensitive to the

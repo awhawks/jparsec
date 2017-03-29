@@ -1018,7 +1018,7 @@ public class ProcessSpectrum {
 	 * @param searchOffset2 The DEC offset to search for.
 	 * @param t The telescope to search for.
 	 * @param restFreq Rest frequency of the scans to average in MHz.
-	 * Set to <= 0 to compute it automatically, averaging all
+	 * Set to 0 or lower to compute it automatically, averaging all
 	 * spectra for the same frequency as that of the first scan
 	 * found that satisfies the other conditions.
 	 * @return The spectrum.

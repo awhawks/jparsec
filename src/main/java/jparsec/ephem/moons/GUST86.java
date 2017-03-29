@@ -72,16 +72,16 @@ public class GUST86
 	 *        uranocentric vector J1950 refered to Uranus equator, 3 for
 	 *        uranocentric equatorial vector J1950, 4 for the same as 3 in B1950.
 	 * @return Array with (x, y, z, vx, vy, vz), or with the 6 eliptic elements:<P>
-	 *         SEMIMAJOR AXIS (KM).<P>
-	 *         LONGITUDE (RD).<P>
-	 *         K=E*COS(PI).<P>
-	 *         H=E*SIN(PI).<P>
-	 *         Q=SIN(I/2)*COS(GOM).<P>
-	 *         P=SIN(I/2)*SIN(GOM).<P>
-	 *         E : ECCENTRICITY.<P>
-	 *         PI : LONGITUDE OF PERIASTRE.<P>
-	 *         I : INCLINATION.<P>
-	 *         GOM : ASCENDING NODE LONGITUDE.<P>
+	 *         SEMIMAJOR AXIS (KM).<BR>
+	 *         LONGITUDE (RD).<BR>
+	 *         K=E*COS(PI).<BR>
+	 *         H=E*SIN(PI).<BR>
+	 *         Q=SIN(I/2)*COS(GOM).<BR>
+	 *         P=SIN(I/2)*SIN(GOM).<BR>
+	 *         E : ECCENTRICITY.<BR>
+	 *         PI : LONGITUDE OF PERIASTRE.<BR>
+	 *         I : INCLINATION.<BR>
+	 *         GOM : ASCENDING NODE LONGITUDE.<BR>
 	 */
 	public static double[] GUST86_theory(double TJJ, int IS, int ICODE)
 	{

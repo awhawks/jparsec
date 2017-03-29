@@ -49,7 +49,7 @@ import jparsec.util.JPARSECException;
  * calculations, the methods in this class allows to obtain CIO-based
  * coordinates of the objects. CIO-based calculations are currently not
  * used actively inside JPARSEC.
- * See Wallace and Capitaine, A&A 459, 981 (2006).
+ * See Wallace and Capitaine, A&amp;A 459, 981 (2006).
  * @author T. Alonso Albi - OAN (Spain)
  * @version 1.0
  */

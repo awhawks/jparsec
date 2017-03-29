@@ -35,7 +35,7 @@ import jparsec.util.Logger.LEVEL;
  * molecular lines from interstellar clouds, which are assumed to be
  * homogeneous. The use of this class is subject to reference to the
  * original paper: Van der Tak, F.F.S., Black, J.H., Sch&ouml;ier, F.L.,
- * Jansen, D.J., van Dishoeck, E.F., 2007, A&A 468, 627-635.<P>
+ * Jansen, D.J., van Dishoeck, E.F., 2007, A&amp;A 468, 627-635.<BR>
  *
  * This Java version corresponds to the translation of the original
  * Fortran program version from August 29, 2007, updated to 30nov2011

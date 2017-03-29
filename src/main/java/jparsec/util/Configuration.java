@@ -103,7 +103,7 @@ public class Configuration
 	public static int MAXIMUM_DAYS_FROM_ELEMENTS_COMETS_ASTEROIDS_BETWEEN_TWO_QUERIES = 15;
 
 	/**
-	 * Time out for the queries in milliseconds. Use <= 0 to disable downloads.
+	 * Time out for the queries in milliseconds. Use &lt;= 0 to disable downloads.
 	 */
 	public static int QUERY_TIMEOUT = 5000;
 

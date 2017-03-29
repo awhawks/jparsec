@@ -844,6 +844,7 @@ public class Spectrum30m implements Serializable
      * Only valid lines are drawn into the chart (lines enabled and not deleted in their
      * corresponding internal flags).
      * @param lines The set of Gaussians.
+     * @param xunit The unit to use in the chart for the x axis.
      * @return The chart.
      * @throws JPARSECException If an error occurs.
      */

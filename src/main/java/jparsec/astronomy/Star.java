@@ -241,7 +241,7 @@ public class Star
 	 * Milky Way in Lsun as measured by Portinari 2005). The luminosity ratio is
 	 * computed by means of the absolute magnitude of Milky Way and the other galaxy,
 	 * computed with M = -9.5 log10 (v) + 2, using v = 250 km/s (Turner 2013) for
-	 * the Milky Way.<P>
+	 * the Milky Way.<BR>
 	 * Al alternative approach for this result is given with the method to compute
 	 * the luminosity using the Fabber-Jackson relation, that can also be applied to
 	 * spirals.
@@ -628,10 +628,10 @@ public class Star
 	/**
 	 * Transform from integer to string representation of a variable star
 	 * designation. Method from Guide software.
-	 * <P>
+	 * <BR>
 	 * Variable star designations follow a rather ugly scheme, for historical
 	 * reasons. The first 334 are labeled in the following order:
-	 * <P>
+	 * <BR>
 	 *
 	 * <pre>
 	 *   R  S  T  U  V  W  X  Y  Z RR RS RT RU RV RW RX RY RZ SS ST SU SV SW SX
@@ -650,18 +650,18 @@ public class Star
 	 *  OZ PP PQ PR PS PT PU PV PW PX PY PZ QQ QR QS QT QU QV QW QX QY QZ
 	 * </pre>
 	 *
-	 * <P>
+	 * <BR>
 	 * The first one found in a constellation is 'R (constellation name)'; followed
 	 * by 'S', 'T', ... 'Z'. That allows up to nine variables per constellation; the
 	 * tenth gets labelled 'RR', followed by 'RS', 'RT', 'RU',... 'RZ'; then 'SS',
 	 * 'ST', 'SU'... 'SZ', 'TT'... 'TZ', and so on, up to 'ZZ'. This allows a
 	 * further 9+8+7+6+5+4+3+2+1=45 stars to be labelled. The letters are always 'R'
 	 * through 'Z', and the second letter is never alphabetically before the first.
-	 * <P>
+	 * <BR>
 	 * Following this, we cycle the first letter back to 'A'. This gives 'AA', 'AB',
 	 * 'AC', ... 'AZ'; 'BB', 'BC', 'BD', ... 'BZ'; and, eventually, 'QQ', 'QR', ...
 	 * 'QZ'. For some reason, 'J' is always skipped.
-	 * <P>
+	 * <BR>
 	 * Following this lunacy for 334 variable stars, they are simply labelled
 	 * "V335", "V336", etc.
 	 *
@@ -720,10 +720,10 @@ public class Star
 	/**
 	 * Obtain the variable number from it's string representation.
 	 * Method from Guide software.
-	 * <P>
+	 * <BR>
 	 * Variable star designations follow a rather ugly scheme, for historical
 	 * reasons. The first 334 are labeled in the following order:
-	 * <P>
+	 * <BR>
 	 *
 	 * <pre>
 	 *   R  S  T  U  V  W  X  Y  Z RR RS RT RU RV RW RX RY RZ SS ST SU SV SW SX
@@ -742,18 +742,18 @@ public class Star
 	 *  OZ PP PQ PR PS PT PU PV PW PX PY PZ QQ QR QS QT QU QV QW QX QY QZ
 	 * </pre>
 	 *
-	 * <P>
+	 * <BR>
 	 * The first one found in a constellation is 'R (constellation name)'; followed
 	 * by 'S', 'T', ... 'Z'. That allows up to nine variables per constellation; the
 	 * tenth gets labelled 'RR', followed by 'RS', 'RT', 'RU',... 'RZ'; then 'SS',
 	 * 'ST', 'SU'... 'SZ', 'TT'... 'TZ', and so on, up to 'ZZ'. This allows a
 	 * further 9+8+7+6+5+4+3+2+1=45 stars to be labelled. The letters are always 'R'
 	 * through 'Z', and the second letter is never alphabetically before the first.
-	 * <P>
+	 * <BR>
 	 * Following this, we cycle the first letter back to 'A'. This gives 'AA', 'AB',
 	 * 'AC', ... 'AZ'; 'BB', 'BC', 'BD', ... 'BZ'; and, eventually, 'QQ', 'QR', ...
 	 * 'QZ'. For some reason, 'J' is always skipped.
-	 * <P>
+	 * <BR>
 	 * Following this lunacy for 334 variable stars, they are simply labelled
 	 * "V335", "V336", etc.
 	 *
@@ -831,7 +831,7 @@ public class Star
 	/**
 	 * Based on the cosmology calculator by Edward L. Wright,
 	 * javascript version at http://www.astro.ucla.edu/~wright/CosmoCalc.html.
-	 * For an open universe set WV to 0 and WM < 1. For a flat universe to WV = 1.0 - WM.
+	 * For an open universe set WV to 0 and WM &lt; 1. For a flat universe to WV = 1.0 - WM.
 	 * @param H0 Hubble constant, recommended value is 71 km/(s Mpc).
 	 * @param WM Omega-0 (omega of matter), recommended value is 0.27.
 	 * @param WV Omega-vacuum or lambda (due to consmological constant), recommended value is 0.73.
@@ -971,7 +971,7 @@ public class Star
 	/**
 	 * Based on the cosmology calculator by Edward L. Wright,
 	 * javascript version at http://www.astro.ucla.edu/~wright/CosmoCalc.html.
-	 * For an open universe set WV to 0 and WM < 1. For a flat universe to WV = 1.0 - WM.
+	 * For an open universe set WV to 0 and WM &lt; 1. For a flat universe to WV = 1.0 - WM.
 	 * @param H0 Hubble constant, recommended value is 71 km/(s Mpc).
 	 * @param WM Omega-0 (omega of matter), recommended value is 0.27.
 	 * @param WV Omega-vacuum or lambda (due to consmological constant), recommended value is 0.73.
@@ -1114,7 +1114,7 @@ public class Star
 	 * Returns the B-V color index of a star.
 	 * Based on Flower P.J. Astrophys. J. 469, 355 (1996) and A. Cox (1982).
 	 * @param T Effective temperature in K. NaN is returned in case no
-	 * solution is possible (T > 56000 or T < 3000) and luminosity class is main sequence,
+	 * solution is possible (T &gt; 56000 or T &lt; 3000) and luminosity class is main sequence,
 	 * otherwise an error can be thrown.
 	 * @param lclass The luminosity class for the star.
 	 * @return B-V.
@@ -1139,7 +1139,7 @@ public class Star
 	 * @param BminusV The B-V color index.
 	 * @param lclass The luminosity class for the star.
 	 * @return The effective temperature in K. NaN is returned in case no solution
-	 * is found (B-V < -0.35 or B-V > 1.80) and luminosity class is main sequence,
+	 * is found (B-V &lt; -0.35 or B-V &gt; 1.80) and luminosity class is main sequence,
 	 * otherwise an error can be thrown.
 	 * @throws JPARSECException If an error occurs.
 	 */
@@ -1161,7 +1161,7 @@ public class Star
 	 * and Cox (1982).
 	 * @param T Effective temperature in K.
 	 * @param lclass The luminosity class for the star.
-	 * @return BC. NaN is returned in case no solution is possible (T > 56000 or T < 3000)
+	 * @return BC. NaN is returned in case no solution is possible (T &gt; 56000 or T &lt; 3000)
 	 * and luminosity class is main sequence, otherwise an error can be thrown.
 	 * @throws JPARSECException If an error occurs.
 	 */
@@ -1365,20 +1365,20 @@ public class Star
 	}
 
 	/**
-	 * Returns the Carrington rotation number for the Sun at the specified Julian day.<P>
+	 * Returns the Carrington rotation number for the Sun at the specified Julian day.<BR>
 	 *
 	 * Richard C. Carrington determined the solar rotation rate by watching low-latitude sunspots in the
 	 * 1850s. He defined a fixed solar coordinate system that rotates in a sidereal frame exactly once
 	 * every 25.38 days (Carrington, Observations of the Spots on the Sun, 1863, p 221, 244). The synodic
 	 * rotation rate varies a little during the year because of the eccentricity of the Earth's orbit;
-	 * the mean synodic value is about 27.2753 days.<P>
+	 * the mean synodic value is about 27.2753 days.<BR>
 	 *
 	 * Carrington Rotation 1 began at a seemingly arbitrary instant late on Nov 9, 1853, when Carrington
 	 * began his Greenwich photo-heliographic series. Rotations are counted from that time with the
 	 * central meridian longitude decreasing from 360 to 0 during each rotation as the central meridian
 	 * point rotates under the Earth. Actually the canonical zero meridian used today is the one that
 	 * passed through the ascending node of the solar equator on the ecliptic at Greenwich mean noon on
-	 * January 1, 1854 (Julian Day 2398220.0).<P>
+	 * January 1, 1854 (Julian Day 2398220.0).<BR>
 	 *
 	 * @param jd Julian day in TT.
 	 * @return Carrington rotation number.
@@ -1449,9 +1449,9 @@ public class Star
 	 * cycles for the specified JD. The base Julian day for Ernest W.
 	 * Brown's numbered series of lunations is 1923 Jan 17 02:41 UT.
 	 * This date has been widely quoted as "Jan 16 1923" and indeed it
-	 * was (in EST) at Yale University where Prof. Brown worked.<P>
+	 * was (in EST) at Yale University where Prof. Brown worked.<BR>
 	 *
-	 * A lunation starts with a new Moon.<P>
+	 * A lunation starts with a new Moon.<BR>
 	 *
 	 * The output of this method is the correct lunation number for the
 	 * specified Julian day in TT, in case a new lunation number started

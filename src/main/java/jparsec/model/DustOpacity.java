@@ -131,19 +131,19 @@ public class DustOpacity implements Serializable
 	}
 
 	/**
-	 * ID constant for astronomical silicate grains. Draine & Lee 1984 and Laor &
+	 * ID constant for astronomical silicate grains. Draine &amp; Lee 1984 and Laor &amp;
 	 * Draine 1993.
 	 */
 	public static final int GRAIN_ASTRONOMICAL_SILICATE = 0;
 
 	/**
-	 * ID constant for smoothed UV astronomical silicate grains. Draine & Lee
-	 * 1984, Laor & Draine 1993, and Weingartner & Draine 2000.
+	 * ID constant for smoothed UV astronomical silicate grains. Draine &amp; Lee
+	 * 1984, Laor &amp; Draine 1993, and Weingartner &amp; Draine 2000.
 	 */
 	public static final int GRAIN_SMOOTHED_UV_ASTRONOMICAL_SILICATE = 1;
 
 	/**
-	 * ID constant for graphite grains. Draine & Lee 1984 and Laor & Draine
+	 * ID constant for graphite grains. Draine &amp; Lee 1984 and Laor &amp; Draine
 	 * 1993.
 	 */
 	public static final int GRAIN_GRAPHITE = 2;
@@ -155,17 +155,17 @@ public class DustOpacity implements Serializable
 	public static final int GRAIN_WATER_ICE = 3;
 
 	/**
-	 * ID constant for silicon carbide grains. Laor & Draine 1993.
+	 * ID constant for silicon carbide grains. Laor &amp; Draine 1993.
 	 */
 	public static final int GRAIN_SILICON_CARBIDE = 4;
 
 	/**
-	 * ID constant for PAH neutral grains. Li & Draine 2001.
+	 * ID constant for PAH neutral grains. Li &amp; Draine 2001.
 	 */
 	public static final int GRAIN_PAH_CARBONACEOUS_NEUTRAL = 5;
 
 	/**
-	 * ID constant for PAH ion grains. Li & Draine 2001.
+	 * ID constant for PAH ion grains. Li &amp; Draine 2001.
 	 */
 	public static final int GRAIN_PAH_CARBONACEOUS_ION = 6;
 
@@ -414,7 +414,7 @@ public class DustOpacity implements Serializable
 
 	/**
 	 * Obtains the default density for a given grain. For reference see for
-	 * example Weingartner & Draine 2000.
+	 * example Weingartner &amp; Draine 2000.
 	 *
 	 * @return Density in g/cm^3.
 	 * @throws JPARSECException If the grain does not exist.

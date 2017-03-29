@@ -151,7 +151,7 @@ import jparsec.vo.GeneralQuery.SKYVIEW_SURVEY;
  * are shown only for scales above 10 px/degree. The user may expect the
  * possibility of showing deep sky objects with apparent magnitudes below 7.5
  * for scales below 20 px/degree. This can be achieved setting a
- * given limiting magnitude for objects (>7.5), 10 for instance.
+ * given limiting magnitude for objects (&gt;7.5), 10 for instance.
  * In this case, every object up to 10.0 magnitude (or the selected value) will
  * be visible, but not any other fainter than this. This allow showing more
  * objects without making a mess in the image with too many ones. Of course,
