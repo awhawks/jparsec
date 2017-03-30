@@ -9,13 +9,20 @@ import javax.swing.WindowConstants;
 import jparsec.astronomy.Constellation;
 import jparsec.astronomy.CoordinateSystem;
 import jparsec.astronomy.TelescopeElement;
+import jparsec.ephem.Ephem;
 import jparsec.ephem.EphemerisElement;
+import jparsec.ephem.Functions;
 import jparsec.ephem.Target;
+import jparsec.ephem.planets.EphemElement;
 import jparsec.graph.chartRendering.Graphics;
 import jparsec.graph.chartRendering.PlanetRenderElement;
 import jparsec.graph.chartRendering.Projection;
 import jparsec.graph.chartRendering.RenderPlanet;
 import jparsec.graph.chartRendering.SkyRenderElement;
+import jparsec.graph.chartRendering.TrajectoryElement;
+import jparsec.graph.chartRendering.Graphics.FONT;
+import jparsec.graph.chartRendering.RenderSky.OBJECT;
+import jparsec.graph.chartRendering.SkyRenderElement.COLOR_MODE;
 import jparsec.graph.chartRendering.frame.SkyRendering;
 import jparsec.io.FileFormatElement;
 import jparsec.io.FileIO;
@@ -23,9 +30,12 @@ import jparsec.io.ReadFile;
 import jparsec.math.Constant;
 import jparsec.observer.City;
 import jparsec.observer.CityElement;
+import jparsec.observer.LocationElement;
 import jparsec.observer.ObserverElement;
 import jparsec.time.AstroDate;
 import jparsec.time.TimeElement;
+import jparsec.time.TimeScale;
+import jparsec.time.TimeElement.SCALE;
 import jparsec.util.Translate;
 
 public class SkyChartTest {
@@ -234,6 +244,44 @@ public class SkyChartTest {
 			//sky.poleAngle = (float) Constant.PI_OVER_FOUR;
 */
 
+        /*
+        String path = "/home/alonso/java/clearskyAndroid/release/testNEOs/2012da14.txt";
+    	String data[] = DataSet.arrayListToStringArray(ReadFile.readAnyExternalFile(path));
+		LocationElement[] loc_path = new LocationElement[data.length-1];
+		String[] addLabel = new String[data.length-1];
+		double minJD = -1, maxJD = -1, step = -1, jdLast = -1;
+		EphemElement ephem = new EphemElement();
+		for (int ii=0; ii<data.length-1; ii++) {
+			String val[] = DataSet.toStringArray(data[ii+1], " ", true);
+			double jd = Double.parseDouble(val[0]);
+			if (ii == 2) step = jd - jdLast;
+			if (jd < minJD || minJD == -1) minJD = jd;
+			if (jd > maxJD || maxJD == -1) maxJD = jd;
+			String f1 = val[1]+" "+val[2]+" "+val[3];
+			String f2 = val[4]+" "+val[5]+" "+val[6];
+			addLabel[ii] = " ("+val[7]+"m)";
+			String f3 = val[8];
+			double ra = Functions.parseRightAscension(f1), dec = Functions.parseDeclination(f2), dist = Double.parseDouble(f3);
+			loc_path[ii] = new LocationElement(ra, dec, dist);
+			ephem.setEquatorialLocation(loc_path[ii]);
+			TimeElement time1 = new TimeElement(jd, SCALE.UNIVERSAL_TIME_UT1);
+			ephem = Ephem.topocentricCorrection(time1, observer, eph, ephem);
+			loc_path[ii] = ephem.getEquatorialLocation();
+			jdLast = jd;
+		}	
+		minJD = TimeScale.getJD(new TimeElement(minJD, SCALE.UNIVERSAL_TIME_UT1), observer, eph, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
+		maxJD = TimeScale.getJD(new TimeElement(maxJD, SCALE.UNIVERSAL_TIME_UT1), observer, eph, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
+		TrajectoryElement tr = new TrajectoryElement(OBJECT.NEO, data[0], 
+				minJD, maxJD, (float) step, true, TrajectoryElement.LABELS.DAY_MONTH_ABBREVIATION, 3, false, false);
+		System.out.println("Trajectory start: "+(new AstroDate(minJD)).toString());
+		System.out.println("Trajectory end:   "+(new AstroDate(maxJD)).toString());
+		tr.populateTrajectoryPath(loc_path, addLabel, data[0]);
+		tr.drawPathFont = FONT.DIALOG_ITALIC_13;
+		tr.drawPathColor1 = Color.WHITE.getRGB();
+		tr.drawPathColor2 = Color.RED.getRGB();
+		sky.trajectory = new TrajectoryElement[] {tr};
+		*/
+		
         try {
         String contents[] = DataSet.arrayListToStringArray(ReadFile.readResource(FileIO.DATA_SKY_DIRECTORY + "iram-J2000.sou"));
         sky.addExternalCatalog(Translate.translate("IRAM catalog"), Translate.translate("Radiosource"), Color.RED.getRGB(), contents, FileFormatElement.IRAM_SOU_FORMAT);

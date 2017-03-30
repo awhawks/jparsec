@@ -10532,6 +10532,72 @@ public class RenderSky
 
 					old_pos = pos;
 				}
+				
+				// Mark current position for NEOs
+				if (render.trajectory[index].objectType == OBJECT.NEO && render.trajectory[index].loc_path.length > 2) {
+					if (render.trajectory[index].startTimeJD < projection.jd && render.trajectory[index].endTimeJD > projection.jd) {
+						double x[] = new double [3], y[] = new double[3];
+						int imin = -1;
+						double dmin = -1;
+						for (int i=0; i<render.trajectory[index].loc_path.length; i++) {
+							jd_TDB = render.trajectory[index].startTimeJD + render.trajectory[index].stepTimeJD * i;
+							double d = Math.abs(projection.jd - jd_TDB);
+							if (d < dmin || dmin == -1) {
+								dmin = d;
+								imin = i;
+							}
+						}
+						double lat = -1, lon = -1;
+						for (int comp = 0; comp < 2; comp ++) {
+							x[0] = render.trajectory[index].startTimeJD + render.trajectory[index].stepTimeJD * imin;
+							y[0] = render.trajectory[index].loc_path[imin].getLatitude();
+							if (comp == 0) y[0] = render.trajectory[index].loc_path[imin].getLongitude();
+							if (imin > 0) {
+								x[1] = render.trajectory[index].startTimeJD + render.trajectory[index].stepTimeJD * (imin-1);
+								y[1] = render.trajectory[index].loc_path[imin-1].getLatitude();
+								if (comp == 0) y[1] = render.trajectory[index].loc_path[imin-1].getLongitude();
+								if (imin < render.trajectory[index].loc_path.length-1) {
+									x[2] = render.trajectory[index].startTimeJD + render.trajectory[index].stepTimeJD * (imin+1);
+									y[2] = render.trajectory[index].loc_path[imin+1].getLatitude();
+									if (comp == 0) y[2] = render.trajectory[index].loc_path[imin+1].getLongitude();
+								} else {
+									x[2] = render.trajectory[index].startTimeJD + render.trajectory[index].stepTimeJD * (imin-2);
+									y[2] = render.trajectory[index].loc_path[imin-2].getLatitude();								
+									if (comp == 0) y[2] = render.trajectory[index].loc_path[imin-2].getLongitude();								
+								}
+							} else {
+								x[1] = render.trajectory[index].startTimeJD + render.trajectory[index].stepTimeJD * (imin+1);
+								y[1] = render.trajectory[index].loc_path[imin+1].getLatitude();
+								if (comp == 0) y[1] = render.trajectory[index].loc_path[imin+1].getLongitude();
+								x[2] = render.trajectory[index].startTimeJD + render.trajectory[index].stepTimeJD * (imin+2);
+								y[2] = render.trajectory[index].loc_path[imin+2].getLatitude();
+								if (comp == 0) y[2] = render.trajectory[index].loc_path[imin+2].getLongitude();								
+							}
+							Interpolation interp = new Interpolation(x, y, false);
+							double out = interp.MeeusInterpolation(projection.jd);
+							if (comp == 0) lon = out;
+							if (comp == 1) lat = out;
+						}
+						LocationElement currentPos = new LocationElement(lon, lat, 1);
+						pos = projection.projectPosition(currentPos, 0, false);
+						if (pos != null && this.isInTheScreen((int)pos[0], (int)pos[1])) {
+							pos[0] = (int) pos[0];
+							pos[1] = (int) pos[1];
+							g.setColor(render.trajectory[index].drawPathColor1, true);
+							g.setStroke(render.trajectory[index].stroke);
+							int r = 5;
+							if (render.anaglyphMode == ANAGLYPH_COLOR_MODE.NO_ANAGLYPH) {
+								g.drawLine(pos[0]-r, pos[1]-r, pos[0]+r, pos[1]+r, true);
+								g.drawLine(pos[0]+r, pos[1]-r, pos[0]-r, pos[1]+r, true);
+								g.drawOval(pos[0]-r, pos[1]-r, 2*r+1, 2*r+1, true);
+							} else {
+								g.drawLine(pos[0]-r, pos[1]-r, pos[0]+r, pos[1]+r, dist, dist);
+								g.drawLine(pos[0]+r, pos[1]-r, pos[0]-r, pos[1]+r, dist, dist);
+								g.drawOval(pos[0]-r, pos[1]-r, 2*r+1, 2*r+1, dist);
+							}
+						}
+					}
+				}
 			}
 		}
 	}
