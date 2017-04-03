@@ -103,7 +103,7 @@ Testing ... ephemerides for natural satellites (tests of mutual occultations/ecl
 (Less accurate) Mutual eclipse not reported by MoonEphem class.
    Test case #68: 4; 1997, 5, 30, 3, 5, 15, Paris, Ganymede, Io, Total occ; -
    Test case #69: 4; 1997, 5, 31, 0, 30, 6, Stuttgart, Ganymede, Io, Partial occ; -
-07-ene-2016 16:37:47 (main) jparsec.observer.City.findCity
+01-abr-2017 11:25:01 (main) jparsec.observer.City.findCity
 ADVERTENCIA: Found 2 locations named 'Tenerife'. Selecting the one with index number 0.
    Test case #70: 4; 1997, 6, 7, 4, 32, 29, Tenerife, Ganymede, Io, Partial occ; -
    Test case #71: 4; 1997, 6, 18, 1, 4, 39, Lisboa, Europa, Io, Annular ecl; -
@@ -181,7 +181,7 @@ Testing ... geodetic and geocentric coordinates and ellipsoids
    Test case #128: 9; 0, 45.1921, 1000, geodetic, WGS84; 0.0, 44.9997, -
    Test case #129: 9; 0, 90, 1000, geocentric, WGS84; 0.0, 90.0, -
 Testing ... detailed ephemerides for different bodies, theories, and coordinate types
-07-ene-2016 16:37:51 (main) jparsec.observer.EarthOrientationParameters.obtainEOP
+01-abr-2017 11:25:04 (main) jparsec.observer.EarthOrientationParameters.obtainEOP
 ADVERTENCIA: UT1-UTC not available, using UT1 = UTC and ignoring pole movement.
    Test case #130: 10; 1950, 1, 1, Moon, 0.5, 1.0E-7; 03h 53m 47.38s,  24° 09' 05.0", 03h 56m 46.04s,  24° 17' 33.3", 03h 53m 47.79s,  24° 08' 58.8", 356.94706 , -4.96237 , 35.52562, -1.57515 , 0.985328111433 , 0.00267134176532 , 141.2508 , 38.6518 , Tau
 
@@ -420,178 +420,178 @@ Testing ... general astronomical events
    Test case #225: 14; 1992, 4, 12, librations; l = -1.23, b = 4.20, p = 15.08
 Testing ... double and variable stars
    Test case #226: 15; 2011, 7, 14, 14, 0, 0, variable, AN And; 0.81, 15-jul-2011 04:21
-07-ene-2016 16:42:00 (main) jparsec.io.ReadFile.parseDoubleStar
+01-abr-2017 11:28:25 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: ".". Line to parse was: 
 001125.97+584929.1 00114+5850 SKW   1Aa,Ab   .     .      .       15.    19.      462.7     y    .         0.14   a   .        0.3       .      31.         .          .           .       0.90      .       344.        .          2003 7 n SKW2005                    
-07-ene-2016 16:42:00 (main) jparsec.io.ReadFile.parseDoubleStar
+01-abr-2017 11:28:25 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: ".". Line to parse was: 
 001125.97+584929.1 00114+5850 SKW   1Aa,Ab   .     .      .       15.    19.       58.8     y    .         0.05   a   .        0.4       .      33.         .          .           .       0.90      .        14.        .          2003 7 n SKW2005                    
-07-ene-2016 16:42:00 (main) jparsec.io.ReadFile.parseDoubleStar
+01-abr-2017 11:28:25 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: ".". Line to parse was: 
 001125.97+584929.1 00114+5850 SKW   1Aa,Ab   .     .      .       15.    19.      117.9     y    .         0.10   a   .       70.        .      48.         .          .           .       0.31      .       300.        .          2003 7 n SKW2005                    
-07-ene-2016 16:42:00 (main) jparsec.io.ReadFile.parseDoubleStar
+01-abr-2017 11:28:25 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: ".". Line to parse was: 
 001125.97+584929.1 00114+5850 SKW   1Aa,Ab   .     .      .       15.    19.      206.3     y    .         0.17   a   .       70.        .     243.         .          .           .       0.69      .        63.        .          2003 7 n SKW2005                    
-07-ene-2016 16:42:00 (main) jparsec.io.ReadFile.parseDoubleStar
+01-abr-2017 11:28:25 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: ".". Line to parse was: 
 004006.26+501415.5 00401+5014 V523 Cas       .     .      .       10.87    .       86.      y   5.          .     m   .       83.8       .        .         .          .           .       0.08     0.07        .        .               7 n Pbl2006                    
-07-ene-2016 16:42:00 (main) jparsec.io.ReadFile.parseDoubleStar
+01-abr-2017 11:28:25 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: ".". Line to parse was: 
 005642.52+604300.2 00567+6043 BU 1028A         782   5394   4427   2.47    .       60.      y    .       150.     m   .         .        .        .         .          .           .        .        .          .        .               7   Gon2000                    
-07-ene-2016 16:42:00 (main) jparsec.io.ReadFile.parseDoubleStar
+01-abr-2017 11:28:25 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: ".". Line to parse was: 
 014558.62+800455.3 01460+8005 GW Cep         .     .      .       11.13    .       13.5     y   5.          .     m   .       84.0       .        .         .          .           .       0.58     0.28        .        .               7 n Pbl2006                    
-07-ene-2016 16:42:00 (main) jparsec.io.ReadFile.parseDoubleStar
+01-abr-2017 11:28:25 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: ".". Line to parse was: 
 020903.42+404739.1 02091+4048 BX And         .      13078  10027   8.98    .       62.      y   9.          .     m   .       74.5       .        .         .          .           .       0.3      0.3         .        .               7 n Pbl2006                    
-07-ene-2016 16:42:00 (main) jparsec.io.ReadFile.parseDoubleStar
+01-abr-2017 11:28:25 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: ".". Line to parse was: 
 021222.28+301811.0 02124+3018 TZ Tri          1697  13480  10280   4.95v   .         .           .         0.0021 a  0.0009   58.       4.        .         .          .           .        .        .          .        .               7 n Krs1998                    
-07-ene-2016 16:42:00 (main) jparsec.io.ReadFile.parseDoubleStar
+01-abr-2017 11:28:25 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: ".". Line to parse was: 
 021542.83+250235.7 02157+2503 COU  79A       .      13872  10535   6.40    .      925.      d  90.          .         .       71.      45.     211.       55.     54092.      m  62.       0.        .         0.        .     2000 2008 9 n Mut2010e                   
-07-ene-2016 16:42:00 (main) jparsec.io.ReadFile.parseDoubleStar
+01-abr-2017 11:28:25 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: ".". Line to parse was: 
 021647.37+434622.7 02168+4346 NLTT 7491      .      13931  10626   7.60    .       11.5     y   1.1      116.44   m  6.56       .        .        .         .     14494.      d 904.       0.02     0.05     290.      78.               7   Hds2010                    
-07-ene-2016 16:42:00 (main) jparsec.io.ReadFile.parseDoubleStar
+01-abr-2017 11:28:25 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: ".". Line to parse was: 
 022903.99+672408.6 02291+6724 STF 262AB,C     1860  15089  11569   4.46   9.05       .           .          .         .       87.6       .     109.82       .      2250.      y    .      48.1       .         8.82      .     1900 1957 7 n Hop1960b                   
-07-ene-2016 16:42:00 (main) jparsec.io.ReadFile.parseDoubleStar
+01-abr-2017 11:28:25 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: ".". Line to parse was: 
 025538.89+265225.3 02556+2652 STF 326AB       2218  18143  13642   7.68  10.02       .           .          .         .       81.50      .      34.55       .      2248.0     y    .       1.0       .       308.20      .     1900 1955 7 n Hop1967                    
-07-ene-2016 16:42:00 (main) jparsec.io.ReadFile.parseDoubleStar
+01-abr-2017 11:28:25 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: ".". Line to parse was: 
 030952.74-065333.5 03099-0654 UX Eri         .     .       14699  10.64    .       42.8     y  13.       110.     m   .       79.0       .        .         .          .           .       0.6       .          .        .               7 n Pbl2006                    
-07-ene-2016 16:42:00 (main) jparsec.io.ReadFile.parseDoubleStar
+01-abr-2017 11:28:25 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: ".". Line to parse was: 
 031246.32-011145.4 03128-0112 HJ  663B        2406  19994B 14954B 11.0     .      740.      d    .         0.064  a   .       95.        .        .         .          .           .        .        .          .        .     2000 2008 7 n Sef2008b                   
-07-ene-2016 16:42:00 (main) jparsec.io.ReadFile.parseDoubleStar
+01-abr-2017 11:28:25 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: ".". Line to parse was: 
 034813.42+221850.9 03482+2219 EQ Tau         .     .      .       11.20    .       50.2     y  18.          .     m   .       86.6       .        .         .          .           .       0.37     0.12        .        .               7 n Pbl2006                    
-07-ene-2016 16:42:00 (main) jparsec.io.ReadFile.parseDoubleStar
+01-abr-2017 11:28:25 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: ".". Line to parse was: 
 045205.73+062835.6 04521+0929 GJ 179         .     .       22627  12.02    .        6.26    y   0.16     196.13   m  3.26       .        .        .         .     15140.      d 104.       0.21     0.08     153.      24.               7   Hds2010                    
-07-ene-2016 16:42:00 (main) jparsec.io.ReadFile.parseDoubleStar
+01-abr-2017 11:28:25 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: ".". Line to parse was: 
 051114.50-083324.4 05112-0833 RUC  18AB      .     .       24156   9.74  12.41     52.      y   3.          .     m   .       87.5       .        .         .          .           .       0.77     0.05        .        .               7 n Pbl2006                    
-07-ene-2016 16:42:00 (main) jparsec.io.ReadFile.parseDoubleStar
+01-abr-2017 11:28:25 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: ".". Line to parse was: 
 051740.98+072112.0 05177+0721 BD+07  855     .      34445  24681   7.33    .        2.87    y   0.03      44.55   m  0.43       .        .        .         .     13781.      d  48.       0.27     0.07     104.      19.               7   Hds2010                    
-07-ene-2016 16:42:00 (main) jparsec.io.ReadFile.parseDoubleStar
+01-abr-2017 11:28:25 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: ".". Line to parse was: 
 053319.07+444902.2 05333+4449 GJ 1081        .     .      .       12.2     .       11.4     y    .         0.041  a   .       99.        .      45.         .      1979.4     y    .        .        .          .        .               9   USN1988a                   
-07-ene-2016 16:42:00 (main) jparsec.io.ReadFile.parseDoubleStar
+01-abr-2017 11:28:25 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: ".". Line to parse was: 
 073437.45+315210.2 07346+3153 YY Gem          6175  60179C.        9.83    .       19.542763h   0.000007   0.00135a  0.00005  86.5      0.05      .         .     50556.5614  m   0.0004   0.        .          .        .               8 n Sgr2000                    
-07-ene-2016 16:42:00 (main) jparsec.io.ReadFile.parseDoubleStar
+01-abr-2017 11:28:25 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: ".". Line to parse was: 
 083137.58+192339.5 08317+1924 BEU  12Aa,Ab   .     .       41824  11.89    .       66.515280h   0.000029   0.0028 a  0.0003   86.7      0.4       .         .     50579.1907  m   0.0002   0.        .          .        .               8 n Sgr2000                    
-07-ene-2016 16:42:00 (main) jparsec.io.ReadFile.parseDoubleStar
+01-abr-2017 11:28:25 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: ".". Line to parse was: 
 094648.28+760246.9 09468+7603 Ross 434       .     .       47981  10.63    .        1.26    y    .         0.038  a   .       94.        .     135.         .          .           .        .        .          .        .               7 n Ald1951                    
-07-ene-2016 16:42:00 (main) jparsec.io.ReadFile.parseDoubleStar
+01-abr-2017 11:28:25 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: ".". Line to parse was: 
 100140.39+172433.2 10017+1725 RUC   7        .     .       49136   9.45    .       19.59    y   5.       140.     m   .       65.8       .        .         .          .           .       0.09     0.03        .        .               7 n Pbl2006                    
-07-ene-2016 16:42:00 (main) jparsec.io.ReadFile.parseDoubleStar
+01-abr-2017 11:28:25 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: ".". Line to parse was: 
 105505.83+471428.9 10551+4714 G 146-72       .     .      .       12.7     .        6.8     y    .         0.020  a   .       55.        .      76.         .      1979.8     y    .        .        .          .        .               9   USN1988a                   
-07-ene-2016 16:42:00 (main) jparsec.io.ReadFile.parseDoubleStar
+01-abr-2017 11:28:25 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: ".". Line to parse was: 
 110533.98-110519.4 11056-1105 TOK 221        .      96220  54214   6.10  11.       30.      y    .       200.     m   .         .        .        .         .          .           .        .        .          .        .               7   Gon2000                    
-07-ene-2016 16:42:00 (main) jparsec.io.ReadFile.parseDoubleStar
+01-abr-2017 11:28:25 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: ".". Line to parse was: 
 111105.23+302645.4 11111+3027 STT 231AB       8083  97101  54646   8.86   9.98       .           .          .         .       91.50      .      83.10  *    .      2050.      y    .        .        .       190.4       .     1900 1960 7 n Hop1960b                   
-07-ene-2016 16:42:00 (main) jparsec.io.ReadFile.parseDoubleStar
+01-abr-2017 11:28:25 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: ".". Line to parse was: 
 113004.31+295752.5 11301+2958 AW UMa         .      99946  56109   6.92    .       16.8     y   5.       120.     m   .       78.3       .        .         .          .           .       0.46     0.22        .        .               7 n Pbl2006                    
-07-ene-2016 16:42:00 (main) jparsec.io.ReadFile.parseDoubleStar
+01-abr-2017 11:28:25 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: ".". Line to parse was: 
 121420.99+114909.3 12143+1149 AH Vir         .     106400  59683   9.33    .       41.1     y  15.       180.     m   .       86.5       .        .         .          .           .       0.89     0.05        .        .               7 n Pbl2006                    
-07-ene-2016 16:42:00 (main) jparsec.io.ReadFile.parseDoubleStar
+01-abr-2017 11:28:25 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: ".". Line to parse was: 
 122635.94-630556.6 12266-6306 DUN 252AB      .     108248  60718   1.25   1.55       .           .          .         .      100.51      .     102.70       .      2106.      y    .       1.215     .       358.79      .          1955 7 n Hop1960b                   
-07-ene-2016 16:42:00 (main) jparsec.io.ReadFile.parseDoubleStar
+01-abr-2017 11:28:25 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: ".". Line to parse was: 
 142648.28-051040.0 14268-0511 LDS4465A       .     126614  70623   8.79    .        3.41    y   0.05      32.36   m  0.28       .        .        .         .     13808.      d  52.       0.41     0.10     243.      19.               7   Hds2010                    
-07-ene-2016 16:42:00 (main) jparsec.io.ReadFile.parseDoubleStar
+01-abr-2017 11:28:25 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: ".". Line to parse was: 
 143503.75+090649.3 14350+0907 RUC   8        .     128141  71319   8.99    .       21.3     y    .       300.     m   .       56.6       .        .         .          .           .       0.96     0.07        .        .               7 n Pbl2006                    
-07-ene-2016 16:42:00 (main) jparsec.io.ReadFile.parseDoubleStar
+01-abr-2017 11:28:25 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: ".". Line to parse was: 
 145821.57+440235.9 14584-4443 STF1896B       .     132563B 73261B  9.68    .     1544.      d  34.        27.3    m  2.8        .        .        .         .      2593.      m 148.       0.22     0.09     158.      35.          2010 9 n Des2011                    
-07-ene-2016 16:42:00 (main) jparsec.io.ReadFile.parseDoubleStar
+01-abr-2017 11:28:25 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: ".". Line to parse was: 
 150046.94+350754.7 15008+3508 TY Boo         .     .      .       11.40    .       55.8     y  27.          .     m   .       77.5       .        .         .          .           .       0.26     0.07        .        .               7 n Pbl2006                    
-07-ene-2016 16:42:00 (main) jparsec.io.ReadFile.parseDoubleStar
+01-abr-2017 11:28:25 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: ".". Line to parse was: 
 150809.13+395812.8 15082+3958 RUC  23        .     .       74061   9.01k 14.98k    34.0     y   5.          .     m   .         .        .        .         .          .           .       0.58     0.04        .        .               7 n Pbl2006                    
-07-ene-2016 16:42:00 (main) jparsec.io.ReadFile.parseDoubleStar
+01-abr-2017 11:28:25 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: "0.567 7". Line to parse was: 
 153117.22-334911.2 15313-3349 B  2036AB      .     138138  76001   7.7    7.9     227.78    y    .         0.444  a   .       90.9       .     181.2        .      1985.94    y    .       0.567 7   .        67.0       .     2000 2011 4   Hrt2011d wds15313-3349k.png
-07-ene-2016 16:42:00 (main) jparsec.io.ReadFile.parseDoubleStar
+01-abr-2017 11:28:25 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: ".". Line to parse was: 
 165529.24-082003.1 16555-0820 Gl 644Ba,Bb    .     152751B 82817B  9.81    .        2.965509d   0.000006    .     a   .      164.18     0.08      .         .     50919.48    m   0.03     0.0209   0.0008   150.       3.               8 n Sgr2000                    
-07-ene-2016 16:42:00 (main) jparsec.io.ReadFile.parseDoubleStar
+01-abr-2017 11:28:25 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: ".". Line to parse was: 
 165547.87+351057.5 16557+3511 RUC   9        .     .      .       10.10    .       10.9     y   6.          .     m   .       57.0       .        .         .          .           .       0.26     0.32        .        .               7 n Pbl2006                    
-07-ene-2016 16:42:00 (main) jparsec.io.ReadFile.parseDoubleStar
+01-abr-2017 11:28:25 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: ".". Line to parse was: 
 170721.73-340514.5 17074-3405 V455 Sco       .     .      .       13.73    .     1397.8     d   5.9        0.24   m  0.01     94.3      1.4    169.49      0.75   52991.0     d   9.4      0.0       .          .        .          2007 7 n Fek2008                    
-07-ene-2016 16:42:00 (main) jparsec.io.ReadFile.parseDoubleStar
+01-abr-2017 11:28:25 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: ".". Line to parse was: 
 171357.81+162101.0 17140+1621 HO  557A       .     155937  84293   8.0   12.0      57.8     y   8.          .     m   .       80.8       .        .         .          .           .       0.16     0.06        .        .               7 n Pbl2006                    
-07-ene-2016 16:42:00 (main) jparsec.io.ReadFile.parseDoubleStar
+01-abr-2017 11:28:25 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: ".". Line to parse was: 
 171744.18+114010.8 17177+1140 G 139-29       .     .      .       15.1     .        9.5     y    .         0.056  a   .      115.        .     178.         .      1970.6     y    .        .        .          .        .               9   USN1988a                   
-07-ene-2016 16:42:00 (main) jparsec.io.ReadFile.parseDoubleStar
+01-abr-2017 11:28:25 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: ".". Line to parse was: 
 173752.78+183521.5 17379+1836 Ci 18,2347     .     .       86287   9.62    .       24.      y    .         0.04   a   .         .        .        .         .      1956.0     y    .       0.20      .          .        .          1963 7 n Bie1964                    
-07-ene-2016 16:42:00 (main) jparsec.io.ReadFile.parseDoubleStar
+01-abr-2017 11:28:25 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: ".". Line to parse was: 
 175652.38+045914.7 17568+0459 V566 Oph       .     163611  87860   7.60    .       23.1     y   5.       140.     m   .       79.8       .        .         .          .           .       0.6      0.2         .        .               7 n Pbl2006                    
-07-ene-2016 16:42:00 (main) jparsec.io.ReadFile.parseDoubleStar
+01-abr-2017 11:28:25 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: ".". Line to parse was: 
 180009.07+800013.7 18002+8000 STF2308AB      11061 166866  88136   5.70   6.00  25097.69    c    .          .         .      117.        .     209.         .      4058.      y    .       0.98      .       142.        .               7 n PkO2012                    
-07-ene-2016 16:42:00 (main) jparsec.io.ReadFile.parseDoubleStar
+01-abr-2017 11:28:25 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: ".". Line to parse was: 
 180009.07+800013.7 18002+8000 STF2308AB      11061 166866  88136   5.70   6.00   1845.44    c    .          .         .      125.        .     209.         .      3802.      y    .       0.94      .       152.        .               7 n PkO2012                    
-07-ene-2016 16:42:00 (main) jparsec.io.ReadFile.parseDoubleStar
+01-abr-2017 11:28:25 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: ".". Line to parse was: 
 180009.07+800013.7 18002+8000 STF2308AB      11061 166866  88136   5.70   6.00    514.60    c    .          .         .      179.        .     115.         .      3299.      y    .       0.95      .       262.        .               7 n PkO2012                    
-07-ene-2016 16:42:00 (main) jparsec.io.ReadFile.parseDoubleStar
+01-abr-2017 11:28:25 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: ".". Line to parse was: 
 180009.07+800013.7 18002+8000 STF2308AB      11061 166866  88136   5.70   6.00   1845.44    c    .          .         .      123.        .      31.         .      3772.      y    .       0.94      .       328.        .               7 n PkO2012                    
-07-ene-2016 16:42:00 (main) jparsec.io.ReadFile.parseDoubleStar
+01-abr-2017 11:28:25 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: ".". Line to parse was: 
 180009.07+800013.7 18002+8000 STF2308AB      11061 166866  88136   5.70   6.00  25097.69    c    .          .         .      116.        .      31.         .      4045.      y    .       0.98      .       318.        .               7 n PkO2012                    
-07-ene-2016 16:42:00 (main) jparsec.io.ReadFile.parseDoubleStar
+01-abr-2017 11:28:25 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: ".". Line to parse was: 
 203951.88+111458.8 20399+1115 CVN  17Aa1,2   .     196885 101966   5.5     .        3.63    y   0.01       0.065  a  0.003      .        .        .         .      2002.85    y   0.02     0.48     0.02      93.2      3.0    2000 2009 7 n Cvn2011                    
-07-ene-2016 16:42:00 (main) jparsec.io.ReadFile.parseDoubleStar
+01-abr-2017 11:28:25 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: ".". Line to parse was: 
 205904.54+041737.8 20591+0418 STF2737AB,C    14499 199766 103569   5.30   7.05       .           .          .         .      110.9       .     253.9        .      1900.      y    .       6.80      .       180.0       .     1950 1960 7 n Zel1965                    
-07-ene-2016 16:42:00 (main) jparsec.io.ReadFile.parseDoubleStar
+01-abr-2017 11:28:25 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: ".". Line to parse was: 
 220410.52-564657.8 22034-5647 VLK   1Ba,Bb   .     .      .       12.29k 13.23k    11.2     y   0.5        0.67   a  0.03    282.8      0.7       .         .      2010.1     y   0.6      0.53     0.03        .        .          2008 7 n Mcg2009                    
-07-ene-2016 16:42:00 (main) jparsec.io.ReadFile.parseDoubleStar
+01-abr-2017 11:28:25 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: ".". Line to parse was: 
 222256.88+161927.8 22229+1619 BB Peg         .     .      110493  10.97    .       20.4     y   4.        30.     m   .       79.9       .        .         .          .           .       0.32     0.21        .        .               7 n Pbl2006                    
-07-ene-2016 16:42:00 (main) jparsec.io.ReadFile.parseDoubleStar
+01-abr-2017 11:28:25 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: ".". Line to parse was: 
 223832.26-151818.8 22385-1519 Gl 866Aa,Ab    .     .      .       12.2     .        3.786516d   0.000005    .     a   .      116.5      0.5       .         .     50799.8080  m   0.       0.        .          .        .               8 n Sgr2000                    
-07-ene-2016 16:42:00 (main) jparsec.io.ReadFile.parseDoubleStar
+01-abr-2017 11:28:25 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: ".". Line to parse was: 
 225341.59+375618.5 22536+3756 RUC  15        .     216598 113052   6.81k  9.4 k    93.1     y    .       400.     m   .       80.2       .        .         .          .           .       0.71     0.01        .        .               7 n Pbl2006                    
-07-ene-2016 16:42:00 (main) jparsec.io.ReadFile.parseDoubleStar
+01-abr-2017 11:28:25 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: ".". Line to parse was: 
 225341.59+375618.5 22536+3756 RUC  15        .     216598 113052   6.81k  9.4 k    28.2     y   1.       160.     m   .       80.2       .        .         .          .           .       0.51     0.05        .        .               7 n Pbl2006                    
-07-ene-2016 16:42:00 (main) jparsec.io.ReadFile.parseDoubleStar
+01-abr-2017 11:28:25 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: ".". Line to parse was: 
 231132.01+365335.6 23116+3654 RUC  26        .     .      114508   7.67l 14.26k    59.1     y  10.       160.     m   .       86.8       .        .         .          .           .       0.12     0.03        .        .               7 n Pbl2006                    
-07-ene-2016 16:42:00 (main) jparsec.io.ReadFile.parseDoubleStar
+01-abr-2017 11:28:25 (main) jparsec.io.ReadFile.parseDoubleStar
 ADVERTENCIA: Could not parse this double star, returning null. Details: For input string: ".". Line to parse was: 
 233920.98+773755.1 23393+7738 gam CepAa,Ab   .     222404 116727   1.04    .  k   902.9     d   3.5      332.4    m  7.7        .        .        .         .     53147.      d  71.       0.115    0.058     63.      27.          2006 7   Nhr2007                    
-   Test case #227: 15; 2011, 7, 14, 14, 0, 0, double, STF  60AB; 13.2, -36.3
+   Test case #227: 15; 2011, 7, 14, 14, 0, 0, double, STF  60AB; 13.2, -37.2
 Testing ... eclipses
    Test case #228: 16; 2005, 10, 1, solar, UT1; 03-oct-2005 07:40:13 (partial), 03-oct-2005 08:55:55 (annular), 03-oct-2005 08:58:00 (Eclipse maximum), within 1s with Spenak's results
    Test case #229: 16; -1000, 3, 10, lunar, TDB; 14-mar-1000 02:55:24 B.C. (penumbral), 14-mar-1000 03:55:28 B.C. (full penumbral), 14-mar-1000 03:54:53 B.C. (partial), 14-mar-1000 04:58:40 B.C. (total), 14-mar-1000 05:40:16 B.C. (Eclipse maximum)
@@ -731,4 +731,4 @@ SUMMARY
 
 Passed tests: 266
 Failures: 36
-Launch time: 1064.132s
+Launch time: 884.126s
