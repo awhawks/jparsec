@@ -10252,7 +10252,7 @@ public class RenderSky
 
 		int col;
 
-		double cte = pixels_per_degree_50;
+		double cte = pixels_per_degree_50*0.5;
 		float dist = getDist(0);
 		double steps = 1.0;
 		if (render.drawClever && field > 5 * this.trajectoryField) steps = 2;
@@ -10530,7 +10530,8 @@ public class RenderSky
 						point_size = 1;
 					}
 
-					old_pos = pos;
+					old_pos = null;
+					if (pos != null) old_pos = pos.clone();
 				}
 				
 				// Mark current position for NEOs
@@ -10656,8 +10657,11 @@ public class RenderSky
 		if (sunSpot != null) {
 			g.setColor(render.drawSunSpotsColor, true);
 			int c = render.drawSunSpotsColor;
-			if (c == render.background)
-				c = g.invertColor(render.background);
+			if (c == render.background) {
+				g.setColor(g.invertColor(render.background), g.getAlpha(render.background));
+				c = g.getColor();
+				g.setColor(render.drawSunSpotsColor, true);
+			}
 
 			int nlines = sunSpot.size();
 			for (int i = 0; i < nlines; i++)
