@@ -2427,7 +2427,7 @@ public class AWTGraphics implements Graphics {
 		Object obj = DataBase.getData(url, "AWTGraphics", true);
 		if (obj != null) return obj;
 
-		if (url.startsWith("file:") || url.startsWith("http:")) {
+		if (url.startsWith("file:") || url.startsWith("http:")  || url.startsWith("https:")) {
 			try {
 				BufferedImage img = GeneralQuery.queryImage(url);
 				return img;

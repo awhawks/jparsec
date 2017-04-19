@@ -115,19 +115,12 @@ public class Functions
 		if (r >= Constant.TWO_PI && r < Constant.FOUR_PI) return r - Constant.TWO_PI;
 		if (r >= 0 && r < Constant.TWO_PI) return r;
 
-		// This seems faster than Math.floor ...
-		double r2 = r * Constant.TWO_PI_INVERSE;
-		if (r > 0) {
-			r -= Constant.TWO_PI * (int) r2;
-		} else {
-			if (r2 == (int) r2) {
-				return 0;
-			} else {
-				r += Constant.TWO_PI * ((int) Math.abs(r2) + 1);
-			}
-		}
+		double d = r - Constant.TWO_PI * Math.floor(r / Constant.TWO_PI);
+		// Can't use Math.IEEEremainder here because remainder differs
+		// from modulus for negative numbers.
+		if (d < 0.)	d += Constant.TWO_PI;
 
-		return r;
+		return d;
 	}
 
 	/**

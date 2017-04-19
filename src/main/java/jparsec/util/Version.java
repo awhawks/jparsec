@@ -329,7 +329,9 @@ public class Version
 						"Fixed 60 textures for deep sky objects.\n"+
 						"Trajectories for bodies can now include custom labels in each point, and the trajectory can be set from an array of external positions for objects not supported (transient NEOs).\n"+
 						"When rendering the Earth map with artificial satellites and their elements cannot be updated the satellites do not appear, but the trajectories computed with outdated elements did.\n"+
-						"Fixed some problems with the position of subscripts and superscripts in TextLabel class.\n"
+						"Fixed some problems with the position of subscripts and superscripts in TextLabel class.\n",
+				"      1.114:  (May XX, 2017):\n"+
+						".\n"
 
 				+FileIO.getLineSeparator(),
 		};
@@ -338,7 +340,7 @@ public class Version
 		// Dependencies for JPARSEC programs and models
 		String library[] = new String[] {
 			// Dependency name                             Version
-			"jparsec.jar                                   1.113",
+			"jparsec.jar                                   1.114",
 
 			"sky.jar                                       1.39",
 			"orbital_elements.jar                          1.25",

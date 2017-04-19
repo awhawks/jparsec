@@ -1813,7 +1813,7 @@ public class RenderSky
 
 	private void renderDisk(double size) throws Exception {
 		rp.render = render.planetRender;
-		render.planetRender.foreground = render.getColorMode() == COLOR_MODE.NIGHT_MODE ? 255<<24 | 255<<16 | 0<<8 | 0 : 255<<24 | 255<<16 | 255<<8 | 255;
+		render.planetRender.foreground = render.getColorMode() == COLOR_MODE.NIGHT_MODE ? 255<<24 | 255<<16 | 0<<8 | 0 : g.invertColor(this.render.background);
 		render.planetRender.width = render.width;
 		render.planetRender.height = render.height;
 		render.planetRender.northUp = false;
@@ -3079,7 +3079,7 @@ public class RenderSky
 							if (projection.obs.getMotherBody() != TARGET.EARTH && projection.obs.getMotherBody() != TARGET.NOT_A_PLANET) {
 								loc = projection.getPositionFromBody(loc, false);
 							}
-							LocationElement loc2 = projection.getApparentLocationInSelectedCoordinateSystem(loc, true, true, 0);
+							LocationElement loc2 = projection.getApparentLocationInSelectedCoordinateSystem(loc, true, false, (float)(Constant.DEG_TO_RAD*0.15));
 							if (fillPoints) {
 								if (loc2 != null) milkyWay.add(new float[] {(float)loc2.getLongitude(), (float)loc2.getLatitude()}); //loc2);
 								continue;
@@ -3088,7 +3088,7 @@ public class RenderSky
 							if (loc2 != null && !render.drawSkyBelowHorizon && projection.obs.getMotherBody() != TARGET.NOT_A_PLANET
 									&& render.coordinateSystem != COORDINATE_SYSTEM.HORIZONTAL) {
 								LocationElement ll = projection.getApparentLocationInSelectedCoordinateSystem(loc, false, false, COORDINATE_SYSTEM.HORIZONTAL, 0);
-								if (ll.getLatitude() < 0) loc2 = null;
+								if (ll.getLatitude() < -projection.getHorizonElevation()-Constant.DEG_TO_RAD*0.15) loc2 = null;
 							}
 
 							if (loc2 == null && old_loc != null) {
@@ -3185,7 +3185,7 @@ public class RenderSky
 		//double he = projection.getHorizonElevation();
 		//projection.setHorizonElevation(5*Constant.DEG_TO_RAD);
 
-		//projection.disableCorrectionOfLocalHorizon();
+		projection.disableCorrectionOfLocalHorizon();
 		if (fastMode) {
 			x = new int[4000];
 			y = new int[4000];
@@ -4959,8 +4959,10 @@ public class RenderSky
 					SKYVIEW_SURVEY survey = SKYVIEW_SURVEY.DSSOLD;
 					String query = GeneralQuery.getQueryToSkyView(source, survey, fieldDSS, width, invertLevels, grid, scoord, sproj, slut, sscale, catalog, contours);
 					img = g.getImage(query);
-					String p = FileIO.getTemporalDirectory() + "sdss_"+(float)loc.getLongitude()+"_"+(float)loc.getLatitude()+"_"+(float)fieldDSS+".jpg";
-					WriteFile.writeImage(p, img);
+					if (img != null) {
+						String p = FileIO.getTemporalDirectory() + "sdss_"+(float)loc.getLongitude()+"_"+(float)loc.getLatitude()+"_"+(float)fieldDSS+".jpg";
+						WriteFile.writeImage(p, img);
+					}
 				}
 				overlay(new String[] {l}, 0, false, null, img, baryc,
 						null, null, 1, sph);
@@ -5675,7 +5677,7 @@ public class RenderSky
 				if (projection.obs.getMotherBody() != TARGET.EARTH && projection.obs.getMotherBody() != TARGET.NOT_A_PLANET) {
 					loc = projection.getPositionFromBody(loc, false);
 				}
-				loc = projection.getApparentLocationInSelectedCoordinateSystem(loc, true, false, 0);
+				loc = projection.getApparentLocationInSelectedCoordinateSystem(loc, true, false, (float)(Constant.DEG_TO_RAD*1));
 				if (loc != null || old_loc != null) {
 					if (loc != null) {
 						if (index % n == 0) {
@@ -5702,6 +5704,7 @@ public class RenderSky
 			float[] loc;
 			int steppix = (int) (20 + eclStep * pixels_per_degree);
 			int rs = eclipticLine.size();
+			projection.disableCorrectionOfLocalHorizon();
 			for (int i=0; i<rs; i++)
 			{
 				loc = (float[]) eclipticLine.get(i);
@@ -5777,6 +5780,7 @@ public class RenderSky
 					old_pos = null;
 				}
 			}
+			projection.enableCorrectionOfLocalHorizon();
 		}
 		if (!fast) {
 			if (render.anaglyphMode == ANAGLYPH_COLOR_MODE.NO_ANAGLYPH) {
@@ -10388,12 +10392,13 @@ public class RenderSky
 				}
 */
 				double jd_TDB = -1;
+				int rz = (int) (pixels_per_degree*10);
 				for (int i = 0; i < loc_path.length; i++)
 				{
 					col = render.trajectory[index].drawPathColor1;
 					pos = projection.projectPosition(loc_path[i], 0, false);
-					if (pos != null && !this.isInTheScreen((int)pos[0], (int)pos[1])) {
-						if (old_pos == null || !this.isInTheScreen((int)old_pos[0], (int)old_pos[1])) {
+					if (pos != null && !this.isInTheScreen((int)pos[0], (int)pos[1], rz)) {
+						if (old_pos == null || !this.isInTheScreen((int)old_pos[0], (int)old_pos[1], rz)) {
 							old_pos = pos;
 							continue;
 						}
@@ -11619,6 +11624,38 @@ public class RenderSky
     public int graphMarginY = 38;
     private String labelRA = null, labelDEC = null;
 
+    private static String fixLabel(String label, boolean ra) {
+    	int f = 1;
+    	if (label.startsWith("-")) f = -1;
+		double add = 0.15*f*Constant.ARCSEC_TO_RAD;
+    	if (label.endsWith("60'")) {
+    		if (ra) {
+        		double val = Functions.parseRightAscension(label) + add;
+    			label = Functions.formatRAOnlyMinutes(val, 0);
+    		} else {
+        		double val = Functions.parseDeclination(label) + add;
+    			label = Functions.formatDECOnlyMinutes(val, 0);    			
+    		}
+    		if (label.startsWith("360\u00b0")) label = "00\u00b0";
+    		return label;
+    	}
+    	if (label.endsWith("60\"")) {
+    		if (ra) {
+        		double val = Functions.parseRightAscension(label) + add;
+    			label = Functions.formatRA(val, 0);
+    		} else {
+        		double val = Functions.parseDeclination(label) + add;
+    			label = Functions.formatDEC(val, 0);    			
+    		}    		
+    		if (label.startsWith("360\u00b0")) label = "00\u00b0";
+    	}
+    	if (label.endsWith("60s") && ra) {
+    		double val = Functions.parseRightAscension(label) + add;
+			label = Functions.formatRA(val, 0);    		
+    	}
+		if (label.startsWith("360\u00b0")) label = "00\u00b0";
+    	return label;
+    }
     private void drawAxesLabels() throws JPARSECException
     {
     	float dist = refz; //getDist(this.axesDist);
@@ -11807,10 +11844,6 @@ public class RenderSky
 			step = step2 * ppr;
 			boolean somethingWritten = false;
 			double arcsec900 = 900.0 * Constant.ARCSEC_TO_RAD;
-			double arcsec0p15 = 0.15*Constant.ARCSEC_TO_RAD;
-			double arcsec1p15 = 1.15*Constant.ARCSEC_TO_RAD;
-			double arcsec0p5 = 0.5*Constant.ARCSEC_TO_RAD;
-			double arcsec1p5 = 1.5*Constant.ARCSEC_TO_RAD;
 
 			if (step > 5 && render.centralLatitude < 80 * Constant.DEG_TO_RAD) {
 				LocationElement loc = new LocationElement(closest, dec, 1.0);
@@ -11829,20 +11862,16 @@ public class RenderSky
 					if (render.drawCoordinateGridHighZoom) {
 						if (render.coordinateSystem == COORDINATE_SYSTEM.EQUATORIAL) {
 							if (step2 < arcsec900) {
-								s = Functions.formatRA(loc.getLongitude()+arcsec0p15, 0);
+								s = fixLabel(Functions.formatRA(loc.getLongitude(), 0), true);
 							} else {
-								s = Functions.formatRAOnlyMinutes(loc.getLongitude()+arcsec0p15, 0);
-								if (s.endsWith("60'"))
-									s = Functions.formatRAOnlyMinutes(loc.getLongitude()+arcsec1p15, 0);
+								s = fixLabel(Functions.formatRAOnlyMinutes(loc.getLongitude(), 0), true);
 							}
 						} else {
 							loc.setLongitude(Functions.normalizeRadians(loc.getLongitude()));
 							if (step2 < arcsec900) {
-								s = Functions.formatDEC(loc.getLongitude()+arcsec0p15, 0);
+								s = fixLabel(Functions.formatDEC(loc.getLongitude(), 0), false);
 							} else {
-								s = Functions.formatDECOnlyMinutes(loc.getLongitude()+arcsec0p15, 0);
-								if (s.endsWith("60'"))
-									s = Functions.formatDECOnlyMinutes(loc.getLongitude()+arcsec1p15, 0);
+								s = fixLabel(Functions.formatDECOnlyMinutes(loc.getLongitude(), 0), false);
 							}
 						}
 						//s = s.substring(s.indexOf(" ")).trim();
@@ -11871,20 +11900,16 @@ public class RenderSky
 							loc = this.getSkyLocation(render.telescope.invertHorizontal ? (float) (render.width-1-x) : (float) x, py);
 							if (render.coordinateSystem == COORDINATE_SYSTEM.EQUATORIAL) {
 								if (step2 < arcsec900) {
-									s = Functions.formatRA(loc.getLongitude()+arcsec0p15, 0);
+									s = fixLabel(Functions.formatRA(loc.getLongitude(), 0), true);
 								} else {
-									s = Functions.formatRAOnlyMinutes(loc.getLongitude()+arcsec0p15, 0);
-									if (s.endsWith("60'"))
-										s = Functions.formatRAOnlyMinutes(loc.getLongitude()+arcsec1p15, 0);
+									s = fixLabel(Functions.formatRAOnlyMinutes(loc.getLongitude(), 0), true);
 								}
 							} else {
 								loc.setLongitude(Functions.normalizeRadians(loc.getLongitude()));
 								if (step2 < arcsec900) {
-									s = Functions.formatDEC(loc.getLongitude()+arcsec0p15, 0);
+									s = fixLabel(Functions.formatDEC(loc.getLongitude(), 0), false);
 								} else {
-									s = Functions.formatDECOnlyMinutes(loc.getLongitude()+arcsec0p15, 0);
-									if (s.endsWith("60'"))
-										s = Functions.formatRAOnlyMinutes(loc.getLongitude()+arcsec1p15, 0);
+									s = fixLabel(Functions.formatDECOnlyMinutes(loc.getLongitude(), 0), false);
 								}
 							}
 							//s = s.substring(s.indexOf(" ")).trim();
@@ -11918,19 +11943,15 @@ public class RenderSky
 							loc = this.getSkyLocation(render.telescope.invertHorizontal ? (float) (render.width-1-x) : (float) x, py);
 							if (render.coordinateSystem == COORDINATE_SYSTEM.EQUATORIAL) {
 								if (step2 < arcsec900) {
-									s = Functions.formatRA(loc.getLongitude()+arcsec0p15, 0);
+									s = fixLabel(Functions.formatRA(loc.getLongitude(), 0), true);
 								} else {
-									s = Functions.formatRAOnlyMinutes(loc.getLongitude()+arcsec0p15, 0);
-									if (s.endsWith("60'"))
-										s = Functions.formatRAOnlyMinutes(loc.getLongitude()+arcsec1p15, 0);
+									s = fixLabel(Functions.formatRAOnlyMinutes(loc.getLongitude(), 0), true);
 								}
 							} else {
 								if (step2 < arcsec900) {
-									s = Functions.formatDEC(loc.getLongitude()+arcsec0p15, 0);
+									s = fixLabel(Functions.formatDEC(loc.getLongitude(), 0), false);
 								} else {
-									s = Functions.formatDECOnlyMinutes(loc.getLongitude()+arcsec0p15, 0);
-									if (s.endsWith("60'"))
-										s = Functions.formatRAOnlyMinutes(loc.getLongitude()+arcsec1p15, 0);
+									s = fixLabel(Functions.formatDECOnlyMinutes(loc.getLongitude(), 0), false);
 								}
 							}
 							//s = s.substring(s.indexOf(" ")).trim();
@@ -11993,13 +12014,11 @@ public class RenderSky
 				int x = this.graphMarginX;
 				if (render.drawLeyend == LEYEND_POSITION.LEFT) x += this.leyendMargin;
 				if (render.drawCoordinateGridHighZoom) {
-					s = Functions.formatDECOnlyMinutes(loc.getLatitude()+arcsec0p5*FastMath.sign(loc.getLatitude())*Constant.ARCSEC_TO_RAD, 0);
-					if (s.endsWith("60'"))
-						s = Functions.formatDECOnlyMinutes(loc.getLatitude()+arcsec1p5*FastMath.sign(loc.getLatitude()), 0);
+					s = fixLabel(Functions.formatDECOnlyMinutes(loc.getLatitude(), 0), false);
 					//s = s.substring(s.indexOf(" ")).trim();
 					if (s.startsWith("00")) s = s.substring(3).trim();
 					if (s.endsWith("00'")) s = s.substring(0, s.length()-3).trim();
-					if (s.equals("") || s.startsWith("00")) s = null;
+					if (s.equals("") || s.startsWith("00")) s = "00\u00b0";
 				}
 				drawLine2(x, (int) (y+0.5), x-l, (int) (y+0.5), dist, dist, g, thin, s);
 				do {
@@ -12007,13 +12026,11 @@ public class RenderSky
 					if (render.drawCoordinateGridHighZoom) {
 						double lat = this.getSkyLocation(x, render.telescope
 								.invertVertical ? (float) (render.height-1-y): (float) y).getLatitude();
-						s = Functions.formatDECOnlyMinutes(lat+arcsec0p5*FastMath.sign(lat), 0);
-						if (s.endsWith("60'"))
-							s = Functions.formatDECOnlyMinutes(lat+arcsec1p5*FastMath.sign(lat), 0);
+						s = fixLabel(Functions.formatDECOnlyMinutes(lat, 0), false);
 						//s = s.substring(s.indexOf(" ")).trim();
 						if (s.startsWith("00")) s = s.substring(3).trim();
 						if (s.endsWith("00'")) s = s.substring(0, s.length()-3).trim();
-						if (s.equals("") || s.startsWith("00")) s = null;
+						if (s.equals("") || s.startsWith("00")) s = "00\u00b0";
 					}
 					if (y < min) drawLine2(x, (int) (y+0.5), x-l, (int) (y+0.5), dist, dist, g, thin, s);
 				} while (y < min);
@@ -12024,13 +12041,11 @@ public class RenderSky
 					if (render.drawCoordinateGridHighZoom) {
 						double lat = this.getSkyLocation(x, render.telescope
 								.invertVertical ? (float) (render.height-1-y): (float) y).getLatitude();
-						s = Functions.formatDECOnlyMinutes(lat+arcsec0p5*FastMath.sign(lat), 0);
-						if (s.endsWith("60'"))
-							s = Functions.formatDECOnlyMinutes(lat+arcsec1p5*FastMath.sign(lat), 0);
+						s = fixLabel(Functions.formatDECOnlyMinutes(lat, 0), false);
 						//s = s.substring(s.indexOf(" ")).trim();
 						if (s.startsWith("00")) s = s.substring(3).trim();
 						if (s.endsWith("00'")) s = s.substring(0, s.length()-3).trim();
-						if (s.equals("") || s.startsWith("00")) s = null;
+						if (s.equals("") || s.startsWith("00")) s = "00\u00b0";
 					}
 					if (y > max) drawLine2(x, (int) (y+0.5), x-l, (int) (y+0.5), dist, dist, g, thin, s);
 				} while (y > max);
@@ -13859,6 +13874,177 @@ public class RenderSky
 			}
 	}
 
+	/**
+	 * Searches for objects and return its coordinates. Planets, deep sky objects,
+	 * stars, asteroids, comets, probes, and artificial satellites are considered.
+	 * @param s Object name.
+	 * @return Equatorial coordinates of the objects matching the provided name, or 
+	 * null if none is found. The radius of the location object will be an integer 
+	 * provided the index of the @linkplain{OBJECT} type.
+	 */
+	public LocationElement[] searchObjects(String s)
+	{
+		LocationElement out[] = new LocationElement[0];
+		try {
+			if (s.toUpperCase().equals("M1") || s.toUpperCase().equals("M 1")) s = "NGC 1952";
+				LocationElement loc = null;
+				TARGET planet = Target.getID(s);
+				if (planet == TARGET.NOT_A_PLANET) planet = Target.getIDFromEnglishName(s);
+				if (planet != TARGET.NOT_A_PLANET) {
+					EphemElement ephem = calcPlanet(planet, true, false);
+					if (ephem != null) loc = new LocationElement(ephem.rightAscension, ephem.declination, 1.0);
+				}
+				if (loc != null) {
+					loc.setRadius(OBJECT.PLANET.ordinal());
+					out = (LocationElement[]) DataSet.addObjectArray(out, new LocationElement[] {loc});
+				}
+				loc = searchDeepSkyObject(s);
+				if (loc != null) {
+					loc.setRadius(OBJECT.DEEPSKY.ordinal());
+					out = (LocationElement[]) DataSet.addObjectArray(out, new LocationElement[] {loc});
+				}
+				StarEphemElement star = searchStar(s);
+				if (star != null) {
+					loc = new LocationElement(star.rightAscension, star.declination, 1.0);
+					if (loc != null) {
+						loc.setRadius(OBJECT.STAR.ordinal());
+						out = (LocationElement[]) DataSet.addObjectArray(out, new LocationElement[] {loc});
+					}
+				}
+				EphemElement ephem = getEphemerisOfMinorObject(s, RenderSky.OBJECT.ASTEROID, false);
+				if (ephem != null) {
+					loc = new LocationElement(ephem.rightAscension, ephem.declination, 1.0);
+					if (loc != null) {
+						loc.setRadius(OBJECT.ASTEROID.ordinal());
+						out = (LocationElement[]) DataSet.addObjectArray(out, new LocationElement[] {loc});
+					}
+				}
+				ephem = getEphemerisOfMinorObject(s, RenderSky.OBJECT.COMET, false);
+				if (ephem != null) {
+					loc = new LocationElement(ephem.rightAscension, ephem.declination, 1.0);
+					if (loc != null) {
+						loc.setRadius(OBJECT.COMET.ordinal());
+						out = (LocationElement[]) DataSet.addObjectArray(out, new LocationElement[] {loc});
+					}
+				}
+				ephem = getEphemerisOfMinorObject(s, RenderSky.OBJECT.NEO, false);
+				if (ephem != null) {
+					loc = new LocationElement(ephem.rightAscension, ephem.declination, 1.0);
+					if (loc != null) {
+						loc.setRadius(OBJECT.NEO.ordinal());
+						out = (LocationElement[]) DataSet.addObjectArray(out, new LocationElement[] {loc});
+					}
+				}
+				ephem = getEphemerisOfMinorObject(s, RenderSky.OBJECT.ARTIFICIAL_SATELLITE, false);
+				if (ephem != null) {
+					loc = new LocationElement(ephem.rightAscension, ephem.declination, 1.0);
+					if (loc != null) {
+						loc.setRadius(OBJECT.ARTIFICIAL_SATELLITE.ordinal());
+						out = (LocationElement[]) DataSet.addObjectArray(out, new LocationElement[] {loc});
+					}
+				}
+				ephem = getEphemerisOfMinorObject(s, RenderSky.OBJECT.PROBE, false);
+				if (ephem != null) {
+					loc = new LocationElement(ephem.rightAscension, ephem.declination, 1.0);
+					if (loc != null) {
+						loc.setRadius(OBJECT.PROBE.ordinal());
+						out = (LocationElement[]) DataSet.addObjectArray(out, new LocationElement[] {loc});
+					}
+				}
+				ephem = getEphemerisOfMinorObject(s, RenderSky.OBJECT.TRANSNEPTUNIAN, false);
+				if (ephem != null) {
+					loc = new LocationElement(ephem.rightAscension, ephem.declination, 1.0);
+					if (loc != null) {
+						loc.setRadius(OBJECT.TRANSNEPTUNIAN.ordinal());
+						out = (LocationElement[]) DataSet.addObjectArray(out, new LocationElement[] {loc});
+					}
+				}
+				ArrayList<Object> sncat = null;
+				Object oo = null;
+				if (db_sncat >= 0) {
+					oo = DataBase.getData(db_sncat);
+				} else {
+					oo = DataBase.getData("sncat", threadID, true);
+				}
+				if (oo != null) {
+					sncat = new ArrayList<Object>(Arrays.asList((Object[]) oo));
+					for (Iterator<Object> itr = sncat.iterator();itr.hasNext();)
+					{
+						Object obj[] = (Object[]) itr.next();
+						String n = (String) obj[1];
+						if (n.toLowerCase().equals(s.toLowerCase())) {
+							loc = (LocationElement) obj[0];
+							loc = projection.toEquatorialPosition(loc, false);
+							if (loc != null) {
+								loc.setRadius(OBJECT.SUPERNOVA.ordinal());
+								out = (LocationElement[]) DataSet.addObjectArray(out, new LocationElement[] {loc});
+							}
+							//loc = Ephem.removeRefractionCorrectionFromEquatorialCoordinates(projection.time, projection.obs, projection.eph, loc);
+							break;
+						}
+					}
+				}
+
+				sncat = null;
+				oo = null;
+				if (db_novae >= 0) {
+					oo = DataBase.getData(db_novae);
+				} else {
+					oo = DataBase.getData("novae", threadID, true);
+				}
+				if (oo != null) {
+					sncat = new ArrayList<Object>(Arrays.asList((Object[]) oo));
+					for (Iterator<Object> itr = sncat.iterator();itr.hasNext();)
+					{
+						Object obj[] = (Object[]) itr.next();
+						String n = (String) obj[1];
+						if (n.toLowerCase().equals(s.toLowerCase())) {
+							loc = (LocationElement) obj[0];
+							loc = projection.toEquatorialPosition(loc, false);
+							if (loc != null) {
+								loc.setRadius(OBJECT.NOVA.ordinal());
+								out = (LocationElement[]) DataSet.addObjectArray(out, new LocationElement[] {loc});
+							}
+							//loc = Ephem.removeRefractionCorrectionFromEquatorialCoordinates(projection.time, projection.obs, projection.eph, loc);
+							break;
+						}
+					}
+				}
+
+				ArrayList<Object> met = null;
+				oo = null;
+				if (db_meteor >= 0) {
+					oo = DataBase.getData(db_meteor);
+				} else {
+					oo = DataBase.getData("meteor", threadID, true);
+				}
+				if (oo != null && s.length() > 4) {
+					met = new ArrayList<Object>(Arrays.asList((Object[]) oo));
+					for (Iterator<Object> itr = met.iterator();itr.hasNext();)
+					{
+						Object obj[] = (Object[]) itr.next();
+						String n = (String) obj[0];
+						if (n.toLowerCase().startsWith(s.toLowerCase())) {
+							loc = (LocationElement) obj[2];
+							loc = projection.toEquatorialPosition(loc, false);
+							if (loc != null) {
+								loc.setRadius(OBJECT.METEOR_SHOWER.ordinal());
+								out = (LocationElement[]) DataSet.addObjectArray(out, new LocationElement[] {loc});
+							}
+							//loc = Ephem.removeRefractionCorrectionFromEquatorialCoordinates(projection.time, projection.obs, projection.eph, loc);
+							break;
+						}
+					}
+				}
+				
+			if (out.length == 0) return null;
+			return out;
+		} catch (Exception exc) {
+			Logger.log(LEVEL.ERROR, "Error searching for objects "+s+". Message was: "+exc.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(exc.getStackTrace()));
+			return null;
+		}
+	}
+	
 	/**
 	 * Searches for an object and return its coordinates. Planets,
 	 * asteroids, comets, and probes are considered.

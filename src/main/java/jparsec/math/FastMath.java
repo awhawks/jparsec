@@ -336,6 +336,7 @@ public class FastMath
 	{
 		if (EXACT_MODE) return Math.asin(x);
 		if (x == 0) return x;
+		if (x > 1 || x < -1 || x == Double.NaN) return Double.NaN;
 
 		double s = 1;
 		if (x < 0) {
