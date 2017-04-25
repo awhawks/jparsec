@@ -1,7 +1,7 @@
 /**
  * This file is part of JPARSEC library.
  * <p/>
- * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
+ * (C) Copyright 2006-2017 by T. Alonso Albi - OAN (Spain).
  * <p/>
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
  * <p/>

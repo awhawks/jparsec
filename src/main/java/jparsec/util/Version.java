@@ -1,7 +1,7 @@
 /*
  * This file is part of JPARSEC library.
  *
- * (C) Copyright 2006-2015 by T. Alonso Albi - OAN (Spain).
+ * (C) Copyright 2006-2017 by T. Alonso Albi - OAN (Spain).
  *
  * Project Info:  http://conga.oan.es/~alonso/jparsec/jparsec.html
  *
@@ -310,12 +310,12 @@ public class Version
 						"Latex compilation now done in batchmode instead of nonstopmode to avoid so many warning messages blocking the compilation.\n"+
 						"AWTDrawer - fillOval replaced with an image in JMathPlot library to improve performance.",
 				"      1.111: Important bug fix in Windows systems, Android and astrophotography fixes (Oct 18, 2016):\n"+
-						"The method ReadFile.readResourceAndReturnNumberOfLines didn't work on Windows, producing errors when executing anything on this platform. Thanks to Volker Hören for reporting.\n"+
+						"The method ReadFile.readResourceAndReturnNumberOfLines didn't work on Windows, producing errors when executing anything on this platform. Thanks to Volker HÃ¶ren for reporting.\n"+
 						"Some fixes to ClearSky for desktop (astrophotography), and a more robust camera detection.\n"+
 						"Sky rendering with some fixes and improvements for Android.\n"+
 						"Update of orbital elements.\n",
 				"      1.112: Bug fixes to reach the (possibly) final version of ClearSky for Android (Jan 9, 2017):\n"+
-						"The Zip class had a bug when used on Windows systems, so the updating of internal files didn't work on Windows. Thanks to Volker Hören for reporting.\n"+
+						"The Zip class had a bug when used on Windows systems, so the updating of internal files didn't work on Windows. Thanks to Volker HÃ¶ren for reporting.\n"+
 						"Bug fix when computing planetary transits on the Sun in MainEvents class. In some cases the method caused a hang.\n"+
 						"Fix in the logic of reading the internal or an external file for elements of artificial satellites. After a few changes the default internal one (almost always outdated) was always used.\n"+
 						"The leyend in sky rendering is now shown in lower resolutions, up to 720 pixels in horizontal.\n"+
