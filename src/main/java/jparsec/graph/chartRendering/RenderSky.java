@@ -53,6 +53,7 @@ import jparsec.ephem.Functions;
 import jparsec.ephem.IAU2006;
 import jparsec.ephem.Nutation;
 import jparsec.ephem.Obliquity;
+import jparsec.ephem.PhysicalParameters;
 import jparsec.ephem.Precession;
 import jparsec.ephem.RiseSetTransit;
 import jparsec.ephem.Target;
@@ -9388,6 +9389,148 @@ public class RenderSky
 	 * Searches for a deep sky object given it's name.
 	 *
 	 * @param obj_name Name of the object as given in the catalog.
+	 * @return Two objects with the array of names and the array of objects locations.
+	 * @throws JPARSECException If the method fails.
+	 */
+	public Object[] searchDeepSkyObjects(String obj_name)
+			throws JPARSECException
+	{
+		boolean isMessier = false;
+		if (!obj_name.equals("") && obj_name.length() > 1)
+			isMessier = obj_name.startsWith("M") && DataSet.isDoubleStrictCheck(obj_name.substring(1).trim());
+
+		if (obj_name.toUpperCase().equals("M1") || obj_name.toUpperCase().equals("M 1")) obj_name = "NGC 1952";
+		int cal = obj_name.toUpperCase().indexOf("CALDWELL");
+		if (cal >= 0) {
+			obj_name = obj_name.substring(cal+8).trim();
+			cal = obj_name.indexOf(" ");
+			if (cal > 0) obj_name = obj_name.substring(0, cal);
+			obj_name = "CALDWELL"+obj_name;
+			isMessier = true;
+		} else {
+			if (obj_name.toUpperCase().startsWith("C") && DataSet.isDoubleStrictCheck(obj_name.substring(1).trim())) {
+				obj_name = "CALDWELL"+obj_name.substring(1).trim();
+				isMessier = true;
+			}
+		}
+
+		ArrayList<Object> objects = null;
+		Object o = null; //DataBase.getData("objectsJ2000", null, true);
+		if (db_objects >= 0) {
+			o = DataBase.getData(db_objects);
+		} else {
+			o = DataBase.getData("objects", threadID, true);
+		}
+//		if (o == null) o = populate();
+		if (o != null) objects = new ArrayList<Object>(Arrays.asList((Object[]) o));
+		if (objects == null) return null;
+
+		ArrayList<Object> objectsJ2000 = null;
+		o = DataBase.getData("objectsJ2000", null, true);
+		if (o == null) o = populate(false);
+		objectsJ2000 = new ArrayList<Object>(Arrays.asList((Object[]) o));
+
+		LocationElement ephem[] = new LocationElement[0];
+		String names[] = new String[0];
+		String obj_name2 = obj_name.toLowerCase();
+		LocationElement locF;
+		for (int i = 0; i < objects.size(); i++)
+		{
+			Object[] obj = (Object[]) objects.get(i);
+			if (obj.length <= 3) {
+				locF = (LocationElement) obj[1];
+				obj = (Object[]) objectsJ2000.get((Integer) obj[0]);
+			} else {
+				locF = (LocationElement) obj[3];
+			}
+
+			String messier = (String) obj[1];
+			messier = DataSet.replaceAll(messier, " ", "", true);
+			if (isMessier) {
+				if (obj_name.equals(messier.trim())) {
+					LocationElement loc = projection.toEquatorialPosition(locF, false);
+					ephem = (LocationElement[]) DataSet.addObjectArray(ephem, new LocationElement[] {loc.clone()});
+					names = DataSet.addStringArray(names, messier);
+					break;
+				}
+			} else {
+				String name = (String) obj[0];
+				if (DataSet.isDoubleStrictCheck(name) || (name.length() > 4 && DataSet.isDoubleStrictCheck(name.substring(0, 4)))) {
+					if (name.length() < 8 || name.indexOf(" ") > 0) name = "NGC " + name;
+				} else {
+					try {
+						if (name.startsWith("I.")) name = "IC "+name.substring(2);
+					} catch (Exception exc2) {	}
+				}
+	
+				String com = "";
+				String comments = (String) obj[7];
+				int pp = comments.indexOf("Popular name:");
+				if (pp>=0) com = comments.substring(pp+14).trim();
+				if (!messier.equals("")) messier = " "+messier;
+	
+				if (obj_name2.equals(name.toLowerCase()) || obj_name.equals(messier.trim()) || obj_name.equals(name+messier) ||
+						obj_name.equals(name+messier+" - "+com) ||
+						(name.indexOf(" ") > 0 && (name.substring(name.indexOf(" ")).trim()+messier+" - "+com).indexOf(obj_name) == 0)) {
+					LocationElement loc = projection.toEquatorialPosition(locF, false);
+					ephem = (LocationElement[]) DataSet.addObjectArray(ephem, new LocationElement[] {loc.clone()});
+					names = DataSet.addStringArray(names, name);
+					break;
+				}
+			}
+		}
+		for (int i = 0; i < objects.size(); i++)
+		{
+			Object[] obj = (Object[]) objects.get(i);
+			if (obj.length <= 3) {
+				locF = (LocationElement) obj[1];
+				obj = (Object[]) objectsJ2000.get((Integer) obj[0]);
+			} else {
+				locF = (LocationElement) obj[3];
+			}
+
+			String com = "";
+			String comments = (String) obj[7];
+			int pp = comments.indexOf("Popular name:");
+			if (pp>=0) com = comments.substring(pp+14).trim();
+
+			if (com.toLowerCase().indexOf(obj_name2) >= 0) {				
+				String name = (String) obj[0];
+				if (DataSet.isDoubleStrictCheck(name) || (name.length() > 4 && DataSet.isDoubleStrictCheck(name.substring(0, 4)))) {
+					if (name.length() < 8 || name.indexOf(" ") > 0) name = "NGC " + name;
+				} else {
+					try {
+						if (name.startsWith("I.")) name = "IC "+name.substring(2);
+					} catch (Exception exc2) {	}
+				}
+				
+				if (DataSet.getIndex(names, name) < 0) {
+					LocationElement loc = projection.toEquatorialPosition(locF, false);
+					ephem = (LocationElement[]) DataSet.addObjectArray(ephem, new LocationElement[] {loc.clone()});
+					names = DataSet.addStringArray(names, name);
+				}
+				//break;
+			}
+		}
+
+		if (ephem == null || ephem.length == 0) return null;
+		if (projection.obs.getMotherBody() != TARGET.NOT_A_PLANET && projection.eph.isTopocentric && render.drawSkyCorrectingLocalHorizon
+				&& render.coordinateSystem != COORDINATE_SYSTEM.HORIZONTAL)
+		{
+			for (int i=0; i<ephem.length; i++) {
+				ephem[i] = CoordinateSystem.equatorialToHorizontal(ephem[i], projection.time, projection.obs, projection.eph);
+				ephem[i].setLatitude(Ephem.getGeometricElevation(projection.eph, projection.obs, ephem[i].getLatitude()));
+				ephem[i] = CoordinateSystem.horizontalToEquatorial(ephem[i], projection.time, projection.obs, projection.eph);
+			}
+		}
+
+		return new Object[] {names, ephem};
+	}
+	
+	/**
+	 * Searches for a deep sky object given it's name.
+	 *
+	 * @param obj_name Name of the object as given in the catalog.
 	 * @return The main name in the catalog, NGC or IC name almost always.
 	 * @throws JPARSECException If the method fails.
 	 */
@@ -9576,6 +9719,128 @@ public class RenderSky
 		return calcStar(my_star, false);
 	}
 
+	private static int[] searchStars(String object, ReadFile re) {
+		int index[] = new int[0];
+		Object o[] = re.getReadElements();
+		if (o == null) return null;
+		for (int i = 0; i < o.length; i++)
+		{
+			StarData sd = null;
+			if (o[i] instanceof StarElement) {
+				StarElement se = (StarElement)o[i];
+				if (se == null) continue;
+				String name = ""+se.name;
+				if (name.equals(object) || (name.indexOf("("+object+")") >= 0))
+				{
+					index = DataSet.addIntegerArray(index, new int[] {i});
+					break;
+				} else {
+					if (name.toLowerCase().indexOf(object.toLowerCase()) >= 0)
+					{
+						index = DataSet.addIntegerArray(index, new int[] {i});
+					}
+				}
+			} else {
+				sd = (StarData)o[i];
+				if (sd == null) continue;
+				String name = ""+sd.sky2000;
+				if (sd.nom2 != null) name += " ("+sd.nom2+")";
+				if (sd.greek != '\u0000') name += " ("+sd.greek+")";
+				if (name.equals(object) || (name.indexOf("("+object+")") >= 0))
+				{
+					index = DataSet.addIntegerArray(index, new int[] {i});
+					break;
+				} else {
+					if (name.toLowerCase().indexOf(object.toLowerCase()) >= 0)
+					{
+						index = DataSet.addIntegerArray(index, new int[] {i});
+					}
+				}
+			}
+		}
+		return index;
+	}
+	
+	static int[] getStars(String object, ReadFile re) throws JPARSECException
+	{
+		// Search object
+		int my_star[] = searchStars(object, re);
+
+		if (my_star == null) my_star = new int[0];
+
+			ArrayList<String> names = null;
+			Object o = DataBase.getData("starNames0", true);
+			if (o == null) {
+				names = ReadFile.readResource(FileIO.DATA_SKY_DIRECTORY + "star_names.txt");
+				DataBase.addData("starNames0", Thread.currentThread().getName(), DataSet.arrayListToStringArray(names), true);
+			} else {
+				names = new ArrayList<String>(Arrays.asList((String[])o));
+			}
+
+			// Correct for double stars
+			String wrongNames[] = new String [] {
+					"Alp Cen","The Eri","Alp Cru","Alp Cru","Gam And","Gam Leo","Bet Sco","Alp Lib","Alp CVn","Bet Cyg","Bet Cap","Alp Her","Alp Cap","Psi Dra","Gam Ari"
+			};
+			String okNames[] = new String[] {
+					"Alp1 Cen","The1 Eri","Alp1 Cru","Alp1 Cru","Gam1 And","Gam1 Leo","Bet1 Sco","Alp1 Lib","Alp1 CVn","Bet1 Cyg","Bet1 Cap","Alp1 Her","Alp1 Cap","Psi1 Dra","Gam1 Ari"
+			};
+
+			// Support for proper star names
+			for (int n = 0; n < names.size(); n++)
+			{
+				String line = names.get(n);
+				int aa = line.toLowerCase().indexOf(object.toLowerCase());
+				if (aa >= 0)
+				{
+					String proper_name = FileIO.getField(1, line, ";", true);
+					
+					// Correct for double stars
+					int index = DataSet.getIndex(wrongNames, proper_name);
+					if (index >= 0) proper_name = okNames[index];
+					
+					boolean first = false;
+					if (FileIO.getField(2, line, ";", true).toLowerCase().equals(object.toLowerCase())) first = true;
+					if (FileIO.getField(3, line, ";", true).toLowerCase().equals(object.toLowerCase())) first = true;
+					int ss = searchStar(proper_name, re);
+					if (ss >= 0) {
+						if (first) {
+							my_star = DataSet.addIntegerArray(new int[] {ss}, my_star);						
+						} else {
+							my_star = DataSet.addIntegerArray(my_star, new int[] {ss});
+						}
+					}
+				}
+			}
+
+		return my_star;
+	}
+	/**
+	 * Searches for certain stars by it's name.
+	 *
+	 * @param name Name of the star. For instance 'Alp UMi', 'Polaris' or Sky2000
+	 *        catalog number.
+	 * @return Ephemeris for the stars, or null object if not found.
+	 * @throws JPARSECException If an error occurs.
+	 */
+	public StarEphemElement[] searchStars(String name) throws JPARSECException
+	{
+		if (re_star == null || name == null) return null;
+
+		int my_star[] = getStars(name, re_star);
+		if (my_star == null) return null;
+		StarEphemElement out[] = new StarEphemElement[my_star.length];
+		for (int i=0; i<out.length; i++) {
+			out[i] = calcStar(my_star[i], false);
+			if (out[i] == null) {
+				out = (StarEphemElement[]) DataSet.deleteIndex(out, i);
+				continue;
+			}
+			String pn = getStarProperName(out[i].name);
+			if (pn != null) out[i].name = pn;
+		}
+		return out;
+	}
+	
 	/**
 	 * Return ephemeris for a given star.
 	 * @param my_star ID value for the star, retrieved with {@linkplain RenderSky#getClosestStarInScreenCoordinates(int, int, boolean)}.
@@ -13657,7 +13922,7 @@ public class RenderSky
 			break;
 		case PROBE:
 			eph.algorithm = EphemerisElement.ALGORITHM.PROBE;
-			index = Spacecraft.getIndex(objName);
+			index = Spacecraft.getIndex(objName, projection.jd);
 			if (index >= 0) {
 				eph.orbit = Spacecraft.getProbeElement(index);
 				try { ephem = Ephem.getEphemeris(projection.time, projection.obs, eph, fullEphem); // To get rise, set, transit
@@ -13878,13 +14143,14 @@ public class RenderSky
 	 * Searches for objects and return its coordinates. Planets, deep sky objects,
 	 * stars, asteroids, comets, probes, and artificial satellites are considered.
 	 * @param s Object name.
-	 * @return Equatorial coordinates of the objects matching the provided name, or 
+	 * @return Arrays with the names of hte objects and the equatorial coordinates of them.
 	 * null if none is found. The radius of the location object will be an integer 
 	 * provided the index of the @linkplain{OBJECT} type.
 	 */
-	public LocationElement[] searchObjects(String s)
+	public Object[] searchObjects(String s)
 	{
 		LocationElement out[] = new LocationElement[0];
+		String name = null, names[] = new String[0];
 		try {
 			if (s.toUpperCase().equals("M1") || s.toUpperCase().equals("M 1")) s = "NGC 1952";
 				LocationElement loc = null;
@@ -13892,23 +14158,32 @@ public class RenderSky
 				if (planet == TARGET.NOT_A_PLANET) planet = Target.getIDFromEnglishName(s);
 				if (planet != TARGET.NOT_A_PLANET) {
 					EphemElement ephem = calcPlanet(planet, true, false);
-					if (ephem != null) loc = new LocationElement(ephem.rightAscension, ephem.declination, 1.0);
+					if (ephem != null) {
+						loc = new LocationElement(ephem.rightAscension, ephem.declination, 1.0);
+						name = ephem.name;
+					}
 				}
 				if (loc != null) {
 					loc.setRadius(OBJECT.PLANET.ordinal());
 					out = (LocationElement[]) DataSet.addObjectArray(out, new LocationElement[] {loc});
+					names = DataSet.addStringArray(names, name);
 				}
-				loc = searchDeepSkyObject(s);
-				if (loc != null) {
-					loc.setRadius(OBJECT.DEEPSKY.ordinal());
-					out = (LocationElement[]) DataSet.addObjectArray(out, new LocationElement[] {loc});
+				Object outs[] = searchDeepSkyObjects(s);
+				if (outs != null) {
+					String n[] = (String[]) outs[0];
+					LocationElement[] locs = (LocationElement[]) outs[1];
+					for (int i=0; i<locs.length; i++) {
+						locs[i].setRadius(OBJECT.DEEPSKY.ordinal());
+						names = DataSet.addStringArray(names, n[i]);
+					}
+					out = (LocationElement[]) DataSet.addObjectArray(out, locs);
 				}
-				StarEphemElement star = searchStar(s);
+				StarEphemElement star[] = searchStars(s);
 				if (star != null) {
-					loc = new LocationElement(star.rightAscension, star.declination, 1.0);
-					if (loc != null) {
-						loc.setRadius(OBJECT.STAR.ordinal());
+					for (int i=0; i<star.length; i++) {
+						loc = new LocationElement(star[i].rightAscension, star[i].declination, OBJECT.STAR.ordinal());
 						out = (LocationElement[]) DataSet.addObjectArray(out, new LocationElement[] {loc});
+						names = DataSet.addStringArray(names, star[i].name);
 					}
 				}
 				EphemElement ephem = getEphemerisOfMinorObject(s, RenderSky.OBJECT.ASTEROID, false);
@@ -13917,6 +14192,7 @@ public class RenderSky
 					if (loc != null) {
 						loc.setRadius(OBJECT.ASTEROID.ordinal());
 						out = (LocationElement[]) DataSet.addObjectArray(out, new LocationElement[] {loc});
+						names = DataSet.addStringArray(names, ephem.name);
 					}
 				}
 				ephem = getEphemerisOfMinorObject(s, RenderSky.OBJECT.COMET, false);
@@ -13925,6 +14201,7 @@ public class RenderSky
 					if (loc != null) {
 						loc.setRadius(OBJECT.COMET.ordinal());
 						out = (LocationElement[]) DataSet.addObjectArray(out, new LocationElement[] {loc});
+						names = DataSet.addStringArray(names, ephem.name);
 					}
 				}
 				ephem = getEphemerisOfMinorObject(s, RenderSky.OBJECT.NEO, false);
@@ -13933,6 +14210,7 @@ public class RenderSky
 					if (loc != null) {
 						loc.setRadius(OBJECT.NEO.ordinal());
 						out = (LocationElement[]) DataSet.addObjectArray(out, new LocationElement[] {loc});
+						names = DataSet.addStringArray(names, ephem.name);
 					}
 				}
 				ephem = getEphemerisOfMinorObject(s, RenderSky.OBJECT.ARTIFICIAL_SATELLITE, false);
@@ -13941,6 +14219,7 @@ public class RenderSky
 					if (loc != null) {
 						loc.setRadius(OBJECT.ARTIFICIAL_SATELLITE.ordinal());
 						out = (LocationElement[]) DataSet.addObjectArray(out, new LocationElement[] {loc});
+						names = DataSet.addStringArray(names, ephem.name);
 					}
 				}
 				ephem = getEphemerisOfMinorObject(s, RenderSky.OBJECT.PROBE, false);
@@ -13949,6 +14228,7 @@ public class RenderSky
 					if (loc != null) {
 						loc.setRadius(OBJECT.PROBE.ordinal());
 						out = (LocationElement[]) DataSet.addObjectArray(out, new LocationElement[] {loc});
+						names = DataSet.addStringArray(names, ephem.name);
 					}
 				}
 				ephem = getEphemerisOfMinorObject(s, RenderSky.OBJECT.TRANSNEPTUNIAN, false);
@@ -13957,6 +14237,7 @@ public class RenderSky
 					if (loc != null) {
 						loc.setRadius(OBJECT.TRANSNEPTUNIAN.ordinal());
 						out = (LocationElement[]) DataSet.addObjectArray(out, new LocationElement[] {loc});
+						names = DataSet.addStringArray(names, ephem.name);
 					}
 				}
 				ArrayList<Object> sncat = null;
@@ -13972,15 +14253,17 @@ public class RenderSky
 					{
 						Object obj[] = (Object[]) itr.next();
 						String n = (String) obj[1];
-						if (n.toLowerCase().equals(s.toLowerCase())) {
+						if (n.toLowerCase().indexOf(s.toLowerCase()) >= 0) {
 							loc = (LocationElement) obj[0];
+							if (loc == null) continue;
 							loc = projection.toEquatorialPosition(loc, false);
 							if (loc != null) {
 								loc.setRadius(OBJECT.SUPERNOVA.ordinal());
 								out = (LocationElement[]) DataSet.addObjectArray(out, new LocationElement[] {loc});
+								names = DataSet.addStringArray(names, n);
 							}
 							//loc = Ephem.removeRefractionCorrectionFromEquatorialCoordinates(projection.time, projection.obs, projection.eph, loc);
-							break;
+							//break;
 						}
 					}
 				}
@@ -13998,15 +14281,17 @@ public class RenderSky
 					{
 						Object obj[] = (Object[]) itr.next();
 						String n = (String) obj[1];
-						if (n.toLowerCase().equals(s.toLowerCase())) {
+						if (n.toLowerCase().indexOf(s.toLowerCase()) >= 0) {
 							loc = (LocationElement) obj[0];
+							if (loc == null) continue;
 							loc = projection.toEquatorialPosition(loc, false);
 							if (loc != null) {
 								loc.setRadius(OBJECT.NOVA.ordinal());
 								out = (LocationElement[]) DataSet.addObjectArray(out, new LocationElement[] {loc});
+								names = DataSet.addStringArray(names, n);
 							}
 							//loc = Ephem.removeRefractionCorrectionFromEquatorialCoordinates(projection.time, projection.obs, projection.eph, loc);
-							break;
+							//break;
 						}
 					}
 				}
@@ -14018,27 +14303,67 @@ public class RenderSky
 				} else {
 					oo = DataBase.getData("meteor", threadID, true);
 				}
-				if (oo != null && s.length() > 4) {
+				if (oo != null && s.length() > 3) {
 					met = new ArrayList<Object>(Arrays.asList((Object[]) oo));
 					for (Iterator<Object> itr = met.iterator();itr.hasNext();)
 					{
 						Object obj[] = (Object[]) itr.next();
 						String n = (String) obj[0];
-						if (n.toLowerCase().startsWith(s.toLowerCase())) {
+						if (n.toLowerCase().indexOf(s.toLowerCase()) >= 0) {
 							loc = (LocationElement) obj[2];
+							if (loc == null) continue;
 							loc = projection.toEquatorialPosition(loc, false);
 							if (loc != null) {
 								loc.setRadius(OBJECT.METEOR_SHOWER.ordinal());
 								out = (LocationElement[]) DataSet.addObjectArray(out, new LocationElement[] {loc});
+								names = DataSet.addStringArray(names, n);
 							}
 							//loc = Ephem.removeRefractionCorrectionFromEquatorialCoordinates(projection.time, projection.obs, projection.eph, loc);
-							break;
+							//break;
 						}
 					}
 				}
 				
+		    	 double cra[] = null, cdec[] = null;
+		    	 String cons[] = null;
+		    	 try {
+		    		 double jd = projection.jd;
+		        	 ArrayList<Object> constel = Constellation.getConstellations(jd, render.drawConstellationNamesType);
+		        	 cons = (String[]) constel.get(0);
+			    	 cra = (double[]) constel.get(1);
+			    	 cdec = (double[]) constel.get(2);
+		    	 } catch (Exception exc) {}
+		    	 if (projection.obs.getMotherBody() != TARGET.NOT_A_PLANET && 
+		    			 projection.obs.getMotherBody() != TARGET.EARTH) {
+		 			try {
+		 				double jd = projection.jd;
+			 			EphemerisElement ephIn = projection.eph.clone();
+			 			ephIn.targetBody = projection.obs.getMotherBody();
+			 			LocationElement np = PhysicalParameters.getBodyNorthPole(jd, ephIn);
+			 			for (int i=0; i<cra.length; i++) {
+			 				loc = new LocationElement(cra[i], cdec[i], 1);
+			 				loc = new LocationElement(LocationElement.getApproximatePositionAngle(np, loc), Constant.PI_OVER_TWO - LocationElement.getApproximateAngularDistance(np, loc), loc.getRadius());
+			 				cra[i] = loc.getLongitude();
+			 				cdec[i] = loc.getLatitude();
+			 			}
+		 			} catch (Exception exc) {}
+		    	 }
+		    	 if (cons != null && cra != null && cdec != null) {
+		    		 for (int i=0; i<cons.length; i++) {
+		    			 if (s.toLowerCase().equals(cons[i].toLowerCase())) {
+								out = (LocationElement[]) DataSet.addObjectArray(new LocationElement[] {new LocationElement(cra[i], cdec[i], -1)}, out);		    				 
+								names = DataSet.addStringArray(names, cons[i]);
+		    			 } else {
+			    			 if (cons[i].toLowerCase().indexOf(s.toLowerCase()) >= 0) {
+								out = (LocationElement[]) DataSet.addObjectArray(out, new LocationElement[] {new LocationElement(cra[i], cdec[i], -1)});
+								names = DataSet.addStringArray(names, cons[i]);
+			    			 }
+		    			 }
+		    		 }
+		    	 }
+		    	 
 			if (out.length == 0) return null;
-			return out;
+			return new Object[] {names, out};
 		} catch (Exception exc) {
 			Logger.log(LEVEL.ERROR, "Error searching for objects "+s+". Message was: "+exc.getLocalizedMessage()+". Trace: "+JPARSECException.getTrace(exc.getStackTrace()));
 			return null;

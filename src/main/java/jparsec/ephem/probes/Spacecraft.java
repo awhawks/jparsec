@@ -164,6 +164,37 @@ public class Spacecraft
 	}
 
 	/**
+	 * Gets the index of a probe when the phase is not known.
+	 *
+	 * @param name Probe name, with or without the phase.
+	 * @param jd Julian day to search for an active phase.
+	 * @return Probe index of the first match, or -1 if no match in found.
+	 * @throws JPARSECException If an error occurs.
+	 */
+	public static int getIndex(String name, double jd)
+	throws JPARSECException {
+		if (readFile == null) {
+			ReadFile re = new ReadFile();
+			re.setPath(Spacecraft.PATH_TO_PROBES_FILE);
+			re.readFileOfProbes();
+			readFile = re;
+		}
+
+		int index = -1;
+		for (int i=0; i<readFile.getNumberOfObjects(); i++)
+		{
+			if (Spacecraft.getFullName(i).toLowerCase().indexOf(name.toLowerCase()) >= 0) {
+				if (isTimeApplicable(getOrbitalElementsOfMinorBody(Spacecraft.getFullName(i)), jd)) {
+					index = i;
+					break;
+				}
+			}
+		}
+
+		return index;
+	}
+
+	/**
 	 * Gets the full name of the probe. Format is "NAME-PHASE". Phase does not
 	 * exist always.
 	 *

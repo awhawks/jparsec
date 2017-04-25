@@ -324,14 +324,17 @@ public class Version
 						"Improved support for external catalogs in sky rendering.\n"+
 						"Fix when computing when the rings of Saturn reach the maximum aperture.\n"+
 						"New events computed: supermoon, Neomenia, transits of satellites on top of planets.\n",
-				"      1.113:  (Apr 1, 2017):\n"+
+				"      1.113: Night mode support and some fixes (Apr 1, 2017):\n"+
 						"Complete support for night mode in planetary rendering, icons, and deeps sky textures.\n"+
 						"Fixed 60 textures for deep sky objects.\n"+
 						"Trajectories for bodies can now include custom labels in each point, and the trajectory can be set from an array of external positions for objects not supported (transient NEOs).\n"+
 						"When rendering the Earth map with artificial satellites and their elements cannot be updated the satellites do not appear, but the trajectories computed with outdated elements did.\n"+
 						"Fixed some problems with the position of subscripts and superscripts in TextLabel class.\n",
-				"      1.114:  (May XX, 2017):\n"+
-						".\n"
+				"      1.114: Many bug fixes (May XX, 2017):\n"+
+						"Fix in Functions.normalizeRadians for very high input values.\n"+
+						"AWTGraphics now correctly detects and downloads images for https protocol.\n"+
+						"Planets and satellites did not appear correctly in white color mode.\n"+
+						"Better axes labels, milky way and ecliptic cuts with the horizon, and some other sky rendering fixes.\n"
 
 				+FileIO.getLineSeparator(),
 		};
