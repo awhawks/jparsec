@@ -4779,22 +4779,26 @@ public class RenderSky
 			if (file != null && file.equals("SUN")) ang = 0;
 
 			//ang -= Constant.PI_OVER_FOUR; //Constant.TWO_PI * ((jd - Constant.J2000) / 365.25) / 25800.0;
-			if (g.renderingToAndroid() || !recovered || w == -1 || h == -1) {
+			if (!recovered || w == -1 || h == -1) {
 				img = g.getScaledImage(img, w*(int)(2*radius_x+0.5), h*(int)(2*radius_y+0.5), true, false);
-				if (file != null && !g.renderingToAndroid()) g.addToDataBase(img, file+render.getColorMode().name(), 100);
-			}
-			img = g.getRotatedAndScaledImage(img, radius_x-0.5f, radius_y-0.5f, ang, 1, 1);
-			if (render.getColorMode() == COLOR_MODE.NIGHT_MODE) {
-				int arr[] = g.getImageAsPixels(img), s[] = g.getSize(img);
-				for (int i=0; i<arr.length; i++) {
-					int r = (arr[i]>>16)&255;
-					arr[i] = 255<<24 | r<<16;
+			}				
+			if (!recovered) {
+				img = g.getRotatedAndScaledImage(img, radius_x-0.5f, radius_y-0.5f, ang, 1, 1);
+				if (render.getColorMode() == COLOR_MODE.NIGHT_MODE) {
+					int arr[] = g.getImageAsPixels(img), s[] = g.getSize(img);
+					for (int i=0; i<arr.length; i++) {
+						int r = (arr[i]>>16)&255;
+						arr[i] = 255<<24 | r<<16;
+					}
+					img = g.getImage(s[0], s[1], arr);
 				}
-				img = g.getImage(s[0], s[1], arr);
+			}
+			if (file != null && !file.equals("SUN") && !recovered) {
+				g.addToDataBase(img, file+render.getColorMode().name(), 5);
 			}
 			
 			if (render.drawSkyCorrectingLocalHorizon && projection.obs.getMotherBody() == TARGET.EARTH && projection.eph.isTopocentric
-					&& (projection.eph.targetBody != TARGET.SUN || !render.planetRender.axes)) {
+					&& (projection.eph.targetBody != TARGET.SUN)) {
 				LocationElement locEq = projection.toEquatorialPosition(loc, true);
 				LocationElement locH = projection.getApparentLocationInSelectedCoordinateSystem(locEq, false, true, COORDINATE_SYSTEM.HORIZONTAL, (float) (sc * Constant.DEG_TO_RAD / 120.0));
 				double elev = locH.getLatitude(), angrad = Constant.DEG_TO_RAD * sc / 120.0;
@@ -5132,7 +5136,8 @@ public class RenderSky
 						name = (String) obj[0];
 						comments = (String) obj[7];
 						size = Math.max(size0, g.renderingToAndroid() ? 6 : 3);
-						if (projection.isCylindricalForced() && (fieldDeg < 60 || hugeFactor >= 1) && !external && size > 15 && render.drawDeepSkyObjectsTextures && !imagesNotFound.contains(name)) {
+						if (projection.isCylindricalForced() && (fieldDeg < 60 || hugeFactor >= 1) && !external && size > 15 && render.drawDeepSkyObjectsTextures && !imagesNotFound.contains(name)
+								&& locF.getLatitude() < 80*Constant.DEG_TO_RAD) {
 							String file = name.toLowerCase() + ".jpg";
 							if (file.indexOf("caldwell")>=0) {
 								file = searchDeepSkyObjectReturnMainName(file);
@@ -8020,7 +8025,7 @@ public class RenderSky
 							for (int index = 0; index < rs; index++)
 							{
 								SatelliteOrbitalElement sat = SatelliteEphem.getArtificialSatelliteOrbitalElement(index);
-								ArrayList<Object[]> events = SatelliteEphem.getNextIridiumFlares(time, projection.obs, eph, sat, Constant.DEG_TO_RAD, dt * 2, true, 5);
+								ArrayList<Object[]> events = SDP4_SGP4.getNextIridiumFlares(time, projection.obs, eph, sat, Constant.DEG_TO_RAD, dt * 2, true, 5);
 								if (events != null && events.size() > 0) {
 									for (int i=0; i<events.size(); i++) {
 										Object data[] = events.get(i);
@@ -9852,7 +9857,7 @@ public class RenderSky
 			throws JPARSECException
 	{
 		Object readStars[] = re_star.getReadElements();
-		if (my_star >= readStars.length) return null;
+		if (readStars == null || my_star >= readStars.length) return null;
 		StarData star = (StarData) readStars[my_star];
 		if (star == null || star.loc == null) return null;
 		if (maxStars > -1 && my_star >= maxStars) return null;
@@ -9900,7 +9905,7 @@ public class RenderSky
 			throws JPARSECException
 	{
 		Object readStars[] = re_star.getReadElements();
-		if (my_star >= readStars.length) return null;
+		if (readStars == null || my_star >= readStars.length) return null;
 		StarData sd = (StarData) readStars[my_star];
 		if (sd == null || sd.loc == null) return null;
 		if (maxStars > -1 && my_star >= maxStars) return null;
@@ -10528,6 +10533,7 @@ public class RenderSky
 		if (render.drawClever && field > 10 * this.trajectoryField) steps = 3;
 		double cte2 = cte * cte;
 
+		boolean spa = Translate.getDefaultLanguage() == LANGUAGE.SPANISH;
 		for (int index = 0; index < render.trajectory.length; index++)
 		{
 			if (render.trajectory[index].loc_path == null) continue;
@@ -10702,7 +10708,11 @@ public class RenderSky
 							if (render.trajectory[index].drawLabelsFormat == TrajectoryElement.LABELS.YEAR_MONTH_DAY)
 								label = astro.getYear() + " " + label;
 							if (render.trajectory[index].drawLabelsFormat == TrajectoryElement.LABELS.DAY_MONTH_ABBREVIATION) {
-								label = astro.getDay() + " " + mont[-1 + astro.getMonth()];
+								if (spa) {
+									label = astro.getDay() + " " + mont[-1 + astro.getMonth()];
+								} else {
+									label = mont[-1 + astro.getMonth()] + " " + astro.getDay();									
+								}
 								if (Math.abs(this.jd-jd) > 365) {
 									label += " " + astro.getYear();
 								}
@@ -10715,9 +10725,9 @@ public class RenderSky
 									if (stepTime * 1440.0 <= 0.1) {
 										String sec = Functions.formatValue(astro.getSeconds(), 1);
 										if (sec.indexOf(".") == 1) sec = "0" + sec;
-										label = Functions.fmt(astro2.getHour(), 2, ':')+Functions.fmt(astro2.getMinute(), 2, ' ')+":"+sec;
+										label = Functions.fmt(astro2.getHour(), 2, ':')+Functions.fmt(astro2.getMinute(), 2, ' ').trim()+":"+sec;
 									} else {
-										label = Functions.fmt(astro2.getHour(), 2, ':')+Functions.fmt(astro2.getMinute(), 2, ' ');
+										label = Functions.fmt(astro2.getHour(), 2, ':')+Functions.fmt(astro2.getMinute(), 2, ' ').trim();
 										String sec = Functions.fmt(astro.getRoundedSecond(), 2, ' ').trim();
 										if (!sec.equals("00")) label += ":" + sec;
 									}
@@ -14005,13 +14015,15 @@ public class RenderSky
 			}
 		}
 
-		for (int n = 0; n < names2.length; n++)
-		{
-			String line = names2[n];
-			int aa = line.toLowerCase().indexOf(properName.toLowerCase());
-			if (aa >= 0)
+		if (names != null && names2 != null) {
+			for (int n = 0; n < names2.length; n++)
 			{
-				return names[n];
+				String line = names2[n];
+				int aa = line.toLowerCase().indexOf(properName.toLowerCase());
+				if (aa >= 0)
+				{
+					return names[n];
+				}
 			}
 		}
 		return null;

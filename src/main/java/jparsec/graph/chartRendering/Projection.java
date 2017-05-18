@@ -1212,7 +1212,7 @@ public class Projection
 	public LocationElement getEclipticPositionOfRendering() throws JPARSECException
 	{
 		LocationElement loc;
-		boolean fast = true;
+		boolean fast = false;
 		switch (this.render.coordinateSystem)
 		{
 		case GALACTIC:
@@ -1246,7 +1246,7 @@ public class Projection
 	{
 		if (render.coordinateSystem == CoordinateSystem.COORDINATE_SYSTEM.EQUATORIAL) return loc0;
 
-		boolean fast = true;
+		boolean fast = false;
 		switch (this.render.coordinateSystem)
 		{
 		case GALACTIC:
@@ -1282,7 +1282,7 @@ public class Projection
 	 */
 	public LocationElement getGalacticPositionOfRendering() throws JPARSECException
 	{
-		boolean fast = true; // <5" of difference
+		boolean fast = false; // <5" of difference
 		LocationElement loc0 = this.loc0.clone();
 		switch (this.render.coordinateSystem)
 		{
@@ -1316,7 +1316,7 @@ public class Projection
 	 */
 	public LocationElement getHorizontalPositionOfRendering() throws JPARSECException
 	{
-		boolean fast = true; // <5" of difference
+		boolean fast = false; // <5" of difference
 		LocationElement loc0 = this.loc0.clone();
 		switch (this.render.coordinateSystem)
 		{

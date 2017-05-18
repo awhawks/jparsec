@@ -334,6 +334,7 @@ public class Version
 						"Fix in Functions.normalizeRadians for very high input values.\n"+
 						"AWTGraphics now correctly detects and downloads images for https protocol.\n"+
 						"Planets and satellites did not appear correctly in white color mode.\n"+
+						"Better performance for the overlay of deep sky textures, and fix for Mel111 position.\n"+
 						"Better axes labels, milky way and ecliptic cuts with the horizon, and some other sky rendering fixes.\n"
 
 				+FileIO.getLineSeparator(),
@@ -345,7 +346,7 @@ public class Version
 			// Dependency name                             Version
 			"jparsec.jar                                   1.114",
 
-			"sky.jar                                       1.39",
+			"sky.jar                                       1.40",
 			"orbital_elements.jar                          1.25",
 			"sunspot.jar                                   1.15",
 			"eop.jar                                       1.14",
@@ -356,7 +357,7 @@ public class Version
 			"radex.jar                                     1.03",
 			"jfreechart-1.0.13.jar                         1.00",
 			"series96.jar                                  1.02",
-			"textures.jar                                  1.11",
+			"textures.jar                                  1.12",
 			"surfacePlotter2.0.jar                         1.00",
 			"miglayout-4.0-swing.jar                       1.00",
 			"nrjavaserial-3.8.8.jar                        1.00",

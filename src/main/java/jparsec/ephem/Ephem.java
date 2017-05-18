@@ -1960,7 +1960,7 @@ public class Ephem
 	 */
 	public static double[] aberration(double geo_pos[], double earth[], double light_time) throws JPARSECException
 	{
-		if (light_time <= 0) return geo_pos;
+		if (light_time <= 0 || earth == null) return geo_pos;
 
 		double vearth[] = new double[] { earth[3], earth[4], earth[5] };
 		double p[] = geo_pos.clone();

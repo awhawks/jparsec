@@ -33,6 +33,7 @@ import jparsec.ephem.moons.MoonEphem;
 import jparsec.ephem.planets.EphemElement;
 import jparsec.ephem.planets.OrbitEphem;
 import jparsec.ephem.planets.OrbitalElement;
+import jparsec.ephem.probes.SDP4_SGP4;
 import jparsec.ephem.probes.SatelliteEphem;
 import jparsec.ephem.probes.Spacecraft;
 import jparsec.ephem.stars.StarElement;
@@ -674,7 +675,7 @@ public class TrajectoryElement implements Serializable
 						this.loc_path[step] = new LocationElement(ephem.rightAscension, ephem.declination, 1.0);
 						break;
 					case ARTIFICIAL_SATELLITE:
-						ephem = EphemElement.parseSatelliteEphemElement(SatelliteEphem.satEphemeris(time_path, obs, eph_path, false), time_path.astroDate.jd());
+						ephem = EphemElement.parseSatelliteEphemElement(SDP4_SGP4.satEphemeris(time_path, obs, eph_path, false), time_path.astroDate.jd());
 						this.loc_path[step] = new LocationElement(ephem.rightAscension, ephem.declination, 1.0);
 						break;
 					default:

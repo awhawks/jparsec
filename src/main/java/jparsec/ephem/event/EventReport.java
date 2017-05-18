@@ -1062,7 +1062,9 @@ public class EventReport {
 				if (star != null) {
 					if (star.magnitude < maglim)
 					{
-							list.add(star);
+						list.add(star);
+					} else {
+						break;
 					}
 				}
 			}
@@ -1103,6 +1105,7 @@ public class EventReport {
 				String com = FileIO.getRestAfterField(8, line, " ", true);
 
 				double m = Double.parseDouble(mag);
+				if (m > maglim) break;
 				LocationElement loc = new LocationElement(Double.parseDouble(ra)/Constant.RAD_TO_HOUR, Double.parseDouble(dec)*Constant.DEG_TO_RAD, 1.0);
 				if (loc != null && m < maglim) {
 					int tt = DataSet.getIndex(types, type);
