@@ -174,8 +174,13 @@ public class Configuration
 			try {
 				// The trick is to use the reference date of the elements of the first artificial satellite,
 				// since when they are updated the reflect very approximately the last update time.
-				// This works if everything is updated the same date, which is ussual.
-				SatelliteOrbitalElement sat = SatelliteEphem.getArtificialSatelliteOrbitalElement(0);
+				// This works if everything is updated the same date, which is usual.
+				ReadFile re = new ReadFile();
+				re.setPath(SatelliteEphem.PATH_TO_SATELLITES_FILE);
+				if (SatelliteEphem.USE_IRIDIUM_SATELLITES) re.setPath(SatelliteEphem.PATH_TO_SATELLITES_IRIDIUM_FILE);
+				re.readFileOfArtificialSatellites();
+
+				SatelliteOrbitalElement sat = re.getSatelliteOrbitalElement(0);
 				AstroDate astro = new AstroDate(sat.year, 1, sat.day);
 				Logger.log(LEVEL.INFO, "Cannot obtain last update time of orbital elements. The approximate date is "+astro.toString()+", based on artificial satellites elements.");
 				return astro.msFrom1970();
@@ -195,7 +200,20 @@ public class Configuration
 		String fileName = FileIO.getFileNameFromPath(SatelliteEphem.PATH_TO_SATELLITES_FILE);
 		if (SatelliteEphem.USE_IRIDIUM_SATELLITES)
 			fileName = FileIO.getFileNameFromPath(SatelliteEphem.PATH_TO_SATELLITES_IRIDIUM_FILE);
-		long date = getLastModifiedTimeOfResource(FileIO.DATA_ORBITAL_ELEMENTS_JARFILE, FileIO.DATA_ORBITAL_ELEMENTS_DIRECTORY, fileName);
+		long date;
+		if (SatelliteEphem.usingExternalElementsAsDefaultData()) {
+			SatelliteOrbitalElement sat = SatelliteEphem.getArtificialSatelliteOrbitalElement(0);
+			AstroDate sastro = new AstroDate(sat.year, 1, sat.day);
+			date = sastro.msFrom1970();
+		} else {
+			date = getLastModifiedTimeOfResource(FileIO.DATA_ORBITAL_ELEMENTS_JARFILE, FileIO.DATA_ORBITAL_ELEMENTS_DIRECTORY, fileName);
+			if (date <= 0) {
+				if (APPLET_MODE) return true;
+				return false;
+			}
+			double dt = (astro.msFrom1970() - date) / (1000.0 * Constant.SECONDS_PER_DAY);
+			if (dt < -MAXIMUM_DAYS_FROM_ELEMENTS_ARTIFICIAL_SATELLITES || dt > MAXIMUM_DAYS_FROM_ELEMENTS_ARTIFICIAL_SATELLITES) return false;
+		}
 		if (date <= 0) {
 			if (APPLET_MODE) return true;
 			return false;

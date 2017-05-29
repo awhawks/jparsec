@@ -127,6 +127,24 @@ public class SatelliteEphem
 	private static String defaultData[] = null, defaultDataIridium[] = null;
 
 	/**
+	 * Returns if a set of external elements (from an updated file of elements of 
+	 * artificial satellites) is currently being used as the default data for 
+	 * the main artificial satellites or the iridium satellites. If true, you can 
+	 * reset and use again the internal catalog (possibly outdated) by calling 
+	 * {@linkplain #setSatellitesFromExternalFile(String[])} with a null object. If 
+	 * false, you can call {@linkplain #setSatellitesFromExternalFile(String[], boolean)}
+	 * with the new elements and true as boolean, to set as default new updated elements.
+	 * @return True or false.
+	 */
+	public static boolean usingExternalElementsAsDefaultData() {
+		if (USE_IRIDIUM_SATELLITES) {
+			return defaultDataIridium != null;
+		} else {
+			return defaultData != null;
+		}
+	}
+
+	/**
 	 * Sets the list of orbital elements of satellite to that of an
 	 * external file.
 	 * @param file The read file, in the three-line format

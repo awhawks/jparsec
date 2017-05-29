@@ -104,6 +104,7 @@ import jparsec.observer.ExtraterrestrialObserverElement;
 import jparsec.observer.LocationElement;
 import jparsec.observer.ObserverElement;
 import jparsec.time.AstroDate;
+import jparsec.time.DateTimeOps;
 import jparsec.time.SiderealTime;
 import jparsec.time.TimeElement;
 import jparsec.time.TimeElement.SCALE;
@@ -8153,6 +8154,11 @@ public class RenderSky
 						{
 							String label = ephem.name+", "+Functions.formatValue(ephem.magnitude, 1);
 							label += (g.renderingToAndroid() ? "m" : "^{m}");
+							AstroDate astroS = new AstroDate((Double)data[0]);
+							String start = DateTimeOps.twoDigits(astroS.getHour())+":"+DateTimeOps.twoDigits(astroS.getMinute())+":"+DateTimeOps.twoDigits(astroS.getRoundedSecond());
+							AstroDate astroE = new AstroDate((Double)data[1]);
+							String end = DateTimeOps.twoDigits(astroE.getHour())+":"+DateTimeOps.twoDigits(astroE.getMinute())+":"+DateTimeOps.twoDigits(astroE.getRoundedSecond());
+							label += "("+start+"-"+end+")";
 							drawString(render.drawStarsColor, render.drawMinorObjectsNamesFont,
 									label, pos[0], pos[1], -(18+render.drawMinorObjectsNamesFont.getSize()), false);
 						}
