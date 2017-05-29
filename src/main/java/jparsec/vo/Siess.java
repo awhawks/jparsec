@@ -325,8 +325,8 @@ public class Siess {
 		chart.xTickLabels = ChartElement.TICK_LABELS.LOGARITHM_VALUES;
 		chart.yTickLabels = ChartElement.TICK_LABELS.LOGARITHM_VALUES;
 
-		chart.xAxisInLogScale = true;
-		chart.yAxisInLogScale = true;
+		chart.xAxisInLogScale = false;
+		chart.yAxisInLogScale = false;
 		return new CreateChart(chart);
 	}
 

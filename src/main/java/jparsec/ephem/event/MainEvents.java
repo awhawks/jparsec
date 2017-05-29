@@ -1824,7 +1824,7 @@ public class MainEvents
 
 			double dif = GRS_lon - ephem.longitudeOfCentralMeridianSystemII;
 			dif = Functions.normalizeRadians(dif);
-//			if (dif > Math.PI) dif = dif - Constant.TWO_PI;
+			if (dif > Math.PI) dif = dif - Constant.TWO_PI;
 			double dt = dif * 9.9 / (24.0 * Constant.TWO_PI);
 			jd = jd + dt * 0.25; // * 0.5;
 			if (dt < prec) {

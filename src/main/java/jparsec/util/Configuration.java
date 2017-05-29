@@ -323,7 +323,7 @@ public class Configuration
 	public static synchronized String updateArtificialSatellitesInTempDir(AstroDate astro) throws JPARSECException {
 		SatelliteEphem.setSatellitesFromExternalFile(null, true);
 
-		if (isAcceptableDateForArtificialSatellites(astro)) return null;
+		//if (isAcceptableDateForArtificialSatellites(astro)) return null;
 
 		double dt = getdt(astro.msFrom1970(), System.currentTimeMillis());
 
@@ -331,8 +331,10 @@ public class Configuration
 			if (dt < -MAXIMUM_DAYS_FROM_ELEMENTS_ARTIFICIAL_SATELLITES_SHOW || dt > MAXIMUM_DAYS_FROM_ELEMENTS_ARTIFICIAL_SATELLITES_SHOW) {
 				return null;
 			} else {
-				SatelliteEphem.setSatellitesFromExternalFile(null, true);
-				return "DEFAULT_FILE";
+				if (MAXIMUM_DAYS_FROM_ELEMENTS_ARTIFICIAL_SATELLITES > MAXIMUM_DAYS_FROM_ELEMENTS_ARTIFICIAL_SATELLITES_SHOW) {
+					SatelliteEphem.setSatellitesFromExternalFile(null, true);
+					return "DEFAULT_FILE";
+				}
 			}
 		}
 
@@ -365,7 +367,7 @@ public class Configuration
 
 
 		String p = FileIO.getTemporalDirectory() + fileName;
-		File f = new File(p);
+/*		File f = new File(p);
 		if (f.exists()) {
 			double newdt = getdt(astro.msFrom1970(), f.lastModified());
 			double dtElapsedFromLastDownload = getdt(System.currentTimeMillis(), f.lastModified());
@@ -375,7 +377,7 @@ public class Configuration
 				return p;
 			}
 		}
-
+*/
 		if (SatelliteEphem.USE_IRIDIUM_SATELLITES) {
 			String query = Update.UPDATE_URL_VISUAL_ARTIFICIAL_SATELLITES_IRIDIUM;
 			String q = GeneralQuery.query(query, QUERY_TIMEOUT);
