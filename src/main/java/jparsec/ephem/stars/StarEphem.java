@@ -62,14 +62,14 @@ import jparsec.util.Translate.LANGUAGE;
  *
  * <pre>
  * // Read BSC5 or SKYMASTER 2000 catalog
- * ReadElement roe = new ReadElement();
- * roe.setPath(PATH_TO_BSC5_FILE);
- * roe.setFormat(ReadElement.format_BSC5);
- * roe.readFileOfStars();
+ * ReadFile rf = new ReadFile();
+ * rf.setPath(PATH_TO_BSC5_FILE);
+ * rf.setFormat(ReadFile.FORMAT.BSC5);
+ * rf.readFileOfStars();
  *
  * // Choose a star.
- * int my_star = roe.searchByName(&quot;Alp UMi&quot;);
- * StarElement star = (StarElement) roe.READ_ELEMENTS.elementAt(my_star);
+ * int my_star = rf.searchByName(&quot;Alp UMi&quot;);
+ * StarElement star = (StarElement) rf.READ_ELEMENTS.elementAt(my_star);
  *
  * // Calc ephemeris.
  * StarEphemElement star_ephem = StarEphem.StarEphemeris(time, observer, eph, star, true);

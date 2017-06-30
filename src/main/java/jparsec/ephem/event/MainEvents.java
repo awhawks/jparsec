@@ -395,7 +395,7 @@ public class MainEvents
 			ObserverElement observer = ObserverElement.parseCity(city);
 			EphemElement mephem = Ephem.getEphemeris(mtime, observer, eph, false);
 			boolean superMoon = (mephem.distance * Constant.AU) < 360000;
-			if (superMoon) type = Translate.translate(1323);
+			if (superMoon) type += " ("+Translate.translate(1323)+")";
 		}
 
 		SimpleEventElement see = new SimpleEventElement(jde, inputEvent, type);

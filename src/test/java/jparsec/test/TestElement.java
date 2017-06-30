@@ -811,6 +811,7 @@ public class TestElement implements Serializable {
 			type = testValues[3].toLowerCase().trim();
 
 			if (type.equals("grs")) {
+				astro = new AstroDate((int) in[0], (int) in[1], in[2]);
 				SimpleEventElement see = MainEvents.getJupiterGRSNextTransitTime(TimeScale.getJD(new TimeElement(astro.jd(), TimeElement.SCALE.UNIVERSAL_TIME_UT1), observer, eph, SCALE.BARYCENTRIC_DYNAMICAL_TIME));
 				foundValues = new String[] {TimeFormat.formatJulianDayAsDateAndTimeOnlyMinutes(new TimeElement(TimeScale.getJD(new TimeElement(see.time, TimeElement.SCALE.BARYCENTRIC_DYNAMICAL_TIME), observer, eph, SCALE.UNIVERSAL_TIME_UT1), SCALE.UNIVERSAL_TIME_UT1), true, true) };
 			}

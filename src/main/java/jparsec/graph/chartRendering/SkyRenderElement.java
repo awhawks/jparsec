@@ -1148,7 +1148,7 @@ public class SkyRenderElement implements Serializable
 				}
 
 				s = getField(line, rf, SkyRenderElement.EXTERNAL_CATALOG_FIELD_POSITION_ANGLE_DEG);
-				if (s != null) pa = (float) (Double.parseDouble(s) * Constant.DEG_TO_RAD);
+				if (s != null && !s.equals("-") && !s.equals("-1")) pa = (float) (Double.parseDouble(s) * Constant.DEG_TO_RAD);
 
 				s = getField(line, rf, SkyRenderElement.EXTERNAL_CATALOG_FIELD_SIZE_DEG);
 				if (s != null) {
@@ -1247,7 +1247,7 @@ public class SkyRenderElement implements Serializable
 							LocationElement.parseLocationElement(loc), eph));
 				}
 
-				list.add(new Object[] {name1, name2, tt, loc, (float)Double.parseDouble(mag),
+				list.add(new Object[] {name1, name2, (byte) tt, loc, (float)Double.parseDouble(mag),
 						new float[] {maxSize, minSize}, pa, com, rgb});
 			}
 		}
@@ -1360,7 +1360,7 @@ public class SkyRenderElement implements Serializable
 				}
 
 				s = getField(contents[i], rf, SkyRenderElement.EXTERNAL_CATALOG_FIELD_POSITION_ANGLE_DEG);
-				if (s != null) pa = (float) (Double.parseDouble(s) * Constant.DEG_TO_RAD);
+				if (s != null && !s.equals("-") && !s.equals("-1")) pa = (float) (Double.parseDouble(s) * Constant.DEG_TO_RAD);
 
 				s = getField(contents[i], rf, SkyRenderElement.EXTERNAL_CATALOG_FIELD_SIZE_DEG);
 				if (s != null) {
@@ -1459,7 +1459,7 @@ public class SkyRenderElement implements Serializable
 							LocationElement.parseLocationElement(loc), eph));
 				}
 
-				list.add(new Object[] {name1, name2, tt, loc, (float)Double.parseDouble(mag),
+				list.add(new Object[] {name1, name2, (byte) tt, loc, (float)Double.parseDouble(mag),
 						new float[] {maxSize, minSize}, pa, com, rgb});
 			}
 		}
@@ -1546,7 +1546,7 @@ public class SkyRenderElement implements Serializable
 					if (s != null && !s.equals("") && !s.startsWith("null")) 
 						com = s;
 					s = FileIO.getField(6, contents[i], separator, true);
-					if (s != null && !s.equals("") && !s.startsWith("null")) 
+					if (s != null && !s.equals("") && !s.equals("-1") && !s.equals("-") && !s.startsWith("null")) 
 						pa = (float) (Double.parseDouble(s) * Constant.DEG_TO_RAD);
 					s = FileIO.getField(5, contents[i], separator, true);
 					if (s != null && !s.equals("") && !s.startsWith("null")) { 
@@ -1608,7 +1608,7 @@ public class SkyRenderElement implements Serializable
 							LocationElement.parseLocationElement(loc), eph));
 				}
 
-				list.add(new Object[] {name1, name2, tt, loc, (float)Double.parseDouble(mag),
+				list.add(new Object[] {name1, name2, (byte) tt, loc, (float)Double.parseDouble(mag),
 						new float[] {maxSize, minSize}, pa, com, rgb});
 			}
 		}
@@ -1696,7 +1696,7 @@ public class SkyRenderElement implements Serializable
 					if (s != null && !s.equals("") && !s.startsWith("null")) 
 						com = s;
 					s = FileIO.getField(6, line, separator, true);
-					if (s != null && !s.equals("") && !s.startsWith("null")) 
+					if (s != null && !s.equals("-1") && !s.equals("") && !s.equals("-") && !s.startsWith("null")) 
 						pa = (float) (Double.parseDouble(s) * Constant.DEG_TO_RAD);
 					s = FileIO.getField(5, line, separator, true);
 					if (s != null && !s.equals("") && !s.startsWith("null")) { 
@@ -1758,7 +1758,7 @@ public class SkyRenderElement implements Serializable
 							LocationElement.parseLocationElement(loc), eph));
 				}
 
-				list.add(new Object[] {name1, name2, tt, loc, (float)Double.parseDouble(mag),
+				list.add(new Object[] {name1, name2, (byte) tt, loc, (float)Double.parseDouble(mag),
 						new float[] {maxSize, minSize}, pa, com, rgb});
 			}
 		}

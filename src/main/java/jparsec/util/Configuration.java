@@ -75,13 +75,13 @@ public class Configuration
 	 * orbital elements of artificial satellites and the date when new elements
 	 * should be downloaded.
 	 */
-	public static int MAXIMUM_DAYS_FROM_ELEMENTS_ARTIFICIAL_SATELLITES = 2;
+	public static int MAXIMUM_DAYS_FROM_ELEMENTS_ARTIFICIAL_SATELLITES = 3;
 
 	/**
 	 * Holds the maximum acceptable difference of days between the date of the
 	 * orbital elements of artificial satellites and the date they can be shown.
 	 */
-	public static int MAXIMUM_DAYS_FROM_ELEMENTS_ARTIFICIAL_SATELLITES_SHOW = 5;
+	public static int MAXIMUM_DAYS_FROM_ELEMENTS_ARTIFICIAL_SATELLITES_SHOW = 7;
 
 	/**
 	 * Holds the maximum acceptable difference of days between the date of the
@@ -197,22 +197,16 @@ public class Configuration
 	 * @throws JPARSECException If an error occurs.
 	 */
 	public static boolean isAcceptableDateForArtificialSatellites(AstroDate astro) throws JPARSECException {
-		String fileName = FileIO.getFileNameFromPath(SatelliteEphem.PATH_TO_SATELLITES_FILE);
-		if (SatelliteEphem.USE_IRIDIUM_SATELLITES)
-			fileName = FileIO.getFileNameFromPath(SatelliteEphem.PATH_TO_SATELLITES_IRIDIUM_FILE);
 		long date;
 		if (SatelliteEphem.usingExternalElementsAsDefaultData()) {
 			SatelliteOrbitalElement sat = SatelliteEphem.getArtificialSatelliteOrbitalElement(0);
 			AstroDate sastro = new AstroDate(sat.year, 1, sat.day);
 			date = sastro.msFrom1970();
 		} else {
+			String fileName = FileIO.getFileNameFromPath(SatelliteEphem.PATH_TO_SATELLITES_FILE);
+			if (SatelliteEphem.USE_IRIDIUM_SATELLITES)
+				fileName = FileIO.getFileNameFromPath(SatelliteEphem.PATH_TO_SATELLITES_IRIDIUM_FILE);
 			date = getLastModifiedTimeOfResource(FileIO.DATA_ORBITAL_ELEMENTS_JARFILE, FileIO.DATA_ORBITAL_ELEMENTS_DIRECTORY, fileName);
-			if (date <= 0) {
-				if (APPLET_MODE) return true;
-				return false;
-			}
-			double dt = (astro.msFrom1970() - date) / (1000.0 * Constant.SECONDS_PER_DAY);
-			if (dt < -MAXIMUM_DAYS_FROM_ELEMENTS_ARTIFICIAL_SATELLITES || dt > MAXIMUM_DAYS_FROM_ELEMENTS_ARTIFICIAL_SATELLITES) return false;
 		}
 		if (date <= 0) {
 			if (APPLET_MODE) return true;
@@ -339,21 +333,13 @@ public class Configuration
 	 * @throws JPARSECException If an error occurs.
 	 */
 	public static synchronized String updateArtificialSatellitesInTempDir(AstroDate astro) throws JPARSECException {
-		SatelliteEphem.setSatellitesFromExternalFile(null, true);
-
 		//if (isAcceptableDateForArtificialSatellites(astro)) return null;
 
 		double dt = getdt(astro.msFrom1970(), System.currentTimeMillis());
 
 		if (dt < -MAXIMUM_DAYS_FROM_ELEMENTS_ARTIFICIAL_SATELLITES || dt > MAXIMUM_DAYS_FROM_ELEMENTS_ARTIFICIAL_SATELLITES) {
-			if (dt < -MAXIMUM_DAYS_FROM_ELEMENTS_ARTIFICIAL_SATELLITES_SHOW || dt > MAXIMUM_DAYS_FROM_ELEMENTS_ARTIFICIAL_SATELLITES_SHOW) {
+			if (dt < -MAXIMUM_DAYS_FROM_ELEMENTS_ARTIFICIAL_SATELLITES_SHOW || dt > MAXIMUM_DAYS_FROM_ELEMENTS_ARTIFICIAL_SATELLITES_SHOW)
 				return null;
-			} else {
-				if (MAXIMUM_DAYS_FROM_ELEMENTS_ARTIFICIAL_SATELLITES > MAXIMUM_DAYS_FROM_ELEMENTS_ARTIFICIAL_SATELLITES_SHOW) {
-					SatelliteEphem.setSatellitesFromExternalFile(null, true);
-					return "DEFAULT_FILE";
-				}
-			}
 		}
 
 		String fileName = FileIO.getFileNameFromPath(SatelliteEphem.PATH_TO_SATELLITES_FILE);
@@ -413,6 +399,7 @@ public class Configuration
 			String file[] = DataSet.arrayListToStringArray(ReadFile.readAnyExternalFile(p));
 			SatelliteEphem.setSatellitesFromExternalFile(file, true);
 		} catch (Exception exc) {
+			//SatelliteEphem.setSatellitesFromExternalFile(null, true);
 			FileIO.deleteFile(p);
 			return null;
 		}

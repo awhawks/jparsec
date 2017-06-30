@@ -169,8 +169,13 @@ public class SatelliteEphem
 			return;
 		}
 
-		readFile = new ReadFile();
-		readFile.readFileOfArtificialSatellitesFromExternalFile(file);
+		ReadFile re = new ReadFile();
+		re.readFileOfArtificialSatellitesFromExternalFile(file);
+		if (re.getReadElements() != null) {
+			readFile = re;
+		} else {
+			throw new JPARSECException("Could not read the provided array of elements.");
+		}
 	}
 	private static void readData() throws JPARSECException {
 		if (readFile == null) {

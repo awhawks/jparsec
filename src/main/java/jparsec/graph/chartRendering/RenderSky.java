@@ -1725,7 +1725,8 @@ public class RenderSky
 							}
 						} else {
 							Object shadow = g.getImage(FileIO.DATA_TEXTURES_DIRECTORY + "earth-shadow.png");
-							int factorQ = 4; // Resample texture, since it has low resolution
+							int step = g.renderingToAndroid() ? 2 : 1;
+							int factorQ = 4 / step; // Resample texture, since it has low resolution
 							int sizei[] = g.getSize(shadow);
 							shadow = g.getScaledImage(shadow, sizei[0]*factorQ, 4, false, true);
 							int refC = 157*factorQ;
@@ -1742,9 +1743,9 @@ public class RenderSky
 								upperLimbFactor = (float) (dp / angrad);
 								angr = (float) (projection.getCenitAngleAt(locEq, true) - Constant.PI_OVER_TWO);
 							}
-							for (int iy = (int)(rp.yPosition - moon_size); iy < (int)(rp.yPosition + moon_size); iy++)
+							for (int iy = (int)(rp.yPosition - moon_size); iy < (int)(rp.yPosition + moon_size); iy = iy + step)
 							{
-								for (int ix = (int)(rp.xPosition - moon_size); ix < (int)(rp.xPosition + moon_size); ix++)
+								for (int ix = (int)(rp.xPosition - moon_size); ix < (int)(rp.xPosition + moon_size); ix = ix + step)
 								{
 									if (ix >= 0 && ix < render.width && iy >= 0 && iy < render.height)
 									{
@@ -1783,18 +1784,18 @@ public class RenderSky
 															Math.max(0, g.getBlue(c)-delta),
 															alpha);
 													if (render.anaglyphMode == ANAGLYPH_COLOR_MODE.NO_ANAGLYPH) {
-														g.fillRect(ix, iy, 1, 1);
+														g.fillRect(ix, iy, step, step);
 													} else {
-														g.fillRect(ix, iy, 1, 1, dist);
+														g.fillRect(ix, iy, step, step, dist);
 													}
 												}
 											} else {
 												if (s_r >= r1) {
 													g.setColor(0, alpha0);
 													if (render.anaglyphMode == ANAGLYPH_COLOR_MODE.NO_ANAGLYPH) {
-														g.fillRect(ix, iy, 1, 1);
+														g.fillRect(ix, iy, step, step);
 													} else {
-														g.fillRect(ix, iy, 1, 1, dist);
+														g.fillRect(ix, iy, step, step, dist);
 													}
 												}
 											}
@@ -2164,7 +2165,7 @@ public class RenderSky
 						    	}
 			    			}
 			    		} else {
-			    			drawStar(tsize, pos, dist, sd.spi, g);
+			    			drawStar(tsize, pos, dist, sd.spi/10, g);
 			    		}
 					} else {
 						int tsize = (int) (2 * size+adds);
@@ -2172,12 +2173,9 @@ public class RenderSky
 						colIndex = 2;
 						if (render.getColorMode() == COLOR_MODE.NIGHT_MODE) colIndex = 6;
 
-						if (render.drawStarsColors && !sd.sp.isEmpty())
-						{
-							if (sd.spi >= 0) {
-								g.setColor(col[sd.spi], false);
-								colIndex = sd.spi;
-							}
+						if (render.drawStarsColors && sd.spi >= 0) {
+							colIndex = sd.spi / 10;
+							g.setColor(col[colIndex], false);
 						}
 
 						float tx = (pos[0]) - size;
@@ -3168,14 +3166,19 @@ public class RenderSky
 		boolean soft = true; //!render.fillMilkyWay;
 		int step = 1;
 		boolean fill = render.fillMilkyWay; // && render.drawCoordinateGrid;
+		if (g.renderingToAndroid()) {
+			soft = false;
+			fastMode = false;
+		}
+		/*
 		if (!fill && pixels_per_degree < 11 && render.drawClever && !g.renderingToExternalGraphics()) {
 			step = 2;
 			soft = false;
 			if (render.coordinateSystem == CoordinateSystem.COORDINATE_SYSTEM.HORIZONTAL && !render.drawSkyBelowHorizon && projection.obs.getMotherBody() != TARGET.NOT_A_PLANET) step = 1;
 		}
-		if (g.renderingToAndroid()) soft = false;
+		*/
 
-		int cte = (int) (pixels_per_degree * 10);
+		//int cte = (int) (pixels_per_degree * 10);
 		float loc[]; //[];
 
 		int width2 = (int) (pixels_per_degree_50);
@@ -3194,16 +3197,6 @@ public class RenderSky
 			for (int i = 0; i < rs; i = i + step)
 			{
 				loc = (float[]) milkyWay.get(i);
-				if (step == 2 && i < rs - 1) {
-					if (loc != null && loc[0] == 1.0 && loc[1] == 1.0) {
-						lastIndex = i;
-						break;
-					}
-					float[] loc2 = (float[]) milkyWay.get(i+1);
-					if (loc2 == null || loc2[0] == loc2[1]) {
-						loc = loc2;
-					}
-				}
 
 				if (loc == null) {
 					starting = true;
@@ -3221,7 +3214,7 @@ public class RenderSky
 					{
 						pos0 = projection.projectPosition(loc, 200, true);
 						//pos0 = projection.projectPosition(loc, cte, !fill);
-						if (!projection.isInvalid(pos0) && (render.projection == Projection.PROJECTION.CYLINDRICAL_EQUIDISTANT || render.projection == Projection.PROJECTION.CYLINDRICAL || projection.isCylindricalForced()) && !starting) {
+						if (!projection.isInvalid(pos1) && !projection.isInvalid(pos0) && (render.projection == Projection.PROJECTION.CYLINDRICAL_EQUIDISTANT || render.projection == Projection.PROJECTION.CYLINDRICAL || projection.isCylindricalForced()) && !starting) {
 							if ((FastMath.pow(pos0[0] - pos1[0], 2.0) + FastMath.pow(pos0[1] - pos1[1], 2.0)) > width2)
 								pos0 = Projection.INVALID_POSITION;
 						}
@@ -3262,16 +3255,6 @@ public class RenderSky
 			for (int i = 0; i < rs; i = i + step)
 			{
 				loc = (float[]) milkyWay.get(i);
-				if (step == 2 && i < rs - 1) {
-					if (loc != null && loc[0] == 1.0 && loc[1] == 1.0) {
-						lastIndex = i;
-						break;
-					}
-					float[] loc2 = (float[]) milkyWay.get(i+1);
-					if (loc2 == null || loc2[0] == loc2[1]) {
-						loc = loc2;
-					}
-				}
 
 				if (loc == null) {
 					starting = true;
@@ -3338,7 +3321,7 @@ public class RenderSky
 					{
 						pos0 = projection.projectPosition(loc, 200, true);
 						//pos0 = projection.projectPosition(loc, cte, !fill);
-						if (!projection.isInvalid(pos0) && (render.projection == Projection.PROJECTION.CYLINDRICAL_EQUIDISTANT || render.projection == Projection.PROJECTION.CYLINDRICAL || projection.isCylindricalForced()) && !starting) {
+						if (!projection.isInvalid(pos1) && !projection.isInvalid(pos0) && (render.projection == Projection.PROJECTION.CYLINDRICAL_EQUIDISTANT || render.projection == Projection.PROJECTION.CYLINDRICAL || projection.isCylindricalForced()) && !starting) {
 							if ((FastMath.pow(pos0[0] - pos1[0], 2.0) + FastMath.pow(pos0[1] - pos1[1], 2.0)) > width2)
 								pos0 = Projection.INVALID_POSITION;
 						}
@@ -3581,6 +3564,7 @@ public class RenderSky
 					if (loc[0] == 2.0 && loc[1] == 2.0) {
 						break;
 					}
+					if (loc[0] == 1.0 && loc[1] == 1.0) continue;
 
 					if (projection.obs.getMotherBody() != TARGET.NOT_A_PLANET && projection.eph.isTopocentric)
 					{
@@ -4075,8 +4059,7 @@ public class RenderSky
 			if (render.drawMinorObjectsLabels) drawString(g.getColor(), ff, name, pos0[0], pos0[1], -(radius2+f.getSize()), false);
 			if (SaveObjectsToAllowSearch) {
 				minorObjects.add(new Object[] {
-						RenderSky.OBJECT.METEOR_SHOWER, pos0.clone(),
-						new String[] {name, ""+loc.getLongitude(), ""+loc.getLatitude(), Double.toString(thz), "", "", ""}
+						RenderSky.OBJECT.METEOR_SHOWER, pos0.clone(), loc, (float) thz, name
 				});
 			}
 		}
@@ -4134,6 +4117,7 @@ public class RenderSky
 			if (pixels_per_degree < 7) step = 4;
 			if (pixels_per_degree < 4) step = 6;
 			projection.createNewArrayWhenProjecting = false;
+			if (g.renderingToAndroid()) step += 2;
 		}
 
 		projection.enableCorrectionOfLocalHorizon();
@@ -4832,8 +4816,7 @@ public class RenderSky
 
 	private Object[] getSDSSoldImage(LocationElement loc) throws Exception {
 		String f[] = FileIO.getFiles(FileIO.getTemporalDirectory());
-		Object out[] = null;
-		double minDist = -1;
+		ArrayList<Object[]> out = new ArrayList<Object[]>();
 		for (int i=0; i<f.length; i++) {
 			String s = FileIO.getFileNameFromPath(f[i]);
 			if (s.startsWith("sdss_") && s.endsWith(".jpg")) {
@@ -4844,16 +4827,15 @@ public class RenderSky
 				LocationElement loc2 = new LocationElement(lon, lat, 1.0);
 				double dist = LocationElement.getApproximateAngularDistance(loc, loc2) * Constant.RAD_TO_DEG;
 				if (dist < 1.75) {
-					if (dist < minDist || minDist == -1) {
-						minDist = dist;
-						out = new Object[] {g.getImage(new File(f[i]).toURI().toURL().toString()), loc2,
-								Double.parseDouble(FileIO.getField(3, s2, "_", true))
-								};
-					}
+					out.add(new Object[] {g.getImage(new File(f[i]).toURI().toURL().toString()), 
+							loc2,
+							Double.parseDouble(FileIO.getField(3, s2, "_", true))
+						});
 				}
 			}
 		}
-		return out;
+		if (out.size() == 0) return new Object[] {new Object[] {null, loc, 2.0}};
+		return out.toArray();
 	}
 
 	private static final String types[] = new String[] {"unk", "gal", "neb", "pneb", "ocl", "gcl", "galpart", "qua", "duplicate", "duplicateInNGC", "star/s", "notFound"};
@@ -4947,94 +4929,99 @@ public class RenderSky
 			loc = LocationElement.parseRectangularCoordinates(precessToJ2000(jd, loc.getRectangularCoordinates(), projection.eph));
 
 			 if (g.renderingToAndroid()) {
-				Object img = null;
+
 				try {
-					Object o[] = getSDSSoldImage(loc);
-					if (o != null) {
-						img = o[0];
-						loc = (LocationElement) o[1];
-						fieldDSS = (Double) o[2];
-					}
-				} catch (Exception exc) {}
-
-				String source = ""+(loc.getLongitude()*Constant.RAD_TO_DEG)+" "+(loc.getLatitude()*Constant.RAD_TO_DEG);
-				String l = "DSS "+source+" 0 "+(fieldDSS*60.0)+" 0 DSS DSS DSS";
-				l = DataSet.replaceAll(l, " ", UnixSpecialCharacter.UNIX_SPECIAL_CHARACTER.TAB.value, true);
-				if (img == null && fieldDeg < 3) {
-				 	width = 300;
-					SKYVIEW_SURVEY survey = SKYVIEW_SURVEY.DSSOLD;
-					String query = GeneralQuery.getQueryToSkyView(source, survey, fieldDSS, width, invertLevels, grid, scoord, sproj, slut, sscale, catalog, contours);
-					img = g.getImage(query);
-					if (img != null) {
-						String p = FileIO.getTemporalDirectory() + "sdss_"+(float)loc.getLongitude()+"_"+(float)loc.getLatitude()+"_"+(float)fieldDSS+".jpg";
-						WriteFile.writeImage(p, img);
-					}
-				}
-				overlay(new String[] {l}, 0, false, null, img, baryc,
-						null, null, 1, sph);
-			 } else {
-				Object imgR = null;
-				try {
-					Object o[] = getSDSSoldImage(loc);
-					if (o != null) {
-						imgR = o[0];
-						loc = (LocationElement) o[1];
-						fieldDSS = (Double) o[2];
-					}
-				} catch (Exception exc) {}
-/*				if (lastDSSSource != null) {
-					LocationElement lastDSS = new LocationElement(
-							Double.parseDouble(FileIO.getField(1, lastDSSSource, " ", true)) * Constant.DEG_TO_RAD,
-							Double.parseDouble(FileIO.getField(2, lastDSSSource, " ", true)) * Constant.DEG_TO_RAD, 1.0
-							);
-					double dist = LocationElement.getAngularDistance(lastDSS, locEQ);
-					if (dist < 5 * Constant.DEG_TO_RAD) {
-						imgR = g.getFromDataBase(lastDSSSource);
-						fieldDSS = Double.parseDouble(FileIO.getField(3, lastDSSSource, " ", true));
-						source = ""+(lastDSS.getLongitude()*Constant.RAD_TO_DEG)+" "+(lastDSS.getLatitude()*Constant.RAD_TO_DEG);
-						l = "DSS "+source+" 0 "+(fieldDSS*60.0)+" 0 DSS DSS DSS";
-						l = DataSet.replaceAll(l, " ", UnixSpecialCharacter.UNIX_SPECIAL_CHARACTER.TAB.value, true);
-					} else {
-						DataBase.addData(lastDSSSource, null, true);
-					}
-				}
-*/
-				String source = ""+(loc.getLongitude()*Constant.RAD_TO_DEG)+" "+(loc.getLatitude()*Constant.RAD_TO_DEG);
-				String l = "DSS "+source+" 0 "+(fieldDSS*60.0)+" 0 DSS DSS DSS";
-				l = DataSet.replaceAll(l, " ", UnixSpecialCharacter.UNIX_SPECIAL_CHARACTER.TAB.value, true);
-
-				if (imgR == null && fieldDeg < 3) {
-					// Create the string queries
-					SKYVIEW_SURVEY surveyR = SKYVIEW_SURVEY.DSS2R;
-					SKYVIEW_SURVEY surveyG = SKYVIEW_SURVEY.DSSOLD;
-					SKYVIEW_SURVEY surveyB = SKYVIEW_SURVEY.DSS2B;
-					String queryR = GeneralQuery.getQueryToSkyView(source, surveyR, fieldDSS, width, invertLevels, grid, scoord, sproj, slut, sscale, catalog, contours);
-					String queryG = GeneralQuery.getQueryToSkyView(source, surveyG, fieldDSS, width, invertLevels, grid, scoord, sproj, slut, sscale, catalog, contours);
-					String queryB = GeneralQuery.getQueryToSkyView(source, surveyB, fieldDSS, width, invertLevels, grid, scoord, sproj, slut, sscale, catalog, contours);
-
-					// getImage must support web queries
-					imgR = g.getImage(queryR);
-					Object imgG = g.getImage(queryG);
-					Object imgB = g.getImage(queryB);
-					int imgSize[] = g.getSize(imgR);
-
-					// COMBINE RGB
-					g.disableInversion();
-					for (int x=0; x<imgSize[0]; x++) {
-						for (int y=0; y<imgSize[1]; y++) {
-							g.setRGB(imgR, x, y, Functions.getColor(g.getRed(g.getRGB(imgR, x, y)), g.getGreen(g.getRGB(imgG, x, y)), g.getBlue(g.getRGB(imgB, x, y)), 255));
+					Object oo[] = getSDSSoldImage(loc);
+					if (oo != null) {
+						for (int i=0; i<oo.length; i++) {
+							Object o[] = (Object[]) oo[i];
+							Object img = o[0];
+							loc = (LocationElement) o[1];
+							fieldDSS = (Double) o[2];
+		
+							String source = ""+(loc.getLongitude()*Constant.RAD_TO_DEG)+" "+(loc.getLatitude()*Constant.RAD_TO_DEG);
+							String l = "DSS "+source+" 0 "+(fieldDSS*60.0)+" 0 DSS DSS DSS";
+							l = DataSet.replaceAll(l, " ", "\t", true);
+							if (img == null && fieldDeg < 3) {
+							 	width = 300;
+								SKYVIEW_SURVEY survey = SKYVIEW_SURVEY.DSSOLD;
+								String query = GeneralQuery.getQueryToSkyView(source, survey, fieldDSS, width, invertLevels, grid, scoord, sproj, slut, sscale, catalog, contours);
+								img = g.getImage(query);
+								if (img != null) {
+									String p = FileIO.getTemporalDirectory() + "sdss_"+(float)loc.getLongitude()+"_"+(float)loc.getLatitude()+"_"+(float)fieldDSS+".jpg";
+									WriteFile.writeImage(p, img);
+								}
+							}
+							overlay(new String[] {l}, 0, false, null, img, baryc,
+									null, null, 1, sph);
 						}
 					}
-					g.enableInversion();
-
-					String p = FileIO.getTemporalDirectory() + "sdss_"+(float)loc.getLongitude()+"_"+(float)loc.getLatitude()+"_"+(float)fieldDSS+".jpg";
-					WriteFile.writeImage(p, imgR);
-					//lastDSSSource = source+" "+fieldDSS+" "+render.getColorMode().name();
-					//g.addToDataBase(imgR, lastDSSSource, 0);
-				}
-
-				overlay(new String[] {l}, 0, false, null, imgR, baryc,
-						null, null, 1, sph);
+				} catch (Exception exc) {}
+			 } else {
+				try {
+					Object oo[] = getSDSSoldImage(loc);
+					if (oo != null) {
+						for (int i=0; i<oo.length; i++) {
+							Object o[] = (Object[]) oo[i];
+							Object imgR = o[0];
+							loc = (LocationElement) o[1];
+							fieldDSS = (Double) o[2];
+			/*				if (lastDSSSource != null) {
+								LocationElement lastDSS = new LocationElement(
+										Double.parseDouble(FileIO.getField(1, lastDSSSource, " ", true)) * Constant.DEG_TO_RAD,
+										Double.parseDouble(FileIO.getField(2, lastDSSSource, " ", true)) * Constant.DEG_TO_RAD, 1.0
+										);
+								double dist = LocationElement.getAngularDistance(lastDSS, locEQ);
+								if (dist < 5 * Constant.DEG_TO_RAD) {
+									imgR = g.getFromDataBase(lastDSSSource);
+									fieldDSS = Double.parseDouble(FileIO.getField(3, lastDSSSource, " ", true));
+									source = ""+(lastDSS.getLongitude()*Constant.RAD_TO_DEG)+" "+(lastDSS.getLatitude()*Constant.RAD_TO_DEG);
+									l = "DSS "+source+" 0 "+(fieldDSS*60.0)+" 0 DSS DSS DSS";
+									l = DataSet.replaceAll(l, " ", "\t", true);
+								} else {
+									DataBase.addData(lastDSSSource, null, true);
+								}
+							}
+			*/
+							String source = ""+(loc.getLongitude()*Constant.RAD_TO_DEG)+" "+(loc.getLatitude()*Constant.RAD_TO_DEG);
+							String l = "DSS "+source+" 0 "+(fieldDSS*60.0)+" 0 DSS DSS DSS";
+							l = DataSet.replaceAll(l, " ", "\t", true);
+			
+							if (imgR == null && fieldDeg < 3) {
+								// Create the string queries
+								SKYVIEW_SURVEY surveyR = SKYVIEW_SURVEY.DSS2R;
+								SKYVIEW_SURVEY surveyG = SKYVIEW_SURVEY.DSSOLD;
+								SKYVIEW_SURVEY surveyB = SKYVIEW_SURVEY.DSS2B;
+								String queryR = GeneralQuery.getQueryToSkyView(source, surveyR, fieldDSS, width, invertLevels, grid, scoord, sproj, slut, sscale, catalog, contours);
+								String queryG = GeneralQuery.getQueryToSkyView(source, surveyG, fieldDSS, width, invertLevels, grid, scoord, sproj, slut, sscale, catalog, contours);
+								String queryB = GeneralQuery.getQueryToSkyView(source, surveyB, fieldDSS, width, invertLevels, grid, scoord, sproj, slut, sscale, catalog, contours);
+			
+								// getImage must support web queries
+								imgR = g.getImage(queryR);
+								Object imgG = g.getImage(queryG);
+								Object imgB = g.getImage(queryB);
+								int imgSize[] = g.getSize(imgR);
+			
+								// COMBINE RGB
+								g.disableInversion();
+								for (int x=0; x<imgSize[0]; x++) {
+									for (int y=0; y<imgSize[1]; y++) {
+										g.setRGB(imgR, x, y, Functions.getColor(g.getRed(g.getRGB(imgR, x, y)), g.getGreen(g.getRGB(imgG, x, y)), g.getBlue(g.getRGB(imgB, x, y)), 255));
+									}
+								}
+								g.enableInversion();
+			
+								String p = FileIO.getTemporalDirectory() + "sdss_"+(float)loc.getLongitude()+"_"+(float)loc.getLatitude()+"_"+(float)fieldDSS+".jpg";
+								WriteFile.writeImage(p, imgR);
+								//lastDSSSource = source+" "+fieldDSS+" "+render.getColorMode().name();
+								//g.addToDataBase(imgR, lastDSSSource, 0);
+							}
+			
+							overlay(new String[] {l}, 0, false, null, imgR, baryc,
+									null, null, 1, sph);
+						}
+					}
+				} catch (Exception exc) {}
 			}
 		}
 
@@ -5085,7 +5072,7 @@ public class RenderSky
 				}
 			}
 
-			int type = (Integer) obj[2];
+			int type = (Byte) obj[2];
 			if (render.drawFaintStars && render.drawStarsLimitingMagnitude > 12 && (type == 4 || type == 5)
 					&& faintStars != null && fieldDeg < 3.0 && mag < render.drawStarsLimitingMagnitude - 3) { // mag components around cluster mag + 3
 				// Draw labels for open/globular clusters but not the object itself, when the cluster is partially
@@ -5265,7 +5252,7 @@ public class RenderSky
 								g.setStroke(render.drawDeepSkyObjectsStroke);
 							} else {
 								if (render.fillGalaxyColor != -1) {
-									if (render.drawStarsRealistic == REALISTIC_STARS.NONE_CUTE) {
+									if (pa == -1 || render.drawStarsRealistic == REALISTIC_STARS.NONE_CUTE) {
 										g.setColor(render.background, true);
 										g.fillOval(pos0[0] - size+1, pos0[1] - size+1, 2*size-1, 2*size-1, this.fast);
 									}
@@ -5346,7 +5333,7 @@ public class RenderSky
 									}
 									g.setStroke(render.drawDeepSkyObjectsStroke);
 								} else {
-									drawGalaxy(pos0, size*2, distGal, render.drawStarsRealistic != REALISTIC_STARS.NONE_CUTE, g, render.drawDeepSkyObjectsColor, g.getColor());
+									drawGalaxy(pos0, size, distGal, false, g, render.drawDeepSkyObjectsColor, g.getColor());
 								}
 							}
 							g.setColor(render.drawDeepSkyObjectsColor, true);
@@ -5402,11 +5389,11 @@ public class RenderSky
 
 						if (SaveObjectsToAllowSearch) {
 							String objType = messier;
-							if (type <= 7) objType = objt[type];
+							if (type <= 7) objType = ""+type; //objt[type];
 							if (external && comments != null && !comments.equals("")) comments = "Type: " + comments;
 							minorObjects.add(new Object[] {
-									RenderSky.OBJECT.DEEPSKY, pos0.clone(),
-									new String[] {name2print, ""+locF.getLongitude(), ""+locF.getLatitude(), Double.toString(Math.abs(mag)), objType, ""+size_xy[0]+"x"+size_xy[1], comments}
+									RenderSky.OBJECT.DEEPSKY, pos0.clone(), locF, (float) Math.abs(mag), name2print, 
+									new Object[] {objType, size_xy, comments}
 							});
 						}
 					}
@@ -7998,6 +7985,7 @@ public class RenderSky
 				double mag[] = new double[index2];
 				for (int i=0; i<index2; i++) {
 					mag[i] = satEphem[i].magnitude;
+					if (mag[i] == SatelliteEphemElement.UNKNOWN_MAGNITUDE) mag[i] = 0;
 				}
 				satEphem = (SatelliteEphemElement[]) DataSet.sortInCrescent(satEphem, mag);
 
@@ -8084,9 +8072,10 @@ public class RenderSky
 				enoughBright = true;
 				if (ephem != null && ephem.magnitude != SatelliteEphemElement.UNKNOWN_MAGNITUDE &&
 						ephem.magnitude > render.drawMinorObjectsLimitingMagnitude) break; //enoughBright = false;
-				if (ephem != null && enoughBright && ephem.getLocation() != null) {
+				if (ephem != null && !ephem.isEclipsed && enoughBright && ephem.getLocation() != null) {
 					// Don't draw object if the observer is inside it
-					if (ephem.angularRadius > Constant.PI_OVER_FOUR) continue;
+					if (ephem.angularRadius != SatelliteEphemElement.UNKNOWN_ANGULAR_SIZE && 
+							ephem.angularRadius > Constant.PI_OVER_FOUR) continue;
 
 					float pos[] = projection.projectPosition(ephem.getLocation(), 0, false);
 					if (pos != null && !this.isInTheScreen((int)pos[0], (int)pos[1])) pos = null;
@@ -8424,8 +8413,8 @@ public class RenderSky
 
 					if (SaveObjectsToAllowSearch) {
 						minorObjects.add(new Object[] {
-								RenderSky.OBJECT.SUPERNOVA, pos.clone(),
-								new String[] {(String) obj[1], ""+loc.getLongitude(), ""+loc.getLatitude(), (String) obj[4], (String) obj[3]}
+								RenderSky.OBJECT.SUPERNOVA, pos.clone(), loc, (float) mag, (String) obj[1],  
+								(String) obj[3]
 						});
 						save = true;
 					}
@@ -8618,8 +8607,8 @@ public class RenderSky
 
 					if (SaveObjectsToAllowSearch) {
 						minorObjects.add(new Object[] {
-								RenderSky.OBJECT.NOVA, pos.clone(),
-								new String[] {(String) obj[1], ""+loc.getLongitude(), ""+loc.getLatitude(), (String) obj[4], (String) obj[3]}
+								RenderSky.OBJECT.NOVA, pos.clone(), loc, (float) mag, (String) obj[1], 
+								(String) obj[3]
 						});
 						save = true;
 					}
@@ -8805,17 +8794,16 @@ public class RenderSky
 		public LocationElement loc;
 		public double ra, dec;
 		public float pos[], var[], doub[], mag[];
-		public String sp, nom2, properName, type;
+		public String nom2, properName;
 		public char greek;
 		public int sky2000; // index
-		public short spi;
+		public byte spi;
 
-		public StarData(LocationElement loc, float mag, String sp, String type) {
+		public StarData(LocationElement loc, float mag) {
 			if (loc != null) loc.set(DataSet.toFloatArray(loc.get())); // Reduce memory use
 			this.loc = loc;
 			this.mag = new float[] {mag};
-			this.sp = sp;
-			if (!type.equals("N")) this.type = type;
+			spi = -1;
 		}
 	}
 
@@ -8978,7 +8966,7 @@ public class RenderSky
 				if (pos0 == null) ll = null;
 			}
 			if (ll != null) ll.setRadius(ll.getRadius() / Constant.RAD_TO_ARCSEC);
-			sd = new StarData(ll, starElem.magnitude, starElem.spectrum, starElem.type);
+			sd = new StarData(ll, starElem.magnitude);
 			sd.ra = locStar0.getLongitude();
 			sd.dec = locStar0.getLatitude();
 			if (eph.correctForExtinction) {
@@ -8989,7 +8977,13 @@ public class RenderSky
 
 			String spectrum = "OBAFGKM";
 			sd.spi = -1;
-			if (!sd.sp.equals("")) sd.spi = (short) spectrum.indexOf(sd.sp.substring(0, 1));
+			if (!starElem.spectrum.equals("")) {
+				sd.spi = (byte) (spectrum.indexOf(starElem.spectrum.substring(0, 1)) * 10);
+				if (starElem.spectrum.length() > 1) {
+					String ss = starElem.spectrum.substring(1, 2);
+					if (DataSet.isDoubleFastCheck(ss)) try { sd.spi += Integer.parseInt(ss); } catch (Exception exc) {}
+				}
+			}
 			sd.sky2000 = Integer.parseInt(FileIO.getField(1, starElem.name, " ", true));
 			int bracket1 = starElem.name.indexOf("(");
 			int bracket2 = starElem.name.indexOf(")");
@@ -9015,13 +9009,17 @@ public class RenderSky
 			}
 
 			int nData = 0;
-			if (sd.type != null) nData = FileIO.getNumberOfFields(sd.type, ";", true);
+			if (starElem.type != null) nData = FileIO.getNumberOfFields(starElem.type, ";", true);
 			if (nData >= 2) {
-				String dData = FileIO.getField(2, sd.type, ";", true);
+				String dData = FileIO.getField(2, starElem.type, ";", true);
 				String s = FileIO.getField(1, dData, ",", true);
-				float pa = 0, sep = 1;
+				float pa = 0, sep = -1, difM = -1, per = -1;
 				if (s != null && !s.isEmpty())
-					sep = Float.parseFloat(s);
+					sep = Float.parseFloat(s); 
+				s = FileIO.getField(2, dData, ",", true);
+				if (s != null && !s.isEmpty()) difM = Float.parseFloat(s); 
+				s = FileIO.getField(3, dData, ",", true);
+				if (s != null && !s.isEmpty()) per = Float.parseFloat(s); 
 				if (render.drawStarsPositionAngleInDoubles) {
 					s = FileIO.getField(4, dData, ",", true);
 					if (s != null && !s.isEmpty()) {
@@ -9032,11 +9030,11 @@ public class RenderSky
 					}
 					if (pa == 0) pa = (float)(0.001 * Constant.DEG_TO_RAD);
 				}
-				sd.doub = new float[] {sep, pa};
+				if (sep > 0 || pa != 0) sd.doub = new float[] {sep, pa, difM, per};
 			}
 
 			if (nData == 3) {
-				String varData = FileIO.getField(3, sd.type, ";", true);
+				String varData = FileIO.getField(3, starElem.type, ";", true);
 				int varnData = FileIO.getNumberOfFields(varData, ",", false);
 				if (varnData == 4) { // Only consider variable those with variability in band V in Sky2000 catalog
 					String max = FileIO.getField(1, varData, ",", true);
@@ -9044,7 +9042,12 @@ public class RenderSky
 					if (!max.isEmpty() && !min.isEmpty()) {
 						float maxMag = Float.parseFloat(max);
 						float minm = Float.parseFloat(min);
-						sd.var = new float[] {minm, maxMag};
+						String s = FileIO.getField(3, varData, ",", true);
+						float per = -1, type = -1;
+						if (s != null && !s.isEmpty()) per = Float.parseFloat(s); 
+						s = FileIO.getField(4, varData, ",", true);
+						if (s != null && !s.isEmpty()) type = Float.parseFloat(s); 
+						sd.var = new float[] {minm, maxMag, per, type};
 					}
 				}
 			}
@@ -9921,9 +9924,38 @@ public class RenderSky
 		double p = sd.loc.getRadius();
 		if (p != 0) p = 1000.0 / p;
 		StarElement se = new StarElement(name, sd.ra, sd.dec, p, sd.mag[sd.mag.length-1], 0.0f, 0.0f, 0.0f, Constant.J2000, FRAME.ICRF);
-		se.type = sd.type;
-		if (se.type == null) se.type = "N";
-		se.spectrum = sd.sp;
+		se.type = "N";
+		String type = "";
+		if (sd.doub != null) {
+			if (sd.doub[0] > 0) type += ""+sd.doub[0];
+			type += ",";
+			if (sd.doub[2] > 0) type += ""+sd.doub[2];
+			type += ",";
+			if (sd.doub[3] > 0) type += ""+sd.doub[3];
+			type += ",";
+			if (sd.doub[1] > 0) type += ""+(float) (sd.doub[1]*Constant.RAD_TO_DEG);
+			se.type = "D";
+		}
+		if (sd.var != null) {
+			if (se.type.equals("D")) {
+				se.type = "B";
+			} else {
+				se.type = "V";
+			}
+			type += ";"+sd.var[0]+","+sd.var[1]+",";
+			if (sd.var[2] > 0) type += ""+sd.var[2];
+			type += ",";
+			if (sd.var[3] > 0) type += ""+(int)(sd.var[3]+0.5);
+		}
+		if (!se.type.equals("N")) se.type += ";" + type;
+		
+		se.spectrum = null;
+		if (sd.spi >= 0) {
+			String sp = "OBAFGKM";
+			int i = sd.spi / 10;
+			int ii = sd.spi - i * 10;
+			se.spectrum = sp.substring(i, i + 1) + Integer.toString(ii);
+		}
 		return se;
 	}
 
@@ -11614,8 +11646,8 @@ public class RenderSky
 					    		name2print = DataSet.replaceAll(name2print, ",,", ",", true);
 					    	}
 */							minorObjects.add(new Object[] {
-									RenderSky.OBJECT.DEEPSKY, pos.clone(),
-									new String[] {(String) faintStarsNames.get(index), ""+loc.getLongitude(), ""+loc.getLatitude(), ""+d[3]}
+									RenderSky.OBJECT.DEEPSKY, pos.clone(), loc, d[3], 
+									(String) faintStarsNames.get(index)
 							});
 		 				}		 				
 					}
@@ -11813,8 +11845,7 @@ public class RenderSky
 							 				
 							 				if (SaveObjectsToAllowSearch) {
 												minorObjects.add(new Object[] {
-														RenderSky.OBJECT.DEEPSKY, pos.clone(),
-														new String[] {name2print, ""+loc.getLongitude(), ""+loc.getLatitude(), ""+ephem.magnitude}
+														RenderSky.OBJECT.DEEPSKY, pos.clone(), loc, ephem.magnitude, name2print
 												});
 							 				}
 										}
@@ -13026,7 +13057,7 @@ public class RenderSky
 								float[] poss = new float[] {(float) (graphMarginX + (index*s)), baseY-1};
 								g.setColor((Integer)data[8], true);
 								if (render.getColorMode() == COLOR_MODE.NIGHT_MODE) g.setColor(render.drawDeepSkyObjectsColor, true);
-								drawGalaxy(poss, starMaxSize, dist, render.drawStarsRealistic != REALISTIC_STARS.NONE_CUTE, g, render.drawDeepSkyObjectsColor, g.getColor());
+								drawGalaxy(poss, starMaxSize, dist, false, g, render.drawDeepSkyObjectsColor, g.getColor());
 								label = (String) data[1];
 								Rectangle boundsg = g.getStringBounds(label);
 								g.setColor(render.drawCoordinateGridColor, 255);
@@ -13822,14 +13853,31 @@ public class RenderSky
 							}
 							data[2] = ephem;
 						} else {
-							String objData[] = ((String[]) data[2]).clone();
-							LocationElement loc = new LocationElement(Double.parseDouble(objData[1]),
-									Double.parseDouble(objData[2]), 1.0);
+							String objData[] = new String[4]; //((String[]) data[2]).clone();
+							LocationElement loc = (LocationElement) data[2];
 							loc = projection.toEquatorialPosition(loc, false);
 							objData[1] = Functions.formatRA(loc.getLongitude(), 2);
 							objData[2] = Functions.formatDEC(loc.getLatitude(), 1);
+							objData[0] = (String) data[4];
+							if (type == RenderSky.OBJECT.METEOR_SHOWER) {
+								objData[3] = "" + (int) (0.5 + (Float) data[3]);							
+							} else {
+								objData[3] = "" + (Float) data[3];
+							}
+							if (data.length > 5) {
+								if (type == OBJECT.SUPERNOVA || type == OBJECT.NOVA) {
+									objData = DataSet.addStringArray(objData, ((String) data[5])); 									
+								} else {
+									Object oo[] = ((Object[]) data[5]);
+									String objType = (String) oo[0];
+									if (DataSet.isDoubleFastCheck(objType)) objType = objt[Integer.parseInt(objType)];
+									float size[] = (float[]) oo[1];
+									objData = DataSet.addStringArray(objData, 
+											new String[] {objType, ""+size[0]+"x"+size[1], (String) oo[2]}); 
+								}
+							}
 							if (type == RenderSky.OBJECT.DEEPSKY) {
-								String name = objData[0];
+								String name = (String) data[4];
 								if (name.startsWith("I."))
 									name = DataSet.replaceAll(name, "I.", "IC ", true);
 								try {
@@ -14802,7 +14850,7 @@ public class RenderSky
 			float mg = (Float) obj[4];
 			if (mag != -1 && mg > mag) break;
 			float s[] = (float[]) obj[5];
-			int type = (Integer) obj[2];
+			int type = (Byte) obj[2];
 			float pa = (Float) obj[6];
 
 			if (name.startsWith("I.")) name = DataSet.replaceAll(name, "I.", "IC ", true);
@@ -14902,7 +14950,7 @@ public class RenderSky
 								paf = (float) (Float.parseFloat(pa) * Constant.DEG_TO_RAD);
 						} catch (Exception exc) {}
 						loc.set(DataSet.toFloatArray(loc.get())); // Reduce memory use
-						outObj.add(new Object[] {name, messier, tt, loc, magnitude,
+						outObj.add(new Object[] {name, messier, (byte) tt, loc, magnitude,
 								new float[] {maxSize, minSize}, paf, com});
 				}
 
