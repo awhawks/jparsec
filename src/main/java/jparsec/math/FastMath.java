@@ -400,6 +400,7 @@ public class FastMath
 	 * @return The result.
 	 */
 	public static double multiplyBy10ToTheX(double val, int x) {
+		if (x > 308 || EXACT_MODE) return val * Math.pow(10.0, x);
 		if (pow10 == null) FastMath.initialize();
 		return val * pow10[x + 325];
 	}

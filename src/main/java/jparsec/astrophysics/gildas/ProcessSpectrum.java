@@ -238,6 +238,10 @@ public class ProcessSpectrum {
         	out[3] = -Math.abs(out[3]);
         }
 
+        out[4] = Math.abs(out[4]);
+        out[5] = Math.abs(out[5]);
+        out[6] = Math.abs(out[6]);
+        out[7] = Math.abs(out[7]);
         return out;
 	}
 

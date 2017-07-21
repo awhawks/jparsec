@@ -1176,6 +1176,9 @@ public class RenderPlanet
 		return equals;
 	}
 
+	private static Object imgMoon = null;
+	public static int minScale = 3;
+	
 	/**
 	 * Renderize a planet.
 	 *
@@ -1204,9 +1207,9 @@ public class RenderPlanet
 		}
 */
 		repaint = false;
-		if ((field < 3600 || scale > 2) && render.textures && render.target != TARGET.SUN && renderingSky && lastRenderElement != null &&
+		if ((field < 3600 || scale > minScale) && render.textures && render.target != TARGET.SUN && renderingSky && lastRenderElement != null &&
 				similarRenders(lastRenderElement, render) &&
-				lastScale >= scale && lastScale > 2) {
+				lastScale >= scale && lastScale > minScale) {
 			repaint = !(lastScale > scale && (lastScale*2 > render.width || lastScale*2 > render.height));
 		}
 		scaleFactor = MAXIMUM_TEXTURE_QUALITY_FACTOR;
@@ -1234,7 +1237,7 @@ public class RenderPlanet
 				g.enableInversion();
 			}
 		}
-		if (!repaint && !fastGridAndBye && scale > 2) { // *
+		if (!repaint && !fastGridAndBye && scale > minScale) { // *
 			int clip[] = gg.getClip();
 			if (render.anaglyphMode != ANAGLYPH_COLOR_MODE.NO_ANAGLYPH) {
 				Object img1 = gg.getImage(0, 0, gg.getWidth(), gg.getHeight());
@@ -1388,10 +1391,10 @@ public class RenderPlanet
 		// Renderize planet
 		g.setColor(render.foreground, false);
 		int br = g.getRed(render.background), bg = g.getGreen(render.background), bb = g.getBlue(render.background);
-		if (r < 2 && !fastGridAndBye) fastGridAndBye = true;
+		if (r < minScale && !fastGridAndBye) fastGridAndBye = true;
 		if (((r > render.width && !render.highQuality && !RenderPlanet.FORCE_HIGHT_QUALITY) ||
 				(r > render.width/1.5 && g.renderingToAndroid())) && render.textures && !fastGridAndBye) fastGridAndBye = true;
-		if (!fastGridAndBye && render.textures && r > 2 && render.target != TARGET.SUN)
+		if (!fastGridAndBye && render.textures && r > minScale && render.target != TARGET.SUN)
 		{
 //			if (ringsTexturesVisible)
 //				this.renderRings(g, r, dubois, scale, diameter, oblateness, refz, backgroundCol, posx, posy, subslat, dlon, incl_up, incl_pole, distCenter, timesOut, false, true, false);
@@ -1401,18 +1404,26 @@ public class RenderPlanet
 //			int index = DataSet.getIndex(imgs, s);
 			Object img = null, img2 = null;
 //			if (index < 0) {
-				if (render.target == TARGET.EARTH && earthMap != null && earthMap.EarthMapSource != null) {
-					img = g.getImage(earthMap.EarthMapSource);
-				} else {
-					img = g.getImage(FileIO.DATA_TEXTURES_DIRECTORY + s + ".jpg");
-				}
-				int size[] = g.getSize(img);
-				if (render.target == TARGET.EARTH && showDayAndNight) {
-					img2 = g.getImage(FileIO.DATA_TEXTURES_DIRECTORY + "Earth_night.jpg");
-					int size2[] = g.getSize(img2);
-					if (size2[0] != size[0] || size2[1] != size[1])
-						img2 = g.getScaledImage(img2, size[0], size[1], false, ALLOW_SPLINE_RESIZING);
-
+			int size[] = new int[] {10, 10};
+				if (planetVisible) {
+					if (render.target == TARGET.EARTH && earthMap != null && earthMap.EarthMapSource != null) {
+						img = g.getImage(earthMap.EarthMapSource);
+					} else {
+						if (render.target == TARGET.Moon && imgMoon != null) {
+							img = imgMoon;
+						} else {
+							img = g.getImage(FileIO.DATA_TEXTURES_DIRECTORY + s + ".jpg");
+							if (render.target == TARGET.Moon) imgMoon = img;
+						}
+					}
+					size = g.getSize(img);
+					if (render.target == TARGET.EARTH && showDayAndNight) {
+						img2 = g.getImage(FileIO.DATA_TEXTURES_DIRECTORY + "Earth_night.jpg");
+						int size2[] = g.getSize(img2);
+						if (size2[0] != size[0] || size2[1] != size[1])
+							img2 = g.getScaledImage(img2, size[0], size[1], false, ALLOW_SPLINE_RESIZING);
+	
+					}
 				}
 /*				if (!Configuration.USE_DISK_FOR_DATABASE) {
 					images.add(img);
@@ -1644,7 +1655,7 @@ public class RenderPlanet
 			}
 		} else
 		{
-			if (r < 2) {
+			if (r < minScale) {
 				posx = posx / scaleFactor;
 				posy = posy / scaleFactor;
 				scaleFactor = 1;
@@ -1702,7 +1713,7 @@ public class RenderPlanet
 		render.textures = textures;
 
 		int rec[] = g.getClip();
-		if (renderingSky && (render.textures || render.target == TARGET.SUN) && scale > 2) {
+		if (planetVisible && renderingSky && (render.textures || render.target == TARGET.SUN) && scale > minScale) {
 			if (!this.isInTheScreen(posx, posy, (int)scale)) {
 				lastRenderElement = null;
 				lastRender = null;
@@ -1777,7 +1788,7 @@ public class RenderPlanet
 			}
 
 			g.enableAntialiasing();
-			if (renderingSky && scale > 2) {
+			if (renderingSky && scale > minScale) {
 				Object o;
 				if (dubois) {
 					Object li = g.getImage(rec[0], rec[1], rec[2], rec[3]);
@@ -1794,7 +1805,7 @@ public class RenderPlanet
 		}
 
 		// Renderize axes
-		this.renderAxes(g, posx, posy, r, incl_north, incl_up, refz, scaleFactor);
+		if (planetVisible) this.renderAxes(g, posx, posy, r, incl_north, incl_up, refz, scaleFactor);
 
 		if (!renderingSky && !useSkySatPos && render.showLabels && satR.length > 0) {
 			int offsetLabel = g.getFont().getSize() * 2 / 3;
@@ -1842,7 +1853,7 @@ public class RenderPlanet
 		float sf = 1.0f;
 		boolean imgResized = false;
 //		if (!dubois) {
-		if (renderingSky && upperLimbFactor < 1f && lastRender != null) {
+		if (planetVisible && renderingSky && upperLimbFactor < 1f && lastRender != null) {
 			int de = (int) (scale * (1.0 - upperLimbFactor) + 0.5);
 			if (de > 1) {
 				int cl[] = g.getClip();
@@ -2482,7 +2493,7 @@ public class RenderPlanet
 								g.fillOval((posx - size), (posy - size), fs, fs, zpos);
 							}
 						}
-						if (render.textures && r > 2 && render.satellitesMain)
+						if (render.textures && r > minScale && render.satellitesMain)
 						{
 							if (!isVisible) {
 								if (m.eclipsed && !m.occulted) {
@@ -3306,6 +3317,7 @@ public class RenderPlanet
 	 */
 	public static LocationElement identifyFeature(String name, TARGET target)
 	{
+		name = name.toLowerCase();
 		String feature = null;
 		LocationElement out = null;
 		try {
@@ -3317,7 +3329,7 @@ public class RenderPlanet
 			{
 				String line = v.get(i);
 
-				feature = FileIO.getField(1, line, sep, true);
+				feature = FileIO.getField(1, line, sep, true).toLowerCase();
 				//String t = FileIO.getField(2, line, sep, true);
 				//feature = n + " ("+t+")";
 				if (feature.indexOf(name) >= 0) {

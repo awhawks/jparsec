@@ -1268,7 +1268,7 @@ public class RenderSky
 
 					double size = render.planetRender.ephem.angularRadius * this.pixels_per_radian;
 					if (target == TARGET.Moon && size < 0.1) continue;
-					if (sats_are_possible || size > 2 || target == TARGET.SUN || target == TARGET.Moon)
+					if (sats_are_possible || size > RenderPlanet.minScale || target == TARGET.SUN || target == TARGET.Moon)
 					{
 						if (((target == TARGET.SUN && size < 1000 && render.planetRender.textures) || (target == TARGET.Moon && !render.planetRender.textures && size < 35 && render.drawIcons)) ||
 								(size <= 15 && render.drawIcons && (target == TARGET.EARTH || target == TARGET.SUN || target == TARGET.Moon)))
@@ -1365,7 +1365,7 @@ public class RenderSky
 								drawString(render.drawStarsColor, font, target.getName(), rp.xPosition,
 									rp.yPosition, -displacement, false);
 
-							if (size > 2 && render.planetRender.satellitesMain && render.planetRender.moonephem != null && rp.skySatPos != null)
+							if (size > RenderPlanet.minScale && render.planetRender.satellitesMain && render.planetRender.moonephem != null && rp.skySatPos != null)
 							{
 								font = null;
 								for (int i = 0; i < render.planetRender.moonephem.length; i++)

@@ -1230,7 +1230,8 @@ public class CreateChart implements Serializable
 					double dx = 0.0, dy = 0.0;
 					double minx = x_val[i];
 					double miny = y_val[i];
-					if (chart_elem.series[nser].showErrorBars)
+					if (chart_elem.series[nser].showErrorBars 
+							&& (dx_val != null || dy_val != null))
 					{
 						if (dx_val != null)
 							dx = dx_val[i];

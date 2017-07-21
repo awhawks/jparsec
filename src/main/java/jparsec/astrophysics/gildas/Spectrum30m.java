@@ -40,6 +40,14 @@ import jparsec.astrophysics.FluxElement;
 import jparsec.astrophysics.MeasureElement;
 import jparsec.astrophysics.Spectrum;
 import jparsec.astrophysics.Table;
+import jparsec.ephem.Ephem;
+import jparsec.ephem.EphemerisElement;
+import jparsec.ephem.EphemerisElement.FRAME;
+import jparsec.ephem.Functions;
+import jparsec.ephem.Target.TARGET;
+import jparsec.ephem.planets.PlanetEphem;
+import jparsec.ephem.stars.StarElement;
+import jparsec.ephem.stars.StarEphem;
 import jparsec.graph.ChartElement;
 import jparsec.graph.ChartSeriesElement;
 import jparsec.graph.CreateChart;
@@ -54,8 +62,14 @@ import jparsec.math.Constant;
 import jparsec.math.FastMath;
 import jparsec.math.Interpolation;
 import jparsec.observer.LocationElement;
+import jparsec.observer.Observatory;
+import jparsec.observer.ObserverElement;
+import jparsec.observer.Country.COUNTRY;
 import jparsec.time.AstroDate;
 import jparsec.time.DateTimeOps;
+import jparsec.time.TimeElement;
+import jparsec.time.TimeElement.SCALE;
+import jparsec.time.TimeScale;
 import jparsec.util.JPARSECException;
 import jparsec.util.Logger;
 import jparsec.util.Logger.LEVEL;
@@ -704,18 +718,9 @@ public class Spectrum30m implements Serializable
      * @return Vlsr in km/s.
      */
     public double getVlsrForAGivenFrequency(double frequency, double fref) {
-    	double vref = 0.0, vres = 0.0;
-    	try {
-	    	vref = Double.parseDouble((this.get(Gildas30m.REF_VEL)).value);
-	    	vres = Double.parseDouble((this.get(Gildas30m.VEL_RESOL)).value);
-    	} catch (Exception exc) {
-    		if (Logger.reportJPARSECLogs) Logger.log(LEVEL.ERROR, "could not recover reference velocity and/or velocity resolution!");
-    	}
-       	double fref0 = Double.parseDouble((this.get(Gildas30m.REF_FREQ)).value);
-    	double fres = - vres * fref0 / (Constant.SPEED_OF_LIGHT * 0.001);
-    	double delta = (frequency - fref) / fres;
-    	double vel = vref + delta * vres;
-		return vel;
+    	Spectrum30m copy = this.clone();
+    	copy.modifyRestFrequency(fref);
+    	return copy.getVelocityForAGivenFrequency(frequency);
     }
 
     /**
@@ -987,7 +992,7 @@ public class Spectrum30m implements Serializable
 		}
 
 		AstroDate astro = new AstroDate(date);
-		s.observingTimeJD = s.observingTimeJD / 24.0 + astro.jd();
+		s.observingTimeJD = s.observingTimeJD * 24.0 / Constant.TWO_PI + astro.jd();
 
 		if (coordType != Gildas30m.COORDINATES_EQUATORIAL) {
 			if (coordType == Gildas30m.COORDINATES_GALACTIC) {
@@ -1130,7 +1135,7 @@ public class Spectrum30m implements Serializable
         source = sp.source;
         line = sp.line;
         teles = sp.backend;
-        ut = AstroDate.getDayFraction(sp.observingTimeJD);
+        ut = AstroDate.getDayFraction(sp.observingTimeJD) * Constant.TWO_PI;
         int quality = 0;
         freqres = - velres * rfreq / (Constant.SPEED_OF_LIGHT * 0.001);
         Parameter ldobs = new Parameter(ConverterFactory.getGILDASdate(sp.observingTimeJD), Gildas30m.LDOBS_DESC);
@@ -1257,7 +1262,7 @@ public class Spectrum30m implements Serializable
 		String ut =  this.get(Gildas30m.UT_TIME).value;
 		Parameter headerParams[] = this.getHeader().getHeaderParameters();
 		AstroDate astro = new AstroDate(ConverterFactory.getDate(Integer.parseInt(Parameter.getByKey(headerParams, Gildas30m.LDOBS).value)));
-		astro.setDayFraction(Double.parseDouble(ut) / 24.0);
+		astro.setDayFraction(Double.parseDouble(ut) / Constant.TWO_PI);
 		String dateObs = astro.getYear()+"-"+DateTimeOps.twoDigits(astro.getMonth())+"-"+DateTimeOps.twoDigits(astro.getDay())+"T"+DateTimeOps.twoDigits(astro.getHour())+":"+DateTimeOps.twoDigits(astro.getMinute())+":"+DateTimeOps.twoDigits((float)astro.getSeconds());
 		ut = DateTimeOps.twoDigits(astro.getHour())+":"+DateTimeOps.twoDigits(astro.getMinute())+":"+DateTimeOps.twoDigits((float)astro.getSeconds());
 		astro = new AstroDate(ConverterFactory.getDate(Integer.parseInt(Parameter.getByKey(headerParams, Gildas30m.LDRED).value)));
@@ -1265,7 +1270,7 @@ public class Spectrum30m implements Serializable
 		astro = new AstroDate();
 		String date = astro.getYear()+"-"+DateTimeOps.twoDigits(astro.getMonth())+"-"+DateTimeOps.twoDigits(astro.getDay())+"T"+DateTimeOps.twoDigits(astro.getHour())+":"+DateTimeOps.twoDigits(astro.getMinute())+":"+DateTimeOps.twoDigits((float)astro.getSeconds());
 		String lst =  this.get(Gildas30m.LST_TIME).value;
-		astro.setDayFraction(Double.parseDouble(lst) / 24.0);
+		astro.setDayFraction(Double.parseDouble(lst) / Constant.TWO_PI);
 		lst = DateTimeOps.twoDigits(astro.getHour())+":"+DateTimeOps.twoDigits(astro.getMinute())+":"+DateTimeOps.twoDigits((float)astro.getSeconds());
 
 		double ddata[] = DataSet.toDoubleArray(data);
@@ -1431,9 +1436,9 @@ public class Spectrum30m implements Serializable
 			   	vel = ImageHeaderElement.getByKey(head, "VELO-LSR");
 			   	f = 0.001;
 		   	}
-		   	double doppler = 0;
-		   	if (ImageHeaderElement.getIndex(head, "DOPPLER") >= 0)
-		   		doppler = Double.parseDouble(ImageHeaderElement.getByKey(head, "DOPPLER").value);
+		   	double doppler = -1;
+		   	//if (ImageHeaderElement.getIndex(head, "DOPPLER") >= 0)
+		   	//	doppler = Double.parseDouble(ImageHeaderElement.getByKey(head, "DOPPLER").value);
 		   	double v0 = Double.parseDouble(vel.value) * f;
 		   	double freqoff = Double.parseDouble(ImageHeaderElement.getByKey(head, "FOFFSET").value);
 		   	double epoch = Double.parseDouble(ImageHeaderElement.getByKey(head, "EPOCH").value);
@@ -1651,7 +1656,7 @@ public class Spectrum30m implements Serializable
         double gainim = 0.0, h2omm = 0.0, pamb = 0.0, tamb = 0.0, tatmsig = 0.0, tchop = 0.0;
         double tcold = 0.0, tausig = 0.0, tauima = 0.0, trec = 0.0, factor = 0.0, altitude = 0.0;
         double c1 = 0.0, c2 = 0.0, c3 = 0.0, sigma = 0.0, swde = 0.0, swdu = 0.0, swp = 0.0;
-        double swl = 0.0, swb = 0.0, todo = 0.0, lon = 0.0, lat = 0.0, doppler = 0;
+        double swl = 0.0, swb = 0.0, todo = 0.0, lon = 0.0, lat = 0.0, doppler = -1;
         int projection = Gildas30m.PROJECTION_RADIO, veltype = 1, mode = 1;
         int nph = 0, version = 2, block = 0, kind = 0, quality = 0;
         String source = "", line = "";
@@ -1703,7 +1708,7 @@ public class Spectrum30m implements Serializable
 //        try { swm = Integer.parseInt(ImageHeaderElement.getByKey(head, "SWMODE").value); } catch (Exception exc1) { nErr ++; }
         try { tamb = Double.parseDouble(ImageHeaderElement.getByKey(head, "TAMB").value); } catch (Exception exc1) { nErr ++; }
         try { veltype = Integer.parseInt(ImageHeaderElement.getByKey(head, "VELTYPE").value); } catch (Exception exc1) { nErr ++; }
-        try { doppler = Double.parseDouble(ImageHeaderElement.getByKey(head, "DOPPPLER").value); } catch (Exception exc1) { nErr ++; }
+        //try { doppler = Double.parseDouble(ImageHeaderElement.getByKey(head, "DOPPPLER").value); } catch (Exception exc1) { nErr ++; }
         try { c1 = Double.parseDouble(ImageHeaderElement.getByKey(head, "COUNT1").value); } catch (Exception exc1) { nErr ++; }
         try { c2 = Double.parseDouble(ImageHeaderElement.getByKey(head, "COUNT2").value); } catch (Exception exc1) { nErr ++; }
         try { c3 = Double.parseDouble(ImageHeaderElement.getByKey(head, "COUNT3").value); } catch (Exception exc1) { nErr ++; }
@@ -1747,11 +1752,11 @@ public class Spectrum30m implements Serializable
 		dred = DataSet.replaceAll(dred, "T", " ", false);
 		AstroDate ared = new AstroDate(dred);
 		double jdRed = ared.jd();
-		ut = AstroDate.getDayFraction(jdObs) * 24.0;
+		ut = AstroDate.getDayFraction(jdObs) * Constant.TWO_PI;
 		String dlst = (ImageHeaderElement.getByKey(head, "LST")).value;
 		dlst = "2000-01-01 "+dlst;
 		AstroDate alst = new AstroDate(dlst);
-		lst = AstroDate.getDayFraction(alst.jd()) * 24.0;
+		lst = AstroDate.getDayFraction(alst.jd()) * Constant.TWO_PI;
 
         map = new TreeMap<String,Parameter>();
         map.put(Gildas30m.LDOBS, new Parameter(ConverterFactory.getGILDASdate(jdObs), Gildas30m.LDOBS_DESC));
@@ -2339,62 +2344,68 @@ public class Spectrum30m implements Serializable
 		int date = Integer.parseInt(d);
 		double time = Double.parseDouble((get(Gildas30m.UT_TIME)).value);
 		AstroDate astro = ConverterFactory.getAstroDate(date);
-		astro.add(time / 24.0);
+		astro.add(time / Constant.TWO_PI);
 		return astro;
 	}
 
+	private double getDoppler() {
+    	// Compute doppler since Gildas always set doppler to 0 in the header
+		try {
+			TimeElement time = new TimeElement(getObservationDate(), SCALE.UNIVERSAL_TIME_UTC);
+			ObserverElement obs = ObserverElement.parseObservatory(Observatory.findObservatorybyName("Veleta", COUNTRY.Spain));
+			EphemerisElement eph = new EphemerisElement(TARGET.NOT_A_PLANET, EphemerisElement.COORDINATES_TYPE.APPARENT,
+					EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.TOPOCENTRIC, EphemerisElement.REDUCTION_METHOD.IAU_2006,
+					EphemerisElement.FRAME.DYNAMICAL_EQUINOX_J2000, EphemerisElement.ALGORITHM.MOSHIER);
+			double ra = Double.parseDouble((get(Gildas30m.LAMBDA)).value);
+			double dec = Double.parseDouble((get(Gildas30m.BETA)).value);
+			LocationElement locEq = new LocationElement(ra, dec, 1);
+
+			double JD_TDB = TimeScale.getJD(time, obs, eph, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
+			double geo_sun[] = Ephem.eclipticToEquatorial(PlanetEphem.getGeocentricPosition(JD_TDB, TARGET.Solar_System_Barycenter, 0.0, false, obs), Constant.J2000, eph);
+			
+			/*
+			double eqRotMod = Constant.EARTH_MEAN_ROTATION_RATE * obs.getEllipsoid().getEquatorialRadius() * 
+					Math.cos(obs.getLatitudeRad()) / (Constant.AU / Constant.SECONDS_PER_DAY);
+			double eqRot[] = CoordinateSystem.horizontalToEquatorial(new LocationElement(Constant.PI_OVER_TWO, 0, eqRotMod), time, obs, eph).getRectangularCoordinates();
+			geo_sun[3] += eqRot[0];
+			geo_sun[4] += eqRot[1];
+			geo_sun[5] += eqRot[2];
+			*/
+			
+			double doppler = Functions.scalarProduct(new double[] {geo_sun[3], geo_sun[4], geo_sun[5]}, locEq.getRectangularCoordinates());
+			double voff = -Double.parseDouble((get(Gildas30m.REF_VEL)).value);
+			StarElement star = new StarElement("", ra, dec, 0, 0, 0, 0, (float) voff, Constant.J2000, FRAME.DYNAMICAL_EQUINOX_J2000);
+			double lsr = StarEphem.getLSRradialVelocity(time, obs, eph, star);
+			doppler = doppler * (Constant.AU / Constant.SECONDS_PER_DAY) + lsr;
+			doppler /= (Constant.SPEED_OF_LIGHT * 0.001);
+			
+			return doppler;
+		} catch (JPARSECException e) {
+			e.printStackTrace();
+		}
+
+		return 0;
+	}
+	
 	/**
 	 * Modifies the rest frequency for this spectrum.
 	 * @param freq The new rest frequency in MHz.
-	 * @throws JPARSECException In case the spectrum has no doppler factor in its header.
 	 */
-	public void modifyRestFrequency(double freq) throws JPARSECException {
+	public void modifyRestFrequency(double freq) {
 		double restFreq = Double.parseDouble((get(Gildas30m.REF_FREQ)).value);
 		if (freq != restFreq) {
 	    	double fres = - this.getVelocityResolution() * restFreq / (Constant.SPEED_OF_LIGHT * 0.001);
 			double vres = -fres * (Constant.SPEED_OF_LIGHT * 0.001) / freq;
+	    	double doppler = getDoppler();
 
-/*			try {
-				TimeElement time = new TimeElement(getObservationDate(), SCALE.UNIVERSAL_TIME_UTC);
-				ObserverElement obs = ObserverElement.parseObservatory(Observatory.findObservatorybyName("Veleta"));
-				EphemerisElement eph = new EphemerisElement(TARGET.NOT_A_PLANET, EphemerisElement.COORDINATES_TYPE.APPARENT,
-						EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.TOPOCENTRIC, EphemerisElement.REDUCTION_METHOD.IAU_2006,
-						EphemerisElement.FRAME.DYNAMICAL_EQUINOX_J2000, EphemerisElement.ALGORITHM.MOSHIER);
-				double ra = Double.parseDouble((get(Gildas30m.LAMBDA)).value);
-				double dec = Double.parseDouble((get(Gildas30m.BETA)).value);
-				LocationElement locEq = new LocationElement(ra, dec, 1);
-
-				double JD_TDB = TimeScale.getJD(time, obs, eph, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
-				double geo_sun[] = Ephem.eclipticToEquatorial(PlanetEphem.getGeocentricPosition(JD_TDB, TARGET.Solar_System_Barycenter, 0.0, false, obs), Constant.J2000, eph);
-				double doppler = Functions.scalarProduct(new double[] {geo_sun[3], geo_sun[4], geo_sun[5]}, locEq.getRectangularCoordinates());
-				doppler *= Constant.AU / Constant.SECONDS_PER_DAY;
-				System.out.println("DOPPLER: "+doppler);
-			} catch (JPARSECException e) {
-				e.printStackTrace();
-			}
-*/
-/*			try {
-				TimeElement time = new TimeElement(getObservationDate(), SCALE.UNIVERSAL_TIME_UTC);
-				ObserverElement obs = ObserverElement.parseObservatory(Observatory.findObservatorybyName("Veleta"));
-				EphemerisElement eph = new EphemerisElement(TARGET.NOT_A_PLANET, EphemerisElement.COORDINATES_TYPE.APPARENT,
-						EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.TOPOCENTRIC, EphemerisElement.REDUCTION_METHOD.IAU_2006,
-						EphemerisElement.FRAME.DYNAMICAL_EQUINOX_J2000, EphemerisElement.ALGORITHM.MOSHIER);
-
-				double ra = Double.parseDouble((get(Gildas30m.LAMBDA)).value);
-				double dec = Double.parseDouble((get(Gildas30m.BETA)).value);
-				LocationElement locEq = new LocationElement(ra, dec, 1);
-				double vr = StarEphem.getRadialVelocity(time, obs, eph, locEq);
-			} catch (JPARSECException e) {
-				e.printStackTrace();
-			}
-*/
-
+			/*
 	    	double doppler = 0.0;
 	    	if (!keyExists(Gildas30m.DOPPLER)) {
 	    		JPARSECException.addWarning("Spectrum with an unknown doppler factor.");
 	    	} else {
 	    		doppler = Double.parseDouble((get(Gildas30m.DOPPLER)).value);
 	    	}
+	    	*/
 			double refchan = getReferenceChannel() + ((freq - restFreq) / fres) * (1.0 + doppler);
 
 			this.put(Gildas30m.VEL_RESOL, new Parameter(vres, Gildas30m.VEL_RESOL_DESC));
@@ -2421,6 +2432,7 @@ public class Spectrum30m implements Serializable
 	    		JPARSECException.addWarning("Spectrum with an unknown doppler factor.");
 	    	} else {
 	    		doppler0 = Double.parseDouble((get(Gildas30m.DOPPLER)).value);
+	    		if (doppler0 == -1) doppler0 = getDoppler();
 	    	}
 			double dopplerAdd = (vref - vel) / (0.001 * Constant.SPEED_OF_LIGHT);
 			double doppler = doppler0 + dopplerAdd;

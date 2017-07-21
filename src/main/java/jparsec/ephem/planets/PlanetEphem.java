@@ -1403,7 +1403,7 @@ public class PlanetEphem
 		double lightTimeS = 0.0;
 		if (eph.ephemType != EphemerisElement.COORDINATES_TYPE.GEOMETRIC) {
 			lightTimeS = light_time;
-			if (eph.targetBody != TARGET.SUN) {
+			if (eph.targetBody != TARGET.SUN && geo_sun_0 != null) {
 				lightTimeS = Functions.getNorm(geo_sun_0) * Constant.LIGHT_TIME_DAYS_PER_AU;
 			}
 		}

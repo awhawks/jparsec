@@ -713,7 +713,7 @@ public class MeasureElement implements Serializable
 			double n = this.getValue();
 			double dn = this.error;
 
-			if (dn == 0.0 || new Double(dn).equals(Double.NaN)) {
+			if (dn == 0.0 || Double.isNaN(dn) || Double.isInfinite(dn) || dn < 0) {
 				if (unit && this.unit != null) return ""+this.getValue()+" +/- "+ dn + " " + this.unit.trim();
 				return ""+this.getValue()+" +/- "+dn;
 			}

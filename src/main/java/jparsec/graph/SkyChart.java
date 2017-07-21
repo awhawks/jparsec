@@ -5396,6 +5396,7 @@ private class thread0 implements Runnable {
 				EphemerisElement eph = new EphemerisElement(TARGET.NOT_A_PLANET, EphemerisElement.COORDINATES_TYPE.APPARENT,
 						EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.TOPOCENTRIC, EphemerisElement.REDUCTION_METHOD.IAU_2006,
 						EphemerisElement.FRAME.DYNAMICAL_EQUINOX_J2000);
+				eph.optimizeForSpeed();
 
 				EventReport.setEverythingTo(false);
 				EventReport.eclipses = true;
