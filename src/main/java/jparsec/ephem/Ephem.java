@@ -2209,6 +2209,7 @@ public class Ephem
 	 * method can be called after by creating an ephem object and setting its equatorial position, but
 	 * check that the distance in that object is set in AU. For true apparent position you can also consider calling
 	 * {@linkplain #correctEquatorialCoordinatesForRefraction(TimeElement, ObserverElement, EphemerisElement, LocationElement)}.
+	 * Note this method is not suitable for stars since proper motions are not considered.
 	 * @param loc0 Mean (catalog) J2000 position.
 	 * @param time Time object.
 	 * @param observer Observer object.
@@ -2218,20 +2219,20 @@ public class Ephem
 	 */
 	public static LocationElement fromJ2000ToApparentGeocentricEquatorial(LocationElement loc0, TimeElement time, ObserverElement observer, EphemerisElement eph) throws JPARSECException {
 		LocationElement loc = loc0.clone();
-		double r0 = loc.getRadius();
+		
 		double equinox = TimeScale.getJD(time, observer, eph, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
 		equinox = eph.getEpoch(equinox);
-		double baryc[] = Ephem.eclipticToEquatorial(PlanetEphem.getGeocentricPosition(equinox, TARGET.Solar_System_Barycenter, 0.0, false, observer), Constant.J2000, eph);
-		loc.setRadius(100000 * Constant.RAD_TO_ARCSEC); // 100000 pc
-		double light_time = loc.getRadius() * Constant.LIGHT_TIME_DAYS_PER_AU;
 		double r[] = loc.getRectangularCoordinates();
-		if (eph.ephemType == COORDINATES_TYPE.APPARENT && (eph.targetBody != TARGET.Moon || observer.getMotherBody() != TARGET.EARTH))
+		if (eph.ephemType == COORDINATES_TYPE.APPARENT && (eph.targetBody != TARGET.Moon || observer.getMotherBody() != TARGET.EARTH)) {
+			double baryc[] = Ephem.eclipticToEquatorial(PlanetEphem.getGeocentricPosition(equinox, TARGET.Solar_System_Barycenter, 0.0, false, observer), Constant.J2000, eph);
+			loc.setRadius(100000 * Constant.RAD_TO_ARCSEC); // 100000 pc
+			double light_time = loc.getRadius() * Constant.LIGHT_TIME_DAYS_PER_AU;
 			r = Ephem.aberration(loc.getRectangularCoordinates(), baryc, light_time);
+		}
 
 		r = Precession.precessFromJ2000(equinox, r, eph);
 		if (observer.getMotherBody() == TARGET.EARTH && eph.ephemType == COORDINATES_TYPE.APPARENT) {
 			loc = LocationElement.parseRectangularCoordinates(Nutation.nutateInEquatorialCoordinates(equinox, eph, r, true));
-			loc.setRadius(r0);
 
 			// Correct for polar motion
 /*			if (eph.correctForPolarMotion)
@@ -2247,6 +2248,7 @@ public class Ephem
 */
 		}
 
+		loc.setRadius(loc0.getRadius());
 		return loc;
 	}
 

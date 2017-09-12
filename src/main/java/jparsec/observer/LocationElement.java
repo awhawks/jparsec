@@ -33,6 +33,7 @@ import jparsec.ephem.moons.MoonEphem;
 import jparsec.ephem.planets.EphemElement;
 import jparsec.ephem.stars.StarElement;
 import jparsec.ephem.stars.StarEphem;
+import jparsec.ephem.stars.StarEphemElement;
 import jparsec.graph.DataSet;
 import jparsec.graph.chartRendering.RenderSky;
 import jparsec.math.Constant;
@@ -86,7 +87,7 @@ public class LocationElement implements Serializable
 	 * @param body The name of the body.
 	 * @param apparentOfDate True to return the apparent position of the body for the
 	 * current time (corrected for aberration, precesion, and nutation), false for mean
-	 * J2000 position.
+	 * J2000 position. Apparent position will be geocentric.
 	 * @throws JPARSECException If the body is not found.
 	 */
 	public LocationElement(String body, boolean apparentOfDate) throws JPARSECException {
@@ -107,17 +108,26 @@ public class LocationElement implements Serializable
 
 		if (t == TARGET.NOT_A_PLANET) {
 			int index = StarEphem.getStarTargetIndex(body);
+		    double parsecToAU = apparentOfDate ? (Constant.PARSEC / (Constant.AU * 1E3)) : 1;
 			if (index == -1) {
 				LocationElement se = RenderSky.searchDeepSkyObjectJ2000(body);
 				if (se == null) throw new JPARSECException("Object not found");
+				se.setRadius(1E8);
 				set(se.get());
 			} else {
 				StarElement star = StarEphem.getStarElement(index);
-				set(star.rightAscension, star.declination, star.getDistance());
+				if (!apparentOfDate) {
+					set(star.rightAscension, star.declination, star.getDistance());				
+				} else {
+				    StarEphemElement se = StarEphem.starEphemeris(time, observer, eph, star, false);
+					set(se.rightAscension, se.declination, se.distance);
+				}
+				return;
 			}
 
 			if (apparentOfDate) {
-				LocationElement loc =  Ephem.fromJ2000ToApparentGeocentricEquatorial(this, time, observer, eph);
+				LocationElement loc = Ephem.fromJ2000ToApparentGeocentricEquatorial(this, time, observer, eph);
+			    loc.setRadius(loc.getRadius() / parsecToAU);
 				set(loc.get());
 			}
 		} else {

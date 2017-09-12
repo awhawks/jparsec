@@ -261,7 +261,7 @@ public class pyGildas {
 					if (error != null && (error.toLowerCase().indexOf("importerror")>=0 || error.toLowerCase().indexOf("no module")>=0))
 						throw new JPARSECException("Gildas could not be executed. Details: "+error);
 
-					throw new JPARSECException("inconsistent number of variables to be retrieved.");
+					throw new JPARSECException("inconsistent number of variables to be retrieved. Error: "+error);
 				}
 			}
 		} catch (Exception exc)

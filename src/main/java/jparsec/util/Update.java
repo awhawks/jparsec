@@ -81,7 +81,7 @@ public class Update
 	/**
 	 * The url used to update orbital elements of natural satellites.
 	 */
-	public static final String UPDATE_URL_NATURAL_SATELLITES = "http://ssd.jpl.nasa.gov/?sat_elem";
+	public static final String UPDATE_URL_NATURAL_SATELLITES = "https://ssd.jpl.nasa.gov/?sat_elem";
 	/**
 	 * The url used to update orbital elements of comets.
 	 */

@@ -1219,7 +1219,9 @@ public class RenderSky
 							// they start to being occulted/eclipsed by the mother planet.
 							EVENT_DEFINITION ed = MoonEvent.getEventDefinition();
 							MoonEvent.setEventDefinition(EVENT_DEFINITION.AUTOMATIC_FOR_DRAWING);
-							render.planetRender.moonephem = MoonEphem.calcAllSatellites(projection.time, projection.obs, projection.eph, all);
+							eph = projection.eph.clone();
+							eph.targetBody = target;
+							render.planetRender.moonephem = MoonEphem.calcAllSatellites(projection.time, projection.obs, eph, all);
 							MoonEvent.setEventDefinition(ed);
 							MoonEphemElement me[] = render.planetRender.moonephem.clone();
 							LocationElement loci[] = new LocationElement[me.length];
@@ -2504,7 +2506,7 @@ public class RenderSky
 		if (render.drawClever || drawAll) {
 			try {
 				if (interp == null)
-					interp = new Interpolation(new double[] {1000000, 5000, 180, 150, 100, 45, 25, 10, 3, 0}, new double[] {5, 5, 5, 6, 6.5, 7.5, 8.5, 9.5, 16.5, 16.5}, true);
+					interp = new Interpolation(new double[] {1000000, 5000, 180, 150, 100, 45, 25, 15, 10, 3, 0}, new double[] {5, 5, 5, 6, 6.5, 7.5, 8.0, 8.5, 9.5, 16.5, 16.5}, true);
 				float maglim = (float) interp.linearInterpolation(1500.0 / pixels_per_degree)
 						- (g.renderingToAndroid() ? 0.5f : 0f);
 				if (maglim < 5) maglim = 5;
@@ -2534,7 +2536,7 @@ public class RenderSky
 		float pixels_per_radian = width / field;
 		float pixels_per_degree = (float) (pixels_per_radian * Constant.DEG_TO_RAD);
 		try {
-			Interpolation interp = new Interpolation(new double[] {5000, 180, 150, 100, 45, 25, 10, 3, 0}, new double[] {5, 5, 6, 6.5, 7.5, 8.5, 9.5, 16.5, 16.5}, true);
+			Interpolation interp = new Interpolation(new double[] {5000, 180, 150, 100, 45, 25, 15, 10, 3, 0}, new double[] {5, 5, 6, 6.5, 7.5, 8.0, 8.5, 9.5, 16.5, 16.5}, true);
 			maglim = (float) interp.linearInterpolation(1500.0 / pixels_per_degree)
 					- (android ? 0.5f : 0);
 		} catch (JPARSECException e) {}
@@ -4871,6 +4873,7 @@ public class RenderSky
 			maglimNotDrag = render.drawStarsLimitingMagnitude;
 			maglimStarsNotDrag = maglim;
 		}
+		if (fieldDeg > 15 && objMagLim-maglim > 2) objMagLim = maglim + 2;
 		LocationElement loc;
 		LocationElement locF;
 		Object obj[];

@@ -2470,7 +2470,7 @@ public class RenderPlanet
 							double top = brightest + 1;
 							if (mag < 1.0) mag = 1.0;
 							//if (render.textures && !renderingSky && screen_out[posx][posy] == 0) drawPoint(posx, posy, g, screen_out);
-							if (render.textures && !renderingSky && r <= 2) {
+							if (render.textures && !renderingSky && r <= minScale) {
 								float size2 = (float) Math.pow(10.0, (top - mag) / 2.5);
 								if (isInTheScreen(posx, posy, (int) (size2 + 1)))
 									g.fillOval(posx-size2, posy-size2, 2*size2+1, 2*size2+1, zpos);
@@ -2486,9 +2486,9 @@ public class RenderPlanet
 										size = 0.5f * (g.renderingToAndroid() ? 2:1);
 								}
 							}
-							if (!render.textures || r <= 2) {
+							if (!render.textures || r <= minScale) {
 								if (size == 0 && (scaleFactor > 1 || g.renderingToAndroid())) size = 0.125f*(scaleFactor>1? scaleFactor:1);
-								if (g.renderingToAndroid()) size = 2*size+1;
+								//if (g.renderingToAndroid()) size = 2*size+1;
 								int fs = (int) (2*size+1);
 								g.fillOval((posx - size), (posy - size), fs, fs, zpos);
 							}

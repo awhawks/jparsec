@@ -33,8 +33,8 @@ public class UpdateRun {
         AstroDate astro = new AstroDate();
 
         // orbital_elements.jar
-        Update.updateOrbitalElementsFromMPC();
         Update.updateOrbitalElementsOfNaturalSatellites();
+        Update.updateOrbitalElementsFromMPC();
         Update.updateSizeAndMagnitudeOfArtificialSatellites();
         Update.updateOrbitsOfVisualBinaryStars();
 

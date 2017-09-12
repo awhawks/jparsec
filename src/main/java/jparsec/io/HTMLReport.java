@@ -163,7 +163,7 @@ public class HTMLReport implements Serializable {
 	}
 	/**
 	 * Begins the body tag.
-	 * @param backgroundColor The background color in hexadecimal
+	 * @param backgroundColor The background color in hexadecimal, for instance ffffff.
 	 * notation, or null.
 	 */
 	public void beginBody(String backgroundColor)
@@ -171,7 +171,7 @@ public class HTMLReport implements Serializable {
 		body = true;
 		if (htmlCode.indexOf("<body") >= 0) return;
 		String c = "";
-		if (backgroundColor != null) c = " bgcolor=\""+backgroundColor+"\"";
+		if (backgroundColor != null) c = " bgcolor=\"#"+backgroundColor+"\"";
 		htmlCode.append("<body"+c+">" + sep);
 	}
 	/**

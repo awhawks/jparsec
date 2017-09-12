@@ -124,6 +124,7 @@ public class LATEXReport implements Serializable
 		latexCode.append("% "+msg + TimeFormat.dateNow(DateFormat.FULL) + sep);
 		latexCode.append("\\documentclass{article}" + sep);
 		latexCode.append("\\usepackage{graphicx}" + sep);
+		latexCode.append("\\usepackage{ulem}" + sep);
 		//latexCode.append("\\usepackage{txfonts}" + sep);
 		latexCode.append("\\usepackage{verbatim}" + sep);
 		latexCode.append("\\usepackage{hyperref}" + sep);
@@ -174,6 +175,7 @@ public class LATEXReport implements Serializable
 		latexCode.append("% "+msg + TimeFormat.dateNow(DateFormat.FULL) + sep);
 		latexCode.append("\\documentclass{article}" + sep);
 		latexCode.append("\\usepackage{graphicx}" + sep);
+		latexCode.append("\\usepackage{ulem}" + sep);
 		//latexCode.append("\\usepackage{txfonts}" + sep);
 		latexCode.append("\\usepackage{verbatim}" + sep);
 		latexCode.append("\\usepackage{hyperref}" + sep);
@@ -227,6 +229,7 @@ public class LATEXReport implements Serializable
 		latexCode.append("% "+msg + TimeFormat.dateNow(DateFormat.FULL) + sep);
 		latexCode.append("\\documentclass{"+documentType+"}" + sep);
 		latexCode.append("\\usepackage{graphicx}" + sep);
+		latexCode.append("\\usepackage{ulem}" + sep);
 		latexCode.append("\\usepackage{txfonts}" + sep);
 		latexCode.append("\\usepackage{verbatim}" + sep);
 		latexCode.append("\\usepackage{hyperref}" + sep);
@@ -306,6 +309,7 @@ public class LATEXReport implements Serializable
 		latexCode.append("\\documentclass{beamer}" + sep);
 		latexCode.append("\\usepackage[latin1]{inputenc}" + sep);
 		latexCode.append("\\usepackage{graphicx}" + sep);
+		latexCode.append("\\usepackage{ulem}" + sep);
 		latexCode.append("\\usepackage{txfonts}" + sep);
 		latexCode.append("\\usepackage{verbatim}" + sep);
 		latexCode.append("\\usepackage{hyperref}" + sep);

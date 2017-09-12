@@ -874,6 +874,35 @@ public class Spectrum30m implements Serializable
 		}
 		return ch;
 	}
+	
+    /**
+     * Returns a chart with this spectrum including a set of Gaussians.
+     * Invalid lines are also drawn into the chart (with stroke).
+     * @param lines The set of Gaussians.
+     * @param xunit The unit to use in the chart for the x axis.
+     * @return The chart.
+     * @throws JPARSECException If an error occurs.
+     */
+	public CreateChart getChartWithAllLines(SpectrumLine lines[], XUNIT xunit) throws JPARSECException {
+		CreateChart ch = getChart(800, 600, xunit);
+		if (lines != null && lines.length > 0) {
+			int index = 0;
+			for (int l=0;l<lines.length; l++) {
+				index ++;
+				Spectrum30m s30m2 = new Spectrum30m(Spectrum.getGaussianSpectrum(200, lines[l]));
+				if (xunit == XUNIT.CHANNEL_NUMBER)  s30m2.resample(this);
+				ChartSeriesElement series = s30m2.getChart(800, 600, xunit).getChartElement().series[0];
+				series.legend = lines[l].label;
+				if (series.legend == null || series.legend.trim().equals(""))
+					series.legend = "Line "+index;
+				series.color = Color.RED;
+				if (lines[l].deleted || !lines[l].enabled) series.stroke = JPARSECStroke.STROKE_LINES_MEDIUM;
+				ch.addSeries(series);
+			}
+			ch.updateChart();
+		}
+		return ch;
+	}
 
     /**
      * Clones this instance.
