@@ -330,7 +330,7 @@ public class Version
 						"Trajectories for bodies can now include custom labels in each point, and the trajectory can be set from an array of external positions for objects not supported (transient NEOs).\n"+
 						"When rendering the Earth map with artificial satellites and their elements cannot be updated the satellites do not appear, but the trajectories computed with outdated elements did.\n"+
 						"Fixed some problems with the position of subscripts and superscripts in TextLabel class.\n",
-				"      1.114: Many bug fixes (May XX, 2017):\n"+
+				"      1.114: Many bug fixes (Sep 13, 2017):\n"+
 						"Fix in Functions.normalizeRadians for very high input values.\n"+
 						"AWTGraphics now correctly detects and downloads images for https protocol.\n"+
 						"Planets and satellites did not appear correctly in white color mode.\n"+
@@ -346,10 +346,10 @@ public class Version
 			// Dependency name                             Version
 			"jparsec.jar                                   1.114",
 
-			"sky.jar                                       1.40",
-			"orbital_elements.jar                          1.25",
-			"sunspot.jar                                   1.15",
-			"eop.jar                                       1.14",
+			"sky.jar                                       1.41",
+			"orbital_elements.jar                          1.26",
+			"sunspot.jar                                   1.16",
+			"eop.jar                                       1.15",
 
 			"sgt_v30.jar                                   1.06",
 			"jcommon-1.0.16.jar                            1.03",
