@@ -803,7 +803,7 @@ public class RenderSky
 		if (render.trajectory != null) {
 			if (render.trajectory[0] != null) {
 				if (render.trajectory[0].objectType != null) {
-					drawTrajectory();
+					drawTrajectory(false);
 				}
 			}
 		}
@@ -846,6 +846,13 @@ public class RenderSky
 			planets = null;
 			JPARSECException
 					.addWarning("cannot obtain ephemeris for Solar System objects in this date.");
+		}
+		if (render.trajectory != null) {
+			if (render.trajectory[0] != null) {
+				if (render.trajectory[0].objectType != null) {
+					drawTrajectory(true);
+				}
+			}
 		}
 		projection.createNewArrayWhenProjecting = true;
 		drawHorizonTexture();
@@ -10561,7 +10568,7 @@ public class RenderSky
 	 */
 	public double getOriginalFieldOfView() { return field0; }
 
-	private void drawTrajectory() throws JPARSECException
+	private void drawTrajectory(boolean onlyClose) throws JPARSECException
 	{
 		if (render.drawClever && this.fieldDeg >= 100 && field > 5 * this.trajectoryField) return;
 
@@ -10577,6 +10584,12 @@ public class RenderSky
 		boolean spa = Translate.getDefaultLanguage() == LANGUAGE.SPANISH;
 		for (int index = 0; index < render.trajectory.length; index++)
 		{
+			if (!onlyClose && 
+					(render.trajectory[index].objectType == OBJECT.NEO || 
+					render.trajectory[index].objectType == OBJECT.ARTIFICIAL_SATELLITE)) continue;
+			if (onlyClose && 
+					render.trajectory[index].objectType != OBJECT.NEO && 
+					render.trajectory[index].objectType != OBJECT.ARTIFICIAL_SATELLITE) continue;
 			if (render.trajectory[index].loc_path == null) continue;
 			float pos[] = Projection.INVALID_POSITION;
 			float old_pos[] = Projection.INVALID_POSITION;
