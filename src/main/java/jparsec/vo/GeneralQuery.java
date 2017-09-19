@@ -39,7 +39,11 @@ import javax.imageio.ImageIO;
 import jparsec.ephem.Functions;
 import jparsec.ephem.Target.TARGET;
 import jparsec.graph.DataSet;
+import jparsec.io.ApplicationLauncher;
+import jparsec.io.ApplicationLauncher.OS;
 import jparsec.io.FileIO;
+import jparsec.io.ReadFile;
+import jparsec.io.WriteFile;
 import jparsec.observer.LocationElement;
 import jparsec.util.JPARSECException;
 
@@ -394,6 +398,24 @@ public class GeneralQuery implements Serializable {
 			return output.toString();
     	} catch (Exception e)
     	{
+    		if (query.startsWith("https") && ApplicationLauncher.getOperatingSystem() == OS.LINUX) {
+    			try {
+    				String f1[] = FileIO.getFiles(FileIO.getTemporalDirectory());
+	    			Process pr = ApplicationLauncher.executeCommand("wget "+query, null, new File(FileIO.getTemporalDirectory()));
+	    			pr.waitFor();
+    				String f2[] = FileIO.getFiles(FileIO.getTemporalDirectory());
+    				if (f2.length == f1.length+1) {
+    					for (int i=0; i<f2.length; i++) {
+    						int index = DataSet.getIndex(f1, f2[i]);
+    						if (index < 0) {
+    							String out = DataSet.arrayListToString(ReadFile.readAnyExternalFile(f2[i], charset));
+    							FileIO.deleteFile(f2[i]);
+    							return out;
+    						}
+    					}
+    				}
+    			} catch (Exception e2) { e2.printStackTrace(); }
+    		}
     		throw new JPARSECException(e);
     	}
     }
@@ -487,6 +509,27 @@ public class GeneralQuery implements Serializable {
 		    return con.getContentType();
     	} catch (Exception e)
     	{
+    		if (query.startsWith("https") && ApplicationLauncher.getOperatingSystem() == OS.LINUX && 
+    				fileName != null) {
+    			try {
+    				String f1[] = FileIO.getFiles(FileIO.getTemporalDirectory());
+	    			Process pr = ApplicationLauncher.executeCommand("wget "+query, null, new File(FileIO.getTemporalDirectory()));
+	    			pr.waitFor();
+    				String f2[] = FileIO.getFiles(FileIO.getTemporalDirectory());
+    				if (f2.length == f1.length+1) {
+    					for (int i=0; i<f2.length; i++) {
+    						int index = DataSet.getIndex(f1, f2[i]);
+    						if (index < 0) {
+    							String charset = ReadFile.ENCODING_UTF_8;
+    							String out = DataSet.arrayListToString(ReadFile.readAnyExternalFile(f2[i], charset));
+    							FileIO.deleteFile(f2[i]);
+    							WriteFile.writeAnyExternalFile(fileName, out, charset);
+    							return "txt";
+    						}
+    					}
+    				}
+    			} catch (Exception e2) { e2.printStackTrace(); }
+    		}
     		throw new JPARSECException(e);
     	}
     }
@@ -588,6 +631,24 @@ public class GeneralQuery implements Serializable {
 		    return out;
     	} catch (Exception e)
     	{
+    		if (query.startsWith("https") && ApplicationLauncher.getOperatingSystem() == OS.LINUX) {
+    			try {
+    				String f1[] = FileIO.getFiles(FileIO.getTemporalDirectory());
+	    			Process pr = ApplicationLauncher.executeCommand("wget "+query, null, new File(FileIO.getTemporalDirectory()));
+	    			pr.waitFor();
+    				String f2[] = FileIO.getFiles(FileIO.getTemporalDirectory());
+    				if (f2.length == f1.length+1) {
+    					for (int i=0; i<f2.length; i++) {
+    						int index = DataSet.getIndex(f1, f2[i]);
+    						if (index < 0) {
+    							String out = DataSet.arrayListToString(ReadFile.readAnyExternalFile(f2[i], encoding));
+    							FileIO.deleteFile(f2[i]);
+    							return out;
+    						}
+    					}
+    				}
+    			} catch (Exception e2) { e2.printStackTrace(); }
+    		}
     		throw new JPARSECException(e);
     	}
     }
@@ -607,7 +668,7 @@ public class GeneralQuery implements Serializable {
     }
 
 	/**
-	 * Perform the query for an object. An attemp to read the whole file is
+	 * Perform the query for an object. An attempt to read the whole file is
 	 * done (whatever its size). If the size of the file cannot be known, then
 	 * only the first 10 MB are read.
 	 * @param query Query to call.
@@ -707,6 +768,24 @@ public class GeneralQuery implements Serializable {
 			return image;
     	} catch (Exception e)
     	{
+    		if (query.startsWith("https") && ApplicationLauncher.getOperatingSystem() == OS.LINUX) {
+    			try {
+    				String f1[] = FileIO.getFiles(FileIO.getTemporalDirectory());
+	    			Process pr = ApplicationLauncher.executeCommand("wget "+query, null, new File(FileIO.getTemporalDirectory()));
+	    			pr.waitFor();
+    				String f2[] = FileIO.getFiles(FileIO.getTemporalDirectory());
+    				if (f2.length == f1.length+1) {
+    					for (int i=0; i<f2.length; i++) {
+    						int index = DataSet.getIndex(f1, f2[i]);
+    						if (index < 0) {
+    							BufferedImage image = ImageIO.read(new File(f2[i]));
+    							FileIO.deleteFile(f2[i]);
+    							return image;
+    						}
+    					}
+    				}
+    			} catch (Exception e2) { e2.printStackTrace(); }
+    		}
     		throw new JPARSECException(e);
     	}
     }
