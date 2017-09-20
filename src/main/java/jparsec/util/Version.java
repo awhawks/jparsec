@@ -335,7 +335,11 @@ public class Version
 						"AWTGraphics now correctly detects and downloads images for https protocol.\n"+
 						"Planets and satellites did not appear correctly in white color mode.\n"+
 						"Better performance for the overlay of deep sky textures, and fix for Mel111 position.\n"+
-						"Better axes labels, milky way and ecliptic cuts with the horizon, and some other sky rendering fixes.\n"
+						"Better axes labels, milky way and ecliptic cuts with the horizon, and some other sky rendering fixes.\n",
+				"      1.115: Some bug fixes (Dec XX, 2017):\n"+
+						"The math library by Michael Thomas Flanagan is now an external dependency (simplifies fiting spectra to several Gaussians simultaneously).\n"+
+						"Trajectories are now rendered in front of the background objects for NEOs and artificial satellites.\n"+
+						"Images and text files (for updates) can be downloaded with https protocol, but only in Linux (using wget).\n"
 
 				+FileIO.getLineSeparator(),
 		};
@@ -344,13 +348,14 @@ public class Version
 		// Dependencies for JPARSEC programs and models
 		String library[] = new String[] {
 			// Dependency name                             Version
-			"jparsec.jar                                   1.114",
+			"jparsec.jar                                   1.115",
 
 			"sky.jar                                       1.41",
 			"orbital_elements.jar                          1.26",
 			"sunspot.jar                                   1.16",
 			"eop.jar                                       1.15",
 
+			"flanagan.jar                                  1.00",
 			"sgt_v30.jar                                   1.06",
 			"jcommon-1.0.16.jar                            1.03",
 			"sky2000.jar                                   1.06",

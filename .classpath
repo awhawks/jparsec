@@ -175,5 +175,6 @@
 	<classpathentry kind="var" path="M2_REPO"/>
 	<classpathentry kind="lib" path="lib/dust.jar"/>
 	<classpathentry kind="lib" path="lib/series96.jar"/>
+	<classpathentry kind="lib" path="/home/alonso/java/librerias/flanagan/flanagan.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

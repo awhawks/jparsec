@@ -1334,8 +1334,8 @@ public class ProcessSpectrum {
 
 	private double fitx[], fitdx[];
 	private void fitAGaussian(double x[], double y[], double w[]) throws JPARSECException {
-		jparsec.math.Regression reg = new jparsec.math.Regression(x, y, w);
-		reg.setMaximumNumberOfInterationsForNelderAndMeadSimplex(maximumNumberOfIterationsForNelderAndMeadSimplexInRegressionClass);
+		Regression reg = new Regression(x, y, w);
+		reg.setNmax(maximumNumberOfIterationsForNelderAndMeadSimplexInRegressionClass);
 		reg.gaussian();
 		fitx = reg.getBestEstimates();
 		fitdx = reg.getBestEstimatesErrors();
@@ -1352,8 +1352,8 @@ public class ProcessSpectrum {
 	 */
 	public static double[] fitGaussian(double x[], double y[], double sigma) throws JPARSECException {
         double w[] = DataSet.getSetOfValues(sigma, sigma, x.length, false); // Use sigma as the error in each point
-		jparsec.math.Regression reg = new jparsec.math.Regression(x, y, w);
-		reg.setMaximumNumberOfInterationsForNelderAndMeadSimplex(maximumNumberOfIterationsForNelderAndMeadSimplexInRegressionClass);
+		Regression reg = new Regression(x, y, w);
+		reg.setNmax(maximumNumberOfIterationsForNelderAndMeadSimplexInRegressionClass);
 		reg.gaussian();
 
 		double[] fitx = reg.getBestEstimates();
@@ -1383,8 +1383,8 @@ public class ProcessSpectrum {
 	 * @throws JPARSECException If an error occurs.
 	 */
 	public static double[] fitGaussian(double x[], double y[], double sigma[]) throws JPARSECException {
-		jparsec.math.Regression reg = new jparsec.math.Regression(x, y, sigma);
-		reg.setMaximumNumberOfInterationsForNelderAndMeadSimplex(maximumNumberOfIterationsForNelderAndMeadSimplexInRegressionClass);
+		Regression reg = new Regression(x, y, sigma);
+		reg.setNmax(maximumNumberOfIterationsForNelderAndMeadSimplexInRegressionClass);
 		reg.gaussian();
 
 		double[] fitx = reg.getBestEstimates();
