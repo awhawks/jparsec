@@ -35,6 +35,7 @@ import jparsec.ephem.planets.OrbitEphem;
 import jparsec.ephem.planets.OrbitalElement;
 import jparsec.ephem.probes.SDP4_SGP4;
 import jparsec.ephem.probes.SatelliteEphem;
+import jparsec.ephem.probes.SatelliteEphemElement;
 import jparsec.ephem.probes.Spacecraft;
 import jparsec.ephem.stars.StarElement;
 import jparsec.ephem.stars.StarEphem;
@@ -675,8 +676,10 @@ public class TrajectoryElement implements Serializable
 						this.loc_path[step] = new LocationElement(ephem.rightAscension, ephem.declination, 1.0);
 						break;
 					case ARTIFICIAL_SATELLITE:
-						ephem = EphemElement.parseSatelliteEphemElement(SDP4_SGP4.satEphemeris(time_path, obs, eph_path, false), time_path.astroDate.jd());
+						SatelliteEphemElement see = SDP4_SGP4.satEphemeris(time_path, obs, eph_path, false);
+						ephem = EphemElement.parseSatelliteEphemElement(see, time_path.astroDate.jd());
 						this.loc_path[step] = new LocationElement(ephem.rightAscension, ephem.declination, 1.0);
+						if (see.isEclipsed) loc_path[step].setRadius(EphemElement.INVALID_MAGNITUDE);
 						break;
 					default:
 						throw new JPARSECException("invalid trajectory object type.");

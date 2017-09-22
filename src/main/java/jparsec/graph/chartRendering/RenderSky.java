@@ -21,14 +21,9 @@
  */
 package jparsec.graph.chartRendering;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -88,7 +83,6 @@ import jparsec.graph.chartRendering.SkyRenderElement.LEYEND_POSITION;
 import jparsec.graph.chartRendering.SkyRenderElement.MILKY_WAY_TEXTURE;
 import jparsec.graph.chartRendering.SkyRenderElement.REALISTIC_STARS;
 import jparsec.graph.chartRendering.SkyRenderElement.SUPERIMPOSED_LABELS;
-import jparsec.io.ApplicationLauncher;
 import jparsec.io.FileFormatElement;
 import jparsec.io.FileIO;
 import jparsec.io.ReadFile;
@@ -10816,6 +10810,8 @@ public class RenderSky
 							
 							int point2 = 2*point_size;
 							g.setColor(col, true);
+							if (render.trajectory[index].objectType == OBJECT.ARTIFICIAL_SATELLITE && loc_path[i].getRadius() == EphemElement.INVALID_MAGNITUDE)
+								g.setColor(col, 164);
 							if (render.anaglyphMode == ANAGLYPH_COLOR_MODE.NO_ANAGLYPH) {
 								g.fillOval((int)pos[0] - point_size, (int)pos[1] - point_size, point2, point2, this.fast);
 							} else {
@@ -10825,6 +10821,8 @@ public class RenderSky
 							if (g.renderingToAndroid()) point_size ++;
 							int point2 = 2*point_size;
 							g.setColor(col, true);
+							if (render.trajectory[index].objectType == OBJECT.ARTIFICIAL_SATELLITE && loc_path[i].getRadius() == EphemElement.INVALID_MAGNITUDE)
+								g.setColor(col, 164);
 							if (render.anaglyphMode == ANAGLYPH_COLOR_MODE.NO_ANAGLYPH) {
 								g.fillOval(pos[0] - point_size, pos[1] - point_size, point2+1, point2+1, this.fast);
 								//g.drawLine(pos[0] - point2*2, pos[1], pos[0] + point2*2, pos[1], this.fast);
