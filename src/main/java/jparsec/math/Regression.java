@@ -107,6 +107,20 @@ public class Regression extends flanagan.analysis.Regression {
 		setDefaultValues(xData, yData, weight);
 	}
 	
+	// Fit to multiple Gaussians
+	public void multipleGaussiansNoPlot(int nGaussians, double[] initMeans, double[] initSDs, double[] initFracts){
+        if(initMeans.length!=nGaussians)throw new IllegalArgumentException("length of initial means array, " + initMeans.length + ", does not equal the number of Gaussians, " + nGaussians);
+        if(initSDs.length!=nGaussians)throw new IllegalArgumentException("length of initial standard deviations array, " + initSDs.length + ", does not equal the number of Gaussians, " + nGaussians);
+        if(initFracts.length!=nGaussians)throw new IllegalArgumentException("length of initial fractional weight array, " + initFracts.length + ", does not equal the number of Gaussians, " + nGaussians);
+        double sum = 0.0;
+        for(int i=0; i<nGaussians; i++)sum += initFracts[i];
+        if(sum!=1.0){
+            System.out.println("Regression method multipleGaussiansPlot: the sum of the initial estimates of the fractional weight, " + sum + ", does not equal 1.0");
+            System.out.println("Program continued using the supplied fractional weight");
+        }
+	    this.fitMultipleGaussians(nGaussians, initMeans, initSDs, initFracts, 0);
+	}
+	
 	/**
 	 * Returns if convergency was reached.
 	 * @return True or false.

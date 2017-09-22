@@ -1750,7 +1750,12 @@ public class EventReport {
 								event = EVENT.OCCULTATION;
 							}
 							if (limitD > 0) details = Translate.getEntry(1008, LANGUAGE.ENGLISH)+" "+b0+"-"+b1;
-							String add = " (d = "+Functions.formatValue(p.getY(), 1)+"\u00b0)";
+							String add0 = Functions.formatValue(p.getY(), 1);
+							String add = " (d = "+add0+"\u00b0)";
+							if (add0.equals("0.0")) {
+								add0 = Functions.formatValue(p.getY()*60, 1);
+								add = " (d = "+add0+"')";								
+							}
 							double init = -1, end = -1;
 							if (event != EVENT.CONJUNCTION) {
 								double find = -1, previous = -1;
@@ -1780,7 +1785,14 @@ public class EventReport {
 								}
 								if (init != -1 && end != -1 && init != end) {
 									TimeElement timeE = new TimeElement(p.getX(), SCALE.TERRESTRIAL_TIME);
-									add = " (d = "+Functions.formatValue(p.getY(), 1)+"\u00b0, "+
+									add0 = Functions.formatValue(p.getY(), 1);
+									add = " (d = "+add0+"\u00b0";
+									if (add0.equals("0.0")) {
+										add0 = Functions.formatValue(p.getY()*60, 1);
+										add = " (d = "+add0+"'";								
+									}
+
+									add += ", "+
 										Translate.getEntry(1022, LANGUAGE.ENGLISH).toLowerCase()+" "+timeE.toMinString()+")";
 								}
 							}
@@ -1889,7 +1901,12 @@ public class EventReport {
 								if (p.getY() < z.get(meani))
 									details = b1+" "+Translate.getEntry(164, LANGUAGE.ENGLISH).toLowerCase()+" "+Translate.getEntry(161, LANGUAGE.ENGLISH)+" "+b0;
 							}
-							String add = " (d = "+Functions.formatValue(p.getY(), 1)+"\u00b0";
+							String add0 = Functions.formatValue(p.getY(), 1);
+							String add = " (d = "+add0+"\u00b0";
+							if (add0.equals("0.0")) {
+								add0 = Functions.formatValue(p.getY()*60, 1);
+								add = " (d = "+add0+"'";								
+							}
 							if (magStar > -100) add += ", mag = "+Functions.formatValue(magStar, 2);
 							add += ")";
 							double init = -1, end = -1;
@@ -1921,7 +1938,13 @@ public class EventReport {
 								}
 								if (init != -1 && end != -1 && init != end) {
 									TimeElement timeE = new TimeElement(p.getX(), SCALE.TERRESTRIAL_TIME);
-									add = " (d = "+Functions.formatValue(p.getY(), 1)+"\u00b0, "+
+									add0 = Functions.formatValue(p.getY(), 1);
+									add = " (d = "+add0+"\u00b0";
+									if (add0.equals("0.0")) {
+										add0 = Functions.formatValue(p.getY()*60, 1);
+										add = " (d = "+add0+"'";								
+									}
+									add += ", "+
 										Translate.getEntry(1022, LANGUAGE.ENGLISH).toLowerCase()+" "+timeE.toMinString();
 									if (magStar > -100) add += ", mag = "+Functions.formatValue(magStar, 2);
 									add += ")";
