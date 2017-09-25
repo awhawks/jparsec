@@ -2629,6 +2629,7 @@ public class RenderSky
     Object starImg[][] = null;
     private static float starSize[] = null;
     private void drawStar(int tsize, float[] pos, float dist, int colIndex, Graphics g) {
+    	if (tsize >= 45) tsize = 44;
     	if (render.getColorMode() == COLOR_MODE.NIGHT_MODE) colIndex = 6;
     	int index = render.drawStarsRealistic.ordinal();
     	if (colIndex < 0) colIndex = 2;
@@ -13548,6 +13549,13 @@ public class RenderSky
 				render.trajectory[i].drawPathColor1 = g.getColor();
 			}
 			g.setColor(c, true);
+		}
+		if (!g.renderingToAndroid() && render.width >= 3000) {
+        	int hugeFactor = Math.max((render.width/1000) - 2, 4);
+        	render.drawCoordinateGridFont = FONT.getDerivedFont(render.drawCoordinateGridFont, 14);
+        	int s = 14 + hugeFactor * 2; 
+        	if (s > 35) s = 35;
+        	render.drawCoordinateGridFont = FONT.getDerivedFont(render.drawCoordinateGridFont, s);        	
 		}
 	}
 

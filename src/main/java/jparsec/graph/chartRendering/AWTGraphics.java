@@ -3464,7 +3464,13 @@ public class AWTGraphics implements Graphics {
 		// Hack to use a font supported by Java in PDF export (later transformed to Symbol again using a font mapping in iText).
 		// Symbol is for Greek alphabet
 		if (n.equals("Symbol")) n = Font.SERIF;
-		Font font = new Font(n, f.getType(), f.getSize());
+		int size = f.getSize();
+		if (!renderingToExternalGraphics() && w >= 3000) {
+        	int hugeFactor = Math.max((w/1000) - 2, 4);
+        	size += hugeFactor * 2; 
+        	if (size > 35) size = 35;
+		}
+		Font font = new Font(n, f.getType(), size);
 		g.setFont(font);
 		if (g2 != null) g2.setFont(font);
 	}

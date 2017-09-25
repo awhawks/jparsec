@@ -1447,6 +1447,11 @@ public class SkyChart implements Serializable, KeyListener, MouseMotionListener,
 			}
 
 			int s = 10;
+			if (chart.width >= 3000) {
+	        	int hugeFactor = Math.max((chart.width/1000) - 2, 4);
+	        	s += hugeFactor * 2; 
+	        	if (s > 35) s = 35;
+			}
 			if (g != null) {
 				g.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, s));
 				int x0 = 5;
