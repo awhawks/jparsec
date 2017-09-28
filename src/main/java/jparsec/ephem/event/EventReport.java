@@ -1506,7 +1506,7 @@ public class EventReport {
 						sourceEphem.add(ephem);
 					} else {
 						eph.targetBody = TARGET.values()[target];
-						int si = source.indexOf(eph.targetBody.getEnglishName());
+						int si = source.indexOf(eph.targetBody.getName());
 						EphemElement ephem = Ephem.getEphemeris(time, obs, eph, false);
 						sourceEphem.set(si, ephem);
 					}
