@@ -470,11 +470,19 @@ public class EventReport {
 					if (s != null) jd = s.time + 300;
 					break;
 				case 41:
-					if (planetaryEvents) s = MainEvents.SaturnRingsEdgeOn(jd, EVENT_TIME.NEXT);
+					if (planetaryEvents) {
+						s = MainEvents.SaturnRingsEdgeOn(jd, eventTime);
+						if (s.time < jd && eventTime == EVENT_TIME.CLOSEST) 
+							s = MainEvents.SaturnRingsEdgeOn(jd, EVENT_TIME.NEXT);
+					}
 					if (s != null) jd = s.time + 300;
 					break;
 				case 42:
-					if (planetaryEvents) s = MainEvents.SaturnRingsMaximumAperture(jd, EVENT_TIME.NEXT);
+					if (planetaryEvents) {
+						s = MainEvents.SaturnRingsMaximumAperture(jd, eventTime);
+						if (s.time < jd && eventTime == EVENT_TIME.CLOSEST) 
+							s = MainEvents.SaturnRingsMaximumAperture(jd, EVENT_TIME.NEXT);
+					}
 					if (s != null) jd = s.time + 300;
 					break;
 				case 43:

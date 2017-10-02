@@ -657,8 +657,7 @@ public class MainEvents
 				dif = Math.abs(ephem1.subsolarLatitude) - Math.abs(oldpa);
 				oldpa = ephem1.subsolarLatitude;
 			} while (dif > 0);
-			time.add(-step);
-			step = step / 2.0;
+			step = -step / 2.0;
 		} while (Math.abs(step) > precision);
 
 		step = 10;
@@ -673,8 +672,7 @@ public class MainEvents
 				dif = Math.abs(ephem1.positionAngleOfPole) - Math.abs(oldpa);
 				oldpa = ephem1.positionAngleOfPole;
 			} while (dif > 0);
-			time.add(-step);
-			step = step / 2.0;
+			step = -step / 2.0;
 		} while (Math.abs(step) > precision);
 
 
