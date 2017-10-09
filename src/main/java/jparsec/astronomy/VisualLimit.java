@@ -22,6 +22,7 @@
 package jparsec.astronomy;
 
 import jparsec.ephem.EphemerisElement;
+import jparsec.ephem.Functions;
 import jparsec.ephem.Target.TARGET;
 import jparsec.ephem.planets.EphemElement;
 import jparsec.ephem.planets.PlanetEphem;
@@ -48,6 +49,10 @@ import jparsec.util.JPARSECException;
  */
 public class VisualLimit
 {
+	/** Factor to convert to nano lamberts. Original value was 1.11E-15, but seems to be 
+	 * a bug. See http://www.iol.ie/~geniet/eng/vislimitbas.htm. */
+	private static final double tonL = 1.02E-15;
+	
 	/**
 	 * Explicit (all values) constructor.
 	 *
@@ -115,9 +120,9 @@ public class VisualLimit
 			kaCoeff *= Math.exp(1.33 * Math.log(humidityParam));
 		}
 		if (fixed.latitude < 0D)
-			kaCoeff *= 1D - Math.sin(monthAngle);
+			kaCoeff *= 1D - 0.33 * Math.sin(monthAngle);  // Was 1, not 0.33, in original code, see http://www.iol.ie/~geniet/eng/vislimitbas.htm
 		else
-			kaCoeff *= 1D + Math.sin(monthAngle);
+			kaCoeff *= 1D + 0.33 * Math.sin(monthAngle);
 
 		koCoeff = (3. + .4 * (fixed.latitude * Math.cos(monthAngle) - Math.cos(3. * fixed.latitude))) / 3.;
 
@@ -128,7 +133,8 @@ public class VisualLimit
 		airMassMoon = computeAirMass(fixed.moonZenithAngle);
 		airMassSun = computeAirMass(fixed.sunZenithAngle);
 		moonElong = fixed.moonElongation * 180. / Math.PI;
-		lunarMag = -12.73 + moonElong * (.026 + 4.e-9 * (moonElong * moonElong * moonElong));
+		double moonPhase = Functions.normalizeDegrees(moonElong + 180);
+		lunarMag = -12.73 + moonPhase * (.026 + 4.e-9 * (moonPhase * moonPhase * moonPhase));
 		/* line 2180 in B Schaefer code */
 
 		for (i = 0; i < 5; i++)
@@ -195,7 +201,7 @@ public class VisualLimit
 				twilightBrightness = magToBrightness(twilightBrightness);
 				/* above is line 2280, B Schaefer code */
 				twilightBrightness *= 100. / (angular.sunAngularDistance * 180. / Math.PI);
-				twilightBrightness *= 1. - magToBrightness(k[i]);
+				twilightBrightness *= 1. - magToBrightness(k[i] * airMass); // airMass added here, see bug at http://www.iol.ie/~geniet/eng/vislimitbas.htm
 				/* preceding line looks suspicious to me... line 2290 */
 				brightnessDaylight = magToBrightness(ms[i] - mo[i] + 43.27);
 				/* line 2340 */
@@ -216,7 +222,7 @@ public class VisualLimit
 	 */
 	public double limitingMagnitude()
 	{
-		double c1, c2, bl = brightness[2] / 1.11e-15;
+		double c1, c2, bl = brightness[2] / tonL;
 		double th, tval;
 
 		if (bl > 1500.)
@@ -499,8 +505,8 @@ public class VisualLimit
 
 		VisualLimit v = new VisualLimit(bandMask, f, a);
 		double[] bright = new double[]
-			{ v.getBrightness(0) / 1.11E-15, v.getBrightness(1) / 1.11E-15, v.getBrightness(2) / 1.11E-15,
-					v.getBrightness(3) / 1.11E-15, v.getBrightness(4) / 1.11E-15 };
+			{ v.getBrightness(0) / tonL, v.getBrightness(1) / tonL, v.getBrightness(2) / tonL,
+					v.getBrightness(3) / tonL, v.getBrightness(4) / tonL };
 		return bright;
 	}
 

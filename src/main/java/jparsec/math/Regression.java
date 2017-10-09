@@ -24,6 +24,7 @@ package jparsec.math;
 import java.awt.Color;
 
 import flanagan.analysis.RegressionFunction;
+import jparsec.ephem.Functions;
 import jparsec.graph.ChartSeriesElement;
 import jparsec.graph.DataSet;
 import jparsec.util.JPARSECException;
@@ -106,8 +107,53 @@ public class Regression extends flanagan.analysis.Regression {
 
 		setDefaultValues(xData, yData, weight);
 	}
-	
-	// Fit to multiple Gaussians
+
+	/**
+	 * Computes the parameters of the Gaussian as defined by M. Flanagan in his math library 
+	 * from the more common Gaussian parameters used in astrophysics.
+	 * @param chan Channel or x coordinate of the line center. Returned unmodified in first 
+	 * index of the output array.
+	 * @param vres Velocity resolution, km/s.
+	 * @param w Width of the line, also km/s.
+	 * @param p Peak in K.
+	 * @return Array with values of parameters mean, sd, and yscale as defined by M. Flanagan.
+	 * To be used as initial estimates for fitting a Gaussian with optionally fixed parameters.
+	 * Just call {@linkplain #gaussian(double[], boolean[])}.
+	 */
+	public static double[] getInitialEstimates(double chan, double vres, double w, double p) {
+        double sqrttwopi = Math.sqrt(Constant.TWO_PI);
+		double g = 2.0 * Math.sqrt(2.0 * Math.log(2.0));
+        
+		double initMean = chan;
+		double initSD = w / (g * vres);
+		double initYScale = p * initSD * sqrttwopi;
+		return new double[] {initMean, initSD, initYScale};
+	}
+
+	/**
+	 * Get initial fraction for a Gaussian. To be used for fitting multiple Gaussians 
+	 * simultaneously.
+	 * @param vres Velocity resolution, km/s.
+	 * @param w Width of the line, also km/s.
+	 * @param p Peak in K.
+	 * @return Initial frac parameter as defined by M. Flanagan.
+	 */
+	public static double getInitialFrac(double vres, double w, double p) {
+        double sqrttwopi = Math.sqrt(Constant.TWO_PI);
+		double g = 2.0 * Math.sqrt(2.0 * Math.log(2.0));
+		double initFract = p * g * vres / (w * sqrttwopi);
+		return initFract;
+	}
+
+	/**
+	 * Fit multiple Gaussians simultaneously, generating no plot. To use this method see 
+	 * also {@linkplain #getInitialFrac(double, double, double)} 
+	 * and {@linkplain #getInitialEstimates(double, double, double, double)}.
+	 * @param nGaussians Number of Gaussians to fit.
+	 * @param initMeans Values for the means of the Gaussians.
+	 * @param initSDs Values for the standard deviations of the Gaussians.
+	 * @param initFracts Values for the initial fractions.
+	 */
 	public void multipleGaussiansNoPlot(int nGaussians, double[] initMeans, double[] initSDs, double[] initFracts){
         if(initMeans.length!=nGaussians)throw new IllegalArgumentException("length of initial means array, " + initMeans.length + ", does not equal the number of Gaussians, " + nGaussians);
         if(initSDs.length!=nGaussians)throw new IllegalArgumentException("length of initial standard deviations array, " + initSDs.length + ", does not equal the number of Gaussians, " + nGaussians);
