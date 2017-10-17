@@ -863,8 +863,8 @@ public class RenderSky
 				double sf1 = field0, sf2 = field0;
 				if (//render.telescope.ocular == null &&
 						render.telescope.ccd != null) {
-					if (render.telescope.ccd.name != null && !render.telescope.ccd.name.equals("")) 
-						s += " + "+render.telescope.ccd.name;
+					if (render.telescope.ccd.name != null && !render.telescope.ccd.name.trim().equals("")) 
+						s += " + "+render.telescope.ccd.name.trim();
 					TelescopeElement tel = render.telescope.clone();
 					tel.ocular = null;
 					radius = (float) (pixels_per_radian * 0.5 * render.telescope.ccd.getFieldX(tel));
@@ -964,7 +964,7 @@ public class RenderSky
 				} else {
 					if (render.telescope.ocular != null && 
 							render.telescope.ocular.name != null && 
-							!render.telescope.ocular.equals("")) s += " + "+render.telescope.ocular.name;
+							!render.telescope.ocular.name.trim().equals("")) s += " + "+render.telescope.ocular.name.trim();
 					g.drawOval(x0-radius, y0 - radius, 2*radius+1, 2*radius+1, dist);
 					int off = (int) (24f * (2f * radius / (float) render.width));
 					g.drawLine(x0-off, y0, x0+off, y0, dist, dist);
