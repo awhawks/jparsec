@@ -1263,7 +1263,7 @@ public class EventReport {
 		eph.targetBody = TARGET.Comet;
 		eph.algorithm = EphemerisElement.ALGORITHM.ORBIT;
 		int year0 = (new AstroDate(jd0)).getYear();
-		double step = 1.0, maglim = 6.5;
+		double step = 0.25, maglim = 6.5;
 		String events[] = new String[] {};
 		double times[] = new double[] {};
 		Object obj[] = new Object[] {};
@@ -1271,6 +1271,8 @@ public class EventReport {
 		String cometUnvisible = "Cunvisible ", asteroidUnvisible = "Aunvisible ";
 		String cometMaxMag = "Cmax ", asteroidMaxMag = "Amax ";
 		String cometPerih = "Cperih ", cometPerig = "Cperig ";
+		boolean alreadyVisibleA[] = new boolean[naster];
+		boolean alreadyVisibleC[] = new boolean[ncomet];
 		for (double jd = jd0; jd <=jdf; jd = jd + step) {
 			TimeElement time = new TimeElement(jd, SCALE.BARYCENTRIC_DYNAMICAL_TIME);
 			for (int index = 0; index < ncomet; index++)
@@ -1282,7 +1284,7 @@ public class EventReport {
 						if (orbit.referenceTime < jd0 - 365*2) continue;
 
 						int year = Integer.parseInt(orbit.name.substring(2, orbit.name.indexOf(" ")));
-						if (year > year0+1) continue;
+						if (year > year0+2) continue;
 					} catch (Exception exc) {
 						exc.printStackTrace();
 						continue;
@@ -1295,10 +1297,16 @@ public class EventReport {
 				{
 					eph.targetBody = TARGET.Comet;
 					EphemElement ephem = OrbitEphem.orbitEphemeris(time, obs, eph);
+					if (jd == jd0) alreadyVisibleC[index] = ephem.magnitude < maglim;
 					int ivis0 = DataSet.getIndex(events, cometVisible+ephem.name);
+					if (ivis0 < 0) ivis0 = DataSet.getIndex(events, "*"+cometVisible+ephem.name);
 					if (ephem.magnitude < maglim) {
 						if (ivis0 < 0) {
-							events = DataSet.addStringArray(events, new String[] {cometVisible+ephem.name});
+							if (!alreadyVisibleC[index]) {
+								events = DataSet.addStringArray(events, new String[] {cometVisible+ephem.name});								
+							} else {
+								events = DataSet.addStringArray(events, new String[] {"*"+cometVisible+ephem.name});
+							}
 							times = DataSet.addDoubleArray(times, new double[] {jd});
 							obj = DataSet.addObjectArray(obj, new Object[] {ephem.getEquatorialLocation()});
 							events = DataSet.addStringArray(events, new String[] {ephem.distance+" "+cometPerig+ephem.name});
@@ -1324,11 +1332,10 @@ public class EventReport {
 							obj = DataSet.addObjectArray(obj, new Object[] {ephem.getEquatorialLocation()});
 						}
 					} else {
-						if (ivis0 >= 0) {
+						if (ephem.magnitude > maglim && ivis0 >= 0) {
 							events = DataSet.addStringArray(events, new String[] {cometUnvisible+ephem.name});
 							times = DataSet.addDoubleArray(times, new double[] {jd});
 							obj = DataSet.addObjectArray(obj, new Object[] {ephem.getEquatorialLocation()});
-							events[ivis0] = "*"+cometVisible+ephem.name;
 						}
 					}
 					int imax = DataSet.getIndexEndingWith(events, " "+cometPerig+ephem.name);
@@ -1355,10 +1362,16 @@ public class EventReport {
 				{
 					eph.targetBody = TARGET.Asteroid;
 					EphemElement ephem = OrbitEphem.orbitEphemeris(time, obs, eph);
+					if (jd == jd0) alreadyVisibleA[index] = ephem.magnitude < maglim;
 					int ivis0 = DataSet.getIndex(events, asteroidVisible+ephem.name);
+					if (ivis0 < 0) ivis0 = DataSet.getIndex(events, "*"+asteroidVisible+ephem.name);
 					if (ephem.magnitude < maglim) {
 						if (ivis0 < 0) {
-							events = DataSet.addStringArray(events, new String[] {asteroidVisible+ephem.name});
+							if (!alreadyVisibleA[index]) {
+								events = DataSet.addStringArray(events, new String[] {asteroidVisible+ephem.name});								
+							} else {
+								events = DataSet.addStringArray(events, new String[] {"*"+asteroidVisible+ephem.name});
+							}
 							times = DataSet.addDoubleArray(times, new double[] {jd});
 							obj = DataSet.addObjectArray(obj, new Object[] {ephem.getEquatorialLocation()});
 						}
@@ -1376,11 +1389,10 @@ public class EventReport {
 							obj = DataSet.addObjectArray(obj, new Object[] {ephem.getEquatorialLocation()});
 						}
 					} else {
-						if (ivis0 >= 0) {
+						if (ephem.magnitude > maglim && ivis0 >= 0) {
 							events = DataSet.addStringArray(events, new String[] {asteroidUnvisible+ephem.name});
 							times = DataSet.addDoubleArray(times, new double[] {jd});
 							obj = DataSet.addObjectArray(obj, new Object[] {ephem.getEquatorialLocation()});
-							events[ivis0] = "*"+asteroidVisible+ephem.name;
 						}
 					}
 				}
@@ -1397,62 +1409,72 @@ public class EventReport {
 			if (events[i].startsWith(asteroidVisible)) type = asteroid;
 			if (!type.equals("")) {
 				String name = FileIO.getRestAfterField(1, events[i], " ", true);
-				s = new SimpleEventElement(times[i], EVENT.OTHER, type+" "+name+" "+Translate.getEntry(1085, LANGUAGE.ENGLISH));
-				s.body = name;
-				if (obj[i] != null) {
-					LocationElement loc = (LocationElement) obj[i];
-					if (loc.getLatitude() != 0.0 || loc.getLongitude() != 0.0 || loc.getRadius() != 0.0)
-						s.eventLocation = loc;
-				}
-			} else {
-				if (events[i].startsWith(cometUnvisible)) type = comet;
-				if (events[i].startsWith(asteroidUnvisible)) type = asteroid;
-				if (!type.equals("")) {
-					String name = FileIO.getRestAfterField(1, events[i], " ", true);
-					s = new SimpleEventElement(times[i], EVENT.OTHER, type+" "+name+" "+Translate.getEntry(1086, LANGUAGE.ENGLISH));
+				if (times[i] > jd0) {
+					s = new SimpleEventElement(times[i], EVENT.OTHER, type+" "+name+" "+Translate.getEntry(1085, LANGUAGE.ENGLISH));
 					s.body = name;
 					if (obj[i] != null) {
 						LocationElement loc = (LocationElement) obj[i];
 						if (loc.getLatitude() != 0.0 || loc.getLongitude() != 0.0 || loc.getRadius() != 0.0)
 							s.eventLocation = loc;
 					}
-				} else {
-					if (events[i].indexOf(" "+cometMaxMag) > 0) type = comet;
-					if (events[i].indexOf(" "+asteroidMaxMag) > 0) type = asteroid;
-					if (!type.equals("")) {
-						String name = FileIO.getRestAfterField(3, events[i], " ", true);
-						s = new SimpleEventElement(times[i], EVENT.OTHER, type+" "+name+" "+Translate.getEntry(1087, LANGUAGE.ENGLISH));
+				}
+			} else {
+				if (events[i].startsWith(cometUnvisible)) type = comet;
+				if (events[i].startsWith(asteroidUnvisible)) type = asteroid;
+				if (!type.equals("")) {
+					String name = FileIO.getRestAfterField(1, events[i], " ", true);
+					if (times[i] > jd0) {
+						s = new SimpleEventElement(times[i], EVENT.OTHER, type+" "+name+" "+Translate.getEntry(1086, LANGUAGE.ENGLISH));
 						s.body = name;
-						s.details = DataSet.replaceAll(s.details, "%mag", Functions.formatValue(Double.parseDouble(FileIO.getField(1, events[i], " ", true)), 2), true);
-						s.details = DataSet.replaceAll(s.details, "%elong", Functions.formatValue(Constant.RAD_TO_DEG*Double.parseDouble(FileIO.getField(2, events[i], " ", true)), 2), true);
 						if (obj[i] != null) {
 							LocationElement loc = (LocationElement) obj[i];
 							if (loc.getLatitude() != 0.0 || loc.getLongitude() != 0.0 || loc.getRadius() != 0.0)
 								s.eventLocation = loc;
 						}
-					} else {
-						if (events[i].indexOf(" "+cometPerih) > 0) type = comet;
-						if (!type.equals("")) {
-							String name = FileIO.getRestAfterField(2, events[i], " ", true);
-							s = new SimpleEventElement(times[i], EVENT.PLANET_MINIMUM_DISTANCE_FROM_SUN, "");
+					}
+				} else {
+					if (events[i].indexOf(" "+cometMaxMag) > 0) type = comet;
+					if (events[i].indexOf(" "+asteroidMaxMag) > 0) type = asteroid;
+					if (!type.equals("")) {
+						String name = FileIO.getRestAfterField(3, events[i], " ", true);
+						if (times[i] > jd0) {
+							s = new SimpleEventElement(times[i], EVENT.OTHER, type+" "+name+" "+Translate.getEntry(1087, LANGUAGE.ENGLISH));
 							s.body = name;
-							s.details = Functions.formatValue(Double.parseDouble(FileIO.getField(1, events[i], " ", true)), 3);
+							s.details = DataSet.replaceAll(s.details, "%mag", Functions.formatValue(Double.parseDouble(FileIO.getField(1, events[i], " ", true)), 2), true);
+							s.details = DataSet.replaceAll(s.details, "%elong", Functions.formatValue(Constant.RAD_TO_DEG*Double.parseDouble(FileIO.getField(2, events[i], " ", true)), 2), true);
 							if (obj[i] != null) {
 								LocationElement loc = (LocationElement) obj[i];
 								if (loc.getLatitude() != 0.0 || loc.getLongitude() != 0.0 || loc.getRadius() != 0.0)
 									s.eventLocation = loc;
 							}
-						} else {
-							if (events[i].indexOf(" "+cometPerig) > 0) type = comet;
-							if (!type.equals("")) {
-								String name = FileIO.getRestAfterField(2, events[i], " ", true);
-								s = new SimpleEventElement(times[i], EVENT.PLANET_MINIMUM_DISTANCE, "");
+						}
+					} else {
+						if (events[i].indexOf(" "+cometPerih) > 0) type = comet;
+						if (!type.equals("")) {
+							String name = FileIO.getRestAfterField(2, events[i], " ", true);
+							if (times[i] > jd0) {
+								s = new SimpleEventElement(times[i], EVENT.PLANET_MINIMUM_DISTANCE_FROM_SUN, "");
 								s.body = name;
 								s.details = Functions.formatValue(Double.parseDouble(FileIO.getField(1, events[i], " ", true)), 3);
 								if (obj[i] != null) {
 									LocationElement loc = (LocationElement) obj[i];
 									if (loc.getLatitude() != 0.0 || loc.getLongitude() != 0.0 || loc.getRadius() != 0.0)
 										s.eventLocation = loc;
+								}
+							}
+						} else {
+							if (events[i].indexOf(" "+cometPerig) > 0) type = comet;
+							if (!type.equals("")) {
+								String name = FileIO.getRestAfterField(2, events[i], " ", true);
+								if (times[i] > jd0) {
+									s = new SimpleEventElement(times[i], EVENT.PLANET_MINIMUM_DISTANCE, "");
+									s.body = name;
+									s.details = Functions.formatValue(Double.parseDouble(FileIO.getField(1, events[i], " ", true)), 3);
+									if (obj[i] != null) {
+										LocationElement loc = (LocationElement) obj[i];
+										if (loc.getLatitude() != 0.0 || loc.getLongitude() != 0.0 || loc.getRadius() != 0.0)
+											s.eventLocation = loc;
+									}
 								}
 							}
 						}

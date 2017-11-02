@@ -537,7 +537,7 @@ public class SimpleEventElement implements Serializable {
 					if (this.eventType == EVENT.SATURN_RINGS_MAXIMUM_APERTURE) {
 						out += " ("+Functions.formatValue(Double.parseDouble(details), 2)+"\u00b0)";
 					} else {
-						if (eventType == EVENT.ARTIFICIAL_SATELLITES_TRANSITS_SUN_MOON) {
+						if (eventType == EVENT.ARTIFICIAL_SATELLITES_TRANSITS_SUN_MOON || eventType == EVENT.ARTIFICIAL_SATELLITES_TRANSITS) {
 							out += " ("+Translate.translate(29).toLowerCase()+" "+tof+" " +details+")";
 						} else {
 							out += " ("+details+")";

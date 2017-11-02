@@ -293,7 +293,7 @@ public class SimbadElement implements Serializable
 //					(s == null && obj_name.indexOf(name) >= 0)) {
 				s = new SimbadElement(name, loc.getLongitude(), loc.getLatitude());
 				s.otherNames = new String[] {messier, com};
-				s.type = types[(Integer) obj[2]];
+				s.type = types[(Byte) obj[2]];
 				break;
 			}
 //			if (name.equals(obj_name) || messier.equals(obj_name) || com.equals(obj_name))
@@ -316,7 +316,7 @@ public class SimbadElement implements Serializable
 					LocationElement loc = (LocationElement) obj[3];
 					s = new SimbadElement(name, loc.getLongitude(), loc.getLatitude());
 					s.otherNames = new String[] {messier, com};
-					s.type = types[(Integer) obj[2]];
+					s.type = types[(Byte) obj[2]];
 					break;
 				}
 			}
