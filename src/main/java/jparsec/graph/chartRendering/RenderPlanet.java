@@ -3268,6 +3268,8 @@ public class RenderPlanet
 
 		try {
 			String n = target.getEnglishName();
+			if (!ReadFile.resourceAvailable(FileIO.DATA_SKY_LOCATIONS_DIRECTORY +n+".txt"))
+				return null;
 			ArrayList<String> v = ReadFile.readResource(FileIO.DATA_SKY_LOCATIONS_DIRECTORY +n+".txt",
 					ReadFile.ENCODING_UTF_8);
 			double lon0 = loc.getLongitude() * Constant.RAD_TO_DEG;
@@ -3322,6 +3324,8 @@ public class RenderPlanet
 		LocationElement out = null;
 		try {
 			String n = target.getEnglishName();
+			if (!ReadFile.resourceAvailable(FileIO.DATA_SKY_LOCATIONS_DIRECTORY +n+".txt"))
+				return null;
 			ArrayList<String> v = ReadFile.readResource(FileIO.DATA_SKY_LOCATIONS_DIRECTORY +n+".txt",
 					ReadFile.ENCODING_UTF_8);
 			String sep = UnixSpecialCharacter.UNIX_SPECIAL_CHARACTER.TAB.value;
@@ -3357,6 +3361,8 @@ public class RenderPlanet
 	{
 		try {
 			String n = target.getEnglishName();
+			if (!ReadFile.resourceAvailable(FileIO.DATA_SKY_LOCATIONS_DIRECTORY +n+".txt"))
+				return null;
 			ArrayList<String> v = ReadFile.readResource(FileIO.DATA_SKY_LOCATIONS_DIRECTORY +n+".txt",
 					ReadFile.ENCODING_UTF_8);
 			String feature[] = new String[v.size()];

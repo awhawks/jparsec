@@ -189,8 +189,9 @@ public class PhysicalParameters
 
 		// Compute surface brightness and magnitude corrected by phase
 		if (ephem.magnitude !=  EphemElement.INVALID_MAGNITUDE &&
-				(ephem.angularRadius * Constant.RAD_TO_ARCSEC > 0.5))
-			ephem.surfaceBrightness = (float) Star.getSurfaceBrightness(mag, ephem.angularRadius * Constant.RAD_TO_ARCSEC);
+				(ephem.angularRadius * Constant.RAD_TO_ARCSEC > 0.5) && ephem.phase >= 0)
+			ephem.surfaceBrightness = (float) Star.getSurfaceBrightness(mag, 
+					Math.sqrt(ephem.angularRadius * ephem.angularRadius * ephem.phase) * Constant.RAD_TO_ARCSEC);
 
 		if (eph.targetBody == TARGET.Moon && obs.getMotherBody() == TARGET.EARTH) {
 			// Substitute librations by the results of Eckhardt's theory. IAU rotation model is extremely inaccurate (in

@@ -12654,6 +12654,10 @@ public class RenderSky
 		if (render.drawStarsRealistic != REALISTIC_STARS.NONE && render.drawStarsRealistic != REALISTIC_STARS.NONE_CUTE && hugeFactor < 1) s += 56.0 / (m+3.0);
 		int index = 0;
 		int offset = 0;
+		if (g.renderingToAndroid()) {
+			offset --;
+			baseY1 --;
+		}
 		if (mmax>7 && !g.renderingToAndroid()) offset++;
 		float step = 1, sPerStar = (float) (s / ((int)m+2f));
 		if (starSymbolsSectionSize > 0 && sPerStar < (1.55*fs)/15 && hugeFactor < 1) {
@@ -12704,7 +12708,7 @@ public class RenderSky
 			g.setColor(render.drawCoordinateGridColor, false);
 			g.drawString(label, pos[0]-(w/2.0f), baseY2-(h/2.0f)+offset, dist);
 		}
-		if (g.renderingToAndroid()) baseY2 -= 2;
+		if (g.renderingToAndroid()) baseY2 -= 3;
 		Graphics.FONT f = g.getFont();
 		if (labelsm == null) labelsm = Translate.translate(30);
 		int little = 0;
@@ -14818,19 +14822,22 @@ public class RenderSky
 				name = DataSet.replaceAll(name, "I.", "IC ", true);
 			try {
 				String name2 = FileIO.getField(1, name, " ", true);
-				if (DataSet.isDoubleStrictCheck(name2) || (name2.length() > 4 && DataSet.isDoubleStrictCheck(name2.substring(0, 4)))) {
-					boolean ok = true;
-					String f2 = FileIO.getField(2, name, " ", true);
-					if (f2 != null && f2.length() > 0 && !f2.equals("-")) {
-						ok = false;
-						if (f2.startsWith("M")) {
-							try {
-								int mn = Integer.parseInt(f2.substring(1));
-								ok = true;
-							} catch (Exception exc2) {}
+				if (DataSet.isDoubleFastCheck(name2) || 
+						(name2.length() > 4 && DataSet.isDoubleFastCheck(name2.substring(0, 4)))) {
+					if (DataSet.isDoubleStrictCheck(name2) || (name2.length() > 4 && DataSet.isDoubleStrictCheck(name2.substring(0, 4)))) {
+						boolean ok = true;
+						String f2 = FileIO.getField(2, name, " ", true);
+						if (f2 != null && f2.length() > 0 && !f2.equals("-")) {
+							ok = false;
+							if (f2.startsWith("M")) {
+								try {
+									int mn = Integer.parseInt(f2.substring(1));
+									ok = true;
+								} catch (Exception exc2) {}
+							}
 						}
+						if (ok && (name.length() < 8 || name.indexOf(" ") > 0)) name = "NGC " + name;
 					}
-					if (ok && (name.length() < 8 || name.indexOf(" ") > 0)) name = "NGC " + name;
 				}
 			} catch (Exception exc) {}
 
