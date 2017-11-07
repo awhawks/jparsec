@@ -168,7 +168,7 @@ public class AstroDate implements Serializable
 	throws JPARSECException {
 		try {
 			String date = cdsDate;
-			date = date.substring(date.indexOf(",")+1).trim();
+			if (date.indexOf(",") > 0) date = date.substring(date.indexOf(",")+1).trim();
 			date = FileIO.getTextBeforeField(5, date, " ", true);
 			day = Integer.parseInt(FileIO.getField(1, date, " ", true));
 			String mo = FileIO.getField(2, date, " ", true);
