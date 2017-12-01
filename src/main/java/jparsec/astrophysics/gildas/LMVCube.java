@@ -3461,6 +3461,16 @@ public class LMVCube implements Serializable
     private RandomAccessFile bis;
 
     /**
+     * Closes the LMV file, only necessary when you read a large number 
+     * of LMV cubes from files. Does nothing when the cube don't come 
+     * from a file.
+     * @throws IOException If the internal instance to the file cannot be closed.
+     */
+    public void closeFile() throws IOException {
+    	if (bis != null) bis.close();
+    }
+    
+    /**
      * Minimum flux.
      */
     public float minimumFlux;

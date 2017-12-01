@@ -1651,7 +1651,7 @@ public class EventReport {
 		}
 
 		// Conjunctions between planets and comets/asteroids, not Moon, and not occultations
-		for (int i=3; i<nbody-1; i++) {
+		for (int i=1; i<nbody-1; i++) {
 			for (int j=i+1; j<nbody; j++) {
 				if (i != moon && j != moon) addEvent(jd0, jdf, step, list, listEphem, i, j, 5, obs, eph);
 			}

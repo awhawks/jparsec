@@ -194,7 +194,8 @@ public class AstroDate implements Serializable
 			String time = FileIO.getField(4, date, " ", true);
 			int h = Integer.parseInt(FileIO.getField(1, time, ":", false));
 			int m = Integer.parseInt(FileIO.getField(2, time, ":", false));
-			int s = Integer.parseInt(FileIO.getField(3, time, ":", false));
+			int s = 0;
+			if (FileIO.getNumberOfFields(time, ":", false) > 2) s = Integer.parseInt(FileIO.getField(3, time, ":", false));
 			second = s + m * Constant.SECONDS_PER_MINUTE + h * Constant.SECONDS_PER_HOUR;
 
 			if (year == 0) JPARSECException.addWarning("Year should never be 0. Assumed to be -1 = 1 b.C.");

@@ -13919,6 +13919,7 @@ public class RenderSky
 													ok = true;
 												} catch (Exception exc2) {}
 											}
+											if (f2.startsWith("CALDWELL")) ok = true;
 										}
 										if (ok && (name.length() < 8 || name.indexOf(" ") > 0)) name = "NGC " + name;
 									}
