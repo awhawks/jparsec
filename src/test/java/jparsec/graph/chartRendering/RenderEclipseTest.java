@@ -104,7 +104,7 @@ public class RenderEclipseTest {
 
         // Chart all solar/lunar eclipses for a given year
         RenderSatellite.ALLOW_SPLINE_RESIZING = false; // Improve performance
-        int year = 2017;
+        int year = 2018;
         String locName = "Madrid";
         
         //observer.setName("Burgeo");

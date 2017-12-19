@@ -6968,19 +6968,15 @@ public class RenderSky
 				try {
 					double jd = TimeScale.getJD(projection.time, projection.obs, projection.eph, SCALE.UNIVERSAL_TIME_UTC);
 					AstroDate astro = new AstroDate(jd);
-					if (!Configuration.isAcceptableDateForTransNeptunians(astro, false)) {
-						String p = Configuration.updateTransNeptuniansInTempDir(astro);
-						if (p == null) {
+					String p = Configuration.updateTransNeptuniansInTempDir(astro);
+					if (p == null) {
+						if (!Configuration.isAcceptableDateForTransNeptunians(astro, false)) {
 							neverWaitT = true;
 							JPARSECException.addWarning("Cannot show accurate positions for transneptunian objects in this date.");
 							return;
-						}
-					} else {
-						if (!Configuration.isAcceptableDateForTransNeptunians(astro, true)) {
-							String p = Configuration.updateTransNeptuniansInTempDir(astro);
-							if (p == null) {
+						} else {
+							if (!Configuration.isAcceptableDateForTransNeptunians(astro, true))
 								OrbitEphem.setTransNeptuniansFromExternalFile(null);
-							}
 						}
 					}
 				} catch (Exception exc) {
@@ -7150,19 +7146,14 @@ public class RenderSky
 				try {
 					double jd = TimeScale.getJD(projection.time, projection.obs, projection.eph, SCALE.UNIVERSAL_TIME_UTC);
 					AstroDate astro = new AstroDate(jd);
-					if (!Configuration.isAcceptableDateForAsteroids(astro, false)) {
-						String p = Configuration.updateAsteroidsInTempDir(astro);
-						if (p == null) {
+					String p = Configuration.updateAsteroidsInTempDir(astro);
+					if (p == null) {
+						if (!Configuration.isAcceptableDateForAsteroids(astro, false)) {
 							neverWaitA = true;
 							JPARSECException.addWarning("Cannot show accurate positions for asteroids in this date.");
 							return;
-						}
-					} else {
-						if (!Configuration.isAcceptableDateForAsteroids(astro, true)) {
-							String p = Configuration.updateAsteroidsInTempDir(astro);
-							if (p == null) {
-								OrbitEphem.setAsteroidsFromExternalFile(null);
-							}
+						} else {
+							OrbitEphem.setAsteroidsFromExternalFile(null);
 						}
 					}
 				} catch (Exception exc) {
@@ -7340,8 +7331,8 @@ public class RenderSky
 				try {
 					OrbitEphem.setCometsFromExternalFile(null);
 					String p = Configuration.updateCometsInTempDir(astro);
-					if (!Configuration.isAcceptableDateForComets(astro, false)) {
-						if (p == null) {
+					if (p == null) {
+						if (!Configuration.isAcceptableDateForComets(astro, false)) {
 							ArrayList<OrbitalElement> oldComets = ReadFile.readFileOfOldComets(astro, 10);
 							if (oldComets == null) {
 								neverWaitC = true;
@@ -7351,13 +7342,9 @@ public class RenderSky
 								OrbitEphem.setCometsFromElements(oldComets);
 								JPARSECException.addWarning("Cannot show accurate (with updated orbital elements) positions for comets in this date.");
 							}
-						}
-					} else {
-						if (!Configuration.isAcceptableDateForComets(astro, true)) {
-							if (p == null) {
-								OrbitEphem.setCometsFromExternalFile(null);
-								JPARSECException.addWarning("Cannot show accurate (with updated orbital elements) positions for comets in this date.");
-							}
+						} else {
+							OrbitEphem.setCometsFromExternalFile(null);
+							JPARSECException.addWarning("Cannot show accurate (with updated orbital elements) positions for comets in this date.");
 						}
 					}
 				} catch (Exception exc) {

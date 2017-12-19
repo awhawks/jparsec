@@ -69,7 +69,7 @@ public class Update
 	/**
 	 * The url used to update the Padova-Asiago SN catalogue.
 	 */
-	public static final String UPDATE_URL_PADOVA_ASIAGO_SN_CAT = "http://graspa.oapd.inaf.it/asnc/cat.txt";
+	public static final String UPDATE_URL_PADOVA_ASIAGO_SN_CAT = "https://graspa.oapd.inaf.it/asnc/cat.txt";
 	/**
 	 * The url used to update the galactic novae SN catalogue.
 	 */
@@ -85,15 +85,15 @@ public class Update
 	/**
 	 * The url used to update orbital elements of comets.
 	 */
-	public static final String UPDATE_URL_COMETS = "http://www.minorplanetcenter.net/iau/Ephemerides/Comets/Soft00Cmt.txt";
+	public static final String UPDATE_URL_COMETS = "https://www.minorplanetcenter.net/iau/Ephemerides/Comets/Soft00Cmt.txt";
 	/**
 	 * The url used to update orbital elements of trans-Neptunian objects.
 	 */
-	public static final String UPDATE_URL_DISTANT_BODIES = "http://www.minorplanetcenter.net/iau/Ephemerides/Distant/Soft00Distant.txt";
+	public static final String UPDATE_URL_DISTANT_BODIES = "https://www.minorplanetcenter.net/iau/Ephemerides/Distant/Soft00Distant.txt";
 	/**
 	 * The url used to update orbital elements of bright asteroids.
 	 */
-	public static final String UPDATE_URL_BRIGHT_ASTEROIDS = "http://www.minorplanetcenter.net/iau/Ephemerides/Bright/2007/Soft00Bright.txt";
+	public static final String UPDATE_URL_BRIGHT_ASTEROIDS = "https://www.minorplanetcenter.net/iau/Ephemerides/Bright/2007/Soft00Bright.txt";
 	/**
 	 * The url used to update orbital elements of artificial satellites.
 	 */
@@ -109,7 +109,7 @@ public class Update
 	/**
 	 * The url used to update the official list of observatories.
 	 */
-	public static final String UPDATE_URL_OBSERVATORIES = "http://www.minorplanetcenter.net/iau/lists/ObsCodes.html";
+	public static final String UPDATE_URL_OBSERVATORIES = "https://www.minorplanetcenter.net/iau/lists/ObsCodes.html";
 
 	/**
 	 * The url used to update IAU1980 Earth Orientation Parameters.
