@@ -523,7 +523,7 @@ public class SimpleEventElement implements Serializable {
 						d += " AU";
 					}
 				}
-				out += " ("+d+")";
+				if (d.length() > 2) out += " ("+d+")";
 				translateIt = true;
 			} else {
 				if (eventType == EVENT.MOON_APOGEE || eventType == EVENT.MOON_PERIGEE) {

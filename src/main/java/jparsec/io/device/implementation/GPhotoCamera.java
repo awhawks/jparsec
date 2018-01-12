@@ -1236,7 +1236,25 @@ public class GPhotoCamera {
 		this.fps = 4;
 		if (fps < 0 || (fps > 0 && fps < 30)) this.fps = fps;
 	}
+	
+	/**
+	 * Sets an external command to be sent to gphoto during live view in shell mode, 
+	 * when live view is paused. Only executed once.
+	 * @param command External command for shell mode.
+	 */
+	public void executeExternalCommandInPausedLiveView(String command) {
+		ext = command;
+	}
 
+	/**
+	 * Returns the external command sent to gphoto during live view in shell mode, 
+	 * when live view is paused. The command is reset to null after is executed.
+	 * @return The external command or null.
+	 */
+	public String getExternalCommandInPausedLiveView() {
+		return ext;
+	}
+	
 	/**
 	 * Sets the fps for live view or live shot modes.
 	 * @param fps The approximate  number of fps for the updated images.
@@ -1257,6 +1275,29 @@ public class GPhotoCamera {
 	}
 
 	/**
+	 * Pauses live view.
+	 */
+	public void pauseLiveView() {
+		if (liveView) liveViewRunning = false;
+	}
+
+	/**
+	 * Resumes live view.
+	 */
+	public void resumeLiveView() {
+		if (liveView) liveViewRunning = true;
+	}
+
+	/**
+	 * Returns true when live view (or live shot) is active but paused.
+	 * @return True or false.
+	 */
+	public boolean isLivePaused() {
+		if (liveView && !liveViewRunning) return true;
+		return false;
+	}
+	
+	/**
 	 * Returns if live view or live shot modes are currently working.
 	 * @return True or false.
 	 */
@@ -1276,7 +1317,7 @@ public class GPhotoCamera {
 
 	private boolean liveView = false, liveViewRunning = false;
 	private String foc = null, zoo = null, zoo_pos = null, iso = null, aper = null, ss = null, 
-			res = null, res2 = null, tar = null, liveFocalLength = null;
+			res = null, res2 = null, tar = null, liveFocalLength = null, ext = null;
 	private int fps, liveMaxTime = 0;
 	private long timeLimit;
 	class live implements Runnable {
@@ -1315,7 +1356,7 @@ public class GPhotoCamera {
 	        	writer.flush();
 				Thread.sleep(250);
 
-				if (model.toLowerCase().indexOf("canon") >= 0) {
+				if (model.toLowerCase().indexOf("canon") >= 0 && isParameterAvailable(CAMERA_PARAMETER.VIEWFINDER)) {
 					command = "set-config "+cameraConfigs[CAMERA_PARAMETER.VIEWFINDER.ordinal()]+"="+id.viewfinderUp+FileIO.getLineSeparator();
 					if (debug) System.out.println("Executing shell command: "+command);
 			        writer.write(command);
@@ -1338,135 +1379,182 @@ public class GPhotoCamera {
 				writer.flush();
 				Thread.sleep(2000);
 
-				Method m = updatePanel.getClass().getDeclaredMethod("repaint", new Class[] {BufferedImage.class});
-				m.setAccessible(true);
+				Method m = null;
+				if (updatePanel != null) {
+					m = updatePanel.getClass().getDeclaredMethod("repaint", new Class[] {BufferedImage.class});
+					m.setAccessible(true);
+				}
 				long t0 = System.nanoTime()/1000000;
 				long lastFL = -1;
 				while (liveView && (timeLimit == -1 || System.nanoTime()/1000000 < timeLimit)) {
-					if (isParameterAvailable(CAMERA_PARAMETER.FOCAL_LENGTH)) {
-						long now = System.currentTimeMillis();
-						double elapsed = (now - lastFL) * 0.001;
-						if (lastFL < 0 || elapsed > 3) {
-							lastFL = now;
-					    	byte[] b = new byte[1024*10];
-				        	stdout.read(b);
-							command = "get-config "+cameraConfigs[CAMERA_PARAMETER.FOCAL_LENGTH.ordinal()]+FileIO.getLineSeparator();
+					if (liveViewRunning) {
+						if (isParameterAvailable(CAMERA_PARAMETER.FOCAL_LENGTH)) {
+							long now = System.currentTimeMillis();
+							double elapsed = (now - lastFL) * 0.001;
+							if (lastFL < 0 || elapsed > 3) {
+								lastFL = now;
+						    	byte[] b = new byte[1024*10];
+					        	stdout.read(b);
+								command = "get-config "+cameraConfigs[CAMERA_PARAMETER.FOCAL_LENGTH.ordinal()]+FileIO.getLineSeparator();
+								if (debug) System.out.println("Executing shell command: "+command);
+								writer.write(command);
+								writer.flush();
+								Thread.sleep(125);
+					        	b = new byte[1024*10];
+					        	stdout.read(b);
+					        	String s = new String(b).trim();
+					        	int ci = s.indexOf("Current: ");
+					        	if (ci >= 0) s = s.substring(ci + 9).trim();
+					        	ci = s.indexOf("Bottom");
+					        	if (ci >= 0) s = s.substring(0, ci).trim();
+					        	liveFocalLength = s;
+							}
+						}
+						if (foc != null) {
+							command = "set-config-index "+cameraConfigs[CAMERA_PARAMETER.FOCUS.ordinal()]+"="+foc+FileIO.getLineSeparator();
 							if (debug) System.out.println("Executing shell command: "+command);
 							writer.write(command);
 							writer.flush();
-							Thread.sleep(125);
-				        	b = new byte[1024*10];
-				        	stdout.read(b);
-				        	String s = new String(b).trim();
-				        	int ci = s.indexOf("Current: ");
-				        	if (ci >= 0) s = s.substring(ci + 9).trim();
-				        	ci = s.indexOf("Bottom");
-				        	if (ci >= 0) s = s.substring(0, ci).trim();
-				        	liveFocalLength = s;
+							Thread.sleep(250);
+							foc = null;
 						}
-					}
-					if (foc != null) {
-						command = "set-config-index "+cameraConfigs[CAMERA_PARAMETER.FOCUS.ordinal()]+"="+foc+FileIO.getLineSeparator();
+						if (zoo != null) {
+							command = "set-config "+cameraConfigs[CAMERA_PARAMETER.ZOOM.ordinal()]+"="+zoo+FileIO.getLineSeparator();
+							if (debug) System.out.println("Executing shell command: "+command);
+							writer.write(command);
+							writer.flush();
+							Thread.sleep(250);
+							zoo = null;
+						}
+						if (zoo_pos != null) {
+							command = "set-config "+cameraConfigs[CAMERA_PARAMETER.ZOOM_POSITION.ordinal()]+"="+zoo_pos+FileIO.getLineSeparator();
+							if (debug) System.out.println("Executing shell command: "+command);
+							writer.write(command);
+							writer.flush();
+							Thread.sleep(250);
+							zoo_pos = null;
+						}
+						if (iso != null) {
+							command = "set-config "+cameraConfigs[CAMERA_PARAMETER.ISO.ordinal()]+"="+iso+FileIO.getLineSeparator();
+							if (debug) System.out.println("Executing shell command: "+command);
+							writer.write(command);
+							writer.flush();
+							Thread.sleep(250);
+							iso = null;
+						}
+						if (aper != null) {
+							command = "set-config "+cameraConfigs[CAMERA_PARAMETER.APERTURE.ordinal()]+"="+aper+FileIO.getLineSeparator();
+							if (debug) System.out.println("Executing shell command: "+command);
+							writer.write(command);
+							writer.flush();
+							Thread.sleep(250);
+							aper = null;
+						}
+						if (ss != null) {
+							command = "set-config "+cameraConfigs[CAMERA_PARAMETER.SHUTTER_SPEED.ordinal()]+"="+ss+FileIO.getLineSeparator();
+							writer.write(command);
+							writer.flush();
+							Thread.sleep(250);
+							ss = null;
+						}
+						if (res != null) {
+							command = "set-config "+cameraConfigs[CAMERA_PARAMETER.RESOLUTION.ordinal()]+"="+res+FileIO.getLineSeparator();
+							if (debug) System.out.println("Executing shell command: "+command);
+							writer.write(command);
+							writer.flush();
+							Thread.sleep(250);
+							res = null;
+						}
+						if (res2 != null) {
+							command = "set-config "+cameraConfigs[CAMERA_PARAMETER.NIKON_QUALITY.ordinal()]+"="+res2+FileIO.getLineSeparator();
+							if (debug) System.out.println("Executing shell command: "+command);
+							writer.write(command);
+							writer.flush();
+							Thread.sleep(250);
+							res2 = null;
+						}
+						if (tar != null) {
+							command = "set-config "+cameraConfigs[CAMERA_PARAMETER.CAPTURE_TARGET.ordinal()]+"="+tar+FileIO.getLineSeparator();
+							if (debug) System.out.println("Executing shell command: "+command);
+							writer.write(command);
+							writer.flush();
+							Thread.sleep(250);
+							tar = null;
+						}
+						FileIO.deleteFile(workingDir + fileName);
+						command = "capture-preview"+FileIO.getLineSeparator();
 						if (debug) System.out.println("Executing shell command: "+command);
 						writer.write(command);
 						writer.flush();
-						Thread.sleep(250);
-						foc = null;
-					}
-					if (zoo != null) {
-						command = "set-config "+cameraConfigs[CAMERA_PARAMETER.ZOOM.ordinal()]+"="+zoo+FileIO.getLineSeparator();
-						if (debug) System.out.println("Executing shell command: "+command);
-						writer.write(command);
-						writer.flush();
-						Thread.sleep(250);
-						zoo = null;
-					}
-					if (zoo_pos != null) {
-						command = "set-config "+cameraConfigs[CAMERA_PARAMETER.ZOOM_POSITION.ordinal()]+"="+zoo_pos+FileIO.getLineSeparator();
-						if (debug) System.out.println("Executing shell command: "+command);
-						writer.write(command);
-						writer.flush();
-						Thread.sleep(250);
-						zoo_pos = null;
-					}
-					if (iso != null) {
-						command = "set-config "+cameraConfigs[CAMERA_PARAMETER.ISO.ordinal()]+"="+iso+FileIO.getLineSeparator();
-						if (debug) System.out.println("Executing shell command: "+command);
-						writer.write(command);
-						writer.flush();
-						Thread.sleep(250);
-						iso = null;
-					}
-					if (aper != null) {
-						command = "set-config "+cameraConfigs[CAMERA_PARAMETER.APERTURE.ordinal()]+"="+aper+FileIO.getLineSeparator();
-						if (debug) System.out.println("Executing shell command: "+command);
-						writer.write(command);
-						writer.flush();
-						Thread.sleep(250);
-						aper = null;
-					}
-					if (ss != null) {
-						command = "set-config "+cameraConfigs[CAMERA_PARAMETER.SHUTTER_SPEED.ordinal()]+"="+ss+FileIO.getLineSeparator();
-						writer.write(command);
-						writer.flush();
-						Thread.sleep(250);
-						ss = null;
-					}
-					if (res != null) {
-						command = "set-config "+cameraConfigs[CAMERA_PARAMETER.RESOLUTION.ordinal()]+"="+res+FileIO.getLineSeparator();
-						if (debug) System.out.println("Executing shell command: "+command);
-						writer.write(command);
-						writer.flush();
-						Thread.sleep(250);
-						res = null;
-					}
-					if (res2 != null) {
-						command = "set-config "+cameraConfigs[CAMERA_PARAMETER.NIKON_QUALITY.ordinal()]+"="+res2+FileIO.getLineSeparator();
-						if (debug) System.out.println("Executing shell command: "+command);
-						writer.write(command);
-						writer.flush();
-						Thread.sleep(250);
-						res2 = null;
-					}
-					if (tar != null) {
-						command = "set-config "+cameraConfigs[CAMERA_PARAMETER.CAPTURE_TARGET.ordinal()]+"="+tar+FileIO.getLineSeparator();
-						if (debug) System.out.println("Executing shell command: "+command);
-						writer.write(command);
-						writer.flush();
-						Thread.sleep(250);
-						tar = null;
-					}
-					FileIO.deleteFile(workingDir + fileName);
-					command = "capture-preview"+FileIO.getLineSeparator();
-					if (debug) System.out.println("Executing shell command: "+command);
-					writer.write(command);
-					writer.flush();
-					long t1 = System.nanoTime()/1000000, dt;
-					if (fps < 0) {
-						dt = -1000l * fps;
-					} else {
-						dt = 1000l/fps;
-					}
-					if (dt > (t1-t0)) {
-						dt -= (t1-t0);
-						long target = t1 + dt;
-						while (dt > 0) {
-							if (dt > 1000) {
-								Thread.sleep(1000);
-								if (!liveView) break;
-							} else {
-								Thread.sleep(dt);
+						long t1 = System.nanoTime()/1000000, dt;
+						if (fps < 0) {
+							dt = -1000l * fps;
+						} else {
+							dt = 1000l/fps;
+						}
+						if (dt > (t1-t0)) {
+							dt -= (t1-t0);
+							long target = t1 + dt;
+							while (dt > 0) {
+								if (dt > 1000) {
+									Thread.sleep(1000);
+									if (!liveView) break;
+								} else {
+									Thread.sleep(dt);
+								}
+								t1 = System.nanoTime()/1000000;
+								dt = target - t1;
 							}
-							t1 = System.nanoTime()/1000000;
-							dt = target - t1;
 						}
+						t0 = t1;
+						lastShotPath = workingDir + fileName;
+						if (updatePanel != null && m != null) {
+							try {
+								BufferedImage img = ReadFile.readImage(workingDir + fileName);
+								if (img != null) m.invoke(updatePanel, img);
+							} catch (Exception exc) { exc.printStackTrace(); }
+						}
+					} else {
+						if (ext != null) {
+							String filesBefore[] = FileIO.getFiles(workingDir);
+							command = ext + FileIO.getLineSeparator();
+							if (debug) System.out.println("Executing shell command: "+command);
+							writer.write(command);
+							writer.flush();
+							String filesAfter[] = null, fap[] = null;
+							while (true) {
+								Thread.sleep(2000);
+								filesAfter = FileIO.getFiles(workingDir);
+								if (fap != null) {
+									if (filesAfter.length == fap.length) break;
+								}
+								fap = filesAfter;
+							}
+							lastShotPath = "";
+							for (int i=0; i<filesAfter.length; i++) {
+								if (DataSet.getIndex(filesBefore, filesAfter[i]) < 0) {
+									lastShotPath += filesAfter[i]+",";
+									if (filesAfter[i].toLowerCase().endsWith(".jpg") ||
+											filesAfter[i].toLowerCase().endsWith(".png")) fileName = filesAfter[i];
+								}
+							}
+							if (lastShotPath.equals("")) {
+								lastShotPath = null;
+							} else {
+								lastShotPath = lastShotPath.substring(0, lastShotPath.length()-1);
+							}
+							ext = null;
+						}
+
+						t0 = System.nanoTime()/1000000;
+						long dt = 0;
+						if (fps < 0) {
+							dt = -1000l * fps;
+						} else {
+							dt = 1000l/fps;
+						}
+						Thread.sleep(2*dt);
 					}
-					t0 = t1;
-					lastShotPath = workingDir + fileName;
-					try {
-						BufferedImage img = ReadFile.readImage(workingDir + fileName);
-						if (updatePanel != null && m != null && img != null) m.invoke(updatePanel, img);
-					} catch (Exception exc) { exc.printStackTrace(); }
 				}
 			} catch (Exception exc) {
 				exc.printStackTrace();
@@ -1478,15 +1566,17 @@ public class GPhotoCamera {
 				e1.printStackTrace();
 			}
 			if (started) {
-				command = "set-config "+cameraConfigs[CAMERA_PARAMETER.VIEWFINDER.ordinal()]+"="+id.viewfinderDown+FileIO.getLineSeparator();
-				try {
-					if (debug) System.out.println("Executing shell command: "+command);
-					writer.write(command);
-					writer.flush();
-				} catch (IOException e) {
-					e.printStackTrace();
+				if (isParameterAvailable(CAMERA_PARAMETER.VIEWFINDER)) {
+					command = "set-config "+cameraConfigs[CAMERA_PARAMETER.VIEWFINDER.ordinal()]+"="+id.viewfinderDown+FileIO.getLineSeparator();
+					try {
+						if (debug) System.out.println("Executing shell command: "+command);
+						writer.write(command);
+						writer.flush();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 				}
-
+				
 				try {
 					Thread.sleep(500);
 				} catch (InterruptedException e1) {
@@ -1580,7 +1670,7 @@ public class GPhotoCamera {
 	        	writer.flush();
 				Thread.sleep(250);
 
-				if (model.toLowerCase().indexOf("canon") >= 0) {
+				if (model.toLowerCase().indexOf("canon") >= 0 && isParameterAvailable(CAMERA_PARAMETER.VIEWFINDER)) {
 					command = "set-config "+cameraConfigs[CAMERA_PARAMETER.VIEWFINDER.ordinal()]+"="+id.viewfinderUp+FileIO.getLineSeparator();
 					if (debug) System.out.println("Executing shell command: "+command);
 			        writer.write(command);
@@ -1604,143 +1694,152 @@ public class GPhotoCamera {
 				writer.flush();
 				Thread.sleep(2000);
 
-				Method m = updatePanel.getClass().getDeclaredMethod("repaint", new Class[] {BufferedImage.class});
-				m.setAccessible(true);
+				Method m = null;
+				if (updatePanel != null) {
+	 				m = updatePanel.getClass().getDeclaredMethod("repaint", new Class[] {BufferedImage.class});
+					m.setAccessible(true);
+				}
 				long t0 = System.nanoTime()/1000000;
 				while (liveView && (timeLimit == -1 || System.nanoTime()/1000000 < timeLimit)) {
-					if (!maintainCopyInCamera) FileIO.deleteFile(workingDir + fileName);
-					if (foc != null) {
-						command = "set-config-index "+cameraConfigs[CAMERA_PARAMETER.FOCUS.ordinal()]+"="+foc+FileIO.getLineSeparator();
-						if (debug) System.out.println("Executing shell command: "+command);
-						writer.write(command);
-						writer.flush();
-						Thread.sleep(250);
-						foc = null;
-					}
-					if (zoo != null) zoo = null;
-					if (zoo_pos != null) zoo_pos = null;
-					if (iso != null) {
-						command = "set-config "+cameraConfigs[CAMERA_PARAMETER.ISO.ordinal()]+"="+iso+FileIO.getLineSeparator();
-						if (debug) System.out.println("Executing shell command: "+command);
-						writer.write(command);
-						writer.flush();
-						Thread.sleep(250);
-						iso = null;
-					}
-					if (aper != null) {
-						command = "set-config "+cameraConfigs[CAMERA_PARAMETER.APERTURE.ordinal()]+"="+aper+FileIO.getLineSeparator();
-						if (debug) System.out.println("Executing shell command: "+command);
-						writer.write(command);
-						writer.flush();
-						Thread.sleep(250);
-						aper = null;
-					}
-					if (ss != null) {
-						command = "set-config "+cameraConfigs[CAMERA_PARAMETER.SHUTTER_SPEED.ordinal()]+"="+ss+FileIO.getLineSeparator();
-						if (debug) System.out.println("Executing shell command: "+command);
-						writer.write(command);
-						writer.flush();
-						Thread.sleep(250);
-						ss = null;
-					}
-					if (res != null) {
-						command = "set-config "+cameraConfigs[CAMERA_PARAMETER.RESOLUTION.ordinal()]+"="+res+FileIO.getLineSeparator();
-						if (debug) System.out.println("Executing shell command: "+command);
-						writer.write(command);
-						writer.flush();
-						Thread.sleep(250);
-						res = null;
-					}
-					if (res2 != null) {
-						command = "set-config "+cameraConfigs[CAMERA_PARAMETER.NIKON_QUALITY.ordinal()]+"="+res2+FileIO.getLineSeparator();
-						if (debug) System.out.println("Executing shell command: "+command);
-						writer.write(command);
-						writer.flush();
-						Thread.sleep(250);
-						res2 = null;
-					}
-					if (tar != null) {
-						command = "set-config "+cameraConfigs[CAMERA_PARAMETER.CAPTURE_TARGET.ordinal()]+"="+tar+FileIO.getLineSeparator();
-						if (debug) System.out.println("Executing shell command: "+command);
-						writer.write(command);
-						writer.flush();
-						Thread.sleep(250);
-						tar = null;
-					}
-					String filesBefore[] = null;
-					if (maintainCopyInCamera) filesBefore = FileIO.getFiles(workingDir);
-					if (isBulbMode()) {
-						command = "set-config "+cameraConfigs[CAMERA_PARAMETER.BULB.ordinal()]+"="+id.bulbModeEnabled+FileIO.getLineSeparator();
-						if (debug) System.out.println("Executing shell command: "+command);
-						writer.write(command);
-						writer.flush();
-						Thread.sleep(bulbTime*1000l);
-						command = "set-config "+cameraConfigs[CAMERA_PARAMETER.BULB.ordinal()]+"="+id.bulbModeDisabled+FileIO.getLineSeparator();
-						if (debug) System.out.println("Executing shell command: "+command);
-						writer.write(command);
-						writer.flush();
-						Thread.sleep(250);
-						command = "wait-event-and-download 3s"+FileIO.getLineSeparator();
-						if (debug) System.out.println("Executing shell command: "+command);
-						writer.write(command);
-						writer.flush();
-					} else {
-						command = "capture-image-and-download"+FileIO.getLineSeparator();
-					}
-					if (debug) System.out.println("Executing shell command: "+command);
-					writer.write(command);
-					writer.flush();
-					double texp = bulbTime;
-					try {
-						texp = DataSet.getDoubleValueWithoutLimit(getParameter(CAMERA_PARAMETER.SHUTTER_SPEED));
-					} catch (Exception exc) {}
-					Thread.sleep((int)(2000l+texp*1000l));
-
-					if (maintainCopyInCamera) {
-						String filesAfter[] = FileIO.getFiles(workingDir);
-						lastShotPath = "";
-						for (int i=0; i<filesAfter.length; i++) {
-							if (DataSet.getIndex(filesBefore, filesAfter[i]) < 0) {
-								lastShotPath += filesAfter[i]+",";
-								if (filesAfter[i].toLowerCase().endsWith(".jpg") ||
-										filesAfter[i].toLowerCase().endsWith(".png")) fileName = filesAfter[i];
-							}
+					if (liveViewRunning) {
+						if (!maintainCopyInCamera) FileIO.deleteFile(workingDir + fileName);
+						if (foc != null) {
+							command = "set-config-index "+cameraConfigs[CAMERA_PARAMETER.FOCUS.ordinal()]+"="+foc+FileIO.getLineSeparator();
+							if (debug) System.out.println("Executing shell command: "+command);
+							writer.write(command);
+							writer.flush();
+							Thread.sleep(250);
+							foc = null;
 						}
-						fileName = FileIO.getFileNameFromPath(fileName);
-						if (lastShotPath.equals("")) {
-							lastShotPath = null;
+						if (zoo != null) zoo = null;
+						if (zoo_pos != null) zoo_pos = null;
+						if (iso != null) {
+							command = "set-config "+cameraConfigs[CAMERA_PARAMETER.ISO.ordinal()]+"="+iso+FileIO.getLineSeparator();
+							if (debug) System.out.println("Executing shell command: "+command);
+							writer.write(command);
+							writer.flush();
+							Thread.sleep(250);
+							iso = null;
+						}
+						if (aper != null) {
+							command = "set-config "+cameraConfigs[CAMERA_PARAMETER.APERTURE.ordinal()]+"="+aper+FileIO.getLineSeparator();
+							if (debug) System.out.println("Executing shell command: "+command);
+							writer.write(command);
+							writer.flush();
+							Thread.sleep(250);
+							aper = null;
+						}
+						if (ss != null) {
+							command = "set-config "+cameraConfigs[CAMERA_PARAMETER.SHUTTER_SPEED.ordinal()]+"="+ss+FileIO.getLineSeparator();
+							if (debug) System.out.println("Executing shell command: "+command);
+							writer.write(command);
+							writer.flush();
+							Thread.sleep(250);
+							ss = null;
+						}
+						if (res != null) {
+							command = "set-config "+cameraConfigs[CAMERA_PARAMETER.RESOLUTION.ordinal()]+"="+res+FileIO.getLineSeparator();
+							if (debug) System.out.println("Executing shell command: "+command);
+							writer.write(command);
+							writer.flush();
+							Thread.sleep(250);
+							res = null;
+						}
+						if (res2 != null) {
+							command = "set-config "+cameraConfigs[CAMERA_PARAMETER.NIKON_QUALITY.ordinal()]+"="+res2+FileIO.getLineSeparator();
+							if (debug) System.out.println("Executing shell command: "+command);
+							writer.write(command);
+							writer.flush();
+							Thread.sleep(250);
+							res2 = null;
+						}
+						if (tar != null) {
+							command = "set-config "+cameraConfigs[CAMERA_PARAMETER.CAPTURE_TARGET.ordinal()]+"="+tar+FileIO.getLineSeparator();
+							if (debug) System.out.println("Executing shell command: "+command);
+							writer.write(command);
+							writer.flush();
+							Thread.sleep(250);
+							tar = null;
+						}
+						String filesBefore[] = null;
+						if (maintainCopyInCamera) filesBefore = FileIO.getFiles(workingDir);
+						if (isBulbMode()) {
+							command = "set-config "+cameraConfigs[CAMERA_PARAMETER.BULB.ordinal()]+"="+id.bulbModeEnabled+FileIO.getLineSeparator();
+							if (debug) System.out.println("Executing shell command: "+command);
+							writer.write(command);
+							writer.flush();
+							Thread.sleep(bulbTime*1000l);
+							command = "set-config "+cameraConfigs[CAMERA_PARAMETER.BULB.ordinal()]+"="+id.bulbModeDisabled+FileIO.getLineSeparator();
+							if (debug) System.out.println("Executing shell command: "+command);
+							writer.write(command);
+							writer.flush();
+							Thread.sleep(250);
+							command = "wait-event-and-download 3s"+FileIO.getLineSeparator();
+							if (debug) System.out.println("Executing shell command: "+command);
+							writer.write(command);
+							writer.flush();
 						} else {
-							lastShotPath = lastShotPath.substring(0, lastShotPath.length()-1);
+							command = "capture-image-and-download"+FileIO.getLineSeparator();
+						}
+						if (debug) System.out.println("Executing shell command: "+command);
+						writer.write(command);
+						writer.flush();
+						double texp = bulbTime;
+						try {
+							texp = DataSet.getDoubleValueWithoutLimit(getParameter(CAMERA_PARAMETER.SHUTTER_SPEED));
+						} catch (Exception exc) {}
+						Thread.sleep((int)(2000l+texp*1000l));
+	
+						if (maintainCopyInCamera) {
+							String filesAfter[] = FileIO.getFiles(workingDir);
+							lastShotPath = "";
+							for (int i=0; i<filesAfter.length; i++) {
+								if (DataSet.getIndex(filesBefore, filesAfter[i]) < 0) {
+									lastShotPath += filesAfter[i]+",";
+									if (filesAfter[i].toLowerCase().endsWith(".jpg") ||
+											filesAfter[i].toLowerCase().endsWith(".png")) fileName = filesAfter[i];
+								}
+							}
+							fileName = FileIO.getFileNameFromPath(fileName);
+							if (lastShotPath.equals("")) {
+								lastShotPath = null;
+							} else {
+								lastShotPath = lastShotPath.substring(0, lastShotPath.length()-1);
+							}
+						} else {
+							lastShotPath = workingDir + fileName;
 						}
 						lastShotTime = System.nanoTime()/1000000;
-					}
-
-					lastShotPath = workingDir + fileName;
-					try {
-						BufferedImage img = ReadFile.readImage(workingDir + fileName);
-						if (updatePanel != null && m != null && img != null) m.invoke(updatePanel, img);
-					} catch (Exception exc) { exc.printStackTrace(); }
-					long t1 = System.nanoTime()/1000000, dt;
-					if (fps < 0) {
-						dt = -1000l * fps;
-					} else {
-						dt = 1000l/fps;
-					}
-					if (dt > (t1-t0)) {
-						dt -= (t1-t0);
-						long target = t1 + dt;
-						while (dt > 0) {
-							if (dt > 1000) {
-								Thread.sleep(1000);
-								if (!liveView) break;
-							} else {
-								Thread.sleep(dt);
-							}
-							t1 = System.nanoTime()/1000000;
-							dt = target - t1;
+						if (updatePanel != null && m != null) {
+							try {
+								BufferedImage img = ReadFile.readImage(workingDir + fileName);
+								if (img != null) m.invoke(updatePanel, img);
+							} catch (Exception exc) { exc.printStackTrace(); }
 						}
+						long t1 = System.nanoTime()/1000000, dt;
+						if (fps < 0) {
+							dt = -1000l * fps;
+						} else {
+							dt = 1000l/fps;
+						}
+						if (dt > (t1-t0)) {
+							dt -= (t1-t0);
+							long target = t1 + dt;
+							while (dt > 0) {
+								if (dt > 1000) {
+									Thread.sleep(1000);
+									if (!liveView) break;
+								} else {
+									Thread.sleep(dt);
+								}
+								t1 = System.nanoTime()/1000000;
+								dt = target - t1;
+							}
+						}
+						t0 = t1;
+					} else {
+						t0 = System.nanoTime()/1000000;
 					}
-					t0 = t1;
 				}
 			} catch (Exception exc) {
 				exc.printStackTrace();
@@ -1752,15 +1851,17 @@ public class GPhotoCamera {
 				e1.printStackTrace();
 			}
 			if (started) {
-				command = "set-config "+cameraConfigs[CAMERA_PARAMETER.VIEWFINDER.ordinal()]+"="+id.viewfinderDown+FileIO.getLineSeparator();
-				try {
-					if (debug) System.out.println("Executing shell command: "+command);
-					writer.write(command);
-					writer.flush();
-				} catch (IOException e) {
-					e.printStackTrace();
+				if (isParameterAvailable(CAMERA_PARAMETER.VIEWFINDER)) {
+					command = "set-config "+cameraConfigs[CAMERA_PARAMETER.VIEWFINDER.ordinal()]+"="+id.viewfinderDown+FileIO.getLineSeparator();
+					try {
+						if (debug) System.out.println("Executing shell command: "+command);
+						writer.write(command);
+						writer.flush();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 				}
-
+				
 				try {
 					Thread.sleep(500);
 				} catch (InterruptedException e1) {

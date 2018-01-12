@@ -1336,9 +1336,14 @@ public class ProcessSpectrum {
 	private void fitAGaussian(double x[], double y[], double w[]) throws JPARSECException {
 		Regression reg = new Regression(x, y, w);
 		reg.setNmax(maximumNumberOfIterationsForNelderAndMeadSimplexInRegressionClass);
-		reg.gaussian();
-		fitx = reg.getBestEstimates();
-		fitdx = reg.getBestEstimatesErrors();
+		try {
+			reg.gaussian();
+			fitx = reg.getBestEstimates();
+			fitdx = reg.getBestEstimatesErrors();
+		} catch (Exception exc) {
+			fitx = new double[] {0, 0, 0};
+			fitdx = new double[] {0, 0, 0};
+		}
 	}
 
 	/**
