@@ -1113,16 +1113,20 @@ public class GPhotoCamera {
 				}
 */
 				String filesAfter[] = FileIO.getFiles(workingDir);
-				lastShotPath = "";
+				String lastShotPath = "";
 				for (int i=0; i<filesAfter.length; i++) {
-					if (DataSet.getIndex(filesBefore, filesAfter[i]) < 0)
+					if (DataSet.getIndex(filesBefore, filesAfter[i]) < 0) {
+						File f = new File(filesAfter[i]);
+						if (f.isDirectory()) continue;
 						lastShotPath += filesAfter[i]+",";
+					}
 				}
 				if (lastShotPath.equals("")) {
 					lastShotPath = null;
 				} else {
 					lastShotPath = lastShotPath.substring(0, lastShotPath.length()-1);
 				}
+				setLastShotPath(lastShotPath);
 				lastShotTime = System.nanoTime()/1000000;
 			} catch (Exception exc) {
 				exc.printStackTrace();
@@ -1350,7 +1354,13 @@ public class GPhotoCamera {
 		        writer = new BufferedWriter(new OutputStreamWriter(stdin));
 
 				String fileName = "capture_preview.jpg";
-				command = "gphoto2 --camera \""+getModel()+"\" --port "+getPort()+" --quiet --shell"+FileIO.getLineSeparator();
+				command = "gphoto2 --camera \""+getModel()+"\" --port "+getPort()+" --quiet";
+				if (maintainCopyInCamera) {
+					command +=" --keep";
+				} else {
+					command +=" --no-keep";
+				}
+				command += " --shell"+FileIO.getLineSeparator();
 				if (debug) System.out.println("Executing shell command: "+command);
 		        writer.write(command);
 	        	writer.flush();
@@ -1530,12 +1540,12 @@ public class GPhotoCamera {
 								}
 								fap = filesAfter;
 							}
-							lastShotPath = "";
+							String lastShotPath = "";
 							for (int i=0; i<filesAfter.length; i++) {
 								if (DataSet.getIndex(filesBefore, filesAfter[i]) < 0) {
+									File f = new File(filesAfter[i]);
+									if (f.isDirectory()) continue;
 									lastShotPath += filesAfter[i]+",";
-									if (filesAfter[i].toLowerCase().endsWith(".jpg") ||
-											filesAfter[i].toLowerCase().endsWith(".png")) fileName = filesAfter[i];
 								}
 							}
 							if (lastShotPath.equals("")) {
@@ -1543,6 +1553,7 @@ public class GPhotoCamera {
 							} else {
 								lastShotPath = lastShotPath.substring(0, lastShotPath.length()-1);
 							}
+							setLastShotPath(lastShotPath);
 							ext = null;
 						}
 
@@ -1790,11 +1801,14 @@ public class GPhotoCamera {
 						} catch (Exception exc) {}
 						Thread.sleep((int)(2000l+texp*1000l));
 	
+						String lastShotPath = "";
 						if (maintainCopyInCamera) {
 							String filesAfter[] = FileIO.getFiles(workingDir);
 							lastShotPath = "";
 							for (int i=0; i<filesAfter.length; i++) {
 								if (DataSet.getIndex(filesBefore, filesAfter[i]) < 0) {
+									File f = new File(filesAfter[i]);
+									if (f.isDirectory()) continue;
 									lastShotPath += filesAfter[i]+",";
 									if (filesAfter[i].toLowerCase().endsWith(".jpg") ||
 											filesAfter[i].toLowerCase().endsWith(".png")) fileName = filesAfter[i];
@@ -1809,6 +1823,7 @@ public class GPhotoCamera {
 						} else {
 							lastShotPath = workingDir + fileName;
 						}
+						setLastShotPath(lastShotPath);
 						lastShotTime = System.nanoTime()/1000000;
 						if (updatePanel != null && m != null) {
 							try {

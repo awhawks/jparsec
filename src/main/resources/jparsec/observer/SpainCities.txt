@@ -1494,7 +1494,7 @@ San Pedro de Mérida                                 6585
            38 57  4  - 6 11  8  - 0 24 44   282
 San Vicente de Alcántara                            6590
            39 21 43  - 7  8  7  - 0 28 32   504
-Sancti-Spíritus                                     6595
+Sancti-Spíritus (Badajoz)                           6595
            38 55 35  - 5  8 42  - 0 20 34   485
 Santa Amalia                                        6600
            39  0 47  - 6  0 39  - 0 24  2   253
@@ -1578,7 +1578,7 @@ Zalamea de la Serena                                6795
            38 39  5  - 5 39 34  - 0 22 38   485
 Zarza-Capilla                                       6800
            38 48 29  - 5  9 14  - 0 20 36   601
-La Zarza                                            6805
+La Zarza (Badajoz)                                  6805
            38 49  6  - 6 12 57  - 0 24 51   329
 Palma de Mallorca                                   7001
            39 34 20  + 2 39 11  + 0 10 36    15
@@ -3118,7 +3118,7 @@ Arroyo de la Luz                                   10084
            39 29  7  - 6 35  1  - 0 26 20   352
 Arroyomolinos de la Vera                           10088
            40  3 15  - 5 51 15  - 0 23 24   617
-Arroyomolinos                                      10092
+Arroyomolinos (Cáceres)                            10092
            39 11 11  - 6  9 43  - 0 24 38   398
 Baños de Montemayor                                10096
            40 19  9  - 5 51 21  - 0 23 25   705
@@ -3376,7 +3376,7 @@ Pozuelo de Zarzón                                  10600
            40  8 57  - 6 24 52  - 0 25 39   466
 Puerto de Santa Cruz                               10604
            39 19  4  - 5 51 27  - 0 23 25   457
-Rebollar                                           10608
+Rebollar (Cáceres)                                 10608
            40  9 17  - 5 53 52  - 0 23 35   622
 Riolobos                                           10612
            39 55 18  - 6 18  7  - 0 25 12   267
@@ -3658,7 +3658,7 @@ Borriol                                            12150
            40  2 39  - 0  4 14  - 0  0 16   208
 Burriana                                           12155
            39 53 27  - 0  4 57  - 0  0 19    12
-Cabanes                                            12160
+Cabanes (Castellón)                                12160
            40  9 24  + 0  2 38  + 0  0 10   290
 Cálig                                              12165
            40 27 48  + 0 21 19  + 0  1 25   122
@@ -4056,7 +4056,7 @@ Villamayor de Calatrava                            13900
            38 47 25  - 4  8 13  - 0 16 32   661
 Villanueva de la Fuente                            13910
            38 41 37  - 2 41 39  - 0 10 46  1000
-Villanueva de los Infantes                         13920
+Villanueva de los Infantes (Ciudad Real)           13920
            38 44 18  - 3  0 50  - 0 12  3   880
 Villanueva de San Carlos                           13930
            38 37 21  - 3 54 29  - 0 15 37   640
@@ -4368,7 +4368,7 @@ Ribeira                                            15720
            42 33 22  - 8 59 25  - 0 35 57    17
 Rois                                               15730
            42 45 48  - 8 41 21  - 0 34 45    60
-Sada                                               15740
+Sada (La Coruña)                                   15740
            43 21  8  - 8 15  8  - 0 33  0     5
 San Sadurniño                                      15750
            43 31 60  - 8  4  8  - 0 32 16    60
@@ -4378,7 +4378,7 @@ Santiago de Compostela                             15770
            42 52 53  - 8 32 34  - 0 34 10   251
 Santiso                                            15780
            42 51 24  - 8  3 40  - 0 32 14   380
-Sobrado                                            15790
+Sobrado (La Coruña)                                15790
            43  2 25  - 8  1 17  - 0 32  5   511
 As Somozas                                         15800
            43 31 40  - 7 56 22  - 0 31 45   280
@@ -4534,7 +4534,7 @@ Casas de los Pinos                                 16248
            39 20  6  - 2 22 10  - 0  9 28   725
 Casasimarro                                        16252
            39 23 39  - 2  2 19  - 0  8  9   753
-Castejón                                           16256
+Castejón (Cuenca)                                  16256
            40 22 58  - 2 31  2  - 0 10  4   858
 Castillejo de Iniesta                              16260
            39 31 35  - 1 45 35  - 0  7  2   827
@@ -4650,7 +4650,7 @@ Mota del Cuervo                                    16484
            39 29 59  - 2 52 10  - 0 11 28   704
 Motilla del Palancar                               16488
            39 33 42  - 1 54 31  - 0  7 38   831
-Moya                                               16492
+Moya (Cuenca)                                      16492
            39 56 59  - 1 22  0  - 0  5 28  1141
 Narboneta                                          16496
            39 45  6  - 1 28 22  - 0  5 53   873
@@ -4940,7 +4940,7 @@ Brunyola                                           17108
            41 54 21  + 2 41  9  + 0 10 44   257
 Boadella d'Empordà                                 17112
            42 19 51  + 2 51 26  + 0 11 25    89
-Cabanes                                            17116
+Cabanes (Gerona)                                   17116
            42 18 31  + 2 58 45  + 0 11 54    26
 Cabanelles                                         17120
            42 13 55  + 2 49 14  + 0 11 16   194
@@ -5082,7 +5082,7 @@ Maçanet de Cabrenys                                17392
            42 23 15  + 2 44 56  + 0 10 59   370
 Maçanet de la Selva                                17396
            41 46 43  + 2 43 54  + 0 10 55   100
-Mieres                                             17400
+Mieres (Gerona)                                    17400
            42  7 41  + 2 38 25  + 0 10 33   286
 Mollet de Peralada                                 17404
            42 21 42  + 3  0  3  + 0 12  0    59
@@ -5254,7 +5254,7 @@ La Tallada d'Empordà                               17736
            42  4 52  + 3  3 26  + 0 12 13    20
 Terrades                                           17740
            42 18 40  + 2 50 28  + 0 11 21   228
-Torrent                                            17744
+Torrent (Gerona)                                   17744
            41 57 11  + 3  7 42  + 0 12 30    44
 Torroella de Fluvià                                17748
            42 10 29  + 3  2 47  + 0 12 11     9
@@ -6444,7 +6444,7 @@ Cala                                               21160
            37 58 24  - 6 18 54  - 0 25 15   585
 Calañas                                            21170
            37 39 21  - 6 52 39  - 0 27 30   300
-El Campillo                                        21180
+El Campillo (Huelva)                               21180
            37 41 42  - 6 37 40  - 0 26 30   450
 Campofrío                                          21190
            37 46  8  - 6 34 17  - 0 26 17   521
@@ -7368,7 +7368,7 @@ Palacios del Sil                                   24424
            42 52 35  - 6 25 57  - 0 25 43   872
 Páramo del Sil                                     24428
            42 49 16  - 6 29 19  - 0 25 57   870
-Pedrosa del Rey                                    24432
+Pedrosa del Rey (León)                             24432
            42 58 10  - 4 57 42  - 0 19 50  1086
 Peranzanes                                         24436
            42 52 40  - 6 37 51  - 0 26 31   980
@@ -7464,7 +7464,7 @@ Sariegos                                           24632
            42 38 55  - 5 37 47  - 0 22 31   865
 Sena de Luna                                       24636
            42 55 51  - 5 57  6  - 0 23 48  1160
-Sobrado                                            24640
+Sobrado (León)                                     24640
            42 31 16  - 6 51  4  - 0 27 24   433
 Soto de la Vega                                    24644
            42 20  2  - 5 52 49  - 0 23 31   778
@@ -8554,7 +8554,7 @@ Aranjuez                                           28065
            40  2  5  - 3 36  5  - 0 14 24   489
 Arganda del Rey                                    28070
            40 18  7  - 3 26 16  - 0 13 45   618
-Arroyomolinos                                      28075
+Arroyomolinos (Madrid)                             28075
            40 16 10  - 3 55  5  - 0 15 40   603
 El Atazar                                          28080
            40 56  8  - 3 28  9  - 0 13 52   995
@@ -8692,7 +8692,7 @@ Mejorada del Campo                                 28410
            40 23 53  - 3 29 14  - 0 13 56   578
 Miraflores de la Sierra                            28415
            40 48 54  - 3 45 51  - 0 15  3  1150
-El Molar                                           28420
+El Molar (Madrid)                                  28420
            40 44  3  - 3 34 53  - 0 14 19   850
 Los Molinos                                        28425
            40 42 59  - 4  4 16  - 0 16 17  1045
@@ -9120,7 +9120,7 @@ Cehegín                                            30170
            38  5 59  - 1 47 57  - 0  7 11   571
 Ceutí                                              30180
            38  4 49  - 1 16  6  - 0  5  4    84
-Cieza                                              30190
+Cieza (Murcia)                                     30190
            38 14 17  - 1 25 35  - 0  5 42   188
 Fortuna                                            30200
            38 10 50  - 1  7 18  - 0  4 29   191
@@ -9316,7 +9316,7 @@ Cascante                                           31204
            42  0  1  - 1 40 40  - 0  6 42   354
 Cáseda                                             31207
            42 31 29  - 1 22  0  - 0  5 28   435
-Castejón                                           31210
+Castejón (Navarra)                                 31210
            42 10 20  - 1 41 24  - 0  6 45   267
 Castillonuevo                                      31213
            42 40 49  - 1  2 36  - 0  4 10   802
@@ -9598,7 +9598,7 @@ Roncal                                             31627
            42 48 32  - 0 57 19  - 0  3 49   727
 Orreaga/Roncesvalles                               31630
            43  0 39  - 1 19  4  - 0  5 16   952
-Sada                                               31633
+Sada (Navarra)                                     31633
            42 35 17  - 1 23 49  - 0  5 35   515
 Saldías                                            31636
            43  5 22  - 1 46 46  - 0  7  7   554
@@ -9962,7 +9962,7 @@ Llanera                                            33350
            43 26 33  - 5 51  1  - 0 23 24   180
 Llanes                                             33360
            43 25 24  - 4 45 11  - 0 19  0    11
-Mieres                                             33370
+Mieres (Asturias)                                  33370
            43 15 28  - 5 46 26  - 0 23  5   209
 Morcín                                             33380
            43 17  1  - 5 53 29  - 0 23 33   355
@@ -10488,7 +10488,7 @@ Vega de San Mateo                                  35290
            28  0 33  -15 31 51  - 1  2  7   836
 Agüimes                                            35300
            27 54 19  -15 26 41  - 1  1 46   286
-Moya                                               35310
+Moya (Gran Canaria)                                35310
            28  6 34  -15 34 57  - 1  2 19   488
 Teror                                              35320
            28  3 29  -15 32 45  - 1  2 11   591
@@ -11154,7 +11154,7 @@ San Pedro del Valle                                37530
            41  2  4  - 5 51 34  - 0 23 26   791
 San Pelayo de Guareña                              37532
            41  7  1  - 5 51 23  - 0 23 25   800
-Sancti-Spíritus                                    37534
+Sancti-Spíritus (Salamanca)                        37534
            40 42 27  - 6 23 58  - 0 25 35   756
 Sanchón de la Ribera                               37536
            41  5 20  - 6 24 43  - 0 25 38   735
@@ -11488,7 +11488,7 @@ Cillorigo Castro                                   39095
            43 10 38  - 4 35 59  - 0 18 23   250
 Castro-Urdiales                                    39100
            43 23  8  - 3 12 53  - 0 12 51    20
-Cieza                                              39105
+Cieza (Cantabria)                                  39105
            43 13 21  - 4  5 10  - 0 16 20   150
 Colindres                                          39110
            43 23 44  - 3 26 59  - 0 13 47     6
@@ -11642,7 +11642,7 @@ Vega de Pas                                        39480
            43  9 39  - 3 46 53  - 0 15  7   352
 Villacarriedo                                      39485
            43 13 55  - 3 48 13  - 0 15 12   212
-Villaescusa                                        39490
+Villaescusa (Cantabria)                            39490
            43 22 27  - 3 50 60  - 0 15 23    20
 Villafufre                                         39495
            43 16  0  - 3 53 34  - 0 15 34   217
@@ -12522,7 +12522,7 @@ Quiñonería                                         42615
            41 34 11  - 2  2 11  - 0  8  8  1021
 Los Rábanos                                        42620
            41 43  6  - 2 28 28  - 0  9 53  1028
-Rebollar                                           42625
+Rebollar (Soria)                                   42625
            41 54 53  - 2 30 14  - 0 10  0  1135
 Recuerda                                           42630
            41 28 37  - 2 59 37  - 0 11 58   899
@@ -12818,7 +12818,7 @@ El Milà                                            43415
            41 14 57  + 1 12 27  + 0  4 49   166
 Miravet                                            43420
            41  2 13  + 0 35 51  + 0  2 23    43
-El Molar                                           43425
+El Molar (Tarragona)                               43425
            41  9 54  + 0 42 29  + 0  2 49   228
 Montblanc                                          43430
            41 22 41  + 1  9 46  + 0  4 39   350
@@ -13182,7 +13182,7 @@ Estercuel                                          44344
            40 51 21  - 0 37 50  - 0  2 31   829
 Ferreruela de Huerva                               44348
            41  3 53  - 1 13 55  - 0  4 55  1018
-Fonfría                                            44352
+Fonfría (Teruel)                                   44352
            40 59 49  - 1  5  1  - 0  4 20  1247
 Formiche Alto                                      44356
            40 19 32  - 0 53 32  - 0  3 34  1108
@@ -14374,7 +14374,7 @@ Torrebaja                                          46726
            40  5 49  - 1 15 17  - 0  5  1   742
 Torrella                                           46729
            38 59 23  - 0 34 11  - 0  2 16   140
-Torrent                                            46732
+Torrent (Valencia)                                 46732
            39 26 18  - 0 27 50  - 0  1 51    47
 Torres Torres                                      46735
            39 44 44  - 0 21 15  - 0  1 25   168
@@ -14476,7 +14476,7 @@ Cabreros del Monte                                 47120
            41 50 56  - 5 15 60  - 0 21  3   733
 Campaspero                                         47124
            41 29 33  - 4 11 37  - 0 16 46   902
-El Campillo                                        47128
+El Campillo (Valladolid)                           47128
            41 15 30  - 5  0 42  - 0 20  2   747
 Camporredondo                                      47132
            41 28 30  - 4 30 12  - 0 18  0   799
@@ -14634,7 +14634,7 @@ La Pedraja de Portillo                             47444
            41 28 25  - 4 38 45  - 0 18 34   717
 Pedrajas de San Esteban                            47448
            41 20 35  - 4 34 57  - 0 18 19   758
-Pedrosa del Rey                                    47452
+Pedrosa del Rey (Valladolid)                       47452
            41 33 24  - 5 12 11  - 0 20 48   724
 Peñafiel                                           47456
            41 35 51  - 4  7  2  - 0 16 28   754
@@ -14840,7 +14840,7 @@ Villanueva de la Condesa                           47864
            42  9  3  - 5  5 36  - 0 20 22   797
 Villanueva de los Caballeros                       47868
            41 45 33  - 5 14 44  - 0 20 58   713
-Villanueva de los Infantes                         47872
+Villanueva de los Infantes (Valladolid)            47872
            41 42 16  - 4 28 57  - 0 17 55   787
 Villanueva de San Mancio                           47876
            41 55 49  - 5  0 42  - 0 20  2   746
@@ -14860,7 +14860,7 @@ Villavicencio de los Caballeros                    47904
            42  3 25  - 5 14 10  - 0 20 56   753
 Zaratán                                            47908
            41 39 46  - 4 46 54  - 0 19  7   754
-La Zarza                                           47912
+La Zarza (Ávila)                                   47912
            41 15 46  - 4 46 12  - 0 19  4   754
 Bilbao                                             48001
            43 15 30  - 2 55 21  - 0 11 41     6
@@ -15210,7 +15210,7 @@ Ferreruela                                         49189
            41 46  3  - 6  4 12  - 0 24 16   830
 Figueruela de Arriba                               49192
            41 52 12  - 6 26 38  - 0 25 46   859
-Fonfría                                            49195
+Fonfría (Zamora)                                   49195
            41 38 13  - 6  8 19  - 0 24 33   800
 Fresno de la Polvorosa                             49201
            42  5  3  - 5 46  4  - 0 23  4   720
@@ -15514,7 +15514,7 @@ Villabuena del Puente                              49654
            41 22 56  - 5 24 19  - 0 21 37   706
 Villadepera                                        49657
            41 32 59  - 6  7 48  - 0 24 31   727
-Villaescusa                                        49660
+Villaescusa (Zamora)                               49660
            41 12 29  - 5 27 44  - 0 21 50   824
 Villafáfila                                        49663
            41 50 60  - 5 36 48  - 0 22 27   690

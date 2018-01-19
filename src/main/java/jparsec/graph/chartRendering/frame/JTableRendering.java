@@ -216,6 +216,9 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 	         public Object getValueAt(int row, int col) {
 	        	 if (columnClasses[col] == Boolean.class) return Boolean.parseBoolean(lineTable[row][col]);
 	        	 //if (columnClasses[col] == Integer.class) return Integer.parseInt(lineTable[row][col]);
+	        	 if (columnClasses[col] == Double.class) return Double.parseDouble(lineTable[row][col]);
+	        	 if (columnClasses[col] == Float.class) return Float.parseFloat(lineTable[row][col]);
+	        	 if (columnClasses[col] == Long.class) return Long.parseLong(lineTable[row][col]);
 	        	 String out = lineTable[row][col];
 	        	 return out;
 	         }
@@ -446,7 +449,7 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 	        	String fa = FileIO.getField(column + 1, (String) a, SEPARATOR, false);
 	        	String fb = FileIO.getField(column + 1, (String) b, SEPARATOR, false);
 	        	if (columnClasses[column] == Integer.class || columnClasses[column] == Double.class
-	        			|| columnClasses[column] == Long.class) {
+	        			|| columnClasses[column] == Long.class || columnClasses[column] == Float.class) {
 	        		Double va = Double.parseDouble(fa);
 	        		Double vb = Double.parseDouble(fb);
 		            if (ascending) {
