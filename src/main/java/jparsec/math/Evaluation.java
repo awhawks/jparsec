@@ -197,7 +197,7 @@ public class Evaluation implements Serializable
 		}
 
 		try {
-			return ((Double) jsEngine.eval("var xx = " + expression + "; " + "xx;")).doubleValue();
+			return ((Double) jsEngine.eval("var xx = 0.0 + " + expression + "; " + "xx;")).doubleValue();
 		} catch (ScriptException ex) {
 			throw new JPARSECException(ex);
 		}

@@ -215,7 +215,7 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 	         }
 	         public Object getValueAt(int row, int col) {
 	        	 if (columnClasses[col] == Boolean.class) return Boolean.parseBoolean(lineTable[row][col]);
-	        	 //if (columnClasses[col] == Integer.class) return Integer.parseInt(lineTable[row][col]);
+	        	 if (columnClasses[col] == Integer.class) return Integer.parseInt(lineTable[row][col]);
 	        	 if (columnClasses[col] == Double.class) return Double.parseDouble(lineTable[row][col]);
 	        	 if (columnClasses[col] == Float.class) return Float.parseFloat(lineTable[row][col]);
 	        	 if (columnClasses[col] == Long.class) return Long.parseLong(lineTable[row][col]);

@@ -2137,9 +2137,10 @@ public class DataSet
     {
     	if (array1 == null) return array2;
     	if (array2 == null) return array1;
-    	boolean out[] = new boolean[array1.length + array2.length];
-    	System.arraycopy(array1, 0, out, 0, array1.length);
-    	System.arraycopy(array2, 0, out, array1.length, array2.length);
+    	int l1 = array1.length, l2 = array2.length;
+    	boolean out[] = new boolean[l1 + l2];
+    	System.arraycopy(array1, 0, out, 0, l1);
+    	System.arraycopy(array2, 0, out, l1, l2);
     	return out;
     }
 
@@ -3381,16 +3382,16 @@ public class DataSet
 
 		if (val.length == 0 || list.length == 0) return out;
 
-		double max = DataSet.getMaximumValue(val), newMax = max + 1;
-
 		double v[] = val.clone();
+		String l[] = list.clone();
 		int oindex = 0;
 		do {
 			int index = DataSet.getIndexOfMinimum(v);
-			out[oindex] = list[index];
+			out[oindex] = l[index];
 			oindex ++;
 
-			v[index] = newMax;
+			v = DataSet.deleteIndex(v, index);
+			l = (String[]) DataSet.deleteIndex(l, index);
 		} while (oindex < list.length);
 		return out;
 	}
@@ -3400,7 +3401,7 @@ public class DataSet
 	 * array.
 	 *
 	 * @param list Array of objects.
-	 * @param val Values for each of the objects
+	 * @param val Values for each of the objects. Check none is infinity or Double.MAX_VALUE.
 	 * @return Array with the objects listed in crescent order of the values.
 	 * @throws JPARSECException If an error occurs.
 	 */
@@ -3412,8 +3413,6 @@ public class DataSet
 
 		if (val.length == 0 || list.length == 0) return out;
 
-		double max = DataSet.getMaximumValue(val), newMax = max + 1;
-
 		double v[] = val.clone();
 		int oindex = 0;
 		do {
@@ -3421,7 +3420,7 @@ public class DataSet
 			out[oindex] = list[index];
 			oindex ++;
 
-			v[index] = newMax;
+			v[index] = Double.MAX_VALUE;
 		} while (oindex < list.length);
 		return out;
 	}
@@ -3470,16 +3469,16 @@ public class DataSet
 
 		if (val.length == 0 || list.length == 0) return out;
 
-		double min = DataSet.getMinimumValue(val), newMin = min - 1;
-
 		double v[] = val.clone();
+		String l[] = list.clone();
 		int oindex = 0;
 		do {
 			int index = DataSet.getIndexOfMaximum(v);
-			out[oindex] = list[index];
+			out[oindex] = l[index];
 			oindex ++;
 
-			v[index] = newMin;
+			v = DataSet.deleteIndex(v, index);
+			l = (String[]) DataSet.deleteIndex(l, index);
 		} while (oindex < list.length);
 		return out;
 	}
@@ -3489,7 +3488,7 @@ public class DataSet
 	 * array.
 	 *
 	 * @param list Array of objects.
-	 * @param val Values for each of the objects
+	 * @param val Values for each of the objects. Check none of them is -infinity or Double.MIN_VALUE.
 	 * @return Array with the objects listed in descent order of the values.
 	 * @throws JPARSECException If an error occurs.
 	 */
@@ -3501,8 +3500,6 @@ public class DataSet
 
 		if (val.length == 0 || list.length == 0) return out;
 
-		double min = DataSet.getMinimumValue(val), newMin = min - 1;
-
 		double v[] = val.clone();
 		int oindex = 0;
 		do {
@@ -3510,7 +3507,7 @@ public class DataSet
 			out[oindex] = list[index];
 			oindex ++;
 
-			v[index] = newMin;
+			v[index] = Double.MIN_VALUE;
 		} while (oindex < list.length);
 		return out;
 	}
