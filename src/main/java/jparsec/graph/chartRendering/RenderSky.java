@@ -1170,6 +1170,9 @@ public class RenderSky
 					render.planetRender.ephem = obj;
 					loc0 = obj.getLocation();
 				}
+				
+				if (render.drawHorizonTexture != HORIZON_TEXTURE.NONE && 
+						render.planetRender.ephem.magnitude > maglim) continue;
 
 				/*
 				 * Since we want to draw satellites even if the planet is
@@ -2776,7 +2779,10 @@ public class RenderSky
 
 		String t = "Veleta_30m";
 		if (render.drawHorizonTexture == HORIZON_TEXTURE.VILLAGE) t = "village";
+		if (render.drawHorizonTexture == HORIZON_TEXTURE.GUEREINS) t = "guereins";
+		if (render.drawHorizonTexture == HORIZON_TEXTURE.LICHTENSTEIN) t = "Lichtenstein";
 		Object horizonTexture = g.getImage(FileIO.DATA_LANDSCAPES_DIRECTORY + t + ".jpg");
+		if (horizonTexture == null) horizonTexture = g.getImage(FileIO.DATA_LANDSCAPES_DIRECTORY + t + ".png");
 		if (horizonTexture == null) return;
 
 		String data[] = DataSet.arrayListToStringArray(ReadFile.readResource(FileIO.DATA_LANDSCAPES_DIRECTORY + t + ".txt"));
@@ -2820,8 +2826,8 @@ public class RenderSky
 		if (render.anaglyphMode == ANAGLYPH_COLOR_MODE.NO_ANAGLYPH && ((render.planetRender.highQuality
 				 && RenderPlanet.MAXIMUM_TEXTURE_QUALITY_FACTOR > 1) || g.renderingToExternalGraphics())) {
 			if (render.planetRender.highQuality && RenderPlanet.MAXIMUM_TEXTURE_QUALITY_FACTOR > 1) {
-				scale = 1.5f;
-				if (RenderPlanet.MAXIMUM_TEXTURE_QUALITY_FACTOR > 2) scale = RenderPlanet.MAXIMUM_TEXTURE_QUALITY_FACTOR * 1.5f / 2f;
+				scale = RenderPlanet.MAXIMUM_TEXTURE_QUALITY_FACTOR;
+				//if (RenderPlanet.MAXIMUM_TEXTURE_QUALITY_FACTOR > 2) scale = RenderPlanet.MAXIMUM_TEXTURE_QUALITY_FACTOR * 1.5f / 2f;
 				step /= scale;
 			}
 			if (step < 1) step = 1;
@@ -2854,28 +2860,32 @@ public class RenderSky
 			Object horizonTexture, Graphics g, float scale, int brightness, int minr, int ming, int minb) throws JPARSECException {
 		//if (Math.abs(Functions.toCenturies(jd)) < 10) return;
 
-		int size2 = (int) (2*size)+1;
+		int size2 = (int) (2*size+scale);
 		int[] sizei = g.getSize(horizonTexture);
 		double scaley = sizei[1] * Constant.TWO_PI / imax;
 
 		init = (int) Functions.module(init, imax);
 		iend = (int) Functions.module(iend, imax);
 		if (iend < init) iend += imax;
+		boolean showGround = true;
+		if (showGround) projection.disableCorrectionOfLocalHorizon();
 		for (int j=jnit; j<=jend; j = j + step) {
-			for (int ii=init; ii<=iend; ii = ii + step) {
+			for (int ii=0; ii<imax; ii = ii + step) {
+//				for (int ii=init; ii<=iend; ii = ii + step) {
 				int i = ii;
 				if (i >= imax) i-= imax;
 					LocationElement loc = null;
 
-						loc = new LocationElement((i/im2)*Constant.TWO_PI, (1.0-j/jm2)*scaley, 1.0);
+						loc = new LocationElement((i-im2)*Constant.TWO_PI/imax, (1.0-j/jm2)*scaley, 1.0);
 						loc = CoordinateSystem.horizontalToEquatorial(loc, projection.ast, projection.obs.getLatitudeRad(), true);
-						loc = projection.getApparentLocationInSelectedCoordinateSystem(loc, true, true, 0);
+						loc = projection.getApparentLocationInSelectedCoordinateSystem(loc, !showGround, true, 0);
 
 						if (loc == null) continue;
 
 						g.disableInversion();
 						int rgb = g.getRGB(horizonTexture, i, j);
 						g.enableInversion();
+						if (((rgb>>24)&255) < 20) continue;
 						int rr = ((rgb>>16)&255), gg = ((rgb>>8)&255), bb = (rgb&255);
 						if (rr >= minr && gg >= ming && bb >= minb) continue;
 
@@ -2885,8 +2895,8 @@ public class RenderSky
 						if (rr < 0) rr = 0;
 						if (gg < 0) gg = 0;
 						if (bb < 0) bb = 0;
-						g.setColor(rr, gg, bb, 254);
-						loc.setRadius(g.getColor());
+						g.setColor(rr, gg, bb, 255);
+						loc.setRadius(g.getColor()+0.5);
 
 
 					float pos[] = projection.projectPosition(loc, 0, false);
@@ -2895,8 +2905,8 @@ public class RenderSky
 						g.setColor((int)loc.getRadius(), true);
 						if (render.anaglyphMode == ANAGLYPH_COLOR_MODE.NO_ANAGLYPH) {
 							if (scale > 1) {
-								if (fieldDeg > 50)
-									g.setColor((int)loc.getRadius(), g.getAlpha((int)loc.getRadius())/2);
+								//if (fieldDeg > 50)
+								//	g.setColor((int)loc.getRadius(), g.getAlpha((int)loc.getRadius())/2);
 								pos[0] = scale*pos[0];
 								pos[1] = scale*pos[1];
 								g.fillRect((int)(0.5+pos[0])-size*scale, (int)(0.5+pos[1])-size*scale, size2*scale, size2*scale);
@@ -2909,6 +2919,7 @@ public class RenderSky
 					}
 			}
 		}
+		if (showGround) projection.enableCorrectionOfLocalHorizon();
 		g.enableInversion();
 //		if (save) DataBase.addData("milkyWayTexture", threadID, mw.toArray(), true);
 	}
@@ -4875,7 +4886,7 @@ public class RenderSky
 			maglimNotDrag = render.drawStarsLimitingMagnitude;
 			maglimStarsNotDrag = maglim;
 		}
-		if (fieldDeg > 15 && objMagLim-maglim > 2) objMagLim = maglim + 2;
+		if (fieldDeg > 15 && objMagLim-maglim > 2 && render.drawClever) objMagLim = maglim + 2;
 		LocationElement loc;
 		LocationElement locF;
 		Object obj[];

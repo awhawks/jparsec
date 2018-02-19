@@ -617,7 +617,11 @@ public class SkyRenderElement implements Serializable
 		/** Veleta 30m telescope site, at Granada (Spain). */
 		VELETA_30m,
 		/** A generic village. */
-		VILLAGE
+		VILLAGE,
+		/** The main texture of Stellarium. */
+		GUEREINS, 
+		/** Another texture prepared from a panorama image in Wikipedia. */
+		LICHTENSTEIN
 	};
 
 	/**

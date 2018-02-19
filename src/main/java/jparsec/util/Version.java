@@ -377,7 +377,7 @@ public class Version
 			"jhall.jar                                     1.00",
 			"iue.jar                                       1.00",
 			"vsop87.jar                                    1.01",
-			"images.jar                                    1.12",
+			"images.jar                                    1.13",
 			"telescopes.jar                                1.01",
 			"dust.jar                                      1.00",
 			"fits.jar                                      1.01",

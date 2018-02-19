@@ -85,15 +85,15 @@ public class Update
 	/**
 	 * The url used to update orbital elements of comets.
 	 */
-	public static final String UPDATE_URL_COMETS = "https://www.minorplanetcenter.net/iau/Ephemerides/Comets/Soft00Cmt.txt";
+	public static final String UPDATE_URL_COMETS = "https://minorplanetcenter.net/iau/Ephemerides/Comets/Soft00Cmt.txt";
 	/**
 	 * The url used to update orbital elements of trans-Neptunian objects.
 	 */
-	public static final String UPDATE_URL_DISTANT_BODIES = "https://www.minorplanetcenter.net/iau/Ephemerides/Distant/Soft00Distant.txt";
+	public static final String UPDATE_URL_DISTANT_BODIES = "https://minorplanetcenter.net/iau/Ephemerides/Distant/Soft00Distant.txt";
 	/**
 	 * The url used to update orbital elements of bright asteroids.
 	 */
-	public static final String UPDATE_URL_BRIGHT_ASTEROIDS = "https://www.minorplanetcenter.net/iau/Ephemerides/Bright/2007/Soft00Bright.txt";
+	public static final String UPDATE_URL_BRIGHT_ASTEROIDS = "https://minorplanetcenter.net/iau/Ephemerides/Bright/2007/Soft00Bright.txt";
 	/**
 	 * The url used to update orbital elements of artificial satellites.
 	 */
