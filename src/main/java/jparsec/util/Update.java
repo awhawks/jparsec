@@ -69,7 +69,7 @@ public class Update
 	/**
 	 * The url used to update the Padova-Asiago SN catalogue.
 	 */
-	public static final String UPDATE_URL_PADOVA_ASIAGO_SN_CAT = "https://graspa.oapd.inaf.it/asnc/cat.txt";
+	public static final String UPDATE_URL_PADOVA_ASIAGO_SN_CAT = "http://graspa.oapd.inaf.it/asnc/cat.txt";
 	/**
 	 * The url used to update the galactic novae SN catalogue.
 	 */

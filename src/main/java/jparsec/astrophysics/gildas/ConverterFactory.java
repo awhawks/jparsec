@@ -85,8 +85,10 @@ public class ConverterFactory
             return new IEEE2EEEI();
         if(c == '.')
             return new EEEI2EEEI();
-        else
-            return null;
+        try {
+			JPARSECException.addWarning("Could not find suitable format reader for this image file");
+		} catch (Exception e) { }
+        return null;
     }
 
     /**

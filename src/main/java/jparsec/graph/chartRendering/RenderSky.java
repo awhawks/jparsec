@@ -2803,7 +2803,8 @@ public class RenderSky
 			brightness = 0;
 		} else {
 			if (render.planetRender.ephemSun.elevation*Constant.RAD_TO_DEG > -15) {
-				brightness = (int) (brightness * (1.0-(render.planetRender.ephemSun.elevation*Constant.RAD_TO_DEG + 15)/30.0));
+				double exp = 1 - (render.planetRender.ephemSun.elevation*Constant.RAD_TO_DEG + 15)/30.0;
+				brightness = (int) (brightness * exp * exp);
 			}
 		}
 		LocationElement loc0 = projection.getHorizontalPositionOfRendering();
@@ -3809,7 +3810,6 @@ public class RenderSky
 			jnit0 = 0;
 			jend0 = imax/2;
 		}
-		int size2 = (int) (2*size)+1;
 
 		// Hold Milky Way in memory disabled since it needs 26 MB and it just only improves
 		// performance a factor 2
@@ -3833,9 +3833,15 @@ public class RenderSky
 		init = (int) Functions.module(init, imax);
 		iend = (int) Functions.module(iend, imax);
 		if (iend < init) iend += imax;
+		boolean useRGB = (render.getColorMode() != COLOR_MODE.NIGHT_MODE);
+		boolean useGray = useRGB && render.drawHorizonTexture != HORIZON_TEXTURE.NONE;
+		if (useGray) {
+			step *= 2;
+			size *= 2;
+		}
+		int size2 = (int) (2*size)+1;
 		float size2s = size2*scale;
 		float sizes = size*scale;
-		boolean useRGB = (render.getColorMode() != COLOR_MODE.NIGHT_MODE);
 		for (int j=jnit0; j<jend0; j = j + step) {
 			for (int ii=init; ii<iend; ii = ii + step) {
 				int i = ii; //(int) Functions.module(ii, imax);
@@ -3865,6 +3871,12 @@ public class RenderSky
 						int rgb = g.getRGB(milkyWayTexture, i, j);
 						int alpha = 16 + (((rgb>>16)&255) + ((rgb>>8)&255) + (rgb&255)) / 3;
 						if (alpha > 254) alpha = 254;
+						if (useGray) {
+							int a0 = alpha - 16, a02 = (a0 * 2) / 3;;
+							rgb = Functions.getColor(a02, a02, a0, a0);
+							alpha = Math.min(a0/4 - 5, 40);
+							if (alpha < 0) alpha = 0;
+						}
 						if (!useRGB) rgb = ((rgb>>16)&255) << 16;
 						g.setColor(rgb, alpha);
 						loc.setRadius(g.getColor());
@@ -3916,13 +3928,18 @@ public class RenderSky
 		double dist = LocationElement.getApproximateAngularDistance(loc, loc2);
 		if (dist > field*0.75) return;
 
-		int size2 = (int)(2*size)+1;
 		init = (int) Functions.module(init, imax);
 		iend = (int) Functions.module(iend, imax);
 		if (iend < init) iend += imax;
+		boolean useRGB = (render.getColorMode() != COLOR_MODE.NIGHT_MODE);
+		boolean useGray = useRGB && render.drawHorizonTexture != HORIZON_TEXTURE.NONE;
+		if (useGray) {
+			step *= 2;
+			size *= 2;
+		}
+		int size2 = (int)(2*size)+1;
 		float size2s = size2*scale;
 		float sizes = size*scale;
-		boolean useRGB = (render.getColorMode() != COLOR_MODE.NIGHT_MODE);
 		for (int j=jnit; j<jend; j = j + step) {
 			for (int ii=init; ii<iend; ii = ii + step) {
 				i = ii;
@@ -3942,6 +3959,12 @@ public class RenderSky
 					g.enableInversion();
 					int alpha = 16 + (((rgb>>16)&255) + ((rgb>>8)&255) + (rgb&255)) / 3;
 					if (alpha > 255) alpha = 255;
+					if (useGray) {
+						int a0 = alpha - 16, a02 = (a0 * 2) / 3;;
+						rgb = Functions.getColor(a02, a02, a0, a0);
+						alpha = Math.min(a0/4 - 5, 40);
+						if (alpha < 0) alpha = 0;
+					}
 					if (!useRGB) rgb = ((rgb>>16)&255) << 16;
 
 					g.setColor(rgb, alpha);

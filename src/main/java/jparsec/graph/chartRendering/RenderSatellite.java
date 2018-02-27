@@ -765,6 +765,8 @@ public class RenderSatellite
 			int over = g.getFont().getSize() * 4;
 			Graphics g2 = g.getGraphics(g.getWidth() + over, g.getHeight() + over);
 			g2.setFont(g.getFont());
+			g2.setColor(0, 0, 0, 255);
+			g2.fillRect(0, 0, g2.getWidth(), g2.getHeight());
 			g2.setColor(0, 0, 0, 0);
 			g2.fillRect(0, 0, g2.getWidth(), g2.getHeight());
 			int px0 = over/2+over/6, py0 = over/2-over/6;
