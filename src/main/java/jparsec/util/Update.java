@@ -123,7 +123,7 @@ public class Update
 	/**
 	 * The url used to update Sun spots database.
 	 */
-	public static final String UPDATE_URL_SUN_SPOTS = "http://solarscience.msfc.nasa.gov/greenwch/";
+	public static final String UPDATE_URL_SUN_SPOTS = "https://solarscience.msfc.nasa.gov/greenwch/";
 
 	/**
 	 * The url used to update JPL catalogue of molecular spectroscopy.

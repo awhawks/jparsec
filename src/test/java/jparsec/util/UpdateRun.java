@@ -45,9 +45,9 @@ public class UpdateRun {
         Update.updatePadovaAsiagoSNcat();
         Update.updateNovae();
 
-        // sunspot.jar
-        Update.updateSunSpotsDatabase(astro.getYear());
-        Update.updateSunSpotsDatabase(astro.getYear() - 1);
+        // sunspot.jar (>= 2017 not available anymore)
+        //Update.updateSunSpotsDatabase(astro.getYear());
+        //Update.updateSunSpotsDatabase(astro.getYear() - 1);
 
         // jpl.jar. Check, some files with no standard format: c041001.cat (CH3CN)
         // JPL should not be updated anymore

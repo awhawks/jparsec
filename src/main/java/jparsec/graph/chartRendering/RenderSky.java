@@ -323,6 +323,14 @@ public class RenderSky
 	private int nstars = -1, adds;
 
 	/**
+	 * Returns the projection object.
+	 * @return Projection object.
+	 */
+	public Projection getProjection() {
+		return projection;
+	}
+	
+	/**
 	 * Returns the internal rectagble of the rendering grid.
 	 * @return An array with minimum x, minimum y, width, and height
 	 * of the external rectangle.
@@ -2890,12 +2898,22 @@ public class RenderSky
 						int rr = ((rgb>>16)&255), gg = ((rgb>>8)&255), bb = (rgb&255);
 						if (rr >= minr && gg >= ming && bb >= minb) continue;
 
-						rr -= brightness;
-						gg -= brightness;
-						bb -= brightness;
-						if (rr < 0) rr = 0;
-						if (gg < 0) gg = 0;
-						if (bb < 0) bb = 0;
+						if (brightness > 0) {
+							double lum = ((0.299*(rr-brightness) + 0.587*(gg-brightness) + 0.114*(bb-brightness)))/255.0;
+							if (lum <= 0) {
+								rr = gg = bb = 0;
+							} else {
+								rr = (int) (rr * lum);
+								gg = (int) (gg * lum);
+								bb = (int) (bb * lum);
+								if (rr < 0) rr = 0;
+								if (gg < 0) gg = 0;
+								if (bb < 0) bb = 0;
+								if (rr > 255) rr = 255;
+								if (gg > 255) gg = 255;
+								if (bb > 255) bb = 255;
+							}
+						}
 						g.setColor(rr, gg, bb, 255);
 						loc.setRadius(g.getColor()+0.5);
 
@@ -14901,7 +14919,7 @@ public class RenderSky
 			float mg = (Float) obj[4];
 			if (mag != -1 && mg > mag) break;
 			float s[] = (float[]) obj[5];
-			int type = (Byte) obj[2];
+			int type = Math.abs((Byte) obj[2]);
 			float pa = (Float) obj[6];
 
 			if (name.startsWith("I.")) name = DataSet.replaceAll(name, "I.", "IC ", true);

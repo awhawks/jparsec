@@ -350,10 +350,10 @@ public class Version
 			// Dependency name                             Version
 			"jparsec.jar                                   1.115",
 
-			"sky.jar                                       1.42",
-			"orbital_elements.jar                          1.26",
-			"sunspot.jar                                   1.16",
-			"eop.jar                                       1.15",
+			"sky.jar                                       1.43",
+			"orbital_elements.jar                          1.27",
+			"sunspot.jar                                   1.17",
+			"eop.jar                                       1.16",
 
 			"flanagan.jar                                  1.00",
 			"sgt_v30.jar                                   1.06",

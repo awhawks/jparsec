@@ -393,7 +393,7 @@ public class SimbadElement implements Serializable
 								paf = (float) (Float.parseFloat(pa) * Constant.DEG_TO_RAD);
 						} catch (Exception exc) {}
 						loc.set(DataSet.toFloatArray(loc.get())); // Reduce memory use
-						outObj.add(new Object[] {name, messier, tt, loc, (float) Double.parseDouble(mag),
+						outObj.add(new Object[] {name, messier, (byte) tt, loc, (float) Double.parseDouble(mag),
 								new float[] {maxSize, minSize}, paf, com});
 					}
 				}
