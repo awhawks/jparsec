@@ -726,6 +726,8 @@ public class RenderPlanet
 							//if (onPlanet && !behindPlanet && ((alfa < alpha0 + 15*dalfa0 && g.getRGB(screenCopy, (int) dx, (int) dy) != backgroundCol) || (alfa > alpha1-15*dalfa0 && g.getRGB(screenCopy, (int) dx, (int) dy) != backgroundCol))) continue;
 							int rgb0 = g.getRGB((int) dx, (int) dy);
 							int rgb1 = g.getRGB(screenCopy, (int) dx, (int) dy);
+							g.setColor(rgb1, g.getAlpha(rgb0));
+							rgb1 = g.getColor();							
 							if (!dubois && rgb0 != rgb1) continue;
 							float dist = getDist(pos[2]/r, refz);
 							//if (dubois && g.getRGBLeft((int) dx, (int) dy, dist) != g.getRGBLeft(screenCopy, (int) dx, (int) dy, dist)) continue;

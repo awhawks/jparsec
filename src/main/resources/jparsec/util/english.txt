@@ -1322,3 +1322,7 @@ end
 max
 light-years
 supermoon
+Pulsating
+Eruptive
+Eclipsing
+Rotating

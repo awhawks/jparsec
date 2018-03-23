@@ -308,16 +308,14 @@ public class StarElement implements Serializable
 		if (n1 < 1 || n1 > 4) return null;
 		int n2 = -1;
 		if (v.length() > 1) n2 = Integer.parseInt(v.substring(1, 2));
-		String mainType = null;
-		if (Translate.getDefaultLanguage() == LANGUAGE.SPANISH) {
-			String TYPES_SPA[] = new String[] {"Pulsante", "Eruptiva", "Eclipsante", "Rotante"};
-			mainType = TYPES_SPA[n1-1];
-			if (n1 == 3 && n2 == 5) mainType = TYPES_SPA[1];			
-		} else {
-			String TYPES[] = new String[] {"Pulsating", "Eruptive", "Eclipsing", "Rotating"};
-			mainType = TYPES[n1-1];
-			if (n1 == 3 && n2 == 5) mainType = TYPES[1];
-		}
+		String TYPES[] = new String[] {
+				Translate.translate(1324),
+				Translate.translate(1325),
+				Translate.translate(1326),
+				Translate.translate(1327),
+				};
+		String mainType = TYPES[n1-1];
+		if (n1 == 3 && n2 == 5) mainType = TYPES[1];
 		String out = null;
 		switch (n1) {
 		case 1: // Pulsing

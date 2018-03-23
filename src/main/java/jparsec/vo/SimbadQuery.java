@@ -103,8 +103,25 @@ public class SimbadQuery implements Serializable {
 
 		String pos = findHeader(text, "%J ");
 		if (pos == null) return null;
-		oe.rightAscension = DataSet.parseDouble(FileIO.getField(1, pos, " ", true)) * Constant.DEG_TO_RAD;
-		oe.declination = DataSet.parseDouble(FileIO.getField(2, pos, " ", true)) * Constant.DEG_TO_RAD;
+		oe.rightAscension = oe.declination = 0;
+		try {
+			oe.rightAscension = DataSet.parseDouble(FileIO.getField(1, pos, " ", true)) * Constant.DEG_TO_RAD;
+		} catch (Exception exc) {
+			try {
+				JPARSECException.addWarning("Could not parse right ascension from Simbad: "+FileIO.getField(1, pos, " ", true));
+			} catch (JPARSECException e) {
+				exc.printStackTrace();
+			}
+		}
+		try {
+			oe.declination = DataSet.parseDouble(FileIO.getField(2, pos, " ", true)) * Constant.DEG_TO_RAD;
+		} catch (Exception exc) {
+			try {
+				JPARSECException.addWarning("Could not parse declination from Simbad: "+FileIO.getField(2, pos, " ", true));
+			} catch (JPARSECException e) {
+				exc.printStackTrace();
+			}
+		}
 		String name = FileIO.getField(1, findHeader(text, "# "), "#", true).trim();
 		oe.name = name;
 		oe.otherNames = findHeaders(text, "%I ");

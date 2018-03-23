@@ -1322,3 +1322,7 @@ final
 máximo
 años-luz
 superluna
+Pulsante
+Eruptiva
+Eclipsante
+Rotante

@@ -43,7 +43,7 @@ public class Translate
 	private Translate() {}
 
 	static {
-		translations = new String[2][];
+		translations = new String[3][];
 		getNumberOfEntries();
 	}
 	
@@ -54,7 +54,9 @@ public class Translate
 		/** ID constant for English. */
 		ENGLISH,
 		/** ID Constant for Spanish. */
-		SPANISH
+		SPANISH,
+		/** ID Constant for Italian. */
+		ITALIAN
 	}
 
 	/**
@@ -73,6 +75,7 @@ public class Translate
 			try {
 				translations[0] = new String[ReadFile.readResourceGetNumberOfLines("jparsec/util/english.txt", ReadFile.ENCODING_ISO_8859)];
 				translations[1] = new String[translations[0].length];
+				translations[2] = new String[translations[0].length];
 			} catch (Exception exc) {
 				throw new RuntimeException("Cannot read language files. This error should never happen!");
 			}
