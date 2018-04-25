@@ -89,8 +89,8 @@ public class AstroDate implements Serializable
 	 * @param year Year. Should not be zero.
 	 * @param month Month of the year (1..12).
 	 * @param day Day of the month (1...31).
-	 * @param seconds Time in seconds past midnight. This must be in the range
-	 *        from 0 to Astro.SECONDS_PER_DAY-1.
+	 * @param seconds Time in seconds past midnight. This should be in the range
+	 *        from 0 to {@linkplain Constant#SECONDS_PER_DAY}.
 	 */
 	private AstroDate(int year, int month, int day, double seconds)
 	{

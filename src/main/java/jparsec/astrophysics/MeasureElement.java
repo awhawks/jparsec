@@ -780,41 +780,40 @@ public class MeasureElement implements Serializable
 		return v.trim();
 	}
 
-	/** Planck constant in J*s. Value from CODATA 2010. */
-	public static final MeasureElement PLANCK_CONSTANT = new MeasureElement(6.62606957E-34, 0.00000029E-34, "J*s");
-	/** Boltzmann constant in J/K. Value from CODATA 2010. */
-	public static final MeasureElement BOLTZMANN_CONSTANT = new MeasureElement(1.3806488E-23, 0.0000013E-23, "J/K");
-	/** Stefan-Boltzmann en W/(m^2 K^4). Value from CODATA 2010. */
-	public static final MeasureElement STEFAN_BOLTZMANN_CONSTANT = new MeasureElement(0.00000005670373, 0.00000000000021, "W/m2/K4)");
-	/** Electron charge in C (J/eV). Value from CODATA 2010. */
-	public static final MeasureElement ELECTRON_CHARGE = new MeasureElement(1.602176565E-19, 0.000000035E-19, "C");
-	/** Gravitational constant in m^3/(kg s^2). Value from CODATA 2010. */
-	public static final MeasureElement GRAVITATIONAL_CONSTANT = new MeasureElement(6.67384E-11, 0.00080E-11, "m3/kg/s2)");
-	/** Avogadro number in mol^-1. CODATA 2010. */
-	public static final MeasureElement AVOGADRO_CONSTANT = new MeasureElement(6.02214129E+23, 0.00000027E+23, "/mol");
-	/** Gas constant in J / (mol K). Value from CODATA 2010. */
-	public static final MeasureElement GAS_CONSTANT = new MeasureElement(8.3144621, 0.0000075, "J/mol/K");
-	/** Electron mass in Kg. Value from CODATA 2010. */
-	public static final MeasureElement ELECTRON_MASS = new MeasureElement(9.10938291E-31, 0.00000040E-31, "Kg");
-	/** Proton mass in Kg. Value from CODATA 2010. */
-	public static final MeasureElement PROTON_MASS = new MeasureElement(1.672621777E-27, 0.000000074E-27, "Kg");
-	/** Fine structure constant. Value from CODATA 2010. */
-	public static final MeasureElement FINE_STRUCTURE_CONSTANT = new MeasureElement(0.0072973525698, 0.0000000000024, "");
-	/** Atomic unit mass, or 1/12 of the mass of the C-12 isotope, in Kg. Value from CODATA 2010. */
-	public static final MeasureElement AMU = new MeasureElement(1.660538921E-27, 0.000000073E-27, "Kg");
-	/** Rydberg constant in m^-1. Value from CODATA 2010. */
-	public static final MeasureElement RYDBERG_CONSTANT = new MeasureElement(10973731.568539, 0.000055, "/m");
-	/** Wien constant in m K. Value from CODATA 2010. */
-	public static final MeasureElement WIEN_CONSTANT = new MeasureElement(0.0028977721, 0.0000000026, "m*K");
-	/** molar volume of an ideal gas in m^3/mol. Value from CODATA 2010 */
-	public static final MeasureElement VOLUME_OF_1MOL_IDEAL_GAS = new MeasureElement(0.022710953, 0.000000021, "m3/mol");
-	/** Bohr's magneton in MeV/T. Value from CODATA 2010 */
-	public static final MeasureElement BOHR_MAGNETON = new MeasureElement(5.7883818066E-11, 0.0000000038E-11, "MeV/T");
-	/** Bohr radius in m. Value from CODATA 2010. */
-	public static final MeasureElement BOHR_RADIUS = new MeasureElement(5.2917721092E-11, 0.0000000017E-11, "m");
-	/** Classical radius of the electron in m. Value from CODATA 2010. */
-	public static final MeasureElement ELECTRON_RADIUS = new MeasureElement(2.8179403267E-15, 0.0000000027E-15, "m");
-
+	/** Planck constant in J*s. Value from CODATA 2014. */
+	public static final MeasureElement PLANCK_CONSTANT = new MeasureElement(6.626070040E-34, 0.000000081E-34, "J*s");
+	/** Boltzmann constant in J/K. Value from CODATA 2014. */
+	public static final MeasureElement BOLTZMANN_CONSTANT = new MeasureElement(1.38064852E-23, 0.00000079E-23, "J/K");
+	/** Stefan-Boltzmann en W/(m^2 K^4). Value from CODATA 2014. */
+	public static final MeasureElement STEFAN_BOLTZMANN_CONSTANT = new MeasureElement(0.00000005670367, 0.00000000000013, "W/m2/K4)");
+	/** Electron charge in C (J/eV). Value from CODATA 2014. */
+	public static final MeasureElement ELECTRON_CHARGE = new MeasureElement(1.6021766208E-19, 0.0000000098E-19, "C");
+	/** Gravitational constant in m^3/(kg s^2). Value from CODATA 2014. */
+	public static final MeasureElement GRAVITATIONAL_CONSTANT = new MeasureElement(6.67408E-11, 0.00031E-11, "m3/kg/s2)");
+	/** Avogadro number in mol^-1. CODATA 2014. */
+	public static final MeasureElement AVOGADRO_CONSTANT = new MeasureElement(6.022140857E+23, 0.000000074E+23, "/mol");
+	/** Gas constant in J / (mol K). Value from CODATA 2014. */
+	public static final MeasureElement GAS_CONSTANT = new MeasureElement(8.3144598, 0.0000048, "J/mol/K");
+	/** Electron mass in Kg. Value from CODATA 2014. */
+	public static final MeasureElement ELECTRON_MASS = new MeasureElement(9.10938356E-31, 0.00000011E-31, "Kg");
+	/** Proton mass in Kg. Value from CODATA 2014. */
+	public static final MeasureElement PROTON_MASS = new MeasureElement(1.672621898E-27, 0.000000021E-27, "Kg");
+	/** Fine structure constant. Value from CODATA 2014. */
+	public static final MeasureElement FINE_STRUCTURE_CONSTANT = new MeasureElement(0.0072973525664, 0.0000000000017, "");
+	/** Atomic unit mass, or 1/12 of the mass of the C-12 isotope, in Kg. Value from CODATA 2014. */
+	public static final MeasureElement AMU = new MeasureElement(1.660539040E-27, 0.000000020E-27, "Kg");
+	/** Rydberg constant in m^-1. Value from CODATA 2014. */
+	public static final MeasureElement RYDBERG_CONSTANT = new MeasureElement(10973731.568508, 0.000065, "/m");
+	/** Wien constant in m K. Value from CODATA 2014. */
+	public static final MeasureElement WIEN_CONSTANT = new MeasureElement(0.0028977729, 0.0000000017, "m*K");
+	/** molar volume of an ideal gas in m^3/mol (100 kPa). Value from CODATA 2014 */
+	public static final MeasureElement VOLUME_OF_1MOL_IDEAL_GAS = new MeasureElement(0.022710947, 0.000000013, "m3/mol");
+	/** Bohr's magneton in MeV/T. Value from CODATA 2014 */
+	public static final MeasureElement BOHR_MAGNETON = new MeasureElement(5.7883818012E-11, 0.0000000026E-11, "MeV/T");
+	/** Bohr radius in m. Value from CODATA 2014. */
+	public static final MeasureElement BOHR_RADIUS = new MeasureElement(5.2917721067E-11, 0.0000000012E-11, "m");
+	/** Classical radius of the electron in m. Value from CODATA 2014. */
+	public static final MeasureElement ELECTRON_RADIUS = new MeasureElement(2.8179403227E-15, 0.0000000019E-15, "m");
 
 	/**
 	 * Returns an array with the values of a set of measures.

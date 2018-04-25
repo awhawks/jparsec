@@ -26,7 +26,7 @@ import java.math.BigDecimal;
 /**
  * Some useful physical constants, preferently in International System of Units.
  * <P>
- * Values taken from CODATA 2010, 2006, CODATA 2002, and E.R. Cohen, B. N. Taylor,
+ * Values taken from CODATA 2014, 2010, 2006, CODATA 2002, and E.R. Cohen, B. N. Taylor,
  * "The Fundamental Physical Constants", Phys. Today, August 1997.
  * AU definition following JPL Ephemeris.
  *
@@ -193,8 +193,8 @@ public class Constant
 	/** Length of a sidereal day in days according to IERS Conventions. */
 	public static final double SIDEREAL_DAY_LENGTH = 1.00273781191135448;
 
-	/** Planck constant in J*s. Value from CODATA 2010. */
-	public static final double PLANCK_CONSTANT = 6.62606957E-34;
+	/** Planck constant in J*s. Value from CODATA 2014. */
+	public static final double PLANCK_CONSTANT = 6.626070040E-34;
 
 	/** Constant to transform erg to Jules. */
 	public static final double ERGIO_TO_JULE = 1.0E-7;
@@ -205,8 +205,8 @@ public class Constant
 	/** Constant to transform Jy to W/(m^2 Hz). */
 	public static final double JY_TO_W_HZ_M2 = ERGIO_TO_JULE * 1E4 / ERG_S_CM2_HZ_TO_JY;
 
-	/** Boltzmann constant in J/K. Value from CODATA 2010. */
-	public static final double BOLTZMANN_CONSTANT = 1.3806488E-23;
+	/** Boltzmann constant in J/K. Value from CODATA 2014. */
+	public static final double BOLTZMANN_CONSTANT = 1.38064852E-23;
 
 	/** Hz to K transform coefficient. */
 	public static final double HZ_TO_K = PLANCK_CONSTANT / BOLTZMANN_CONSTANT;
@@ -223,53 +223,53 @@ public class Constant
 	/** Absolute magnitude of the Sun (Wikipedia). */
 	public static final double SUN_ABSOLUTE_MAGNITUDE = 4.83;
 
-	/** Stefan-Boltzmann en W/(m^2 K^4). Value from CODATA 2010. */
-	public static final double STEFAN_BOLTZMANN_CONSTANT = .00000005670373;
+	/** Stefan-Boltzmann en W/(m^2 K^4). Value from CODATA 2014. */
+	public static final double STEFAN_BOLTZMANN_CONSTANT = .00000005670367;
 
-	/** Electron charge in C (J/eV). Value from CODATA 2010. */
-	public static final double ELECTRON_CHARGE = 1.602176565E-19;
+	/** Electron charge in C (J/eV). Value from CODATA 2014. */
+	public static final double ELECTRON_CHARGE = 1.6021766208-19;
 
-	/** Avogadro number in mol^-1. CODATA 2010. */
-	public static final double AVOGADRO_CONSTANT = 6.02214129E+23;
+	/** Avogadro number in mol^-1. CODATA 2014. */
+	public static final double AVOGADRO_CONSTANT = 6.022140857E+23;
 
-	/** Wien constant in m K. Value from CODATA 2010. */
-	public static final double WIEN_CONSTANT = 0.0028977721;
+	/** Wien constant in m K. Value from CODATA 2014. */
+	public static final double WIEN_CONSTANT = 0.0028977729;
 
-	/** Rydberg constant in m^-1. Value from CODATA 2010. */
-	public static final double RYDBERG_CONSTANT = 10973731.568539;
+	/** Rydberg constant in m^-1. Value from CODATA 2014. */
+	public static final double RYDBERG_CONSTANT = 10973731.568508;
 
-	/** Gravitational constant in m^3/(kg s^2). Value from CODATA 2010. */
-	public static final double GRAVITATIONAL_CONSTANT = 6.67384E-11;
+	/** Gravitational constant in m^3/(kg s^2). Value from CODATA 2014. */
+	public static final double GRAVITATIONAL_CONSTANT = 6.67408E-11;
 
-	/** Earth's gravity value at sea level in m/s^2, exact. Value from CODATA 2010. */
+	/** Earth's gravity value at sea level in m/s^2, exact. Value from CODATA 2014. */
 	public static final double GRAVITY_FIELD = 9.80665;
 
-	/** molar volume of an ideal gas in m^3/mol. Value from CODATA 2010 */
-	public static final double VOLUME_OF_1MOL_IDEAL_GAS = 0.022710953;
+	/** molar volume of an ideal gas in m^3/mol (100 kPa). Value from CODATA 2014 */
+	public static final double VOLUME_OF_1MOL_IDEAL_GAS = 0.022710947;
 
-	/** Bohr's magneton in MeV/T. Value from CODATA 2010 */
-	public static final double BOHR_MAGNETON = 5.7883818066E-11;
+	/** Bohr's magneton in MeV/T. Value from CODATA 2014 */
+	public static final double BOHR_MAGNETON = 5.7883818012E-11;
 
-	/** Gas constant in J / (mol K). Value from CODATA 2010. */
-	public static final double GAS_CONSTANT = 8.3144621;
+	/** Gas constant in J / (mol K). Value from CODATA 2014. */
+	public static final double GAS_CONSTANT = 8.3144598;
 
-	/** Electron mass in Kg. Value from CODATA 2010. */
-	public static final double ELECTRON_MASS = 9.10938291E-31;
+	/** Electron mass in Kg. Value from CODATA 2014. */
+	public static final double ELECTRON_MASS = 9.10938356E-31;
 
-	/** Proton mass in Kg. Value from CODATA 2010. */
-	public static final double PROTON_MASS = 1.672621777E-27;
+	/** Proton mass in Kg. Value from CODATA 2014. */
+	public static final double PROTON_MASS = 1.672621898E-27;
 
 	/** Solar mean radius in km. From Marcelo Emilio et al. 2012 (Wikipedia). */
 	public static final double SUN_RADIUS = 696342.0;
 
-	/** Fine structure constant. Value from CODATA 2010. */
-	public static final double FINE_STRUCTURE_CONSTANT = 0.0072973525698;
+	/** Fine structure constant. Value from CODATA 2014. */
+	public static final double FINE_STRUCTURE_CONSTANT = 0.0072973525664;
 
-	/** Classical radius of the electron in m. Value from CODATA 2010. */
-	public static final double ELECTRON_RADIUS = 2.8179403267E-15;
+	/** Classical radius of the electron in m. Value from CODATA 2014. */
+	public static final double ELECTRON_RADIUS = 2.8179403227E-15;
 
-	/** Bohr radius in m. Value from CODATA 2010. */
-	public static final double BOHR_RADIUS = 5.2917721092E-11;
+	/** Bohr radius in m. Value from CODATA 2014. */
+	public static final double BOHR_RADIUS = 5.2917721067E-11;
 
 	/** One inch in m. */
 	public static final double INCH = .0254;
@@ -280,8 +280,8 @@ public class Constant
 	/** One atm in Pa (=760 torr). */
 	public static final double ATMOSPHERE = 101325.0;
 
-	/** Atomic unit mass, or 1/12 of the mass of the C-12 isotope, in Kg. Value from CODATA 2010. */
-	public static final double AMU = 1.660538921E-27;
+	/** Atomic unit mass, or 1/12 of the mass of the C-12 isotope, in Kg. Value from CODATA 2014. */
+	public static final double AMU = 1.660539040E-27;
 
 	/** Mass of the hydrogen molecule in Kg. This value is 2 * m_p + m_e. */
 	public static final double H2_MASS = 2.0 * PROTON_MASS + ELECTRON_MASS;

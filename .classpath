@@ -7,7 +7,7 @@
 	<classpathentry kind="var" path="M2_REPO/javax/inject/javax.inject/1/javax.inject-1.jar"/>
 	<classpathentry kind="var" path="M2_REPO/javax/mail/javax.mail-api/1.5.4/javax.mail-api-1.5.4.jar"/>
 	<classpathentry kind="var" path="M2_REPO/javax/activation/activation/1.1/activation-1.1.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/java-8-oracle"/>
 	<classpathentry kind="var" path="M2_REPO/cds/savot/savot-model/2.6/savot-model-2.6.jar"/>
 	<classpathentry kind="var" path="M2_REPO/cds/savot/savot-common/2.6/savot-common-2.6.jar"/>
 	<classpathentry kind="var" path="M2_REPO/cds/savot/savot-pullengine/2.6/savot-pullengine-2.6.jar"/>

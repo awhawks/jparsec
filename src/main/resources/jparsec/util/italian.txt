@@ -169,7 +169,7 @@ anulare
 totale
 parziale
 no eclisse
-Category chart  // ANC
+Istogramma
 Grafico XY
 Grafico a torta
 Scatter
@@ -288,7 +288,7 @@ troppo.
 Usato il valore della funzione di partizione
 non valido in posizione
 Saltando questo.
-il formato del file sembra non essere corretto. \ nSi prega di verificare che sia un file binario valido \ ncreato da questa applicazione.
+il formato del file sembra non essere corretto. \nSi prega di verificare che sia un file binario valido \ncreato da questa applicazione.
 Catalogo dei flussi UV stellari
 Velocità
 Numero di canale
@@ -421,18 +421,18 @@ Lunghezza d'onda
 Raggio (AU)
 Temperatura come funzione del raggio
 Deviazione
-Rim
+Bordo
 Midplane
 Superficie
 Interno
-Tentative
+Tentativo
 Disk+star+free-free
 Busta
 Effetto di variazione
 massa di polveri
 raggio esterno del disco
-rim temperature
-density slope
+temperatura di bordo
+pendenza della densità
 inclinazione
 nello strato interno
 nello strato superficiale
@@ -441,7 +441,7 @@ abbondanza nello strato superficiale
 Massa di polvere
 Raggio esterno (AU)
 Rim temperature
-Density slope
+Pendenza della densità
 Inclinazione (deg)
 abbondanza
 Dimensione massima del grano
@@ -1028,44 +1028,44 @@ Maxima
 radiante
 Calendario Maya
 Quadrantidi
-delta-Cancrids
-alpha-Centaurids
-delta-Leonids
-gamma-Normids
+delta-Cancridi
+Alpha-Centauridi
+aelta-Leonids
+gamma-Normidi
 Virginidi
 Liridi
-pi-Puppids
-eta-Aquarids
-Sagittarids
-June Bootids
-Pegasids
-July Phoenicids
-Piscis Austrinids
-Southern delta-Aquarids
-alpha-Capricornids
-Southern iota-Aquarids
-Northern delta-Aquarids
+pi-Puppidi
+eta-Aquaridi
+Sagittaridi
+Bootidi di giugno
+Pegasidi
+Phoenicidi di luglio
+Piscis Austrinidi
+Sud delta-Aquaridi
+alpha-Capricornidi
+Sud iota-Aquaridi
+Nord delta-Aquaridi
 Perseidi
-kappa-Cygnids
-Northern iota-Aquarids
-alpha-Aurigids
-delta-Aurigids
-Piscids
+kappa-Cignidi
+Nord iota-Aquaridi
+alpha-Aurigidi
+delta-Aurigidi
+Piscidi
 Draconidi
-epsilon-Geminids
+epsilon-Geminidi
 Orionidi
-Southern Taurids
-Northern Taurids
-Leonids
-alpha-Monocerotids
-chi-Orionids
-Dec Phoenicids
-Puppid/Velids
-Monocerotids
-sigma-Hydrids
-Geminids
-Coma Berenicids
-Ursids
+Tauridi meridionali
+Tauridi settentrionali
+Leonidi
+Alpha Monocerotidi
+chi-Orionidi
+Phoenicidi
+Puppidi/Velidi
+Monocerotidi
+sigma-Idridi
+Geminidi
+Coma Berenicidi
+Ursidi
 a.C.
 Modalità di stampa
 GRS (Grande Macchia Rossa)
@@ -1179,7 +1179,7 @@ Impossibile scattare la foto. Dettagli:
 unrefracted
 Le condizioni meteorologiche sono inadeguate per continuare le osservazioni. L'osservatorio è stato spento a tempo indeterminato.
 Lampadina
-Campo visivo)
+Campo visivo (°)
 Pianeti extrasolari
 Radiosorgente
 Catalogo IRAM
