@@ -602,6 +602,7 @@ public class SatelliteEphem
 
 		boolean isEclipsed = false;
 		if (ECL.equals("Eclipsed")) isEclipsed = true;
+		if (isEclipsed) ILL = 0;
 
 		FastMath.EXACT_MODE = exactMode;
 

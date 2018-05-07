@@ -754,6 +754,7 @@ public class SDP8_SGP8
 
 	boolean isEclipsed = false;
 	if (ECL.equals("Eclipsed")) isEclipsed = true;
+	if (isEclipsed) ILL = 0;
 
 	FastMath.EXACT_MODE = exactMode;
 
