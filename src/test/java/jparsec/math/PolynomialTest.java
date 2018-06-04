@@ -8,6 +8,7 @@ public class PolynomialTest {
      * Used to test out the methods in this class.
      *
      * @param args Unused.
+     * @throws Exception If an error occurs.
      **/
     public static void main(String args[]) throws Exception {
         System.out.println("Polynomial test");

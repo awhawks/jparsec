@@ -15,6 +15,7 @@ public class TelescopeControlPanelTest {
      * Test program.
      *
      * @param args Not used.
+     * @throws Exception If an error occurs.
      */
     public static void main(String args[]) throws Exception {
         // Translate.setDefaultLanguage(LANGUAGE.SPANISH);

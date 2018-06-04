@@ -31,6 +31,7 @@ import jparsec.astrophysics.MeasureElement;
 import jparsec.math.GenericFit;
 import jparsec.math.LinearFit;
 import jparsec.math.Polynomial;
+import jparsec.math.Regression;
 import jparsec.util.JPARSECException;
 
 /**

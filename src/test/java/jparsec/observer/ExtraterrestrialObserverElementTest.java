@@ -16,6 +16,7 @@ public class ExtraterrestrialObserverElementTest {
      * Test program.
      *
      * @param args Not used.
+     * @throws Exception If an error occurs.
      */
     public static void main(String args[]) throws Exception {
         System.out.println("ExtraterrestrialObserverElement test");

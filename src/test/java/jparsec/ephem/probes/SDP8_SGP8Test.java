@@ -20,6 +20,7 @@ public class SDP8_SGP8Test {
      * Test program.
      *
      * @param args Not used.
+     * @throws Exception If an error occurs.
      */
     public static void main(String args[]) throws Exception {
         AstroDate astro = new AstroDate(2011, AstroDate.OCTOBER, 27, 13, 29, 0);

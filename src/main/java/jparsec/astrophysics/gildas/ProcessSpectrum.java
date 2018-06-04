@@ -83,8 +83,7 @@ public class ProcessSpectrum {
 
 	/**
 	 * Sets the maximum number of iterations when computing fitting Gaussians. Default value
-	 * is 3000, but could be too high. Internally the method {@linkplain Regression#setMaximumNumberOfInterationsForNelderAndMeadSimplex(int)}
-	 * is called with this value.
+	 * is 3000, but could be too high.
 	 */
 	public static int maximumNumberOfIterationsForNelderAndMeadSimplexInRegressionClass = 3000;
 
@@ -939,7 +938,7 @@ public class ProcessSpectrum {
 	 * automatically.
 	 */
 	public void fixLevel0() {
-		double m = this.getMeanAround(v, v.length/2, v.length/2+1);
+		double m = getMeanAround(v, v.length/2, v.length/2+1);
 //		double s = getSigma(v);
 
 //		if (Math.abs(m) > TIMES_SIGMA * s) { // FIXME TIMES_SIGMA wasn't here at the beggining, I put it after and then decided to eliminate it again

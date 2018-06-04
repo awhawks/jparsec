@@ -7,6 +7,7 @@ public class VAX2EEEITest {
      * Testing program
      *
      * @param args Unused.
+     * @throws Exception If an error occurs.
      */
     public static void main(String args[]) throws Exception {
         System.out.println("VAX2EEEI test");

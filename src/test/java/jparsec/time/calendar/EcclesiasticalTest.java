@@ -7,6 +7,7 @@ public class EcclesiasticalTest {
      * Test program.
      *
      * @param args Unused.
+     * @throws Exception If an error occurs.
      */
     public static void main(String args[]) throws Exception {
         System.out.println("Ecclesiastical test");

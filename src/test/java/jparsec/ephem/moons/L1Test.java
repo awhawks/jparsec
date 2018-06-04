@@ -7,8 +7,7 @@ import static org.testng.Assert.assertEquals;
 public class L1Test {
     /**
      * Testing program.
-     * <p/>
-     * //@param args Not used.
+     * @param args Not used.
      */
     public static void main(String args[]) {
         for (int nsat = 1; nsat <= 4; nsat++) {

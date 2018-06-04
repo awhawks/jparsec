@@ -16,6 +16,8 @@ import jparsec.time.TimeScale;
 public class RenderPlanetTest {
     /**
      * For unit testing only.
+     * @param arg Not used.
+     * @throws Exception If an error occurs.
      */
     public static void main(String arg[]) throws Exception {
         System.out.println("RenderPlanet test");

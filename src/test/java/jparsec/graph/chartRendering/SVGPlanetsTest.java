@@ -8,6 +8,7 @@ public class SVGPlanetsTest {
      * Test program.
      *
      * @param args Not used.
+     * @throws Exception If an error occurs.
      */
     public static void main(String[] args) throws Exception {
         Picture p = new Picture(SVGPlanets.drawIcon(Target.TARGET.VENUS, 4));

@@ -113,7 +113,7 @@ public class StarEphem
 	 * original list was filtered to reduce the number of stars to 109. Some indexes will be 
 	 * equal or greater to 8884, requiring to set the flag {@linkplain #READ_STARS_BEYOND_MAG_6_5}
 	 * to true to read them. The first 12 values in the array are the top 12 naked eye variables 
-	 * stars given by Sky & Telescope (http://www.skyandtelescope.com/observing/celestial-objects-to-watch/the-top-12-naked-eye-variable-stars/),
+	 * stars given by Sky &amp; Telescope (http://www.skyandtelescope.com/observing/celestial-objects-to-watch/the-top-12-naked-eye-variable-stars/),
 	 * then the list is completed up to 25 with the ones visible to naked eye in H. Levy's book.
 	 */
 	public static final int[] MAIN_VARIABLE_STARS = new int[] {

@@ -5,6 +5,7 @@ public class EgyptianTest {
      * For unit testing only.
      *
      * @param args Not used.
+     * @throws Exception If an error occurs.
      */
     public static void main(final String args[]) throws Exception {
         System.out.println("Egyptian Test");

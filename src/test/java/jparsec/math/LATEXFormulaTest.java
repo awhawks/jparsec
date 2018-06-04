@@ -8,6 +8,7 @@ public class LATEXFormulaTest {
      * Test program.
      *
      * @param args Unused.
+     * @throws Exception If an error occurs.
      */
     public static void main(String[] args) throws Exception {
         String expression = LATEXFormula.getIntegral("t=0", "2pi") +

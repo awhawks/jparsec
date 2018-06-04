@@ -8,6 +8,7 @@ public class Spectrum30mTest {
     /**
      * Test program.
      * @param args Not used.
+     * @throws Exception If an error occurs.
      */
     public static void main(String args[]) throws Exception {
         //String path = "/home/alonso/colaboraciones/Asuncion/2011/figurasMuchasLineas_MonR2/broad-2-new.30m";

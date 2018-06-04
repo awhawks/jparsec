@@ -11,6 +11,7 @@ public class UpdateRun {
      * For unit testing only.
      *
      * @param args Not used.
+     * @throws Exception If an error occurs.
      */
     public static void main(String args[]) throws Exception {
         System.out.println("Update test");

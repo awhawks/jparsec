@@ -8,7 +8,8 @@ public class LocationElementTest {
     /**
      * For unit testing only.
      *
-     * @param args Not used.
+     *@param args Not used.
+     * @throws Exception If an error occurs.
      */
     public static void main(String args[]) throws Exception {
         System.out.println("LocationElement test");

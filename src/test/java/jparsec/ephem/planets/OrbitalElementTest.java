@@ -17,6 +17,7 @@ public class OrbitalElementTest {
      * Test program.
      *
      * @param args Not used.
+     * @throws Exception If an error occurs.
      */
     public static void main(String args[]) throws Exception {
         AstroDate astro = new AstroDate(1991, 10, 5.0);

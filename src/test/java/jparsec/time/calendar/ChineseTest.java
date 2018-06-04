@@ -7,6 +7,7 @@ public class ChineseTest {
      * For unit testing only.
      *
      * @param args Not used.
+     * @throws JPARSECException If an error occurs.
      */
     public static void main(String args[]) throws JPARSECException {
         System.out.println("Chinese test");

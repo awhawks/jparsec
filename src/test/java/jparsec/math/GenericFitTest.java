@@ -10,6 +10,7 @@ public class GenericFitTest {
      * Test program.
      *
      * @param args Not used.
+     * @throws Exception If an error occurs.
      */
     public static void main(String args[]) throws Exception {
         System.out.println("Let's fit a set of data to the function p1 * Math.sin(x) + p2 * Math.sin(2.0*x) + p3 * Math.sin(3.0*x)");

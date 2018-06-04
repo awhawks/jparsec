@@ -336,10 +336,15 @@ public class Version
 						"Planets and satellites did not appear correctly in white color mode.\n"+
 						"Better performance for the overlay of deep sky textures, and fix for Mel111 position.\n"+
 						"Better axes labels, milky way and ecliptic cuts with the horizon, and some other sky rendering fixes.\n",
-				"      1.115: Some bug fixes (Dec XX, 2017):\n"+
+				"      1.115: Some bug fixes (June 6, 2018):\n"+
 						"The math library by Michael Thomas Flanagan is now an external dependency (simplifies fiting spectra to several Gaussians simultaneously).\n"+
 						"Trajectories are now rendered in front of the background objects for NEOs and artificial satellites.\n"+
-						"Images and text files (for updates) can be downloaded with https protocol, but only in Linux (using wget).\n"
+						"Images and text files (for updates) can be downloaded with https protocol, but only in Linux (using wget).\n"+
+						"Events of maximum aperture of Saturn rings and comets close to Earth were computed wrong with input dates close to the event date.\n"+
+						"Some bug fixes in VisualLimit class.\n"+
+						"Sky rendering supports transparency images that can be used to render Stellarium-like scenes (see the ephemerides server).\n"+
+						"Italian language supported thanks to Angelo Nicolini.\n"+
+						"Many other minor fixes (see https://bitbucket.org/talonsoalbi/jparsec/commits/all).\n"
 
 				+FileIO.getLineSeparator(),
 		};

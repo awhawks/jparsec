@@ -11,6 +11,7 @@ public class FFTTest {
      * Test program.
      *
      * @param args Not used.
+     * @throws Exception If an error occurs.
      */
     public static void main(String[] args) throws Exception {
         String path = "/home/alonso/reduccion/2006/hot_cores/n7129/n7129.30m";

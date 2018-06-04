@@ -7,6 +7,7 @@ public class Gildas30mTest {
      * A test program.
      *
      * @param args Unused.
+     * @throws Exception If an error occurs.
      */
     public static void main(String args[]) throws Exception {
         System.out.println("Gildas30m test");

@@ -10,6 +10,7 @@ public class GUST86Test {
      * Test program.
      *
      * @param args Not used.
+     * @throws Exception If an error occurs.
      */
     public static void main(String args[]) throws Exception {
         AstroDate astro = new AstroDate(1995, 7, 10, 15, 0, 0);

@@ -11,6 +11,7 @@ public class SExtractorTest {
      * Test program.
      *
      * @param args Unused.
+     * @throws Exception If an error occurs.
      */
     public static void main(String args[]) throws Exception {
         System.out.println("SExtractor test");

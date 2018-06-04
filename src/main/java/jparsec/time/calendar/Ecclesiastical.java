@@ -83,7 +83,7 @@ public class Ecclesiastical implements Serializable
 	/**
 	 * Gets the Easter from an alternative method not based on Calendrical Calculations.
 	 *
-	 * @param l y.
+	 * @param y year.
 	 * @return Easter fixed day.
 	 */
 	public static long easter(long y) {

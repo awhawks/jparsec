@@ -18,6 +18,7 @@ public class ProjectionTest {
      * Test program.
      *
      * @param args Unused.
+     * @throws Exception If an error occurs.
      */
     public static void main(String args[]) throws Exception {
         // Define date
