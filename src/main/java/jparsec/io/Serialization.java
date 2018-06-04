@@ -255,6 +255,43 @@ public class Serialization
 	}
 
 	/**
+	 * Reads several objects using serialization.
+	 * @param filePath Path for the file.
+	 * @return The object array.
+	 * @throws JPARSECException If an error occurs.
+	 */
+	public static ArrayList readObjectsAsList(String filePath)
+	throws JPARSECException {
+		ArrayList v = new ArrayList();
+		try {
+			 //  Create a stream for reading.
+		      FileInputStream fis = new FileInputStream( filePath );
+
+		      //  Next, create an object that can read from that file.
+		      ObjectInputStream inStream = new ObjectInputStream( fis );
+
+		      boolean moreObjects = true;
+		      do {
+		    	  // Retrieve the Serializable object.
+		    	  Object serialObject = inStream.readObject();
+		    	  if (serialObject instanceof String && "NO_MORE_OBJECTS".equals(serialObject)) {
+		    		  moreObjects = false;
+		    	  } else {
+		    		  v.add(serialObject);
+		    	  }
+		      } while (moreObjects);
+
+		      inStream.close();
+		      fis.close();
+		} catch (Exception e)
+		{
+			throw new JPARSECException ("error reading serial object "+(v.size()+1)+".", e);
+		}
+
+		return v;
+	}
+	
+	/**
 	 * Reads several objects using serialization, skipping possible errors.
 	 * Should not be used, since it could hang the process.
 	 * @param filePath Path for the file.

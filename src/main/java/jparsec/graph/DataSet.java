@@ -3507,7 +3507,7 @@ public class DataSet
 			out[oindex] = list[index];
 			oindex ++;
 
-			v[index] = Double.MIN_VALUE;
+			v[index] = -Double.MAX_VALUE;
 		} while (oindex < list.length);
 		return out;
 	}

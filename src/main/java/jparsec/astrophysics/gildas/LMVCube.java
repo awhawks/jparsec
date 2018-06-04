@@ -421,7 +421,9 @@ public class LMVCube implements Serializable
             epoch = convert.readFloat(abyte0, c);
             //int lengthOfProjectionSection =
             	convert.readInt(abyte0, c + 4);
-            projectionType = PROJECTION.values()[convert.readInt(abyte0, c + 4 + 4)];
+            projectionType = PROJECTION.TAN;
+            int pi = convert.readInt(abyte0, c + 4 + 4);
+            if (pi < PROJECTION.values().length) projectionType = PROJECTION.values()[pi];
             axis1Pos = convert.readDouble(abyte0, c + 4 + 4 + 4);
             axis2Pos = convert.readDouble(abyte0, c + 4 + 4 + 4 + 8);
             axis12PA = convert.readDouble(abyte0, c + 4 + 4 + 4 + 8 + 8);
@@ -455,7 +457,7 @@ public class LMVCube implements Serializable
         }
         catch(Exception exception)
         {
-            throw new JPARSECException(exception);
+            throw new JPARSECException(JPARSECException.getTrace(exception.getStackTrace()));
         }
     }
 

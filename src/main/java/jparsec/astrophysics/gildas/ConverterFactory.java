@@ -79,14 +79,15 @@ public class ConverterFactory
      */
     public static Convertible getConvertibleImage(char c)
     {
-        if(c == '_')
+        if (c == '_')
             return new VAX2EEEI();
-        if(c == '-')
+        if (c == '-')
             return new IEEE2EEEI();
-        if(c == '.')
+        if (c == '.')
             return new EEEI2EEEI();
         try {
-			JPARSECException.addWarning("Could not find suitable format reader for this image file");
+			JPARSECException.addWarning("Could not find suitable format reader for this image file, "
+					+ "valid format identifiers are _-. and found '"+c+"' ("+(int) c+")");
 		} catch (Exception e) { }
         return null;
     }

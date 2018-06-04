@@ -1338,7 +1338,7 @@ public class LATEXReport implements Serializable
 	}
 
 	/**
-	 * Writes the code for an image tag. Not compatible with HTML.
+	 * Writes the code for an image tag.
 	 * @param width Width.
 	 * @param height Height.
 	 * @param align Align.

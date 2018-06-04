@@ -8941,6 +8941,7 @@ public class RenderSky
 			if (highPrecision && !projection.eph.preferPrecisionInEphemerides) highPrecision = false;
 
 			/* space motion */
+			if (baryc == null) baryc = Ephem.eclipticToEquatorial(PlanetEphem.getGeocentricPosition(equinox, TARGET.Solar_System_Barycenter, 0.0, false, projection.obs), Constant.J2000, projection.eph);
 			if (projection.eph.ephemType != COORDINATES_TYPE.GEOMETRIC && properM > 0)
 			{
 				double p[] = new double[3];

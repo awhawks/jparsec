@@ -72,9 +72,10 @@ public class Ecclesiastical implements Serializable
 	public static long easterFromCalendricalCalculations(long l)
 	{
 		long l1 = 1L + Calendar.quotient(l, 100D);
-		long l2 = Calendar.mod(((14L + 11L * Calendar.mod(l, 19L)) - Calendar.quotient(3L * l1, 4D)) + Calendar
-				.quotient(5L + 8L * l1, 25D), 30L);
-		long l3 = l2 != 0L && (l2 != 1L || Calendar.mod(l, 19L) <= 10L) ? l2 : l2 + 1L;
+		long l2 = Calendar.mod(((14L + 11L * Calendar.mod(l, 19L)) - Calendar.quotient(3L * l1, 4D)) + 
+				Calendar.quotient(5L + 8L * l1, 25D), 30L);
+		long l3 = l2 + 1L;
+		if (l2 == 0L || (l2 == 1L && Calendar.mod(l, 19L) > 10L)) l3 = l2;
 		long l4 = new Gregorian(l, 4, 19).fixed - l3;
 		return Calendar.kDayAfter(l4, 0);
 	}

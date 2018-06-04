@@ -27,6 +27,7 @@ import java.io.Serializable;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 
 import jparsec.graph.DataSet;
 import jparsec.io.FileIO;
@@ -325,5 +326,39 @@ public class ADSQuery implements Serializable {
     	} catch (Exception exc) {
     		throw new JPARSECException("Could not create the query", exc);
     	}
+    }
+
+    /**
+     * Returns the ADS elements for all the articles of a given author and year range, including 
+     * the titles of the Papers.
+     * @param authorName Author name, for instance "Alonso-Albi, T.".
+     * @param year0 The initial year for the search, for instance 2000.
+     * @param yearf The final year for the search.
+     * @return The ADS objects representing the articles.
+     * @throws JPARSECException If an error occurs.
+     */    
+    public static ADSElement[] getArticles(String authorName, int year0, int yearf) throws JPARSECException {
+		String out = ADSQuery.query(ADSQuery.getAuthorQuery(authorName, year0, yearf));
+		
+		// Parse the output to get the abstracts and download the PDFs	
+		String o[] = DataSet.toStringArray(out, FileIO.getLineSeparator(), true);
+		ArrayList<Object> list = new ArrayList<Object>();
+		ADSElement ads = null;
+		for (int i=0; i<o.length; i++) {
+			if (o[i].trim().startsWith("@")) {
+				int n = o[i].indexOf("{");
+				String abs = o[i].substring(n+1);
+				if (abs.endsWith(",")) abs = abs.substring(0, abs.length()-1);
+				ads = new ADSElement(abs);
+			}
+			if (o[i].trim().startsWith("title") && ads != null) {
+				String title = o[i].substring(o[i].indexOf("{")+1);
+				title = title.substring(0, title.lastIndexOf("}"));
+				ads.title = title;
+				list.add(ads);
+				ads = null;
+			}
+		}
+		return (ADSElement[]) DataSet.toObjectArray(list);
     }
 }

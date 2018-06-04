@@ -259,6 +259,15 @@ public class HTMLReport implements Serializable {
 		this.writeTextWithStyleAndColor(title);
 		htmlCode.append("</h1>" + sep);
 	}
+
+	/**
+	 * Calls {@linkplain #writeMainTitle(String)}.
+	 * @param title The title.
+	 */
+	public void beginSection(String title) {
+		writeMainTitle(title);
+	}
+	
 	/**
 	 * Writes a big title.
 	 * @param title Text of the title.

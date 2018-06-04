@@ -52,14 +52,18 @@ public class ADSElement implements Serializable {
 	 */
 	public String publicationType;
 	/**
-	 * Page numebr.
+	 * Page number.
 	 */
 	public int page;
 	/**
-	 * Author surname.
+	 * Author name.
 	 */
 	public String author;
-
+	/**
+	 * Paper title. This data is sometimes not available.
+	 */
+	public String title;
+	
 	private String bibTex;
 
 	/**
@@ -304,6 +308,7 @@ public class ADSElement implements Serializable {
 		s.publicationType = this.publicationType;
 		s.volume = this.volume;
 		s.year = this.year;
+		s.title = this.title;
 		return s;
 	}
 	/**
@@ -320,6 +325,7 @@ public class ADSElement implements Serializable {
 		if (page != that.page) return false;
 		if (journal != null ? !journal.equals(that.journal) : that.journal != null) return false;
 		if (volume != null ? !volume.equals(that.volume) : that.volume != null) return false;
+		if (title != null ? !title.equals(that.title) : that.title != null) return false;
 		if (publicationType != null ? !publicationType.equals(that.publicationType) : that.publicationType != null)
 			return false;
 		if (author != null ? !author.equals(that.author) : that.author != null) return false;
@@ -330,6 +336,7 @@ public class ADSElement implements Serializable {
 	@Override
 	public int hashCode() {
 		int result = year;
+		result = 31 * result + (title != null ? title.hashCode() : 0);
 		result = 31 * result + (journal != null ? journal.hashCode() : 0);
 		result = 31 * result + (volume != null ? volume.hashCode() : 0);
 		result = 31 * result + (publicationType != null ? publicationType.hashCode() : 0);
