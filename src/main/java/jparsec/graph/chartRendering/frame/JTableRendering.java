@@ -1,7 +1,10 @@
 package jparsec.graph.chartRendering.frame;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -10,9 +13,14 @@ import java.beans.PropertyChangeListener;
 import java.util.Arrays;
 import java.util.Comparator;
 
+import javax.swing.JList;
+import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
@@ -40,10 +48,13 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 	private final String SEPARATOR = "@<>@"; // A strange separator that is never used in the fields
 	private String selectedRow;
 	private int colColumn = -1;
-	private String[] colVal;
+	private String[] colVal, columnToolTips;
 	private Color[] colCol;
 	private String columnNames[];
 	private Class<?> columnClasses[];
+	private int alignment[];
+	private String separator = ",";
+	
 	/**
 	 * Constructor for a table.
 	 * @param columns The names of the columns.
@@ -83,6 +94,16 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 		}
 	}
 
+	/**
+	 * Sets the separator used to show in one cell multiple lines of text ({@inheritDoc JList}).
+	 * In the table data the list of items will be an unique string, that should be separated 
+	 * in a list with the separator provided here. Default is a comma. 
+	 * @param s The separator for lists of items in one cell.
+	 */
+	public void setSeparatorForLists(String s) {
+		separator = s;
+	}
+	
 	/**
 	 * Returns the table component.
 	 * @return The table.
@@ -167,6 +188,16 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 	}
 
 	/**
+	 * Sets the alignment of the data in each columns
+	 * @param ca An array of integers (length equals to the number of columns) 
+	 * with constants selecting the alignment. Constant defined in {@linkplain SwingConstants}
+	 * for left, right, and center alignment.
+	 */
+	public void setColumnAlignments(int ca[]) {
+		alignment = ca;
+	}
+
+	/**
 	 * Sets the width in pixels for a given column at startup.
 	 * @param width The set of widths for each column.
 	 */
@@ -174,6 +205,14 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 		for (int i=0; i<width.length; i++) {
 			table.getColumnModel().getColumn(i).setPreferredWidth(width[i]);
 		}
+	}
+	
+	/**
+	 * Set text tooltips for each columns in the header of the table.
+	 * @param tt Tooltips, or null to hide all.
+	 */
+	public void setColumnToolTips(String tt[]) {
+		columnToolTips = tt;
 	}
 
 	/**
@@ -214,8 +253,8 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 	        	 return columnClasses[i];
 	         }
 	         public Object getValueAt(int row, int col) {
-	        	 if (columnClasses[col] == Boolean.class) return Boolean.parseBoolean(lineTable[row][col]);
-	        	 if (columnClasses[col] == Integer.class) return Integer.parseInt(lineTable[row][col]);
+	        	 if (columnClasses[col] == Boolean.class) return new Boolean(Boolean.parseBoolean(lineTable[row][col]));
+	        	 if (columnClasses[col] == Integer.class) return new Integer(Integer.parseInt(lineTable[row][col]));
 	        	 if (columnClasses[col] == Double.class) return Double.parseDouble(lineTable[row][col]);
 	        	 if (columnClasses[col] == Float.class) return Float.parseFloat(lineTable[row][col]);
 	        	 if (columnClasses[col] == Long.class) return Long.parseLong(lineTable[row][col]);
@@ -240,7 +279,17 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 	        		 }
 	        		 return;
 	        	 }
-	        	 lineTable[row][col] = (String) b;
+	        	 if (columnClasses[col] == JList.class) {
+	        		 String cell = "";
+	        		 ListModel lm = ((JList) b).getModel();
+	        		 for (int i=0; i<lm.getSize();i++) {
+	        			 cell += ((String) lm.getElementAt(i));
+	        			 if (i < lm.getSize()-1) cell += separator;
+	        		 }
+	        		 lineTable[row][col] = cell;
+	        	 } else {
+	        		 lineTable[row][col] = (String) b;
+	        	 }
         		 valueChanging = true;
 	         }
 	         public boolean isCellEditable(int row, int column)
@@ -256,9 +305,39 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 		{
 			private static final long serialVersionUID = 1L;
 
+			@Override
+			public TableCellRenderer getCellRenderer(int row, int column) {
+				TableCellRenderer tcr = super.getCellRenderer(row, column);
+				if (tcr instanceof DefaultTableCellRenderer && alignment != null) {
+					((DefaultTableCellRenderer) tcr).setHorizontalAlignment(alignment[column]);
+					((DefaultTableCellRenderer) tcr).setHorizontalTextPosition(alignment[column]);
+				}
+				return tcr;
+			}
 			public Component prepareRenderer(TableCellRenderer renderer,
                     int rowIndex, int vColIndex) {
 				Component c = super.prepareRenderer(renderer, rowIndex, vColIndex);
+				if (columnClasses[vColIndex] == JList.class) {
+					String s = ((DefaultTableCellRenderer) c).getText();
+					c = new JPanel();
+					((JPanel) c).setBackground(null);
+					String ss[] = DataSet.toStringArray(s, separator, false);
+					JList list = new JList(ss);
+					list.setFont(table.getFont());
+					list.setBackground(null);
+					
+					int w = -1;
+					for (int i=0; i<ss.length; i++) {
+						int d = list.getFontMetrics(getFont()).stringWidth(ss[i]);
+						if (d > w || w == -1) w = d;
+					}
+					
+					c.setSize(new Dimension(w + list.getFont().getSize()/3, 
+							(list.getFont().getSize() + list.getFont().getSize() / 3) * 2));
+					((FlowLayout) ((JPanel) c).getLayout()).setVgap(0);
+					((FlowLayout) ((JPanel) c).getLayout()).setHgap(0);
+					((JPanel) c).add(list);
+				}
 				int row = this.convertRowIndexToModel(rowIndex);
 				c.setForeground(null);
 				if (colColumn >= 0 && colCol != null && colVal != null) {
@@ -285,6 +364,20 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 				}
 				return c;
 			}
+			
+		    // Implement table header tool tips.
+		    protected JTableHeader createDefaultTableHeader() {
+		        return new JTableHeader(columnModel) {
+		            public String getToolTipText(MouseEvent e) {
+		            	if (columnToolTips == null) return null;
+		                String tip = null;
+		                java.awt.Point p = e.getPoint();
+		                int index = columnModel.getColumnIndexAtX(p.x);
+		                int realIndex = columnModel.getColumn(index).getModelIndex();
+		                return columnToolTips[realIndex];
+		            }
+		        };
+		    }
 		};
 		table.getSelectionModel().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
@@ -368,6 +461,7 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 
     	this.sortColumn(table.getModel(), column, this.ascending[column]);
     	table.revalidate();
+    	table.repaint();
     }
 
 	@Override

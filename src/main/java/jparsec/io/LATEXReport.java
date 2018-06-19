@@ -1670,11 +1670,13 @@ public class LATEXReport implements Serializable
 
 		String out = "";
 		try {
-			Process p = ApplicationLauncher.executeCommand("latex "+outputDir+" -interaction=batchmode " + path, null, new File(od));
+			//String com = "latex "+outputDir+" -interaction=batchmode " + path;
+			String com[] = new String[] {"latex", outputDir, "-interaction=batchmode", path};
+			Process p = ApplicationLauncher.executeCommand(com, null, new File(od));
 			p.waitFor();
-			p = ApplicationLauncher.executeCommand("latex "+outputDir+" -interaction=batchmode " + path, null, new File(od));
+			p = ApplicationLauncher.executeCommand(com, null, new File(od));
 			p.waitFor();
-			p = ApplicationLauncher.executeCommand("latex "+outputDir+" -interaction=batchmode " + path, null, new File(od));
+			p = ApplicationLauncher.executeCommand(com, null, new File(od));
 			p.waitFor();
 			out = ApplicationLauncher.getConsoleOutputFromProcess(p);
 		} catch (Exception exc) {}
@@ -1715,7 +1717,9 @@ public class LATEXReport implements Serializable
 		String dviName = path.substring(0, path.lastIndexOf(".")) + ".dvi";
 		LATEXReport.compileLatexToDVI(path);
 		String psName = dviName.substring(0, dviName.lastIndexOf(".")) + ".ps";
-		Process p = ApplicationLauncher.executeCommand("dvips -o "+psName+" " + dviName, null, new File(FileIO.getDirectoryFromPath(dviName)));
+		//String com = "dvips -o "+psName+" " + dviName;
+		String com[] = new String[] {"dvips", "-o", psName, dviName};
+		Process p = ApplicationLauncher.executeCommand(com, null, new File(FileIO.getDirectoryFromPath(dviName)));
 		try {
 			p.waitFor();
 			LATEXReport.deleteTemporalFiles(path);
@@ -1733,6 +1737,7 @@ public class LATEXReport implements Serializable
 	public static String compileLatexToPDF(String path)
 	throws JPARSECException {
 		if (!path.endsWith(".tex")) path += ".tex";
+
 		LATEXReport.deleteTemporalFiles(path);
 
 		String outputDir = "";
@@ -1742,11 +1747,13 @@ public class LATEXReport implements Serializable
 
 		//String out = "";
 		try {
-			Process p = ApplicationLauncher.executeCommand("pdflatex "+outputDir+" -interaction=batchmode " + path, null, new File(od));
+			//String com = "pdflatex "+outputDir+" -interaction=batchmode " + path;
+			String com[] = new String[] {"pdflatex", outputDir, "-interaction=batchmode", path};
+			Process p = ApplicationLauncher.executeCommand(com, null, new File(od));
 			p.waitFor();
-			p = ApplicationLauncher.executeCommand("pdflatex "+outputDir+" -interaction=batchmode " + path, null, new File(od));
+			p = ApplicationLauncher.executeCommand(com, null, new File(od));
 			p.waitFor();
-			p = ApplicationLauncher.executeCommand("pdflatex "+outputDir+" -interaction=batchmode " + path, null, new File(od));
+			p = ApplicationLauncher.executeCommand(com, null, new File(od));
 			p.waitFor();
 			//out = ApplicationLauncher.getConsoleOutputFromProcess(p);
 			LATEXReport.deleteTemporalFiles(path);
@@ -1770,12 +1777,17 @@ public class LATEXReport implements Serializable
 		String pdfName = dviName.substring(0, dviName.lastIndexOf(".")) + ".pdf";
 		Process p;
 		try {
-			p = ApplicationLauncher.executeCommand("rm "+pdfName);
+			//String com1 = "rm "+pdfName;
+			String com1[] = new String[] {"rm", pdfName};
+			p = ApplicationLauncher.executeCommand(com1);
 			p.waitFor();
-			p = ApplicationLauncher.executeCommand("dvipdf -sOutputFile="+pdfName+" " + dviName, null, new File(FileIO.getDirectoryFromPath(dviName)));
-		} catch (Exception exc)
-		{
-			p = ApplicationLauncher.executeCommand("dvipdfm -o "+pdfName+" " + dviName, null, new File(FileIO.getDirectoryFromPath(dviName)));
+			//String com2 = "dvipdf -sOutputFile="+pdfName+" " + dviName;
+			String com2[] = new String[] {"dvipdf", "-sOutputFile="+pdfName, dviName};
+			p = ApplicationLauncher.executeCommand(com2, null, new File(FileIO.getDirectoryFromPath(dviName)));
+		} catch (Exception exc) {
+			//String com3 = "dvipdfm -o "+pdfName+" " + dviName;
+			String com3[] = new String[] {"dvipdfm", "-o", pdfName, dviName};
+			p = ApplicationLauncher.executeCommand(com3, null, new File(FileIO.getDirectoryFromPath(dviName)));
 		}
 
 		try {

@@ -157,7 +157,7 @@ public class AstroDate implements Serializable
 
 	/**
 	 * Creates an instance from a date expressed in a common way,
-	 * like the standarized format Fri, 29 Jul 2011 23:30:44 +0200,
+	 * like the standardized format Fri, 29 Jul 2011 23:30:44 +0200,
 	 * a simple way like 2001 Jan 1 or Feb 17 2005 10:00:00, MJD50000.125,
 	 * and so on.<P>
 	 * The date is parsed by means of the cds package.
@@ -166,6 +166,8 @@ public class AstroDate implements Serializable
 	 */
 	public AstroDate(String cdsDate)
 	throws JPARSECException {
+		
+		// Attempt to read using the standardized format: Fri, 29 Jul 2011 23:30:44 +0200
 		try {
 			String date = cdsDate;
 			if (date.indexOf(",") > 0) date = date.substring(date.indexOf(",")+1).trim();
@@ -202,7 +204,29 @@ public class AstroDate implements Serializable
 			if (year < 0) year ++;
 			return;
 		} catch (Exception exc) {}
-
+		
+		// Attempt to read using the long full format: September 5, 2012 [, 00:00:00.000]
+		try {
+			String f[] = DataSet.toStringArray(cdsDate, ",", false);
+			int mo = 1 + DataSet.getIndex(MONTH_NAMES, FileIO.getField(1, f[0], " ", true).trim());
+			int da = Integer.parseInt(FileIO.getField(2, f[0], " ", true).trim());
+			int yr = Integer.parseInt(f[1].trim());
+			int hr = 0, mn = 0;
+			double se = 0;
+			if (f.length > 2) {
+				String f2[] = DataSet.toStringArray(f[2], ":", false);
+				hr = Integer.parseInt(f2[0].trim());
+				mn = Integer.parseInt(f2[1].trim());
+				se = Double.parseDouble(f2[2].trim());
+			}
+			year = yr;
+			month = mo;
+			day = da;
+			second = se + mn * Constant.SECONDS_PER_MINUTE + hr * Constant.SECONDS_PER_HOUR;
+			return;
+		} catch (Exception exc) { exc.printStackTrace(); }
+		
+		// Attempt to read using CDS for other formats
 		try {
 			Class<?> c = Class.forName("cds.astro.Astrotime");
 			Object t = c.newInstance();
@@ -881,7 +905,7 @@ public class AstroDate implements Serializable
 
 	/**
 	 * Convert this {@linkplain AstroDate} instance to a String,
-	 * formatted like 'September, 5, 2012 [, 00:00]'.
+	 * formatted like 'September 5, 2012 [, 00:00]'.
 	 *
 	 * @param showTime true to show the time.
 	 * @return A formatted date/time String.
@@ -893,6 +917,24 @@ public class AstroDate implements Serializable
 		AstroDate astro = new AstroDate(this.jd() + 0.5 / 1440.0); // round up minute
 		String date = astro.toStringDate();
 		if (showTime) date += ", "+Functions.fmt(astro.getHour(), 2, ':') + Functions.fmt(astro.getMinute(), 2);
+		return date;
+	}
+	
+	/**
+	 * Convert this {@linkplain AstroDate} instance to a String,
+	 * formatted like 'September 5, 2012 [, 00:00:00.000]'.
+	 *
+	 * @param showTime true to show the time.
+	 * @param nsec Decimal places for the seconds.
+	 * @return A formatted date/time String.
+	 * @throws JPARSECException If the calendar month is invalid.
+	 */
+	public String toStringDateWithSeconds(boolean showTime, int nsec) throws JPARSECException
+	{
+		if (!showTime) return toStringDate();
+		String date = toStringDate();
+		if (showTime) date += ", "+Functions.fmt(getHour(), 2, ':') + Functions.fmt(getMinute(), 2, ':') + 
+				Functions.formatValue(getSeconds(), nsec, 2, false);
 		return date;
 	}
 
