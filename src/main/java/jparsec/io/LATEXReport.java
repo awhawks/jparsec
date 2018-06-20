@@ -134,6 +134,7 @@ public class LATEXReport implements Serializable
 		latexCode.append("\\usepackage{ragged2e}" + sep);
 		latexCode.append("\\usepackage{setspace}" + sep);
 		latexCode.append("\\usepackage{pdfpages}" + sep);
+		latexCode.append("\\usepackage[space]{grffile}" + sep);
 		//latexCode.append("\\usepackage{blindtext}" + sep);
 		latexCode.append("\\usepackage[usenames]{color}" + sep);
 		latexCode.append("\\usepackage{natbib}" + sep);
@@ -185,6 +186,7 @@ public class LATEXReport implements Serializable
 		latexCode.append("\\usepackage{ragged2e}" + sep);
 		latexCode.append("\\usepackage{setspace}" + sep);
 		latexCode.append("\\usepackage{pdfpages}" + sep);
+		latexCode.append("\\usepackage[space]{grffile}" + sep);
 		//latexCode.append("\\usepackage{blindtext}" + sep);
 		latexCode.append("\\usepackage[usenames]{color}" + sep);
 		latexCode.append("\\usepackage{natbib}" + sep);
@@ -239,6 +241,7 @@ public class LATEXReport implements Serializable
 		latexCode.append("\\usepackage{ragged2e}" + sep);
 		latexCode.append("\\usepackage{setspace}" + sep);
 		latexCode.append("\\usepackage{pdfpages}" + sep);
+		latexCode.append("\\usepackage[space]{grffile}" + sep);
 		latexCode.append("\\usepackage{natbib}" + sep);
 		if (packages != null && packages.length > 0) {
 			for (int i=0; i<packages.length; i++) {
@@ -319,6 +322,7 @@ public class LATEXReport implements Serializable
 		latexCode.append("\\usepackage{ragged2e}" + sep);
 		latexCode.append("\\usepackage{setspace}" + sep);
 		latexCode.append("\\usepackage{pdfpages}" + sep);
+		latexCode.append("\\usepackage[space]{grffile}" + sep);
 		if (packages != null && packages.length > 0) {
 			for (int i=0; i<packages.length; i++) {
 				latexCode.append("\\usepackage{"+packages[i]+"}" + sep);

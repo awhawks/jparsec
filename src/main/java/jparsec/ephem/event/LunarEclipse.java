@@ -81,14 +81,21 @@ public class LunarEclipse
 		boolean inside_shadow = false, totality = false;
 		boolean inside_penumbra = false, totality_penumbra = false;
 		if (targetBody != TARGET.Moon) {
-			// Project satellite on planet's equator
-			double f = (ephem_moon.distance * Constant.AU * Math.sin(ephem_moon.elongation) - motherBody.equatorialRadius);
-			if (f <= targetBody.equatorialRadius) inside_shadow = true;
-			if (f <= - targetBody.equatorialRadius) totality = true;
-			// Correction for penumbra
-			f -= targetBody.equatorialRadius * (ephem.angularRadius / ephem_moon.angularRadius);
-			if (f <= targetBody.equatorialRadius) inside_penumbra = true;
-			if (f <= - targetBody.equatorialRadius) totality_penumbra = true;
+			// Locate the position of the planet shadow cone (opposite direction of the geocentric position of the Sun)
+			LocationElement loc = new LocationElement(ephem.rightAscension + Math.PI, -ephem.declination, 1);
+			// Distance to the geocentric position of the moon
+			double d = LocationElement.getAngularDistance(loc, ephem_moon.getEquatorialLocation());
+			// Get better estimate of angle contributions of mother planet, satellite, and Sun. 
+			// Note ss is not fully accurate, should be size as visible from the satellite, not the geocenter
+			double s = Math.asin(motherBody.equatorialRadius / (ephem_moon.distance * Constant.AU));
+			double sm = Math.asin(targetBody.equatorialRadius / (ephem_moon.distance * Constant.AU));
+			double ss = Math.asin(TARGET.SUN.equatorialRadius / (ephem.distance * Constant.AU));
+			
+			// Apply eclipse conditions (more or less)
+			if (d < s + sm + ss * 2) inside_penumbra = true;
+			if (d < s - sm + ss * 2) totality_penumbra = true;
+			if (d < s + ephem_moon.angularRadius) inside_shadow = true;
+			if (d < s - ephem_moon.angularRadius) totality = true;
 
 			boolean out[] = new boolean[] { inside_penumbra, totality_penumbra, inside_shadow, totality };
 			return out;

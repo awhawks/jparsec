@@ -3321,6 +3321,7 @@ public class RenderPlanet
 	 */
 	public static LocationElement identifyFeature(String name, TARGET target)
 	{
+		if (name == null || name.trim().equals("")) return null;
 		name = name.toLowerCase();
 		String feature = null;
 		LocationElement out = null;

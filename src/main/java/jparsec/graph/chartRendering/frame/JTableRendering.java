@@ -54,6 +54,7 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 	private Class<?> columnClasses[];
 	private int alignment[];
 	private String separator = ",";
+	private boolean allowHighlightRow = true;
 	
 	/**
 	 * Constructor for a table.
@@ -222,6 +223,15 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 	public void setColumnNames(String names[]) {
 		this.columnNames = names.clone();
 	}
+	
+	/**
+	 * Sets if all rows should be highlighted when a cell is selected.
+	 * Default is true;
+	 * @param h True or false.
+	 */
+	public void setAllowHighLightRow(boolean h) {
+		allowHighlightRow = h;
+	}
 
 	/**
 	 * Returns the selected row after a mouse click event.
@@ -340,6 +350,14 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 				}
 				int row = this.convertRowIndexToModel(rowIndex);
 				c.setForeground(null);
+				if (isCellSelected(rowIndex, vColIndex) || 
+						isRowSelected(rowIndex) && allowHighlightRow) {
+					c.setBackground(getSelectionBackground());
+					return c;
+				} else {
+					// If not shaded, match the table's background
+					c.setBackground(getBackground());
+				}
 				if (colColumn >= 0 && colCol != null && colVal != null) {
 					String f = lineTable[row][colColumn];
 					int index = DataSet.getIndex(colVal, f);
@@ -356,12 +374,6 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 					}
 				}
 				
-				if (isCellSelected(rowIndex, vColIndex)) {
-					c.setBackground(getSelectionBackground());
-				} else {
-					// If not shaded, match the table's background
-					c.setBackground(getBackground());
-				}
 				return c;
 			}
 			
@@ -370,7 +382,6 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 		        return new JTableHeader(columnModel) {
 		            public String getToolTipText(MouseEvent e) {
 		            	if (columnToolTips == null) return null;
-		                String tip = null;
 		                java.awt.Point p = e.getPoint();
 		                int index = columnModel.getColumnIndexAtX(p.x);
 		                int realIndex = columnModel.getColumn(index).getModelIndex();
@@ -384,6 +395,7 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 		table.setAutoCreateColumnsFromModel(false);
 		table.setColumnSelectionAllowed(true);
 		table.setRowSelectionAllowed(true);
+		table.setAutoCreateRowSorter(true);
 		table.setCellSelectionEnabled(true);
 		table.addPropertyChangeListener(this);
 		table.addMouseListener(this);
@@ -400,13 +412,18 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 	 * @param show True to update the view.
 	 */
 	public void updateTable(String stable[][], boolean show) {
+		table.invalidate();
 		if (stable != null) {
 			updateData(stable);
 		}
-		int index = -1;
-        if (tableSorted >= 0) sortColumn(table.getModel(), tableSorted, tableSortAscending);
+		table.validate();
+		table.getRowSorter().allRowsChanged();
+		
+		//int index = -1;
+        //if (tableSorted >= 0) sortColumn(table.getModel(), tableSorted, tableSortAscending);
         if (show) {
 	    	table.revalidate();
+	    	/*
 			if (selectedRow != null) {
 		    	  for (int i=0; i<lineTable.length; i++) {
 		    		  String li = DataSet.toString(lineTable[i], SEPARATOR);
@@ -421,6 +438,7 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
     		} else {
     			table.clearSelection();
     		}
+    		*/
 	    	for (int i=0; i<columnNames.length; i++) {
 	    		tableHeader.getColumnModel().getColumn(i).setHeaderValue(columnNames[i]);
 	    	}
@@ -431,6 +449,7 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 
     //  Regardless of sort order (ascending or descending), null values always appear last.
     // colIndex specifies a column in model.
+	/*
 	private int tableSorted = -1;
 	private boolean tableSortAscending = false;
     private void sortColumn(TableModel model, int colIndex, boolean ascending) {
@@ -463,7 +482,8 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
     	table.revalidate();
     	table.repaint();
     }
-
+	*/
+	
 	@Override
 	public void propertyChange(PropertyChangeEvent arg0) {
 			valueChanging = false;
@@ -471,10 +491,11 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-       	if (e.getSource() == this.tableHeader) {
+/*       	if (e.getSource() == this.tableHeader) {
     		TableColumnModel columnModel = table.getColumnModel();
     		int viewColumn = columnModel.getColumnIndexAtX(e.getX());
     		if (viewColumn != -1) {
+    			
 	    		int column = table.convertColumnIndexToModel(viewColumn);
 	    		if (e.getClickCount() == 1 && column != -1) {
 	    		      this.sortByColumn(column);
@@ -482,7 +503,8 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 	    		    	  for (int i=0; i<lineTable.length; i++) {
 	    		    		  String li = DataSet.toString(lineTable[i], SEPARATOR);
 	    		    		  if (selectedRow.equals(li)) {
-	    		    			  table.setRowSelectionInterval(i, i);
+	    		    			  if (i >= 0 && i < table.getRowCount()) 
+	    		    				  table.setRowSelectionInterval(i, i);
 	    		    			  return;
 	    		    		  }
 	    		    	  }
@@ -491,6 +513,7 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
     		}
     		return;
     	}
+*/
   		if (e.getSource() == table) {
 			int row = table.getSelectedRow();
 			if (row < 0) return;
