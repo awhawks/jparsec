@@ -839,6 +839,28 @@ public class CreateChart implements Serializable
 		chartPanel.setMouseWheelEnabled(true);
 		return chartPanel;
 	}
+	
+	/**
+	 * Returns the JPanel for the chart.
+	 * @return The component.
+	 * @param prop Show properties option in popup menu.
+	 * @param copy Show copy option in popup menu.
+	 * @param save Show save option in popup menu.
+	 * @param print Show print option in popup menu.
+	 * @param zoom Show zoom option in popup menu.
+	 * @param scale Show scale option in popup menu.
+	 * @throws JPARSECException If an error occurs.
+	 */
+	public ChartPanel getComponent(boolean prop, boolean copy, boolean save, boolean print, boolean zoom, boolean scale)
+	throws JPARSECException {
+		int w = chart_elem.imageWidth;
+		int h = chart_elem.imageHeight;
+		ChartPanel chartPanel = new ChartPanel(getChart(), w, h, w/2, h/2, w*2, h*2, true, prop, copy, save, print, zoom, scale);
+		chartPanel.setPreferredSize(new java.awt.Dimension(w, h));
+		chartPanel.setDisplayToolTips(true);
+		chartPanel.setMouseWheelEnabled(true);
+		return chartPanel;
+	}
 
 	/**
 	 * Shows the main chart in an JFreeChart panel.

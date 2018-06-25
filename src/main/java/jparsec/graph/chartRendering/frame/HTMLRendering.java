@@ -109,7 +109,7 @@ public class HTMLRendering extends JDialog implements ActionListener, Serializab
 		jEditorPane_Message.setPreferredSize(size);
 		jEditorPane_Message.setMargin(new Insets(0, 0, 0, 0));
 		jEditorPane_Message.setForeground(Color.BLACK);
-		jEditorPane_Message.setEnabled(false);
+		jEditorPane_Message.setEnabled(true);
 		jEditorPane_Message.setBackground(background);
 		jEditorPane_Message.setOpaque(true);
 		scrollpane = new JScrollPane(jEditorPane_Message);

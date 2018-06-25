@@ -256,7 +256,7 @@ public class HTMLReport implements Serializable {
 		if (!header) try { writeHeader(""); } catch (Exception exc) {}
 		if (!body) try { beginBody(); } catch (Exception exc) {}
 		htmlCode.append("<h1>");
-		this.writeTextWithStyleAndColor(title);
+		this.writeTextWithStyleAndColor(title, false);
 		htmlCode.append("</h1>" + sep);
 	}
 
@@ -277,7 +277,7 @@ public class HTMLReport implements Serializable {
 		if (!header) try { writeHeader(""); } catch (Exception exc) {}
 		if (!body) try { beginBody(); } catch (Exception exc) {}
 		htmlCode.append("<h2>");
-		this.writeTextWithStyleAndColor(title);
+		this.writeTextWithStyleAndColor(title, false);
 		htmlCode.append("</h2>" + sep);
 	}
 	/**
@@ -289,7 +289,7 @@ public class HTMLReport implements Serializable {
 		if (!header) try { writeHeader(""); } catch (Exception exc) {}
 		if (!body) try { beginBody(); } catch (Exception exc) {}
 		htmlCode.append("<h3>");
-		this.writeTextWithStyleAndColor(title);
+		this.writeTextWithStyleAndColor(title, false);
 		htmlCode.append("</h3>" + sep);
 	}
 	/**
@@ -304,7 +304,7 @@ public class HTMLReport implements Serializable {
 		for (int i=0; i<lines.length; i++)
 		{
 			htmlCode.append("<li>");
-			this.writeTextWithStyleAndColor(lines[i]);
+			this.writeTextWithStyleAndColor(lines[i], true);
 			htmlCode.append("</li>" + sep);
 		}
 		htmlCode.append("</ul>" + sep);
@@ -318,7 +318,7 @@ public class HTMLReport implements Serializable {
 		if (!header) try { writeHeader(""); } catch (Exception exc) {}
 		if (!body) try { beginBody(); } catch (Exception exc) {}
 		htmlCode.append("<p>");
-		this.writeTextWithStyleAndColor(text);
+		this.writeTextWithStyleAndColor(text, true);
 		htmlCode.append("</p>" + sep);
 	}
 	/**
@@ -331,7 +331,7 @@ public class HTMLReport implements Serializable {
 		if (!header) try { writeHeader(""); } catch (Exception exc) {}
 		if (!body) try { beginBody(); } catch (Exception exc) {}
 		htmlCode.append("<p "+options+">");
-		this.writeTextWithStyleAndColor(text);
+		this.writeTextWithStyleAndColor(text, false);
 		htmlCode.append("</p>" + sep);
 	}
 	/**
@@ -456,7 +456,7 @@ public class HTMLReport implements Serializable {
 		for (int i=0; i<columns.length; i++)
 		{
 			htmlCode.append("<td"+prop+">"+sep);
-			this.writeTextWithStyleAndColor(columns[i]);
+			this.writeTextWithStyleAndColor(columns[i], true);
 			htmlCode.append(sep);
 			htmlCode.append("</td>"+sep);
 		}
@@ -509,7 +509,7 @@ public class HTMLReport implements Serializable {
 		for (int i=0; i<columns.length; i++)
 		{
 			htmlCode.append("<td"+prop+" title=\""+title[i]+"\">"+sep);
-			this.writeTextWithStyleAndColor(columns[i]);
+			this.writeTextWithStyleAndColor(columns[i], true);
 			htmlCode.append(sep);
 			htmlCode.append("</td>"+sep);
 		}
@@ -718,10 +718,12 @@ public class HTMLReport implements Serializable {
 	{
 		this.textColor = color;
 	}
-	private void writeTextWithStyleAndColor(String text)
+	private void writeTextWithStyleAndColor(String text, boolean useSize)
 	{
 		htmlCode.append(this.getBeginOfCurrentStyle());
-		htmlCode.append("<font size=\""+(2+this.textSize.ordinal())+"\" color = \"#"+this.textColor+"\">");
+		String size = "";
+		if (useSize) size = "size=\""+(2+this.textSize.ordinal())+"\"";
+		htmlCode.append("<font "+size+" color = \"#"+this.textColor+"\">");
 		htmlCode.append(HTMLReport.format(text));
 		htmlCode.append("</font>");
 		htmlCode.append(this.getEndOfCurrentStyle());

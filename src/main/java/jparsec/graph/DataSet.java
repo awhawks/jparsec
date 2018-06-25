@@ -1801,35 +1801,19 @@ public class DataSet
 	 */
 	public static int getIndexContaining(String x[], String px)
 	{
-		int max = x.length;
-		for (int i=0; i<max; i++)
+		for (int i=0; i<x.length; i++)
 		{
-			if (x[i] == null) {
-				max = i;
-				break;
-			}
+			if (x[i] == null) continue;
 			if (x[i].indexOf(px) >= 0)
 				return i;
 		}
-		for (int i=0; i<max; i++)
+		for (int i=0; i<x.length; i++)
 		{
+			if (x[i] == null) continue;
 			if (x[i].toLowerCase().indexOf(px.toLowerCase()) >= 0) {
 				return i;
 			}
 		}
-/*		for (int i=0; i<max; i++)
-		{
-			if (px.indexOf(x[i]) >= 0 && !x[i].isEmpty()) {
-				return i;
-			}
-		}
-		for (int i=0; i<max; i++)
-		{
-			if (px.toLowerCase().indexOf(x[i].toLowerCase()) >= 0 && !x[i].isEmpty()) {
-				return i;
-			}
-		}
-*/
 		return -1;
 	}
 
@@ -1846,26 +1830,10 @@ public class DataSet
 		int max = x.length;
 		for (int i=0; i<max; i++)
 		{
-			if (x[i] == null) {
-				max = i;
-				break;
-			}
+			if (x[i] == null) continue;
 			if (x[i].indexOf(px) >= 0)
 				return i;
 		}
-/*		for (int i=0; i<max; i++)
-		{
-			if (px.indexOf(x[i]) >= 0 && !x[i].isEmpty()) {
-				return i;
-			}
-		}
-		for (int i=0; i<max; i++)
-		{
-			if (px.toLowerCase().indexOf(x[i].toLowerCase()) >= 0 && !x[i].isEmpty()) {
-				return i;
-			}
-		}
-*/
 		return -1;
 	}
 
@@ -1881,12 +1849,14 @@ public class DataSet
 	{
 		for (int i=0; i<x.length; i++)
 		{
+			if (x[i] == null) continue;
 			if (x[i].startsWith(px)) {
 				return i;
 			}
 		}
 		for (int i=0; i<x.length; i++)
 		{
+			if (x[i] == null) continue;
 			if (x[i].toLowerCase().startsWith(px.toLowerCase())) {
 				return i;
 			}
@@ -1906,12 +1876,14 @@ public class DataSet
 	{
 		for (int i=0; i<x.length; i++)
 		{
+			if (x[i] == null) continue;
 			if (x[i].endsWith(px)) {
 				return i;
 			}
 		}
 		for (int i=0; i<x.length; i++)
 		{
+			if (x[i] == null) continue;
 			if (x[i].toLowerCase().endsWith(px.toLowerCase())) {
 				return i;
 			}

@@ -80,18 +80,20 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 			}
 		}
 		createTable();
+		lineTableOriginal = lineTable.clone();
 	}
 
 	private void updateData(String table[][]) {
+		if (table == null || table.length == 0) {
+			lineTable = new String[0][0];
+			return;
+		}
 		lineTable = new String[table.length][table[0].length+1];
-		lineTableOriginal = new String[table.length][table[0].length+1];
 		for (int i=0; i<table.length; i++) {
 			for (int j=0; j<table[i].length; j++) {
 				lineTable[i][j] = table[i][j];
-				lineTableOriginal[i][j] = table[i][j];
 			}
 			lineTable[i][lineTable[0].length-1] = ""+i;
-			lineTableOriginal[i][lineTable[0].length-1] = ""+i;
 		}
 	}
 
@@ -118,14 +120,7 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 	 * @return The data, ordered as [rows][columns].
 	 */
 	public String[][] getOriginalTableData() {
-		String ltOriginal[][] = new String[lineTable.length][lineTable[0].length-1];
-		for (int i=0; i<lineTable.length; i++) {
-			for (int j=0; j<lineTable[i].length-1; j++) {
-				ltOriginal[i][j] = lineTableOriginal[i][j];
-				ltOriginal[i][j] = lineTableOriginal[i][j];
-			}
-		}
-		return ltOriginal;
+		return lineTableOriginal.clone();
 	}
 
 	/**
@@ -263,11 +258,22 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 	        	 return columnClasses[i];
 	         }
 	         public Object getValueAt(int row, int col) {
-	        	 if (columnClasses[col] == Boolean.class) return new Boolean(Boolean.parseBoolean(lineTable[row][col]));
-	        	 if (columnClasses[col] == Integer.class) return new Integer(Integer.parseInt(lineTable[row][col]));
-	        	 if (columnClasses[col] == Double.class) return Double.parseDouble(lineTable[row][col]);
-	        	 if (columnClasses[col] == Float.class) return Float.parseFloat(lineTable[row][col]);
-	        	 if (columnClasses[col] == Long.class) return Long.parseLong(lineTable[row][col]);
+	        	 if (lineTable.length == 0) return null;
+	        	 if (row > lineTable.length || col > lineTable[0].length || lineTable[row][col] == null)
+	        		 return null;
+	        	 if (!lineTable[row][col].equals("")) {
+		        	 if (columnClasses[col] == Boolean.class) return new Boolean(Boolean.parseBoolean(lineTable[row][col]));
+		        	 if (columnClasses[col] == Integer.class) return new Integer(Integer.parseInt(lineTable[row][col]));
+		        	 if (columnClasses[col] == Double.class) return Double.parseDouble(lineTable[row][col]);
+		        	 if (columnClasses[col] == Float.class) return Float.parseFloat(lineTable[row][col]);
+		        	 if (columnClasses[col] == Long.class) return Long.parseLong(lineTable[row][col]);
+	        	 }
+	        	 if (columnClasses[col] == Boolean.class) return null;
+	        	 if (columnClasses[col] == Integer.class) return null;
+	        	 if (columnClasses[col] == Double.class) return null;
+	        	 if (columnClasses[col] == Float.class) return null;
+	        	 if (columnClasses[col] == Long.class) return null;
+	        	 
 	        	 String out = lineTable[row][col];
 	        	 return out;
 	         }
@@ -403,7 +409,7 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 		tableHeader.addMouseListener(this);
 		Font h = tableHeader.getFont();
 		tableHeader.setFont(new Font(h.getFontName(), Font.BOLD, h.getSize()));
-		updateTable(null, true);
+		updateTable(lineTable, true);
 	}
 
 	/**
@@ -412,10 +418,10 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 	 * @param show True to update the view.
 	 */
 	public void updateTable(String stable[][], boolean show) {
+		int row = table.getSelectedRow();
+		
 		table.invalidate();
-		if (stable != null) {
-			updateData(stable);
-		}
+		updateData(stable);
 		table.validate();
 		table.getRowSorter().allRowsChanged();
 		
@@ -444,6 +450,11 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 	    	}
 	    	table.repaint();
 	    	tableHeader.repaint();
+        }
+        
+        if (row >= 0 && lineTable != null && row < lineTable.length) {
+        	this.selectedRow = DataSet.toString(lineTable[row], SEPARATOR);
+        	table.setRowSelectionInterval(row, row);
         }
 	}
 
