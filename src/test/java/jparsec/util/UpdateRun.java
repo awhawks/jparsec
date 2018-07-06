@@ -26,6 +26,7 @@ public class UpdateRun {
      //         http://exoplanetarchive.ipac.caltech.edu/cgi-bin/nstedAPI/nph-nstedAPI?table=exoplanets&select=pl_hostname,ra,dec,st_dist,st_mass,pl_masse,pl_rade,pl_trandur,pl_trandep,pl_orbeccen,pl_orbincl,pl_orblper,pl_orbsmax,pl_orbtper,pl_pelink,pl_name,st_vj&order=pl_masse&format=ascii
      // Space probes
      // Other: Planetary features, SkyViewData
+     // Sunspot: http://fenyi.solarobs.csfk.mta.hu/en/databases/DPD/
         
         // 1. Backup Files eop.jar, sunspot.jar, orbital_elements.jar, sky.jar, jpl.jar, cologne.jar
         // 2. Execute everything by parts

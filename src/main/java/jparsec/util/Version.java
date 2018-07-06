@@ -344,7 +344,9 @@ public class Version
 						"Some bug fixes in VisualLimit class.\n"+
 						"Sky rendering supports transparency images that can be used to render Stellarium-like scenes (see the ephemerides server).\n"+
 						"Italian language supported thanks to Angelo Nicolini.\n"+
-						"Many other minor fixes (see https://bitbucket.org/talonsoalbi/jparsec/commits/all).\n"
+						"Many other minor fixes (see https://bitbucket.org/talonsoalbi/jparsec/commits/all).\n",
+				"      1.116: XXX (October X, 2018) :\n"+
+						"Orbital elements updated.\n"
 
 				+FileIO.getLineSeparator(),
 		};
@@ -353,12 +355,12 @@ public class Version
 		// Dependencies for JPARSEC programs and models
 		String library[] = new String[] {
 			// Dependency name                             Version
-			"jparsec.jar                                   1.115",
+			"jparsec.jar                                   1.116",
 
-			"sky.jar                                       1.43",
-			"orbital_elements.jar                          1.27",
-			"sunspot.jar                                   1.17",
-			"eop.jar                                       1.16",
+			"sky.jar                                       1.44",
+			"orbital_elements.jar                          1.28",
+			"sunspot.jar                                   1.18",
+			"eop.jar                                       1.17",
 
 			"flanagan.jar                                  1.00",
 			"sgt_v30.jar                                   1.06",

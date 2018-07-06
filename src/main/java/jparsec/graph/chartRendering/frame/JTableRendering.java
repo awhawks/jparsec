@@ -341,7 +341,8 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 					JList list = new JList(ss);
 					list.setFont(table.getFont());
 					list.setBackground(null);
-					
+					list.setForeground(null);
+
 					int w = -1;
 					for (int i=0; i<ss.length; i++) {
 						int d = list.getFontMetrics(getFont()).stringWidth(ss[i]);

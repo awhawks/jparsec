@@ -304,10 +304,23 @@ public class Picture
 	 * @param a The alpha channel. Can be null.
 	 */
 	public void setColor(int r[][], int g[][], int b[][], int a[][]) {
-		for (int j=0; j<r[0].length; j++)
+		int d1 = 0, d2 = 0;
+		if (r != null) {
+			d1 = r.length;
+			d2 = r[0].length;
+		}
+		if (g != null) {
+			d1 = g.length;
+			d2 = g[0].length;
+		}
+		if (b != null) {
+			d1 = b.length;
+			d2 = b[0].length;
+		}
+		for (int j=0; j<d2; j++)
 		{
-			int rgb[] = new int[r.length];
-			for (int i=0; i<r.length; i++)
+			int rgb[] = new int[d1];
+			for (int i=0; i<d1; i++)
 			{
 				int rc = 0, gc = 0, bc = 0, ac = 0;
 				if (r != null) rc = r[i][j];
@@ -329,7 +342,7 @@ public class Picture
 					rgb[i] = Functions.getColor(rc, gc, bc, 255);
 				}
 			}
-	        image.setRGB(0, j, r.length, 1, rgb, 0, r.length);
+	        image.setRGB(0, j, d1, 1, rgb, 0, d1);
 		}
 	}
 
@@ -341,11 +354,24 @@ public class Picture
 	 * @param a The alpha channel. Can be null.
 	 */
 	public void setColor(byte r[][], byte g[][], byte b[][], byte a[][]) {
+		int d1 = 0, d2 = 0;
+		if (r != null) {
+			d1 = r.length;
+			d2 = r[0].length;
+		}
+		if (g != null) {
+			d1 = g.length;
+			d2 = g[0].length;
+		}
+		if (b != null) {
+			d1 = b.length;
+			d2 = b[0].length;
+		}
 		int add = 128;
-		for (int j=0; j<r[0].length; j++)
+		for (int j=0; j<d2; j++)
 		{
-			int rgb[] = new int[r.length];
-			for (int i=0; i<r.length; i++)
+			int rgb[] = new int[d1];
+			for (int i=0; i<d1; i++)
 			{
 				int rc = add, gc = add, bc = add, ac = 0;
 				if (r != null) rc += r[i][j];
@@ -361,7 +387,7 @@ public class Picture
 					rgb[i] = Functions.getColor(rc, gc, bc, 255);
 				}
 			}
-	        image.setRGB(0, j, r.length, 1, rgb, 0, r.length);
+	        image.setRGB(0, j, d1, 1, rgb, 0, d1);
 		}
 	}
 

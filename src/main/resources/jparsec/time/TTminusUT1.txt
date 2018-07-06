@@ -1234,9 +1234,15 @@
  2017  4  1  68.7135
  2017  5  1  68.7623
  2017  6  1  68.8033
- 2018  68.9    extrapolated
- 2019  69.2    extrapolated
- 2020  69.5    extrapolated
+ 2017  7  1  68.8245
+ 2017  8  1  68.8373
+ 2017  9  1  68.8477
+ 2017 10  1  68.8689
+ 2017 11  1  68.9006
+ 2017 12  1  68.9355
+ 2018  69.0    extrapolated
+ 2019  69.5    extrapolated
+ 2020  70.0    extrapolated
 ! Approximate formulae is used 365 days after the last data available here.
 ! To avoid the discontinuity between those two methods (around 1s) add
 ! more extrapolated dates here from http://maia.usno.navy.mil/ser7/deltat.data
