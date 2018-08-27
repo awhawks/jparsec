@@ -1783,9 +1783,12 @@ public class Spectrum30m implements Serializable
 		double jdRed = ared.jd();
 		ut = AstroDate.getDayFraction(jdObs) * Constant.TWO_PI;
 		String dlst = (ImageHeaderElement.getByKey(head, "LST")).value;
-		dlst = "2000-01-01 "+dlst;
-		AstroDate alst = new AstroDate(dlst);
-		lst = AstroDate.getDayFraction(alst.jd()) * Constant.TWO_PI;
+
+		double val[] = DataSet.toDoubleValues(DataSet.toStringArray(dlst, ":", false));
+		lst = (val[0] + val[1] / 60.0 + val[2] / 3600.0) * Constant.TWO_PI / 24.0;
+		//dlst = "2000-01-01 "+dlst;
+		//AstroDate alst = new AstroDate(dlst);
+		//lst = AstroDate.getDayFraction(alst.jd()) * Constant.TWO_PI;
 
         map = new TreeMap<String,Parameter>();
         map.put(Gildas30m.LDOBS, new Parameter(ConverterFactory.getGILDASdate(jdObs), Gildas30m.LDOBS_DESC));

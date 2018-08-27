@@ -3163,6 +3163,39 @@ public class LMVCube implements Serializable
 
 		return gridChart;
  	}
+ 	
+ 	/**
+ 	 * Returns a chart of the integrated intensity around a given range of planes.
+ 	 * @param plane0 First plane number (first is 0) to start integrating the emission.
+ 	 * @param plane1 Last plane index for integrating the emission.
+ 	 * @return The chart.
+ 	 * @throws JPARSECException If an error occurs.
+ 	 */
+ 	public CreateGridChart getChart(int plane0, int plane1) throws JPARSECException {
+		String unit = fluxUnit.trim();
+		if (unit.equals("Jy/beam")) unit = "Jy beam^{-1}";
+		String l = "#"+plane0+"-"+plane1;
+
+		float x0 = (float) (getx0() * Constant.RAD_TO_ARCSEC);
+		float xf = (float) (getxf() * Constant.RAD_TO_ARCSEC);
+		float y0 = (float) (gety0() * Constant.RAD_TO_ARCSEC);
+		float yf = (float) (getyf() * Constant.RAD_TO_ARCSEC);
+		float data[][] = null;
+		data = this.integratedIntensity(plane0, plane1);
+		unit += " (km/s)";
+		GridChartElement chart = new GridChartElement(l,
+				this.axis1Label.trim()+" offset (\")", this.axis2Label.trim()+" offset (\")", unit,
+				GridChartElement.COLOR_MODEL.BLUE_TO_RED,
+				new double[] {x0, xf, y0, yf}, DataSet.toDoubleArray(data),
+				null, 600);
+		chart.type = TYPE.RASTER_CONTOUR;
+		chart.levelsOrientation = GridChartElement.WEDGE_ORIENTATION.HORIZONTAL_BOTTOM;
+		chart.levelsBorderStyle = GridChartElement.WEDGE_BORDER.NO_BORDER;
+
+		CreateGridChart gridChart = new CreateGridChart(chart);
+
+		return gridChart;
+ 	}
 
  	/**
  	 * Returns the spectra along a given strip of this cube between two equatorial positions. The strip is

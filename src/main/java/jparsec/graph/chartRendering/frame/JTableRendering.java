@@ -1,6 +1,5 @@
 package jparsec.graph.chartRendering.frame;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -10,7 +9,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Arrays;
 import java.util.Comparator;
 
 import javax.swing.JList;
@@ -23,12 +21,11 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 import jparsec.ephem.Functions;
 import jparsec.graph.DataSet;
-import jparsec.io.FileIO;
 import jparsec.time.TimeElement;
 import jparsec.util.JPARSECException;
 
@@ -52,6 +49,7 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 	private Color[] colCol;
 	private String columnNames[];
 	private Class<?> columnClasses[];
+	private Class<?> columnClassesForSort[];
 	private int alignment[];
 	private String separator = ",";
 	private boolean allowHighlightRow = true;
@@ -79,6 +77,37 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 				columnClasses[i] = String.class;
 			}
 		}
+		createTable();
+		lineTableOriginal = lineTable.clone();
+	}
+
+	/**
+	 * Constructor for a table.
+	 * @param columns The names of the columns.
+	 * @param classes The classes in each column. Valid values are numbers (Integer, ...), Boolean
+	 * and String classes. Set the entire array to null to use String for all columns, or any of the elements
+	 * to null to use String but letting the value to be parsed to an angle formatted by the methods in
+	 * {@linkplain Functions} or a date formatted in {@linkplain TimeElement}.
+	 * @param editable True or false to allow or not to edit columns. Set to
+	 * null to set all to false for String and true for Boolean.
+	 * @param table The table, ordered as [rows][columns].
+	 * @param sortClasses The column classes for sorting. Only columns of type Double for set and 
+	 * type String for visualization will be considered, creating an specific sorter for them.
+	 * @throws JPARSECException If an error occurs.
+	 */
+	public JTableRendering(String columns[], Class<?> classes[], boolean editable[], String table[][], 
+			Class<?> sortClasses[]) throws JPARSECException  {
+		columnNames = columns;
+		columnClasses = classes;
+		this.editable = editable;
+		updateData(table);
+		if (columnClasses == null) {
+			columnClasses = new Class<?>[columns.length];
+			for (int i=0; i<columns.length; i++) {
+				columnClasses[i] = String.class;
+			}
+		}
+		columnClassesForSort = sortClasses;
 		createTable();
 		lineTableOriginal = lineTable.clone();
 	}
@@ -199,6 +228,7 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 	 */
 	public void setColumnWidth(int width[]) {
 		for (int i=0; i<width.length; i++) {
+			if (table.getColumnModel().getColumnCount() <= i) break;
 			table.getColumnModel().getColumn(i).setPreferredWidth(width[i]);
 		}
 	}
@@ -218,7 +248,15 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 	public void setColumnNames(String names[]) {
 		this.columnNames = names.clone();
 	}
-	
+
+	/**
+	 * Returns the names of the columns.
+	 * @return The column names.
+	 */
+	public String[] getColumnNames() {
+		return columnNames.clone();
+	}
+
 	/**
 	 * Sets if all rows should be highlighted when a cell is selected.
 	 * Default is true;
@@ -259,7 +297,7 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 	         }
 	         public Object getValueAt(int row, int col) {
 	        	 if (lineTable.length == 0) return null;
-	        	 if (row > lineTable.length || col > lineTable[0].length || lineTable[row][col] == null)
+	        	 if (row >= lineTable.length || col >= lineTable[0].length || lineTable[row][col] == null)
 	        		 return null;
 	        	 if (!lineTable[row][col].equals("")) {
 		        	 if (columnClasses[col] == Boolean.class) return new Boolean(Boolean.parseBoolean(lineTable[row][col]));
@@ -391,7 +429,9 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 		            	if (columnToolTips == null) return null;
 		                java.awt.Point p = e.getPoint();
 		                int index = columnModel.getColumnIndexAtX(p.x);
+		                if (index < 0) return null;
 		                int realIndex = columnModel.getColumn(index).getModelIndex();
+		                if (realIndex >= columnToolTips.length) return null;
 		                return columnToolTips[realIndex];
 		            }
 		        };
@@ -402,7 +442,7 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 		table.setAutoCreateColumnsFromModel(false);
 		table.setColumnSelectionAllowed(true);
 		table.setRowSelectionAllowed(true);
-		table.setAutoCreateRowSorter(true);
+		//table.setAutoCreateRowSorter(true);
 		table.setCellSelectionEnabled(true);
 		table.addPropertyChangeListener(this);
 		table.addMouseListener(this);
@@ -410,9 +450,28 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 		tableHeader.addMouseListener(this);
 		Font h = tableHeader.getFont();
 		tableHeader.setFont(new Font(h.getFontName(), Font.BOLD, h.getSize()));
+
+		TableRowSorter<TableModel> sorter = new TableRowSorter(table.getModel());
+		if (columnClassesForSort != null) {
+			for (int i=0; i<columnClassesForSort.length; i++) {
+				if (columnClassesForSort[i] == Double.class && 
+						columnClasses[i] == String.class) {
+					sorter.setComparator(i, new Comparator<String>() {
+					    @Override
+					    public int compare(String name1, String name2) {
+					    	Double d1 = Double.parseDouble(name1);
+					    	Double d2 = Double.parseDouble(name2);
+					    	return d1.compareTo(d2);
+					    }
+					});
+				}
+			}
+		}
+		table.setRowSorter(sorter);
+
 		updateTable(lineTable, true);
 	}
-
+	
 	/**
 	 * Updates the contents of the table.
 	 * @param stable The new table.
@@ -420,16 +479,20 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 	 */
 	public void updateTable(String stable[][], boolean show) {
 		int row = table.getSelectedRow();
+		String rowS = null;
+		if (row >= 0) rowS = DataSet.toString(lineTable[row], SEPARATOR);
 		
-		table.invalidate();
 		updateData(stable);
-		table.validate();
-		table.getRowSorter().allRowsChanged();
+		if (table.getRowSorter() != null) {
+			try {
+				table.getRowSorter().allRowsChanged();
+			} catch (Exception exc) {}
+		}
 		
 		//int index = -1;
         //if (tableSorted >= 0) sortColumn(table.getModel(), tableSorted, tableSortAscending);
         if (show) {
-	    	table.revalidate();
+	    	//table.revalidate();
 	    	/*
 			if (selectedRow != null) {
 		    	  for (int i=0; i<lineTable.length; i++) {
@@ -447,16 +510,30 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
     		}
     		*/
 	    	for (int i=0; i<columnNames.length; i++) {
+	    		if (tableHeader.getColumnModel().getColumnCount() <= i) break;
 	    		tableHeader.getColumnModel().getColumn(i).setHeaderValue(columnNames[i]);
 	    	}
 	    	table.repaint();
 	    	tableHeader.repaint();
         }
         
-        if (row >= 0 && lineTable != null && row < lineTable.length) {
-        	this.selectedRow = DataSet.toString(lineTable[row], SEPARATOR);
-        	table.setRowSelectionInterval(row, row);
+        if (row >= 0 && lineTable != null && lineTable.length > 0) {
+        	row = -1;
+        	for (int i=0; i<lineTable.length; i++) {
+        		if (!rowS.startsWith(lineTable[i][0]+SEPARATOR)) continue;
+        		String rs = DataSet.toString(lineTable[i], SEPARATOR);
+        		if (rs.equals(rowS)) {
+        			row = i;
+        			break;
+        		}
+        	}
+        	if (row >= 0) {
+	        	this.selectedRow = DataSet.toString(lineTable[row], SEPARATOR);
+	        	row = table.convertColumnIndexToView(row);
+	        	if (row >= 0 && row < table.getRowCount()) table.setRowSelectionInterval(row, row);
+        	}
         }
+		table.validate();
 	}
 
     //  Regardless of sort order (ascending or descending), null values always appear last.
@@ -529,7 +606,7 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
   		if (e.getSource() == table) {
 			int row = table.getSelectedRow();
 			if (row < 0) return;
-       		this.selectedRow = DataSet.toString(lineTable[row], SEPARATOR);
+       		if (row < lineTable.length) this.selectedRow = DataSet.toString(lineTable[row], SEPARATOR);
        		return;
   		}
 	}
@@ -550,6 +627,7 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 	public void mouseReleased(MouseEvent arg0) {
 	}
 
+	/*
 	class ColumnSorter implements Comparator<Object> {
 	    boolean ascending;
 	    int column;
@@ -639,4 +717,5 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 	        }
 	    }
 	}
+	*/
 }

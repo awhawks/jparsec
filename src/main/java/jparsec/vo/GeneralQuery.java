@@ -373,7 +373,7 @@ public class GeneralQuery implements Serializable {
     throws JPARSECException
     {
     	try {
-    		if (timeout <= 0) throw new JPARSECException("Cannot download with timeout <= 0");
+    		if (timeout <= 0) throw new Exception("Cannot download with timeout <= 0");
 
 			URL urlObject = new URL(query);
 			URLConnection con = urlObject.openConnection();
@@ -398,7 +398,7 @@ public class GeneralQuery implements Serializable {
 			return output.toString();
     	} catch (Exception e)
     	{
-    		if (query.startsWith("https") && ApplicationLauncher.getOperatingSystem() == OS.LINUX) {
+    		if (query.startsWith("https")) { // && ApplicationLauncher.getOperatingSystem() != OS.WINDOWS) {
     			try {
     				String f1[] = FileIO.getFiles(FileIO.getTemporalDirectory());
 	    			Process pr = ApplicationLauncher.executeCommand("wget "+query, null, new File(FileIO.getTemporalDirectory()));

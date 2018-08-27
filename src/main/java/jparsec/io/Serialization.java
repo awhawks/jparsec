@@ -159,6 +159,7 @@ public class Serialization
 	 */
 	public static void writeObjects(Object[] serialObject, String filePath)
 	throws JPARSECException {
+		int i = -1;
 		try {
 			//	  Create a stream for writing.
 		    FileOutputStream fos = new FileOutputStream( filePath );
@@ -167,7 +168,7 @@ public class Serialization
 		        new ObjectOutputStream( fos );
 
 		    //  Save each object.
-		    for (int i=0; i<serialObject.length; i++)
+		    for (i=0; i<serialObject.length; i++)
 		    {
 		    	outStream.writeObject( serialObject[i] );
 		    }
@@ -180,7 +181,7 @@ public class Serialization
 		    fos.close();
 		} catch (Exception e)
 		{
-			throw new JPARSECException ("error writting serial object.", e);
+			throw new JPARSECException ("error writting serial object #"+(i+1)+" ("+serialObject[i].getClass()+").", e);
 		}
 	}
 
@@ -192,6 +193,7 @@ public class Serialization
 	 */
 	public static void writeObjects(ArrayList<Object[]> serialObject, String filePath)
 	throws JPARSECException {
+		int i = -1;
 		try {
 			//	  Create a stream for writing.
 		    FileOutputStream fos = new FileOutputStream( filePath );
@@ -200,7 +202,7 @@ public class Serialization
 		        new ObjectOutputStream( fos );
 
 		    //  Save each object.
-		    for (int i=0; i<serialObject.size(); i++)
+		    for (i=0; i<serialObject.size(); i++)
 		    {
 		    	outStream.writeObject( serialObject.get(i) );
 		    }
@@ -213,7 +215,7 @@ public class Serialization
 		    fos.close();
 		} catch (Exception e)
 		{
-			throw new JPARSECException ("error writting serial object.", e);
+			throw new JPARSECException ("error writting serial object "+(i+1)+" ("+serialObject.get(i).getClass()+").", e);
 		}
 	}
 
@@ -246,6 +248,39 @@ public class Serialization
 
 		      inStream.close();
 		      fis.close();
+		} catch (Exception e)
+		{
+			throw new JPARSECException ("error reading serial object "+(v.size()+1)+".", e);
+		}
+
+		return v.toArray();
+	}
+
+	/**
+	 * Reads several objects using serialization.
+	 * @param s Stream to the input file.
+	 * @return The object array.
+	 * @throws JPARSECException If an error occurs.
+	 */
+	public static Object[] readObjects(InputStream s)
+	throws JPARSECException {
+		ArrayList<Object> v = new ArrayList<Object>();
+		try {
+		      //  Next, create an object that can read from that file.
+		      ObjectInputStream inStream = new ObjectInputStream( s );
+
+		      boolean moreObjects = true;
+		      do {
+		    	  // Retrieve the Serializable object.
+		    	  Object serialObject = inStream.readObject();
+		    	  if (serialObject instanceof String && "NO_MORE_OBJECTS".equals(serialObject)) {
+		    		  moreObjects = false;
+		    	  } else {
+		    		  v.add(serialObject);
+		    	  }
+		      } while (moreObjects);
+
+		      inStream.close();
 		} catch (Exception e)
 		{
 			throw new JPARSECException ("error reading serial object "+(v.size()+1)+".", e);

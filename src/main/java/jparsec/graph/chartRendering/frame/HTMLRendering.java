@@ -32,12 +32,16 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.io.Serializable;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JEditorPane;
+import javax.swing.JFrame;
 import javax.swing.JScrollPane;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
 
 import jparsec.util.JPARSECException;
 
@@ -69,9 +73,32 @@ public class HTMLRendering extends JDialog implements ActionListener, Serializab
 	 * @param message Content of the dialog.
 	 * @param icon Frame icon.
 	 * @param showOK True to show the ok button.
+	 * @param parent The parent JFrame, or null.
+	 * @throws JPARSECException If an error occurs.
+	 */
+	public HTMLRendering(String title, String message, BufferedImage icon, boolean showOK, 
+			JFrame parent)
+	throws JPARSECException {
+		super(parent);
+		init(title, message, icon, showOK);
+	}
+	
+	/**
+	 * Constructor for a default HTML non-modal and non-visible dialog.
+	 * Default initial size is 400x400 pixels.
+	 *
+	 * @param title Title.
+	 * @param message Content of the dialog.
+	 * @param icon Frame icon.
+	 * @param showOK True to show the ok button.
 	 * @throws JPARSECException If an error occurs.
 	 */
 	public HTMLRendering(String title, String message, BufferedImage icon, boolean showOK)
+	throws JPARSECException {
+		init(title, message, icon, showOK);
+	}
+
+	private void init(String title, String message, BufferedImage icon, boolean showOK) 
 	throws JPARSECException {
 		this.setVisible(false);
 		if (icon != null) this.setIconImage(icon);
@@ -88,14 +115,27 @@ public class HTMLRendering extends JDialog implements ActionListener, Serializab
 		setTitle(title);
 		if (message.startsWith("file:") || message.startsWith("http:")) {
 			try {
+				jEditorPane_Message.setEditorKit(JEditorPane.createEditorKitForContentType("text/html"));
+				jEditorPane_Message.setEditable(false);
 				jEditorPane_Message.setPage(message);
-			} catch (Exception e) {	}
+				jEditorPane_Message.addHyperlinkListener(new HyperlinkListener() {
+				    public void hyperlinkUpdate(HyperlinkEvent e) {
+				        if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+							try {
+								jEditorPane_Message.setPage(e.getURL());
+							} catch (IOException e1) {
+								e1.printStackTrace();
+							}
+				        }
+				    }
+				});
+			} catch (Exception e) { e.printStackTrace(); }
 		} else {
 			jEditorPane_Message.setText(message);
 		}
 		this.pack();
 	}
-
+	
 	// Component initialization
 	private void initialize(BufferedImage icon, boolean showOK) throws JPARSECException
 	{
@@ -127,6 +167,18 @@ public class HTMLRendering extends JDialog implements ActionListener, Serializab
 		this.addComponentListener(this);
 	}
 
+	/**
+	 * Returns the JButton of the Dialog.
+	 * @return The JButton.
+	 */
+	public JButton getOkButton() { return jButton_Ok; }
+	
+	/**
+	 * Returns the JEditorPane of the Dialog.
+	 * @return The JEditorPane.
+	 */
+	public JEditorPane getEditorPane() { return jEditorPane_Message; }
+	
 	// Overridden so we can exit when window is closed
 	protected void processWindowEvent(WindowEvent e)
 	{

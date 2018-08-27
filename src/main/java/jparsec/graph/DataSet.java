@@ -2043,7 +2043,7 @@ public class DataSet
     }
 
     /**
-     * Appends an object array to another array, conserving to class of the
+     * Appends an object array to another array, conserving the class of the
      * objects in the output array.
      * @param array1 First array.
      * @param array2 Second array to be append at the end of the first one.

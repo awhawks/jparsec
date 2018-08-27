@@ -207,24 +207,57 @@ public class AstroDate implements Serializable
 		
 		// Attempt to read using the long full format: September 5, 2012 [, 00:00:00.000]
 		try {
-			String f[] = DataSet.toStringArray(cdsDate, ",", false);
-			int mo = 1 + DataSet.getIndex(MONTH_NAMES, FileIO.getField(1, f[0], " ", true).trim());
-			int da = Integer.parseInt(FileIO.getField(2, f[0], " ", true).trim());
-			int yr = Integer.parseInt(f[1].trim());
-			int hr = 0, mn = 0;
-			double se = 0;
-			if (f.length > 2) {
-				String f2[] = DataSet.toStringArray(f[2], ":", false);
-				hr = Integer.parseInt(f2[0].trim());
-				mn = Integer.parseInt(f2[1].trim());
-				se = Double.parseDouble(f2[2].trim());
+			if (cdsDate.indexOf(",") > 0) {
+				String f[] = DataSet.toStringArray(cdsDate, ",", false);
+				int mo = 1 + DataSet.getIndex(MONTH_NAMES, FileIO.getField(1, f[0], " ", true).trim());
+				if (mo < 1) throw new Exception("Maybe Spanish ?");
+				int da = Integer.parseInt(FileIO.getField(2, f[0], " ", true).trim());
+				int yr = Integer.parseInt(f[1].trim());
+				int hr = 0, mn = 0;
+				double se = 0;
+				if (f.length > 2) {
+					String f2[] = DataSet.toStringArray(f[2], ":", false);
+					hr = Integer.parseInt(f2[0].trim());
+					mn = Integer.parseInt(f2[1].trim());
+					se = Double.parseDouble(f2[2].trim());
+				}
+				year = yr;
+				month = mo;
+				day = da;
+				second = se + mn * Constant.SECONDS_PER_MINUTE + hr * Constant.SECONDS_PER_HOUR;
+				return;
 			}
-			year = yr;
-			month = mo;
-			day = da;
-			second = se + mn * Constant.SECONDS_PER_MINUTE + hr * Constant.SECONDS_PER_HOUR;
-			return;
-		} catch (Exception exc) { exc.printStackTrace(); }
+		} catch (Exception exc) {
+			try {
+				if (Translate.getDefaultLanguage() == LANGUAGE.SPANISH) {
+					String f[] = DataSet.toStringArray(cdsDate, ",", false);
+					String sm = FileIO.getField(3, f[0], " ", true).trim();
+					int mo = 1 + DataSet.getIndexContaining(Translate.translate(MONTH_NAMES), sm);
+					if (sm.toLowerCase().equals("mayo")) mo = 5;
+					if (mo > 0) {
+						int da = Integer.parseInt(FileIO.getField(1, f[0], " ", true).trim());
+						int yr = Integer.parseInt(FileIO.getField(5, f[0], " ", true).trim());
+						int hr = 0, mn = 0;
+						double se = 0;
+						if (f.length > 1) {
+							String f2[] = DataSet.toStringArray(f[1], ":", false);
+							hr = Integer.parseInt(f2[0].trim());
+							mn = Integer.parseInt(f2[1].trim());
+							se = Double.parseDouble(f2[2].trim());
+						}
+						year = yr;
+						month = mo;
+						day = da;
+						second = se + mn * Constant.SECONDS_PER_MINUTE + hr * Constant.SECONDS_PER_HOUR;
+						return;
+					}
+				}
+			} catch (Exception exc1) {
+				exc1.printStackTrace();
+				throw new JPARSECException(exc1);
+			}
+			exc.printStackTrace(); 
+		}
 		
 		// Attempt to read using CDS for other formats
 		try {
