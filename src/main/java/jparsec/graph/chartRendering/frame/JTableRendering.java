@@ -14,6 +14,7 @@ import java.util.Comparator;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
@@ -26,6 +27,7 @@ import javax.swing.table.TableRowSorter;
 
 import jparsec.ephem.Functions;
 import jparsec.graph.DataSet;
+import jparsec.io.FileIO;
 import jparsec.time.TimeElement;
 import jparsec.util.JPARSECException;
 
@@ -313,6 +315,16 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 	        	 if (columnClasses[col] == Long.class) return null;
 	        	 
 	        	 String out = lineTable[row][col];
+	        	 out = DataSet.replaceAll(out, "@BOLD", "", true);
+	        	 /*
+	        	 if (out.indexOf(separator) >= 0) {
+	        		 String lines[] = DataSet.toStringArray(out, separator, false);
+	        		 JTextArea ta = new JTextArea(1, lines.length);
+	        		 ta.setText(DataSet.toString(lines, FileIO.getLineSeparator()));
+	        		 ta.setFont(table.getFont());
+	        		 return ta;
+	        	 }
+	        	 */
 	        	 return out;
 	         }
 	         public void setValueAt(Object b, int row, int col) {
@@ -365,19 +377,27 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 				if (tcr instanceof DefaultTableCellRenderer && alignment != null) {
 					((DefaultTableCellRenderer) tcr).setHorizontalAlignment(alignment[column]);
 					((DefaultTableCellRenderer) tcr).setHorizontalTextPosition(alignment[column]);
+					((DefaultTableCellRenderer) tcr).setVerticalAlignment(SwingConstants.CENTER);
 				}
 				return tcr;
 			}
 			public Component prepareRenderer(TableCellRenderer renderer,
                     int rowIndex, int vColIndex) {
 				Component c = super.prepareRenderer(renderer, rowIndex, vColIndex);
+				Font font = table.getFont();
+				String s2 = lineTable[rowIndex][vColIndex];
+				if (s2 != null && s2.indexOf("@BOLD") >= 0) {
+					font = font.deriveFont(Font.BOLD);
+				}
+				c.setFont(font);
 				if (columnClasses[vColIndex] == JList.class) {
-					String s = ((DefaultTableCellRenderer) c).getText();
+					String s = s2; //((DefaultTableCellRenderer) c).getText();
+					s = DataSet.replaceAll(s, "@BOLD", "", true);
 					c = new JPanel();
 					((JPanel) c).setBackground(null);
 					String ss[] = DataSet.toStringArray(s, separator, false);
 					JList list = new JList(ss);
-					list.setFont(table.getFont());
+					list.setFont(font);
 					list.setBackground(null);
 					list.setForeground(null);
 
@@ -459,8 +479,8 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 					sorter.setComparator(i, new Comparator<String>() {
 					    @Override
 					    public int compare(String name1, String name2) {
-					    	Double d1 = Double.parseDouble(name1);
-					    	Double d2 = Double.parseDouble(name2);
+					    	Double d1 = Double.parseDouble(FileIO.getField(1, name1, " ", false));
+					    	Double d2 = Double.parseDouble(FileIO.getField(1, name2, " ", false));
 					    	return d1.compareTo(d2);
 					    }
 					});
@@ -480,7 +500,7 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 	public void updateTable(String stable[][], boolean show) {
 		int row = table.getSelectedRow();
 		String rowS = null;
-		if (row >= 0) rowS = DataSet.toString(lineTable[row], SEPARATOR);
+		if (row >= 0 && lineTable.length > row) rowS = DataSet.toString(lineTable[row], SEPARATOR);
 		
 		updateData(stable);
 		if (table.getRowSorter() != null) {
@@ -517,7 +537,7 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 	    	tableHeader.repaint();
         }
         
-        if (row >= 0 && lineTable != null && lineTable.length > 0) {
+        if (rowS != null && row >= 0 && lineTable != null && lineTable.length > 0) {
         	row = -1;
         	for (int i=0; i<lineTable.length; i++) {
         		if (!rowS.startsWith(lineTable[i][0]+SEPARATOR)) continue;
@@ -527,7 +547,7 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
         			break;
         		}
         	}
-        	if (row >= 0) {
+        	if (row >= 0 && lineTable.length > row) {
 	        	this.selectedRow = DataSet.toString(lineTable[row], SEPARATOR);
 	        	row = table.convertColumnIndexToView(row);
 	        	if (row >= 0 && row < table.getRowCount()) table.setRowSelectionInterval(row, row);

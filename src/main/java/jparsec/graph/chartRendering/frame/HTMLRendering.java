@@ -178,7 +178,13 @@ public class HTMLRendering extends JDialog implements ActionListener, Serializab
 	 * @return The JEditorPane.
 	 */
 	public JEditorPane getEditorPane() { return jEditorPane_Message; }
-	
+
+	/**
+	 * Returns the JScrollPane of the Dialog.
+	 * @return The JScrollPane.
+	 */
+	public JScrollPane getScrollPane() { return scrollpane; }
+
 	// Overridden so we can exit when window is closed
 	protected void processWindowEvent(WindowEvent e)
 	{

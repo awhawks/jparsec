@@ -229,10 +229,17 @@ public class AstroDate implements Serializable
 			}
 		} catch (Exception exc) {
 			try {
-				if (Translate.getDefaultLanguage() == LANGUAGE.SPANISH) {
+				//if (Translate.getDefaultLanguage() == LANGUAGE.SPANISH) {
 					String f[] = DataSet.toStringArray(cdsDate, ",", false);
 					String sm = FileIO.getField(3, f[0], " ", true).trim();
-					int mo = 1 + DataSet.getIndexContaining(Translate.translate(MONTH_NAMES), sm);
+					int mo = -1;
+					for (int m=0;m<MONTH_NAMES.length;m++) {
+						String ms = Translate.translate(MONTH_NAMES[m], LANGUAGE.ENGLISH, LANGUAGE.SPANISH);
+						if (ms.toLowerCase().equals(sm.toLowerCase())) {
+							mo = 1 + m;
+							return;
+						}
+					}
 					if (sm.toLowerCase().equals("mayo")) mo = 5;
 					if (mo > 0) {
 						int da = Integer.parseInt(FileIO.getField(1, f[0], " ", true).trim());
@@ -251,7 +258,7 @@ public class AstroDate implements Serializable
 						second = se + mn * Constant.SECONDS_PER_MINUTE + hr * Constant.SECONDS_PER_HOUR;
 						return;
 					}
-				}
+				//}
 			} catch (Exception exc1) {
 				exc1.printStackTrace();
 				throw new JPARSECException(exc1);
