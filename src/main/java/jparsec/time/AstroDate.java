@@ -503,6 +503,7 @@ public class AstroDate implements Serializable
 	 * @throws JPARSECException If the resulting date is invalid.
 	 */
 	public void add(double days) throws JPARSECException {
+		if (days == 0) return;
 		AstroDate astro = new AstroDate(this.jd() + days);
 		this.year = astro.year;
 		this.month = astro.month;

@@ -2368,13 +2368,17 @@ public class Spectrum30m implements Serializable
 	 */
 	public AstroDate getObservationDate() throws JPARSECException {
 		String d = (get(Gildas30m.LDOBS)).value;
-		if (!DataSet.isDoubleStrictCheck(d)) {
+		if (d == null || d.equals("") || !DataSet.isDoubleStrictCheck(d)) {
 			d = getHeader().getHeaderParameters()[6].value;
 			if (!DataSet.isDoubleStrictCheck(d))
 				throw new JPARSECException("Value for observation date is not available");
 		}
 		int date = Integer.parseInt(d);
-		double time = Double.parseDouble((get(Gildas30m.UT_TIME)).value);
+		String ut = (get(Gildas30m.UT_TIME)).value;
+		if (ut == null || ut.equals("") || !DataSet.isDoubleStrictCheck(ut))
+			throw new JPARSECException("Value for observation time is not available");
+		
+		double time = Double.parseDouble(ut);
 		AstroDate astro = ConverterFactory.getAstroDate(date);
 		astro.add(time / Constant.TWO_PI);
 		return astro;
@@ -2412,7 +2416,7 @@ public class Spectrum30m implements Serializable
 			doppler /= (Constant.SPEED_OF_LIGHT * 0.001);
 			
 			return doppler;
-		} catch (JPARSECException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 

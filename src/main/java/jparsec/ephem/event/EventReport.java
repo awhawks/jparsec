@@ -1293,7 +1293,7 @@ public class EventReport {
 
 				eph.orbit = orbit;
 				if (Math.abs(orbit.referenceTime - jd) < Constant.JULIAN_DAYS_PER_CENTURY &&
-						orbit.getMagnitude(jd) < maglim)
+						orbit.getCometMaximumMagnitude() < maglim)
 				{
 					eph.targetBody = TARGET.Comet;
 					EphemElement ephem = OrbitEphem.orbitEphemeris(time, obs, eph);
@@ -1333,9 +1333,13 @@ public class EventReport {
 						}
 					} else {
 						if (ephem.magnitude > maglim && ivis0 >= 0) {
-							events = DataSet.addStringArray(events, new String[] {cometUnvisible+ephem.name});
-							times = DataSet.addDoubleArray(times, new double[] {jd});
-							obj = DataSet.addObjectArray(obj, new Object[] {ephem.getEquatorialLocation()});
+							String eventsLater[] = DataSet.getSubArray(events, ivis0, events.length-1);
+							int iuvis = DataSet.getIndex(eventsLater, cometUnvisible+ephem.name);
+							if (iuvis < 0) {
+								events = DataSet.addStringArray(events, new String[] {cometUnvisible+ephem.name});
+								times = DataSet.addDoubleArray(times, new double[] {jd});
+								obj = DataSet.addObjectArray(obj, new Object[] {ephem.getEquatorialLocation()});
+							}
 						}
 					}
 					int imax = DataSet.getIndexEndingWith(events, " "+cometPerig+ephem.name);
@@ -1390,9 +1394,13 @@ public class EventReport {
 						}
 					} else {
 						if (ephem.magnitude > maglim && ivis0 >= 0) {
-							events = DataSet.addStringArray(events, new String[] {asteroidUnvisible+ephem.name});
-							times = DataSet.addDoubleArray(times, new double[] {jd});
-							obj = DataSet.addObjectArray(obj, new Object[] {ephem.getEquatorialLocation()});
+							String eventsLater[] = DataSet.getSubArray(events, ivis0, events.length-1);
+							int iuvis = DataSet.getIndex(eventsLater, asteroidUnvisible+ephem.name);
+							if (iuvis < 0) {
+								events = DataSet.addStringArray(events, new String[] {asteroidUnvisible+ephem.name});
+								times = DataSet.addDoubleArray(times, new double[] {jd});
+								obj = DataSet.addObjectArray(obj, new Object[] {ephem.getEquatorialLocation()});
+							}
 						}
 					}
 				}

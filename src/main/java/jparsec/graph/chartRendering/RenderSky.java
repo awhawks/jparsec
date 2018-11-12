@@ -5127,6 +5127,8 @@ public class RenderSky
 				} else {
 					g.setColor((Integer)obj[8], true);
 				}
+			} else {
+				if (mag == 100 && (fieldDeg > fieldLimit*0.5 || maglim <= 8)) continue;
 			}
 
 			int type = (Byte) obj[2];
@@ -10784,7 +10786,8 @@ public class RenderSky
 
 					if (!projection.isInvalid(pos))
 					{
-						double step = (double) (i % ((int)steps*render.trajectory[index].labelsSteps));
+						int stepi = (int)steps*render.trajectory[index].labelsSteps;
+						double step = (double) (i % stepi);
 						jd_TDB = render.trajectory[index].startTimeJD + render.trajectory[index].stepTimeJD * i;
 						if (render.trajectory[index].drawLabels && step == 0.0)
 						{
@@ -10846,7 +10849,14 @@ public class RenderSky
 							*/
 							point_size = 3;
 							if (g.renderingToAndroid()) point_size ++;
-							drawString(col, render.trajectory[index].drawPathFont, label, pos[0], pos[1], -render.trajectory[index].drawPathFont.getSize()-point_size, true);
+							
+							boolean showLabel = true;
+							if (i >= stepi && loc_path[i-stepi] != null) {
+								double ad = LocationElement.getApproximateAngularDistance(loc_path[i], loc_path[i-stepi]);
+								if (ad < field/15) showLabel = false;
+							}
+							
+							if (showLabel) drawString(col, render.trajectory[index].drawPathFont, label, pos[0], pos[1], -render.trajectory[index].drawPathFont.getSize()-point_size, true);
 							col = render.trajectory[index].drawPathColor2;
 							
 							int point2 = 2*point_size;

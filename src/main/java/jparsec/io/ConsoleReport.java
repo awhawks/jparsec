@@ -152,13 +152,13 @@ public class ConsoleReport
 		if (!isStar) out += name + Translate.translate(303)+": " + Functions.formatValue(ephem.phase, 3) + sep;
 		if (!isStar) out += name + Translate.translate(304)+": " + Functions.formatAngle(ephem.heliocentricEclipticLongitude, decimalArcsec) + sep;
 		if (!isStar) out += name + Translate.translate(305)+": " + Functions.formatAngle(ephem.heliocentricEclipticLatitude, decimalArcsec) + sep;
-		if (!isStar) out += name + Translate.translate(306)+": " + Functions.formatValue(ephem.distanceFromSun, 5) + sep;
+		if (!isStar) out += name + Translate.translate(306)+": " + Functions.formatValue(ephem.distanceFromSun, 5) + " " + unit1 + sep;
 		out += name + Translate.translate(28)+": " + Functions.formatAngle(ephem.azimuth, decimalArcsec) + sep;
 		out += name + Translate.translate(29)+": " + Functions.formatAngle(ephem.elevation, decimalArcsec) + sep;
 		if (!isStar) out += name + Translate.translate(307)+": " + Functions.formatAngle(ephem.defectOfIllumination, 3) + sep;
 		out += name + Translate.translate(308)+": " + Functions.formatAngle(ephem.angularRadius, 3) + sep;
 		out += name + Translate.translate(157)+": " + (ephem.magnitude > 99 ? "-" : Functions.formatValue(ephem.magnitude, 3)) + sep;
-		if (!isStar && ephem.angularRadius > 0.5 * Constant.ARCSEC_TO_RAD) out += name + Translate.translate(309)+": " + Functions.formatValue(ephem.surfaceBrightness, 3) + sep;
+		if (!isStar && ephem.angularRadius > 0.5 * Constant.ARCSEC_TO_RAD) out += name + Translate.translate(309)+": " + Functions.formatValue(ephem.surfaceBrightness, 3) + " mag/\"^2" + sep;
 		out += name + Translate.translate(319)+": " + Functions.formatAngle(ephem.northPoleRA, decimalArcsec) + sep;
 		out += name + Translate.translate(320)+": " + Functions.formatAngle(ephem.northPoleDEC, decimalArcsec) + sep;
 		if (!isStar) out += name + Translate.translate(311)+": " + Functions.formatAngle(ephem.subsolarLongitude, decimalArcsec) + sep;

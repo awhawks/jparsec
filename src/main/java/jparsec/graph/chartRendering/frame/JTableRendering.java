@@ -307,12 +307,14 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 		        	 if (columnClasses[col] == Double.class) return Double.parseDouble(lineTable[row][col]);
 		        	 if (columnClasses[col] == Float.class) return Float.parseFloat(lineTable[row][col]);
 		        	 if (columnClasses[col] == Long.class) return Long.parseLong(lineTable[row][col]);
+		        	 //if (columnClasses[col] == JList.class) return new JList(DataSet.toStringArray(lineTable[row][col], separator)); //Long.parseLong(lineTable[row][col]);
 	        	 }
 	        	 if (columnClasses[col] == Boolean.class) return null;
 	        	 if (columnClasses[col] == Integer.class) return null;
 	        	 if (columnClasses[col] == Double.class) return null;
 	        	 if (columnClasses[col] == Float.class) return null;
 	        	 if (columnClasses[col] == Long.class) return null;
+	        	 //if (columnClasses[col] == JList.class) return null;
 	        	 
 	        	 String out = lineTable[row][col];
 	        	 out = DataSet.replaceAll(out, "@BOLD", "", true);
@@ -385,7 +387,9 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
                     int rowIndex, int vColIndex) {
 				Component c = super.prepareRenderer(renderer, rowIndex, vColIndex);
 				Font font = table.getFont();
-				String s2 = lineTable[rowIndex][vColIndex];
+				int row = this.convertRowIndexToModel(rowIndex);
+				
+				String s2 = lineTable[row][vColIndex];
 				if (s2 != null && s2.indexOf("@BOLD") >= 0) {
 					font = font.deriveFont(Font.BOLD);
 				}
@@ -413,7 +417,7 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 					((FlowLayout) ((JPanel) c).getLayout()).setHgap(0);
 					((JPanel) c).add(list);
 				}
-				int row = this.convertRowIndexToModel(rowIndex);
+
 				c.setForeground(null);
 				if (isCellSelected(rowIndex, vColIndex) || 
 						isRowSelected(rowIndex) && allowHighlightRow) {
@@ -475,15 +479,29 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 		if (columnClassesForSort != null) {
 			for (int i=0; i<columnClassesForSort.length; i++) {
 				if (columnClassesForSort[i] == Double.class && 
-						columnClasses[i] == String.class) {
+						(columnClasses[i] == String.class || 
+						columnClasses[i] == JList.class)) {
 					sorter.setComparator(i, new Comparator<String>() {
 					    @Override
 					    public int compare(String name1, String name2) {
-					    	Double d1 = Double.parseDouble(FileIO.getField(1, name1, " ", false));
-					    	Double d2 = Double.parseDouble(FileIO.getField(1, name2, " ", false));
+					    	String sep = " ";
+					    	if (name1.indexOf(separator) >= 0) sep = separator;
+					    	String s1 = FileIO.getField(1, name1, sep, false);
+					    	String s2 = FileIO.getField(1, name2, sep, false);
+					    	Double d1 = DataSet.isDoubleStrictCheck(s1) ? Double.parseDouble(s1) : 0;
+					    	Double d2 = DataSet.isDoubleStrictCheck(s2) ? Double.parseDouble(s2) : 0;
 					    	return d1.compareTo(d2);
 					    }
 					});
+				} else {
+					if (columnClasses[i] == JList.class) {
+						sorter.setComparator(i, new Comparator<String>() {
+						    @Override
+						    public int compare(String n1, String n2) {
+						    	return n1.compareTo(n2);
+						    }
+						});
+					}
 				}
 			}
 		}

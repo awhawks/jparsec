@@ -393,7 +393,7 @@ public class Spectrum implements Serializable
 	 * rest frequency, and velocity resolution are set.
 	 */
 	public static Spectrum getGaussianSpectrum(int np, SpectrumLine line) {
-		return Spectrum.getGaussianSpectrum(line.vel, line.peakT, line.width, np, line.freq, 2*line.width, 0);
+		return Spectrum.getGaussianSpectrum(line.vel, line.peakT, line.width, np, line.freq, 4*line.width, 0);
 	}
 
 	/**
