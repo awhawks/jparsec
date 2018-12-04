@@ -418,6 +418,8 @@ public class Configuration
 	 * @throws JPARSECException If an error occurs.
 	 */
 	public static synchronized String updateSupernovaeInTempDir(AstroDate astro) throws JPARSECException {
+		return null; // Catalog is not longer updated
+		/*
 		if (isAcceptableDateForSupernovae(astro)) return null;
 		if (APPLET_MODE) return "APPLET_MODE";
 
@@ -436,6 +438,7 @@ public class Configuration
 		GeneralQuery.queryFile(query, p, QUERY_TIMEOUT);
 
 		return p;
+		*/
 	}
 
 	/**

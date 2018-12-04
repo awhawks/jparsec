@@ -105,7 +105,7 @@ public class RenderEclipseTest {
 
         // Chart all solar/lunar eclipses for a given year
         RenderSatellite.ALLOW_SPLINE_RESIZING = false; // Improve performance
-        int year = 2018;
+        int year = 2019;
         String locName = "Madrid";
         
         //observer.setName("Burgeo");
@@ -150,6 +150,7 @@ public class RenderEclipseTest {
             String date = newTime.astroDate.toString();
             date = date.substring(0, date.indexOf(" "));
             pic.write(path + "lunarEclipse_" + locName + "_" + date + addName + ".png");
+            pic.writeAsJPEG(path + "lunarEclipse_" + locName + "_" + date + addName + ".jpg", 0.8);
             newTime.add(20);
         } while (true);
 
@@ -189,6 +190,7 @@ public class RenderEclipseTest {
             String date = newTime.astroDate.toString();
             date = date.substring(0, date.indexOf(" "));
             pic.write(path + "solarEclipse_" + locName + "_" + date + addName + ".png");
+            pic.writeAsJPEG(path + "solarEclipse_" + locName + "_" + date + addName + ".jpg", 0.8);
             newTime.add(20);
         } while (true);
     }

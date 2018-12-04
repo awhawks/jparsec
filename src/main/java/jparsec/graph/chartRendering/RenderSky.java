@@ -8245,14 +8245,6 @@ public class RenderSky
 		if (sncat == null || (sncat.size() == 0 && fieldDeg < limFieldDeg && fieldDeg != lastFieldDegSN))  {
 			lastFieldDegSN = fieldDeg;
 			sncat = new ArrayList<Object>();
-			FileFormatElement format_Padova_Asiago_SN_cat[] = new FileFormatElement[] {
-					new FileFormatElement(3, 9, "SN_ID"), new FileFormatElement(13, 31, "OBJ_HOST"), new FileFormatElement(33, 42, "OBJ_RA"),
-					new FileFormatElement(43, 51, "OBJ_DEC"), new FileFormatElement(53, 61, "SN_RA"), new FileFormatElement(63, 71, "SN_DEC"),
-					new FileFormatElement(148, 156, "SN_OFFSET_RA"), new FileFormatElement(158, 166, "SN_OFFSET_DEC"),
-					new FileFormatElement(169, 172, "SN_MAG"), new FileFormatElement(188, 192, "SN_DATE") };
-			ReadFormat rf = new ReadFormat();
-			rf.setFormatToRead(format_Padova_Asiago_SN_cat);
-			String months = "JanFebMarAprMayJunJulAugSepOctNovDec";
 
 			InputStream is = null;
 			BufferedReader dis = null;
@@ -8260,6 +8252,66 @@ public class RenderSky
 			{
 				double jd = TimeScale.getJD(projection.time, projection.obs, projection.eph, SCALE.UNIVERSAL_TIME_UTC);
 				AstroDate astro = new AstroDate(jd);
+				if (astro.getYear() >= 2015) {
+					if (is == null) is = getClass().getClassLoader().getResourceAsStream(FileIO.DATA_SKY_DIRECTORY + "SNafter2015.txt");
+					dis = new BufferedReader(new InputStreamReader(is, ReadFile.ENCODING_ISO_8859));
+					String line = dis.readLine();
+					if (baryc == null) baryc = Ephem.eclipticToEquatorial(PlanetEphem.getGeocentricPosition(equinox, TARGET.Solar_System_Barycenter, 0.0, false, projection.obs), Constant.J2000, projection.eph);
+					while ((line = dis.readLine()) != null)
+					{
+						String SN_id = FileIO.getField(1, line, ",", fast);
+						String SN_date = FileIO.getField(2, line, ",", fast);
+						String SN_mag = FileIO.getField(3, line, ",", fast);
+						String ra = FileIO.getField(4, line, ",", fast);
+						String dec = FileIO.getField(5, line, ",", fast);
+						
+						double mag = Double.parseDouble(SN_mag);
+						LocationElement loc = new LocationElement(Functions.parseRightAscension(ra), 
+								Functions.parseDeclination(dec), 1.0);
+						if (equinox != Constant.J2000) {
+							// Correct for aberration, precession, and nutation
+							if (projection.eph.ephemType == COORDINATES_TYPE.APPARENT) {
+								loc.setRadius(1000 * Constant.RAD_TO_ARCSEC); // 1000 pc
+								double light_time = loc.getRadius() * Constant.LIGHT_TIME_DAYS_PER_AU;
+								double r[] = Ephem.aberration(loc.getRectangularCoordinates(), baryc, light_time);
+
+								r = precessFromJ2000(equinox, r, projection.eph);
+								loc = LocationElement.parseRectangularCoordinates(nutateInEquatorialCoordinates(equinox, projection.eph, r, true));
+							} else {
+								loc = LocationElement.parseRectangularCoordinates(precessFromJ2000(equinox,
+										LocationElement.parseLocationElement(loc), projection.eph));
+							}
+						}
+						if (loc != null) {
+							// Correct apparent magnitude for extinction
+							if (projection.eph.ephemType == EphemerisElement.COORDINATES_TYPE.APPARENT && projection.eph.correctForExtinction &&
+									projection.obs.getMotherBody() == TARGET.EARTH && projection.eph.isTopocentric) {
+								double angh = lst - loc.getLongitude();
+								double h = FastMath.sin(projection.obs.getLatitudeRad()) * FastMath.sin(loc.getLatitude()) + FastMath.cos(projection.obs.getLatitudeRad()) * FastMath.cos(loc.getLatitude()) * FastMath
+										.cos(angh);
+								double alt = FastMath.asin(h);
+								mag += Star.getExtinction(Constant.PI_OVER_TWO-alt, projection.obs.getHeight() / 1000.0, 5);
+							}
+
+							if (projection.obs.getMotherBody() != TARGET.EARTH && projection.obs.getMotherBody() != TARGET.NOT_A_PLANET) {
+								loc = projection.getPositionFromBody(loc, this.fast);
+							}
+
+							loc = projection.getApparentLocationInSelectedCoordinateSystem(loc, true, false, 0);
+							sncat.add(new Object[] {loc, SN_id, mag, SN_date, SN_mag});
+						}
+
+					}
+				} else {
+					FileFormatElement format_Padova_Asiago_SN_cat[] = new FileFormatElement[] {
+							new FileFormatElement(3, 9, "SN_ID"), new FileFormatElement(13, 31, "OBJ_HOST"), new FileFormatElement(33, 42, "OBJ_RA"),
+							new FileFormatElement(43, 51, "OBJ_DEC"), new FileFormatElement(53, 61, "SN_RA"), new FileFormatElement(63, 71, "SN_DEC"),
+							new FileFormatElement(148, 156, "SN_OFFSET_RA"), new FileFormatElement(158, 166, "SN_OFFSET_DEC"),
+							new FileFormatElement(169, 172, "SN_MAG"), new FileFormatElement(188, 192, "SN_DATE") };
+					ReadFormat rf = new ReadFormat();
+					rf.setFormatToRead(format_Padova_Asiago_SN_cat);
+					String months = "JanFebMarAprMayJunJulAugSepOctNovDec";
+
 				String p = null;
 				try {
 					p = Configuration.updateSupernovaeInTempDir(astro);
@@ -8399,6 +8451,7 @@ public class RenderSky
 						}
 					}
 				}
+				}
 				// Close file
 				dis.close();
 				is.close();
@@ -8447,6 +8500,7 @@ public class RenderSky
 					int tsize = (int) (0.5 + (1.5f * size+adds));
 					if (tsize > 1 && render.drawStarsRealistic != REALISTIC_STARS.NONE &&
 							render.drawStarsRealistic != REALISTIC_STARS.NONE_CUTE) {
+						if (g.renderingToAndroid()) tsize ++;
 						this.drawStar(tsize, pos, dist, 6, g);
 					} else {
 						tsize = (int) (2* size+adds);
@@ -8641,6 +8695,7 @@ public class RenderSky
 					int tsize = (int) (0.5 + (1.5f * size+adds));
 					if (tsize > 1 && render.drawStarsRealistic != REALISTIC_STARS.NONE &&
 							render.drawStarsRealistic != REALISTIC_STARS.NONE_CUTE) {
+						if (g.renderingToAndroid()) tsize ++;
 						this.drawStar(tsize, pos, dist, 6, g);
 					} else {
 						tsize = (int) (2* size+adds);
@@ -11065,7 +11120,7 @@ public class RenderSky
 				if (!projection.isInvalid(pos) && this.isInTheScreen((int)pos[0], (int)pos[1]))
 				{
 					double area = Double.parseDouble(record[4]);
-					int radius = (int) (Math.sqrt(area / Math.PI) * Sun_radius + 0.5);
+					int radius = (int) (Math.sqrt(area) * Sun_radius + 0.5);
 					radius = Math.max(radius, 0);
 					int width = 2 * radius+1;
 					if (render.anaglyphMode == ANAGLYPH_COLOR_MODE.NO_ANAGLYPH) {
@@ -11077,8 +11132,9 @@ public class RenderSky
 					{
 						String group = record[0];
 						String type = record[1];
-						String label = group + "-" + type;
-						drawString(c, render.drawStarsNamesFont, label, pos[0], pos[1], -Math.max(10, render.drawStarsNamesFont.getSize()), false);
+						String label = group;
+						if (!type.equals("")) label += "-" + type;
+						drawString(c, render.drawStarsNamesFont, label, pos[0], pos[1], Math.max(10+radius, render.drawStarsNamesFont.getSize()), false);
 					}
 				}
 			}
@@ -13595,6 +13651,7 @@ public class RenderSky
 		firstTime = true;
 		sizes = null;
 		fieldDegBefore = -1;
+		if (g == null) return;
 		if (render.trajectory != null) {
 			int c = g.getColor();
 			for (int i=0; i<render.trajectory.length; i++) {

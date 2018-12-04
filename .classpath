@@ -158,16 +158,12 @@
 	<classpathentry kind="var" path="M2_REPO/org/codehaus/plexus/plexus-resources/1.0.1/plexus-resources-1.0.1.jar"/>
 	<classpathentry kind="lib" path="lib/cds.astro.jar"/>
 	<classpathentry kind="lib" path="lib/cologne.jar"/>
-	<classpathentry kind="lib" path="lib/eop.jar"/>
 	<classpathentry kind="lib" path="lib/images.jar"/>
 	<classpathentry kind="lib" path="lib/jpl_ephem.jar"/>
-	<classpathentry kind="lib" path="lib/orbital_elements.jar"/>
 	<classpathentry kind="lib" path="lib/radex.jar"/>
 	<classpathentry kind="lib" path="lib/sgt_v30.jar"/>
-	<classpathentry kind="lib" path="lib/sky.jar"/>
 	<classpathentry kind="lib" path="lib/sky2000.jar"/>
 	<classpathentry kind="lib" path="lib/skyViewWCS.jar"/>
-	<classpathentry kind="lib" path="lib/sunspot.jar"/>
 	<classpathentry kind="lib" path="lib/telescopes.jar"/>
 	<classpathentry kind="lib" path="lib/textures.jar"/>
 	<classpathentry kind="lib" path="lib/visad.jar"/>
@@ -176,5 +172,9 @@
 	<classpathentry kind="lib" path="lib/dust.jar"/>
 	<classpathentry kind="lib" path="lib/series96.jar"/>
 	<classpathentry kind="lib" path="/home/alonso/java/librerias/flanagan/flanagan.jar"/>
+	<classpathentry kind="lib" path="/home/alonso/eclipse/workspace/mis_programas/jparsec/manager/lib/sunspot.jar"/>
+	<classpathentry kind="lib" path="/home/alonso/eclipse/workspace/mis_programas/jparsec/manager/lib/eop.jar"/>
+	<classpathentry kind="lib" path="/home/alonso/eclipse/workspace/mis_programas/jparsec/manager/lib/orbital_elements.jar"/>
+	<classpathentry kind="lib" path="/home/alonso/eclipse/workspace/mis_programas/jparsec/manager/lib/sky.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

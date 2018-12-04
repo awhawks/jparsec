@@ -345,7 +345,11 @@ public class Version
 						"Sky rendering supports transparency images that can be used to render Stellarium-like scenes (see the ephemerides server).\n"+
 						"Italian language supported thanks to Angelo Nicolini.\n"+
 						"Many other minor fixes (see https://bitbucket.org/talonsoalbi/jparsec/commits/all).\n",
-				"      1.116: XXX (October X, 2018) :\n"+
+				"      1.116: Fixes to solar spots and SN catalogs not working (December XX, 2018) :\n"+
+						"Initial support to read fits cubes from Gildas in LMVCube.\n"+
+						"New files for sun spots for 2016 and after, using the DPD catalog at http://fenyi.solarobs.csfk.mta.hu/DPD/.\n"+
+						"New files for SN catalogos for 2015 and after, using the Open Supernova Project at https://sne.space/.\n"+
+						"Current sun spots are again working after the fix http -> https protocol, as happend with orbitales elements recently.\n"+
 						"Orbital elements updated.\n"
 
 				+FileIO.getLineSeparator(),
@@ -357,9 +361,9 @@ public class Version
 			// Dependency name                             Version
 			"jparsec.jar                                   1.116",
 
-			"sky.jar                                       1.44",
+			"sky.jar                                       1.45",
 			"orbital_elements.jar                          1.28",
-			"sunspot.jar                                   1.18",
+			"sunspot.jar                                   1.19",
 			"eop.jar                                       1.17",
 
 			"flanagan.jar                                  1.00",

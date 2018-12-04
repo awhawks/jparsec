@@ -26,6 +26,8 @@ import java.util.ArrayList;
 
 import jparsec.graph.*;
 import jparsec.graph.GridChartElement.TYPE;
+import jparsec.io.image.FitsIO;
+import jparsec.io.image.ImageHeaderElement;
 import jparsec.io.image.ImageSplineTransform;
 import jparsec.io.image.WCS;
 import jparsec.astronomy.CoordinateSystem;
@@ -45,6 +47,7 @@ import jparsec.math.FastMath;
 import jparsec.math.Interpolation;
 import jparsec.io.FileIO;
 import jparsec.util.*;
+import nom.tam.fits.ImageHDU;
 
 /**
  * A class to read/write lmv (GILDAS) datacubes. A datacube can be created in
@@ -271,6 +274,12 @@ public class LMVCube implements Serializable
 	public LMVCube(String source, float[][][] cube, String unit, String line, double freq,
 			double ra, double dec, float v0, float beamMajor, float beamMinor, float beamPA, double[] formula)
 	throws JPARSECException {
+		init(source, cube, unit, line, freq, ra, dec, v0, beamMajor, beamMinor, beamPA, formula);
+	}
+
+	private void init(String source, float[][][] cube, String unit, String line, double freq,
+			double ra, double dec, float v0, float beamMajor, float beamMinor, float beamPA, double[] formula)
+	throws JPARSECException {
 		this.axis12PA = 0;
 		this.axis1Dim = cube[0][0].length;
 		this.axis2Dim = cube[0].length;
@@ -320,7 +329,7 @@ public class LMVCube implements Serializable
 		this.setExtremaData(cube);
 		this.setWCS();
 	}
-
+	
 	/**
 	 * Constructor for a given lmv file.
 	 * @param path The path to the file.
@@ -331,11 +340,108 @@ public class LMVCube implements Serializable
     throws JPARSECException {
     	readFile(path);
     }
+    
+    /**
+     * Reads a cube from a .fits file (or tries), based on Gildas .fits files. 
+     * This method is called 
+     * automatically when the input path for the file constructor points 
+     * to a .fits file. Source name needs to be set manually later, it is 
+     * left empty here. In case flux is not K you may need to set flux unit 
+     * and scale the intensity to transform Jy to K, also manually.
+     * @param path Path to the .fits file.
+     * @throws JPARSECException If an error occurs.
+     */
+    public void readFromFits(String path) throws JPARSECException {
+		FitsIO f = new FitsIO(path);
+		
+		// Read HDU 0, of image type, with its header and data
+		ImageHDU hdu = (ImageHDU) f.getHDU(0);
+		ImageHeaderElement header[] = f.getHeader(0);
+		Object o = (hdu.getData()).getData();
+		
+		// Read main source data. Velocities are in m/s, angles in degrees, and frecuencies 
+		// in Hz. Only exception is VELREF which is in km/s in Leroy's file (Gildas will not
+		// load it correctly) ...
+		float[][][] cube;
+		try {
+			int data[][][][] = (int[][][][]) o;
+			
+			cube = new float[data[0].length][data[0][0].length][data[0][0][0].length]; 
+			double max = -1, min = -1;
+			double bzero = hdu.getBZero(), bscale = hdu.getBScale(); //, maxVal = Math.pow(2, Math.abs(hdu.getBitPix())-1);
+			for (int v=0;v<cube.length;v++) {
+				cube[v] = DataSet.toFloatArray(DataSet.toDoubleArray(data[0][v]));
+				for  (int y=0; y<cube[0].length; y++) {
+					for  (int x=0; x<cube[0][0].length; x++) {
+						if (Double.isNaN(cube[v][y][x])) cube[v][y][x] = 0;
+						cube[v][y][x] = (float) ((bzero + bscale * (cube[v][y][x]))); // - maxVal ?
+						if (cube[v][y][x] > max || max == -1) max = cube[v][y][x];
+						if (cube[v][y][x] < min || min == -1) min = cube[v][y][x];
+					}					
+				}
+			}
+		} catch (Exception exc) {
+			int data[][][] = (int[][][]) o;
+			
+			cube = new float[data.length][data[0].length][data[0][0].length]; 
+			double max = -1, min = -1;
+			double bzero = hdu.getBZero(), bscale = hdu.getBScale(); //, maxVal = Math.pow(2, Math.abs(hdu.getBitPix())-1);
+			for (int v=0;v<cube.length;v++) {
+				cube[v] = DataSet.toFloatArray(DataSet.toDoubleArray(data[v]));
+				for  (int y=0; y<cube[0].length; y++) {
+					for  (int x=0; x<cube[0][0].length; x++) {
+						if (Double.isNaN(cube[v][y][x])) cube[v][y][x] = 0;
+						cube[v][y][x] = (float) ((bzero + bscale * (cube[v][y][x]))); // - maxVal ?
+						if (cube[v][y][x] > max || max == -1) max = cube[v][y][x];
+						if (cube[v][y][x] < min || min == -1) min = cube[v][y][x];
+					}					
+				}
+			}
+		}
+		
+		String unit = hdu.getBUnit();
+		String line = ImageHeaderElement.getByKey(header, "LINE").value.trim();
+		double freq = ImageHeaderElement.getByKeyAsDouble(header, "RESTFREQ") * 1.0E-6;
+		double ra = ImageHeaderElement.getByKeyAsDouble(header, "CRVAL1") * Constant.DEG_TO_RAD;
+		double dec = ImageHeaderElement.getByKeyAsDouble(header, "CRVAL2") * Constant.DEG_TO_RAD;
+		double v0 = ImageHeaderElement.getByKeyAsDouble(header, "VELREF"); // LSR, in km/s in the fits file
+		double beamMajor = 0, beamMinor = 0, beamPA = 0;
+		try {
+			beamMajor = ImageHeaderElement.getByKeyAsDouble(header, "BMAJ") * Constant.DEG_TO_RAD;
+			beamMinor = ImageHeaderElement.getByKeyAsDouble(header, "BMIN") * Constant.DEG_TO_RAD;
+			beamPA = ImageHeaderElement.getByKeyAsDouble(header, "BPA") * Constant.DEG_TO_RAD;
+		} catch (Exception exc) {
+			exc.printStackTrace();
+		}
+		
+		double formula[] = new double[] {
+				// - 3 values: reference pixel, value, increment in axis 1-4
+				// - In Gildas convention first pixel is 1, 1. In Fits ... depends on the 
+				// software (I think). It should be also 1, 1, but many software use 0, 0 (IDL)
+				// as first pixel, making this a mess.
+				ImageHeaderElement.getByKeyAsDouble(header, "CRPIX1"), 0, ImageHeaderElement.getByKeyAsDouble(header, "CDELT1") * Constant.DEG_TO_RAD,
+				ImageHeaderElement.getByKeyAsDouble(header, "CRPIX2"), 0, ImageHeaderElement.getByKeyAsDouble(header, "CDELT2") * Constant.DEG_TO_RAD,
+				ImageHeaderElement.getByKeyAsDouble(header, "CRPIX3"), ImageHeaderElement.getByKeyAsDouble(header, "CRVAL3") * 0.001, ImageHeaderElement.getByKeyAsDouble(header, "CDELT3") * 0.001,
+				0, 0, 0
+		};
+		
+		// Create the Gildas cube from previous data
+		String source = "";
+		init(source, cube, unit, line, freq, ra, dec, (float) v0, (float) beamMajor, (float) beamMinor, (float) beamPA, formula);
+		projectionType = PROJECTION.TAN; // TAN projection mentioned in CTYPE
+    }
 
     private void readFile(String path)
     throws JPARSECException {
         readingFile = true;
         this.path = path;
+        
+        if (path.endsWith(".fits")) {
+        	readFromFits(path);
+        	readingFile = false;
+        	return;
+        }
+        
         try
         {
             bis = new RandomAccessFile(path, "r");

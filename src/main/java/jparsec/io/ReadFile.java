@@ -56,6 +56,7 @@ import jparsec.math.Constant;
 import jparsec.observer.LocationElement;
 import jparsec.observer.ObserverElement;
 import jparsec.time.AstroDate;
+import jparsec.time.DateTimeOps;
 import jparsec.time.TimeElement;
 import jparsec.time.TimeElement.SCALE;
 import jparsec.util.Configuration;
@@ -3143,35 +3144,74 @@ public class ReadFile implements Serializable
 
 		try
 		{
-			ReadFile rfile = new ReadFile(FileIO.DATA_SUNSPOT_DIRECTORY + fileName, ReadFile.ENCODING_ISO_8859);
-			ArrayList<String> v = rfile.readResource();
+			if (year >= 2016) {
+				// DPD Catalog at http://fenyi.solarobs.csfk.mta.hu/DPD/
+				// Baranyi+ 2016, https://arxiv.org/abs/1606.00669
+				// Gyori+ 2017, https://arxiv.org/pdf/1612.03274v1.pdf
+				FileFormatElement DEBRECEN_PHOTOH_DATA[] = {
+						new FileFormatElement(22, 28, "NOAA_GROUP_NUMBER"),
+						new FileFormatElement(30, 34, "SPOT_NUMBER_IN_GROUP"),
+						new FileFormatElement(42, 46, "SPOT_AREA_NOT_CORRECTED"),
+						new FileFormatElement(54, 58, "SPOT_AREA"),
+						new FileFormatElement(36, 40, "UMBRAL_AREA_NOT_CORRECTED"),
+						new FileFormatElement(48, 52, "UMBRAL_AREA"),
+						new FileFormatElement(60, 65, "LATITUDE"),
+						new FileFormatElement(67, 72, "LONGITUDE"),
+						new FileFormatElement(41, 44, "SPOT_AREA"), 
+						new FileFormatElement(88, 93, "DISTANCE_TO_CENTRE"),
+						new FileFormatElement(81, 86, "POSITION_ANGLE"), 
+						new FileFormatElement(74, 79, "CENTRAL_MERIDIAN_DISTANCE"),
+				};
 
-			int nlines = v.size();
-			rf.setFormatToRead(FileFormatElement.NOAA_GREENWICH_SOLAR_SPOTS);
-			String groupLabel = "NOAA";
-			if (astro.getYear() < 1976)
-				groupLabel = "GREENWICH";
-			for (int i = 0; i < nlines; i++)
-			{
-				String line = v.get(i);
-
-				int month = rf.readInteger(line, "MONTH");
-				int day = rf.readInteger(line, "DAY");
-				if (month == astro.getMonth() && day == astro.getDay())
-				{
-					String gn = rf.readString(line, "GROUP_NUMBER");
-					if (gn.length() > 1) gn = gn.substring(1);
-					String group = groupLabel + gn;
-					String type = rf.readString(line, "GREENWICH_GROUP_TYPE");
-					if (astro.getYear() > 1981)
-						type = rf.readString(line, "NOAA_GROUP_TYPE");
-					double area = rf.readDouble(line, "SPOT_AREA") / 1000000.0;
+				fileName = "DPD"+year+".txt";
+				ReadFile rfile = new ReadFile(FileIO.DATA_SUNSPOT_DIRECTORY + fileName, ReadFile.ENCODING_ISO_8859);
+				rf.setFormatToRead(DEBRECEN_PHOTOH_DATA);
+				String mo = DateTimeOps.twoDigits(astro.getMonth());
+				String da = DateTimeOps.twoDigits(astro.getMonth());
+				ArrayList<String> v = rfile.readResourceContaining("s "+year+" "+mo+" "+da+" ");
+				for (int i = 0; i < v.size(); i++) {
+					String line = v.get(i);
+					
+					double area = rf.readDouble(line.trim(), "SPOT_AREA") / 1000000.0;
+					if (area < 0) area = -area;
+					String group = rf.readString(line, "NOAA_GROUP_NUMBER").trim();
+					String type = rf.readString(line, "SPOT_NUMBER_IN_GROUP").trim();
 					double lon = rf.readDouble(line, "LONGITUDE") * Constant.DEG_TO_RAD;
 					double lat = rf.readDouble(line, "LATITUDE") * Constant.DEG_TO_RAD;
-
-					String record[] = new String[]
-					{ group, type, "" + lon, "" + lat, "" + area };
-					out.add(record);
+					String record[] = new String[] {group, type, "" + lon, "" + lat, "" + area};
+					out.add(record);					
+				}				
+			} else {
+				ReadFile rfile = new ReadFile(FileIO.DATA_SUNSPOT_DIRECTORY + fileName, ReadFile.ENCODING_ISO_8859);
+				ArrayList<String> v = rfile.readResource();
+	
+				int nlines = v.size();
+				rf.setFormatToRead(FileFormatElement.NOAA_GREENWICH_SOLAR_SPOTS);
+				String groupLabel = "NOAA";
+				if (astro.getYear() < 1976)
+					groupLabel = "GREENWICH";
+				for (int i = 0; i < nlines; i++)
+				{
+					String line = v.get(i);
+	
+					int month = rf.readInteger(line, "MONTH");
+					int day = rf.readInteger(line, "DAY");
+					if (month == astro.getMonth() && day == astro.getDay())
+					{
+						String gn = rf.readString(line, "GROUP_NUMBER");
+						if (gn.length() > 1) gn = gn.substring(1);
+						String group = groupLabel + gn;
+						String type = rf.readString(line, "GREENWICH_GROUP_TYPE");
+						if (astro.getYear() > 1981)
+							type = rf.readString(line, "NOAA_GROUP_TYPE");
+						double area = rf.readDouble(line, "SPOT_AREA") / 1000000.0;
+						double lon = rf.readDouble(line, "LONGITUDE") * Constant.DEG_TO_RAD;
+						double lat = rf.readDouble(line, "LATITUDE") * Constant.DEG_TO_RAD;
+	
+						String record[] = new String[]
+						{ group, type, "" + lon, "" + lat, "" + area };
+						out.add(record);
+					}
 				}
 			}
 		} catch (Exception e)
@@ -3186,55 +3226,57 @@ public class ReadFile implements Serializable
 				if (lastNOAAdate > 0 && Math.abs(lastNOAAdate-jd) < 3 && lastNOAAdata != null) {
 					data = lastNOAAdata;
 				} else {
-					String link = "http://services.swpc.noaa.gov/text/solar-regions.txt";
+					String link = "https://services.swpc.noaa.gov/text/solar-regions.txt";
 					data = GeneralQuery.query(link, Configuration.QUERY_TIMEOUT);
 					lastSun = null;
 				}
 				if (!data.equals("")) {
 					String lines[] = DataSet.toStringArray(data, FileIO.getLineSeparator());
 					int idate = DataSet.getIndexStartingWith(lines, ":Solar_Region_Summary");
-					int idate1 = lines[idate].lastIndexOf(":");
-					String date = lines[idate].substring(idate1+1).trim();
-					int myyear = Integer.parseInt(FileIO.getField(1, date, " ", true));
-					int myday = Integer.parseInt(FileIO.getField(3, date, " ", true));
-					int mymonth = 1 + DataSet.getIndexStartingWith(AstroDate.MONTH_NAMES, FileIO.getField(2, date, " ", true));
-
-					AstroDate astrodate = new AstroDate(myyear, mymonth, myday);
-
-					double dif = Math.abs(astrodate.jd()-jd);
-					if (dif < 3) {
-						lastNOAAdate = astrodate.jd();
-						lastNOAAdata = data;
-
-						int inum = DataSet.getIndexStartingWith(lines, "# Num");
-						if (lastSun == null) {
-							EphemerisElement eph = new EphemerisElement(TARGET.SUN, EphemerisElement.COORDINATES_TYPE.APPARENT,
-									EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.GEOCENTRIC, EphemerisElement.REDUCTION_METHOD.IAU_2006,
-									EphemerisElement.FRAME.DYNAMICAL_EQUINOX_J2000);
-							TimeElement time = new TimeElement(astrodate.jd()+1, SCALE.UNIVERSAL_TIME_UTC);
-							ObserverElement obs = new ObserverElement();
-							lastSun = Ephem.getEphemeris(time, obs, eph, false);
-						}
-
-						for (int i=inum+1; i<lines.length; i++) {
-							String fields[] = DataSet.toStringArray(lines[i], " ", true);
-							if (fields.length < 8) continue;
-							
-							String group = "NOAA" + fields[0];
-							String type = fields[7];
-							double area = Double.parseDouble(fields[3]) / 1000000.0;
-
-							fields[1] = DataSet.replaceAll(fields[1], "*", "", true);
-							double lon = -Double.parseDouble(fields[1].substring(4));
-							double lat = Double.parseDouble(fields[1].substring(1, 3));
-							if (fields[1].substring(3).startsWith("W")) lon = -lon;
-							if (fields[1].startsWith("S")) lat = -lat;
-							lon *= Constant.DEG_TO_RAD;
-							lat *= Constant.DEG_TO_RAD;
-							lon += lastSun.longitudeOfCentralMeridian;
-
-							String record[] = new String[] { group, type, "" + lon, "" + lat, "" + area };
-							out.add(record);
+					if (idate >= 0) {
+						int idate1 = lines[idate].lastIndexOf(":");
+						String date = lines[idate].substring(idate1+1).trim();
+						int myyear = Integer.parseInt(FileIO.getField(1, date, " ", true));
+						int myday = Integer.parseInt(FileIO.getField(3, date, " ", true));
+						int mymonth = 1 + DataSet.getIndexStartingWith(AstroDate.MONTH_NAMES, FileIO.getField(2, date, " ", true));
+	
+						AstroDate astrodate = new AstroDate(myyear, mymonth, myday);
+	
+						double dif = Math.abs(astrodate.jd()-jd);
+						if (dif < 3) {
+							lastNOAAdate = astrodate.jd();
+							lastNOAAdata = data;
+	
+							int inum = DataSet.getIndexStartingWith(lines, "# Num");
+							if (lastSun == null) {
+								EphemerisElement eph = new EphemerisElement(TARGET.SUN, EphemerisElement.COORDINATES_TYPE.APPARENT,
+										EphemerisElement.EQUINOX_OF_DATE, EphemerisElement.GEOCENTRIC, EphemerisElement.REDUCTION_METHOD.IAU_2006,
+										EphemerisElement.FRAME.DYNAMICAL_EQUINOX_J2000);
+								TimeElement time = new TimeElement(astrodate.jd()+1, SCALE.UNIVERSAL_TIME_UTC);
+								ObserverElement obs = new ObserverElement();
+								lastSun = Ephem.getEphemeris(time, obs, eph, false);
+							}
+	
+							for (int i=inum+1; i<lines.length; i++) {
+								String fields[] = DataSet.toStringArray(lines[i], " ", true);
+								if (fields.length < 8) continue;
+								
+								String group = "NOAA" + fields[0];
+								String type = fields[7];
+								double area = Double.parseDouble(fields[3]) / 1000000.0;
+	
+								fields[1] = DataSet.replaceAll(fields[1], "*", "", true);
+								double lon = -Double.parseDouble(fields[1].substring(4));
+								double lat = Double.parseDouble(fields[1].substring(1, 3));
+								if (fields[1].substring(3).startsWith("W")) lon = -lon;
+								if (fields[1].startsWith("S")) lat = -lat;
+								lon *= Constant.DEG_TO_RAD;
+								lat *= Constant.DEG_TO_RAD;
+								lon += lastSun.longitudeOfCentralMeridian;
+	
+								String record[] = new String[] { group, type, "" + lon, "" + lat, "" + area };
+								out.add(record);
+							}
 						}
 					}
 				}

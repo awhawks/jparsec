@@ -24,7 +24,6 @@ package jparsec.graph.chartRendering;
 import java.util.ArrayList;
 
 import jparsec.astronomy.Difraction;
-import jparsec.astronomy.CoordinateSystem.COORDINATE_SYSTEM;
 import jparsec.ephem.Ephem;
 import jparsec.ephem.EphemerisElement;
 import jparsec.ephem.EphemerisElement.ALGORITHM;
@@ -2404,7 +2403,7 @@ public class RenderPlanet
 					}
 
 					TARGET satTarget = null;
-					int adds = g.renderingToAndroid() ? 2:1;
+					//int adds = g.renderingToAndroid() ? 2:1;
 					for (int isat0 = 0; isat0 < moon.length; isat0++)
 					{
 						isat = (int) isatOrdered[isat0];
@@ -3268,31 +3267,40 @@ public class RenderPlanet
 		String feature = null;
 		double minDist = -1;
 
+		String n = target.getEnglishName();
 		try {
-			String n = target.getEnglishName();
-			if (!ReadFile.resourceAvailable(FileIO.DATA_SKY_LOCATIONS_DIRECTORY +n+".txt"))
-				return null;
-			ArrayList<String> v = ReadFile.readResource(FileIO.DATA_SKY_LOCATIONS_DIRECTORY +n+".txt",
+			ArrayList<String> v = null;
+			if (v == null) { 
+				if (!ReadFile.resourceAvailable(FileIO.DATA_SKY_LOCATIONS_DIRECTORY +n+".txt"))
+					return null;
+				v = ReadFile.readResource(FileIO.DATA_SKY_LOCATIONS_DIRECTORY +n+".txt",
 					ReadFile.ENCODING_UTF_8);
+			}
 			double lon0 = loc.getLongitude() * Constant.RAD_TO_DEG;
 			double lat0 = loc.getLatitude() * Constant.RAD_TO_DEG;
-			String sep = UnixSpecialCharacter.UNIX_SPECIAL_CHARACTER.TAB.value;
+			String sep = "\t";
+			double cosLat0 = FastMath.cos(lat0);
+			double maxDist2 = maxDist / cosLat0, minDist2 = -1;
 			for (int i=0; i<v.size(); i++)
 			{
 				String line = v.get(i);
 
 				String lat = FileIO.getField(3, line, sep, true);
 				double latp = DataSet.parseDouble(lat);
+				if (minDist > 0 && Math.abs(latp-lat0) > minDist) continue;
 				if (maxDist > 0 && Math.abs(latp-lat0) > maxDist) continue;
 
 				String lon = FileIO.getField(4, line, sep, true);
 				double lonp = DataSet.parseDouble(lon); // Different criteria, East positive ! ?
 				if (target != TARGET.Moon && target != TARGET.MERCURY && target != TARGET.VENUS && target != TARGET.EARTH) lonp = -lonp;
-				if (maxDist > 0 && Math.abs(lonp-lon0) > maxDist && Math.abs(lonp-lon0) < 360.0 - maxDist) continue;
+				
+				double dlon = Functions.normalizeDegrees(lonp - lon0);
+				if (minDist2 > 0 && dlon > minDist2 && dlon < 360.0 - minDist2) continue;
+				if (maxDist2 > 0 && dlon > maxDist2 && dlon < 360.0 - maxDist2) continue;
 
 				LocationElement loc0 = new LocationElement(lonp*Constant.DEG_TO_RAD,latp*Constant.DEG_TO_RAD,1.0);
 				double dist = LocationElement.getApproximateAngularDistance(loc, loc0);
-				if (dist < 0.5) dist = LocationElement.getAngularDistance(loc, loc0);
+				if (dist < Constant.DEG_TO_RAD) dist = LocationElement.getAngularDistance(loc, loc0);
 				if (dist < minDist || minDist == -1) {
 					String size = FileIO.getField(5, line, sep, true);
 					if (minDiameter > 0 && DataSet.isDoubleStrictCheck(size)) {
@@ -3300,6 +3308,7 @@ public class RenderPlanet
 						if (s < minDiameter) continue;
 					}
 					minDist = dist;
+					minDist2 = dist / cosLat0;
 					String name = FileIO.getField(1, line, sep, true);
 					String type = FileIO.getField(2, line, sep, true);
 					String detail = FileIO.getField(6, line, sep, true);
@@ -3307,7 +3316,8 @@ public class RenderPlanet
 					feature = name + " ("+type+") ("+Functions.formatValue(lonp, 2)+"\u00b0) ("+Functions.formatValue(latp, 2)+"\u00b0) ("+size+" km) ("+detail+")";
 				}
 			}
-		} catch (Exception exc) { }
+		} catch (Exception exc) { 
+		}
 		if (minDist != -1 && maxDist > 0 && minDist > maxDist * Constant.DEG_TO_RAD) return null;
 
 		return feature;
