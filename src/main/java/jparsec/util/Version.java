@@ -345,7 +345,7 @@ public class Version
 						"Sky rendering supports transparency images that can be used to render Stellarium-like scenes (see the ephemerides server).\n"+
 						"Italian language supported thanks to Angelo Nicolini.\n"+
 						"Many other minor fixes (see https://bitbucket.org/talonsoalbi/jparsec/commits/all).\n",
-				"      1.116: Fixes to solar spots and SN catalogs not working (December XX, 2018) :\n"+
+				"      1.116: Fixes to solar spots and SN catalogs not working (December 4, 2018) :\n"+
 						"Initial support to read fits cubes from Gildas in LMVCube.\n"+
 						"New files for sun spots for 2016 and after, using the DPD catalog at http://fenyi.solarobs.csfk.mta.hu/DPD/.\n"+
 						"New files for SN catalogos for 2015 and after, using the Open Supernova Project at https://sne.space/.\n"+

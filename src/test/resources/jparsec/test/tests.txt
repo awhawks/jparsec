@@ -349,7 +349,7 @@
 ! Default location is Madrid.
 ! Note Simbad/Vizier queries are sometimes not working, specially in weekends ... 
 13; 2011, 7, 13, 10, 22, 46, HD259431; 06h 33m 05.19s, 10° 19' 20.0", 06h 33m 43.28s, 10° 18' 45.8", 4.27, 12.97, 12.88
-13; 2011, 7, 13, 10, 22, 46, R Mon; 06h 39m 09.95s, 08° 44' 09.7", 06h 39m 47.58s, 08° 43' 29.5", -3.01, 6.80, 6.70
+13; 2011, 7, 13, 10, 22, 46, R Mon; 06h 39m 09.95s, 08° 44' 09.6", 06h 39m 47.59s, 08° 43' 29.4", -3.01, 6.80, 6.70
 !
 ! ***
 ! Test for main astronomical events, like Venus or Mercury transits on the Sun disk, equinox and

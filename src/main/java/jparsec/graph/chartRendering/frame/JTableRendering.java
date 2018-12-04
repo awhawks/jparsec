@@ -14,7 +14,6 @@ import java.util.Comparator;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTable;
-import javax.swing.JTextArea;
 import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
@@ -129,7 +128,7 @@ public class JTableRendering implements PropertyChangeListener, MouseListener {
 	}
 
 	/**
-	 * Sets the separator used to show in one cell multiple lines of text ({@inheritDoc JList}).
+	 * Sets the separator used to show in one cell multiple lines of text ({@linkplain JList}).
 	 * In the table data the list of items will be an unique string, that should be separated 
 	 * in a list with the separator provided here. Default is a comma. 
 	 * @param s The separator for lists of items in one cell.
