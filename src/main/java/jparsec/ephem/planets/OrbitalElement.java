@@ -837,7 +837,7 @@ public class OrbitalElement implements Serializable
 
 		int year = time.astroDate.getYear();
 
-		int n = (150 * w) / 500;
+		int n = (250 * w) / 500;
 		double step = 5.0;
 		boolean close = true;
 		if (orbit != null) {
@@ -948,7 +948,7 @@ public class OrbitalElement implements Serializable
 				}
 			}
 		}
-		n = 3;
+		n = 4;
 		if (showPlanets) {
 			g.setColor(Functions.getColor(0, 0, 255, 255), true);
 			int offy = g.getFont().getSize();
@@ -963,7 +963,7 @@ public class OrbitalElement implements Serializable
 				}
 			}
 		}
-		g.setColor(Functions.getColor(255, 255, 0, 255), true);
+		g.setColor(Color.ORANGE.getRGB(), true);
 		g.fillOval(x0 - n, y0 - n, 2*n, 2*n, false);
 		g.setColor(Functions.getColor(0, 0, 0, 255), true);
 		int border = 100;
@@ -1001,7 +1001,7 @@ public class OrbitalElement implements Serializable
 			}
 			break;
 		};
-		s = Functions.formatValue(factor, 3);
+		s = Functions.formatValue(factor, 1);
 		if (showPlanets) {
 			if (Translate.getDefaultLanguage() == LANGUAGE.SPANISH) {
 				s += " UA";

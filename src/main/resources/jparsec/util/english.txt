@@ -1326,3 +1326,6 @@ Pulsating
 Eruptive
 Eclipsing
 Rotating
+NO RISE ON THIS DATE
+NO TRANSIT ON THIS DATE
+NO SET ON THIS DATE

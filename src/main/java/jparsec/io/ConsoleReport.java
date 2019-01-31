@@ -27,6 +27,7 @@ import java.util.Properties;
 import java.util.Set;
 
 import jparsec.ephem.Functions;
+import jparsec.ephem.RiseSetTransit;
 import jparsec.ephem.Target;
 import jparsec.ephem.Target.TARGET;
 import jparsec.ephem.planets.EphemElement;
@@ -139,10 +140,22 @@ public class ConsoleReport
 			if (ephem.set != null && ephem.set.length > l) l = ephem.set.length;
 			if (ephem.transit != null && ephem.transit.length > l) l = ephem.transit.length;
 			for (int i=0; i<l; i++) {
-				if (ephem.rise != null && ephem.rise.length > i) out += name + Translate.translate(295)+": " + TimeFormat.formatJulianDayAsDateAndTime(ephem.rise[i], SCALE.LOCAL_TIME) + sep;
-				if (ephem.transit != null && ephem.transit.length > i) out += name + Translate.translate(297)+": " + TimeFormat.formatJulianDayAsDateAndTime(ephem.transit[i], SCALE.LOCAL_TIME) + sep;
+				if (ephem.rise != null && ephem.rise.length > i) {
+					String rise = TimeFormat.formatJulianDayAsDateAndTime(ephem.rise[i], SCALE.LOCAL_TIME);
+					if (ephem.rise[i] == RiseSetTransit.NO_RISE_SET_TRANSIT) rise = Translate.translate(1328);
+					out += name + Translate.translate(295)+": " + rise + sep;
+				}
+				if (ephem.transit != null && ephem.transit.length > i) {
+					String transit = TimeFormat.formatJulianDayAsDateAndTime(ephem.transit[i], SCALE.LOCAL_TIME);
+					if (ephem.transit[i] == RiseSetTransit.NO_RISE_SET_TRANSIT) transit = Translate.translate(1329);
+					out += name + Translate.translate(297)+": " + transit + sep;
+				}
 				if (ephem.transitElevation != null && ephem.transitElevation.length > i && ephem.transit[i] > 0) out += name + Translate.translate(298)+": " + Functions.formatAngle(ephem.transitElevation[i], 1) + sep;
-				if (ephem.set != null && ephem.set.length > i) out += name + Translate.translate(296)+": " + TimeFormat.formatJulianDayAsDateAndTime(ephem.set[i], SCALE.LOCAL_TIME) + sep;
+				if (ephem.set != null && ephem.set.length > i) {
+					String set = TimeFormat.formatJulianDayAsDateAndTime(ephem.set[i], SCALE.LOCAL_TIME);
+					if (ephem.set[i] == RiseSetTransit.NO_RISE_SET_TRANSIT) set = Translate.translate(1330);
+					out += name + Translate.translate(296)+": " + set + sep;
+				}
 			}
 		}
 		out += name + Translate.translate(300)+": " + (float) (ephem.lightTime * factor2) + " " + unit2 + sep;
@@ -267,10 +280,24 @@ public class ConsoleReport
 		} else {
 			out += name + Translate.translate(299)+": " + Functions.formatValue(ephem.distance * factor, n) + " " + unit + sep;
 		}
-		if (ephem.rise != null) out += name + Translate.translate(295)+": " + TimeFormat.formatJulianDayAsDateAndTime(ephem.rise[0], SCALE.LOCAL_TIME) + sep;
-		if (ephem.transit != null) out += name + Translate.translate(297)+": " + TimeFormat.formatJulianDayAsDateAndTime(ephem.transit[0], SCALE.LOCAL_TIME) + sep;
+		
+		if (ephem.rise != null) {
+			String rise = TimeFormat.formatJulianDayAsDateAndTime(ephem.rise[0], SCALE.LOCAL_TIME);
+			if (ephem.rise[0] == RiseSetTransit.NO_RISE_SET_TRANSIT) rise = Translate.translate(1328);
+			out += name + Translate.translate(295)+": " + rise + sep;
+		}
+		if (ephem.transit != null) {
+			String transit = TimeFormat.formatJulianDayAsDateAndTime(ephem.transit[0], SCALE.LOCAL_TIME);
+			if (ephem.transit[0] == RiseSetTransit.NO_RISE_SET_TRANSIT) transit = Translate.translate(1329);
+			out += name + Translate.translate(297)+": " + transit + sep;
+		}
 		if (ephem.transitElevation != null && ephem.transit[0] > 0) out += name + Translate.translate(298)+": " + Functions.formatAngle(ephem.transitElevation[0], 1) + sep;
-		if (ephem.set != null) out += name + Translate.translate(296)+": " + TimeFormat.formatJulianDayAsDateAndTime(ephem.set[0], SCALE.LOCAL_TIME) + sep;
+		if (ephem.set != null) {
+			String set = TimeFormat.formatJulianDayAsDateAndTime(ephem.set[0], SCALE.LOCAL_TIME);
+			if (ephem.set[0] == RiseSetTransit.NO_RISE_SET_TRANSIT) set = Translate.translate(1330);
+			out += name + Translate.translate(296)+": " + set + sep;
+		}
+		
 		if (!isStar) out += name + Translate.translate(301)+": " + Functions.formatAngle(ephem.elongation, decimalArcsec) + sep;
 		if (!isStar) out += name + Translate.translate(302)+": " + Functions.formatAngle(ephem.phaseAngle, decimalArcsec) + sep;
 		out += name + Translate.translate(321)+": " + ephem.constellation + sep;

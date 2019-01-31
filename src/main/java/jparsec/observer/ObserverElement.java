@@ -1078,18 +1078,32 @@ public class ObserverElement implements Serializable {
 	 */
 	public ObserverElement(String ip) throws JPARSECException {
 		// Create and execute query
-		String query = "http://freegeoip.net/csv/";
-		if (ip != null && !ip.equals("")) query = "http://freegeoip.net/csv/" + ip;
+		String query = "http://api.ipstack.com/check?access_key=8aa6cb5c55d68fcc823bb2e62155acd1";
+		if (ip != null && !ip.equals("")) query = "http://api.ipstack.com/" + ip + "?access_key=8aa6cb5c55d68fcc823bb2e62155acd1";
 		String out = GeneralQuery.query(query, "UTF-8", 30000);
 
 		// Parse query results
-		String country = FileIO.getField(3, out, ",", false);
-		String region = FileIO.getField(5, out, ",", false);
-		String city = FileIO.getField(6, out, ",", false);
-		String lat = FileIO.getField(9, out, ",", false);
-		String lon = FileIO.getField(10, out, ",", false);
+		String country = FileIO.getField(6, out, ",", false);
+		String region = FileIO.getField(8, out, ",", false);
+		String city = FileIO.getField(9, out, ",", false);
+		String lat = FileIO.getField(11, out, ",", false);
+		String lon = FileIO.getField(12, out, ",", false);
 		// String time = FileIO.getField(11, out, ",", false); // time zone in hours
 
+		country = FileIO.getField(2, country, ":", false);
+		region = FileIO.getField(2, region, ":", false);
+		city = FileIO.getField(2, city, ":", false);
+		lat = FileIO.getField(2, lat, ":", false);
+		lon = FileIO.getField(2, lon, ":", false);
+		country = DataSet.replaceAll(country, "\"", "", true);
+		region = DataSet.replaceAll(region, "\"", "", true);
+		country = DataSet.replaceAll(country, "null", "", true);
+		region = DataSet.replaceAll(region, "null", "", true);
+		city = DataSet.replaceAll(city, "null", "", true);
+		city = DataSet.replaceAll(city, "\"", "", true);
+		lat = DataSet.replaceAll(lat, "\"", "", true);
+		lon = DataSet.replaceAll(lon, "\"", "", true);
+		
 		country = DataSet.capitalize(country.toLowerCase(), true);
 		country = DataSet.replaceAll(country, " And ", " and ", true);
 		country = DataSet.replaceAll(country, " Of ", " of ", true);
@@ -1105,6 +1119,8 @@ public class ObserverElement implements Serializable {
 			tz = DataSet.parseDouble(h) + DataSet.parseDouble(m) / 60.0;
 		} else {
 */			CityElement closestCity = City.findNearestCity(new LocationElement(obslon * Constant.DEG_TO_RAD, obslat * Constant.DEG_TO_RAD, 1.0));
+			if (city == null || city.equals("")) city = closestCity.name;
+			if (country == null || country.equals("")) country = closestCity.country;
 			tz = closestCity.timeZone;
 //		}
 

@@ -1326,3 +1326,6 @@ Pulsante
 Eruttiva
 Ad Eclissi
 Rotante
+NESSUN SORGERE
+NESSUN TRANSITO
+NESSUN TRAMONTO

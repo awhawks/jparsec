@@ -81,12 +81,14 @@ public class HTMLReport implements Serializable {
 		VERY_SMALL,
 		/** ID constant for a small text size. */
 		SMALL,
-		/** ID constant for a medium text size. */
+		/** ID constant for a medium text size (default). */
 		NORMAL,
 		/** ID constant for a large text size. */
 		LARGE,
 		/** ID constant for a very large text size. */
-		VERY_LARGE
+		VERY_LARGE,
+		/** ID constant for an undefined text size, will not be used. */
+		UNDEFINED
 	};
 
 	/**
@@ -722,7 +724,7 @@ public class HTMLReport implements Serializable {
 	{
 		htmlCode.append(this.getBeginOfCurrentStyle());
 		String size = "";
-		if (useSize) size = "size=\""+(2+this.textSize.ordinal())+"\"";
+		if (useSize && textSize != SIZE.UNDEFINED) size = "size=\""+(2+this.textSize.ordinal())+"\"";
 		htmlCode.append("<font "+size+" color = \"#"+this.textColor+"\">");
 		htmlCode.append(HTMLReport.format(text));
 		htmlCode.append("</font>");

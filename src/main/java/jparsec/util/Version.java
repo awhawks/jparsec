@@ -347,10 +347,18 @@ public class Version
 						"Many other minor fixes (see https://bitbucket.org/talonsoalbi/jparsec/commits/all).\n",
 				"      1.116: Fixes to solar spots and SN catalogs not working (December 4, 2018) :\n"+
 						"Initial support to read fits cubes from Gildas in LMVCube.\n"+
+						"JTableRendering has been revised to support new features.\n"+
 						"New files for sun spots for 2016 and after, using the DPD catalog at http://fenyi.solarobs.csfk.mta.hu/DPD/.\n"+
 						"New files for SN catalogos for 2015 and after, using the Open Supernova Project at https://sne.space/.\n"+
 						"Current sun spots are again working after the fix http -> https protocol, as happend with orbitales elements recently.\n"+
-						"Orbital elements updated.\n"
+						"Orbital elements updated.\n",
+				"      1.117: Fixes (XXX, 2019) :\n"+
+						"More realistic brightness of the horizon texture during sunrise/sunset.\n"+
+						"Better messages when an object does not rise or set on a given date in ConsoleReport.\n"+
+						"Geolocalization did not work anymore in ObserverElement class, fixed.\n"+
+						"The findCity method in City class now recognize input like 'cityname (country), much better than cityname[int].\n'"+
+						"Some improvements in HTMLReport with fonts and OrbitalElement with the orbit chart.\n"+
+						"Better support for 4k screens in sky rendering.\n"
 
 				+FileIO.getLineSeparator(),
 		};
@@ -359,7 +367,7 @@ public class Version
 		// Dependencies for JPARSEC programs and models
 		String library[] = new String[] {
 			// Dependency name                             Version
-			"jparsec.jar                                   1.116",
+			"jparsec.jar                                   1.117",
 
 			"sky.jar                                       1.45",
 			"orbital_elements.jar                          1.28",

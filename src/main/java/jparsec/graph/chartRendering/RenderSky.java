@@ -668,7 +668,7 @@ public class RenderSky
         		leyendMargin = 1+(51*render.drawCoordinateGridFont.getSize())/15;
     		if (maglim > 9)
     			leyendMargin += maglim-9;
-    		if (hugeFactor > 1) leyendMargin *= hugeFactor;
+    		if (hugeFactor > 1) leyendMargin *= (hugeFactor-1);
 
     		int recy = 0, recx = graphMarginX, recw = render.width-graphMarginX, rech = render.height-leyendMargin-graphMarginY;
     		if (render.drawLeyend == LEYEND_POSITION.TOP) recy = leyendMargin;
@@ -2576,7 +2576,7 @@ public class RenderSky
 		if (mag > maglim) return 0;
 		double maglim2 = ((int) maglim) + 0.5;
 		float dif = (float) (maglim2-mag);
-		if (hugeFactor > 2) dif *= (hugeFactor-1);
+		if (hugeFactor > 2) dif *= (hugeFactor-2);
 //		if (maglim2 >= 9.51) {
 //			return (float) (Math.pow(dif, 0.9)+0.5);
 //		}
@@ -2807,11 +2807,11 @@ public class RenderSky
 		int minr = Integer.parseInt(FileIO.getField(1, data[0], " ", true));
 		int ming = Integer.parseInt(FileIO.getField(2, data[0], " ", true));
 		int minb = Integer.parseInt(FileIO.getField(3, data[0], " ", true));
-		if (render.planetRender.ephemSun.elevation*Constant.RAD_TO_DEG > 15) {
+		if (render.planetRender.ephemSun.elevation*Constant.RAD_TO_DEG > 5) {
 			brightness = 0;
 		} else {
 			if (render.planetRender.ephemSun.elevation*Constant.RAD_TO_DEG > -15) {
-				double exp = 1 - (render.planetRender.ephemSun.elevation*Constant.RAD_TO_DEG + 15)/30.0;
+				double exp = 1 - (render.planetRender.ephemSun.elevation*Constant.RAD_TO_DEG + 15)/20.0;
 				brightness = (int) (brightness * exp * exp);
 			}
 		}

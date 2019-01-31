@@ -649,11 +649,15 @@ public final class City
 	static protected CityElement c_Madrid = null;
 
 	/**
-	 * Find one city given it's name or part of it.
+	 * Find one city given it's name or part of it. When there are several cities with 
+	 * the same same it is possible to avoid confusion with two options: adding the country 
+	 * name between parenthesis, like Roma (Italy), or adding an integer in brackets representing which 
+	 * to return in the order given in the database, like Roma[0] for the first result.
 	 *
 	 * @param city_location The name of the city or representative part of it's name.
 	 * In case several locations could exists with the same name, you can use the
-	 * suffix [0] to get the first, [1] for the second, and so on. The complete
+	 * suffix [0] to get the first, [1] for the second, and so on. Or you can add the country 
+	 * between parenthesis to avoid confusion. The complete
 	 * list of locations with a given name is provided by {@linkplain City#findAllCities(String)}.
 	 * @return The object CityElement containing the first city that matches the
 	 *         search, or the best match. Null if none is found. In case several are found with the
@@ -665,7 +669,9 @@ public final class City
 			throws JPARSECException {
 		if (c_Madrid != null && city_location.equals("Madrid")) return c_Madrid;
 		int b = city_location.indexOf("[");
+		int ba = city_location.lastIndexOf("(");
 		int n = 0;
+		String country = null;
 		boolean specified = false;
 		if (b > 0) {
 			int bb = city_location.indexOf("]");
@@ -674,13 +680,26 @@ public final class City
 				city_location = city_location.substring(0, b);
 				specified = true;
 			}
+		} else {
+			if (ba > 0) {
+				String co = city_location.substring(ba+1);
+				city_location = city_location.substring(0, ba).trim();
+				co = co.substring(0, co.indexOf(")")).trim();
+				country = co.toLowerCase();
+				specified = true;
+			}
 		}
 
 		CityElement c[] = findAllCities(city_location, specified ? 0 : 1);
 		if (c != null) {
 			if (c.length > 1 && !specified) JPARSECException.addWarning("Found "+c.length+" locations named '"+city_location+"'. Selecting the one with index number "+n+".");
 			if (c_Madrid == null && city_location.equals("Madrid")) c_Madrid = c[n];
-			return c[n];
+			if (country != null) {
+				for (int i=0; i<c.length; i++) {
+					if (c[i].country.toLowerCase().equals(country)) return c[i];
+				}
+			}
+			if (n >= 0) return c[n];
 		}
 
 		return null;
