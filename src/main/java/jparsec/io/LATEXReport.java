@@ -1537,19 +1537,21 @@ public class LATEXReport implements Serializable
 		if (alsoSize) {
 			switch (textSize) {
 			case NORMAL:
-				style = "{\\normal ";
+				style = "{\\normal {";
 				break;
 			case LARGE:
-				style = "{\\large ";
+				style = "{\\large {";
 				break;
 			case SMALL:
-				style = "{\\small ";
+				style = "{\\small {";
 				break;
 			case VERY_LARGE:
-				style = "{\\huge ";
+				style = "{\\huge {";
 				break;
 			case VERY_SMALL:
-				style = "{\\tiny ";
+				style = "{\\tiny {";
+				break;
+			case UNDEFINED:
 				break;
 			}
 		}
@@ -1559,19 +1561,19 @@ public class LATEXReport implements Serializable
 		case PLAIN:
 			break;
 		case BOLD:
-			style += "{\\textbf ";
+			style += "{\\textbf {";
 			break;
 		case ITALIC:
-			style += "{\\textit ";
+			style += "{\\textit {";
 			break;
 		case UNDERLINE:
-			style += "{\\underline ";
+			style += "{\\underline {";
 			break;
 		case UNDERLINE_BOLD:
-			style += "{\\textbf{\\underline ";
+			style += "{\\textbf{\\underline {";
 			break;
 		case UNDERLINE_ITALIC:
-			style += "{\\textit{\\underline ";
+			style += "{\\textit{\\underline {";
 			break;
 		}
 		return style;
@@ -1585,22 +1587,22 @@ public class LATEXReport implements Serializable
 			style = "";
 			break;
 		case BOLD:
-			style = "}";
+			style = "}}";
 			break;
 		case ITALIC:
-			style = "}";
+			style = "}}";
 			break;
 		case UNDERLINE:
-			style = "}";
+			style = "}}";
 			break;
 		case UNDERLINE_BOLD:
-			style = "}}";
+			style = "}}}";
 			break;
 		case UNDERLINE_ITALIC:
-			style = "}}";
+			style = "}}}";
 			break;
 		}
-		if (alsoSize) return style + "}";
+		if (alsoSize) return style + "}}";
 		return style;
 	}
 	/**

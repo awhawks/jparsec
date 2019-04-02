@@ -360,10 +360,10 @@ public class MieTheory implements Serializable
 	 * Obtains the cross sections for absorption, scattering, and extinction of dust
 	 * for a given size distribution. An integration
 	 * is performed from 5E-3 microns up to the given maximum dust radius. This
-	 * method ussually requires a a lot of computing time.
+	 * method usually requires a a lot of computing time.
 	 *
 	 * @param dust Dust properties.
-	 * @param wavelength Wavelenth in microns, between 0.001 and 1000.
+	 * @param wavelength Wavelength in microns, between 0.001 and 1000.
 	 * @param refractiveIndex The adequate refractive index for the current grain.
 	 * @param np Number of points to use when integrating in size. Recommended
 	 * values are from 500 to 5000 to get an accurate result.

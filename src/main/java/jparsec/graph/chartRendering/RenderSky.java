@@ -2168,14 +2168,22 @@ public class RenderSky
 						    	if (render.anaglyphMode == ANAGLYPH_COLOR_MODE.NO_ANAGLYPH && !g.renderingToExternalGraphics()) {
 						    		g.drawPoint((int)pos[0], (int)pos[1], colS);
 						    	} else {
-				    				g.setColor(colS, true);
-						    		g.fillOval(pos[0], pos[1], 1, 1, dist);
+				    				if (g.renderingToExternalGraphics()) {
+						    			g.fillOval(pos[0]-1, pos[1]-1, 2, 2, false);
+				    				} else {
+					    				g.setColor(colS, true);
+				    					g.fillOval(pos[0], pos[1], 1, 1, dist);
+				    				}
 						    	}
 			    			} else {
 						    	if (render.anaglyphMode == ANAGLYPH_COLOR_MODE.NO_ANAGLYPH && !g.renderingToExternalGraphics()) {
 						    		g.drawPoint((int)pos[0], (int)pos[1], g.getColor());
 						    	} else {
-						    		g.fillOval(pos[0], pos[1], 1, 1, dist);
+						    		if (g.renderingToExternalGraphics()) {
+						    			g.fillOval(pos[0]-1, pos[1]-1, 2, 2, false);
+						    		} else {
+						    			g.fillOval(pos[0], pos[1], 1, 1, dist);
+						    		}
 						    	}
 			    			}
 			    		} else {
@@ -2647,7 +2655,7 @@ public class RenderSky
 
     	if (FakeStarsForExternalGraphics && g.renderingToExternalGraphics()) {
     		if (tsize <= 1) {
-        		g.fillOval(pos[0], pos[1], 1, 1, false);
+        		g.fillOval(pos[0], pos[1], 2, 2, false);
         		return;
     		}
     		g.setColor(col[colIndex], 64);
@@ -4927,7 +4935,7 @@ public class RenderSky
 			maglimNotDrag = render.drawStarsLimitingMagnitude;
 			maglimStarsNotDrag = maglim;
 		}
-		if (fieldDeg > 15 && objMagLim-maglim > 2 && render.drawClever) objMagLim = maglim + 2;
+		if (fieldDeg > 15 && objMagLim-maglim > 2 && render.drawClever && g.renderingToAndroid()) objMagLim = maglim + 2;
 		LocationElement loc;
 		LocationElement locF;
 		Object obj[];
@@ -5128,7 +5136,7 @@ public class RenderSky
 					g.setColor((Integer)obj[8], true);
 				}
 			} else {
-				if (mag == 100 && (fieldDeg > fieldLimit*0.5 || maglim <= 8)) continue;
+				if (mag == 100 && render.drawClever && (fieldDeg > fieldLimit*0.5 || maglim <= 8)) continue;
 			}
 
 			int type = (Byte) obj[2];
@@ -5183,6 +5191,7 @@ public class RenderSky
 						name = (String) obj[0];
 						comments = (String) obj[7];
 						size = Math.max(size0, g.renderingToAndroid() ? 6 : 3);
+						size = Math.max(size, render.drawDeepSkyObjectSymbolMinimumSize);
 						if (projection.isCylindricalForced() && (fieldDeg < 60 || hugeFactor >= 1) && !external && size > 15 && render.drawDeepSkyObjectsTextures && !imagesNotFound.contains(name)
 								&& locF.getLatitude() < 80*Constant.DEG_TO_RAD) {
 							String file = name.toLowerCase() + ".jpg";
@@ -5988,6 +5997,8 @@ public class RenderSky
 		float heightPlus50MinusMaxY = g.getHeight()-rec.getMaxY()+50;
 		float widthMinus1MinusGraphMarginX = render.width-1-rec.getMinX();
 		float maxYPlusFontSize3Over2 = rec.getMaxY()+ (fontSize*3)/2;
+		boolean showRALabelsOnTop = render.telescope.invertVertical || render.centralLatitude < (-60*Constant.DEG_TO_RAD);
+		// TODO
 		boolean fastMode = render.drawFastLinesMode.fastGrid();
 		if (fastMode) {
 			if (!render.drawCoordinateGridStroke.isContinuousLine()) fastMode = false;
@@ -6047,11 +6058,11 @@ public class RenderSky
 				}
 
 				if (render.drawCoordinateGridLabels &&
-						(pos[1] > maxYminus50 && !render.telescope.invertVertical || pos[1] < heightPlus50MinusMaxY && render.telescope.invertVertical)
+						(pos[1] > maxYminus50 && !showRALabelsOnTop || pos[1] < heightPlus50MinusMaxY && showRALabelsOnTop)
 						&&
 						(pos[0] > rec.getMinX() && !render.telescope.invertHorizontal || pos[0] < widthMinus1MinusGraphMarginX && render.telescope.invertHorizontal) &&
 						(pos[0] < rec.getMaxX() && !render.telescope.invertHorizontal || pos[0] > render.width-1-rec.getMaxX() && render.telescope.invertHorizontal)) {
-					if (render.telescope.invertVertical) {
+					if (showRALabelsOnTop) {
 						tol = Math.abs(rec.getMaxY() - (g.getWidth() - pos[1] - 1));
 					} else {
 						tol = Math.abs(rec.getMaxY() - pos[1]);
@@ -6268,8 +6279,8 @@ public class RenderSky
 					if (render.drawCoordinateGridLabels &&
 							((!render.telescope.invertHorizontal && pos[0] < minXplus100) || (render.telescope.invertHorizontal && pos[0] > render.width-1-minXplus100))
 							&&
-							((!render.telescope.invertVertical && pos[1] > minYplusFontSize && pos[1] < rec.getMaxY()) ||
-									(render.telescope.invertVertical && pos[1] < render.height-1-minYplusFontSize && pos[1] > render.height-1-(rec.getMaxY())))
+							((!showRALabelsOnTop && pos[1] > minYplusFontSize && pos[1] < rec.getMaxY()) ||
+									(showRALabelsOnTop && pos[1] < render.height-1-minYplusFontSize && pos[1] > render.height-1-(rec.getMaxY())))
 							) {
 						if (render.telescope.invertHorizontal) {
 							tol = (float) Math.abs((double) (rec.getMinX())-(render.width-1-pos[0]));
@@ -6438,6 +6449,7 @@ public class RenderSky
 		float prev_pos1[] = null, prev_pos2[] = null, pos[], tol, px;
 		String label;
 		float[] loc;
+		boolean showRALabelsOnTop = render.telescope.invertVertical || render.centralLatitude < (-60*Constant.DEG_TO_RAD);
 		//int rs = raline.size();
 		//for (int i = 0; i<rs; i++)
 		projection.disableCorrectionOfLocalHorizon();
@@ -6486,7 +6498,7 @@ public class RenderSky
 
 				if (render.drawCoordinateGridLabels && pos[1] > rec.getMaxY()-50 &&
 						(pos[0] > graphMarginX && !render.telescope.invertHorizontal || pos[0] < render.width-1-graphMarginX && render.telescope.invertHorizontal) && pos[0] < render.width) {
-					if (render.telescope.invertVertical) {
+					if (showRALabelsOnTop) {
 						tol = Math.abs(rec.getMaxY() - (g.getWidth() - pos[1] - 1));
 					} else {
 						tol = Math.abs(rec.getMaxY() - pos[1]);
@@ -12124,7 +12136,7 @@ public class RenderSky
     		g.drawRotatedString(labelDEC, rec.getMinX()-graphMarginX+(h/2.0f+ (g.renderingToAndroid() ? 11f : 5.5f)), (render.height+w)/2f, (float)Constant.PI_OVER_TWO, dist);
     	}
 */
-		if (render.drawCoordinateGrid) {
+		if (render.drawCoordinateGrid && !g.renderingToExternalGraphics()) {
 	   		if (labelRA == null) {
     			labelRA = Translate.translate(CoordinateSystem.COORDINATE_SYSTEMS[render.coordinateSystem.ordinal()]).substring(0, 3);
     		}
@@ -12793,7 +12805,11 @@ public class RenderSky
 			    	if (render.anaglyphMode == ANAGLYPH_COLOR_MODE.NO_ANAGLYPH && !g.renderingToExternalGraphics()) {
 			    		g.drawPoint((int)pos[0], (int)pos[1], g.getColor());
 			    	} else {
-			    		g.fillOval(pos[0], pos[1], 1, 1, dist);
+			    		if (g.renderingToExternalGraphics()) {
+			        		g.fillOval(pos[0]-1, pos[1]-1, 2, 2, false);
+			    		} else {
+			    			g.fillOval(pos[0], pos[1], 1, 1, dist);
+			    		}
 			    	}
 					g.setColor(render.drawCoordinateGridColor, false);
 				} else {
@@ -13310,6 +13326,11 @@ public class RenderSky
 		Object obj[];
  		int step = 1;
  		if (imax > 50 && render.drawFastLabels != SUPERIMPOSED_LABELS.AVOID_SUPERIMPOSING_VERY_ACCURATE && render.drawFastLabels != SUPERIMPOSED_LABELS.AVOID_SUPERIMPOSING_ACCURATE) step = 2;
+ 		if (g.renderingToExternalGraphics() && render.drawFastLabels == SUPERIMPOSED_LABELS.AVOID_SUPERIMPOSING_VERY_ACCURATE) {
+ 			dangle /= 12;
+ 			overs = 1.05;
+ 			oversampling = 0.05f;
+ 		}
 		int r1 = g.getRed(render.background), g1 = g.getGreen(render.background), b1 = g.getBlue(render.background);
 		boolean useBackground = false;
 		int off = 1;
@@ -13332,9 +13353,9 @@ public class RenderSky
 				bestPX = -1;
 				bestPY = -1;
 				bestScore = Float.MAX_VALUE;
-				np = (int) (1+w*overs) * (int) (1+h*overs);
+				np = (int) (1+w) * (int) (1+h);
 				float r = Math.abs(radius);
-				r -= h/2;
+				r -= h/3.5;
 				for (ang=0.0f;ang<Constant.TWO_PI;ang=ang+dangle)
 				{
 					float cosa = FastMath.cosf(ang), sina = FastMath.sinf(ang);

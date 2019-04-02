@@ -142,7 +142,7 @@ public class SkyChartTest {
         sky.drawDeepSkyObjects = true;
         sky.drawSkyBelowHorizon = false;
         sky.drawSkyCorrectingLocalHorizon = true;
-        sky.drawFastLabels = SkyRenderElement.SUPERIMPOSED_LABELS.AVOID_SUPERIMPOSING_SOFT;
+        sky.drawFastLabels = SkyRenderElement.SUPERIMPOSED_LABELS.AVOID_SUPERIMPOSING_VERY_ACCURATE;
         sky.drawFastLabelsInWideFields = false;
         sky.fillMilkyWay = true;
         sky.drawSuperNovaAndNovaEvents = true;
@@ -186,8 +186,8 @@ public class SkyChartTest {
         skyFast.planetRender.textures = false;
         skyFast.drawFastLinesMode = SkyRenderElement.FAST_LINES.GRID_AND_MILKY_WAY_AND_CONSTELLATIONS;
         skyFast.drawFastLinesMode.setFastOvals(true);
-        skyFast.drawFastLabels = SkyRenderElement.SUPERIMPOSED_LABELS.FAST;
-        skyFast.drawFastLabelsInWideFields = true;
+        skyFast.drawFastLabels = SkyRenderElement.SUPERIMPOSED_LABELS.AVOID_SUPERIMPOSING_VERY_ACCURATE;
+        skyFast.drawFastLabelsInWideFields = false;
         skyFast.drawSuperNovaAndNovaEvents = false;
         skyFast.drawMilkyWayContoursWithTextures = SkyRenderElement.MILKY_WAY_TEXTURE.NO_TEXTURE;
         skyFast.drawDeepSkyObjectsTextures = false;

@@ -955,7 +955,7 @@ public class EventReport {
 					s.eventType != EVENT.MOON_APOGEE &&
 					s.eventType != EVENT.MOON_PERIGEE
 					) {
-				if (twoP >= 0 && (s.eventType == EVENT.ECLIPSE || s.eventType == EVENT.OCCULTATION ||
+				if (twoP >= 0 && (s.eventType == EVENT.MOON_FULL || s.eventType == EVENT.ECLIPSE || s.eventType == EVENT.OCCULTATION ||
 						s.eventType == EVENT.MOON_MAXIMUM_DECLINATION || s.eventType == EVENT.MOON_MINIMUM_DECLINATION ||
 						s.eventType == EVENT.PLANET_CONJUNCTION || s.eventType == EVENT.PLANET_OPPOSITION)) {
 					title = description.substring(0, twoP).trim();

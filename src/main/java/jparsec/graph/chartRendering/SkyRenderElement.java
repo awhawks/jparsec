@@ -284,6 +284,9 @@ public class SkyRenderElement implements Serializable
 	 * Set whether to draw or not deep sky objects.
 	 */
 	public boolean drawDeepSkyObjects = true;
+	
+	/** Allow to configure the minimum size of symbols for deep sky objects. */
+	public int drawDeepSkyObjectSymbolMinimumSize = 0;
 
 	/**
 	 * Set whether to draw or not the real images of the
@@ -1926,6 +1929,7 @@ public class SkyRenderElement implements Serializable
 		s.drawCoordinateGridFont = this.drawCoordinateGridFont;
 		s.drawCoordinateGridLabels = this.drawCoordinateGridLabels;
 		s.drawDeepSkyObjects = this.drawDeepSkyObjects;
+		s.drawDeepSkyObjectSymbolMinimumSize = this.drawDeepSkyObjectSymbolMinimumSize;
 		s.drawDeepSkyObjectsTextures = this.drawDeepSkyObjectsTextures;
 		s.drawDeepSkyObjectsColor = this.drawDeepSkyObjectsColor;
 		s.drawMeteorShowersColor = this.drawMeteorShowersColor;
@@ -2061,6 +2065,7 @@ public class SkyRenderElement implements Serializable
 		if (fillMilkyWay != that.fillMilkyWay) return false;
 		if (fillNebulae != that.fillNebulae) return false;
 		if (drawDeepSkyObjects != that.drawDeepSkyObjects) return false;
+		if (drawDeepSkyObjectSymbolMinimumSize != that.drawDeepSkyObjectSymbolMinimumSize) return false;
 		if (drawDeepSkyObjectsTextures != that.drawDeepSkyObjectsTextures) return false;
 		if (drawDeepSkyObjectsOnlyMessier != that.drawDeepSkyObjectsOnlyMessier) return false;
 		if (drawDeepSkyObjectsAllMessierAndCaldwell != that.drawDeepSkyObjectsAllMessierAndCaldwell) return false;
@@ -2180,6 +2185,7 @@ public class SkyRenderElement implements Serializable
 		long temp;
 		result = width;
 		result = 31 * result + height;
+		result = 31 * result + drawDeepSkyObjectSymbolMinimumSize;
 		temp = Double.doubleToLongBits(centralLongitude);
 		result = 31 * result + (int) (temp ^ (temp >>> 32));
 		temp = Double.doubleToLongBits(centralLatitude);

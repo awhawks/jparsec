@@ -266,9 +266,9 @@ public class LocationElement implements Serializable
 	public void setLongitude(double d)
 	{
 		if (lonLatRad != null) {
-			lonLatRad[0] = d;
+			lonLatRad[0] = Functions.normalizeRadians(d);
 		} else {
-			lonLatRadF[0] = (float) d;
+			lonLatRadF[0] = (float) Functions.normalizeRadians(d);
 		}
 	}
 

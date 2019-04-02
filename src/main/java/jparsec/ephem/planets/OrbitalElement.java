@@ -965,10 +965,11 @@ public class OrbitalElement implements Serializable
 		}
 		g.setColor(Color.ORANGE.getRGB(), true);
 		g.fillOval(x0 - n, y0 - n, 2*n, 2*n, false);
-		g.setColor(Functions.getColor(0, 0, 0, 255), true);
+		g.setColor(Functions.getColor(0, 0, 0, 92), true);
 		int border = 100;
 		g.drawLine(x0, y0-h/2+border, x0, y0+h/2-border, false);
 		g.drawLine(x0-w/2+border, y0, x0+w/2-border, y0, false);
+		g.setColor(Functions.getColor(0, 0, 0, 255), true);
 		String s = "0\u00b0";
 		if (!showPlanets) s += " (N)";
 		int size = g.getFont().getSize();

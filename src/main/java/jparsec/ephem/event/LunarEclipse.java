@@ -153,8 +153,8 @@ public class LunarEclipse
 		} else
 		{
 			if (inside_shadow && targetBody == TARGET.Moon) {
-				recommendedTimeOffsetToNextEvent = 0.25 * Math.abs(dist - (s_r - ephem_moon.angularRadius)) / LunarEclipse.moonMeanOrbitalRate;
-				recommendedTimeOffsetToNextEventAfterTotality = 0.25 * Math.abs(dist - (s_r + ephem_moon.angularRadius)) / LunarEclipse.moonMeanOrbitalRate;
+				recommendedTimeOffsetToNextEvent = 0; //0.25 * Math.abs(dist - (s_r - ephem_moon.angularRadius)) / LunarEclipse.moonMeanOrbitalRate;
+				recommendedTimeOffsetToNextEventAfterTotality = 0; //0.25 * Math.abs(dist - (s_r + ephem_moon.angularRadius)) / LunarEclipse.moonMeanOrbitalRate;
 			}
 		}
 
